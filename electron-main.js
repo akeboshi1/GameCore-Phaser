@@ -4,6 +4,9 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
+//主进程
+var ipc = electron.ipcRenderer;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow;
@@ -27,6 +30,8 @@ function createWindow () {
 
     // and load the index.html of the app.
     mainWindow.loadURL('file://' + __dirname + '/dist/index.html');
+
+    ipc.send("startApp");
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools();

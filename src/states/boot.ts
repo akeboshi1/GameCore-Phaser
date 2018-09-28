@@ -31,5 +31,8 @@ export default class Boot extends Phaser.State {
             this.game.scale.forceOrientation(true, false);
             // this.game.scale.forceOrientation(false, true);
         }
+
+        let googleFontText = this.game.add.text(this.game.world.centerX - 100, this.game.world.centerY, 'Hello World');
+        googleFontText.addColor('#ffcc00', 0);
     }
 }

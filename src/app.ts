@@ -36,3 +36,6 @@ function startApp(): void {
     let app = new App(gameConfig);
     console.log('startApp------------------------------------------------');
 }
+// window.onload = () => {
+//     startApp();
+// };
