@@ -1,4 +1,5 @@
 import * as Utils from '../utils/utils';
+import {App} from '../App';
 
 export default class Boot extends Phaser.State {
     public preload(): void {
@@ -31,6 +32,9 @@ export default class Boot extends Phaser.State {
             this.game.scale.forceOrientation(true, false);
             // this.game.scale.forceOrientation(false, true);
         }
+
+        App.LayerManager.init(this.game);
+        App.LayoutManager.init(this.game);
 
         let googleFontText = this.game.add.text(this.game.world.centerX - 100, this.game.world.centerY, 'Hello World');
         googleFontText.addColor('#ffcc00', 0);
