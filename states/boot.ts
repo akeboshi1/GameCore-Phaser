@@ -1,3 +1,4 @@
+///<reference path="../../globals.d.ts"/>
 import * as Utils from '../utils/utils';
 import {App} from '../App';
 
