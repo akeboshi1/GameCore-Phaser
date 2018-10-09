@@ -8,7 +8,7 @@ import Game = Phaser.Game;
 
 export class LayoutManager extends BaseSingleton {
     public game: Game;
-    private layoutList: Array<ILayout>
+    private layoutList: Array<ILayout>;
 
     public constructor() {
         super();
@@ -37,7 +37,7 @@ export class LayoutManager extends BaseSingleton {
      */
     public unRegister(iLayout: ILayout): void {
         let idx = this.getLayoutIdx(iLayout);
-        if (idx != -1)
+        if (idx !== -1)
             this.layoutList.splice(idx, 1);
     }
 
@@ -53,7 +53,7 @@ export class LayoutManager extends BaseSingleton {
         let i: number = 0;
         let len: number = this.layoutList.length;
         for (; i < len; i++) {
-            if (this.layoutList[i] == iLayout) {
+            if (this.layoutList[i] === iLayout) {
                 return i;
             }
         }
