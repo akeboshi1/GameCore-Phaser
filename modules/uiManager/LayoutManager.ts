@@ -2,13 +2,13 @@
  * 自动布局和视窗同步管理器
  * author aaron
  */
-import BaseSingleton from '../../base/BaseSingleton';
-import {ILayout} from '../../base/ILayout';
 import Game = Phaser.Game;
+import BaseSingleton from "../../base/BaseSingleton";
+import {ILayout} from "../../base/ILayout";
 
 export class LayoutManager extends BaseSingleton {
     public game: Game;
-    private layoutList: Array<ILayout>;
+    public layoutList: Array<ILayout>;
 
     public constructor() {
         super();

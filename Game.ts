@@ -16,9 +16,9 @@ export default class Game extends Phaser.Game implements IGame {
 
         this.state.add('boot', Boot);
         this.state.start('boot');
-    }
+    };
 
     public resize(): void {
 
-    }
+    };
 }
