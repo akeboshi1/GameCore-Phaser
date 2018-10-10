@@ -1,18 +1,13 @@
-///<reference path="../../globals.d.ts"/>
-import * as Utils from '../utils/utils';
-import {App} from '../App';
+import {Globals} from '../Globals';
+import * as Assets from '../Assets';
 
 export default class Boot extends Phaser.State {
     public preload(): void {
-        // Load any assets you need for your preloader state here.
+        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesPreloadSpritesArray.getName(), Assets.Atlases.AtlasesPreloadSpritesArray.getPNG(), Assets.Atlases.AtlasesPreloadSpritesArray.getJSONArray());
     }
 
     public create(): void {
-        // Do anything here that you need to be setup immediately, before the game actually starts doing anything.
 
-        // Uncomment the following to disable multitouch
-        // this.input.maxPointers = 1;
-        
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
 
@@ -26,10 +21,9 @@ export default class Boot extends Phaser.State {
             // this.game.scale.forceOrientation(false, true);
         }
 
-        App.LayerManager.init(this.game);
-        App.LayoutManager.init(this.game);
+        Globals.LayerManager.init(this.game);
+        Globals.LayoutManager.init(this.game);
 
-        let googleFontText = this.game.add.text(this.game.world.centerX - 100, this.game.world.centerY, 'Hello World');
-        googleFontText.addColor('#ffcc00', 0);
+        this.game.state.start('preloader');
     }
 }

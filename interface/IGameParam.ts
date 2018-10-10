@@ -1,4 +1,4 @@
-import {MapData} from '../struct/MapData';
+import {MapInfo} from '../struct/MapInfo';
 
 /**
  * author aaron
@@ -6,5 +6,7 @@ import {MapData} from '../struct/MapData';
 export default interface IGameParam {
     width: number;
     height: number;
-    mapData: MapData;
+    rows: number;
+    cols: number;
+    mapData: MapInfo;
 }

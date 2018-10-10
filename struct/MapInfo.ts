@@ -1,7 +1,7 @@
 import {TerrainInfo} from './TerrainInfo';
 import {ElementInfo} from './ElementInfo';
 
-export class MapData {
+export class MapInfo {
     private _terrainInfo: Array<TerrainInfo>;
     private _elemenInfo: Array<ElementInfo>;
     public get terrainInfo(): Array<TerrainInfo> {

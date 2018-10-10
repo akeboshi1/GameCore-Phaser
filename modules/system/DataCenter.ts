@@ -1,4 +1,7 @@
-class DataCenter extends Core.BaseSingleton {
+import BaseSingleton from "../../base/BaseSingleton";
+import {MapData} from "../../data/MapData";
+
+export class DataCenter extends BaseSingleton {
     public loginData: Object = {
         'username': 'zhangbuxin',
         'time': 1515740032,
@@ -22,6 +25,11 @@ class DataCenter extends Core.BaseSingleton {
                 this.loginData[key] = value;
             }
         }
+    }
+
+    public get MapData(): MapData
+    {
+        return MapData.getInstance();
     }
 
 }
