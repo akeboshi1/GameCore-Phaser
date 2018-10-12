@@ -1,7 +1,7 @@
 import BaseSingleton from '../../base/BaseSingleton';
 import Point = Phaser.Point;
 
-class Room45Util extends BaseSingleton {
+export class Room45Util extends BaseSingleton {
     private _hTilewidth: number;
     private _hTileheight: number;
     private _originX: number;

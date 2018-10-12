@@ -8,11 +8,13 @@ export namespace Atlases {
 
         static getPNG(): string { return require('assets/atlases/preload_sprites_array.png'); }
     }
-    export namespace AtlasesPreloadSpritesArray {
-        export enum Frames {
-            PreloadBar = 'preload_bar.png',
-            PreloadFrame = 'preload_frame.png',
-        }
+}
+
+export namespace Images {
+    export class ImagesTile {
+        static getName(): string { return 'tile'; }
+
+        static getPNG(): string { return require('assets/images/tile.png'); }
     }
 }
 

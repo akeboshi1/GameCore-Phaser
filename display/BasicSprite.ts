@@ -1,6 +1,6 @@
-import {} from 'phaser-ce';
-
-export default class BasicSprite extends Phaser.Sprite {
-
+export default class BasicSprite extends PIXI.DisplayObjectContainer {
+    public constructor() {
+        super();
+    }
 }
 

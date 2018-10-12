@@ -1,8 +1,10 @@
 import BaseSingleton from "../../base/BaseSingleton";
+import {Images} from "../../Assets";
 
 export class Res extends BaseSingleton {
     private game: Phaser.Game = null;
     private soundKeys: string[] = [];
+
     public loadAllAssets(game: Phaser.Game, onComplete?: Function, onCompleteContext?: any) {
         this.game = game;
 
@@ -26,10 +28,11 @@ export class Res extends BaseSingleton {
         }
     }
 
-    private loadImages() {
+    private loadImages(): void {
+        this.game.load.image(Images.ImagesTile.getName(), Images.ImagesTile.getPNG());
     }
 
-    private loadAtlases() {
+    private loadAtlases(): void {
 
     }
 }

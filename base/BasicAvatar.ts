@@ -1,12 +1,14 @@
 import {IAnimatedObject} from './IAnimatedObject';
 import {IEntityComponent} from './IEntityComponent';
+import BasicSprite from "../display/BasicSprite";
 
-export class BasicAvatar implements IAnimatedObject, IEntityComponent {
+export class BasicAvatar extends BasicSprite implements IAnimatedObject, IEntityComponent {
         private mInitilized: Boolean = false;
         public owner: any;
         protected data: any = null;
 
         public constructor() {
+            super();
         }
 
         public get initilized(): Boolean {
