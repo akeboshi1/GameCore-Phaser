@@ -1,10 +1,12 @@
-import 'p2';
-import 'pixi';
-import 'phaser';
-import IGame from './interface/IGame';
-import IGameParam from './interface/IGameParam'
-import 'phaser-ce';
-import BootState from './states/boot';
+///<reference path="../../node_modules/phaser-plugin-isometric/dist/phaser.plugin.isometric.d.ts"/>
+import "isometric";
+import "p2";
+import "pixi";
+import "phaser";
+import IGame from "./interface/IGame";
+import IGameParam from "./interface/IGameParam"
+import "phaser-ce";
+import BootState from "./states/boot";
 import {Globals} from "./Globals";
 import PreloaderState from "./states/preloader";
 import GameState from "./states/game";

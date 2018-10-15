@@ -12,16 +12,15 @@ export class SceneBasic extends BasicAnimatedViewElement {
     protected mSceneScrollHeight: number = 0;
     private mSceneInited: boolean = false;
 
-    protected onInitialize(): void
-    {
+    protected onInitialize(): void {
         super.onInitialize();
         this.watchStageResize = true;
         this.visible = this.registerForUpdates = false;
     }
 
     public get actived(): boolean {
-        return this.mActived
-    };
+        return this.mActived;
+    }
 
     public get sceneScrollWidth(): number {
         return this.mSceneScrollWidth;
@@ -86,7 +85,7 @@ export class SceneBasic extends BasicAnimatedViewElement {
         //
         // this.camera.cameraStage.visible = this.visible = this.registerForUpdates = true;
 
-        //stage size may be changed in last scene.
+        // stage size may be changed in last scene;
         this.requestStageResize();
     }
 
