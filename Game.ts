@@ -1,8 +1,8 @@
 ///<reference path="../../node_modules/phaser-plugin-isometric/dist/phaser.plugin.isometric.d.ts"/>
-import "isometric";
 import "p2";
 import "pixi";
 import "phaser";
+import "isometric";
 import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam"
 import "phaser-ce";
