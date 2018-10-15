@@ -1,5 +1,5 @@
 import BaseSingleton from "../../base/BaseSingleton";
-import {Images} from "../../Assets";
+import {Images, Jsons} from "../../Assets";
 
 export class Res extends BaseSingleton {
     private game: Phaser.Game = null;
@@ -13,6 +13,7 @@ export class Res extends BaseSingleton {
         }
 
         this.loadImages();
+        this.loadJsons();
         this.loadAtlases();
 
         if ((this.game.load as any)._fileList.length === 0) {
@@ -30,6 +31,12 @@ export class Res extends BaseSingleton {
 
     private loadImages(): void {
         this.game.load.image(Images.ImagesTile.getName(), Images.ImagesTile.getPNG());
+    }
+
+    private loadJsons(): void {
+        for(let i of Jsons.JsonMap.getLoadList()) {
+            this.game.load.json(i+"_json",Jsons.JsonMap.getJSON(i));
+        }
     }
 
     private loadAtlases(): void {

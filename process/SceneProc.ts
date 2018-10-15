@@ -3,12 +3,13 @@ import {Globals} from "../Globals";
 import {RoomScene} from "../scene/RoomScene";
 import {MapInfo} from "../struct/MapInfo";
 import {FlowManager} from "../flow/FlowManager";
+import {SceneLoader} from "../scene/SceneLoader";
 
 export class SceneProc extends BaseProc {
 	public roomScene: RoomScene;
 	private hasRgistHandler: boolean = false;
 	private flowManager: FlowManager;
-	// private roomSceneLoader: RoomSceneLoader;
+	private roomSceneLoader: SceneLoader;
 
 	public beginProc(): void {
 		super.beginProc();

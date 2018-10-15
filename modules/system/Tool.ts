@@ -1,5 +1,6 @@
 import BaseSingleton from '../../base/BaseSingleton';
 import {Log} from "../../Log";
+import {Zlib} from "zlib";
 
 export class Tool extends BaseSingleton {
     public constructor() {
@@ -107,5 +108,13 @@ export class Tool extends BaseSingleton {
         else if (circleCenterY - circleRadius > rectY + rectHeight) return false;
 
         return true;
+    }
+
+    public mapDecode(data: any): any {
+        // let a = new Uint8Array(egret.Base64Util.decode(text));
+        // let b: Uint8Array = new Zlib.Inflate(a).decompress();
+        // let s: string = this.ab2str(b);
+        // let result = s.split(",");
+        return "";
     }
 }
