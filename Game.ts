@@ -1,4 +1,4 @@
-///<reference path="../../node_modules/phaser-plugin-isometric/dist/phaser.plugin.isometric.d.ts"/>
+/// <reference path="././defs/definitions.d.ts"/>
 import 'p2';
 import 'pixi';
 import 'phaser';
@@ -10,7 +10,6 @@ import {Globals} from "./Globals";
 import PreloaderState from "./states/preloader";
 import GameState from "./states/game";
 import {Log} from "./Log";
-import 'phaser-isometric';
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
