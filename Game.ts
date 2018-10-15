@@ -1,4 +1,3 @@
-/// <reference path="././defs/definitions.d.ts"/>
 import 'p2';
 import 'pixi';
 import 'phaser';
