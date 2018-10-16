@@ -24,7 +24,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     public data: any;
     public display: any;
     public scene: SceneBasic;
-    public camera: SceneCamera;
+    public camera: Phaser.Camera;
     public isNeedSort: boolean = true;
     private mInitilized: boolean = false;
 
@@ -175,8 +175,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     };
 
     protected onUpdated(deltaTime: number): void {
-        this.screenX = this.x - this.camera.scrollX;
-        this.screenY = this.y - this.camera.scrollY;
+        this.screenX = this.x - this.camera.x;
+        this.screenY = this.y - this.camera.y;
 
         this.checkIsValidDisplayAvatar();
         if ((this.display as IEntityComponent).onTick !== undefined) (<IEntityComponent>this.display).onTick(deltaTime);

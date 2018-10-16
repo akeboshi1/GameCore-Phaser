@@ -1,6 +1,7 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {MapData} from "../../data/MapData";
 import {ElementConfig} from "../../config/ElementConfig";
+import {PlayerData} from "../../data/PlayerData";
 
 export class DataCenter extends BaseSingleton {
     public loginData: Object = {
@@ -28,9 +29,13 @@ export class DataCenter extends BaseSingleton {
         }
     }
 
-    public get MapData(): MapData
-    {
+    public get MapData(): MapData {
         return MapData.getInstance();
+    }
+
+    public get PlayerData(): PlayerData
+    {
+        return PlayerData.getInstance();
     }
 
     public get ElementConfig():ElementConfig{

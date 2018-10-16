@@ -10,7 +10,7 @@ export class QueueFlow extends BasicGroupFlow {
         var findChildFlow: IFlow = this.childrenFlows.moveFirst();
         this.childrenFlows.remove(findChildFlow);
 
-        if (this.childrenFlows.length == 0) {
+        if (this.childrenFlows.length === 0) {
             this.onExcuteFlowComplete();
         }
         else {

@@ -1,16 +1,17 @@
-import {Globals} from '../Globals';
-import * as Assets from '../Assets';
+import {Globals} from "../Globals";
+import * as Assets from "../Assets";
+import {Log} from "../Log";
 
 export default class Boot extends Phaser.State {
     public preload(): void {
-        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesPreloadSpritesArray.getName(), Assets.Atlases.AtlasesPreloadSpritesArray.getPNG(), Assets.Atlases.AtlasesPreloadSpritesArray.getJSONArray());
+        //this.game.load.atlasJSONArray(Assets.Atlases.AtlasesPreloadSpritesArray.getName(), Assets.Atlases.AtlasesPreloadSpritesArray.getPNG(), Assets.Atlases.AtlasesPreloadSpritesArray.getJSONArray());
+        Log.trace("sfsdfsdfsdfsdfsdfsdfsdfsdf---------------------=====================");
     }
 
     public create(): void {
 
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
-
 
 
         if (this.game.device.desktop) {

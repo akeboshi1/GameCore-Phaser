@@ -38,7 +38,7 @@ export class Tool extends BaseSingleton {
      * @return 由参数中两点确定的直线的二元一次函数
      */
     public getLineFunc(ponit1: Phaser.Point, point2: Phaser.Point, type: number = 0): Function {
-        var resultFuc: Function = null;
+        let resultFuc: Function = null;
 
 
         // 先考虑两点在一条垂直于坐标轴直线的情况，此时直线方程为 y = a 或者 x = a 的形式
@@ -68,7 +68,7 @@ export class Tool extends BaseSingleton {
         }
 
         // 当两点确定直线不垂直于坐标轴时直线方程设为 y = ax + b
-        var a: number;
+        let a: number;
 
         // 根据
         // y1 = ax1 + b
@@ -76,7 +76,7 @@ export class Tool extends BaseSingleton {
         // 上下两式相减消去b, 得到 a = ( y1 - y2 ) / ( x1 - x2 )
         a = (ponit1.y - point2.y) / (ponit1.x - point2.x);
 
-        var b: number;
+        let b: number;
 
         //将a的值代入任一方程式即可得到b
         b = ponit1.y - a * ponit1.x;

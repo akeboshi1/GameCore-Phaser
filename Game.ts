@@ -29,6 +29,7 @@ export default class Game extends Phaser.Game implements IGame {
         this.state.add('boot', BootState);
         this.state.add('preloader', PreloaderState);
         this.state.add('game', GameState);
+
         this.state.start('boot');
     };
 
@@ -36,14 +37,17 @@ export default class Game extends Phaser.Game implements IGame {
     };
 
     public update(time: number): void {
-        Log.trace("update-->",time);
+        // Log.trace("update-->",time);
+        super.update(time);
     }
 
     public updateLogic(timeStep: number): void{
         Log.trace("updateLogic-->",timeStep);
+        super.updateLogic(timeStep);
     }
 
     public updateRender(timeStep: number): void{
         Log.trace("updateRender-->",timeStep);
+        super.updateRender(timeStep);
     }
 }

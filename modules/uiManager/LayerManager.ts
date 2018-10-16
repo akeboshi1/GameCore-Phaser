@@ -3,37 +3,38 @@
  * author aaron
  */
 import BaseSingleton from '../../base/BaseSingleton';
-import DisplayObjectContainer = PIXI.DisplayObjectContainer;
+import {Globals} from "../../Globals";
+import BasicSprite from "../../display/BasicSprite";
 
 export class LayerManager extends BaseSingleton {
     public stage: Phaser.Stage;
-    public container: DisplayObjectContainer;
-    public sceneLayer: DisplayObjectContainer;
-    public animationLayer: DisplayObjectContainer;
-    public uiLayer: DisplayObjectContainer;
-    public dialogLayer: DisplayObjectContainer;
-    public tipLayer: DisplayObjectContainer;
-    public textLineSliderLayer: DisplayObjectContainer;
-    public debugLayer: DisplayObjectContainer;
+    public container: Phaser.Sprite;
+    public sceneLayer: BasicSprite;
+    public animationLayer: BasicSprite;
+    public uiLayer: BasicSprite;
+    public dialogLayer: BasicSprite;
+    public tipLayer: BasicSprite;
+    public textLineSliderLayer: BasicSprite;
+    public debugLayer: BasicSprite;
 
     public init(stage: Phaser.Stage): void {
         this.stage = stage;
 
-        this.container = new DisplayObjectContainer();
+        this.container = Globals.game.add.sprite(0,0);
 
-        this.sceneLayer = new DisplayObjectContainer();
+        this.sceneLayer = new BasicSprite();
 
-        this.textLineSliderLayer = new DisplayObjectContainer();
+        this.textLineSliderLayer = new BasicSprite();
 
-        this.animationLayer = new DisplayObjectContainer();
+        this.animationLayer = new BasicSprite();
 
-        this.uiLayer = new DisplayObjectContainer();
+        this.uiLayer = new BasicSprite();
 
-        this.tipLayer = new DisplayObjectContainer();
+        this.tipLayer = new BasicSprite();
 
-        this.dialogLayer = new DisplayObjectContainer();
+        this.dialogLayer = new BasicSprite();
 
-        this.debugLayer = new DisplayObjectContainer();
+        this.debugLayer = new BasicSprite();
 
         this.container.addChild(this.sceneLayer);
         this.container.addChild(this.uiLayer);
@@ -42,7 +43,6 @@ export class LayerManager extends BaseSingleton {
         this.container.addChild(this.tipLayer);
         this.container.addChild(this.dialogLayer);
         this.container.addChild(this.debugLayer);
-        this.stage.add(this.container);
 
         this.layout();
     }

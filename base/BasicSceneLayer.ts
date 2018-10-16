@@ -6,7 +6,7 @@ import {SceneCamera} from "../scene/SceneCamera";
 
 export class BasicSceneLayer extends BasicViewElement implements IAnimatedObject, ITickedObject {
     public scene: SceneBasic;
-    public camera: SceneCamera;
+    public camera: Phaser.Camera;
 
     public constructor() {
         super();

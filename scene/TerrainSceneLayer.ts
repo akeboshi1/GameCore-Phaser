@@ -42,8 +42,8 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     }
 
     public onFrame(deltaTime: number): void {
-        this.x = -this.camera.scrollX;
-        this.y = -this.camera.scrollY;
+        this.x = -this.camera.x;
+        this.y = -this.camera.y;
         // this.x = (GameConst.WindowWidth - this.mapSceneInfo.mapTotalWidth) >> 1;
         // this.y = (GameConst.WindowHeight - this.mapSceneInfo.mapTotalHeight) >> 1;
         var terrainItem: BasicTerrainItem = null;

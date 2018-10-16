@@ -1,11 +1,10 @@
 ///<reference path="../../globals.d.ts"/>
 import {BasicAnimatedViewElement} from "../base/BasicAnimatedViewElement";
 import {Log} from "../Log";
-import {SceneCamera} from "./SceneCamera";
 import {MapInfo} from "../struct/MapInfo";
 
 export class SceneBasic extends BasicAnimatedViewElement {
-    public camera: SceneCamera;
+    public camera: Phaser.Camera;
 
     protected mActived: boolean = false;
     protected mSceneScrollWidth: number = 0;
@@ -67,13 +66,13 @@ export class SceneBasic extends BasicAnimatedViewElement {
     }
 
     public onTick(deltaTime: number): void {
-        this.camera.onTick(deltaTime);
+        // this.camera.onTick(deltaTime);
     }
 
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
 
-        this.camera.onFrame(deltaTime);
+        // this.camera.onFrame(deltaTime);
     }
 
     protected onActivedScene(): void {
@@ -111,8 +110,8 @@ export class SceneBasic extends BasicAnimatedViewElement {
 
     protected onStageResize(): void {
         if (this.mActived) {
-            this.camera.setCameraSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
-            this.camera.resetPosition();
+            // this.camera.setCameraSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
+            // this.camera.resetPosition();
         }
     }
 }
