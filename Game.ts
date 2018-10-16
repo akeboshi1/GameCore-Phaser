@@ -7,7 +7,7 @@ import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam"
 import "phaser-ce";
 import BootState from "./states/boot";
-import {Globals} from "./Globals";
+import Globals from "./Globals";
 import PreloaderState from "./states/preloader";
 import GameState from "./states/game";
 import {Log} from "./Log";
@@ -39,15 +39,17 @@ export default class Game extends Phaser.Game implements IGame {
     public update(time: number): void {
         // Log.trace("update-->",time);
         super.update(time);
+        Globals.TickManager.onEnterFrame(time);
     }
 
     public updateLogic(timeStep: number): void{
-        Log.trace("updateLogic-->",timeStep);
+        // Log.trace("updateLogic-->",timeStep);
         super.updateLogic(timeStep);
+
     }
 
     public updateRender(timeStep: number): void{
-        Log.trace("updateRender-->",timeStep);
+        // Log.trace("updateRender-->",timeStep);
         super.updateRender(timeStep);
     }
 }

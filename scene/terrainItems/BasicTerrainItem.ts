@@ -4,7 +4,7 @@ import {Const} from "../../const/Const";
 import {SceneCamera} from "../SceneCamera";
 import {TerrainSceneLayer} from "../TerrainSceneLayer";
 import BasicSprite from "../../display/BasicSprite";
-import {Globals} from "../../Globals";
+import Globals from "../../Globals";
 
 export class BasicTerrainItem extends BasicSprite implements IAnimatedObject {
     public data: any;

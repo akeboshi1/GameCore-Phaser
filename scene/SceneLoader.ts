@@ -1,7 +1,7 @@
 import {Log} from "../Log";
-import {Globals} from "../Globals";
 import {Jsons} from "../Assets";
 import {MapSceneInfo} from "../struct/MapSceneInfo";
+import Globals from "../Globals";
 
 export class SceneLoader {
     public loadStartCallback: Function;

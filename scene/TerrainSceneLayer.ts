@@ -4,6 +4,8 @@ import {BasicTerrainItem} from "./terrainItems/BasicTerrainItem";
 import {BasicSceneLayer} from "../base/BasicSceneLayer";
 import {TerrainInfo} from "../struct/TerrainInfo";
 import {RoomNode} from "./grid/RoomNode";
+import {TerrainImageItem} from "./terrainItems/TerrainImageItem";
+import Globals from "../Globals";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
     public curTerrainLoadCount: number = 0;
@@ -70,25 +72,17 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         let element: any;
         let value: TerrainInfo;
         let point: Phaser.Point;
-        let node: RoomNode;
         for (; i < len; i++) {
             value = datas[i];
-            // if (value.type == 0) {
-            //     element = new RoomNullTerrainItem(this);
-            // } else {
-            //     element = new RoomTerrainItem(this);
-            // }
-            // element.camera = this.camera;
-            // element.data = value;
-            // point = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
-            // element.itemX = point.x - GameConst.HALF_MAP_TILE_WIDTH;
-            // element.itemY = point.y;
-            // element.itemWidth = GameConst.MAP_TILE_WIDTH;
-            // element.itemHeight = GameConst.MAP_TILE_HEIGHT;
-            // node = (<RoomScene>this.scene).seaMapGrid.getNode(value.col, value.row);
-            // element.updateNodeWalkAble(node);
-            // this.addChild(element);
-            // this._terrainItems.push(element);
+            element = new TerrainImageItem(this);
+            element.data = value;
+            point = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
+            element.itemX = point.x - Const.GameConst.HALF_MAP_TILE_WIDTH;
+            element.itemY = point.y;
+            element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
+            element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
+            this.addChild(element);
+            this._terrainItems.push(element);
         }
     }
 }

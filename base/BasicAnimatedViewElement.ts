@@ -1,7 +1,7 @@
 import {BasicViewElement} from "./BasicViewElement";
 import {IAnimatedObject} from "./IAnimatedObject";
 import {ITickedObject} from "./ITickedObject";
-import {Globals} from "../Globals";
+import Globals from "../Globals";
 import {MessageType} from "../const/MessageType";
 
 export class BasicAnimatedViewElement extends BasicViewElement implements IAnimatedObject, ITickedObject {

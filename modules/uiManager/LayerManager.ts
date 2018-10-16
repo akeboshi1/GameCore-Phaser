@@ -3,7 +3,7 @@
  * author aaron
  */
 import BaseSingleton from '../../base/BaseSingleton';
-import {Globals} from "../../Globals";
+import Globals from "../../Globals";
 import BasicSprite from "../../display/BasicSprite";
 
 export class LayerManager extends BaseSingleton {

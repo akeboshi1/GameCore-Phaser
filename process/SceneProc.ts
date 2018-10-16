@@ -1,5 +1,5 @@
 import {BaseProc} from "../base/BaseProc";
-import {Globals} from "../Globals";
+import Globals from "../Globals";
 import {RoomScene} from "../scene/RoomScene";
 import {MapInfo} from "../struct/MapInfo";
 import {FlowManager} from "../flow/FlowManager";
@@ -49,7 +49,7 @@ export class SceneProc extends BaseProc {
         this.roomScene = new RoomScene();
         this.roomScene.camera = Globals.game.camera;
         // this.roomScene.camera.cameraStage.addChildAt(this.roomScene, 0);
-
+        Globals.LayerManager.sceneLayer.addChild(this.roomScene);
         this.sceneLoader = new SceneLoader();
         this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this)
 

@@ -1,6 +1,5 @@
 import BaseSingleton from '../../base/BaseSingleton';
 import {Log} from "../../Log";
-import {Zlib} from "zlib";
 
 export class Tool extends BaseSingleton {
     public constructor() {

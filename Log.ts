@@ -1,7 +1,7 @@
 /**
  * author aaron
  */
-import {Globals} from "./Globals";
+import Globals from "./Globals";
 
 export class Log {
     public static trace(...optionalParams: any[]): void {

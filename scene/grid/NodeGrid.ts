@@ -1,6 +1,6 @@
 import {ANode} from "./ANode";
 import {RoomNode} from "./RoomNode";
-import {Globals} from "../../Globals";
+import Globals from "../../Globals";
 
 export class NodeGrid {
     public nodeClass: any = RoomNode;

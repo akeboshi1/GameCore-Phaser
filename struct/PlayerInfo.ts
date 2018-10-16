@@ -1,5 +1,5 @@
 import {RoleAvatarModelVO} from "./RoleAvatarModelVO";
-import {Globals} from "../Globals";
+import Globals from "../Globals";
 import {MessageType} from "../const/MessageType";
 
 export class PlayerInfo {

@@ -1,9 +1,8 @@
 import {BasicTerrainItem} from "./BasicTerrainItem";
 import {TerrainSceneLayer} from "../TerrainSceneLayer";
 import {Room45Util} from "../../modules/system/Room45Util";
-import {Globals} from "../../Globals";
+import Globals from "../../Globals";
 import Image = Phaser.Image;
-import BasicSprite from "../../display/BasicSprite";
 import {Const} from "../../const/Const";
 
 export class TerrainImageItem extends BasicTerrainItem {
@@ -21,7 +20,7 @@ export class TerrainImageItem extends BasicTerrainItem {
             this.room45Util.setting(1, 1, Const.GameConst.MAP_TILE_WIDTH, Const.GameConst.MAP_TILE_HEIGHT);
         }
 
-        let graphics = Globals.LayerManager.game.make.graphics();
+        let graphics = Globals.game.make.graphics();
         graphics.lineStyle(2, 0xff0000, 1);
         this.draw(graphics);
         this.addChild(graphics);
@@ -33,8 +32,8 @@ export class TerrainImageItem extends BasicTerrainItem {
 
     protected onTerrainItemLoad(): void {
         super.onTerrainItemLoad();
-        Globals.LayerManager.game.load.onLoadComplete.addOnce(this.onTerrainItemLoadComplete, this);
-        Globals.LayerManager.game.load.image(this.data.sign, this.data.path);
+        Globals.game.load.onLoadComplete.addOnce(this.onTerrainItemLoadComplete, this);
+        Globals.game.load.image(this.data.sign, this.data.path);
     }
 
     protected onTerrainItemLoadComplete(thisObj: any): void {

@@ -9,22 +9,11 @@ export class TickManager extends BaseSingleton {
     public game: Game;
     private _timeHandleList: Object[];
     private _frameHandleList: Object[];
-    private _currTime: number;
-    private _count: number;
 
     public constructor() {
         super();
         this._timeHandleList = [];
         this._frameHandleList = [];
-    }
-
-    public init(game: Game): void {
-        this.game = game;
-        this._currTime = this.game.time.elapsed;
-        this._count = 0;
-
-        let timer = game.time.create();
-        timer.add(33,this.onEnterFrame,this);
     }
 
     /**
@@ -89,12 +78,12 @@ export class TickManager extends BaseSingleton {
         }
     }
 
-    private onEnterFrame(elapsed: number): boolean {
+    public onEnterFrame(elapsed: number): boolean {
         let curTime: number = elapsed;
         let deltaTime: number;
         if (this._timeHandleList.length > 0) {
             var handle: Object;
-            for (var i: number = 0; i < this._timeHandleList.length; i++) {
+            for (let i: number = 0; i < this._timeHandleList.length; i++) {
                 handle = this._timeHandleList[i];
                 deltaTime = curTime - handle["lastTime"];
                 if (deltaTime >= handle["interval"]) {
@@ -104,7 +93,7 @@ export class TickManager extends BaseSingleton {
             }
         }
         if (this._frameHandleList.length > 0) {
-            for (var i: number = 0; i < this._frameHandleList.length; i++) {
+            for (let i: number = 0; i < this._frameHandleList.length; i++) {
                 handle = this._frameHandleList[i];
                 deltaTime = curTime - handle["lastTime"];
                 handle["lastTime"] = curTime;

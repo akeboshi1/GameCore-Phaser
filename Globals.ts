@@ -8,7 +8,7 @@ import {TickManager} from "./modules/system/TickManager";
 import {Room45Util} from "./modules/system/Room45Util";
 import {SceneManager} from "./modules/system/SceneManager";
 
-export class Globals {
+export default class Globals {
     private static _game:Phaser.Game;
     public static  set game(value:Phaser.Game) {
         this._game = value;

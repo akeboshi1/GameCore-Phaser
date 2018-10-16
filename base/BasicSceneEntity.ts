@@ -3,7 +3,7 @@ import {IAnimatedObject} from "./IAnimatedObject";
 import {Const} from "../const/Const";
 import {SceneBasic} from "../scene/SceneBasic";
 import {SceneCamera} from "../scene/SceneCamera";
-import {Globals} from "../Globals";
+import Globals from "../Globals";
 import {BasicAvatar} from "./BasicAvatar";
 import {IEntityComponent} from "./IEntityComponent";
 import BasicDisplay from "../display/BasicDisplay";

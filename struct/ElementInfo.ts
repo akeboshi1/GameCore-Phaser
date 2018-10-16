@@ -1,4 +1,4 @@
-import {Globals} from "../Globals";
+import Globals from "../Globals";
 
 export class ElementInfo {
     public id: number;

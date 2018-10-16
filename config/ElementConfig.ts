@@ -1,5 +1,5 @@
 import BaseSingleton from "../base/BaseSingleton";
-import {Globals} from "../Globals";
+import Globals from "../Globals";
 
 export class ElementConfig extends BaseSingleton {
 	private terrain_config: Object = {};
