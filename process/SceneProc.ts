@@ -46,10 +46,10 @@ export class SceneProc extends BaseProc {
     }
 
     private onEnterRoom(): void {
-        this.roomScene = new RoomScene();
+        this.roomScene = new RoomScene(Globals.game);
         this.roomScene.camera = Globals.game.camera;
-        // this.roomScene.camera.cameraStage.addChildAt(this.roomScene, 0);
-        Globals.LayerManager.sceneLayer.addChild(this.roomScene);
+
+        Globals.LayerManager.sceneLayer.add(this.roomScene);
         this.sceneLoader = new SceneLoader();
         this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this)
 

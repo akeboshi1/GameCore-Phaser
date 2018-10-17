@@ -25,15 +25,16 @@ export namespace Atlases {
 
 export namespace Images {
     export class ImagesTile {
-        static getName(): string {
-            return 'tile_png';
+        static getName(id: number): string {
+            return "tile" + id + "_png";
         }
 
-        static getPNG(): string {
-            return require('assets/images/tile.png');
+        static getPNG(id: number): string {
+            return require("assets/images/terrain/terrain_"+id+".png");
         }
     }
 }
+
 export namespace Jsons {
     export class JsonMap {
         static getLoadList(): number[] {
@@ -43,9 +44,29 @@ export namespace Jsons {
             }
             return temp;
         }
-        
+
         static getName(mapId: number): string {
-            return require( mapId + '_json');
+            return require(mapId + '_json');
+        }
+
+        static getJSON(mapId: number): string {
+            return require('assets/map/' + mapId + '.json');
+        }
+    }
+}
+
+export namespace Tile {
+    export class JsonMap {
+        static getLoadList(): number[] {
+            let temp: number[] = [];
+            for (let i: number = 1; i < 2; i++) {
+                temp.push(10000 + i);
+            }
+            return temp;
+        }
+
+        static getName(mapId: number): string {
+            return require(mapId + '_json');
         }
 
         static getJSON(mapId: number): string {

@@ -1,7 +1,6 @@
 import {LayerManager} from './modules/uiManager/LayerManager';
 import {LayoutManager} from './modules/uiManager/LayoutManager';
 import {DataCenter} from "./modules/system/DataCenter";
-import {Res} from "./modules/system/Res";
 import {Tool} from "./modules/system/Tool";
 import {MessageCenter} from "./modules/system/MessageCenter";
 import {TickManager} from "./modules/system/TickManager";
@@ -38,14 +37,6 @@ export default class Globals {
     public static get DataCenter(): DataCenter
     {
         return DataCenter.getInstance();
-    }
-
-    /**
-     * 资源中心
-     */
-    public static get Res(): Res
-    {
-        return Res.getInstance();
     }
 
     /**

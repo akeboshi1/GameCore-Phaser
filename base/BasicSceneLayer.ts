@@ -8,8 +8,8 @@ export class BasicSceneLayer extends BasicViewElement implements IAnimatedObject
     public scene: SceneBasic;
     public camera: Phaser.Camera;
 
-    public constructor() {
-        super();
+    public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
+        super(game,x,y);
     }
 
     //IAnimatedObject Interface

@@ -22,7 +22,7 @@ export default class Boot extends Phaser.State {
         }
 
         Globals.game = this.game;
-        Globals.LayerManager.init(this.game.stage);
+        Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
 
         this.game.state.start('preloader');

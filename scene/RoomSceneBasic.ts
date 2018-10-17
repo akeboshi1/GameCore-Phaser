@@ -21,10 +21,6 @@ export class RoomSceneBasic extends SceneBasic {
     //all scenes objects
     private mSceneElements: HashMap = new HashMap();
 
-    public constructor() {
-        super();
-    }
-
     public notifyInitializeSceneComplete(): void {
         Globals.MessageCenter.dispatch(MessageType.SCENE_INITIALIZED);
     }
@@ -149,24 +145,23 @@ export class RoomSceneBasic extends SceneBasic {
     protected onInitialize(): void {
         super.onInitialize();
 
-        this.terrainSceneLayer = new TerrainSceneLayer();
+        this.terrainSceneLayer = new TerrainSceneLayer(this.game);
         this.terrainSceneLayer.scene = this;
         this.terrainSceneLayer.camera = this.camera;
         this.addChild(this.terrainSceneLayer);
-
         //--
 
-        this.bottomSceneLayer = new DisplaySortableSceneLayer();
+        this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.bottomSceneLayer.scene = this;
         this.bottomSceneLayer.camera = this.camera;
         this.addChild(this.bottomSceneLayer);
 
-        this.middleSceneLayer = new DisplaySortableSceneLayer();
+        this.middleSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.middleSceneLayer.camera = this.camera;
         this.middleSceneLayer.scene = this;
         this.addChild(this.middleSceneLayer);
 
-        this.topSceneLayer = new DisplaySortableSceneLayer();
+        this.topSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.topSceneLayer.camera = this.camera;
         this.topSceneLayer.scene = this;
         this.addChild(this.topSceneLayer);

@@ -7,34 +7,34 @@ import Globals from "../../Globals";
 import BasicSprite from "../../display/BasicSprite";
 
 export class LayerManager extends BaseSingleton {
-    public stage: Phaser.Stage;
+    private game: Phaser.Game;
     public container: Phaser.Sprite;
-    public sceneLayer: BasicSprite;
-    public animationLayer: BasicSprite;
-    public uiLayer: BasicSprite;
-    public dialogLayer: BasicSprite;
-    public tipLayer: BasicSprite;
-    public textLineSliderLayer: BasicSprite;
-    public debugLayer: BasicSprite;
+    public sceneLayer: Phaser.Group;
+    public animationLayer: Phaser.Group;
+    public uiLayer: Phaser.Group;
+    public dialogLayer: Phaser.Group;
+    public tipLayer: Phaser.Group;
+    public textLineSliderLayer: Phaser.Group;
+    public debugLayer: Phaser.Group;
 
-    public init(stage: Phaser.Stage): void {
-        this.stage = stage;
+    public init(game: Phaser.Game): void {
+        this.game = game;
 
-        this.container = Globals.game.add.sprite(0,0);
+        this.container = game.add.sprite(0,0);
 
-        this.sceneLayer = new BasicSprite();
+        this.sceneLayer = new Phaser.Group(game);
 
-        this.textLineSliderLayer = new BasicSprite();
+        this.textLineSliderLayer = new Phaser.Group(game);
 
-        this.animationLayer = new BasicSprite();
+        this.animationLayer = new Phaser.Group(game);
 
-        this.uiLayer = new BasicSprite();
+        this.uiLayer = new Phaser.Group(game);
 
-        this.tipLayer = new BasicSprite();
+        this.tipLayer = new Phaser.Group(game);
 
-        this.dialogLayer = new BasicSprite();
+        this.dialogLayer = new Phaser.Group(game);
 
-        this.debugLayer = new BasicSprite();
+        this.debugLayer = new Phaser.Group(game);
 
         this.container.addChild(this.sceneLayer);
         this.container.addChild(this.uiLayer);

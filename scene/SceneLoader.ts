@@ -1,7 +1,7 @@
 import {Log} from "../Log";
 import {Jsons} from "../Assets";
-import {MapSceneInfo} from "../struct/MapSceneInfo";
 import Globals from "../Globals";
+import {MapInfo} from "../struct/MapInfo";
 
 export class SceneLoader {
     public loadStartCallback: Function;
@@ -36,19 +36,21 @@ export class SceneLoader {
         }
     }
 
-    public getMapSceneInfo(mapId: number, mapConfig: any): MapSceneInfo {
+    public getMapSceneInfo(mapId: number, mapConfig: any): MapInfo {
         Log.trace("Scene mapConfig:" + mapId);
-        var mapSceneInfo: MapSceneInfo = new MapSceneInfo();
+        var mapSceneInfo: MapInfo = new MapInfo();
 
         mapSceneInfo.mapId = mapId;
         mapSceneInfo.setTmx(mapConfig);
+        
+        Globals.DataCenter.MapData.setMapInfo(mapSceneInfo);
 
         return mapSceneInfo;
     }
 
     protected modelLoadCompleteHandler(): void {
 
-        let sceneInfo: MapSceneInfo = this.getMapSceneInfo(this.mId, Globals.game.cache.getJSON(this.mId + "_json"));
+        let sceneInfo: MapInfo = this.getMapSceneInfo(this.mId, Globals.game.cache.getJSON(this.mId + "_json"));
 
         if (this.loadCompleteCallback != null) this.loadCompleteCallback.apply(this.callBackObj, [sceneInfo]);
     }

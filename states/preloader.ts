@@ -1,4 +1,3 @@
-import Globals from "../Globals";
 import {Atlases} from "../Assets";
 import * as Assets from "../Assets";
 
@@ -9,16 +8,21 @@ export default class Preloader extends Phaser.State {
     public preload(): void {
         this.loadImages();
         this.loadJsons();
+        this.loadAtlases();
     }
 
     private loadImages(): void {
-        Globals.game.load.image(Assets.Images.ImagesTile.getName(), Assets.Images.ImagesTile.getPNG());
+
     }
 
     private loadJsons(): void {
         for(let i of Assets.Jsons.JsonMap.getLoadList()) {
-            Globals.game.load.json(i+"_json",Assets.Jsons.JsonMap.getJSON(i));
+            this.game.load.json(i+"_json",Assets.Jsons.JsonMap.getJSON(i));
         }
+    }
+
+    private loadAtlases() {
+
     }
 
     public init(): void {
@@ -33,11 +37,6 @@ export default class Preloader extends Phaser.State {
 
         this.game.load.setPreloadSprite(this.preloadBarSprite);
 
-        // Globals.Res.loadAllAssets(this.startGame, this);
-    }
-
-    private waitForSoundDecoding(): void {
-        Globals.Res.waitForSoundDecoding(this.startGame, this);
     }
 
     public create(): void {

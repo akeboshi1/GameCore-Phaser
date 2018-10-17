@@ -2,15 +2,20 @@ import {BasicTerrainItem} from "./BasicTerrainItem";
 import {TerrainSceneLayer} from "../TerrainSceneLayer";
 import {Room45Util} from "../../modules/system/Room45Util";
 import Globals from "../../Globals";
-import Image = Phaser.Image;
 import {Const} from "../../const/Const";
+import {Images} from "../../Assets";
+import * as Assets from "../../Assets";
 
 export class TerrainImageItem extends BasicTerrainItem {
-    private mBitmap: Image;
     private room45Util: Room45Util;
 
-    public constructor(owner: TerrainSceneLayer) {
-        super(owner);
+    public constructor(game: Phaser.Game,owner: TerrainSceneLayer) {
+        super(game,owner);
+        let graphics = Globals.game.make.graphics();
+        graphics.beginFill(0xFF0000);
+        graphics.drawCircle(-Const.GameConst.HALF_MAP_TILE_WIDTH,0,2);
+        graphics.endFill();
+        this.add(graphics);
     }
 
     protected onTerrainItemCreate(): void {
@@ -23,21 +28,31 @@ export class TerrainImageItem extends BasicTerrainItem {
         let graphics = Globals.game.make.graphics();
         graphics.lineStyle(2, 0xff0000, 1);
         this.draw(graphics);
-        this.addChild(graphics);
+        this.add(graphics);
 
-        this.terrainItemDisplayObject = this.mBitmap;
+        this.terrainItemDisplayObject = new Phaser.Sprite(Globals.game,0,0);
+
         super.onTerrainItemCreate();
 
     }
 
     protected onTerrainItemLoad(): void {
         super.onTerrainItemLoad();
-        Globals.game.load.onLoadComplete.addOnce(this.onTerrainItemLoadComplete, this);
-        Globals.game.load.image(this.data.sign, this.data.path);
+        if(Globals.game.cache.checkImageKey(Assets.Images.ImagesTile.getName(this.data.type))){
+            this.onTerrainItemLoadComplete();
+        }else{
+            Globals.game.load.onLoadComplete.addOnce(this.onTerrainItemLoadComplete, this);
+            Globals.game.load.image(Assets.Images.ImagesTile.getName(this.data.type), Assets.Images.ImagesTile.getPNG(this.data.type));
+            Globals.game.load.start();
+        }
     }
 
-    protected onTerrainItemLoadComplete(thisObj: any): void {
-
+    protected onTerrainItemLoadComplete(): void {
+        let bmd = this.game.make.bitmapData(Const.GameConst.MAP_TILE_WIDTH,Const.GameConst.MAP_TILE_HEIGHT + Const.GameConst.MAP_TILE_DEPTH);
+        let rect = new Phaser.Rectangle(Const.GameConst.MAP_TILE_WIDTH * this.data.subIdx,(Const.GameConst.MAP_TILE_HEIGHT + Const.GameConst.MAP_TILE_DEPTH) * this.data.colorIdx,Const.GameConst.MAP_TILE_WIDTH,Const.GameConst.MAP_TILE_HEIGHT + Const.GameConst.MAP_TILE_DEPTH);
+        bmd.copyRect(Images.ImagesTile.getName(this.data.type),rect);
+        this.terrainItemDisplayObject.loadTexture(bmd);
+        super.onTerrainItemLoadComplete();
     }
 
     private draw(graphics: Phaser.Graphics): void {

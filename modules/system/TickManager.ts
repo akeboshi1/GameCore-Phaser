@@ -3,10 +3,10 @@
  * author aaron
  */
 import BaseSingleton from "../../base/BaseSingleton";
-import Game from "../../Game";
+import Globals from "../../Globals";
 
 export class TickManager extends BaseSingleton {
-    public game: Game;
+
     private _timeHandleList: Object[];
     private _frameHandleList: Object[];
 
@@ -26,7 +26,12 @@ export class TickManager extends BaseSingleton {
      */
     public addTime(method: Function, thisObj: any, interval: number = 33, triggerImmediately: Boolean = false): void {
         this.removeTime(method, thisObj);
-        var handle: Object = {"interval": interval, "method": method, "thisObj": thisObj, "lastTime": this.game.time.elapsed};
+        var handle: Object = {
+            "interval": interval,
+            "method": method,
+            "thisObj": thisObj,
+            "lastTime": Globals.game.time.elapsed
+        };
         this._timeHandleList.push(handle);
         if (triggerImmediately) {
             method.apply(thisObj);
@@ -56,7 +61,7 @@ export class TickManager extends BaseSingleton {
      */
     public addFrame(method: Function, thisObj: any, triggerImmediately: Boolean = false): void {
         this.removeFrame(method, thisObj);
-        var handle: Object = {"method": method, "thisObj": thisObj, "lastTime": this.game.time.elapsed};
+        var handle: Object = {"method": method, "thisObj": thisObj, "lastTime": Globals.game.time.elapsed};
         this._frameHandleList.push(handle);
         if (triggerImmediately) {
             method.apply(thisObj);

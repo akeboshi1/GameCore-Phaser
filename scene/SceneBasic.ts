@@ -82,14 +82,14 @@ export class SceneBasic extends BasicAnimatedViewElement {
         // this.camera.scrollWidth = this.mSceneScrollWidth;
         // this.camera.scrollHeight = this.mSceneScrollHeight;
         //
-        // this.camera.cameraStage.visible = this.visible = this.registerForUpdates = true;
+        this.visible = this.registerForUpdates = true;
 
         // stage size may be changed in last scene;
         this.requestStageResize();
     }
 
     protected onDeActivedScene(): void {
-        // this.camera.cameraStage.visible = this.visible = this.registerForUpdates = false;
+        this.visible = this.registerForUpdates = false;
     }
 
     protected onInitializeScene(value: MapInfo): void {
@@ -110,7 +110,7 @@ export class SceneBasic extends BasicAnimatedViewElement {
 
     protected onStageResize(): void {
         if (this.mActived) {
-            // this.camera.setCameraSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
+            // this.camera.setSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
             // this.camera.resetPosition();
         }
     }

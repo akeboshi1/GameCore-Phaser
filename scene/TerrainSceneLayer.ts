@@ -3,17 +3,17 @@ import {MapInfo} from "../struct/MapInfo";
 import {BasicTerrainItem} from "./terrainItems/BasicTerrainItem";
 import {BasicSceneLayer} from "../base/BasicSceneLayer";
 import {TerrainInfo} from "../struct/TerrainInfo";
-import {RoomNode} from "./grid/RoomNode";
 import {TerrainImageItem} from "./terrainItems/TerrainImageItem";
 import Globals from "../Globals";
+import {TerrainNullItem} from "./terrainItems/TerrainNullItem";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
     public curTerrainLoadCount: number = 0;
     private mapSceneInfo: MapInfo;
     private _terrainItems: Array<BasicTerrainItem>;
 
-    public constructor() {
-        super();
+    public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
+        super(game,x,y);
         this._terrainItems = [];
     }
 
@@ -44,8 +44,6 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     }
 
     public onFrame(deltaTime: number): void {
-        this.x = -this.camera.x;
-        this.y = -this.camera.y;
         // this.x = (GameConst.WindowWidth - this.mapSceneInfo.mapTotalWidth) >> 1;
         // this.y = (GameConst.WindowHeight - this.mapSceneInfo.mapTotalHeight) >> 1;
         var terrainItem: BasicTerrainItem = null;
@@ -74,14 +72,18 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         let point: Phaser.Point;
         for (; i < len; i++) {
             value = datas[i];
-            element = new TerrainImageItem(this);
+            if (value.type === 0) {
+                element = new TerrainNullItem(Globals.game,this);
+            } else {
+                element = new TerrainImageItem(Globals.game,this);
+            }
+            element.camera = this.camera;
             element.data = value;
             point = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
             element.itemX = point.x - Const.GameConst.HALF_MAP_TILE_WIDTH;
             element.itemY = point.y;
             element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
             element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
-            this.addChild(element);
             this._terrainItems.push(element);
         }
     }
