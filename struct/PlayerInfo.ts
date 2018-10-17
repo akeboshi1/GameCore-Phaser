@@ -9,8 +9,8 @@ export class PlayerInfo {
 	public sex: number = 1;              // 性别
 	// public col: number = 4;
 	// public row: number = 7;
-	public x: number = 682;
-	public y: number = 176;
+	public x: number = 50;
+	public y: number = 50;
 	public direct: number = 3;
 	public mapId: number = 10001;
 

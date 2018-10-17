@@ -1,8 +1,8 @@
 import {SceneProc} from "../process/SceneProc";
-import Globals from "../Globals";
 
 export default class Game extends Phaser.State {
     public init(): void {
+        new Phaser.Plugin.Isometric(this.game);
     }
 
     public create(): void {

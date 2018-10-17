@@ -136,4 +136,40 @@ export class Tool extends BaseSingleton {
     private ab2str(buf) {
         return String.fromCharCode.apply(null, new Uint16Array(buf));
     }
+
+    /**
+     * Bound a number by a minimum and maximum.
+     * Ensures that this number is no smaller than the minimum,
+     * and no larger than the maximum.
+     *
+     * @param	Value	Any number.
+     * @param	Min		Any number.
+     * @param	Max		Any number.
+     *
+     * @return	The bounded value of the number.
+     */
+    public clamp(value: number, min: number, max: number): number {
+        //			var lowerBound:number = (Value<Min)?Min:Value;
+        //			return (lowerBound>Max)?Max:lowerBound;
+        return value < min ? min : (value > max ? max : value);
+    }
+
+    public caculateDirectionRadianByTwoPoint2(startX: number, startY: number, endX: number, endY: number): number {
+        return this.adjustRadianBetween0And2PI(Math.atan2(endY - startY, endX - startX));
+    }
+
+    public SMALLEST_NUMBER: number = 0.000001;
+    public DOUBLE_PI: number = Math.PI * 2;//360
+    public adjustRadianBetween0And2PI(radian: number): number {
+        radian %= this.DOUBLE_PI;
+
+        if (radian < 0) {
+            radian += this.DOUBLE_PI;
+        }
+
+        if (this.DOUBLE_PI - radian < this.SMALLEST_NUMBER) radian = 0;
+
+        return radian;
+    }
+
 }

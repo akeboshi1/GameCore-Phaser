@@ -13,6 +13,20 @@ export namespace Const {
         MAP_TILE_WIDTH = 62,
         HALF_MAP_TILE_WIDTH = 31,
         MAP_TILE_HEIGHT = 32,
-        HALF_MAP_TILE_HEIGHT = 16
+        HALF_MAP_TILE_HEIGHT = 16,
+        DEFAULT_VISIBLE_TEST_RADIUS = 150,
+        MASK_ALPHA = 0.5
+    }
+
+    export enum SceneElementType {
+        ROLE = 1,
+        ELEMENT = 2
+    }
+
+    export enum ModelStateType {
+        BONES_JUMP = "jump",
+        BONES_RUN = "run",
+        BONES_STAND = "stand",
+        BONES_WALK = "walk"
     }
 }

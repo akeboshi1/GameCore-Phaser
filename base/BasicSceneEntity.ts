@@ -9,15 +9,12 @@ import {IEntityComponent} from "./IEntityComponent";
 import BasicDisplay from "../display/BasicDisplay";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
-    public static DEFAULT_VISIBLE_TEST_RADIUS: number = 150;
     //basic
     public uid: string;//runtime id
     public elementTypeId: number = -1;//see SceneElementType
     public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
-    public visibleTestRadius: number = BasicSceneEntity.DEFAULT_VISIBLE_TEST_RADIUS;
 
     public isValidDisplay: boolean = false;
-    public layerIndex: number = 0;
     public zFighting: number = 0;
     public screenX: number = 0;
     public screenY: number = 0;
@@ -25,7 +22,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     public display: any;
     public scene: SceneBasic;
     public camera: Phaser.Camera;
-    public isNeedSort: boolean = true;
     private mInitilized: boolean = false;
 
     public constructor() {
@@ -77,10 +73,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
         return this.uid;
     }
 
-    public get needSort(): boolean {
-        return this.isValidDisplay && this.isNeedSort;
-    }
-
     //Position
     public setPosition(x: number, y: number): void {
         this._x = x;
@@ -95,12 +87,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
         return Globals.Room45Util.pixelToTileCoords(this._x, this._y).y;
     }
 
-    public isInScene(): boolean {
-        return this.scene != null;
-    }
-
     public isInScreen(): boolean {
-        return Globals.Tool.isOverlapCircleAndRectangle(this.screenX, this.screenY, this.visibleTestRadius, 0, 0, this.camera.width, this.camera.height );
+        return true;//Globals.Tool.isOverlapCircleAndRectangle(this.screenX, this.screenY, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, 0, 0, this.camera.width, this.camera.height );
     }
 
     public initialize(): void {
@@ -109,9 +97,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
             this.mInitilized = true;
             this.onInitializeCompleted();
         }
-    }
-
-    public loadDisplayComplete(): void {
     }
 
     public updateByData(data: any = null): void {
@@ -187,10 +172,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-        if (this.needSort) {
-            this.display.x = this.screenX >> 0;
-            this.display.y = this.screenY >> 0;
-        }
+        this.display.x = this.screenX >> 0;
+        this.display.y = this.screenY >> 0;
        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 }

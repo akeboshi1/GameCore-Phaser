@@ -6,8 +6,8 @@ import Globals from "../../Globals";
 export class TerrainNullItem extends TerrainImageItem {
     protected mCurrentNode: RoomNode;
 
-    public constructor(game: Phaser.Game,owner: TerrainSceneLayer) {
-        super(game,owner);
+    public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
+        super(game, owner);
     }
 
 

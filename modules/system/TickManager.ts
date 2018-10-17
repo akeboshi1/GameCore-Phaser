@@ -47,7 +47,7 @@ export class TickManager extends BaseSingleton {
         var handle: Object;
         for (var i: number = this._timeHandleList.length - 1; i >= 0; i--) {
             handle = this._timeHandleList[i];
-            if (handle["method"] == method && handle["thisObj"] == thisObj) {
+            if (handle["method"] === method && handle["thisObj"] === thisObj) {
                 this._timeHandleList.splice(i, 1);
             }
         }
@@ -77,7 +77,7 @@ export class TickManager extends BaseSingleton {
         var handle: Object;
         for (var i: number = this._frameHandleList.length - 1; i >= 0; i--) {
             handle = this._frameHandleList[i];
-            if (handle["method"] == method && handle["thisObj"] == thisObj) {
+            if (handle["method"] === method && handle["thisObj"] === thisObj) {
                 this._frameHandleList.splice(i, 1);
             }
         }

@@ -22,7 +22,7 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadAtlases() {
-
+        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesCharSpritesArray.getName(),Assets.Atlases.AtlasesCharSpritesArray.getPNG(),Assets.Atlases.AtlasesCharSpritesArray.getJSONArray());
     }
 
     public init(): void {

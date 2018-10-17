@@ -4,6 +4,9 @@ import {RoomScene} from "../scene/RoomScene";
 import {MapInfo} from "../struct/MapInfo";
 import {FlowManager} from "../flow/FlowManager";
 import {SceneLoader} from "../scene/SceneLoader";
+import {PlayerInfo} from "../struct/PlayerInfo";
+import {SelfRoleElement} from "../scene/elements/SelfRoleElement";
+import {Const} from "../const/Const";
 
 export class SceneProc extends BaseProc {
     public roomScene: RoomScene;
@@ -75,6 +78,10 @@ export class SceneProc extends BaseProc {
         Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tilewidth, mapSceneInfo.tileheight);
 
         this.roomScene.initializeScene(mapSceneInfo);
+
+        //初始化当前玩家其他信息
+        var currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+        this.roomScene.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.playerID.toString(), currentCharacterInfo, true) as SelfRoleElement;
 
         //set camera
         Globals.SceneManager.pushScene(this.roomScene);

@@ -21,6 +21,20 @@ export namespace Atlases {
             PreloadFrame = 'preload_frame.png',
         }
     }
+
+    export class AtlasesCharSpritesArray {
+        static getName(): string {
+            return 'char_sprites_array';
+        }
+
+        static getJSONArray(): string {
+            return require('assets/atlases/char_sprites_array.json');
+        }
+
+        static getPNG(): string {
+            return require('assets/atlases/char_sprites_array.png');
+        }
+    }
 }
 
 export namespace Images {
