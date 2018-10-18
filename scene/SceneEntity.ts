@@ -164,30 +164,30 @@ export default class SceneEntity extends BasicSceneEntity {
         this.x += (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
         this.y += (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
 
-        if (dirX == 1) {
-            if (dirY == 1) {
+        if (dirX === 1) {
+            if (dirY === 1) {
                 //down;
-            } else if (dirY == 0) {
+            } else if (dirY === 0) {
                 //rightDown
                 this.setAngleIndex(5);
-            } else if (dirY == -1) {
+            } else if (dirY === -1) {
                 //right
             }
-        } else if (dirX == 0) {
-            if (dirY == 1) {
+        } else if (dirX === 0) {
+            if (dirY === 1) {
                 //leftDown
                 this.setAngleIndex(3);
-            } else if (dirY == -1) {
+            } else if (dirY === -1) {
                 //rightUp
                 this.setAngleIndex(7);
             }
-        } else if (dirX == -1) {
-            if (dirY == 1) {
+        } else if (dirX === -1) {
+            if (dirY === 1) {
                 //left
-            } else if (dirY == 0) {
+            } else if (dirY === 0) {
                 //leftUp
                 this.setAngleIndex(1);
-            } else if (dirY == -1) {
+            } else if (dirY === -1) {
                 //up;
             }
         }

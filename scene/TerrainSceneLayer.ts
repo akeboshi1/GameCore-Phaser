@@ -84,6 +84,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
             element.itemY = point.y;
             element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
             element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
+            this.addChild(element);
             this._terrainItems.push(element);
         }
     }

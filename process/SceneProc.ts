@@ -7,6 +7,7 @@ import {SceneLoader} from "../scene/SceneLoader";
 import {PlayerInfo} from "../struct/PlayerInfo";
 import {SelfRoleElement} from "../scene/elements/SelfRoleElement";
 import {Const} from "../const/Const";
+import {BasicRoleAvatar} from "../avatar/BasicRoleAvatar";
 
 export class SceneProc extends BaseProc {
     public roomScene: RoomScene;

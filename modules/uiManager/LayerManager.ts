@@ -5,10 +5,11 @@
 import BaseSingleton from '../../base/BaseSingleton';
 import Globals from "../../Globals";
 import BasicSprite from "../../display/BasicSprite";
+import {BasicRoleAvatar} from "../../avatar/BasicRoleAvatar";
 
 export class LayerManager extends BaseSingleton {
     private game: Phaser.Game;
-    public container: Phaser.Sprite;
+    public container: Phaser.Group;
     public sceneLayer: Phaser.Group;
     public animationLayer: Phaser.Group;
     public uiLayer: Phaser.Group;
@@ -20,7 +21,7 @@ export class LayerManager extends BaseSingleton {
     public init(game: Phaser.Game): void {
         this.game = game;
 
-        this.container = game.add.sprite(0,0);
+        this.container = new Phaser.Group(game);
 
         this.sceneLayer = new Phaser.Group(game);
 
@@ -43,6 +44,8 @@ export class LayerManager extends BaseSingleton {
         this.container.addChild(this.tipLayer);
         this.container.addChild(this.dialogLayer);
         this.container.addChild(this.debugLayer);
+
+        this.game.stage.add(this.container);
 
         this.layout();
     }

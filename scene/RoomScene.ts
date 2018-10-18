@@ -36,6 +36,11 @@ export class RoomScene extends RoomSceneBasic {
         // }
     }
 
+    protected onActivedScene(): void {
+        super.onActivedScene();
+        this.camera.follow(this.currentSelfPlayer.display);
+    }
+
     public addSceneElement(sceneElementType: number,
                            uid: string, elemetData: any,
                            isSelf: boolean = false): BasicSceneEntity {

@@ -1,9 +1,9 @@
 import {BasicRoleElement} from "./BasicRoleElement";
 import BasicDisplay from "../../display/BasicDisplay";
 import Globals from "../../Globals";
-import * as Assets from "../../Assets";
-import {Const} from "../../const/Const";
 import {BasicRoleAvatar} from "../../avatar/BasicRoleAvatar";
+import {Atlases} from "../../Assets";
+import * as Assets from "../../Assets";
 
 export class RoleElement extends BasicRoleElement {
 
@@ -13,25 +13,26 @@ export class RoleElement extends BasicRoleElement {
         // Create dude's animations
         // const backRightFrames =
         //     Phaser.Animation.generateFrameNames('greenhood_walk_back_right_', 1, 8);
-        // this.display.animations.add('walkBackRight', backRightFrames, 12, true, false);
+        // this.display.animations.add('walkBackRight', backRightFrames, 12, true);
         //
         // const backLeftFrames =
         //     Phaser.Animation.generateFrameNames('greenhood_walk_back_left_', 1, 8);
-        // this.display.animations.add('walkBackLeft', backLeftFrames, 12, true, false);
+        // this.display.animations.add('walkBackLeft', backLeftFrames, 12, true);
         //
         // const frontRightFrames =
         //     Phaser.Animation.generateFrameNames('greenhood_walk_front_right_', 1, 8);
-        // this.display.animations.add('walkFrontRight', frontRightFrames, 12, true, false);
+        // this.display.animations.add('walkFrontRight', frontRightFrames, 12, true);
         //
         // const frontLeftFrames =
         //     Phaser.Animation.generateFrameNames('greenhood_walk_front_left_', 1, 8);
-        // this.display.animations.add('walkFrontLeft', frontLeftFrames, 12, true, false);
+        // this.display.animations.add('walkFrontLeft', frontLeftFrames, 12, true);
 
+        // this.play("walkFrontRight");
+        // this.stop();
     }
 
     protected createDisplay(): BasicDisplay {
         let avatar = new BasicRoleAvatar(Globals.game);
-        avatar.anchor.set(0.5, 1);
         return avatar;
     }
 
