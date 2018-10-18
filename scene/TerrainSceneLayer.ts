@@ -67,7 +67,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     protected initializeTerrainItems(datas: Array<any>): void {
         let i: number = 0;
         let len: number = datas.length;
-        let element: any;
+        let element: BasicTerrainItem;
         let value: TerrainInfo;
         let point: Phaser.Point;
         for (; i < len; i++) {
@@ -79,11 +79,14 @@ export class TerrainSceneLayer extends BasicSceneLayer {
             }
             element.camera = this.camera;
             element.data = value;
-            point = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
-            element.itemX = point.x - Const.GameConst.HALF_MAP_TILE_WIDTH;
-            element.itemY = point.y;
+            // point = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
+            // element.itemX = point.x - Const.GameConst.HALF_MAP_TILE_WIDTH;
+            // element.itemY = point.y;
+            element.itemX = value.row * Const.GameConst.MAP_TILE_HEIGHT;
+            element.itemY = value.col * Const.GameConst.MAP_TILE_HEIGHT;
             element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
             element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
+
             this.addChild(element);
             this._terrainItems.push(element);
         }

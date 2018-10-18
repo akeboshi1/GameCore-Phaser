@@ -11,11 +11,11 @@ export class TerrainImageItem extends BasicTerrainItem {
 
     public constructor(game: Phaser.Game,owner: TerrainSceneLayer) {
         super(game,owner);
-        let graphics = Globals.game.make.graphics();
-        graphics.beginFill(0xFF0000);
-        graphics.drawCircle(-Const.GameConst.HALF_MAP_TILE_WIDTH,0,2);
-        graphics.endFill();
-        this.add(graphics);
+        // let graphics = Globals.game.make.graphics();
+        // graphics.beginFill(0xFF0000);
+        // graphics.drawCircle(-Const.GameConst.HALF_MAP_TILE_WIDTH,0,2);
+        // graphics.endFill();
+        // this.add(graphics);
     }
 
     protected onTerrainItemCreate(): void {
@@ -25,15 +25,22 @@ export class TerrainImageItem extends BasicTerrainItem {
             this.room45Util.setting(1, 1, Const.GameConst.MAP_TILE_WIDTH, Const.GameConst.MAP_TILE_HEIGHT);
         }
 
-        let graphics = Globals.game.make.graphics();
-        graphics.lineStyle(2, 0xff0000, 1);
-        this.draw(graphics);
-        this.add(graphics);
+        // let graphics = Globals.game.make.graphics();
+        // graphics.lineStyle(2, 0xff0000, 1);
+        // this.draw(graphics);
+        // this.add(graphics);
 
-        this.terrainItemDisplayObject = new Phaser.Sprite(Globals.game,0,0);
+        // this.terrainItemDisplayObject = new Phaser.Sprite(Globals.game,0,0);
+        this.terrainIsoDisplayObject = this.game.add.isoSprite(0, 0, 0);
 
         super.onTerrainItemCreate();
+    }
 
+    public setPosition(x: number, y: number, z: number = 0) {
+        if (this.terrainIsoDisplayObject) {
+            let point3 = this.terrainIsoDisplayObject.isoPosition;
+            point3.setTo(x, y, z);
+        }
     }
 
     protected onTerrainItemLoad(): void {
@@ -51,7 +58,7 @@ export class TerrainImageItem extends BasicTerrainItem {
         let bmd = this.game.make.bitmapData(Const.GameConst.MAP_TILE_WIDTH,Const.GameConst.MAP_TILE_HEIGHT + Const.GameConst.MAP_TILE_DEPTH);
         let rect = new Phaser.Rectangle(Const.GameConst.MAP_TILE_WIDTH * this.data.subIdx,(Const.GameConst.MAP_TILE_HEIGHT + Const.GameConst.MAP_TILE_DEPTH) * this.data.colorIdx,Const.GameConst.MAP_TILE_WIDTH,Const.GameConst.MAP_TILE_HEIGHT + Const.GameConst.MAP_TILE_DEPTH);
         bmd.copyRect(Images.ImagesTile.getName(this.data.type),rect);
-        this.terrainItemDisplayObject.loadTexture(bmd);
+        this.terrainIsoDisplayObject.loadTexture(bmd);
         super.onTerrainItemLoadComplete();
     }
 
