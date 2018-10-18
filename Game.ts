@@ -30,10 +30,10 @@ export default class Game extends Phaser.Game implements IGame {
         this.state.add('game', GameState);
 
         this.state.start('boot');
-    };
+    }
 
     public resize(): void {
-    };
+    }
 
     public update(time: number): void {
         // Log.trace("update-->",time);

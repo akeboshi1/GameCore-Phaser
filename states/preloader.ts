@@ -9,6 +9,7 @@ export default class Preloader extends Phaser.State {
         this.loadImages();
         this.loadJsons();
         this.loadAtlases();
+        this.loadAvatar();
     }
 
     private loadImages(): void {
@@ -23,6 +24,12 @@ export default class Preloader extends Phaser.State {
 
     private loadAtlases() {
         this.game.load.atlasJSONArray(Assets.Atlases.AtlasesCharSpritesArray.getName(),Assets.Atlases.AtlasesCharSpritesArray.getPNG(),Assets.Atlases.AtlasesCharSpritesArray.getJSONArray());
+    }
+
+    private loadAvatar(): void {
+        this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(),Assets.Avatar.AvatarBone.getSkeUrl());
+        this.game.load.json(Assets.Avatar.AvatarBone.getJsonName(),Assets.Avatar.AvatarBone.getJsonUrl());
+        this.game.load.image(Assets.Avatar.AvatarBone.getImgName(),Assets.Avatar.AvatarBone.getImgUrl());
     }
 
     public init(): void {

@@ -3,9 +3,6 @@
  * author aaron
  */
 import BaseSingleton from '../../base/BaseSingleton';
-import Globals from "../../Globals";
-import BasicSprite from "../../display/BasicSprite";
-import {BasicRoleAvatar} from "../../avatar/BasicRoleAvatar";
 
 export class LayerManager extends BaseSingleton {
     private game: Phaser.Game;

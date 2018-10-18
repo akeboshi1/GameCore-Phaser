@@ -2,11 +2,9 @@ import {ITickedObject} from "./ITickedObject";
 import {IAnimatedObject} from "./IAnimatedObject";
 import {Const} from "../const/Const";
 import {SceneBasic} from "../scene/SceneBasic";
-import {SceneCamera} from "../scene/SceneCamera";
 import Globals from "../Globals";
 import {BasicAvatar} from "./BasicAvatar";
 import {IEntityComponent} from "./IEntityComponent";
-import BasicDisplay from "../display/BasicDisplay";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     //basic
@@ -145,8 +143,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
 
     }
 
-    protected createDisplay(): BasicDisplay {
-        var d: BasicAvatar = new BasicAvatar();
+    protected createDisplay(): any {
+        var d: BasicAvatar = new BasicAvatar(Globals.game);
         return d;
     }
 

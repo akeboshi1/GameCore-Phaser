@@ -172,4 +172,15 @@ export class Tool extends BaseSingleton {
         return radian;
     }
 
+    public caclNumStr(value: number): string {
+        let result: string = "";
+        if (value >= 0 && value < 10)
+            result = "000" + value;
+        if (value >= 10 && value < 100)
+            result = "00" + value;
+        if (value >= 100 && value < 1000)
+            result = "0" + value;
+        return result;
+    }
+
 }

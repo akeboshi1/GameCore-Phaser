@@ -1,6 +1,6 @@
 import {LinkNode} from "./LinkNode";
 
-export class UniqueLinkList {
+export default class UniqueLinkList {
     private mLength: number;
     private mItemsHashMap: any;
     private mNodesPool: Array<LinkNode>;

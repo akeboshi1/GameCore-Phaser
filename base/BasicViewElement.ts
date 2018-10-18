@@ -1,5 +1,3 @@
-import BasicSprite from "../display/BasicSprite";
-
 export class BasicViewElement extends Phaser.Sprite {
     private _isInitilized: boolean = false;
 

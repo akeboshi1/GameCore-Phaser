@@ -1,4 +1,4 @@
-import {UniqueLinkList} from "../UniqueLinkList";
+import UniqueLinkList from "../UniqueLinkList";
 import {IFlow} from "./IFlow";
 import {IGroupFlow} from "./IGroupFlow";
 import {BasicFlow} from "./BasicFlow";

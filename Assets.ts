@@ -49,6 +49,29 @@ export namespace Images {
     }
 }
 
+export namespace Avatar {
+    export class AvatarBone {
+        static getSkeName(): string {
+            return "bones_allblue_ske_dbbin";
+        }
+        static getJsonName(): string {
+            return "bones_allblue_tex_json";
+        }
+        static getImgName(): string {
+            return "bones_allblue_tex_png";
+        }
+        static getSkeUrl(): string {
+            return require("assets/avatar/bones_allblue_ske.dbbin");
+        }
+        static getJsonUrl(): string {
+            return require("assets/avatar/bones_allblue_tex.json");
+        }
+        static getImgUrl(): string {
+            return require("assets/avatar/bones_allblue_tex.png");
+        }
+    }
+}
+
 export namespace Jsons {
     export class JsonMap {
         static getLoadList(): number[] {

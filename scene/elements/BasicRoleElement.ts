@@ -2,9 +2,10 @@ import {Const} from "../../const/Const";
 import {PlayerInfo} from "../../struct/PlayerInfo";
 import SceneEntity from "../SceneEntity";
 import Globals from "../../Globals";
-import BasicDisplay from "../../display/BasicDisplay";
 import {RoomScene} from "../RoomScene";
 import {RoomNode} from "../grid/RoomNode";
+import {RoleBonesAvatar} from "../../avatar/RoleBonesAvatar";
+import {BasicRoleAvatar} from "../../avatar/BasicRoleAvatar";
 
 export class BasicRoleElement extends SceneEntity {
 	private mAnimationDirty: boolean = false;
@@ -38,6 +39,10 @@ export class BasicRoleElement extends SceneEntity {
 			this.invalidAnimation();
 		}
 	}
+
+    public loadModel(url: string): void {
+        (<RoleBonesAvatar>this.display).loadModel(url);
+    }
 
 	protected onPauseMove(): void {
 
@@ -111,19 +116,19 @@ export class BasicRoleElement extends SceneEntity {
 		super.onInitialize();
 
 		this.mySpeed = this.characterInfo.moveSpeed * 0.001 * Const.GameConst.MAP_TILE_WIDTH * 2;
-
 		this.setCols(1);
 		this.setRows(1);
 		this.setAngleIndex(this.characterInfo.direct);
 		this.setPosition(this.characterInfo.x, this.characterInfo.y);
 		this.mouseEnable = false;
 		this.zFighting = 1;
-		// this.loadModel(this.characterInfo.model.bodyModel);
+
+        this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model.bodyModel);
 	}
 
-	protected createDisplay(): BasicDisplay {
-		// var avatar: RoleBonesAvatar = new RoleBonesAvatar();
-		return null;
+	protected createDisplay(): any {
+        let avatar = new RoleBonesAvatar(Globals.game);
+		return avatar;
 	}
 
 	protected onUpdateByData(): void {
