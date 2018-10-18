@@ -32,8 +32,8 @@ export class RoleElement extends BasicRoleElement {
     }
 
     protected createDisplay(): BasicDisplay {
-        // let avatar = new BasicRoleAvatar(Globals.game);
-        let avatar = Globals.game.add.isoSprite(0,0,0,Assets.Atlases.AtlasesCharSpritesArray.getName(), "greenhood_idle_front_left")
+        let avatar = new BasicRoleAvatar(Globals.game);
+        // let avatar = Globals.game.add.isoSprite(0,0,0,Assets.Atlases.AtlasesCharSpritesArray.getName(), "greenhood_idle_front_left")
         return avatar;
     }
 
