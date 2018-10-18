@@ -7,26 +7,28 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
     public data: any;
     public itemX: number = 0;
     public itemY: number = 0;
+    public itemZ: number = 0;
     public itemWidth: number = 0;
     public itemHeight: number = 0;
     public camera: Phaser.Camera;
     protected mOwner: TerrainSceneLayer;
-    protected terrainItemDisplayObject: Phaser.Sprite;
+    // protected terrainItemDisplayObject: Phaser.Sprite;
     protected mTerrainItemIsLoadInited: boolean = false;
     protected mTerrainItemIsLoading: boolean = false;
     protected mTerrainItemDisplayObjectCreated: boolean = false;
     protected mTerrainItemOutCameraTime: number = 0;
-    protected mTerrainItemIsInCamera: boolean = false
+    protected mTerrainItemIsInCamera: boolean = false;
+    protected terrainIsoDisplayObject: Phaser.Plugin.Isometric.IsoSprite;
 
     public constructor(game: Phaser.Game,owner: TerrainSceneLayer) {
         super(game);
         this.mOwner = owner;
     }
 
-    public onFrame(deltaTime: number): void {
+    public onFrame(deltaTime: number) {
 
-            this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-            this.camera.width, this.camera.height, this.itemX, this.itemY, this.itemWidth, this.itemHeight)
+        this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
+        this.camera.width, this.camera.height, this.itemX, this.itemY, this.itemWidth, this.itemHeight)
         this.mTerrainItemIsInCamera = true;
         if (this.mTerrainItemIsInCamera) {
             this.mTerrainItemOutCameraTime = 0;
@@ -34,8 +36,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
             if (!this.mTerrainItemDisplayObjectCreated) {
                 this.onTerrainItemCreate();
 
-                this.x = this.itemX;
-                this.y = this.itemY;
+                this.setPosition(this.itemX, this.itemY, this.itemZ);
 
                 this.mTerrainItemDisplayObjectCreated = true;
             }
@@ -67,12 +68,17 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
         }
     }
 
-    public releaseTerrainItem(): void {
+    public setPosition(x: number, y: number, z: number) {
+
+    }
+
+    public releaseTerrainItem() {
         if (this.mTerrainItemDisplayObjectCreated) {
             this.mTerrainItemDisplayObjectCreated = false;
 
-            this.removeChild(this.terrainItemDisplayObject);
-            this.terrainItemDisplayObject = null;
+            // this.removeChild(this.terrainItemDisplayObject);
+            this.remove(this.terrainIsoDisplayObject);
+            this.terrainIsoDisplayObject = null;
 
             if (this.mTerrainItemIsLoading) {
                 this.mTerrainItemIsLoading = false;
@@ -86,19 +92,20 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
         }
     }
 
-    public dispose(): void {
+    public dispose() {
         this.releaseTerrainItem();
     }
 
-    protected onTerrainItemCreate(): void {
-        this.add(this.terrainItemDisplayObject);
+    protected onTerrainItemCreate() {
+        // this.add(this.terrainItemDisplayObject);
+        this.add(this.terrainIsoDisplayObject);
     }
 
-    protected onTerrainItemLoad(): void {
+    protected onTerrainItemLoad() {
         this.mOwner.increaseLoadCount();
     }
 
-    protected onTerrainItemLoadComplete(): void {
+    protected onTerrainItemLoadComplete() {
         this.mOwner.decreaseLoadCount();
         this.mTerrainItemIsLoading = false;
     }

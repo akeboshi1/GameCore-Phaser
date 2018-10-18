@@ -11,7 +11,7 @@ export class BasicRoleAvatar extends Phaser.Sprite implements IAnimatedObject, I
     public owner: BasicSceneEntity;
 
     public onFrame(deltaTime: number): void {
-        Log.trace(this.x,this.parent.x,this.parent.parent.x,this.parent.parent.parent.x,this.anchor.toString());
+        // Log.trace(this.x,this.parent.x,this.parent.parent.x,this.parent.parent.parent.x,this.anchor.toString());
     }
 
     public onTick(deltaTime: number): void {

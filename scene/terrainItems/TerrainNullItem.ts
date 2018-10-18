@@ -16,8 +16,6 @@ export class TerrainNullItem extends TerrainImageItem {
         //     this.camera.width, this.camera.height, this.itemX, this.itemY, this.itemWidth, this.itemHeight)
         // if (this.mTerrainItemIsInCamera) {
         //     this.mTerrainItemOutCameraTime = 0;
-        //     this.x = this.itemX;
-        //     this.y = this.itemY;
         //     this.visible = true;
         // } else {
         //     this.mTerrainItemOutCameraTime += deltaTime;
@@ -26,8 +24,8 @@ export class TerrainNullItem extends TerrainImageItem {
         //     }
         //     this.visible = false;
         // }
-        this.x = this.itemX;
-        this.y = this.itemY;
+        
+        this.setPosition(this.itemX, this.itemY, this.itemZ);
         this.visible = true;
     }
 
