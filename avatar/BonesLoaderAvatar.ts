@@ -74,7 +74,7 @@ export class BonesLoaderAvatar implements IAnimatedObject {
      * 替换皮肤
      */
     public replaceSkin(skinIndex: number): void {
-        this.replacePart("body_3_dress", skinIndex);
+        this.replacePart("body_3_dress",skinIndex);
         this.replacePart("body_3_tail", skinIndex);
         this.replacePart("body_3_base", skinIndex);
         this.replacePart("fleg_3_base", skinIndex);
@@ -85,7 +85,7 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         this.replacePart("head_3_back", skinIndex);
         this.replacePart("head_3_base", skinIndex);
 
-        this.replacePart("body_1_dress", skinIndex);
+        this.replacePart("body_1_dress",skinIndex);
         this.replacePart("body_1_tail", skinIndex);
         this.replacePart("body_1_base", skinIndex);
         this.replacePart("fleg_1_base", skinIndex);
@@ -140,12 +140,12 @@ export class BonesLoaderAvatar implements IAnimatedObject {
 
     protected init(): void {
         let dragonbonesData = Globals.game.cache.getItem(Assets.Avatar.AvatarBone.getSkeName(),Phaser.Cache.BINARY);
-        let textureData: any = Globals.game.cache.getItem(Assets.Avatar.AvatarBone.getJsonName(), Phaser.Cache.JSON).data;
-        let texture: any = Globals.game.cache.getImage(Assets.Avatar.AvatarBone.getImgName());
+        let textureData: any = Globals.game.cache.getItem(Assets.Avatar.AvatarBone.getJsonName(), Phaser.Cache.JSON);
+        let texture: any = Globals.game.cache.getImage(Assets.Avatar.AvatarBone.getImgName(),true);
 
         const factory = dragonBones.PhaserFactory.factory;
         factory.parseDragonBonesData(dragonbonesData);
-        factory.parseTextureAtlasData(textureData, texture.base);
+        factory.parseTextureAtlasData(textureData.data, texture.base);
 
         this.armature = factory.buildArmatureDisplay("Armature", "bones_allblue");
         this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
@@ -201,7 +201,16 @@ export class BonesLoaderAvatar implements IAnimatedObject {
     private replacePart(prat: string, skinIndex: number): void {
         let solt: Slot = this.armature.armature.getSlot(prat);
         let partStr: string = Globals.Tool.caclNumStr(skinIndex);
-        let tex = Globals.game.cache.getImage(prat + "_" + partStr + "_png");
-        solt.replaceDisplay(tex);
+        let isCache: boolean = Globals.game.cache.checkImageKey(prat + "_" + partStr + "_png");
+        if(isCache){
+            let tex = Globals.game.cache.getImage(prat + "_" + partStr + "_png");
+            let texture: any = Globals.game.cache.getImage(prat + "_" + partStr + "_png",true);
+            // solt.replaceDisplay(texture.base);
+            var style = { font: "14px", fill: "#FF0000", align: "center" };
+            let _logoText = Globals.game.make.text(0.0, 0.0, "Core Element", style);
+            solt.display = _logoText;
+        }
+        // const factory = dragonBones.PhaserFactory.factory;
+        // factory.replaceSlotDisplay("bones_allblue","Armature","head_base_3","head_base_3",slot);
     }
 }
