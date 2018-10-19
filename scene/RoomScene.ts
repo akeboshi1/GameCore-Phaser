@@ -7,6 +7,7 @@ import Globals from "../Globals";
 import {MessageType} from "../const/MessageType";
 import {SelfRoleElement} from "./elements/SelfRoleElement";
 import {RoleElement} from "./elements/RoleElement";
+import BasicElement from './elements/BasicElement';
 
 export class RoomScene extends RoomSceneBasic {
     public seaMapGrid: RoomGridUtil;
@@ -76,7 +77,7 @@ export class RoomScene extends RoomSceneBasic {
             case Const.SceneElementType.ELEMENT:
                 //普通
                 if (elemetData.config.subType == 1) {
-                    //element = new BasicElement();
+                    // element = new BasicElement();
                 }//npc
                 else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
                    // element = new BasicNPCElement();

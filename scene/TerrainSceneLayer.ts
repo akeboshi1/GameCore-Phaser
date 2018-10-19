@@ -64,6 +64,10 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         }
     }
 
+    public drawGrid() {
+        this.mapSceneInfo.cols;
+    }
+
     protected initializeTerrainItems(datas: Array<any>): void {
         let i: number = 0;
         let len: number = datas.length;

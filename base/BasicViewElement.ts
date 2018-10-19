@@ -24,7 +24,7 @@ export class BasicViewElement extends Phaser.Sprite {
     //event handler
     private addToStageHandler(): void {
         this.events.onAddedToGroup.remove(this.addToStageHandler, this);
-        this.events.onRemovedFromGroup.add(this.removeFromStageHandler, this)
+        this.events.onRemovedFromGroup.add(this.removeFromStageHandler, this);
         if (!this._isInitilized) {
             this._isInitilized = true;
             this.onInitialize();
