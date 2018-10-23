@@ -1,5 +1,7 @@
-import {Atlases} from "../Assets";
+import {Atlases, Avatar} from "../Assets";
 import * as Assets from "../Assets";
+import Globals from "../Globals";
+import {Const} from "../const/Const";
 
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
@@ -10,26 +12,6 @@ export default class Preloader extends Phaser.State {
         this.loadJsons();
         this.loadAtlases();
         this.loadAvatar();
-    }
-
-    private loadImages(): void {
-
-    }
-
-    private loadJsons(): void {
-        for(let i of Assets.Jsons.JsonMap.getLoadList()) {
-            this.game.load.json(i+"_json",Assets.Jsons.JsonMap.getJSON(i));
-        }
-    }
-
-    private loadAtlases() {
-        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesCharSpritesArray.getName(),Assets.Atlases.AtlasesCharSpritesArray.getPNG(),Assets.Atlases.AtlasesCharSpritesArray.getJSONArray());
-    }
-
-    private loadAvatar(): void {
-        this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(),Assets.Avatar.AvatarBone.getSkeUrl());
-        this.game.load.json(Assets.Avatar.AvatarBone.getJsonName(),Assets.Avatar.AvatarBone.getJsonUrl());
-        this.game.load.image(Assets.Avatar.AvatarBone.getImgName(),Assets.Avatar.AvatarBone.getImgUrl());
     }
 
     public init(): void {
@@ -48,6 +30,23 @@ export default class Preloader extends Phaser.State {
 
     public create(): void {
         this.startGame();
+    }
+
+    private loadImages(): void {
+    }
+
+    private loadJsons(): void {
+        for (let i of Assets.Jsons.JsonMap.getLoadList()) {
+            this.game.load.json(i + "_json", Assets.Jsons.JsonMap.getJSON(i));
+        }
+    }
+
+    private loadAtlases() {
+        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesCharSpritesArray.getName(), Assets.Atlases.AtlasesCharSpritesArray.getPNG(), Assets.Atlases.AtlasesCharSpritesArray.getJSONArray());
+    }
+
+    private loadAvatar(): void {
+        this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(), Assets.Avatar.AvatarBone.getSkeUrl());
     }
 
     private startGame(): void {

@@ -1,6 +1,8 @@
 import {BasicAvatar} from "../base/BasicAvatar";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
+import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
+import Globals from "../Globals";
 
 export class RoleBonesAvatar extends BasicAvatar {
 	public hasPalceHold: boolean = true;
@@ -11,7 +13,7 @@ export class RoleBonesAvatar extends BasicAvatar {
 	protected mAngleIndexDirty: boolean = false;
 	protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
 	protected mAnimationDirty: boolean = false;
-	protected mSkinIndex: number = 10;
+	protected mSkin: RoleAvatarModelVO;
 	protected mSkinDirty: boolean = false;
 
 	protected onInitialize(): void {
@@ -30,16 +32,15 @@ export class RoleBonesAvatar extends BasicAvatar {
 
 	protected bodyControlHandler(boneAvatar: BonesLoaderAvatar): void {
 		boneAvatar.playAnimation(this.animationName, this.angleIndex);
-		boneAvatar.replaceSkin(this.skinIndex);
 	}
 
 	public dispose(): void {
 		super.dispose();
 	}
 
-	public loadModel(url: string): void {
-		this.skinIndex = +url;
-		this.mBodyAvatar.loadModel(url, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+	public loadModel(model: RoleAvatarModelVO): void {
+		this.mSkin = model;
+		this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
 	}
 
 	public onTick(deltaTime: number): void {
@@ -83,10 +84,10 @@ export class RoleBonesAvatar extends BasicAvatar {
 		}
 	};
 
-	public get skinIndex(): number { return this.mSkinIndex; };
-	public set skinIndex(value: number) {
-		if (this.mSkinIndex != value) {
-			this.mSkinIndex = value;
+	public get skin(): RoleAvatarModelVO { return this.mSkin; }
+	public set skin(value: RoleAvatarModelVO) {
+		if (this.mSkin != value) {
+			this.mSkin = value;
 			this.mSkinDirty = true;
 		}
 	};
