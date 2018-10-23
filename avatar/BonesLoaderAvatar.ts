@@ -1,20 +1,23 @@
 import {IAnimatedObject} from "../base/IAnimatedObject";
 import Globals from "../Globals";
+import { Const} from "../const/Const";
+import {Avatar} from "../Assets";
+import PhaserSlotDisplay = dragonBones.PhaserSlotDisplay;
 import Slot = dragonBones.Slot;
-import * as Assets from "../Assets";
+import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 
 export class BonesLoaderAvatar implements IAnimatedObject {
     private static readonly BONES_SCALE: number = 1;
     protected armature: dragonBones.PhaserArmatureDisplay;
-    private myModelUrl: string = "";
-    private myModelUrlDirty: boolean = false;
+    private myModel: RoleAvatarModelVO;
+    private myModelDirty: boolean = false;
     private mModelLoaded: boolean = false;
     private mLoadCompleteCallback: Function;
     private mLoadThisObj: any;
-    private mGroupName: string;
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
     private mAnimatonControlThisObj: any;
+    private replaceArr = [];
 
     public constructor() {
         this.init();
@@ -24,16 +27,12 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         this.view.visible = value;
     }
 
-    public get modelUrl(): string {
-        return this.myModelUrl;
-    }
-
     public get modelLoaded(): boolean {
         return this.mModelLoaded
     };
 
     public get view(): any {
-        return this.armature.armature.display;
+        return this.armature;
     }
 
     public setPos(x: number, y: number): void {
@@ -60,12 +59,12 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         let t_direct = angleIndex;
         if (angleIndex == 7) {
             t_direct = 1;
-            this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE
+            this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
 
         if (angleIndex == 5) {
             t_direct = 3
-            this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE
+            this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
         this.armature.animation.play(animationName + "_" + t_direct);
     }
@@ -73,47 +72,161 @@ export class BonesLoaderAvatar implements IAnimatedObject {
     /**
      * 替换皮肤
      */
-    public replaceSkin(skinIndex: number): void {
-        this.replacePart("body_3_dress",skinIndex);
-        this.replacePart("body_3_tail", skinIndex);
-        this.replacePart("body_3_base", skinIndex);
-        this.replacePart("fleg_3_base", skinIndex);
-        this.replacePart("barm_3_base", skinIndex);
-        this.replacePart("bleg_3_base", skinIndex);
-        this.replacePart("farm_3_base", skinIndex);
-        this.replacePart("head_3_face", skinIndex);
-        this.replacePart("head_3_back", skinIndex);
-        this.replacePart("head_3_base", skinIndex);
-
-        this.replacePart("body_1_dress",skinIndex);
-        this.replacePart("body_1_tail", skinIndex);
-        this.replacePart("body_1_base", skinIndex);
-        this.replacePart("fleg_1_base", skinIndex);
-        this.replacePart("barm_1_base", skinIndex);
-        this.replacePart("bleg_1_base", skinIndex);
-        this.replacePart("farm_1_base", skinIndex);
-        this.replacePart("head_1_back", skinIndex);
-        this.replacePart("head_1_base", skinIndex);
+    public replaceSkin(): void {
+        for (let obj of this.replaceArr) {
+            this.replacePart(obj.slot, obj.part, obj.dir, obj.skin);
+        }
+        this.replaceArr.splice(0);
     }
 
-    public loadModel(url: string, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {
-        if (this.myModelUrl == url) return;
+    public loadModel(model: RoleAvatarModelVO, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {
+        if (this.myModel.sign != model.sign) {
 
-        if (this.myModelUrl != url) {
             this.closeLoadModel();
+            this.myModel = model;
+
+            if (model.body_base_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyBase, part: Const.AvatarPartType.BodyBase, dir: 3, skin: model.body_base_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyBase, part: Const.AvatarPartType.BodyBase, dir: 1, skin: model.body_base_id});
+            }
+
+            if (model.body_spec_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodySpec, part: Const.AvatarPartType.BodySpec, dir: 3, skin: model.body_spec_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodySpec, part: Const.AvatarPartType.BodySpec, dir: 1, skin: model.body_spec_id});
+            }
+
+            if (model.body_wing_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyWing, part: Const.AvatarPartType.BodyWing, dir: 3, skin: model.body_wing_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyWing, part: Const.AvatarPartType.BodyWing, dir: 1, skin: model.body_wing_id});
+            }
+
+            if (model.body_tail_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyTail, part: Const.AvatarPartType.BodyTail, dir: 3, skin: model.body_tail_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyTail, part: Const.AvatarPartType.BodyTail, dir: 1, skin: model.body_tail_id});
+            }
+
+            if (model.body_cost_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyCost, part: Const.AvatarPartType.BodyCost, dir: 3, skin: model.body_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyCost, part: Const.AvatarPartType.BodyCost, dir: 1, skin: model.body_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyCostDres, part: Const.AvatarPartType.BodyCostDres, dir: 3, skin: model.body_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BodyCostDres, part: Const.AvatarPartType.BodyCostDres, dir: 1, skin: model.body_cost_id});
+            }
+
+            if (model.farm_base_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.FarmBase, part: Const.AvatarPartType.FarmBase, dir: 3, skin: model.farm_base_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.FarmBase, part: Const.AvatarPartType.FarmBase, dir: 1, skin: model.farm_base_id});
+            }
+
+            if (model.farm_spec_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.FarmSpec, part: Const.AvatarPartType.FarmSpec, dir: 3, skin: model.farm_spec_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.FarmSpec, part: Const.AvatarPartType.FarmSpec, dir: 1, skin: model.farm_spec_id});
+            }
+
+            if (model.farm_cost_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.FarmCost, part: Const.AvatarPartType.FarmCost, dir: 3, skin: model.farm_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.FarmCost, part: Const.AvatarPartType.FarmCost, dir: 1, skin: model.farm_cost_id});
+            }
+
+            if (model.barm_base_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BarmBase, part: Const.AvatarPartType.BarmBase, dir: 3, skin: model.barm_base_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BarmBase, part: Const.AvatarPartType.BarmBase, dir: 1, skin: model.barm_base_id});
+            }
+
+            if (model.barm_spec_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BarmSpec, part: Const.AvatarPartType.BarmSpec, dir: 3, skin: model.barm_spec_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BarmSpec, part: Const.AvatarPartType.BarmSpec, dir: 1, skin: model.barm_spec_id});
+            }
+
+            if (model.barm_cost_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BarmCost, part: Const.AvatarPartType.BarmCost, dir: 3, skin: model.barm_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BarmCost, part: Const.AvatarPartType.BarmCost, dir: 1, skin: model.barm_cost_id});
+            }
+
+            if (model.bleg_base_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BlegBase, part: Const.AvatarPartType.BlegBase, dir: 3, skin: model.bleg_base_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BlegBase, part: Const.AvatarPartType.BlegBase, dir: 1, skin: model.bleg_base_id});
+            }
+
+            if (model.bleg_spec_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BlegSpec, part: Const.AvatarPartType.BlegSpec, dir: 3, skin: model.bleg_spec_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BlegSpec, part: Const.AvatarPartType.BlegSpec, dir: 1, skin: model.bleg_spec_id});
+            }
+
+            if (model.bleg_cost_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.BlegCost, part: Const.AvatarPartType.BlegCost, dir: 3, skin: model.bleg_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.BlegCost, part: Const.AvatarPartType.BlegCost, dir: 1, skin: model.bleg_cost_id});
+            }
+
+            if (model.fleg_base_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.FlegBase, part: Const.AvatarPartType.FlegBase, dir: 3, skin: model.fleg_base_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.FlegBase, part: Const.AvatarPartType.FlegBase, dir: 1, skin: model.fleg_base_id});
+            }
+
+            if (model.fleg_spec_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.FlegSpec, part: Const.AvatarPartType.FlegSpec, dir: 3, skin: model.fleg_spec_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.FlegSpec, part: Const.AvatarPartType.FlegSpec, dir: 1, skin: model.fleg_spec_id});
+            }
+
+            if (model.fleg_cost_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.FlegCost, part: Const.AvatarPartType.FlegCost, dir: 3, skin: model.fleg_cost_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.FlegCost, part: Const.AvatarPartType.FlegCost, dir: 1, skin: model.fleg_cost_id});
+            }
+
+            if (model.head_base_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadBase, part: Const.AvatarPartType.HeadBase, dir: 3, skin: model.head_base_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadBase, part: Const.AvatarPartType.HeadBase, dir: 1, skin: model.head_base_id});
+            }
+
+            if (model.head_hair_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadHair, part: Const.AvatarPartType.HeadHair, dir: 3, skin: model.head_hair_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadHair, part: Const.AvatarPartType.HeadHair, dir: 1, skin: model.head_hair_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadHairBack, part: Const.AvatarPartType.HeadHairBack, dir: 3, skin: model.head_hair_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadHairBack, part: Const.AvatarPartType.HeadHairBack, dir: 1, skin: model.head_hair_id});
+            }
+
+            if (model.head_hats_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadHats, part: Const.AvatarPartType.HeadHats, dir: 3, skin: model.head_hats_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadHats, part: Const.AvatarPartType.HeadHats, dir: 1, skin: model.head_hats_id});
+            }
+
+            if (model.head_spec_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadSpec, part: Const.AvatarPartType.HeadSpec, dir: 3, skin: model.head_spec_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadSpec, part: Const.AvatarPartType.HeadSpec, dir: 1, skin: model.head_spec_id});
+            }
+
+            if (model.head_eyes_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadEyes, part: Const.AvatarPartType.HeadEyes, dir: 3, skin: model.head_eyes_id});
+            }
+
+            if (model.head_mous_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadMous, part: Const.AvatarPartType.HeadMous, dir: 3, skin: model.head_mous_id});
+            }
+
+            if (model.head_mask_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.HeadMask, part: Const.AvatarPartType.HeadMask, dir: 3, skin: model.head_mask_id});
+            }
+
+            if (model.farm_shld_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.ShldFarm, part: Const.AvatarPartType.ShldFarm, dir: 3, skin: model.farm_shld_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.ShldFarm, part: Const.AvatarPartType.ShldFarm, dir: 1, skin: model.farm_shld_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.ShldBarm, part: Const.AvatarPartType.ShldBarm, dir: 3, skin: model.farm_shld_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.ShldBarm, part: Const.AvatarPartType.ShldBarm, dir: 1, skin: model.farm_shld_id});
+            }
+
+            if (model.farm_weap_id > 0) {
+                this.replaceArr.push({slot: Const.AvatarSlotType.WeapFarm, part: Const.AvatarPartType.WeapFarm, dir: 3, skin: model.farm_weap_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.WeapFarm, part: Const.AvatarPartType.WeapFarm, dir: 1, skin: model.farm_weap_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.WeapBarm, part: Const.AvatarPartType.WeapBarm, dir: 3, skin: model.farm_weap_id});
+                this.replaceArr.push({slot: Const.AvatarSlotType.WeapBarm, part: Const.AvatarPartType.WeapBarm, dir: 1, skin: model.farm_weap_id});
+            }
 
             if (onLoadStart != null) {
                 onLoadStart.apply(thisObj);
             }
 
-            this.myModelUrl = url;
-            this.mGroupName = url + "_avatar";
-
-            if (this.myModelUrl && this.myModelUrl.length > 0) {
-                this.mLoadCompleteCallback = onLoadComplete;
-                this.mLoadThisObj = thisObj;
-                this.myModelUrlDirty = true;
-            }
+            this.mLoadCompleteCallback = onLoadComplete;
+            this.mLoadThisObj = thisObj;
+            this.myModelDirty = true;
         }
     }
 
@@ -123,9 +236,9 @@ export class BonesLoaderAvatar implements IAnimatedObject {
     }
 
     public onFrame(deltaTime: number): void {
-        if (this.myModelUrlDirty) {
+        if (this.myModelDirty) {
             this.onUpdateModelUrl();
-            this.myModelUrlDirty = false;
+            this.myModelDirty = false;
         }
 
         if (this.mModelLoaded) {
@@ -139,50 +252,43 @@ export class BonesLoaderAvatar implements IAnimatedObject {
     }
 
     protected init(): void {
-        let dragonbonesData = Globals.game.cache.getItem(Assets.Avatar.AvatarBone.getSkeName(),Phaser.Cache.BINARY);
-        let textureData: any = Globals.game.cache.getItem(Assets.Avatar.AvatarBone.getJsonName(), Phaser.Cache.JSON);
-        let texture: any = Globals.game.cache.getImage(Assets.Avatar.AvatarBone.getImgName(),true);
+        this.myModel = new RoleAvatarModelVO();
+
+        let dragonbonesData = Globals.game.cache.getItem(Avatar.AvatarBone.getSkeName(), Phaser.Cache.BINARY);
 
         const factory = dragonBones.PhaserFactory.factory;
         factory.parseDragonBonesData(dragonbonesData);
-        factory.parseTextureAtlasData(textureData.data, texture.base);
 
         this.armature = factory.buildArmatureDisplay("Armature", "bones_allblue");
         this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
         this.armature.armature.cacheFrameRate = 0;
-        // this.armature.anchor.set(0.5, 0.5);
+
     }
 
     protected closeLoadModel(): void {
-        if (this.myModelUrl != null) {
-            if (this.mModelLoaded) {
-                this.mModelLoaded = false;
-            }
-            this.myModelUrl = null;
+        if (this.mModelLoaded) {
+            this.mModelLoaded = false;
         }
-        this.myModelUrlDirty = false;
+        this.replaceArr = [];
+        this.myModelDirty = false;
     }
 
     protected onUpdateModelUrl(): void {
-        if (Globals.game.cache.checkImageKey("fleg_3_base_" + this.modelUrl + "_png")) {
-            this.modelLoadCompleteHandler();
-        } else {
+        let loadNum: number = 0;
+
+        for(let obj of this.replaceArr)
+        {
+            let key: string = obj.part.replace("#", Globals.Tool.caclNumStr(obj.skin)).replace("$", obj.dir);
+            if (Globals.game.cache.checkImageKey(Avatar.AvatarBone.getPartName(key))) continue;
+            Globals.game.load.image(Avatar.AvatarBone.getPartName(key), Avatar.AvatarBone.getPartUrl(key));
+            ++loadNum;
+        }
+
+        if (loadNum > 0) {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            Globals.game.load.image("barm_1_base_" + this.modelUrl + "_png", require("assets/avatar/part/barm_1_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("bleg_1_base_" + this.modelUrl + "_png", require("assets/avatar/part/bleg_1_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("body_1_base_" + this.modelUrl + "_png", require("assets/avatar/part/body_1_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("farm_1_base_" + this.modelUrl + "_png", require("assets/avatar/part/farm_1_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("fleg_1_base_" + this.modelUrl + "_png", require("assets/avatar/part/fleg_1_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("head_1_back_" + this.modelUrl + "_png", require("assets/avatar/part/head_1_back_" + this.modelUrl + ".png"));
-            Globals.game.load.image("head_1_base_" + this.modelUrl + "_png", require("assets/avatar/part/head_1_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("head_3_back_" + this.modelUrl + "_png", require("assets/avatar/part/head_3_back_" + this.modelUrl + ".png"));
-            Globals.game.load.image("head_3_base_" + this.modelUrl + "_png", require("assets/avatar/part/head_3_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("barm_3_base_" + this.modelUrl + "_png", require("assets/avatar/part/barm_3_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("bleg_3_base_" + this.modelUrl + "_png", require("assets/avatar/part/bleg_3_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("body_3_base_" + this.modelUrl + "_png", require("assets/avatar/part/body_3_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("farm_3_base_" + this.modelUrl + "_png", require("assets/avatar/part/farm_3_base_" + this.modelUrl + ".png"));
-            Globals.game.load.image("fleg_3_base_" + this.modelUrl + "_png", require("assets/avatar/part/fleg_3_base_" + this.modelUrl + ".png"));
             Globals.game.load.start();
+        } else {
+            this.modelLoadCompleteHandler();
         }
     }
 
@@ -196,22 +302,21 @@ export class BonesLoaderAvatar implements IAnimatedObject {
             this.mLoadThisObj = null;
         }
 
+        this.replaceSkin();
+
         this.invalidAnimationControlFunc();
     }
 
-    private replacePart(prat: string, skinIndex: number): void {
-        let solt: Slot = this.armature.armature.getSlot(prat);
-        let partStr: string = Globals.Tool.caclNumStr(skinIndex);
-        let isCache: boolean = Globals.game.cache.checkImageKey(prat + "_" + partStr + "_png");
-        if(isCache){
-            let tex = Globals.game.cache.getImage(prat + "_" + partStr + "_png");
-            let texture: any = Globals.game.cache.getImage(prat + "_" + partStr + "_png",true);
-            // solt.replaceDisplay(texture.base);
-            var style = { font: "14px", fill: "#FF0000", align: "center" };
-            let _logoText = Globals.game.make.text(0.0, 0.0, "Core Element", style);
-            solt.display = _logoText;
+    private replacePart(soltName: string,soltPart:string, soltDir: number, skin: number): void {
+        let part: string = soltName.replace("$", soltDir.toString());
+        let slot: Slot = this.armature.armature.getSlot(part);
+        let partStr: string = Globals.Tool.caclNumStr(skin);
+        let resKey: string = Avatar.AvatarBone.getPartName(soltPart.replace("#", partStr)).replace("$", soltDir.toString());
+        let isCache: boolean = Globals.game.cache.checkImageKey(resKey);
+        if (isCache) {
+            let dis: PhaserSlotDisplay = new PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
+            dis.anchor.set(0.5,0.5);
+            slot.replaceDisplay(dis);
         }
-        // const factory = dragonBones.PhaserFactory.factory;
-        // factory.replaceSlotDisplay("bones_allblue","Armature","head_base_3","head_base_3",slot);
     }
 }

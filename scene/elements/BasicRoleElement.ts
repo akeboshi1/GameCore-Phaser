@@ -6,6 +6,7 @@ import {RoomScene} from "../RoomScene";
 import {RoomNode} from "../grid/RoomNode";
 import {RoleBonesAvatar} from "../../avatar/RoleBonesAvatar";
 import {BasicRoleAvatar} from "../../avatar/BasicRoleAvatar";
+import RoleAvatarModelVO from "../../struct/RoleAvatarModelVO";
 
 export class BasicRoleElement extends SceneEntity {
 	private mAnimationDirty: boolean = false;
@@ -32,7 +33,7 @@ export class BasicRoleElement extends SceneEntity {
 	}
 
 	public setAnimation(value: string): void {
-		// Log.trace("角度-->"+value);
+		// Log.trace("动作-->"+value);
 		if (this.myAnimationName != value) {
 			this.myAnimationName = value;
 
@@ -40,8 +41,8 @@ export class BasicRoleElement extends SceneEntity {
 		}
 	}
 
-    public loadModel(url: string): void {
-        (<RoleBonesAvatar>this.display).loadModel(url);
+    public loadModel(model: RoleAvatarModelVO): void {
+        (<RoleBonesAvatar>this.display).loadModel(model);
     }
 
 	protected onPauseMove(): void {
@@ -50,7 +51,7 @@ export class BasicRoleElement extends SceneEntity {
 	}
 
 	protected onStartMove(): void {
-		this.myAnimationName = Const.ModelStateType.BONES_STAND;
+		this.myAnimationName = Const.ModelStateType.BONES_WALK;
 		this.invalidAnimation();
 	}
 
@@ -61,8 +62,8 @@ export class BasicRoleElement extends SceneEntity {
 	}
 
 	protected onAvatarAnimationChanged(): void {
-		// (<RoleAvatarBasic>this.display).animationName = this.myIsWalking ? ModelStateType.BONES_WALK : this.myAnimationName;
-		// (<RoleAvatarBasic>this.display).angleIndex = this.mAngleIndex;
+		(<RoleBonesAvatar>this.display).animationName = this.myIsWalking ? Const.ModelStateType.BONES_WALK : this.myAnimationName;
+		(<RoleBonesAvatar>this.display).angleIndex = this.mAngleIndex;
 	}
 
 	public get gridPos(): Phaser.Point {
@@ -123,7 +124,7 @@ export class BasicRoleElement extends SceneEntity {
 		this.mouseEnable = false;
 		this.zFighting = 1;
 
-        this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model.bodyModel);
+        this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);
 	}
 
 	protected createDisplay(): any {

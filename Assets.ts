@@ -44,7 +44,7 @@ export namespace Images {
         }
 
         static getPNG(id: number): string {
-            return require("assets/images/terrain/terrain_"+id+".png");
+            return require("assets/images/terrain/terrain_" + id + ".png");
         }
     }
 }
@@ -54,20 +54,17 @@ export namespace Avatar {
         static getSkeName(): string {
             return "bones_allblue_ske_dbbin";
         }
-        static getJsonName(): string {
-            return "bones_allblue_tex_json";
-        }
-        static getImgName(): string {
-            return "bones_allblue_tex_png";
-        }
+
         static getSkeUrl(): string {
             return require("assets/avatar/bones_allblue_ske.dbbin");
         }
-        static getJsonUrl(): string {
-            return require("assets/avatar/bones_allblue_tex.json");
+
+        static getPartName(value: string): string {
+            return value + "_png";
         }
-        static getImgUrl(): string {
-            return require("assets/avatar/bones_allblue_tex.png");
+
+        static getPartUrl(value: string): string {
+            return require("assets/avatar/part/" + value + ".png");
         }
     }
 }
