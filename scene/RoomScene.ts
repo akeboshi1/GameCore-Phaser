@@ -8,6 +8,7 @@ import {MessageType} from "../const/MessageType";
 import {SelfRoleElement} from "./elements/SelfRoleElement";
 import {RoleElement} from "./elements/RoleElement";
 import BasicElement from './elements/BasicElement';
+import {ElementInfo} from "../struct/ElementInfo";
 
 export class RoomScene extends RoomSceneBasic {
     public seaMapGrid: RoomGridUtil;
@@ -26,15 +27,15 @@ export class RoomScene extends RoomSceneBasic {
 
         this.terrainSceneLayer.initializeMap(value);
 
-        // let i: number = 0;
-        // let len: number = this.mapSceneInfo.elementInfo.length;
-        // let element: ElementInfo;
-        // for (; i < len; i++) {
-        //     element = this.mapSceneInfo.elementInfo[i];
-        // if (element.config.type == 13) {
-        //this.addSceneElement(SceneElementType.ELEMENT, element.id.toString(), element);
-        // }
-        // }
+        let i: number = 0;
+        let len: number = this.mapSceneInfo.elementData.length;
+        let element: ElementInfo;
+        for (; i < len; i++) {
+            element = this.mapSceneInfo.elementData[i];
+            // if (element.config.type == 13) {
+               this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
+            // }
+        }
     }
 
     protected onActivedScene(): void {
@@ -68,6 +69,7 @@ export class RoomScene extends RoomSceneBasic {
                 //当前玩家
                 if (isSelf) {
                     element = this.currentSelfPlayer = new SelfRoleElement()
+                    this.game.camera.follow(element.display);
                 }
                 else {
                     element = new RoleElement();
@@ -76,12 +78,12 @@ export class RoomScene extends RoomSceneBasic {
 
             case Const.SceneElementType.ELEMENT:
                 //普通
-                if (elemetData.config.subType == 1) {
-                    // element = new BasicElement();
-                }//npc
-                else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
+                // if (elemetData.config.subType == 1) {
+                    element = new BasicElement();
+                // }//npc
+                // else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
                    // element = new BasicNPCElement();
-                }
+                // }
                 break;
 
             default:

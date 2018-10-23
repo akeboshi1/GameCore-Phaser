@@ -1,8 +1,7 @@
 import { IAnimatedObject } from "../../base/IAnimatedObject";
-import { IEntityComponent } from "../../base/IEntityComponent";
 import Globals from "../../Globals";
 
-export default class BasicElementDisplay extends Phaser.Group implements IAnimatedObject {
+export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject {
     private myModelURL: string = ""
     private myModelUrlDirty: boolean = false;
     private mModelLoaded: boolean = false;
@@ -15,20 +14,22 @@ export default class BasicElementDisplay extends Phaser.Group implements IAnimat
     private mAnimationControlFuncDirty: boolean;
     private mAnimationControlThisObj: any;
 
-    protected element: Phaser.Plugin.Isometric.IsoSprite;
+    // protected element: Phaser.Plugin.Isometric.IsoSprite;
+    protected element: Phaser.Image;
 
     constructor(game: Phaser.Game) {
-        super(game);
+        super(game, 0, 0, 0);
         this.init();
     }
 
     protected init() {
-        this.element = this.game.add.isoSprite(0, 0, 0, "", "", this);
+        this.element = this.game.add.image(0, 0, 0);
+
         this.visible = false;
     }
 
     public setPosition(x?: number, y?: number, z?: number) {
-        let point3 = this.element.isoPosition;
+        let point3 = this.isoPosition;
         point3.set(x, y, z);
     }
 
@@ -43,7 +44,7 @@ export default class BasicElementDisplay extends Phaser.Group implements IAnimat
     }
 
     public dispose() {
-        this.remove(this.element);
+        this.removeChild(this.element);
         this.element = null;
 
         this.closeLoadModel();
@@ -62,7 +63,7 @@ export default class BasicElementDisplay extends Phaser.Group implements IAnimat
         
         this.closeLoadModel();
 
-        if (onLoadStart !== null) {
+        if (onLoadStart !== undefined) {
             onloadstart.apply(thisArg);
         }
 
@@ -91,7 +92,9 @@ export default class BasicElementDisplay extends Phaser.Group implements IAnimat
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.atlas(this.myModelURL);
+            this.game.load.image(this.myModelURL + "_png",  require("assets/images/elements/"+ this.myModelURL + ".png"));
+            this.game.load.json(this.myModelURL + "_json", require("assets/images/elements/"+ this.myModelURL + ".json"));
+
             this.game.load.start();
         }
     }
@@ -105,7 +108,7 @@ export default class BasicElementDisplay extends Phaser.Group implements IAnimat
 
         if (this.mModelLoaded) {
             if (this.mAnimationControlFuncDirty) {
-                if (this.mAnimationControlFunc !== null) {
+                if (this.mAnimationControlFunc !== undefined) {
                     this.mAnimationControlFunc.call(this.mAnimationControlThisObj, this);
                 }
                 this.mAnimationControlFuncDirty = false;
@@ -116,12 +119,14 @@ export default class BasicElementDisplay extends Phaser.Group implements IAnimat
     protected modelLoadCompleteHandler() {
         this.mModelLoaded = true;
 
-        if (this.mLoadCompleteCallback !== null) {
+        if (this.mLoadCompleteCallback !== undefined) {
             let cb: Function = this.mLoadCompleteCallback;
             this.mLoadCompleteCallback = null;
             cb.apply(this.mLoadThisArg);
             this.mLoadThisArg = null;
         }
+
+        // let json = this.game.cache.getJSON(this.myModelURL + "_json");
 
         this.invalidAnimationControllerFunc();
     }

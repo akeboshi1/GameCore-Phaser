@@ -2,7 +2,7 @@ import { BasicSceneEntity } from "../../base/BasicSceneEntity";
 import { BasicViewElement } from "../../base/BasicViewElement";
 import BasicElementDisplay from "./BasicElementDisplay";
 import Globals from "../../Globals";
-import { ElementInfo } from "../../struct/ElementInfo";
+import {ElementInfo}  from "../../struct/ElementInfo";
 
 export default class BasicElement extends BasicSceneEntity {
 
@@ -13,7 +13,11 @@ export default class BasicElement extends BasicSceneEntity {
 
     protected onInitialize() {
         super.onInitialize();
-        // this.loadModel(this.elementData.path);
+        this.loadModel(this.elementData.path);
+    }
+
+    public loadModel(url: string) {
+        (<BasicElementDisplay>this.display).loadModel(url, this);
     }
 
     public get elementData(): ElementInfo {

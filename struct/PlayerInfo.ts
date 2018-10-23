@@ -1,6 +1,7 @@
 import {RoleAvatarModelVO} from "./RoleAvatarModelVO";
 import Globals from "../Globals";
 import {MessageType} from "../const/MessageType";
+import { Const } from "../const/Const";
 
 export class PlayerInfo {
 	public playerID: number = 10001;         // 玩家ID
@@ -9,8 +10,8 @@ export class PlayerInfo {
 	public sex: number = 1;              // 性别
 	// public col: number = 4;
 	// public row: number = 7;
-	public x: number = 682;
-	public y: number = 176;
+	public x: number = 7 * Const.GameConst.MAP_TILE_HEIGHT;
+	public y: number = 4 * Const.GameConst.MAP_TILE_HEIGHT;
 	public direct: number = 3;
 	public mapId: number = 10001;
 

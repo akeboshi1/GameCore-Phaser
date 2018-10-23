@@ -150,6 +150,7 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         this.armature = factory.buildArmatureDisplay("Armature", "bones_allblue");
         this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
         this.armature.armature.cacheFrameRate = 0;
+        // this.armature.anchor.set(0.5, 0.5);
     }
 
     protected closeLoadModel(): void {
