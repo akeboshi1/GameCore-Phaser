@@ -17,7 +17,7 @@ export default class Game extends Phaser.Game implements IGame {
             width: value.width,
             height: value.height,
             renderer: Phaser.AUTO,
-            parent: '',
+            parent: "",
             resolution: 1
         };
         super(config);
@@ -25,11 +25,11 @@ export default class Game extends Phaser.Game implements IGame {
         // 初始化地图数据
         Globals.DataCenter.MapData.setMapInfo(value.mapData);
 
-        this.state.add('boot', BootState);
-        this.state.add('preloader', PreloaderState);
-        this.state.add('game', GameState);
+        this.state.add("boot", BootState);
+        this.state.add("preloader", PreloaderState);
+        this.state.add("game", GameState);
 
-        this.state.start('boot');
+        this.state.start("boot");
     }
 
     public resize(): void {
@@ -41,13 +41,13 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.TickManager.onEnterFrame(time);
     }
 
-    public updateLogic(timeStep: number): void{
+    public updateLogic(timeStep: number): void {
         // Log.trace("updateLogic-->",timeStep);
         super.updateLogic(timeStep);
 
     }
 
-    public updateRender(timeStep: number): void{
+    public updateRender(timeStep: number): void {
         // Log.trace("updateRender-->",timeStep);
         super.updateRender(timeStep);
     }

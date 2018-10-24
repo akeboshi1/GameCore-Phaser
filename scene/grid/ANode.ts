@@ -41,8 +41,8 @@ export class ANode {
 
     /** 得到此节点到另一节点的网格距离 */
     public getDistanceTo(targetNode: ANode): number {
-        var disX: number = targetNode.x - this.x;
-        var disY: number = targetNode.y - this.y;
+        let disX: number = targetNode.x - this.x;
+        let disY: number = targetNode.y - this.y;
         this.distance = Math.sqrt(disX * disX + disY * disY);
         return this.distance;
     }

@@ -2,94 +2,104 @@ import {BasicAvatar} from "../base/BasicAvatar";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
-import Globals from "../Globals";
 
 export class RoleBonesAvatar extends BasicAvatar {
-	public hasPalceHold: boolean = true;
-	//dynamic part
-	protected mBodyAvatar: BonesLoaderAvatar;
+    public hasPalceHold: boolean = true;
+    //dynamic part
+    protected mBodyAvatar: BonesLoaderAvatar;
 
-	protected mAngleIndex: number = 3;
-	protected mAngleIndexDirty: boolean = false;
-	protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
-	protected mAnimationDirty: boolean = false;
-	protected mSkin: RoleAvatarModelVO;
-	protected mSkinDirty: boolean = false;
+    protected mAngleIndex: number = 3;
+    protected mAngleIndexDirty: boolean = false;
+    protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
+    protected mAnimationDirty: boolean = false;
+    protected mSkin: RoleAvatarModelVO;
+    protected mSkinDirty: boolean = false;
 
-	protected onInitialize(): void {
-		this.mBodyAvatar = new BonesLoaderAvatar();
-		this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
-		this.mBodyAvatar.visible = false;
-		this.addChild(this.mBodyAvatar.view);
-	}
+    public get angleIndex(): number {
+        return this.mAngleIndex;
+    }
 
-	protected onInitializeComplete(): void {
-	}
+    public set angleIndex(value: number) {
+        if (this.mAngleIndex !== value) {
+            this.mAngleIndex = value;
+            this.mAngleIndexDirty = true;
+        }
+    }
 
-	protected onAddPlaceHoldAvatarPart(): void {}
+    public get animationName(): string {
+        return this.mAnimationName;
+    };
 
-    protected onRemovePlaceHoldAvatarPart(): void {}
+    public set animationName(value: string) {
+        if (this.mAnimationName !== value) {
+            this.mAnimationName = value;
+            this.mAnimationDirty = true;
+        }
+    };
 
-	protected bodyControlHandler(boneAvatar: BonesLoaderAvatar): void {
-		boneAvatar.playAnimation(this.animationName, this.angleIndex);
-	}
+    public get skin(): RoleAvatarModelVO {
+        return this.mSkin;
+    }
 
-	public dispose(): void {
-		super.dispose();
-	}
+    public set skin(value: RoleAvatarModelVO) {
+        if (this.mSkin !== value) {
+            this.mSkin = value;
+            this.mSkinDirty = true;
+        }
+    };
 
-	public loadModel(model: RoleAvatarModelVO): void {
-		this.mSkin = model;
-		this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
-	}
+    public dispose(): void {
+        super.dispose();
+    }
 
-	public onTick(deltaTime: number): void {
-		super.onTick(deltaTime);
+    public loadModel(model: RoleAvatarModelVO): void {
+        this.mSkin = model;
+        this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+    }
 
-		if (this.mAngleIndexDirty || this.mAnimationDirty || this.mSkinDirty) {
-			this.mBodyAvatar.invalidAnimationControlFunc();
-		}
-	}
+    public onTick(deltaTime: number): void {
+        super.onTick(deltaTime);
 
-	public onFrame(deltaTime: number): void {
-		super.onFrame(deltaTime);
-		this.mBodyAvatar.onFrame(deltaTime);
+        if (this.mAngleIndexDirty || this.mAnimationDirty || this.mSkinDirty) {
+            this.mBodyAvatar.invalidAnimationControlFunc();
+        }
+    }
+
+    public onFrame(deltaTime: number): void {
+        super.onFrame(deltaTime);
+        this.mBodyAvatar.onFrame(deltaTime);
         dragonBones.PhaserFactory.factory.dragonBones.advanceTime(deltaTime);
-		this.mAngleIndexDirty = false;
-		this.mAnimationDirty = false;
-		this.mSkinDirty = false;
-	}
+        this.mAngleIndexDirty = false;
+        this.mAnimationDirty = false;
+        this.mSkinDirty = false;
+    }
 
-	protected bodyAvatarPartLoadStartHandler(): void {
-		if (this.hasPalceHold) this.onAddPlaceHoldAvatarPart();
-	}
+    protected onInitialize(): void {
+        this.mBodyAvatar = new BonesLoaderAvatar();
+        this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
+        this.mBodyAvatar.visible = false;
+        this.addChild(this.mBodyAvatar.view);
+    }
 
-	protected bodyAvatarPartLoadCompleteHandler(): void {
-		if (this.hasPalceHold) this.onRemovePlaceHoldAvatarPart();
-		this.mBodyAvatar.visible = true;
-	}
+    protected onInitializeComplete(): void {
+    }
 
-	public get angleIndex(): number { return this.mAngleIndex; }
-	public set angleIndex(value: number) {
-		if (this.mAngleIndex != value) {
-			this.mAngleIndex = value;
-			this.mAngleIndexDirty = true;
-		}
-	}
+    protected onAddPlaceHoldAvatarPart(): void {
+    }
 
-	public get animationName(): string { return this.mAnimationName; };
-	public set animationName(value: string) {
-		if (this.mAnimationName != value) {
-			this.mAnimationName = value;
-			this.mAnimationDirty = true;
-		}
-	};
+    protected onRemovePlaceHoldAvatarPart(): void {
+    }
 
-	public get skin(): RoleAvatarModelVO { return this.mSkin; }
-	public set skin(value: RoleAvatarModelVO) {
-		if (this.mSkin != value) {
-			this.mSkin = value;
-			this.mSkinDirty = true;
-		}
-	};
+    protected bodyControlHandler(boneAvatar: BonesLoaderAvatar): void {
+        boneAvatar.playAnimation(this.animationName, this.angleIndex);
+    }
+
+    protected bodyAvatarPartLoadStartHandler(): void {
+        if (this.hasPalceHold) this.onAddPlaceHoldAvatarPart();
+    }
+
+    protected bodyAvatarPartLoadCompleteHandler(): void {
+        if (this.hasPalceHold) this.onRemovePlaceHoldAvatarPart();
+        this.mBodyAvatar.visible = true;
+    }
 }
