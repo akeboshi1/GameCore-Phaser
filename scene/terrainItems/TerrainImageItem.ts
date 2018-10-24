@@ -11,11 +11,6 @@ export class TerrainImageItem extends BasicTerrainItem {
 
     public constructor(game: Phaser.Game,owner: TerrainSceneLayer) {
         super(game,owner);
-        // let graphics = Globals.game.make.graphics();
-        // graphics.beginFill(0xFF0000);
-        // graphics.drawCircle(-Const.GameConst.HALF_MAP_TILE_WIDTH,0,2);
-        // graphics.endFill();
-        // this.add(graphics);
     }
 
     protected onTerrainItemCreate(): void {
@@ -32,6 +27,7 @@ export class TerrainImageItem extends BasicTerrainItem {
 
         // this.terrainItemDisplayObject = new Phaser.Sprite(Globals.game,0,0);
         this.terrainIsoDisplayObject = this.game.add.isoSprite(0, 0, 0);
+        this.terrainIsoDisplayObject.anchor.set(0.5, 0.5);
 
         super.onTerrainItemCreate();
     }

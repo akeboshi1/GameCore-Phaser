@@ -20,7 +20,7 @@ export class RoleBonesAvatar extends BasicAvatar {
 		this.mBodyAvatar = new BonesLoaderAvatar();
 		this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
 		this.mBodyAvatar.visible = false;
-		this.add(this.mBodyAvatar.view);
+		this.addChild(this.mBodyAvatar.view);
 	}
 
 	protected onInitializeComplete(): void {

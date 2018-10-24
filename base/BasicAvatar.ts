@@ -1,13 +1,13 @@
 import {IAnimatedObject} from './IAnimatedObject';
 import {IEntityComponent} from './IEntityComponent';
 
-export class BasicAvatar extends Phaser.Group implements IAnimatedObject, IEntityComponent {
+export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent {
         private mInitilized: Boolean = false;
         public owner: any;
-        protected data: any = null;
+        // protected data: any = null;
 
         public constructor(game: Phaser.Game) {
-            super(game);
+            super(game, 0, 0, 0);
         }
 
         public get initilized(): Boolean {
@@ -16,7 +16,7 @@ export class BasicAvatar extends Phaser.Group implements IAnimatedObject, IEntit
 
         public initialize(data: any = null): void {
             if (!this.mInitilized) {
-                this.data = data;
+                // this.data = data;
                 this.onInitialize();
                 this.mInitilized = true;
                 this.onInitializeComplete();

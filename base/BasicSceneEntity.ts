@@ -45,6 +45,16 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
         this._y = value;
     }
 
+    private _z: number = 0;
+
+    public get z(): number {
+        return this._z;
+    }
+
+    public set z(value: number) {
+        this._z = value;
+    }
+
     /**
      * 所占X格子的列数
      */
@@ -129,7 +139,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
         else {
             this.display.visible = false;
         }
-    }
+    }   
 
     protected onInitialize(): void {
         if (!this.display) this.display = this.createDisplay();
@@ -158,8 +168,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     };
 
     protected onUpdated(deltaTime: number): void {
-        this.screenX = this.x - this.camera.x;
-        this.screenY = this.y - this.camera.y;
+        // this.screenX = this.x - this.camera.x;
+        // this.screenY = this.y - this.camera.y;
 
         this.checkIsValidDisplayAvatar();
         if ((this.display as IEntityComponent).onTick !== undefined) (<IEntityComponent>this.display).onTick(deltaTime);
@@ -170,8 +180,12 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-        this.display.x = this.screenX >> 0;
-        this.display.y = this.screenY >> 0;
+        // this.display.x = this.screenX >> 0;
+        // this.display.y = this.screenY >> 0;
+        if (this.display instanceof Phaser.Plugin.Isometric.IsoSprite) {
+            let point3 = this.display.isoPosition;
+            point3.setTo(this.x, this.y, this.z);
+        }
        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 }
