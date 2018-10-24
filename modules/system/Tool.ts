@@ -1,8 +1,11 @@
-import BaseSingleton from '../../base/BaseSingleton';
-import * as pako from 'pako';
+import BaseSingleton from "../../base/BaseSingleton";
+import * as pako from "pako";
 import {Log} from "../../Log";
 
 export class Tool extends BaseSingleton {
+    public SMALLEST_NUMBER: number = 0.000001;
+    public DOUBLE_PI: number = Math.PI * 2;//360
+
     public constructor() {
         super();
     }
@@ -116,16 +119,18 @@ export class Tool extends BaseSingleton {
 
         // Decode base64 (convert ascii to binary)
         let strData = atob(mapData);
-        
+
         // Convert binary string to character-number array
-        let charData = strData.split('').map(function(x){return x.charCodeAt(0);});
-        
+        let charData = strData.split('').map(function (x) {
+            return x.charCodeAt(0);
+        });
+
         // Turn number array into byte-array
         let binData = new Uint8Array(charData);
-        
+
         // Pako magic
         let data = pako.inflate(binData);
-        
+
         // Convert gunzipped byteArray back to ascii string:
         let str = String.fromCharCode.apply(null, new Uint16Array(data));
         // console.log(`str: ${str}`);
@@ -133,20 +138,16 @@ export class Tool extends BaseSingleton {
         return result;
     }
 
-    private ab2str(buf) {
-        return String.fromCharCode.apply(null, new Uint16Array(buf));
-    }
-
     /**
      * Bound a number by a minimum and maximum.
      * Ensures that this number is no smaller than the minimum,
      * and no larger than the maximum.
      *
-     * @param	Value	Any number.
-     * @param	Min		Any number.
-     * @param	Max		Any number.
+     * @param    Value    Any number.
+     * @param    Min        Any number.
+     * @param    Max        Any number.
      *
-     * @return	The bounded value of the number.
+     * @return    The bounded value of the number.
      */
     public clamp(value: number, min: number, max: number): number {
         //			var lowerBound:number = (Value<Min)?Min:Value;
@@ -158,8 +159,6 @@ export class Tool extends BaseSingleton {
         return this.adjustRadianBetween0And2PI(Math.atan2(endY - startY, endX - startX));
     }
 
-    public SMALLEST_NUMBER: number = 0.000001;
-    public DOUBLE_PI: number = Math.PI * 2;//360
     public adjustRadianBetween0And2PI(radian: number): number {
         radian %= this.DOUBLE_PI;
 
@@ -181,6 +180,10 @@ export class Tool extends BaseSingleton {
         if (value >= 100 && value < 1000)
             result = "0" + value;
         return result;
+    }
+
+    private ab2str(buf) {
+        return String.fromCharCode.apply(null, new Uint16Array(buf));
     }
 
 }
