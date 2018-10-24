@@ -39,7 +39,6 @@ export default class Game extends Phaser.Game implements IGame {
         // Log.trace("update-->",time);
         super.update(time);
         Globals.TickManager.onEnterFrame(time);
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(time);
     }
 
     public updateLogic(timeStep: number): void{

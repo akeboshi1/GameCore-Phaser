@@ -6,6 +6,7 @@ import {MessageCenter} from "./modules/system/MessageCenter";
 import {TickManager} from "./modules/system/TickManager";
 import {Room45Util} from "./modules/system/Room45Util";
 import {SceneManager} from "./modules/system/SceneManager";
+import {KeyboardMod} from "./modules/system/KeyboardMod";
 
 export default class Globals {
     private static _game:Phaser.Game;
@@ -22,6 +23,13 @@ export default class Globals {
      */
     public static get LayerManager(): LayerManager {
         return LayerManager.getInstance();
+    }
+
+    /**
+     * 键盘工具
+     */
+    public static get Keyboard(): KeyboardMod {
+        return KeyboardMod.getInstance();
     }
 
     /**

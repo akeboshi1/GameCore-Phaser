@@ -54,6 +54,7 @@ export class RoleBonesAvatar extends BasicAvatar {
 	public onFrame(deltaTime: number): void {
 		super.onFrame(deltaTime);
 		this.mBodyAvatar.onFrame(deltaTime);
+        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(deltaTime);
 		this.mAngleIndexDirty = false;
 		this.mAnimationDirty = false;
 		this.mSkinDirty = false;

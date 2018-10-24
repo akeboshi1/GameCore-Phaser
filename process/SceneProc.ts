@@ -23,7 +23,7 @@ export class SceneProc extends BaseProc {
     public endProc(): void {
         if (this._active) {
             Globals.MessageCenter.removeByGroup("SceneProc");
-            this.unRegistRoomListenerHandler();
+            this.unRegistSceneListenerHandler();
             if (this.flowManager)
                 this.flowManager.dispose();
             this.flowManager = null;
@@ -32,13 +32,13 @@ export class SceneProc extends BaseProc {
     }
 
     //server handler
-    public registRoomListenerHandler(): void {
+    public registSceneListenerHandler(): void {
         if (!this.hasRgistHandler) {
             this.hasRgistHandler = true;
         }
     }
 
-    public unRegistRoomListenerHandler(): void {
+    public unRegistSceneListenerHandler(): void {
         if (this.hasRgistHandler) {
             this.hasRgistHandler = false;
         }
@@ -46,10 +46,10 @@ export class SceneProc extends BaseProc {
 
     private onLoginOk(): void {
         // App.SocketCenter.gameSocket.sendMsg([Core.MessageEnum.SEND_ENTER_GAME, 1]);
-        this.onEnterRoom();
+        this.onEnterScene();
     }
 
-    private onEnterRoom(): void {
+    private onEnterScene(): void {
         this.roomScene = new RoomScene(Globals.game);
         this.roomScene.camera = Globals.game.camera;
 
@@ -64,7 +64,7 @@ export class SceneProc extends BaseProc {
         //mapScene
         this.sceneLoader.changedToMap(Globals.DataCenter.PlayerData.mainPlayerInfo.mapId);
 
-        this.registRoomListenerHandler();
+        this.registSceneListenerHandler();
     }
 
     private changedToMapSceneStartHandler(): void {

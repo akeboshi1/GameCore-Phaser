@@ -51,7 +51,7 @@ export class BasicRoleElement extends SceneEntity {
 	}
 
 	protected onStartMove(): void {
-		this.myAnimationName = Const.ModelStateType.BONES_WALK;
+		this.myAnimationName = Const.ModelStateType.BONES_STAND;
 		this.invalidAnimation();
 	}
 
