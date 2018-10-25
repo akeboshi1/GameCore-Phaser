@@ -22,7 +22,7 @@ export class SelfRoleElement extends RoleElement {
                         angle = 1;
                     else
                         angle = 7
-                    this.mWalkAngleIndex = 8;
+                    this.walkAngleIndex = 8;
                     break;
                 case Phaser.Keyboard.DOWN.toString():
                 case Phaser.Keyboard.S.toString():
@@ -30,7 +30,7 @@ export class SelfRoleElement extends RoleElement {
                         angle = 3;
                     else
                         angle = 5
-                    this.mWalkAngleIndex = 4;
+                    this.walkAngleIndex = 4;
                     break;
                 case Phaser.Keyboard.LEFT.toString():
                 case Phaser.Keyboard.A.toString():
@@ -38,7 +38,7 @@ export class SelfRoleElement extends RoleElement {
                         angle = 1;
                     else
                         angle = 3
-                    this.mWalkAngleIndex = 2;
+                    this.walkAngleIndex = 2;
                     break;
                 case Phaser.Keyboard.RIGHT.toString():
                 case Phaser.Keyboard.D.toString():
@@ -46,27 +46,27 @@ export class SelfRoleElement extends RoleElement {
                         angle = 7;
                     else
                         angle = 5
-                    this.mWalkAngleIndex = 6;
+                    this.walkAngleIndex = 6;
                     break;
                 case Phaser.Keyboard.UP + "," + Phaser.Keyboard.RIGHT:
                 case Phaser.Keyboard.W + "," + Phaser.Keyboard.D:
                     angle = 7;
-                    this.mWalkAngleIndex = 7;
+                    this.walkAngleIndex = 7;
                     break;
                 case Phaser.Keyboard.UP + "," + Phaser.Keyboard.LEFT:
                 case Phaser.Keyboard.W + "," + Phaser.Keyboard.A:
                     angle = 1;
-                    this.mWalkAngleIndex = 1;
+                    this.walkAngleIndex = 1;
                     break;
                 case Phaser.Keyboard.DOWN + "," + Phaser.Keyboard.RIGHT:
                 case Phaser.Keyboard.S + "," + Phaser.Keyboard.D:
                     angle = 5;
-                    this.mWalkAngleIndex = 5;
+                    this.walkAngleIndex = 5;
                     break;
                 case Phaser.Keyboard.DOWN + "," + Phaser.Keyboard.LEFT:
                 case Phaser.Keyboard.S + "," + Phaser.Keyboard.A:
                     angle = 3;
-                    this.mWalkAngleIndex = 3;
+                    this.walkAngleIndex = 3;
                     break;
             }
             this.setAngleIndex(angle);

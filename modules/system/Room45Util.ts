@@ -1,5 +1,7 @@
 import BaseSingleton from '../../base/BaseSingleton';
 import Point = Phaser.Point;
+import Globals from "../../Globals";
+import Point3 = Phaser.Plugin.Isometric.Point3;
 
 export class Room45Util extends BaseSingleton {
     private _hTilewidth: number;
@@ -37,14 +39,36 @@ export class Room45Util extends BaseSingleton {
     }
 
     /**
+     * 直角转斜角
+     * @param x 水平像素坐标
+     * @param y 垂直像素坐标
+     * @version Egret 3.0.3
+     */
+    public p3top2(x: number, y: number, z:number): Point {
+        let point:Point = Globals.game.iso.project(new Point3(x,y,z));
+        return point;
+    }
+
+    /**
+     * 斜角转直角
+     * @param tileX 水平格子坐标
+     * @param tileY 垂直格子坐标
+     * @version Egret 3.0.3
+     */
+    public p2top3(tileX: number, tileY: number): Point3 {
+        let point3:Phaser.Plugin.Isometric.Point3 = Globals.game.iso.unproject(new Phaser.Point(tileX,tileY));
+        return point3;
+    }
+
+    /**
      * 像素坐标转化为格子坐标
      * @param x 水平像素坐标
      * @param y 垂直像素坐标
      * @version Egret 3.0.3
      */
     public pixelToTileCoords(x: number, y: number): Point {
-        let __x: number = Math.floor(this.pixelToTileX(x, y));
-        let __y: number = Math.floor(this.pixelToTileY(y, x));
+        var __x: number = Math.floor(this.pixelToTileX(x, y));
+        var __y: number = Math.floor(this.pixelToTileY(y, x));
         return new Point(__x, __y);
     }
 
@@ -56,7 +80,7 @@ export class Room45Util extends BaseSingleton {
      * @version Egret 3.0.3
      */
     private pixelToTileX(x: number, y: number): number {
-        let temp: number = (y / this.tileheight) + ((x - this._originX) / this.tilewidth);
+        var temp: number = (y / this.tileheight) + ((x - this._originX) / this.tilewidth);
         return temp;
     }
 
@@ -71,7 +95,6 @@ export class Room45Util extends BaseSingleton {
         let temp = (y / this.tileheight) - ((x - this._originX) / this.tilewidth);
         return temp;
     }
-
 
     /**
      * 格子坐标转化为像素坐标

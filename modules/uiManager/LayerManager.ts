@@ -3,6 +3,7 @@
  * author aaron
  */
 import BaseSingleton from '../../base/BaseSingleton';
+import Globals from "../../Globals";
 
 export class LayerManager extends BaseSingleton {
     private game: Phaser.Game;
@@ -18,7 +19,7 @@ export class LayerManager extends BaseSingleton {
     public init(game: Phaser.Game): void {
         this.game = game;
 
-        this.container = new Phaser.Group(game);
+        this.container = game.add.group();
 
         this.sceneLayer = new Phaser.Group(game);
 
@@ -34,20 +35,23 @@ export class LayerManager extends BaseSingleton {
 
         this.debugLayer = new Phaser.Group(game);
 
-        this.container.addChild(this.sceneLayer);
-        this.container.addChild(this.uiLayer);
-        this.container.addChild(this.textLineSliderLayer);
-        this.container.addChild(this.animationLayer);
-        this.container.addChild(this.tipLayer);
-        this.container.addChild(this.dialogLayer);
-        this.container.addChild(this.debugLayer);
-
-        this.game.stage.add(this.container);
+        this.container.add(this.sceneLayer);
+        this.container.add(this.uiLayer);
+        this.container.add(this.textLineSliderLayer);
+        this.container.add(this.animationLayer);
+        this.container.add(this.tipLayer);
+        this.container.add(this.dialogLayer);
+        this.container.add(this.debugLayer);
 
         this.layout();
     }
 
     public layout(): void {
-
+        // let graphics = Globals.game.add.graphics();
+        // graphics.clear();
+        // graphics.beginFill(0xff0000);
+        // graphics.drawCircle(100,100,100);
+        // graphics.endFill();
+        // this.container.add(graphics);
     }
 }

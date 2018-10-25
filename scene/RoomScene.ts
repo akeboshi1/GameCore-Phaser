@@ -33,7 +33,7 @@ export class RoomScene extends RoomSceneBasic {
         for (; i < len; i++) {
             element = this.mapSceneInfo.elementData[i];
             // if (element.config.type == 13) {
-               this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
+            //    this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
             // }
         }
     }
@@ -68,8 +68,7 @@ export class RoomScene extends RoomSceneBasic {
             case Const.SceneElementType.ROLE:
                 //当前玩家
                 if (isSelf) {
-                    element = this.currentSelfPlayer = new SelfRoleElement()
-                    this.game.camera.follow(element.display);
+                    element = this.currentSelfPlayer = new SelfRoleElement();
                 }
                 else {
                     element = new RoleElement();

@@ -30,7 +30,7 @@ export class MessageCenter extends BaseSingleton {
 
     public removeListener(type: string, listener: Function, thisObj: any): void {
         var idx: number = this._listenerList.indexOf(listener);
-        if (idx >= 0 && this._typeList[idx] == type && this._thisObjList[idx] == thisObj) {
+        if (idx >= 0 && this._typeList[idx] === type && this._thisObjList[idx] === thisObj) {
             this.removeByIdx(idx);
         }
     }
@@ -38,7 +38,7 @@ export class MessageCenter extends BaseSingleton {
     public removeByType(type: string): void {
         if (type) {
             for (var idx: number = this._typeList.length - 1; idx >= 0; idx--) {
-                if (this._typeList[idx] == type) {
+                if (this._typeList[idx] === type) {
                     this.removeByIdx(idx);
                 }
             }
@@ -48,7 +48,7 @@ export class MessageCenter extends BaseSingleton {
     public removeByThisObj(thisObj: any): void {
         if (thisObj) {
             for (var idx: number = this._thisObjList.length - 1; idx >= 0; idx--) {
-                if (this._thisObjList[idx] == thisObj) {
+                if (this._thisObjList[idx] === thisObj) {
                     this.removeByIdx(idx);
                 }
             }
@@ -58,7 +58,7 @@ export class MessageCenter extends BaseSingleton {
     public removeByGroup(group: string): void {
         if (group) {
             for (var idx: number = this._groupList.length - 1; idx >= 0; idx--) {
-                if (this._groupList[idx] == group) {
+                if (this._groupList[idx] === group) {
                     this.removeByIdx(idx);
                 }
             }
@@ -70,7 +70,7 @@ export class MessageCenter extends BaseSingleton {
         var dispatchListenerList: Function[] = [];
         var dispatchThisObjList: any[] = [];
         for (idx = 0; idx < this._typeList.length; idx++) {
-            if (this._typeList[idx] == type) {
+            if (this._typeList[idx] === type) {
                 dispatchListenerList.push(this._listenerList[idx]);
                 dispatchThisObjList.push(this._thisObjList[idx]);
             }
@@ -81,7 +81,7 @@ export class MessageCenter extends BaseSingleton {
             for (idx = 0; idx < dispatchListenerList.length; idx++) {
                 listener = dispatchListenerList[idx];
                 thisObj = dispatchThisObjList[idx];
-                if (data == null) {
+                if (data === null) {
                     listener.apply(thisObj);
                 } else {
                     listener.apply(thisObj, [data]);

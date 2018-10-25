@@ -8,12 +8,16 @@ export class TerrainNullItem extends TerrainImageItem {
 
     public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
         super(game, owner);
+        this.terrainIsoDisplayObject = this.game.add.isoSprite(0, 0, 0);
+        this.terrainIsoDisplayObject.anchor.set(0.5,0);
+        this.add(this.terrainIsoDisplayObject);
+        this.draw();
     }
 
 
     public onFrame(deltaTime: number): void {
         // this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.scrollX, this.camera.scrollY,
-        //     this.camera.width, this.camera.height, this.itemX, this.itemY, this.itemWidth, this.itemHeight)
+        //     this.camera.width, this.camera.height, this.isoX, this.isoY, this.itemWidth, this.itemHeight)
         // if (this.mTerrainItemIsInCamera) {
         //     this.mTerrainItemOutCameraTime = 0;
         //     this.visible = true;
@@ -24,8 +28,12 @@ export class TerrainNullItem extends TerrainImageItem {
         //     }
         //     this.visible = false;
         // }
-        
-        this.setPosition(this.itemX, this.itemY, this.itemZ);
+
+        if (this.terrainIsoDisplayObject) {
+            this.terrainIsoDisplayObject.isoX = this.isoX;
+            this.terrainIsoDisplayObject.isoY = this.isoY;
+            this.terrainIsoDisplayObject.isoZ = this.isoZ;
+        }
         this.visible = true;
     }
 

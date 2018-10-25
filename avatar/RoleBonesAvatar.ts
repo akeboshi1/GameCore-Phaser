@@ -2,6 +2,7 @@ import {BasicAvatar} from "../base/BasicAvatar";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
+import {Log} from "../Log";
 
 export class RoleBonesAvatar extends BasicAvatar {
     public hasPalceHold: boolean = true;
@@ -28,14 +29,14 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     public get animationName(): string {
         return this.mAnimationName;
-    };
+    }
 
     public set animationName(value: string) {
         if (this.mAnimationName !== value) {
             this.mAnimationName = value;
             this.mAnimationDirty = true;
         }
-    };
+    }
 
     public get skin(): RoleAvatarModelVO {
         return this.mSkin;
@@ -46,7 +47,7 @@ export class RoleBonesAvatar extends BasicAvatar {
             this.mSkin = value;
             this.mSkinDirty = true;
         }
-    };
+    }
 
     public dispose(): void {
         super.dispose();
@@ -79,6 +80,30 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
         this.mBodyAvatar.visible = false;
         this.addChild(this.mBodyAvatar.view);
+    }
+
+    public get x() {
+        return this.isoX;
+    }
+
+    public set x(isoX) {
+        this.isoX = isoX;
+    }
+
+    public get y() {
+        return this.isoY;
+    }
+
+    public set y(isoY) {
+        this.isoY = isoY;
+    }
+
+    public get z() {
+        return this.isoZ;
+    }
+
+    public set z(isoZ) {
+        this.isoZ = isoZ;
     }
 
     protected onInitializeComplete(): void {

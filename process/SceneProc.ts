@@ -8,6 +8,7 @@ import {PlayerInfo} from "../struct/PlayerInfo";
 import {SelfRoleElement} from "../scene/elements/SelfRoleElement";
 import {Const} from "../const/Const";
 import {BasicRoleAvatar} from "../avatar/BasicRoleAvatar";
+import {Log} from "../Log";
 
 export class SceneProc extends BaseProc {
     public roomScene: RoomScene;
@@ -76,6 +77,9 @@ export class SceneProc extends BaseProc {
 
         Globals.SceneManager.popupScene();
 
+        Log.trace(mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
+        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
+
         Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tilewidth, mapSceneInfo.tileheight);
 
         this.roomScene.initializeScene(mapSceneInfo);
@@ -86,6 +90,9 @@ export class SceneProc extends BaseProc {
 
         //set camera
         Globals.SceneManager.pushScene(this.roomScene);
+        // let camera = Globals.game.camera;
+        // camera.setSize(Globals.DataCenter.MapData.mapInfo.mapTotalWidth,Globals.DataCenter.MapData.mapInfo.mapTotalHeight);
+        Globals.game.camera.follow(this.roomScene.currentSelfPlayer.display);
         this.roomScene.notifyInitializeSceneComplete();
     }
 }

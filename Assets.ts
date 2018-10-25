@@ -3,36 +3,22 @@
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
         static getName(): string {
-            return 'preload_sprites_array';
+            return "preload_sprites_array";
         }
 
         static getJSONArray(): string {
-            return require('assets/atlases/preload_sprites_array.json');
+            return require("assets/atlases/preload_sprites_array.json");
         }
 
         static getPNG(): string {
-            return require('assets/atlases/preload_sprites_array.png');
+            return require("assets/atlases/preload_sprites_array.png");
         }
     }
 
     export namespace AtlasesPreloadSpritesArray {
         export enum Frames {
-            PreloadBar = 'preload_bar.png',
-            PreloadFrame = 'preload_frame.png',
-        }
-    }
-
-    export class AtlasesCharSpritesArray {
-        static getName(): string {
-            return 'char_sprites_array';
-        }
-
-        static getJSONArray(): string {
-            return require('assets/atlases/char_sprites_array.json');
-        }
-
-        static getPNG(): string {
-            return require('assets/atlases/char_sprites_array.png');
+            PreloadBar = "preload_bar.png",
+            PreloadFrame = "preload_frame.png",
         }
     }
 }
@@ -80,11 +66,11 @@ export namespace Jsons {
         }
 
         static getName(mapId: number): string {
-            return require(mapId + '_json');
+            return require(mapId + "_json");
         }
 
         static getJSON(mapId: number): string {
-            return require('assets/map/' + mapId + '.json');
+            return require("assets/map/" + mapId + ".json");
         }
     }
 }
@@ -100,11 +86,11 @@ export namespace Tile {
         }
 
         static getName(mapId: number): string {
-            return require(mapId + '_json');
+            return require(mapId + "_json");
         }
 
         static getJSON(mapId: number): string {
-            return require('assets/map/' + mapId + '.json');
+            return require("assets/map/" + mapId + ".json");
         }
     }
 }

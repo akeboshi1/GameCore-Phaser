@@ -35,11 +35,6 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         return this.armature;
     }
 
-    public setPos(x: number, y: number): void {
-        this.armature.x = x;
-        this.armature.y = y;
-    }
-
     public setAnimationControlFunc(value: Function, thisObj: any): void {
         this.mAnimatonControlFunc = value;
         this.mAnimatonControlThisObj = thisObj;

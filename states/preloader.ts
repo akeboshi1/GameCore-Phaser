@@ -1,8 +1,5 @@
 import {Atlases, Avatar} from "../Assets";
 import * as Assets from "../Assets";
-import Globals from "../Globals";
-import {Const} from "../const/Const";
-
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
     private preloadFrameSprite: Phaser.Sprite = null;
@@ -42,7 +39,6 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadAtlases() {
-        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesCharSpritesArray.getName(), Assets.Atlases.AtlasesCharSpritesArray.getPNG(), Assets.Atlases.AtlasesCharSpritesArray.getJSONArray());
     }
 
     private loadAvatar(): void {

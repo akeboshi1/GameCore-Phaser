@@ -3,6 +3,7 @@
  */
 import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class KeyboardMod extends BaseSingleton {
     private keyCodes: number[];
@@ -35,6 +36,14 @@ export class KeyboardMod extends BaseSingleton {
             Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
     }
 
+    private onDown():void {
+        this.CheckKey();
+    }
+
+    private onUp():void {
+        this.CheckKey();
+    }
+
     private _isKeyDown: boolean = false;
 
     public get isKeyDown(): boolean {
@@ -64,32 +73,33 @@ export class KeyboardMod extends BaseSingleton {
     public CheckKey(): void {
         this._isKeyDown = false;
 
-        if (this.keyDowns.length == 0) return;
+        if (this.keyDowns.length === 0) return;
 
         this._isKeyDown = true;
         this._keyDownCode = "";
 
-        if (this.keyDowns.length == 2) {
-            if (this.keyDowns.indexOf(Phaser.Keyboard.UP) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) != -1) {
+        if (this.keyDowns.length === 2) {
+            if (this.keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.RIGHT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) != -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.D].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.UP) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.LEFT) != -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.LEFT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) != -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.A].toString();
-            }  else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) != -1) {
+            }  else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.RIGHT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) != -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.D].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.LEFT) != -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) != -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) != -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.A].toString();
             }
         }
-        if (this.keyDownCode == "")
+        if (this.keyDownCode === "")
             this._keyDownCode = this.keyDowns[0].toString();
+        // Log.trace("KeyCode--->"+this.keyDownCode);
     }
 
     public clear(): void {

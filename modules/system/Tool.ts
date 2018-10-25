@@ -1,6 +1,7 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import * as pako from "pako";
 import {Log} from "../../Log";
+import {Const} from "../../const/Const";
 
 export class Tool extends BaseSingleton {
     public SMALLEST_NUMBER: number = 0.000001;
@@ -33,7 +34,7 @@ export class Tool extends BaseSingleton {
     }
 
     /**
-     * 根据两点确定这两点连线的二元一次方程 y = ax + b或者 x = ay + b
+     * 根据两点确定这两点连线的二元一次方程 iosY = ax + b或者 iosX = ay + b
      * @param ponit1
      * @param point2
      * @param type        指定返回函数的形式。为0则根据x值得到y，为1则根据y得到x
@@ -44,7 +45,7 @@ export class Tool extends BaseSingleton {
         let resultFuc: Function = null;
 
 
-        // 先考虑两点在一条垂直于坐标轴直线的情况，此时直线方程为 y = a 或者 x = a 的形式
+        // 先考虑两点在一条垂直于坐标轴直线的情况，此时直线方程为 iosY = a 或者 iosX = a 的形式
         if (ponit1.x === point2.x) {
             if (type === 0) {
                 Log.trace("两点所确定直线垂直于y轴，不能根据x值得到y值");
@@ -70,7 +71,7 @@ export class Tool extends BaseSingleton {
             return resultFuc;
         }
 
-        // 当两点确定直线不垂直于坐标轴时直线方程设为 y = ax + b
+        // 当两点确定直线不垂直于坐标轴时直线方程设为 iosY = ax + b
         let a: number;
 
         // 根据
@@ -182,8 +183,13 @@ export class Tool extends BaseSingleton {
         return result;
     }
 
-    private ab2str(buf) {
+    private ab2str(buf):any {
         return String.fromCharCode.apply(null, new Uint16Array(buf));
+    }
+
+    public get45Tile():number {
+        let temp: number = Math.sqrt(Math.pow(Const.GameConst.HALF_MAP_TILE_WIDTH,2)+Math.pow(Const.GameConst.HALF_MAP_TILE_HEIGHT,2));
+        return temp;
     }
 
 }

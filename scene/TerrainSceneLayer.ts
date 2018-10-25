@@ -6,6 +6,7 @@ import {TerrainInfo} from "../struct/TerrainInfo";
 import {TerrainImageItem} from "./terrainItems/TerrainImageItem";
 import Globals from "../Globals";
 import {TerrainNullItem} from "./terrainItems/TerrainNullItem";
+import {Log} from "../Log";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
     public curTerrainLoadCount: number = 0;
@@ -13,7 +14,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     private _terrainItems: Array<BasicTerrainItem>;
 
     public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
-        super(game,x,y);
+        super(game, x, y);
         this._terrainItems = [];
     }
 
@@ -44,8 +45,8 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     }
 
     public onFrame(deltaTime: number): void {
-        // this.x = (GameConst.WindowWidth - this.mapSceneInfo.mapTotalWidth) >> 1;
-        // this.y = (GameConst.WindowHeight - this.mapSceneInfo.mapTotalHeight) >> 1;
+        // this.iosX = (GameConst.WindowWidth - this.mapSceneInfo.mapTotalWidth) >> 1;
+        // this.iosY = (GameConst.WindowHeight - this.mapSceneInfo.mapTotalHeight) >> 1;
         var terrainItem: BasicTerrainItem = null;
 
         for (var i: number = 0, n: number = this._terrainItems.length; i < n; i++) {
@@ -77,17 +78,15 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         for (; i < len; i++) {
             value = datas[i];
             if (value.type === 0) {
-                element = new TerrainNullItem(Globals.game,this);
+                element = new TerrainNullItem(Globals.game, this);
             } else {
-                element = new TerrainImageItem(Globals.game,this);
+                // Log.trace(value.row,value.col);
+                element = new TerrainImageItem(Globals.game, this);
             }
             element.camera = this.camera;
             element.data = value;
-            // point = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
-            // element.itemX = point.x - Const.GameConst.HALF_MAP_TILE_WIDTH;
-            // element.itemY = point.y;
-            element.itemX = value.row * Const.GameConst.MAP_TILE_HEIGHT;
-            element.itemY = value.col * Const.GameConst.MAP_TILE_HEIGHT;
+            element.isoX = value.row * Const.GameConst.MAP_TILE_HEIGHT;
+            element.isoY = value.col * Const.GameConst.MAP_TILE_HEIGHT;
             element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
             element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
 

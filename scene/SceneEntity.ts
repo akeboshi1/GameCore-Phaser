@@ -1,11 +1,12 @@
 import {BasicSceneEntity} from "../base/BasicSceneEntity";
 import Globals from "../Globals";
 import {Const} from "../const/Const";
+import Point = Phaser.Point;
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable: boolean = true;
     public isCanShow: boolean = true;
-    //moving
+    // moving
     protected mySpeed: number = 4;//
     protected mAngleIndex: number = 0;
     protected mWalkAngleIndex: number = 0;//走路
@@ -19,7 +20,7 @@ export default class SceneEntity extends BasicSceneEntity {
         super();
     }
 
-    //Moving
+    // Moving
     public get angleIndex(): number {
         return this.mAngleIndex;
     }
@@ -46,8 +47,8 @@ export default class SceneEntity extends BasicSceneEntity {
         return this.myIsWalking;
     }
 
-    public get gridPos(): Phaser.Point {
-        return this.myIsWalking ? this.myCurrentPathPoints[Globals.Tool.clamp(this.myCurrentPathStepIndex + 1, 0, this.myCurrentPathPoints.length - 1)] : new Phaser.Point(this.getGridPositionColIndex(), this.getGridPositionRowIndex());
+    public get gridPos(): Point {
+        return this.myIsWalking ? this.myCurrentPathPoints[Globals.Tool.clamp(this.myCurrentPathStepIndex + 1, 0, this.myCurrentPathPoints.length - 1)] : this.gridPos;
     }
 
     public dispose(): void {
@@ -57,7 +58,7 @@ export default class SceneEntity extends BasicSceneEntity {
         super.dispose();
     }
 
-    //弧度
+    // 弧度
     public setAngleIndex(value: number): void {
         this.mAngleIndex = value;
     }
@@ -99,10 +100,10 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected onStartMove(): void {
-    };
+    }
 
     protected onPauseMove(): void {
-    };
+    }
 
     protected clearMovingData(): void {
         this.myCurrentPathStepIndex = 1;
@@ -121,7 +122,7 @@ export default class SceneEntity extends BasicSceneEntity {
         this.myCurrentMoveInterval = 0;
         this.myCurrentPathPoints = path;
 
-        // this._topPoint = Game.Room45Util.pixelToTileCoords(this.x,this.y);
+        // this._topPoint = Game.Room45Util.pixelToTileCoords(this.iosX,this.iosY);
 
         this.resumeWalk();
     }
@@ -158,37 +159,37 @@ export default class SceneEntity extends BasicSceneEntity {
     protected onMove(targetPathPoints: any): void {
         if (this.myCurrentPathStepIndex >= this.myCurrentPathPoints.length) return;
 
-        let dirX = targetPathPoints.x - this.getGridPositionColIndex();
-        let dirY = targetPathPoints.y - this.getGridPositionRowIndex();
+        let dirX = targetPathPoints.x - this.gridPos.x;
+        let dirY = targetPathPoints.y - this.gridPos.y;
 
-        this.x += (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
-        this.y += (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
+        this.iosX += (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
+        this.iosY += (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
 
         if (dirX === 1) {
             if (dirY === 1) {
-                //down;
+                // down;
             } else if (dirY === 0) {
-                //rightDown
+                // rightDown
                 this.setAngleIndex(5);
             } else if (dirY === -1) {
-                //right
+                // right
             }
         } else if (dirX === 0) {
             if (dirY === 1) {
-                //leftDown
+                // leftDown
                 this.setAngleIndex(3);
             } else if (dirY === -1) {
-                //rightUp
+                // rightUpAssets
                 this.setAngleIndex(7);
             }
         } else if (dirX === -1) {
             if (dirY === 1) {
-                //left
+                // left
             } else if (dirY === 0) {
-                //leftUp
+                // leftUp
                 this.setAngleIndex(1);
             } else if (dirY === -1) {
-                //up;
+                // up;
             }
         }
     }

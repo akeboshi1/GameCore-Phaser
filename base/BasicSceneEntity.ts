@@ -5,17 +5,19 @@ import {SceneBasic} from "../scene/SceneBasic";
 import Globals from "../Globals";
 import {BasicAvatar} from "./BasicAvatar";
 import {IEntityComponent} from "./IEntityComponent";
+import Point = Phaser.Point;
+import {Log} from "../Log";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     //basic
     public uid: string;//runtime id
-    public elementTypeId: number = -1;//see SceneElementType
+    public elementTypeId: number = 0;
     public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
 
     public isValidDisplay: boolean = false;
-    public zFighting: number = 0;
-    public screenX: number = 0;
-    public screenY: number = 0;
+    // public screenX: number = 0;
+    // public screenY: number = 0;
+
     public data: any;
     public display: any;
     public scene: SceneBasic;
@@ -25,34 +27,34 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     public constructor() {
     }
 
-    private _x: number = 0;
+    private _iosX: number = 0;
 
-    public get x(): number {
-        return this._x;
+    public get iosX(): number {
+        return this._iosX;
     }
 
-    public set x(value: number) {
-        this._x = value;
+    public set iosX(value: number) {
+        this._iosX = value;
     }
 
-    private _y: number = 0;
+    private _iosY: number = 0;
 
-    public get y(): number {
-        return this._y;
+    public get iosY(): number {
+        return this._iosY;
     }
 
-    public set y(value: number) {
-        this._y = value;
+    public set iosY(value: number) {
+        this._iosY = value;
     }
 
-    private _z: number = 0;
+    private _iosZ: number = 0;
 
-    public get z(): number {
-        return this._z;
+    public get iosZ(): number {
+        return this._iosZ;
     }
 
-    public set z(value: number) {
-        this._z = value;
+    public set iosZ(value: number) {
+        this._iosZ = value;
     }
 
     /**
@@ -82,19 +84,17 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     //Position
-    public setPosition(x: number, y: number): void {
-        this._x = x;
-        this._y = y;
+    public setPosition(x: number, y: number, z:number = 0): void {
+        this._iosX = x;
+        this._iosY = y;
+        this._iosZ = z;
     }
 
-    public getGridPositionColIndex(): number {
-        return Globals.Room45Util.pixelToTileCoords(this._x, this._y).x;
+    public get gridPos(): Point {
+        let temp = Globals.Room45Util.p3top2(this._iosX, this._iosY,this._iosZ);
+        let point: Point = Globals.Room45Util.pixelToTileCoords(temp.x,temp.y);
+        return point;
     }
-
-    public getGridPositionRowIndex(): number {
-        return Globals.Room45Util.pixelToTileCoords(this._x, this._y).y;
-    }
-
     public isInScreen(): boolean {
         return true;//Globals.Tool.isOverlapCircleAndRectangle(this.screenX, this.screenY, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, 0, 0, this.camera.width, this.camera.height );
     }
@@ -168,8 +168,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     };
 
     protected onUpdated(deltaTime: number): void {
-        // this.screenX = this.x - this.camera.x;
-        // this.screenY = this.y - this.camera.y;
 
         this.checkIsValidDisplayAvatar();
         if ((this.display as IEntityComponent).onTick !== undefined) (<IEntityComponent>this.display).onTick(deltaTime);
@@ -180,12 +178,9 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-        // this.display.x = this.screenX >> 0;
-        // this.display.y = this.screenY >> 0;
-        if (this.display instanceof Phaser.Plugin.Isometric.IsoSprite) {
-            let point3 = this.display.isoPosition;
-            point3.setTo(this.x, this.y, this.z);
-        }
+        this.display.x = this.iosX;
+        this.display.y = this.iosY;
+        this.display.z = this.iosZ;
        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 }

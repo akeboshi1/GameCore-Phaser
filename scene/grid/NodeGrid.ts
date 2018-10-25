@@ -72,8 +72,8 @@ export class NodeGrid {
 
     /**
      * Returns the node at the given coords.
-     * @param x The x coord.
-     * @param y The y coord.
+     * @param x The iosX coord.
+     * @param y The iosY coord.
      */
     public getNode(x: number, y: number): any {
         let node = this._nodes[x][y]
@@ -84,8 +84,8 @@ export class NodeGrid {
 
     /**
      * Sets the node at the given coords as the end node.
-     * @param x The x coord.
-     * @param y The y coord.
+     * @param x The iosX coord.
+     * @param y The iosY coord.
      */
     public setEndNode(x: number, y: number): void {
         this._endNode = this._nodes[x][y];
@@ -93,8 +93,8 @@ export class NodeGrid {
 
     /**
      * Sets the node at the given coords as the start node.
-     * @param x The x coord.
-     * @param y The y coord.
+     * @param x The iosX coord.
+     * @param y The iosY coord.
      */
     public setStartNode(x: number, y: number): void {
         this._startNode = this._nodes[x][y];
@@ -102,8 +102,8 @@ export class NodeGrid {
 
     /**
      * Sets the node at the given coords as walkable or not.
-     * @param x The x coord.
-     * @param y The y coord.
+     * @param x The iosX coord.
+     * @param y The iosY coord.
      */
     public setWalkable(x: number, y: number, value: boolean): void {
         this._nodes[x][y].walkable = value;

@@ -2,42 +2,42 @@ import {IAnimatedObject} from './IAnimatedObject';
 import {IEntityComponent} from './IEntityComponent';
 
 export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent {
-        private mInitilized: Boolean = false;
-        public owner: any;
-        // protected data: any = null;
+    public owner: any;
+    protected myData: any = null;
+    private mInitilized: boolean = false;
 
-        public constructor(game: Phaser.Game) {
-            super(game, 0, 0, 0);
-        }
+    public constructor(game: Phaser.Game) {
+        super(game, 0, 0, 0);
+    }
 
-        public get initilized(): Boolean {
-            return this.mInitilized;
-        }
+    public get initilized(): boolean {
+        return this.mInitilized;
+    }
 
-        public initialize(data: any = null): void {
-            if (!this.mInitilized) {
-                // this.data = data;
-                this.onInitialize();
-                this.mInitilized = true;
-                this.onInitializeComplete();
-            }
-        }
-
-        protected onInitialize(): void {
-        }
-
-        protected onInitializeComplete(): void {
-        }
-
-        public dispose(): void {
-
-        }
-
-        // IAnimatedObject Interface
-        public onFrame(deltaTime: number): void {
-
-        }
-
-        public onTick(deltaTime: number): void {
+    public initialize(value: any = null): void {
+        if (!this.mInitilized) {
+            this.myData = value;
+            this.onInitialize();
+            this.mInitilized = true;
+            this.onInitializeComplete();
         }
     }
+
+    public dispose(): void {
+
+    }
+
+    // IAnimatedObject Interface
+    public onFrame(deltaTime: number): void {
+
+    }
+
+    public onTick(deltaTime: number): void {
+    }
+
+    protected onInitialize(): void {
+    }
+
+    protected onInitializeComplete(): void {
+    }
+}
