@@ -77,8 +77,12 @@ export class SceneProc extends BaseProc {
 
         Globals.SceneManager.popupScene();
 
-        Log.trace(mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
-        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
+        Log.trace(mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight, DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
+        let tempX: number = 0;
+        let tempY: number = DEFAULT_GAME_HEIGHT/2+130;
+        let widthTemp: number = mapSceneInfo.mapTotalWidth + 690;
+        let heightTemp: number = mapSceneInfo.mapTotalHeight + 440;
+        Globals.game.world.setBounds(tempX, tempY, widthTemp, heightTemp);
 
         Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tilewidth, mapSceneInfo.tileheight);
 
@@ -90,8 +94,8 @@ export class SceneProc extends BaseProc {
 
         //set camera
         Globals.SceneManager.pushScene(this.roomScene);
-        // let camera = Globals.game.camera;
-        // camera.setSize(Globals.DataCenter.MapData.mapInfo.mapTotalWidth,Globals.DataCenter.MapData.mapInfo.mapTotalHeight);
+        let camera = Globals.game.camera;
+        camera.setSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
         Globals.game.camera.follow(this.roomScene.currentSelfPlayer.display);
         this.roomScene.notifyInitializeSceneComplete();
     }

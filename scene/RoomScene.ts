@@ -9,6 +9,7 @@ import {SelfRoleElement} from "./elements/SelfRoleElement";
 import {RoleElement} from "./elements/RoleElement";
 import BasicElement from './elements/BasicElement';
 import {ElementInfo} from "../struct/ElementInfo";
+import {Log} from "../Log";
 
 export class RoomScene extends RoomSceneBasic {
     public seaMapGrid: RoomGridUtil;
@@ -36,6 +37,29 @@ export class RoomScene extends RoomSceneBasic {
             //    this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
             // }
         }
+    }
+    // private graphics;
+    // private graphics1;
+    public onFrame(deltaTime: number): void {
+        super.onFrame(deltaTime);
+        // if (this.graphics === undefined)
+        //     this.graphics = Globals.game.add.graphics();
+        // this.graphics.clear();
+        // // this.graphics.alpha = 0.2;
+        // this.graphics.lineStyle(5, 0xff0000, 1);
+        // // this.graphics.beginFill(0xff0000);
+        // this.graphics.drawRect(Globals.game.camera.x, Globals.game.camera.y, Globals.game.camera.width, Globals.game.camera.height);
+        // this.graphics.endFill();
+
+        // if (this.graphics1 === undefined)
+        //     this.graphics1 = Globals.game.add.graphics();
+        // this.graphics1.clear();
+        // // this.graphics.alpha = 0.2;
+        // this.graphics1.lineStyle(5, 0x00ff00, 1);
+        // // this.graphics.beginFill(0xff0000);
+        // this.graphics1.drawRect(Globals.game.world.x, Globals.game.world.y, Globals.game.world.width, Globals.game.world.height);
+        // this.graphics1.endFill();
+        // Log.trace(this.currentSelfPlayer.display.isoX,this.currentSelfPlayer.display.isoY);
     }
 
     protected onActivedScene(): void {

@@ -9,8 +9,8 @@ export class PlayerInfo {
 	public moveSpeed: number = 1000;        // 速度
 	public sex: number = 1;              // 性别
 
-	public x: number = 0.5 * Const.GameConst.MAP_TILE_HEIGHT;
-	public y: number = 0.5 * Const.GameConst.MAP_TILE_HEIGHT;
+	public x: number = 0 * Const.GameConst.MAP_TILE_HEIGHT;
+	public y: number = 0 * Const.GameConst.MAP_TILE_HEIGHT;
 
 	public direct: number = 3;
 	public mapId: number = 10001;

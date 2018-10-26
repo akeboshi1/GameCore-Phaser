@@ -76,8 +76,8 @@ export class BasicRoleElement extends SceneEntity {
 
     protected doAngleMoving(actualSpeed: number): void {
         if (actualSpeed <= 0) return;
-        let _x = this.iosX;
-        let _y = this.iosY;
+        let _x = this.isoX;
+        let _y = this.isoY;
         // Log.trace("----------------------", Const.GameConst.MAP_TILE_BORDER, Const.GameConst.MAP_TILE_HEIGHT);
         let subSpeedY: number = Const.GameConst.MAP_TILE_BORDER * actualSpeed / Const.GameConst.MAP_TILE_HEIGHT;
         let subSpeedX: number = Const.GameConst.MAP_TILE_BORDER * actualSpeed / Const.GameConst.MAP_TILE_WIDTH;

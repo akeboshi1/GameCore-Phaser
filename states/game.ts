@@ -2,10 +2,11 @@ import {SceneProc} from "../process/SceneProc";
 import Globals from "../Globals";
 
 export default class Game extends Phaser.State {
+
     public init(): void {
-        this.game.iso.anchor.setTo(0.5, 0.5);
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
+        Globals.game.iso.anchor.setTo(0.5, 0.5);
     }
 
     public create(): void {

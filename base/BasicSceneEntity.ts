@@ -27,34 +27,34 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     public constructor() {
     }
 
-    private _iosX: number = 0;
+    private _isoX: number = 0;
 
-    public get iosX(): number {
-        return this._iosX;
+    public get isoX(): number {
+        return this._isoX;
     }
 
-    public set iosX(value: number) {
-        this._iosX = value;
+    public set isoX(value: number) {
+        this._isoX = value;
     }
 
-    private _iosY: number = 0;
+    private _isoY: number = 0;
 
-    public get iosY(): number {
-        return this._iosY;
+    public get isoY(): number {
+        return this._isoY;
     }
 
-    public set iosY(value: number) {
-        this._iosY = value;
+    public set isoY(value: number) {
+        this._isoY = value;
     }
 
-    private _iosZ: number = 0;
+    private _isoZ: number = 0;
 
-    public get iosZ(): number {
-        return this._iosZ;
+    public get isoZ(): number {
+        return this._isoZ;
     }
 
-    public set iosZ(value: number) {
-        this._iosZ = value;
+    public set isoZ(value: number) {
+        this._isoZ = value;
     }
 
     /**
@@ -85,13 +85,13 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
 
     //Position
     public setPosition(x: number, y: number, z:number = 0): void {
-        this._iosX = x;
-        this._iosY = y;
-        this._iosZ = z;
+        this._isoX = x;
+        this._isoY = y;
+        this._isoZ = z;
     }
 
     public get gridPos(): Point {
-        let temp = Globals.Room45Util.p3top2(this._iosX, this._iosY,this._iosZ);
+        let temp = Globals.Room45Util.p3top2(this._isoX, this._isoY,this._isoZ);
         let point: Point = Globals.Room45Util.pixelToTileCoords(temp.x,temp.y);
         return point;
     }
@@ -178,9 +178,9 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-        this.display.x = this.iosX;
-        this.display.y = this.iosY;
-        this.display.z = this.iosZ;
+        this.display.isoX = this.isoX;
+        this.display.isoY = this.isoY;
+        this.display.isoZ = this.isoZ;
        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 }

@@ -3,6 +3,7 @@ import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import {Log} from "../Log";
+import Globals from "../Globals";
 
 export class RoleBonesAvatar extends BasicAvatar {
     public hasPalceHold: boolean = true;
@@ -76,35 +77,35 @@ export class RoleBonesAvatar extends BasicAvatar {
     }
 
     protected onInitialize(): void {
-        this.mBodyAvatar = new BonesLoaderAvatar();
+        this.mBodyAvatar = new BonesLoaderAvatar(Globals.game);
         this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
         this.mBodyAvatar.visible = false;
-        this.addChild(this.mBodyAvatar.view);
+        this.addChild(this.mBodyAvatar);
     }
 
-    public get x() {
-        return this.isoX;
-    }
-
-    public set x(isoX) {
-        this.isoX = isoX;
-    }
-
-    public get y() {
-        return this.isoY;
-    }
-
-    public set y(isoY) {
-        this.isoY = isoY;
-    }
-
-    public get z() {
-        return this.isoZ;
-    }
-
-    public set z(isoZ) {
-        this.isoZ = isoZ;
-    }
+    // public get x() {
+    //     return super.x;
+    // }
+    //
+    // public set x(isoX) {
+    //     this.isoX = isoX;
+    // }
+    //
+    // public get y() {
+    //     return super.y;
+    // }
+    //
+    // public set y(isoY) {
+    //     this.isoY = isoY;
+    // }
+    //
+    // public get z() {
+    //     return this.isoZ;
+    // }
+    //
+    // public set z(isoZ) {
+    //     this.isoZ = isoZ;
+    // }
 
     protected onInitializeComplete(): void {
     }
@@ -126,5 +127,13 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPalceHold) this.onRemovePlaceHoldAvatarPart();
         this.mBodyAvatar.visible = true;
+        // let graphics = Globals.game.add.graphics();
+        // graphics.clear();
+        // // graphics.lineStyle(1, 0x00ff00, 1);
+        // graphics.beginFill(0x0000ff);
+        // graphics.drawCircle(0,0,5);
+        // graphics.endFill();
+        // this.addChild(graphics);
+
     }
 }

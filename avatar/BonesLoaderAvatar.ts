@@ -6,7 +6,7 @@ import PhaserSlotDisplay = dragonBones.PhaserSlotDisplay;
 import Slot = dragonBones.Slot;
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 
-export class BonesLoaderAvatar implements IAnimatedObject {
+export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     private static readonly BONES_SCALE: number = 1;
     protected armature: dragonBones.PhaserArmatureDisplay;
     private myModel: RoleAvatarModelVO;
@@ -19,20 +19,13 @@ export class BonesLoaderAvatar implements IAnimatedObject {
     private mAnimatonControlThisObj: any;
     private replaceArr = [];
 
-    public constructor() {
+    public constructor(game: Phaser.Game) {
+        super(game);
         this.init();
     }
 
-    public set visible(value: boolean) {
-        this.view.visible = value;
-    }
-
     public get modelLoaded(): boolean {
-        return this.mModelLoaded
-    };
-
-    public get view(): any {
-        return this.armature;
+        return this.mModelLoaded;
     }
 
     public setAnimationControlFunc(value: Function, thisObj: any): void {
@@ -52,12 +45,12 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         // console.log(this.direct);
         this.armature.scale.x = BonesLoaderAvatar.BONES_SCALE;
         let t_direct = angleIndex;
-        if (angleIndex == 7) {
+        if (angleIndex === 7) {
             t_direct = 1;
             this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
 
-        if (angleIndex == 5) {
+        if (angleIndex === 5) {
             t_direct = 3
             this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
@@ -75,7 +68,7 @@ export class BonesLoaderAvatar implements IAnimatedObject {
     }
 
     public loadModel(model: RoleAvatarModelVO, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {
-        if (this.myModel.sign != model.sign) {
+        if (this.myModel.sign !== model.sign) {
 
             this.closeLoadModel();
             this.myModel = model;
@@ -215,7 +208,7 @@ export class BonesLoaderAvatar implements IAnimatedObject {
                 this.replaceArr.push({slot: Const.AvatarSlotType.WeapBarm, part: Const.AvatarPartType.WeapBarm, dir: 1, skin: model.farm_weap_id});
             }
 
-            if (onLoadStart != null) {
+            if (onLoadStart !== null) {
                 onLoadStart.apply(thisObj);
             }
 
@@ -236,7 +229,7 @@ export class BonesLoaderAvatar implements IAnimatedObject {
             this.myModelDirty = false;
         }
 
-        if (this.mModelLoaded) {
+        if (this.modelLoaded) {
             if (this.mAnimatonControlFuncDitry) {
                 if (this.mAnimatonControlFunc != null) {
                     this.mAnimatonControlFunc.call(this.mAnimatonControlThisObj, this);
@@ -258,10 +251,11 @@ export class BonesLoaderAvatar implements IAnimatedObject {
         this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
         this.armature.armature.cacheFrameRate = 0;
 
+        this.add(this.armature);
     }
 
     protected closeLoadModel(): void {
-        if (this.mModelLoaded) {
+        if (this.modelLoaded) {
             this.mModelLoaded = false;
         }
         this.replaceArr = [];
