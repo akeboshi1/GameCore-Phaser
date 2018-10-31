@@ -40,12 +40,12 @@ export class TerrainImageItem extends BasicTerrainItem {
     }
 
     protected draw(): void {
-        let graphics = Globals.game.make.graphics();
-        graphics.clear();
-        // graphics.lineStyle(2, 0xff0000, 1);
-        graphics.beginFill(0x00ff00);
-        graphics.drawCircle(0,0,1);
-        graphics.endFill();
-        this.terrainIsoDisplayObject.addChild(graphics);
+        // let graphics = Globals.game.make.graphics();
+        // graphics.clear();
+        // // graphics.lineStyle(2, 0xff0000, 1);
+        // graphics.beginFill(0xff0000);
+        // graphics.drawCircle(0,0,5);
+        // graphics.endFill();
+        // this.terrainIsoDisplayObject.addChild(graphics);
     }
 }

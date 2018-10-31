@@ -51,8 +51,9 @@ export class MapInfo {
             for (j = 0; j < len2; j++) {
                 rowIndex = j;
                 str = data[i][j];
+                terrain = new TerrainInfo();
                 if (str !== "0") {
-                	terrain = new TerrainInfo();
+
 
                 	let arr = str.split("-");
 
@@ -60,16 +61,17 @@ export class MapInfo {
                 	terrain.subIdx = +arr[1];
                 	terrain.colorIdx = +arr[2];
 
-                	terrain.row = rowIndex;
-                	terrain.col = colIndex;
 
                 	this._terrainInfo.push(terrain);
                 }else{
-                	terrain = new TerrainInfo();
-                	terrain.row = rowIndex;
-                	terrain.col = colIndex;
-                	this._terrainInfo.push(terrain);
+                    terrain.type = 1;
+                    terrain.subIdx = 0;
+                    terrain.colorIdx = 0;
+                	
                 }
+                terrain.row = rowIndex;
+                terrain.col = colIndex;
+                this._terrainInfo.push(terrain);
             }
         }
     }

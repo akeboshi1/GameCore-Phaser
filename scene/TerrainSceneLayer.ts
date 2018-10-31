@@ -85,8 +85,11 @@ export class TerrainSceneLayer extends BasicSceneLayer {
             }
             element.camera = this.camera;
             element.data = value;
-            element.isoX = value.row * Const.GameConst.MAP_TILE_HEIGHT;
-            element.isoY = value.col * Const.GameConst.MAP_TILE_HEIGHT;
+            let p = Globals.Room45Util.tileToPixelCoords(value.col,value.row);
+            let p3 = Globals.Room45Util.p2top3(p.x,p.y);
+            element.isoX = p3.x;
+            element.isoY = p3.y;
+            element.isoZ = p3.z;
             element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
             element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
 

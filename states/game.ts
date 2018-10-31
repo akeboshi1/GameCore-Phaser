@@ -7,6 +7,7 @@ export default class Game extends Phaser.State {
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
         Globals.game.iso.anchor.setTo(0.5, 0.5);
+        // Globals.game.iso.anchor.setTo(0, 0);
     }
 
     public create(): void {
