@@ -78,7 +78,8 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         for (; i < len; i++) {
             value = datas[i];
             if (value.type === 0) {
-                element = new TerrainNullItem(Globals.game, this);
+                continue;
+            //     element = new TerrainNullItem(Globals.game, this);
             } else {
                 // Log.trace(value.row,value.col);
                 element = new TerrainImageItem(Globals.game, this);
@@ -86,7 +87,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
             element.camera = this.camera;
             element.data = value;
             let p = Globals.Room45Util.tileToPixelCoords(value.col,value.row);
-            let p3 = Globals.Room45Util.p2top3(p.x,p.y);
+            let p3 = Globals.Room45Util.p2top3(p.x,p.y,0);
             element.isoX = p3.x;
             element.isoY = p3.y;
             element.isoZ = p3.z;

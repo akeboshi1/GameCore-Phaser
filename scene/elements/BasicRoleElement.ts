@@ -76,34 +76,34 @@ export class BasicRoleElement extends SceneEntity {
 
     protected doAngleMoving(actualSpeed: number): void {
         if (actualSpeed <= 0) return;
-        let _x = this.isoX;
-        let _y = this.isoY;
-        // Log.trace("----------------------", Const.GameConst.MAP_TILE_BORDER, Const.GameConst.MAP_TILE_HEIGHT);
-        let subSpeedY: number = Const.GameConst.MAP_TILE_BORDER * actualSpeed / Const.GameConst.MAP_TILE_HEIGHT;
-        let subSpeedX: number = Const.GameConst.MAP_TILE_BORDER * actualSpeed / Const.GameConst.MAP_TILE_WIDTH;
-        // Log.trace("actualSpeed-------->", actualSpeed, "subSpeedY-------->", subSpeedY, "subSpeedX-------->", subSpeedX);
+
+        let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
+        let endP: Point;
+        let moveAngle: number;
         if (this.walkAngleIndex === 8) {
-            _x -= subSpeedY;
-            _y -= subSpeedY;
+            endP = Globals.Room45Util.tileToPixelCoords(0, 0);
         } else if (this.walkAngleIndex === 7) {
-            _y -= actualSpeed;
+            endP = Globals.Room45Util.tileToPixelCoords(1, 0);
         } else if (this.walkAngleIndex === 6) {
-            _x += subSpeedX;
-            _y -= subSpeedX;
+            endP = Globals.Room45Util.tileToPixelCoords(2, 0);
         } else if (this.walkAngleIndex === 5) {
-            _x += actualSpeed;
+            endP = Globals.Room45Util.tileToPixelCoords(2, 1);
         } else if (this.walkAngleIndex === 4) {
-            _x += subSpeedY;
-            _y += subSpeedY;
+            endP = Globals.Room45Util.tileToPixelCoords(2, 2);
         } else if (this.walkAngleIndex === 3) {
-            _y += actualSpeed;
+            endP = Globals.Room45Util.tileToPixelCoords(1, 2);
         } else if (this.walkAngleIndex === 2) {
-            _x -= subSpeedX;
-            _y += subSpeedX;
+            endP = Globals.Room45Util.tileToPixelCoords(0, 2);
         } else if (this.walkAngleIndex === 1) {
-            _x -= actualSpeed;
+            endP = Globals.Room45Util.tileToPixelCoords(0, 1);
         }
-        this.setPosition(_x, _y);
+        moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
+
+        let _x = this.ox + actualSpeed * Math.cos(moveAngle);
+        let _y = this.oy + actualSpeed * Math.sin(moveAngle);
+        let _z = this.oz;
+
+        this.setPosition(_x, _y, _z);
     }
 
     protected onUpdating(deltaTime: number): void {
@@ -121,7 +121,7 @@ export class BasicRoleElement extends SceneEntity {
         this.setCols(1);
         this.setRows(1);
         this.setAngleIndex(this.characterInfo.direct);
-        this.setPosition(this.characterInfo.x, this.characterInfo.y);
+        this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z);
         this.mouseEnable = false;
 
         this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);

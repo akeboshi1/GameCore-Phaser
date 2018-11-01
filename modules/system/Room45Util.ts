@@ -2,6 +2,7 @@ import BaseSingleton from '../../base/BaseSingleton';
 import Point = Phaser.Point;
 import Globals from "../../Globals";
 import Point3 = Phaser.Plugin.Isometric.Point3;
+import {Log} from "../../Log";
 
 export class Room45Util extends BaseSingleton {
     private _hTilewidth: number;
@@ -13,7 +14,8 @@ export class Room45Util extends BaseSingleton {
     public tileheight: number;
     private _mapTotalWidth: number = 0;
     private _mapTotalHeight: number = 0;
-
+    private _projectionAngle: number = Math.PI / 6;
+    private _transform;
     public setting(rows: number, cols: number, tilewidth: number, tileheight: number): void {
         this.rows = rows;
         this.cols = cols;
@@ -24,6 +26,7 @@ export class Room45Util extends BaseSingleton {
         this._originX = this.rows * this._hTilewidth;
         this._mapTotalWidth = (this.rows + this.cols) * (this.tilewidth / 2);
         this._mapTotalHeight = (this.rows + this.cols) * (this.tileheight / 2);
+        this._transform = [Math.cos(this._projectionAngle), Math.sin(this._projectionAngle)];
     }
 
     public get originX(): number {
@@ -55,8 +58,8 @@ export class Room45Util extends BaseSingleton {
      * @param tileY 垂直格子坐标
      * @version Egret 3.0.3
      */
-    public p2top3(tileX: number, tileY: number): Point3 {
-        let point3:Phaser.Plugin.Isometric.Point3 = Globals.game.iso.unproject(new Phaser.Point(tileX,tileY));
+    public p2top3(x: number, y: number, z: number = 0): Point3 {
+        let point3:Phaser.Plugin.Isometric.Point3 = Globals.game.iso.unproject(new Phaser.Point(x+Globals.game.world.x,y+Globals.game.world.y),undefined, z);
         return point3;
     }
 

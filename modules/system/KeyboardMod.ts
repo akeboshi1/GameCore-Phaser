@@ -62,10 +62,11 @@ export class KeyboardMod extends BaseSingleton {
         return this.keyCodes;
     }
 
-    public CheckKey(): void {
+    public CheckKey(): boolean {
         this._isKeyDown = false;
         let keyDowns = this.getKeyDowns();
-        if (keyDowns.length === 0) return;
+        // Log.trace("KeyCode--->" + "0");
+        if (keyDowns.length === 0) return false;
 
         this._isKeyDown = true;
         this._keyDownCode = "";
@@ -92,6 +93,7 @@ export class KeyboardMod extends BaseSingleton {
         if (this.keyDownCode === "")
             this._keyDownCode = keyDowns[0].toString();
         Log.trace("KeyCode--->" + this.keyDownCode);
+        return true;
     }
 
     private onDown(): void {

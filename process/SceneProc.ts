@@ -77,10 +77,12 @@ export class SceneProc extends BaseProc {
 
         Globals.SceneManager.popupScene();
 
-        Log.trace(mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight, DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
-        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
-
         Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tilewidth, mapSceneInfo.tileheight);
+
+        // let p = Globals.Room45Util.tileToPixelCoords(4,7);
+        // Log.trace("pppp->",p);
+        // Log.trace(mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight, DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
+        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
 
         this.roomScene.initializeScene(mapSceneInfo);
 
@@ -91,8 +93,8 @@ export class SceneProc extends BaseProc {
         //set camera
         Globals.SceneManager.pushScene(this.roomScene);
         let camera = Globals.game.camera;
-        camera.setSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
-        Globals.game.camera.follow(this.roomScene.currentSelfPlayer.display);
+        // camera.setSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
+        // Globals.game.camera.follow(this.roomScene.currentSelfPlayer.display);
         this.roomScene.notifyInitializeSceneComplete();
     }
 }

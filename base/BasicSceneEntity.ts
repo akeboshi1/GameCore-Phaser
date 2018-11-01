@@ -27,34 +27,22 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     public constructor() {
     }
 
-    private _isoX: number = 0;
+    protected _ox: number = 0;
 
-    public get isoX(): number {
-        return this._isoX;
+    public get ox(): number {
+        return this._ox;
     }
 
-    public set isoX(value: number) {
-        this._isoX = value;
+    protected _oy: number = 0;
+
+    public get oy(): number {
+        return this._oy;
     }
 
-    private _isoY: number = 0;
+    private _oz: number = 0;
 
-    public get isoY(): number {
-        return this._isoY;
-    }
-
-    public set isoY(value: number) {
-        this._isoY = value;
-    }
-
-    private _isoZ: number = 0;
-
-    public get isoZ(): number {
-        return this._isoZ;
-    }
-
-    public set isoZ(value: number) {
-        this._isoZ = value;
+    public get oz(): number {
+        return this._oz;
     }
 
     /**
@@ -84,14 +72,14 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     //Position
-    public setPosition(x: number, y: number, z:number = 0): void {
-        this._isoX = x;
-        this._isoY = y;
-        this._isoZ = z;
+    public setPosition(x: number, y: number, z:number): void {
+        this._ox = x;
+        this._oy = y;
+        this._oz = z;
     }
 
     public get gridPos(): Point {
-        let temp = Globals.Room45Util.p3top2(this._isoX, this._isoY,this._isoZ);
+        let temp = Globals.Room45Util.p3top2(this._ox, this._oy,this._oz);
         let point: Point = Globals.Room45Util.pixelToTileCoords(temp.x,temp.y);
         return point;
     }
@@ -178,9 +166,14 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-        this.display.isoX = this.isoX;
-        this.display.isoY = this.isoY;
-        this.display.isoZ = this.isoZ;
+
+
+        let p3 = Globals.Room45Util.p2top3(this.ox,this.oy,this.oz);
+        // Log.trace(p3.x,p3.y,p3.z);
+        this.display.isoX = p3.x;
+        this.display.isoY = p3.y;
+        this.display.isoZ = p3.z;
+        // Log.trace(this.display.isoX,this.display.isoY,this.display.isoZ);
        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 }

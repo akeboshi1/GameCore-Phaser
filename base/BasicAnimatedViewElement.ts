@@ -23,13 +23,13 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
         if (this.mRegisterForUpdates && !this.mIsRegisteredForUpdates) {
             // Need to register.
             this.mIsRegisteredForUpdates = true;
-            Globals.TickManager.addTime(this.onTick, this);
+            Globals.TickManager.addTick(this.onTick, this);
             Globals.TickManager.addFrame(this.onFrame, this);
         }
         else if (!this.mRegisterForUpdates && this.mIsRegisteredForUpdates) {
             // Need to unregister.
             this.mIsRegisteredForUpdates = false;
-            Globals.TickManager.removeTime(this.onTick, this);
+            Globals.TickManager.removeTick(this.onTick, this);
             Globals.TickManager.removeFrame(this.onFrame, this);
         }
     }

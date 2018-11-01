@@ -3,17 +3,28 @@
  * author aaron
  */
 import BaseSingleton from "../../base/BaseSingleton";
-import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class TickManager extends BaseSingleton {
 
-    private _timeHandleList: Object[];
+    private game: Phaser.Game;
+    private _tickHandleList: Object[];
     private _frameHandleList: Object[];
+    private _initilized:boolean = false;
 
     public constructor() {
         super();
-        this._timeHandleList = [];
+    }
+
+    public get initilized(): boolean {
+        return this._initilized;
+    }
+
+    public init(game: Phaser.Game):void {
+        this.game = game;
+        this._tickHandleList = [];
         this._frameHandleList = [];
+        this._initilized = true;
     }
 
     /**
@@ -24,18 +35,13 @@ export class TickManager extends BaseSingleton {
      * @param thisObj 执行函数对应的this对象
      * @param triggerImmediately 是否立刻执行一次
      */
-    public addTime(method: Function, thisObj: any, interval: number = 33, triggerImmediately: Boolean = false): void {
-        this.removeTime(method, thisObj);
+    public addTick(method: Function, thisObj: any): void {
+        this.removeTick(method, thisObj);
         var handle: Object = {
-            "interval": interval,
             "method": method,
-            "thisObj": thisObj,
-            "lastTime": Globals.game.time.elapsed
+            "thisObj": thisObj
         };
-        this._timeHandleList.push(handle);
-        if (triggerImmediately) {
-            method.apply(thisObj);
-        }
+        this._tickHandleList.push(handle);
     }
 
     /**
@@ -43,12 +49,12 @@ export class TickManager extends BaseSingleton {
      * @param method 要移除的函数
      * @param thisObj 要移除的函数对应的this对象
      */
-    public removeTime(method: Function, thisObj: any): void {
+    public removeTick(method: Function, thisObj: any): void {
         var handle: Object;
-        for (var i: number = this._timeHandleList.length - 1; i >= 0; i--) {
-            handle = this._timeHandleList[i];
+        for (var i: number = this._tickHandleList.length - 1; i >= 0; i--) {
+            handle = this._tickHandleList[i];
             if (handle["method"] === method && handle["thisObj"] === thisObj) {
-                this._timeHandleList.splice(i, 1);
+                this._tickHandleList.splice(i, 1);
             }
         }
     }
@@ -59,13 +65,14 @@ export class TickManager extends BaseSingleton {
      * @param thisObj 执行函数对应的this对象
      * @param triggerImmediately 是否立刻执行一次
      */
-    public addFrame(method: Function, thisObj: any, triggerImmediately: Boolean = false): void {
+    public addFrame(method: Function, thisObj: any,interval: number = 33): void {
         this.removeFrame(method, thisObj);
-        var handle: Object = {"method": method, "thisObj": thisObj, "lastTime": Globals.game.time.elapsed};
+        // let a = Globals.game.time.time;
+        // let b = Globals.game.time.now;
+        // let c = Globals.game.time.elapsed;
+        // let d = Globals.game.time.elapsedMS;
+        var handle: Object = {"method": method, "thisObj": thisObj,"lastTime": this.game.time.now};
         this._frameHandleList.push(handle);
-        if (triggerImmediately) {
-            method.apply(thisObj);
-        }
     }
 
     /**
@@ -83,31 +90,29 @@ export class TickManager extends BaseSingleton {
         }
     }
 
-    public onEnterFrame(elapsed: number): boolean {
-        let curTime: number = elapsed;
-        let deltaTime: number;
-        if (this._timeHandleList.length > 0) {
-            var handle: Object;
-            for (let i: number = 0; i < this._timeHandleList.length; i++) {
-                handle = this._timeHandleList[i];
-                deltaTime = curTime - handle["lastTime"];
-                if (deltaTime >= handle["interval"]) {
-                    handle["lastTime"] = curTime;
-                    handle["method"].apply(handle["thisObj"], [handle["interval"] * 0.001]);
-                }
-            }
+    public onTickCall(timeStep: number): void {
+        if(!this.initilized) return;
+        var handle: Object;
+        for (let i: number = 0; i < this._tickHandleList.length; i++) {
+            handle = this._tickHandleList[i];
+            handle["method"].apply(handle["thisObj"], [timeStep]);
         }
-        if (this._frameHandleList.length > 0) {
-            for (let i: number = 0; i < this._frameHandleList.length; i++) {
-                handle = this._frameHandleList[i];
-                deltaTime = curTime - handle["lastTime"];
-                handle["lastTime"] = curTime;
-                handle["method"].apply(handle["thisObj"], [deltaTime * 0.001]);
-            }
-        }
-        return true;
     }
 
+    public onFrameCall(): void {
+        if(!this.initilized) return;
+        // let elapsed: number = timeStep - this._curTime;
+        let curTime:number = this.game.time.now;
+        var handle: Object;
+        let deltaTime:number;
+        for (let i: number = 0; i < this._frameHandleList.length; i++) {
+            handle = this._frameHandleList[i];
+            deltaTime = curTime - handle["lastTime"];
+            // Log.trace("elapsed-->",deltaTime)
+            handle["lastTime"] = curTime;
+            handle["method"].apply(handle["thisObj"],[deltaTime * 0.001]);// s
+        }
+    }
 }
     
 

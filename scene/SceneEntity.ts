@@ -162,8 +162,8 @@ export default class SceneEntity extends BasicSceneEntity {
         let dirX = targetPathPoints.x - this.gridPos.x;
         let dirY = targetPathPoints.y - this.gridPos.y;
 
-        this.isoX += (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
-        this.isoY += (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
+        this._ox += (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
+        this._oy += (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
 
         if (dirX === 1) {
             if (dirY === 1) {

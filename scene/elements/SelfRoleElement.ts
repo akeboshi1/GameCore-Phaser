@@ -1,5 +1,6 @@
 import {RoleElement} from "./RoleElement";
 import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class SelfRoleElement extends RoleElement {
     public constructor() {
@@ -7,13 +8,15 @@ export class SelfRoleElement extends RoleElement {
     }
 
     protected onUpdating(deltaTime: number): void {
-        super.onUpdating(deltaTime);
         Globals.Keyboard.CheckKey();
-        if (this.isWalking && !Globals.Keyboard.isKeyDown) {
+        // Log.trace(this.isWalking, Globals.Keyboard.isKeyDown)
+        if (this.isWalking === true && Globals.Keyboard.isKeyDown === false) {
             this.stopWalk();
+            super.onUpdating(deltaTime);
             return;
         }
-        if (Globals.Keyboard.isKeyDown) {
+
+        if (Globals.Keyboard.isKeyDown === true) {
             let angle;
             switch (Globals.Keyboard.keyDownCode) {
                 case Phaser.Keyboard.UP.toString():
@@ -74,5 +77,6 @@ export class SelfRoleElement extends RoleElement {
             if (!this.isWalking)
                 this.resumeWalk();
         }
+        super.onUpdating(deltaTime);
     }
 }

@@ -20,15 +20,15 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
     protected mTerrainItemIsInCamera: boolean = false;
     protected terrainIsoDisplayObject: IsoSprite;
 
-    public constructor(game: Phaser.Game,owner: TerrainSceneLayer) {
+    public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
         super(game);
         this.mOwner = owner;
     }
 
     public onFrame(deltaTime: number) {
-        // this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-        // this.camera.width, this.camera.height, this.isoX, this.isoY, this.itemWidth, this.itemHeight)
-        this.mTerrainItemIsInCamera = true;
+        let p2 = Globals.Room45Util.p3top2(this.isoX, this.isoY, this.isoZ);
+        this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
+            this.camera.width, this.camera.height, p2.x-this.itemWidth/2 , p2.y, this.itemWidth, this.itemHeight);
         if (this.mTerrainItemIsInCamera) {
             this.mTerrainItemOutCameraTime = 0;
 
@@ -39,7 +39,6 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
                     this.terrainIsoDisplayObject.isoY = this.isoY;
                     this.terrainIsoDisplayObject.isoZ = this.isoZ;
                 }
-                this.visible = true;
                 this.mTerrainItemDisplayObjectCreated = true;
             }
             else {
@@ -52,7 +51,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
                     }
                 }
             }
-
+            this.visible = true;
         }
         else {
             this.mTerrainItemOutCameraTime += deltaTime;
