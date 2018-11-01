@@ -7,7 +7,7 @@ import {Log} from "../../Log";
 import Key = Phaser.Key;
 
 export class KeyboardMod extends BaseSingleton {
-    private keyCodes: number[];
+    private keyCodes: number[] = [];
     private upKey: Key;
     private downKey: Key;
     private leftKey: Key;
@@ -22,7 +22,6 @@ export class KeyboardMod extends BaseSingleton {
      */
     public constructor() {
         super();
-        this.keyCodes = [];
         //  Register the keys.
         this.upKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.downKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -50,7 +49,7 @@ export class KeyboardMod extends BaseSingleton {
         return this._keyDownCode;
     }
 
-    private get keyDowns(): number[] {
+    private getKeyDowns(): number[] {
         this.keyCodes.splice(0);
         if (this.upKey.isDown) this.keyCodes.push(Phaser.Keyboard.UP);
         if (this.downKey.isDown) this.keyCodes.push(Phaser.Keyboard.DOWN);
@@ -65,40 +64,36 @@ export class KeyboardMod extends BaseSingleton {
 
     public CheckKey(): void {
         this._isKeyDown = false;
-
-        if (this.keyDowns.length === 0) return;
+        let keyDowns = this.getKeyDowns();
+        if (keyDowns.length === 0) return;
 
         this._isKeyDown = true;
         this._keyDownCode = "";
 
-        if (this.keyDowns.length === 2) {
-            if (this.keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
+        if (keyDowns.length === 2) {
+            if (keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.RIGHT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.D].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.LEFT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.A].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.RIGHT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.D].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT].toString();
-            } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
+            } else if (keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.A].toString();
             }
         }
         if (this.keyDownCode === "")
-            this._keyDownCode = this.keyDowns[0].toString();
+            this._keyDownCode = keyDowns[0].toString();
         Log.trace("KeyCode--->" + this.keyDownCode);
     }
-
-    public clear(): void {
-        this.keyCodes.splice(0);
-    }
-
+    
     private onDown(): void {
         this.CheckKey();
     }

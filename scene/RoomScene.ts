@@ -15,30 +15,6 @@ export class RoomScene extends RoomSceneBasic {
     public seaMapGrid: RoomGridUtil;
     public currentSelfPlayer: SelfRoleElement;
 
-    protected onInitialize(): void {
-        super.onInitialize();
-        this.seaMapGrid = new RoomGridUtil();
-    }
-
-    protected onInitializeScene(value: MapInfo): void {
-        this.mapSceneInfo = value;
-        this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
-
-        super.onInitializeScene(value);
-
-        this.terrainSceneLayer.initializeMap(value);
-
-        let i: number = 0;
-        let len: number = this.mapSceneInfo.elementData.length;
-        let element: ElementInfo;
-        for (; i < len; i++) {
-            element = this.mapSceneInfo.elementData[i];
-            // if (element.config.type == 13) {
-            //    this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
-            // }
-        }
-    }
-    // private graphics;
     // private graphics1;
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
@@ -62,11 +38,6 @@ export class RoomScene extends RoomSceneBasic {
         // Log.trace(this.currentSelfPlayer.display.isoX,this.currentSelfPlayer.display.isoY);
     }
 
-    protected onActivedScene(): void {
-        super.onActivedScene();
-        this.camera.follow(this.currentSelfPlayer.display);
-    }
-
     public addSceneElement(sceneElementType: number,
                            uid: string, elemetData: any,
                            isSelf: boolean = false): BasicSceneEntity {
@@ -82,6 +53,37 @@ export class RoomScene extends RoomSceneBasic {
         Globals.MessageCenter.dispatch(MessageType.ADD_SCENE_ELEMENT, element);
 
         return element;
+    }
+
+    // private graphics;
+
+    protected onInitialize(): void {
+        super.onInitialize();
+        this.seaMapGrid = new RoomGridUtil();
+    }
+
+    protected onInitializeScene(value: MapInfo): void {
+        this.mapSceneInfo = value;
+        this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
+
+        super.onInitializeScene(value);
+
+        this.terrainSceneLayer.initializeMap(value);
+
+        let i: number = 0;
+        let len: number = this.mapSceneInfo.elementData.length;
+        let element: ElementInfo;
+        for (; i < len; i++) {
+            element = this.mapSceneInfo.elementData[i];
+            // if (element.config.type == 13) {
+            //    this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
+            // }
+        }
+    }
+
+    protected onActivedScene(): void {
+        super.onActivedScene();
+        this.camera.follow(this.currentSelfPlayer.display);
     }
 
     protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
@@ -102,10 +104,10 @@ export class RoomScene extends RoomSceneBasic {
             case Const.SceneElementType.ELEMENT:
                 //普通
                 // if (elemetData.config.subType == 1) {
-                    element = new BasicElement();
+                element = new BasicElement();
                 // }//npc
                 // else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
-                   // element = new BasicNPCElement();
+                // element = new BasicNPCElement();
                 // }
                 break;
 
