@@ -4,23 +4,25 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
 import {Log} from "../../Log";
+import Key = Phaser.Key;
 
 export class KeyboardMod extends BaseSingleton {
     private keyCodes: number[];
-    private upKey;
-    private downKey;
-    private leftKey;
-    private rightKey;
-    private wKey;
-    private sKey;
-    private aKey;
-    private dKey;
+    private upKey: Key;
+    private downKey: Key;
+    private leftKey: Key;
+    private rightKey: Key;
+    private wKey: Key;
+    private sKey: Key;
+    private aKey: Key;
+    private dKey: Key;
 
     /**
      * 构造函数
      */
     public constructor() {
         super();
+        this.keyCodes = [];
         //  Register the keys.
         this.upKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.downKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -36,14 +38,6 @@ export class KeyboardMod extends BaseSingleton {
             Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
     }
 
-    private onDown():void {
-        this.CheckKey();
-    }
-
-    private onUp():void {
-        this.CheckKey();
-    }
-
     private _isKeyDown: boolean = false;
 
     public get isKeyDown(): boolean {
@@ -57,7 +51,6 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     private get keyDowns(): number[] {
-        if (this.keyCodes == null) this.keyCodes = [];
         this.keyCodes.splice(0);
         if (this.upKey.isDown) this.keyCodes.push(Phaser.Keyboard.UP);
         if (this.downKey.isDown) this.keyCodes.push(Phaser.Keyboard.DOWN);
@@ -87,7 +80,7 @@ export class KeyboardMod extends BaseSingleton {
                 this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.LEFT].toString();
             } else if (this.keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.A].toString();
-            }  else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
+            } else if (this.keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.RIGHT].toString();
             } else if (this.keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && this.keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
                 this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.D].toString();
@@ -99,10 +92,18 @@ export class KeyboardMod extends BaseSingleton {
         }
         if (this.keyDownCode === "")
             this._keyDownCode = this.keyDowns[0].toString();
-        // Log.trace("KeyCode--->"+this.keyDownCode);
+        Log.trace("KeyCode--->" + this.keyDownCode);
     }
 
     public clear(): void {
         this.keyCodes.splice(0);
+    }
+
+    private onDown(): void {
+        this.CheckKey();
+    }
+
+    private onUp(): void {
+        this.CheckKey();
     }
 }

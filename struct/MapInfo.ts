@@ -3,13 +3,77 @@ import {ElementInfo} from './ElementInfo';
 import Globals from "../Globals";
 
 export class MapInfo {
-    private _mapTotalWidth: number = 0;
-    private _mapTotalHeight: number = 0;
-    private _tilewidth: number;
-    private _tileheight: number;
+    public mapId: number = 1;
     private _tmx: any;
     private _mapConfig: Array<any>;
-    public mapId: number = 1;
+
+    private _mapTotalWidth: number = 0;
+
+    public get mapTotalWidth(): number {
+        return this._mapTotalWidth;
+    }
+
+    private _mapTotalHeight: number = 0;
+
+    public get mapTotalHeight(): number {
+        return this._mapTotalHeight;
+    }
+
+    private _tilewidth: number;
+
+    /**
+     * 获取格子宽（单位：像素）
+     */
+    public get tilewidth() {
+        return this._tilewidth;
+    }
+
+    private _tileheight: number;
+
+    /**
+     * 获取格子高（单位：像素）
+     */
+    public get tileheight() {
+        return this._tileheight;
+    }
+
+    private _elementData: Array<ElementInfo>;
+
+    public get elementData(): Array<ElementInfo> {
+        return this._elementData;
+    }
+
+    private _cols: number;
+
+    public get cols(): number {
+        return this._cols;
+    }
+
+    public set cols(value: number) {
+        this._cols = value;
+    }
+
+    private _rows: number;
+
+    public get rows(): number {
+        return this._rows;
+    }
+
+    public set rows(value: number) {
+        this._rows = value;
+    }
+
+    private _terrainInfo: Array<TerrainInfo>;
+
+    public get terrainInfo(): Array<TerrainInfo> {
+        return this._terrainInfo;
+    }
+
+    private _elementInfo: Array<ElementInfo>;
+
+    public get elementInfo(): Array<ElementInfo> {
+        return this._elementInfo;
+    }
 
     public setTmx(value: any): void {
         this._tmx = value;
@@ -53,21 +117,10 @@ export class MapInfo {
                 str = data[i][j];
                 terrain = new TerrainInfo();
                 if (str !== "0") {
-
-
-                	let arr = str.split("-");
-
-                	terrain.type = +arr[0];
-                	terrain.subIdx = +arr[1];
-                	terrain.colorIdx = +arr[2];
-
-
-                	this._terrainInfo.push(terrain);
-                }else{
-                    terrain.type = 1;
-                    terrain.subIdx = 0;
-                    terrain.colorIdx = 0;
-                	
+                    let arr = str.split("-");
+                    terrain.type = +arr[0];
+                    terrain.subIdx = +arr[1];
+                    terrain.colorIdx = +arr[2];
                 }
                 terrain.row = rowIndex;
                 terrain.col = colIndex;
@@ -107,60 +160,5 @@ export class MapInfo {
             element = new ElementInfo(elements[i]);
             this._elementData.push(element);
         }
-    }
-
-    private _elementData: Array<ElementInfo>;
-
-    public get elementData(): Array<ElementInfo> {
-        return this._elementData;
-    }
-
-    public get rows(): number {
-        return this._rows;
-    }
-
-    public set rows(value: number) {
-        this._rows = value;
-    }
-    public get cols(): number {
-        return this._cols;
-    }
-
-    public set cols(value: number) {
-        this._cols = value;
-    }
-    private _cols: number;
-    private _rows: number;
-    private _terrainInfo: Array<TerrainInfo>;
-    private _elementInfo: Array<ElementInfo>;
-    public get terrainInfo(): Array<TerrainInfo> {
-        return this._terrainInfo;
-    }
-
-
-    /**
-     * 获取格子宽（单位：像素）
-     */
-    public get tilewidth() {
-        return this._tilewidth;
-    }
-
-    /**
-     * 获取格子高（单位：像素）
-     */
-    public get tileheight() {
-        return this._tileheight;
-    }
-
-    public get mapTotalWidth(): number {
-        return this._mapTotalWidth;
-    }
-
-    public get mapTotalHeight(): number {
-        return this._mapTotalHeight;
-    }
-
-    public get elementInfo(): Array<ElementInfo> {
-        return this._elementInfo;
     }
 }
