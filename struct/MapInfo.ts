@@ -77,8 +77,8 @@ export class MapInfo {
 
     public setTmx(value: any): void {
         this._tmx = value;
-        this._cols = +this._tmx.width;//水平方向格子数量
-        this._rows = +this._tmx.height;//垂直方向格子数量
+        this._cols = +this._tmx.width;// 水平方向格子数量
+        this._rows = +this._tmx.height;// 垂直方向格子数量
         this._tilewidth = +this._tmx.tileWidth;
         this._tileheight = +this._tmx.tileHeight;
         this._mapTotalWidth = (this._rows + this._cols) * (this._tilewidth / 2);

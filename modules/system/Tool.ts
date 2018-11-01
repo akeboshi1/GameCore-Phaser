@@ -82,10 +82,10 @@ export class Tool extends BaseSingleton {
 
         let b: number;
 
-        //将a的值代入任一方程式即可得到b
+        // 将a的值代入任一方程式即可得到b
         b = ponit1.y - a * ponit1.x;
 
-        //把a,b值代入即可得到结果函数
+        // 把a,b值代入即可得到结果函数
         if (type === 0) {
             resultFuc = function (x: number): number {
                 return a * x + b;
@@ -151,8 +151,8 @@ export class Tool extends BaseSingleton {
      * @return    The bounded value of the number.
      */
     public clamp(value: number, min: number, max: number): number {
-        //			var lowerBound:number = (Value<Min)?Min:Value;
-        //			return (lowerBound>Max)?Max:lowerBound;
+        // var lowerBound:number = (Value<Min)?Min:Value;
+        // return (lowerBound>Max)?Max:lowerBound;
         return value < min ? min : (value > max ? max : value);
     }
 
@@ -183,13 +183,13 @@ export class Tool extends BaseSingleton {
         return result;
     }
 
-    private ab2str(buf):any {
-        return String.fromCharCode.apply(null, new Uint16Array(buf));
+    public get45Tile(): number {
+        let temp: number = Math.sqrt(Math.pow(Const.GameConst.HALF_MAP_TILE_WIDTH, 2) + Math.pow(Const.GameConst.HALF_MAP_TILE_HEIGHT, 2));
+        return temp;
     }
 
-    public get45Tile():number {
-        let temp: number = Math.sqrt(Math.pow(Const.GameConst.HALF_MAP_TILE_WIDTH,2)+Math.pow(Const.GameConst.HALF_MAP_TILE_HEIGHT,2));
-        return temp;
+    private ab2str(buf): any {
+        return String.fromCharCode.apply(null, new Uint16Array(buf));
     }
 
 }

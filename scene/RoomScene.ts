@@ -7,9 +7,8 @@ import Globals from "../Globals";
 import {MessageType} from "../const/MessageType";
 import {SelfRoleElement} from "./elements/SelfRoleElement";
 import {RoleElement} from "./elements/RoleElement";
-import BasicElement from './elements/BasicElement';
+import BasicElement from "./elements/BasicElement";
 import {ElementInfo} from "../struct/ElementInfo";
-import {Log} from "../Log";
 
 export class RoomScene extends RoomSceneBasic {
     public seaMapGrid: RoomGridUtil;
@@ -87,12 +86,12 @@ export class RoomScene extends RoomSceneBasic {
     }
 
     protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
-        var element: BasicSceneEntity = null;
+        let element: BasicSceneEntity = null;
 
         switch (sceneElementType) {
 
-            case Const.SceneElementType.ROLE:
-                //当前玩家
+            case Const.SceneElementType.ROLE :
+                // 当前玩家
                 if (isSelf) {
                     element = this.currentSelfPlayer = new SelfRoleElement();
                 }
@@ -101,11 +100,12 @@ export class RoomScene extends RoomSceneBasic {
                 }
                 break;
 
-            case Const.SceneElementType.ELEMENT:
-                //普通
+            case Const.SceneElementType.ELEMENT :
+                // 普通
                 // if (elemetData.config.subType == 1) {
                 element = new BasicElement();
-                // }//npc
+                // }
+                // npc
                 // else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
                 // element = new BasicNPCElement();
                 // }

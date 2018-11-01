@@ -93,7 +93,7 @@ export class KeyboardMod extends BaseSingleton {
             this._keyDownCode = keyDowns[0].toString();
         Log.trace("KeyCode--->" + this.keyDownCode);
     }
-    
+
     private onDown(): void {
         this.CheckKey();
     }
