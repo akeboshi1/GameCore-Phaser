@@ -25,24 +25,23 @@ export class SceneLoader {
      * @param freeRes               是否释放加载的资源（当场景被切换时）
      * @param hideLoadProgress      是否隐藏资源加载进度提示
      */
-    public changedToMap(mapId: number = 0, freeRes: boolean = true, hideLoadProgress: boolean = false,): void {
+    public changedToMap(mapId: number = 0, freeRes: boolean = true, hideLoadProgress: boolean = false, ): void {
         this.mId = mapId;
-        if(Globals.game.cache.checkJSONKey(mapId + "_json"))
-        {
+        if (Globals.game.cache.checkJSONKey(mapId + "_json")) {
             this.modelLoadCompleteHandler();
-        }else{
-            Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler,this);
+        } else {
+            Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
             Globals.game.load.json(mapId + "_json", Jsons.JsonMap.getJSON(mapId));
         }
     }
 
     public getMapSceneInfo(mapId: number, mapConfig: any): MapInfo {
         Log.trace("Scene mapConfig:" + mapId);
-        var mapSceneInfo: MapInfo = new MapInfo();
+        let mapSceneInfo: MapInfo = new MapInfo();
 
         mapSceneInfo.mapId = mapId;
         mapSceneInfo.setTmx(mapConfig);
-        
+
         Globals.DataCenter.MapData.setMapInfo(mapSceneInfo);
 
         return mapSceneInfo;

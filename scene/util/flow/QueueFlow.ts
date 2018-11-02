@@ -7,7 +7,7 @@ export class QueueFlow extends BasicGroupFlow {
     }
 
     public notifyChildFlowComplete(childFlow: IFlow): void {
-        var findChildFlow: IFlow = this.childrenFlows.moveFirst();
+        let findChildFlow: IFlow = this.childrenFlows.moveFirst();
         this.childrenFlows.remove(findChildFlow);
 
         if (this.childrenFlows.length === 0) {

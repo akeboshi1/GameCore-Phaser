@@ -17,8 +17,8 @@ export class PlayerData extends BaseSingleton {
     }
 
     public setMainPlayerInfo(obj: any): void {
-        var value: any;
-        for (var key in obj) {
+        let value: any;
+        for (let key in obj) {
             value = obj[key];
             if (value instanceof Object) {
                 this.setMainPlayerInfo(value);
@@ -29,7 +29,7 @@ export class PlayerData extends BaseSingleton {
     }
 
     public addPlayer(data: Object): PlayerInfo {
-        var playerInfo: PlayerInfo = new PlayerInfo();
+        let playerInfo: PlayerInfo = new PlayerInfo();
         playerInfo.playerID = data["playerId"];
         playerInfo.nick = data["nick"];
         playerInfo.sex = data["sex"];
@@ -41,10 +41,10 @@ export class PlayerData extends BaseSingleton {
     }
 
     public removePlayer(playerID: number): void {
-        var playerInfo: PlayerInfo;
-        for (var i: number = this._playerInfoList.length - 1; i >= 0; i--) {
+        let playerInfo: PlayerInfo;
+        for (let i: number = this._playerInfoList.length - 1; i >= 0; i--) {
             playerInfo = this._playerInfoList[i];
-            if (playerInfo.playerID == playerID) {
+            if (playerInfo.playerID === playerID) {
                 this._playerInfoList.splice(i, 1);
             }
         }

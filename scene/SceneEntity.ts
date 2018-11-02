@@ -7,9 +7,9 @@ export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable: boolean = true;
     public isCanShow: boolean = true;
     // moving
-    protected mySpeed: number = 4;//
+    protected mySpeed: number = 4; //
     protected mAngleIndex: number = 0;
-    protected mWalkAngleIndex: number = 0;//走路
+    protected mWalkAngleIndex: number = 0; //走路
     protected myIsWalking: boolean = false;
     protected myCurrentPathStepIndex: number = 0;
     protected myCurrentPathPoints: Array<any> = null;
@@ -26,7 +26,7 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     public get walkAngleIndex(): number {
-        return this.mWalkAngleIndex
+        return this.mWalkAngleIndex;
     }
 
     public set walkAngleIndex(value: number) {
@@ -139,8 +139,7 @@ export default class SceneEntity extends BasicSceneEntity {
         let targetPathPonints: any = this.myCurrentPathPoints[this.myCurrentPathStepIndex];
         this.onMove(targetPathPonints);
 
-        if (++this.myCurrentMoveInterval >= this.mySpeed)//到了该点了
-        {
+        if (++this.myCurrentMoveInterval >= this.mySpeed) {
             this.myCurrentMoveInterval = 0;
 
             if (this.newMovePath) {

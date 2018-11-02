@@ -14,6 +14,6 @@ export default class Boot extends Phaser.State {
         this.game.scale.pageAlignVertically = true;
 
         Globals.game = this.game;
-        this.game.state.start('preloader');
+        this.game.state.start("preloader");
     }
 }

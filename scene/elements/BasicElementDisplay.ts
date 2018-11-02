@@ -2,7 +2,7 @@ import { IAnimatedObject } from "../../base/IAnimatedObject";
 import Globals from "../../Globals";
 
 export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject {
-    private myModelURL: string = ""
+    private myModelURL: string = "";
     private myModelUrlDirty: boolean = false;
     private mModelLoaded: boolean = false;
 
@@ -60,7 +60,7 @@ export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSpri
 
     public loadModel(url: string, thisArg: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
         if (this.myModelURL === url) return;
-        
+
         this.closeLoadModel();
 
         if (onLoadStart !== undefined) {
@@ -92,8 +92,8 @@ export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSpri
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.image(this.myModelURL + "_png",  require("assets/images/elements/"+ this.myModelURL + ".png"));
-            this.game.load.json(this.myModelURL + "_json", require("assets/images/elements/"+ this.myModelURL + ".json"));
+            this.game.load.image(this.myModelURL + "_png",  require("assets/images/elements/" + this.myModelURL + ".png"));
+            this.game.load.json(this.myModelURL + "_json", require("assets/images/elements/" + this.myModelURL + ".json"));
 
             this.game.load.start();
         }

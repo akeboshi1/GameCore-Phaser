@@ -1,5 +1,5 @@
-import {IAnimatedObject} from './IAnimatedObject';
-import {IEntityComponent} from './IEntityComponent';
+import {IAnimatedObject} from "./IAnimatedObject";
+import {IEntityComponent} from "./IEntityComponent";
 
 export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent {
     public owner: any;

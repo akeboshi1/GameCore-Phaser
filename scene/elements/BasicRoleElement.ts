@@ -25,7 +25,7 @@ export class BasicRoleElement extends SceneEntity {
 
     public setAngleIndex(value: number): void {
         // Log.trace("角度-->"+value);
-        if (this.mAngleIndex != value) {
+        if (this.mAngleIndex !== value) {
             this.mAngleIndex = value;
 
             this.invalidAnimation();
@@ -34,7 +34,7 @@ export class BasicRoleElement extends SceneEntity {
 
     public setAnimation(value: string): void {
         // Log.trace("动作-->"+value);
-        if (this.myAnimationName != value) {
+        if (this.myAnimationName !== value) {
             this.myAnimationName = value;
 
             this.invalidAnimation();
@@ -143,7 +143,7 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected onGridPositionChanged(colIndex: number, rowIndex: number): void {
-        var node: RoomNode = (<RoomScene>this.scene).seaMapGrid.getNode(colIndex, rowIndex);
+        let node: RoomNode = (<RoomScene>this.scene).seaMapGrid.getNode(colIndex, rowIndex);
 
         if (node) {
             this.display.alpha = node.isMaskAlpha ? Const.GameConst.MASK_ALPHA : 1;

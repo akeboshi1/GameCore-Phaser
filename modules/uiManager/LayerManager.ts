@@ -2,7 +2,7 @@
  * 图层管理
  * author aaron
  */
-import BaseSingleton from '../../base/BaseSingleton';
+import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
 
 export class LayerManager extends BaseSingleton {

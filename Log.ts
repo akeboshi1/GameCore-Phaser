@@ -12,6 +12,6 @@ export class Log {
 
     public static debug(...optionalParams: any[]): void {
         let text: string = optionalParams.join(", ");
-        Globals.game.debug.text("[Log]" + text,0,14, "#be0823");
+        Globals.game.debug.text("[Log]" + text, 0, 14, "#be0823");
     }
 }

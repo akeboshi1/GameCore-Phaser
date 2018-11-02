@@ -9,13 +9,13 @@ export class BasicSceneLayer extends BasicViewElement implements IAnimatedObject
     public camera: Phaser.Camera;
 
     public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
-        super(game,x,y);
+        super(game, x, y);
     }
 
     //IAnimatedObject Interface
     public onFrame(deltaTime: number): void {
-    };
+    }
 
     public onTick(deltaTime: number): void {
-    };
+    }
 }

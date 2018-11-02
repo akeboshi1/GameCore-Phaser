@@ -9,7 +9,7 @@ import BitmapData = Phaser.BitmapData;
 import {Log} from "../../Log";
 
 export class TerrainImageItem extends BasicTerrainItem {
-    private bmd:BitmapData;
+    private bmd: BitmapData;
     public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
         super(game, owner);
     }
@@ -17,13 +17,13 @@ export class TerrainImageItem extends BasicTerrainItem {
     protected onTerrainItemCreate(): void {
 
         this.terrainIsoDisplayObject = this.game.add.isoSprite(0, 0, 0);
-        this.terrainIsoDisplayObject.anchor.set(0.5,0);
+        this.terrainIsoDisplayObject.anchor.set(0.5, 0);
         this.draw();
         super.onTerrainItemCreate();
     }
 
     public releaseTerrainItem() {
-        if(this.bmd) this.bmd.destroy();
+        if (this.bmd) this.bmd.destroy();
         this.bmd = null;
         super.releaseTerrainItem();
     }

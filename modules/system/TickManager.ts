@@ -10,7 +10,7 @@ export class TickManager extends BaseSingleton {
     private game: Phaser.Game;
     private _tickHandleList: Object[];
     private _frameHandleList: Object[];
-    private _initilized:boolean = false;
+    private _initilized: boolean = false;
 
     public constructor() {
         super();
@@ -20,7 +20,7 @@ export class TickManager extends BaseSingleton {
         return this._initilized;
     }
 
-    public init(game: Phaser.Game):void {
+    public init(game: Phaser.Game): void {
         this.game = game;
         this._tickHandleList = [];
         this._frameHandleList = [];
@@ -37,7 +37,7 @@ export class TickManager extends BaseSingleton {
      */
     public addTick(method: Function, thisObj: any): void {
         this.removeTick(method, thisObj);
-        var handle: Object = {
+        let handle: Object = {
             "method": method,
             "thisObj": thisObj,
             "lastTime": this.game.time.now
@@ -51,8 +51,8 @@ export class TickManager extends BaseSingleton {
      * @param thisObj 要移除的函数对应的this对象
      */
     public removeTick(method: Function, thisObj: any): void {
-        var handle: Object;
-        for (var i: number = this._tickHandleList.length - 1; i >= 0; i--) {
+        let handle: Object;
+        for (let i: number = this._tickHandleList.length - 1; i >= 0; i--) {
             handle = this._tickHandleList[i];
             if (handle["method"] === method && handle["thisObj"] === thisObj) {
                 this._tickHandleList.splice(i, 1);
@@ -66,13 +66,13 @@ export class TickManager extends BaseSingleton {
      * @param thisObj 执行函数对应的this对象
      * @param triggerImmediately 是否立刻执行一次
      */
-    public addFrame(method: Function, thisObj: any,interval: number = 33): void {
+    public addFrame(method: Function, thisObj: any, interval: number = 33): void {
         this.removeFrame(method, thisObj);
         // let a = Globals.game.time.time;
         // let b = Globals.game.time.now;
         // let c = Globals.game.time.elapsed;
         // let d = Globals.game.time.elapsedMS;
-        var handle: Object = {"method": method, "thisObj": thisObj,"lastTime": this.game.time.now};
+        let handle: Object = {"method": method, "thisObj": thisObj, "lastTime": this.game.time.now};
         this._frameHandleList.push(handle);
     }
 
@@ -82,8 +82,8 @@ export class TickManager extends BaseSingleton {
      * @param thisObj 执行函数对应的this对象
      */
     public removeFrame(method: Function, thisObj: any): void {
-        var handle: Object;
-        for (var i: number = this._frameHandleList.length - 1; i >= 0; i--) {
+        let handle: Object;
+        for (let i: number = this._frameHandleList.length - 1; i >= 0; i--) {
             handle = this._frameHandleList[i];
             if (handle["method"] === method && handle["thisObj"] === thisObj) {
                 this._frameHandleList.splice(i, 1);
@@ -92,32 +92,32 @@ export class TickManager extends BaseSingleton {
     }
 
     public onTickCall(): void {
-        if(!this.initilized) return;
-        let curTime:number = this.game.time.now;
-        var handle: Object;
-        let deltaTime:number;
+        if (!this.initilized) return;
+        let curTime: number = this.game.time.now;
+        let handle: Object;
+        let deltaTime: number;
         for (let i: number = 0; i < this._tickHandleList.length; i++) {
             handle = this._tickHandleList[i];
             deltaTime = curTime - handle["lastTime"];
             // Log.trace("elapsed-->",deltaTime)
             handle["lastTime"] = curTime;
-            handle["method"].apply(handle["thisObj"], [deltaTime * 0.001]);// s
+            handle["method"].apply(handle["thisObj"], [deltaTime * 0.001]); // s
         }
     }
 
     public onFrameCall(): void {
-        if(!this.initilized) return;
-        let curTime:number = this.game.time.now;
-        var handle: Object;
-        let deltaTime:number;
+        if (!this.initilized) return;
+        let curTime: number = this.game.time.now;
+        let handle: Object;
+        let deltaTime: number;
         for (let i: number = 0; i < this._frameHandleList.length; i++) {
             handle = this._frameHandleList[i];
             deltaTime = curTime - handle["lastTime"];
             // Log.trace("elapsed-->",deltaTime)
             handle["lastTime"] = curTime;
-            handle["method"].apply(handle["thisObj"],[deltaTime * 0.001]);// s
+            handle["method"].apply(handle["thisObj"], [deltaTime * 0.001]); // s
         }
     }
 }
-    
+
 

@@ -100,7 +100,7 @@ export class RoomSceneBasic extends SceneBasic {
     }
 
     public removeAllSceneElements(filterPassFunction: Function = null): void {
-        let element: BasicSceneEntity
+        let element: BasicSceneEntity;
         let i: number = 0;
         for (; i < this.mSceneElements.valueList.length; i++) {
             element = this.mSceneElements.valueList[i];
@@ -112,7 +112,7 @@ export class RoomSceneBasic extends SceneBasic {
     }
 
     public deleteSceneElement(uid: string): BasicSceneEntity {
-        var element: BasicSceneEntity = this.mSceneElements.getValue(uid) as BasicSceneEntity;
+        let element: BasicSceneEntity = this.mSceneElements.getValue(uid) as BasicSceneEntity;
 
         if (!element) {
             Log.trace("Scene::deleteSceneElement not exsit error. uid: " + uid);

@@ -14,7 +14,7 @@ export class BasicFlow implements IFlow {
     }
 
     public initialize(): void {
-        if (this.mIsInited == false) {
+        if (this.mIsInited === false) {
             this.mIsInited = true;
             this.onInitialize();
         }
@@ -68,7 +68,7 @@ export class BasicFlow implements IFlow {
     }
 
     protected calllaterExcuteFlowComplete(time: number = 0): void {
-        if (time == 0) {
+        if (time === 0) {
             this.onExcuteFlowComplete();
         } else {
             this.mCalllaterExcuteFlowCompleteTimeHandler = setTimeout(this.onExcuteFlowComplete, this, time);

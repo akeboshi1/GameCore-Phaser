@@ -56,7 +56,7 @@ export class SceneProc extends BaseProc {
 
         Globals.LayerManager.sceneLayer.add(this.roomScene);
         this.sceneLoader = new SceneLoader();
-        this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this)
+        this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
 
         this.flowManager = new FlowManager();
         this.flowManager.initialize();
@@ -87,7 +87,7 @@ export class SceneProc extends BaseProc {
         this.roomScene.initializeScene(mapSceneInfo);
 
         //初始化当前玩家其他信息
-        var currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         this.roomScene.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.playerID.toString(), currentCharacterInfo, true) as SelfRoleElement;
 
         //set camera

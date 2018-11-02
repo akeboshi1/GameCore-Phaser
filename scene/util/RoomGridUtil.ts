@@ -21,8 +21,8 @@ export class RoomGridUtil {
         let i: number = 0;
         let n: number = numCols * numRows;
         for (; i < n; i++) {
-            var colIndex: number = Math.floor(i % numCols);
-            var rowIndex: number = Math.floor(i / numCols);
+            let colIndex: number = Math.floor(i % numCols);
+            let rowIndex: number = Math.floor(i / numCols);
             this.setGrid(colIndex, rowIndex, 1, 1, true);
         }
     }

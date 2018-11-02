@@ -7,7 +7,7 @@ import BaseSingleton from "../../base/BaseSingleton";
 
 export class KeyboardMod extends BaseSingleton {
     private keyCodes: number[] = [];
-    private game:Phaser.Game;
+    private game: Phaser.Game;
     public upKey: Key;
     public downKey: Key;
     public leftKey: Key;
@@ -23,13 +23,13 @@ export class KeyboardMod extends BaseSingleton {
     public constructor() {
         super();
         //  Register the keys.
-        
+
         //  Stop the following keys from propagating up to the browser
         // this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
         //     Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
     }
-    
-    public init(game:Phaser.Game):void {
+
+    public init(game: Phaser.Game): void {
         this.game = game;
         this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);

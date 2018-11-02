@@ -20,16 +20,16 @@ export class FlowManager extends QueueFlow {
 
     public pushFlow(childFlow: IFlow): void {
         super.pushFlow(childFlow);
-        if (this.getChildFlowCount() == 1) {
+        if (this.getChildFlowCount() === 1) {
             childFlow.excuteFlow();
         }
     }
 
     public notifyChildFlowComplete(childFlow: IFlow): void {
-        var findChildFlow: IFlow = this.childrenFlows.moveFirst();
+        let findChildFlow: IFlow = this.childrenFlows.moveFirst();
         this.childrenFlows.remove(findChildFlow);
 
-        if (this.childrenFlows.length == 0) {
+        if (this.childrenFlows.length === 0) {
             Log.trace("flow empty.");
         }
         else {

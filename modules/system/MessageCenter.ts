@@ -29,7 +29,7 @@ export class MessageCenter extends BaseSingleton {
     }
 
     public removeListener(type: string, listener: Function, thisObj: any): void {
-        var idx: number = this._listenerList.indexOf(listener);
+        let idx: number = this._listenerList.indexOf(listener);
         if (idx >= 0 && this._typeList[idx] === type && this._thisObjList[idx] === thisObj) {
             this.removeByIdx(idx);
         }
@@ -37,7 +37,7 @@ export class MessageCenter extends BaseSingleton {
 
     public removeByType(type: string): void {
         if (type) {
-            for (var idx: number = this._typeList.length - 1; idx >= 0; idx--) {
+            for (let idx: number = this._typeList.length - 1; idx >= 0; idx--) {
                 if (this._typeList[idx] === type) {
                     this.removeByIdx(idx);
                 }
@@ -47,7 +47,7 @@ export class MessageCenter extends BaseSingleton {
 
     public removeByThisObj(thisObj: any): void {
         if (thisObj) {
-            for (var idx: number = this._thisObjList.length - 1; idx >= 0; idx--) {
+            for (let idx: number = this._thisObjList.length - 1; idx >= 0; idx--) {
                 if (this._thisObjList[idx] === thisObj) {
                     this.removeByIdx(idx);
                 }
@@ -57,7 +57,7 @@ export class MessageCenter extends BaseSingleton {
 
     public removeByGroup(group: string): void {
         if (group) {
-            for (var idx: number = this._groupList.length - 1; idx >= 0; idx--) {
+            for (let idx: number = this._groupList.length - 1; idx >= 0; idx--) {
                 if (this._groupList[idx] === group) {
                     this.removeByIdx(idx);
                 }
@@ -66,9 +66,9 @@ export class MessageCenter extends BaseSingleton {
     }
 
     public dispatch(type: string, data: any = null): void {
-        var idx: number;
-        var dispatchListenerList: Function[] = [];
-        var dispatchThisObjList: any[] = [];
+        let idx: number;
+        let dispatchListenerList: Function[] = [];
+        let dispatchThisObjList: any[] = [];
         for (idx = 0; idx < this._typeList.length; idx++) {
             if (this._typeList[idx] === type) {
                 dispatchListenerList.push(this._listenerList[idx]);
@@ -76,8 +76,8 @@ export class MessageCenter extends BaseSingleton {
             }
         }
         if (dispatchListenerList.length > 0) {
-            var listener: Function;
-            var thisObj: any;
+            let listener: Function;
+            let thisObj: any;
             for (idx = 0; idx < dispatchListenerList.length; idx++) {
                 listener = dispatchListenerList[idx];
                 thisObj = dispatchThisObjList[idx];

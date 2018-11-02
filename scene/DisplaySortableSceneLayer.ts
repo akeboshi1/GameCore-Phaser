@@ -8,7 +8,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     private mDepthSortDirtyFlag: boolean = false;
 
     public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
-        super(game,x,y);
+        super(game, x, y);
         this.mSceneEntities = new UniqueLinkList();
     }
 
@@ -24,7 +24,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     }
 
     public onFrame(deltaTime: number): void {
-        var entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
+        let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
         while (entity) {
             entity.onFrame(deltaTime);
             entity = this.mSceneEntities.moveNext();
@@ -32,7 +32,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     }
 
     public onTick(deltaTime: number): void {
-        var entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
+        let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
         while (entity) {
             entity.onTick(deltaTime);
             entity = this.mSceneEntities.moveNext();

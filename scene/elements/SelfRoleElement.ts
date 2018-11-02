@@ -10,7 +10,7 @@ export class SelfRoleElement extends RoleElement {
     protected onUpdating(deltaTime: number): void {
         Globals.Keyboard.CheckKey();
         // Log.trace(this.isWalking, Globals.Keyboard.isKeyDown)
-        let isKeyDown:boolean = Globals.Keyboard.isKeyDown;
+        let isKeyDown: boolean = Globals.Keyboard.isKeyDown;
         // Log.trace("按键-->"+isKeyDown);
         if (this.isWalking && !isKeyDown) {
             this.stopWalk();
@@ -26,7 +26,7 @@ export class SelfRoleElement extends RoleElement {
                     if (this.angleIndex === 1 || this.angleIndex === 3)
                         angle = 1;
                     else
-                        angle = 7
+                        angle = 7;
                     this.walkAngleIndex = 8;
                     break;
                 case Phaser.Keyboard.DOWN.toString():
@@ -34,7 +34,7 @@ export class SelfRoleElement extends RoleElement {
                     if (this.angleIndex === 1 || this.angleIndex === 3)
                         angle = 3;
                     else
-                        angle = 5
+                        angle = 5;
                     this.walkAngleIndex = 4;
                     break;
                 case Phaser.Keyboard.LEFT.toString():
@@ -42,7 +42,7 @@ export class SelfRoleElement extends RoleElement {
                     if (this.angleIndex === 1 || this.angleIndex === 7)
                         angle = 1;
                     else
-                        angle = 3
+                        angle = 3;
                     this.walkAngleIndex = 2;
                     break;
                 case Phaser.Keyboard.RIGHT.toString():
@@ -50,7 +50,7 @@ export class SelfRoleElement extends RoleElement {
                     if (this.angleIndex === 1 || this.angleIndex === 7)
                         angle = 7;
                     else
-                        angle = 5
+                        angle = 5;
                     this.walkAngleIndex = 6;
                     break;
                 case Phaser.Keyboard.UP + "," + Phaser.Keyboard.RIGHT:

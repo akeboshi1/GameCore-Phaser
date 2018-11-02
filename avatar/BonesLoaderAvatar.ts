@@ -51,7 +51,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
         }
 
         if (angleIndex === 5) {
-            t_direct = 3
+            t_direct = 3;
             this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
         this.armature.animation.play(animationName + "_" + t_direct);
@@ -265,8 +265,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     protected onUpdateModelUrl(): void {
         let loadNum: number = 0;
 
-        for(let obj of this.replaceArr)
-        {
+        for (let obj of this.replaceArr) {
             let key: string = obj.part.replace("#", Globals.Tool.caclNumStr(obj.skin)).replace("$", obj.dir);
             if (Globals.game.cache.checkImageKey(Avatar.AvatarBone.getPartName(key))) continue;
             Globals.game.load.image(Avatar.AvatarBone.getPartName(key), Avatar.AvatarBone.getPartUrl(key));
@@ -285,7 +284,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
         this.mModelLoaded = true;
 
         if (this.mLoadCompleteCallback != null) {
-            var cb: Function = this.mLoadCompleteCallback;
+            let cb: Function = this.mLoadCompleteCallback;
             this.mLoadCompleteCallback = null;
             cb.apply(this.mLoadThisObj);
             this.mLoadThisObj = null;
@@ -296,7 +295,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
         this.invalidAnimationControlFunc();
     }
 
-    private replacePart(soltName: string,soltPart:string, soltDir: number, skin: number): void {
+    private replacePart(soltName: string, soltPart: string, soltDir: number, skin: number): void {
         let part: string = soltName.replace("$", soltDir.toString());
         let slot: Slot = this.armature.armature.getSlot(part);
         let partStr: string = Globals.Tool.caclNumStr(skin);
@@ -304,7 +303,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
         let isCache: boolean = Globals.game.cache.checkImageKey(resKey);
         if (isCache) {
             let dis: PhaserSlotDisplay = new PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
-            dis.anchor.set(0.5,0.5);
+            dis.anchor.set(0.5, 0.5);
             slot.replaceDisplay(dis);
         }
     }

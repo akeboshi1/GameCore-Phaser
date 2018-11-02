@@ -21,7 +21,7 @@ export default class UniqueLinkList {
     }
 
     public findItemByFunction(func: Function): any {
-        if (this.mLength == 0) return undefined;
+        if (this.mLength === 0) return undefined;
 
         let item: any;
         let node: LinkNode = this.mHeadNode;
@@ -35,7 +35,7 @@ export default class UniqueLinkList {
     }
 
     public findItemsByFunction(func: Function): any {
-        if (this.mLength == 0) return undefined;
+        if (this.mLength === 0) return undefined;
 
         let results: Array<any> = [];
 
@@ -56,7 +56,7 @@ export default class UniqueLinkList {
 
         let node: LinkNode = this.getFreeNode();
 
-        if (this.mLength == 0) {
+        if (this.mLength === 0) {
             this.mHeadNode = node;
         } else {
             this.mTailNode.next = node;
@@ -72,14 +72,14 @@ export default class UniqueLinkList {
     }
 
     public remove(item: any): any {
-        if (!item || this.mLength == 0)
+        if (!item || this.mLength === 0)
             return undefined;
         let itemNode: LinkNode = this.mItemsHashMap[item.key];
         if (itemNode === undefined)
             return undefined;
 
         let node: LinkNode = itemNode;
-        if (this.mLength == 1) {
+        if (this.mLength === 1) {
             this.mCursorNode = this.mHeadNode = this.mTailNode = null;
         } else {
             if (node === this.mHeadNode) {
@@ -126,13 +126,13 @@ export default class UniqueLinkList {
 
     public sort(func: any): void {
         let self = this;
-        if (this.mLength == 0) return;
+        if (this.mLength === 0) return;
 
         if (!this.mNodeSortArray) this.mNodeSortArray = new Array<LinkNode>();
 
         let node: LinkNode = this.mHeadNode;
         while (node) {
-            this.mNodeSortArray.push(node)
+            this.mNodeSortArray.push(node);
             node = node.next;
         }
 

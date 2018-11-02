@@ -15,8 +15,8 @@ export class ElementInfo {
     }
 
     protected init(): void {
-        var value: any;
-        for (var key in this.base) {
+        let value: any;
+        for (let key in this.base) {
             value = this.base[key];
             this[key] = value;
         }
@@ -36,7 +36,7 @@ export class ElementInfo {
     }
 
     public get rows(): number {
-        if (this.dir == 3 || this.dir == 7) {
+        if (this.dir === 3 || this.dir === 7) {
             return this.config.rows;
         } else {
             return this.config.cols;
@@ -44,7 +44,7 @@ export class ElementInfo {
     }
 
     public get cols(): number {
-        if (this.dir == 3 || this.dir == 7) {
+        if (this.dir === 3 || this.dir === 7) {
             return this.config.cols;
         } else {
             return this.config.rows;

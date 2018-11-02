@@ -41,7 +41,7 @@ export class RoomScene extends RoomSceneBasic {
                            uid: string, elemetData: any,
                            isSelf: boolean = false): BasicSceneEntity {
 
-        var element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
+        let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
 
         element.uid = uid;
         element.elementTypeId = sceneElementType;

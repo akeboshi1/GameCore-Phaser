@@ -11,7 +11,7 @@ export class ElementConfig extends BaseSingleton {
 
     public init(configResName: string): void {
         let res = Globals.game.cache.getJSON(configResName);
-        var config: Object;
+        let config: Object;
         let i: number = 0;
         let len: number = res.terrain.length;
         for (; i < len; i++) {
@@ -27,12 +27,12 @@ export class ElementConfig extends BaseSingleton {
     }
 
     public getTerrainBy(type: number): any {
-        var config: Object = this.terrain_config[type];
+        let config: Object = this.terrain_config[type];
         return config;
     }
 
     public getElementBy(type: number): any {
-        var config: Object = this.element_config[type];
+        let config: Object = this.element_config[type];
         return config;
     }
 }

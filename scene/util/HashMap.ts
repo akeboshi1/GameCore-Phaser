@@ -32,7 +32,7 @@ export class HashMap {
     }
 
     public getValue(key: any): any {
-        var index: number = this._keyList.indexOf(key);
+        let index: number = this._keyList.indexOf(key);
         if (index >= 0) {
             return this._valueList[index];
         }
@@ -40,7 +40,7 @@ export class HashMap {
     }
 
     public getFirstKey(value: any): any {
-        var index: number = this._valueList.indexOf(value);
+        let index: number = this._valueList.indexOf(value);
         if (index >= 0) {
             return this._keyList[index];
         }
@@ -48,7 +48,7 @@ export class HashMap {
     }
 
     public has(key: any): boolean {
-        var index: number = this._keyList.indexOf(key);
+        let index: number = this._keyList.indexOf(key);
         if (index >= 0) {
             return true;
         }
@@ -64,10 +64,10 @@ export class HashMap {
     }
 
     public remove(key: any): any {
-        var index: number = this._keyList.indexOf(key);
+        let index: number = this._keyList.indexOf(key);
         if (index >= 0) {
             this._keyList.splice(index, 1);
-            var value: any = this._valueList.splice(index, 1)[0];
+            let value: any = this._valueList.splice(index, 1)[0];
             return value;
         }
         return null;

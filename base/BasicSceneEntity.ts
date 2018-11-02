@@ -10,7 +10,7 @@ import {Log} from "../Log";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     //basic
-    public uid: string;//runtime id
+    public uid: string; //runtime id
     public elementTypeId: number = 0;
     public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
 
@@ -64,27 +64,27 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     public get initilized(): boolean {
-        return this.mInitilized
-    };
+        return this.mInitilized;
+    }
 
     public get key(): any {
         return this.uid;
     }
 
     //Position
-    public setPosition(x: number, y: number, z:number): void {
+    public setPosition(x: number, y: number, z: number): void {
         this._ox = x;
         this._oy = y;
         this._oz = z;
     }
 
     public get gridPos(): Point {
-        let temp = Globals.Room45Util.p3top2(this._ox, this._oy,this._oz);
-        let point: Point = Globals.Room45Util.pixelToTileCoords(temp.x,temp.y);
+        let temp = Globals.Room45Util.p3top2(this._ox, this._oy, this._oz);
+        let point: Point = Globals.Room45Util.pixelToTileCoords(temp.x, temp.y);
         return point;
     }
     public isInScreen(): boolean {
-        return true;//Globals.Tool.isOverlapCircleAndRectangle(this.screenX, this.screenY, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, 0, 0, this.camera.width, this.camera.height );
+        return true; //Globals.Tool.isOverlapCircleAndRectangle(this.screenX, this.screenY, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, 0, 0, this.camera.width, this.camera.height );
     }
 
     public initialize(): void {
@@ -127,7 +127,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
         else {
             this.display.visible = false;
         }
-    }   
+    }
 
     protected onInitialize(): void {
         if (!this.display) this.display = this.createDisplay();
@@ -142,18 +142,18 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected createDisplay(): any {
-        var d: BasicAvatar = new BasicAvatar(Globals.game);
+        let d: BasicAvatar = new BasicAvatar(Globals.game);
         return d;
     }
 
     protected onUpdateByData(): void {
-    };
+    }
 
     protected onPreUpdate(deltaTime: number): void {
-    };
+    }
 
     protected onUpdating(deltaTime: number): void {
-    };
+    }
 
     protected onUpdated(deltaTime: number): void {
 
@@ -168,7 +168,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     protected onUpdatingDisplay(deltaTime: number): void {
 
 
-        let p3 = Globals.Room45Util.p2top3(this.ox,this.oy,this.oz);
+        let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
         // Log.trace(p3.x,p3.y,p3.z);
         this.display.isoX = p3.x;
         this.display.isoY = p3.y;

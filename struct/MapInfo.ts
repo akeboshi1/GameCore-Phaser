@@ -1,5 +1,5 @@
-import {TerrainInfo} from './TerrainInfo';
-import {ElementInfo} from './ElementInfo';
+import {TerrainInfo} from "./TerrainInfo";
+import {ElementInfo} from "./ElementInfo";
 import Globals from "../Globals";
 
 export class MapInfo {
@@ -77,8 +77,8 @@ export class MapInfo {
 
     public setTmx(value: any): void {
         this._tmx = value;
-        this._cols = +this._tmx.width;// 水平方向格子数量
-        this._rows = +this._tmx.height;// 垂直方向格子数量
+        this._cols = +this._tmx.width; // 水平方向格子数量
+        this._rows = +this._tmx.height; // 垂直方向格子数量
         this._tilewidth = +this._tmx.tileWidth;
         this._tileheight = +this._tmx.tileHeight;
         this._mapTotalWidth = (this._rows + this._cols) * (this._tilewidth / 2);
@@ -144,8 +144,8 @@ export class MapInfo {
         let i: number = 0;
         let n: number = arr.length;
         for (; i < n; i++) {
-            var colIndex: number = Math.floor(i % _width);
-            var rowIndex: number = Math.floor(i / _width);
+            let colIndex: number = Math.floor(i % _width);
+            let rowIndex: number = Math.floor(i / _width);
             data[colIndex][rowIndex] = arr[i];
         }
     }
