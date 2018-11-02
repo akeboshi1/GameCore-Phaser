@@ -293,7 +293,6 @@ declare namespace dragonBones {
 }
 declare var __extends: any;
 declare var exports: any;
-declare var module: any;
 declare var define: any;
 /**
  * The MIT License (MIT)
