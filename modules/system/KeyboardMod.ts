@@ -1,21 +1,21 @@
 /**
  * author aaron
  */
-import BaseSingleton from "../../base/BaseSingleton";
-import Globals from "../../Globals";
 import {Log} from "../../Log";
 import Key = Phaser.Key;
+import BaseSingleton from "../../base/BaseSingleton";
 
 export class KeyboardMod extends BaseSingleton {
     private keyCodes: number[] = [];
-    private upKey: Key;
-    private downKey: Key;
-    private leftKey: Key;
-    private rightKey: Key;
-    private wKey: Key;
-    private sKey: Key;
-    private aKey: Key;
-    private dKey: Key;
+    private game:Phaser.Game;
+    public upKey: Key;
+    public downKey: Key;
+    public leftKey: Key;
+    public rightKey: Key;
+    public wKey: Key;
+    public sKey: Key;
+    public aKey: Key;
+    public dKey: Key;
 
     /**
      * 构造函数
@@ -23,21 +23,30 @@ export class KeyboardMod extends BaseSingleton {
     public constructor() {
         super();
         //  Register the keys.
-        this.upKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.UP);
-        this.downKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-        this.leftKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        this.rightKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-
-        this.wKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.W);
-        this.sKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.S);
-        this.aKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.A);
-        this.dKey = Globals.game.input.keyboard.addKey(Phaser.Keyboard.D);
+        
         //  Stop the following keys from propagating up to the browser
-        Globals.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
-            Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
+        // this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
+        //     Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
+    }
+    
+    public init(game:Phaser.Game):void {
+        this.game = game;
+        this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
+        this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+        this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+        this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+
+        this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+        this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
     }
 
     private _isKeyDown: boolean = false;
+
+    // public get isKeyDown(): boolean {
+    //     return this.upKey.isDown || this.downKey.isDown || this.leftKey.isDown || this.rightKey.isDown || this.wKey.isDown || this.sKey.isDown || this.aKey.isDown || this.dKey.isDown;
+    // }
 
     public get isKeyDown(): boolean {
         return this._isKeyDown;
@@ -62,11 +71,10 @@ export class KeyboardMod extends BaseSingleton {
         return this.keyCodes;
     }
 
-    public CheckKey(): boolean {
+    public CheckKey(): void {
         this._isKeyDown = false;
         let keyDowns = this.getKeyDowns();
-        // Log.trace("KeyCode--->" + "0");
-        if (keyDowns.length === 0) return false;
+        if (keyDowns.length === 0) return;
 
         this._isKeyDown = true;
         this._keyDownCode = "";
@@ -93,7 +101,6 @@ export class KeyboardMod extends BaseSingleton {
         if (this.keyDownCode === "")
             this._keyDownCode = keyDowns[0].toString();
         Log.trace("KeyCode--->" + this.keyDownCode);
-        return true;
     }
 
     private onDown(): void {

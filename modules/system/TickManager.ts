@@ -39,7 +39,8 @@ export class TickManager extends BaseSingleton {
         this.removeTick(method, thisObj);
         var handle: Object = {
             "method": method,
-            "thisObj": thisObj
+            "thisObj": thisObj,
+            "lastTime": this.game.time.now
         };
         this._tickHandleList.push(handle);
     }
@@ -90,18 +91,22 @@ export class TickManager extends BaseSingleton {
         }
     }
 
-    public onTickCall(timeStep: number): void {
+    public onTickCall(): void {
         if(!this.initilized) return;
+        let curTime:number = this.game.time.now;
         var handle: Object;
+        let deltaTime:number;
         for (let i: number = 0; i < this._tickHandleList.length; i++) {
             handle = this._tickHandleList[i];
-            handle["method"].apply(handle["thisObj"], [timeStep]);
+            deltaTime = curTime - handle["lastTime"];
+            // Log.trace("elapsed-->",deltaTime)
+            handle["lastTime"] = curTime;
+            handle["method"].apply(handle["thisObj"], [deltaTime * 0.001]);// s
         }
     }
 
     public onFrameCall(): void {
         if(!this.initilized) return;
-        // let elapsed: number = timeStep - this._curTime;
         let curTime:number = this.game.time.now;
         var handle: Object;
         let deltaTime:number;

@@ -19,7 +19,7 @@ export default class Game extends Phaser.Game implements IGame {
             height: value.height,
             renderer: Phaser.AUTO,
             parent: "",
-            resolution: 1
+            resolution: 1,
         };
         super(config);
 
@@ -34,23 +34,5 @@ export default class Game extends Phaser.Game implements IGame {
     }
 
     public resize(): void {
-    }
-
-    public update(time: number): void {
-        // Log.trace("update-->",time);
-        super.update(time);
-        // Globals.TickManager.onEnterFrame(time);
-    }
-
-    public updateLogic(timeStep: number): void {
-        // Log.trace("updateLogic-->",timeStep);
-        super.updateLogic(timeStep);
-        Globals.TickManager.onTickCall(timeStep);
-    }
-
-    public updateRender(timeStep: number): void {
-        // Log.trace("updateRender-->",timeStep);
-        Globals.TickManager.onFrameCall();
-        super.updateRender(timeStep);
     }
 }

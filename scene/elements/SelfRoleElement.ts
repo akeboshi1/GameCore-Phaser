@@ -10,18 +10,20 @@ export class SelfRoleElement extends RoleElement {
     protected onUpdating(deltaTime: number): void {
         Globals.Keyboard.CheckKey();
         // Log.trace(this.isWalking, Globals.Keyboard.isKeyDown)
-        if (this.isWalking === true && Globals.Keyboard.isKeyDown === false) {
+        let isKeyDown:boolean = Globals.Keyboard.isKeyDown;
+        // Log.trace("按键-->"+isKeyDown);
+        if (this.isWalking && !isKeyDown) {
             this.stopWalk();
             super.onUpdating(deltaTime);
             return;
         }
 
-        if (Globals.Keyboard.isKeyDown === true) {
+        if (isKeyDown) {
             let angle;
             switch (Globals.Keyboard.keyDownCode) {
                 case Phaser.Keyboard.UP.toString():
                 case Phaser.Keyboard.W.toString():
-                    if (this.angleIndex == 1 || this.angleIndex == 3)
+                    if (this.angleIndex === 1 || this.angleIndex === 3)
                         angle = 1;
                     else
                         angle = 7
@@ -29,7 +31,7 @@ export class SelfRoleElement extends RoleElement {
                     break;
                 case Phaser.Keyboard.DOWN.toString():
                 case Phaser.Keyboard.S.toString():
-                    if (this.angleIndex == 1 || this.angleIndex == 3)
+                    if (this.angleIndex === 1 || this.angleIndex === 3)
                         angle = 3;
                     else
                         angle = 5
@@ -37,7 +39,7 @@ export class SelfRoleElement extends RoleElement {
                     break;
                 case Phaser.Keyboard.LEFT.toString():
                 case Phaser.Keyboard.A.toString():
-                    if (this.angleIndex == 1 || this.angleIndex == 7)
+                    if (this.angleIndex === 1 || this.angleIndex === 7)
                         angle = 1;
                     else
                         angle = 3
@@ -45,7 +47,7 @@ export class SelfRoleElement extends RoleElement {
                     break;
                 case Phaser.Keyboard.RIGHT.toString():
                 case Phaser.Keyboard.D.toString():
-                    if (this.angleIndex == 1 || this.angleIndex == 7)
+                    if (this.angleIndex === 1 || this.angleIndex === 7)
                         angle = 7;
                     else
                         angle = 5
@@ -72,6 +74,7 @@ export class SelfRoleElement extends RoleElement {
                     this.walkAngleIndex = 3;
                     break;
             }
+
             this.setAngleIndex(angle);
 
             if (!this.isWalking)
