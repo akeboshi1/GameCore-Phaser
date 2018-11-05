@@ -304,6 +304,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
         if (isCache) {
             let dis: PhaserSlotDisplay = new PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
             dis.anchor.set(0.5, 0.5);
+            dis.smoothed = false;
             slot.replaceDisplay(dis);
         }
     }

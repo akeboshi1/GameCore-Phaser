@@ -17,10 +17,11 @@ export default class Game extends Phaser.Game implements IGame {
             width: value.width,
             height: value.height,
             renderer: Phaser.AUTO,
-            parent: "",
+            parent: "game",
             resolution: 1,
         };
         super(config);
+        console.log(value);
 
         // 初始化地图数据
         Globals.DataCenter.MapData.setMapInfo(value.mapData);
