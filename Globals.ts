@@ -1,12 +1,13 @@
-import {LayerManager} from "./modules/uiManager/LayerManager";
-import {LayoutManager} from "./modules/uiManager/LayoutManager";
-import {DataCenter} from "./modules/system/DataCenter";
-import {Tool} from "./modules/system/Tool";
-import {MessageCenter} from "./modules/system/MessageCenter";
-import {TickManager} from "./modules/system/TickManager";
-import {Room45Util} from "./modules/system/Room45Util";
-import {SceneManager} from "./modules/system/SceneManager";
-import {KeyboardMod} from "./modules/system/KeyboardMod";
+import {ModuleManager} from "./managers/system/ModuleManager";
+import {LayerManager} from "./managers/uiManager/LayerManager";
+import {KeyboardMod} from "./managers/system/KeyboardMod";
+import {LayoutManager} from "./managers/uiManager/LayoutManager";
+import {MessageCenter} from "./managers/system/MessageCenter";
+import {DataCenter} from "./managers/system/DataCenter";
+import {Tool} from "./managers/system/Tool";
+import {TickManager} from "./managers/system/TickManager";
+import {Room45Util} from "./managers/system/Room45Util";
+import {SceneManager} from "./managers/system/SceneManager";
 
 export default class Globals {
     private static _game: Phaser.Game;
@@ -16,6 +17,13 @@ export default class Globals {
 
     public  static  get game(): Phaser.Game {
         return this._game;
+    }
+
+    /**
+     * 图层管理器
+     */
+    public static get ModuleManager(): ModuleManager {
+        return ModuleManager.getInstance();
     }
 
     /**

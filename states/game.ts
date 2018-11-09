@@ -1,8 +1,9 @@
-import {SceneProc} from "../process/SceneProc";
 import Globals from "../Globals";
-import {Log} from "../Log";
+import {IModuleInfo} from "../base/module/interfaces/IModuleInfo";
+import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 
 export default class Game extends Phaser.State {
+
     public init(): void {
         this.game.time.advancedTiming = true;
         // Globals.game.iso.anchor.setTo(0.5, 0);
@@ -13,7 +14,16 @@ export default class Game extends Phaser.State {
         Globals.Keyboard.init(this.game);
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
-        SceneProc.getInstance().beginProc();
+        let module: IModuleInfo = {
+            name: ModuleTypeEnum.SCENE,
+            data: null
+        };
+        Globals.ModuleManager.createModule(module);
+        // module = {
+        //     name: ModuleTypeEnum.CONTROL,
+        //     data: null
+        // };
+        // Globals.ModuleManager.createModule(module);
     }
 
     public update(): void {

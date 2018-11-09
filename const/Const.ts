@@ -5,6 +5,11 @@ export namespace Const {
         SceneLayerBottom = 3
     }
 
+    export enum ModuleEnum {
+        MODULE_STATUS_RUN = 1,
+        MODULE_STATUS_STOP = 2
+    }
+
     export enum GameConst {
         SHARE_OBJECT_CACHE_SWIP_TIME = 1,
         MAP_TILE_DEPTH = 12,
