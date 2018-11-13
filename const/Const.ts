@@ -24,6 +24,11 @@ export namespace Const {
         MAP_TILE_BORDER = Math.sqrt(Math.pow(Const.GameConst.HALF_MAP_TILE_WIDTH, 2) + Math.pow(Const.GameConst.HALF_MAP_TILE_HEIGHT, 2))
     }
 
+    export enum UIConst {
+        UI_DEFALUT_WIDTH = 500,
+        UI_DEFALUT_HEIGHT = 300
+    }
+
     export enum SceneElementType {
         ROLE = 1,
         ELEMENT = 2

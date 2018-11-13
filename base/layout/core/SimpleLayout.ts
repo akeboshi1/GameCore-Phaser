@@ -16,7 +16,7 @@ export class SimpleLayout extends Layout {
     protected onLayout(): void {
         let len: number = this.m_LayoutItems.length;
         let item: ILayoutItem;
-        let preX: number = 0;k
+        let preX: number = 0;
         let preY: number = 0;
         for (let i: number = 0; i < len;) {
             item = this.m_LayoutItems[i];

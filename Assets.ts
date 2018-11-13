@@ -75,6 +75,21 @@ export namespace Jsons {
     }
 }
 
+export namespace UI {
+    export class SpriteSheetsCloseBtn {
+        static getName(): string { return "ui_button_sprite_sheet_png"; }
+        static getPNG(): string { return require("assets/spritesheets/button_sprite_sheet.png"); }
+        static getFrameWidth(): number { return 193; }
+        static getFrameHeight(): number { return 71; }
+        static getFrameMax(): number { return 3; }
+    }
+
+    export class ImageBg {
+        static getName(): string { return "ui_background_png"; }
+        static getPNG(): string { return require("assets/images/ui/background.png"); }
+    }
+}
+
 export namespace Tile {
     export class JsonMap {
         static getLoadList(): number[] {

@@ -85,7 +85,7 @@ export class SceneMediator extends MediatorBase {
 
         //set camera
         Globals.SceneManager.pushScene(this.view);
-        let camera = Globals.game.camera;
+        // let camera = Globals.game.camera;
         // camera.setSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
         // Globals.game.camera.follow(this.view.currentSelfPlayer.display);
         this.view.notifyInitializeSceneComplete();

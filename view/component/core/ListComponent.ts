@@ -39,6 +39,11 @@ export class ListComponent extends Phaser.Group implements IListComponent {
     }
 
     public onTriggerClick(item: IListItemComponent) {
+        if ( this.m_SelectItem && this.m_SelectItem !== item ) {
+            this.m_SelectItem.setSelect( false );
+        }
+        this.m_SelectItem = item;
+        this.m_SelectItem.setSelect( true ) ;
     }
 
     public selectIndex(index: number) {
