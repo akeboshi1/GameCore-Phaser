@@ -1,3 +1,6 @@
+import {ILayout} from "../interfaces/ILayout";
+import {ILayoutItem} from "../interfaces/ILayoutItem";
+
 export class Layout implements ILayout {
     protected m_LayoutItems: Array<ILayoutItem>;
 
@@ -5,7 +8,7 @@ export class Layout implements ILayout {
         this.m_LayoutItems = new Array<ILayoutItem>();
     }
 
-    protected onLayout(): void {}
+    public onLayout(): void {}
 
     public addItem(item: ILayoutItem): void {
         if (item == null) return;
@@ -33,5 +36,9 @@ export class Layout implements ILayout {
             this.m_LayoutItems.splice(0);
         }
         this.m_LayoutItems = null;
+    }
+
+    public get size(): number {
+        return this.m_LayoutItems.length;
     }
 }

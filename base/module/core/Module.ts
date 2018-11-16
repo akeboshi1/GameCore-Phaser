@@ -1,6 +1,6 @@
 import "phaser-ce";
 import {IModule} from "../interfaces/IModule";
-import {Const} from "../../../const/Const";
+import {Const} from "../../../common/const/Const";
 import {IModuleContext} from "../interfaces/IModuleContext";
 
 export class Module implements IModule {
@@ -30,7 +30,14 @@ export class Module implements IModule {
             this.m_Context.setParam( this.m_ModuleParam );
             this.m_Context.start();
         }
+        this.init();
     }
+
+    protected init(): void {
+        this.onInit();
+    }
+
+    protected onInit(): void { }
 
     protected onStartUp() {}
 

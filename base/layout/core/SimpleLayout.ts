@@ -1,11 +1,12 @@
 import {Layout} from "../base/Layout";
+import {ILayoutItem} from "../interfaces/ILayoutItem";
 
 export class SimpleLayout extends Layout {
     protected m_ColGap: number = 0;
     protected m_RowGap: number = 0;
     protected m_ColNum: number = 1;
     protected m_RowNum: number = 1;
-    public constructor( colGap: number = 0, rowGap: number = 0, colNum: number = 1, rowNum: number = 999 ) {
+    public constructor( colNum: number = 1, rowNum: number = 999, colGap: number = 0, rowGap: number = 0 ) {
         super();
         this.m_ColGap = colGap;
         this.m_RowGap = rowGap;
@@ -13,7 +14,7 @@ export class SimpleLayout extends Layout {
         this.m_RowNum = rowNum;
     }
 
-    protected onLayout(): void {
+    public onLayout(): void {
         let len: number = this.m_LayoutItems.length;
         let item: ILayoutItem;
         let preX: number = 0;

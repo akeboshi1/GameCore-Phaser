@@ -1,4 +1,4 @@
-interface ILayoutItem {
+export interface ILayoutItem {
     getWidth(): number;
     getHeight(): number;
     setPosX(value: number);

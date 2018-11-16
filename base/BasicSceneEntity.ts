@@ -1,11 +1,11 @@
 import {ITickedObject} from "./ITickedObject";
 import {IAnimatedObject} from "./IAnimatedObject";
-import {Const} from "../const/Const";
+import {Const} from "../common/const/Const";
 import Globals from "../Globals";
 import {BasicAvatar} from "./BasicAvatar";
 import {IEntityComponent} from "./IEntityComponent";
 import Point = Phaser.Point;
-import {SceneBasic} from "../modules/scene/view/SceneBasic";
+import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     //basic

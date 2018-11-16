@@ -14,16 +14,9 @@ export default class Game extends Phaser.State {
         Globals.Keyboard.init(this.game);
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
-        let module: IModuleInfo = {
-            name: ModuleTypeEnum.SCENE,
-            data: null
-        };
-        Globals.ModuleManager.createModule(module);
-        // module = {
-        //     name: ModuleTypeEnum.CONTROL,
-        //     data: null
-        // };
-        // Globals.ModuleManager.createModule(module);
+
+        Globals.ModuleManager.openModule( ModuleTypeEnum.SCENE );
+        Globals.ModuleManager.openModule( ModuleTypeEnum.MAINMENU );
     }
 
     public update(): void {

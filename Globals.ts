@@ -1,13 +1,14 @@
-import {ModuleManager} from "./managers/system/ModuleManager";
-import {LayerManager} from "./managers/uiManager/LayerManager";
-import {KeyboardMod} from "./managers/system/KeyboardMod";
-import {LayoutManager} from "./managers/uiManager/LayoutManager";
-import {MessageCenter} from "./managers/system/MessageCenter";
-import {DataCenter} from "./managers/system/DataCenter";
-import {Tool} from "./managers/system/Tool";
-import {TickManager} from "./managers/system/TickManager";
-import {Room45Util} from "./managers/system/Room45Util";
-import {SceneManager} from "./managers/system/SceneManager";
+import {ModuleManager} from "./common/manager/ModuleManager";
+import {LayerManager} from "./common/manager/LayerManager";
+import {KeyboardMod} from "./common/manager/KeyboardMod";
+import {LayoutManager} from "./common/manager/LayoutManager";
+import {MessageCenter} from "./common/manager/MessageCenter";
+import {DataCenter} from "./common/manager/DataCenter";
+import {Tool} from "./common/manager/Tool";
+import {TickManager} from "./common/manager/TickManager";
+import {Room45Util} from "./common/manager/Room45Util";
+import {SceneManager} from "./common/manager/SceneManager";
+import {ClientConnection} from "./common/manager/client-connection";
 
 export default class Globals {
     private static _game: Phaser.Game;
@@ -17,6 +18,13 @@ export default class Globals {
 
     public  static  get game(): Phaser.Game {
         return this._game;
+    }
+
+    /**
+     * 图层管理器
+     */
+    public static get ClientConnection(): ClientConnection {
+        return ClientConnection.getInstance();
     }
 
     /**

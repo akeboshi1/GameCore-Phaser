@@ -1,4 +1,4 @@
-import {MapInfo} from '../struct/MapInfo';
+import {MapInfo} from '../common/struct/MapInfo';
 
 /**
  * author aaron

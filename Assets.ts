@@ -76,12 +76,27 @@ export namespace Jsons {
 }
 
 export namespace UI {
-    export class SpriteSheetsCloseBtn {
-        static getName(): string { return "ui_button_sprite_sheet_png"; }
-        static getPNG(): string { return require("assets/spritesheets/button_sprite_sheet.png"); }
+    export class SpriteSheetsBlueBtn {
+        static getName(): string { return "ui_btn_bule_sprite_sheet_png"; }
+        static getPNG(): string { return require("assets/spritesheets/btn_bule_sprite_sheet.png"); }
         static getFrameWidth(): number { return 193; }
         static getFrameHeight(): number { return 71; }
         static getFrameMax(): number { return 3; }
+    }
+
+    export class SpriteSheetsCloseBtn {
+        static getName(): string { return "ui_btn_close_sprite_sheet_png"; }
+        static getPNG(): string { return require("assets/spritesheets/btn_close_sprite_sheet.png"); }
+        static getFrameWidth(): number { return 118; }
+        static getFrameHeight(): number { return 120; }
+        static getFrameMax(): number { return 3; }
+    }
+
+
+
+    export class ImageMenuBag {
+        static getName(): string { return "ui_menu_bag_png"; }
+        static getPNG(): string { return require("assets/images/ui/menu_bag.png"); }
     }
 
     export class ImageBg {

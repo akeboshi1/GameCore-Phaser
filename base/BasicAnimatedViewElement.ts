@@ -2,7 +2,7 @@ import {BasicViewElement} from "./BasicViewElement";
 import {IAnimatedObject} from "./IAnimatedObject";
 import {ITickedObject} from "./ITickedObject";
 import Globals from "../Globals";
-import {MessageType} from "../const/MessageType";
+import {MessageType} from "../common/const/MessageType";
 
 export class BasicAnimatedViewElement extends BasicViewElement implements IAnimatedObject, ITickedObject {
     public watchStageResize: boolean = false;

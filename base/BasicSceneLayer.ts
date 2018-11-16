@@ -1,7 +1,7 @@
 import {IAnimatedObject} from "./IAnimatedObject";
 import {ITickedObject} from "./ITickedObject";
 import {BasicViewElement} from "./BasicViewElement";
-import {SceneBasic} from "../modules/scene/view/SceneBasic";
+import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 
 export class BasicSceneLayer extends BasicViewElement implements IAnimatedObject, ITickedObject {
     public scene: SceneBasic;

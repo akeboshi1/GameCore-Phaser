@@ -1,4 +1,4 @@
-import {Atlases, Avatar} from "../Assets";
+import {Atlases, Avatar, UI} from "../Assets";
 import * as Assets from "../Assets";
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
@@ -30,6 +30,8 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadImages(): void {
+        this.game.load.image(UI.ImageBg.getName(), UI.ImageBg.getPNG());
+        this.game.load.image(UI.ImageMenuBag.getName(), UI.ImageMenuBag.getPNG());
     }
 
     private loadJsons(): void {
@@ -39,6 +41,8 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadAtlases() {
+        this.game.load.spritesheet(UI.SpriteSheetsCloseBtn.getName(), UI.SpriteSheetsCloseBtn.getPNG(), UI.SpriteSheetsCloseBtn.getFrameWidth(), UI.SpriteSheetsCloseBtn.getFrameHeight(), UI.SpriteSheetsCloseBtn.getFrameMax());
+        this.game.load.spritesheet(UI.SpriteSheetsBlueBtn.getName(), UI.SpriteSheetsBlueBtn.getPNG(), UI.SpriteSheetsBlueBtn.getFrameWidth(), UI.SpriteSheetsBlueBtn.getFrameHeight(), UI.SpriteSheetsBlueBtn.getFrameMax());
     }
 
     private loadAvatar(): void {
