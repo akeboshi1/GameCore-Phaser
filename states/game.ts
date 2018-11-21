@@ -1,5 +1,4 @@
 import Globals from "../Globals";
-import {IModuleInfo} from "../base/module/interfaces/IModuleInfo";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 
 export default class Game extends Phaser.State {

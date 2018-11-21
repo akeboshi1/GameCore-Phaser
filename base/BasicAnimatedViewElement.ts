@@ -50,7 +50,7 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
         this.registerForUpdates = this.mRegisterForUpdates;
 
         if (this.watchStageResize) {
-            Globals.MessageCenter.addListener(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
+            Globals.MessageCenter.on(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
         }
     }
 
@@ -59,7 +59,7 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
         this.mRegisterForUpdates = this.mInitialRegisterForUpdates;
 
         if (this.watchStageResize) {
-            Globals.MessageCenter.removeListener(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
+            Globals.MessageCenter.cancel(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
         }
     }
 

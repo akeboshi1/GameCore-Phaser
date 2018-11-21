@@ -3,7 +3,6 @@ import {IListItemComponent} from "../interfaces/IListItemComponent";
 import {ILayout} from "../../../layout/interfaces/ILayout";
 import {HashMap} from "../../../../modules/Scene/util/HashMap";
 import {IListComponent} from "../interfaces/IListComponent";
-import {ILayoutItem} from "../../../layout/interfaces/ILayoutItem";
 
 export class ListComponent extends Phaser.Group implements IListComponent {
     protected m_Layout: ILayout;

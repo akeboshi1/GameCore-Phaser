@@ -12,12 +12,21 @@ import {ClientConnection} from "./common/manager/client-connection";
 
 export default class Globals {
     private static _game: Phaser.Game;
+    private static _isEditor: boolean;
     public static  set game(value: Phaser.Game) {
         this._game = value;
     }
 
     public  static  get game(): Phaser.Game {
         return this._game;
+    }
+
+    public static set isEditor( value: boolean ) {
+        this._isEditor = value;
+    }
+
+    public static get isEditor(): boolean {
+        return this._isEditor;
     }
 
     /**

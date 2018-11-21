@@ -13,10 +13,6 @@ export class SceneManager extends BaseSingleton {
         return (<SceneBasic>this.mActivedScenesStack[this.mActivedScenesStack.length - 1]);
     }
 
-    public get curRoom(): SceneView {
-        return (<SceneView>this.mActivedScenesStack[this.mActivedScenesStack.length - 1]);
-    }
-
     public pushScene(scene: SceneBasic): void {
         if (this.mActivedScenesStack.length > 0) {
             (<SceneBasic>this.mActivedScenesStack[this.mActivedScenesStack.length - 1]).deactiveScene();

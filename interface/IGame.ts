@@ -1,9 +1,10 @@
-import IGameParam from './IGameParam';
-
 /**
  * 游戏基类
  * author aaron
  */
+import {IEditorMode} from "./IEditorMode";
+
 export default interface IGame {
     resize(): void;
+    changeEditorMode( mode: IEditorMode);
 }

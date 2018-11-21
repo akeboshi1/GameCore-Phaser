@@ -83,7 +83,9 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
         return point;
     }
     public isInScreen(): boolean {
-        return true; //Globals.Tool.isOverlapCircleAndRectangle(this.screenX, this.screenY, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, 0, 0, this.camera.width, this.camera.height );
+        let p2 = Globals.Room45Util.p3top2(this._ox, this._oy, this._oz);
+        return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
+            this.camera.width, this.camera.height, p2.x - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2 , p2.y, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
     }
 
     public initialize(): void {

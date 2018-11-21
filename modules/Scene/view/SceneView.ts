@@ -49,7 +49,7 @@ export class SceneView extends SceneBase {
 
         this.addSceneEntity(element);
 
-        Globals.MessageCenter.dispatch(MessageType.ADD_SCENE_ELEMENT, element);
+        Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
 
         return element;
     }
@@ -82,7 +82,7 @@ export class SceneView extends SceneBase {
 
     protected onActivedScene(): void {
         super.onActivedScene();
-        Globals.game.camera.follow(this.currentSelfPlayer.display);
+        // Globals.game.camera.follow(this.currentSelfPlayer.display);
     }
 
     protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {

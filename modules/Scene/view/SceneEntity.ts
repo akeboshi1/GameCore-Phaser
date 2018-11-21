@@ -9,7 +9,7 @@ export default class SceneEntity extends BasicSceneEntity {
     // moving
     protected mySpeed: number = 4; //
     protected mAngleIndex: number = 0;
-    protected mWalkAngleIndex: number = 0; //走路
+
     protected myIsWalking: boolean = false;
     protected myCurrentPathStepIndex: number = 0;
     protected myCurrentPathPoints: Array<any> = null;
@@ -25,30 +25,8 @@ export default class SceneEntity extends BasicSceneEntity {
         return this.mAngleIndex;
     }
 
-    public get walkAngleIndex(): number {
-        return this.mWalkAngleIndex;
-    }
-
-    public set walkAngleIndex(value: number) {
-        this.mWalkAngleIndex = value;
-    }
-
-    public get movingTarget(): Phaser.Point {
-        let result: Phaser.Point = null;
-        if (this.newMovePath && this.newMovePath.length > 0) {
-            result = this.newMovePath[Globals.Tool.clamp(this.newMovePath.length, 0, this.newMovePath.length - 1)];
-        } else if (this.myCurrentPathPoints && this.myCurrentPathPoints.length) {
-            result = this.myCurrentPathPoints[Globals.Tool.clamp(this.myCurrentPathPoints.length, 0, this.myCurrentPathPoints.length - 1)];
-        }
-        return result ? new Phaser.Point(result.x, result.y) : null;
-    }
-
     public get isWalking(): boolean {
         return this.myIsWalking;
-    }
-
-    public get gridPos(): Point {
-        return this.myIsWalking ? this.myCurrentPathPoints[Globals.Tool.clamp(this.myCurrentPathStepIndex + 1, 0, this.myCurrentPathPoints.length - 1)] : this.gridPos;
     }
 
     public dispose(): void {
@@ -122,8 +100,6 @@ export default class SceneEntity extends BasicSceneEntity {
         this.myCurrentMoveInterval = 0;
         this.myCurrentPathPoints = path;
 
-        // this._topPoint = Game.Room45Util.pixelToTileCoords(this.iosX,this.iosY);
-
         this.resumeWalk();
     }
 
@@ -161,8 +137,11 @@ export default class SceneEntity extends BasicSceneEntity {
         let dirX = targetPathPoints.x - this.gridPos.x;
         let dirY = targetPathPoints.y - this.gridPos.y;
 
-        this._ox += (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
-        this._oy += (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
+        let _x = this.ox + (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
+        let _y = (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
+        let _z = this.oz;
+
+        this.setPosition(_x, _y, _z);
 
         if (dirX === 1) {
             if (dirY === 1) {

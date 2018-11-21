@@ -7,11 +7,16 @@ import {Const} from "../../common/const/Const";
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
+import {MessageType} from "../../common/const/MessageType";
 
 export class SceneMediator extends MediatorBase {
     private hasRgistHandler: boolean = false;
     private flowManager: FlowManager;
     private sceneLoader: SceneLoader;
+
+    constructor() {
+        super();
+    }
 
     public get view(): SceneView {
         return this.viewComponent as SceneView;
@@ -23,7 +28,6 @@ export class SceneMediator extends MediatorBase {
     }
 
     public onRemove(): void {
-        Globals.MessageCenter.removeByGroup("SceneProc");
         this.unRegistSceneListenerHandler();
         if (this.flowManager)
             this.flowManager.dispose();
@@ -67,7 +71,7 @@ export class SceneMediator extends MediatorBase {
     private changedToMapSceneStartHandler(): void {
     }
 
-    private changedToMapSceneCompleteHandler(mapSceneInfo: MapInfo): void {
+    protected changedToMapSceneCompleteHandler(mapSceneInfo: MapInfo): void {
         //clear the last one scene.
         if (this.view) this.view.clearScene();
 
@@ -85,9 +89,7 @@ export class SceneMediator extends MediatorBase {
 
         //set camera
         Globals.SceneManager.pushScene(this.view);
-        // let camera = Globals.game.camera;
-        // camera.setSize(DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT);
-        // Globals.game.camera.follow(this.view.currentSelfPlayer.display);
-        this.view.notifyInitializeSceneComplete();
+        Globals.game.camera.follow(this.view.currentSelfPlayer.display);
+        Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
     }
 }

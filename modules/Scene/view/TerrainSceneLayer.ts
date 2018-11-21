@@ -11,8 +11,8 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     private mapSceneInfo: MapInfo;
     private _terrainItems: Array<BasicTerrainItem>;
 
-    public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
-        super(game, x, y);
+    public constructor(game: Phaser.Game) {
+        super(game);
         this._terrainItems = [];
     }
 
@@ -68,7 +68,6 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         let len: number = datas.length;
         let element: BasicTerrainItem;
         let value: TerrainInfo;
-        let point: Phaser.Point;
         for (; i < len; i++) {
             value = datas[i];
             if (value.type === 0) {

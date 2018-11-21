@@ -27,7 +27,7 @@ export class PlayerInfo {
 
     public changeAvatarModelByModeVO(modelVO: RoleAvatarModelVO): void {
         this.model.changeAvatarModelByModeVO(modelVO);
-        Globals.MessageCenter.dispatch(MessageType.CHANGE_SELF_AVATAR);
+        Globals.MessageCenter.emit(MessageType.CHANGE_SELF_AVATAR);
     }
 }
 

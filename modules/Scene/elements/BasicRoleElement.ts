@@ -11,7 +11,7 @@ import {SceneView} from "../view/SceneView";
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
     private mAnimationDirty: boolean = false;
-    private gridPoint: Phaser.Point = new Phaser.Point();
+    protected mWalkAngleIndex: number = 0; //走路
 
     public constructor() {
         super();
@@ -19,6 +19,14 @@ export class BasicRoleElement extends SceneEntity {
 
     public get characterInfo(): PlayerInfo {
         return this.data;
+    }
+
+    public get walkAngleIndex(): number {
+        return this.mWalkAngleIndex;
+    }
+
+    public set walkAngleIndex(value: number) {
+        this.mWalkAngleIndex = value;
     }
 
     public setAngleIndex(value: number): void {

@@ -36,13 +36,16 @@ export class ModuleViewBase extends Phaser.Group {
     public cancel( name: string, callback: Function, context?: any) {
         if (this.signals[name]) {
             this.signals[name].remove( callback, context || this) ;
-            delete this.signals[name];
+            if ( this.signals[name].getNumListeners() === 0 ) {
+                this.signals[name].dispose();
+                delete this.signals[name];
+            }
         }
     }
 
     public onDispose(): void {
         for ( let name in this.signals ) {
-            this.signals[name].removeAll( this );
+            this.signals[name].dispose();
             delete this.signals[name];
         }
     }

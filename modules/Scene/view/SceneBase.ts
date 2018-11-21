@@ -8,11 +8,13 @@ import {TerrainSceneLayer} from "./TerrainSceneLayer";
 import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {HashMap} from "../util/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
+import {TerrainGridLayer} from "./TerrainGridLayer";
 
 export class SceneBase extends SceneBasic {
     public mapSceneInfo: MapInfo;
 
     //layers...
+    public terrainGridLayer: TerrainGridLayer = null;
     public terrainSceneLayer: TerrainSceneLayer = null;
     public topSceneLayer: DisplaySortableSceneLayer = null;
     public middleSceneLayer: DisplaySortableSceneLayer = null;
@@ -21,13 +23,10 @@ export class SceneBase extends SceneBasic {
     //all scenes objects
     private mSceneElements: HashMap = new HashMap();
 
-    public notifyInitializeSceneComplete(): void {
-        Globals.MessageCenter.dispatch(MessageType.SCENE_INITIALIZED);
-    }
-
     public onTick(deltaTime: number): void {
         super.onTick(deltaTime);
 
+        this.terrainGridLayer.onTick(deltaTime);
         this.terrainSceneLayer.onTick(deltaTime);
         this.topSceneLayer.onTick(deltaTime);
         this.middleSceneLayer.onTick(deltaTime);
@@ -37,6 +36,7 @@ export class SceneBase extends SceneBasic {
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
 
+        this.terrainGridLayer.onFrame(deltaTime);
         this.topSceneLayer.onFrame(deltaTime);
         this.middleSceneLayer.onFrame(deltaTime);
         this.bottomSceneLayer.onFrame(deltaTime);
@@ -150,6 +150,10 @@ export class SceneBase extends SceneBasic {
         this.addChild(this.terrainSceneLayer);
         //--
 
+        this.terrainGridLayer = new TerrainGridLayer(this.game);
+        this.terrainGridLayer.scene = this;
+        this.addChild(this.terrainGridLayer);
+
         this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.bottomSceneLayer.scene = this;
         this.addChild(this.bottomSceneLayer);
@@ -181,7 +185,7 @@ export class SceneBase extends SceneBasic {
         super.onClearScene();
         this.removeAllSceneElements();
         this.terrainSceneLayer.clear();
-        Globals.MessageCenter.dispatch(MessageType.SCENE_CLEARED);
+        Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
     }
 
     protected onStageResize(): void {
