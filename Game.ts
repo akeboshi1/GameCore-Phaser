@@ -29,7 +29,7 @@ export default class Game extends Phaser.Game implements IGame {
 
         // 初始化地图数据
         Globals.isEditor = value.isEditor;
-        Globals.DataCenter.EditorData.setEditorMode(value.editorMode);
+        // Globals.DataCenter.EditorData.setEditorMode(value.editorMode);
         // Globals.DataCenter.EditorData.setMapInfo(value.mapData);
         // Globals.DataCenter.MapData.setMapInfo(value.mapData);
 
