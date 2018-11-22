@@ -1,4 +1,4 @@
-///<reference path="../../../../globals.d.ts"/>
+///<reference path="../../../globals.d.ts"/>
 import {BasicAnimatedViewElement} from "../../../base/BasicAnimatedViewElement";
 import {Log} from "../../../Log";
 import {MapInfo} from "../../../common/struct/MapInfo";

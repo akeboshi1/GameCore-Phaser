@@ -1,9 +1,10 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {IEditorMode} from "../../interface/IEditorMode";
+import {MapInfo} from "../struct/MapInfo";
 
 export class EditorData extends BaseSingleton {
     private m_EditorMode: IEditorMode;
-
+    private _mapInfo: MapInfo;
     constructor() {
         super();
     }
@@ -23,5 +24,13 @@ export class EditorData extends BaseSingleton {
             this.m_EditorMode.mode = value.mode;
             this.m_EditorMode.data = value.data;
         }
+    }
+
+    public setMapInfo(value: MapInfo): void {
+        this._mapInfo = value;
+    }
+
+    public get mapInfo(): MapInfo {
+        return this._mapInfo;
     }
 }

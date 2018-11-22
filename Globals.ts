@@ -8,7 +8,7 @@ import {Tool} from "./common/manager/Tool";
 import {TickManager} from "./common/manager/TickManager";
 import {Room45Util} from "./common/manager/Room45Util";
 import {SceneManager} from "./common/manager/SceneManager";
-import {ClientConnection} from "./common/manager/client-connection";
+import {ISocketConnection} from "./interface/ISocketConnection";
 
 export default class Globals {
     private static _game: Phaser.Game;
@@ -30,10 +30,15 @@ export default class Globals {
     }
 
     /**
-     * 图层管理器
+     * Socket
      */
-    public static get ClientConnection(): ClientConnection {
-        return ClientConnection.getInstance();
+    public static get ClientConnection(): ISocketConnection {
+        return this.m_SocketConnection;
+    }
+
+    private static m_SocketConnection: ISocketConnection;
+    public static setClientConnection( value: ISocketConnection ) {
+        this.m_SocketConnection = value;
     }
 
     /**

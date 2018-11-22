@@ -47,8 +47,12 @@ export class SceneEditorMediator extends SceneMediator {
             this.view.events.onDragUpdate.add(this.dragUpdate);
             this.view.events.onDragStop.add(this.dragStop);
         } else if ( em.mode === EditorType.MODE_BRUSH) {
-
+            this.view.inputEnabled = true;
+            this.view.events.onInputDown.add(this.inputDown, this);
         }
+    }
+
+    private inputDown(): void {
     }
 
     protected changedToMapSceneCompleteHandler(mapSceneInfo: MapInfo): void {

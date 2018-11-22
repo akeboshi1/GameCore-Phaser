@@ -28,9 +28,10 @@ export default class Game extends Phaser.Game implements IGame {
         console.log(value);
 
         // 初始化地图数据
-        Globals.isEditor = true; // value.isEditor;
+        Globals.isEditor = value.isEditor;
         Globals.DataCenter.EditorData.setEditorMode(value.editorMode);
-        Globals.DataCenter.MapData.setMapInfo(value.mapData);
+        // Globals.DataCenter.EditorData.setMapInfo(value.mapData);
+        // Globals.DataCenter.MapData.setMapInfo(value.mapData);
 
         this.state.add("boot", BootState);
         this.state.add("preloader", PreloaderState);
