@@ -1,5 +1,8 @@
 import {Atlases, Avatar, UI} from "../Assets";
 import * as Assets from "../Assets";
+import {PBpacket} from "net-socket-packet";
+import {op_client, op_gateway} from "../../protocol/protocols";
+import Globals from "../Globals";
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
     private preloadFrameSprite: Phaser.Sprite = null;
@@ -55,6 +58,13 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadTitle(): void {
-        this.game.state.start("game");
+        let pkt: PBpacket = new PBpacket(op_client.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
+        Globals.SocketCenter.send(pkt);
+        Globals.SocketCenter.addListener(op_gateway.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.handleSelectCharacter);
+
+    }
+
+    private handleSelectCharacter(): void {
+        this.game.state.start("selectrole");
     }
 }

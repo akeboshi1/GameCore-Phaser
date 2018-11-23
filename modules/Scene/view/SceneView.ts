@@ -1,5 +1,5 @@
 import {RoomGridUtil} from "../util/RoomGridUtil";
-import {MapInfo} from "../../../common/struct/MapInfo";
+import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {Const} from "../../../common/const/Const";
 import Globals from "../../../Globals";
@@ -61,7 +61,7 @@ export class SceneView extends SceneBase {
         this.seaMapGrid = new RoomGridUtil();
     }
 
-    protected onInitializeScene(value: MapInfo): void {
+    protected onInitializeScene(value: SceneInfo): void {
         this.mapSceneInfo = value;
         this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
 

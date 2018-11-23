@@ -30,13 +30,13 @@ export class PlayerData extends BaseSingleton {
 
     public addPlayer(data: Object): PlayerInfo {
         let playerInfo: PlayerInfo = new PlayerInfo();
-        playerInfo.playerID = data["playerId"];
+        playerInfo.uuid = data["playerId"];
         playerInfo.nick = data["nick"];
         playerInfo.sex = data["sex"];
         playerInfo.moveSpeed = data["moveSpeed"];
-        this.removePlayer(playerInfo.playerID);
+        this.removePlayer(playerInfo.uuid);
         this._playerInfoList.push(playerInfo);
-        Log.trace("玩家加入，playerID=" + playerInfo.playerID);
+        Log.trace("玩家加入，playerID=" + playerInfo.uuid);
         return playerInfo;
     }
 
@@ -44,7 +44,7 @@ export class PlayerData extends BaseSingleton {
         let playerInfo: PlayerInfo;
         for (let i: number = this._playerInfoList.length - 1; i >= 0; i--) {
             playerInfo = this._playerInfoList[i];
-            if (playerInfo.playerID === playerID) {
+            if (playerInfo.uuid === playerID) {
                 this._playerInfoList.splice(i, 1);
             }
         }

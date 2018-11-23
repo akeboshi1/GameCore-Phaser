@@ -1,5 +1,5 @@
 import {SceneMediator} from "./SceneMediator";
-import {MapInfo} from "../../common/struct/MapInfo";
+import {SceneInfo} from "../../common/struct/SceneInfo";
 import Globals from "../../Globals";
 import {MessageType} from "../../common/const/MessageType";
 import {IEditorMode} from "../../interface/IEditorMode";
@@ -55,7 +55,7 @@ export class SceneEditorMediator extends SceneMediator {
     private inputDown(): void {
     }
 
-    protected changedToMapSceneCompleteHandler(mapSceneInfo: MapInfo): void {
+    protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
         //clear the last one scene.
         if (this.view) this.view.clearScene();
 

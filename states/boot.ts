@@ -1,6 +1,8 @@
 import Globals from "../Globals";
 import * as Assets from "../Assets";
 import {Log} from "../Log";
+import {PBpacket} from "net-socket-packet";
+import {op_client} from "../../protocol/protocols";
 
 export default class Boot extends Phaser.State {
     public preload(): void {

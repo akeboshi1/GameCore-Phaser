@@ -1,10 +1,12 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {IEditorMode} from "../../interface/IEditorMode";
-import {MapInfo} from "../struct/MapInfo";
+import {SceneInfo} from "../struct/SceneInfo";
+import Globals from "../../Globals";
+import {MessageType} from "../const/MessageType";
 
 export class EditorData extends BaseSingleton {
     private m_EditorMode: IEditorMode;
-    private _mapInfo: MapInfo;
+    private _mapInfo: SceneInfo;
     constructor() {
         super();
     }
@@ -26,11 +28,11 @@ export class EditorData extends BaseSingleton {
         }
     }
 
-    public setMapInfo(value: MapInfo): void {
+    public setMapInfo(value: SceneInfo): void {
         this._mapInfo = value;
     }
 
-    public get mapInfo(): MapInfo {
+    public get mapInfo(): SceneInfo {
         return this._mapInfo;
     }
 }

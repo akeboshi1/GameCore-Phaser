@@ -1,5 +1,5 @@
 import Globals from "../../Globals";
-import {MapInfo} from "../../common/struct/MapInfo";
+import {SceneInfo} from "../../common/struct/SceneInfo";
 import {SceneLoader} from "./view/SceneLoader";
 import {PlayerInfo} from "../../common/struct/PlayerInfo";
 import {SelfRoleElement} from "./elements/SelfRoleElement";
@@ -12,7 +12,7 @@ import {MessageType} from "../../common/const/MessageType";
 export class SceneMediator extends MediatorBase {
     private hasRgistHandler: boolean = false;
     private flowManager: FlowManager;
-    private sceneLoader: SceneLoader;
+    // private sceneLoader: SceneLoader;
 
     constructor() {
         super();
@@ -55,23 +55,25 @@ export class SceneMediator extends MediatorBase {
 
     private onEnterScene(): void {
 
-        this.sceneLoader = new SceneLoader();
-        this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
+        // this.sceneLoader = new SceneLoader();
+        // this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
 
         this.flowManager = new FlowManager();
         this.flowManager.initialize();
         this.flowManager.setView(this.view);
 
         //mapScene
-        this.sceneLoader.changedToMap(Globals.DataCenter.PlayerData.mainPlayerInfo.mapId);
+        // this.sceneLoader.changedToMap(Globals.DataCenter.PlayerData.mainPlayerInfo.mapId);
 
         this.registSceneListenerHandler();
+
+        this.changedToMapSceneCompleteHandler(Globals.DataCenter.SceneData.mapInfo);
     }
 
     private changedToMapSceneStartHandler(): void {
     }
 
-    protected changedToMapSceneCompleteHandler(mapSceneInfo: MapInfo): void {
+    protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
         //clear the last one scene.
         if (this.view) this.view.clearScene();
 
@@ -85,7 +87,7 @@ export class SceneMediator extends MediatorBase {
 
         //初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.playerID.toString(), currentCharacterInfo, true) as SelfRoleElement;
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid.toString(), currentCharacterInfo, true) as SelfRoleElement;
 
         //set camera
         Globals.SceneManager.pushScene(this.view);

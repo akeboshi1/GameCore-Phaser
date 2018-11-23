@@ -1,7 +1,6 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 
-export interface ISocketConnection {
+export interface ISocketSend {
     send(packet: PBpacket);
-    addPacketListener(handler: PacketHandler);
 }
 

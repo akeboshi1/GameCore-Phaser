@@ -1,7 +1,7 @@
 ///<reference path="../../../../globals.d.ts"/>
 import {BasicAnimatedViewElement} from "../../../base/BasicAnimatedViewElement";
 import {Log} from "../../../Log";
-import {MapInfo} from "../../../common/struct/MapInfo";
+import {SceneInfo} from "../../../common/struct/SceneInfo";
 
 export class SceneBasic extends BasicAnimatedViewElement {
     protected mActived: boolean = false;
@@ -48,7 +48,7 @@ export class SceneBasic extends BasicAnimatedViewElement {
         }
     }
 
-    public initializeScene(value: MapInfo): void {
+    public initializeScene(value: SceneInfo): void {
         if (!this.mSceneInited) {
             this.onInitializeScene(value);
             this.mSceneInited = true;
@@ -83,7 +83,7 @@ export class SceneBasic extends BasicAnimatedViewElement {
         this.visible = this.registerForUpdates = false;
     }
 
-    protected onInitializeScene(value: MapInfo): void {
+    protected onInitializeScene(value: SceneInfo): void {
     }
 
     protected onInitializeSceneComplete(): void {

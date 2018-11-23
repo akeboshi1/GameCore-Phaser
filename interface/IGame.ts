@@ -6,5 +6,5 @@ import {IEditorMode} from "./IEditorMode";
 
 export default interface IGame {
     resize(): void;
-    changeEditorMode( mode: IEditorMode);
+    setEditorMode( mode: IEditorMode);
 }

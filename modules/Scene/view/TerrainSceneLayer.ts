@@ -1,5 +1,5 @@
 import {Const} from "../../../common/const/Const";
-import {MapInfo} from "../../../common/struct/MapInfo";
+import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {BasicTerrainItem} from "../terrainItems/BasicTerrainItem";
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
@@ -8,7 +8,7 @@ import Globals from "../../../Globals";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
     public curTerrainLoadCount: number = 0;
-    private mapSceneInfo: MapInfo;
+    private mapSceneInfo: SceneInfo;
     private _terrainItems: Array<BasicTerrainItem>;
 
     public constructor(game: Phaser.Game) {
@@ -16,7 +16,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         this._terrainItems = [];
     }
 
-    public initializeMap(mapSceneInfo: MapInfo): void {
+    public initializeMap(mapSceneInfo: SceneInfo): void {
         this.mapSceneInfo = mapSceneInfo;
         this.initializeTerrainItems(this.mapSceneInfo.terrainInfo);
     }

@@ -8,11 +8,13 @@ import {Tool} from "./common/manager/Tool";
 import {TickManager} from "./common/manager/TickManager";
 import {Room45Util} from "./common/manager/Room45Util";
 import {SceneManager} from "./common/manager/SceneManager";
-import {ISocketConnection} from "./interface/ISocketConnection";
+import {ISocketSend} from "./interface/ISocketSend";
+import {SocketManager} from "./common/manager/SocketManager";
+import {ServiceCenter} from "./common/manager/ServiceCenter";
 
 export default class Globals {
     private static _game: Phaser.Game;
-    private static _isEditor: boolean;
+
     public static  set game(value: Phaser.Game) {
         this._game = value;
     }
@@ -21,24 +23,11 @@ export default class Globals {
         return this._game;
     }
 
-    public static set isEditor( value: boolean ) {
-        this._isEditor = value;
-    }
-
-    public static get isEditor(): boolean {
-        return this._isEditor;
-    }
-
     /**
-     * Socket
+     * socket
      */
-    public static get ClientConnection(): ISocketConnection {
-        return this.m_SocketConnection;
-    }
-
-    private static m_SocketConnection: ISocketConnection;
-    public static setClientConnection( value: ISocketConnection ) {
-        this.m_SocketConnection = value;
+    public static get SocketCenter(): SocketManager {
+        return SocketManager.getInstance();
     }
 
     /**
@@ -74,6 +63,14 @@ export default class Globals {
      */
     public static get DataCenter(): DataCenter {
         return DataCenter.getInstance();
+    }
+
+    /**
+     * 通讯中心
+     * @constructor
+     */
+    public static get ServiceCenter(): ServiceCenter {
+        return ServiceCenter.getInstance();
     }
 
     /**

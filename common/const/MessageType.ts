@@ -13,6 +13,8 @@ export class MessageType {
     public static SCENE_CLEARED: string = "SCENE_CLEARED";
     public static SCENE_CHANGE_TO: string = "SCENE_CHANGE_TO";
 
+    public static SCENE_DATA_INITIALIZE: string = "scene_data_initialize";
+
     public static SEFL_TARGET_START_MOVE: string = "SEFL_TARGET_START_MOVE";
     public static SEFL_TARGET_PAUSE_MOVE: string = "SEFL_TARGET_PAUSE_MOVE";
 

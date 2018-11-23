@@ -3,7 +3,7 @@ import {Log} from "../../../Log";
 import {Const} from "../../../common/const/Const";
 import Globals from "../../../Globals";
 import {MessageType} from "../../../common/const/MessageType";
-import {MapInfo} from "../../../common/struct/MapInfo";
+import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {TerrainSceneLayer} from "./TerrainSceneLayer";
 import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {HashMap} from "../util/HashMap";
@@ -11,7 +11,7 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 
 export class SceneBase extends SceneBasic {
-    public mapSceneInfo: MapInfo;
+    public mapSceneInfo: SceneInfo;
 
     //layers...
     public terrainGridLayer: TerrainGridLayer = null;
@@ -167,7 +167,7 @@ export class SceneBase extends SceneBasic {
         this.addChild(this.topSceneLayer);
     }
 
-    protected onInitializeScene(value: MapInfo): void {
+    protected onInitializeScene(value: SceneInfo): void {
         this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
         this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
         this.terrainSceneLayer.initializeMap(this.mapSceneInfo);

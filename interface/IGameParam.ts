@@ -1,11 +1,13 @@
 /**
  * author aaron
  */
-import {ISocketConnection} from "./ISocketConnection";
+import {ISocketSend} from "./ISocketSend";
+import {ISocketHandle} from "./ISocketHandle";
 
 export default interface IGameParam {
     isEditor: boolean;
     width: number;
     height: number;
-    iSocketConnection?: ISocketConnection;
+    iSocketSend?: ISocketSend;
+    iSocketHandle?: ISocketHandle;
 }

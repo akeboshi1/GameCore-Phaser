@@ -1,10 +1,12 @@
 import {TerrainInfo} from "./TerrainInfo";
 import {ElementInfo} from "./ElementInfo";
 import Globals from "../../Globals";
+import {op_gateway} from "../../../protocol/protocols";
 
-export class MapInfo {
+export class SceneInfo {
     public mapId: number = 1;
-    private _tmx: any;
+    public zStart: number = 0; //TODO:
+    public zEnd: number = 0; //TODO:
     private _mapConfig: Array<any>;
 
     private _mapTotalWidth: number = 0;
@@ -75,28 +77,42 @@ export class MapInfo {
         return this._elementInfo;
     }
 
-    public setTmx(value: any): void {
-        this._tmx = value;
-        this._cols = +this._tmx.width; // 水平方向格子数量
-        this._rows = +this._tmx.height; // 垂直方向格子数量
-        this._tilewidth = +this._tmx.tileWidth;
-        this._tileheight = +this._tmx.tileHeight;
+
+
+    public setConfig( cols: number, rows: number, zStart: number, zEnd: number, tileWidth: number, tileHeight: number): void {
+        this._cols = cols; // 水平方向格子数量
+        this._rows = rows; // 垂直方向格子数量
+        this.zStart = zStart;
+        this.zEnd = zEnd;
+        this._tilewidth = tileWidth;
+        this._tileheight = tileHeight;
         this._mapTotalWidth = (this._rows + this._cols) * (this._tilewidth / 2);
         this._mapTotalHeight = (this._rows + this._cols) * (this._tileheight / 2);
-        this.readMapGidTypes();
+    }
+
+
+    public setTerrainInfo(value: op_gateway.ILayers[]): void {
+        this.readMapGidTypes(value);
+    }
+
+    public setElementInfo(value: any): void {
+        this._elementData = [];
+        let elements = value;
+        let i: number = 0;
+        let len: number = elements.length;
+        let element: ElementInfo;
+        for (; i < len; i++) {
+            element = new ElementInfo(elements[i]);
+            this._elementData.push(element);
+        }
     }
 
     /**
      * 读取地图网格数据
      * @param data
      */
-    private readMapGidTypes(): void {
-        this.mapConversion();
-        this.elementConversion();
-    }
-
-    private mapConversion(): void {
-        let layers: any = this._tmx.layers;
+    private readMapGidTypes(value: op_gateway.ILayers[]): void {
+        let layers: any = value;
         this._mapConfig = [];
         this.readData(layers, this._mapConfig);
 
@@ -147,18 +163,6 @@ export class MapInfo {
             let colIndex: number = Math.floor(i % _width);
             let rowIndex: number = Math.floor(i / _width);
             data[colIndex][rowIndex] = arr[i];
-        }
-    }
-
-    private elementConversion(): void {
-        this._elementData = [];
-        let elements = this._tmx.elements;
-        let i: number = 0;
-        let len: number = elements.length;
-        let element: ElementInfo;
-        for (; i < len; i++) {
-            element = new ElementInfo(elements[i]);
-            this._elementData.push(element);
         }
     }
 }

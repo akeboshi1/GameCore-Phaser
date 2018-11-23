@@ -1,13 +1,13 @@
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import Globals from "../../../Globals";
-import {MapInfo} from "../../../common/struct/MapInfo";
+import {SceneInfo} from "../../../common/struct/SceneInfo";
 
 export class TerrainGridLayer extends BasicSceneLayer {
     public constructor(game: Phaser.Game) {
         super(game);
     }
 
-    public initializeMap(value: MapInfo): void {
+    public initializeMap(value: SceneInfo): void {
         let cols: number = value.cols;
         let rows: number = value.rows;
         let i: number = 0;

@@ -1,5 +1,5 @@
 import BaseSingleton from "../../base/BaseSingleton";
-import {MapData} from "../data/MapData";
+import {SceneData} from "../data/SceneData";
 import {ElementConfig} from "../config/ElementConfig";
 import {PlayerData} from "../data/PlayerData";
 import {EditorData} from "../data/EditorData";
@@ -34,8 +34,8 @@ export class DataCenter extends BaseSingleton {
         return EditorData.getInstance();
     }
 
-    public get MapData(): MapData {
-        return MapData.getInstance();
+    public get SceneData(): SceneData {
+        return SceneData.getInstance();
     }
 
     public get PlayerData(): PlayerData {
