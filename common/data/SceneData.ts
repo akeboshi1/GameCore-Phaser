@@ -1,6 +1,6 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {SceneInfo} from "../struct/SceneInfo";
-import {op_gateway} from "../../../protocol/protocols";
+import {op_client, op_gateway} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
 
@@ -12,9 +12,9 @@ export class SceneData extends BaseSingleton {
         return this._mapInfo;
     }
 
-    public setMapInfo(value: op_gateway.IScene): void {
+    public setMapInfo(value: op_client.IScene): void {
         this._mapInfo.mapId = value.id;
-        this._mapInfo.setConfig(value.xEnd - value.xStart, value.yEnd - value.yStart, value.zStart, value.zEnd, 68, 32);
+        this._mapInfo.setConfig(value.cols, value.rows, value.zStart, value.zEnd, value.tileWidth, value.tileHeight);
         this._mapInfo.setTerrainInfo(value.layers);
         this._mapInfo.setElementInfo(value.Elements);
         if ( this.initialize === false ) {

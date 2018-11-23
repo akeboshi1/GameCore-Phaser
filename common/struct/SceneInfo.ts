@@ -1,7 +1,7 @@
 import {TerrainInfo} from "./TerrainInfo";
 import {ElementInfo} from "./ElementInfo";
 import Globals from "../../Globals";
-import {op_gateway} from "../../../protocol/protocols";
+import {op_client, op_gateway} from "../../../protocol/protocols";
 
 export class SceneInfo {
     public mapId: number = 1;
@@ -91,7 +91,7 @@ export class SceneInfo {
     }
 
 
-    public setTerrainInfo(value: op_gateway.ILayers[]): void {
+    public setTerrainInfo(value: op_client.ILayers[]): void {
         this.readMapGidTypes(value);
     }
 
@@ -111,7 +111,7 @@ export class SceneInfo {
      * 读取地图网格数据
      * @param data
      */
-    private readMapGidTypes(value: op_gateway.ILayers[]): void {
+    private readMapGidTypes(value: op_client.ILayers[]): void {
         let layers: any = value;
         this._mapConfig = [];
         this.readData(layers, this._mapConfig);
