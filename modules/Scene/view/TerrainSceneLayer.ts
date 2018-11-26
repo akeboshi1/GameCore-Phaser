@@ -18,7 +18,9 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
     public initializeMap(mapSceneInfo: SceneInfo): void {
         this.mapSceneInfo = mapSceneInfo;
-        this.initializeTerrainItems(this.mapSceneInfo.terrainInfo);
+        for (let arr of this.mapSceneInfo.terrainConfig) {
+            this.initializeTerrainItems(arr);
+        }
     }
 
     public isValidLoad(): boolean {

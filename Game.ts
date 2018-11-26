@@ -29,8 +29,7 @@ export default class Game extends Phaser.Game implements IGame {
 
         // 初始化地图数据
         GameConfig.isEditor = value.isEditor;
-        Globals.SocketCenter.setSocketSend(value.iSocketSend);
-        Globals.SocketCenter.setSocketHandle(value.iSocketHandle);
+        Globals.SocketManager.setSocketConnection(value.iSocketConnection);
         Globals.ServiceCenter.register();
 
         // Globals.DataCenter.EditorData.setMapInfo(value.mapData);

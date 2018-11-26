@@ -20,9 +20,9 @@ export class TerrainGridLayer extends BasicSceneLayer {
             let rowIndex: number = Math.floor(i / cols);
             let p = Globals.Room45Util.tileToPixelCoords(colIndex, rowIndex);
             graphics.moveTo(p.x, p.y);
-            graphics.lineTo(p.x - value.tilewidth / 2, p.y + value.tileheight / 2);
-            graphics.lineTo(p.x, p.y + value.tileheight);
-            graphics.lineTo(p.x + value.tilewidth / 2, p.y + value.tileheight / 2);
+            graphics.lineTo(p.x - value.tileWidth / 2, p.y + value.tileHeight / 2);
+            graphics.lineTo(p.x, p.y + value.tileHeight);
+            graphics.lineTo(p.x + value.tileWidth / 2, p.y + value.tileHeight / 2);
             graphics.lineTo(p.x, p.y);
             graphics.endFill();
         }

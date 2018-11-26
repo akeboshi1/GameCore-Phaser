@@ -53,6 +53,8 @@ export class SceneEditorMediator extends SceneMediator {
     }
 
     private inputDown(): void {
+        // let element: ElementInfo = new ElementInfo();
+
     }
 
     protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
@@ -61,7 +63,7 @@ export class SceneEditorMediator extends SceneMediator {
 
         Globals.SceneManager.popupScene();
 
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tilewidth, mapSceneInfo.tileheight);
+        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
         Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
 

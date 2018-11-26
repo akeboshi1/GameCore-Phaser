@@ -1,29 +1,27 @@
 import BaseSingleton from "../../base/BaseSingleton";
-import {ISocketSend} from "../../interface/ISocketSend";
-import {ISocketHandle} from "../../interface/ISocketHandle";
-import {PBpacket} from "net-socket-packet";
+import {ISocketConnection} from "../../interface/ISocketConnection";
+import {PacketHandler, PBpacket} from "net-socket-packet";
 
-export class SocketManager extends BaseSingleton implements ISocketSend,ISocketHandle{
-    private m_SocketSend: ISocketSend;
-    private m_SocketHandle: ISocketHandle;
+export class SocketManager extends BaseSingleton {
+    private m_SocketConnection: ISocketConnection;
     public constructor() {
         super();
     }
 
-    public setSocketSend( value: ISocketSend ) {
-        this.m_SocketSend = value;
-    }
-
-    public setSocketHandle( value: ISocketHandle ) {
-        this.m_SocketHandle = value;
+    public setSocketConnection( value: ISocketConnection ) {
+        this.m_SocketConnection = value;
     }
 
     public send( packet: PBpacket ): void {
-        this.m_SocketSend.send(packet);
+        this.m_SocketConnection.send(packet);
     }
 
-    public addListener(opcode: number, fun: Function): void {
-        this.m_SocketHandle.addListener(opcode, fun);
+    public addHandler(handler: PacketHandler): void {
+        this.m_SocketConnection.addPacketListener(handler);
+    }
+
+    public removeHandler(handler: PacketHandler): void {
+        this.m_SocketConnection.rmPacketListener(handler);
     }
 
 }

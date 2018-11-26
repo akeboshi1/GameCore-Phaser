@@ -8,7 +8,7 @@ import {Tool} from "./common/manager/Tool";
 import {TickManager} from "./common/manager/TickManager";
 import {Room45Util} from "./common/manager/Room45Util";
 import {SceneManager} from "./common/manager/SceneManager";
-import {ISocketSend} from "./interface/ISocketSend";
+import {ISocketConnection} from "./interface/ISocketConnection";
 import {SocketManager} from "./common/manager/SocketManager";
 import {ServiceCenter} from "./common/manager/ServiceCenter";
 
@@ -26,7 +26,7 @@ export default class Globals {
     /**
      * socket
      */
-    public static get SocketCenter(): SocketManager {
+    public static get SocketManager(): SocketManager {
         return SocketManager.getInstance();
     }
 

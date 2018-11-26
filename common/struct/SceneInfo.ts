@@ -2,12 +2,14 @@ import {TerrainInfo} from "./TerrainInfo";
 import {ElementInfo} from "./ElementInfo";
 import Globals from "../../Globals";
 import {op_client, op_gateway} from "../../../protocol/protocols";
+import {Log} from "../../Log";
 
 export class SceneInfo {
     public mapId: number = 1;
     public zStart: number = 0; //TODO:
     public zEnd: number = 0; //TODO:
-    private _mapConfig: Array<any>;
+    private _terrainConfig: Array<any>;
+    private _elementConfig: Array<ElementInfo>;
 
     private _mapTotalWidth: number = 0;
 
@@ -21,28 +23,30 @@ export class SceneInfo {
         return this._mapTotalHeight;
     }
 
-    private _tilewidth: number;
+    private _tileWidth: number;
 
     /**
      * 获取格子宽（单位：像素）
      */
-    public get tilewidth() {
-        return this._tilewidth;
+    public get tileWidth() {
+        return this._tileWidth;
     }
 
-    private _tileheight: number;
+    private _tileHeight: number;
 
     /**
      * 获取格子高（单位：像素）
      */
-    public get tileheight() {
-        return this._tileheight;
+    public get tileHeight() {
+        return this._tileHeight;
     }
 
-    private _elementData: Array<ElementInfo>;
+    public get terrainConfig(): Array<any> {
+        return this._terrainConfig;
+    }
 
-    public get elementData(): Array<ElementInfo> {
-        return this._elementData;
+    public get elementConfig(): Array<ElementInfo> {
+        return this._elementConfig;
     }
 
     private _cols: number;
@@ -65,45 +69,36 @@ export class SceneInfo {
         this._rows = value;
     }
 
-    private _terrainInfo: Array<TerrainInfo>;
-
-    public get terrainInfo(): Array<TerrainInfo> {
-        return this._terrainInfo;
-    }
-
-    private _elementInfo: Array<ElementInfo>;
-
-    public get elementInfo(): Array<ElementInfo> {
-        return this._elementInfo;
-    }
-
-
-
-    public setConfig( cols: number, rows: number, zStart: number, zEnd: number, tileWidth: number, tileHeight: number): void {
+    public setConfig(cols: number, rows: number, zStart: number, zEnd: number, tileWidth: number, tileHeight: number): void {
         this._cols = cols; // 水平方向格子数量
         this._rows = rows; // 垂直方向格子数量
         this.zStart = zStart;
         this.zEnd = zEnd;
-        this._tilewidth = tileWidth;
-        this._tileheight = tileHeight;
-        this._mapTotalWidth = (this._rows + this._cols) * (this._tilewidth / 2);
-        this._mapTotalHeight = (this._rows + this._cols) * (this._tileheight / 2);
+        this._tileWidth = tileWidth;
+        this._tileHeight = tileHeight;
+        this._mapTotalWidth = (this._rows + this._cols) * (this._tileWidth / 2);
+        this._mapTotalHeight = (this._rows + this._cols) * (this._tileHeight / 2);
     }
 
 
     public setTerrainInfo(value: op_client.ILayers[]): void {
-        this.readMapGidTypes(value);
+        let i: number = 0;
+        let len: number = value.length;
+        this._terrainConfig = [];
+        for (; i < len; i++) {
+            this._terrainConfig.push(this.readMapGidTypes(value[i]));
+        }
     }
 
     public setElementInfo(value: any): void {
-        this._elementData = [];
+        this._elementConfig = [];
         let elements = value;
         let i: number = 0;
         let len: number = elements.length;
         let element: ElementInfo;
         for (; i < len; i++) {
             element = new ElementInfo(elements[i]);
-            this._elementData.push(element);
+            this._elementConfig.push(element);
         }
     }
 
@@ -111,13 +106,11 @@ export class SceneInfo {
      * 读取地图网格数据
      * @param data
      */
-    private readMapGidTypes(value: op_client.ILayers[]): void {
-        let layers: any = value;
-        this._mapConfig = [];
-        this.readData(layers, this._mapConfig);
+    private readMapGidTypes(value: op_client.ILayers): TerrainInfo[] {
+        let data: Array<any> = this.readTerrainData(value);
 
-        this._terrainInfo = [];
-        let data = this._mapConfig;
+        let arr: TerrainInfo[] = [];
+
         let len: number = data.length;
         let len2: number = data[0].length;
         let rowIndex: number = 0;
@@ -132,7 +125,7 @@ export class SceneInfo {
                 rowIndex = j;
                 str = data[i][j];
                 terrain = new TerrainInfo();
-                if (str !== "0") {
+                if (str !== "" && str !== "0") {
                     let arr = str.split("-");
                     terrain.type = +arr[0];
                     terrain.subIdx = +arr[1];
@@ -140,12 +133,14 @@ export class SceneInfo {
                 }
                 terrain.row = rowIndex;
                 terrain.col = colIndex;
-                this._terrainInfo.push(terrain);
+                arr.push(terrain);
             }
         }
+        return arr;
     }
 
-    private readData(child: any, data: Array<any>): void {
+    private readTerrainData(child: op_client.ILayers): Array<any> {
+        let data: Array<any> = [];
         let _width: number = this._cols;
         let _height: number = this._rows;
         for (let i: number = 0; i < _width; i++) {
@@ -164,5 +159,6 @@ export class SceneInfo {
             let rowIndex: number = Math.floor(i / _width);
             data[colIndex][rowIndex] = arr[i];
         }
+        return data;
     }
 }

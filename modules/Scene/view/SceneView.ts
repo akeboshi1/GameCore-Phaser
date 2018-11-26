@@ -70,10 +70,10 @@ export class SceneView extends SceneBase {
         this.terrainSceneLayer.initializeMap(value);
 
         let i: number = 0;
-        let len: number = this.mapSceneInfo.elementData.length;
+        let len: number = this.mapSceneInfo.elementConfig.length;
         let element: ElementInfo;
         for (; i < len; i++) {
-            element = this.mapSceneInfo.elementData[i];
+            element = this.mapSceneInfo.elementConfig[i];
             // if (element.config.type == 13) {
             //    this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
             // }

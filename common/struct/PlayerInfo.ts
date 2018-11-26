@@ -5,7 +5,7 @@ import { Const } from "../const/Const";
 import {Log} from "../../Log";
 
 export class PlayerInfo {
-    public uuid: number = 10001;         // 玩家ID
+    public actorId: number = 1; //玩家ID
     public nick: string = "";             // 昵称
     public moveSpeed: number = 1000;        // 速度
     public sex: number = 1;              // 性别

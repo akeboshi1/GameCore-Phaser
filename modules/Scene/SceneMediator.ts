@@ -79,7 +79,7 @@ export class SceneMediator extends MediatorBase {
 
         Globals.SceneManager.popupScene();
 
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tilewidth, mapSceneInfo.tileheight);
+        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
         Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
 
@@ -87,7 +87,7 @@ export class SceneMediator extends MediatorBase {
 
         //初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid.toString(), currentCharacterInfo, true) as SelfRoleElement;
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId.toString(), currentCharacterInfo, true) as SelfRoleElement;
 
         //set camera
         Globals.SceneManager.pushScene(this.view);

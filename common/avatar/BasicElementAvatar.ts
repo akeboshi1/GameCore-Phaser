@@ -1,7 +1,8 @@
-import { IAnimatedObject } from "../../../base/IAnimatedObject";
-import Globals from "../../../Globals";
+import {IAnimatedObject} from "../../base/IAnimatedObject";
+import Globals from "../../Globals";
+import {BasicAvatar} from "../../base/BasicAvatar";
 
-export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject {
+export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     private myModelURL: string = "";
     private myModelUrlDirty: boolean = false;
     private mModelLoaded: boolean = false;
@@ -10,48 +11,27 @@ export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSpri
     private mLoadErrorCallback: Function;
     private mLoadThisArg: any;
 
-    private mAnimationControlFunc: Function;
-    private mAnimationControlFuncDirty: boolean;
-    private mAnimationControlThisObj: any;
-
-    // protected element: Phaser.Plugin.Isometric.IsoSprite;
-    protected element: Phaser.Image;
+    protected element: Phaser.Sprite;
 
     constructor(game: Phaser.Game) {
-        super(game, 0, 0, 0);
-        this.init();
+        super(game);
     }
 
-    protected init() {
-        this.element = this.game.add.image(0, 0, 0);
-
-        this.visible = false;
+    public initAnimations(config: any): void {
+        this.element = this.game.add.sprite(0, 0, this.myModelURL + "_element");
+        this.element.animations.add("", [ 1, 2 ]);
     }
 
-    public setPosition(x?: number, y?: number, z?: number) {
-        let point3 = this.isoPosition;
-        point3.set(x, y, z);
-    }
-
-    public setAnimaionControlFunc(value: Function, thisObj: any) {
-        this.mAnimationControlFunc = value;
-        this.mAnimationControlThisObj = thisObj;
-        this.mAnimationControlFuncDirty = true;
-    }
-
-    public invalidAnimationControllerFunc() {
-        this.mAnimationControlFuncDirty = true;
+    public gotoAndPlay( animationName: string ): void {
+        this.element.animations.play(animationName);
     }
 
     public dispose() {
-        this.removeChild(this.element);
+        if ( this.element )
+            this.removeChild(this.element);
         this.element = null;
 
         this.closeLoadModel();
-    }
-
-    public get modelURL(): string {
-        return this.myModelURL;
     }
 
     public get modelLoaded(): boolean {
@@ -92,9 +72,7 @@ export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSpri
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.image(this.myModelURL + "_png",  require("assets/images/elements/" + this.myModelURL + ".png"));
-            this.game.load.json(this.myModelURL + "_json", require("assets/images/elements/" + this.myModelURL + ".json"));
-
+            this.game.load.atlasJSONArray(this.myModelURL + "_element",  require("assets/images/elements/" + this.myModelURL + ".png"), require("assets/images/elements/" + this.myModelURL + ".json" ));
             this.game.load.start();
         }
     }
@@ -104,15 +82,6 @@ export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSpri
         if (this.myModelUrlDirty) {
             this.onUpdateModelURL();
             this.myModelUrlDirty = false;
-        }
-
-        if (this.mModelLoaded) {
-            if (this.mAnimationControlFuncDirty) {
-                if (this.mAnimationControlFunc !== undefined) {
-                    this.mAnimationControlFunc.call(this.mAnimationControlThisObj, this);
-                }
-                this.mAnimationControlFuncDirty = false;
-            }
         }
     }
 
@@ -125,9 +94,5 @@ export default class BasicElementDisplay extends Phaser.Plugin.Isometric.IsoSpri
             cb.apply(this.mLoadThisArg);
             this.mLoadThisArg = null;
         }
-
-        // let json = this.game.cache.getJSON(this.myModelURL + "_json");
-
-        this.invalidAnimationControllerFunc();
     }
 }

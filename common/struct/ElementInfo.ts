@@ -8,6 +8,8 @@ export class ElementInfo {
     public col: number;
     public speed: number = 4;
 
+    public animations: any;
+
     public base: any;
     public constructor(value: any) {
         this.base = value;
