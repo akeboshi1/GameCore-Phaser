@@ -14,6 +14,7 @@ import {MessageType} from "./common/const/MessageType";
 import {IEditorMode} from "./interface/IEditorMode";
 import {GameConfig} from "./GameConfig";
 import SelectRole from "./states/selectrole";
+import {EditorType} from "./common/const/EditorType";
 
 export default class Game extends Phaser.Game implements IGame {
     private sceneReady: boolean;
@@ -29,6 +30,7 @@ export default class Game extends Phaser.Game implements IGame {
 
         // 初始化地图数据
         GameConfig.isEditor = value.isEditor;
+        Globals.DataCenter.EditorData.setEditorMode({mode: EditorType.MODE_MOVE, data: null});
         Globals.SocketManager.setSocketConnection(value.iSocketConnection);
         Globals.ServiceCenter.register();
 

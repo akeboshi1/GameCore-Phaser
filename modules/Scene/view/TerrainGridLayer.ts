@@ -26,9 +26,13 @@ export class TerrainGridLayer extends BasicSceneLayer {
             graphics.lineTo(p.x, p.y);
             graphics.endFill();
         }
+        graphics.lineStyle(0);
         graphics.beginFill(0xff0000, 0);
-        let poly: Phaser.Polygon = new Phaser.Polygon([new Phaser.Point(value.mapTotalWidth >> 1, 0), new Phaser.Point(value.mapTotalWidth, value.mapTotalHeight >> 1)
-            , new Phaser.Point(value.mapTotalWidth >> 1, value.mapTotalHeight), new Phaser.Point(0, value.mapTotalHeight >> 1)]);
+        let p1 = Globals.Room45Util.tileToPixelCoords(0, 0);
+        let p2 = Globals.Room45Util.tileToPixelCoords(cols, 0);
+        let p3 = Globals.Room45Util.tileToPixelCoords(cols, rows);
+        let p4 = Globals.Room45Util.tileToPixelCoords(0, rows);
+        let poly: Phaser.Polygon = new Phaser.Polygon([p1, p2, p3, p4]);
         graphics.drawPolygon(poly.points);
         graphics.endFill();
         this.addChild(graphics);

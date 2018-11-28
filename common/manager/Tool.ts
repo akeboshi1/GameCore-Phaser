@@ -33,26 +33,36 @@ export class Tool extends BaseSingleton {
         return true;
     }
 
-    public mapDecode(mapData) {
+    public mapDecode(mapData: string, compression: string, encoding: string) {
         // Get some base64 encoded binary data from the server. Imagine we got this:
         // var b64Data     = "eJztV9GOwzAI+6FN6u5p//9lUw5xwYDp1JCXU4WUReu6GGxTejzez5/n8bhjLV6/VdT19bffddphTpP9ONPjmGh2YJAs9VxEMa/pOq7vQyGn26pI9bFGc93Fi801q4KtWbf2JgP4jdVkzssOpSAeX/8Mrf1lzKJfS1lloou9prKrVvu9/mcsnfEcUasm9dNn1KlBxjxj2/9+Zo67nm7F9R+Vxqpfa2BdoWcnMyz8KYQ66OpFGddRk4z96CrmNlQt+q3D/REh83rNS/4/eMeaJvgzzbs5IvM4Yn4dSGuv8Y5bsVF5NVP3ddSRL65T5rlaUx3qjTl/15/qrGq39nXhTAcMH6qS1TffS7wvq4Jjwwyimyo++D0D69jpes2D+QSMk3nehSsds2p75ON+2a95sH6ynE9mTNfxLsxgHX098fCOG99RzmYU4Uz0jcq5pnjerXJffjfFZ3nN/0D0sl/RkJ1Lsimonvcybc0ris+ugrVn1sf3U965ccqUb7GCVgtdb3X8TTLXd1bniKwPn7KgXNkeGucFW2tktA+PZWSuypdlDbFaLVqdddYJlcLeLKMruxxaVcyf5F29I5CPydbewGdOf0UZ7+iY/pO85u+44447/nF8AF258Ys=";
-
+        let strData;
         // Decode base64 (convert ascii to binary)
-        let strData = atob(mapData);
+        if (encoding === "base64") {
+            strData = atob(mapData);
+        } else {
+            strData = mapData;
+        }
 
-        // Convert binary string to character-number array
-        let charData = strData.split("").map(function (x) {
-            return x.charCodeAt(0);
-        });
+        let str;
+        if (compression === "zlib") {
+            // Convert binary string to character-number array
+            let charData = strData.split("").map(function (x) {
+                return x.charCodeAt(0);
+            });
 
-        // Turn number array into byte-array
-        let binData = new Uint8Array(charData);
+            // Turn number array into byte-array
+            let binData = new Uint8Array(charData);
 
-        // Pako magic
-        let data = pako.inflate(binData);
+            // Pako magic
+            let data = pako.inflate(binData);
 
-        // Convert gunzipped byteArray back to ascii string:
-        let str = String.fromCharCode.apply(null, new Uint16Array(data));
+            // Convert gunzipped byteArray back to ascii string:
+            str = String.fromCharCode.apply(null, new Uint16Array(data));
+        } else {
+            str = strData;
+        }
+
         // console.log(`str: ${str}`);
         let result = str.split(",");
         return result;
@@ -100,11 +110,6 @@ export class Tool extends BaseSingleton {
         if (value >= 100 && value < 1000)
             result = "0" + value;
         return result;
-    }
-
-    public get45Tile(): number {
-        let temp: number = Math.sqrt(Math.pow(Const.GameConst.HALF_MAP_TILE_WIDTH, 2) + Math.pow(Const.GameConst.HALF_MAP_TILE_HEIGHT, 2));
-        return temp;
     }
 
     private ab2str(buf): any {

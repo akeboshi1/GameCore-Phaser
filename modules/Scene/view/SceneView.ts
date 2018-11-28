@@ -67,8 +67,6 @@ export class SceneView extends SceneBase {
 
         super.onInitializeScene(value);
 
-        this.terrainSceneLayer.initializeMap(value);
-
         let i: number = 0;
         let len: number = this.mapSceneInfo.elementConfig.length;
         let element: ElementInfo;

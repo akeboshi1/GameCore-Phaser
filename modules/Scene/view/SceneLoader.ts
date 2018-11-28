@@ -1,6 +1,4 @@
 import {Log} from "../../../Log";
-import {Jsons} from "../../../Assets";
-import Globals from "../../../Globals";
 import {SceneInfo} from "../../../common/struct/SceneInfo";
 
 export class SceneLoader {

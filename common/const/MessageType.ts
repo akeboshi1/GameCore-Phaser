@@ -12,6 +12,7 @@ export class MessageType {
     public static SCENE_INITIALIZED: string = "SCENE_INITIALIZED";
     public static SCENE_CLEARED: string = "SCENE_CLEARED";
     public static SCENE_CHANGE_TO: string = "SCENE_CHANGE_TO";
+    public static SCENE_MOVE_TO: string = "scene_move_to";
 
     public static SCENE_DATA_INITIALIZE: string = "scene_data_initialize";
 

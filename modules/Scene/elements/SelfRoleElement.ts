@@ -7,7 +7,7 @@ export class SelfRoleElement extends RoleElement {
     }
 
     protected onUpdating(deltaTime: number): void {
-        Globals.Keyboard.CheckKey();
+        let keyDownCode: string = Globals.Keyboard.CheckKey().toString();
         // Log.trace(this.isWalking, Globals.Keyboard.isKeyDown)
         let isKeyDown: boolean = Globals.Keyboard.isKeyDown;
         // Log.trace("按键-->"+isKeyDown);
@@ -19,7 +19,7 @@ export class SelfRoleElement extends RoleElement {
 
         if (isKeyDown) {
             let angle;
-            switch (Globals.Keyboard.keyDownCode) {
+            switch (keyDownCode) {
                 case Phaser.Keyboard.UP.toString():
                 case Phaser.Keyboard.W.toString():
                     if (this.angleIndex === 1 || this.angleIndex === 3)

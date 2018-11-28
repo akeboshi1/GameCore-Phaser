@@ -4,9 +4,13 @@
 import {Log} from "../../Log";
 import Key = Phaser.Key;
 import BaseSingleton from "../../base/BaseSingleton";
+import {PBpacket} from "net-socket-packet";
+import {op_virtual_world} from "../../../protocol/protocols";
+import Globals from "../../Globals";
+import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
 
 export class KeyboardMod extends BaseSingleton {
-    private keyCodes: number[] = [];
+    private _isKeyDown: boolean = false;
     private game: Phaser.Game;
     public upKey: Key;
     public downKey: Key;
@@ -22,92 +26,94 @@ export class KeyboardMod extends BaseSingleton {
      */
     public constructor() {
         super();
-        //  Register the keys.
-
-        //  Stop the following keys from propagating up to the browser
-        // this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
-        //     Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
     }
-
-    public init(game: Phaser.Game): void {
-        this.game = game;
-        this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
-        this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-        this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-
-        this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-        this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-        this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-    }
-
-    private _isKeyDown: boolean = false;
-
-    // public get isKeyDown(): boolean {
-    //     return this.upKey.isDown || this.downKey.isDown || this.leftKey.isDown || this.rightKey.isDown || this.wKey.isDown || this.sKey.isDown || this.aKey.isDown || this.dKey.isDown;
-    // }
 
     public get isKeyDown(): boolean {
         return this._isKeyDown;
     }
 
-    private _keyDownCode: string;
+    public init(game: Phaser.Game): void {
+        this.game = game;
 
-    public get keyDownCode(): string {
-        return this._keyDownCode;
+        //  Stop the following keys from propagating up to the browser
+        this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
+            Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
+
+        this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
+        this.upKey.onDown.add(this.keyDownHandle, this);
+        this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+        this.downKey.onDown.add(this.keyDownHandle, this);
+        this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+        this.leftKey.onDown.add(this.keyDownHandle, this);
+        this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+        this.rightKey.onDown.add(this.keyDownHandle, this);
+
+        this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+        this.wKey.onDown.add(this.keyDownHandle, this);
+        this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        this.sKey.onDown.add(this.keyDownHandle, this);
+        this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+        this.aKey.onDown.add(this.keyDownHandle, this);
+        this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+        this.dKey.onDown.add(this.keyDownHandle, this);
+    }
+
+    private keyDownHandle(): void {
+        let keyArr: number[] = this.CheckKey();
+        if ( this.isKeyDown ) {
+            let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+            let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+            content.keyCodes = keyArr;
+            Globals.SocketManager.send(pkt);
+        }
     }
 
     private getKeyDowns(): number[] {
-        this.keyCodes.splice(0);
-        if (this.upKey.isDown) this.keyCodes.push(Phaser.Keyboard.UP);
-        if (this.downKey.isDown) this.keyCodes.push(Phaser.Keyboard.DOWN);
-        if (this.leftKey.isDown) this.keyCodes.push(Phaser.Keyboard.LEFT);
-        if (this.rightKey.isDown) this.keyCodes.push(Phaser.Keyboard.RIGHT);
-        if (this.wKey.isDown) this.keyCodes.push(Phaser.Keyboard.W);
-        if (this.sKey.isDown) this.keyCodes.push(Phaser.Keyboard.S);
-        if (this.aKey.isDown) this.keyCodes.push(Phaser.Keyboard.A);
-        if (this.dKey.isDown) this.keyCodes.push(Phaser.Keyboard.D);
-        return this.keyCodes;
+        let keyCodes = [];
+        if (this.upKey.isDown) keyCodes.push(Phaser.Keyboard.UP);
+        if (this.downKey.isDown) keyCodes.push(Phaser.Keyboard.DOWN);
+        if (this.leftKey.isDown) keyCodes.push(Phaser.Keyboard.LEFT);
+        if (this.rightKey.isDown) keyCodes.push(Phaser.Keyboard.RIGHT);
+        if (this.wKey.isDown) keyCodes.push(Phaser.Keyboard.W);
+        if (this.sKey.isDown) keyCodes.push(Phaser.Keyboard.S);
+        if (this.aKey.isDown) keyCodes.push(Phaser.Keyboard.A);
+        if (this.dKey.isDown) keyCodes.push(Phaser.Keyboard.D);
+        return keyCodes;
     }
 
-    public CheckKey(): void {
+    public CheckKey(): number[] {
         this._isKeyDown = false;
         let keyDowns = this.getKeyDowns();
-        if (keyDowns.length === 0) return;
+        if (keyDowns.length === 0) return null;
+
+        let lastDownArr: number[] = [];
 
         this._isKeyDown = true;
-        this._keyDownCode = "";
 
         if (keyDowns.length === 2) {
             if (keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.RIGHT].toString();
+                lastDownArr = [Phaser.Keyboard.UP, Phaser.Keyboard.RIGHT];
             } else if (keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.D].toString();
+                lastDownArr = [Phaser.Keyboard.W, Phaser.Keyboard.D];
             } else if (keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.UP, Phaser.Keyboard.LEFT].toString();
+                lastDownArr = [Phaser.Keyboard.UP, Phaser.Keyboard.LEFT];
             } else if (keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.W, Phaser.Keyboard.A].toString();
+                lastDownArr = [Phaser.Keyboard.W, Phaser.Keyboard.A];
             } else if (keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.RIGHT].toString();
+                lastDownArr = [Phaser.Keyboard.DOWN, Phaser.Keyboard.RIGHT];
             } else if (keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.D].toString();
+                lastDownArr = [Phaser.Keyboard.S, Phaser.Keyboard.D];
             } else if (keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT].toString();
+                lastDownArr = [Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT];
             } else if (keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
-                this._keyDownCode = [Phaser.Keyboard.S, Phaser.Keyboard.A].toString();
+                lastDownArr = [Phaser.Keyboard.S, Phaser.Keyboard.A];
             }
         }
-        if (this.keyDownCode === "")
-            this._keyDownCode = keyDowns[0].toString();
-        Log.trace("KeyCode--->" + this.keyDownCode);
-    }
+        if (lastDownArr.length === 0) {
+            lastDownArr = [keyDowns[0]];
+        }
 
-    private onDown(): void {
-        this.CheckKey();
-    }
-
-    private onUp(): void {
-        this.CheckKey();
+        Log.trace("KeyCode--->" + lastDownArr);
+        return lastDownArr;
     }
 }

@@ -38,9 +38,9 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadJsons(): void {
-        for (let i of Assets.Jsons.JsonMap.getLoadList()) {
-            this.game.load.json(i + "_json", Assets.Jsons.JsonMap.getJSON(i));
-        }
+        // for (let i of Assets.Jsons.JsonMap.getLoadList()) {
+        //     this.game.load.json(i + "_json", Assets.Jsons.JsonMap.getJSON(i));
+        // }
     }
 
     private loadAtlases() {

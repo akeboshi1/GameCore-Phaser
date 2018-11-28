@@ -8,6 +8,7 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
+import {op_client} from "../../../protocol/protocols";
 
 export class SceneMediator extends MediatorBase {
     private hasRgistHandler: boolean = false;
@@ -38,14 +39,20 @@ export class SceneMediator extends MediatorBase {
     //server handler
     public registSceneListenerHandler(): void {
         if (!this.hasRgistHandler) {
+            Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
             this.hasRgistHandler = true;
         }
     }
 
     public unRegistSceneListenerHandler(): void {
         if (this.hasRgistHandler) {
+            Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
             this.hasRgistHandler = false;
         }
+    }
+
+    private moveToHandle(moveData: op_client.IMoveData[]): void {
+
     }
 
     private onLoginOk(): void {

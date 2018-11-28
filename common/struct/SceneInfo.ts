@@ -150,7 +150,8 @@ export class SceneInfo {
             }
         }
 
-        let arr = Globals.Tool.mapDecode(child.map);
+
+        let arr = Globals.Tool.mapDecode(child.map, child.compression, child.encoding);
 
         let i: number = 0;
         let n: number = arr.length;

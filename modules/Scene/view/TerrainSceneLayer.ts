@@ -18,8 +18,9 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
     public initializeMap(mapSceneInfo: SceneInfo): void {
         this.mapSceneInfo = mapSceneInfo;
-        for (let arr of this.mapSceneInfo.terrainConfig) {
-            this.initializeTerrainItems(arr);
+        let len: number = this.mapSceneInfo.terrainConfig.length;
+        for (let i = 0; i < len; i++) {
+            this.initializeTerrainItems(this.mapSceneInfo.terrainConfig[i]);
         }
     }
 
@@ -72,7 +73,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         let value: TerrainInfo;
         for (; i < len; i++) {
             value = datas[i];
-            if (value.type === 0) {
+            if (value.type === 0 || i !== 0) {
                 continue;
                 //element = new TerrainNullItem(Globals.game, this);
             } else {
@@ -86,8 +87,8 @@ export class TerrainSceneLayer extends BasicSceneLayer {
             element.isoX = p3.x;
             element.isoY = p3.y;
             element.isoZ = p3.z;
-            element.itemWidth = Const.GameConst.MAP_TILE_WIDTH;
-            element.itemHeight = Const.GameConst.MAP_TILE_HEIGHT;
+            element.itemWidth = this.mapSceneInfo.tileWidth;
+            element.itemHeight = this.mapSceneInfo.tileHeight;
 
             this.addChild(element);
             this._terrainItems.push(element);
