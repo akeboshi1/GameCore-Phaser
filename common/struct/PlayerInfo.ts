@@ -5,9 +5,13 @@ import { Const } from "../const/Const";
 import {Log} from "../../Log";
 
 export class PlayerInfo {
-    public actorId: number = 1; //玩家ID
+    public actorId: number = 0; //玩家ID
+    public id: number  = 0;
+
+    public sceneId: number = 0;
+
     public nick: string = "";             // 昵称
-    public moveSpeed: number = 1000;        // 速度
+    public moveSpeed: number = 10;        // 速度
     public sex: number = 1;              // 性别
 
     public x: number = 682; // 682

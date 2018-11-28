@@ -75,6 +75,8 @@ export class SceneEditorMediator extends SceneMediator {
 
         this.handleChangeMode();
 
+        Globals.game.camera.follow(this.view);
+
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
     }
 }

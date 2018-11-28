@@ -2,6 +2,8 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
 import {Const} from "../../../common/const/Const";
 import Point = Phaser.Point;
+import {op_client} from "../../../../protocol/protocols";
+import Direction = op_client.Direction;
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable: boolean = true;
@@ -9,15 +11,22 @@ export default class SceneEntity extends BasicSceneEntity {
     // moving
     protected mySpeed: number = 4; //
     protected mAngleIndex: number = 0;
+    protected mWalkAngleIndex: number = 0; //走路
+    protected mTarget: op_client.IPBPoint3f;
+    protected mTimeSpan: number;
 
     protected myIsWalking: boolean = false;
-    protected myCurrentPathStepIndex: number = 0;
-    protected myCurrentPathPoints: Array<any> = null;
-    protected myCurrentMoveInterval: number = 0;
-    private newMovePath: Array<any>;
 
     public constructor() {
         super();
+    }
+
+    public get walkAngleIndex(): number {
+        return this.mWalkAngleIndex;
+    }
+
+    public set walkAngleIndex(value: number) {
+        this.mWalkAngleIndex = value;
     }
 
     // Moving
@@ -49,22 +58,39 @@ export default class SceneEntity extends BasicSceneEntity {
         this._rows = value;
     }
 
-    public resumeWalk(): void {
-        if (!this.myIsWalking) {
-            this.myIsWalking = true;
-            this.onStartMove();
-        }
-    }
-
     public stopWalk(): void {
         this.pauseWalk();
-        this.clearMovingData();
+        this.mTimeSpan = 0;
     }
 
     public pauseWalk(): void {
         if (this.myIsWalking) {
             this.myIsWalking = false;
             this.onPauseMove();
+        }
+    }
+
+    public moveToTarget(value: op_client.IMoveData): void {
+
+        if (this.myIsWalking) {
+            return;
+        }
+
+        this.walkAngleIndex = value.direction;
+        this.setAngleIndex(3);
+        this.mTarget = value.destinationPoint3f;
+        this.mTimeSpan = value.timeSpan;
+
+        let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
+        this.mySpeed = distance / this.mTimeSpan;
+
+        this.resumeWalk();
+    }
+
+    protected resumeWalk(): void {
+        if (!this.myIsWalking) {
+            this.myIsWalking = true;
+            this.onStartMove();
         }
     }
 
@@ -83,92 +109,103 @@ export default class SceneEntity extends BasicSceneEntity {
     protected onPauseMove(): void {
     }
 
-    protected clearMovingData(): void {
-        this.myCurrentPathStepIndex = 1;
-        this.myCurrentMoveInterval = 0;
-        this.myCurrentPathPoints = null;
-    }
-
-    protected innerMoveToByPath(path: Array<any>): void {
-
-        if (this.myIsWalking) {
-            this.newMovePath = path;
-            return;
-        }
-
-        this.myCurrentPathStepIndex = 1;
-        this.myCurrentMoveInterval = 0;
-        this.myCurrentPathPoints = path;
-
-        this.resumeWalk();
-    }
-
     protected onUpdating(deltaTime: number): void {
         if (this.myIsWalking) this.onUpdatingPosition(deltaTime);
     }
 
     protected onUpdatingPosition(deltaTime: number): void {
-        this.doPathMoving();
+        this.mTimeSpan -= deltaTime;
+        this.doPathMoving(deltaTime);
     }
 
-    protected doPathMoving(): void {
-        let targetPathPonints: any = this.myCurrentPathPoints[this.myCurrentPathStepIndex];
-        this.onMove(targetPathPonints);
+    protected doPathMoving(deltaTime: number): void {
+        let actualSpeed = this.mySpeed * deltaTime;
+        this.onMove(actualSpeed);
+    }
 
-        if (++this.myCurrentMoveInterval >= this.mySpeed) {
-            this.myCurrentMoveInterval = 0;
+    protected onMove(actualSpeed: number): void {
+        if (actualSpeed <= 0) return;
 
-            if (this.newMovePath) {
-                this.myCurrentPathStepIndex = 0;
-                this.myCurrentPathPoints.splice(this.myCurrentPathStepIndex + 1);
-                this.myCurrentPathPoints = this.myCurrentPathPoints.concat(this.newMovePath);
-                this.newMovePath = null;
+        let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
+        let endP: Point;
+        let moveAngle: number;
+        if (this.walkAngleIndex === 8) {
+            endP = Globals.Room45Util.tileToPixelCoords(0, 0);
+        } else if (this.walkAngleIndex === 7) {
+            endP = Globals.Room45Util.tileToPixelCoords(1, 0);
+        } else if (this.walkAngleIndex === 6) {
+            endP = Globals.Room45Util.tileToPixelCoords(2, 0);
+        } else if (this.walkAngleIndex === 5) {
+            endP = Globals.Room45Util.tileToPixelCoords(2, 1);
+        } else if (this.walkAngleIndex === 4) {
+            endP = Globals.Room45Util.tileToPixelCoords(2, 2);
+        } else if (this.walkAngleIndex === 3) {
+            endP = Globals.Room45Util.tileToPixelCoords(1, 2);
+        } else if (this.walkAngleIndex === 2) {
+            endP = Globals.Room45Util.tileToPixelCoords(0, 2);
+        } else if (this.walkAngleIndex === 1) {
+            endP = Globals.Room45Util.tileToPixelCoords(0, 1);
+        }
+        moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
+
+        let _x = this.ox + actualSpeed * Math.cos(moveAngle);
+        let _y = this.oy + actualSpeed * Math.sin(moveAngle);
+        let _z = this.oz;
+
+        let stopFlag: boolean = false;
+        if (this.walkAngleIndex === Direction.UP && _y <= this.mTarget.y) {
+            _y = this.mTarget.y;
+            stopFlag = true;
+        } else if (this.walkAngleIndex === Direction.UPPER_LEFT) {
+            if (_y <= this.mTarget.y) {
+                _y = this.mTarget.y;
+                stopFlag = true;
             }
-
-            if (++this.myCurrentPathStepIndex >= this.myCurrentPathPoints.length) {
-                this.stopWalk();
+            if (_x <= this.mTarget.x) {
+                _x = this.mTarget.x;
+                stopFlag = true;
+            }
+        } else if (this.walkAngleIndex === Direction.LEFT && _x <= this.mTarget.x) {
+            _x = this.mTarget.x;
+            stopFlag = true;
+        } else if (this.walkAngleIndex === Direction.LOWER_LEFT) {
+            if (_y >= this.mTarget.y) {
+                _y = this.mTarget.y;
+                stopFlag = true;
+            }
+            if (_x <= this.mTarget.x) {
+                _x = this.mTarget.x;
+                stopFlag = true;
+            }
+        } else if (this.walkAngleIndex === Direction.DOWN && _y >= this.mTarget.y) {
+            _y = this.mTarget.y;
+            stopFlag = true;
+        } else if (this.walkAngleIndex === Direction.LOWER_RIGHT) {
+            if (_y >= this.mTarget.y) {
+                _y = this.mTarget.y;
+                stopFlag = true;
+            }
+            if (_x >= this.mTarget.x) {
+                _x = this.mTarget.x;
+                stopFlag = true;
+            }
+        } else if (this.walkAngleIndex === Direction.RIGHT && _x >= this.mTarget.x) {
+            _x = this.mTarget.x;
+            stopFlag = true;
+        } else if (this.walkAngleIndex === Direction.UPPER_RIGHT) {
+            if (_y <= this.mTarget.y) {
+                _y = this.mTarget.y;
+                stopFlag = true;
+            }
+            if (_x >= this.mTarget.x) {
+                _x = this.mTarget.x;
+                stopFlag = true;
             }
         }
-    }
 
-    protected onMove(targetPathPoints: any): void {
-        if (this.myCurrentPathStepIndex >= this.myCurrentPathPoints.length) return;
-
-        let dirX = targetPathPoints.x - this.gridPos.x;
-        let dirY = targetPathPoints.y - this.gridPos.y;
-
-        // let _x = this.ox + (dirX - dirY) * (Const.GameConst.HALF_MAP_TILE_WIDTH / this.mySpeed);
-        // let _y = (dirX + dirY) * (Const.GameConst.HALF_MAP_TILE_HEIGHT / this.mySpeed);
-        // let _z = this.oz;
-        //
-        // this.setPosition(_x, _y, _z);
-
-        if (dirX === 1) {
-            if (dirY === 1) {
-                // down;
-            } else if (dirY === 0) {
-                // rightDown
-                this.setAngleIndex(5);
-            } else if (dirY === -1) {
-                // right
-            }
-        } else if (dirX === 0) {
-            if (dirY === 1) {
-                // leftDown
-                this.setAngleIndex(3);
-            } else if (dirY === -1) {
-                // rightUpAssets
-                this.setAngleIndex(7);
-            }
-        } else if (dirX === -1) {
-            if (dirY === 1) {
-                // left
-            } else if (dirY === 0) {
-                // leftUp
-                this.setAngleIndex(1);
-            } else if (dirY === -1) {
-                // up;
-            }
+        this.setPosition(_x, _y, _z);
+        if (stopFlag) {
+            this.stopWalk();
         }
     }
 

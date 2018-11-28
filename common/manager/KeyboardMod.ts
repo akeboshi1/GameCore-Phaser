@@ -8,6 +8,7 @@ import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
+import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP;
 
 export class KeyboardMod extends BaseSingleton {
     private _isKeyDown: boolean = false;
@@ -41,24 +42,49 @@ export class KeyboardMod extends BaseSingleton {
 
         this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.upKey.onDown.add(this.keyDownHandle, this);
+        this.upKey.onUp.add(this.keyUpHandle, this);
         this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
         this.downKey.onDown.add(this.keyDownHandle, this);
+        this.downKey.onUp.add(this.keyUpHandle, this);
         this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.leftKey.onDown.add(this.keyDownHandle, this);
+        this.leftKey.onUp.add(this.keyUpHandle, this);
         this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
         this.rightKey.onDown.add(this.keyDownHandle, this);
+        this.rightKey.onUp.add(this.keyUpHandle, this);
 
         this.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
         this.wKey.onDown.add(this.keyDownHandle, this);
+        this.wKey.onUp.add(this.keyUpHandle, this);
         this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.sKey.onDown.add(this.keyDownHandle, this);
+        this.sKey.onUp.add(this.keyUpHandle, this);
         this.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.aKey.onDown.add(this.keyDownHandle, this);
+        this.aKey.onUp.add(this.keyUpHandle, this);
         this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
         this.dKey.onDown.add(this.keyDownHandle, this);
+        this.dKey.onUp.add(this.keyUpHandle, this);
     }
 
-    private keyDownHandle(): void {
+    private keyDownHandle( key: any ): void {
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+        let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+        Log.trace("down-->", key.keyCode);
+        content.keyCodes = [key.keyCode];
+        Globals.SocketManager.send(pkt);
+    }
+
+    private keyUpHandle( key: any ): void {
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_UP);
+        let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
+        Log.trace("up-->", key.keyCode);
+        content.keyCodes = [key.keyCode];
+        Globals.SocketManager.send(pkt);
+    }
+
+
+    private keyDownHandle1(): void {
         let keyArr: number[] = this.CheckKey();
         if ( this.isKeyDown ) {
             let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);

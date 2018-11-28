@@ -1,9 +1,9 @@
-import { BasicSceneEntity } from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
 import {ElementInfo}  from "../../../common/struct/ElementInfo";
 import {BasicElementAvatar} from "../../../common/avatar/BasicElementAvatar";
+import SceneEntity from "../view/SceneEntity";
 
-export default class BasicElement extends BasicSceneEntity {
+export default class BasicElement extends SceneEntity {
     protected mAnimationDirty: boolean = false;
     protected myAnimationName: string;
     public constructor() {
@@ -37,7 +37,7 @@ export default class BasicElement extends BasicSceneEntity {
 
     protected onInitialize() {
         super.onInitialize();
-        this.loadModel(this.elementInfo.path);
+        this.loadModel(this.elementInfo.type.toString() );
     }
 
     protected onAvatarAnimationChanged(): void {

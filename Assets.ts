@@ -33,6 +33,20 @@ export namespace Images {
             return require("assets/images/terrain/terrain_" + id + ".png");
         }
     }
+
+    export class ImagesElement {
+        static getName(id: number): string {
+            return "element_" + id + "_png";
+        }
+
+        static getPNG(id: number): string {
+            return require("assets/images/elements/elements_" + id + ".png");
+        }
+
+        static getJSON(id: number): string {
+            return require("assets/images/elements/elements_" + id + ".png");
+        }
+    }
 }
 
 export namespace Avatar {

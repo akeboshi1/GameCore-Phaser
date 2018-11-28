@@ -73,7 +73,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         let value: TerrainInfo;
         for (; i < len; i++) {
             value = datas[i];
-            if (value.type === 0 || i !== 0) {
+            if (value.type === 0) {
                 continue;
                 //element = new TerrainNullItem(Globals.game, this);
             } else {

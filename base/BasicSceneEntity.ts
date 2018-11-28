@@ -6,10 +6,11 @@ import {BasicAvatar} from "./BasicAvatar";
 import {IEntityComponent} from "./IEntityComponent";
 import Point = Phaser.Point;
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
+import {op_client} from "../../protocol/protocols";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     //basic
-    public uid: string; //runtime id
+    public uid: number; //runtime id
     public elementTypeId: number = 0;
     public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
 
@@ -25,6 +26,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
 
     public constructor() {
     }
+
+    public moveToTarget( value: op_client.IMoveData): void { }
 
     protected _ox: number = 0;
 
@@ -167,7 +170,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-
 
         let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
         // Log.trace(p3.x,p3.y,p3.z);

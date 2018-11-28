@@ -72,7 +72,7 @@ export class SceneBase extends SceneBasic {
         return sceneEntity;
     }
 
-    public getSceneElement(uid: string): BasicSceneEntity {
+    public getSceneElement(uid: number): BasicSceneEntity {
         return this.mSceneElements.getValue(uid) as BasicSceneEntity;
     }
 

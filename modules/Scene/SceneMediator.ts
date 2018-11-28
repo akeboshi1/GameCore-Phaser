@@ -9,10 +9,14 @@ import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
 import {op_client} from "../../../protocol/protocols";
+import IMoveData = op_client.IMoveData;
+import MoveType = op_client.MoveType;
+import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 
 export class SceneMediator extends MediatorBase {
     private hasRgistHandler: boolean = false;
     private flowManager: FlowManager;
+
     // private sceneLoader: SceneLoader;
 
     constructor() {
@@ -51,8 +55,35 @@ export class SceneMediator extends MediatorBase {
         }
     }
 
-    private moveToHandle(moveData: op_client.IMoveData[]): void {
+    protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
+        //clear the last one scene.
+        if (this.view) this.view.clearScene();
 
+        Globals.SceneManager.popupScene();
+
+        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
+
+        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
+
+        this.view.initializeScene(mapSceneInfo);
+
+        //初始化当前玩家其他信息
+        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId, currentCharacterInfo, true) as SelfRoleElement;
+
+        //set camera
+        Globals.SceneManager.pushScene(this.view);
+        Globals.game.camera.follow(this.view.currentSelfPlayer.display);
+        Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
+    }
+
+    private moveToHandle(moveData: op_client.IMoveData[]): void {
+        let imove: IMoveData;
+        let entity: BasicSceneEntity;
+        for (let i = 0; i < moveData.length; i++) {
+            imove = moveData[i];
+            entity = this.view.getSceneElement(imove.moveObjectId);
+        }
     }
 
     private onLoginOk(): void {
@@ -78,27 +109,5 @@ export class SceneMediator extends MediatorBase {
     }
 
     private changedToMapSceneStartHandler(): void {
-    }
-
-    protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
-        //clear the last one scene.
-        if (this.view) this.view.clearScene();
-
-        Globals.SceneManager.popupScene();
-
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
-
-        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
-
-        this.view.initializeScene(mapSceneInfo);
-
-        //初始化当前玩家其他信息
-        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId.toString(), currentCharacterInfo, true) as SelfRoleElement;
-
-        //set camera
-        Globals.SceneManager.pushScene(this.view);
-        Globals.game.camera.follow(this.view.currentSelfPlayer.display);
-        Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
     }
 }

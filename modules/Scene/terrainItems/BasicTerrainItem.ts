@@ -26,9 +26,14 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
     }
 
     public onFrame(deltaTime: number) {
-        let p2 = Globals.Room45Util.p3top2(this.isoX, this.isoY, this.isoZ);
+        let p2 = Globals.Room45Util.p3top2(this.isoX, this.isoY, this.isoZ)
+        // this.game.world.x, this.game.world.y;
+        // this.parent.y
+        // this.parent.parent.y
+        // let p = this.game.input.getLocalPosition(this.terrainIsoDisplayObject, this.game.input.activePointer);
+        // let p = this.game.world.toLocal(p2, this);
         this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-            this.camera.width, this.camera.height, p2.x - this.itemWidth / 2 , p2.y, this.itemWidth, this.itemHeight);
+            this.camera.width, this.camera.height, p2.x - this.itemWidth / 2, p2.y, this.itemWidth, this.itemHeight);
         if (this.mTerrainItemIsInCamera) {
             this.mTerrainItemOutCameraTime = 0;
 

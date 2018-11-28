@@ -6,6 +6,11 @@ export class SelfRoleElement extends RoleElement {
         super();
     }
 
+    public setMoveData(): void {
+
+    }
+
+    /**
     protected onUpdating(deltaTime: number): void {
         let keyDownCode: string = Globals.Keyboard.CheckKey().toString();
         // Log.trace(this.isWalking, Globals.Keyboard.isKeyDown)
@@ -81,4 +86,5 @@ export class SelfRoleElement extends RoleElement {
         }
         super.onUpdating(deltaTime);
     }
+     **/
 }

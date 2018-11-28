@@ -24,11 +24,6 @@ export class ElementInfo {
         }
     }
 
-    public get path(): string {
-        let s: string = "elements_" + this.type;
-        return s;
-    }
-
     public set dir(value: number) {
         this._dir = value;
     }

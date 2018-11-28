@@ -1,6 +1,7 @@
 import {IAnimatedObject} from "../../base/IAnimatedObject";
 import Globals from "../../Globals";
 import {BasicAvatar} from "../../base/BasicAvatar";
+import {Images} from "../../Assets";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     private myModelURL: string = "";
@@ -43,7 +44,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
 
         this.closeLoadModel();
 
-        if (onLoadStart !== undefined) {
+        if (onLoadStart != null) {
             onloadstart.apply(thisArg);
         }
 
@@ -58,7 +59,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     }
 
     protected closeLoadModel() {
-        if (this.myModelURL !== null) {
+        if (this.myModelURL != null) {
             if (this.mModelLoaded) {
                 this.mModelLoaded = false;
             }
@@ -72,7 +73,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.atlasJSONArray(this.myModelURL + "_element",  require("assets/images/elements/" + this.myModelURL + ".png"), require("assets/images/elements/" + this.myModelURL + ".json" ));
+            this.game.load.atlasJSONArray(Images.ImagesElement.getName(+this.myModelURL),  Images.ImagesElement.getPNG(+this.myModelURL), Images.ImagesElement.getJSON(+this.myModelURL));
             this.game.load.start();
         }
     }
@@ -88,7 +89,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected modelLoadCompleteHandler() {
         this.mModelLoaded = true;
 
-        if (this.mLoadCompleteCallback !== undefined) {
+        if (this.mLoadCompleteCallback != null) {
             let cb: Function = this.mLoadCompleteCallback;
             this.mLoadCompleteCallback = null;
             cb.apply(this.mLoadThisArg);

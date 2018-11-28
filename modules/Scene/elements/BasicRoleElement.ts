@@ -11,7 +11,7 @@ import {SceneView} from "../view/SceneView";
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
     private mAnimationDirty: boolean = false;
-    protected mWalkAngleIndex: number = 0; //走路
+
 
     public constructor() {
         super();
@@ -19,14 +19,6 @@ export class BasicRoleElement extends SceneEntity {
 
     public get characterInfo(): PlayerInfo {
         return this.data;
-    }
-
-    public get walkAngleIndex(): number {
-        return this.mWalkAngleIndex;
-    }
-
-    public set walkAngleIndex(value: number) {
-        this.mWalkAngleIndex = value;
     }
 
     public setAngleIndex(value: number): void {
@@ -70,10 +62,10 @@ export class BasicRoleElement extends SceneEntity {
         this.invalidAnimation();
     }
 
-    protected onUpdatingPosition(deltaTime: number): void {
-        let actualSpeed = this.mySpeed * deltaTime;
-        this.doAngleMoving(actualSpeed);
-    }
+    // protected onUpdatingPosition(deltaTime: number): void {
+    //     let actualSpeed = this.mySpeed * deltaTime;
+    //     this.doAngleMoving(actualSpeed);
+    // }
 
     protected onAvatarAnimationChanged(): void {
         (<RoleBonesAvatar>this.display).animationName = this.myIsWalking ? Const.ModelStateType.BONES_WALK : this.myAnimationName;
@@ -123,7 +115,7 @@ export class BasicRoleElement extends SceneEntity {
     protected onInitialize(): void {
         super.onInitialize();
 
-        this.mySpeed = this.characterInfo.moveSpeed * 0.001; // Const.GameConst.MAP_TILE_WIDTH * 2
+        this.mySpeed = this.characterInfo.moveSpeed; // Const.GameConst.MAP_TILE_WIDTH * 2
         this.setCols(1);
         this.setRows(1);
         this.setAngleIndex(this.characterInfo.direct);

@@ -1,6 +1,5 @@
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {MainMenuView} from "./view/MainMenuView";
-import {IModuleInfo} from "../../base/module/interfaces/IModuleInfo";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 import Globals from "../../Globals";
 

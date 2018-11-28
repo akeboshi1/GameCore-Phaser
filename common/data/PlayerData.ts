@@ -30,13 +30,13 @@ export class PlayerData extends BaseSingleton {
 
     public addPlayer(data: Object): PlayerInfo {
         let playerInfo: PlayerInfo = new PlayerInfo();
-        playerInfo.actorId = data["actorId"];
-        playerInfo.nick = data["nick"];
-        playerInfo.sex = data["sex"];
-        playerInfo.moveSpeed = data["moveSpeed"];
-        this.removePlayer(playerInfo.actorId);
-        this._playerInfoList.push(playerInfo);
-        Log.trace("玩家加入，playerID=" + playerInfo.actorId);
+        // playerInfo.actorId = data["actorId"];
+        // playerInfo.nick = data["nick"];
+        // playerInfo.sex = data["sex"];
+        // playerInfo.moveSpeed = data["moveSpeed"];
+        // this.removePlayer(playerInfo.actorId);
+        // this._playerInfoList.push(playerInfo);
+        // Log.trace("玩家加入，playerID=" + playerInfo.actorId);
         return playerInfo;
     }
 

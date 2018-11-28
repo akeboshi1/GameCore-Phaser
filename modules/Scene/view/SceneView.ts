@@ -38,7 +38,7 @@ export class SceneView extends SceneBase {
     }
 
     public addSceneElement(sceneElementType: number,
-                           uid: string, elemetData: any,
+                           uid: number, elemetData: any,
                            isSelf: boolean = false): BasicSceneEntity {
 
         let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
@@ -72,9 +72,7 @@ export class SceneView extends SceneBase {
         let element: ElementInfo;
         for (; i < len; i++) {
             element = this.mapSceneInfo.elementConfig[i];
-            // if (element.config.type == 13) {
-            //    this.addSceneElement(Const.SceneElementType.ELEMENT, element.id.toString(), element);
-            // }
+            this.addSceneElement(Const.SceneElementType.ELEMENT, element.id, element);
         }
     }
 
