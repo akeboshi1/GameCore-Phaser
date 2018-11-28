@@ -111,7 +111,7 @@ export class SceneBase extends SceneBasic {
         }
     }
 
-    public deleteSceneElement(uid: string): BasicSceneEntity {
+    public deleteSceneElement(uid: number): BasicSceneEntity {
         let element: BasicSceneEntity = this.mSceneElements.getValue(uid) as BasicSceneEntity;
 
         if (!element) {
