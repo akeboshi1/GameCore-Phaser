@@ -1,8 +1,6 @@
 import RoleAvatarModelVO from "./RoleAvatarModelVO";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
-import { Const } from "../const/Const";
-import {Log} from "../../Log";
 
 export class PlayerInfo {
     public actorId: number = 0; //玩家ID

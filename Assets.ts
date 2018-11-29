@@ -43,8 +43,8 @@ export namespace Images {
             return require("assets/images/elements/elements_" + id + ".png");
         }
 
-        static getJSON(id: number): string {
-            return require("assets/images/elements/elements_" + id + ".png");
+        static getJSONArray(id: number): string {
+            return require("assets/images/elements/elements_" + id + ".json");
         }
     }
 }

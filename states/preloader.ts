@@ -1,8 +1,5 @@
 import {Atlases, Avatar, UI} from "../Assets";
 import * as Assets from "../Assets";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world} from "../../protocol/protocols";
-import Globals from "../Globals";
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
     private preloadFrameSprite: Phaser.Sprite = null;

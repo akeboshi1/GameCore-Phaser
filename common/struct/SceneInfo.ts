@@ -90,14 +90,18 @@ export class SceneInfo {
         }
     }
 
-    public setElementInfo(value: any): void {
+    public setElementInfo(value: op_client.IElement[]): void {
         this._elementConfig = [];
         let elements = value;
         let i: number = 0;
         let len: number = elements.length;
         let element: ElementInfo;
         for (; i < len; i++) {
-            element = new ElementInfo(elements[i]);
+            element = new ElementInfo();
+            element.setInfo(elements[i]);
+            element.x = 682;
+            element.y = 176;
+            element.z = 0;
             this._elementConfig.push(element);
         }
     }
@@ -149,7 +153,6 @@ export class SceneInfo {
                 data[i][j] = new Array();
             }
         }
-
 
         let arr = Globals.Tool.mapDecode(child.map, child.compression, child.encoding);
 
