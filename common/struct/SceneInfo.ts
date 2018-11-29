@@ -99,9 +99,6 @@ export class SceneInfo {
         for (; i < len; i++) {
             element = new ElementInfo();
             element.setInfo(elements[i]);
-            element.x = 682;
-            element.y = 176;
-            element.z = 0;
             this._elementConfig.push(element);
         }
     }

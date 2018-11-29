@@ -101,14 +101,6 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected modelLoadCompleteHandler() {
         this.mModelLoaded = true;
 
-        let graphics = Globals.game.make.graphics();
-        graphics.clear();
-        // graphics.lineStyle(1, 0x00ff00, 1);
-        graphics.beginFill(0x0000ff);
-        graphics.drawCircle(0, 0, 5);
-        graphics.endFill();
-        this.addChild(graphics);
-
         if (this.mLoadCompleteCallback != null) {
             let cb: Function = this.mLoadCompleteCallback;
             this.mLoadCompleteCallback = null;

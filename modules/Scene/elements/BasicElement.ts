@@ -4,6 +4,7 @@ import {BasicElementAvatar} from "../../../common/avatar/BasicElementAvatar";
 import SceneEntity from "../view/SceneEntity";
 import {Const} from "../../../common/const/Const";
 import ModelStateType = Const.ModelStateType;
+import {IAnimatedObject} from "../../../base/IAnimatedObject";
 
 export default class BasicElement extends SceneEntity {
     protected baseLoc3: Phaser.Point;
@@ -11,6 +12,7 @@ export default class BasicElement extends SceneEntity {
     protected baseLoc7: Phaser.Point;
     protected baseLoc1: Phaser.Point;
 
+    protected baseLoc: Phaser.Point;
     protected mAnimationDirty: boolean = false;
     protected myAnimationName: string = ModelStateType.ELEMENT_IDEL;
 
@@ -71,9 +73,25 @@ export default class BasicElement extends SceneEntity {
 
     protected onUpdated(deltaTime: number): void {
         super.onUpdated(deltaTime);
-        let baseLoc: Phaser.Point = this.getBaseLoc(this.angleIndex);
-        // this._ox -= (baseLoc ? baseLoc.x : 0);
-        // this._oy -= (baseLoc ? baseLoc.y : 0);
+        this.baseLoc = this.getBaseLoc(this.angleIndex);
+    }
+
+    protected onUpdatingDisplay(deltaTime: number): void {
+
+        let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
+        // Log.trace(p3.x,p3.y,p3.z);
+        this.display.isoX = p3.x - (this.baseLoc ? this.baseLoc.x : 0);
+        this.display.isoY = p3.y - (this.baseLoc ? this.baseLoc.y : 0);
+        this.display.isoZ = p3.z;
+        // let graphics = Globals.game.make.graphics();
+        // graphics.clear();
+        // // graphics.lineStyle(1, 0x00ff00, 1);
+        // graphics.beginFill(0x0000ff);
+        // graphics.drawCircle(this.baseLoc ? this.baseLoc.x : 0, this.baseLoc ? this.baseLoc.y : 0, 5);
+        // graphics.endFill();
+        // this.display.addChild(graphics);
+        // Log.trace(this.display.isoX,this.display.isoY,this.display.isoZ);
+        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 
     protected onAvatarAnimationChanged(): void {
