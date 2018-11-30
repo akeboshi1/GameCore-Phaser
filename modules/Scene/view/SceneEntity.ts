@@ -4,6 +4,7 @@ import {Const} from "../../../common/const/Const";
 import Point = Phaser.Point;
 import {op_client} from "../../../../protocol/protocols";
 import Direction = op_client.Direction;
+import {Log} from "../../../Log";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable: boolean = true;
@@ -50,14 +51,6 @@ export default class SceneEntity extends BasicSceneEntity {
         this.mAngleIndex = value;
     }
 
-    public setCols(value: number) {
-        this._cols = value;
-    }
-
-    public setRows(value: number) {
-        this._rows = value;
-    }
-
     public stopWalk(): void {
         this.pauseWalk();
         this.mTimeSpan = 0;
@@ -72,9 +65,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
     public moveToTarget(value: op_client.IMoveData): void {
 
-        if (this.myIsWalking) {
-            return;
-        }
+        this.stopWalk();
 
         this.walkAngleIndex = value.direction;
         this.setAngleIndex(3);
@@ -85,6 +76,12 @@ export default class SceneEntity extends BasicSceneEntity {
         this.mySpeed = distance / this.mTimeSpan;
 
         this.resumeWalk();
+    }
+
+    public moveStopTarget(value: op_client.IMovePosition): void {
+        this.stopWalk();
+        this.setAngleIndex(3);
+        this.setPosition(value.destinationPoint3f.x, value.destinationPoint3f.y, value.destinationPoint3f.z);
     }
 
     protected resumeWalk(): void {
@@ -129,21 +126,21 @@ export default class SceneEntity extends BasicSceneEntity {
         let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
         let endP: Point;
         let moveAngle: number;
-        if (this.walkAngleIndex === 8) {
+        if (this.walkAngleIndex === Direction.UP) {
             endP = Globals.Room45Util.tileToPixelCoords(0, 0);
-        } else if (this.walkAngleIndex === 7) {
+        } else if (this.walkAngleIndex === Direction.UPPER_RIGHT) {
             endP = Globals.Room45Util.tileToPixelCoords(1, 0);
-        } else if (this.walkAngleIndex === 6) {
+        } else if (this.walkAngleIndex === Direction.RIGHT) {
             endP = Globals.Room45Util.tileToPixelCoords(2, 0);
-        } else if (this.walkAngleIndex === 5) {
+        } else if (this.walkAngleIndex === Direction.LOWER_RIGHT) {
             endP = Globals.Room45Util.tileToPixelCoords(2, 1);
-        } else if (this.walkAngleIndex === 4) {
+        } else if (this.walkAngleIndex === Direction.DOWN) {
             endP = Globals.Room45Util.tileToPixelCoords(2, 2);
-        } else if (this.walkAngleIndex === 3) {
+        } else if (this.walkAngleIndex === Direction.LOWER_LEFT) {
             endP = Globals.Room45Util.tileToPixelCoords(1, 2);
-        } else if (this.walkAngleIndex === 2) {
+        } else if (this.walkAngleIndex === Direction.LEFT) {
             endP = Globals.Room45Util.tileToPixelCoords(0, 2);
-        } else if (this.walkAngleIndex === 1) {
+        } else if (this.walkAngleIndex === Direction.UPPER_LEFT) {
             endP = Globals.Room45Util.tileToPixelCoords(0, 1);
         }
         moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);

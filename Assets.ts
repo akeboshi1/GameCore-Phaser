@@ -51,12 +51,12 @@ export namespace Images {
 
 export namespace Avatar {
     export class AvatarBone {
-        static getSkeName(): string {
-            return "bones_allblue_ske_dbbin";
+        static getSkeName(avatarId: number): string {
+            return avatarId + "_dbbin";
         }
 
-        static getSkeUrl(): string {
-            return require("assets/avatar/bones_allblue_ske.dbbin");
+        static getSkeUrl(avatarId: number): string {
+            return require("assets/avatar/" + avatarId + ".dbbin");
         }
 
         static getPartName(value: string): string {
@@ -71,31 +71,68 @@ export namespace Avatar {
 
 export namespace UI {
     export class SpriteSheetsBlueBtn {
-        static getName(): string { return "ui_btn_bule_sprite_sheet_png"; }
-        static getPNG(): string { return require("assets/spritesheets/btn_bule_sprite_sheet.png"); }
-        static getFrameWidth(): number { return 193; }
-        static getFrameHeight(): number { return 71; }
-        static getFrameMax(): number { return 3; }
+        static getName(): string {
+            return "ui_btn_bule_sprite_sheet_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/spritesheets/btn_bule_sprite_sheet.png");
+        }
+
+        static getFrameWidth(): number {
+            return 193;
+        }
+
+        static getFrameHeight(): number {
+            return 71;
+        }
+
+        static getFrameMax(): number {
+            return 3;
+        }
     }
 
     export class SpriteSheetsCloseBtn {
-        static getName(): string { return "ui_btn_close_sprite_sheet_png"; }
-        static getPNG(): string { return require("assets/spritesheets/btn_close_sprite_sheet.png"); }
-        static getFrameWidth(): number { return 118; }
-        static getFrameHeight(): number { return 120; }
-        static getFrameMax(): number { return 3; }
-    }
+        static getName(): string {
+            return "ui_btn_close_sprite_sheet_png";
+        }
 
+        static getPNG(): string {
+            return require("assets/spritesheets/btn_close_sprite_sheet.png");
+        }
+
+        static getFrameWidth(): number {
+            return 118;
+        }
+
+        static getFrameHeight(): number {
+            return 120;
+        }
+
+        static getFrameMax(): number {
+            return 3;
+        }
+    }
 
 
     export class ImageMenuBag {
-        static getName(): string { return "ui_menu_bag_png"; }
-        static getPNG(): string { return require("assets/images/ui/menu_bag.png"); }
+        static getName(): string {
+            return "ui_menu_bag_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/menu_bag.png");
+        }
     }
 
     export class ImageBg {
-        static getName(): string { return "ui_background_png"; }
-        static getPNG(): string { return require("assets/images/ui/background.png"); }
+        static getName(): string {
+            return "ui_background_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/background.png");
+        }
     }
 }
 

@@ -5,6 +5,7 @@ import PhaserSlotDisplay = dragonBones.PhaserSlotDisplay;
 import Slot = dragonBones.Slot;
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import {Avatar} from "../../Assets";
+import * as Assets from "../../Assets";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     private static readonly BONES_SCALE: number = 1;
@@ -21,7 +22,8 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
 
     public constructor(game: Phaser.Game) {
         super(game);
-        this.init();
+        this.myModel = new RoleAvatarModelVO();
+        // this.init();
     }
 
     public get modelLoaded(): boolean {
@@ -240,9 +242,10 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     }
 
     protected init(): void {
-        this.myModel = new RoleAvatarModelVO();
-
-        let dragonbonesData = Globals.game.cache.getItem(Avatar.AvatarBone.getSkeName(), Phaser.Cache.BINARY);
+        if (this.armature) {
+            this.armature.destroy();
+        }
+        let dragonbonesData = Globals.game.cache.getItem(Avatar.AvatarBone.getSkeName(this.myModel.id), Phaser.Cache.BINARY);
 
         const factory = dragonBones.PhaserFactory.factory;
         factory.parseDragonBonesData(dragonbonesData);
@@ -264,6 +267,11 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
 
     protected onUpdateModelUrl(): void {
         let loadNum: number = 0;
+
+        if (!Globals.game.cache.checkBinaryKey(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id))) {
+            this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id), Assets.Avatar.AvatarBone.getSkeUrl(this.myModel.id));
+            ++loadNum;
+        }
 
         for (let obj of this.replaceArr) {
             let key: string = obj.part.replace("#", Globals.Tool.caclNumStr(obj.skin)).replace("$", obj.dir);
@@ -289,6 +297,8 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
             cb.apply(this.mLoadThisObj);
             this.mLoadThisObj = null;
         }
+
+        this.init();
 
         this.replaceSkin();
 

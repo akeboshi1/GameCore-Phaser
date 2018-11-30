@@ -108,7 +108,7 @@ export default class BasicElement extends SceneEntity {
         let ary: Array<string> = this.elementInfo.baseLoc.split("&");
         let tmp: Array<string> = ary[0].split(" ");
         this.baseLoc3 = new Phaser.Point(+(tmp[0]), +(tmp[1]));
-        if (this.elementInfo.dirable === 4) {
+        if (this.elementInfo.dirable.length === 4) {
             if (ary.length > 1) {
                 tmp = ary[1].split(" ");
                 this.baseLoc7 = new Phaser.Point(+(tmp[0]), +(tmp[1]));

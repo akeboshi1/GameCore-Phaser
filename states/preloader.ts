@@ -46,7 +46,7 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadAvatar(): void {
-        this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(), Assets.Avatar.AvatarBone.getSkeUrl());
+
     }
 
     private startGame(): void {

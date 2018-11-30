@@ -1,4 +1,9 @@
+import {op_gameconfig} from "../../../protocol/protocols";
+
 export default class RoleAvatarModelVO {
+    public id: number;
+    public dirable: number[];
+
     public body_base_id: number = 0;
     public body_spec_id: number = 0;
     public body_wing_id: number = 0;
@@ -36,7 +41,7 @@ export default class RoleAvatarModelVO {
     }
 
     public get sign(): string {
-        return [this.body_base_id, this.body_spec_id, this.body_wing_id, this.body_tail_id, this.body_cost_id, this.farm_base_id,
+        return [this.id, this.body_base_id, this.body_spec_id, this.body_wing_id, this.body_tail_id, this.body_cost_id, this.farm_base_id,
             this.farm_spec_id, this.farm_cost_id, this.barm_base_id, this.barm_spec_id, this.barm_cost_id, this.bleg_base_id,
             this.bleg_spec_id, this.bleg_cost_id, this.fleg_base_id, this.fleg_spec_id, this.fleg_cost_id, this.head_base_id,
             this.head_hair_id, this.head_hats_id, this.head_spec_id, this.farm_shld_id, this.farm_weap_id].toString();
@@ -73,52 +78,55 @@ export default class RoleAvatarModelVO {
         this.body_cost_id = this.farm_cost_id = this.barm_cost_id = this.bleg_cost_id = this.fleg_cost_id = this.head_hair_id = 5;
     }
 
-    public changeAvatarModelByModeVO(value: RoleAvatarModelVO): void {
-        if (value.body_base_id >= 0)
-            this.body_base_id = value.body_base_id;
-        if (value.body_spec_id >= 0)
-            this.body_spec_id = value.body_spec_id;
-        if (value.body_wing_id >= 0)
-            this.body_wing_id = value.body_wing_id;
-        if (value.body_tail_id >= 0)
-            this.body_tail_id = value.body_tail_id;
-        if (value.body_cost_id >= 0)
-            this.body_cost_id = value.body_cost_id;
-        if (value.farm_base_id >= 0)
-            this.farm_base_id = value.farm_base_id;
-        if (value.farm_spec_id >= 0)
-            this.farm_spec_id = value.farm_spec_id;
-        if (value.farm_cost_id >= 0)
-            this.farm_cost_id = value.farm_cost_id;
-        if (value.barm_base_id >= 0)
-            this.barm_base_id = value.barm_base_id;
-        if (value.barm_spec_id >= 0)
-            this.barm_spec_id = value.barm_spec_id;
-        if (value.barm_cost_id >= 0)
-            this.barm_cost_id = value.barm_cost_id;
-        if (value.bleg_base_id >= 0)
-            this.bleg_base_id = value.bleg_base_id;
-        if (value.bleg_spec_id >= 0)
-            this.bleg_spec_id = value.bleg_spec_id;
-        if (value.bleg_cost_id >= 0)
-            this.bleg_cost_id = value.bleg_cost_id;
-        if (value.fleg_base_id >= 0)
-            this.fleg_base_id = value.fleg_base_id;
-        if (value.fleg_spec_id >= 0)
-            this.fleg_spec_id = value.fleg_spec_id;
-        if (value.fleg_cost_id >= 0)
-            this.fleg_cost_id = value.fleg_cost_id;
-        if (value.head_base_id >= 0)
-            this.head_base_id = value.head_base_id;
-        if (value.head_hair_id >= 0)
-            this.head_hair_id = value.head_hair_id;
-        if (value.head_hats_id >= 0)
-            this.head_hats_id = value.head_hats_id;
-        if (value.head_spec_id >= 0)
-            this.head_spec_id = value.head_spec_id;
-        if (value.farm_shld_id >= 0)
-            this.farm_shld_id = value.farm_shld_id;
-        if (value.farm_weap_id >= 0)
-            this.farm_weap_id = value.farm_weap_id;
+    public changeAvatarModelByModeVO(value: op_gameconfig.IAvatar): void {
+        this.id = value.id;
+        this.dirable = value.dirable;
+
+        if (value.bodyBaseId >= 0)
+            this.body_base_id = value.bodyBaseId;
+        if (value.bodySpecId >= 0)
+            this.body_spec_id = value.bodySpecId;
+        if (value.bodyWingId >= 0)
+            this.body_wing_id = value.bodyWingId;
+        if (value.bodyTailId >= 0)
+            this.body_tail_id = value.bodyTailId;
+        if (value.bodyCostId >= 0)
+            this.body_cost_id = value.bodyCostId;
+        if (value.farmBaseId >= 0)
+            this.farm_base_id = value.farmBaseId;
+        if (value.farmSpecId >= 0)
+            this.farm_spec_id = value.farmSpecId;
+        if (value.farmCostId >= 0)
+            this.farm_cost_id = value.farmCostId;
+        if (value.barmBaseId >= 0)
+            this.barm_base_id = value.barmBaseId;
+        if (value.barmSpecId >= 0)
+            this.barm_spec_id = value.barmSpecId;
+        if (value.barmCostId >= 0)
+            this.barm_cost_id = value.barmCostId;
+        if (value.blegBaseId >= 0)
+            this.bleg_base_id = value.blegBaseId;
+        if (value.blegSpecId >= 0)
+            this.bleg_spec_id = value.blegSpecId;
+        if (value.blegCostId >= 0)
+            this.bleg_cost_id = value.blegCostId;
+        if (value.flegBaseId >= 0)
+            this.fleg_base_id = value.flegBaseId;
+        if (value.flegSpecId >= 0)
+            this.fleg_spec_id = value.flegSpecId;
+        if (value.flegCostId >= 0)
+            this.fleg_cost_id = value.flegCostId;
+        if (value.headBaseId >= 0)
+            this.head_base_id = value.headBaseId;
+        if (value.headHairId >= 0)
+            this.head_hair_id = value.headHairId;
+        if (value.headHatsId >= 0)
+            this.head_hats_id = value.headHatsId;
+        if (value.headSpecId >= 0)
+            this.head_spec_id = value.headSpecId;
+        if (value.farmShldId >= 0)
+            this.farm_shld_id = value.farmShldId;
+        if (value.farmWeapId >= 0)
+            this.farm_weap_id = value.farmWeapId;
     }
 }

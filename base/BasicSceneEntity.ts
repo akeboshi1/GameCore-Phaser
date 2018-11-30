@@ -29,6 +29,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
 
     public moveToTarget( value: op_client.IMoveData): void { }
 
+    public moveStopTarget( value: op_client.IMovePosition): void { }
+
     protected _ox: number = 0;
 
     public get ox(): number {
@@ -45,24 +47,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
 
     public get oz(): number {
         return this._oz;
-    }
-
-    /**
-     * 所占X格子的列数
-     */
-    protected _cols: number = 1;
-
-    public get cols(): number {
-        return this._cols;
-    }
-
-    /**
-     * 所占Y格子的行数
-     */
-    protected _rows: number = 1;
-
-    public get rows(): number {
-        return this._rows;
     }
 
     public get initilized(): boolean {

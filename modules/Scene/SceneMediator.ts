@@ -1,6 +1,5 @@
 import Globals from "../../Globals";
 import {SceneInfo} from "../../common/struct/SceneInfo";
-import {SceneLoader} from "./view/SceneLoader";
 import {PlayerInfo} from "../../common/struct/PlayerInfo";
 import {SelfRoleElement} from "./elements/SelfRoleElement";
 import {Const} from "../../common/const/Const";
@@ -9,9 +8,8 @@ import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
 import {op_client} from "../../../protocol/protocols";
-import IMoveData = op_client.IMoveData;
-import MoveType = op_client.MoveType;
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
+import {Log} from "../../Log";
 
 export class SceneMediator extends MediatorBase {
     private hasRgistHandler: boolean = false;
@@ -44,6 +42,7 @@ export class SceneMediator extends MediatorBase {
     public registSceneListenerHandler(): void {
         if (!this.hasRgistHandler) {
             Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
+            Globals.MessageCenter.on(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
             this.hasRgistHandler = true;
         }
     }
@@ -51,6 +50,7 @@ export class SceneMediator extends MediatorBase {
     public unRegistSceneListenerHandler(): void {
         if (this.hasRgistHandler) {
             Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
+            Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
             this.hasRgistHandler = false;
         }
     }
@@ -78,11 +78,25 @@ export class SceneMediator extends MediatorBase {
     }
 
     private moveToHandle(moveData: op_client.IMoveData[]): void {
-        let imove: IMoveData;
+        let imove: op_client.IMoveData;
         let entity: BasicSceneEntity;
         for (let i = 0; i < moveData.length; i++) {
             imove = moveData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
+            if (this.view.currentSelfPlayer.uid === imove.moveObjectId)
+                Log.trace("[收到] <--> ", imove.direction, imove.timeSpan, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+            if ( entity )
+                entity.moveToTarget(imove);
+        }
+    }
+
+    private moveStopHandle(posData: op_client.IMovePosition[]): void {
+        let imove: op_client.IMovePosition;
+        let entity: BasicSceneEntity;
+        for (let i = 0; i < posData.length; i++) {
+            imove = posData[i];
+            entity = this.view.getSceneElement(imove.moveObjectId);
+            entity.setPosition(imove.destinationPoint3f.x, imove.destinationPoint3f.y, imove.destinationPoint3f.z);
         }
     }
 

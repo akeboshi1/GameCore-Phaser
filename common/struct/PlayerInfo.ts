@@ -1,6 +1,7 @@
 import RoleAvatarModelVO from "./RoleAvatarModelVO";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
+import {op_gameconfig} from "../../../protocol/protocols";
 
 export class PlayerInfo {
     public actorId: number = 0; //玩家ID
@@ -24,11 +25,11 @@ export class PlayerInfo {
     public constructor() {
         this.model = new RoleAvatarModelVO();
         //todo:
-        this.model.test();
+        // this.model.test();
     }
 
-    public changeAvatarModelByModeVO(modelVO: RoleAvatarModelVO): void {
-        this.model.changeAvatarModelByModeVO(modelVO);
+    public changeAvatarModelByModeVO(mode: op_gameconfig.IAvatar): void {
+        this.model.changeAvatarModelByModeVO(mode);
         Globals.MessageCenter.emit(MessageType.CHANGE_SELF_AVATAR);
     }
 }
