@@ -98,8 +98,8 @@ export class SceneMediator extends MediatorBase {
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId)
                 Log.trace("[收到] <--> ", imove.direction, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
-            if (entity)
-                entity.setPosition(imove.destinationPoint3f.x, imove.destinationPoint3f.y, imove.destinationPoint3f.z);
+            // if (entity)
+                // entity.setPosition(imove.destinationPoint3f.x, imove.destinationPoint3f.y, imove.destinationPoint3f.z);
         }
     }
 

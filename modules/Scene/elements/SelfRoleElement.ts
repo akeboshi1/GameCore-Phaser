@@ -6,8 +6,9 @@ export class SelfRoleElement extends RoleElement {
         super();
     }
 
-    public setMoveData(): void {
-
+    protected onUpdating(deltaTime: number): void {
+        super.onUpdating(deltaTime);
+        Globals.Keyboard.onUpdate();
     }
 
     /**

@@ -66,12 +66,8 @@ export class TickManager extends BaseSingleton {
      * @param thisObj 执行函数对应的this对象
      * @param triggerImmediately 是否立刻执行一次
      */
-    public addFrame(method: Function, thisObj: any, interval: number = 33): void {
+    public addFrame(method: Function, thisObj: any): void {
         this.removeFrame(method, thisObj);
-        // let a = Globals.game.time.time;
-        // let b = Globals.game.time.now;
-        // let c = Globals.game.time.elapsed;
-        // let d = Globals.game.time.elapsedMS;
         let handle: Object = {"method": method, "thisObj": thisObj, "lastTime": this.game.time.now};
         this._frameHandleList.push(handle);
     }
