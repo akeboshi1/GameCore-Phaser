@@ -193,16 +193,16 @@ export default class SceneEntity extends BasicSceneEntity {
                 endP = Globals.Room45Util.tileToPixelCoords(1, 2);
                 break;
             case Direction.UPPER_LEFT:
-                endP = Globals.Room45Util.tileToPixelCoords(0, 2);
+                endP = Globals.Room45Util.tileToPixelCoords(0, 1);
                 break;
             case Direction.LEFT:
-                endP = Globals.Room45Util.tileToPixelCoords(0, 1);
+                endP = Globals.Room45Util.tileToPixelCoords(0, 2);
                 break;
         }
 
-        Log.trace("startP-->", startP, "endP-->", endP);
+        // Log.trace("startP-->", startP, "endP-->", endP);
         moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
-        Log.trace("moveAngle-->", moveAngle);
+        // Log.trace("moveAngle-->", moveAngle);
 
         let _x = this.ox + actualSpeed * Math.cos(moveAngle);
         let _y = this.oy + actualSpeed * Math.sin(moveAngle);
