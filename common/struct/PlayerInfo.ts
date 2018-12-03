@@ -17,10 +17,11 @@ export class PlayerInfo {
     public y: number = 176; // 176
     public z: number = 0;
 
-    public direct: number = 3;
     public mapId: number = 10001;
 
     public model: RoleAvatarModelVO;
+
+    public avatarDir: number; // 默认朝向
 
     public constructor() {
         this.model = new RoleAvatarModelVO();

@@ -2,9 +2,10 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
 import {Const} from "../../../common/const/Const";
 import Point = Phaser.Point;
-import {op_client} from "../../../../protocol/protocols";
+import {op_client, op_virtual_world} from "../../../../protocol/protocols";
 import Direction = op_client.Direction;
 import {Log} from "../../../Log";
+import KeyCode = op_virtual_world.KeyCode;
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable: boolean = true;
@@ -65,15 +66,56 @@ export default class SceneEntity extends BasicSceneEntity {
 
     public moveToTarget(value: op_client.IMoveData): void {
 
-        this.stopWalk();
+        this.walkAngleIndex = value.direction.valueOf();
+        let angle;
+        switch (this.walkAngleIndex) {
+            case Direction.UP:
+                if (this.angleIndex === 1 || this.angleIndex === 3)
+                    angle = 1;
+                else
+                    angle = 7;
+                break;
+            case Direction.DOWN:
+                if (this.angleIndex === 1 || this.angleIndex === 3)
+                    angle = 3;
+                else
+                    angle = 5;
+                break;
+            case Direction.LEFT:
+                if (this.angleIndex === 1 || this.angleIndex === 7)
+                    angle = 1;
+                else
+                    angle = 3;
+                break;
+            case Direction.RIGHT:
+                if (this.angleIndex === 1 || this.angleIndex === 7)
+                    angle = 7;
+                else
+                    angle = 5;
+                break;
+            case Direction.UPPER_RIGHT:
+                angle = 7;
+                break;
+            case Direction.UPPER_LEFT:
+                angle = 1;
+                break;
+            case Direction.LOWER_RIGHT:
+                angle = 5;
+                break;
+            case Direction.LOWER_LEFT:
+                angle = 3;
+                break;
+        }
 
-        this.walkAngleIndex = value.direction;
-        this.setAngleIndex(3);
+        this.setAngleIndex(angle);
         this.mTarget = value.destinationPoint3f;
         this.mTimeSpan = value.timeSpan;
 
         let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
+
         this.mySpeed = distance / this.mTimeSpan;
+
+        Log.trace("行走: distance-->", distance, "direction-->", value.direction, "timeSpan-->", value.timeSpan, "speed-->", this.mySpeed);
 
         this.resumeWalk();
     }
@@ -111,99 +153,116 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected onUpdatingPosition(deltaTime: number): void {
-        this.mTimeSpan -= deltaTime;
-        this.doPathMoving(deltaTime);
+        // Log.trace("deltaTime-->", deltaTime);
+        let delata: number = deltaTime * 1000;
+        if (this.mTimeSpan < delata) {
+            delata = this.mTimeSpan;
+        }
+        this.mTimeSpan -= delata;
+        this.doPathMoving(delata);
+        if (this.mTimeSpan === 0) this.stopWalk();
     }
 
     protected doPathMoving(deltaTime: number): void {
-        let actualSpeed = this.mySpeed * deltaTime;
+        let actualSpeed = this.mySpeed * deltaTime ;
         this.onMove(actualSpeed);
     }
 
     protected onMove(actualSpeed: number): void {
-        if (actualSpeed <= 0) return;
 
         let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
         let endP: Point;
         let moveAngle: number;
-        if (this.walkAngleIndex === Direction.UP) {
-            endP = Globals.Room45Util.tileToPixelCoords(0, 0);
-        } else if (this.walkAngleIndex === Direction.UPPER_RIGHT) {
-            endP = Globals.Room45Util.tileToPixelCoords(1, 0);
-        } else if (this.walkAngleIndex === Direction.RIGHT) {
-            endP = Globals.Room45Util.tileToPixelCoords(2, 0);
-        } else if (this.walkAngleIndex === Direction.LOWER_RIGHT) {
-            endP = Globals.Room45Util.tileToPixelCoords(2, 1);
-        } else if (this.walkAngleIndex === Direction.DOWN) {
-            endP = Globals.Room45Util.tileToPixelCoords(2, 2);
-        } else if (this.walkAngleIndex === Direction.LOWER_LEFT) {
-            endP = Globals.Room45Util.tileToPixelCoords(1, 2);
-        } else if (this.walkAngleIndex === Direction.LEFT) {
-            endP = Globals.Room45Util.tileToPixelCoords(0, 2);
-        } else if (this.walkAngleIndex === Direction.UPPER_LEFT) {
-            endP = Globals.Room45Util.tileToPixelCoords(0, 1);
+        switch (this.walkAngleIndex) {
+            case Direction.UP:
+                endP = Globals.Room45Util.tileToPixelCoords(0, 0);
+                break;
+            case Direction.UPPER_RIGHT:
+                endP = Globals.Room45Util.tileToPixelCoords(1, 0);
+                break;
+            case Direction.RIGHT:
+                endP = Globals.Room45Util.tileToPixelCoords(2, 0);
+                break;
+            case Direction.LOWER_RIGHT:
+                endP = Globals.Room45Util.tileToPixelCoords(2, 1);
+                break;
+            case Direction.DOWN:
+                endP = Globals.Room45Util.tileToPixelCoords(2, 2);
+                break;
+            case Direction.LOWER_LEFT:
+                endP = Globals.Room45Util.tileToPixelCoords(1, 2);
+                break;
+            case Direction.UPPER_LEFT:
+                endP = Globals.Room45Util.tileToPixelCoords(0, 2);
+                break;
+            case Direction.LEFT:
+                endP = Globals.Room45Util.tileToPixelCoords(0, 1);
+                break;
         }
+
+        Log.trace("startP-->", startP, "endP-->", endP);
         moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
+        Log.trace("moveAngle-->", moveAngle);
 
         let _x = this.ox + actualSpeed * Math.cos(moveAngle);
         let _y = this.oy + actualSpeed * Math.sin(moveAngle);
         let _z = this.oz;
 
-        let stopFlag: boolean = false;
-        if (this.walkAngleIndex === Direction.UP && _y <= this.mTarget.y) {
-            _y = this.mTarget.y;
-            stopFlag = true;
-        } else if (this.walkAngleIndex === Direction.UPPER_LEFT) {
-            if (_y <= this.mTarget.y) {
-                _y = this.mTarget.y;
-                stopFlag = true;
-            }
-            if (_x <= this.mTarget.x) {
-                _x = this.mTarget.x;
-                stopFlag = true;
-            }
-        } else if (this.walkAngleIndex === Direction.LEFT && _x <= this.mTarget.x) {
-            _x = this.mTarget.x;
-            stopFlag = true;
-        } else if (this.walkAngleIndex === Direction.LOWER_LEFT) {
-            if (_y >= this.mTarget.y) {
-                _y = this.mTarget.y;
-                stopFlag = true;
-            }
-            if (_x <= this.mTarget.x) {
-                _x = this.mTarget.x;
-                stopFlag = true;
-            }
-        } else if (this.walkAngleIndex === Direction.DOWN && _y >= this.mTarget.y) {
-            _y = this.mTarget.y;
-            stopFlag = true;
-        } else if (this.walkAngleIndex === Direction.LOWER_RIGHT) {
-            if (_y >= this.mTarget.y) {
-                _y = this.mTarget.y;
-                stopFlag = true;
-            }
-            if (_x >= this.mTarget.x) {
-                _x = this.mTarget.x;
-                stopFlag = true;
-            }
-        } else if (this.walkAngleIndex === Direction.RIGHT && _x >= this.mTarget.x) {
-            _x = this.mTarget.x;
-            stopFlag = true;
-        } else if (this.walkAngleIndex === Direction.UPPER_RIGHT) {
-            if (_y <= this.mTarget.y) {
-                _y = this.mTarget.y;
-                stopFlag = true;
-            }
-            if (_x >= this.mTarget.x) {
-                _x = this.mTarget.x;
-                stopFlag = true;
-            }
-        }
+        // let stopFlag: boolean = false;
+        // if (this.walkAngleIndex === Direction.UP && _y <= this.mTarget.y) {
+        //     _y = this.mTarget.y;
+        //     stopFlag = true;
+        // } else if (this.walkAngleIndex === Direction.UPPER_LEFT) {
+        //     if (_y <= this.mTarget.y) {
+        //         _y = this.mTarget.y;
+        //         stopFlag = true;
+        //     }
+        //     if (_x <= this.mTarget.x) {
+        //         _x = this.mTarget.x;
+        //         stopFlag = true;
+        //     }
+        // } else if (this.walkAngleIndex === Direction.LEFT && _x <= this.mTarget.x) {
+        //     _x = this.mTarget.x;
+        //     stopFlag = true;
+        // } else if (this.walkAngleIndex === Direction.LOWER_LEFT) {
+        //     if (_y >= this.mTarget.y) {
+        //         _y = this.mTarget.y;
+        //         stopFlag = true;
+        //     }
+        //     if (_x <= this.mTarget.x) {
+        //         _x = this.mTarget.x;
+        //         stopFlag = true;
+        //     }
+        // } else if (this.walkAngleIndex === Direction.DOWN && _y >= this.mTarget.y) {
+        //     _y = this.mTarget.y;
+        //     stopFlag = true;
+        // } else if (this.walkAngleIndex === Direction.LOWER_RIGHT) {
+        //     if (_y >= this.mTarget.y) {
+        //         _y = this.mTarget.y;
+        //         stopFlag = true;
+        //     }
+        //     if (_x >= this.mTarget.x) {
+        //         _x = this.mTarget.x;
+        //         stopFlag = true;
+        //     }
+        // } else if (this.walkAngleIndex === Direction.RIGHT && _x >= this.mTarget.x) {
+        //     _x = this.mTarget.x;
+        //     stopFlag = true;
+        // } else if (this.walkAngleIndex === Direction.UPPER_RIGHT) {
+        //     if (_y <= this.mTarget.y) {
+        //         _y = this.mTarget.y;
+        //         stopFlag = true;
+        //     }
+        //     if (_x >= this.mTarget.x) {
+        //         _x = this.mTarget.x;
+        //         stopFlag = true;
+        //     }
+        // }
 
         this.setPosition(_x, _y, _z);
-        if (stopFlag) {
-            this.stopWalk();
-        }
+        // if (stopFlag) {
+        //     this.stopWalk();
+        // }
     }
 
     protected checkIsValidDisplayAvatar(): void {
