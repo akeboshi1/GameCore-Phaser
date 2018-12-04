@@ -133,7 +133,7 @@ export class SceneMediator extends MediatorBase {
                 Log.trace("[停下] <--> ", imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity)
-                entity.setPosition(imove.destinationPoint3f.x, imove.destinationPoint3f.y, imove.destinationPoint3f.z);
+                entity.moveStopTarget(imove);
         }
     }
 

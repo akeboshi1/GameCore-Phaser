@@ -122,7 +122,6 @@ export default class SceneEntity extends BasicSceneEntity {
 
     public moveStopTarget(value: op_client.IMovePosition): void {
         this.stopWalk();
-        this.setAngleIndex(3);
         this.setPosition(value.destinationPoint3f.x, value.destinationPoint3f.y, value.destinationPoint3f.z);
     }
 
