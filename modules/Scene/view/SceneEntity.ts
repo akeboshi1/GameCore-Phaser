@@ -109,7 +109,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
         this.setAngleIndex(angle);
         this.mTarget = value.destinationPoint3f;
-        this.mTimeSpan = value.timeSpan;
+        this.mTimeSpan = value.timeSpan - 100;
 
         let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
 

@@ -31,7 +31,8 @@ export class SceneMediator extends MediatorBase {
         if (this._move_graphics == null) {
             this._move_graphics = Globals.game.make.graphics();
             this._move_graphics.clear();
-            this._move_graphics.lineStyle(2, 0x00ff00, 1);
+            this._move_graphics.lineStyle(1, 0x000000, 1);
+            this._move_graphics.beginFill(0x00FFFF);
             Globals.LayerManager.sceneLayer.add(this._move_graphics);
         }
         return this._move_graphics;
@@ -42,8 +43,10 @@ export class SceneMediator extends MediatorBase {
     private get stop_graphics(): Phaser.Graphics {
         if (this._stop_graphics == null) {
             this._stop_graphics = Globals.game.make.graphics();
-            this._stop_graphics.lineStyle(2, 0xff0000, 1);
-            this.view.addChild(this._stop_graphics);
+            this._stop_graphics.clear();
+            this._stop_graphics.lineStyle(1, 0x000000, 1);
+            this._stop_graphics.beginFill(0xff0000);
+            Globals.LayerManager.sceneLayer.add(this._stop_graphics);
         }
         return this._stop_graphics;
     }
@@ -100,9 +103,8 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
     }
 
-    private onDraw(graphics: Phaser.Graphics, ox: number, oy: number, x: number, y: number) {
-        graphics.moveTo(ox, oy);
-        graphics.lineTo(x, y);
+    private onDraw(graphics: Phaser.Graphics, x: number, y: number) {
+        graphics.drawCircle(x, y, 5 );
     }
 
     private moveToHandle(moveData: op_client.IMoveData[]): void {
@@ -112,7 +114,7 @@ export class SceneMediator extends MediatorBase {
             imove = moveData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.move_graphics, this.view.currentSelfPlayer.ox, this.view.currentSelfPlayer.oy, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
                 // Log.trace("[收到] <--> ", imove.direction, imove.timeSpan, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity)
@@ -127,7 +129,7 @@ export class SceneMediator extends MediatorBase {
             imove = posData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.stop_graphics, this.view.currentSelfPlayer.ox, this.view.currentSelfPlayer.oy, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
                 // Log.trace("[收到-停下] <--> ", imove.direction, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity)

@@ -69,7 +69,7 @@ export class KeyboardMod extends BaseSingleton {
 
     private tempKeys: string;
     public onUpdate(): void {
-        Log.trace("Tick--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->")
+        // Log.trace("Tick--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->")
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         let keyArr: number[] = this.getKeyDowns();
