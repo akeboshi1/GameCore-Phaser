@@ -3,6 +3,7 @@ import {IAnimatedObject} from "./IAnimatedObject";
 import {ITickedObject} from "./ITickedObject";
 import Globals from "../Globals";
 import {MessageType} from "../common/const/MessageType";
+import {Tick} from "../common/tick/Tick";
 
 export class BasicAnimatedViewElement extends BasicViewElement implements IAnimatedObject, ITickedObject {
     public watchStageResize: boolean = false;
@@ -12,6 +13,7 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
     private mRegisterForUpdates: boolean = true;
     private mInitialRegisterForUpdates: boolean = true;
     private mIsRegisteredForUpdates: boolean = false;
+    private mTick: Tick;
 
     public get registerForUpdates(): boolean {
         return this.mRegisterForUpdates;
@@ -23,14 +25,16 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
         if (this.mRegisterForUpdates && !this.mIsRegisteredForUpdates) {
             // Need to register.
             this.mIsRegisteredForUpdates = true;
-            Globals.TickManager.addTick(this.onTick, this);
-            Globals.TickManager.addFrame(this.onFrame, this);
+            this.mTick = new Tick(16);
+            this.mTick.setCallBack(this.onTick, this);
+            this.mTick.setRenderCallBack(this.onFrame, this);
+            this.mTick.start();
         }
         else if (!this.mRegisterForUpdates && this.mIsRegisteredForUpdates) {
             // Need to unregister.
             this.mIsRegisteredForUpdates = false;
-            Globals.TickManager.removeTick(this.onTick, this);
-            Globals.TickManager.removeFrame(this.onFrame, this);
+            this.mTick.onDispose();
+            this.mTick = null;
         }
     }
 

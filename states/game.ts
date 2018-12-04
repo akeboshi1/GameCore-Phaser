@@ -10,6 +10,7 @@ export default class Game extends Phaser.State {
     }
 
     public create(): void {
+        dragonBones.PhaserFactory.init(this.game);
         Globals.TickManager.init(this.game);
         Globals.Keyboard.init(this.game);
         Globals.LayerManager.init(this.game);
@@ -24,12 +25,10 @@ export default class Game extends Phaser.State {
         }
     }
 
-    public update(): void {
-        Globals.TickManager.onTickCall();
-    }
-
-    public render(): void {
-        Globals.TickManager.onFrameCall();
+    public render(game: Phaser.Game): void {
+        // Log.trace("render---->>>", this.game.time.now);
+        Globals.TickManager.onEnterFrame();
+        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1.0);
         this.game.debug.text(this.game.time.fps.toString(), 2, 14, "#a7aebe");
         // this.game.debug.text(this.game.world.width+"|"+this.game.world.height+"|"+this.game.time.fps.toString(), 2, 14, '#a7aebe');
         // this.game.debug.cameraInfo(this.game.camera, 2, 32, '#a7aebe');

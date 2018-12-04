@@ -7,6 +7,7 @@ import {IEntityComponent} from "./IEntityComponent";
 import Point = Phaser.Point;
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 import {op_client} from "../../protocol/protocols";
+import {Log} from "../Log";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     //basic
@@ -100,6 +101,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     public onTick(deltaTime: number): void {
+        // Log.trace("更新-->", deltaTime);
         this.onPreUpdate(deltaTime);
         this.onUpdating(deltaTime);
         //may remove is the updating.
@@ -107,6 +109,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     }
 
     public onFrame(deltaTime: number): void {
+        // Log.trace("渲染-->", deltaTime);
         if (this.isValidDisplay) {
             this.display.visible = true;
 

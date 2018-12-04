@@ -3,6 +3,7 @@ import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class RoleBonesAvatar extends BasicAvatar {
     public hasPalceHold: boolean = true;
@@ -60,7 +61,6 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     public onTick(deltaTime: number): void {
         super.onTick(deltaTime);
-
         if (this.mAngleIndexDirty || this.mAnimationDirty || this.mSkinDirty) {
             this.mBodyAvatar.invalidAnimationControlFunc();
         }
@@ -69,7 +69,6 @@ export class RoleBonesAvatar extends BasicAvatar {
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
         this.mBodyAvatar.onFrame(deltaTime);
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(deltaTime);
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
         this.mSkinDirty = false;
@@ -81,30 +80,6 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mBodyAvatar.visible = false;
         this.addChild(this.mBodyAvatar);
     }
-
-    // public get x() {
-    //     return super.x;
-    // }
-    //
-    // public set x(isoX) {
-    //     this.isoX = isoX;
-    // }
-    //
-    // public get y() {
-    //     return super.y;
-    // }
-    //
-    // public set y(isoY) {
-    //     this.isoY = isoY;
-    // }
-    //
-    // public get z() {
-    //     return this.isoZ;
-    // }
-    //
-    // public set z(isoZ) {
-    //     this.isoZ = isoZ;
-    // }
 
     protected onInitializeComplete(): void {
     }

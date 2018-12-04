@@ -6,6 +6,7 @@ import Slot = dragonBones.Slot;
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import {Avatar} from "../../Assets";
 import * as Assets from "../../Assets";
+import {Log} from "../../Log";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     private static readonly BONES_SCALE: number = 1;
@@ -57,6 +58,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
             this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
         this.armature.animation.play(animationName + "_" + t_direct);
+        Log.trace("[动画]", animationName + "_" + t_direct);
     }
 
     /**

@@ -7,6 +7,7 @@ import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import RoleAvatarModelVO from "../../../common/struct/RoleAvatarModelVO";
 import Point = Phaser.Point;
 import {SceneView} from "../view/SceneView";
+import {Log} from "../../../Log";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
