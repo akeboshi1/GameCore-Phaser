@@ -109,13 +109,13 @@ export default class SceneEntity extends BasicSceneEntity {
 
         this.setAngleIndex(angle);
         this.mTarget = value.destinationPoint3f;
-        this.mTimeSpan = value.timeSpan - 100;
+        this.mTimeSpan = value.timeSpan;
 
         let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
 
         this.mySpeed = distance / this.mTimeSpan;
 
-        Log.trace("行走: distance-->", distance, "direction-->", value.direction, "timeSpan-->", value.timeSpan, "speed-->", this.mySpeed);
+        // Log.trace("行走: distance-->", distance, "direction-->", value.direction, "timeSpan-->", value.timeSpan, "speed-->", this.mySpeed);
 
         this.resumeWalk();
     }
