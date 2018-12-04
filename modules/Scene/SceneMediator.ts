@@ -115,7 +115,7 @@ export class SceneMediator extends MediatorBase {
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
-                Log.trace("[行走] <--> ", imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                // Log.trace("[行走] <--> ", imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity)
                 entity.moveToTarget(imove);
@@ -130,7 +130,7 @@ export class SceneMediator extends MediatorBase {
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
-                Log.trace("[停下] <--> ", imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                // Log.trace("[停下] <--> ", imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity)
                 entity.moveStopTarget(imove);

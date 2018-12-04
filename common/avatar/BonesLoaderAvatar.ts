@@ -58,7 +58,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
             this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
         this.armature.animation.play(animationName + "_" + t_direct);
-        Log.trace("[动画]", animationName + "_" + t_direct);
+        // Log.trace("[动画]", animationName + "_" + t_direct);
     }
 
     /**
