@@ -61,7 +61,7 @@ export class SceneMediator extends MediatorBase {
 
         Globals.SceneManager.popupScene();
 
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
+        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight, mapSceneInfo.atanAngle);
 
         Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
 

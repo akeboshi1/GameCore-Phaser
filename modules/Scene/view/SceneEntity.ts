@@ -170,38 +170,37 @@ export default class SceneEntity extends BasicSceneEntity {
 
     protected onMove(actualSpeed: number): void {
 
-        let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
-        let endP: Point;
         let moveAngle: number;
+        let atanAngle: number = Globals.Room45Util.atanAngle;
         switch (this.walkAngleIndex) {
             case Direction.UP:
-                endP = Globals.Room45Util.tileToPixelCoords(0, 0);
+                moveAngle = Math.PI / 2 * 3;
                 break;
             case Direction.UPPER_RIGHT:
-                endP = Globals.Room45Util.tileToPixelCoords(1, 0);
+                moveAngle = Math.PI * 2 - atanAngle;
                 break;
             case Direction.RIGHT:
-                endP = Globals.Room45Util.tileToPixelCoords(2, 0);
+                moveAngle = 0;
                 break;
             case Direction.LOWER_RIGHT:
-                endP = Globals.Room45Util.tileToPixelCoords(2, 1);
+                moveAngle = atanAngle;
                 break;
             case Direction.DOWN:
-                endP = Globals.Room45Util.tileToPixelCoords(2, 2);
+                moveAngle = Math.PI / 2;
                 break;
             case Direction.LOWER_LEFT:
-                endP = Globals.Room45Util.tileToPixelCoords(1, 2);
+                moveAngle = Math.PI - atanAngle;
                 break;
             case Direction.UPPER_LEFT:
-                endP = Globals.Room45Util.tileToPixelCoords(0, 1);
+                moveAngle = Math.PI + atanAngle;
                 break;
             case Direction.LEFT:
-                endP = Globals.Room45Util.tileToPixelCoords(0, 2);
+                moveAngle = Math.PI;
                 break;
         }
 
         // Log.trace("startP-->", startP, "endP-->", endP);
-        moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
+        // moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
         // Log.trace("moveAngle-->", moveAngle);
 
         let _x = this.ox + actualSpeed * Math.cos(moveAngle);

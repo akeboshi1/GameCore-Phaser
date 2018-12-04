@@ -5,6 +5,7 @@ import Point3 = Phaser.Plugin.Isometric.Point3;
 import {Log} from "../../Log";
 
 export class Room45Util extends BaseSingleton {
+
     public rows: number;
     public cols: number;
     public tilewidth: number;
@@ -15,6 +16,11 @@ export class Room45Util extends BaseSingleton {
     private _transform;
 
     private _originX: number;
+    private _atanAngle: number = 0;
+
+    public get atanAngle(): number {
+        return this._atanAngle;
+    }
 
     public get originX(): number {
         return this._originX;
@@ -32,7 +38,7 @@ export class Room45Util extends BaseSingleton {
         return this._mapTotalHeight;
     }
 
-    public setting(rows: number, cols: number, tilewidth: number, tileheight: number): void {
+    public setting(rows: number, cols: number, tilewidth: number, tileheight: number, atanAngle: number): void {
         this.rows = rows;
         this.cols = cols;
         this.tilewidth = tilewidth;
@@ -43,6 +49,7 @@ export class Room45Util extends BaseSingleton {
         this._mapTotalWidth = (this.rows + this.cols) * (this.tilewidth / 2);
         this._mapTotalHeight = (this.rows + this.cols) * (this.tileheight / 2);
         this._transform = [Math.cos(this._projectionAngle), Math.sin(this._projectionAngle)];
+        this._atanAngle = atanAngle;
     }
 
     /**
