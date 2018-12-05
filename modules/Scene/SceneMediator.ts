@@ -25,27 +25,21 @@ export class SceneMediator extends MediatorBase {
         return this.viewComponent as SceneView;
     }
 
-    private _move_graphics: Phaser.Graphics;
+    private _move_graphics: MyGraphics;
 
-    private get move_graphics(): Phaser.Graphics {
-        if (this._move_graphics == null) {
-            this._move_graphics = Globals.game.make.graphics();
-            this._move_graphics.clear();
-            this._move_graphics.lineStyle(1, 0x000000, 1);
-            this._move_graphics.beginFill(0x00FFFF);
+    private get move_graphics(): MyGraphics {
+        if (this._move_graphics === undefined) {
+            this._move_graphics = new MyGraphics(Globals.game, 0x00FFFF);
             Globals.LayerManager.sceneLayer.add(this._move_graphics);
         }
         return this._move_graphics;
     }
 
-    private _stop_graphics: Phaser.Graphics;
+    private _stop_graphics: MyGraphics;
 
-    private get stop_graphics(): Phaser.Graphics {
-        if (this._stop_graphics == null) {
-            this._stop_graphics = Globals.game.make.graphics();
-            this._stop_graphics.clear();
-            this._stop_graphics.lineStyle(1, 0x000000, 1);
-            this._stop_graphics.beginFill(0xff0000);
+    private get stop_graphics(): MyGraphics {
+        if (this._stop_graphics === undefined) {
+            this._stop_graphics = new MyGraphics(Globals.game, 0xFF0000);
             Globals.LayerManager.sceneLayer.add(this._stop_graphics);
         }
         return this._stop_graphics;
@@ -103,7 +97,8 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
     }
 
-    private onDraw(graphics: Phaser.Graphics, x: number, y: number) {
+    private onDraw(graphics: MyGraphics, x: number, y: number) {
+        graphics.haha();
         graphics.drawCircle(x, y, 5 );
     }
 
@@ -160,5 +155,19 @@ export class SceneMediator extends MediatorBase {
     }
 
     private changedToMapSceneStartHandler(): void {
+    }
+}
+
+class MyGraphics extends Phaser.Graphics {
+    private _color: number;
+    constructor(game: Phaser.Game, color: number) {
+        super(game);
+        this._color = color;
+    }
+
+    public haha(): void {
+        this.clear();
+        this.lineStyle(1, 0x000000, 1);
+        this.beginFill(this._color);
     }
 }

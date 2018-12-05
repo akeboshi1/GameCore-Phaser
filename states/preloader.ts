@@ -1,5 +1,9 @@
 import {Atlases, Avatar, UI} from "../Assets";
 import * as Assets from "../Assets";
+import {PBpacket} from "net-socket-packet";
+import {op_virtual_world} from "../../protocol/protocols";
+import Globals from "../Globals";
+import {GameConfig} from "../GameConfig";
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
     private preloadFrameSprite: Phaser.Sprite = null;
@@ -55,7 +59,13 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadTitle(): void {
-        this.game.state.start("selectrole");
+        if (GameConfig.isEditor) {
+            this.game.state.start("game");
+        } else {
+            this.game.state.start("selectrole");
+        }
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
+        Globals.SocketManager.send(pkt);
     }
 }
 

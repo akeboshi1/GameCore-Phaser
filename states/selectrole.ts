@@ -5,8 +5,6 @@ import Globals from "../Globals";
 export default class SelectRole extends Phaser.State {
     public create(): void {
         Globals.SocketManager.addHandler(new Handler(this.game));
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
-        Globals.SocketManager.send(pkt);
     }
 }
 

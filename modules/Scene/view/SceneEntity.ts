@@ -14,7 +14,7 @@ export default class SceneEntity extends BasicSceneEntity {
     protected mySpeed: number = 4; //
     protected mAngleIndex: number = 0;
     protected mWalkAngleIndex: number = 0; //走路
-    protected mTarget: op_client.IPBPoint3f;
+    protected mTarget: Phaser.Point;
     protected mTimeSpan: number;
 
     protected myIsWalking: boolean = false;
@@ -31,7 +31,6 @@ export default class SceneEntity extends BasicSceneEntity {
         this.mWalkAngleIndex = value;
     }
 
-    // Moving
     public get angleIndex(): number {
         return this.mAngleIndex;
     }
@@ -108,7 +107,7 @@ export default class SceneEntity extends BasicSceneEntity {
         }
 
         this.setAngleIndex(angle);
-        this.mTarget = value.destinationPoint3f;
+        this.mTarget.set(value.destinationPoint3f.x >> 0, value.destinationPoint3f.y >> 0);
         this.mTimeSpan = value.timeSpan;
 
         let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
@@ -123,6 +122,11 @@ export default class SceneEntity extends BasicSceneEntity {
     public moveStopTarget(value: op_client.IMovePosition): void {
         this.stopWalk();
         this.setPosition(value.destinationPoint3f.x, value.destinationPoint3f.y, value.destinationPoint3f.z);
+    }
+
+    protected onInitialize(): void {
+        super.onInitialize();
+        this.mTarget = new Phaser.Point();
     }
 
     protected resumeWalk(): void {
@@ -152,21 +156,82 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected onUpdatingPosition(deltaTime: number): void {
-        this.doPathMoving(deltaTime);
+        if (this.ox === this.mTarget.x && this.oy === this.mTarget.y) {
+            this.stopWalk();
+        } else {
+            this.doPathMoving(deltaTime);
+        }
     }
 
     protected doPathMoving(deltaTime: number): void {
-        let actualSpeed = this.mySpeed * deltaTime ;
+        let actualSpeed = this.mySpeed * deltaTime;
         this.onMove(actualSpeed);
     }
 
     protected onMove(actualSpeed: number): void {
 
         let atanAngle: number = Globals.Tool.caculateDirectionRadianByTwoPoint2(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
+        let targetX: number = this.ox + actualSpeed * Math.cos(atanAngle);
+        let targetY: number = this.oy + actualSpeed * Math.sin(atanAngle);
+        switch (this.walkAngleIndex) {
+            case Direction.UP:
+                if (targetY < this.mTarget.y) {
+                    targetY = this.mTarget.y;
+                }
+                break;
+            case Direction.DOWN:
+                if (targetY > this.mTarget.y) {
+                    targetY = this.mTarget.y;
+                }
+                break;
+            case Direction.LEFT:
+                if (targetX < this.mTarget.x) {
+                    targetX = this.mTarget.x;
+                }
+                break;
+            case Direction.RIGHT:
+                if (targetX > this.mTarget.x) {
+                    targetX = this.mTarget.x;
+                }
+                break;
+            case Direction.UPPER_LEFT:
+                if (targetY < this.mTarget.y) {
+                    targetY = this.mTarget.y;
+                }
+                if (targetX < this.mTarget.x) {
+                    targetX = this.mTarget.x;
+                }
+                break;
+            case Direction.UPPER_RIGHT:
+                if (targetY < this.mTarget.y) {
+                    targetY = this.mTarget.y;
+                }
+                if (targetX > this.mTarget.x) {
+                    targetX = this.mTarget.x;
+                }
+                break;
+            case Direction.LOWER_LEFT:
+                if (targetY > this.mTarget.y) {
+                    targetY = this.mTarget.y;
+                }
+                if (targetX < this.mTarget.x) {
+                    targetX = this.mTarget.x;
+                }
+                break;
+            case Direction.LOWER_RIGHT:
+                if (targetY > this.mTarget.y) {
+                    targetY = this.mTarget.y;
+                }
+                if (targetX > this.mTarget.x) {
+                    targetX = this.mTarget.x;
+                }
+                break;
+        }
+
         // Log.trace("moveAngle-->", moveAngle);
 
-        let _x = this.ox + actualSpeed * Math.cos(atanAngle);
-        let _y = this.oy + actualSpeed * Math.sin(atanAngle);
+        let _x = targetX;
+        let _y = targetY;
         let _z = this.oz;
 
         this.setPosition(_x, _y, _z);

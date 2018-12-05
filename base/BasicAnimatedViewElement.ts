@@ -25,7 +25,7 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
         if (this.mRegisterForUpdates && !this.mIsRegisteredForUpdates) {
             // Need to register.
             this.mIsRegisteredForUpdates = true;
-            this.mTick = new Tick(33);
+            this.mTick = new Tick(30);
             this.mTick.setCallBack(this.onTick, this);
             this.mTick.setRenderCallBack(this.onFrame, this);
             this.mTick.start();

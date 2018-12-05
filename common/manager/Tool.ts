@@ -86,7 +86,7 @@ export class Tool extends BaseSingleton {
     }
 
     public caculateDirectionRadianByTwoPoint2(startX: number, startY: number, endX: number, endY: number): number {
-        return this.adjustRadianBetween0And2PI(Math.atan2(endY - startY, endX - startX));
+        return Math.atan2(endY - startY, endX - startX);
     }
 
     public adjustRadianBetween0And2PI(radian: number): number {
@@ -96,7 +96,7 @@ export class Tool extends BaseSingleton {
             radian += this.DOUBLE_PI;
         }
 
-        if (this.DOUBLE_PI - radian < this.SMALLEST_NUMBER) radian = 0;
+        // if (this.DOUBLE_PI - radian < this.SMALLEST_NUMBER) radian = 0;
 
         return radian;
     }
