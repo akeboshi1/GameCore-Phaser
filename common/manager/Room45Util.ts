@@ -16,10 +16,9 @@ export class Room45Util extends BaseSingleton {
     private _transform;
 
     private _originX: number;
-    private _atanAngle: number = 0;
 
-    public get atanAngle(): number {
-        return this._atanAngle;
+    constructor() {
+        super();
     }
 
     public get originX(): number {
@@ -38,7 +37,7 @@ export class Room45Util extends BaseSingleton {
         return this._mapTotalHeight;
     }
 
-    public setting(rows: number, cols: number, tilewidth: number, tileheight: number, atanAngle: number): void {
+    public setting(rows: number, cols: number, tilewidth: number, tileheight: number): void {
         this.rows = rows;
         this.cols = cols;
         this.tilewidth = tilewidth;
@@ -49,7 +48,6 @@ export class Room45Util extends BaseSingleton {
         this._mapTotalWidth = (this.rows + this.cols) * (this.tilewidth / 2);
         this._mapTotalHeight = (this.rows + this.cols) * (this.tileheight / 2);
         this._transform = [Math.cos(this._projectionAngle), Math.sin(this._projectionAngle)];
-        this._atanAngle = atanAngle;
     }
 
     /**

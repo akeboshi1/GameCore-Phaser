@@ -11,7 +11,6 @@ export namespace Const {
     }
 
     export enum GameConst {
-        SHARE_OBJECT_CACHE_SWIP_TIME = 1,
         MAP_TILE_DEPTH = 12,
         MAX_TERRAIN_LOAD_COUNT = 1,
         OUT_OF_CAMERA_RELEASE_WAITE_TIME = 1,
@@ -20,8 +19,8 @@ export namespace Const {
     }
 
     export enum UIConst {
-        UI_DEFALUT_WIDTH = 500,
-        UI_DEFALUT_HEIGHT = 300
+        UI_DEFAULT_WIDTH = 500,
+        UI_DEFAULT_HEIGHT = 300
     }
 
     export enum SceneElementType {

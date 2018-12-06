@@ -5,6 +5,7 @@ import {op_client, op_gateway} from "../../../protocol/protocols";
 import {Log} from "../../Log";
 
 export class SceneInfo {
+
     public mapId: number = 1;
     public zStart: number = 0; //TODO:
     public zEnd: number = 0; //TODO:
@@ -13,6 +14,15 @@ export class SceneInfo {
 
     private _mapTotalWidth: number = 0;
     private _atanAngle: number = 0;
+    private _bgSound: number = 1;
+
+    public get bgSound(): number {
+        return this._bgSound;
+    }
+
+    public set bgSound(value: number) {
+        this._bgSound = value;
+    }
 
     public set atanAngle(value: number) {
         this._atanAngle = value;

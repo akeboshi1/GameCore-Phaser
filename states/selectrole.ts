@@ -25,7 +25,9 @@ class Handler extends PacketHandler {
     private handleSelectCharacter(packet: PBpacket): void {
         let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER = packet.content;
         Globals.DataCenter.PlayerData.setMainPlayerInfo(character.character);
-        Globals.DataCenter.PlayerData.mainPlayerInfo.model.changeAvatarModelByModeVO(character.character.avatar);
+        Globals.DataCenter.PlayerData.mainPlayerInfo.changeAvatarModelByModeVO(character.character.avatar);
+        Globals.DataCenter.PlayerData.mainPlayerInfo.setWalkableArea(character.character.walkableArea);
+        Globals.DataCenter.PlayerData.mainPlayerInfo.setCollisionArea(character.character.collisionArea);
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         Globals.SocketManager.send(pkt);

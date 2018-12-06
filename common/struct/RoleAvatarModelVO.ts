@@ -48,6 +48,7 @@ export default class RoleAvatarModelVO {
     }
 
     public test(): void {
+        this.id = 10000;
         this.body_base_id = 1;
         this.body_spec_id = 0;
         this.body_wing_id = 0;
@@ -79,6 +80,8 @@ export default class RoleAvatarModelVO {
     }
 
     public changeAvatarModelByModeVO(value: op_gameconfig.IAvatar): void {
+        this.test();
+        return;
         this.id = value.id;
         this.dirable = value.dirable;
 

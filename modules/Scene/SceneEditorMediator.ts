@@ -57,13 +57,14 @@ export class SceneEditorMediator extends SceneMediator {
 
     }
 
-    protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
+    protected changedToMapSceneCompleteHandler(): void {
+        let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
         //clear the last one scene.
         if (this.view) this.view.clearScene();
 
         Globals.SceneManager.popupScene();
 
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight, mapSceneInfo.atanAngle);
+        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
         Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
 

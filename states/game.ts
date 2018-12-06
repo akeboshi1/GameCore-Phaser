@@ -11,6 +11,7 @@ export default class Game extends Phaser.State {
 
     public create(): void {
         dragonBones.PhaserFactory.init(this.game);
+        Globals.SoundManager.init(this.game);
         Globals.TickManager.init(this.game);
         Globals.Keyboard.init(this.game);
         Globals.LayerManager.init(this.game);

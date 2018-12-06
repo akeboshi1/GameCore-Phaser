@@ -29,7 +29,7 @@ class Handler extends PacketHandler {
         Globals.MessageCenter.emit(MessageType.SCENE_MOVE_STOP, moveData.movePostion);
     }
 
-    private onErrorHandler(packet: PBpacket) {
+    private onErrorHandler(packet: PBpacket): void {
         let err: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         console.error(`error[${err.responseStatus}]: ${err.msg}`);
     }

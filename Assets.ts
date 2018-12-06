@@ -69,6 +69,28 @@ export namespace Avatar {
     }
 }
 
+export namespace Sound {
+    export class BgSound {
+        static getName(id: number): string {
+            return "bg_sound_" + id + "_mp3";
+        }
+
+        static getUrl(id: number): string {
+            return require("assets/sound/bg/" + id + ".mp3");
+        }
+    }
+
+    export class GameSound {
+        static getName(id: number): string {
+            return "game_sound" + id + "_mp3";
+        }
+
+        static getUrl(id: number): string {
+            return require("assets/sound/game/" + id + ".mp3");
+        }
+    }
+}
+
 export namespace UI {
     export class SpriteSheetsBlueBtn {
         static getName(): string {

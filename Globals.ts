@@ -11,6 +11,7 @@ import {SceneManager} from "./common/manager/SceneManager";
 import {ISocketConnection} from "./interface/ISocketConnection";
 import {SocketManager} from "./common/manager/SocketManager";
 import {ServiceCenter} from "./common/manager/ServiceCenter";
+import {SoundManager} from "./common/manager/SoundManager";
 
 export default class Globals {
     private static _game: Phaser.Game;
@@ -28,6 +29,13 @@ export default class Globals {
      */
     public static get SocketManager(): SocketManager {
         return SocketManager.getInstance();
+    }
+
+    /**
+     * sound
+     */
+    public static get SoundManager(): SoundManager {
+        return SoundManager.getInstance();
     }
 
     /**

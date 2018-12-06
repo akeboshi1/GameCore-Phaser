@@ -122,6 +122,9 @@ export class BasicRoleElement extends SceneEntity {
         this.mouseEnable = false;
 
         this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);
+
+        this.display.addChildAt(this.characterInfo.walkableArea.graphics, 0);
+        this.display.addChildAt(this.characterInfo.collisionArea.graphics, 0);
     }
 
     protected createDisplay(): any {

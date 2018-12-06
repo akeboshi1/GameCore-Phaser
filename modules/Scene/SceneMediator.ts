@@ -10,12 +10,13 @@ import {MessageType} from "../../common/const/MessageType";
 import {op_client} from "../../../protocol/protocols";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {Log} from "../../Log";
+import {SceneLoader} from "./view/SceneLoader";
 
 export class SceneMediator extends MediatorBase {
     private hasRegisterHandler: boolean = false;
     private flowManager: FlowManager;
 
-    // private sceneLoader: SceneLoader;
+    private sceneLoader: SceneLoader;
 
     constructor() {
         super();
@@ -75,13 +76,15 @@ export class SceneMediator extends MediatorBase {
         }
     }
 
-    protected changedToMapSceneCompleteHandler(mapSceneInfo: SceneInfo): void {
+    protected changedToMapSceneCompleteHandler(): void {
         //clear the last one scene.
+        let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
+
         if (this.view) this.view.clearScene();
 
         Globals.SceneManager.popupScene();
 
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight, mapSceneInfo.atanAngle);
+        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
         Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
 
@@ -89,7 +92,12 @@ export class SceneMediator extends MediatorBase {
 
         //初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+        // currentCharacterInfo.walkableArea.draw(mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
+        currentCharacterInfo.collisionArea.draw(mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
         this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId, currentCharacterInfo, true) as SelfRoleElement;
+
+        // 播放场景音效
+        Globals.SoundManager.playBgSound(1);
 
         //set camera
         Globals.SceneManager.pushScene(this.view);
@@ -139,19 +147,17 @@ export class SceneMediator extends MediatorBase {
 
     private onEnterScene(): void {
 
-        // this.sceneLoader = new SceneLoader();
-        // this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
+        this.sceneLoader = new SceneLoader();
+        this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
 
         this.flowManager = new FlowManager();
         this.flowManager.initialize();
         this.flowManager.setView(this.view);
 
         //mapScene
-        // this.sceneLoader.changedToMap(Globals.DataCenter.PlayerData.mainPlayerInfo.mapId);
+        this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
 
         this.registerSceneListenerHandler();
-
-        this.changedToMapSceneCompleteHandler(Globals.DataCenter.SceneData.mapInfo);
     }
 
     private changedToMapSceneStartHandler(): void {
