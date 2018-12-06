@@ -1,5 +1,6 @@
 import Globals from "../../Globals";
 import {op_gameconfig} from "../../../protocol/protocols";
+import {DrawArea} from "./DrawArea";
 
 export class ElementInfo {
     public id: number;
@@ -17,6 +18,9 @@ export class ElementInfo {
     public attributes: op_gameconfig.IAttribute[];
     public dirable: number[];
 
+    public walkableArea: DrawArea;
+    public collisionArea: DrawArea;
+
     public speed: number = 4;
 
     public constructor() {
@@ -28,5 +32,13 @@ export class ElementInfo {
             value = base[key];
             this[key] = value;
         }
+    }
+
+    public setWalkableArea(value: string, orgin: Phaser.Point): void {
+        this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
+    }
+
+    public setCollisionArea(value: string, orgin: Phaser.Point): void {
+        this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
     }
 }

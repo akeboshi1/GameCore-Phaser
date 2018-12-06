@@ -72,6 +72,8 @@ export class SceneView extends SceneBase {
         let element: ElementInfo;
         for (; i < len; i++) {
             element = this.mapSceneInfo.elementConfig[i];
+            // element.walkableArea.draw(this.mapSceneInfo.tileWidth >> 1, this.mapSceneInfo.tileHeight >> 1);
+            element.collisionArea.draw(this.mapSceneInfo.tileWidth >> 1, this.mapSceneInfo.tileHeight >> 1);
             this.addSceneElement(Const.SceneElementType.ELEMENT, element.id, element);
         }
     }

@@ -69,6 +69,9 @@ export default class BasicElement extends SceneEntity {
         this.setAngleIndex(this.elementInfo.dir);
         this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
         this.loadModel(this.elementInfo.type.toString());
+
+        // this.display.parent.addChildAt(this.elementInfo.walkableArea.graphics, 0);
+        // this.display.parent.addChildAt(this.elementInfo.collisionArea.graphics, 0);
     }
 
     protected onUpdated(deltaTime: number): void {
@@ -78,19 +81,22 @@ export default class BasicElement extends SceneEntity {
 
     protected onUpdatingDisplay(deltaTime: number): void {
 
-        let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
+        let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
+        // this.elementInfo.walkableArea.graphics.x = this.baseLoc ? -this.baseLoc.x : 0;
+        // this.elementInfo.collisionArea.graphics.y = this.baseLoc ? -this.baseLoc.y : 0;
+        // let p3 = Globals.Room45Util.p2top3(this.ox , this.oy, this.oz);
         // Log.trace(p3.x,p3.y,p3.z);
-        this.display.isoX = p3.x - (this.baseLoc ? this.baseLoc.x : 0);
-        this.display.isoY = p3.y - (this.baseLoc ? this.baseLoc.y : 0);
+        this.display.isoX = p3.x;
+        this.display.isoY = p3.y;
         this.display.isoZ = p3.z;
-        // let graphics = Globals.game.make.graphics();
-        // graphics.clear();
-        // // graphics.lineStyle(1, 0x00ff00, 1);
-        // graphics.beginFill(0x0000ff);
-        // graphics.drawCircle(this.baseLoc ? this.baseLoc.x : 0, this.baseLoc ? this.baseLoc.y : 0, 5);
-        // graphics.endFill();
-        // this.display.addChild(graphics);
-        // Log.trace(this.display.isoX,this.display.isoY,this.display.isoZ);
+
+        let graphics = Globals.game.make.graphics(this.ox, this.oy);
+        graphics.clear();
+        graphics.beginFill(0x0000ff);
+        graphics.drawCircle(0, 0, 5);
+        graphics.endFill();
+        Globals.LayerManager.sceneLayer.add(graphics);
+
         if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 

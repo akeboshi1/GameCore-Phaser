@@ -90,10 +90,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            let key = Images.ImagesElement.getName(+this.myModelURL);
-            let png = Images.ImagesElement.getPNG(+this.myModelURL);
-            let json = Images.ImagesElement.getJSONArray(+this.myModelURL);
-            this.game.load.atlasJSONHash(key, Images.ImagesElement.getPNG(+this.myModelURL), Images.ImagesElement.getJSONArray(+this.myModelURL));
+            this.game.load.atlasJSONHash(Images.ImagesElement.getName(+this.myModelURL), Images.ImagesElement.getPNG(+this.myModelURL), Images.ImagesElement.getJSONArray(+this.myModelURL));
             this.game.load.start();
         }
     }

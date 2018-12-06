@@ -63,11 +63,6 @@ export class BasicRoleElement extends SceneEntity {
         this.invalidAnimation();
     }
 
-    // protected onUpdatingPosition(deltaTime: number): void {
-    //     let actualSpeed = this.mySpeed * deltaTime;
-    //     this.doAngleMoving(actualSpeed);
-    // }
-
     protected onAvatarAnimationChanged(): void {
         (<RoleBonesAvatar>this.display).animationName = this.myIsWalking ? Const.ModelStateType.BONES_WALK : this.myAnimationName;
         (<RoleBonesAvatar>this.display).angleIndex = this.mAngleIndex;
