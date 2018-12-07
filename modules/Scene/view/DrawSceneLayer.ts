@@ -1,5 +1,4 @@
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
-import Globals from "../../../Globals";
 import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {ElementInfo} from "../../../common/struct/ElementInfo";
 import {PlayerInfo} from "../../../common/struct/PlayerInfo";
@@ -35,7 +34,7 @@ export class DrawSceneLayer extends BasicSceneLayer {
         super.onFrame(deltaTime);
         let len: number = this.graphicsList.length;
         for (let i = 0; i < len; i++) {
-            this.graphicsList[i].onFrame(deltaTime);
+            this.graphicsList[i].onTick(deltaTime);
         }
     }
 }

@@ -16,7 +16,6 @@ export class ElementInfo {
     public baseLoc: string;
     public animations: op_gameconfig.IAnimation[];
     public attributes: op_gameconfig.IAttribute[];
-    public dirable: number[];
 
     public walkableArea: DrawArea;
     public collisionArea: DrawArea;

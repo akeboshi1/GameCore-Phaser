@@ -1,9 +1,9 @@
 import {Room45Util} from "../manager/Room45Util";
 import Globals from "../../Globals";
-import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {IDisposeObject} from "../../base/IDisposeObject";
+import {ITickedObject} from "../../base/ITickedObject";
 
-export class DrawArea implements IAnimatedObject, IDisposeObject {
+export class DrawArea implements ITickedObject, IDisposeObject {
     protected areaStr: string;
     protected _orgin: Phaser.Point;
     protected areaArr: number[][];
@@ -61,7 +61,7 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
         return this._graphics;
     }
 
-    public onFrame(deltaTime: number): void {
+    public onTick(deltaTime: number): void {
         if (this.mPosDirty) {
             this.graphics.x = this.ox;
             this.graphics.y = this.oy;
