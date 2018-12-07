@@ -17,7 +17,6 @@ export class SceneData extends BaseSingleton {
         this._mapInfo.setConfig(value.cols, value.rows, value.zStart, value.zEnd, value.tileWidth, value.tileHeight);
         this._mapInfo.setTerrainInfo(value.layers);
         this._mapInfo.setElementInfo(value.elements);
-        this._mapInfo.atanAngle = value.atanAngle;
         if ( this.initialize === false ) {
             Globals.MessageCenter.emit(MessageType.SCENE_DATA_INITIALIZE);
             this._initialize = true;

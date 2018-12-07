@@ -13,7 +13,6 @@ export class SceneInfo {
     private _elementConfig: Array<ElementInfo>;
 
     private _mapTotalWidth: number = 0;
-    private _atanAngle: number = 0;
     private _bgSound: number = 1;
 
     public get bgSound(): number {
@@ -22,14 +21,6 @@ export class SceneInfo {
 
     public set bgSound(value: number) {
         this._bgSound = value;
-    }
-
-    public set atanAngle(value: number) {
-        this._atanAngle = value;
-    }
-
-    public get atanAngle(): number {
-        return this._atanAngle;
     }
 
     public get mapTotalWidth(): number {

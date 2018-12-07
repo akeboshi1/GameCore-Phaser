@@ -3,6 +3,7 @@ import {Const} from "../../../common/const/Const";
 import {TerrainSceneLayer} from "../view/TerrainSceneLayer";
 import Globals from "../../../Globals";
 import IsoSprite = Phaser.Plugin.Isometric.IsoSprite;
+import {GameConfig} from "../../../GameConfig";
 
 export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
     public data: any;
@@ -34,7 +35,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
         // let p = this.game.world.toLocal(p2, this);
         this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
             this.camera.width, this.camera.height, p2.x - this.itemWidth / 2, p2.y, this.itemWidth, this.itemHeight);
-        if (this.mTerrainItemIsInCamera) {
+        if (this.mTerrainItemIsInCamera || GameConfig.isEditor) {
             this.mTerrainItemOutCameraTime = 0;
 
             if (!this.mTerrainItemDisplayObjectCreated) {
