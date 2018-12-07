@@ -100,6 +100,12 @@ export class BasicRoleElement extends SceneEntity {
         this.setPosition(_x, _y, _z);
     }
 
+    //Position
+    public setPosition(x: number, y: number, z: number): void {
+        super.setPosition(x, y, z);
+        this.characterInfo.collisionArea.setPosition(x, y, z);
+    }
+
     protected onUpdating(deltaTime: number): void {
         if (this.mAnimationDirty) {
             this.onAvatarAnimationChanged();
@@ -118,7 +124,6 @@ export class BasicRoleElement extends SceneEntity {
 
         this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);
 
-        this.display.addChildAt(this.characterInfo.walkableArea.graphics, 0);
         this.display.addChildAt(this.characterInfo.collisionArea.graphics, 0);
     }
 

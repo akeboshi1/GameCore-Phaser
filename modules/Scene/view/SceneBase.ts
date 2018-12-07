@@ -9,12 +9,14 @@ import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {HashMap} from "../util/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
+import {DrawSceneLayer} from "./DrawSceneLayer";
 
 export class SceneBase extends SceneBasic {
     public mapSceneInfo: SceneInfo;
 
     //layers...
     public terrainGridLayer: TerrainGridLayer = null;
+    public drawSceneLayer: DrawSceneLayer = null;
     public terrainSceneLayer: TerrainSceneLayer = null;
     public topSceneLayer: DisplaySortableSceneLayer = null;
     public middleSceneLayer: DisplaySortableSceneLayer = null;
@@ -31,6 +33,7 @@ export class SceneBase extends SceneBasic {
         this.topSceneLayer.onTick(deltaTime);
         this.middleSceneLayer.onTick(deltaTime);
         this.bottomSceneLayer.onTick(deltaTime);
+        this.drawSceneLayer.onTick(deltaTime);
     }
 
     public onFrame(deltaTime: number): void {
@@ -41,6 +44,7 @@ export class SceneBase extends SceneBasic {
         this.middleSceneLayer.onFrame(deltaTime);
         this.bottomSceneLayer.onFrame(deltaTime);
         this.terrainSceneLayer.onFrame(deltaTime);
+        this.drawSceneLayer.onFrame(deltaTime);
 
     }
 
@@ -153,6 +157,10 @@ export class SceneBase extends SceneBasic {
         this.terrainGridLayer = new TerrainGridLayer(this.game);
         this.terrainGridLayer.scene = this;
         this.addChild(this.terrainGridLayer);
+
+        this.drawSceneLayer = new DrawSceneLayer(this.game);
+        this.drawSceneLayer.scene = this;
+        this.addChild(this.drawSceneLayer);
 
         this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.bottomSceneLayer.scene = this;

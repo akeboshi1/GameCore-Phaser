@@ -10,7 +10,8 @@ export default class SelectRole extends Phaser.State {
 
 class Handler extends PacketHandler {
     private game: Phaser.Game;
-    constructor( game: Phaser.Game ) {
+
+    constructor(game: Phaser.Game) {
         super();
         this.game = game;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.handleSelectCharacter);
@@ -26,8 +27,8 @@ class Handler extends PacketHandler {
         let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER = packet.content;
         Globals.DataCenter.PlayerData.setMainPlayerInfo(character.character);
         Globals.DataCenter.PlayerData.mainPlayerInfo.changeAvatarModelByModeVO(character.character.avatar);
-        Globals.DataCenter.PlayerData.mainPlayerInfo.setWalkableArea(character.character.walkableArea, new Phaser.Point(1, 1));
-        Globals.DataCenter.PlayerData.mainPlayerInfo.setCollisionArea(character.character.collisionArea, new Phaser.Point(1, 1));
+        // Globals.DataCenter.PlayerData.mainPlayerInfo.setWalkableArea(character.character.walkableArea, new Phaser.Point(2, 1));
+        Globals.DataCenter.PlayerData.mainPlayerInfo.setCollisionArea(character.character.collisionArea, new Phaser.Point(character.character.originPoint[0], character.character.originPoint[1]));
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         Globals.SocketManager.send(pkt);

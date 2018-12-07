@@ -96,6 +96,9 @@ export class SceneMediator extends MediatorBase {
         currentCharacterInfo.collisionArea.draw( mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
         this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId, currentCharacterInfo, true) as SelfRoleElement;
 
+        this.view.drawSceneLayer.addPlayer(currentCharacterInfo);
+        this.view.drawSceneLayer.initializeMap(mapSceneInfo);
+
         // 播放场景音效
         Globals.SoundManager.playBgSound(1);
 

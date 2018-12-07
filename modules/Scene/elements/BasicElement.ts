@@ -69,9 +69,12 @@ export default class BasicElement extends SceneEntity {
         this.setAngleIndex(this.elementInfo.dir);
         this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
         this.loadModel(this.elementInfo.type.toString());
+    }
 
-        // this.display.parent.addChildAt(this.elementInfo.walkableArea.graphics, 0);
-        // this.display.parent.addChildAt(this.elementInfo.collisionArea.graphics, 0);
+    //Position
+    public setPosition(x: number, y: number, z: number): void {
+        super.setPosition(x, y, z);
+        this.elementInfo.collisionArea.setPosition(x, y, z);
     }
 
     protected onUpdated(deltaTime: number): void {

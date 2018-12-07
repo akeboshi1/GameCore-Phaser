@@ -6,20 +6,31 @@ import {Log} from "../../Log";
 
 export class Room45Util extends BaseSingleton {
 
+
     public rows: number;
     public cols: number;
     public tilewidth: number;
     public tileheight: number;
-    private _hTilewidth: number;
-    private _hTileheight: number;
     private _projectionAngle: number = Math.PI / 6;
     private _transform;
-
-    private _originX: number;
 
     constructor() {
         super();
     }
+
+    private _hTilewidth: number;
+
+    public get hTilewidth(): number {
+        return this._hTilewidth;
+    }
+
+    private _hTileheight: number;
+
+    public get hTileheight(): number {
+        return this._hTileheight;
+    }
+
+    private _originX: number;
 
     public get originX(): number {
         return this._originX;

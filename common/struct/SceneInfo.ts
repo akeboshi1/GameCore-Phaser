@@ -118,8 +118,8 @@ export class SceneInfo {
         for (; i < len; i++) {
             element = new ElementInfo();
             element.setInfo(elements[i]);
-            element.setWalkableArea(elements[i].walkableArea, new Phaser.Point(1, 1));
-            element.setCollisionArea(elements[i].collisionArea, new Phaser.Point(1, 1));
+            // element.setWalkableArea(elements[i].walkableArea, new Phaser.Point(1, 1));
+            element.setCollisionArea(elements[i].collisionArea, new Phaser.Point(elements[i].originPoint[0], elements[i].originPoint[1]));
             this._elementConfig.push(element);
         }
     }
