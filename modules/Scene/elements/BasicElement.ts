@@ -5,6 +5,7 @@ import SceneEntity from "../view/SceneEntity";
 import {Const} from "../../../common/const/Const";
 import ModelStateType = Const.ModelStateType;
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
+import {op_gameconfig} from "../../../../protocol/protocols";
 
 export default class BasicElement extends SceneEntity {
     protected baseLoc: Phaser.Point;
@@ -98,7 +99,9 @@ export default class BasicElement extends SceneEntity {
 
     private initBaseLoc(): void {
         //图片坐标
-        let tmp: Array<string> = this.elementInfo.baseLoc.split(",");
+        let config: op_gameconfig.IAnimation = this.elementInfo.config;
+        if (config === null) return;
+        let tmp: Array<string> = config.baseLoc.split(",");
         this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
     }
 }
