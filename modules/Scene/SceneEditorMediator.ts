@@ -94,9 +94,5 @@ export class SceneEditorMediator extends SceneMediator {
       let screenX: number = pointer.position.x;
       let screenY: number = pointer.position.y;
       let point: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
-      let element: ElementInfo = new ElementInfo();
-      element.type = 10001;
-      element.collisionArea.draw(this.mapSceneInfo.tileWidth >> 1, this.mapSceneInfo.tileHeight >> 1);
-      this.addSceneElement(Const.SceneElementType.ELEMENT, element.id, element);
   }
 }
