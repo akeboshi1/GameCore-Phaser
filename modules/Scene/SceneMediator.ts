@@ -59,7 +59,7 @@ export class SceneMediator extends MediatorBase {
         super.onRemove();
     }
 
-    //server handler
+    // server handler
     public registerSceneListenerHandler(): void {
         if (!this.hasRegisterHandler) {
             Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
@@ -77,7 +77,7 @@ export class SceneMediator extends MediatorBase {
     }
 
     protected changedToMapSceneCompleteHandler(): void {
-        //clear the last one scene.
+        // clear the last one scene.
         let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
 
         if (this.view) this.view.clearScene();
@@ -90,7 +90,7 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
-        //初始化当前玩家其他信息
+        // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         // currentCharacterInfo.walkableArea.draw(Globals.game, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
         currentCharacterInfo.collisionArea.draw( mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
@@ -102,7 +102,7 @@ export class SceneMediator extends MediatorBase {
         // 播放场景音效
         Globals.SoundManager.playBgSound(1);
 
-        //set camera
+        // set camera
         Globals.SceneManager.pushScene(this.view);
         Globals.game.camera.follow(this.view.currentSelfPlayer.display);
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);

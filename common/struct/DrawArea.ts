@@ -15,7 +15,6 @@ export class DrawArea implements ITickedObject, IDisposeObject {
         this._color = color;
         this._orgin = orgin;
         this._room45 = new Room45Util();
-        this._graphics = Globals.game.make.graphics();
         this.init();
     }
 
@@ -80,6 +79,8 @@ export class DrawArea implements ITickedObject, IDisposeObject {
 
     public draw(hTileWidth: number, hTileHeight: number): void {
         if (this.areaArr === undefined || this.areaArr === null || this.areaArr.length === 0) return;
+
+        if (this._graphics === undefined || this._graphics === null ) this._graphics = Globals.game.make.graphics();
 
         this.room45.setting(this.rows, this.cols, hTileWidth, hTileHeight);
         this._graphics.clear();
