@@ -2,8 +2,8 @@ import Globals from "../../Globals";
 
 export class Tick {
     protected m_Timer: number = 0;
-    protected m_StopTime: number = 0;	//停止时间
-    protected m_AccumulativeTime: number = 0;	//累计时间
+    protected m_StopTime: number = 0;	// 停止时间
+    protected m_AccumulativeTime: number = 0;	// 累计时间
     protected m_StopFlag: boolean = true;
     protected m_EndFlag: boolean = false;
     protected m_CallBack: Function;
@@ -27,9 +27,9 @@ export class Tick {
         this.m_CallBackThisObj = thisObj;
     }
 
-    //具体执行过程，使用override
+    // 具体执行过程，使用override
     protected update(): void {
-        if (null !== this.m_CallBack) this.m_CallBack.apply(this.m_CallBackThisObj, [this.m_Delay]);
+        if (undefined !== this.m_CallBack) this.m_CallBack.apply(this.m_CallBackThisObj, [this.m_Delay]);
     }
 
     public setRenderCallBack(callBack: Function, thisObj: any): void {
@@ -37,9 +37,9 @@ export class Tick {
         this.m_RenderCallThisObj = thisObj;
     }
 
-    //这里把计算和渲染分开，用于帧数降低时候，避免无谓的渲染消耗
+    // 这里把计算和渲染分开，用于帧数降低时候，避免无谓的渲染消耗
     protected render(timeElapsed: number): void {
-        if (null !== this.m_RenderCall) this.m_RenderCall.apply(this.m_RenderCallThisObj, [timeElapsed]);
+        if (undefined !== this.m_RenderCall) this.m_RenderCall.apply(this.m_RenderCallThisObj, [timeElapsed]);
     }
 
     public onTick(timeElapsed: number): void {

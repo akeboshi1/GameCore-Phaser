@@ -19,12 +19,19 @@ export class EditorData extends BaseSingleton {
         this.m_EditorMode = value;
     }
 
-    public changeEditorMode(value: IEditorMode) {
-        if (this.m_EditorMode == null) {
-            this.setEditorMode(value);
+    public changeEditorMode(mode: string, data?: any) {
+        let boo = false;
+        if (this.m_EditorMode === undefined) {
+            boo = true;
+            this.m_EditorMode.mode = mode;
+            this.m_EditorMode.data = data;
         } else {
-            this.m_EditorMode.mode = value.mode;
-            this.m_EditorMode.data = value.data;
+            boo = this.m_EditorMode.mode !== mode;
+            this.m_EditorMode.mode = mode;
+            this.m_EditorMode.data = data;
+        }
+        if (boo) {
+          Globals.MessageCenter.emit(MessageType.EDITOR_CHANGE_MODE);
         }
     }
 

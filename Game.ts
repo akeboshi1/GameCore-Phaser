@@ -61,7 +61,6 @@ export default class Game extends Phaser.Game implements IGame {
     }
 
     public setEditorMode(mode: IEditorMode) {
-        Globals.DataCenter.EditorData.changeEditorMode(mode);
-        Globals.MessageCenter.emit(MessageType.EDITOR_CHANGE_MODE);
+        Globals.DataCenter.EditorData.changeEditorMode(mode.mode, mode.data);
     }
 }

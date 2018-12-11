@@ -159,7 +159,7 @@ export class SceneMediator extends MediatorBase {
         this.flowManager.initialize();
         this.flowManager.setView(this.view);
 
-        //mapScene
+        // mapScene
         this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
 
         this.registerSceneListenerHandler();
