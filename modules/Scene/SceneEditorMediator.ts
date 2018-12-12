@@ -10,6 +10,9 @@ import {Tick} from "../../common/tick/Tick";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {Const} from "../../common/const/Const";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
+import {PBpacket} from "net-socket-packet";
+import {op_editor, op_virtual_world} from "../../../protocol/protocols";
+import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
@@ -99,6 +102,10 @@ export class SceneEditorMediator extends SceneMediator {
 
   private sendSceneBrush(value: Phaser.Point): void {
     Log.trace("点击地块-->", value);
+    let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_ELEMENT_POINT_RESULT);
+    let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
+    content.point = { x: value.x, y: value.y};
+    Globals.SocketManager.send(pkt);
   }
 
   private sendSceneEraser(value: Phaser.Point): void {
