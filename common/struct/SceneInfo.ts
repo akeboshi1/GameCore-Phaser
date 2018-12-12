@@ -130,20 +130,15 @@ export class SceneInfo {
         let colIndex: number = 0;
         let i: number = 0;
         let j: number = 0;
-        let str: string;
+        let type: number;
         let terrain: TerrainInfo;
         for (; i < len; i++) {
             colIndex = i;
             for (j = 0; j < len2; j++) {
                 rowIndex = j;
-                str = data[i][j];
+                type = +data[i][j];
                 terrain = new TerrainInfo();
-                if (str !== "" && str !== "0") {
-                    let arr = str.split("-");
-                    terrain.type = +arr[0];
-                    terrain.subIdx = +arr[1];
-                    terrain.colorIdx = +arr[2];
-                }
+                terrain.type = type;
                 terrain.row = rowIndex;
                 terrain.col = colIndex;
                 arr.push(terrain);
@@ -156,9 +151,9 @@ export class SceneInfo {
         let data: Array<any> = [];
         let _width: number = this._cols;
         let _height: number = this._rows;
-        for (let i: number = 0; i < _width; i++) {
+        for (let i = 0; i < _width; i++) {
             data[i] = new Array();
-            for (let j: number = 0; j < _height; j++) {
+            for (let j = 0; j < _height; j++) {
                 data[i][j] = new Array();
             }
         }
