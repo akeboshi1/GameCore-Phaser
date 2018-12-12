@@ -42,9 +42,9 @@ export class ElementLoaderAvatar extends Phaser.Group implements IAnimatedObject
     /**
      * 动画
      */
-    public playAnimation(animationName: string, scaleX: number, scaleY: number): void {
+    public playAnimation(animationName: string, scaleX: number): void {
         this.element.animations.play(animationName);
-        this.element.scale.set(scaleX, scaleY);
+        this.element.scale.x = scaleX;
     }
 
     public setAnimationControlFunc(value: Function, thisObj: any): void {

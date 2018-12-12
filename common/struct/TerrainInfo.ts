@@ -1,6 +1,10 @@
 export class TerrainInfo {
     public col: number;
     public row: number;
-    public type: number;
-    public id: string;
+
+    public colorIdx: number = 0;
+
+    public type: number = 0;
+
+    public subIdx: number = 0;
 }
