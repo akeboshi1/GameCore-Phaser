@@ -69,29 +69,51 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     protected initializeTerrainItems(datas: Array<any>): void {
         let i: number = 0;
         let len: number = datas.length;
-        let element: BasicTerrainItem;
         let value: TerrainInfo;
+        let element: BasicTerrainItem;
         for (; i < len; i++) {
             value = datas[i];
-            if (value.type === 0) {
-                continue;
-                //element = new TerrainNullItem(Globals.game, this);
-            } else {
-                // Log.trace(value.row,value.col);
+            if (value.type > 0) {
                 element = new TerrainImageItem(Globals.game, this);
+                this.setTerrainItem(element, value);
+                this.addChild(element);
+                this._terrainItems.push(element);
             }
-            element.camera = this.camera;
-            element.data = value;
-            let p = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
-            let p3 = Globals.Room45Util.p2top3(p.x, p.y, 0);
-            element.isoX = p3.x;
-            element.isoY = p3.y;
-            element.isoZ = p3.z;
-            element.itemWidth = this.mapSceneInfo.tileWidth;
-            element.itemHeight = this.mapSceneInfo.tileHeight;
+        }
+    }
 
+    private getItemByPos(col: number, row: number): BasicTerrainItem {
+        let len = this._terrainItems.length;
+        for (let i = 0; i < len; i++) {
+            if (this._terrainItems[i].data.col === col && this._terrainItems[i].data.row === row) {
+                return this._terrainItems[i];
+            }
+        }
+        return null;
+    }
+
+    public addTerrainItem(value: TerrainInfo): void {
+        let element: BasicTerrainItem = this.getItemByPos(value.col, value.row);
+        if (element) {
+            element.dispose();
+        } else {
+            element = new TerrainImageItem(Globals.game, this);
             this.addChild(element);
             this._terrainItems.push(element);
         }
+        this.setTerrainItem(element, value);
+    }
+
+    protected setTerrainItem(element: BasicTerrainItem, value: TerrainInfo): void {
+        element.camera = this.camera;
+        element.data = value;
+        element.col = value.col;
+        let p = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
+        let p3 = Globals.Room45Util.p2top3(p.x, p.y, 0);
+        element.isoX = p3.x;
+        element.isoY = p3.y;
+        element.isoZ = p3.z;
+        element.itemWidth = this.mapSceneInfo.tileWidth;
+        element.itemHeight = this.mapSceneInfo.tileHeight;
     }
 }

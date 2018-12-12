@@ -64,6 +64,7 @@ export class SceneMediator extends MediatorBase {
         if (!this.hasRegisterHandler) {
             Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
             Globals.MessageCenter.on(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
+            Globals.MessageCenter.on(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
             this.hasRegisterHandler = true;
         }
     }
@@ -141,6 +142,19 @@ export class SceneMediator extends MediatorBase {
             // }
             if (entity) {
                 entity.moveStopTarget(imove);
+            }
+        }
+    }
+
+    private changeElementHandle(changeData: op_client.IChangeAnimation[]): void {
+        let ichange: op_client.IChangeAnimation;
+        let entity: any;
+        for (let i = 0; i < changeData.length; i++) {
+            ichange = changeData[i];
+            entity = this.view.getSceneElement(ichange.id);
+            if (entity) {
+                entity.setAnimation(ichange.animationName);
+                entity.setScaleX(ichange.scale);
             }
         }
     }

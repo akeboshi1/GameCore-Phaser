@@ -9,8 +9,8 @@ export class Room45Util extends BaseSingleton {
 
     public rows: number;
     public cols: number;
-    public tilewidth: number;
-    public tileheight: number;
+    public tileWidth: number;
+    public tileHeight: number;
     private _projectionAngle: number = Math.PI / 6;
     private _transform;
 
@@ -18,16 +18,16 @@ export class Room45Util extends BaseSingleton {
         super();
     }
 
-    private _hTilewidth: number;
+    private _hTileWidth: number;
 
-    public get hTilewidth(): number {
-        return this._hTilewidth;
+    public get hTileWidth(): number {
+        return this._hTileWidth;
     }
 
-    private _hTileheight: number;
+    private _hTileHeight: number;
 
-    public get hTileheight(): number {
-        return this._hTileheight;
+    public get hTileHeight(): number {
+        return this._hTileHeight;
     }
 
     private _originX: number;
@@ -48,16 +48,16 @@ export class Room45Util extends BaseSingleton {
         return this._mapTotalHeight;
     }
 
-    public setting(rows: number, cols: number, tilewidth: number, tileheight: number): void {
+    public setting(rows: number, cols: number, tileWidth: number, tileHeight: number): void {
         this.rows = rows;
         this.cols = cols;
-        this.tilewidth = tilewidth;
-        this.tileheight = tileheight;
-        this._hTilewidth = this.tilewidth / 2;
-        this._hTileheight = this.tileheight / 2;
-        this._originX = this.rows * this._hTilewidth;
-        this._mapTotalWidth = (this.rows + this.cols) * (this.tilewidth / 2);
-        this._mapTotalHeight = (this.rows + this.cols) * (this.tileheight / 2);
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this._hTileWidth = this.tileWidth / 2;
+        this._hTileHeight = this.tileHeight / 2;
+        this._originX = this.rows * this._hTileWidth;
+        this._mapTotalWidth = (this.rows + this.cols) * (this.tileWidth / 2);
+        this._mapTotalHeight = (this.rows + this.cols) * (this.tileHeight / 2);
         this._transform = [Math.cos(this._projectionAngle), Math.sin(this._projectionAngle)];
     }
 
@@ -102,7 +102,7 @@ export class Room45Util extends BaseSingleton {
      * @version Egret 3.0.3
      */
     public tileToPixelCoords(tileX: number, tileY: number): Point {
-        let temp = new Point((tileX - tileY) * this._hTilewidth + this._originX, (tileX + tileY) * this._hTileheight);
+        let temp = new Point((tileX - tileY) * this._hTileWidth + this._originX, (tileX + tileY) * this._hTileHeight);
         return temp;
     }
 
@@ -113,7 +113,7 @@ export class Room45Util extends BaseSingleton {
      * @version Egret 3.0.3
      */
     private pixelToTileX(x: number, y: number): number {
-        let temp: number = (y / this.tileheight) + ((x - this._originX) / this.tilewidth);
+        let temp: number = (y / this.tileHeight) + ((x - this._originX) / this.tileWidth);
         return temp;
     }
 
@@ -124,7 +124,7 @@ export class Room45Util extends BaseSingleton {
      * @version Egret 3.0.3
      */
     private pixelToTileY(y: number, x: number): number {
-        let temp = (y / this.tileheight) - ((x - this._originX) / this.tilewidth);
+        let temp = (y / this.tileHeight) - ((x - this._originX) / this.tileWidth);
         return temp;
     }
 }

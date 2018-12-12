@@ -14,6 +14,7 @@ export class MessageType {
     public static SCENE_CHANGE_TO: string = "SCENE_CHANGE_TO";
     public static SCENE_MOVE_TO: string = "scene_move_to";
     public static SCENE_MOVE_STOP: string = "scene_move_stop";
+    public static CHANGE_ELEMENT_ANIMATION: string = "change_element_animation";
 
     public static SCENE_DATA_INITIALIZE: string = "scene_data_initialize";
 

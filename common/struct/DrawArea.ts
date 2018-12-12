@@ -71,8 +71,8 @@ export class DrawArea implements ITickedObject, IDisposeObject {
 
     public setPosition(x: number, y: number, z: number): void {
         if (this.ox === x && this.oy === y && this.oz === z) return;
-        this._ox = x - this.room45.originX - (this._orgin.x - this._orgin.y) * this.room45.hTilewidth;
-        this._oy = y - (this._orgin.x + this._orgin.y) * this.room45.hTileheight;
+        this._ox = x - this.room45.originX - (this._orgin.x - this._orgin.y) * this.room45.hTileWidth;
+        this._oy = y - (this._orgin.x + this._orgin.y) * this.room45.hTileHeight;
         this._oz = z;
         this.mPosDirty = true;
     }

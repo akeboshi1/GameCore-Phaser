@@ -10,6 +10,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
     public isoX: number = 0;
     public isoY: number = 0;
     public isoZ: number = 0;
+    public col: number  = 0;
     public itemWidth: number = 0;
     public itemHeight: number = 0;
     public camera: Phaser.Camera;
