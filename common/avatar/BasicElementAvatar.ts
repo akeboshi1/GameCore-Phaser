@@ -9,12 +9,20 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold: boolean = true;
     protected mBodyAvatar: ElementLoaderAvatar;
     protected mScaleDirty: boolean = false;
-    protected mAnimationName: string = "";
+    protected mAnimationName: string = Const.ModelStateType.ELEMENT_IDLE;
     protected mAnimationDirty: boolean = false;
     protected mScaleX: number = 1;
+    protected mScaleY: number = 1;
 
     constructor(game: Phaser.Game) {
         super(game);
+    }
+
+    protected onInitialize(): void {
+        this.mBodyAvatar = new ElementLoaderAvatar(Globals.game);
+        this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
+        this.mBodyAvatar.visible = false;
+        this.addChild(this.mBodyAvatar);
     }
 
     public get scaleX(): number {
@@ -22,8 +30,21 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     }
 
     public set scaleX(value: number) {
-        this.mScaleX = value;
-        this.mScaleDirty = true;
+        if (this.mScaleX !== value) {
+            this.mScaleX = value;
+            this.mScaleDirty = true;
+        }
+    }
+
+    public get scaleY(): number {
+        return this.mScaleY;
+    }
+
+    public set scaleY(value: number) {
+        if (this.mScaleY !== value) {
+            this.mScaleY = value;
+            this.mScaleDirty = true;
+        }
     }
 
     public get animationName(): string {
@@ -31,13 +52,34 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     }
 
     public set animationName(value: string) {
-        this.mAnimationName = value;
-        this.mAnimationDirty = true;
+        if (this.mAnimationName !== value) {
+            this.mAnimationName = value;
+            this.mAnimationDirty = true;
+        }
     }
 
     public loadModel(elementInfo: ElementInfo): void {
         this.mBodyAvatar.setAnimationConfig(elementInfo.animations);
         this.mBodyAvatar.loadModel(elementInfo.type, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+    }
+
+    protected bodyControlHandler(boneAvatar: ElementLoaderAvatar): void {
+        boneAvatar.playAnimation(this.animationName, this.scaleX, this.scaleY);
+    }
+
+    protected bodyAvatarPartLoadStartHandler(): void {
+        if (this.hasPlaceHold) this.onAddPlaceHoldAvatarPart();
+    }
+
+    protected bodyAvatarPartLoadCompleteHandler(): void {
+        if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
+        this.mBodyAvatar.visible = true;
+    }
+
+    protected onAddPlaceHoldAvatarPart(): void {
+    }
+
+    protected onRemovePlaceHoldAvatarPart(): void {
     }
 
     public onTick(deltaTime: number): void {
@@ -56,31 +98,5 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
 
     public dispose(): void {
         super.dispose();
-    }
-
-    protected onInitialize(): void {
-        this.mBodyAvatar = new ElementLoaderAvatar(Globals.game);
-        this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.mBodyAvatar.visible = false;
-        this.addChild(this.mBodyAvatar);
-    }
-
-    protected bodyControlHandler(boneAvatar: ElementLoaderAvatar): void {
-        boneAvatar.playAnimation(this.animationName, this.scaleX);
-    }
-
-    protected bodyAvatarPartLoadStartHandler(): void {
-        if (this.hasPlaceHold) this.onAddPlaceHoldAvatarPart();
-    }
-
-    protected bodyAvatarPartLoadCompleteHandler(): void {
-        if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        this.mBodyAvatar.visible = true;
-    }
-
-    protected onAddPlaceHoldAvatarPart(): void {
-    }
-
-    protected onRemovePlaceHoldAvatarPart(): void {
     }
 }

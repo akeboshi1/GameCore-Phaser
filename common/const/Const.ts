@@ -32,7 +32,9 @@ export namespace Const {
         BONES_JUMP = "jump",
         BONES_RUN = "run",
         BONES_STAND = "stand",
-        BONES_WALK = "walk"
+        BONES_WALK = "walk",
+        ELEMENT_IDLE = "idle",
+        ELEMENT_WALK = "walk"
     }
 
     export enum AvatarSlotType {

@@ -2,6 +2,8 @@ import Globals from "../../../Globals";
 import {ElementInfo} from "../../../common/struct/ElementInfo";
 import {BasicElementAvatar} from "../../../common/avatar/BasicElementAvatar";
 import SceneEntity from "../view/SceneEntity";
+import {Const} from "../../../common/const/Const";
+import ModelStateType = Const.ModelStateType;
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "../../../../protocol/protocols";
 
@@ -9,7 +11,7 @@ export default class BasicElement extends SceneEntity {
     protected baseLoc: Phaser.Point;
     protected mAnimationDirty: boolean = false;
     protected mScaleX: number = 1;
-    protected myAnimationName: string = "";
+    protected myAnimationName: string = ModelStateType.ELEMENT_IDLE;
 
     public constructor() {
         super();
@@ -21,26 +23,24 @@ export default class BasicElement extends SceneEntity {
 
     public setAnimation(value: string): void {
         // Log.trace("角度-->"+value);
-        this.myAnimationName = value;
+        if (this.myAnimationName !== value) {
+            this.myAnimationName = value;
 
-        this.invalidAnimation();
+            this.invalidAnimation();
+        }
     }
 
     public setScaleX(value: number): void {
         // Log.trace("角度-->"+value);
-        this.mScaleX = value;
+        if (this.mScaleX !== value) {
+            this.mScaleX = value;
 
-        this.invalidAnimation();
+            this.invalidAnimation();
+        }
     }
 
     public loadModel(value: ElementInfo) {
         (<BasicElementAvatar>this.display).loadModel(value);
-    }
-
-    // Position
-    public setPosition(x: number, y: number, z: number): void {
-        super.setPosition(x, y, z);
-        this.elementInfo.collisionArea.setPosition(x, y, z);
     }
 
     protected invalidAnimation(): void {
@@ -72,6 +72,12 @@ export default class BasicElement extends SceneEntity {
         this.setScaleX(this.elementInfo.scale);
     }
 
+    // Position
+    public setPosition(x: number, y: number, z: number): void {
+        super.setPosition(x, y, z);
+        this.elementInfo.collisionArea.setPosition(x, y, z);
+    }
+
     protected onUpdatingDisplay(deltaTime: number): void {
         let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
 
@@ -90,7 +96,7 @@ export default class BasicElement extends SceneEntity {
     }
 
     protected onAvatarAnimationChanged(): void {
-        (<BasicElementAvatar>this.display).animationName = this.myAnimationName;
+        (<BasicElementAvatar>this.display).animationName = this.myIsWalking ? Const.ModelStateType.BONES_WALK : this.myAnimationName;
         (<BasicElementAvatar>this.display).scaleX = this.mScaleX;
     }
 
