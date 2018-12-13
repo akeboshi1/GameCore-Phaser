@@ -4,7 +4,7 @@ export class TerrainInfo {
 
     public colorIdx: number = 0;
 
-    public type: number = 0;
+    public type: string;
 
     public subIdx: number = 0;
 }

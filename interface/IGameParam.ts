@@ -8,4 +8,5 @@ export default interface IGameParam {
     width: number;
     height: number;
     iSocketConnection?: ISocketConnection;
+    homeDir: string;
 }

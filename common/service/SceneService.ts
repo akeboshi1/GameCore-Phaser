@@ -25,10 +25,8 @@ class Handler extends PacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_TERRAIN, this.handleAddTerrain);
-    // let arr = str.split("-");
-    // terrain.type = +arr[0];
-    // terrain.subIdx = +arr[1];
-    // terrain.colorIdx = +arr[2];
+    this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_ELEMENT, this.handleDeleteElement);
+    this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
   }
 
   private handleMoveCharacter(packet: PBpacket): void {
@@ -80,5 +78,15 @@ class Handler extends PacketHandler {
   private handleAddTerrain(packet: PBpacket): void {
     let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_TERRAIN = packet.content;
     Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrainData.terrains);
+  }
+
+  private handleDeleteElement(packet: PBpacket): void {
+    let elementData: op_client.IOP_EDITOR_REQ_CLIENT_DELETE_ELEMENT = packet.content;
+    Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_ELEMENT, elementData.id);
+  }
+
+  private handleDeleteTerrain(packet: PBpacket): void {
+    let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_DELETE_TERRAIN = packet.content;
+    Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_TERRAIN, terrainData.id);
   }
 }

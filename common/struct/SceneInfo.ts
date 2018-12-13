@@ -140,7 +140,7 @@ export class SceneInfo {
                 terrain = new TerrainInfo();
                 if (str !== "" && str !== "0") {
                     let arr = str.split("-");
-                    terrain.type = +arr[0];
+                    terrain.type = arr[0];
                     terrain.subIdx = +arr[1];
                     terrain.colorIdx = +arr[2];
                 }

@@ -32,12 +32,11 @@ export default class Game extends Phaser.Game implements IGame {
     GameConfig.isEditor = value.isEditor;
     GameConfig.GameWidth = value.width;
     GameConfig.GameHeight = value.height;
+    GameConfig.HomeDir = value.homeDir;
+
     Globals.DataCenter.EditorData.setEditorMode({mode: EditorEnum.Mode.MOVE, type: EditorEnum.Type.ELEMENT});
     Globals.SocketManager.setSocketConnection(value.iSocketConnection);
     Globals.ServiceCenter.register();
-
-    // Globals.DataCenter.EditorData.setMapInfo(value.mapData);
-    // Globals.DataCenter.MapData.setMapInfo(value.mapData);
 
     this.state.add("boot", BootState);
     this.state.add("preloader", PreloaderState);

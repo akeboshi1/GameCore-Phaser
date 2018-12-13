@@ -1,4 +1,6 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
+import * as path from "path";
+import {GameConfig} from "./GameConfig";
 
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
@@ -35,16 +37,16 @@ export namespace Images {
     }
 
     export class ImagesElement {
-        static getName(id: number): string {
+        static getName(id: string): string {
             return "element_" + id + "_png";
         }
 
-        static getPNG(id: number): string {
-            return require("assets/images/elements/elements_" + id + ".png");
+        static getPNG(id: string): string {
+          return `${path.resolve(GameConfig.HomeDir , `.pixelpai/element/${id}/${id}.png`)}`;
         }
 
-        static getJSONArray(id: number): string {
-            return require("assets/images/elements/elements_" + id + ".json");
+        static getJSONArray(id: string): string {
+          return `${path.resolve(GameConfig.HomeDir, `.pixelpai/element/${id}/${id}.json`)}`;
         }
     }
 }

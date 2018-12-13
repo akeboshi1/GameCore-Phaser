@@ -32,6 +32,9 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
+    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveElement, this);
+    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
+
   }
 
   public onTick(deltaTime: Number): void {
@@ -100,6 +103,14 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   /**
+   * 删除物件
+   * @elementId elementId
+   */
+  private removeElement(elementId: number): void {
+    this.view.deleteSceneElement(elementId);
+  }
+
+  /**
    * 添加物件
    * @element ElementInfo
    */
@@ -162,7 +173,16 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
+  private handleRemoveElement(value: op_client.IElement): void {
+
+  }
+
+  private handleRemoveTerrain(value: op_client.ITerrain[]): void {
+
+  }
+
   private onSceneBrushDown(view: any, pointer: Phaser.Pointer): void {
+    Log.trace("name", view.name);
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
     let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
     let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;

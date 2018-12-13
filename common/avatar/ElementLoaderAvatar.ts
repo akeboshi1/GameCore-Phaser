@@ -4,7 +4,7 @@ import {op_gameconfig} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 
 export class ElementLoaderAvatar extends Phaser.Group implements IAnimatedObject {
-    private myType: number = 0;
+    private myType: string;
     private mLoadThisArg: any;
     private myModelUrlDirty: boolean = false;
     private mModelLoaded: boolean = false;
@@ -57,7 +57,7 @@ export class ElementLoaderAvatar extends Phaser.Group implements IAnimatedObject
         this.mAnimatonControlFuncDitry = true;
     }
 
-    public loadModel(type: number, thisArg: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
+    public loadModel(type: string, thisArg: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
         if (this.myType === type) return;
 
         this.closeLoadModel();
@@ -68,7 +68,7 @@ export class ElementLoaderAvatar extends Phaser.Group implements IAnimatedObject
 
         this.myType = type;
 
-        if (this.myType > 0) {
+        if (this.myType) {
             this.mLoadCompleteCallback = onLoadComplete;
             this.mLoadErrorCallback = onLoadError;
             this.mLoadThisArg = thisArg;
@@ -77,11 +77,11 @@ export class ElementLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     protected closeLoadModel() {
-        if (this.myType !== 0) {
+        if (this.myType) {
             if (this.mModelLoaded) {
                 this.mModelLoaded = false;
             }
-            this.myType = 0;
+            this.myType = "";
         }
         this.myModelUrlDirty = false;
     }

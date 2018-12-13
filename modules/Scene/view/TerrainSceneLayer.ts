@@ -73,7 +73,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
         let element: BasicTerrainItem;
         for (; i < len; i++) {
             value = datas[i];
-            if (value.type > 0) {
+            if (value.type) {
                 element = new TerrainImageItem(Globals.game, this);
                 this.setTerrainItem(element, value);
                 this.addChild(element);

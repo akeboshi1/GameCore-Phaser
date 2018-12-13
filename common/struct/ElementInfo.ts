@@ -4,7 +4,7 @@ import {DrawArea} from "./DrawArea";
 
 export class ElementInfo {
     public id: number;
-    public type: number;
+    public type: string;
     public dir: number;
     public x: number;
     public y: number;
@@ -19,7 +19,7 @@ export class ElementInfo {
     public walkableArea: DrawArea;
     public collisionArea: DrawArea;
 
-    public scale: number = 1; //-1水平翻转
+    public scale: number = 1; // -1水平翻转
 
     public speed: number = 4;
 
