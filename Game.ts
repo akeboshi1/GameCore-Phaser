@@ -32,7 +32,7 @@ export default class Game extends Phaser.Game implements IGame {
     GameConfig.isEditor = value.isEditor;
     GameConfig.GameWidth = value.width;
     GameConfig.GameHeight = value.height;
-    Globals.DataCenter.EditorData.setEditorMode({mode: EditorEnum.Mode.MOVE});
+    Globals.DataCenter.EditorData.setEditorMode({mode: EditorEnum.Mode.MOVE, type: EditorEnum.Type.ELEMENT});
     Globals.SocketManager.setSocketConnection(value.iSocketConnection);
     Globals.ServiceCenter.register();
 
