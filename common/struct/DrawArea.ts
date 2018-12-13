@@ -57,6 +57,7 @@ export class DrawArea implements ITickedObject, IDisposeObject {
     protected _graphics: Phaser.Graphics;
 
     public get graphics(): Phaser.Graphics {
+        if (this._graphics === undefined || this._graphics === null ) this._graphics = Globals.game.make.graphics();
         return this._graphics;
     }
 
@@ -80,14 +81,12 @@ export class DrawArea implements ITickedObject, IDisposeObject {
     public draw(hTileWidth: number, hTileHeight: number): void {
         if (this.areaArr === undefined || this.areaArr === null || this.areaArr.length === 0) return;
 
-        if (this._graphics === undefined || this._graphics === null ) this._graphics = Globals.game.make.graphics();
-
         this.room45.setting(this.rows, this.cols, hTileWidth, hTileHeight);
-        this._graphics.clear();
-        this._graphics.lineStyle(1);
+        this.graphics.clear();
+        this.graphics.lineStyle(1);
 
-        // this._graphics.x = -(this.room45.mapTotalWidth >> 1);
-        // this._graphics.y = -(this.room45.mapTotalHeight >> 1);
+        // this.graphics.x = -(this.room45.mapTotalWidth >> 1);
+        // this.graphics.y = -(this.room45.mapTotalHeight >> 1);
         let p1: Phaser.Point;
         let p2: Phaser.Point;
         let p3: Phaser.Point;
@@ -95,20 +94,20 @@ export class DrawArea implements ITickedObject, IDisposeObject {
         let poly: Phaser.Polygon;
         for (let i = 0; i < this.cols; i++) {
             for (let j = 0; j < this.rows; j++) {
-                this._graphics.beginFill(this.areaArr[i][j] === 1 ? this._color : 0x00ff00, this.areaArr[i][j] === 1 ? 0.6 : 0.1);
+                this.graphics.beginFill(this.areaArr[i][j] === 1 ? this._color : 0x00ff00, this.areaArr[i][j] === 1 ? 0.6 : 0.1);
                 p1 = this._room45.tileToPixelCoords(i, j);
                 p2 = this._room45.tileToPixelCoords(i + 1, j);
                 p3 = this._room45.tileToPixelCoords(i + 1, j + 1);
                 p4 = this._room45.tileToPixelCoords(i, j + 1);
                 poly = new Phaser.Polygon([p1, p2, p3, p4]);
-                this._graphics.drawPolygon(poly.points);
+                this.graphics.drawPolygon(poly.points);
             }
         }
-        this._graphics.endFill();
+        this.graphics.endFill();
     }
 
     public onDispose() {
-        this._graphics.destroy(true);
+        this.graphics.destroy(true);
     }
 
     protected init(): void {
