@@ -87,6 +87,10 @@ class Handler extends PacketHandler {
 
   private handleDeleteTerrain(packet: PBpacket): void {
     let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_DELETE_TERRAIN = packet.content;
-    Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_TERRAIN, terrainData.id);
+    if (terrainData.all === true) {
+      Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_ALL_TERRAIN);
+    } else {
+      Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_TERRAIN, [terrainData.x, terrainData.y]);
+    }
   }
 }

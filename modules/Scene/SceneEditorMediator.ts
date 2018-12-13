@@ -34,6 +34,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
+    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
 
   }
 
@@ -118,6 +119,15 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.terrainSceneLayer.addTerrainItem(terrain);
   }
 
+  /**
+   * 删除地块
+   * @elementId elementId
+   */
+  private removeTerrain(col: number, row: number): void {
+    this.view.terrainSceneLayer.removeTerrainItem(col, row);
+  }
+
+
   private clearMode(): void {
     if (this.view.input) {
       this.view.input.disableDrag();
@@ -173,12 +183,16 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
-  private handleRemoveElement(value: op_client.IElement): void {
-
+  private handleRemoveElement(value: number): void {
+    this.removeElement(value);
   }
 
-  private handleRemoveTerrain(value: op_client.ITerrain[]): void {
+  private handleRemoveAllTerrain(): void {
+    this.view.terrainSceneLayer.removeAllTerrain();
+  }
 
+  private handleRemoveTerrain(value: any): void {
+      this.removeTerrain(value[0], value[1]);
   }
 
   private onSceneBrushDown(view: any, pointer: Phaser.Pointer): void {
