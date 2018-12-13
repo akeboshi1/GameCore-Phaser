@@ -11,56 +11,52 @@ import Globals from "./Globals";
 import PreloaderState from "./states/preloader";
 import GameState from "./states/game";
 import {MessageType} from "./common/const/MessageType";
-import {IEditorMode} from "./interface/IEditorMode";
 import {GameConfig} from "./GameConfig";
 import SelectRole from "./states/selectrole";
-import {EditorType} from "./common/const/EditorType";
+import {EditorEnum} from "./common/const/EditorEnum";
 
 export default class Game extends Phaser.Game implements IGame {
-    private sceneReady: boolean;
-    constructor(value: IGameParam) {
-        let config: Phaser.IGameConfig = {
-            width: value.width,
-            height: value.height,
-            renderer: Phaser.AUTO,
-            parent: "game",
-            resolution: 1,
-        };
-        super(config);
+  private sceneReady: boolean;
 
-        // 初始化地图数据
-        GameConfig.isEditor = value.isEditor;
-        GameConfig.GameWidth = value.width;
-        GameConfig.GameHeight = value.height;
-        Globals.DataCenter.EditorData.setEditorMode({mode: EditorType.MODE_MOVE, data: null});
-        Globals.SocketManager.setSocketConnection(value.iSocketConnection);
-        Globals.ServiceCenter.register();
+  constructor(value: IGameParam) {
+    let config: Phaser.IGameConfig = {
+      width: value.width,
+      height: value.height,
+      renderer: Phaser.AUTO,
+      parent: "game",
+      resolution: 1,
+    };
+    super(config);
 
-        // Globals.DataCenter.EditorData.setMapInfo(value.mapData);
-        // Globals.DataCenter.MapData.setMapInfo(value.mapData);
+    // 初始化地图数据
+    GameConfig.isEditor = value.isEditor;
+    GameConfig.GameWidth = value.width;
+    GameConfig.GameHeight = value.height;
+    Globals.DataCenter.EditorData.setEditorMode({mode: EditorEnum.Mode.MOVE});
+    Globals.SocketManager.setSocketConnection(value.iSocketConnection);
+    Globals.ServiceCenter.register();
 
-        this.state.add("boot", BootState);
-        this.state.add("preloader", PreloaderState);
-        this.state.add("selectrole", SelectRole);
-        this.state.add("game", GameState);
+    // Globals.DataCenter.EditorData.setMapInfo(value.mapData);
+    // Globals.DataCenter.MapData.setMapInfo(value.mapData);
 
-        this.state.start("boot");
+    this.state.add("boot", BootState);
+    this.state.add("preloader", PreloaderState);
+    this.state.add("selectrole", SelectRole);
+    this.state.add("game", GameState);
 
-        Globals.MessageCenter.once(MessageType.SCENE_INITIALIZED, this.handleSceneReady);
-    }
+    this.state.start("boot");
 
-    /**
-     * 告诉我你好了
-     */
-    private handleSceneReady(): void {
-        this.sceneReady = true;
-    }
+    Globals.MessageCenter.once(MessageType.SCENE_INITIALIZED, this.handleSceneReady);
+  }
 
-    public resize(): void {
-        Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
-    }
+  public resize(): void {
+    Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
+  }
 
-    public setEditorMode(mode: IEditorMode) {
-        Globals.DataCenter.EditorData.changeEditorMode(mode.mode, mode.data);
-    }
+  /**
+   * 告诉我你好了
+   */
+  private handleSceneReady(): void {
+    this.sceneReady = true;
+  }
 }

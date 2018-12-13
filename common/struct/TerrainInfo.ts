@@ -1,6 +1,6 @@
 export class TerrainInfo {
-    public col: number;
-    public row: number;
+    public col: number = 0;
+    public row: number = 0;
 
     public colorIdx: number = 0;
 

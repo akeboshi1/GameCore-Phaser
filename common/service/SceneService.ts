@@ -24,6 +24,7 @@ class Handler extends PacketHandler {
     // Editor
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
+    this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_TERRAIN, this.handleAddTerrain);
     // let arr = str.split("-");
     // terrain.type = +arr[0];
     // terrain.subIdx = +arr[1];
@@ -68,11 +69,16 @@ class Handler extends PacketHandler {
 
   private handleChangeEditorMode(packet: PBpacket): void {
     let modeData: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
-    Globals.DataCenter.EditorData.changeEditorMode(modeData.mode);
+    Globals.DataCenter.EditorData.changeEditorMode(modeData.mode, modeData.type);
   }
 
   private handleAddElement(packet: PBpacket): void {
-    let modeData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_ELEMENT = packet.content;
-    // Globals.DataCenter.EditorData.changeEditorMode(modeData.element);
+    let elementData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_ELEMENT = packet.content;
+    Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, elementData.element);
+  }
+
+  private handleAddTerrain(packet: PBpacket): void {
+    let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_TERRAIN = packet.content;
+    Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrainData.terrains);
   }
 }

@@ -3,7 +3,7 @@ import {SceneInfo} from "../../common/struct/SceneInfo";
 import Globals from "../../Globals";
 import {MessageType} from "../../common/const/MessageType";
 import {IEditorMode} from "../../interface/IEditorMode";
-import {EditorType} from "../../common/const/EditorType";
+import {EditorEnum} from "../../common/const/EditorEnum";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
 import {Tick} from "../../common/tick/Tick";
@@ -11,12 +11,11 @@ import {ElementInfo} from "../../common/struct/ElementInfo";
 import {Const} from "../../common/const/Const";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import {PBpacket} from "net-socket-packet";
-import {op_editor, op_virtual_world} from "../../../protocol/protocols";
+import {op_client, op_editor, op_virtual_world} from "../../../protocol/protocols";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
-  private sceneDownPos: Phaser.Point;
   private sceneDownPointer: Phaser.Pointer;
   private isSceneDown: boolean;
   private movementY = 0;
@@ -27,42 +26,40 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   public onRegister(): void {
-    this.sceneDownPos = new Phaser.Point(-1, -1);
     this.mTick = new Tick(30);
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.start();
     super.onRegister();
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
+    Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
+    Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
   }
 
   public onTick(deltaTime: Number): void {
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
     switch (em.mode) {
-      case EditorType.MODE_BRUSH:
+      case EditorEnum.Mode.BRUSH:
         if (this.isSceneDown) {
-          let screenX: number = this.sceneDownPointer.x - this.view.x;
-          let screenY: number = this.sceneDownPointer.y - this.view.y;
-          let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX / this.view.scale.x, screenY / this.view.scale.y);
-          if (tempPoint.x !== this.sceneDownPos.x || tempPoint.y !== this.sceneDownPos.y) {
-            this.sceneDownPos.x = tempPoint.x;
-            this.sceneDownPos.y = tempPoint.y;
-            this.sendSceneBrush(this.sceneDownPos);
+          let screenX: number = (this.sceneDownPointer.x - this.view.x) / this.view.scale.x;
+          let screenY: number = (this.sceneDownPointer.y - this.view.y) / this.view.scale.y;
+          let tempPoint: Phaser.Point;
+          if (em.type === EditorEnum.Type.TERRAIN) {
+            tempPoint = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
+          } else if (em.type === EditorEnum.Type.ELEMENT) {
+            tempPoint = new Phaser.Point(screenX, screenY);
           }
+          this.sendSceneBrush(tempPoint);
         }
         break;
-      case EditorType.MODE_ERASER:
+      case  EditorEnum.Mode.ERASER:
         if (this.isSceneDown) {
-          let screenX: number = this.sceneDownPointer.x - this.view.x;
-          let screenY: number = this.sceneDownPointer.y - this.view.y;
-          let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX / this.view.scale.x, screenY / this.view.scale.y);
-          if (tempPoint.x !== this.sceneDownPos.x || tempPoint.y !== this.sceneDownPos.y) {
-            this.sceneDownPos.x = tempPoint.x;
-            this.sceneDownPos.y = tempPoint.y;
-            this.sendSceneEraser(this.sceneDownPos);
-          }
+          let screenX: number = (this.sceneDownPointer.x - this.view.x) / this.view.scale.x;
+          let screenY: number = (this.sceneDownPointer.y - this.view.y) / this.view.scale.y;
+          let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
+          this.sendSceneEraser(tempPoint);
         }
         break;
-      case EditorType.MODE_ZOOM:
+      case EditorEnum.Mode.ZOOM:
         if (this.isGameDown) {
           let newMoveY: number = Globals.game.input.y;
           let add = this.movementY - newMoveY;
@@ -102,9 +99,9 @@ export class SceneEditorMediator extends SceneMediator {
 
   private sendSceneBrush(value: Phaser.Point): void {
     Log.trace("点击地块-->", value);
-    let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_ELEMENT_POINT_RESULT);
+    let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
-    content.point = { x: value.x, y: value.y};
+    content.point = {x: value.x, y: value.y};
     Globals.SocketManager.send(pkt);
   }
 
@@ -150,7 +147,7 @@ export class SceneEditorMediator extends SceneMediator {
 
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
 
-    if (em.mode === EditorType.MODE_MOVE) {
+    if (em.mode === EditorEnum.Mode.MOVE) {
       // Log.trace(this.view.x, this.view.y, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight, GameConfig.GameWidth, GameConfig.GameHeight);
       let bounds: Phaser.Rectangle = new Phaser.Rectangle(-(Globals.Room45Util.mapTotalWidth * this.view.scale.x - GameConfig.GameWidth), -(Globals.Room45Util.mapTotalHeight * this.view.scale.y - GameConfig.GameHeight),
         (Globals.Room45Util.mapTotalWidth * this.view.scale.x - GameConfig.GameWidth + Globals.Room45Util.tileWidth * this.view.scale.x / 2), (Globals.Room45Util.mapTotalHeight * this.view.scale.y - GameConfig.GameHeight + Globals.Room45Util.tileHeight * this.view.scale.y));
@@ -158,13 +155,30 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.inputEnabled = true;
       this.view.input.enableDrag();
       this.view.input.boundsRect = bounds;
-    } else if (em.mode === EditorType.MODE_BRUSH) {
-
+    } else if (em.mode === EditorEnum.Mode.BRUSH) {
       this.view.events.onInputDown.add(this.onSceneBrushDown, this);
-    } else if (em.mode === EditorType.MODE_ERASER) {
+    } else if (em.mode === EditorEnum.Mode.ERASER) {
       this.view.events.onInputDown.add(this.onSceneEraserDown, this);
-    } else if (em.mode === EditorType.MODE_ZOOM) {
+    } else if (em.mode === EditorEnum.Mode.ZOOM) {
       Globals.game.input.onDown.add(this.onGameDown, this);
+    }
+  }
+
+  private handleAddElement(value: op_client.IElement): void {
+    let element: ElementInfo = new ElementInfo();
+    element.setInfo(value);
+    this.addElement(element);
+  }
+
+  private handleAddTerrain(value: op_client.ITerrain[]): void {
+    let terrain: TerrainInfo;
+    let len: number = value.length;
+    for (let i = 0; i < len; i++) {
+      terrain = new TerrainInfo();
+      terrain.type = value[i].type;
+      terrain.col = value[i].x;
+      terrain.row = value[i].y;
+      this.addTerrain(terrain);
     }
   }
 
