@@ -16,8 +16,6 @@ import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
-  private sceneDownPointer: Phaser.Pointer;
-  private isSceneDown: boolean;
   private movementY = 0;
   private isGameDown: boolean;
 
@@ -29,6 +27,7 @@ export class SceneEditorMediator extends SceneMediator {
     this.mTick = new Tick(30);
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.start();
+    this.view.inputEnabled = true;
     super.onRegister();
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
@@ -72,11 +71,11 @@ export class SceneEditorMediator extends SceneMediator {
 
     Globals.SceneManager.pushScene(this.view);
 
-    this.handleChangeMode();
-
     Globals.game.camera.follow(this.view);
 
     Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
+
+    this.handleChangeMode();
   }
 
   private sendSceneBrush(value: Phaser.Point): void {
@@ -126,17 +125,15 @@ export class SceneEditorMediator extends SceneMediator {
    */
   private handleChangeMode(): void {
     this.clearMode();
-
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
-
     if (em.mode === EditorEnum.Mode.MOVE) {
       // Log.trace(this.view.x, this.view.y, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight, GameConfig.GameWidth, GameConfig.GameHeight);
-      let bounds: Phaser.Rectangle = new Phaser.Rectangle(-(Globals.Room45Util.mapTotalWidth * this.view.scale.x - GameConfig.GameWidth), -(Globals.Room45Util.mapTotalHeight * this.view.scale.y - GameConfig.GameHeight),
-        (Globals.Room45Util.mapTotalWidth * this.view.scale.x - GameConfig.GameWidth + Globals.Room45Util.tileWidth * this.view.scale.x / 2), (Globals.Room45Util.mapTotalHeight * this.view.scale.y - GameConfig.GameHeight + Globals.Room45Util.tileHeight * this.view.scale.y));
-      // Log.trace(bounds);
-      this.view.inputEnabled = true;
-      this.view.input.enableDrag();
+      let scaleX: number = this.view.scale.x;
+      let scaleY: number = this.view.scale.y;
+      let bounds: Phaser.Rectangle = new Phaser.Rectangle(-(Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth), -(Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight),
+        (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth + Globals.Room45Util.tileWidth * scaleX / 2), (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight + Globals.Room45Util.tileHeight * scaleY));
       this.view.input.boundsRect = bounds;
+      this.view.input.enableDrag();
     } else if (em.mode === EditorEnum.Mode.BRUSH) {
       this.view.events.onInputDown.add(this.onSceneBrushDown, this);
     } else if (em.mode === EditorEnum.Mode.ERASER) {
