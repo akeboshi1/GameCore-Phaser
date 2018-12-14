@@ -1,6 +1,6 @@
-import {QueueFlow} from "../util/flow/QueueFlow";
+import {QueueFlow} from "../../../base/ds/flow/QueueFlow";
 import {SceneView} from "../view/SceneView";
-import {IFlow} from "../util/flow/IFlow";
+import {IFlow} from "../../../base/ds/flow/IFlow";
 import {Log} from "../../../Log";
 
 export class FlowManager extends QueueFlow {

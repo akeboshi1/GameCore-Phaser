@@ -2,7 +2,7 @@ import {IModuleManager} from "../../base/module/interfaces/IModuleManager";
 import BaseSingleton from "../../base/BaseSingleton";
 import {IModule} from "../../base/module/interfaces/IModule";
 import {IModuleInfo} from "../../base/module/interfaces/IModuleInfo";
-import {HashMap} from "../../modules/Scene/util/HashMap";
+import {HashMap} from "../../base/ds/HashMap";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 
 

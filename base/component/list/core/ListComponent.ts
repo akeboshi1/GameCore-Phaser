@@ -1,7 +1,7 @@
 import {SimpleLayout} from "../../../layout/core/SimpleLayout";
 import {IListItemComponent} from "../interfaces/IListItemComponent";
 import {ILayout} from "../../../layout/interfaces/ILayout";
-import {HashMap} from "../../../../modules/Scene/util/HashMap";
+import {HashMap} from "../../../ds/HashMap";
 import {IListComponent} from "../interfaces/IListComponent";
 
 export class ListComponent extends Phaser.Group implements IListComponent {

@@ -12,8 +12,7 @@ export class QueueFlow extends BasicGroupFlow {
 
         if (this.childrenFlows.length === 0) {
             this.onExcuteFlowComplete();
-        }
-        else {
+        } else {
             findChildFlow = this.childrenFlows.moveFirst();
             findChildFlow.excuteFlow();
         }
@@ -23,8 +22,7 @@ export class QueueFlow extends BasicGroupFlow {
         if (this.childrenFlows && this.childrenFlows.length > 0) {
             let childFlow: IFlow = this.childrenFlows.moveFirst();
             childFlow.excuteFlow();
-        }
-        else {
+        } else {
             this.onExcuteFlowComplete();
         }
     }

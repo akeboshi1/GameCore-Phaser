@@ -12,6 +12,7 @@ import {SceneBase} from "./SceneBase";
 
 export class SceneView extends SceneBase {
     public seaMapGrid: RoomGridUtil;
+    public quadTree: Phaser.QuadTree;
     public currentSelfPlayer: SelfRoleElement;
 
     // private graphics1;

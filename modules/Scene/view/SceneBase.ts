@@ -6,7 +6,7 @@ import {MessageType} from "../../../common/const/MessageType";
 import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {TerrainSceneLayer} from "./TerrainSceneLayer";
 import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
-import {HashMap} from "../util/HashMap";
+import {HashMap} from "../../../base/ds/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DrawSceneLayer} from "./DrawSceneLayer";

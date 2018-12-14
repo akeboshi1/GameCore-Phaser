@@ -3,7 +3,7 @@ import {IFlow} from "./IFlow";
 export class BasicFlow implements IFlow {
     protected mParent: IFlow;
     protected myData: any;
-    private mIsInited: boolean = false;
+    private mIsInited = false;
     private mCalllaterExcuteFlowCompleteTimeHandler: number = -1;
 
     public constructor() {

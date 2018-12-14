@@ -34,7 +34,9 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
   public decreaseLoadCount(): void {
     this.curTerrainLoadCount--;
-    if (this.curTerrainLoadCount < 0) this.curTerrainLoadCount = 0;
+    if (this.curTerrainLoadCount < 0) {
+      this.curTerrainLoadCount = 0;
+    }
   }
 
   public releaseTerrainItems(): void {
@@ -93,11 +95,10 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   }
 
   protected initializeTerrainItems(datas: Array<any>): void {
-    let i: number = 0;
     let len: number = datas.length;
     let value: TerrainInfo;
     let element: BasicTerrainItem;
-    for (; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       value = datas[i];
       if (value.type) {
         element = new TerrainImageItem(Globals.game, this);

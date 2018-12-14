@@ -1,5 +1,5 @@
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
-import UniqueLinkList from "../util/UniqueLinkList";
+import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
