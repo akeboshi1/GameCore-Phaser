@@ -67,7 +67,7 @@ export class SceneView extends SceneBase {
 
         super.onInitializeScene(value);
 
-        let i: number = 0;
+        let i = 0;
         let len: number = this.mapSceneInfo.elementConfig.length;
         let element: ElementInfo;
         for (; i < len; i++) {
@@ -91,8 +91,7 @@ export class SceneView extends SceneBase {
                 // 当前玩家
                 if (isSelf) {
                     element = this.currentSelfPlayer = new SelfRoleElement();
-                }
-                else {
+                } else {
                     element = new RoleElement();
                 }
                 break;

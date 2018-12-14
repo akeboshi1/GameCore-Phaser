@@ -3,62 +3,102 @@ import UniqueLinkList from "../util/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
-    protected mSceneEntities: UniqueLinkList;
-    public needRealTimeDepthSort: boolean = false;
-    private mDepthSortDirtyFlag: boolean = false;
+  public needRealTimeDepthSort = true;
+  protected mSceneEntities: UniqueLinkList;
+  protected SCENE_LAYER_RENDER_DELAY = 200;
+  private mDepthSortDirtyFlag = false;
+  private mSortWaitTime = 0;
 
-    public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
-        super(game, x, y);
-        this.mSceneEntities = new UniqueLinkList();
+  public constructor(game: Phaser.Game) {
+    super(game);
+    this.mSceneEntities = new UniqueLinkList();
+  }
+
+  public addEntity(d: BasicSceneEntity): void {
+    d.scene = this.scene;
+    d.camera = this.camera;
+
+    d.initialize();
+
+    this.mSceneEntities.add(d);
+    this.add(d.display);
+    this.markDirty();
+  }
+
+  public onFrame(deltaTime: number): void {
+    let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
+    while (entity) {
+      entity.onFrame(deltaTime);
+      entity = this.mSceneEntities.moveNext();
+    }
+  }
+
+  public onTick(deltaTime: number): void {
+    this.mSortWaitTime += deltaTime;
+
+    let needSort = false;
+
+    if (this.mSortWaitTime > this.SCENE_LAYER_RENDER_DELAY) {
+      this.mSortWaitTime = 0;
+      needSort = this.needRealTimeDepthSort || this.mDepthSortDirtyFlag;
+      if (needSort) {
+        this.mDepthSortDirtyFlag = false;
+      }
     }
 
-    public add(d: BasicSceneEntity): void {
-        d.scene = this.scene;
-        d.camera = this.camera;
-
-        d.initialize();
-
-        this.mSceneEntities.add(d);
-        this.addChild(d.display);
-        this.markDirty();
+    if (needSort) {
+      this.mSceneEntities.sort(this.sortFunc);
+      // this.game.iso.simpleSort( this.parent );
     }
-
-    public onFrame(deltaTime: number): void {
-        let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
-        while (entity) {
-            entity.onFrame(deltaTime);
-            entity = this.mSceneEntities.moveNext();
+    let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
+    while (entity) {
+      entity.onTick(deltaTime);
+      if (needSort) {
+        if (entity.needSort) {
+          this.setChildIndex(entity.display, this.children.length - 1);
         }
+      }
+      entity = this.mSceneEntities.moveNext();
+    }
+  }
+
+  // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+  public sortFunc(a: BasicSceneEntity, b: BasicSceneEntity): number {
+    if (a.oy > b.oy) {
+      return 1;
+    } else if (a.oy < b.oy) {
+      return -1;
+    } else {
+      // 左边的排在下面
+      if (a.ox > b.ox) {
+        return 1;
+      } else if (a.ox < b.ox) {
+        return -1;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Indicates this layer is dirty and needs to resort.
+   */
+  public markDirty(force: boolean = false): void {
+    if (!this.needRealTimeDepthSort || force) {
+      this.mDepthSortDirtyFlag = true;
+    }
+  }
+
+  public removeEntity(d: BasicSceneEntity, dispose: boolean = true): void {
+    this.mSceneEntities.remove(d);
+    if (d && d.display && d.display.parent) {
+      this.removeChild(d.display);
     }
 
-    public onTick(deltaTime: number): void {
-        let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
-        while (entity) {
-            entity.onTick(deltaTime);
-            entity = this.mSceneEntities.moveNext();
-        }
+    if (dispose) {
+      d.dispose();
     }
 
-    /**
-     * Indicates this layer is dirty and needs to resort.
-     */
-    public markDirty(force: boolean = false): void {
-        if (!this.needRealTimeDepthSort || force) {
-            this.mDepthSortDirtyFlag = true;
-        }
-    }
-
-    public remove(d: BasicSceneEntity, dispose: boolean = true): void {
-        this.mSceneEntities.remove(d);
-        if (d && d.display && d.display.parent) {
-            this.removeChild(d.display);
-        }
-
-        if (dispose) {
-            d.dispose();
-        }
-
-        d.scene = null;
-        d.camera = null;
-    }
+    d.scene = null;
+    d.camera = null;
+  }
 }

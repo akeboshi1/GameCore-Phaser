@@ -12,191 +12,208 @@ import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DrawSceneLayer} from "./DrawSceneLayer";
 
 export class SceneBase extends SceneBasic {
-    public mapSceneInfo: SceneInfo;
+  public mapSceneInfo: SceneInfo;
 
-    //layers...
-    public terrainGridLayer: TerrainGridLayer = null;
-    public drawSceneLayer: DrawSceneLayer = null;
-    public terrainSceneLayer: TerrainSceneLayer = null;
-    public topSceneLayer: DisplaySortableSceneLayer = null;
-    public middleSceneLayer: DisplaySortableSceneLayer = null;
-    public bottomSceneLayer: DisplaySortableSceneLayer = null;
+  // layers...
+  public terrainGridLayer: TerrainGridLayer = null;
+  public drawSceneLayer: DrawSceneLayer = null;
+  public terrainSceneLayer: TerrainSceneLayer = null;
+  public topSceneLayer: DisplaySortableSceneLayer = null;
+  public middleSceneLayer: DisplaySortableSceneLayer = null;
+  public bottomSceneLayer: DisplaySortableSceneLayer = null;
+  public needRealTimeDepthSort = true;
+  protected SCENE_LAYER_RENDER_DELAY = 200;
+  // all scenes objects
+  private mSceneElements: HashMap = new HashMap();
+  private mDepthSortDirtyFlag = false;
+  private mSortWaitTime = 0;
 
-    //all scenes objects
-    private mSceneElements: HashMap = new HashMap();
+  public onTick(deltaTime: number): void {
+    super.onTick(deltaTime);
 
-    public onTick(deltaTime: number): void {
-        super.onTick(deltaTime);
+    this.terrainGridLayer.onTick(deltaTime);
+    this.terrainSceneLayer.onTick(deltaTime);
+    this.topSceneLayer.onTick(deltaTime);
+    this.middleSceneLayer.onTick(deltaTime);
+    this.bottomSceneLayer.onTick(deltaTime);
+    this.drawSceneLayer.onTick(deltaTime);
 
-        this.terrainGridLayer.onTick(deltaTime);
-        this.terrainSceneLayer.onTick(deltaTime);
-        this.topSceneLayer.onTick(deltaTime);
-        this.middleSceneLayer.onTick(deltaTime);
-        this.bottomSceneLayer.onTick(deltaTime);
-        this.drawSceneLayer.onTick(deltaTime);
+    // this.mSortWaitTime += deltaTime;
+
+    // let needSort = false;
+    //
+    // if (this.mSortWaitTime > this.SCENE_LAYER_RENDER_DELAY) {
+    //   this.mSortWaitTime = 0;
+    //   needSort = this.needRealTimeDepthSort || this.mDepthSortDirtyFlag;
+    //   if (needSort) {
+    //     this.mDepthSortDirtyFlag = false;
+    //   }
+    // }
+    //
+    // if (needSort) {
+    //   this.game.iso.simpleSort( this.middleSceneLayer );
+    // }
+  }
+
+  public onFrame(deltaTime: number): void {
+    super.onFrame(deltaTime);
+
+    this.terrainGridLayer.onFrame(deltaTime);
+    this.topSceneLayer.onFrame(deltaTime);
+    this.middleSceneLayer.onFrame(deltaTime);
+    this.bottomSceneLayer.onFrame(deltaTime);
+    this.terrainSceneLayer.onFrame(deltaTime);
+    this.drawSceneLayer.onFrame(deltaTime);
+
+  }
+
+  public addSceneEntity(sceneEntity: BasicSceneEntity): BasicSceneEntity {
+    if (this.mSceneElements.has(sceneEntity.uid)) {
+      Log.trace("Scene::addSceneElement exsit error." + " uid: " + sceneEntity.uid);
+      return null;
     }
 
-    public onFrame(deltaTime: number): void {
-        super.onFrame(deltaTime);
+    this.mSceneElements.add(sceneEntity.uid, sceneEntity);
 
-        this.terrainGridLayer.onFrame(deltaTime);
-        this.topSceneLayer.onFrame(deltaTime);
-        this.middleSceneLayer.onFrame(deltaTime);
-        this.bottomSceneLayer.onFrame(deltaTime);
-        this.terrainSceneLayer.onFrame(deltaTime);
-        this.drawSceneLayer.onFrame(deltaTime);
+    switch (sceneEntity.sceneLayerType) {
+      case Const.SceneConst.SceneLayerBottom:
+        this.bottomSceneLayer.addEntity(sceneEntity);
+        break;
 
+      case Const.SceneConst.SceneLayerMiddle:
+        this.middleSceneLayer.addEntity(sceneEntity);
+        break;
+
+      case Const.SceneConst.SceneLayerTop:
+        this.topSceneLayer.addEntity(sceneEntity);
+        break;
+
+      default:
+        throw new Error("addSceneEntity no scene layer!");
     }
 
-    public addSceneEntity(sceneEntity: BasicSceneEntity): BasicSceneEntity {
-        if (this.mSceneElements.has(sceneEntity.uid)) {
-            Log.trace("Scene::addSceneElement exsit error." + " uid: " + sceneEntity.uid);
-            return null;
-        }
+    return sceneEntity;
+  }
 
-        this.mSceneElements.add(sceneEntity.uid, sceneEntity);
+  public getSceneElement(uid: number): BasicSceneEntity {
+    return this.mSceneElements.getValue(uid) as BasicSceneEntity;
+  }
 
-        switch (sceneEntity.sceneLayerType) {
-            case Const.SceneConst.SceneLayerBottom:
-                this.bottomSceneLayer.add(sceneEntity);
-                break;
-
-            case Const.SceneConst.SceneLayerMiddle:
-                this.middleSceneLayer.add(sceneEntity);
-                break;
-
-            case Const.SceneConst.SceneLayerTop:
-                this.topSceneLayer.add(sceneEntity);
-                break;
-
-            default:
-                throw new Error("addSceneEntity no scene layer!");
-        }
-
-        return sceneEntity;
-    }
-
-    public getSceneElement(uid: number): BasicSceneEntity {
-        return this.mSceneElements.getValue(uid) as BasicSceneEntity;
-    }
-
-    public getSceneElementByFunction(filterFunction: Function): BasicSceneEntity {
-        let element: BasicSceneEntity;
-        for (let i: number = 0; i < this.mSceneElements.valueList.length; i++) {
-            element = this.mSceneElements.valueList[i];
-            if (filterFunction(element)) {
-                return element;
-            }
-        }
-        return null;
-    }
-
-    public getSceneElementsByFunction(filterFunction: Function): Array<BasicSceneEntity> {
-        let results: Array<BasicSceneEntity> = [];
-        let element: BasicSceneEntity;
-        for (let i: number = 0; i < this.mSceneElements.valueList.length; i++) {
-            element = this.mSceneElements.valueList[i];
-            if (filterFunction(element)) {
-                results.push(element);
-            }
-        }
-        return results;
-    }
-
-    public removeAllSceneElements(filterPassFunction: Function = null): void {
-        let element: BasicSceneEntity;
-        let i: number = 0;
-        for (; i < this.mSceneElements.valueList.length; i++) {
-            element = this.mSceneElements.valueList[i];
-            if (filterPassFunction == null || filterPassFunction(element)) {
-                this.deleteSceneElement(element.uid);
-                --i;
-            }
-        }
-    }
-
-    public deleteSceneElement(uid: number): BasicSceneEntity {
-        let element: BasicSceneEntity = this.mSceneElements.getValue(uid) as BasicSceneEntity;
-
-        if (!element) {
-            Log.trace("Scene::deleteSceneElement not exsit error. uid: " + uid);
-            return null;
-        }
-        this.mSceneElements.remove(uid);
-
-        switch (element.sceneLayerType) {
-            case Const.SceneConst.SceneLayerBottom:
-                this.bottomSceneLayer.remove(element);
-                break;
-
-            case Const.SceneConst.SceneLayerMiddle:
-                this.middleSceneLayer.remove(element);
-                break;
-
-            case Const.SceneConst.SceneLayerTop:
-                this.topSceneLayer.remove(element);
-                break;
-
-            default:
-                throw new Error("addSceneElement no scene layer!");
-        }
-
+  public getSceneElementByFunction(filterFunction: Function): BasicSceneEntity {
+    let element: BasicSceneEntity;
+    for (let i = 0; i < this.mSceneElements.valueList.length; i++) {
+      element = this.mSceneElements.valueList[i];
+      if (filterFunction(element)) {
         return element;
+      }
+    }
+    return null;
+  }
+
+  public getSceneElementsByFunction(filterFunction: Function): Array<BasicSceneEntity> {
+    let results: Array<BasicSceneEntity> = [];
+    let element: BasicSceneEntity;
+    for (let i = 0; i < this.mSceneElements.valueList.length; i++) {
+      element = this.mSceneElements.valueList[i];
+      if (filterFunction(element)) {
+        results.push(element);
+      }
+    }
+    return results;
+  }
+
+  public removeAllSceneElements(filterPassFunction: Function = null): void {
+    let element: BasicSceneEntity;
+    for (let i = 0; i < this.mSceneElements.valueList.length; i++) {
+      element = this.mSceneElements.valueList[i];
+      if (filterPassFunction == null || filterPassFunction(element)) {
+        this.deleteSceneElement(element.uid);
+        --i;
+      }
+    }
+  }
+
+  public deleteSceneElement(uid: number): BasicSceneEntity {
+    let element: BasicSceneEntity = this.mSceneElements.getValue(uid) as BasicSceneEntity;
+
+    if (!element) {
+      Log.trace("Scene::deleteSceneElement not exsit error. uid: " + uid);
+      return null;
+    }
+    this.mSceneElements.remove(uid);
+
+    switch (element.sceneLayerType) {
+      case Const.SceneConst.SceneLayerBottom:
+        this.bottomSceneLayer.removeEntity(element);
+        break;
+
+      case Const.SceneConst.SceneLayerMiddle:
+        this.middleSceneLayer.removeEntity(element);
+        break;
+
+      case Const.SceneConst.SceneLayerTop:
+        this.topSceneLayer.removeEntity(element);
+        break;
+
+      default:
+        throw new Error("addSceneElement no scene layer!");
     }
 
-    //----------------------------------------------------------------------
+    return element;
+  }
 
-    protected onInitialize(): void {
-        super.onInitialize();
+  // ----------------------------------------------------------------------
 
-        this.terrainSceneLayer = new TerrainSceneLayer(this.game);
-        this.terrainSceneLayer.scene = this;
-        this.addChild(this.terrainSceneLayer);
-        //--
+  protected onInitialize(): void {
+    super.onInitialize();
 
-        this.terrainGridLayer = new TerrainGridLayer(this.game);
-        this.terrainGridLayer.scene = this;
-        this.addChild(this.terrainGridLayer);
+    this.terrainSceneLayer = new TerrainSceneLayer(this.game);
+    this.terrainSceneLayer.scene = this;
+    this.addChild(this.terrainSceneLayer);
 
-        this.drawSceneLayer = new DrawSceneLayer(this.game);
-        this.drawSceneLayer.scene = this;
-        this.addChild(this.drawSceneLayer);
+    this.terrainGridLayer = new TerrainGridLayer(this.game);
+    this.terrainGridLayer.scene = this;
+    this.addChild(this.terrainGridLayer);
 
-        this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
-        this.bottomSceneLayer.scene = this;
-        this.addChild(this.bottomSceneLayer);
+    this.drawSceneLayer = new DrawSceneLayer(this.game);
+    this.drawSceneLayer.scene = this;
+    this.addChild(this.drawSceneLayer);
 
-        this.middleSceneLayer = new DisplaySortableSceneLayer(this.game);
-        this.middleSceneLayer.scene = this;
-        this.addChild(this.middleSceneLayer);
+    this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
+    this.bottomSceneLayer.scene = this;
+    this.addChild(this.bottomSceneLayer);
 
-        this.topSceneLayer = new DisplaySortableSceneLayer(this.game);
-        this.topSceneLayer.scene = this;
-        this.addChild(this.topSceneLayer);
-    }
+    this.middleSceneLayer = new DisplaySortableSceneLayer(this.game);
+    this.middleSceneLayer.scene = this;
+    this.addChild(this.middleSceneLayer);
 
-    protected onInitializeScene(value: SceneInfo): void {
-        this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
-        this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
-        this.terrainSceneLayer.initializeMap(this.mapSceneInfo);
-    }
+    this.topSceneLayer = new DisplaySortableSceneLayer(this.game);
+    this.topSceneLayer.scene = this;
+    this.addChild(this.topSceneLayer);
+  }
 
-    protected onActivedScene(): void {
-        super.onActivedScene();
-    }
+  protected onInitializeScene(value: SceneInfo): void {
+    this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
+    this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
+    this.terrainSceneLayer.initializeMap(this.mapSceneInfo);
+  }
 
-    protected onDeActivedScene(): void {
-        super.onDeActivedScene();
-    }
+  protected onActivedScene(): void {
+    super.onActivedScene();
+  }
 
-    protected onClearScene(): void {
-        super.onClearScene();
-        this.removeAllSceneElements();
-        this.terrainSceneLayer.clear();
-        Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
-    }
+  protected onDeActivedScene(): void {
+    super.onDeActivedScene();
+  }
 
-    protected onStageResize(): void {
-        super.onStageResize();
-    }
+  protected onClearScene(): void {
+    super.onClearScene();
+    this.removeAllSceneElements();
+    this.terrainSceneLayer.clear();
+    Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
+  }
+
+  protected onStageResize(): void {
+    super.onStageResize();
+  }
 }

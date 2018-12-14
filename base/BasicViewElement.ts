@@ -1,5 +1,5 @@
 export class BasicViewElement extends Phaser.Sprite {
-    private _isInitilized: boolean = false;
+    private _isInitilized = false;
 
     public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
         super(game, x, y);
@@ -21,7 +21,7 @@ export class BasicViewElement extends Phaser.Sprite {
         this.events.onAddedToGroup.add(this.addToStageHandler, this);
     }
 
-    //event handler
+    // event handler
     private addToStageHandler(): void {
         this.events.onAddedToGroup.remove(this.addToStageHandler, this);
         this.events.onRemovedFromGroup.add(this.removeFromStageHandler, this);

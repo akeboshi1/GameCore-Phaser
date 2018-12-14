@@ -7,7 +7,7 @@ import {TerrainImageItem} from "../terrainItems/TerrainImageItem";
 import Globals from "../../../Globals";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
-  public curTerrainLoadCount: number = 0;
+  public curTerrainLoadCount = 0;
   private mapSceneInfo: SceneInfo;
   private _terrainItems: Array<BasicTerrainItem>;
 
@@ -39,7 +39,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
   public releaseTerrainItems(): void {
     if (this._terrainItems && this._terrainItems.length > 0) {
-      for (let i: number = 0, n: number = this._terrainItems.length; i < n; i++) {
+      for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
         this._terrainItems[i].releaseTerrainItem();
       }
     }
@@ -50,7 +50,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     // this.iosY = (GameConst.WindowHeight - this.mapSceneInfo.mapTotalHeight) >> 1;
     let terrainItem: BasicTerrainItem = null;
 
-    for (let i: number = 0, n: number = this._terrainItems.length; i < n; i++) {
+    for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
       terrainItem = this._terrainItems[i];
       terrainItem.onFrame(deltaTime);
     }
@@ -58,7 +58,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
   public clear(): void {
     if (this._terrainItems && this._terrainItems.length > 0) {
-      for (let i: number = 0, n: number = this._terrainItems.length; i < n; i++) {
+      for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
         this._terrainItems[i].dispose();
       }
 
