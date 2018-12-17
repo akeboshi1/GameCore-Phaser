@@ -25,6 +25,10 @@ export class SceneView extends SceneBase {
     element.elementTypeId = sceneElementType;
     element.data = elemetData;
 
+    element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+        , this.mapSceneInfo.tileHeight >> 1);
+    this.drawSceneLayer.addDraw(element.collisionArea);
+
     this.addSceneEntity(element);
 
     Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
@@ -46,13 +50,9 @@ export class SceneView extends SceneBase {
     let i = 0;
     let len: number = this.mapSceneInfo.elementConfig.length;
     let data: ElementInfo;
-    let element: BasicSceneEntity;
     for (; i < len; i++) {
       data = this.mapSceneInfo.elementConfig[i];
-      element = this.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
-      element.setCollisionArea(data.collisionArea, data.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-        , this.mapSceneInfo.tileHeight >> 1);
-      this.drawSceneLayer.addDraw(element.collisionArea);
+      this.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
     }
   }
 

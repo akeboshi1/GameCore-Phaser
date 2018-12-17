@@ -3,7 +3,7 @@ import {op_client, op_virtual_world} from "../../protocol/protocols";
 import Globals from "../Globals";
 
 export default class SelectRole extends Phaser.State {
-    public create(): void {
+    public init(): void {
         Globals.SocketManager.addHandler(new Handler(this.game));
     }
 }

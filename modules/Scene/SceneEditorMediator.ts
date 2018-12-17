@@ -99,8 +99,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @element ElementInfo
    */
   private addElement(value: ElementInfo): void {
-    let element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
-    element.setCollisionArea(value.collisionArea, value.originCollisionPoint, Globals.Room45Util.tileWidth >> 1, Globals.Room45Util.tileHeight >> 1);
+    this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
   }
 
   /**

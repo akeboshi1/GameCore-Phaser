@@ -60,7 +60,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   }
 
   public get quadH(): number {
-    return this.data.collisionArea.height;
+    return this.collisionArea.height;
   }
 
   public get quadW(): number {

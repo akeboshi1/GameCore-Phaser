@@ -20,7 +20,11 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   }
 
   public initialize(p_rect: Phaser.Rectangle, p_maxDepth: number = 3, currentDepth: number = 0): void {
-    this.mQuadTree = new QuadTree(p_rect, p_maxDepth, currentDepth);
+    if (this.mQuadTree === undefined) {
+        this.mQuadTree = new QuadTree(p_rect, p_maxDepth, currentDepth);
+    } else {
+        this.mQuadTree.init(p_rect, p_maxDepth, currentDepth);
+    }
   }
 
   public addEntity(d: BasicSceneEntity): void {

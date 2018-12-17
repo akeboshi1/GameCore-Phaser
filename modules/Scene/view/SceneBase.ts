@@ -177,6 +177,10 @@ export class SceneBase extends SceneBasic {
     this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
     this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
     this.terrainSceneLayer.initializeMap(this.mapSceneInfo);
+    let rect: Phaser.Rectangle = new Phaser.Rectangle(0, 0, this.mapSceneInfo.mapTotalWidth, this.mapSceneInfo.mapTotalHeight);
+    this.bottomSceneLayer.initialize(rect);
+    this.middleSceneLayer.initialize(rect);
+    this.topSceneLayer.initialize(rect);
   }
 
   protected onActivedScene(): void {
