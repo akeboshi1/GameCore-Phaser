@@ -77,135 +77,135 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
             this.closeLoadModel();
             this.myModel = model;
 
-            if (model.body_base_id > 0) {
+            if (model.body_base_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyBase, part: Const.AvatarPartType.BodyBase, dir: 3, skin: model.body_base_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyBase, part: Const.AvatarPartType.BodyBase, dir: 1, skin: model.body_base_id});
             }
 
-            if (model.body_spec_id > 0) {
+            if (model.body_spec_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodySpec, part: Const.AvatarPartType.BodySpec, dir: 3, skin: model.body_spec_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodySpec, part: Const.AvatarPartType.BodySpec, dir: 1, skin: model.body_spec_id});
             }
 
-            if (model.body_wing_id > 0) {
+            if (model.body_wing_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyWing, part: Const.AvatarPartType.BodyWing, dir: 3, skin: model.body_wing_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyWing, part: Const.AvatarPartType.BodyWing, dir: 1, skin: model.body_wing_id});
             }
 
-            if (model.body_tail_id > 0) {
+            if (model.body_tail_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyTail, part: Const.AvatarPartType.BodyTail, dir: 3, skin: model.body_tail_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyTail, part: Const.AvatarPartType.BodyTail, dir: 1, skin: model.body_tail_id});
             }
 
-            if (model.body_cost_id > 0) {
+            if (model.body_cost_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyCost, part: Const.AvatarPartType.BodyCost, dir: 3, skin: model.body_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyCost, part: Const.AvatarPartType.BodyCost, dir: 1, skin: model.body_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyCostDres, part: Const.AvatarPartType.BodyCostDres, dir: 3, skin: model.body_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BodyCostDres, part: Const.AvatarPartType.BodyCostDres, dir: 1, skin: model.body_cost_id});
             }
 
-            if (model.farm_base_id > 0) {
+            if (model.farm_base_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.FarmBase, part: Const.AvatarPartType.FarmBase, dir: 3, skin: model.farm_base_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.FarmBase, part: Const.AvatarPartType.FarmBase, dir: 1, skin: model.farm_base_id});
             }
 
-            if (model.farm_spec_id > 0) {
+            if (model.farm_spec_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.FarmSpec, part: Const.AvatarPartType.FarmSpec, dir: 3, skin: model.farm_spec_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.FarmSpec, part: Const.AvatarPartType.FarmSpec, dir: 1, skin: model.farm_spec_id});
             }
 
-            if (model.farm_cost_id > 0) {
+            if (model.farm_cost_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.FarmCost, part: Const.AvatarPartType.FarmCost, dir: 3, skin: model.farm_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.FarmCost, part: Const.AvatarPartType.FarmCost, dir: 1, skin: model.farm_cost_id});
             }
 
-            if (model.barm_base_id > 0) {
+            if (model.barm_base_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BarmBase, part: Const.AvatarPartType.BarmBase, dir: 3, skin: model.barm_base_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BarmBase, part: Const.AvatarPartType.BarmBase, dir: 1, skin: model.barm_base_id});
             }
 
-            if (model.barm_spec_id > 0) {
+            if (model.barm_spec_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BarmSpec, part: Const.AvatarPartType.BarmSpec, dir: 3, skin: model.barm_spec_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BarmSpec, part: Const.AvatarPartType.BarmSpec, dir: 1, skin: model.barm_spec_id});
             }
 
-            if (model.barm_cost_id > 0) {
+            if (model.barm_cost_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BarmCost, part: Const.AvatarPartType.BarmCost, dir: 3, skin: model.barm_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BarmCost, part: Const.AvatarPartType.BarmCost, dir: 1, skin: model.barm_cost_id});
             }
 
-            if (model.bleg_base_id > 0) {
+            if (model.bleg_base_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BlegBase, part: Const.AvatarPartType.BlegBase, dir: 3, skin: model.bleg_base_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BlegBase, part: Const.AvatarPartType.BlegBase, dir: 1, skin: model.bleg_base_id});
             }
 
-            if (model.bleg_spec_id > 0) {
+            if (model.bleg_spec_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BlegSpec, part: Const.AvatarPartType.BlegSpec, dir: 3, skin: model.bleg_spec_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BlegSpec, part: Const.AvatarPartType.BlegSpec, dir: 1, skin: model.bleg_spec_id});
             }
 
-            if (model.bleg_cost_id > 0) {
+            if (model.bleg_cost_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.BlegCost, part: Const.AvatarPartType.BlegCost, dir: 3, skin: model.bleg_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.BlegCost, part: Const.AvatarPartType.BlegCost, dir: 1, skin: model.bleg_cost_id});
             }
 
-            if (model.fleg_base_id > 0) {
+            if (model.fleg_base_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.FlegBase, part: Const.AvatarPartType.FlegBase, dir: 3, skin: model.fleg_base_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.FlegBase, part: Const.AvatarPartType.FlegBase, dir: 1, skin: model.fleg_base_id});
             }
 
-            if (model.fleg_spec_id > 0) {
+            if (model.fleg_spec_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.FlegSpec, part: Const.AvatarPartType.FlegSpec, dir: 3, skin: model.fleg_spec_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.FlegSpec, part: Const.AvatarPartType.FlegSpec, dir: 1, skin: model.fleg_spec_id});
             }
 
-            if (model.fleg_cost_id > 0) {
+            if (model.fleg_cost_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.FlegCost, part: Const.AvatarPartType.FlegCost, dir: 3, skin: model.fleg_cost_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.FlegCost, part: Const.AvatarPartType.FlegCost, dir: 1, skin: model.fleg_cost_id});
             }
 
-            if (model.head_base_id > 0) {
+            if (model.head_base_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadBase, part: Const.AvatarPartType.HeadBase, dir: 3, skin: model.head_base_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadBase, part: Const.AvatarPartType.HeadBase, dir: 1, skin: model.head_base_id});
             }
 
-            if (model.head_hair_id > 0) {
+            if (model.head_hair_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadHair, part: Const.AvatarPartType.HeadHair, dir: 3, skin: model.head_hair_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadHair, part: Const.AvatarPartType.HeadHair, dir: 1, skin: model.head_hair_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadHairBack, part: Const.AvatarPartType.HeadHairBack, dir: 3, skin: model.head_hair_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadHairBack, part: Const.AvatarPartType.HeadHairBack, dir: 1, skin: model.head_hair_id});
             }
 
-            if (model.head_hats_id > 0) {
+            if (model.head_hats_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadHats, part: Const.AvatarPartType.HeadHats, dir: 3, skin: model.head_hats_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadHats, part: Const.AvatarPartType.HeadHats, dir: 1, skin: model.head_hats_id});
             }
 
-            if (model.head_spec_id > 0) {
+            if (model.head_spec_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadSpec, part: Const.AvatarPartType.HeadSpec, dir: 3, skin: model.head_spec_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadSpec, part: Const.AvatarPartType.HeadSpec, dir: 1, skin: model.head_spec_id});
             }
 
-            if (model.head_eyes_id > 0) {
+            if (model.head_eyes_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadEyes, part: Const.AvatarPartType.HeadEyes, dir: 3, skin: model.head_eyes_id});
             }
 
-            if (model.head_mous_id > 0) {
+            if (model.head_mous_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadMous, part: Const.AvatarPartType.HeadMous, dir: 3, skin: model.head_mous_id});
             }
 
-            if (model.head_mask_id > 0) {
+            if (model.head_mask_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.HeadMask, part: Const.AvatarPartType.HeadMask, dir: 3, skin: model.head_mask_id});
             }
 
-            if (model.farm_shld_id > 0) {
+            if (model.farm_shld_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.ShldFarm, part: Const.AvatarPartType.ShldFarm, dir: 3, skin: model.farm_shld_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.ShldFarm, part: Const.AvatarPartType.ShldFarm, dir: 1, skin: model.farm_shld_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.ShldBarm, part: Const.AvatarPartType.ShldBarm, dir: 3, skin: model.farm_shld_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.ShldBarm, part: Const.AvatarPartType.ShldBarm, dir: 1, skin: model.farm_shld_id});
             }
 
-            if (model.farm_weap_id > 0) {
+            if (model.farm_weap_id) {
                 this.replaceArr.push({slot: Const.AvatarSlotType.WeapFarm, part: Const.AvatarPartType.WeapFarm, dir: 3, skin: model.farm_weap_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.WeapFarm, part: Const.AvatarPartType.WeapFarm, dir: 1, skin: model.farm_weap_id});
                 this.replaceArr.push({slot: Const.AvatarSlotType.WeapBarm, part: Const.AvatarPartType.WeapBarm, dir: 3, skin: model.farm_weap_id});
@@ -268,7 +268,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     }
 
     protected onUpdateModelUrl(): void {
-        let loadNum: number = 0;
+        let loadNum = 0;
 
         if (!Globals.game.cache.checkBinaryKey(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id))) {
             this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id), Assets.Avatar.AvatarBone.getSkeUrl(this.myModel.id));

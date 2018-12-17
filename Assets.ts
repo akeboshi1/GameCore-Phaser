@@ -53,11 +53,11 @@ export namespace Images {
 
 export namespace Avatar {
     export class AvatarBone {
-        static getSkeName(avatarId: number): string {
+        static getSkeName(avatarId: string): string {
             return avatarId + "_dbbin";
         }
 
-        static getSkeUrl(avatarId: number): string {
+        static getSkeUrl(avatarId: string): string {
             return require("assets/avatar/" + avatarId + ".dbbin");
         }
 
