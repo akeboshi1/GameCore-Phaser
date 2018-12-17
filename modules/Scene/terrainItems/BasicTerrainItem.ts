@@ -48,8 +48,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
                     this.terrainIsoDisplayObject.isoZ = this.isoZ;
                 }
                 this.mTerrainItemDisplayObjectCreated = true;
-            }
-            else {
+            } else {
                 if (!this.mTerrainItemIsLoadInited) {
                     if (this.mOwner.isValidLoad()) {
                         this.onTerrainItemLoad();

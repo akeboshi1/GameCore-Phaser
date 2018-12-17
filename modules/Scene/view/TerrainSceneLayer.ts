@@ -61,7 +61,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   public clear(): void {
     if (this._terrainItems && this._terrainItems.length > 0) {
       for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
-        this._terrainItems[i].dispose();
+        this._terrainItems[i].onDispose();
       }
 
       this._terrainItems.length = 0;
@@ -71,7 +71,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   public addTerrainItem(value: TerrainInfo): void {
     let element: BasicTerrainItem = this.getItemByPos(value.col, value.row);
     if (element) {
-      element.dispose();
+      element.onDispose();
     } else {
       element = new TerrainImageItem(Globals.game, this);
       this.addChild(element);
@@ -83,14 +83,14 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   public removeTerrainItem(col: number, row: number): void {
     let element: BasicTerrainItem = this.getItemByPos(col, row);
     if (element) {
-      element.dispose();
+      element.onDispose();
     }
   }
 
   public removeAllTerrain(): void {
     let len = this._terrainItems.length;
     for (let i = 0; i < len; i++) {
-        this._terrainItems[i].dispose();
+        this._terrainItems[i].onDispose();
     }
   }
 
