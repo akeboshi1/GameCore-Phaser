@@ -4,8 +4,9 @@ import {TerrainSceneLayer} from "../view/TerrainSceneLayer";
 import Globals from "../../../Globals";
 import IsoSprite = Phaser.Plugin.Isometric.IsoSprite;
 import {GameConfig} from "../../../GameConfig";
+import {IDisposeObject} from "../../../base/IDisposeObject";
 
-export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
+export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject {
     public data: any;
     public isoX: number = 0;
     public isoY: number = 0;
@@ -59,8 +60,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
                 }
             }
             this.visible = true;
-        }
-        else {
+        } else {
             this.mTerrainItemOutCameraTime += deltaTime;
             if (this.mTerrainItemOutCameraTime > Const.GameConst.OUT_OF_CAMERA_RELEASE_WAITE_TIME) {
                 this.mTerrainItemOutCameraTime = 0;
@@ -94,7 +94,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject {
         }
     }
 
-    public dispose() {
+    public onDispose() {
         this.releaseTerrainItem();
     }
 

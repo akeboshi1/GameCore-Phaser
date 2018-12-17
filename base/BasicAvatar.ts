@@ -1,7 +1,8 @@
 import {IAnimatedObject} from "./IAnimatedObject";
 import {IEntityComponent} from "./IEntityComponent";
+import {IDisposeObject} from "./IDisposeObject";
 
-export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent {
+export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent, IDisposeObject {
     public owner: any;
     protected myData: any = null;
     private mInitilized: boolean = false;
@@ -23,7 +24,7 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
         }
     }
 
-    public dispose(): void {
+    public onDispose(): void {
 
     }
 

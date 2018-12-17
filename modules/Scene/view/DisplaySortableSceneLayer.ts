@@ -2,14 +2,17 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {QuadTree} from "../../../base/ds/QuadTree";
+import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
-  public needRealTimeDepthSort = true;
+  public needRealTimeDepthSort = false;
   protected mSceneEntities: UniqueLinkList;
   protected SCENE_LAYER_RENDER_DELAY = 200;
   private mDepthSortDirtyFlag = false;
   private mSortWaitTime = 0;
+  private mSortRectangle: Phaser.Rectangle;
   private mQuadTree: QuadTree;
+
 
   public constructor(game: Phaser.Game) {
     super(game);
@@ -31,7 +34,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       this.mQuadTree.insert(d);
     }
     this.add(d.display);
-    this.markDirty();
+    this.markDirty(d.collisionArea.ox, d.collisionArea.oy, d.collisionArea.width, d.collisionArea.height);
   }
 
   public onFrame(deltaTime: number): void {
@@ -55,9 +58,10 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       }
     }
 
+    let found: IQuadTreeNode[];
     if (needSort) {
-      this.mSceneEntities.sort(this.sortFunc);
-      // this.game.iso.simpleSort( this.parent );
+      found = this.mQuadTree.retrieve(this.mSortRectangle);
+      found.sort(this.sortFunc);
     }
     let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
     while (entity) {
@@ -91,10 +95,35 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   /**
    * Indicates this layer is dirty and needs to resort.
    */
-  public markDirty(force: boolean = false): void {
-    if (!this.needRealTimeDepthSort || force) {
-      this.mDepthSortDirtyFlag = true;
+  public markDirty(x: number, y: number, w: number, h: number): void {
+    if (this.mSortRectangle === undefined) {
+      this.mSortRectangle = new Phaser.Rectangle();
     }
+    let startX: number = this.mSortRectangle.x;
+    let startY: number = this.mSortRectangle.y;
+    let endX: number = startX + this.mSortRectangle.width;
+    let endY: number = startY + this.mSortRectangle.height;
+    if (x < startX) {
+      this.mSortRectangle.x = x;
+    }
+    if (y < startY) {
+      this.mSortRectangle.y = y;
+    }
+
+    if (x + w > endX) {
+      endX = x + w;
+    }
+
+    if (y + h > endY) {
+      endY = y + h;
+    }
+
+    this.mSortRectangle.x = startX;
+    this.mSortRectangle.y = startY;
+    this.mSortRectangle.width = endX - startX;
+    this.mSortRectangle.height = endY - startY;
+
+    this.mDepthSortDirtyFlag = true;
   }
 
   public removeEntity(d: BasicSceneEntity, dispose: boolean = true): void {
@@ -108,7 +137,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     }
 
     if (dispose) {
-      d.dispose();
+      d.onDispose();
     }
 
     d.scene = null;

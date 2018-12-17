@@ -54,10 +54,6 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         this.mAnimationDirty = false;
     }
 
-    public dispose(): void {
-        super.dispose();
-    }
-
     protected onInitialize(): void {
         this.mBodyAvatar = new ElementLoaderAvatar(Globals.game);
         this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);

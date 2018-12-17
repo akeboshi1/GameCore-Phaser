@@ -10,8 +10,9 @@ import {op_client} from "../../protocol/protocols";
 import {Log} from "../Log";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
 import {DrawArea} from "../common/struct/DrawArea";
+import {IDisposeObject} from "./IDisposeObject";
 
-export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode {
+export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode, IDisposeObject {
   public uid: number;
   public elementTypeId = 0;
   public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
@@ -131,10 +132,10 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     this.onUpdateByData();
   }
 
-  public dispose(): void {
+  public onDispose(): void {
     this.isValidDisplay = false;
     if (this.display) {
-      if (this.display.hasOwnProperty("dispose")) this.display["dispose"]();
+      if ((this.display as IDisposeObject).onDispose() !== undefined) (<IDisposeObject>this.display).onDispose();
       this.display = null;
     }
   }

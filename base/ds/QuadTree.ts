@@ -30,11 +30,11 @@ export class QuadTree {
     this._topLeft = this._topRight = this._bottomLeft = this._bottomRight = null;
   }
 
-  public retrieve(node: IQuadTreeNode): IQuadTreeNode[] {
+  public retrieve(node: Phaser.Rectangle): IQuadTreeNode[] {
     let result: IQuadTreeNode[] = [];
 
 // 如果所取区块比本身区域还大，那么它所有子树的children都取出
-    if (node.quadX <= this._rect.x && node.quadY <= this._rect.y && node.quadX + node.quadW >= this._rect.right && node.quadY + node.quadH >= this._rect.bottom) {
+    if (node.x <= this._rect.x && node.y <= this._rect.y && node.x + node.width >= this._rect.right && node.y + node.height >= this._rect.bottom) {
       result.push.apply(result, this._children);
 
       result.push.apply(result, this._topLeft.retrieve(node));
@@ -46,26 +46,26 @@ export class QuadTree {
     }
 
 // 否则就只取对应的区域子树
-    let objRight: number = node.quadX + node.quadW;
-    let objBottom: number = node.quadY + node.quadH;
+    let objRight: number = node.x + node.width;
+    let objBottom: number = node.y + node.height;
 
 // 完全在分区里
-    if ((node.quadX > this._rect.x) && (objRight < this._centerX)) {
-      if (node.quadY > this._rect.y && objBottom < this._centerY) {
+    if ((node.x > this._rect.x) && (objRight < this._centerX)) {
+      if (node.y > this._rect.y && objBottom < this._centerY) {
         result.push.apply(result, this._topLeft.retrieve(node));
         return result;
       }
-      if (node.quadY > this._centerY && objBottom < this._rect.bottom) {
+      if (node.y > this._centerY && objBottom < this._rect.bottom) {
         result.push.apply(result, this._bottomLeft.retrieve(node));
         return result;
       }
     }
-    if (node.quadX > this._centerX && objRight < this._rect.right) {
-      if (node.quadY > this._rect.y && objBottom < this._centerY) {
+    if (node.x > this._centerX && objRight < this._rect.right) {
+      if (node.y > this._rect.y && objBottom < this._centerY) {
         result.push.apply(result, this._topRight.retrieve(node));
         return result;
       }
-      if (node.quadY > this._centerY && objBottom < this._rect.bottom) {
+      if (node.y > this._centerY && objBottom < this._rect.bottom) {
         result.push.apply(result, this._bottomRight.retrieve(node));
         return result;
       }
@@ -74,23 +74,23 @@ export class QuadTree {
     // 只要有部分在分区里，也放到对应分区里，但注意可以重复放
 
     // 上边
-    if (objBottom > this._rect.y && node.quadY < this._centerY) {
+    if (objBottom > this._rect.y && node.y < this._centerY) {
 
-      if (node.quadX < this._centerX && objRight > this._rect.x) {
+      if (node.x < this._centerX && objRight > this._rect.x) {
         result.push.apply(result, this._topLeft.retrieve(node));
       }
-      if (node.quadX < this._rect.right && objRight > this._centerX) {
+      if (node.x < this._rect.right && objRight > this._centerX) {
         result.push.apply(result, this._topRight.retrieve(node));
       }
     }
 
     // 下边
-    if (objBottom > this._centerY && node.quadY < this._rect.bottom) {
-      if (node.quadX < this._centerX && objRight > this._rect.x) {
+    if (objBottom > this._centerY && node.y < this._rect.bottom) {
+      if (node.x < this._centerX && objRight > this._rect.x) {
         result.push.apply(result, this._bottomLeft.retrieve(node));
       }
 
-      if (node.quadX < this._rect.right && objRight > this._centerX) {
+      if (node.x < this._rect.right && objRight > this._centerX) {
         result.push.apply(result, this._bottomRight.retrieve(node));
       }
     }

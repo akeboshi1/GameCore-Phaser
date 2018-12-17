@@ -35,10 +35,6 @@ export class RoleBonesAvatar extends BasicAvatar {
         }
     }
 
-    public dispose(): void {
-        super.dispose();
-    }
-
     public loadModel(model: RoleAvatarModelVO): void {
         this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }

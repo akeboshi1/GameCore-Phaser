@@ -39,11 +39,11 @@ export default class SceneEntity extends BasicSceneEntity {
         return this.myIsWalking;
     }
 
-    public dispose(): void {
+    public onDispose(): void {
         if (this.mouseEnable) {
             this.mouseEnable = false;
         }
-        super.dispose();
+        super.onDispose();
     }
 
     // 弧度

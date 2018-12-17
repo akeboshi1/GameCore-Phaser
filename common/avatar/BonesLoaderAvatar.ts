@@ -7,13 +7,14 @@ import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import {Avatar} from "../../Assets";
 import * as Assets from "../../Assets";
 import {Log} from "../../Log";
+import {IDisposeObject} from "../../base/IDisposeObject";
 
-export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
+export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
     private static readonly BONES_SCALE: number = 1;
     protected armature: dragonBones.PhaserArmatureDisplay;
     private myModel: RoleAvatarModelVO;
-    private myModelDirty: boolean = false;
-    private mModelLoaded: boolean = false;
+    private myModelDirty = false;
+    private mModelLoaded = false;
     private mLoadCompleteCallback: Function;
     private mLoadThisObj: any;
     private mAnimatonControlFunc: Function;
@@ -222,7 +223,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject {
         }
     }
 
-    public dispose(): void {
+    public onDispose(): void {
         this.closeLoadModel();
         this.mLoadCompleteCallback = null;
     }

@@ -2,8 +2,9 @@
 import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {IEntityComponent} from "../../base/IEntityComponent";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
+import {IDisposeObject} from "../../base/IDisposeObject";
 
-export class BasicRoleAvatar extends Phaser.Group implements IAnimatedObject, IEntityComponent {
+export class BasicRoleAvatar extends Phaser.Group implements IAnimatedObject, IEntityComponent, IDisposeObject {
     public owner: BasicSceneEntity;
     protected data: any = null;
     private mInitilized: boolean = false;
@@ -27,7 +28,7 @@ export class BasicRoleAvatar extends Phaser.Group implements IAnimatedObject, IE
     protected onInitializeComplete(): void {
     }
 
-    public dispose(): void {
+    public onDispose(): void {
         this.data = null;
         this.mInitilized = false;
     }
