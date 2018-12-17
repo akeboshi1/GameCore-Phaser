@@ -4,38 +4,38 @@ export default class RoleAvatarModelVO {
     public id: string;
     public dirable: number[];
 
-    public body_base_id = "0";
-    public body_spec_id = "0";
-    public body_wing_id = "0";
-    public body_tail_id = "0";
-    public body_cost_id = "0";
+    public body_base_id = "";
+    public body_spec_id = "";
+    public body_wing_id = "";
+    public body_tail_id = "";
+    public body_cost_id = "";
 
-    public farm_base_id = "0";
-    public farm_spec_id = "0";
-    public farm_cost_id = "0";
+    public farm_base_id = "";
+    public farm_spec_id = "";
+    public farm_cost_id = "";
 
-    public barm_base_id = "0";
-    public barm_spec_id = "0";
-    public barm_cost_id = "0";
+    public barm_base_id = "";
+    public barm_spec_id = "";
+    public barm_cost_id = "";
 
-    public bleg_base_id = "0";
-    public bleg_spec_id = "0";
-    public bleg_cost_id = "0";
+    public bleg_base_id = "";
+    public bleg_spec_id = "";
+    public bleg_cost_id = "";
 
-    public fleg_base_id = "0";
-    public fleg_spec_id = "0";
-    public fleg_cost_id = "0";
+    public fleg_base_id = "";
+    public fleg_spec_id = "";
+    public fleg_cost_id = "";
 
-    public head_base_id = "0";
-    public head_hair_id = "0";
-    public head_hats_id = "0";
-    public head_spec_id = "0";
-    public head_eyes_id = "0";
-    public head_mous_id = "0";
-    public head_mask_id = "0";
+    public head_base_id = "";
+    public head_hair_id = "";
+    public head_hats_id = "";
+    public head_spec_id = "";
+    public head_eyes_id = "";
+    public head_mous_id = "";
+    public head_mask_id = "";
 
-    public farm_shld_id = "0";
-    public farm_weap_id = "0";
+    public farm_shld_id = "";
+    public farm_weap_id = "";
 
     public constructor() {
     }
@@ -50,31 +50,31 @@ export default class RoleAvatarModelVO {
     public test(): void {
         this.id = "10000";
         this.body_base_id = "1";
-        this.body_spec_id = "0";
-        this.body_wing_id = "0";
-        this.body_tail_id = "0";
+        this.body_spec_id = "";
+        this.body_wing_id = "";
+        this.body_tail_id = "";
 
         this.farm_base_id = "1";
-        this.farm_spec_id = "0";
+        this.farm_spec_id = "";
 
         this.barm_base_id = "1";
-        this.barm_spec_id = "0";
+        this.barm_spec_id = "";
 
         this.bleg_base_id = "1";
-        this.bleg_spec_id = "0";
+        this.bleg_spec_id = "";
 
         this.fleg_base_id = "1";
-        this.fleg_spec_id = "0";
+        this.fleg_spec_id = "";
 
         this.head_base_id = "1";
-        this.head_hats_id = "0";
-        this.head_spec_id = "0";
+        this.head_hats_id = "";
+        this.head_spec_id = "";
         this.head_eyes_id = "1";
-        this.head_mous_id = "0";
-        this.head_mask_id = "0";
+        this.head_mous_id = "";
+        this.head_mask_id = "";
 
-        this.farm_shld_id = "0";
-        this.farm_weap_id = "0";
+        this.farm_shld_id = "";
+        this.farm_weap_id = "";
 
         this.body_cost_id = this.farm_cost_id = this.barm_cost_id = this.bleg_cost_id = this.fleg_cost_id = this.head_hair_id = "5";
     }
