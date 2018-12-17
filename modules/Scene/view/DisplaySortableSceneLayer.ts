@@ -1,6 +1,7 @@
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
+import {QuadTree} from "../../../base/ds/QuadTree";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = true;
@@ -8,10 +9,15 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   protected SCENE_LAYER_RENDER_DELAY = 200;
   private mDepthSortDirtyFlag = false;
   private mSortWaitTime = 0;
+  private mQuadTree: QuadTree;
 
   public constructor(game: Phaser.Game) {
     super(game);
     this.mSceneEntities = new UniqueLinkList();
+  }
+
+  public initialize(p_rect: Phaser.Rectangle, p_maxDepth: number = 3, currentDepth: number = 0): void {
+    this.mQuadTree = new QuadTree(p_rect, p_maxDepth, currentDepth);
   }
 
   public addEntity(d: BasicSceneEntity): void {
@@ -21,6 +27,9 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.initialize();
 
     this.mSceneEntities.add(d);
+    if (this.mQuadTree) {
+      this.mQuadTree.insert(d);
+    }
     this.add(d.display);
     this.markDirty();
   }
@@ -92,6 +101,10 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     this.mSceneEntities.remove(d);
     if (d && d.display && d.display.parent) {
       this.removeChild(d.display);
+    }
+
+    if (this.mQuadTree) {
+      this.mQuadTree.insert(d);
     }
 
     if (dispose) {

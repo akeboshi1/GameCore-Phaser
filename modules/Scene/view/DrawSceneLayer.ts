@@ -11,23 +11,9 @@ export class DrawSceneLayer extends BasicSceneLayer {
         this.graphicsList = [];
     }
 
-    public addPlayer(value: PlayerInfo): void {
-        let graphics: Phaser.Graphics = value.collisionArea.graphics;
-        this.addChild(graphics);
-        this.graphicsList.push(value.collisionArea);
-    }
-
-    public initializeMap(value: SceneInfo): void {
-        let i: number = 0;
-        let len: number = value.elementConfig.length;
-        let element: ElementInfo;
-        let graphics: Phaser.Graphics;
-        for (; i < len; i++) {
-            element = value.elementConfig[i];
-            graphics = element.collisionArea.graphics;
-            this.addChild(graphics);
-            this.graphicsList.push(element.collisionArea);
-        }
+    public addDraw(value: DrawArea): void {
+      this.addChild(value.graphics);
+      this.graphicsList.push(value);
     }
 
     public onFrame(deltaTime: number): void {

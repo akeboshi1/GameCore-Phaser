@@ -98,9 +98,9 @@ export class SceneEditorMediator extends SceneMediator {
    * 添加物件
    * @element ElementInfo
    */
-  private addElement(element: ElementInfo): void {
-    element.collisionArea.draw(Globals.Room45Util.tileWidth >> 1, Globals.Room45Util.tileHeight >> 1);
-    this.view.addSceneElement(Const.SceneElementType.ELEMENT, element.id, element);
+  private addElement(value: ElementInfo): void {
+    let element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
+    element.setCollisionArea(value.collisionArea, value.originCollisionPoint, Globals.Room45Util.tileWidth >> 1, Globals.Room45Util.tileHeight >> 1);
   }
 
   /**
@@ -177,8 +177,8 @@ export class SceneEditorMediator extends SceneMediator {
     for (let i = 0; i < len; i++) {
       terrain = new TerrainInfo();
       terrain.type = value[i].type;
-      terrain.col = value[i].x;
-      terrain.row = value[i].y;
+      terrain.col = value[i].col;
+      terrain.row = value[i].row;
       this.addTerrain(terrain);
     }
   }

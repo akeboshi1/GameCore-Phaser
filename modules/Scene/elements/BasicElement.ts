@@ -37,12 +37,6 @@ export default class BasicElement extends SceneEntity {
         (<BasicElementAvatar>this.display).loadModel(value);
     }
 
-    // Position
-    public setPosition(x: number, y: number, z: number): void {
-        super.setPosition(x, y, z);
-        this.elementInfo.collisionArea.setPosition(x, y, z);
-    }
-
     protected invalidAnimation(): void {
         this.mAnimationDirty = true;
     }

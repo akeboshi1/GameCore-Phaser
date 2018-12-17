@@ -8,8 +8,10 @@ import Point = Phaser.Point;
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 import {op_client} from "../../protocol/protocols";
 import {Log} from "../Log";
+import {IQuadTreeNode} from "./ds/IQuadTreeNode";
+import {DrawArea} from "../common/struct/DrawArea";
 
-export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
+export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode {
   public uid: number;
   public elementTypeId = 0;
   public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
@@ -21,6 +23,10 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
   public scene: SceneBasic;
   public camera: Phaser.Camera;
   public isNeedSort = true;
+
+  public walkableArea: DrawArea;
+  public collisionArea: DrawArea;
+
   private mInitilized = false;
 
   public constructor() {
@@ -52,14 +58,38 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     return this.uid;
   }
 
-  public get gridPos(): Point {
-    let temp = Globals.Room45Util.p3top2(this._ox, this._oy, this._oz);
-    let point: Point = Globals.Room45Util.pixelToTileCoords(temp.x, temp.y);
-    return point;
+  public get quadH(): number {
+    return this.data.collisionArea.height;
+  }
+
+  public get quadW(): number {
+    return this.collisionArea.width;
+  }
+
+  public get quadX(): number {
+    return this.collisionArea.ox;
+  }
+
+  public get quadY(): number {
+    return this.collisionArea.oy;
   }
 
   public get needSort(): boolean {
     return this.isValidDisplay && this.isNeedSort;
+  }
+
+  public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+    if (this.walkableArea === undefined) {
+      this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
+    }
+    this.walkableArea.draw(hWidth, hHeight);
+  }
+
+  public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+    if (this.collisionArea === undefined) {
+      this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
+    }
+    this.collisionArea.draw(hWidth, hHeight);
   }
 
   public moveToTarget(value: op_client.IMoveData): void {
@@ -74,6 +104,9 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject {
     this._ox = x >> 0;
     this._oy = y >> 0;
     this._oz = z >> 0;
+    if (this.collisionArea) {
+      this.collisionArea.setPosition(x, y, z);
+    }
   }
 
   public isInScreen(): boolean {

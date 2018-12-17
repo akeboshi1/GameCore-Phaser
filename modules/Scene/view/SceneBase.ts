@@ -21,12 +21,8 @@ export class SceneBase extends SceneBasic {
   public topSceneLayer: DisplaySortableSceneLayer = null;
   public middleSceneLayer: DisplaySortableSceneLayer = null;
   public bottomSceneLayer: DisplaySortableSceneLayer = null;
-  public needRealTimeDepthSort = true;
-  protected SCENE_LAYER_RENDER_DELAY = 200;
   // all scenes objects
   private mSceneElements: HashMap = new HashMap();
-  private mDepthSortDirtyFlag = false;
-  private mSortWaitTime = 0;
 
   public onTick(deltaTime: number): void {
     super.onTick(deltaTime);
@@ -38,21 +34,6 @@ export class SceneBase extends SceneBasic {
     this.bottomSceneLayer.onTick(deltaTime);
     this.drawSceneLayer.onTick(deltaTime);
 
-    // this.mSortWaitTime += deltaTime;
-
-    // let needSort = false;
-    //
-    // if (this.mSortWaitTime > this.SCENE_LAYER_RENDER_DELAY) {
-    //   this.mSortWaitTime = 0;
-    //   needSort = this.needRealTimeDepthSort || this.mDepthSortDirtyFlag;
-    //   if (needSort) {
-    //     this.mDepthSortDirtyFlag = false;
-    //   }
-    // }
-    //
-    // if (needSort) {
-    //   this.game.iso.simpleSort( this.middleSceneLayer );
-    // }
   }
 
   public onFrame(deltaTime: number): void {
