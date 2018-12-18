@@ -8,19 +8,19 @@ import {IDisposeObject} from "../../../base/IDisposeObject";
 
 export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject {
     public data: any;
-    public isoX: number = 0;
-    public isoY: number = 0;
-    public isoZ: number = 0;
-    public col: number  = 0;
-    public itemWidth: number = 0;
-    public itemHeight: number = 0;
+    public isoX = 0;
+    public isoY = 0;
+    public isoZ = 0;
+    public col  = 0;
+    public itemWidth = 0;
+    public itemHeight = 0;
     public camera: Phaser.Camera;
     protected mOwner: TerrainSceneLayer;
-    protected mTerrainItemIsLoadInited: boolean = false;
-    protected mTerrainItemIsLoading: boolean = false;
-    protected mTerrainItemDisplayObjectCreated: boolean = false;
-    protected mTerrainItemOutCameraTime: number = 0;
-    protected mTerrainItemIsInCamera: boolean = false;
+    protected mTerrainItemIsLoadInited = false;
+    protected mTerrainItemIsLoading = false;
+    protected mTerrainItemDisplayObjectCreated = false;
+    protected mTerrainItemOutCameraTime = 0;
+    protected mTerrainItemIsInCamera = false;
     protected terrainIsoDisplayObject: IsoSprite;
 
     public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
@@ -29,12 +29,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     }
 
     public onFrame(deltaTime: number) {
-        let p2 = Globals.Room45Util.p3top2(this.isoX, this.isoY, this.isoZ)
-        // this.game.world.x, this.game.world.y;
-        // this.parent.y
-        // this.parent.parent.y
-        // let p = this.game.input.getLocalPosition(this.terrainIsoDisplayObject, this.game.input.activePointer);
-        // let p = this.game.world.toLocal(p2, this);
+        let p2 = Globals.Room45Util.p3top2(this.isoX, this.isoY, this.isoZ);
         this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
             this.camera.width, this.camera.height, p2.x - this.itemWidth / 2, p2.y, this.itemWidth, this.itemHeight);
         if (this.mTerrainItemIsInCamera || GameConfig.isEditor) {

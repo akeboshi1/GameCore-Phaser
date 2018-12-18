@@ -11,7 +11,7 @@ import {Log} from "../../../Log";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
-    private mAnimationDirty: boolean = false;
+    private mAnimationDirty = false;
 
 
     public constructor() {

@@ -13,11 +13,11 @@ export default class SceneEntity extends BasicSceneEntity {
     // moving
     protected mySpeed: number = 4; //
     protected mAngleIndex: number = 0;
-    protected mWalkAngleIndex: number = 0; //走路
+    protected mWalkAngleIndex: number = 0; // 走路
     protected mTarget: Phaser.Point;
     protected mTimeSpan: number;
 
-    protected myIsWalking: boolean = false;
+    protected myIsWalking = false;
 
     public constructor() {
         super();
@@ -122,6 +122,7 @@ export default class SceneEntity extends BasicSceneEntity {
     public moveStopTarget(value: op_client.IMovePosition): void {
         this.stopWalk();
         this.setPosition(value.destinationPoint3f.x, value.destinationPoint3f.y, value.destinationPoint3f.z);
+        super.moveStopTarget(value);
     }
 
     protected onInitialize(): void {
