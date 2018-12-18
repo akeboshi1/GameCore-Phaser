@@ -34,7 +34,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.initialize();
 
     this.mSceneEntities.add(d);
-    if (this.mQuadTree) {
+    if (this.mQuadTree && d.needSort) {
       this.mQuadTree.insert(d);
     }
     this.add(d.display);

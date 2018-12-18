@@ -54,7 +54,6 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected onPauseMove(): void {
-
         this.invalidAnimation();
     }
 
