@@ -95,11 +95,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     }
 
     public moveStopTarget(value: op_client.IMovePosition): void {
-      let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
-      // Log.trace(p3.x,p3.y,p3.z);
-      this.display.isoX = p3.x;
-      this.display.isoY = p3.y;
-      this.display.isoZ = p3.z;
     }
 
     // Position
