@@ -15,6 +15,7 @@ export class LayerManager extends BaseSingleton {
     public tipLayer: Phaser.Group;
     public textLineSliderLayer: Phaser.Group;
     public debugLayer: Phaser.Group;
+    public graphics: Phaser.Graphics;
 
     public init(game: Phaser.Game): void {
         this.game = game;
@@ -41,6 +42,8 @@ export class LayerManager extends BaseSingleton {
         this.debugLayer = new Phaser.Group(game, this.container, "debugLayer");
         this.debugLayer.fixedToCamera = true;
 
+        this.graphics = new Phaser.Graphics(game);
+        this.container.add(this.graphics);
         this.layout();
     }
 

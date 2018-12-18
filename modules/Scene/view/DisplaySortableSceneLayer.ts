@@ -2,6 +2,7 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {QuadTree} from "../../../base/ds/QuadTree";
+import {QuadTreeTest} from "../../../base/ds/QuadTreeTest";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
@@ -10,7 +11,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   private mDepthSortDirtyFlag = false;
   private mSortWaitTime = 0;
   private mSortRectangle: Phaser.Rectangle;
-  private mQuadTree: QuadTree;
+  private mQuadTree: QuadTreeTest;
 
 
   public constructor(game: Phaser.Game) {
@@ -18,9 +19,9 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     this.mSceneEntities = new UniqueLinkList();
   }
 
-  public initialize(p_rect: Phaser.Rectangle, p_maxDepth: number = 3, currentDepth: number = 0): void {
+  public initialize(p_rect: Phaser.Rectangle): void {
     if (this.mQuadTree === undefined) {
-        this.mQuadTree = new QuadTree(p_rect, p_maxDepth, currentDepth);
+        this.mQuadTree = new QuadTreeTest(p_rect, 2, 4);
     }
     this.mQuadTree.clear();
   }
@@ -32,10 +33,11 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.initialize();
 
     this.mSceneEntities.add(d);
-    if (this.mQuadTree && d.needSort) {
+    this.add(d.display);
+
+    if (this.mQuadTree) {
       this.mQuadTree.insert(d);
     }
-    this.add(d.display);
     this.markDirty(d.collisionArea.ox, d.collisionArea.oy, d.collisionArea.width, d.collisionArea.height);
   }
 
@@ -62,6 +64,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     let found: BasicSceneEntity[];
     if (needSort) {
       found = this.mQuadTree.retrieve(this.mSortRectangle) as BasicSceneEntity[];
+      this.mSortRectangle = null;
     }
     let entity: BasicSceneEntity;
     let insertIdx = -1;
@@ -101,8 +104,8 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
    * Indicates this layer is dirty and needs to resort.
    */
   public markDirty(x: number, y: number, w: number, h: number): void {
-    if (this.mSortRectangle === undefined) {
-      this.mSortRectangle = new Phaser.Rectangle();
+    if (this.mSortRectangle === undefined || this.mSortRectangle == null) {
+      this.mSortRectangle = new Phaser.Rectangle(x, y, w, h);
     }
     let startX: number = this.mSortRectangle.x;
     let startY: number = this.mSortRectangle.y;

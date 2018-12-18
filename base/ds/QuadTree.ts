@@ -2,10 +2,10 @@ import {IRectangle} from "./IRectangle";
 import {IQuadTreeNode} from "./IQuadTreeNode";
 
 export class QuadTree {
+  public bounds: IRectangle;
   protected max_objects: number;
   protected max_levels: number;
   protected level: number;
-  protected bounds: IRectangle;
   protected children: IQuadTreeNode[];
   protected nodes: QuadTree[];
 
@@ -26,13 +26,13 @@ export class QuadTree {
       horizontalMidpoint = this.bounds.y + (this.bounds.height / 2),
 
       // pRect can completely fit within the top quadrants
-      topQuadrant = (pRect.y < horizontalMidpoint && pRect.y + pRect.height < horizontalMidpoint),
+      topQuadrant = pRect.y + pRect.height < horizontalMidpoint,
 
       // pRect can completely fit within the bottom quadrants
       bottomQuadrant = (pRect.y > horizontalMidpoint);
 
     // pRect can completely fit within the left quadrants
-    if (pRect.x < verticalMidpoint && pRect.x + pRect.width < verticalMidpoint) {
+    if (pRect.x + pRect.width < verticalMidpoint) {
       if (topQuadrant) {
         index = 1;
       } else if (bottomQuadrant) {
@@ -52,21 +52,21 @@ export class QuadTree {
   }
 
   public retrieve(pRect: IRectangle): IQuadTreeNode[] {
-    let index = this.getIndex( pRect ),
+    let index = this.getIndex(pRect),
       returnObjects = this.children;
 
     // if we have subnodes ...
-    if (this.nodes[0] !== undefined ) {
+    if (this.nodes.length > 0) {
 
       // if pRect fits into a subnode ..
-      if ( index !== -1 ) {
-        returnObjects = returnObjects.concat( this.nodes[index].retrieve( pRect ) );
+      if (index !== -1) {
+        returnObjects = returnObjects.concat(this.nodes[index].retrieve(pRect));
 
         // if pRect does not fit into a subnode, check it against all subnodes
       } else {
         let len = this.nodes.length;
-        for ( let i = 0; i < len; i = i + 1 ) {
-          returnObjects = returnObjects.concat( this.nodes[i].retrieve( pRect ) );
+        for (let i = 0; i < len; i = i + 1) {
+          returnObjects = returnObjects.concat(this.nodes[i].retrieve(pRect));
         }
       }
     }
@@ -79,7 +79,7 @@ export class QuadTree {
       index;
 
     // if we have subnodes ...
-    if (this.nodes[0] !== undefined) {
+    if (this.nodes.length > 0) {
       index = this.getIndex({x: pRect.quadX, y: pRect.quadY, width: pRect.quadW, height: pRect.quadH});
 
       if (index !== -1) {
@@ -93,37 +93,42 @@ export class QuadTree {
     if (this.children.length > this.max_objects && this.level < this.max_levels) {
 
       // split if we don't already have subnodes
-      if (this.nodes[0] === undefined) {
+      if (this.nodes.length === 0) {
         this.split();
       }
 
       // add all objects to there corresponding subnodes
       while (i < this.children.length) {
 
-        index = this.getIndex({x: this.children[i].quadX, y: this.children[i].quadY, width: this.children[i].quadW, height: this.children[i].quadH});
+        index = this.getIndex({
+          x: this.children[i].quadX,
+          y: this.children[i].quadY,
+          width: this.children[i].quadW,
+          height: this.children[i].quadH
+        });
 
         if (index !== -1) {
           this.nodes[index].insert(this.children.splice(i, 1)[0]);
         } else {
-          i = i + 1;
+          ++i;
         }
       }
     }
   }
 
   public remove(obj: IQuadTreeNode): boolean {
-    let node = this.getObjectNode( {x: obj.quadX, y: obj.quadY, width: obj.quadW, height: obj.quadH} ), index = -1;
+    let node = this.getObjectNode({x: obj.quadX, y: obj.quadY, width: obj.quadW, height: obj.quadH}), index = -1;
 
     if ((<QuadTree>node).children) {
-      index = (<QuadTree>node).children.indexOf( obj );
+      index = (<QuadTree>node).children.indexOf(obj);
     }
 
-    if ( index === -1 ) {
+    if (index === -1) {
       return false;
     }
 
     if ((<QuadTree>node).children) {
-      (<QuadTree>node).children.splice( index, 1 );
+      (<QuadTree>node).children.splice(index, 1);
     }
     return true;
   }
@@ -131,11 +136,11 @@ export class QuadTree {
   public clear(): void {
     this.children = [];
 
-    if ( !this.nodes.length ) {
+    if (!this.nodes.length) {
       return;
     }
 
-    for ( let i = 0; i < this.nodes.length; i = i + 1 ) {
+    for (let i = 0; i < this.nodes.length; i++) {
 
       this.nodes[i].clear();
 
@@ -149,58 +154,17 @@ export class QuadTree {
 
     this.clear();
 
-    for ( let i = 0; i < this.children.length; i++ ) {
-      this.insert( objects[i] );
+    for (let i = 0; i < this.children.length; i++) {
+      this.insert(objects[i]);
     }
   }
 
-  private getAll(): IQuadTreeNode[] {
-    let children = this.children;
-
-    for ( let i = 0; i < this.nodes.length; i = i + 1 ) {
-      children = children.concat( this.nodes[i].getAll() );
-    }
-
-    return children;
-  }
-
-  private getObjectNode(obj: IRectangle): QuadTree | boolean {
-    let index;
-
-    // if there are no subnodes, object must be here
-    if (!this.nodes.length) {
-
-      return this;
-
-    } else {
-
-      index = this.getIndex(obj);
-
-      // if the object does not fit into a subnode, it must be here
-      if (index === -1) {
-
-        return this;
-
-        // if it fits into a subnode, continue deeper search there
-      } else {
-        let node = this.nodes[index].getObjectNode(obj);
-        if (node) {
-
-          return node;
-
-        }
-      }
-    }
-
-    return false;
-  }
-
-  private split(): void {
+  protected split(): void {
     let nextLevel = this.level + 1,
       subWidth = Math.round(this.bounds.width / 2),
-      subHeight = Math.round(this.bounds.width / 2),
-      x = Math.round(this.bounds.width / 2),
-      y = Math.round(this.bounds.width / 2);
+      subHeight = Math.round(this.bounds.height / 2),
+      x = Math.round(this.bounds.x),
+      y = Math.round(this.bounds.y);
 
     // top right node
     this.nodes[0] = new QuadTree({
@@ -233,5 +197,46 @@ export class QuadTree {
       width: subWidth,
       height: subHeight
     }, this.max_objects, this.max_levels, nextLevel);
+  }
+
+  private getAll(): IQuadTreeNode[] {
+    let children = this.children;
+
+    for (let i = 0; i < this.nodes.length; i++) {
+      children = children.concat(this.nodes[i].getAll());
+    }
+
+    return children;
+  }
+
+  private getObjectNode(obj: IRectangle): QuadTree | boolean {
+    let index;
+
+    // if there are no subnodes, object must be here
+    if (this.nodes.length === 0) {
+
+      return this;
+
+    } else {
+
+      index = this.getIndex(obj);
+
+      // if the object does not fit into a subnode, it must be here
+      if (index === -1) {
+
+        return this;
+
+        // if it fits into a subnode, continue deeper search there
+      } else {
+        let node = this.nodes[index].getObjectNode(obj);
+        if (node) {
+
+          return node;
+
+        }
+      }
+    }
+
+    return false;
   }
 }

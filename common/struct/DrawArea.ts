@@ -74,6 +74,7 @@ export class DrawArea implements ITickedObject, IDisposeObject {
       this.graphics.x = this.ox;
       this.graphics.y = this.oy;
       this.graphics.z = this.oz;
+      this.graphics.visible = true;
       this.mPosDirty = false;
     }
   }
@@ -136,5 +137,6 @@ export class DrawArea implements ITickedObject, IDisposeObject {
         this.areaArr[j][i] = +tempArr[i];
       }
     }
+    this.graphics.visible = false;
   }
 }
