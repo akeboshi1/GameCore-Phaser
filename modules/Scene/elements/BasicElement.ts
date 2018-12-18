@@ -73,13 +73,6 @@ export default class BasicElement extends SceneEntity {
         this.display.isoY = p3.y;
         this.display.isoZ = p3.z;
 
-        // let graphics = Globals.game.make.graphics(this.ox, this.oy);
-        // graphics.clear();
-        // graphics.beginFill(0x0000ff);
-        // graphics.drawCircle(0, 0, 5);
-        // graphics.endFill();
-        // Globals.LayerManager.sceneLayer.add(graphics);
-
         if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
     }
 

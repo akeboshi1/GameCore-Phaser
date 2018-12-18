@@ -64,8 +64,6 @@ export default class Preloader extends Phaser.State {
         } else {
             this.game.state.start("selectrole");
         }
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
-        Globals.SocketManager.send(pkt);
     }
 }
 

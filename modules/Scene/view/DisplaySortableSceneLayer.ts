@@ -61,22 +61,25 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
         this.mDepthSortDirtyFlag = false;
       }
     }
-
-    let found: IQuadTreeNode[];
+    let found: BasicSceneEntity[];
     if (needSort) {
-      found = this.mQuadTree.retrieve(this.mSortRectangle);
-      found.sort(this.sortFunc);
+      found = this.mQuadTree.retrieve(this.mSortRectangle) as BasicSceneEntity[];
     }
-    let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
-    while (entity) {
-      entity.onTick(deltaTime);
-      if (needSort) {
-        if (entity.needSort) {
-          this.setChildIndex(entity.display, this.children.length - 1);
-        }
+    let entity: BasicSceneEntity;
+    let insertIdx = -1;
+    if (found && found.length > 0) {
+        found.sort(this.sortFunc);
+        insertIdx = this.getChildIndex(found[found.length - 1].display);
+    }
+
+      entity = this.mSceneEntities.moveFirst();
+      while (entity) {
+          if (insertIdx !== -1 && found.indexOf(entity) !== -1) {
+              this.setChildIndex(entity.display, insertIdx);
+          }
+          entity.onTick(deltaTime);
+          entity = this.mSceneEntities.moveNext();
       }
-      entity = this.mSceneEntities.moveNext();
-    }
   }
 
   // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层

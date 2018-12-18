@@ -3,6 +3,7 @@ import {op_client} from "../../../protocol/protocols";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import BaseSingleton from "../../base/BaseSingleton";
 import {MessageType} from "../const/MessageType";
+import {BasePacketHandler} from "./BasePacketHandler";
 
 export class SceneService extends BaseSingleton {
   public register(): void {
@@ -10,7 +11,7 @@ export class SceneService extends BaseSingleton {
   }
 }
 
-class Handler extends PacketHandler {
+class Handler extends BasePacketHandler {
   constructor() {
     super();
     // Server
@@ -20,7 +21,6 @@ class Handler extends PacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.handleMoveElement);
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.handleStopElement);
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_CHANGE_ELEMENT_ANIMATION, this.handleChangeElement);
-    this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onErrorHandler);
     // Editor
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
@@ -54,14 +54,9 @@ class Handler extends PacketHandler {
     Globals.MessageCenter.emit(MessageType.CHANGE_ELEMENT_ANIMATION, changeData.changeAnimation);
   }
 
-  private onErrorHandler(packet: PBpacket): void {
-    let err: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-    console.error(`error[${err.responseStatus}]: ${err.msg}`);
-  }
-
   private handleEnterScene(packet: PBpacket): void {
     let sceneData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-    Globals.DataCenter.PlayerData.setMainPlayerInfo({actorId: sceneData.actorId});
+    Globals.DataCenter.PlayerData.mainPlayerInfo.actorId = sceneData.actorId;
     Globals.DataCenter.SceneData.setMapInfo(sceneData.scene);
   }
 

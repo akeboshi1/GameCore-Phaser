@@ -1,49 +1,101 @@
 import RoleAvatarModelVO from "./RoleAvatarModelVO";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
-import {op_gameconfig} from "../../../protocol/protocols";
-import {DrawArea} from "./DrawArea";
+import {op_client, op_gameconfig} from "../../../protocol/protocols";
+import ICharacter = op_client.ICharacter;
 
-export class PlayerInfo {
-  public actorId = 0; // 玩家ID
-  public id = 0;
+export class PlayerInfo implements ICharacter {
+    /** Character id. */
+    public id: number;
 
-  public sceneId = 0;
+    /** Character name. */
+    public name: string;
 
-  public nick = "";             // 昵称
-  public moveSpeed = 10;        // 速度
-  public sex = 1;              // 性别
+    /** Character maxNum. */
+    public maxNum: number;
 
-  public x = 682; // 682
-  public y = 176; // 176
-  public z = 0;
+    /** Character camp. */
+    public camp: string;
 
-  public model: RoleAvatarModelVO;
+    /** Character avatar. */
+    public avatar?: (op_gameconfig.IAvatar | null);
 
-  public avatarDir: number; // 默认朝向
+    /** Character attributes. */
+    public attributes: op_gameconfig.IAttribute[];
 
-  public walkableArea: string;
-  public originWalkablePoint: Phaser.Point;
-  public collisionArea: string;
-  public originCollisionPoint: Phaser.Point;
+    /** Character package. */
+    public package: op_gameconfig.IPackage[];
 
-  public constructor() {
-    this.model = new RoleAvatarModelVO();
-  }
+    /** Character sceneId. */
+    public sceneId: number;
 
-  public changeAvatarModelByModeVO(mode: op_gameconfig.IAvatar): void {
-    this.model.changeAvatarModelByModeVO(mode);
-    Globals.MessageCenter.emit(MessageType.CHANGE_SELF_AVATAR);
-  }
+    /** Character x. */
+    public x: number;
 
-  public setWalkableArea(value: string, orgin: Phaser.Point): void {
-    this.walkableArea = value;
-    this.originWalkablePoint = orgin;
-  }
+    /** Character y. */
+    public y: number;
 
-  public setCollisionArea(value: string, orgin: Phaser.Point): void {
-    this.collisionArea = value;
-    this.originCollisionPoint = orgin;
-  }
+    /** Character z. */
+    public z: number;
+
+    /** Character avatarDir. */
+    public avatarDir: number;
+
+    /** Character walkableArea. */
+    public walkableArea: string;
+
+    /** Character collisionArea. */
+    public collisionArea: string;
+
+    /** Character originPoint. */
+    public originPoint: number[];
+
+    /** Character walkOriginPoint. */
+    public walkOriginPoint: number[];
+
+    public actorId = 0; // 玩家ID
+    public moveSpeed = 10;        // 速度
+
+    public model: RoleAvatarModelVO;
+    protected _originWalkPoint: Phaser.Point;
+
+    public constructor() {
+        this.model = new RoleAvatarModelVO();
+    }
+
+    protected _originCollisionPoint: Phaser.Point;
+
+    public get originCollisionPoint(): Phaser.Point {
+        return this._originCollisionPoint;
+    }
+
+    public get originWalkPoint(): Phaser.Point {
+        return this._originWalkPoint;
+    }
+
+    public changeAvatarModelByModeVO(mode: op_gameconfig.IAvatar): void {
+        this.model.changeAvatarModelByModeVO(mode);
+        Globals.MessageCenter.emit(MessageType.CHANGE_SELF_AVATAR);
+    }
+
+    public setOriginCollisionPoint(value: number[] | null): void {
+        if (this._originCollisionPoint === undefined) {
+            this._originCollisionPoint = new Phaser.Point();
+        }
+        if (value && value.length > 1) {
+            this._originCollisionPoint.x = value[0];
+            this._originCollisionPoint.y = value[1];
+        }
+    }
+
+    public setOriginWalkPoint(value: number[] | null): void {
+        if (this._originWalkPoint === undefined) {
+            this._originWalkPoint = new Phaser.Point();
+        }
+        if (value && value.length > 1) {
+            this._originWalkPoint.x = value[0];
+            this._originWalkPoint.y = value[1];
+        }
+    }
 }
 

@@ -18,8 +18,8 @@ export class SceneData extends BaseSingleton {
         this._mapInfo.setTerrainInfo(value.layers);
         this._mapInfo.setElementInfo(value.elements);
         if ( this.initialize === false ) {
-            Globals.MessageCenter.emit(MessageType.SCENE_DATA_INITIALIZE);
             this._initialize = true;
+            Globals.MessageCenter.emit(MessageType.SCENE_DATA_INITIALIZE);
         }
     }
 

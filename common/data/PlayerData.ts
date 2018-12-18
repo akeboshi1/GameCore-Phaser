@@ -2,12 +2,20 @@ import BaseSingleton from "../../base/BaseSingleton";
 import {MainPlayerInfo} from "../struct/MainPlayerInfo";
 import {PlayerInfo} from "../struct/PlayerInfo";
 import {Log} from "../../Log";
+import {op_client} from "../../../protocol/protocols";
+import Globals from "../../Globals";
+import {MessageType} from "../const/MessageType";
 
 export class PlayerData extends BaseSingleton {
+    private _initialize: boolean = false;
     private _playerInfoList: PlayerInfo[] = [];
 
     public constructor() {
         super();
+    }
+
+    public get initialize(): boolean {
+        return this._initialize;
     }
 
     private _mainPlayerInfo: MainPlayerInfo = new MainPlayerInfo();
@@ -16,15 +24,24 @@ export class PlayerData extends BaseSingleton {
         return this._mainPlayerInfo;
     }
 
-    public setMainPlayerInfo(obj: any): void {
+    public setMainPlayerInfo(obj: op_client.ICharacter): void {
         let value: any;
         for (let key in obj) {
             value = obj[key];
-            if (value instanceof Object) {
-                this.setMainPlayerInfo(value);
-            } else {
-                this._mainPlayerInfo[key] = value;
-            }
+            this._mainPlayerInfo[key] = value;
+        }
+        if (obj.avatar) {
+            this.mainPlayerInfo.changeAvatarModelByModeVO(obj.avatar);
+        }
+        if (obj.walkOriginPoint) {
+            this.mainPlayerInfo.setOriginWalkPoint(obj.walkOriginPoint);
+        }
+        if (obj.originPoint) {
+            this.mainPlayerInfo.setOriginCollisionPoint(obj.originPoint);
+        }
+        if ( this.initialize === false ) {
+            this._initialize = true;
+            Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
         }
     }
 

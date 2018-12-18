@@ -22,6 +22,7 @@ export class MessageType {
   public static SCENE_REMOVE_TERRAIN = "scene_remove_terrain";
   public static SCENE_REMOVE_ALL_TERRAIN = "scene_remove_all_terrain";
 
+  public static PLAYER_DATA_INITIALIZE = "scene_data_initialize";
   public static SCENE_DATA_INITIALIZE = "scene_data_initialize";
 
   public static SEFL_TARGET_START_MOVE = "SEFL_TARGET_START_MOVE";
