@@ -1,172 +1,237 @@
+import {IRectangle} from "./IRectangle";
 import {IQuadTreeNode} from "./IQuadTreeNode";
 
 export class QuadTree {
-  protected _depth: number;
-  protected _maxDepth: number;
-  protected _hWidth: number;
-  protected _hHeight: number;
-  protected _centerX: number;
-  protected _centerY: number;
-  private _topLeft: QuadTree;
-  private _topRight: QuadTree;
-  private _bottomLeft: QuadTree;
-  private _bottomRight: QuadTree;
-  private _rect: Phaser.Rectangle;
-  private _children: IQuadTreeNode[];
+  protected max_objects: number;
+  protected max_levels: number;
+  protected level: number;
+  protected bounds: IRectangle;
+  protected children: IQuadTreeNode[];
+  protected nodes: QuadTree[];
 
-  constructor(p_rect: Phaser.Rectangle, p_maxDepth: number = 10, currentDepth: number = 0) {
-    this.init(p_rect, p_maxDepth, currentDepth);
+  constructor(bounds: IRectangle, max_objects?: number, max_levels?: number, level?: number) {
+    this.max_objects = max_objects || 10;
+    this.max_levels = max_levels || 4;
+
+    this.level = level || 0;
+    this.bounds = bounds;
+
+    this.children = [];
+    this.nodes = [];
   }
 
-  public init(p_rect: Phaser.Rectangle, p_maxDepth?: number, currentDepth?: number): void {
-    this.clear();
-    this._maxDepth = p_maxDepth || 4;
-    this._depth = currentDepth || 0;
-    this._rect = p_rect;
-    this._hWidth = this._rect.width >> 1;
-    this._hHeight = this._rect.height >> 1;
-    this._centerX = this._rect.x + this._hWidth;
-    this._centerY = this._rect.y + this._hHeight;
+  public getIndex(pRect: IRectangle): number {
+    let index = -1,
+      verticalMidpoint = this.bounds.x + (this.bounds.width / 2),
+      horizontalMidpoint = this.bounds.y + (this.bounds.height / 2),
+
+      // pRect can completely fit within the top quadrants
+      topQuadrant = (pRect.y < horizontalMidpoint && pRect.y + pRect.height < horizontalMidpoint),
+
+      // pRect can completely fit within the bottom quadrants
+      bottomQuadrant = (pRect.y > horizontalMidpoint);
+
+    // pRect can completely fit within the left quadrants
+    if (pRect.x < verticalMidpoint && pRect.x + pRect.width < verticalMidpoint) {
+      if (topQuadrant) {
+        index = 1;
+      } else if (bottomQuadrant) {
+        index = 2;
+      }
+
+      // pRect can completely fit within the right quadrants
+    } else if (pRect.x > verticalMidpoint) {
+      if (topQuadrant) {
+        index = 0;
+      } else if (bottomQuadrant) {
+        index = 3;
+      }
+    }
+
+    return index;
+  }
+
+  public retrieve(pRect: IRectangle): IQuadTreeNode[] {
+    let index = this.getIndex( pRect ),
+      returnObjects = this.children;
+
+    // if we have subnodes ...
+    if (this.nodes[0] !== undefined ) {
+
+      // if pRect fits into a subnode ..
+      if ( index !== -1 ) {
+        returnObjects = returnObjects.concat( this.nodes[index].retrieve( pRect ) );
+
+        // if pRect does not fit into a subnode, check it against all subnodes
+      } else {
+        let len = this.nodes.length;
+        for ( let i = 0; i < len; i = i + 1 ) {
+          returnObjects = returnObjects.concat( this.nodes[i].retrieve( pRect ) );
+        }
+      }
+    }
+
+    return returnObjects;
+  }
+
+  public insert(pRect: IQuadTreeNode): void {
+    let i = 0,
+      index;
+
+    // if we have subnodes ...
+    if (this.nodes[0] !== undefined) {
+      index = this.getIndex({x: pRect.quadX, y: pRect.quadY, width: pRect.quadW, height: pRect.quadH});
+
+      if (index !== -1) {
+        this.nodes[index].insert(pRect);
+        return;
+      }
+    }
+
+    this.children.push(pRect);
+
+    if (this.children.length > this.max_objects && this.level < this.max_levels) {
+
+      // split if we don't already have subnodes
+      if (this.nodes[0] === undefined) {
+        this.split();
+      }
+
+      // add all objects to there corresponding subnodes
+      while (i < this.children.length) {
+
+        index = this.getIndex({x: this.children[i].quadX, y: this.children[i].quadY, width: this.children[i].quadW, height: this.children[i].quadH});
+
+        if (index !== -1) {
+          this.nodes[index].insert(this.children.splice(i, 1)[0]);
+        } else {
+          i = i + 1;
+        }
+      }
+    }
+  }
+
+  public remove(obj: IQuadTreeNode): boolean {
+    let node = this.getObjectNode( {x: obj.quadX, y: obj.quadY, width: obj.quadW, height: obj.quadH} ), index = -1;
+
+    if ((<QuadTree>node).children) {
+      index = (<QuadTree>node).children.indexOf( obj );
+    }
+
+    if ( index === -1 ) {
+      return false;
+    }
+
+    if ((<QuadTree>node).children) {
+      (<QuadTree>node).children.splice( index, 1 );
+    }
+    return true;
   }
 
   public clear(): void {
-    this._children = [];
-    this._topLeft = this._topRight = this._bottomLeft = this._bottomRight = null;
-  }
+    this.children = [];
 
-  public retrieve(node: Phaser.Rectangle): IQuadTreeNode[] {
-    let result: IQuadTreeNode[] = [];
-
-// 如果所取区块比本身区域还大，那么它所有子树的children都取出
-    if (node.x <= this._rect.x && node.y <= this._rect.y && node.x + node.width >= this._rect.right && node.y + node.height >= this._rect.bottom) {
-      result.push.apply(result, this._children);
-
-      if (this._topLeft) result.push.apply(result, this._topLeft.retrieve(node));
-      if (this._topRight) result.push.apply(result, this._topRight.retrieve(node));
-      if (this._bottomLeft) result.push.apply(result, this._bottomLeft.retrieve(node));
-      if (this._bottomRight) result.push.apply(result, this._bottomRight.retrieve(node));
-
-      return result;
-    }
-
-// 否则就只取对应的区域子树
-    let objRight: number = node.x + node.width;
-    let objBottom: number = node.y + node.height;
-
-// 完全在分区里
-    if ((node.x > this._rect.x) && (objRight < this._centerX)) {
-      if (node.y > this._rect.y && objBottom < this._centerY) {
-        if (this._topLeft) result.push.apply(result, this._topLeft.retrieve(node));
-        return result;
-      }
-      if (node.y > this._centerY && objBottom < this._rect.bottom) {
-        if (this._bottomLeft) result.push.apply(result, this._bottomLeft.retrieve(node));
-        return result;
-      }
-    }
-    if (node.x > this._centerX && objRight < this._rect.right) {
-      if (node.y > this._rect.y && objBottom < this._centerY) {
-        if (this._topRight) result.push.apply(result, this._topRight.retrieve(node));
-        return result;
-      }
-      if (node.y > this._centerY && objBottom < this._rect.bottom) {
-        if (this._bottomRight) result.push.apply(result, this._bottomRight.retrieve(node));
-        return result;
-      }
-    }
-
-    // 只要有部分在分区里，也放到对应分区里，但注意可以重复放
-
-    // 上边
-    if (objBottom > this._rect.y && node.y < this._centerY) {
-
-      if (node.x < this._centerX && objRight > this._rect.x) {
-        if (this._topLeft) result.push.apply(result, this._topLeft.retrieve(node));
-      }
-      if (node.x < this._rect.right && objRight > this._centerX) {
-        if (this._topRight) result.push.apply(result, this._topRight.retrieve(node));
-      }
-    }
-
-    // 下边
-    if (objBottom > this._centerY && node.y < this._rect.bottom) {
-      if (node.x < this._centerX && objRight > this._rect.x) {
-        if (this._bottomLeft) result.push.apply(result, this._bottomLeft.retrieve(node));
-      }
-
-      if (node.x < this._rect.right && objRight > this._centerX) {
-        if (this._bottomRight) result.push.apply(result, this._bottomRight.retrieve(node));
-      }
-    }
-    return result;
-
-  }
-
-  public insert(node: IQuadTreeNode): void {
-
-// 如果不能切分或者obj比整个区域还大，就放到children里
-    if (this._depth >= this._maxDepth || (node.quadX <= this._rect.x && node.quadY <= this._rect.y && node.quadX + node.quadW >= this._rect.right && node.quadY + node.quadH >= this._rect.bottom)) {
-
-      this._children.push(node);
+    if ( !this.nodes.length ) {
       return;
     }
 
-    if (this._topLeft == null) {
-      let d: number = this._depth + 1;
-      this._topLeft = new QuadTree(new Phaser.Rectangle(this._rect.x, this._rect.y, this._hWidth, this._hHeight), this._maxDepth, d);
-      this._topRight = new QuadTree(new Phaser.Rectangle(this._rect.x + this._hWidth, this._rect.y, this._hWidth, this._hHeight), this._maxDepth, d);
-      this._bottomLeft = new QuadTree(new Phaser.Rectangle(this._rect.x, this._rect.y + this._hHeight, this._hWidth, this._hHeight), this._maxDepth, d);
-      this._bottomRight = new QuadTree(new Phaser.Rectangle(this._rect.x + this._hWidth, this._rect.y + this._hHeight, this._hWidth, this._hHeight), this._maxDepth, d);
+    for ( let i = 0; i < this.nodes.length; i = i + 1 ) {
+
+      this.nodes[i].clear();
+
     }
 
-    let objRight: number = node.quadX + node.quadW;
-    let objBottom: number = node.quadY + node.quadH;
-
-// 可以完全放到分区里就递归放到对应分区里
-    if ((node.quadX > this._rect.x) && (objRight < this._centerX)) {
-      if (node.quadY > this._rect.y && objBottom < this._centerY) {
-        this._topLeft.insert(node);
-        return;
-      }
-      if (node.quadY > this._centerY && objBottom < this._rect.bottom) {
-        this._bottomLeft.insert(node);
-        return;
-      }
-    }
-    if (node.quadX > this._centerX && objRight < this._rect.right) {
-      if (node.quadY > this._rect.y && objBottom < this._centerY) {
-        this._topRight.insert(node);
-        return;
-      }
-      if (node.quadY > this._centerY && objBottom < this._rect.bottom) {
-        this._bottomRight.insert(node);
-        return;
-      }
-    }
-
-// 只要有部分在分区里，也放到对应分区里，但注意可以重复放
-
-// 上边
-    if (objBottom > this._rect.y && node.quadY < this._centerY) {
-
-      if (node.quadX < this._centerX && objRight > this._rect.x) {
-        this._topLeft.insert(node);
-      }
-      if (node.quadX < this._rect.right && objRight > this._centerX) {
-        this._topRight.insert(node);
-      }
-    }
-// 下边
-    if (objBottom > this._centerY && node.quadY < this._rect.bottom) {
-      if (node.quadX < this._centerX && objRight > this._rect.x) {
-        this._bottomLeft.insert(node);
-      }
-
-      if (node.quadX < this._rect.right && objRight > this._centerX) {
-        this._bottomRight.insert(node);
-      }
-    }
-
+    this.nodes = [];
   }
 
+  public cleanup(): void {
+    let objects = this.getAll();
+
+    this.clear();
+
+    for ( let i = 0; i < this.children.length; i++ ) {
+      this.insert( objects[i] );
+    }
+  }
+
+  private getAll(): IQuadTreeNode[] {
+    let children = this.children;
+
+    for ( let i = 0; i < this.nodes.length; i = i + 1 ) {
+      children = children.concat( this.nodes[i].getAll() );
+    }
+
+    return children;
+  }
+
+  private getObjectNode(obj: IRectangle): QuadTree | boolean {
+    let index;
+
+    // if there are no subnodes, object must be here
+    if (!this.nodes.length) {
+
+      return this;
+
+    } else {
+
+      index = this.getIndex(obj);
+
+      // if the object does not fit into a subnode, it must be here
+      if (index === -1) {
+
+        return this;
+
+        // if it fits into a subnode, continue deeper search there
+      } else {
+        let node = this.nodes[index].getObjectNode(obj);
+        if (node) {
+
+          return node;
+
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private split(): void {
+    let nextLevel = this.level + 1,
+      subWidth = Math.round(this.bounds.width / 2),
+      subHeight = Math.round(this.bounds.width / 2),
+      x = Math.round(this.bounds.width / 2),
+      y = Math.round(this.bounds.width / 2);
+
+    // top right node
+    this.nodes[0] = new QuadTree({
+      x: x + subWidth,
+      y: y,
+      width: subWidth,
+      height: subHeight
+    }, this.max_objects, this.max_levels, nextLevel);
+
+    // top left node
+    this.nodes[1] = new QuadTree({
+      x: x,
+      y: y,
+      width: subWidth,
+      height: subHeight
+    }, this.max_objects, this.max_levels, nextLevel);
+
+    // bottom left node
+    this.nodes[2] = new QuadTree({
+      x: x,
+      y: y + subHeight,
+      width: subWidth,
+      height: subHeight
+    }, this.max_objects, this.max_levels, nextLevel);
+
+    // bottom right node
+    this.nodes[3] = new QuadTree({
+      x: x + subWidth,
+      y: y + subHeight,
+      width: subWidth,
+      height: subHeight
+    }, this.max_objects, this.max_levels, nextLevel);
+  }
 }

@@ -22,7 +22,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public scene: SceneBasic;
     public camera: Phaser.Camera;
     public isNeedSort = true;
-    public isNeedSort = true;
 
     public walkableArea: DrawArea;
     public collisionArea: DrawArea;

@@ -2,7 +2,6 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {QuadTree} from "../../../base/ds/QuadTree";
-import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
@@ -22,9 +21,8 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public initialize(p_rect: Phaser.Rectangle, p_maxDepth: number = 3, currentDepth: number = 0): void {
     if (this.mQuadTree === undefined) {
         this.mQuadTree = new QuadTree(p_rect, p_maxDepth, currentDepth);
-    } else {
-        this.mQuadTree.init(p_rect, p_maxDepth, currentDepth);
     }
+    this.mQuadTree.clear();
   }
 
   public addEntity(d: BasicSceneEntity): void {
@@ -34,7 +32,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.initialize();
 
     this.mSceneEntities.add(d);
-    if (this.mQuadTree) {
+    if (this.mQuadTree && d.needSort) {
       this.mQuadTree.insert(d);
     }
     this.add(d.display);
