@@ -1,8 +1,9 @@
 import Globals from "../../Globals";
-import {op_gameconfig} from "../../../protocol/protocols";
+import {op_client, op_gameconfig} from "../../../protocol/protocols";
 import {DrawArea} from "./DrawArea";
+import IElement = op_client.IElement;
 
-export class ElementInfo {
+export class ElementInfo implements IElement {
   public id: number;
   public type: string;
   public dir: number;
@@ -23,9 +24,9 @@ export class ElementInfo {
 
   public scale = 1; // -1水平翻转
 
-  public speed = 4;
-
   public animationName: string;
+
+  public speed = 4;
 
   public constructor() {
   }

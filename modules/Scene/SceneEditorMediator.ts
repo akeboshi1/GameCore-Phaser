@@ -176,8 +176,8 @@ export class SceneEditorMediator extends SceneMediator {
     for (let i = 0; i < len; i++) {
       terrain = new TerrainInfo();
       terrain.type = value[i].type;
-      terrain.col = value[i].col;
-      terrain.row = value[i].row;
+      terrain.x = value[i].x;
+      terrain.y = value[i].y;
       this.addTerrain(terrain);
     }
   }
