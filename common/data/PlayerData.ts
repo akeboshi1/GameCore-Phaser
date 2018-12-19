@@ -31,9 +31,6 @@ export class PlayerData extends BaseSingleton {
             value = obj[key];
             this._mainPlayerInfo[key] = value;
         }
-        if (obj.nickname) {
-            GameConfig.UserName = obj.nickname;
-        }
         if (obj.avatar) {
             this.mainPlayerInfo.changeAvatarModelByModeVO(obj.avatar);
         }

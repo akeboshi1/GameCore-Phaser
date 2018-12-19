@@ -166,6 +166,7 @@ export class SceneEditorMediator extends SceneMediator {
   private handleAddElement(value: op_client.IElement): void {
     let element: ElementInfo = new ElementInfo();
     element.setInfo(value);
+    // element.setWalkableArea(value.walkableArea, new Phaser.Point(1, 1));
     element.setCollisionArea(value.collisionArea, value.originPoint ? new Phaser.Point(value.originPoint[0], value.originPoint[1]) : new Phaser.Point());
     this.addElement(element);
   }
@@ -175,9 +176,7 @@ export class SceneEditorMediator extends SceneMediator {
     let len: number = value.length;
     for (let i = 0; i < len; i++) {
       terrain = new TerrainInfo();
-      terrain.type = value[i].type;
-      terrain.x = value[i].x;
-      terrain.y = value[i].y;
+      terrain.setInfo(value[i]);
       this.addTerrain(terrain);
     }
   }
