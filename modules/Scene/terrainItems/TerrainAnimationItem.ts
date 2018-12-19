@@ -5,7 +5,7 @@ import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 
 export class TerrainAnimationItem extends BasicTerrainItem  {
     private avatar: BasicTerrainAvatar;
-    protected mAnimationDirty: boolean = false;
+    protected mAnimationDirty = false;
     protected myAnimationName: string;
     public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
         super(game, owner);

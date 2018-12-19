@@ -1,6 +1,7 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 import * as path from "path";
 import {GameConfig} from "./GameConfig";
+import {op_gameconfig} from "../protocol/protocols";
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
         static getName(): string {
@@ -24,33 +25,34 @@ export namespace Atlases {
     }
 }
 
-export namespace Images {
-    export class ImagesTile {
-        static getName(type: string): string {
-            return "tile_" + type + "_png";
-        }
-
-        static getPNG(type: string): string {
-            return `${path.resolve(GameConfig.HomeDir , `.pixelpai/${GameConfig.UserName}terrains/${type}/${type}.png`)}`;
-        }
-
-        static getJSONArray(type: string): string {
-            return `${path.resolve(GameConfig.HomeDir, `.pixelpai/${GameConfig.UserName}/terrains/${type}/${type}.json`)}`;
-        }
+export namespace Display {
+  export class AtlasUtil {
+    static getKey(value: op_gameconfig.IDisplay): string {
+      let keys = [];
+      if (value.texturePath) {
+        keys.push(value.texturePath);
+      }
+      if (value.dataPath) {
+        keys.push(value.dataPath);
+      }
+      return keys.join("&");
     }
 
-    export class ImagesElement {
-        static getName(id: string): string {
-            return "element_" + id + "_png";
-        }
+    static getRes(url: string): string {
+      return `${path.resolve(GameConfig.HomeDir , url)}`;
+    }
+  }
+}
 
-        static getPNG(id: string): string {
-          return `${path.resolve(GameConfig.HomeDir , `.pixelpai/${GameConfig.UserName}/elements/${id}/${id}.png`)}`;
-        }
+export namespace Images {
+    export class ImagesTile {
+      static getName(id: number): string {
+        return "tile_" + id + "_png";
+      }
 
-        static getJSONArray(id: string): string {
-          return `${path.resolve(GameConfig.HomeDir, `.pixelpai/${GameConfig.UserName}/elements/${id}/${id}.json`)}`;
-        }
+      static getPNG(id: number): string {
+        return require("assets/images/terrain/terrain_" + id + ".png");
+      }
     }
 }
 

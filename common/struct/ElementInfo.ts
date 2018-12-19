@@ -1,6 +1,4 @@
-import Globals from "../../Globals";
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
-import {DrawArea} from "./DrawArea";
 import IElement = op_client.IElement;
 
 export class ElementInfo implements IElement {
@@ -14,6 +12,7 @@ export class ElementInfo implements IElement {
   public des: string;
   public color: number;
   public subType: number;
+  public display: op_gameconfig.IDisplay;
   public animations: op_gameconfig.IAnimation[];
   public attributes: op_gameconfig.IAttribute[];
 

@@ -18,6 +18,8 @@ export class TerrainInfo implements ITerrain {
 
   public type: string;
 
+  public display: op_gameconfig.IDisplay;
+
   public get col(): number {
     return this.x;
   }

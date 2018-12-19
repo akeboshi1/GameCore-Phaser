@@ -1,16 +1,16 @@
 import {IAnimatedObject} from "../../base/IAnimatedObject";
-import {Images} from "../../Assets";
+import {Display, Images} from "../../Assets";
 import {op_gameconfig} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 
-export class TerrainLoaderAvatar extends Phaser.Group implements IAnimatedObject {
-    private myType: string;
+export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject {
+    private mUrl: op_gameconfig.IDisplay = {};
     private mLoadThisArg: any;
-    private myModelUrlDirty: boolean = false;
-    private mModelLoaded: boolean = false;
+    private myModelUrlDirty = false;
+    private mModelLoaded = false;
     private mLoadCompleteCallback: Function;
     private mLoadErrorCallback: Function;
-    private terrain: Phaser.Sprite;
+    private element: Phaser.Sprite;
     private config: op_gameconfig.IAnimation[];
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
@@ -29,21 +29,22 @@ export class TerrainLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     protected init(): void {
-        let key = Images.ImagesTile.getName(this.myType);
-        this.terrain = this.game.make.sprite(0, 0, key);
+        let key: string = Display.AtlasUtil.getKey(this.mUrl);
+        this.element = this.game.make.sprite(0, 0, key);
         let animation: op_gameconfig.IAnimation;
         for (let i = 0; i < this.config.length; i++) {
             animation = this.config[i];
-            this.terrain.animations.add(animation.name, animation.frame, animation.frameRate, animation.loop);
+            this.element.animations.add(animation.name, animation.frame, animation.frameRate, animation.loop);
         }
-        this.addChild(this.terrain);
+        this.addChild(this.element);
     }
 
     /**
      * 动画
      */
-    public playAnimation(animationName: string): void {
-        this.terrain.animations.play(animationName);
+    public playAnimation(animationName: string, scaleX?: number): void {
+        this.element.animations.play(animationName);
+        this.element.scale.x = scaleX || 1;
     }
 
     public setAnimationControlFunc(value: Function, thisObj: any): void {
@@ -56,8 +57,10 @@ export class TerrainLoaderAvatar extends Phaser.Group implements IAnimatedObject
         this.mAnimatonControlFuncDitry = true;
     }
 
-    public loadModel(type: string, thisArg: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
-        if (this.myType === type) return;
+    public loadModel(url: op_gameconfig.IDisplay, thisArg: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
+        if (this.mUrl.dataPath === url.dataPath && this.mUrl.texturePath === url.texturePath) {
+          return;
+        }
 
         this.closeLoadModel();
 
@@ -65,9 +68,10 @@ export class TerrainLoaderAvatar extends Phaser.Group implements IAnimatedObject
             onLoadStart.apply(thisArg);
         }
 
-        this.myType = type;
+        this.mUrl.texturePath = url.texturePath;
+        this.mUrl.dataPath = url.dataPath;
 
-        if (this.myType) {
+        if (this.mUrl.dataPath && this.mUrl.texturePath) {
             this.mLoadCompleteCallback = onLoadComplete;
             this.mLoadErrorCallback = onLoadError;
             this.mLoadThisArg = thisArg;
@@ -76,21 +80,22 @@ export class TerrainLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     protected closeLoadModel() {
-        if (this.myType) {
+        if (this.mUrl.dataPath && this.mUrl.texturePath) {
             if (this.mModelLoaded) {
                 this.mModelLoaded = false;
             }
-            this.myType = "";
+          this.mUrl.texturePath = "";
+          this.mUrl.dataPath = "";
         }
         this.myModelUrlDirty = false;
     }
 
     protected onUpdateModelURL() {
-        if (Globals.game.cache.checkTextureKey(Images.ImagesTile.getName(this.myType))) {
+        if (Globals.game.cache.checkTextureKey(Display.AtlasUtil.getKey(this.mUrl))) {
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.atlasJSONHash(Images.ImagesTile.getName(this.myType), Images.ImagesTile.getPNG(this.myType), Images.ImagesTile.getJSONArray(this.myType));
+            this.game.load.atlasJSONHash(Display.AtlasUtil.getKey(this.mUrl), Display.AtlasUtil.getRes(this.mUrl.texturePath), Display.AtlasUtil.getRes(this.mUrl.dataPath));
             this.game.load.start();
         }
     }

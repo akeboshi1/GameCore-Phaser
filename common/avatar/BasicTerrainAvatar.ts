@@ -2,13 +2,13 @@ import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {BasicAvatar} from "../../base/BasicAvatar";
 import Globals from "../../Globals";
 import {TerrainInfo} from "../struct/TerrainInfo";
-import {TerrainLoaderAvatar} from "./TerrainLoaderAvatar";
+import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 
 export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
-    protected hasPlaceHold: boolean = true;
-    protected mBodyAvatar: TerrainLoaderAvatar;
-    protected mAnimationName: string = "";
-    protected mAnimationDirty: boolean = false;
+    protected hasPlaceHold = true;
+    protected mBodyAvatar: DisplayLoaderAvatar;
+    protected mAnimationName: string;
+    protected mAnimationDirty = false;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -29,7 +29,7 @@ export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
         this.mBodyAvatar.setAnimationConfig(terrainInfo.animations);
         this.callBack = callBack;
         this.callThisObj = thisObj;
-        this.mBodyAvatar.loadModel(terrainInfo.type, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        this.mBodyAvatar.loadModel(terrainInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
     public onTick(deltaTime: number): void {
@@ -46,13 +46,13 @@ export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
     }
 
     protected onInitialize(): void {
-        this.mBodyAvatar = new TerrainLoaderAvatar(Globals.game);
+        this.mBodyAvatar = new DisplayLoaderAvatar(Globals.game);
         this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
         this.mBodyAvatar.visible = false;
         this.addChild(this.mBodyAvatar);
     }
 
-    protected bodyControlHandler(boneAvatar: TerrainLoaderAvatar): void {
+    protected bodyControlHandler(boneAvatar: DisplayLoaderAvatar): void {
         boneAvatar.playAnimation(this.animationName);
     }
 
