@@ -1,7 +1,6 @@
 import {QuadTree} from "./QuadTree";
 import {IQuadTreeNode} from "./IQuadTreeNode";
 import Globals from "../../Globals";
-import {p} from "@angular/core/src/render3";
 import {IRectangle} from "./IRectangle";
 
 export class QuadTreeTest extends QuadTree {
