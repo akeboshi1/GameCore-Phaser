@@ -37,10 +37,6 @@ export class TerrainImageItem extends BasicTerrainItem {
     }
 
     protected onTerrainItemLoadComplete(): void {
-        // if(this.bmd)
-        //     Log.trace("full--------------------------------------");
-        // else
-        //     Log.trace("kong--------------------------------------");
         this.bmd = this.game.make.bitmapData(this.itemWidth, this.itemHeight + Const.GameConst.MAP_TILE_DEPTH);
         let rect = new Phaser.Rectangle(this.itemWidth * this.data.subIdx, (this.itemHeight + Const.GameConst.MAP_TILE_DEPTH) * this.data.colorIdx, this.itemWidth, this.itemHeight + Const.GameConst.MAP_TILE_DEPTH);
         let source = Images.ImagesTile.getName(this.data.type);

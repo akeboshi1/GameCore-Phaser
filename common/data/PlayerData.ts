@@ -5,6 +5,7 @@ import {Log} from "../../Log";
 import {op_client} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
+import {GameConfig} from "../../GameConfig";
 
 export class PlayerData extends BaseSingleton {
     private _initialize: boolean = false;
@@ -29,6 +30,9 @@ export class PlayerData extends BaseSingleton {
         for (let key in obj) {
             value = obj[key];
             this._mainPlayerInfo[key] = value;
+        }
+        if (obj.nickname) {
+            GameConfig.UserName = obj.nickname;
         }
         if (obj.avatar) {
             this.mainPlayerInfo.changeAvatarModelByModeVO(obj.avatar);

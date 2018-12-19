@@ -11,6 +11,8 @@ export class PlayerInfo implements ICharacter {
     /** Character name. */
     public name: string;
 
+    public nickname: string
+
     /** Character maxNum. */
     public maxNum: number;
 

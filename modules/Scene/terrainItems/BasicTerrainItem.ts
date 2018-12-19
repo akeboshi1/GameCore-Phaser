@@ -5,8 +5,9 @@ import Globals from "../../../Globals";
 import IsoSprite = Phaser.Plugin.Isometric.IsoSprite;
 import {GameConfig} from "../../../GameConfig";
 import {IDisposeObject} from "../../../base/IDisposeObject";
+import {ITickedObject} from "../../../base/ITickedObject";
 
-export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject {
+export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject, ITickedObject {
     public data: any;
     public isoX = 0;
     public isoY = 0;
@@ -68,6 +69,8 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
             this.visible = false;
         }
     }
+
+    public onTick(deltaTime: number): void { }
 
     public releaseTerrainItem() {
         if (this.mTerrainItemDisplayObjectCreated) {

@@ -1,7 +1,6 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 import * as path from "path";
 import {GameConfig} from "./GameConfig";
-
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
         static getName(): string {
@@ -27,12 +26,16 @@ export namespace Atlases {
 
 export namespace Images {
     export class ImagesTile {
-        static getName(id: number): string {
-            return "tile_" + id + "_png";
+        static getName(type: string): string {
+            return "tile_" + type + "_png";
         }
 
-        static getPNG(id: number): string {
-            return require("assets/images/terrain/terrain_" + id + ".png");
+        static getPNG(type: string): string {
+            return `${path.resolve(GameConfig.HomeDir , `.pixelpai/${GameConfig.UserName}terrains/${type}/${type}.png`)}`;
+        }
+
+        static getJSONArray(type: string): string {
+            return `${path.resolve(GameConfig.HomeDir, `.pixelpai/${GameConfig.UserName}/terrains/${type}/${type}.json`)}`;
         }
     }
 
@@ -42,11 +45,11 @@ export namespace Images {
         }
 
         static getPNG(id: string): string {
-          return `${path.resolve(GameConfig.HomeDir , `.pixelpai/element/${id}/${id}.png`)}`;
+          return `${path.resolve(GameConfig.HomeDir , `.pixelpai/${GameConfig.UserName}/elements/${id}/${id}.png`)}`;
         }
 
         static getJSONArray(id: string): string {
-          return `${path.resolve(GameConfig.HomeDir, `.pixelpai/element/${id}/${id}.json`)}`;
+          return `${path.resolve(GameConfig.HomeDir, `.pixelpai/${GameConfig.UserName}/elements/${id}/${id}.json`)}`;
         }
     }
 }

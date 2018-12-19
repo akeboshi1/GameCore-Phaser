@@ -48,14 +48,21 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   }
 
   public onFrame(deltaTime: number): void {
-    // this.iosX = (GameConst.WindowWidth - this.mapSceneInfo.mapTotalWidth) >> 1;
-    // this.iosY = (GameConst.WindowHeight - this.mapSceneInfo.mapTotalHeight) >> 1;
     let terrainItem: BasicTerrainItem = null;
 
     for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
       terrainItem = this._terrainItems[i];
       terrainItem.onFrame(deltaTime);
     }
+  }
+
+  public onTick(deltaTime: number): void {
+      let terrainItem: BasicTerrainItem = null;
+
+      for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
+          terrainItem = this._terrainItems[i];
+          terrainItem.onTick(deltaTime);
+      }
   }
 
   public clear(): void {

@@ -9,10 +9,10 @@ import {Log} from "../../Log";
 import {Tick} from "../../common/tick/Tick";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {Const} from "../../common/const/Const";
-import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import {PBpacket} from "net-socket-packet";
 import {op_client, op_editor, op_virtual_world} from "../../../protocol/protocols";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
+import {TerrainInfo} from "../../common/struct/TerrainInfo";
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
