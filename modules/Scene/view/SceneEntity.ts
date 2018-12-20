@@ -173,60 +173,60 @@ export default class SceneEntity extends BasicSceneEntity {
         let atanAngle: number = Globals.Tool.caculateDirectionRadianByTwoPoint2(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
         let targetX: number = this.ox + actualSpeed * Math.cos(atanAngle);
         let targetY: number = this.oy + actualSpeed * Math.sin(atanAngle);
-        switch (this.walkAngleIndex) {
-            case Direction.UP:
-                if (targetY < this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                break;
-            case Direction.DOWN:
-                if (targetY > this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                break;
-            case Direction.LEFT:
-                if (targetX < this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.RIGHT:
-                if (targetX > this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.UPPER_LEFT:
-                if (targetY < this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX < this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.UPPER_RIGHT:
-                if (targetY < this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX > this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.LOWER_LEFT:
-                if (targetY > this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX < this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.LOWER_RIGHT:
-                if (targetY > this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX > this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-        }
+        // switch (this.walkAngleIndex) {
+        //     case Direction.UP:
+        //         if (targetY < this.mTarget.y) {
+        //             targetY = this.mTarget.y;
+        //         }
+        //         break;
+        //     case Direction.DOWN:
+        //         if (targetY > this.mTarget.y) {
+        //             targetY = this.mTarget.y;
+        //         }
+        //         break;
+        //     case Direction.LEFT:
+        //         if (targetX < this.mTarget.x) {
+        //             targetX = this.mTarget.x;
+        //         }
+        //         break;
+        //     case Direction.RIGHT:
+        //         if (targetX > this.mTarget.x) {
+        //             targetX = this.mTarget.x;
+        //         }
+        //         break;
+        //     case Direction.UPPER_LEFT:
+        //         if (targetY < this.mTarget.y) {
+        //             targetY = this.mTarget.y;
+        //         }
+        //         if (targetX < this.mTarget.x) {
+        //             targetX = this.mTarget.x;
+        //         }
+        //         break;
+        //     case Direction.UPPER_RIGHT:
+        //         if (targetY < this.mTarget.y) {
+        //             targetY = this.mTarget.y;
+        //         }
+        //         if (targetX > this.mTarget.x) {
+        //             targetX = this.mTarget.x;
+        //         }
+        //         break;
+        //     case Direction.LOWER_LEFT:
+        //         if (targetY > this.mTarget.y) {
+        //             targetY = this.mTarget.y;
+        //         }
+        //         if (targetX < this.mTarget.x) {
+        //             targetX = this.mTarget.x;
+        //         }
+        //         break;
+        //     case Direction.LOWER_RIGHT:
+        //         if (targetY > this.mTarget.y) {
+        //             targetY = this.mTarget.y;
+        //         }
+        //         if (targetX > this.mTarget.x) {
+        //             targetX = this.mTarget.x;
+        //         }
+        //         break;
+        // }
 
         // Log.trace("moveAngle-->", moveAngle);
 
