@@ -2,56 +2,75 @@ import {BasicTerrainItem} from "./BasicTerrainItem";
 import {TerrainSceneLayer} from "../view/TerrainSceneLayer";
 import Globals from "../../../Globals";
 import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
+import {op_gameconfig} from "../../../../protocol/protocols";
 
-export class TerrainAnimationItem extends BasicTerrainItem  {
-    private avatar: BasicTerrainAvatar;
-    protected mAnimationDirty = false;
-    protected myAnimationName: string;
-    public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
-        super(game, owner);
+export class TerrainAnimationItem extends BasicTerrainItem {
+  protected mAnimationDirty = false;
+  protected myAnimationName: string;
+  protected baseLoc: Phaser.Point;
+
+  public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
+    super(game, owner);
+  }
+
+  public releaseTerrainItem() {
+    if ((<BasicTerrainAvatar>this.terrainIsoDisplayObject)) {
+      (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onDispose();
     }
+    super.releaseTerrainItem();
+  }
 
-    public releaseTerrainItem() {
-        super.releaseTerrainItem();
-        if (this.avatar) this.avatar.onDispose();
-        this.avatar = null;
+  public setAnimation(value: string): void {
+    // Log.trace("角度-->"+value);
+    this.myAnimationName = value;
+
+    this.invalidAnimation();
+  }
+
+  public onFrame(deltaTime: number) {
+    super.onFrame(deltaTime);
+    if (this.terrainIsoDisplayObject && (this.terrainIsoDisplayObject as BasicTerrainAvatar).onFrame !== undefined) (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onFrame(deltaTime);
+  }
+
+  public onTick(deltaTime: number): void {
+    if (this.mAnimationDirty) {
+      this.onAvatarAnimationChanged();
+      this.mAnimationDirty = false;
     }
+    if (this.terrainIsoDisplayObject && (this.terrainIsoDisplayObject as BasicTerrainAvatar).onTick !== undefined) (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onTick(deltaTime);
+    super.onTick(deltaTime);
+  }
 
-    protected onTerrainItemCreate(): void {
-        this.terrainIsoDisplayObject = new BasicTerrainAvatar(Globals.game);
-        super.onTerrainItemCreate();
-    }
+  protected onTerrainItemCreate(): void {
+    this.terrainIsoDisplayObject = new BasicTerrainAvatar(Globals.game);
+    (<BasicTerrainAvatar>this.terrainIsoDisplayObject).initialize(this.data);
+    this.initBaseLoc();
+    super.onTerrainItemCreate();
+  }
 
-    protected onTerrainItemLoad(): void {
-        super.onTerrainItemLoad();
-        (<BasicTerrainAvatar>this.terrainIsoDisplayObject).loadModel(this.data.type, this.onTerrainItemLoadComplete, this);
-    }
+  protected onTerrainItemLoad(): void {
+    super.onTerrainItemLoad();
+    (<BasicTerrainAvatar>this.terrainIsoDisplayObject).loadModel(this.onTerrainItemLoadComplete, this);
+  }
 
-    protected onTerrainItemLoadComplete(): void {
-        this.setAnimation(this.data.animationName);
-        super.onTerrainItemLoadComplete();
-    }
+  private initBaseLoc(): void {
+    // 图片坐标
+    let config: op_gameconfig.IAnimation = this.data.config;
+    if (config === null) return;
+    let tmp: Array<string> = config.baseLoc.split(",");
+    this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
+  }
 
-    protected invalidAnimation(): void {
-        this.mAnimationDirty = true;
-    }
+  protected onTerrainItemLoadComplete(): void {
+    this.setAnimation(this.data.animationName);
+    super.onTerrainItemLoadComplete();
+  }
 
-    public setAnimation(value: string): void {
-        // Log.trace("角度-->"+value);
-        this.myAnimationName = value;
+  protected invalidAnimation(): void {
+    this.mAnimationDirty = true;
+  }
 
-        this.invalidAnimation();
-    }
-
-    public onTick(deltaTime: number): void {
-        if (this.mAnimationDirty) {
-            this.onAvatarAnimationChanged();
-            this.mAnimationDirty = false;
-        }
-        super.onTick(deltaTime);
-    }
-
-    protected onAvatarAnimationChanged(): void {
-        (<BasicTerrainAvatar>this.terrainIsoDisplayObject).animationName = this.myAnimationName;
-    }
+  protected onAvatarAnimationChanged(): void {
+    (<BasicTerrainAvatar>this.terrainIsoDisplayObject).animationName = this.myAnimationName;
+  }
 }

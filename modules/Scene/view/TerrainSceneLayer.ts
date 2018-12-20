@@ -3,13 +3,20 @@ import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {BasicTerrainItem} from "../terrainItems/BasicTerrainItem";
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
-import {TerrainImageItem} from "../terrainItems/TerrainImageItem";
 import Globals from "../../../Globals";
+import {TerrainAnimationItem} from "../terrainItems/TerrainAnimationItem";
+import {QuadTreeTest} from "../../../base/ds/QuadTreeTest";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
   public curTerrainLoadCount = 0;
+  public needRealTimeDepthSort = false;
+  protected _terrainItems: Array<BasicTerrainItem>;
+  protected TERRAIN_LAYER_RENDER_DELAY = 200;
   private mapSceneInfo: SceneInfo;
-  private _terrainItems: Array<BasicTerrainItem>;
+  private mDepthSortDirtyFlag = false;
+  private mSortWaitTime = 0;
+  private mSortRectangle: Phaser.Rectangle;
+  private mQuadTree: QuadTreeTest;
 
   public constructor(game: Phaser.Game) {
     super(game);
@@ -18,6 +25,15 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
   public initializeMap(mapSceneInfo: SceneInfo): void {
     this.mapSceneInfo = mapSceneInfo;
+    if (this.mQuadTree === undefined) {
+      this.mQuadTree = new QuadTreeTest({
+        x: 0,
+        y: 0,
+        width: this.mapSceneInfo.mapTotalWidth,
+        height: this.mapSceneInfo.mapTotalHeight
+      }, 2, 4);
+    }
+    this.mQuadTree.clear();
     let len: number = this.mapSceneInfo.terrainConfig.length;
     for (let i = 0; i < len; i++) {
       this.initializeTerrainItems(this.mapSceneInfo.terrainConfig[i]);
@@ -57,12 +73,44 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   }
 
   public onTick(deltaTime: number): void {
-      let terrainItem: BasicTerrainItem = null;
+    this.mSortWaitTime += deltaTime;
 
-      for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
-          terrainItem = this._terrainItems[i];
-          terrainItem.onTick(deltaTime);
+    let needSort = false;
+
+    if (this.mSortWaitTime > this.TERRAIN_LAYER_RENDER_DELAY) {
+      this.mSortWaitTime = 0;
+      needSort = this.needRealTimeDepthSort || this.mDepthSortDirtyFlag;
+      if (needSort) {
+        this.mDepthSortDirtyFlag = false;
       }
+    }
+    let found: BasicTerrainItem[];
+    if (needSort) {
+      found = this.mQuadTree.retrieve(this.mSortRectangle) as BasicTerrainItem[];
+      this.mSortRectangle = null;
+    }
+
+    let terrainItem: BasicTerrainItem = null;
+
+    let insertIdx = -1;
+    if (found && found.length > 0) {
+      found.sort(this.sortFunc);
+      insertIdx = found[found.length - 1].getChildIndex(found[found.length - 1].display);
+    }
+
+    for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
+      terrainItem = this._terrainItems[i];
+      if (terrainItem.hadCreated) {
+        if (this.mQuadTree) {
+          this.mQuadTree.insert(terrainItem);
+        }
+        this.markDirty(terrainItem.collisionArea.ox, terrainItem.collisionArea.oy, terrainItem.collisionArea.width, terrainItem.collisionArea.height);
+      }
+      if (terrainItem.isCreated && insertIdx !== -1 && found.indexOf(terrainItem) !== -1) {
+        terrainItem.setChildIndex(terrainItem.display, insertIdx);
+      }
+      terrainItem.onTick(deltaTime);
+    }
   }
 
   public clear(): void {
@@ -75,58 +123,111 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     }
   }
 
-  public addTerrainItem(value: TerrainInfo): void {
-    let element: BasicTerrainItem = this.getItemByPos(value.col, value.row);
-    if (element) {
-      element.onDispose();
+  // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+  public sortFunc(a: BasicTerrainItem, b: BasicTerrainItem): number {
+    if (a.oy > b.oy) {
+      return 1;
+    } else if (a.oy < b.oy) {
+      return -1;
     } else {
-      element = new TerrainImageItem(Globals.game, this);
-      this.addChild(element);
-      this._terrainItems.push(element);
+      // 左边的排在下面
+      if (a.ox > b.ox) {
+        return 1;
+      } else if (a.ox < b.ox) {
+        return -1;
+      }
     }
-    this.setTerrainItem(element, value);
+    return 0;
+  }
+
+  public addTerrainItem(value: TerrainInfo): void {
+    let terrain: BasicTerrainItem = this.getItemByPos(value.col, value.row);
+    if (terrain) {
+      terrain.onDispose();
+    } else {
+      terrain = new TerrainAnimationItem(Globals.game, this);
+      terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+        , this.mapSceneInfo.tileHeight >> 1);
+      this.addChild(terrain);
+      this._terrainItems.push(terrain);
+    }
+    this.setTerrainItem(terrain, value);
   }
 
   public removeTerrainItem(col: number, row: number): void {
-    let element: BasicTerrainItem = this.getItemByPos(col, row);
-    if (element) {
-      element.onDispose();
+    let terrain: BasicTerrainItem = this.getItemByPos(col, row);
+    if (terrain) {
+      terrain.onDispose();
     }
   }
 
   public removeAllTerrain(): void {
     let len = this._terrainItems.length;
     for (let i = 0; i < len; i++) {
-        this._terrainItems[i].onDispose();
+      this._terrainItems[i].onDispose();
     }
+  }
+
+  /**
+   * Indicates this layer is dirty and needs to resort.
+   */
+  public markDirty(x: number, y: number, w: number, h: number): void {
+    if (this.mSortRectangle === undefined || this.mSortRectangle == null) {
+      this.mSortRectangle = new Phaser.Rectangle(x, y, w, h);
+    }
+    let startX: number = this.mSortRectangle.x;
+    let startY: number = this.mSortRectangle.y;
+    let endX: number = startX + this.mSortRectangle.width;
+    let endY: number = startY + this.mSortRectangle.height;
+    if (x < startX) {
+      this.mSortRectangle.x = x;
+    }
+    if (y < startY) {
+      this.mSortRectangle.y = y;
+    }
+
+    if (x + w > endX) {
+      endX = x + w;
+    }
+
+    if (y + h > endY) {
+      endY = y + h;
+    }
+
+    this.mSortRectangle.x = startX;
+    this.mSortRectangle.y = startY;
+    this.mSortRectangle.width = endX - startX;
+    this.mSortRectangle.height = endY - startY;
+
+    this.mDepthSortDirtyFlag = true;
   }
 
   protected initializeTerrainItems(datas: Array<any>): void {
     let len: number = datas.length;
     let value: TerrainInfo;
-    let element: BasicTerrainItem;
+    let terrain: BasicTerrainItem;
     for (let i = 0; i < len; i++) {
       value = datas[i];
       if (value.type) {
-        element = new TerrainImageItem(Globals.game, this);
-        this.setTerrainItem(element, value);
-        this.addChild(element);
-        this._terrainItems.push(element);
+        terrain = new TerrainAnimationItem(Globals.game, this);
+        terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+          , this.mapSceneInfo.tileHeight >> 1);
+        this.setTerrainItem(terrain, value);
+        this.addChild(terrain);
+        this._terrainItems.push(terrain);
       }
     }
   }
 
-  protected setTerrainItem(element: BasicTerrainItem, value: TerrainInfo): void {
-    element.camera = this.camera;
-    element.data = value;
-    element.col = value.col;
+  protected setTerrainItem(terrain: BasicTerrainItem, value: TerrainInfo): void {
+    terrain.camera = this.camera;
+    terrain.data = value;
     let p = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
-    let p3 = Globals.Room45Util.p2top3(p.x, p.y, 0);
-    element.isoX = p3.x;
-    element.isoY = p3.y;
-    element.isoZ = p3.z;
-    element.itemWidth = this.mapSceneInfo.tileWidth;
-    element.itemHeight = this.mapSceneInfo.tileHeight;
+    terrain.ox = p.x;
+    terrain.oy = p.y;
+    terrain.oz = value.z;
+    terrain.itemWidth = this.mapSceneInfo.tileWidth;
+    terrain.itemHeight = this.mapSceneInfo.tileHeight;
   }
 
   private getItemByPos(col: number, row: number): BasicTerrainItem {

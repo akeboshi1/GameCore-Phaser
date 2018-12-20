@@ -7,9 +7,9 @@ import {op_gameconfig} from "../../../../protocol/protocols";
 
 export default class BasicElement extends SceneEntity {
     protected baseLoc: Phaser.Point;
-    protected mAnimationDirty: boolean = false;
-    protected mScaleX: number = 1;
-    protected myAnimationName: string = "";
+    protected mAnimationDirty = false;
+    protected mScaleX = 1;
+    protected myAnimationName: string;
 
     public constructor() {
         super();
@@ -73,7 +73,9 @@ export default class BasicElement extends SceneEntity {
         this.display.isoY = p3.y;
         this.display.isoZ = p3.z;
 
-        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
+        if ((this.display as IAnimatedObject).onFrame !== undefined) {
+          (<IAnimatedObject>this.display).onFrame(deltaTime);
+        }
     }
 
     protected onAvatarAnimationChanged(): void {

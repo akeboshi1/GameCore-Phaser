@@ -22,12 +22,20 @@ export class ElementInfo implements IElement {
   public originCollisionPoint: Phaser.Point;
 
   public scale = 1; // -1水平翻转
-
-  public animationName: string;
-
   public speed = 4;
 
   public constructor() {
+  }
+
+  private _animationName: string;
+
+  public set animationName(value: string) {
+    this._animationName = value;
+    this.setArea();
+  }
+
+  public get animationName(): string {
+    return this._animationName;
   }
 
   public get config(): op_gameconfig.IAnimation {
@@ -49,17 +57,32 @@ export class ElementInfo implements IElement {
       value = base[key];
       this[key] = value;
     }
+    this.setArea();
   }
 
-  public setWalkableArea(value: string, orgin: Phaser.Point): void {
+  private setArea(): void {
+    let curAnimation: op_gameconfig.IAnimation = this.config;
+    if (curAnimation) {
+      if (curAnimation.walkableArea) {
+        if (this.walkableArea !== curAnimation.walkableArea || this.originWalkablePoint.x !== curAnimation.walkOriginPoint[0] || this.originWalkablePoint.y !== curAnimation.walkOriginPoint[1]) {
+          this.setWalkableArea(curAnimation.walkableArea, curAnimation.walkOriginPoint ? new Phaser.Point(curAnimation.walkOriginPoint[0], curAnimation.walkOriginPoint[1]) : new Phaser.Point());
+        }
+      }
+      if (curAnimation.collisionArea) {
+        if (this.collisionArea !== curAnimation.collisionArea || this.originCollisionPoint.x !== curAnimation.originPoint[0] || this.originCollisionPoint.y !== curAnimation.originPoint[1]) {
+          this.setCollisionArea(curAnimation.collisionArea, curAnimation.originPoint ? new Phaser.Point(curAnimation.originPoint[0], curAnimation.originPoint[1]) : new Phaser.Point());
+        }
+      }
+    }
+  }
+
+  private setWalkableArea(value: string, orgin: Phaser.Point): void {
     this.walkableArea = value;
     this.originWalkablePoint = orgin;
   }
 
-  public setCollisionArea(value: string, orgin: Phaser.Point): void {
+  private setCollisionArea(value: string, orgin: Phaser.Point): void {
     this.collisionArea = value;
     this.originCollisionPoint = orgin;
   }
-
-
 }

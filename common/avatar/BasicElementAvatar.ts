@@ -54,6 +54,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         this.mAnimationDirty = false;
     }
 
+    public get elementInfo(): ElementInfo {
+        return this.myData;
+    }
+
     protected onInitialize(): void {
         this.mBodyAvatar = new DisplayLoaderAvatar(Globals.game);
         this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);

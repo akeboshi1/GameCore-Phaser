@@ -5,75 +5,79 @@ import {TerrainInfo} from "../struct/TerrainInfo";
 import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 
 export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
-    protected hasPlaceHold = true;
-    protected mBodyAvatar: DisplayLoaderAvatar;
-    protected mAnimationName: string;
-    protected mAnimationDirty = false;
+  protected hasPlaceHold = true;
+  protected mBodyAvatar: DisplayLoaderAvatar;
+  protected mAnimationName: string;
+  protected mAnimationDirty = false;
+  private callBack: Function;
+  private callThisObj: any;
 
-    constructor(game: Phaser.Game) {
-        super(game);
-    }
+  constructor(game: Phaser.Game) {
+    super(game);
+  }
 
-    public get animationName(): string {
-        return this.mAnimationName;
-    }
+  public get animationName(): string {
+    return this.mAnimationName;
+  }
 
-    public set animationName(value: string) {
-        this.mAnimationName = value;
-        this.mAnimationDirty = true;
-    }
+  public set animationName(value: string) {
+    this.mAnimationName = value;
+    this.mAnimationDirty = true;
+  }
 
-    private callBack: Function;
-    private callThisObj: any;
-    public loadModel(terrainInfo: TerrainInfo, callBack: Function, thisObj: any): void {
-        this.mBodyAvatar.setAnimationConfig(terrainInfo.animations);
-        this.callBack = callBack;
-        this.callThisObj = thisObj;
-        this.mBodyAvatar.loadModel(terrainInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
-    }
+  public get terrainInfo(): TerrainInfo {
+    return this.myData;
+  }
 
-    public onTick(deltaTime: number): void {
-        super.onTick(deltaTime);
-        if (this.mAnimationDirty) {
-            this.mBodyAvatar.invalidAnimationControlFunc();
-        }
-    }
+  public loadModel(callBack: Function, thisObj: any): void {
+    this.mBodyAvatar.setAnimationConfig(this.terrainInfo.animations);
+    this.callBack = callBack;
+    this.callThisObj = thisObj;
+    this.mBodyAvatar.loadModel(this.terrainInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+  }
 
-    public onFrame(deltaTime: number): void {
-        super.onFrame(deltaTime);
-        this.mBodyAvatar.onFrame(deltaTime);
-        this.mAnimationDirty = false;
+  public onTick(deltaTime: number): void {
+    super.onTick(deltaTime);
+    if (this.mAnimationDirty) {
+      this.mBodyAvatar.invalidAnimationControlFunc();
     }
+  }
 
-    protected onInitialize(): void {
-        this.mBodyAvatar = new DisplayLoaderAvatar(Globals.game);
-        this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.mBodyAvatar.visible = false;
-        this.addChild(this.mBodyAvatar);
-    }
+  public onFrame(deltaTime: number): void {
+    super.onFrame(deltaTime);
+    this.mBodyAvatar.onFrame(deltaTime);
+    this.mAnimationDirty = false;
+  }
 
-    protected bodyControlHandler(boneAvatar: DisplayLoaderAvatar): void {
-        boneAvatar.playAnimation(this.animationName);
-    }
+  protected onInitialize(): void {
+    this.mBodyAvatar = new DisplayLoaderAvatar(Globals.game);
+    this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
+    this.mBodyAvatar.visible = false;
+    this.addChild(this.mBodyAvatar);
+  }
 
-    protected bodyAvatarPartLoadStartHandler(): void {
-        if (this.hasPlaceHold) this.onAddPlaceHoldAvatarPart();
-    }
+  protected bodyControlHandler(boneAvatar: DisplayLoaderAvatar): void {
+    boneAvatar.playAnimation(this.animationName);
+  }
 
-    protected bodyAvatarPartLoadCompleteHandler(): void {
-        if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        if (this.callBack != null) {
-            let cb: Function = this.callBack;
-            this.callBack = null;
-            cb.apply(this.callThisObj);
-            this.callThisObj = null;
-        }
-        this.mBodyAvatar.visible = true;
-    }
+  protected bodyAvatarPartLoadStartHandler(): void {
+    if (this.hasPlaceHold) this.onAddPlaceHoldAvatarPart();
+  }
 
-    protected onAddPlaceHoldAvatarPart(): void {
+  protected bodyAvatarPartLoadCompleteHandler(): void {
+    if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
+    if (this.callBack != null) {
+      let cb: Function = this.callBack;
+      this.callBack = null;
+      cb.apply(this.callThisObj);
+      this.callThisObj = null;
     }
+    this.mBodyAvatar.visible = true;
+  }
 
-    protected onRemovePlaceHoldAvatarPart(): void {
-    }
+  protected onAddPlaceHoldAvatarPart(): void {
+  }
+
+  protected onRemovePlaceHoldAvatarPart(): void {
+  }
 }

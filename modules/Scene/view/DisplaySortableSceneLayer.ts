@@ -38,6 +38,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     if (this.mQuadTree) {
       this.mQuadTree.insert(d);
     }
+
     this.markDirty(d.collisionArea.ox, d.collisionArea.oy, d.collisionArea.width, d.collisionArea.height);
   }
 

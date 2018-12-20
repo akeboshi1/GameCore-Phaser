@@ -110,8 +110,6 @@ export class SceneInfo {
         for (let i = 0; i < len; i++) {
             element = new ElementInfo();
             element.setInfo(elements[i]);
-            // element.setWalkableArea(elements[i].walkableArea, new Phaser.Point(1, 1));
-            element.setCollisionArea(elements[i].collisionArea, elements[i].originPoint ? new Phaser.Point(elements[i].originPoint[0], elements[i].originPoint[1]) : new Phaser.Point());
             this._elementConfig.push(element);
         }
     }

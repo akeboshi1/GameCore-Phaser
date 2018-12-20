@@ -14,11 +14,41 @@ export class TerrainInfo implements ITerrain {
 
   public animations: op_gameconfig.IAnimation[];
 
-  public animationName: string;
+  private _animationName: string;
 
   public type: string;
 
   public display: op_gameconfig.IDisplay;
+
+  public walkableArea: string;
+  public originWalkablePoint: Phaser.Point;
+  public collisionArea: string;
+  public originCollisionPoint: Phaser.Point;
+
+  public constructor() {
+  }
+
+  public set animationName(value: string) {
+    this._animationName = value;
+    this.setArea();
+  }
+
+  public get animationName(): string {
+    return this._animationName;
+  }
+
+  public get config(): op_gameconfig.IAnimation {
+    if (this.animations == null) return null;
+    let len: number = this.animations.length;
+    if (len === 0) return null;
+
+    for (let i = 0; i < len; i++) {
+      if (this.animations[i].name === this.animationName) {
+        return this.animations[i];
+      }
+    }
+    return null;
+  }
 
   public get col(): number {
     return this.x;
@@ -34,5 +64,31 @@ export class TerrainInfo implements ITerrain {
       value = base[key];
       this[key] = value;
     }
+  }
+
+  private setArea(): void {
+    let curAnimation: op_gameconfig.IAnimation = this.config;
+    if (curAnimation) {
+      if (curAnimation.walkableArea) {
+        if (this.walkableArea !== curAnimation.walkableArea || this.originWalkablePoint.x !== curAnimation.walkOriginPoint[0] || this.originWalkablePoint.y !== curAnimation.walkOriginPoint[1]) {
+          this.setWalkableArea(curAnimation.walkableArea, curAnimation.walkOriginPoint ? new Phaser.Point(curAnimation.walkOriginPoint[0], curAnimation.walkOriginPoint[1]) : new Phaser.Point());
+        }
+      }
+      if (curAnimation.collisionArea) {
+        if (this.collisionArea !== curAnimation.collisionArea || this.originCollisionPoint.x !== curAnimation.originPoint[0] || this.originCollisionPoint.y !== curAnimation.originPoint[1]) {
+          this.setCollisionArea(curAnimation.collisionArea, curAnimation.originPoint ? new Phaser.Point(curAnimation.originPoint[0], curAnimation.originPoint[1]) : new Phaser.Point());
+        }
+      }
+    }
+  }
+
+  private setWalkableArea(value: string, orgin: Phaser.Point): void {
+    this.walkableArea = value;
+    this.originWalkablePoint = orgin;
+  }
+
+  private setCollisionArea(value: string, orgin: Phaser.Point): void {
+    this.collisionArea = value;
+    this.originCollisionPoint = orgin;
   }
 }
