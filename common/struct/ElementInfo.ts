@@ -21,10 +21,14 @@ export class ElementInfo implements IElement {
   public collisionArea: string;
   public originCollisionPoint: Phaser.Point;
 
-  public scale = 1; // -1水平翻转
+  public scale = false;
   public speed = 4;
 
   public constructor() {
+  }
+
+  public get scaleX(): number {
+    return this.scale ? -1 : 1;
   }
 
   private _animationName: string;

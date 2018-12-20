@@ -63,7 +63,7 @@ export default class BasicElement extends SceneEntity {
         this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
         this.loadModel(this.elementInfo);
         this.setAnimation(this.elementInfo.animationName);
-        this.setScaleX(this.elementInfo.scale);
+        this.setScaleX(this.elementInfo.scaleX);
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
