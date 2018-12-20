@@ -144,7 +144,7 @@ export default class UniqueLinkList {
 
         let nextNode: LinkNode = null;
         let n: number = this.mNodeSortArray.length - 1;
-        for (let i: number = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             node = this.mNodeSortArray[i];
             nextNode = this.mNodeSortArray[i + 1];
 

@@ -34,10 +34,6 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     this.mOwner = owner;
   }
 
-  public get isCreated(): boolean {
-    return this.mTerrainItemDisplayObjectCreated;
-  }
-
   public get hadCreated(): boolean {
     if (this.mTerrainItemDisplayObjectCreated && !this.mTerrainItemDisplayObjectHadCreated) {
        this.mTerrainItemDisplayObjectHadCreated  = true;

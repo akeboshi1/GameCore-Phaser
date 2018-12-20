@@ -6,6 +6,7 @@ import {op_client, op_virtual_world} from "../../../../protocol/protocols";
 import Direction = op_client.Direction;
 import {Log} from "../../../Log";
 import KeyCode = op_virtual_world.KeyCode;
+import {GameConfig} from "../../../GameConfig";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable: boolean = true;
@@ -238,6 +239,6 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected checkIsValidDisplayAvatar(): void {
-        this.isValidDisplay = this.isCanShow && this.isInScreen();
+        this.isValidDisplay = GameConfig.isEditor || (this.isCanShow && this.isInScreen());
     }
 }

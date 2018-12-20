@@ -1,8 +1,8 @@
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
-import {QuadTree} from "../../../base/ds/QuadTree";
 import {QuadTreeTest} from "../../../base/ds/QuadTreeTest";
+import Globals from "../../../Globals";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
@@ -21,7 +21,8 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
   public initialize(p_rect: Phaser.Rectangle): void {
     if (this.mQuadTree === undefined) {
-        this.mQuadTree = new QuadTreeTest(p_rect, 2, 4);
+      this.mQuadTree = new QuadTreeTest(p_rect, 2, 4);
+      this.addChild(QuadTreeTest.graphicsTree);
     }
     this.mQuadTree.clear();
   }
@@ -68,33 +69,49 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       this.mSortRectangle = null;
     }
     let entity: BasicSceneEntity;
-    let insertIdx = -1;
     if (found && found.length > 0) {
-        found.sort(this.sortFunc);
-        insertIdx = this.getChildIndex(found[found.length - 1].display);
+      let childIdxList = [];
+      let len = found.length;
+      for (let i = 0; i < len; i++) {
+        childIdxList.push(this.getChildIndex(found[i].display));
+      }
+      found.sort(this.sortFunc);
+      childIdxList = childIdxList.sort((n1, n2) => {
+        if (n1 > n2) {
+          return 1;
+        }
+        if (n1 < n2) {
+          return -1;
+        }
+        return 0;
+      });
+
+      for (let i = 0; i < len; i++) {
+        entity = found[i];
+        this.setChildIndex(entity.display, childIdxList[i]);
+      }
     }
 
-      entity = this.mSceneEntities.moveFirst();
-      while (entity) {
-          if (insertIdx !== -1 && found.indexOf(entity) !== -1) {
-              this.setChildIndex(entity.display, insertIdx);
-          }
-          entity.onTick(deltaTime);
-          entity = this.mSceneEntities.moveNext();
-      }
+    entity = this.mSceneEntities.moveFirst();
+    while (entity) {
+      entity.onTick(deltaTime);
+      entity = this.mSceneEntities.moveNext();
+    }
   }
 
   // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
   public sortFunc(a: BasicSceneEntity, b: BasicSceneEntity): number {
-    if (a.oy > b.oy) {
+    let a3 = Globals.Room45Util.p2top3(a.ox, a.oy, a.oz);
+    let b3 = Globals.Room45Util.p2top3(b.ox, b.oy, b.oz);
+    if (a3.y > b3.y) {
       return 1;
-    } else if (a.oy < b.oy) {
+    } else if (a3.y < b3.y) {
       return -1;
     } else {
       // 左边的排在下面
-      if (a.ox > b.ox) {
+      if (a3.x > b3.x) {
         return 1;
-      } else if (a.ox < b.ox) {
+      } else if (a3.x < b3.x) {
         return -1;
       }
     }

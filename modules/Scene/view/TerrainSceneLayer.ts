@@ -5,7 +5,7 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import Globals from "../../../Globals";
 import {TerrainAnimationItem} from "../terrainItems/TerrainAnimationItem";
-import {QuadTreeTest} from "../../../base/ds/QuadTreeTest";
+import {QuadTree} from "../../../base/ds/QuadTree";
 
 export class TerrainSceneLayer extends BasicSceneLayer {
   public curTerrainLoadCount = 0;
@@ -16,7 +16,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   private mDepthSortDirtyFlag = false;
   private mSortWaitTime = 0;
   private mSortRectangle: Phaser.Rectangle;
-  private mQuadTree: QuadTreeTest;
+  private mQuadTree: QuadTree;
 
   public constructor(game: Phaser.Game) {
     super(game);
@@ -26,7 +26,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   public initializeMap(mapSceneInfo: SceneInfo): void {
     this.mapSceneInfo = mapSceneInfo;
     if (this.mQuadTree === undefined) {
-      this.mQuadTree = new QuadTreeTest({
+      this.mQuadTree = new QuadTree({
         x: 0,
         y: 0,
         width: this.mapSceneInfo.mapTotalWidth,
@@ -92,10 +92,26 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
     let terrainItem: BasicTerrainItem = null;
 
-    let insertIdx = -1;
     if (found && found.length > 0) {
+      let childIdxList = [];
+      let len = found.length;
+      for (let i = 0; i < len; i++) {
+        childIdxList.push(found[i].getChildIndex(found[i].display));
+      }
       found.sort(this.sortFunc);
-      insertIdx = found[found.length - 1].getChildIndex(found[found.length - 1].display);
+      childIdxList = childIdxList.sort((n1, n2) => {
+        if (n1 > n2) {
+          return 1;
+        }
+        if (n1 < n2) {
+          return -1;
+        }
+        return 0;
+      });
+      for (let i = 0; i < len; i++) {
+        terrainItem = found[i];
+        terrainItem.setChildIndex(terrainItem.display, childIdxList[i]);
+      }
     }
 
     for (let i = 0, n: number = this._terrainItems.length; i < n; i++) {
@@ -105,9 +121,6 @@ export class TerrainSceneLayer extends BasicSceneLayer {
           this.mQuadTree.insert(terrainItem);
         }
         this.markDirty(terrainItem.collisionArea.ox, terrainItem.collisionArea.oy, terrainItem.collisionArea.width, terrainItem.collisionArea.height);
-      }
-      if (terrainItem.isCreated && insertIdx !== -1 && found.indexOf(terrainItem) !== -1) {
-        terrainItem.setChildIndex(terrainItem.display, insertIdx);
       }
       terrainItem.onTick(deltaTime);
     }
@@ -125,15 +138,17 @@ export class TerrainSceneLayer extends BasicSceneLayer {
 
   // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
   public sortFunc(a: BasicTerrainItem, b: BasicTerrainItem): number {
-    if (a.oy > b.oy) {
+    let a3 = Globals.Room45Util.p2top3(a.ox, a.oy, a.oz);
+    let b3 = Globals.Room45Util.p2top3(b.ox, b.oy, b.oz);
+    if (a3.y > b3.y) {
       return 1;
-    } else if (a.oy < b.oy) {
+    } else if (a3.y < b3.y) {
       return -1;
     } else {
       // 左边的排在下面
-      if (a.ox > b.ox) {
+      if (a3.x > b3.x) {
         return 1;
-      } else if (a.ox < b.ox) {
+      } else if (a3.x < b3.x) {
         return -1;
       }
     }

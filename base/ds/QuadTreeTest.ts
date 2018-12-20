@@ -5,44 +5,50 @@ import {IRectangle} from "./IRectangle";
 
 export class QuadTreeTest extends QuadTree {
 
-  protected _graphicsTree: Phaser.Graphics;
+  protected static _graphicsRetrieve: Phaser.Graphics;
 
-  public get graphicsTree(): Phaser.Graphics {
+  public static get graphicsRetrieve(): Phaser.Graphics {
+    if (this._graphicsRetrieve === undefined || this._graphicsRetrieve === null) this._graphicsRetrieve = Globals.game.make.graphics();
+    this._graphicsRetrieve.lineStyle(1, 0x0700FF);
+    return this._graphicsRetrieve;
+  }
+
+  protected static  _graphicsTree: Phaser.Graphics;
+
+  public static  get graphicsTree(): Phaser.Graphics {
     if (this._graphicsTree === undefined || this._graphicsTree === null) this._graphicsTree = Globals.game.make.graphics();
     this._graphicsTree.lineStyle(1, 0x99ECFF);
-    Globals.LayerManager.sceneLayer.add(this._graphicsTree);
     return this._graphicsTree;
   }
 
-  protected _graphicsNode: Phaser.Graphics;
+  protected static  _graphicsNode: Phaser.Graphics;
 
-  public get graphicsNode(): Phaser.Graphics {
+  public static  get graphicsNode(): Phaser.Graphics {
     if (this._graphicsNode === undefined || this._graphicsNode === null) this._graphicsNode = Globals.game.make.graphics();
     this._graphicsNode.lineStyle(1, 0xffcc00);
-    Globals.LayerManager.sceneLayer.add(this._graphicsNode);
     return this._graphicsNode;
   }
 
   public insert(pRect: IQuadTreeNode): void {
     super.insert(pRect);
-    this.graphicsTree.moveTo(pRect.quadX, pRect.quadY);
-    this.graphicsTree.lineTo(pRect.quadX + pRect.quadW, pRect.quadY);
-    this.graphicsTree.lineTo(pRect.quadX + pRect.quadW, pRect.quadY + pRect.quadH);
-    this.graphicsTree.lineTo(pRect.quadX, pRect.quadY + pRect.quadH);
-    this.graphicsTree.lineTo(pRect.quadX, pRect.quadY);
+    QuadTreeTest.graphicsTree.moveTo(pRect.quadX, pRect.quadY);
+    QuadTreeTest.graphicsTree.lineTo(pRect.quadX + pRect.quadW, pRect.quadY);
+    QuadTreeTest.graphicsTree.lineTo(pRect.quadX + pRect.quadW, pRect.quadY + pRect.quadH);
+    QuadTreeTest.graphicsTree.lineTo(pRect.quadX, pRect.quadY + pRect.quadH);
+    QuadTreeTest.graphicsTree.lineTo(pRect.quadX, pRect.quadY);
   }
 
   public retrieve(pRect: IRectangle): IQuadTreeNode[] {
     let result: IQuadTreeNode[] = super.retrieve(pRect);
     let len = result.length;
-    Globals.LayerManager.graphics.clear();
-    Globals.LayerManager.graphics.lineStyle(1, 0x0700FF);
+    QuadTreeTest.graphicsRetrieve.clear();
+    QuadTreeTest.graphicsRetrieve.lineStyle(1, 0x0700FF);
     for (let i = 0; i < len; i++) {
-      Globals.LayerManager.graphics.moveTo(result[i].quadX, result[i].quadY);
-      Globals.LayerManager.graphics.lineTo(result[i].quadX + result[i].quadW, result[i].quadY);
-      Globals.LayerManager.graphics.lineTo(result[i].quadX + result[i].quadW, result[i].quadY + result[i].quadH);
-      Globals.LayerManager.graphics.lineTo(result[i].quadX, result[i].quadY + result[i].quadH);
-      Globals.LayerManager.graphics.lineTo(result[i].quadX, result[i].quadY);
+      QuadTreeTest.graphicsRetrieve.moveTo(result[i].quadX, result[i].quadY);
+      QuadTreeTest.graphicsRetrieve.lineTo(result[i].quadX + result[i].quadW, result[i].quadY);
+      QuadTreeTest.graphicsRetrieve.lineTo(result[i].quadX + result[i].quadW, result[i].quadY + result[i].quadH);
+      QuadTreeTest.graphicsRetrieve.lineTo(result[i].quadX, result[i].quadY + result[i].quadH);
+      QuadTreeTest.graphicsRetrieve.lineTo(result[i].quadX, result[i].quadY);
     }
     return result;
   }
@@ -87,11 +93,11 @@ export class QuadTreeTest extends QuadTree {
     }, this.max_objects, this.max_levels, nextLevel);
 
     for (let i = 0; i < 4; i++) {
-      this.graphicsNode.moveTo(this.nodes[i].bounds.x, this.nodes[i].bounds.y);
-      this.graphicsNode.lineTo(this.nodes[i].bounds.x + this.nodes[i].bounds.width, this.nodes[i].bounds.y);
-      this.graphicsNode.lineTo(this.nodes[i].bounds.x + this.nodes[i].bounds.width, this.nodes[i].bounds.y + this.nodes[i].bounds.height);
-      this.graphicsNode.lineTo(this.nodes[i].bounds.x, this.nodes[i].bounds.y + this.nodes[i].bounds.height);
-      this.graphicsNode.lineTo(this.nodes[i].bounds.x, this.nodes[i].bounds.y);
+      QuadTreeTest.graphicsNode.moveTo(this.nodes[i].bounds.x, this.nodes[i].bounds.y);
+      QuadTreeTest.graphicsNode.lineTo(this.nodes[i].bounds.x + this.nodes[i].bounds.width, this.nodes[i].bounds.y);
+      QuadTreeTest.graphicsNode.lineTo(this.nodes[i].bounds.x + this.nodes[i].bounds.width, this.nodes[i].bounds.y + this.nodes[i].bounds.height);
+      QuadTreeTest.graphicsNode.lineTo(this.nodes[i].bounds.x, this.nodes[i].bounds.y + this.nodes[i].bounds.height);
+      QuadTreeTest.graphicsNode.lineTo(this.nodes[i].bounds.x, this.nodes[i].bounds.y);
     }
   }
 }

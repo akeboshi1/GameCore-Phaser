@@ -10,6 +10,7 @@ import {HashMap} from "../../../base/ds/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DrawSceneLayer} from "./DrawSceneLayer";
+import {GraphicsTreeLayer} from "./GraphicsTreeLayer";
 
 export class SceneBase extends SceneBasic {
   public mapSceneInfo: SceneInfo;
@@ -17,6 +18,7 @@ export class SceneBase extends SceneBasic {
   // layers...
   public terrainGridLayer: TerrainGridLayer = null;
   public drawSceneLayer: DrawSceneLayer = null;
+  public graphicsTreeLayer: GraphicsTreeLayer = null;
   public terrainSceneLayer: TerrainSceneLayer = null;
   public topSceneLayer: DisplaySortableSceneLayer = null;
   public middleSceneLayer: DisplaySortableSceneLayer = null;
@@ -33,6 +35,7 @@ export class SceneBase extends SceneBasic {
     this.middleSceneLayer.onTick(deltaTime);
     this.bottomSceneLayer.onTick(deltaTime);
     this.drawSceneLayer.onTick(deltaTime);
+    this.graphicsTreeLayer.onTick(deltaTime);
 
   }
 
@@ -45,6 +48,7 @@ export class SceneBase extends SceneBasic {
     this.bottomSceneLayer.onFrame(deltaTime);
     this.terrainSceneLayer.onFrame(deltaTime);
     this.drawSceneLayer.onFrame(deltaTime);
+    this.graphicsTreeLayer.onFrame(deltaTime);
 
   }
 
@@ -160,6 +164,10 @@ export class SceneBase extends SceneBasic {
     this.drawSceneLayer.scene = this;
     this.addChild(this.drawSceneLayer);
 
+    this.graphicsTreeLayer = new GraphicsTreeLayer(this.game);
+    this.graphicsTreeLayer.scene = this;
+    this.addChild(this.graphicsTreeLayer);
+
     this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
     this.bottomSceneLayer.scene = this;
     this.addChild(this.bottomSceneLayer);
@@ -181,6 +189,7 @@ export class SceneBase extends SceneBasic {
     this.bottomSceneLayer.initialize(rect);
     this.middleSceneLayer.initialize(rect);
     this.topSceneLayer.initialize(rect);
+    this.graphicsTreeLayer.initialize();
   }
 
   protected onActivedScene(): void {
@@ -195,6 +204,8 @@ export class SceneBase extends SceneBasic {
     super.onClearScene();
     this.removeAllSceneElements();
     this.terrainSceneLayer.clear();
+    this.drawSceneLayer.clear();
+    this.graphicsTreeLayer.clear();
     Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
   }
 
