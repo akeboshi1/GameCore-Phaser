@@ -153,25 +153,20 @@ export class TerrainSceneLayer extends BasicSceneLayer {
   }
 
   public addTerrainItem(value: TerrainInfo): void {
-    let terrain: BasicTerrainItem = this.getItemByPos(value.col, value.row);
-    if (terrain) {
-      terrain.onDispose();
-      if (this.mQuadTree) {
-        this.mQuadTree.remove(terrain);
-      }
-    } else {
-      terrain = new TerrainAnimationItem(Globals.game, this);
-      terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-        , this.mapSceneInfo.tileHeight >> 1);
-      this.addChild(terrain);
-      this._terrainItems.push(terrain);
-    }
+    let terrain: BasicTerrainItem = new TerrainAnimationItem(Globals.game, this);
+    terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+      , this.mapSceneInfo.tileHeight >> 1);
+    this.addChild(terrain);
+    this._terrainItems.push(terrain);
     this.setTerrainItem(terrain, value);
   }
 
   public removeTerrainItem(col: number, row: number): void {
     let terrain: BasicTerrainItem = this.getItemByPos(col, row);
     if (terrain) {
+      if (this.mQuadTree) {
+        this.mQuadTree.remove(terrain);
+      }
       terrain.onDispose();
     }
   }

@@ -1,8 +1,8 @@
 import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
-import {QuadTreeTest} from "../../../base/ds/QuadTreeTest";
 import Globals from "../../../Globals";
+import {QuadTree} from "../../../base/ds/QuadTree";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
@@ -11,7 +11,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   private mDepthSortDirtyFlag = false;
   private mSortWaitTime = 0;
   private mSortRectangle: Phaser.Rectangle;
-  private mQuadTree: QuadTreeTest;
+  private mQuadTree: QuadTree;
 
 
   public constructor(game: Phaser.Game) {
@@ -21,8 +21,9 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
   public initialize(p_rect: Phaser.Rectangle): void {
     if (this.mQuadTree === undefined) {
-      this.mQuadTree = new QuadTreeTest(p_rect, this);
-      this.addChild(QuadTreeTest.graphicsTree);
+      this.mQuadTree = new QuadTree(p_rect);
+      // this.mQuadTree = new QuadTreeTest(p_rect, this);
+      // this.addChild(QuadTreeTest.graphicsTree);
     }
     this.mQuadTree.clear();
   }

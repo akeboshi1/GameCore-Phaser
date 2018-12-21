@@ -18,15 +18,14 @@ export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
   private movementY = 0;
   private isGameDown: boolean;
-  private deltaData = 0;
-  private scaleStrength = 0;
+  private deltaY = 0;
 
   constructor() {
     super();
   }
 
   public onRegister(): void {
-    this.mTick = new Tick(30);
+    this.mTick = new Tick(33);
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.start();
     this.view.inputEnabled = true;
@@ -40,8 +39,8 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
 
 
-    Globals.game.input.mouse.mouseWheelCallback = (event) => {
-      this.scaleStrength = 10;
+    Globals.game.input.mouse.mouseWheelCallback = (event: WheelEvent) => {
+      this.deltaY = event.deltaY;
     };
   }
 
@@ -49,8 +48,11 @@ export class SceneEditorMediator extends SceneMediator {
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
     let scale = 0;
     switch (em.mode) {
+      case  EditorEnum.Mode.BRUSH:
       case  EditorEnum.Mode.ERASER:
-
+        if (this.mouseDown) {
+          this.preSendSceneEraser(this.mousePointer);
+        }
         break;
       case EditorEnum.Mode.ZOOM:
         if (this.isGameDown) {
@@ -62,15 +64,14 @@ export class SceneEditorMediator extends SceneMediator {
         break;
     }
 
-    if (this.scaleStrength) {
-      Log.trace(Globals.game.input.mouse.wheelDelta);
-      let delta: number = Globals.game.input.mouse.wheelDelta;
-      if (delta === Phaser.Mouse.WHEEL_UP) {
+    if (this.deltaY !== 0) {
+      if (this.deltaY < 0) {
         this.view.scale.add(0.01, 0.01);
-      } else if (delta === -1) {
+        this.deltaY += 10;
+      } else if (this.deltaY > 0) {
         this.view.scale.add(-0.01, -0.01);
+        this.deltaY -= 10;
       }
-      --this.scaleStrength;
     }
   }
 
@@ -106,10 +107,6 @@ export class SceneEditorMediator extends SceneMediator {
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
     content.point = {x: value.x, y: value.y};
     Globals.SocketManager.send(pkt);
-  }
-
-  private sendSceneEraser(value: Phaser.Point): void {
-    Log.trace("擦除地块-->", value);
   }
 
   /**
@@ -151,6 +148,8 @@ export class SceneEditorMediator extends SceneMediator {
     // Scene events
     this.view.events.onInputDown.remove(this.onSceneBrushDown, this);
     this.view.events.onInputDown.remove(this.onSceneEraserDown, this);
+    this.view.events.onInputUp.remove(this.onSceneMouseUp, this);
+
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
     Globals.game.input.onUp.remove(this.onGameUp, this);
@@ -173,9 +172,13 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.input.enableDrag();
     } else if (em.mode === EditorEnum.Mode.BRUSH) {
       this.view.events.onInputDown.add(this.onSceneBrushDown, this);
+      this.view.events.onInputUp.add(this.onSceneMouseUp, this);
     } else if (em.mode === EditorEnum.Mode.ERASER) {
       this.view.events.onInputDown.add(this.onSceneEraserDown, this);
+      this.view.events.onInputUp.add(this.onSceneMouseUp, this);
     } else if (em.mode === EditorEnum.Mode.ZOOM) {
+      Globals.game.input.onDown.add(this.onGameDown, this);
+    } else if (em.mode === EditorEnum.Mode.SELECTED) {
       Globals.game.input.onDown.add(this.onGameDown, this);
     }
   }
@@ -208,25 +211,36 @@ export class SceneEditorMediator extends SceneMediator {
     this.removeTerrain(value[0], value[1]);
   }
 
+  private mousePointer: Phaser.Pointer;
+  private mouseDown: boolean;
   private onSceneBrushDown(view: any, pointer: Phaser.Pointer): void {
-    Log.trace("name", view.name);
-    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
-    let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
-    let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
-    let tempPoint: Phaser.Point;
-    if (em.type === EditorEnum.Type.TERRAIN) {
-      tempPoint = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
-    } else if (em.type === EditorEnum.Type.ELEMENT) {
-      tempPoint = new Phaser.Point(screenX, screenY);
-    }
-    this.sendSceneBrush(tempPoint);
+    this.mousePointer = pointer;
+    this.mouseDown = true;
+    this.preSendSceneEraser(this.mousePointer);
   }
 
   private onSceneEraserDown(view: any, pointer: Phaser.Pointer): void {
+    this.mousePointer = pointer;
+    this.mouseDown = true;
+    this.preSendSceneEraser(this.mousePointer);
+  }
+
+  private onSceneMouseUp(): void {
+    this.mouseDown = false;
+  }
+
+  private preSendSceneEraser(pointer: Phaser.Pointer): void {
+    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
     let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
     let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
     let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
-    this.sendSceneEraser(tempPoint);
+    if (tempPoint.x >= 0 && tempPoint.x <= Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y <= Globals.Room45Util.rows) {
+      if (em.type === EditorEnum.Type.TERRAIN) {
+        this.sendSceneBrush(tempPoint);
+      } else if (em.type === EditorEnum.Type.ELEMENT) {
+        this.sendSceneBrush(new Phaser.Point(screenX, screenY));
+      }
+    }
   }
 
   private onGameDown(pointer: Phaser.Pointer, event: any): void {

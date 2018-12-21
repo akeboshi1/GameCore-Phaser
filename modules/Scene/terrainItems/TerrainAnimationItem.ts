@@ -71,6 +71,8 @@ export class TerrainAnimationItem extends BasicTerrainItem {
   }
 
   protected onAvatarAnimationChanged(): void {
-    (<BasicTerrainAvatar>this.terrainIsoDisplayObject).animationName = this.myAnimationName;
+    if (this.terrainIsoDisplayObject) {
+      (<BasicTerrainAvatar>this.terrainIsoDisplayObject).animationName = this.myAnimationName;
+    }
   }
 }
