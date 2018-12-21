@@ -19,6 +19,7 @@ export class SceneEditorMediator extends SceneMediator {
   private movementY = 0;
   private isGameDown: boolean;
   private deltaData = 0;
+  private scaleStrength = 0;
 
   constructor() {
     super();
@@ -37,6 +38,11 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
+
+
+    Globals.game.input.mouse.mouseWheelCallback = (event) => {
+      this.scaleStrength = 10;
+    };
   }
 
   public onTick(deltaTime: Number): void {
@@ -56,12 +62,15 @@ export class SceneEditorMediator extends SceneMediator {
         break;
     }
 
-    Log.trace(Globals.game.input.mouse.wheelDelta);
-    let delta: number = Globals.game.input.mouse.wheelDelta;
-    if (delta === 1) {
-      this.view.scale.add(0.01, 0.01);
-    } else if (delta === -1) {
-      this.view.scale.add(-0.01, -0.01);
+    if (this.scaleStrength) {
+      Log.trace(Globals.game.input.mouse.wheelDelta);
+      let delta: number = Globals.game.input.mouse.wheelDelta;
+      if (delta === Phaser.Mouse.WHEEL_UP) {
+        this.view.scale.add(0.01, 0.01);
+      } else if (delta === -1) {
+        this.view.scale.add(-0.01, -0.01);
+      }
+      --this.scaleStrength;
     }
   }
 
