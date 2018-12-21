@@ -159,7 +159,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     }
 
     if (this.mQuadTree) {
-      this.mQuadTree.insert(d);
+      this.mQuadTree.remove(d);
     }
 
     if (dispose) {

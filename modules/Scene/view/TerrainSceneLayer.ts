@@ -159,6 +159,9 @@ export class TerrainSceneLayer extends BasicSceneLayer {
     let terrain: BasicTerrainItem = this.getItemByPos(value.col, value.row);
     if (terrain) {
       terrain.onDispose();
+      if (this.mQuadTree) {
+        this.mQuadTree.remove(terrain);
+      }
     } else {
       terrain = new TerrainAnimationItem(Globals.game, this);
       terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
