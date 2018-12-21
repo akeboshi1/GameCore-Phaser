@@ -21,7 +21,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
   public initialize(p_rect: Phaser.Rectangle): void {
     if (this.mQuadTree === undefined) {
-      this.mQuadTree = new QuadTreeTest(p_rect, 2, 4);
+      this.mQuadTree = new QuadTreeTest(p_rect, this);
       this.addChild(QuadTreeTest.graphicsTree);
     }
     this.mQuadTree.clear();
