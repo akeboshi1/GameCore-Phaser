@@ -51,7 +51,7 @@ export namespace Images {
       }
 
       static getPNG(id: number): string {
-        return require("assets/images/terrain/terrain_" + id + ".png");
+        return "assets/images/terrain/terrain_" + id + ".png";
       }
     }
 }
