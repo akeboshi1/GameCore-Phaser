@@ -34,10 +34,7 @@ export class TerrainSceneLayer extends BasicSceneLayer {
       }, 2, 4);
     }
     this.mQuadTree.clear();
-    let len: number = this.mapSceneInfo.terrainConfig.length;
-    for (let i = 0; i < len; i++) {
-      this.initializeTerrainItems(this.mapSceneInfo.terrainConfig[i]);
-    }
+    this.initializeTerrainItems(this.mapSceneInfo.terrainConfig);
   }
 
   public isValidLoad(): boolean {
