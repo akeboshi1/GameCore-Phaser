@@ -10,14 +10,15 @@ import {Tick} from "../../common/tick/Tick";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {Const} from "../../common/const/Const";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_editor, op_virtual_world} from "../../../protocol/protocols";
-import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
+import {op_client, op_editor} from "../../../protocol/protocols";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
+import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
   private movementY = 0;
   private isGameDown: boolean;
+  private deltaData = 0;
 
   constructor() {
     super();
@@ -29,10 +30,6 @@ export class SceneEditorMediator extends SceneMediator {
     this.mTick.start();
     this.view.inputEnabled = true;
     super.onRegister();
-    Globals.game.input.mouse.mouseWheelCallback = this.handleWheelCallBack;
-    // function(event){                console.log("Scroll by callback! " + event);
-    //  if (!(event.wheelDeltaY == undefined || event.wheelDeltaY> myGame.world.height || event.wheelDeltaY < (-myGame.world.height))) {
-    //                    myGame.camera.setPosition(0, myGame.camera.y - event.wheelDeltaY);                };            };
 
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
@@ -40,7 +37,6 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
-
   }
 
   public onTick(deltaTime: Number): void {
@@ -60,14 +56,13 @@ export class SceneEditorMediator extends SceneMediator {
         break;
     }
 
-    if (this.direction === "UP") {
-      scale = 0.1;
-      this.view.scale.add(scale, scale);
-    } else if (this.direction === "DOWN") {
-      scale = -0.1;
-      this.view.scale.add(scale, scale);
+    Log.trace(Globals.game.input.mouse.wheelDelta);
+    let delta: number = Globals.game.input.mouse.wheelDelta;
+    if (delta === 1) {
+      this.view.scale.add(0.01, 0.01);
+    } else if (delta === -1) {
+      this.view.scale.add(-0.01, -0.01);
     }
-    this.direction = "";
   }
 
   protected changedToMapSceneCompleteHandler(): void {
@@ -140,7 +135,6 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.terrainSceneLayer.removeTerrainItem(col, row);
   }
 
-
   private clearMode(): void {
     if (this.view.input) {
       this.view.input.disableDrag();
@@ -202,7 +196,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private handleRemoveTerrain(value: any): void {
-      this.removeTerrain(value[0], value[1]);
+    this.removeTerrain(value[0], value[1]);
   }
 
   private onSceneBrushDown(view: any, pointer: Phaser.Pointer): void {
@@ -220,20 +214,10 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private onSceneEraserDown(view: any, pointer: Phaser.Pointer): void {
-      let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
-      let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
-      let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
-      this.sendSceneEraser(tempPoint);
-  }
-
-
-  private direction: string;
-  private handleWheelCallBack(event: any): void {
-    if (Globals.game.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP) {
-      this.direction = "UP";
-    } else {
-      this.direction = "DOWN";
-    }
+    let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
+    let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
+    let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
+    this.sendSceneEraser(tempPoint);
   }
 
   private onGameDown(pointer: Phaser.Pointer, event: any): void {
