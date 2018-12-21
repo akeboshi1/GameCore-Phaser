@@ -29,6 +29,11 @@ export class SceneEditorMediator extends SceneMediator {
     this.mTick.start();
     this.view.inputEnabled = true;
     super.onRegister();
+    Globals.game.input.mouse.mouseWheelCallback = this.handleWheelCallBack;
+    // function(event){                console.log("Scroll by callback! " + event);
+    //  if (!(event.wheelDeltaY == undefined || event.wheelDeltaY> myGame.world.height || event.wheelDeltaY < (-myGame.world.height))) {
+    //                    myGame.camera.setPosition(0, myGame.camera.y - event.wheelDeltaY);                };            };
+
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
@@ -40,6 +45,7 @@ export class SceneEditorMediator extends SceneMediator {
 
   public onTick(deltaTime: Number): void {
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
+    let scale = 0;
     switch (em.mode) {
       case  EditorEnum.Mode.ERASER:
 
@@ -48,12 +54,20 @@ export class SceneEditorMediator extends SceneMediator {
         if (this.isGameDown) {
           let newMoveY: number = Globals.game.input.y;
           let add = this.movementY - newMoveY;
-          let scale = (add / GameConfig.GameHeight) * 0.1;
+          scale = (add / GameConfig.GameHeight) * 0.1;
           this.view.scale.add(scale, scale);
-          Log.trace("放大场景-->", add);
         }
         break;
     }
+
+    if (this.direction === "UP") {
+      scale = 0.1;
+      this.view.scale.add(scale, scale);
+    } else if (this.direction === "DOWN") {
+      scale = -0.1;
+      this.view.scale.add(scale, scale);
+    }
+    this.direction = "";
   }
 
   protected changedToMapSceneCompleteHandler(): void {
@@ -210,6 +224,16 @@ export class SceneEditorMediator extends SceneMediator {
       let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
       let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
       this.sendSceneEraser(tempPoint);
+  }
+
+
+  private direction: string;
+  private handleWheelCallBack(event: any): void {
+    if (Globals.game.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP) {
+      this.direction = "UP";
+    } else {
+      this.direction = "DOWN";
+    }
   }
 
   private onGameDown(pointer: Phaser.Pointer, event: any): void {
