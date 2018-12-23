@@ -71,6 +71,13 @@ export default class UniqueLinkList {
         return item;
     }
 
+    public getValue(key: string): any {
+      let itemNode: LinkNode = this.mItemsHashMap[key];
+      if (itemNode === undefined)
+        return undefined;
+      return itemNode.value;
+    }
+
     public remove(item: any): any {
         if (!item || this.mLength === 0)
             return undefined;

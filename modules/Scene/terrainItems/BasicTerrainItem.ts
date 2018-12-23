@@ -4,16 +4,29 @@ import Globals from "../../../Globals";
 import {GameConfig} from "../../../GameConfig";
 import {IDisposeObject} from "../../../base/IDisposeObject";
 import {ITickedObject} from "../../../base/ITickedObject";
-import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 import {DrawArea} from "../../../common/struct/DrawArea";
 import IsoSprite = Phaser.Plugin.Isometric.IsoSprite;
 import {ITerrainLayer} from "../view/ITerrainLayer";
 
-export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject, ITickedObject, IQuadTreeNode {
+export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject, ITickedObject {
   public data: any;
-  public ox = 0;
-  public oy = 0;
-  public oz = 0;
+  protected _ox = 0;
+
+  public get ox(): number {
+    return this._ox;
+  }
+
+  protected _oy = 0;
+
+  public get oy(): number {
+    return this._oy;
+  }
+
+  private _oz = 0;
+
+  public get oz(): number {
+    return this._oz;
+  }
   public itemWidth = 0;
   public itemHeight = 0;
   public camera: Phaser.Camera;
@@ -34,8 +47,19 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     this.mOwner = owner;
   }
 
+  // Position
+  public setPosition(x: number, y: number, z: number): void {
+    this._ox = x >> 0;
+    this._oy = y >> 0;
+    this._oz = z >> 0;
+  }
+
+  public get key(): string {
+    return this.data.col + "|" + this.data.row;
+  }
+
   public get hadCreated(): boolean {
-    if (this.mTerrainItemDisplayObjectCreated && !this.mTerrainItemDisplayObjectHadCreated) {
+    if (this.mTerrainItemDisplayObjectCreated && this.mTerrainItemDisplayObjectHadCreated === false) {
        this.mTerrainItemDisplayObjectHadCreated  = true;
        return true;
     }
@@ -44,36 +68,6 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
 
   public get display(): any {
     return this.terrainIsoDisplayObject;
-  }
-
-  public get quadH(): number {
-    return this.collisionArea.height;
-  }
-
-  public get quadW(): number {
-    return this.collisionArea.width;
-  }
-
-  public get quadX(): number {
-    return this.collisionArea.ox;
-  }
-
-  public get quadY(): number {
-    return this.collisionArea.oy;
-  }
-
-  public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-    if (this.walkableArea === undefined) {
-      this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
-    }
-    this.walkableArea.draw(hWidth, hHeight);
-  }
-
-  public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-    if (this.collisionArea === undefined) {
-      this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
-    }
-    this.collisionArea.draw(hWidth, hHeight);
   }
 
   public onFrame(deltaTime: number) {

@@ -13,6 +13,7 @@ import {PBpacket} from "net-socket-packet";
 import {op_client, op_editor} from "../../../protocol/protocols";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
+import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
@@ -103,6 +104,15 @@ export class SceneEditorMediator extends SceneMediator {
     this.handleChangeMode();
   }
 
+  protected initializeTerrainItems(datas: Array<any>): void {
+    let len: number = datas.length;
+    let value: TerrainInfo;
+    for (let i = 0; i < len; i++) {
+      value = datas[i];
+      this.addTerrain(value);
+    }
+  }
+
   private sendSceneBrush(value: Phaser.Point): void {
     Log.trace("点击地块-->", value);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
@@ -131,8 +141,9 @@ export class SceneEditorMediator extends SceneMediator {
    * 添加物件
    * @element ElementInfo
    */
-  private addTerrain(terrain: TerrainInfo): void {
-    this.view.terrainEditorLayer.addTerrainItem(terrain);
+  private addTerrain(value: TerrainInfo): void {
+    let terrain: TerrainAnimationItem = this.view.terrainEditorLayer.addTerrainItem(value) as TerrainAnimationItem;
+    this.view.drawSceneLayer.addDraw(terrain.collisionArea);
   }
 
   /**

@@ -4,8 +4,9 @@ import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import {DrawArea} from "../../../common/struct/DrawArea";
 import {ITerrainLayer} from "../view/ITerrainLayer";
+import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 
-export class TerrainAnimationItem extends BasicTerrainItem {
+export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeNode {
   protected mAnimationDirty = false;
   protected myAnimationName: string;
   protected baseLoc: Phaser.Point;
@@ -20,6 +21,41 @@ export class TerrainAnimationItem extends BasicTerrainItem {
       (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onDispose();
     }
     super.releaseTerrainItem();
+  }
+
+  public get quadH(): number {
+    return this.collisionArea.height;
+  }
+
+  public get quadW(): number {
+    return this.collisionArea.width;
+  }
+
+  public get quadX(): number {
+    return this.collisionArea.ox;
+  }
+
+  public get quadY(): number {
+    return this.collisionArea.oy;
+  }
+
+  public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+    if (this.walkableArea === undefined) {
+      this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
+    }
+    this.walkableArea.draw(hWidth, hHeight);
+  }
+
+
+
+
+
+  // Position
+  public setPosition(x: number, y: number, z: number): void {
+    super.setPosition(x, y, z);
+    if (this.collisionArea) {
+      this.collisionArea.setPosition(x, y, z);
+    }
   }
 
   public setAnimation(value: string): void {

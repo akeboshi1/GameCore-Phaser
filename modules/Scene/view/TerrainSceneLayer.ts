@@ -38,14 +38,10 @@ export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer 
 
     public addTerrainItem(value: TerrainInfo): any {
         let terrain: BasicTerrainItem = new TerrainAnimationItem(Globals.game, this);
-        terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-            , this.mapSceneInfo.tileHeight >> 1);
         terrain.camera = this.camera;
         terrain.data = value;
         let p = Globals.Room45Util.tileToPixelCoords(value.col, value.row);
-        terrain.ox = p.x;
-        terrain.oy = p.y;
-        terrain.oz = value.z;
+        terrain.setPosition(p.x, p.y, value.z);
         terrain.itemWidth = this.mapSceneInfo.tileWidth;
         terrain.itemHeight = this.mapSceneInfo.tileHeight;
         this.addChild(terrain);

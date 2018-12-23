@@ -36,18 +36,6 @@ export class SceneView extends SceneBase {
         return element;
     }
 
-    public addTerrainElement(value: TerrainInfo): void {
-        let terrain: any;
-        if (this.terrainSceneLayer) {
-            terrain = this.terrainSceneLayer.addTerrainItem(value);
-            this.drawSceneLayer.addDraw(terrain.collisionArea);
-        }
-        if (this.terrainEditorLayer) {
-            terrain = this.terrainEditorLayer.addTerrainItem(value);
-            this.drawSceneLayer.addDraw(terrain.collisionArea);
-        }
-    }
-
     protected onInitialize(): void {
         super.onInitialize();
         this.seaMapGrid = new RoomGridUtil();

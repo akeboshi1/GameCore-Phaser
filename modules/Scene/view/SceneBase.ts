@@ -161,6 +161,10 @@ export class SceneBase extends SceneBasic {
     protected onInitialize(): void {
         super.onInitialize();
 
+        this.drawSceneLayer = new DrawSceneLayer(this.game);
+        this.drawSceneLayer.scene = this;
+        this.addChild(this.drawSceneLayer);
+
         if (GameConfig.isEditor) {
             this.terrainEditorLayer = new TerrainEditorLayer(this.game);
             this.terrainEditorLayer.scene = this;
@@ -175,9 +179,6 @@ export class SceneBase extends SceneBasic {
         this.terrainGridLayer.scene = this;
         this.addChild(this.terrainGridLayer);
 
-        this.drawSceneLayer = new DrawSceneLayer(this.game);
-        this.drawSceneLayer.scene = this;
-        this.addChild(this.drawSceneLayer);
 
         this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.bottomSceneLayer.scene = this;

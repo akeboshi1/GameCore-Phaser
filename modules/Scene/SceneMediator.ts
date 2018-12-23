@@ -113,7 +113,7 @@ export class SceneMediator extends MediatorBase {
         let value: TerrainInfo;
         for (let i = 0; i < len; i++) {
             value = datas[i];
-            this.view.addTerrainElement(value);
+            this.view.terrainSceneLayer.addTerrainItem(value);
         }
     }
 
