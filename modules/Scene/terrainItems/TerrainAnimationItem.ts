@@ -1,15 +1,17 @@
 import {BasicTerrainItem} from "./BasicTerrainItem";
-import {TerrainSceneLayer} from "../view/TerrainSceneLayer";
 import Globals from "../../../Globals";
 import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {op_gameconfig} from "../../../../protocol/protocols";
+import {TerrainEditorLayer} from "../view/TerrainEditorLayer";
+import {DrawArea} from "../../../common/struct/DrawArea";
 
 export class TerrainAnimationItem extends BasicTerrainItem {
   protected mAnimationDirty = false;
   protected myAnimationName: string;
   protected baseLoc: Phaser.Point;
+  public collisionArea: DrawArea;
 
-  public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
+  public constructor(game: Phaser.Game, owner: TerrainEditorLayer) {
     super(game, owner);
   }
 
@@ -26,6 +28,13 @@ export class TerrainAnimationItem extends BasicTerrainItem {
 
     this.invalidAnimation();
   }
+
+    public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+        if (this.collisionArea === undefined) {
+            this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
+        }
+        this.collisionArea.draw(hWidth, hHeight);
+    }
 
   public onFrame(deltaTime: number) {
     super.onFrame(deltaTime);

@@ -97,7 +97,6 @@ export class SceneMediator extends MediatorBase {
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         // currentCharacterInfo.walkableArea.draw(Globals.game, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
         this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId, currentCharacterInfo, true) as SelfRoleElement;
-        this.view.currentSelfPlayer.setCollisionArea(currentCharacterInfo.collisionArea, currentCharacterInfo.originCollisionPoint, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1)
 
         // 播放场景音效
         Globals.SoundManager.playBgSound(1);

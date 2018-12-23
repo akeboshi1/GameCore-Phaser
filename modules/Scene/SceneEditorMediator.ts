@@ -130,7 +130,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @element ElementInfo
    */
   private addTerrain(terrain: TerrainInfo): void {
-    this.view.terrainSceneLayer.addTerrainItem(terrain);
+    this.view.terrainEditorLayer.addTerrainItem(terrain);
   }
 
   /**
@@ -138,7 +138,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @elementId elementId
    */
   private removeTerrain(col: number, row: number): void {
-    this.view.terrainSceneLayer.removeTerrainItem(col, row);
+    this.view.terrainEditorLayer.removeTerrainItem(col, row);
   }
 
   private clearMode(): void {
@@ -204,7 +204,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private handleRemoveAllTerrain(): void {
-    this.view.terrainSceneLayer.removeAllTerrain();
+    this.view.terrainEditorLayer.releaseTerrainItems();
   }
 
   private handleRemoveTerrain(value: any): void {

@@ -66,6 +66,10 @@ export class TerrainInfo implements ITerrain {
     }
   }
 
+  public get id(): string {
+     return this.col + "|" + this.row;
+  }
+
   private setArea(): void {
     let curAnimation: op_gameconfig.IAnimation = this.config;
     if (curAnimation) {

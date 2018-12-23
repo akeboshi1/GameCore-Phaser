@@ -1,6 +1,5 @@
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {Const} from "../../../common/const/Const";
-import {TerrainSceneLayer} from "../view/TerrainSceneLayer";
 import Globals from "../../../Globals";
 import {GameConfig} from "../../../GameConfig";
 import {IDisposeObject} from "../../../base/IDisposeObject";
@@ -8,6 +7,7 @@ import {ITickedObject} from "../../../base/ITickedObject";
 import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 import {DrawArea} from "../../../common/struct/DrawArea";
 import IsoSprite = Phaser.Plugin.Isometric.IsoSprite;
+import {ITerrainLayer} from "../view/ITerrainLayer";
 
 export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, IDisposeObject, ITickedObject, IQuadTreeNode {
   public data: any;
@@ -19,7 +19,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
   public camera: Phaser.Camera;
   public walkableArea: DrawArea;
   public collisionArea: DrawArea;
-  protected mOwner: TerrainSceneLayer;
+  protected mOwner: ITerrainLayer;
   protected mTerrainItemIsLoadInited = false;
   protected mTerrainItemIsLoading = false;
   protected mTerrainItemDisplayObjectCreated = false;
@@ -29,7 +29,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
   protected baseLoc: Phaser.Point;
   protected mTerrainItemDisplayObjectHadCreated = false;
 
-  public constructor(game: Phaser.Game, owner: TerrainSceneLayer) {
+  public constructor(game: Phaser.Game, owner: ITerrainLayer) {
     super(game);
     this.mOwner = owner;
   }
