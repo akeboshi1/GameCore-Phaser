@@ -9,8 +9,8 @@ import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
 import {op_client} from "../../../protocol/protocols";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
-import {Log} from "../../Log";
 import {SceneLoader} from "./view/SceneLoader";
+import {TerrainInfo} from "../../common/struct/TerrainInfo";
 
 export class SceneMediator extends MediatorBase {
     private hasRegisterHandler: boolean = false;
@@ -91,7 +91,8 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
-
+        mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
+        this.initializeTerrainItems(mapSceneInfo.terrainConfig);
 
         // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
@@ -105,6 +106,15 @@ export class SceneMediator extends MediatorBase {
         Globals.SceneManager.pushScene(this.view);
         Globals.game.camera.follow(this.view.currentSelfPlayer.display);
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
+    }
+
+    protected initializeTerrainItems(datas: Array<any>): void {
+        let len: number = datas.length;
+        let value: TerrainInfo;
+        for (let i = 0; i < len; i++) {
+            value = datas[i];
+            this.view.addTerrainElement(value);
+        }
     }
 
     private onDraw(graphics: MyGraphics, x: number, y: number) {

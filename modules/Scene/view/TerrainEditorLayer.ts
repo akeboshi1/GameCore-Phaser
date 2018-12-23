@@ -70,12 +70,13 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
         terrain.itemHeight = this.mapSceneInfo.tileHeight;
     }
 
-    public addTerrainItem(value: TerrainInfo): void {
+    public addTerrainItem(value: TerrainInfo): any {
         let terrain: BasicTerrainItem = new TerrainAnimationItem(Globals.game, this);
         this.setTerrainItem(terrain, value);
         this.mTerrainEntities.add(terrain);
         this.mHashTerrains.add(value.col + "|" + value.row, terrain);
         this.add(terrain);
+        return terrain;
     }
 
     public removeTerrainItem(col: number, row: number): void {
@@ -152,7 +153,7 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
             for (let i = 0; i < len; i++) {
                 childIdxList.push(found[i].getChildIndex(found[i].display));
             }
-            found.sort(this.sortFunc);
+            found.sort(Globals.Room45Util.sortFunc);
             childIdxList = childIdxList.sort((n1, n2) => {
                 if (n1 > n2) {
                     return 1;
@@ -179,25 +180,6 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
             }
             terrainItem = this.mTerrainEntities.moveNext();
         }
-    }
-
-    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
-    protected sortFunc(a: BasicTerrainItem, b: BasicTerrainItem): number {
-        let a3 = Globals.Room45Util.p2top3(a.ox, a.oy, a.oz);
-        let b3 = Globals.Room45Util.p2top3(b.ox, b.oy, b.oz);
-        if (a3.y > b3.y) {
-            return 1;
-        } else if (a3.y < b3.y) {
-            return -1;
-        } else {
-            // 左边的排在下面
-            if (a3.x > b3.x) {
-                return 1;
-            } else if (a3.x < b3.x) {
-                return -1;
-            }
-        }
-        return 0;
     }
 
     /**

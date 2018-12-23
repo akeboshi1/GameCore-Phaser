@@ -1,4 +1,4 @@
-import {Room45Util} from "../manager/Room45Util";
+import {Scene45Util} from "../manager/Scene45Util";
 import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/IDisposeObject";
 import {ITickedObject} from "../../base/ITickedObject";
@@ -14,7 +14,7 @@ export class DrawArea implements ITickedObject, IDisposeObject {
     this.areaStr = value;
     this._color = color;
     this._orgin = orgin;
-    this._room45 = new Room45Util();
+    this._room45 = new Scene45Util();
     this.init();
   }
 
@@ -56,9 +56,9 @@ export class DrawArea implements ITickedObject, IDisposeObject {
     return this._room45.mapTotalWidth;
   }
 
-  protected _room45: Room45Util;
+  protected _room45: Scene45Util;
 
-  public get room45(): Room45Util {
+  public get room45(): Scene45Util {
     return this._room45;
   }
 

@@ -76,7 +76,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       for (let i = 0; i < len; i++) {
         childIdxList.push(this.getChildIndex(found[i].display));
       }
-      found.sort(this.sortFunc);
+      found.sort(Globals.Room45Util.sortFunc);
       childIdxList = childIdxList.sort((n1, n2) => {
         if (n1 > n2) {
           return 1;
@@ -98,25 +98,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       entity.onTick(deltaTime);
       entity = this.mSceneEntities.moveNext();
     }
-  }
-
-  // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
-  public sortFunc(a: BasicSceneEntity, b: BasicSceneEntity): number {
-    let a3 = Globals.Room45Util.p2top3(a.ox, a.oy, a.oz);
-    let b3 = Globals.Room45Util.p2top3(b.ox, b.oy, b.oz);
-    if (a3.y > b3.y) {
-      return 1;
-    } else if (a3.y < b3.y) {
-      return -1;
-    } else {
-      // 左边的排在下面
-      if (a3.x > b3.x) {
-        return 1;
-      } else if (a3.x < b3.x) {
-        return -1;
-      }
-    }
-    return 0;
   }
 
   /**

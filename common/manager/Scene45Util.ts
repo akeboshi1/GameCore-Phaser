@@ -4,7 +4,7 @@ import Globals from "../../Globals";
 import Point3 = Phaser.Plugin.Isometric.Point3;
 import {Log} from "../../Log";
 
-export class Room45Util extends BaseSingleton {
+export class Scene45Util extends BaseSingleton {
 
 
     public rows: number;
@@ -16,6 +16,42 @@ export class Room45Util extends BaseSingleton {
 
     constructor() {
         super();
+    }
+
+    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+    public sortFunc(a: any, b: any): number {
+        let a3 = Globals.Room45Util.p2top3(a.ox, a.oy, a.oz);
+        let b3 = Globals.Room45Util.p2top3(b.ox, b.oy, b.oz);
+        if (a3.y > b3.y) {
+            return 1;
+        } else if (a3.y < b3.y) {
+            return -1;
+        } else {
+            // 左边的排在下面
+            if (a3.x > b3.x) {
+                return 1;
+            } else if (a3.x < b3.x) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+    public sortDataFunc(a: any, b: any): number {
+        if (a.y > b.y) {
+            return 1;
+        } else if (a.y < b.y) {
+            return -1;
+        } else {
+            // 左边的排在下面
+            if (a.x > b.x) {
+                return 1;
+            } else if (a.x < b.x) {
+                return -1;
+            }
+        }
+        return 0;
     }
 
     private _hTileWidth: number;

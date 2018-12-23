@@ -2,8 +2,8 @@ import {BasicTerrainItem} from "./BasicTerrainItem";
 import Globals from "../../../Globals";
 import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {op_gameconfig} from "../../../../protocol/protocols";
-import {TerrainEditorLayer} from "../view/TerrainEditorLayer";
 import {DrawArea} from "../../../common/struct/DrawArea";
+import {ITerrainLayer} from "../view/ITerrainLayer";
 
 export class TerrainAnimationItem extends BasicTerrainItem {
   protected mAnimationDirty = false;
@@ -11,7 +11,7 @@ export class TerrainAnimationItem extends BasicTerrainItem {
   protected baseLoc: Phaser.Point;
   public collisionArea: DrawArea;
 
-  public constructor(game: Phaser.Game, owner: TerrainEditorLayer) {
+  public constructor(game: Phaser.Game, owner: ITerrainLayer) {
     super(game, owner);
   }
 

@@ -9,87 +9,99 @@ import {RoleElement} from "../elements/RoleElement";
 import BasicElement from "../elements/BasicElement";
 import {ElementInfo} from "../../../common/struct/ElementInfo";
 import {SceneBase} from "./SceneBase";
-import {DrawArea} from "../../../common/struct/DrawArea";
+import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 
 export class SceneView extends SceneBase {
-  public seaMapGrid: RoomGridUtil;
-  public currentSelfPlayer: SelfRoleElement;
+    public seaMapGrid: RoomGridUtil;
+    public currentSelfPlayer: SelfRoleElement;
 
-  public addSceneElement(sceneElementType: number,
-                         uid: number, elemetData: any,
-                         isSelf: boolean = false): BasicSceneEntity {
+    public addSceneElement(sceneElementType: number,
+                           uid: number, elemetData: any,
+                           isSelf: boolean = false): BasicSceneEntity {
 
-    let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
+        let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
 
-    element.uid = uid;
-    element.elementTypeId = sceneElementType;
-    element.data = elemetData;
+        element.uid = uid;
+        element.elementTypeId = sceneElementType;
+        element.data = elemetData;
 
-    element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-        , this.mapSceneInfo.tileHeight >> 1);
-    this.drawSceneLayer.addDraw(element.collisionArea);
+        element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+            , this.mapSceneInfo.tileHeight >> 1);
+        this.drawSceneLayer.addDraw(element.collisionArea);
 
-    this.addSceneEntity(element);
+        this.addSceneEntity(element);
 
-    Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
+        Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
 
-    return element;
-  }
-
-  protected onInitialize(): void {
-    super.onInitialize();
-    this.seaMapGrid = new RoomGridUtil();
-  }
-
-  protected onInitializeScene(value: SceneInfo): void {
-    this.mapSceneInfo = value;
-    this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
-
-    super.onInitializeScene(value);
-
-    let i = 0;
-    let len: number = this.mapSceneInfo.elementConfig.length;
-    let data: ElementInfo;
-    for (; i < len; i++) {
-      data = this.mapSceneInfo.elementConfig[i];
-      this.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
+        return element;
     }
-  }
 
-  protected onActivedScene(): void {
-    super.onActivedScene();
-    // Globals.game.camera.follow(this.currentSelfPlayer.display);
-  }
-
-  protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
-    let element: BasicSceneEntity = null;
-
-    switch (sceneElementType) {
-
-      case Const.SceneElementType.ROLE :
-        // 当前玩家
-        if (isSelf) {
-          element = this.currentSelfPlayer = new SelfRoleElement();
-        } else {
-          element = new RoleElement();
+    public addTerrainElement(value: TerrainInfo): void {
+        let terrain: any;
+        if (this.terrainSceneLayer) {
+            terrain = this.terrainSceneLayer.addTerrainItem(value);
+            this.drawSceneLayer.addDraw(terrain.collisionArea);
         }
-        break;
-
-      case Const.SceneElementType.ELEMENT :
-        // 普通
-        // if (elemetData.config.subType == 1) {
-        element = new BasicElement();
-        // }
-        // npc
-        // else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
-        // element = new BasicNPCElement();
-        // }
-        break;
-
-      default:
-        break;
+        if (this.terrainEditorLayer) {
+            terrain = this.terrainEditorLayer.addTerrainItem(value);
+            this.drawSceneLayer.addDraw(terrain.collisionArea);
+        }
     }
 
-    return element;
-  }
+    protected onInitialize(): void {
+        super.onInitialize();
+        this.seaMapGrid = new RoomGridUtil();
+    }
+
+    protected onInitializeScene(value: SceneInfo): void {
+        this.mapSceneInfo = value;
+        this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
+
+        super.onInitializeScene(value);
+
+        let i = 0;
+        let len: number = this.mapSceneInfo.elementConfig.length;
+        let data: ElementInfo;
+        for (; i < len; i++) {
+            data = this.mapSceneInfo.elementConfig[i];
+            this.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
+        }
+    }
+
+    protected onActivedScene(): void {
+        super.onActivedScene();
+        // Globals.game.camera.follow(this.currentSelfPlayer.display);
+    }
+
+    protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
+        let element: BasicSceneEntity = null;
+
+        switch (sceneElementType) {
+
+            case Const.SceneElementType.ROLE :
+                // 当前玩家
+                if (isSelf) {
+                    element = this.currentSelfPlayer = new SelfRoleElement();
+                } else {
+                    element = new RoleElement();
+                }
+                break;
+
+            case Const.SceneElementType.ELEMENT :
+                // 普通
+                // if (elemetData.config.subType == 1) {
+                element = new BasicElement();
+                // }
+                // npc
+                // else if (elemetData.config.subType == 2 || elemetData.config.subType == 3) {
+                // element = new BasicNPCElement();
+                // }
+                break;
+
+            default:
+                break;
+        }
+
+        return element;
+    }
 }

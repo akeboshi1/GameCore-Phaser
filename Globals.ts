@@ -6,7 +6,7 @@ import {MessageCenter} from "./common/manager/MessageCenter";
 import {DataCenter} from "./common/manager/DataCenter";
 import {Tool} from "./common/manager/Tool";
 import {TickManager} from "./common/manager/TickManager";
-import {Room45Util} from "./common/manager/Room45Util";
+import {Scene45Util} from "./common/manager/Scene45Util";
 import {SceneManager} from "./common/manager/SceneManager";
 import {ISocketConnection} from "./interface/ISocketConnection";
 import {SocketManager} from "./common/manager/SocketManager";
@@ -105,8 +105,8 @@ export default class Globals {
     /**
      * 地图工具
      */
-    public static get Room45Util(): Room45Util {
-        return Room45Util.getInstance();
+    public static get Room45Util(): Scene45Util {
+        return Scene45Util.getInstance();
     }
 
     /**

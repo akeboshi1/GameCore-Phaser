@@ -92,6 +92,8 @@ export class SceneEditorMediator extends SceneMediator {
 
     this.view.terrainGridLayer.initializeMap(mapSceneInfo);
 
+    this.initializeTerrainItems(mapSceneInfo.terrainConfig);
+
     Globals.SceneManager.pushScene(this.view);
 
     Globals.game.camera.follow(this.view);
