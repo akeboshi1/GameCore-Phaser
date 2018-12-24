@@ -7,7 +7,6 @@ import {SceneBasic} from "../../modules/Scene/view/SceneBasic";
 
 export class MouseMod extends BaseSingleton {
     private game: Phaser.Game;
-    private _scene: SceneBasic;
     private l_d = false;
     private m_d = false;
     private r_d = false;
@@ -28,14 +27,6 @@ export class MouseMod extends BaseSingleton {
         activePointer.middleButton.onUp.add(this.keyUpHandle, this);
         activePointer.rightButton.onDown.add(this.keyDownHandle, this);
         activePointer.rightButton.onUp.add(this.keyUpHandle, this);
-    }
-
-    public set scene(value: SceneBasic) {
-        this._scene = value;
-    }
-
-    public get scene(): SceneBasic {
-        return this._scene;
     }
 
     private keyDownHandle( key: any ): void {
@@ -73,14 +64,14 @@ export class MouseMod extends BaseSingleton {
             events.push(op_virtual_world.MouseEvent.RightMouseUp);
         }
 
-        if (this.scene === undefined || events.length === 0) {
+        if (events.length === 0) {
             return;
         }
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.mouseEvent = events;
-        content.point3f = {x: activePointer.x - (this.scene ? this.scene.x : 0), y: activePointer.y - (this.scene ? this.scene.y : 0)};
+        content.point3f = {x: activePointer.x + this.game.camera.x, y: activePointer.y + this.game.camera.y};
         Globals.SocketManager.send(pkt);
     }
 
