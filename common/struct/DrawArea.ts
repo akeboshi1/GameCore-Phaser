@@ -1,19 +1,21 @@
 import {Scene45Util} from "../manager/Scene45Util";
 import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/IDisposeObject";
-import {ITickedObject} from "../../base/ITickedObject";
+import {IAnimatedObject} from "../../base/IAnimatedObject";
 
-export class DrawArea implements ITickedObject, IDisposeObject {
+export class DrawArea implements IAnimatedObject, IDisposeObject {
   protected areaStr: string;
   protected _orgin: Phaser.Point;
   protected areaArr: number[][];
   protected _color = 0;
   private mPosDirty = false;
+  private mCanShow = false;
+  private mPosInit = false;
 
-  constructor(value: string, color: number, orgin: Phaser.Point) {
+  constructor(value: string, color: number, orgin?: Phaser.Point) {
     this.areaStr = value;
     this._color = color;
-    this._orgin = orgin;
+    this._orgin = orgin || new Phaser.Point(0, 0);
     this._room45 = new Scene45Util();
     this.init();
   }
@@ -69,7 +71,7 @@ export class DrawArea implements ITickedObject, IDisposeObject {
     return this._graphics;
   }
 
-  public onTick(deltaTime: number): void {
+  public onFrame(deltaTime: number): void {
     if (this.mPosDirty) {
       this.graphics.x = this.ox;
       this.graphics.y = this.oy;
@@ -77,6 +79,7 @@ export class DrawArea implements ITickedObject, IDisposeObject {
       this.graphics.visible = true;
       this.mPosDirty = false;
     }
+    this.graphics.visible = this.mPosInit && this.mCanShow;
   }
 
   public setPosition(x: number, y: number, z: number): void {
@@ -85,6 +88,9 @@ export class DrawArea implements ITickedObject, IDisposeObject {
     this._oy = y - (this._orgin.x + this._orgin.y) * this.room45.hTileHeight;
     this._oz = z;
     this.mPosDirty = true;
+    if (this.mPosInit === false) {
+      this.mPosInit = true;
+    }
   }
 
   public draw(hTileWidth: number, hTileHeight: number): void {
@@ -92,7 +98,7 @@ export class DrawArea implements ITickedObject, IDisposeObject {
 
     this.room45.setting(this.rows, this.cols, hTileWidth, hTileHeight);
     this.graphics.clear();
-    this.graphics.lineStyle(1);
+    this.graphics.lineStyle(1, this._color, 0.6);
 
     let p1: Phaser.Point;
     let p2: Phaser.Point;
@@ -138,5 +144,13 @@ export class DrawArea implements ITickedObject, IDisposeObject {
       }
     }
     this.graphics.visible = false;
+  }
+
+  public show(): void {
+    this.mCanShow = true;
+  }
+
+  public hide(): void {
+    this.mCanShow = false;
   }
 }
