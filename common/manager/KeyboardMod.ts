@@ -136,4 +136,46 @@ export class KeyboardMod extends BaseSingleton {
         Log.trace("KeyCode--->" + lastDownArr);
         return lastDownArr;
     }
+
+    public dispose(): void {
+      if (this.upKey) {
+        this.upKey.onDown.remove(this.keyDownHandle, this);
+        this.upKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.downKey) {
+        this.downKey.onDown.remove(this.keyDownHandle, this);
+        this.downKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.leftKey) {
+        this.leftKey.onDown.remove(this.keyDownHandle, this);
+        this.leftKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.rightKey) {
+        this.rightKey.onDown.remove(this.keyDownHandle, this);
+        this.rightKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.wKey) {
+        this.wKey.onDown.remove(this.keyDownHandle, this);
+        this.wKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.sKey) {
+        this.sKey.onDown.remove(this.keyDownHandle, this);
+        this.sKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.aKey) {
+        this.aKey.onDown.remove(this.keyDownHandle, this);
+        this.aKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.dKey) {
+        this.dKey.onDown.remove(this.keyDownHandle, this);
+        this.dKey.onUp.remove(this.keyUpHandle, this);
+      }
+    }
 }

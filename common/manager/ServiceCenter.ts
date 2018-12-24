@@ -19,4 +19,9 @@ export class ServiceCenter extends BaseSingleton  {
         this.GameService.register();
         this.SceneService.register();
     }
+
+    public dispose(): void {
+      this.GameService.unRegister();
+      this.SceneService.unRegister();
+    }
 }

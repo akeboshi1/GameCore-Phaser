@@ -9,7 +9,7 @@ export class TickManager extends BaseSingleton {
 
     private game: Phaser.Game;
     private m_TickList: Tick[];
-    private m_LastTime: number = 0;
+    private m_LastTime = 0;
 
     public constructor() {
         super();
@@ -50,6 +50,16 @@ export class TickManager extends BaseSingleton {
                 this.m_TickList.splice(i, 1);
             }
         }
+    }
+
+    public dispose(): void {
+      let len: number = this.m_TickList.length;
+      let tick: Tick;
+      for (let i = len - 1; i >= 0; i--) {
+        tick = this.m_TickList[i];
+        tick.onDispose();
+      }
+      this.m_TickList.length = 0;
     }
 }
 

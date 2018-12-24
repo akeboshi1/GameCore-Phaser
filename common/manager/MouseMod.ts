@@ -21,12 +21,14 @@ export class MouseMod extends BaseSingleton {
     public init(game: Phaser.Game): void {
         this.game = game;
         let activePointer: Phaser.Pointer = this.game.input.activePointer;
-        activePointer.leftButton.onDown.add(this.keyDownHandle, this);
-        activePointer.leftButton.onUp.add(this.keyUpHandle, this);
-        activePointer.middleButton.onDown.add(this.keyDownHandle, this);
-        activePointer.middleButton.onUp.add(this.keyUpHandle, this);
-        activePointer.rightButton.onDown.add(this.keyDownHandle, this);
-        activePointer.rightButton.onUp.add(this.keyUpHandle, this);
+        if (activePointer) {
+          activePointer.leftButton.onDown.add(this.keyDownHandle, this);
+          activePointer.leftButton.onUp.add(this.keyUpHandle, this);
+          activePointer.middleButton.onDown.add(this.keyDownHandle, this);
+          activePointer.middleButton.onUp.add(this.keyUpHandle, this);
+          activePointer.rightButton.onDown.add(this.keyDownHandle, this);
+          activePointer.rightButton.onUp.add(this.keyUpHandle, this);
+        }
     }
 
     private keyDownHandle( key: any ): void {
@@ -73,6 +75,18 @@ export class MouseMod extends BaseSingleton {
         content.mouseEvent = events;
         content.point3f = {x: activePointer.x + this.game.camera.x, y: activePointer.y + this.game.camera.y};
         Globals.SocketManager.send(pkt);
+    }
+
+    public dispose(): void {
+      let activePointer: Phaser.Pointer = this.game.input.activePointer;
+      if (activePointer) {
+        activePointer.leftButton.onDown.remove(this.keyDownHandle, this);
+        activePointer.leftButton.onUp.remove(this.keyUpHandle, this);
+        activePointer.middleButton.onDown.remove(this.keyDownHandle, this);
+        activePointer.middleButton.onUp.remove(this.keyUpHandle, this);
+        activePointer.rightButton.onDown.remove(this.keyDownHandle, this);
+        activePointer.rightButton.onUp.remove(this.keyUpHandle, this);
+      }
     }
 
 }

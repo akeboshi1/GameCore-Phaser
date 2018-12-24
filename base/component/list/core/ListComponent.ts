@@ -46,8 +46,8 @@ export class ListComponent extends Phaser.Group implements IListComponent {
 
     public getItemByFunction(filterFunction: Function): IListItemComponent {
         let item: IListItemComponent = null;
-        let i: number = 0;
-        for (; i < this.m_ItemList.valueList.length; i++) {
+        let len: number = this.m_ItemList.valueList.length;
+        for (let i = 0; i < len; i++) {
             item = this.m_ItemList.valueList[i];
             if (filterFunction(item)) {
                 return item;

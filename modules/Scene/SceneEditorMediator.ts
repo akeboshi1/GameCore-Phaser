@@ -14,6 +14,7 @@ import {op_client, op_editor} from "../../../protocol/protocols";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
+import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
@@ -29,10 +30,13 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   public onRegister(): void {
-    this.mTick = new Tick(100);
+    this.mTick = new Tick(33);
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.start();
     this.view.inputEnabled = true;
+    this.view.bottomSceneLayer.inputEnableChildren = true;
+    this.view.middleSceneLayer.inputEnableChildren = true;
+    this.view.topSceneLayer.inputEnableChildren = true;
     super.onRegister();
 
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
@@ -62,6 +66,11 @@ export class SceneEditorMediator extends SceneMediator {
         }
         break;
       case  EditorEnum.Mode.ERASER:
+        if (this.isSceneDown) {
+          if (em.type === EditorEnum.Type.TERRAIN) {
+            this.preSendSceneDown(this.mousePointer);
+          }
+        }
         break;
       case EditorEnum.Mode.ZOOM:
         if (this.isGameDown) {
@@ -75,10 +84,10 @@ export class SceneEditorMediator extends SceneMediator {
 
     if (this.deltaY !== 0) {
       if (this.deltaY < 0) {
-        this.view.scale.add(0.01, 0.01);
+        this.view.scale.add(0.02, 0.02);
         this.deltaY += 10;
       } else if (this.deltaY > 0) {
-        this.view.scale.add(-0.01, -0.01);
+        this.view.scale.add(-0.02, -0.02);
         this.deltaY -= 10;
       }
     }
@@ -171,6 +180,9 @@ export class SceneEditorMediator extends SceneMediator {
     // Scene events
     this.view.events.onInputDown.remove(this.onSceneDown, this);
 
+    // Layer events
+    this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
+
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
     Globals.game.input.onUp.remove(this.onGameUp, this);
@@ -195,9 +207,14 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.events.onInputDown.add(this.onSceneDown, this);
     } else if (em.mode === EditorEnum.Mode.ERASER) {
       this.view.events.onInputDown.add(this.onSceneDown, this);
+      if (em.type === EditorEnum.Type.TERRAIN) {
+        this.view.events.onInputDown.add(this.onSceneDown, this);
+      } else if (em.type === EditorEnum.Type.ELEMENT) {
+        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
+      }
     } else if (em.mode === EditorEnum.Mode.ZOOM) {
       Globals.game.input.onDown.add(this.onGameDown, this);
-    } else if (em.mode === EditorEnum.Mode.SELECTED) {
+    } else if (em.mode === EditorEnum.Mode.SELECT) {
       Globals.game.input.onDown.add(this.onGameDown, this);
     }
   }
@@ -230,7 +247,17 @@ export class SceneEditorMediator extends SceneMediator {
     this.removeTerrain(value[0], value[1]);
   }
 
+  private onElementLayerDown(item: any) {
+    let elementId: number = item.owner.data.id;
+    Log.trace("选中物件-->", elementId);
+    let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_OBJECT);
+    let content: OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = pkt.content;
+    content.ids = [elementId];
+    Globals.SocketManager.send(pkt);
+  }
+
   private onSceneDown(view: any, pointer: Phaser.Pointer): void {
+    // todo:加鼠标移动
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
     this.mousePointer = pointer;
     if (em.type === EditorEnum.Type.TERRAIN) {
@@ -239,10 +266,6 @@ export class SceneEditorMediator extends SceneMediator {
     this.isSceneDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
   }
-
-  // private onSceneUp(view: any, pointer: Phaser.Pointer): void {
-  //   this.isSceneDown = true;
-  // }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {
     let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
