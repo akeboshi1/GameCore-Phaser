@@ -9,6 +9,7 @@ export class SelfRoleElement extends RoleElement {
     protected onUpdating(deltaTime: number): void {
         super.onUpdating(deltaTime);
         Globals.Keyboard.onUpdate();
+        Globals.MouseMod.onUpdate();
     }
 
     protected checkIsValidDisplayAvatar(): void {

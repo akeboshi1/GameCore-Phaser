@@ -11,7 +11,7 @@ import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GA
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP;
 
 export class KeyboardMod extends BaseSingleton {
-    private _isKeyDown: boolean = false;
+    private _isKeyDown = false;
     private game: Phaser.Game;
     public upKey: Key;
     public downKey: Key;

@@ -12,6 +12,7 @@ import {ISocketConnection} from "./interface/ISocketConnection";
 import {SocketManager} from "./common/manager/SocketManager";
 import {ServiceCenter} from "./common/manager/ServiceCenter";
 import {SoundManager} from "./common/manager/SoundManager";
+import {MouseMod} from "./common/manager/MouseMod";
 
 export default class Globals {
     private static _game: Phaser.Game;
@@ -59,7 +60,15 @@ export default class Globals {
         return KeyboardMod.getInstance();
     }
 
-    /**
+  /**
+   * 鼠标工具
+   */
+  public static get MouseMod(): MouseMod {
+    return MouseMod.getInstance();
+  }
+
+
+  /**
      * 布局管理器
      */
     public static get LayoutManager(): LayoutManager {

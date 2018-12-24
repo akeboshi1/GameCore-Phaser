@@ -14,6 +14,7 @@ export default class Game extends Phaser.State {
         Globals.SoundManager.init(this.game);
         Globals.TickManager.init(this.game);
         Globals.Keyboard.init(this.game);
+        Globals.MouseMod.init(this.game);
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
 
