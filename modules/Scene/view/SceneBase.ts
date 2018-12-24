@@ -210,6 +210,7 @@ export class SceneBase extends SceneBasic {
 
     protected onActivedScene(): void {
         super.onActivedScene();
+        Globals.MouseMod.scene = this;
     }
 
     protected onDeActivedScene(): void {
@@ -220,6 +221,7 @@ export class SceneBase extends SceneBasic {
         if (this.terrainEditorLayer) {
             this.terrainEditorLayer.releaseTerrainItems();
         }
+        Globals.MouseMod.scene = null;
     }
 
     protected onClearScene(): void {
