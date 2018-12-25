@@ -79,4 +79,13 @@ export class SoundManager extends BaseSingleton {
             this.m_GameSound.pauseAll();
         }
     }
+
+    public dispose(): void {
+       if (this.m_GameSound) {
+         this.m_GameSound.destroy();
+       }
+       if (this.m_BgSound) {
+         this.m_BgSound.destroy(true);
+       }
+    }
 }

@@ -4,13 +4,13 @@ import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import {DrawArea} from "../../../common/struct/DrawArea";
 import {ITerrainLayer} from "../view/ITerrainLayer";
-import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 
-export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeNode {
+export class TerrainAnimationItem extends BasicTerrainItem {
+  public collisionArea: DrawArea;
+  public mouseOverArea: DrawArea;
   protected mAnimationDirty = false;
   protected myAnimationName: string;
   protected baseLoc: Phaser.Point;
-  public collisionArea: DrawArea;
 
   public constructor(game: Phaser.Game, owner: ITerrainLayer) {
     super(game, owner);
@@ -23,22 +23,6 @@ export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeN
     super.releaseTerrainItem();
   }
 
-  public get quadH(): number {
-    return this.collisionArea.height;
-  }
-
-  public get quadW(): number {
-    return this.collisionArea.width;
-  }
-
-  public get quadX(): number {
-    return this.collisionArea.ox;
-  }
-
-  public get quadY(): number {
-    return this.collisionArea.oy;
-  }
-
   public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
     if (this.walkableArea === undefined) {
       this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
@@ -46,15 +30,36 @@ export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeN
     this.walkableArea.draw(hWidth, hHeight);
   }
 
+  public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+    if (this.collisionArea === undefined) {
+      this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
+    }
+    this.collisionArea.draw(hWidth, hHeight);
+  }
 
+  public setMouseOverArea(hWidth: number, hHeight: number): void {
+    if (this.mouseOverArea === undefined) {
+      this.mouseOverArea = new DrawArea("1,1&1,1", 0xFF0000);
+      this.mouseOverArea.draw(hWidth, hHeight);
+    }
+  }
 
-
+  public triggerMouseOver(value: boolean): void {
+    if (value === true) {
+      this.mouseOverArea.show();
+    } else {
+      this.mouseOverArea.hide();
+    }
+  }
 
   // Position
   public setPosition(x: number, y: number, z: number): void {
     super.setPosition(x, y, z);
     if (this.collisionArea) {
       this.collisionArea.setPosition(x, y, z);
+    }
+    if (this.mouseOverArea) {
+      this.mouseOverArea.setPosition(x, y, z);
     }
   }
 
@@ -64,13 +69,6 @@ export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeN
 
     this.invalidAnimation();
   }
-
-    public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-        if (this.collisionArea === undefined) {
-            this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
-        }
-        this.collisionArea.draw(hWidth, hHeight);
-    }
 
   public onFrame(deltaTime: number) {
     super.onFrame(deltaTime);
@@ -98,14 +96,6 @@ export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeN
     (<BasicTerrainAvatar>this.terrainIsoDisplayObject).loadModel(this.onTerrainItemLoadComplete, this);
   }
 
-  private initBaseLoc(): void {
-    // 图片坐标
-    let config: op_gameconfig.IAnimation = this.data.config;
-    if (config === null) return;
-    let tmp: Array<string> = config.baseLoc.split(",");
-    this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
-  }
-
   protected onTerrainItemLoadComplete(): void {
     this.setAnimation(this.data.animationName);
     super.onTerrainItemLoadComplete();
@@ -119,5 +109,13 @@ export class TerrainAnimationItem extends BasicTerrainItem implements IQuadTreeN
     if (this.terrainIsoDisplayObject) {
       (<BasicTerrainAvatar>this.terrainIsoDisplayObject).animationName = this.myAnimationName;
     }
+  }
+
+  private initBaseLoc(): void {
+    // 图片坐标
+    let config: op_gameconfig.IAnimation = this.data.config;
+    if (config === null) return;
+    let tmp: Array<string> = config.baseLoc.split(",");
+    this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
   }
 }

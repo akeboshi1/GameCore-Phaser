@@ -8,11 +8,11 @@ export namespace EditorEnum {
     ERASER = "eraser",
     MOVE = "move",
     ZOOM = "zoom",
-    SELECTED = "selected"
+    SELECT = "select"
 }
 
   export enum Type {
-    TERRAIN = 1,
-    ELEMENT = 2
+    TERRAIN = "terrains",
+    ELEMENT = "elements"
   }
 }

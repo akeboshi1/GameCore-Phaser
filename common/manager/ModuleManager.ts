@@ -7,7 +7,7 @@ import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 
 
 export class ModuleManager extends BaseSingleton implements IModuleManager {
-    private CLASS_NAME_SUFFIX: string = "Module";
+    private CLASS_NAME_SUFFIX = "Module";
     protected m_ModuleList: HashMap;
 
     constructor() {
@@ -49,5 +49,15 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
 
     public getModule(moduleName: string): IModule {
         return this.m_ModuleList.getValue(moduleName);
+    }
+
+    public dispose(): void {
+      let len: number = this.m_ModuleList.valueList.length;
+      let module: IModule;
+      for (let i = 0; i < len; i++) {
+        module = this.m_ModuleList.valueList[i];
+        module.onDispose();
+      }
+      this.m_ModuleList.clear();
     }
 }

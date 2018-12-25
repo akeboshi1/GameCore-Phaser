@@ -10,12 +10,11 @@ export class TerrainGridLayer extends BasicSceneLayer {
     public initializeMap(value: SceneInfo): void {
         let cols: number = value.cols;
         let rows: number = value.rows;
-        let i: number = 0;
         let n: number = cols * rows;
         let graphics = this.game.make.graphics();
         graphics.clear();
         graphics.lineStyle(1, 0xffffff, 1);
-        for (; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             let colIndex: number = Math.floor(i % cols);
             let rowIndex: number = Math.floor(i / cols);
             let p = Globals.Room45Util.tileToPixelCoords(colIndex, rowIndex);
@@ -36,5 +35,6 @@ export class TerrainGridLayer extends BasicSceneLayer {
         graphics.drawPolygon(poly.points);
         graphics.endFill();
         this.addChild(graphics);
+        graphics.cacheAsBitmap = true;
     }
 }

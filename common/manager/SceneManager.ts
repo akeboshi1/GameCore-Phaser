@@ -42,4 +42,12 @@ export class SceneManager extends BaseSingleton {
     public getScenesStackAt(index: number): SceneBasic {
         return this.mActivedScenesStack[index];
     }
+
+    public dispose(): void {
+      let len: number = this.mActivedScenesStack.length;
+      for (let i = 0; i < len; i++) {
+        (<SceneBasic>this.mActivedScenesStack[this.mActivedScenesStack.length - 1]).deactiveScene();
+      }
+      this.mActivedScenesStack.length = 0;
+    }
 }

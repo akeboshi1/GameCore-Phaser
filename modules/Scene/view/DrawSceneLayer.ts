@@ -18,7 +18,7 @@ export class DrawSceneLayer extends BasicSceneLayer {
     super.onFrame(deltaTime);
     let len: number = this.graphicsList.length;
     for (let i = 0; i < len; i++) {
-      this.graphicsList[i].onTick(deltaTime);
+      this.graphicsList[i].onFrame(deltaTime);
     }
   }
 

@@ -93,8 +93,6 @@ export class TerrainInfo implements ITerrain {
 
   private setCollisionArea(value: string, orgin: Phaser.Point): void {
     this.collisionArea = value;
-    this.collisionArea = "1,1&1,1"
     this.originCollisionPoint = orgin;
-    this.originCollisionPoint = new Phaser.Point(0, 0);
   }
 }
