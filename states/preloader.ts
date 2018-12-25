@@ -1,8 +1,4 @@
 import {Atlases, Avatar, UI} from "../Assets";
-import * as Assets from "../Assets";
-import {PBpacket} from "net-socket-packet";
-import {op_virtual_world} from "../../protocol/protocols";
-import Globals from "../Globals";
 import {GameConfig} from "../GameConfig";
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
@@ -34,7 +30,7 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadImages(): void {
-        this.game.load.image(UI.ImageBg.getName(), UI.ImageBg.getPNG());
+        this.game.load.nineSlice(UI.DialogBg.getName(), UI.DialogBg.getPNG(), 7, 7 , 7, 7);
         this.game.load.image(UI.ImageMenuBag.getName(), UI.ImageMenuBag.getPNG());
     }
 

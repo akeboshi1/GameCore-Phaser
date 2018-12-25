@@ -2,6 +2,7 @@ import "p2";
 import "pixi";
 import "phaser";
 import "isometric";
+import "phaserNineSlice";
 import "dragonBones";
 import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam";

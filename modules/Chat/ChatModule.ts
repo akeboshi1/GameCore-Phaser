@@ -1,3 +1,4 @@
+import "phaser-ce";
 import {Module} from "../../base/module/core/Module";
 import Globals from "../../Globals";
 import {MainMenuContext} from "../MainMenu/MainMenuContext";

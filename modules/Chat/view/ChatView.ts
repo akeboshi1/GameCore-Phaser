@@ -1,4 +1,5 @@
 import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
+import {UI} from "../../../Assets";
 
 export class ChatView extends ModuleViewBase {
   constructor(game: Phaser.Game) {
@@ -11,6 +12,7 @@ export class ChatView extends ModuleViewBase {
   }
 
   protected init(): void {
-
+    let ns: PhaserNineSlice.NineSlice = this.game.add.nineSlice(0, 0, UI.DialogBg.getName(), null, 200 , 100);
+    this.add(ns);
   }
 }

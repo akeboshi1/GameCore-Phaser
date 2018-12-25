@@ -18,7 +18,7 @@ export default class Game extends Phaser.State {
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
 
-        Globals.ModuleManager.openModule(ModuleTypeEnum.MAINMENU);
+        Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT);
 
         if (Globals.DataCenter.SceneData.initialize) {
             this.onHandleEnterScene();

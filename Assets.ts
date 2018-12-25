@@ -154,13 +154,13 @@ export namespace UI {
         }
     }
 
-    export class ImageBg {
+    export class DialogBg {
         static getName(): string {
-            return "ui_background_png";
+            return "ui_dialog_bg_png";
         }
 
         static getPNG(): string {
-            return require("assets/images/ui/background.png");
+            return require("assets/images/ui/dialog_bg.png");
         }
     }
 }

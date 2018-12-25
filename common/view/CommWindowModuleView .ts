@@ -48,7 +48,7 @@ export class CommWindowModuleView extends ModuleViewBase {
         this.m_Width = Const.UIConst.UI_DEFAULT_WIDTH;
         this.m_Height = Const.UIConst.UI_DEFAULT_HEIGHT;
         this.m_CloseBtPath = UI.SpriteSheetsCloseBtn.getPNG();
-        this.m_BgPath = UI.ImageBg.getPNG();
+        // this.m_BgPath = UI.ImageBg.getPNG();
     }
 
     protected init(): void {
