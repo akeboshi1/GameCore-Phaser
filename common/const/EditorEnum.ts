@@ -8,7 +8,7 @@ export namespace EditorEnum {
     ERASER = "eraser",
     MOVE = "move",
     ZOOM = "zoom",
-    SELECTED = "selected"
+    SELECT = "select"
 }
 
   export enum Type {

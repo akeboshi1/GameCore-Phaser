@@ -3,6 +3,7 @@ import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
 import {QuadTree} from "../../../base/ds/QuadTree";
+import {QuadTreeTest} from "../../../base/ds/QuadTreeTest";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
@@ -12,6 +13,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   private mSortWaitTime = 0;
   private mSortRectangle: Phaser.Rectangle;
   private mQuadTree: QuadTree;
+  // private mQuadTree: QuadTreeTest;
 
 
   public constructor(game: Phaser.Game) {

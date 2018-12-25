@@ -6,8 +6,14 @@ import {MessageType} from "../const/MessageType";
 import {BasePacketHandler} from "./BasePacketHandler";
 
 export class SceneService extends BaseSingleton {
+  private handle: Handler;
   public register(): void {
-    Globals.SocketManager.addHandler(new Handler());
+    this.handle = new Handler();
+    Globals.SocketManager.addHandler(this.handle);
+  }
+
+  public unRegister(): void {
+    Globals.SocketManager.removeHandler(this.handle);
   }
 }
 
