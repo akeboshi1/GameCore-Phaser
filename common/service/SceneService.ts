@@ -21,6 +21,11 @@ class Handler extends BasePacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.handleMoveElement);
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.handleStopElement);
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_CHANGE_ELEMENT_ANIMATION, this.handleChangeElement);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.handleServerAddElement);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT, this.handleServerRemoveElement);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_CHARACTER, this.handleUpdateCharacter);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.handleAddCharacter);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.handleRemoveCharacter);
     // Editor
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
@@ -28,6 +33,17 @@ class Handler extends BasePacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_ELEMENT, this.handleDeleteElement);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
   }
+
+  private handleServerAddElement(packet: PBpacket): void {
+      let Element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
+      console.log(`sceneid: ${Element.sceneid} , element: ${Element.element.id}`);
+  }
+
+  private handleServerRemoveElement(packet: PBpacket): void {
+      let Element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT = packet.content;
+      console.log(`sceneid: ${Element.sceneid} , element: ${Element.elementid}`);
+  }
+
 
   private handleMoveCharacter(packet: PBpacket): void {
     let moveData: op_client.OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER = packet.content;
@@ -87,5 +103,21 @@ class Handler extends BasePacketHandler {
     } else {
       Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_TERRAIN, [terrainData.x, terrainData.y]);
     }
+  }
+
+   private handleAddCharacter(packet: PBpacket): void {
+        let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
+        console.log(`${character.character.uuid}`);
+  }
+
+   private handleRemoveCharacter(packet: PBpacket): void {
+        let uuid: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER = packet.content;
+        console.log(`${uuid}`);
+  }
+
+   private handleUpdateCharacter(packet: PBpacket): void {
+        let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_CHARACTER = packet.content;
+        console.log(`${character.character.uuid}`);
+        //Globals.DataCenter.PlayerData.addPlayerInfo(character.character);
   }
 }
