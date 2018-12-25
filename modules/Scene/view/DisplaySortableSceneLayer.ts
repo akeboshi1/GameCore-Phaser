@@ -42,8 +42,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     if (this.mQuadTree) {
       this.mQuadTree.insert(d);
     }
-
-    this.markDirty(d.collisionArea.ox, d.collisionArea.oy, d.collisionArea.width, d.collisionArea.height);
   }
 
   public onFrame(deltaTime: number): void {
@@ -98,6 +96,10 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     entity = this.mSceneEntities.moveFirst();
     while (entity) {
       entity.onTick(deltaTime);
+      if (entity.positionDirty) {
+          this.markDirty(entity.quadX, entity.quadY, entity.quadW, entity.quadH);
+          entity.positionDirty = false;
+      }
       entity = this.mSceneEntities.moveNext();
     }
   }

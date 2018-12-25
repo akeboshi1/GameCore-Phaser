@@ -9,12 +9,12 @@ import KeyCode = op_virtual_world.KeyCode;
 import {GameConfig} from "../../../GameConfig";
 
 export default class SceneEntity extends BasicSceneEntity {
-    public mouseEnable: boolean = true;
-    public isCanShow: boolean = true;
+    public mouseEnable = true;
+    public isCanShow = true;
     // moving
-    protected mySpeed: number = 4; //
-    protected mAngleIndex: number = 0;
-    protected mWalkAngleIndex: number = 0; // 走路
+    protected mySpeed = 4; //
+    protected mAngleIndex = 0;
+    protected mWalkAngleIndex = 0; // 走路
     protected mTarget: Phaser.Point;
     protected mTimeSpan: number;
 
@@ -140,8 +140,7 @@ export default class SceneEntity extends BasicSceneEntity {
     protected onInitializeCompleted(): void {
         if (this.mouseEnable) {
             this.display.touchEnabled = true;
-        }
-        else {
+        } else {
             this.display.touchEnabled = false;
         }
     }

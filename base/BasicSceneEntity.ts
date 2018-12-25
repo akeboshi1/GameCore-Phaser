@@ -98,14 +98,16 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     }
 
     // Position
-    public setPosition(x: number, y: number, z: number): void {
+    public positionDirty = false;
+    public setPosition(x: number, y: number, z?: number): void {
         // Log.trace("[x,y,z]", x, y, z);
         this._ox = x >> 0;
         this._oy = y >> 0;
-        this._oz = z >> 0;
+        this._oz = z || 0;
         if (this.collisionArea) {
             this.collisionArea.setPosition(x, y, z);
         }
+        this.positionDirty = true;
     }
 
     public isInScreen(): boolean {

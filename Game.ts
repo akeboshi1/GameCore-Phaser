@@ -15,11 +15,8 @@ import {GameConfig} from "./GameConfig";
 import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
-import {ModuleManager} from "./common/manager/ModuleManager";
 
 export default class Game extends Phaser.Game implements IGame {
-  private sceneReady: boolean;
-
   constructor(value: IGameParam) {
     let config: Phaser.IGameConfig = {
       width: value.width,
@@ -59,7 +56,6 @@ export default class Game extends Phaser.Game implements IGame {
   }
 
   public dispose(): void {
-    // todo:清除
     Globals.ServiceCenter.dispose();
     Globals.ModuleManager.dispose();
     Globals.SoundManager.dispose();

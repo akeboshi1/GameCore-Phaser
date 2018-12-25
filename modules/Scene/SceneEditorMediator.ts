@@ -13,36 +13,40 @@ import {PBpacket} from "net-socket-packet";
 import {op_client, op_editor} from "../../../protocol/protocols";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
+import BasicElement from "./elements/BasicElement";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
   private movementY = 0;
-  private isGameDown: boolean;
   private deltaY = 0;
+  private isGameDown = false;
   private mousePointer: Phaser.Pointer;
-  private isSceneDown: boolean;
-  private mSelectTerrainDown: TerrainAnimationItem;
+  private mSelectElement: BasicElement;
+  private mSelectTerrain: TerrainAnimationItem;
 
   constructor() {
     super();
   }
 
+  private get em(): IEditorMode {
+    return Globals.DataCenter.EditorData.editorMode;
+  }
+
   public onRegister(): void {
     this.mTick = new Tick(33);
     this.mTick.setCallBack(this.onTick, this);
+    this.mTick.setRenderCallBack(this.onFrame, this);
     this.mTick.start();
     this.view.inputEnabled = true;
-    this.view.bottomSceneLayer.inputEnableChildren = true;
     this.view.middleSceneLayer.inputEnableChildren = true;
-    this.view.topSceneLayer.inputEnableChildren = true;
     super.onRegister();
 
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
-    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveElement, this);
+    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
 
@@ -52,27 +56,31 @@ export class SceneEditorMediator extends SceneMediator {
     };
   }
 
-  public onTick(deltaTime: Number): void {
-    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
-    let scale = 0;
-    switch (em.mode) {
+  public onFrame(deltaTime: number): void {
+    switch (this.em.mode) {
       case  EditorEnum.Mode.BRUSH:
-        if (this.isSceneDown) {
-          if (em.type === EditorEnum.Type.TERRAIN) {
+        if (this.isGameDown) {
+          if (this.em.type === EditorEnum.Type.TERRAIN) {
             this.preSendSceneDown(this.mousePointer);
-          } else if (em.type === EditorEnum.Type.ELEMENT) {
+          } else if (this.em.type === EditorEnum.Type.ELEMENT) {
             this.triggerMouseDown(this.mousePointer);
           }
         }
         break;
       case  EditorEnum.Mode.ERASER:
-        if (this.isSceneDown) {
-          if (em.type === EditorEnum.Type.TERRAIN) {
+        if (this.isGameDown) {
+          if (this.em.type === EditorEnum.Type.TERRAIN) {
             this.preSendSceneDown(this.mousePointer);
           }
         }
         break;
+      case EditorEnum.Mode.SELECT:
+        if (this.mSelectElement) {
+          this.moveElement(this.mSelectElement, this.mousePointer);
+        }
+        break;
       case EditorEnum.Mode.ZOOM:
+        let scale = 0;
         if (this.isGameDown) {
           let newMoveY: number = Globals.game.input.y;
           let add = this.movementY - newMoveY;
@@ -85,14 +93,32 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.deltaY !== 0) {
       if (this.deltaY < 0) {
         this.view.scale.add(0.02, 0.02);
-        this.deltaY += 10;
       } else if (this.deltaY > 0) {
         this.view.scale.add(-0.02, -0.02);
+      }
+    }
+
+    if (this.view.scale.x < this.minScaleX) {
+      this.view.scale.x = this.minScaleX;
+    }
+
+    if (this.view.scale.y < this.minScaleY) {
+      this.view.scale.y = this.minScaleY;
+    }
+  }
+
+  public onTick(deltaTime: number): void {
+    if (this.deltaY !== 0) {
+      if (this.deltaY < 0) {
+        this.deltaY += 10;
+      } else if (this.deltaY > 0) {
         this.deltaY -= 10;
       }
     }
   }
 
+  private minScaleX = 1;
+  private minScaleY = 1;
   protected changedToMapSceneCompleteHandler(): void {
     let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
     // clear the last one scene.
@@ -118,6 +144,9 @@ export class SceneEditorMediator extends SceneMediator {
 
     Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
 
+    this.minScaleX = GameConfig.GameWidth / mapSceneInfo.mapTotalWidth;
+    this.minScaleY = GameConfig.GameHeight / mapSceneInfo.mapTotalHeight;
+
     this.handleChangeMode();
   }
 
@@ -130,11 +159,50 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
-  private sendSceneDown(value: Phaser.Point): void {
-    Log.trace("点击地块-->", value);
+  /**
+   * 切换编辑器状态
+   */
+  private handleChangeMode(): void {
+    this.clearMode();
+    if (this.em.mode === EditorEnum.Mode.MOVE) {
+      let scaleX: number = this.view.scale.x;
+      let scaleY: number = this.view.scale.y;
+      let bounds: Phaser.Rectangle = new Phaser.Rectangle(-this.view.x * scaleX - (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth), -this.view.y * scaleY - (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight),
+        (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth + Globals.Room45Util.tileWidth * scaleX / 2), (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight + Globals.Room45Util.tileHeight * scaleY));
+      this.view.input.boundsRect = bounds;
+      this.view.input.enableDrag();
+    } else if (this.em.mode === EditorEnum.Mode.BRUSH) {
+      Globals.game.input.onDown.add(this.onGameDown, this);
+    } else if (this.em.mode === EditorEnum.Mode.ERASER) {
+      if (this.em.type === EditorEnum.Type.TERRAIN) {
+        Globals.game.input.onDown.add(this.onGameDown, this);
+      } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
+      }
+    } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
+      Globals.game.input.onDown.add(this.onGameDown, this);
+    } else if (this.em.mode === EditorEnum.Mode.SELECT) {
+      if (this.em.type === EditorEnum.Type.TERRAIN) {
+        Globals.game.input.onDown.add(this.onGameDown, this);
+      } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
+      }
+    }
+  }
+
+  private sendScenePoint(x: number, y: number): void {
+    Log.trace("点击地块-->", x, y);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
-    content.point = {x: value.x, y: value.y};
+    content.point = {x: x, y: y};
+    Globals.SocketManager.send(pkt);
+  }
+
+  private sendSceneObject(value: number[]): void {
+    Log.trace("点击物件-->", value);
+    let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_OBJECT);
+    let content: OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = pkt.content;
+    content.ids = value;
     Globals.SocketManager.send(pkt);
   }
 
@@ -152,6 +220,12 @@ export class SceneEditorMediator extends SceneMediator {
    */
   private removeElement(elementId: number): void {
     this.view.deleteSceneElement(elementId);
+  }
+
+  private moveElement(element: BasicElement, pointer: Phaser.Pointer): void {
+    let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
+    let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
+    element.setPosition(screenX, screenY);
   }
 
   /**
@@ -177,9 +251,6 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.view.input) {
       this.view.input.disableDrag();
     }
-    // Scene events
-    this.view.events.onInputDown.remove(this.onSceneDown, this);
-
     // Layer events
     this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
 
@@ -187,36 +258,6 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.input.onDown.remove(this.onGameDown, this);
     Globals.game.input.onUp.remove(this.onGameUp, this);
 
-  }
-
-  /**
-   * 切换编辑器状态
-   */
-  private handleChangeMode(): void {
-    this.clearMode();
-    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
-    if (em.mode === EditorEnum.Mode.MOVE) {
-      // Log.trace(this.view.x, this.view.y, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight, GameConfig.GameWidth, GameConfig.GameHeight);
-      let scaleX: number = this.view.scale.x;
-      let scaleY: number = this.view.scale.y;
-      let bounds: Phaser.Rectangle = new Phaser.Rectangle(-(Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth), -(Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight),
-        (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth + Globals.Room45Util.tileWidth * scaleX / 2), (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight + Globals.Room45Util.tileHeight * scaleY));
-      this.view.input.boundsRect = bounds;
-      this.view.input.enableDrag();
-    } else if (em.mode === EditorEnum.Mode.BRUSH) {
-      this.view.events.onInputDown.add(this.onSceneDown, this);
-    } else if (em.mode === EditorEnum.Mode.ERASER) {
-      this.view.events.onInputDown.add(this.onSceneDown, this);
-      if (em.type === EditorEnum.Type.TERRAIN) {
-        this.view.events.onInputDown.add(this.onSceneDown, this);
-      } else if (em.type === EditorEnum.Type.ELEMENT) {
-        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
-      }
-    } else if (em.mode === EditorEnum.Mode.ZOOM) {
-      Globals.game.input.onDown.add(this.onGameDown, this);
-    } else if (em.mode === EditorEnum.Mode.SELECT) {
-      Globals.game.input.onDown.add(this.onGameDown, this);
-    }
   }
 
   private handleAddElement(value: op_client.IElement): void {
@@ -249,34 +290,21 @@ export class SceneEditorMediator extends SceneMediator {
 
   private onElementLayerDown(item: any) {
     let elementId: number = item.owner.data.id;
-    Log.trace("选中物件-->", elementId);
-    let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_OBJECT);
-    let content: OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = pkt.content;
-    content.ids = [elementId];
-    Globals.SocketManager.send(pkt);
-  }
-
-  private onSceneDown(view: any, pointer: Phaser.Pointer): void {
-    // todo:加鼠标移动
-    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
-    this.mousePointer = pointer;
-    if (em.type === EditorEnum.Type.TERRAIN) {
-      this.preSendSceneDown(this.mousePointer);
-    }
-    this.isSceneDown = true;
+    this.sendSceneObject([elementId]);
+    if (this.em.mode === EditorEnum.Mode.SELECT)
+      this.mSelectElement = item.owner;
     Globals.game.input.onUp.add(this.onGameUp, this);
   }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {
-    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
     let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
     let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
     let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
     if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
-      if (em.type === EditorEnum.Type.TERRAIN) {
-        this.sendSceneDown(tempPoint);
-      } else if (em.type === EditorEnum.Type.ELEMENT) {
-        this.sendSceneDown(new Phaser.Point(screenX, screenY));
+      if (this.em.type === EditorEnum.Type.TERRAIN) {
+        this.sendScenePoint(tempPoint.x, tempPoint.y);
+      } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+        this.sendScenePoint(screenX, screenY);
       }
     }
   }
@@ -289,19 +317,24 @@ export class SceneEditorMediator extends SceneMediator {
     let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
     let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
     if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
-      if (this.mSelectTerrainDown) {
-        this.mSelectTerrainDown.triggerMouseOver(false);
-        this.mSelectTerrainDown = null;
+      if (this.mSelectTerrain) {
+        this.mSelectTerrain.triggerMouseOver(false);
+        this.mSelectTerrain = null;
       }
-      this.mSelectTerrainDown = this.view.terrainEditorLayer.getTerrainItem(tempPoint.x, tempPoint.y);
-      if (this.mSelectTerrainDown) {
-        this.mSelectTerrainDown.triggerMouseOver(true);
+      this.mSelectTerrain = this.view.terrainEditorLayer.getTerrainItem(tempPoint.x, tempPoint.y);
+      if (this.mSelectTerrain) {
+        this.mSelectTerrain.triggerMouseOver(true);
       }
     }
   }
 
   private onGameDown(pointer: Phaser.Pointer, event: any): void {
-    // Log.trace(pointer.position.x, pointer.position.y, pointer.x, pointer.y);
+    this.mousePointer = pointer;
+    if (this.em.type === EditorEnum.Type.TERRAIN) {
+      this.preSendSceneDown(this.mousePointer);
+    } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+      this.triggerMouseDown(this.mousePointer);
+    }
     this.movementY = pointer.position.y;
     this.isGameDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
@@ -310,18 +343,21 @@ export class SceneEditorMediator extends SceneMediator {
   private onGameUp(pointer: Phaser.Pointer, event: any): void {
     Globals.game.input.onUp.remove(this.onGameUp, this);
 
-    if (this.mSelectTerrainDown) {
-      this.mSelectTerrainDown.triggerMouseOver(false);
-      this.mSelectTerrainDown = null;
+    if (this.mSelectTerrain) {
+      this.mSelectTerrain.triggerMouseOver(false);
+      this.mSelectTerrain = null;
     }
 
-    let em: IEditorMode = Globals.DataCenter.EditorData.editorMode;
-    if (this.isSceneDown) {
-      if (em.mode === EditorEnum.Mode.BRUSH && em.type === EditorEnum.Type.ELEMENT) {
+    if (this.mSelectElement) {
+      this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
+      this.mSelectElement = null;
+    }
+
+    if (this.isGameDown) {
+      if (this.em.mode === EditorEnum.Mode.BRUSH && this.em.type === EditorEnum.Type.ELEMENT) {
         this.preSendSceneDown(pointer);
       }
     }
-    this.isSceneDown = false;
     this.isGameDown = false;
   }
 }
