@@ -1,6 +1,7 @@
 import Globals from "../Globals";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
+import {UI} from "../Assets";
 
 export default class Game extends Phaser.State {
 
@@ -18,7 +19,7 @@ export default class Game extends Phaser.State {
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
 
-        Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT);
+        Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, null, {nineslice_images: [{key: UI.DialogBg.getName() , url: UI.DialogBg.getPNG(), top: 7, left: 7, right: 7, bottom: 7}]});
 
         if (Globals.DataCenter.SceneData.initialize) {
             this.onHandleEnterScene();

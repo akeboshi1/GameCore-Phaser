@@ -30,7 +30,6 @@ export default class Preloader extends Phaser.State {
     }
 
     private loadImages(): void {
-        this.game.load.nineSlice(UI.DialogBg.getName(), UI.DialogBg.getPNG(), 7, 7 , 7, 7);
         this.game.load.image(UI.ImageMenuBag.getName(), UI.ImageMenuBag.getPNG());
     }
 
