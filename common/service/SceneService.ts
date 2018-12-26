@@ -32,12 +32,19 @@ class Handler extends BasePacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_CHARACTER, this.handleUpdateCharacter);
     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.handleAddCharacter);
     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.handleRemoveCharacter);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN, this.handleServerAddTerrain);
     // Editor
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_TERRAIN, this.handleAddTerrain);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_ELEMENT, this.handleDeleteElement);
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
+  }
+
+  //没想到吧，这是潘老板写的
+  private handleServerAddTerrain(packet: PBpacket): void {
+      let Terrain: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
+      console.log(`terrain: ${Terrain.terrain.length}`);
   }
 
   private handleServerAddElement(packet: PBpacket): void {
@@ -49,6 +56,7 @@ class Handler extends BasePacketHandler {
       let Element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT = packet.content;
       console.log(`sceneid: ${Element.sceneid} , element: ${Element.elementid}`);
   }
+  //没想到吧，潘老板写的都写完了
 
 
   private handleMoveCharacter(packet: PBpacket): void {
