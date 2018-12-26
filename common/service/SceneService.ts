@@ -41,23 +41,21 @@ class Handler extends BasePacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
   }
 
-  //没想到吧，这是潘老板写的
+  // 没想到吧，这是潘老板写的
   private handleServerAddTerrain(packet: PBpacket): void {
-      let Terrain: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
-      console.log(`terrain: ${Terrain.terrain.length}`);
+      let terrain: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
+      Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrain.terrain);
   }
 
   private handleServerAddElement(packet: PBpacket): void {
-      let Element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
-      console.log(`sceneid: ${Element.sceneid} , element: ${Element.element.id}`);
+      let element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
+      Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, element.elements);
   }
 
   private handleServerRemoveElement(packet: PBpacket): void {
-      let Element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT = packet.content;
-      console.log(`sceneid: ${Element.sceneid} , element: ${Element.elementid}`);
+      let element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT = packet.content;
+      Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_ELEMENT, element.elementid);
   }
-  //没想到吧，潘老板写的都写完了
-
 
   private handleMoveCharacter(packet: PBpacket): void {
     let moveData: op_client.OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER = packet.content;
@@ -97,7 +95,7 @@ class Handler extends BasePacketHandler {
 
   private handleAddElement(packet: PBpacket): void {
     let elementData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_ELEMENT = packet.content;
-    Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, elementData.element);
+    Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, [elementData.element]);
   }
 
   private handleAddTerrain(packet: PBpacket): void {

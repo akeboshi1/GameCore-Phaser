@@ -3,7 +3,6 @@ import "pixi";
 import "phaser";
 import "phaser-ce";
 import "isometric";
-import "nineSlice";
 import "dragonBones";
 import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam";

@@ -7,15 +7,13 @@ import {EditorEnum} from "../../common/const/EditorEnum";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
 import {Tick} from "../../common/tick/Tick";
-import {ElementInfo} from "../../common/struct/ElementInfo";
-import {Const} from "../../common/const/Const";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_editor} from "../../../protocol/protocols";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
 import BasicElement from "./elements/BasicElement";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
+import {op_editor} from "../../../protocol/protocols";
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
@@ -206,22 +204,6 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.SocketManager.send(pkt);
   }
 
-  /**
-   * 添加物件
-   * @element ElementInfo
-   */
-  private addElement(value: ElementInfo): void {
-    this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
-  }
-
-  /**
-   * 删除物件
-   * @elementId elementId
-   */
-  private removeElement(elementId: number): void {
-    this.view.deleteSceneElement(elementId);
-  }
-
   private moveElement(element: BasicElement, pointer: Phaser.Pointer): void {
     let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
     let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
@@ -232,7 +214,7 @@ export class SceneEditorMediator extends SceneMediator {
    * 添加物件
    * @element ElementInfo
    */
-  private addTerrain(value: TerrainInfo): void {
+  protected addTerrain(value: TerrainInfo): void {
     let terrain: TerrainAnimationItem = this.view.terrainEditorLayer.addTerrainItem(value) as TerrainAnimationItem;
     if (terrain) {
       this.view.drawSceneLayer.addDraw(terrain.mouseOverArea);
@@ -258,26 +240,6 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.input.onDown.remove(this.onGameDown, this);
     Globals.game.input.onUp.remove(this.onGameUp, this);
 
-  }
-
-  private handleAddElement(value: op_client.IElement): void {
-    let element: ElementInfo = new ElementInfo();
-    element.setInfo(value);
-    this.addElement(element);
-  }
-
-  private handleAddTerrain(value: op_client.ITerrain[]): void {
-    let terrain: TerrainInfo;
-    let len: number = value.length;
-    for (let i = 0; i < len; i++) {
-      terrain = new TerrainInfo();
-      terrain.setInfo(value[i]);
-      this.addTerrain(terrain);
-    }
-  }
-
-  private handleRemoveElement(value: number): void {
-    this.removeElement(value);
   }
 
   private handleRemoveAllTerrain(): void {

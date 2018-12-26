@@ -7,10 +7,13 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
-import {op_client} from "../../../protocol/protocols";
+import {op_client, op_virtual_world} from "../../../protocol/protocols";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {SceneLoader} from "./view/SceneLoader";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
+import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
+import {ElementInfo} from "../../common/struct/ElementInfo";
+import {PBpacket} from "net-socket-packet";
 
 export class SceneMediator extends MediatorBase {
     private hasRegisterHandler: boolean = false;
@@ -48,6 +51,7 @@ export class SceneMediator extends MediatorBase {
 
     public onRegister(): void {
         super.onRegister();
+        Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
         this.onLoginOk();
     }
 
@@ -75,6 +79,66 @@ export class SceneMediator extends MediatorBase {
             Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
             this.hasRegisterHandler = false;
         }
+    }
+
+    /**
+     * 监听添加地块
+     * @param value
+     */
+    protected handleAddTerrain(value: op_client.ITerrain[]): void {
+        let terrain: TerrainInfo;
+        let len: number = value.length;
+        for (let i = 0; i < len; i++) {
+            terrain = new TerrainInfo();
+            terrain.setInfo(value[i]);
+            this.addTerrain(terrain);
+        }
+    }
+
+    /**
+     * 监听添加物件
+     * @param value
+     */
+    protected handleAddElement(value: op_client.IElement[]): void {
+        let element: ElementInfo;
+        let len: number = value.length;
+        for (let i = 0; i < len; i++) {
+            element = new ElementInfo();
+            element.setInfo(value[i]);
+            this.addElement(element);
+        }
+    }
+
+    /**
+     * 监听删除物件
+     * @param value
+     */
+    protected handleRemoveElement(value: number): void {
+        this.removeElement(value);
+    }
+
+    /**
+     * 添加地块
+     * @element ElementInfo
+     */
+    protected addTerrain(value: TerrainInfo): void {
+        this.view.terrainSceneLayer.addTerrainItem(value);
+}
+
+    /**
+     * 添加物件
+     * @element ElementInfo
+     */
+    protected addElement(value: ElementInfo): void {
+        this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
+    }
+
+    /**
+     * 删除物件
+     * @elementId elementId
+     */
+    protected removeElement(elementId: number): void {
+        this.view.deleteSceneElement(elementId);
     }
 
     protected changedToMapSceneCompleteHandler(): void {
@@ -105,7 +169,13 @@ export class SceneMediator extends MediatorBase {
         // set camera
         Globals.SceneManager.pushScene(this.view);
         Globals.game.camera.follow(this.view.currentSelfPlayer.display);
+        this.sendSceneReady();
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
+    }
+
+    private sendSceneReady(): void {
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
+        Globals.SocketManager.send(pkt);
     }
 
     protected initializeTerrainItems(datas: Array<any>): void {

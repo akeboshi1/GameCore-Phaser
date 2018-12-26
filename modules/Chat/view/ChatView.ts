@@ -1,5 +1,6 @@
 import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
 import {UI} from "../../../Assets";
+import {PhaserNineSlice} from "../../../lib/nineSlice/Plugin";
 
 export class ChatView extends ModuleViewBase {
   constructor(game: Phaser.Game) {
