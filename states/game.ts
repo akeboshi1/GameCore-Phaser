@@ -21,7 +21,9 @@ export default class Game extends Phaser.State {
         Globals.LayoutManager.init(this.game);
 
         let chatResource: INineSliceImageResouce[] = [{key: UI.DialogBg.getName() , url: UI.DialogBg.getPNG(), top: 7, left: 7, right: 7, bottom: 7},
-            {key: UI.InputBg.getName() , url: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}];
+            {key: UI.InputBg.getName() , url: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4},
+            {key: UI.Button1.getName() , url: UI.Button1.getPNG(), top: 8, left: 9, right: 9, bottom: 10}
+            ];
         Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, null, {nineslice_images: chatResource});
 
         if (Globals.DataCenter.SceneData.initialize) {

@@ -16,6 +16,8 @@ export class MessageType {
     public static SCENE_MOVE_STOP = "scene_move_stop";
     public static CHANGE_ELEMENT_ANIMATION = "change_element_animation";
 
+    public static CHAT_TO = "chat_to"
+
     public static SCENE_ADD_PLAYER = "scene_add_player";
     public static SCENE_REMOVE_PLAYER = "scene_remove_player";
     public static SCENE_UPDATE_PLAYER = "scene_update_player";

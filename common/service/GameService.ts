@@ -20,7 +20,6 @@ export class GameService extends BaseSingleton {
 class Handler extends BasePacketHandler {
   constructor() {
     super();
-    // Server
     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.handleSelectCharacter);
   }
 
