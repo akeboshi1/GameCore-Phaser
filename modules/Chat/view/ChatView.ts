@@ -20,7 +20,6 @@ export class ChatView extends ModuleViewBase {
         ns = this.game.add.nineSlice(10, this.game.height - 30, UI.InputBg.getName(), null, 260, 24);
         this.add(ns);
         this.tf = this.game.make.text(10, this.game.height - 28, "请输入", {fontSize: 12, fill: "#ffcc00"});
-        tf.type
         this.add(this.tf);
     }
 }
