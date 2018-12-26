@@ -2,9 +2,9 @@ import RoleAvatarModelVO from "./RoleAvatarModelVO";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
-import ICharacter = op_client.ICharacter;
+import IActor = op_client.IActor;
 
-export class PlayerInfo implements ICharacter {
+export class PlayerInfo implements IActor {
     /** Character id. */
     public id: number;
 
@@ -55,14 +55,22 @@ export class PlayerInfo implements ICharacter {
     /** Character walkOriginPoint. */
     public walkOriginPoint: number[];
 
-    public actorId = 0; // 玩家ID
-    public moveSpeed = 10;        // 速度
+    public uuid = 0; // 玩家ID
+    public moveSpeed = 10; // 速度
 
     public model: RoleAvatarModelVO;
     protected _originWalkPoint: Phaser.Point;
 
     public constructor() {
         this.model = new RoleAvatarModelVO();
+    }
+
+    public setInfo(obj: any): void {
+        let value: any;
+        for (let key in obj) {
+            value = obj[key];
+            this[key] = value;
+        }
     }
 
     protected _originCollisionPoint: Phaser.Point;

@@ -161,7 +161,7 @@ export class SceneMediator extends MediatorBase {
         // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         // currentCharacterInfo.walkableArea.draw(Globals.game, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.actorId, currentCharacterInfo, true) as SelfRoleElement;
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
 
         // 播放场景音效
         Globals.SoundManager.playBgSound(1);

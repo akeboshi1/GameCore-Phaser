@@ -19,18 +19,23 @@ export class PlayerData extends BaseSingleton {
         return this._initialize;
     }
 
+    private characterId = 0;
+    public setCharacterId(value: number): void {
+        this.characterId = value;
+        if ( this.initialize === false ) {
+            this._initialize = true;
+            Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
+        }
+    }
+
     private _mainPlayerInfo: MainPlayerInfo = new MainPlayerInfo();
 
     public get mainPlayerInfo(): MainPlayerInfo {
         return this._mainPlayerInfo;
     }
 
-    public setMainPlayerInfo(obj: op_client.ICharacter): void {
-        let value: any;
-        for (let key in obj) {
-            value = obj[key];
-            this._mainPlayerInfo[key] = value;
-        }
+    public setMainPlayerInfo(obj: op_client.IActor): void {
+        this.mainPlayerInfo.setInfo(obj)
         if (obj.avatar) {
             this.mainPlayerInfo.changeAvatarModelByModeVO(obj.avatar);
         }
@@ -40,29 +45,33 @@ export class PlayerData extends BaseSingleton {
         if (obj.originPoint) {
             this.mainPlayerInfo.setOriginCollisionPoint(obj.originPoint);
         }
-        if ( this.initialize === false ) {
-            this._initialize = true;
-            Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
-        }
     }
 
-    public addPlayer(data: Object): PlayerInfo {
+    public addPlayer(obj: op_client.IActor): PlayerInfo {
         let playerInfo: PlayerInfo = new PlayerInfo();
-        // playerInfo.actorId = data["actorId"];
-        // playerInfo.nick = data["nick"];
-        // playerInfo.sex = data["sex"];
-        // playerInfo.moveSpeed = data["moveSpeed"];
-        // this.removePlayer(playerInfo.actorId);
-        // this._playerInfoList.push(playerInfo);
-        // Log.trace("玩家加入，playerID=" + playerInfo.actorId);
+        playerInfo.setInfo(obj);
+        if (obj.avatar) {
+            playerInfo.changeAvatarModelByModeVO(obj.avatar);
+        }
+        if (obj.walkOriginPoint) {
+            playerInfo.setOriginWalkPoint(obj.walkOriginPoint);
+        }
+        if (obj.originPoint) {
+            playerInfo.setOriginCollisionPoint(obj.originPoint);
+        }
+        this._playerInfoList.push(playerInfo);
         return playerInfo;
     }
 
-    public removePlayer(playerID: number): void {
+    public updatePlayer(obj: op_client.IActor): void {
+
+    }
+
+    public removePlayer(uuid: number): void {
         let playerInfo: PlayerInfo;
         for (let i: number = this._playerInfoList.length - 1; i >= 0; i--) {
             playerInfo = this._playerInfoList[i];
-            if (playerInfo.actorId === playerID) {
+            if (playerInfo.uuid === uuid) {
                 this._playerInfoList.splice(i, 1);
             }
         }

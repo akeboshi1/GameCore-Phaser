@@ -163,5 +163,15 @@ export namespace UI {
             return require("assets/images/ui/dialog_bg.png");
         }
     }
+
+    export class InputBg {
+        static getName(): string {
+            return "ui_input_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/input_bg.png");
+        }
+    }
 }
 

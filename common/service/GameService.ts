@@ -26,6 +26,6 @@ class Handler extends BasePacketHandler {
 
   private handleSelectCharacter(packet: PBpacket): void {
     let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER = packet.content;
-    Globals.DataCenter.PlayerData.setMainPlayerInfo(character.character);
+    Globals.DataCenter.PlayerData.setCharacterId(character.selectCharacterId);
   }
 }
