@@ -199,6 +199,7 @@ export namespace PhaserNineSlice {
          */
         private renderTexture(): void {
             //Set a new empty texture
+            this.texture = this.game.add.renderTexture(this.localWidth, this.localHeight);
             // this.texture.resize(this.localWidth, this.localHeight, true);
 
             //The positions we want from the base texture

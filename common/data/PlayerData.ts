@@ -47,7 +47,7 @@ export class PlayerData extends BaseSingleton {
         }
     }
 
-    public addPlayer(obj: op_client.IActor): PlayerInfo {
+    public addPlayer(obj: op_client.IActor): void {
         let playerInfo: PlayerInfo = new PlayerInfo();
         playerInfo.setInfo(obj);
         if (obj.avatar) {
@@ -60,11 +60,19 @@ export class PlayerData extends BaseSingleton {
             playerInfo.setOriginCollisionPoint(obj.originPoint);
         }
         this._playerInfoList.push(playerInfo);
-        return playerInfo;
+        Globals.MessageCenter.emit(MessageType.SCENE_ADD_PLAYER, playerInfo);
     }
 
     public updatePlayer(obj: op_client.IActor): void {
-
+        let playerInfo: PlayerInfo;
+        for (let i: number = this._playerInfoList.length - 1; i >= 0; i--) {
+            playerInfo = this._playerInfoList[i];
+            if (playerInfo.uuid === obj.uuid) {
+                playerInfo.setInfo(obj);
+                Globals.MessageCenter.emit(MessageType.SCENE_UPDATE_PLAYER, playerInfo);
+                break;
+            }
+        }
     }
 
     public removePlayer(uuid: number): void {
@@ -73,6 +81,8 @@ export class PlayerData extends BaseSingleton {
             playerInfo = this._playerInfoList[i];
             if (playerInfo.uuid === uuid) {
                 this._playerInfoList.splice(i, 1);
+                Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_PLAYER, uuid);
+                break;
             }
         }
     }

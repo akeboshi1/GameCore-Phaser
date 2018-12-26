@@ -51,7 +51,6 @@ export class SceneMediator extends MediatorBase {
 
     public onRegister(): void {
         super.onRegister();
-        Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
         this.onLoginOk();
     }
 
@@ -69,6 +68,11 @@ export class SceneMediator extends MediatorBase {
             Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
             Globals.MessageCenter.on(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
             Globals.MessageCenter.on(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
+
+            Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
+            Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
+            Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleRemovePlayer, this);
+            Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleUpdatePlayer, this);
             this.hasRegisterHandler = true;
         }
     }
@@ -77,6 +81,12 @@ export class SceneMediator extends MediatorBase {
         if (this.hasRegisterHandler) {
             Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
             Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
+            Globals.MessageCenter.cancel(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
+
+            Globals.MessageCenter.cancel(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
+            Globals.MessageCenter.cancel(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
+            Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleRemovePlayer, this);
+            Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleUpdatePlayer, this);
             this.hasRegisterHandler = false;
         }
     }
@@ -94,6 +104,34 @@ export class SceneMediator extends MediatorBase {
             this.addTerrain(terrain);
         }
     }
+
+    /**
+     * 监听添加玩家
+     * @param value
+     */
+    protected handleAddPlayer(value: op_client.IActor): void {
+        this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value, true);
+    }
+
+    /**
+     * 监听更新玩家
+     * @param value
+     */
+    protected handleUpdatePlayer(value: op_client.IActor): void {
+        let player: BasicSceneEntity = this.view.getSceneElement(value.uuid);
+        if (player) {
+            player.updateByData(value);
+        }
+    }
+
+    /**
+     * 监听移除玩家
+     * @param value
+     */
+    protected handleRemovePlayer(value: op_client.IActor): void {
+        this.view.deleteSceneElement(value.uuid);
+    }
+
 
     /**
      * 监听添加物件
