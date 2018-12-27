@@ -120,7 +120,10 @@ class Handler extends BasePacketHandler {
 
     private handleAddCharacter(packet: PBpacket): void {
         let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
-        Globals.DataCenter.PlayerData.addPlayer(character.actor);
+        let len: number = character.actors.length;
+        for (let i = 0; i < len; i++) {
+            Globals.DataCenter.PlayerData.addPlayer(character.actors[i]);
+        }
     }
 
     private handleRemoveCharacter(packet: PBpacket): void {
@@ -130,6 +133,9 @@ class Handler extends BasePacketHandler {
 
     private handleUpdateCharacter(packet: PBpacket): void {
         let character: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_CHARACTER = packet.content;
-        Globals.DataCenter.PlayerData.updatePlayer(character.actor);
+        let len: number = character.actors.length;
+        for (let i = 0; i < len; i++) {
+            Globals.DataCenter.PlayerData.updatePlayer(character.actors[i]);
+        }
     }
 }
