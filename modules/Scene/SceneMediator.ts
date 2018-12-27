@@ -71,6 +71,7 @@ export class SceneMediator extends MediatorBase {
 
             Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
             Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
+            Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
             Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
             Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleRemovePlayer, this);
             Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleUpdatePlayer, this);
@@ -86,6 +87,7 @@ export class SceneMediator extends MediatorBase {
 
             Globals.MessageCenter.cancel(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
             Globals.MessageCenter.cancel(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
+            Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
             Globals.MessageCenter.cancel(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
             Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleRemovePlayer, this);
             Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleUpdatePlayer, this);
