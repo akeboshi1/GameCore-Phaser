@@ -2,6 +2,7 @@
 import * as path from "path";
 import {GameConfig} from "./GameConfig";
 import {op_gameconfig} from "../protocol/protocols";
+
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
         static getName(): string {
@@ -26,33 +27,65 @@ export namespace Atlases {
 }
 
 export namespace Display {
-  export class AtlasUtil {
-    static getKey(value: op_gameconfig.IDisplay): string {
-      let keys = [];
-      if (value.texturePath) {
-        keys.push(value.texturePath);
-      }
-      if (value.dataPath) {
-        keys.push(value.dataPath);
-      }
-      return keys.join("&");
+    export class AtlasUtil {
+        static getKey(value: op_gameconfig.IDisplay): string {
+            let keys = [];
+            if (value.texturePath) {
+                keys.push(value.texturePath);
+            }
+            if (value.dataPath) {
+                keys.push(value.dataPath);
+            }
+            return keys.join("&");
+        }
+
+        static getRes(url: string): string {
+            return `${path.resolve(GameConfig.HomeDir, url)}`;
+        }
+    }
+}
+
+export namespace Load {
+    export class Image {
+        static getKey(value: string): string {
+            return value + "_png";
+        }
     }
 
-    static getRes(url: string): string {
-      return `${path.resolve(GameConfig.HomeDir , url)}`;
+    export class Audio {
+        static getKey(key: string): string {
+            return key + "_mp3";
+        }
     }
-  }
+
+    export class Atlas {
+        static getKey(key: string): string {
+            return key + "_atlas";
+        }
+    }
+
+    export class Nineslice {
+        static getKey(key: string): string {
+            return key + "_nineslice";
+        }
+    }
 }
 
 export namespace Images {
-    export class ImagesTile {
-      static getName(id: number): string {
-        return "tile_" + id + "_png";
-      }
+    export class Load {
+        static getKey(key: string): string {
+            return key + "_png";
+        }
+    }
 
-      static getPNG(id: number): string {
-        return "assets/images/terrain/terrain_" + id + ".png";
-      }
+    export class ImagesTile {
+        static getName(id: number): string {
+            return "tile_" + id + "_png";
+        }
+
+        static getPNG(id: number): string {
+            return "assets/images/terrain/terrain_" + id + ".png";
+        }
     }
 }
 
@@ -174,13 +207,17 @@ export namespace UI {
         }
     }
 
-    export class Button1 {
+    export class Button {
         static getName(): string {
-            return "ui_button1_png";
+            return "ui_button_png";
         }
 
         static getPNG(): string {
-            return require("assets/images/ui/button1.png");
+            return require("assets/images/ui/button.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/button.json");
         }
     }
 }

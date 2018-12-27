@@ -1,8 +1,8 @@
 import {IModuleInfo} from "../interfaces/IModuleInfo";
-import {IModuleLoadList} from "../interfaces/IModuleLoadList";
+import {IPhaserLoadList} from "../../../interface/IPhaserLoadList";
 
 export class ModuleInfo implements IModuleInfo {
-    protected m_LoadList: IModuleLoadList;
+    protected m_LoadList: IPhaserLoadList;
     protected m_Name: string;
     protected m_Data: any;
 
@@ -11,11 +11,11 @@ export class ModuleInfo implements IModuleInfo {
         this.m_Data = data;
     }
 
-    public set loadList(value: IModuleLoadList) {
+    public set loadList(value: IPhaserLoadList) {
         this.m_LoadList = value;
     }
 
-    public get loadList(): IModuleLoadList {
+    public get loadList(): IPhaserLoadList {
         return this.m_LoadList;
     }
 

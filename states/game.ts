@@ -2,7 +2,7 @@ import Globals from "../Globals";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
 import {UI} from "../Assets";
-import {INineSliceImageResouce} from "../base/module/interfaces/IModuleLoadList";
+import {IAtlasResource, INineSliceImageResource} from "../interface/IPhaserLoadList";
 import {GameConfig} from "../GameConfig";
 
 export default class Game extends Phaser.State {
@@ -22,11 +22,11 @@ export default class Game extends Phaser.State {
         Globals.LayoutManager.init(this.game);
 
         if (!GameConfig.isEditor) {
-          let chatResource: INineSliceImageResouce[] = [{key: UI.DialogBg.getName() , url: UI.DialogBg.getPNG(), top: 7, left: 7, right: 7, bottom: 7},
-            {key: UI.InputBg.getName() , url: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4},
-            {key: UI.Button1.getName() , url: UI.Button1.getPNG(), top: 8, left: 9, right: 9, bottom: 10}
+          let chatResource: INineSliceImageResource[] = [{key: UI.DialogBg.getName() , png: UI.DialogBg.getPNG(), top: 7, left: 7, right: 7, bottom: 7},
+            {key: UI.InputBg.getName() , png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
           ];
-          Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, null, {nineslice_images: chatResource});
+          let atlas: IAtlasResource[] = [{key: UI.Button.getName() , png: UI.Button.getPNG(), json: UI.Button.getJSON()}]
+          Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, null, {nineslices: chatResource, atlas: atlas});
         }
 
         if (Globals.DataCenter.SceneData.initialize) {

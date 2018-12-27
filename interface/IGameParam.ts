@@ -3,6 +3,7 @@
  */
 import {ISocketConnection} from "./ISocketConnection";
 import {IEditorMode} from "./IEditorMode";
+import {IPhaserLoadList} from "./IPhaserLoadList";
 
 export default interface IGameParam {
     isEditor: boolean;
@@ -11,4 +12,5 @@ export default interface IGameParam {
     iSocketConnection: ISocketConnection;
     homeDir: string;
     editorMode?: IEditorMode;
+    preLoadList?: IPhaserLoadList;
 }

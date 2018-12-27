@@ -3,28 +3,47 @@ import BaseSingleton from "../../base/BaseSingleton";
 import {IModule} from "../../base/module/interfaces/IModule";
 import {IModuleInfo} from "../../base/module/interfaces/IModuleInfo";
 import {HashMap} from "../../base/ds/HashMap";
-import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
-import {IModuleLoadList} from "../../base/module/interfaces/IModuleLoadList";
 import Globals from "../../Globals";
-import {Sound} from "../../Assets";
+import {IPhaserLoadList} from "../../interface/IPhaserLoadList";
 
 
 export class ModuleManager extends BaseSingleton implements IModuleManager {
-    private CLASS_NAME_SUFFIX = "Module";
     protected m_ModuleList: HashMap;
+    private CLASS_NAME_SUFFIX = "Module";
 
     constructor() {
         super();
         this.m_ModuleList = new HashMap();
     }
 
-    public openModule( moduleName: string, param?: any, loadList?: IModuleLoadList ): void {
+    public openModule(moduleName: string, param?: any, loadList?: IPhaserLoadList): void {
         let module: IModuleInfo = {
             name: moduleName,
             data: param,
             loadList: loadList
         };
-        this.createModule( module );
+        this.createModule(module);
+    }
+
+    public destroyModule(moduleName: string): void {
+        let module: IModule = this.m_ModuleList.remove(moduleName);
+        if (module) {
+            module.onDispose();
+        }
+    }
+
+    public getModule(moduleName: string): IModule {
+        return this.m_ModuleList.getValue(moduleName);
+    }
+
+    public dispose(): void {
+        let len: number = this.m_ModuleList.valueList.length;
+        let module: IModule;
+        for (let i = 0; i < len; i++) {
+            module = this.m_ModuleList.valueList[i];
+            module.onDispose();
+        }
+        this.m_ModuleList.clear();
     }
 
     private createModule(info: IModuleInfo): void {
@@ -38,7 +57,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 module = this.linkModule(info);
                 module.startUp();
             } else {
-                this.loadModule(info , () => {
+                this.loadModule(info, () => {
                     module = this.linkModule(info);
                     module.startUp();
                 }, this);
@@ -51,20 +70,28 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         let i = 0;
         let len = info.loadList.images ? info.loadList.images.length : 0;
         for (; i < len; i++) {
-            if (!Globals.game.cache.checkImageKey(info.loadList.images[i].key)) {
-                Globals.game.load.image(info.loadList.images[i].key, info.loadList.images[i].url);
+            if (!Globals.game.cache.checkImageKey(info.loadList.images[i].png)) {
+                Globals.game.load.image(info.loadList.images[i].key, info.loadList.images[i].png);
                 ++loadNum;
             }
         }
+
         i = 0;
-        len = info.loadList.nineslice_images ? info.loadList.nineslice_images.length : 0;
+        len = info.loadList.nineslices ? info.loadList.nineslices.length : 0;
         for (; i < len; i++) {
-            if (Globals.game.cache.getNineSlice(info.loadList.nineslice_images[i].key) === undefined) {
-                Globals.game.load.nineSlice(info.loadList.nineslice_images[i].key, info.loadList.nineslice_images[i].url,
-                    info.loadList.nineslice_images[i].top, info.loadList.nineslice_images[i].left, info.loadList.nineslice_images[i].right,
-                    info.loadList.nineslice_images[i].bottom );
+            if (Globals.game.cache.getNineSlice(info.loadList.nineslices[i].png) === undefined) {
+                Globals.game.load.nineSlice(info.loadList.nineslices[i].key, info.loadList.nineslices[i].png,
+                    info.loadList.nineslices[i].top, info.loadList.nineslices[i].left, info.loadList.nineslices[i].right,
+                    info.loadList.nineslices[i].bottom);
                 ++loadNum;
             }
+        }
+
+        i = 0;
+        len = info.loadList.atlas ? info.loadList.atlas.length : 0;
+        for (; i < len; i++) {
+            Globals.game.load.atlas(info.loadList.atlas[i].key, info.loadList.atlas[i].png, info.loadList.atlas[i].json);
+            ++loadNum;
         }
 
         if (loadNum === 0) {
@@ -89,26 +116,5 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         module.name = info.name;
         this.m_ModuleList.add(info.name, module);
         return module;
-    }
-
-    public destroyModule(moduleName: string): void {
-        let module: IModule = this.m_ModuleList.remove(moduleName);
-        if ( module ) {
-            module.onDispose();
-        }
-    }
-
-    public getModule(moduleName: string): IModule {
-        return this.m_ModuleList.getValue(moduleName);
-    }
-
-    public dispose(): void {
-      let len: number = this.m_ModuleList.valueList.length;
-      let module: IModule;
-      for (let i = 0; i < len; i++) {
-        module = this.m_ModuleList.valueList[i];
-        module.onDispose();
-      }
-      this.m_ModuleList.clear();
     }
 }
