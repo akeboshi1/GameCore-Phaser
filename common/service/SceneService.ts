@@ -85,8 +85,12 @@ class Handler extends BasePacketHandler {
 
     private handleEnterScene(packet: PBpacket): void {
         let sceneData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-        Globals.DataCenter.PlayerData.setMainPlayerInfo(sceneData.actor);
-        Globals.DataCenter.SceneData.setMapInfo(sceneData.scene);
+        if (sceneData.actor) {
+            Globals.DataCenter.PlayerData.setMainPlayerInfo(sceneData.actor);
+        }
+        if (sceneData.scene) {
+            Globals.DataCenter.SceneData.setMapInfo(sceneData.scene);
+        }
     }
 
     private handleChangeEditorMode(packet: PBpacket): void {
