@@ -136,7 +136,7 @@ export class QuadTree {
   public clear(): void {
     this.children = [];
 
-    if (!this.nodes.length) {
+    if (this.nodes.length === 0) {
       return;
     }
 
@@ -154,7 +154,7 @@ export class QuadTree {
 
     this.clear();
 
-    for (let i = 0; i < this.children.length; i++) {
+    for (let i = 0; i < objects.length; i++) {
       this.insert(objects[i]);
     }
   }
