@@ -1,10 +1,8 @@
 import "phaser-ce";
 import {UI} from "../../../../Assets";
-import {op_gameconfig} from "../../../../../protocol/protocols";
 import {IListItemComponent} from "../../../../base/component/list/interfaces/IListItemComponent";
 import {IListItemEventListener} from "../../../../base/component/list/interfaces/IListItemEventListener";
 import {SlotInfo} from "../../../../common/struct/SlotInfo";
-import IAttribute = op_gameconfig.IAttribute;
 
 export class AttriListItem extends Phaser.Group implements IListItemComponent {
     protected m_Data: any;
@@ -16,8 +14,6 @@ export class AttriListItem extends Phaser.Group implements IListItemComponent {
         super(game);
         this.init();
     }
-
-    private _data: IAttribute
 
     public get data(): any {
         return this.m_Data;

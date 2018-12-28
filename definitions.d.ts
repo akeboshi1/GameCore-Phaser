@@ -2,7 +2,7 @@
 ///<reference path="./lib/dragonBones/dragonBones.d.ts"/>
 ///<reference path="./lib/nineSlice/phaser-nineslice.d.ts"/>
 
-declare module Phaser {
+declare namespace Phaser {
 
   interface Game {
     iso: Phaser.Plugin.Isometric.Projector;
