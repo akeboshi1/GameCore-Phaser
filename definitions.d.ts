@@ -17,6 +17,10 @@ declare module Phaser {
     isoSprite(x: number, y: number, z: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Plugin.Isometric.IsoSprite;
   }
 
+  interface GameObjectCreator {
+    nineSlice: (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group) => PhaserNineSlice.NineSlice;
+  }
+
   interface Cache {
     addNineSlice: (key: string, data: PhaserNineSlice.NineSliceCacheData) => void;
     getNineSlice: (key: string) => PhaserNineSlice.NineSliceCacheData;

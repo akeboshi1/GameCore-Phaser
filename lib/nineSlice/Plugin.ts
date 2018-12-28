@@ -54,7 +54,7 @@ export namespace PhaserNineSlice {
                 return group.add(nineSliceObject);
             };
 
-          (<any>Phaser.GameObjectFactory.prototype).nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number): PhaserNineSlice.NineSlice {
+          (<any>Phaser.GameObjectCreator.prototype).nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number): PhaserNineSlice.NineSlice {
                 return new PhaserNineSlice.NineSlice(this.game, x, y, key, frame, width, height);
             };
         }
