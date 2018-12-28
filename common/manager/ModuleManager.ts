@@ -16,7 +16,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         this.m_ModuleList = new HashMap();
     }
 
-    public openModule(moduleName: string, param?: any, loadList?: IPhaserLoadList): void {
+    public openModule(moduleName: string, loadList?: IPhaserLoadList, param?: any): void {
         let module: IModuleInfo = {
             name: moduleName,
             data: param,

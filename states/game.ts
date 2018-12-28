@@ -22,11 +22,34 @@ export default class Game extends Phaser.State {
         Globals.LayoutManager.init(this.game);
 
         if (!GameConfig.isEditor) {
-          let chatResource: INineSliceImageResource[] = [{key: UI.DialogBg.getName() , png: UI.DialogBg.getPNG(), top: 7, left: 7, right: 7, bottom: 7},
-            {key: UI.InputBg.getName() , png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
-          ];
-          let atlas: IAtlasResource[] = [{key: UI.Button.getName() , png: UI.Button.getPNG(), json: UI.Button.getJSON()}]
-          Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, null, {nineslices: chatResource, atlas: atlas});
+            let chatResource: INineSliceImageResource[] = [{
+                key: UI.DialogBg.getName(),
+                png: UI.DialogBg.getPNG(),
+                top: 7,
+                left: 7,
+                right: 7,
+                bottom: 7
+            },
+                {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
+            ];
+            let atlas: IAtlasResource[] = [{
+                key: UI.Button.getName(),
+                png: UI.Button.getPNG(),
+                json: UI.Button.getJSON()
+            }]
+            Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, {nineslices: chatResource, atlas: atlas});
+
+            let roleInfoResource: INineSliceImageResource[] = [{
+                key: UI.ProgressBg.getName(),
+                png: UI.ProgressBg.getPNG(),
+                top: 6,
+                left: 6,
+                right: 6,
+                bottom: 6
+            },
+                {key: UI.ProgressFill.getName(), png: UI.ProgressFill.getPNG(), top: 6, left: 6, right: 6, bottom: 6}
+            ];
+            Globals.ModuleManager.openModule(ModuleTypeEnum.ROLEINFO, {nineslices: roleInfoResource});
         }
 
         if (Globals.DataCenter.SceneData.initialize) {

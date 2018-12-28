@@ -5,5 +5,6 @@ export class ModuleTypeEnum {
     public static BAG = "Bag"; // 背包
     public static STORE = "Store"; // 商店
     public static CHAT = "Chat"; // 聊天
+    public static ROLEINFO = "RoleInfo"; // 聊天
 
 }

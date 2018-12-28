@@ -187,6 +187,26 @@ export namespace UI {
         }
     }
 
+    export class ProgressBg {
+        static getName(): string {
+            return "ui_progress_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/progress_bg.png");
+        }
+    }
+
+    export class ProgressFill {
+        static getName(): string {
+            return "ui_progress_fill_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/progress_fill.png");
+        }
+    }
+
     export class DialogBg {
         static getName(): string {
             return "ui_dialog_bg_png";
