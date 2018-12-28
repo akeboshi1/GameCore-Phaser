@@ -148,7 +148,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     }
 
     public removeEntity(d: BasicSceneEntity, dispose: boolean = true): void {
-        // Log.trace("删除四叉树" , d.data);
         if (this.mQuadTree) {
             this.mQuadTree.remove(d);
         }

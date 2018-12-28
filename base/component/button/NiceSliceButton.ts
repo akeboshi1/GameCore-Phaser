@@ -7,7 +7,7 @@ export class NiceSliceButton extends PhaserNineSlice.NineSlice {
     protected mOutFrame: string;
     protected mDownFrame: string;
 
-    constructor(game: PhaserNineSlice.NineSliceGame, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData) {
+    constructor(game: Phaser.Game, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData) {
         super(game, x, y, key, outFrame, width, height, data);
         this.mOverFrame = overFrame;
         this.mOutFrame = outFrame;
@@ -24,10 +24,7 @@ export class NiceSliceButton extends PhaserNineSlice.NineSlice {
     }
 
     protected updateTexture(frame: string): void {
-        let img = this.game.cache.getItem(frame, Phaser.Cache.IMAGE);
-        // @ts-ignore
-        this.setTexture(new PIXI.Texture(img.base));
-        this.baseTexture = this.texture.baseTexture;
+        this.loadTexture(this.key, frame);
         this.baseFrame = this.texture.frame;
         let s: Phaser.Sprite;
         // The positions we want from the base texture
@@ -45,18 +42,19 @@ export class NiceSliceButton extends PhaserNineSlice.NineSlice {
                     textureXs[xi + 1] - textureXs[xi],  // width
                     textureYs[yi + 1] - textureYs[yi]   // height
                 );
+                s.scale.x = s.scale.y = 2;
             }
         }
     }
 
     protected updateTexturePart(s: Phaser.Sprite, x: number, y: number, width: number, height: number): void {
-        let frame = new PIXI.Rectangle(
+        let frameRect = new PIXI.Rectangle(
             this.baseFrame.x + this.texture.frame.x + x,
             this.baseFrame.y + this.texture.frame.y + y,
             Math.max(width, 1),
             Math.max(height, 1)
         );
-        s.setTexture(new PIXI.Texture(this.baseTexture, frame));
+        s.setTexture(new PIXI.Texture(this.baseTexture, frameRect));
     }
 
     private handleOver(): void {

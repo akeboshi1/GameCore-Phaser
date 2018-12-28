@@ -1,13 +1,4 @@
 export namespace PhaserNineSlice {
-    // @ts-ignore
-    export interface NineSliceObjectFactory extends Phaser.GameObjectFactory {
-        nineSlice: (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group) => PhaserNineSlice.NineSlice;
-    }
-
-    export interface NineSliceObjectCreator extends Phaser.GameObjectCreator {
-        nineSlice: (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group) => PhaserNineSlice.NineSlice;
-    }
-
     export interface NineSliceCache extends Phaser.Cache {
         addNineSlice: (key: string, data: NineSliceCacheData) => void;
         getNineSlice: (key: string) => NineSliceCacheData;
@@ -16,13 +7,6 @@ export namespace PhaserNineSlice {
 
     export interface NineSliceLoader extends Phaser.Loader {
         nineSlice: (key: string, url: string, top: number, left?: number, right?: number, bottom?: number) => void;
-        cache: NineSliceCache;
-    }
-
-    // @ts-ignore
-    export interface NineSliceGame extends Phaser.Game {
-        add: NineSliceObjectFactory;
-        load: NineSliceLoader;
         cache: NineSliceCache;
     }
 
@@ -71,8 +55,7 @@ export namespace PhaserNineSlice {
          * game.add.NineSlice();
          */
         private addNineSliceFactory() {
-            // @ts-ignore
-            (<PhaserNineSlice.NineSliceObjectFactory>Phaser.GameObjectFactory.prototype).nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group): PhaserNineSlice.NineSlice {
+            Phaser.GameObjectFactory.prototype.nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group): PhaserNineSlice.NineSlice {
                 if (group === undefined) {
                     group = this.world;
                 }
@@ -82,7 +65,7 @@ export namespace PhaserNineSlice {
                 return group.add(nineSliceObject);
             };
 
-            (<PhaserNineSlice.NineSliceObjectCreator>Phaser.GameObjectCreator.prototype).nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number): PhaserNineSlice.NineSlice {
+            Phaser.GameObjectCreator.prototype.nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number): PhaserNineSlice.NineSlice {
                 return new PhaserNineSlice.NineSlice(this.game, x, y, key, frame, width, height);
             };
         }
@@ -132,8 +115,7 @@ export namespace PhaserNineSlice {
         protected bottomSize: number;
         protected baseFrame: PIXI.Rectangle;
 
-        constructor(game: PhaserNineSlice.NineSliceGame, x: number, y: number, key: string, frame: string, width: number, height: number, data?: NineSliceCacheData) {
-            // @ts-ignore
+        constructor(game: Phaser.Game, x: number, y: number, key: string, frame: string, width: number, height: number, data?: NineSliceCacheData) {
             super(game, x, y, key, frame);
 
             this.baseTexture = this.texture.baseTexture;
@@ -250,14 +232,14 @@ export namespace PhaserNineSlice {
          * @ returns {PIXI.Sprite}
          */
         protected createTexturePart(x: number, y: number, width: number, height: number): Phaser.Image {
-            let frame = new PIXI.Rectangle(
+            let frameRect = new PIXI.Rectangle(
                 this.baseFrame.x + this.texture.frame.x + x,
                 this.baseFrame.y + this.texture.frame.y + y,
                 Math.max(width, 1),
                 Math.max(height, 1)
             );
 
-            return new Phaser.Sprite(this.game, 0, 0, new PIXI.Texture(this.baseTexture, frame));
+            return new Phaser.Sprite(this.game, 0, 0, new PIXI.Texture(this.baseTexture, frameRect));
         }
     }
 }
