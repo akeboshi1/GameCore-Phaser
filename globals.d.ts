@@ -1,5 +1,5 @@
 ///<reference path="../../node_modules/phaser-plugin-isometric/dist/phaser.plugin.isometric.d.ts"/>
-///<reference path="./../core/lib/dragonBones/dragonBones.d.ts"/>
+///<reference path="./lib/dragonBones/dragonBones.d.ts"/>
 
 declare module Phaser {
 
