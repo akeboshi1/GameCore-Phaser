@@ -1,15 +1,4 @@
 export namespace PhaserNineSlice {
-    export interface NineSliceCache extends Phaser.Cache {
-        addNineSlice: (key: string, data: NineSliceCacheData) => void;
-        getNineSlice: (key: string) => NineSliceCacheData;
-        nineSlice: { [key: string]: NineSliceCacheData };
-    }
-
-    export interface NineSliceLoader extends Phaser.Loader {
-        nineSlice: (key: string, url: string, top: number, left?: number, right?: number, bottom?: number) => void;
-        cache: NineSliceCache;
-    }
-
     export interface NineSliceCacheData {
         top: number;
         bottom?: number;
@@ -27,7 +16,7 @@ export namespace PhaserNineSlice {
         }
 
         private addNineSliceLoader() {
-            (<PhaserNineSlice.NineSliceLoader>Phaser.Loader.prototype).nineSlice = function (key: string, url: string, top: number, left?: number, right?: number, bottom?: number) {
+            Phaser.Loader.prototype.nineSlice = function (key: string, url: string, top: number, left?: number, right?: number, bottom?: number) {
                 let cacheData: NineSliceCacheData = {
                     top: top
                 };
@@ -75,15 +64,15 @@ export namespace PhaserNineSlice {
          */
         private addNineSliceCache(): void {
             // Create the cache space
-            (<PhaserNineSlice.NineSliceCache>Phaser.Cache.prototype).nineSlice = {};
+            Phaser.Cache.prototype.nineSlice = {};
 
             // Method for adding a NineSlice dict to the cache space
-            (<PhaserNineSlice.NineSliceCache>Phaser.Cache.prototype).addNineSlice = function (key: string, data: any) {
+            Phaser.Cache.prototype.addNineSlice = function (key: string, data: any) {
                 this.nineSlice[key] = data;
             };
 
             // Method for fetching a NineSlice dict from the cache space
-            (<PhaserNineSlice.NineSliceCache>Phaser.Cache.prototype).getNineSlice = function (key: string): any {
+            Phaser.Cache.prototype.getNineSlice = function (key: string): any {
                 let data = this.nineSlice[key];
 
                 // if (undefined === data) {
