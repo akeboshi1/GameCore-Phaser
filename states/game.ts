@@ -63,7 +63,7 @@ export default class Game extends Phaser.State {
         // Log.trace("render---->>>", this.game.time.now);
         Globals.TickManager.onEnterFrame();
         dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1.0);
-        this.game.debug.text(this.game.time.fps.toString(), 2, 14, "#a7aebe");
+        this.game.debug.text(this.game.time.fps.toString(), GameConfig.GameWidth - 20, 14, "#a7aebe");
         // this.game.debug.text(this.game.world.width+"|"+this.game.world.height+"|"+this.game.time.fps.toString(), 2, 14, '#a7aebe');
         // this.game.debug.cameraInfo(this.game.camera, 2, 32, '#a7aebe');
     }
