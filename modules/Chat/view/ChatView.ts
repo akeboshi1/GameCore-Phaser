@@ -25,7 +25,8 @@ export class ChatView extends ModuleViewBase {
         this.input_tf = this.game.make.text(12, this.game.height - 28, "请输入", {fontSize: 12, fill: "#ffcc00"});
         this.add(this.input_tf);
         this.game.load.text
-        this.bt = new NiceSliceButton(this.game, 260, this.game.height - 30, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 30, 24, {
+        // @ts-ignore
+      this.bt = new NiceSliceButton(this.game, 260, this.game.height - 30, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 30, 24, {
             top: 7,
             bottom: 7,
             left: 7,
