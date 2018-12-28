@@ -44,9 +44,9 @@ export namespace PhaserNineSlice {
          * game.add.NineSlice();
          */
         private addNineSliceFactory() {
-            Phaser.GameObjectFactory.prototype.nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group): PhaserNineSlice.NineSlice {
+          (<any>Phaser.GameObjectFactory.prototype).nineSlice = (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group): PhaserNineSlice.NineSlice => {
                 if (group === undefined) {
-                    group = this.world;
+                    group = this.game.world;
                 }
 
                 let nineSliceObject = new PhaserNineSlice.NineSlice(this.game, x, y, key, frame, width, height);
@@ -54,7 +54,7 @@ export namespace PhaserNineSlice {
                 return group.add(nineSliceObject);
             };
 
-            Phaser.GameObjectCreator.prototype.nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number): PhaserNineSlice.NineSlice {
+          (<any>Phaser.GameObjectFactory.prototype).nineSlice = function (x: number, y: number, key: string, frame: string, width: number, height: number): PhaserNineSlice.NineSlice {
                 return new PhaserNineSlice.NineSlice(this.game, x, y, key, frame, width, height);
             };
         }
