@@ -31,6 +31,9 @@ export class RoleInfoMediator extends MediatorBase {
 
     private handleUpdate(player: PlayerInfo): void {
         // todo:先不管 player.slot
+        if (player.uuid !== Globals.DataCenter.PlayerData.mainPlayerInfo.uuid) {
+            return;
+        }
         if (player.attributes) {
             let solt: SlotInfo;
             let i: number = 0;
@@ -38,8 +41,10 @@ export class RoleInfoMediator extends MediatorBase {
             let item: AttriListItem;
             for (; i < len; i++) {
                 item = this.view.m_List.getItem(i) as AttriListItem;
-                solt = Globals.DataCenter.PlayerData.mainPlayerInfo.getSlotByName(item.data.bondName);
-                item.data = solt;
+                if (item) {
+                    solt = Globals.DataCenter.PlayerData.mainPlayerInfo.getSlotByName(item.data.bondName);
+                    item.data = solt;
+                }
             }
         }
     }

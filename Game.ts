@@ -16,6 +16,7 @@ import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
 import {IRectangle} from "./base/ds/IRectangle";
+import {IPhaserLoadList} from "./interface/IPhaserLoadList";
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
@@ -34,6 +35,7 @@ export default class Game extends Phaser.Game implements IGame {
             Globals.DataCenter.EditorData.setEditorMode({mode: value.editorMode.mode, type: value.editorMode.type});
         }
 
+        GameConfig.preLoadList =  value.preLoadList;
         GameConfig.GameWidth = value.width;
         GameConfig.GameHeight = value.height;
         GameConfig.HomeDir = value.homeDir;
@@ -46,7 +48,7 @@ export default class Game extends Phaser.Game implements IGame {
         this.state.add("selectrole", SelectRole);
         this.state.add("game", GameState);
 
-        this.state.start("boot");
+        this.state.start("boot", false, false, value.preLoadList);
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
         Globals.SocketManager.send(pkt);

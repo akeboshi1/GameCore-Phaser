@@ -45,11 +45,7 @@ export class ListComponent extends Phaser.Group implements IListComponent {
     }
 
     public getLength(): number {
-        let len: number = 0;
-        for (let key in this.m_ItemList) {
-            ++len;
-        }
-        return len;
+        return this.m_Layout.size;
     }
 
     public getItemByFunction(filterFunction: Function): IListItemComponent {

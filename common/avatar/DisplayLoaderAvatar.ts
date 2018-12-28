@@ -1,7 +1,8 @@
 import {IAnimatedObject} from "../../base/IAnimatedObject";
-import {Display, Images} from "../../Assets";
+import {Load} from "../../Assets";
 import {op_gameconfig} from "../../../protocol/protocols";
 import Globals from "../../Globals";
+import Display = op_gameconfig.Display;
 
 export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject {
     private mUrl: op_gameconfig.IDisplay = {};
@@ -29,7 +30,7 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     protected init(): void {
-        let key: string = Display.AtlasUtil.getKey(this.mUrl);
+        let key: string = Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath);
         this.element = this.game.make.sprite(0, 0, key);
         let animation: op_gameconfig.IAnimation;
         for (let i = 0; i < this.config.length; i++) {
@@ -91,11 +92,11 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     protected onUpdateModelURL() {
-        if (Globals.game.cache.checkTextureKey(Display.AtlasUtil.getKey(this.mUrl))) {
+        if (Globals.game.cache.checkTextureKey(this.mUrl.texturePath + this.mUrl.dataPath)) {
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.atlasJSONHash(Display.AtlasUtil.getKey(this.mUrl), Display.AtlasUtil.getRes(this.mUrl.texturePath), Display.AtlasUtil.getRes(this.mUrl.dataPath));
+            this.game.load.atlas(Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath), Load.Url.getRes(this.mUrl.texturePath), Load.Url.getRes(this.mUrl.dataPath));
             this.game.load.start();
         }
     }

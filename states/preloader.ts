@@ -1,14 +1,17 @@
-import {Atlases, Avatar, UI} from "../Assets";
+import {Atlases, Load} from "../Assets";
 import {GameConfig} from "../GameConfig";
+import {IAtlasResource, IImageResource} from "../interface/IPhaserLoadList";
 export default class Preloader extends Phaser.State {
     private preloadBarSprite: Phaser.Sprite = null;
     private preloadFrameSprite: Phaser.Sprite = null;
 
     public preload(): void {
-        this.loadImages();
-        this.loadJsons();
-        this.loadAtlases();
-        this.loadAvatar();
+        if (GameConfig.preLoadList.images) {
+            this.loadImages(GameConfig.preLoadList.images);
+        }
+        if (GameConfig.preLoadList.atlas) {
+            this.loadAtlases(GameConfig.preLoadList.atlas);
+        }
     }
 
     public init(): void {
@@ -29,23 +32,25 @@ export default class Preloader extends Phaser.State {
         this.startGame();
     }
 
-    private loadImages(): void {
-        this.game.load.image(UI.ImageMenuBag.getName(), UI.ImageMenuBag.getPNG());
+    private loadImages(images: IImageResource[]): void {
+        let i = 0;
+        let len = images.length;
+        for (; i < len; i++) {
+            this.game.load.image(images[i].key, Load.Url.getRes(images[i].png));
+        }
+    }
+
+    private loadAtlases(atlas: IAtlasResource[]) {
+        let len = atlas.length;
+        for (let i = 0; i < len; i++) {
+            this.game.load.atlas(atlas[i].key, Load.Url.getRes(atlas[i].png), Load.Url.getRes(atlas[i].json));
+        }
     }
 
     private loadJsons(): void {
-        // for (let i of Assets.Jsons.JsonMap.getLoadList()) {
-        //     this.game.load.json(i + "_json", Assets.Jsons.JsonMap.getJSON(i));
-        // }
-    }
-
-    private loadAtlases() {
-        this.game.load.spritesheet(UI.SpriteSheetsCloseBtn.getName(), UI.SpriteSheetsCloseBtn.getPNG(), UI.SpriteSheetsCloseBtn.getFrameWidth(), UI.SpriteSheetsCloseBtn.getFrameHeight(), UI.SpriteSheetsCloseBtn.getFrameMax());
-        this.game.load.spritesheet(UI.SpriteSheetsBlueBtn.getName(), UI.SpriteSheetsBlueBtn.getPNG(), UI.SpriteSheetsBlueBtn.getFrameWidth(), UI.SpriteSheetsBlueBtn.getFrameHeight(), UI.SpriteSheetsBlueBtn.getFrameMax());
     }
 
     private loadAvatar(): void {
-
     }
 
     private startGame(): void {

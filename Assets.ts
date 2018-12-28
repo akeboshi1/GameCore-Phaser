@@ -26,26 +26,13 @@ export namespace Atlases {
     }
 }
 
-export namespace Display {
-    export class AtlasUtil {
-        static getKey(value: op_gameconfig.IDisplay): string {
-            let keys = [];
-            if (value.texturePath) {
-                keys.push(value.texturePath);
-            }
-            if (value.dataPath) {
-                keys.push(value.dataPath);
-            }
-            return keys.join("&");
-        }
-
+export namespace Load {
+    export class Url {
         static getRes(url: string): string {
             return `${path.resolve(GameConfig.HomeDir, url)}`;
         }
     }
-}
 
-export namespace Load {
     export class Image {
         static getKey(value: string): string {
             return value + "_png";

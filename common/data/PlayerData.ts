@@ -66,6 +66,11 @@ export class PlayerData extends BaseSingleton {
 
     public updatePlayer(obj: op_client.IActor): void {
         let playerInfo: PlayerInfo;
+        if (this._mainPlayerInfo.uuid === obj.uuid) {
+            this._mainPlayerInfo.setInfo(obj);
+            Globals.MessageCenter.emit(MessageType.SCENE_UPDATE_PLAYER, this._mainPlayerInfo);
+            return;
+        }
         for (let i: number = this._playerInfoList.length - 1; i >= 0; i--) {
             playerInfo = this._playerInfoList[i];
             if (playerInfo.uuid === obj.uuid) {
