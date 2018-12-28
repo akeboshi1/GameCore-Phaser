@@ -59,7 +59,9 @@ export class ElementInfo implements IElement {
     let value: any;
     for (let key in base) {
       value = base[key];
-      this[key] = value;
+      if (value) {
+          this[key] = value;
+      }
     }
     this.setArea();
   }

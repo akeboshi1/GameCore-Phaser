@@ -19,13 +19,10 @@ export class PlayerData extends BaseSingleton {
         return this._initialize;
     }
 
-    private characterId = 0;
+    public characterId = 0;
     public setCharacterId(value: number): void {
         this.characterId = value;
-        if ( this.initialize === false ) {
-            this._initialize = true;
-            Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
-        }
+        Globals.MessageCenter.emit(MessageType.PLAYER_SELECT_CHARACTER);
     }
 
     private _mainPlayerInfo: MainPlayerInfo = new MainPlayerInfo();
@@ -44,6 +41,10 @@ export class PlayerData extends BaseSingleton {
         }
         if (obj.originPoint) {
             this.mainPlayerInfo.setOriginCollisionPoint(obj.originPoint);
+        }
+        if ( this.initialize === false ) {
+            this._initialize = true;
+            Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
         }
     }
 

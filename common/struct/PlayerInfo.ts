@@ -3,6 +3,7 @@ import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
 import IActor = op_client.IActor;
+import {SlotInfo} from "./SlotInfo";
 
 export class PlayerInfo implements IActor {
     /** Character id. */
@@ -55,6 +56,9 @@ export class PlayerInfo implements IActor {
     /** Character walkOriginPoint. */
     public walkOriginPoint: number[];
 
+    /** Actor slot */
+    public slot?: (op_gameconfig.ISlot[]|null);
+
     public uuid = 0; // 玩家ID
     public moveSpeed = 10; // 速度
 
@@ -69,8 +73,60 @@ export class PlayerInfo implements IActor {
         let value: any;
         for (let key in obj) {
             value = obj[key];
-            this[key] = value;
+            if (value) {
+                this[key] = value;
+            }
         }
+    }
+
+    public getSlots(): SlotInfo[] {
+        if (this.slot === undefined) return null;
+        let len = this.slot.length;
+        let info: SlotInfo;
+        let attri: op_gameconfig.IAttribute;
+        let slots: SlotInfo[] = [];
+        for (let i = 0; i < len; i++) {
+            info = new SlotInfo();
+            attri = this.getAttriByKey(this.slot[i].bondAttrCurkey);
+            info.bondAttrCur = attri.intVal;
+            attri = this.getAttriByKey(this.slot[i].bondAttrMaxkey);
+            info.bondAttrMax = attri.intVal;
+            info.bondName = this.slot[i].bondName;
+            info.color = this.slot[i].color;
+            slots.push(info);
+        }
+        return slots;
+    }
+
+    public getSlotByName(name: string): SlotInfo {
+        if (this.slot === undefined) return null;
+        let len = this.slot.length;
+        let info: SlotInfo;
+        let attri: op_gameconfig.IAttribute;
+        for (let i = 0; i < len; i++) {
+            if (this.slot[i].bondName === name) {
+                info = new SlotInfo();
+                attri = this.getAttriByKey(this.slot[i].bondAttrCurkey);
+                info.bondAttrCur = attri.intVal;
+                attri = this.getAttriByKey(this.slot[i].bondAttrMaxkey);
+                info.bondAttrMax = attri.intVal;
+                info.bondName = this.slot[i].bondName;
+                info.color = this.slot[i].color;
+                return info;
+            }
+        }
+        return null;
+    }
+
+    public getAttriByKey(key: string): op_gameconfig.IAttribute {
+        if (this.attributes === undefined) return null;
+        let len = this.attributes.length;
+        for (let i = 0; i < len; i++) {
+            if (this.attributes[i].name === key) {
+                return this.attributes[i];
+            }
+        }
+        return null;
     }
 
     protected _originCollisionPoint: Phaser.Point;

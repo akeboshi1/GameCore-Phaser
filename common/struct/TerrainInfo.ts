@@ -62,7 +62,9 @@ export class TerrainInfo implements ITerrain {
     let value: any;
     for (let key in base) {
       value = base[key];
-      this[key] = value;
+      if (value) {
+          this[key] = value;
+      }
     }
   }
 
