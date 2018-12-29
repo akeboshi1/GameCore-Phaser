@@ -2,10 +2,13 @@ import Globals from "../Globals";
 import * as Assets from "../Assets";
 import {PhaserNineSlice} from "../lib/nineSlice/Plugin";
 
+require("expose-loader?PhaserInput!../lib/phaser-input/phaser-input");
+
 export default class Boot extends Phaser.State {
     public preload(): void {
         this.game.plugins.add(Phaser.Plugin.Isometric);
         this.game.plugins.add(PhaserNineSlice.Plugin);
+        this.game.plugins.add(PhaserInput.Plugin);
         this.game.load.atlasJSONArray(Assets.Atlases.AtlasesPreloadSpritesArray.getName(), Assets.Atlases.AtlasesPreloadSpritesArray.getPNG(), Assets.Atlases.AtlasesPreloadSpritesArray.getJSONArray());
     }
 
