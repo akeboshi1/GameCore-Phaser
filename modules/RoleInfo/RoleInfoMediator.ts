@@ -5,6 +5,7 @@ import Globals from "../../Globals";
 import {AttriListItem} from "./view/item/AttriListItem";
 import {MessageType} from "../../common/const/MessageType";
 import {PlayerInfo} from "../../common/struct/PlayerInfo";
+import {IListItemComponent} from "../../base/component/list/interfaces/IListItemComponent";
 
 export class RoleInfoMediator extends MediatorBase {
     private get view(): RoleInfoView {
@@ -22,7 +23,6 @@ export class RoleInfoMediator extends MediatorBase {
 
     private addEvent(): void {
         Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdate, this);
-
     }
 
     private handleInit(): void {
@@ -35,16 +35,15 @@ export class RoleInfoMediator extends MediatorBase {
             return;
         }
         if (player.attributes) {
-            let solt: SlotInfo;
-            let i: number = 0;
-            let len = this.view.m_List.getLength();
-            let item: AttriListItem;
-            for (; i < len; i++) {
-                item = this.view.m_List.getItem(i) as AttriListItem;
-                if (item) {
-                    solt = Globals.DataCenter.PlayerData.mainPlayerInfo.getSlotByName(item.data.bondName);
-                    item.data = solt;
+            let item: IListItemComponent = this.view.m_List.getItemByFunction((value: IListItemComponent) => {
+                if (value.data.uuid === player.uuid) {
+                    return true;
                 }
+                return false;
+            });
+            if (item) {
+                let solt: SlotInfo = player.getSlotByName(item.data.bondName);
+                item.data = solt;
             }
         }
     }

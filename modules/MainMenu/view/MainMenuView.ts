@@ -14,11 +14,11 @@ export class MainMenuView extends ModuleViewBase {
     }
 
     protected init(): void {
-        this.m_Bt = this.game.make.button(0, 3, UI.SpriteSheetsBlueBtn.getName(), this.onBtClick, this, 2, 1, 0);
+        // this.m_Bt = this.game.make.button(0, 3, UI.SpriteSheetsBlueBtn.getName(), this.onBtClick, this, 2, 1, 0);
         // this.m_Bt.anchor.setTo(0, 0);
-        this.m_Bt.y = this.game.height - UI.SpriteSheetsBlueBtn.getFrameHeight();
-        this.m_Bt.scale.x = this.m_Bt.scale.y = 0.5;
-        this.add(this.m_Bt);
+        // this.m_Bt.y = this.game.height - UI.SpriteSheetsBlueBtn.getFrameHeight();
+        // this.m_Bt.scale.x = this.m_Bt.scale.y = 0.5;
+        // this.add(this.m_Bt);
     }
 
     protected onBtClick() {

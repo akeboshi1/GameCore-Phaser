@@ -114,7 +114,7 @@ export class SceneMediator extends MediatorBase {
      * @param value
      */
     protected handleAddPlayer(value: op_client.IActor): void {
-        this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value, true);
+        this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value);
     }
 
     /**

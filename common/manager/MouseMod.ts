@@ -28,7 +28,17 @@ export class MouseMod extends BaseSingleton {
           activePointer.middleButton.onUp.add(this.keyUpHandle, this);
           activePointer.rightButton.onDown.add(this.keyDownHandle, this);
           activePointer.rightButton.onUp.add(this.keyUpHandle, this);
+          this.resume();
         }
+    }
+
+    private running = false;
+    public pause(): void {
+        this.running = false;
+    }
+
+    public resume(): void {
+        this.running = true;
     }
 
     private keyDownHandle( key: any ): void {
@@ -40,6 +50,10 @@ export class MouseMod extends BaseSingleton {
     }
 
     public onUpdate(): void {
+        if (this.running === false) {
+            return;
+        }
+
         let activePointer: Phaser.Pointer = this.game.input.activePointer;
         let events: number[] = [];
         if (activePointer.leftButton.isDown) {

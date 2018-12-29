@@ -1,7 +1,6 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 import * as path from "path";
 import {GameConfig} from "./GameConfig";
-import {op_gameconfig} from "../protocol/protocols";
 
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
@@ -59,12 +58,6 @@ export namespace Load {
 }
 
 export namespace Images {
-    export class Load {
-        static getKey(key: string): string {
-            return key + "_png";
-        }
-    }
-
     export class ImagesTile {
         static getName(id: number): string {
             return "tile_" + id + "_png";
@@ -119,28 +112,6 @@ export namespace Sound {
 }
 
 export namespace UI {
-    export class SpriteSheetsBlueBtn {
-        static getName(): string {
-            return "ui_btn_bule_sprite_sheet_png";
-        }
-
-        static getPNG(): string {
-            return require("assets/spritesheets/btn_bule_sprite_sheet.png");
-        }
-
-        static getFrameWidth(): number {
-            return 193;
-        }
-
-        static getFrameHeight(): number {
-            return 71;
-        }
-
-        static getFrameMax(): number {
-            return 3;
-        }
-    }
-
     export class SpriteSheetsCloseBtn {
         static getName(): string {
             return "ui_btn_close_sprite_sheet_png";
@@ -160,17 +131,6 @@ export namespace UI {
 
         static getFrameMax(): number {
             return 3;
-        }
-    }
-
-
-    export class ImageMenuBag {
-        static getName(): string {
-            return "ui_menu_bag_png";
-        }
-
-        static getPNG(): string {
-            return require("assets/images/ui/menu_bag.png");
         }
     }
 
@@ -211,6 +171,26 @@ export namespace UI {
 
         static getPNG(): string {
             return require("assets/images/ui/input_bg.png");
+        }
+    }
+
+    export class ItemBg {
+        static getName(): string {
+            return "ui_item_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/item_bg.png");
+        }
+    }
+
+    export class ItemShortcutBg {
+        static getName(): string {
+            return "ui_item_shortcut_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/item_shortcut_bg.png");
         }
     }
 

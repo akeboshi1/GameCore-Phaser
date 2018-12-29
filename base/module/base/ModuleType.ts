@@ -6,5 +6,5 @@ export class ModuleTypeEnum {
     public static STORE = "Store"; // 商店
     public static CHAT = "Chat"; // 聊天
     public static ROLEINFO = "RoleInfo"; // 聊天
-
+    public static SHORTCUTMENU = "ShortcutMenu"; // 聊天
 }

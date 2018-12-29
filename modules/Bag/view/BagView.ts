@@ -18,18 +18,7 @@ export class BagView extends CommWindowModuleView {
 
     protected init(): void {
         super.init();
-        const settings = {
-            kineticMovement: true,
-            timeConstantScroll: this.width, //really mimic iOS
-            horizontalScroll: false,
-            verticalScroll: true,
-            horizontalWheel: false,
-            verticalWheel: true,
-            deltaWheel: 40,
-            clickXThreshold: 5,
-            clickYThreshold: 5,
-        };
-        this.m_Scroll = new ScrollArea(this.game, 0, 0, this.width, this.height, settings);
+        this.m_Scroll = new ScrollArea(this.game, 0, 0, this.width, this.height);
         this.m_List = new ListComponent(this.game);
         let i: number = 0;
         let len: number = 10;

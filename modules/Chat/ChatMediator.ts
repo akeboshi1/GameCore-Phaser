@@ -14,10 +14,28 @@ export class ChatMediator extends MediatorBase {
     public onRegister(): void {
         Globals.MessageCenter.on(MessageType.CHAT_TO, this.onHandleChat, this);
         this.view.bt.events.onInputUp.add(this.onHandleBt, this);
+        this.view.bt.events.onInputOver.add(this.onHandleOver, this);
+        this.view.bt.events.onInputOut.add(this.onHandleOut, this);
+    }
+
+    public onRemove(): void {
+        Globals.MessageCenter.cancel(MessageType.CHAT_TO, this.onHandleChat, this);
+        this.view.bt.events.onInputUp.remove(this.onHandleBt, this);
+        this.view.bt.events.onInputOver.remove(this.onHandleOver, this);
+        this.view.bt.events.onInputOut.remove(this.onHandleOut, this);
+        super.onRemove();
     }
 
     private onHandleChat(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
         this.view.out_tf.text += chat.chatContext + "\n";
+    }
+
+    private onHandleOver(): void {
+        Globals.MouseMod.pause();
+    }
+
+    private onHandleOut(): void {
+        Globals.MouseMod.resume();
     }
 
     private onHandleBt(): void {

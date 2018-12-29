@@ -1,5 +1,4 @@
 import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
-import {UI} from "../../../Assets";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 
 export class RoleInfoView extends ModuleViewBase {
@@ -9,12 +8,11 @@ export class RoleInfoView extends ModuleViewBase {
     }
 
     public onResize(): void {
-        this.x = this.game.camera.x;
-        this.y = this.game.camera.y;
     }
 
     protected init(): void {
         this.m_List = new ListComponent(this.game);
+        this.m_List.y = 2;
         this.add(this.m_List);
     }
 }

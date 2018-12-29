@@ -1,14 +1,15 @@
 import "phaser-ce";
-import {UI} from "../../../../Assets";
+import {Load, UI} from "../../../../Assets";
 import {IListItemComponent} from "../../../../base/component/list/interfaces/IListItemComponent";
 import {IListItemEventListener} from "../../../../base/component/list/interfaces/IListItemEventListener";
-import {SlotInfo} from "../../../../common/struct/SlotInfo";
+import {op_gameconfig} from "../../../../../protocol/protocols";
 
-export class AttriListItem extends Phaser.Group implements IListItemComponent {
+export class ShortcutMenuListItem extends Phaser.Group implements IListItemComponent {
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;
-    private bar: Phaser.Graphics;
+    protected m_Icon: Phaser.Image;
+    protected m_ShortcutTxt: Phaser.Text;
 
     constructor(game) {
         super(game);
@@ -51,11 +52,11 @@ export class AttriListItem extends Phaser.Group implements IListItemComponent {
     }
 
     public getHeight(): number {
-        return 20;
+        return 61;
     }
 
     public getWidth(): number {
-        return 134;
+        return 56;
     }
 
     public setPosX(value: number) {
@@ -70,19 +71,20 @@ export class AttriListItem extends Phaser.Group implements IListItemComponent {
     }
 
     protected init(): void {
-        this.game.add.nineSlice(0, 0, UI.ProgressBg.getName(), null, 138, 26, this);
-        this.bar = this.game.make.graphics(0, 0);
-        this.addChild(this.bar);
-        this.game.add.nineSlice(0, 0, UI.ProgressFill.getName(), null, 138, 26, this);
+        this.game.add.image(0, 0, UI.ItemBg.getName(), 0, this);
+        this.m_Icon = this.game.add.image(0, 0, null, 0, this);
+        this.game.add.image(0, 0, UI.ItemShortcutBg.getName(), 0, this);
+        this.m_ShortcutTxt = this.game.add.text(22, 40, "", {fill: "#FFF", font: "18px"}, this);
+    }
+
+    public setShortCut(value: string): void {
+        this.m_ShortcutTxt.text = value;
     }
 
     protected render(): void {
-        let slot: SlotInfo = this.data;
-        this.bar.clear();
-        let color: any = "0x" + slot.color.substr(1);
-        this.bar.beginFill(color, 0.8);
-        this.bar.drawRect(2, 2, 134 , 20);
-        let prec = slot.bondAttrCur / slot.bondAttrMax;
-        this.bar.scale.x = prec;
+        let item: op_gameconfig.IItem = this.data;
+        if (item && item.display) {
+            this.m_Icon.loadTexture(Load.Image.getKey(item.display.texturePath));
+        }
     }
 }

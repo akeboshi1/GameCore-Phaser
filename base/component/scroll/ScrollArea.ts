@@ -61,7 +61,7 @@ export class ScrollArea extends Phaser.Group {
     public configure(options: any): void {
         if (options) {
             for (let property in options) {
-                if (this.settings.hasOwnProperty(property) && this.settings[property] != null) {
+                if (this.settings.hasOwnProperty(property)) {
                     this.settings[property] = options[property];
                 }
             }

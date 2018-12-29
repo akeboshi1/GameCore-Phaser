@@ -2,7 +2,7 @@ import Globals from "../Globals";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
 import {UI} from "../Assets";
-import {IAtlasResource, INineSliceImageResource} from "../interface/IPhaserLoadList";
+import {IAtlasResource, IImageResource, INineSliceImageResource} from "../interface/IPhaserLoadList";
 import {GameConfig} from "../GameConfig";
 
 export default class Game extends Phaser.State {
@@ -50,6 +50,15 @@ export default class Game extends Phaser.State {
                 {key: UI.ProgressFill.getName(), png: UI.ProgressFill.getPNG(), top: 6, left: 6, right: 6, bottom: 6}
             ];
             Globals.ModuleManager.openModule(ModuleTypeEnum.ROLEINFO, {nineslices: roleInfoResource});
+
+            let shortcutMenuResource: IImageResource[] = [{
+                key: UI.ItemBg.getName(),
+                png: UI.ItemBg.getPNG()
+            }, {
+                key: UI.ItemShortcutBg.getName(),
+                png: UI.ItemShortcutBg.getPNG()
+            }];
+            Globals.ModuleManager.openModule(ModuleTypeEnum.SHORTCUTMENU, {images: shortcutMenuResource});
         }
 
         if (Globals.DataCenter.SceneData.initialize) {
