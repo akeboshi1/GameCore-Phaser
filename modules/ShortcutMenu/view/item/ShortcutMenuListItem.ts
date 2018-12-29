@@ -74,7 +74,7 @@ export class ShortcutMenuListItem extends Phaser.Group implements IListItemCompo
         this.game.add.image(0, 0, UI.ItemBg.getName(), 0, this);
         this.m_Icon = this.game.add.image(0, 0, null, 0, this);
         this.game.add.image(0, 0, UI.ItemShortcutBg.getName(), 0, this);
-        this.m_ShortcutTxt = this.game.add.text(22, 40, "", {fill: "#FFF", font: "18px"}, this);
+        this.m_ShortcutTxt = this.game.add.text(23, 40, "", {fill: "#FFF", font: "18px"}, this);
     }
 
     public setShortCut(value: string): void {

@@ -13,7 +13,7 @@ export class ShortcutMenuView extends ModuleViewBase {
 
     protected init(): void {
         this.m_List = new ShortcutList(this.game);
-        this.m_List.x = GameConfig.GameWidth - 233;
+        this.m_List.x = (GameConfig.GameWidth - 228) >> 1;
         this.m_List.y = GameConfig.GameHeight - 61;
         this.add(this.m_List);
     }
