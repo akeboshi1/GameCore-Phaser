@@ -135,6 +135,7 @@ export class SceneBase extends SceneBasic {
             return null;
         }
         this.mSceneElements.remove(uid);
+        this.drawSceneLayer.removeDraw(element.collisionArea);
 
         switch (element.sceneLayerType) {
             case Const.SceneConst.SceneLayerBottom:

@@ -1,5 +1,6 @@
 import {ILayout} from "../interfaces/ILayout";
 import {ILayoutItem} from "../interfaces/ILayoutItem";
+import {IListItemComponent} from "../../component/list/interfaces/IListItemComponent";
 
 export class Layout implements ILayout {
     protected m_LayoutItems: Array<ILayoutItem>;
@@ -19,6 +20,18 @@ export class Layout implements ILayout {
 
     public getItem(index: number): ILayoutItem {
         if (this.m_LayoutItems.length > index && this.m_LayoutItems) return this.m_LayoutItems[index];
+        return null;
+    }
+
+    public getItemByFunction(filterFunction: Function): ILayoutItem {
+        let item: ILayoutItem = null;
+        let len: number = this.m_LayoutItems.length;
+        for (let i = 0; i < len; i++) {
+            item = this.m_LayoutItems[i];
+            if (filterFunction(item)) {
+                return item;
+            }
+        }
         return null;
     }
 

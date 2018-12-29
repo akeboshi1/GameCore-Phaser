@@ -194,6 +194,16 @@ export namespace UI {
         }
     }
 
+    export class ItemIcon {
+        static getName(id: number): string {
+            return "item_icon_" + id + "_png";
+        }
+
+        static getPNG(id: number): string {
+            return require("assets/images/ui/item_" + id + ".png");
+        }
+    }
+
     export class Button {
         static getName(): string {
             return "ui_button_png";

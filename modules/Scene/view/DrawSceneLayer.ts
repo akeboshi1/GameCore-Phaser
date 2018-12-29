@@ -14,6 +14,16 @@ export class DrawSceneLayer extends BasicSceneLayer {
     this.graphicsList.push(value);
   }
 
+  public removeDraw(value: DrawArea): void {
+    if (value.graphics.parent) {
+        value.graphics.parent.removeChild(value.graphics);
+    }
+    let idx = this.graphicsList.indexOf(value);
+    if (idx !== -1) {
+      this.graphicsList.splice(idx, 1);
+    }
+  }
+
   public onFrame(deltaTime: number): void {
     super.onFrame(deltaTime);
     let len: number = this.graphicsList.length;

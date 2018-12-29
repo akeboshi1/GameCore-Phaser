@@ -35,15 +35,24 @@ export class RoleInfoMediator extends MediatorBase {
             return;
         }
         if (player.attributes) {
-            let item: IListItemComponent = this.view.m_List.getItemByFunction((value: IListItemComponent) => {
-                if (value.data.uuid === player.uuid) {
-                    return true;
+            let solts: SlotInfo[] = Globals.DataCenter.PlayerData.mainPlayerInfo.getSlots();
+            if (solts == null) {
+                return;
+            }
+            let len = solts.length;
+            let item: IListItemComponent;
+            let solt: SlotInfo;
+            for (let i = 0; i < len; i++) {
+                solt = solts[i];
+                item = this.view.m_List.getItemByFunction((value: IListItemComponent) => {
+                    if (value.data.bondName === solt.bondName) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (item) {
+                    item.data = solt;
                 }
-                return false;
-            });
-            if (item) {
-                let solt: SlotInfo = player.getSlotByName(item.data.bondName);
-                item.data = solt;
             }
         }
     }

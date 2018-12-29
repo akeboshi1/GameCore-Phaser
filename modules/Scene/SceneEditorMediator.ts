@@ -226,6 +226,10 @@ export class SceneEditorMediator extends SceneMediator {
    * @elementId elementId
    */
   private removeTerrain(col: number, row: number): void {
+    let terrain: TerrainAnimationItem = this.view.terrainEditorLayer.getTerrainItem(col, row) as TerrainAnimationItem;
+    if (terrain) {
+        this.view.drawSceneLayer.removeDraw(terrain.mouseOverArea);
+    }
     this.view.terrainEditorLayer.removeTerrainItem(col, row);
   }
 

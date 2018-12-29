@@ -57,6 +57,18 @@ export default class Game extends Phaser.State {
             }, {
                 key: UI.ItemShortcutBg.getName(),
                 png: UI.ItemShortcutBg.getPNG()
+            }, {
+                key: UI.ItemIcon.getName(1),
+                png: UI.ItemIcon.getPNG(1)
+            }, {
+                key: UI.ItemIcon.getName(2),
+                png: UI.ItemIcon.getPNG(2)
+            }, {
+                key: UI.ItemIcon.getName(3),
+                png: UI.ItemIcon.getPNG(3)
+            }, {
+                key: UI.ItemIcon.getName(4),
+                png: UI.ItemIcon.getPNG(4)
             }];
             Globals.ModuleManager.openModule(ModuleTypeEnum.SHORTCUTMENU, {images: shortcutMenuResource});
         }

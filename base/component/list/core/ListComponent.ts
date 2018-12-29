@@ -6,7 +6,6 @@ import {IListComponent} from "../interfaces/IListComponent";
 
 export class ListComponent extends Phaser.Group implements IListComponent {
     protected m_Layout: ILayout;
-    protected m_ItemList: HashMap = new HashMap;
     protected m_SelectItem: IListItemComponent;
 
     constructor( game: Phaser.Game ) {
@@ -41,7 +40,7 @@ export class ListComponent extends Phaser.Group implements IListComponent {
     }
 
     public getItem(index: number): IListItemComponent {
-        return this.m_ItemList.getValue(index);
+        return this.m_Layout.getItem(index) as IListItemComponent;
     }
 
     public getLength(): number {
@@ -49,15 +48,7 @@ export class ListComponent extends Phaser.Group implements IListComponent {
     }
 
     public getItemByFunction(filterFunction: Function): IListItemComponent {
-        let item: IListItemComponent = null;
-        let len: number = this.m_ItemList.valueList.length;
-        for (let i = 0; i < len; i++) {
-            item = this.m_ItemList.valueList[i];
-            if (filterFunction(item)) {
-                return item;
-            }
-        }
-        return null;
+        return this.m_Layout.getItemByFunction(filterFunction) as IListItemComponent;
     }
 
     public onTriggerClick(item: IListItemComponent) {
