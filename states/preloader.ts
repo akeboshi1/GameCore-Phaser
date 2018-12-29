@@ -6,11 +6,13 @@ export default class Preloader extends Phaser.State {
     private preloadFrameSprite: Phaser.Sprite = null;
 
     public preload(): void {
-        if (GameConfig.preLoadList.images) {
+        if (GameConfig.preLoadList !== undefined) {
+          if (GameConfig.preLoadList.images) {
             this.loadImages(GameConfig.preLoadList.images);
-        }
-        if (GameConfig.preLoadList.atlas) {
+          }
+          if (GameConfig.preLoadList.atlas) {
             this.loadAtlases(GameConfig.preLoadList.atlas);
+          }
         }
     }
 

@@ -92,7 +92,7 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     protected onUpdateModelURL() {
-        if (Globals.game.cache.checkTextureKey(this.mUrl.texturePath + this.mUrl.dataPath)) {
+        if (Globals.game.cache.checkTextureKey(Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath))) {
             this.mLoadCompleteCallback();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
