@@ -1,4 +1,3 @@
-import { PhaserNineSlice} from "../../../lib/nineSlice/Plugin";
 import NineSliceCacheData = PhaserNineSlice.NineSliceCacheData;
 
 export class NiceSliceButton extends Phaser.Sprite {

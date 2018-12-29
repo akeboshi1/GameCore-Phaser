@@ -1,8 +1,5 @@
 import Globals from "../Globals";
 import * as Assets from "../Assets";
-import {PhaserNineSlice} from "../lib/nineSlice/Plugin";
-
-require("expose-loader?PhaserInput!../lib/phaser-input/phaser-input");
 
 export default class Boot extends Phaser.State {
     public preload(): void {

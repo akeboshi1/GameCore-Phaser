@@ -8,7 +8,6 @@ declare namespace Phaser {
     iso: Phaser.Plugin.Isometric.Projector;
   }
 
-
   interface Loader {
     nineSlice: (key: string, url: string, top: number, left?: number, right?: number, bottom?: number) => void;
   }
@@ -16,6 +15,7 @@ declare namespace Phaser {
   interface GameObjectFactory {
     nineSlice: (x: number, y: number, key: string, frame: string, width: number, height: number, group?: Phaser.Group) => PhaserNineSlice.NineSlice;
     isoSprite(x: number, y: number, z: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Plugin.Isometric.IsoSprite;
+    inputField: (x: number, y: number, inputOptions?: PhaserInput.InputOptions, group?: Phaser.Group) => PhaserInput.InputField;
   }
 
   interface GameObjectCreator {

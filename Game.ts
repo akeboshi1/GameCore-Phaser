@@ -4,6 +4,8 @@ import "phaser";
 import "phaser-ce";
 import "isometric";
 import "dragonBones";
+import "nineslice";
+import "input";
 import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam";
 import BootState from "./states/boot";
