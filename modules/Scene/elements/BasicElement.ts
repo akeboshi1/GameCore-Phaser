@@ -6,7 +6,6 @@ import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "../../../../protocol/protocols";
 
 export default class BasicElement extends SceneEntity {
-    protected baseLoc: Phaser.Point;
     protected mAnimationDirty = false;
     protected mScaleX = 1;
     protected myAnimationName: string;
@@ -83,7 +82,7 @@ export default class BasicElement extends SceneEntity {
         (<BasicElementAvatar>this.display).scaleX = this.mScaleX;
     }
 
-    private initBaseLoc(): void {
+    protected initBaseLoc(): void {
         // 图片坐标
         let config: op_gameconfig.IAnimation = this.elementInfo.config;
         if (config === null) return;

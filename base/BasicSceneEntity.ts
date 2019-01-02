@@ -14,7 +14,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public uid: number;
     public elementTypeId = 0;
     public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
-
+    protected baseLoc: Phaser.Point;
     public isValidDisplay = false;
 
     public data: any;
@@ -195,8 +195,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     }
 
     protected onUpdatingDisplay(deltaTime: number): void {
-
-        let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
+        let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
+        // let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
         // Log.trace(p3.x,p3.y,p3.z);
         this.display.isoX = p3.x;
         this.display.isoY = p3.y;
