@@ -1,5 +1,7 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 import {GameConfig} from "./GameConfig";
+import * as path from "path";
+import * as url from "url";
 
 export namespace Atlases {
     export class AtlasesPreloadSpritesArray {
@@ -26,10 +28,15 @@ export namespace Atlases {
 
 export namespace Load {
     export class Url {
-        static getRes(url: string): string {
-            return GameConfig.HomeDir + "/" + url;
+        static getRes(value: string): string {
+            if (GameConfig.isEditor) {
+                return `${path.resolve(GameConfig.HomeDir, value)}`;
+            } else {
+                return `${url.resolve(GameConfig.HomeDir, value)}`;
+            }
         }
     }
+
 
     export class Image {
         static getKey(value: string): string {
@@ -135,11 +142,11 @@ export namespace UI {
 
     export class WindowBg {
         static getName(): string {
-            return "ui_progress_bg_png";
+            return "ui_window_bg_png";
         }
 
         static getPNG(): string {
-            return require("assets/images/ui/progress_bg.png");
+            return require("assets/images/ui/window_bg.png");
         }
     }
 
