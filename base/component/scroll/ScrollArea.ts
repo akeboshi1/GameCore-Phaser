@@ -30,25 +30,29 @@ export class ScrollArea extends Phaser.Group {
     private settings = {
         kineticMovement: true,
         timeConstantScroll: 325, //really mimic iOS
-        horizontalScroll: true,
+        horizontalScroll: false,
         verticalScroll: true,
         horizontalWheel: false,
         verticalWheel: true,
         deltaWheel: 40,
         clickXThreshold: 5,
         clickYThreshold: 5,
+        offsetX: 0,
+        offsetY: 20
     };
     private velocityWheelXAbs: number;
     private velocityWheelYAbs: number;
     private elapsed: number;
 
-    constructor(game: Phaser.Game, x: number, y: number, w: number, h: number, params?: any) {
+    constructor(game: Phaser.Game, rect: Phaser.Rectangle, params?: any) {
         super(game);
-        this._x = x;
-        this._y = y;
-        this._w = w;
-        this._h = h;
-        this.configure(params);
+        this.x = this._x = rect.x;
+        this.y = this._y = rect.y;
+        this._w = rect.width;
+        this._h = rect.height;
+        if (params) {
+            this.configure(params);
+        }
         this.init();
     }
 
@@ -153,12 +157,12 @@ export class ScrollArea extends Phaser.Group {
     }
 
     protected init(): void {
-        this._maskGraphics = this.game.make.graphics(this.x, this.y);
-        this._maskGraphics.beginFill(0x000000);
+        this._maskGraphics = this.game.make.graphics(0, 0);
+        this._maskGraphics.beginFill(0x00ffff);
         this._maskGraphics.drawRect(0, 0, this._w, this._h);
         this._maskGraphics.endFill();
         this.add(this._maskGraphics);
-        this._maskGraphics.inputEnabled = true;
+        // this._maskGraphics.inputEnabled = true;
         this.mask = this._maskGraphics;
 
         this.dragging = false;
@@ -333,7 +337,20 @@ export class ScrollArea extends Phaser.Group {
             }
         }
 
-        this.maskGraphics.x = -this.x;
-        this.maskGraphics.y = -this.y;
+        this.maskGraphics.x = this._x - this.x;
+        this.maskGraphics.y = this._y - this.y;
+    }
+
+    public get width(): number {
+        return super.width - this.settings.offsetX;
+    }
+
+    public get height(): number {
+        return super.height - this.settings.offsetY;
+    }
+
+    public scroll(value: number = 1): void {
+        this.y = this._y - (this.height - this._h) * value;
+        this.limitMovement();
     }
 }

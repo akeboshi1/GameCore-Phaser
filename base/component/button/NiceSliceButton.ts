@@ -4,8 +4,10 @@ export class NiceSliceButton extends Phaser.Sprite {
     protected mOverFrame: PhaserNineSlice.NineSlice;
     protected mOutFrame: PhaserNineSlice.NineSlice;
     protected mDownFrame: PhaserNineSlice.NineSlice;
+    protected mText: Phaser.Text;
 
-    constructor(game: Phaser.Game, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData) {
+
+    constructor(game: Phaser.Game, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData, text?: string) {
         super(game, 0, 0);
         this.mOverFrame = new PhaserNineSlice.NineSlice(game, x, y, key, overFrame, width, height, data);
         this.mOverFrame.visible = false;
@@ -16,7 +18,14 @@ export class NiceSliceButton extends Phaser.Sprite {
         this.addChild(this.mOverFrame);
         this.addChild(this.mOutFrame);
         this.addChild(this.mDownFrame);
+        this.mText = this.game.make.text(x + 3,  y + 4, text || "", {fontSize: 12, fill: "#000"});
+        this.mText.inputEnabled = false;
+        this.addChild(this.mText);
         this.init();
+    }
+
+    public setText(value: string): void {
+        this.mText.text = value;
     }
 
     protected init(): void {

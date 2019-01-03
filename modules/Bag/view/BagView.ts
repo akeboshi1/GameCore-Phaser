@@ -2,6 +2,7 @@ import {CommWindowModuleView} from "../../../common/view/CommWindowModuleView ";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {BagListItem} from "./item/BagListItem";
 import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
+import {GameConfig} from "../../../GameConfig";
 
 export class BagView extends CommWindowModuleView {
     private m_List: ListComponent;
@@ -18,7 +19,8 @@ export class BagView extends CommWindowModuleView {
 
     protected init(): void {
         super.init();
-        this.m_Scroll = new ScrollArea(this.game, 0, 0, this.width, this.height);
+        const bounds = new Phaser.Rectangle(0, 0, 300, 250);
+        this.m_Scroll = new ScrollArea(this.game, bounds);
         this.m_List = new ListComponent(this.game);
         let i: number = 0;
         let len: number = 10;

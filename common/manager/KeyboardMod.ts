@@ -9,6 +9,7 @@ import {op_virtual_world} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP;
+import {HashMap} from "../../base/ds/HashMap";
 
 export class KeyboardMod extends BaseSingleton {
     private _isKeyDown = false;
@@ -21,6 +22,8 @@ export class KeyboardMod extends BaseSingleton {
     public sKey: Key;
     public aKey: Key;
     public dKey: Key;
+    protected keyDownHandleDic: HashMap;
+    protected keyUpHandleDic: HashMap;
 
     /**
      * 构造函数
@@ -37,8 +40,8 @@ export class KeyboardMod extends BaseSingleton {
         this.game = game;
 
         //  Stop the following keys from propagating up to the browser
-        this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
-            Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
+        // this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
+        //     Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
 
         this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.upKey.onDown.add(this.keyDownHandle, this);
@@ -65,11 +68,121 @@ export class KeyboardMod extends BaseSingleton {
         this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
         this.dKey.onDown.add(this.keyDownHandle, this);
         this.dKey.onUp.add(this.keyUpHandle, this);
+
+        this.keyDownHandleDic = new HashMap();
+        this.keyUpHandleDic = new HashMap();
+        this.game.input.keyboard.addCallbacks(this, this.onDown, this.onUp);
+    }
+
+    protected onDown(key: number): void {
+        let boo: boolean = this.keyDownHandleDic.has(key);
+        if (!boo) {
+            return;
+        }
+
+        let arr: any[] = this.keyDownHandleDic.getValue(key);
+        let len: number = arr.length;
+        for (let i = 0; i < len; i++) {
+            let cb: Function
+            if (arr[i].once) {
+                cb = arr[i].cb;
+                arr[i].cb = null;
+                cb.apply(arr[i].context);
+                arr[i].context = null;
+                arr.splice(i, 1);
+                i--;
+                len--;
+            } else {
+                cb = arr[i].cb;
+                cb.apply(arr[i].context);
+            }
+        }
+    }
+
+    protected onUp(event: KeyboardEvent): void {
+        let key = event.keyCode;
+        let boo: boolean = this.keyUpHandleDic.has(key);
+        if (!boo) {
+            return;
+        }
+
+        let arr: any[] = this.keyUpHandleDic.getValue(key);
+        let len: number = arr.length;
+        for (let i = 0; i < len; i++) {
+            let cb: Function
+            if (arr[i].once) {
+                cb = arr[i].cb;
+                arr[i].cb = null;
+                cb.apply(arr[i].context);
+                arr[i].context = null;
+                arr.splice(i, 1);
+                i--;
+                len--;
+            } else {
+                cb = arr[i].cb;
+                cb.apply(arr[i].context);
+            }
+        }
+    }
+
+    public addListenerKeyUp(key: number, callBack: Function, context?: any, once?: boolean ): void {
+        let boo: boolean = this.keyUpHandleDic.has(key);
+        let arr: any[];
+        if (boo) {
+            arr = this.keyUpHandleDic.getValue(key);
+        } else {
+            arr = [];
+            this.keyUpHandleDic.add(key, arr);
+        }
+        arr.push({cb: callBack, context: context, once: once || false});
+    }
+
+    public removeListenerKeyUp(key: number, callBack: Function, context?: any): void {
+        let boo: boolean = this.keyUpHandleDic.has(key);
+        if (!boo) {
+            return;
+        }
+        let arr: any[] = this.keyUpHandleDic.getValue(key);
+        let len: number = arr.length;
+        for (let i = 0; i < len; i++) {
+            if (arr[i].cb === callBack && context === context) {
+                arr.splice(i, 1);
+                i--;
+                len--;
+            }
+        }
+    }
+
+    public addListenerKeyDown(key: number, callBack: Function, context?: any, once?: boolean ): void {
+        let boo: boolean = this.keyDownHandleDic.has(key);
+        let arr: any[];
+        if (boo) {
+            arr = this.keyDownHandleDic.getValue(key);
+        } else {
+            arr = [];
+            this.keyDownHandleDic.add(key, arr);
+        }
+        arr.push({cb: callBack, context: context, once: once || false});
+    }
+
+    public removeListenerKeyDown(key: number, callBack: Function, context?: any): void {
+        let boo: boolean = this.keyDownHandleDic.has(key);
+        if (!boo) {
+            return;
+        }
+        let arr: any[] = this.keyDownHandleDic.getValue(key);
+        let len: number = arr.length;
+        for (let i = 0; i < len; i++) {
+            if (arr[i].cb === callBack && context === context) {
+                arr.splice(i, 1);
+                i--;
+                len--;
+            }
+        }
     }
 
     private tempKeys: string;
-    public onUpdate(): void {
-        // Log.trace("Tick--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->")
+    protected onUpdate(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         let keyArr: number[] = this.getKeyDowns();
@@ -99,42 +212,6 @@ export class KeyboardMod extends BaseSingleton {
         if (this.aKey.isDown) keyCodes.push(Phaser.Keyboard.A);
         if (this.dKey.isDown) keyCodes.push(Phaser.Keyboard.D);
         return keyCodes;
-    }
-
-    public CheckKey(): number[] {
-        this._isKeyDown = false;
-        let keyDowns = this.getKeyDowns();
-        if (keyDowns.length === 0) return null;
-
-        let lastDownArr: number[] = [];
-
-        this._isKeyDown = true;
-
-        if (keyDowns.length === 2) {
-            if (keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
-                lastDownArr = [Phaser.Keyboard.UP, Phaser.Keyboard.RIGHT];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
-                lastDownArr = [Phaser.Keyboard.W, Phaser.Keyboard.D];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.UP) !== -1 && keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
-                lastDownArr = [Phaser.Keyboard.UP, Phaser.Keyboard.LEFT];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.W) !== -1 && keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
-                lastDownArr = [Phaser.Keyboard.W, Phaser.Keyboard.A];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && keyDowns.indexOf(Phaser.Keyboard.RIGHT) !== -1) {
-                lastDownArr = [Phaser.Keyboard.DOWN, Phaser.Keyboard.RIGHT];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && keyDowns.indexOf(Phaser.Keyboard.D) !== -1) {
-                lastDownArr = [Phaser.Keyboard.S, Phaser.Keyboard.D];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.DOWN) !== -1 && keyDowns.indexOf(Phaser.Keyboard.LEFT) !== -1) {
-                lastDownArr = [Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT];
-            } else if (keyDowns.indexOf(Phaser.Keyboard.S) !== -1 && keyDowns.indexOf(Phaser.Keyboard.A) !== -1) {
-                lastDownArr = [Phaser.Keyboard.S, Phaser.Keyboard.A];
-            }
-        }
-        if (lastDownArr.length === 0) {
-            lastDownArr = [keyDowns[0]];
-        }
-
-        Log.trace("KeyCode--->" + lastDownArr);
-        return lastDownArr;
     }
 
     public dispose(): void {

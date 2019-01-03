@@ -40,7 +40,7 @@ export class ShortcutMenuMediator extends MediatorBase {
         let pack: op_gameconfig.IPackage = packs[0];
         let len = pack.maxIndex;
         let item: ShortcutMenuListItem;
-        let temps = ["H", "J", "K", "L"];
+        let temps = ["1", "2", "3", "4"];
         let icons = [1, 2, 3, 4];
         for (let i = 0; i < len; i++) {
             item = new ShortcutMenuListItem(Globals.game);
