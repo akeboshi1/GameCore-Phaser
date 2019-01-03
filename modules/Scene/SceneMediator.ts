@@ -206,7 +206,7 @@ export class SceneMediator extends MediatorBase {
         this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
 
         // 播放场景音效
-        Globals.SoundManager.playBgSound(1);
+        // Globals.SoundManager.playBgSound(1);
 
         // set camera
         Globals.SceneManager.pushScene(this.view);

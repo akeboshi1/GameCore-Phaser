@@ -32,12 +32,12 @@ export default class Game extends Phaser.State {
             },
                 {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
             ];
-            let atlas: IAtlasResource[] = [{
+            let chatAtlas: IAtlasResource[] = [{
                 key: UI.Button.getName(),
                 png: UI.Button.getPNG(),
                 json: UI.Button.getJSON()
-            }]
-            Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, {nineslices: chatResource, atlas: atlas});
+            }];
+            Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, {nineslices: chatResource, atlas: chatAtlas});
 
             let roleInfoResource: INineSliceImageResource[] = [{
                 key: UI.ProgressBg.getName(),
@@ -71,6 +71,20 @@ export default class Game extends Phaser.State {
                 png: UI.ItemIcon.getPNG(4)
             }];
             Globals.ModuleManager.openModule(ModuleTypeEnum.SHORTCUTMENU, {images: shortcutMenuResource});
+            let promptResource: INineSliceImageResource[] = [{
+                key: UI.WindowBg.getName(),
+                png: UI.WindowBg.getPNG(),
+                top: 29,
+                left: 13,
+                right: 13,
+                bottom: 7
+            }];
+            let promptAtlas: IAtlasResource[] = [{
+                key: UI.WindowClose.getName(),
+                png: UI.WindowClose.getPNG(),
+                json: UI.WindowClose.getJSON()
+            }];
+            Globals.ModuleManager.openModule(ModuleTypeEnum.PROMPT, {nineslices: promptResource, atlas: promptAtlas});
         }
 
         if (Globals.DataCenter.SceneData.initialize) {

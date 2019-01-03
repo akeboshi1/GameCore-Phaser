@@ -18,14 +18,21 @@ export class NiceSliceButton extends Phaser.Sprite {
         this.addChild(this.mOverFrame);
         this.addChild(this.mOutFrame);
         this.addChild(this.mDownFrame);
-        this.mText = this.game.make.text(x + 3,  y + 4, text || "", {fontSize: 12, fill: "#000"});
-        this.mText.inputEnabled = false;
-        this.addChild(this.mText);
+        if (text) {
+            this.mText = this.game.make.text(x, y, text || "", {fontSize: 12, fill: "#000"});
+            this.mText.x += ((width - this.mText.width) >> 1) + 1;
+            this.mText.y += ((height - this.mText.height) >> 1) + 1;
+            this.mText.setTextBounds(0, 0, width, height);
+            this.mText.inputEnabled = false;
+            this.addChild(this.mText);
+        }
         this.init();
     }
 
     public setText(value: string): void {
-        this.mText.text = value;
+        if (this.mText) {
+            this.mText.text = value;
+        }
     }
 
     protected init(): void {

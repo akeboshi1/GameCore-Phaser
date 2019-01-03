@@ -1,8 +1,8 @@
 export class ModuleViewBase extends Phaser.Group {
     private signals: { [name: string]: Phaser.Signal } = {};
 
-    constructor(game: Phaser.Game) {
-        super(game);
+    constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer) {
+        super(game, parent || null);
         this.preInit();
         this.init();
         this.onResize();

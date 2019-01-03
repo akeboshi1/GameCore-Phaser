@@ -150,6 +150,20 @@ export namespace UI {
         }
     }
 
+    export class WindowClose {
+        static getName(): string {
+            return "ui_window_close_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/window_close.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/window_close.json");
+        }
+    }
+
     export class ProgressBg {
         static getName(): string {
             return "ui_progress_bg_png";

@@ -37,8 +37,6 @@ export class ChatView extends ModuleViewBase {
         this.scroller.add(this.out_tf);
         this.scroller.start();
         this.add(this.scroller);
-        // let tf: Phaser.Text = this.game.add.text(265,  GameConfig.GameHeight - 26, "发送", {fontSize: 12, fill: "#000"}, this);
-        // tf.inputEnabled = false;
     }
 
 

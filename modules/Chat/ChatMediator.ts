@@ -5,6 +5,7 @@ import {PBpacket} from "net-socket-packet";
 import {op_client, op_virtual_world} from "../../../protocol/protocols";
 import {MessageType} from "../../common/const/MessageType";
 import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT;
+import {Log} from "../../Log";
 
 export class ChatMediator extends MediatorBase {
     private get view(): ChatView {
