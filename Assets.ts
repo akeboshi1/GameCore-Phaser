@@ -1,5 +1,4 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
-import * as path from "path";
 import {GameConfig} from "./GameConfig";
 
 export namespace Atlases {
@@ -28,7 +27,7 @@ export namespace Atlases {
 export namespace Load {
     export class Url {
         static getRes(url: string): string {
-            return `${path.resolve(GameConfig.HomeDir, url)}`;
+            return GameConfig.HomeDir + "/" + url;
         }
     }
 
@@ -134,6 +133,16 @@ export namespace UI {
         }
     }
 
+    export class WindowBg {
+        static getName(): string {
+            return "ui_progress_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/progress_bg.png");
+        }
+    }
+
     export class ProgressBg {
         static getName(): string {
             return "ui_progress_bg_png";
@@ -143,6 +152,7 @@ export namespace UI {
             return require("assets/images/ui/progress_bg.png");
         }
     }
+
 
     export class ProgressFill {
         static getName(): string {
