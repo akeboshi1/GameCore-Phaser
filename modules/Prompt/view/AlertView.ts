@@ -29,10 +29,12 @@ export class AlertView extends CommWindowModuleView {
     }
 
     protected onCloseClick() {
-        let cb: Function = this.callBack;
-        this.callBack = null;
-        cb.apply(this.callThisObj);
-        this.callThisObj = null;
+        if (this.callBack) {
+            let cb: Function = this.callBack;
+            this.callBack = null;
+            cb.apply(this.callThisObj);
+            this.callThisObj = null;
+        }
         super.onCloseClick();
     }
 
