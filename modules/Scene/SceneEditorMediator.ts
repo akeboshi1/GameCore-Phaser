@@ -184,6 +184,9 @@ export class SceneEditorMediator extends SceneMediator {
         Globals.game.input.onDown.add(this.onGameDown, this);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
         this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
+        this.view.terrainGridLayer.graphics.inputEnabled = true;
+        this.view.terrainGridLayer.inputEnableChildren = true;
+        this.view.terrainGridLayer.onChildInputUp.add(this.onTerrainLayerUp, this);
       }
     }
   }
@@ -237,8 +240,13 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.view.input) {
       this.view.input.disableDrag();
     }
+
+    this.view.terrainGridLayer.graphics.inputEnabled = false;
+    this.view.terrainGridLayer.inputEnableChildren = false;
+
     // Layer events
     this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
+    this.view.terrainGridLayer.onChildInputUp.remove(this.onTerrainLayerUp, this);
 
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
@@ -254,12 +262,18 @@ export class SceneEditorMediator extends SceneMediator {
     this.removeTerrain(value[0], value[1]);
   }
 
-  private onElementLayerDown(item: any) {
+  private onElementLayerDown(item: any): void {
     let elementId: number = item.owner.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT)
       this.mSelectElement = item.owner;
     Globals.game.input.onUp.add(this.onGameUp, this);
+  }
+
+  private onTerrainLayerUp(item: any): void {
+    if (this.em.mode === EditorEnum.Mode.SELECT) {
+      this.sendSceneObject([]);
+    }
   }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {
