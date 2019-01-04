@@ -119,6 +119,9 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
     this.graphics.endFill();
   }
 
+  public onClear(): void {
+  }
+
   public onDispose() {
     this.graphics.destroy(true);
   }

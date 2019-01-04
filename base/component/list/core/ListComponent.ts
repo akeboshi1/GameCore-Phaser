@@ -1,10 +1,11 @@
 import {SimpleLayout} from "../../../layout/core/SimpleLayout";
 import {IListItemComponent} from "../interfaces/IListItemComponent";
 import {ILayout} from "../../../layout/interfaces/ILayout";
-import {HashMap} from "../../../ds/HashMap";
 import {IListComponent} from "../interfaces/IListComponent";
+import {VisualComponent} from "../../../VisualComponent";
+import {UIEvents} from "../../event/UIEvents";
 
-export class ListComponent extends Phaser.Group implements IListComponent {
+export class ListComponent extends VisualComponent implements IListComponent {
     protected m_Layout: ILayout;
     protected m_SelectItem: IListItemComponent;
 
@@ -57,12 +58,17 @@ export class ListComponent extends Phaser.Group implements IListComponent {
         }
         this.m_SelectItem = item;
         this.m_SelectItem.setSelect( true ) ;
+        this.emit(UIEvents.LIST_ITEM_CLICK, item);
     }
 
     public selectIndex(index: number) {
     }
 
-    public onDispose(): void {
+    public onClear() {
+        this.m_Layout.onClear();
+    }
 
+    public onDispose(): void {
+        this.m_Layout.onDispose();
     }
 }

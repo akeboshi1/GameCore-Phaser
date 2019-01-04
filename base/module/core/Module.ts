@@ -67,6 +67,9 @@ export class Module implements IModule {
         return this.m_Name;
     }
 
+    public onClear(): void {
+    }
+
     public onDispose() {
         if ( this.m_Context ) this.m_Context.dispose();
         this.m_Context = null;

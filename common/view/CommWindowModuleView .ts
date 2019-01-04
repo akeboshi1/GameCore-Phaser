@@ -49,7 +49,7 @@ export class CommWindowModuleView extends ModuleViewBase {
         this.m_Title = this.game.make.text(0, 0, "", {fontSize: 12, fill: "#000", boundsAlignH: "center", boundsAlignV: "middle"});
         this.m_Title.setTextBounds(0, 0, this.width, 25);
         this.add(this.m_Title);
-        this.m_CloseBt = new NiceSliceButton(this.game, this.width - 30, 4, UI.WindowClose.getName(), "close_over.png", "close_out.png", "close_down.png",
+        this.m_CloseBt = new NiceSliceButton(this.game, this.width - 30, 4, UI.WindowClose.getName(), "button_over.png", "button_out.png", "button_down.png",
             16, 16, {
                 top: 8,
                 bottom: 8,

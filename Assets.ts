@@ -225,13 +225,25 @@ export namespace UI {
         }
     }
 
-    export class ItemIcon {
-        static getName(id: number): string {
-            return "item_icon_" + id + "_png";
+    export class DropDownBtn {
+        static getName(): string {
+            return "ui_drop_down_png";
         }
 
-        static getPNG(id: number): string {
-            return require("assets/images/ui/item_" + id + ".png");
+        static getPNG(): string {
+            return require("assets/images/ui/drop_down.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/drop_down.json");
+        }
+
+        static getWidth(): number {
+            return 16;
+        }
+
+        static getHeight(): number {
+            return 16;
         }
     }
 

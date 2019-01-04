@@ -28,6 +28,9 @@ export class BasicRoleAvatar extends Phaser.Group implements IAnimatedObject, IE
     protected onInitializeComplete(): void {
     }
 
+    public onClear(): void {
+    }
+
     public onDispose(): void {
         this.data = null;
         this.mInitilized = false;

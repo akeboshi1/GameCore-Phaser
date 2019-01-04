@@ -222,6 +222,9 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         }
     }
 
+    public onClear(): void {
+    }
+
     public onDispose(): void {
         this.closeLoadModel();
         this.mLoadCompleteCallback = null;

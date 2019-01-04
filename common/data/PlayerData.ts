@@ -83,6 +83,10 @@ export class PlayerData extends BaseSingleton {
 
     public removePlayer(uuid: number): void {
         let playerInfo: PlayerInfo;
+        if (this._mainPlayerInfo.uuid === uuid) {
+            Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_PLAYER, uuid);
+            return;
+        }
         for (let i: number = this._playerInfoList.length - 1; i >= 0; i--) {
             playerInfo = this._playerInfoList[i];
             if (playerInfo.uuid === uuid) {

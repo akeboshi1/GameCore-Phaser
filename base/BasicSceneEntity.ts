@@ -141,6 +141,9 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
         }
     }
 
+    public onClear(): void {
+    }
+
     public onTick(deltaTime: number): void {
         // Log.trace("更新-->", deltaTime);
         this.onPreUpdate(deltaTime);

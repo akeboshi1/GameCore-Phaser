@@ -1,6 +1,7 @@
 import {IPageComponent} from "../interfaces/IPageComponent";
+import {VisualComponent} from "../../../VisualComponent";
 
-export class PageComponent extends Phaser.Group implements IPageComponent {
+export class PageComponent extends VisualComponent implements IPageComponent {
     private m_CurIndex: number;
     private m_MaxIndex: number;
 
@@ -15,8 +16,6 @@ export class PageComponent extends Phaser.Group implements IPageComponent {
     private m_LastBtnPath: string;
 
     private m_Text: Phaser.Text;
-
-    private signals: { [name: string]: Phaser.Signal } = {};
 
     constructor( game: Phaser.Game ) {
         super( game );
@@ -72,28 +71,7 @@ export class PageComponent extends Phaser.Group implements IPageComponent {
         return this.m_MaxIndex;
     }
 
-    // Event-related
-    public on(name: string, callback: Function, context?: any) {
-        if (!this.signals[name]) {
-            this.signals[name] = new Phaser.Signal();
-        }
-
-        this.signals[name].add(callback, context || this);
-    }
-
-    private emit(name: string, args?: any) {
-        if (!this.signals[name]) {
-            this.signals[name] = new Phaser.Signal();
-        }
-
-        this.signals[name].dispatch(args);
-    }
-
-    public off( name: string, callback: Function, context?: any) {
-        if (this.signals[name]) {
-            this.signals[name].remove( callback, context || this) ;
-            delete this.signals[name];
-        }
+    public onClear(): void {
     }
 
     public onDispose() {

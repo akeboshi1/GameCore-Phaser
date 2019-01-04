@@ -44,9 +44,18 @@ export class Layout implements ILayout {
         this.onLayout();
     }
 
+    public onClear() {
+        let len = this.m_LayoutItems.length;
+        for (let i = 0; i < len; i++) {
+            this.m_LayoutItems[i].onDispose();
+        }
+        this.m_LayoutItems.length = 0;
+    }
+
     public onDispose() {
-        if ( this.m_LayoutItems ) {
-            this.m_LayoutItems.splice(0);
+        let len = this.m_LayoutItems.length;
+        for (let i = 0; i < len; i++) {
+            this.m_LayoutItems[i].onDispose();
         }
         this.m_LayoutItems = null;
     }

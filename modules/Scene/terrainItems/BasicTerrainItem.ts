@@ -133,6 +133,9 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     }
   }
 
+  public onClear(): void {
+  }
+
   public onDispose() {
     this.releaseTerrainItem();
   }

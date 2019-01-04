@@ -36,6 +36,10 @@ export default class Game extends Phaser.State {
                 key: UI.Button.getName(),
                 png: UI.Button.getPNG(),
                 json: UI.Button.getJSON()
+            }, {
+                key: UI.DropDownBtn.getName(),
+                png: UI.DropDownBtn.getPNG(),
+                json: UI.DropDownBtn.getJSON()
             }];
             Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, {nineslices: chatResource, atlas: chatAtlas});
 
@@ -57,18 +61,6 @@ export default class Game extends Phaser.State {
             }, {
                 key: UI.ItemShortcutBg.getName(),
                 png: UI.ItemShortcutBg.getPNG()
-            }, {
-                key: UI.ItemIcon.getName(1),
-                png: UI.ItemIcon.getPNG(1)
-            }, {
-                key: UI.ItemIcon.getName(2),
-                png: UI.ItemIcon.getPNG(2)
-            }, {
-                key: UI.ItemIcon.getName(3),
-                png: UI.ItemIcon.getPNG(3)
-            }, {
-                key: UI.ItemIcon.getName(4),
-                png: UI.ItemIcon.getPNG(4)
             }];
             Globals.ModuleManager.openModule(ModuleTypeEnum.SHORTCUTMENU, {images: shortcutMenuResource});
             let promptResource: INineSliceImageResource[] = [{

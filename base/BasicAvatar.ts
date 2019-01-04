@@ -41,4 +41,7 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
 
     protected onInitializeComplete(): void {
     }
+
+    public onClear(): void {
+    }
 }

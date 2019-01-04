@@ -50,8 +50,8 @@ export class NiceSliceButton extends Phaser.Sprite {
     }
 
     private handleOut(): void {
-        this.mOverFrame.visible = true;
-        this.mOutFrame.visible = false;
+        this.mOverFrame.visible = false;
+        this.mOutFrame.visible = true;
         this.mDownFrame.visible = false;
     }
 
