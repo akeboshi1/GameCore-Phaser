@@ -8,57 +8,57 @@ import {Tool} from "./common/manager/Tool";
 import {TickManager} from "./common/manager/TickManager";
 import {Scene45Util} from "./common/manager/Scene45Util";
 import {SceneManager} from "./common/manager/SceneManager";
-import {ISocketConnection} from "./interface/ISocketConnection";
 import {SocketManager} from "./common/manager/SocketManager";
 import {ServiceCenter} from "./common/manager/ServiceCenter";
 import {SoundManager} from "./common/manager/SoundManager";
 import {MouseMod} from "./common/manager/MouseMod";
+import {PromptManager} from "./common/manager/PromptManager";
 
 export default class Globals {
-    private static _game: Phaser.Game;
+  private static _game: Phaser.Game;
 
-    public static  set game(value: Phaser.Game) {
-        this._game = value;
-    }
+  public static get game(): Phaser.Game {
+    return this._game;
+  }
 
-    public  static  get game(): Phaser.Game {
-        return this._game;
-    }
+  public static set game(value: Phaser.Game) {
+    this._game = value;
+  }
 
-    /**
-     * socket
-     */
-    public static get SocketManager(): SocketManager {
-        return SocketManager.getInstance();
-    }
+  /**
+   * socket
+   */
+  public static get SocketManager(): SocketManager {
+    return SocketManager.getInstance();
+  }
 
-    /**
-     * sound
-     */
-    public static get SoundManager(): SoundManager {
-        return SoundManager.getInstance();
-    }
+  /**
+   * sound
+   */
+  public static get SoundManager(): SoundManager {
+    return SoundManager.getInstance();
+  }
 
-    /**
-     * 图层管理器
-     */
-    public static get ModuleManager(): ModuleManager {
-        return ModuleManager.getInstance();
-    }
+  /**
+   * 图层管理器
+   */
+  public static get ModuleManager(): ModuleManager {
+    return ModuleManager.getInstance();
+  }
 
-    /**
-     * 图层管理器
-     */
-    public static get LayerManager(): LayerManager {
-        return LayerManager.getInstance();
-    }
+  /**
+   * 图层管理器
+   */
+  public static get LayerManager(): LayerManager {
+    return LayerManager.getInstance();
+  }
 
-    /**
-     * 键盘工具
-     */
-    public static get Keyboard(): KeyboardMod {
-        return KeyboardMod.getInstance();
-    }
+  /**
+   * 键盘工具
+   */
+  public static get Keyboard(): KeyboardMod {
+    return KeyboardMod.getInstance();
+  }
 
   /**
    * 鼠标工具
@@ -69,60 +69,67 @@ export default class Globals {
 
 
   /**
-     * 布局管理器
-     */
-    public static get LayoutManager(): LayoutManager {
-        return LayoutManager.getInstance();
-    }
+   * 布局管理器
+   */
+  public static get LayoutManager(): LayoutManager {
+    return LayoutManager.getInstance();
+  }
 
-    /**
-     * 数据中心
-     */
-    public static get DataCenter(): DataCenter {
-        return DataCenter.getInstance();
-    }
+  /**
+   * 提示管理器
+   */
+  public static get PromptManager(): PromptManager {
+    return PromptManager.getInstance();
+  }
 
-    /**
-     * 通讯中心
-     * @constructor
-     */
-    public static get ServiceCenter(): ServiceCenter {
-        return ServiceCenter.getInstance();
-    }
+  /**
+   * 数据中心
+   */
+  public static get DataCenter(): DataCenter {
+    return DataCenter.getInstance();
+  }
 
-    /**
-     * 消息处理中心
-     */
-    public static get MessageCenter(): MessageCenter {
-        return MessageCenter.getInstance();
-    }
+  /**
+   * 通讯中心
+   * @constructor
+   */
+  public static get ServiceCenter(): ServiceCenter {
+    return ServiceCenter.getInstance();
+  }
 
-    /**
-     * 游戏工具
-     */
-    public static get Tool(): Tool {
-        return Tool.getInstance();
-    }
+  /**
+   * 消息处理中心
+   */
+  public static get MessageCenter(): MessageCenter {
+    return MessageCenter.getInstance();
+  }
 
-    /**
-     * 全局计时器
-     */
-    public static get TickManager(): TickManager {
-        return TickManager.getInstance();
-    }
+  /**
+   * 游戏工具
+   */
+  public static get Tool(): Tool {
+    return Tool.getInstance();
+  }
 
-    /**
-     * 地图工具
-     */
-    public static get Room45Util(): Scene45Util {
-        return Scene45Util.getInstance();
-    }
+  /**
+   * 全局计时器
+   */
+  public static get TickManager(): TickManager {
+    return TickManager.getInstance();
+  }
 
-    /**
-     * 场景管理器
-     */
-    public static get SceneManager(): SceneManager {
-        return SceneManager.getInstance();
-    }
+  /**
+   * 地图工具
+   */
+  public static get Room45Util(): Scene45Util {
+    return Scene45Util.getInstance();
+  }
+
+  /**
+   * 场景管理器
+   */
+  public static get SceneManager(): SceneManager {
+    return SceneManager.getInstance();
+  }
 
 }

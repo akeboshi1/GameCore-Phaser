@@ -22,8 +22,10 @@ export class LayerManager extends BaseSingleton {
     this.container = game.add.group();
 
     this.sceneLayer = new Phaser.Group(game, this.container, "sceneLayer");
-    this.sceneLayer.x = GameConfig.GameWidth >> 1;
-    this.sceneLayer.y = GameConfig.GameHeight >> 1;
+    if (!GameConfig.isEditor) {
+      this.sceneLayer.x = GameConfig.GameWidth >> 1;
+      this.sceneLayer.y = GameConfig.GameHeight >> 1;
+    }
 
     this.animationLayer = new Phaser.Group(game, this.container, "animationLayer");
     this.animationLayer.fixedToCamera = true;

@@ -3,7 +3,7 @@ import {Sound} from "../../Assets";
 
 export class SoundManager extends BaseSingleton {
     private game: Phaser.Game;
-    static DEFAULT_VALUE: number = 0.5;
+    static DEFAULT_VALUE = 0.5;
     private m_BgSound: Phaser.Sound;
     private m_GameSound: Phaser.SoundManager;
 
