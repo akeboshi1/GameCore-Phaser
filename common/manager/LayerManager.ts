@@ -3,6 +3,7 @@
  * author aaron
  */
 import BaseSingleton from "../../base/BaseSingleton";
+import {GameConfig} from "../../GameConfig";
 
 export class LayerManager extends BaseSingleton {
   public container: Phaser.Group;
@@ -21,6 +22,8 @@ export class LayerManager extends BaseSingleton {
     this.container = game.add.group();
 
     this.sceneLayer = new Phaser.Group(game, this.container, "sceneLayer");
+    this.sceneLayer.x = GameConfig.GameWidth >> 1;
+    this.sceneLayer.y = GameConfig.GameHeight >> 1;
 
     this.animationLayer = new Phaser.Group(game, this.container, "animationLayer");
     this.animationLayer.fixedToCamera = true;

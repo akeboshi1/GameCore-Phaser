@@ -9,6 +9,7 @@ import {op_client} from "../../protocol/protocols";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
 import {DrawArea} from "../common/struct/DrawArea";
 import {IDisposeObject} from "./IDisposeObject";
+import {GameConfig} from "../GameConfig";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode, IDisposeObject {
     public uid: number;
@@ -113,7 +114,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public isInScreen(): boolean {
         // let p2 = Globals.Room45Util.p3top2(this._ox, this._oy, this._oz);
         return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-            this.camera.width, this.camera.height, this._ox - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2, this._oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
+            this.camera.width, this.camera.height, this._ox - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2 + GameConfig.GameWidth / 2, this._oy + GameConfig.GameHeight / 2, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
     }
 
     public initialize(): void {

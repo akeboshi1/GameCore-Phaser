@@ -4,6 +4,7 @@ import {op_virtual_world} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT;
 import {SceneBasic} from "../../modules/Scene/view/SceneBasic";
+import {GameConfig} from "../../GameConfig";
 
 export class MouseMod extends BaseSingleton {
     private game: Phaser.Game;
@@ -87,7 +88,7 @@ export class MouseMod extends BaseSingleton {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.mouseEvent = events;
-        content.point3f = {x: activePointer.x + this.game.camera.x, y: activePointer.y + this.game.camera.y};
+        content.point3f = {x: activePointer.x + this.game.camera.x - GameConfig.GameWidth / 2, y: activePointer.y + this.game.camera.y - GameConfig.GameHeight / 2};
         Globals.SocketManager.send(pkt);
     }
 
