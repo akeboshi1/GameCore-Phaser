@@ -73,7 +73,7 @@ export class SceneEditorMediator extends SceneMediator {
         }
         break;
       case EditorEnum.Mode.SELECT:
-        if (this.mSelectElement) {
+        if (this.mSelectElement && this.mousePointer) {
           this.moveElement(this.mSelectElement, this.mousePointer);
         }
         break;
