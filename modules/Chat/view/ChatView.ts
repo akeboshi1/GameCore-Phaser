@@ -39,7 +39,7 @@ export class ChatView extends ModuleViewBase {
         this.scroller.start();
         this.add(this.scroller);
 
-        this.comobox = new ComboBox(this.game, 4, GameConfig.GameHeight - 226, this, ["世界频道", "当前场景", "小喇叭"]);
+        this.comobox = new ComboBox(this.game, 5, GameConfig.GameHeight - 226, this, ["世界频道", "当前场景", "小喇叭"]);
     }
 
 

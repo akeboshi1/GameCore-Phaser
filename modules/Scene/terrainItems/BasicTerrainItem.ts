@@ -72,7 +72,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
 
   public onFrame(deltaTime: number) {
     this.mTerrainItemIsInCamera = Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-      this.camera.width, this.camera.height, this.ox - this.itemWidth / 2 + GameConfig.GameWidth / 2, this.oy + GameConfig.GameHeight / 2, this.itemWidth, this.itemHeight);
+      this.camera.width, this.camera.height, this.ox - this.itemWidth / 2, this.oy, this.itemWidth, this.itemHeight);
     if (this.mTerrainItemIsInCamera || GameConfig.isEditor) {
       this.mTerrainItemOutCameraTime = 0;
 
