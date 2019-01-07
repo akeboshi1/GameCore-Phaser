@@ -5,10 +5,10 @@ import {MessageType} from "../common/const/MessageType";
 
 export default class SelectRole extends Phaser.State {
     public create(): void {
-        if (Globals.DataCenter.PlayerData.characterId > 0) {
+        if (Globals.DataCenter.PlayerData.characterId !== 0) {
             this.onSelectCharacter();
         } else {
-            Globals.MessageCenter.on(MessageType.PLAYER_SELECT_CHARACTER, this.onSelectCharacter);
+            Globals.MessageCenter.on(MessageType.PLAYER_SELECT_CHARACTER, this.onSelectCharacter, this);
         }
     }
 
