@@ -43,7 +43,7 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
             right: 8
         });
         this.add(this.mDropDownBt);
-        this.mListBg = this.game.add.nineSlice(0, this.mHeight, UI.InputBg.getName(), null, this.mWidth, 1);
+        this.mListBg = this.game.make.nineSlice(0, this.mHeight, UI.InputBg.getName(), null, this.mWidth, 1);
         this.mList = new ListComponent(this.game);
         this.mList.on(UIEvents.LIST_ITEM_CLICK, this.onListItemClick, this);
         this.mList.y = this.mHeight;
@@ -75,9 +75,6 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
         this.mList.onClear();
 
         let len = this.mDatas.length;
-        if (len > 0) {
-            this.mLabel.text = this.mDatas[0];
-        }
 
         if (this.mOpen) {
             let item: ComboTextItem;
@@ -92,6 +89,10 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
         } else {
             this.remove(this.mListBg);
             this.remove(this.mList);
+        }
+
+        if (this.mLabel.text === "") {
+            this.mLabel.text = this.mDatas[0];
         }
     }
 

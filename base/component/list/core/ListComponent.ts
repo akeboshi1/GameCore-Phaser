@@ -61,6 +61,10 @@ export class ListComponent extends VisualComponent implements IListComponent {
         this.emit(UIEvents.LIST_ITEM_CLICK, item);
     }
 
+    public get selectItem(): IListItemComponent {
+        return this.m_SelectItem;
+    }
+
     public selectIndex(index: number) {
     }
 

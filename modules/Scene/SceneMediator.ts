@@ -14,6 +14,8 @@ import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {PBpacket} from "net-socket-packet";
+import {GameConfig} from "../../GameConfig";
+import GameConst = Const.GameConst;
 
 export class SceneMediator extends MediatorBase {
     private hasRegisterHandler: boolean = false;
@@ -193,7 +195,7 @@ export class SceneMediator extends MediatorBase {
 
         Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
-        Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
+        Globals.game.world.setBounds(-GameConfig.GameWidth / 2, -GameConfig.GameHeight / 2, mapSceneInfo.mapTotalWidth + GameConfig.GameWidth, mapSceneInfo.mapTotalHeight + GameConfig.GameHeight);
 
         this.view.initializeScene(mapSceneInfo);
 
