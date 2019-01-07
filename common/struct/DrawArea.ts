@@ -2,6 +2,7 @@ import {Scene45Util} from "../manager/Scene45Util";
 import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/IDisposeObject";
 import {IAnimatedObject} from "../../base/IAnimatedObject";
+import {GameConfig} from "../../GameConfig";
 
 export class DrawArea implements IAnimatedObject, IDisposeObject {
   protected areaStr: string;
@@ -98,25 +99,27 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
 
     this.room45.setting(this.rows, this.cols, hTileWidth, hTileHeight);
     this.graphics.clear();
-    this.graphics.lineStyle(1, this._color, 0.6);
 
-    this.graphics.beginFill(0x444444, 0.4);
-    this.graphics.drawEllipse(hTileWidth >> 1, hTileHeight >> 1, this.room45.mapTotalWidth / 2, this.room45.mapTotalHeight / 2);
-
-    let p1: Phaser.Point;
-    let p2: Phaser.Point;
-    let p3: Phaser.Point;
-    let p4: Phaser.Point;
-    let poly: Phaser.Polygon;
-    for (let i = 0; i < this.cols; i++) {
-      for (let j = 0; j < this.rows; j++) {
-        this.graphics.beginFill(this.areaArr[i][j] === 1 ? this._color : 0x00ff00, this.areaArr[i][j] === 1 ? 0.6 : 0.1);
-        p1 = this._room45.tileToPixelCoords(i, j);
-        p2 = this._room45.tileToPixelCoords(i + 1, j);
-        p3 = this._room45.tileToPixelCoords(i + 1, j + 1);
-        p4 = this._room45.tileToPixelCoords(i, j + 1);
-        poly = new Phaser.Polygon([p1, p2, p3, p4]);
-        this.graphics.drawPolygon(poly.points);
+    if (!GameConfig.isEditor) {
+      this.graphics.beginFill(0x444444, 0.4);
+      this.graphics.drawEllipse(hTileWidth >> 1, hTileHeight >> 1, this.room45.mapTotalWidth / 2, this.room45.mapTotalHeight / 2);
+    } else {
+      this.graphics.lineStyle(1, this._color, 0.6);
+      let p1: Phaser.Point;
+      let p2: Phaser.Point;
+      let p3: Phaser.Point;
+      let p4: Phaser.Point;
+      let poly: Phaser.Polygon;
+      for (let i = 0; i < this.cols; i++) {
+        for (let j = 0; j < this.rows; j++) {
+          this.graphics.beginFill(this.areaArr[i][j] === 1 ? this._color : 0x00ff00, this.areaArr[i][j] === 1 ? 0.6 : 0.1);
+          p1 = this._room45.tileToPixelCoords(i, j);
+          p2 = this._room45.tileToPixelCoords(i + 1, j);
+          p3 = this._room45.tileToPixelCoords(i + 1, j + 1);
+          p4 = this._room45.tileToPixelCoords(i, j + 1);
+          poly = new Phaser.Polygon([p1, p2, p3, p4]);
+          this.graphics.drawPolygon(poly.points);
+        }
       }
     }
     this.graphics.endFill();
