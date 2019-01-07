@@ -2,6 +2,7 @@ import {Load} from "../Assets";
 
 export interface IPhaserLoadList {
     images?: IImageResource[];
+    sheets?: ISheetResource[];
     atlas?: IAtlasResource[];
     nineslices?: INineSliceImageResource[]; //九宫格
     audio?: IAudioResource;
@@ -31,6 +32,14 @@ export class AudioResource extends ResourceBase implements IAudioResource {
     sounds: string[];
     get key(): string {
         return Load.Audio.getKey(this.sounds[0]);
+    }
+}
+
+export class SheetsResource extends ImageResource implements ISheetResource {
+    frameWidth: number;
+    frameHeight: number;
+    get key(): string {
+        return Load.Sheet.getKey(this.png + this.frameWidth + "_" + this.frameHeight);
     }
 }
 
@@ -66,6 +75,11 @@ export interface IResourceBase {
 export interface IImageResource extends IResourceBase {
     png: string;
 
+}
+
+export interface ISheetResource extends IImageResource {
+    frameWidth: number;
+    frameHeight: number;
 }
 
 export interface IAudioResource extends IResourceBase {

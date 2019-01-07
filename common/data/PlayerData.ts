@@ -91,7 +91,7 @@ export class PlayerData extends BaseSingleton {
             playerInfo = this._playerInfoList[i];
             if (playerInfo.uuid === uuid) {
                 this._playerInfoList.splice(i, 1);
-                Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_PLAYER, playerInfo);
+                Globals.MessageCenter.emit(MessageType.SCENE_REMOVE_PLAYER, uuid);
                 break;
             }
         }

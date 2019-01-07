@@ -50,6 +50,12 @@ export namespace Load {
         }
     }
 
+    export class Sheet {
+        static getKey(key: string): string {
+            return key + "_sheets";
+        }
+    }
+
     export class Atlas {
         static getKey(key: string): string {
             return key + "_atlas";
@@ -159,8 +165,12 @@ export namespace UI {
             return require("assets/images/ui/window_close.png");
         }
 
-        static getJSON(): string {
-            return require("assets/images/ui/window_close.json");
+        static getWidth(): number {
+            return 16;
+        }
+
+        static getHeight(): number {
+            return 16;
         }
     }
 
@@ -234,10 +244,6 @@ export namespace UI {
             return require("assets/images/ui/drop_down.png");
         }
 
-        static getJSON(): string {
-            return require("assets/images/ui/drop_down.json");
-        }
-
         static getWidth(): number {
             return 16;
         }
@@ -258,6 +264,14 @@ export namespace UI {
 
         static getJSON(): string {
             return require("assets/images/ui/button.json");
+        }
+
+        static getWidth(): number {
+            return 15;
+        }
+
+        static getHeight(): number {
+            return 15;
         }
     }
 }

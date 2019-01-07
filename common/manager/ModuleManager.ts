@@ -77,6 +77,15 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         }
 
         i = 0;
+        len = info.loadList.sheets ? info.loadList.sheets.length : 0;
+        for (; i < len; i++) {
+            if (!Globals.game.cache.checkTextureKey(info.loadList.sheets[i].key)) {
+                Globals.game.load.spritesheet(info.loadList.sheets[i].key, info.loadList.sheets[i].png, info.loadList.sheets[i].frameWidth, info.loadList.sheets[i].frameHeight);
+                ++loadNum;
+            }
+        }
+
+        i = 0;
         len = info.loadList.nineslices ? info.loadList.nineslices.length : 0;
         for (; i < len; i++) {
             if (Globals.game.cache.getNineSlice(info.loadList.nineslices[i].png) === undefined) {

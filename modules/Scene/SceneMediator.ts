@@ -134,8 +134,8 @@ export class SceneMediator extends MediatorBase {
      * 监听移除玩家
      * @param value
      */
-    protected handleRemovePlayer(value: op_client.IActor): void {
-        this.view.deleteSceneElement(value.uuid);
+    protected handleRemovePlayer(uuid: number): void {
+        this.view.deleteSceneElement(uuid);
     }
 
 

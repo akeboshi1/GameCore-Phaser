@@ -2,8 +2,11 @@ import Globals from "../Globals";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
 import {UI} from "../Assets";
-import {IAtlasResource, IImageResource, INineSliceImageResource} from "../interface/IPhaserLoadList";
+import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource} from "../interface/IPhaserLoadList";
 import {GameConfig} from "../GameConfig";
+import WindowClose = UI.WindowClose;
+import Button = UI.Button;
+import DropDownBtn = UI.DropDownBtn;
 
 export default class Game extends Phaser.State {
 
@@ -32,16 +35,19 @@ export default class Game extends Phaser.State {
             },
                 {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
             ];
+            let chatSheet: ISheetResource[] = [{
+                key: UI.DropDownBtn.getName(),
+                png: UI.DropDownBtn.getPNG(),
+                frameWidth: DropDownBtn.getWidth(),
+                frameHeight: DropDownBtn.getHeight()
+            }
+            ];
             let chatAtlas: IAtlasResource[] = [{
                 key: UI.Button.getName(),
                 png: UI.Button.getPNG(),
                 json: UI.Button.getJSON()
-            }, {
-                key: UI.DropDownBtn.getName(),
-                png: UI.DropDownBtn.getPNG(),
-                json: UI.DropDownBtn.getJSON()
             }];
-            Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, {nineslices: chatResource, atlas: chatAtlas});
+            Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT, {nineslices: chatResource, sheets: chatSheet, atlas: chatAtlas});
 
             let roleInfoResource: INineSliceImageResource[] = [{
                 key: UI.ProgressBg.getName(),
@@ -71,12 +77,13 @@ export default class Game extends Phaser.State {
                 right: 13,
                 bottom: 7
             }];
-            let promptAtlas: IAtlasResource[] = [{
+            let promtSheet: ISheetResource[] = [{
                 key: UI.WindowClose.getName(),
                 png: UI.WindowClose.getPNG(),
-                json: UI.WindowClose.getJSON()
+                frameWidth: WindowClose.getWidth(),
+                frameHeight: WindowClose.getHeight()
             }];
-            Globals.ModuleManager.openModule(ModuleTypeEnum.PROMPT, {nineslices: promptResource, atlas: promptAtlas});
+            Globals.ModuleManager.openModule(ModuleTypeEnum.PROMPT, {nineslices: promptResource, sheets: promtSheet});
         }
 
         if (Globals.DataCenter.SceneData.initialize) {

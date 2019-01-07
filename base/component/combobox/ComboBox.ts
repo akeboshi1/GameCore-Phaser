@@ -1,6 +1,5 @@
 import {ListComponent} from "../list/core/ListComponent";
 import {UI} from "../../../Assets";
-import {NiceSliceButton} from "../button/NiceSliceButton";
 import {ComboTextItem} from "./item/ComboTextItem";
 import {IDisposeObject} from "../../IDisposeObject";
 import {UIEvents} from "../event/UIEvents";
@@ -10,7 +9,7 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
     protected mWidth: number;
     protected mHeight: number;
     protected mLabel: Phaser.Text;
-    protected mDropDownBt: NiceSliceButton;
+    protected mDropDownBt: Phaser.Button;
     protected mListBg: PhaserNineSlice.NineSlice;
     protected mDatas: string[];
     protected mOpen = false;
@@ -25,7 +24,7 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
         this.init();
     }
 
-    public setData(value: string[]): void {
+    public changeData(value: string[]): void {
         this.mDatas = value;
         this.render();
     }
@@ -36,12 +35,8 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
         this.mLabel.setShadow(2, 2, 0x333333, 2, false, false);
         this.mLabel.setTextBounds(0, 0, this.mWidth - UI.DropDownBtn.getWidth(), this.mHeight);
         this.add(this.mLabel);
-        this.mDropDownBt = new NiceSliceButton(this.game, this.mWidth - UI.DropDownBtn.getWidth() - 4, (this.mHeight - UI.DropDownBtn.getHeight()) / 2, UI.DropDownBtn.getName(), "button_over.png", "button_out.png", "button_down.png", UI.DropDownBtn.getWidth(), UI.DropDownBtn.getHeight(), {
-            top: 8,
-            bottom: 8,
-            left: 8,
-            right: 8
-        });
+        this.mDropDownBt = this.game.make.button(this.mWidth - UI.DropDownBtn.getWidth() - 4, (this.mHeight - UI.DropDownBtn.getHeight()) / 2, UI.DropDownBtn.getName(), null, this
+        , 1, 0 , 2);
         this.add(this.mDropDownBt);
         this.mListBg = this.game.make.nineSlice(0, this.mHeight, UI.InputBg.getName(), null, this.mWidth, 1);
         this.mList = new ListComponent(this.game);

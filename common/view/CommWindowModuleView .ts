@@ -1,11 +1,10 @@
 import {Const} from "../const/Const";
 import {UI} from "../../Assets";
 import {ModuleViewBase} from "./ModuleViewBase";
-import {NiceSliceButton} from "../../base/component/button/NiceSliceButton";
 import {GameConfig} from "../../GameConfig";
 
 export class CommWindowModuleView extends ModuleViewBase {
-    public m_CloseBt: NiceSliceButton;
+    public m_CloseBt: Phaser.Button;
     public m_Bg: PhaserNineSlice.NineSlice;
     public m_Title: Phaser.Text;
 
@@ -49,13 +48,8 @@ export class CommWindowModuleView extends ModuleViewBase {
         this.m_Title = this.game.make.text(0, 0, "", {fontSize: 12, fill: "#000", boundsAlignH: "center", boundsAlignV: "middle"});
         this.m_Title.setTextBounds(0, 0, this.width, 25);
         this.add(this.m_Title);
-        this.m_CloseBt = new NiceSliceButton(this.game, this.width - 30, 4, UI.WindowClose.getName(), "button_over.png", "button_out.png", "button_down.png",
-            16, 16, {
-                top: 8,
-                bottom: 8,
-                left: 8,
-                right: 8
-            });
+        this.m_CloseBt = this.game.make.button(this.width - 30, 4, UI.WindowClose.getName(), null, this
+            , 1, 0 , 2);
         this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
         this.add(this.m_CloseBt);
     }
