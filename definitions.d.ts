@@ -1,5 +1,6 @@
 ///<reference path="../../node_modules/phaser-plugin-isometric/dist/phaser.plugin.isometric.d.ts"/>
 ///<reference path="./lib/dragonBones/dragonBones.d.ts"/>
+///<reference path="./lib/phaser-filter/Glow.d.ts"/>
 
 declare namespace Phaser {
 

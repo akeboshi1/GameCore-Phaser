@@ -6,6 +6,7 @@ import "isometric";
 import "dragonBones";
 import "nineslice";
 import "input";
+import "glow";
 import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam";
 import BootState from "./states/boot";

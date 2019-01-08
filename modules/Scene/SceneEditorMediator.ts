@@ -20,9 +20,11 @@ export class SceneEditorMediator extends SceneMediator {
   private movementY = 0;
   private deltaY = 0;
   private isGameDown = false;
+  private isElementDown = false;
   private mousePointer: Phaser.Pointer;
   private mSelectElement: BasicElement;
   private mSelectTerrain: TerrainAnimationItem;
+  // private mGlowFilter: Phaser.Filter.Glow;
 
   constructor() {
     super();
@@ -39,6 +41,8 @@ export class SceneEditorMediator extends SceneMediator {
     this.mTick.start();
     this.view.inputEnabled = true;
     this.view.middleSceneLayer.inputEnableChildren = true;
+    this.mousePointer = Globals.game.input.activePointer;
+    // this.mGlowFilter = new Phaser.Filter.Glow(Globals.game);
     super.onRegister();
 
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
@@ -73,7 +77,8 @@ export class SceneEditorMediator extends SceneMediator {
         }
         break;
       case EditorEnum.Mode.SELECT:
-        if (this.mSelectElement && this.mousePointer) {
+        Log.trace("选中", this.mSelectElement,  this.isElementDown, this.mousePointer );
+        if (this.isElementDown && this.mSelectElement && this.mousePointer) {
           this.moveElement(this.mSelectElement, this.mousePointer);
         }
         break;
@@ -103,6 +108,9 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.view.scale.y < this.minScaleY) {
       this.view.scale.y = this.minScaleY;
     }
+    // if (this.mGlowFilter) {
+    //   this.mGlowFilter.update();
+    // }
   }
 
   public onTick(deltaTime: number): void {
@@ -266,12 +274,13 @@ export class SceneEditorMediator extends SceneMediator {
     let elementId: number = item.owner.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
-        this.mSelectElement = item.owner;
-        let blurX = Globals.game.add.filter("BlurX");
-        let blurY = Globals.game.add.filter("BlurY");
-        this.mSelectElement.display.filters = [blurX, blurY];
-        "#fffab0"
+      if (this.mSelectElement) {
+        this.mSelectElement.display.filters = null;
+      }
+      this.mSelectElement = item.owner; // 0xfffab0
+      // this.mSelectElement.display.filters  = [ this.mGlowFilter ];
     }
+    this.isElementDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
   }
 
@@ -314,7 +323,6 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private onGameDown(pointer: Phaser.Pointer, event: any): void {
-    this.mousePointer = pointer;
     if (this.em.type === EditorEnum.Type.TERRAIN) {
       this.preSendSceneDown(this.mousePointer);
     } else if (this.em.type === EditorEnum.Type.ELEMENT) {
@@ -335,14 +343,14 @@ export class SceneEditorMediator extends SceneMediator {
 
     if (this.mSelectElement) {
       this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
-      this.mSelectElement = null;
     }
 
-    if (this.isGameDown) {
+    if (this.isElementDown) {
       if (this.em.mode === EditorEnum.Mode.BRUSH && this.em.type === EditorEnum.Type.ELEMENT) {
         this.preSendSceneDown(pointer);
       }
     }
+    this.isElementDown = false;
     this.isGameDown = false;
   }
 }
