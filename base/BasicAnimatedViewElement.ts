@@ -6,8 +6,6 @@ import {MessageType} from "../common/const/MessageType";
 import {Tick} from "../common/tick/Tick";
 
 export class BasicAnimatedViewElement extends BasicViewElement implements IAnimatedObject, ITickedObject {
-  public watchStageResize = false;
-
   private mStageSizeDirty = false;
 
   private mRegisterForUpdates = true;
@@ -51,19 +49,11 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
   protected onAddToStage(): void {
     this.mInitialRegisterForUpdates = this.mRegisterForUpdates;
     this.registerForUpdates = this.mRegisterForUpdates;
-
-    if (this.watchStageResize) {
-      Globals.MessageCenter.on(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
-    }
   }
 
   protected onRemoveFromStage(): void {
     this.registerForUpdates = false;
     this.mRegisterForUpdates = this.mInitialRegisterForUpdates;
-
-    if (this.watchStageResize) {
-      Globals.MessageCenter.cancel(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
-    }
   }
 
   protected requestStageResize(): void {
@@ -71,9 +61,5 @@ export class BasicAnimatedViewElement extends BasicViewElement implements IAnima
   }
 
   protected onStageResize(): void {
-  }
-
-  private stageResizeHandler(): void {
-    this.requestStageResize();
   }
 }

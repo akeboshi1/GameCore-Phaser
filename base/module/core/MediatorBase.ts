@@ -1,4 +1,6 @@
 import {IMediator} from "../interfaces/IMediator";
+import Globals from "../../../Globals";
+import {MessageType} from "../../../common/const/MessageType";
 
 export class MediatorBase implements IMediator {
     protected m_Param: any;
@@ -27,6 +29,7 @@ export class MediatorBase implements IMediator {
 
     public preRemove(): void {
         this.onRemove();
+        Globals.MessageCenter.cancel(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
     }
 
     public onRemove(): void {
@@ -37,6 +40,10 @@ export class MediatorBase implements IMediator {
     }
 
     public onRegister(): void {
+        Globals.MessageCenter.on(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
+    }
+
+    protected stageResizeHandler(): void {
     }
 
     public setViewComponent(viewComponent: any): void {

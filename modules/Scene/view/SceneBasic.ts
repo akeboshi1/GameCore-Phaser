@@ -10,7 +10,6 @@ export class SceneBasic extends BasicAnimatedViewElement {
 
     protected onInitialize(): void {
         super.onInitialize();
-        this.watchStageResize = true;
         this.visible = this.registerForUpdates = false;
     }
 
@@ -92,7 +91,7 @@ export class SceneBasic extends BasicAnimatedViewElement {
         this.visible = this.registerForUpdates = false;
     }
 
-    protected requestStageResize(): void {
+    public requestStageResize(): void {
         if (!this.mActived) return;
 
         super.requestStageResize();

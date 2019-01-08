@@ -64,6 +64,10 @@ export class SceneMediator extends MediatorBase {
         super.onRemove();
     }
 
+    protected stageResizeHandler(): void {
+        this.view.requestStageResize();
+    }
+
     // server handler
     public registerSceneListenerHandler(): void {
         if (!this.hasRegisterHandler) {
@@ -77,6 +81,7 @@ export class SceneMediator extends MediatorBase {
             Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
             Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
             Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
+
             this.hasRegisterHandler = true;
         }
     }

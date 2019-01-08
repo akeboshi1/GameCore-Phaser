@@ -265,8 +265,13 @@ export class SceneEditorMediator extends SceneMediator {
   private onElementLayerDown(item: any): void {
     let elementId: number = item.owner.data.id;
     this.sendSceneObject([elementId]);
-    if (this.em.mode === EditorEnum.Mode.SELECT)
-      this.mSelectElement = item.owner;
+    if (this.em.mode === EditorEnum.Mode.SELECT) {
+        this.mSelectElement = item.owner;
+        let blurX = Globals.game.add.filter("BlurX");
+        let blurY = Globals.game.add.filter("BlurY");
+        this.mSelectElement.display.filters = [blurX, blurY];
+        "#fffab0"
+    }
     Globals.game.input.onUp.add(this.onGameUp, this);
   }
 

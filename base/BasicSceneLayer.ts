@@ -5,7 +5,7 @@ import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 export class BasicSceneLayer extends Phaser.Group implements IAnimatedObject, ITickedObject {
     public scene: SceneBasic;
 
-    public constructor(game: Phaser.Game, x: number = 0, y: number = 0) {
+    public constructor(game: Phaser.Game) {
         super(game);
     }
 

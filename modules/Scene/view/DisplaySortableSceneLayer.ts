@@ -53,8 +53,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
         }
     }
 
-
-
     public onTick(deltaTime: number): void {
         this.mSortWaitTime += deltaTime;
 

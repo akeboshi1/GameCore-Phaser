@@ -18,6 +18,8 @@ import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
 import {IRectangle} from "./base/ds/IRectangle";
+import {Log} from "./Log";
+import {LayerManager} from "./common/manager/LayerManager";
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
@@ -56,7 +58,12 @@ export default class Game extends Phaser.Game implements IGame {
     }
 
     public resize(bounds: IRectangle): void {
-        Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE, bounds);
+        GameConfig.GameWidth = bounds.width;
+        GameConfig.GameHeight = bounds.height;
+        this.scale.setGameSize(bounds.width, bounds.height);
+        Log.trace(this.camera.x, this.camera.y);
+        Globals.LayerManager.onStateResize();
+        Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
     }
 
     public dispose(): void {

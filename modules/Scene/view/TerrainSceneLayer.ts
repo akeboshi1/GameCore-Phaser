@@ -84,4 +84,8 @@ export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer 
             this._terrainItems.length = 0;
         }
     }
+
+    public set x(value: number) {
+        super.x = value;
+    }
 }
