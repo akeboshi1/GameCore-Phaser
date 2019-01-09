@@ -5,14 +5,12 @@ import {UI} from "../Assets";
 import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource} from "../interface/IPhaserLoadList";
 import {GameConfig} from "../GameConfig";
 import WindowClose = UI.WindowClose;
-import Button = UI.Button;
 import DropDownBtn = UI.DropDownBtn;
 
 export default class Game extends Phaser.State {
 
     public init(): void {
         this.game.time.advancedTiming = true;
-        // Globals.game.iso.anchor.setTo(0.5, 0);
     }
 
     public create(): void {

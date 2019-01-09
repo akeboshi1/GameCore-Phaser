@@ -6,7 +6,6 @@ import "isometric";
 import "dragonBones";
 import "nineslice";
 import "input";
-import "glow";
 import IGame from "./interface/IGame";
 import IGameParam from "./interface/IGameParam";
 import BootState from "./states/boot";
@@ -20,7 +19,6 @@ import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
 import {IRectangle} from "./base/ds/IRectangle";
 import {Log} from "./Log";
-import {LayerManager} from "./common/manager/LayerManager";
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
