@@ -12,11 +12,11 @@ export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
     public isCanShow = true;
     // moving
-    protected mySpeed = 4; //
     protected mAngleIndex = 0;
     protected mWalkAngleIndex = 0; // 走路
     protected mTarget: Phaser.Point;
     protected mTimeSpan: number;
+    protected mWalkTime: number;
 
     protected myIsWalking = false;
 
@@ -54,7 +54,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
     public stopWalk(): void {
         this.pauseWalk();
-        this.mTimeSpan = 0;
+        this.mWalkTime = this.mTimeSpan = 0;
     }
 
     public pauseWalk(): void {
@@ -108,12 +108,13 @@ export default class SceneEntity extends BasicSceneEntity {
         }
 
         this.setAngleIndex(angle);
-        this.mTarget.set(value.destinationPoint3f.x >> 0, value.destinationPoint3f.y >> 0);
+        this.mTarget.set(value.destinationPoint3f.x, value.destinationPoint3f.y);
         this.mTimeSpan = value.timeSpan;
+        this.mWalkTime = 0;
 
-        let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
+            // let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
 
-        this.mySpeed = distance / this.mTimeSpan;
+        // this.mySpeed = distance / this.mTimeSpan;
 
         // Log.trace("行走: distance-->", distance, "direction-->", value.direction, "timeSpan-->", value.timeSpan, "speed-->", this.mySpeed);
 
@@ -156,83 +157,31 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected onUpdatingPosition(deltaTime: number): void {
-        switch (this.walkAngleIndex) {
-            case Direction.UP:
-                if (this.oy < this.mTarget.y) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.DOWN:
-                if (this.oy > this.mTarget.y) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.LEFT:
-                if (this.ox < this.mTarget.x) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.RIGHT:
-                if (this.ox > this.mTarget.x) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.UPPER_LEFT:
-                if (this.oy < this.mTarget.y) {
-                    this.stopWalk();
-                    return;
-                }
-                if (this.ox < this.mTarget.x) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.UPPER_RIGHT:
-                if (this.oy < this.mTarget.y) {
-                    this.stopWalk();
-                    return;
-                }
-                if (this.ox > this.mTarget.x) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.LOWER_LEFT:
-                if (this.oy > this.mTarget.y) {
-                    this.stopWalk();
-                    return;
-                }
-                if (this.ox < this.mTarget.x) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-            case Direction.LOWER_RIGHT:
-                if (this.oy > this.mTarget.y) {
-                    this.stopWalk();
-                    return;
-                }
-                if (this.ox > this.mTarget.x) {
-                    this.stopWalk();
-                    return;
-                }
-                break;
-        }
-        if (this.ox === this.mTarget.x && this.oy === this.mTarget.y) {
+        this.mWalkTime += deltaTime;
+
+        if (this.mWalkTime >= this.mTimeSpan) {
+            this.doPathMoving(this.mTarget.x, this.mTarget.y);
             this.stopWalk();
         } else {
-            this.doPathMoving(deltaTime);
+            let _x = this.ox + (this.mTarget.x - this.ox) * (this.mTimeSpan - this.mWalkTime) / this.mTimeSpan;
+            let _y = this.oy + (this.mTarget.y - this.oy) * (this.mTimeSpan - this.mWalkTime) / this.mTimeSpan;
+            this.doPathMoving(_x, _y);
         }
     }
 
-    protected doPathMoving(deltaTime: number): void {
-        let actualSpeed = this.mySpeed * deltaTime;
-        this.onMove(actualSpeed);
+    protected doPathMoving(targetX: number, targetY: number): void {
+
+        let _x = targetX;
+        let _y = targetY;
+        let _z = this.oz;
+
+        this.setPosition(_x, _y, _z);
     }
+
+    // protected doPathMoving(deltaTime: number): void {
+    //     let actualSpeed = this.mySpeed * deltaTime;
+    //     this.onMove(actualSpeed);
+    // }
 
     protected onMove(actualSpeed: number): void {
 

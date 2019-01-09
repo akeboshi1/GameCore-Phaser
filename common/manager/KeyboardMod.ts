@@ -188,7 +188,7 @@ export class KeyboardMod extends BaseSingleton {
         let keyArr: number[] = this.getKeyDowns();
         if (this.tempKeys === keyArr.toString()) return;
         this.tempKeys = keyArr.toString();
-        Log.trace("down-->", keyArr);
+        // Log.trace("down-->", keyArr);
         content.keyCodes = keyArr;
         Globals.SocketManager.send(pkt);
     }
