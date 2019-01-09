@@ -141,6 +141,7 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.terrainGridLayer.initializeMap(mapSceneInfo);
 
     this.initializeTerrainItems(mapSceneInfo.terrainConfig);
+    this.initializeElementItems(mapSceneInfo.elementConfig);
 
     Globals.SceneManager.pushScene(this.view);
 
