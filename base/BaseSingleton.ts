@@ -16,4 +16,9 @@ export default class BaseSingleton {
         }
         return Class._instance;
     }
+
+    public dispose(): void {
+      let Class: any = this;
+      Class._instance = null;
+    }
 }

@@ -1,6 +1,5 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {SceneData} from "../data/SceneData";
-import {ElementConfig} from "../config/ElementConfig";
 import {PlayerData} from "../data/PlayerData";
 import {EditorData} from "../data/EditorData";
 
@@ -42,8 +41,10 @@ export class DataCenter extends BaseSingleton {
         return PlayerData.getInstance();
     }
 
-    public get ElementConfig(): ElementConfig {
-        return ElementConfig.getInstance();
+    public dispose(): void {
+      this.EditorData.dispose();
+      this.SceneData.dispose();
+      this.PlayerData.dispose();
     }
 
 }
