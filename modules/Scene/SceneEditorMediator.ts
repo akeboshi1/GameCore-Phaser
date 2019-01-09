@@ -244,6 +244,9 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private clearMode(): void {
+    if (!this.view) {
+      return;
+    }
     if (this.view.input) {
       this.view.input.disableDrag();
     }
