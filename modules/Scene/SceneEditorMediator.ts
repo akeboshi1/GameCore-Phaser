@@ -24,7 +24,6 @@ export class SceneEditorMediator extends SceneMediator {
   private mousePointer: Phaser.Pointer;
   private mSelectElement: BasicElement;
   private mSelectTerrain: TerrainAnimationItem;
-  private mGlowFilter: Phaser.Filter.Glow;
 
   constructor() {
     super();
