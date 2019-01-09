@@ -14,6 +14,9 @@ import BasicElement from "./elements/BasicElement";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
 import {op_editor} from "../../../protocol/protocols";
+import {ElementInfo} from "../../common/struct/ElementInfo";
+import {BasicSceneEntity} from "../../base/BasicSceneEntity";
+import {Const} from "../../common/const/Const";
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
@@ -41,7 +44,6 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.inputEnabled = true;
     this.view.middleSceneLayer.inputEnableChildren = true;
     this.mousePointer = Globals.game.input.activePointer;
-    // this.mGlowFilter = new Phaser.Filter.Glow(Globals.game);
     super.onRegister();
 
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
@@ -107,9 +109,6 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.view.scale.y < this.minScaleY) {
       this.view.scale.y = this.minScaleY;
     }
-    // if (this.mGlowFilter) {
-    //   this.mGlowFilter.update();
-    // }
   }
 
   public onTick(deltaTime: number): void {
@@ -269,15 +268,19 @@ export class SceneEditorMediator extends SceneMediator {
     this.removeTerrain(value[0], value[1]);
   }
 
+  protected addElement(value: ElementInfo): void {
+    this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
+  }
+
   private onElementLayerDown(item: any): void {
     let elementId: number = item.owner.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
       if (this.mSelectElement) {
-        this.mSelectElement.display.filters = null;
+        this.mSelectElement.collisionArea.hide();
       }
       this.mSelectElement = item.owner; // 0xfffab0
-      // this.mSelectElement.display.filters  = [ this.mGlowFilter ];
+      this.mSelectElement.collisionArea.show();
     }
     this.isElementDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
@@ -359,5 +362,17 @@ export class SceneEditorMediator extends SceneMediator {
     }
 
     this.isGameDown = false;
+  }
+
+  protected initializeElementItems(datas: Array<any>): void {
+    let i = 0;
+    let len: number = datas.length;
+    let data: ElementInfo;
+    let element: BasicSceneEntity;
+    for (; i < len; i++) {
+      data = datas[i];
+      element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
+      element.collisionArea.hide();
+    }
   }
 }

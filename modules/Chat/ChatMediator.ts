@@ -27,6 +27,9 @@ export class ChatMediator extends MediatorBase {
         this.view.bt.events.onInputUp.remove(this.onHandleBt, this);
         this.view.bt.events.onInputOver.remove(this.onHandleOver, this);
         this.view.bt.events.onInputOut.remove(this.onHandleOut, this);
+        if (this.view.input_tf) {
+          this.view.input_tf.endFocus();
+        }
         super.onRemove();
     }
 
@@ -37,7 +40,6 @@ export class ChatMediator extends MediatorBase {
     private onHandleChat(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
         this.view.out_tf.text += chat.chatContext + "\n";
         this.view.scroller.scroll();
-        this.view.input_tf.startFocus();
     }
 
     private onHandleOver(): void {
@@ -58,5 +60,6 @@ export class ChatMediator extends MediatorBase {
         content.chatContext = this.view.inputValue;
         this.view.inputValue = "";
         Globals.SocketManager.send(pkt);
+        this.view.input_tf.startFocus();
     }
 }

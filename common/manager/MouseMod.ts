@@ -93,7 +93,7 @@ export class MouseMod extends BaseSingleton {
     }
 
     public dispose(): void {
-      let activePointer: Phaser.Pointer = this.game.input.activePointer;
+      let activePointer: Phaser.Pointer = this.game.input ? this.game.input.activePointer : null;
       if (activePointer) {
         activePointer.leftButton.onDown.remove(this.keyDownHandle, this);
         activePointer.leftButton.onUp.remove(this.keyUpHandle, this);

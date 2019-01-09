@@ -28,7 +28,6 @@ export class SceneView extends SceneBase {
         element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
             , this.mapSceneInfo.tileHeight >> 1);
         this.drawSceneLayer.addDraw(element.collisionArea);
-        element.collisionArea.show();
 
         this.addSceneEntity(element);
 
@@ -47,14 +46,6 @@ export class SceneView extends SceneBase {
         this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
 
         super.onInitializeScene(value);
-
-        let i = 0;
-        let len: number = this.mapSceneInfo.elementConfig.length;
-        let data: ElementInfo;
-        for (; i < len; i++) {
-            data = this.mapSceneInfo.elementConfig[i];
-            this.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
-        }
     }
 
     protected onActivedScene(): void {

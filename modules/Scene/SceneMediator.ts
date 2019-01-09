@@ -121,7 +121,8 @@ export class SceneMediator extends MediatorBase {
      * @param value
      */
     protected handleAddPlayer(value: op_client.IActor): void {
-        this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value);
+      let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value);
+      element.collisionArea.show();
     }
 
     /**
@@ -179,7 +180,8 @@ export class SceneMediator extends MediatorBase {
      * @element ElementInfo
      */
     protected addElement(value: ElementInfo): void {
-        this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
+      let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
+      element.collisionArea.hide();
     }
 
     /**
@@ -206,11 +208,13 @@ export class SceneMediator extends MediatorBase {
 
         mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
         this.initializeTerrainItems(mapSceneInfo.terrainConfig);
+        this.initializeElementItems(mapSceneInfo.elementConfig);
 
         // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         // currentCharacterInfo.walkableArea.draw(Globals.game, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
+        let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
+        element.collisionArea.show();
 
         // 播放场景音效
         // Globals.SoundManager.playBgSound(1);
@@ -234,6 +238,18 @@ export class SceneMediator extends MediatorBase {
             value = datas[i];
             this.view.terrainSceneLayer.addTerrainItem(value);
         }
+    }
+
+    protected initializeElementItems(datas: Array<any>): void {
+      let i = 0;
+      let len: number = datas.length;
+      let data: ElementInfo;
+      let element: BasicSceneEntity;
+      for (; i < len; i++) {
+        data = datas[i];
+        element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
+        element.collisionArea.show();
+      }
     }
 
     private onDraw(graphics: MyGraphics, x: number, y: number) {
