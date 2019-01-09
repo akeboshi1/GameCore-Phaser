@@ -24,7 +24,7 @@ export class SceneEditorMediator extends SceneMediator {
   private mousePointer: Phaser.Pointer;
   private mSelectElement: BasicElement;
   private mSelectTerrain: TerrainAnimationItem;
-  // private mGlowFilter: Phaser.Filter.Glow;
+  private mGlowFilter: Phaser.Filter.Glow;
 
   constructor() {
     super();
@@ -350,7 +350,15 @@ export class SceneEditorMediator extends SceneMediator {
         this.preSendSceneDown(pointer);
       }
     }
+
     this.isElementDown = false;
+
+    if (this.isGameDown) {
+      if (this.em.mode === EditorEnum.Mode.BRUSH && this.em.type === EditorEnum.Type.ELEMENT) {
+        this.preSendSceneDown(pointer);
+      }
+    }
+
     this.isGameDown = false;
   }
 }
