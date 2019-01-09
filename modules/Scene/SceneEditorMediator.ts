@@ -141,6 +141,7 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.terrainGridLayer.initializeMap(mapSceneInfo);
 
     this.initializeTerrainItems(mapSceneInfo.terrainConfig);
+    this.initializeElementItems(mapSceneInfo.elementConfig);
 
     Globals.SceneManager.pushScene(this.view);
 
@@ -243,6 +244,9 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private clearMode(): void {
+    if (!this.view) {
+      return;
+    }
     if (this.view.input) {
       this.view.input.disableDrag();
     }
