@@ -156,6 +156,72 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected onUpdatingPosition(deltaTime: number): void {
+        switch (this.walkAngleIndex) {
+            case Direction.UP:
+                if (this.oy < this.mTarget.y) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.DOWN:
+                if (this.oy > this.mTarget.y) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.LEFT:
+                if (this.ox < this.mTarget.x) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.RIGHT:
+                if (this.ox > this.mTarget.x) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.UPPER_LEFT:
+                if (this.oy < this.mTarget.y) {
+                    this.stopWalk();
+                    return;
+                }
+                if (this.ox < this.mTarget.x) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.UPPER_RIGHT:
+                if (this.oy < this.mTarget.y) {
+                    this.stopWalk();
+                    return;
+                }
+                if (this.ox > this.mTarget.x) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.LOWER_LEFT:
+                if (this.oy > this.mTarget.y) {
+                    this.stopWalk();
+                    return;
+                }
+                if (this.ox < this.mTarget.x) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+            case Direction.LOWER_RIGHT:
+                if (this.oy > this.mTarget.y) {
+                    this.stopWalk();
+                    return;
+                }
+                if (this.ox > this.mTarget.x) {
+                    this.stopWalk();
+                    return;
+                }
+                break;
+        }
         if (this.ox === this.mTarget.x && this.oy === this.mTarget.y) {
             this.stopWalk();
         } else {

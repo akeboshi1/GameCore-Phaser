@@ -65,6 +65,7 @@ export class SceneMediator extends MediatorBase {
     }
 
     protected stageResizeHandler(): void {
+        Globals.game.world.setBounds(-GameConfig.GameWidth / 2, -GameConfig.GameHeight / 2, Globals.Room45Util.mapTotalWidth + GameConfig.GameWidth, Globals.Room45Util.mapTotalHeight + GameConfig.GameHeight);
         this.view.requestStageResize();
     }
 

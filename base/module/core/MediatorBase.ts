@@ -1,6 +1,7 @@
 import {IMediator} from "../interfaces/IMediator";
 import Globals from "../../../Globals";
 import {MessageType} from "../../../common/const/MessageType";
+import {IResizeObject} from "../../IResizeObject";
 
 export class MediatorBase implements IMediator {
     protected m_Param: any;
@@ -44,6 +45,10 @@ export class MediatorBase implements IMediator {
     }
 
     protected stageResizeHandler(): void {
+        if (this.viewComponent === undefined) {
+            return;
+        }
+        if ((this.viewComponent as IResizeObject).onResize() !== undefined) (<IResizeObject>this.viewComponent).onResize();
     }
 
     public setViewComponent(viewComponent: any): void {

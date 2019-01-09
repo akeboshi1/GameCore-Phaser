@@ -1,5 +1,6 @@
 import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
 import {AlertView} from "./AlertView";
+import {GameConfig} from "../../../GameConfig";
 
 export class PromptView extends ModuleViewBase {
     public alertView: AlertView;
@@ -8,6 +9,9 @@ export class PromptView extends ModuleViewBase {
     }
 
     public onResize(): void {
+        if (this.alertView) {
+            this.alertView.onResize();
+        }
     }
 
     public show(view: any, value: boolean): void {

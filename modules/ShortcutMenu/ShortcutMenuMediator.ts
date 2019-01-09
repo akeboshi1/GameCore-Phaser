@@ -12,6 +12,7 @@ export class ShortcutMenuMediator extends MediatorBase {
   }
 
   public onRegister(): void {
+      super.onRegister();
       if (Globals.DataCenter.PlayerData.initialize) {
           this.initView();
       } else {
