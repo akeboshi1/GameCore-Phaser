@@ -73,6 +73,7 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.MouseMod.dispose();
         Globals.TickManager.dispose();
         Globals.SceneManager.dispose();
+        Globals.DataCenter.dispose();
         this.state.destroy();
         this.destroy();
     }
