@@ -296,30 +296,25 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   protected handleAddAllTerrain(value: op_client.ITerrain): void {
+    this.handleRemoveAllTerrain();
+
     let terrain: TerrainInfo;
     let cols: number = Globals.Room45Util.cols;
     let rows: number = Globals.Room45Util.rows;
     let n: number = cols * rows;
-    let terrainItem: BasicTerrainItem;
     for (let i = 0; i < n; i++) {
       let colIndex: number = Math.floor(i % cols);
       let rowIndex: number = Math.floor(i / cols);
-      terrainItem = this.view.terrainEditorLayer.getTerrainItem(colIndex, rowIndex);
-      if (terrainItem) {
-        terrainItem.onDispose();
-        terrainItem.data.setInfo(value);
-      } else {
         terrain = new TerrainInfo();
-        terrain.setInfo(value[i]);
+        terrain.setInfo(value);
         terrain.x = colIndex;
         terrain.y = rowIndex;
         this.addTerrain(terrain);
-      }
     }
   }
 
   private handleRemoveAllTerrain(): void {
-    this.view.terrainEditorLayer.releaseTerrainItems();
+    this.view.terrainEditorLayer.clear();
   }
 
   private handleRemoveTerrain(value: any): void {

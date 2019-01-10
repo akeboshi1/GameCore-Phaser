@@ -14,7 +14,7 @@ export class TerrainImageItem extends BasicTerrainItem {
         super(game, owner);
     }
 
-    public releaseTerrainItem() {
+    protected releaseTerrainItem() {
         super.releaseTerrainItem();
         if (this.bmd) this.bmd.destroy();
         this.bmd = null;

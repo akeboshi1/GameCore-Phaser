@@ -14,7 +14,7 @@ export class TerrainAnimationItem extends BasicTerrainItem {
     super(game, owner);
   }
 
-  public releaseTerrainItem() {
+  protected releaseTerrainItem() {
     if ((<BasicTerrainAvatar>this.terrainIsoDisplayObject)) {
       (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onDispose();
     }

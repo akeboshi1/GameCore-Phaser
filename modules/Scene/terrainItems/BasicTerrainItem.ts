@@ -131,7 +131,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     public onTick(deltaTime: number): void {
     }
 
-    public releaseTerrainItem() {
+    protected releaseTerrainItem() {
         if (this.mTerrainItemDisplayObjectCreated) {
             this.mTerrainItemDisplayObjectCreated = false;
 

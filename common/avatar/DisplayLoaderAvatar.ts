@@ -131,4 +131,9 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
             }
         }
     }
+
+    public destroy(destroyChildren?: boolean): void {
+
+      super.destroy(destroyChildren);
+    }
 }

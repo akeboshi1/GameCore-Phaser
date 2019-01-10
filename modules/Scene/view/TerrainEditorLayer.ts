@@ -8,7 +8,6 @@ import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {TerrainAnimationItem} from "../terrainItems/TerrainAnimationItem";
 import {ITerrainLayer} from "./ITerrainLayer";
 import {Const} from "../../../common/const/Const";
-import {TerrainImageItem} from "../terrainItems/TerrainImageItem";
 
 export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer {
   protected curTerrainLoadCount = 0;
@@ -33,15 +32,11 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
   }
 
   public addTerrainItem(value: TerrainInfo): BasicTerrainItem {
-    let terrain: TerrainImageItem = this.mTerrainEntities.getValue(value.col + "|" + value.row);
-    if (terrain === undefined) {
-      terrain = new TerrainImageItem(Globals.game, this);
-      this.setTerrainItem(terrain, value);
-      this.mTerrainEntities.add(terrain);
-      this.add(terrain);
-      return terrain;
-    }
-    return null;
+    let terrain: TerrainAnimationItem = new TerrainAnimationItem(Globals.game, this);
+    this.setTerrainItem(terrain, value);
+    this.mTerrainEntities.add(terrain);
+    this.add(terrain);
+    return terrain;
   }
 
   public getTerrainItem(col: number, row: number): TerrainAnimationItem {
@@ -55,22 +50,14 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
   public removeTerrainItem(col: number, row: number): void {
     let terrain: TerrainAnimationItem = this.mTerrainEntities.getValue(col + "|" + row);
     if (terrain) {
-      this.mTerrainEntities.remove(terrain);
       terrain.onDispose();
+      this.mTerrainEntities.remove(terrain);
     }
   }
 
   public clear(): void {
     this.releaseTerrainItems();
     this.mTerrainEntities.clear();
-  }
-
-  public releaseTerrainItems(): void {
-    let terrain: BasicTerrainItem = this.mTerrainEntities.moveFirst();
-    while (terrain) {
-      terrain.releaseTerrainItem();
-      terrain = this.mTerrainEntities.moveNext();
-    }
   }
 
   public isValidLoad(): boolean {
@@ -155,6 +142,14 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
     this.mDepthSortDirtyFlag = true;
   }
 
+  public releaseTerrainItems(): void {
+    let terrain: BasicTerrainItem = this.mTerrainEntities.moveFirst();
+    while (terrain) {
+      terrain.onDispose();
+      terrain = this.mTerrainEntities.moveNext();
+    }
+  }
+
   protected initializeTerrainItems(datas: Array<any>): void {
     let len: number = datas.length;
     let value: TerrainInfo;
@@ -164,7 +159,7 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
     }
   }
 
-  protected setTerrainItem(terrain: TerrainImageItem, value: TerrainInfo): void {
+  protected setTerrainItem(terrain: BasicTerrainItem, value: TerrainInfo): void {
     terrain.setMouseOverArea(this.mapSceneInfo.tileWidth >> 1, this.mapSceneInfo.tileHeight >> 1);
     terrain.camera = this.camera;
     terrain.data = value;
