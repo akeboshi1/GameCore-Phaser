@@ -189,6 +189,7 @@ export class KeyboardMod extends BaseSingleton {
         if (this.tempKeys === keyArr.toString()) return;
         this.tempKeys = keyArr.toString();
         // Log.trace("down-->", keyArr);
+        Log.warn("[按键]：" + keyArr.toString());
         content.keyCodes = keyArr;
         Globals.SocketManager.send(pkt);
     }
