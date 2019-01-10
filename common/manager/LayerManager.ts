@@ -42,9 +42,4 @@ export class LayerManager extends BaseSingleton {
     this.debugLayer.fixedToCamera = true;
 
   }
-
-  public dispose(): void {
-    this.container.removeAll(true, true, true);
-    super.dispose();
-  }
 }

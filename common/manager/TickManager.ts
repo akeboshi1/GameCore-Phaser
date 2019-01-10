@@ -36,7 +36,7 @@ export class TickManager extends BaseSingleton {
     }
 
     public onEnterFrame(): void {
-        if (null === this.m_TickList) return;
+        if (this.game === undefined || null === this.m_TickList) return;
         let nowTime: number = this.game.time.now;
         let timeElapsed: number = nowTime - this.m_LastTime;
         this.m_LastTime = nowTime;

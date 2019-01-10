@@ -19,7 +19,7 @@ import GameConst = Const.GameConst;
 import {Log} from "../../Log";
 
 export class SceneMediator extends MediatorBase {
-    private hasRegisterHandler: boolean = false;
+    private hasRegisterHandler = false;
     private flowManager: FlowManager;
 
     private sceneLoader: SceneLoader;
@@ -62,6 +62,7 @@ export class SceneMediator extends MediatorBase {
         if (this.flowManager)
             this.flowManager.dispose();
         this.flowManager = null;
+        this.view.clearScene();
         super.onRemove();
     }
 
