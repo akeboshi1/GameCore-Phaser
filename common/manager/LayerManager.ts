@@ -42,9 +42,4 @@ export class LayerManager extends BaseSingleton {
     this.debugLayer.fixedToCamera = true;
 
   }
-
-  public onStateResize(): void {
-    // this.container.x = this.game.camera.x;
-    // this.container.y = this.game.camera.y;
-  }
 }

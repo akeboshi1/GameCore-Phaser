@@ -23,5 +23,4 @@ export class SocketManager extends BaseSingleton {
     public removeHandler(handler: PacketHandler): void {
         this.m_SocketConnection.rmPacketListener(handler);
     }
-
 }

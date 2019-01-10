@@ -43,5 +43,13 @@ export class MessageCenter extends BaseSingleton {
             }
         }
     }
+
+    public dispose(): void {
+      for ( let name in this.signals ) {
+        this.signals[name].dispose();
+        delete this.signals[name];
+      }
+      super.dispose();
+    }
 }
 
