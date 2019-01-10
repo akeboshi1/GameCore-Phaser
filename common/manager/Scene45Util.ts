@@ -85,10 +85,10 @@ export class Scene45Util extends BaseSingleton {
     }
 
     public setting(rows: number, cols: number, tileWidth: number, tileHeight: number): void {
-        this.rows = rows;
-        this.cols = cols;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+        this.rows = +rows;
+        this.cols = +cols;
+        this.tileWidth = +tileWidth;
+        this.tileHeight = +tileHeight;
         this._hTileWidth = this.tileWidth / 2;
         this._hTileHeight = this.tileHeight / 2;
         this._originX = this.rows * this._hTileWidth;

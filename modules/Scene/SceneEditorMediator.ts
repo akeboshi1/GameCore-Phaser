@@ -107,12 +107,12 @@ export class SceneEditorMediator extends SceneMediator {
       }
     }
 
-    if (this.view.scale.x < this.minScaleX) {
-      this.view.scale.x = this.minScaleX;
+    if (this.view.scale.x < this.minScale) {
+      this.view.scale.x = this.minScale;
     }
 
-    if (this.view.scale.y < this.minScaleY) {
-      this.view.scale.y = this.minScaleY;
+    if (this.view.scale.y < this.minScale) {
+      this.view.scale.y = this.minScale;
     }
   }
 
@@ -126,8 +126,7 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
-  private minScaleX = 1;
-  private minScaleY = 1;
+  private minScale = 0;
   protected changedToMapSceneCompleteHandler(): void {
     let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
     // clear the last one scene.
@@ -156,8 +155,9 @@ export class SceneEditorMediator extends SceneMediator {
 
     Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
 
-    this.minScaleX = GameConfig.GameWidth / mapSceneInfo.mapTotalWidth;
-    this.minScaleY = GameConfig.GameHeight / mapSceneInfo.mapTotalHeight;
+    let minScaleX = GameConfig.GameWidth / mapSceneInfo.mapTotalWidth;
+    let minScaleY = GameConfig.GameHeight / mapSceneInfo.mapTotalHeight;
+    this.minScale = minScaleX >= minScaleY ? minScaleX : minScaleY;
 
     this.handleChangeMode();
   }
@@ -201,7 +201,7 @@ export class SceneEditorMediator extends SceneMediator {
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
         if (this.view) {
           this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
-          this.view.terrainGridLayer.graphicsArea.inputEnabled = true;
+          this.view.terrainGridLayer.clickArea.inputEnabled = true;
           this.view.terrainGridLayer.inputEnableChildren = true;
           this.view.terrainGridLayer.onChildInputUp.add(this.onTerrainLayerUp, this);
         }
@@ -263,7 +263,7 @@ export class SceneEditorMediator extends SceneMediator {
     }
 
     if (this.view.terrainGridLayer) {
-      this.view.terrainGridLayer.graphicsArea.inputEnabled = false;
+      this.view.terrainGridLayer.clickArea.inputEnabled = false;
       this.view.terrainGridLayer.inputEnableChildren = false;
       this.view.terrainGridLayer.onChildInputUp.remove(this.onTerrainLayerUp, this);
     }
