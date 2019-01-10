@@ -78,7 +78,7 @@ export class SceneEditorMediator extends SceneMediator {
         }
         break;
       case EditorEnum.Mode.SELECT:
-        Log.trace("选中", this.mSelectElement,  this.isElementDown, this.mousePointer );
+        // Log.trace("选中", this.mSelectElement,  this.isElementDown, this.mousePointer );
         if (this.isElementDown && this.mSelectElement && this.mousePointer) {
           this.moveElement(this.mSelectElement, this.mousePointer);
         }
@@ -170,12 +170,14 @@ export class SceneEditorMediator extends SceneMediator {
   private handleChangeMode(): void {
     this.clearMode();
     if (this.em.mode === EditorEnum.Mode.MOVE) {
-      let scaleX: number = this.view.scale.x;
-      let scaleY: number = this.view.scale.y;
-      let bounds: Phaser.Rectangle = new Phaser.Rectangle(-this.view.x * scaleX - (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth), -this.view.y * scaleY - (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight),
+      if (this.view) {
+        let scaleX: number = this.view.scale.x;
+        let scaleY: number = this.view.scale.y;
+        let bounds: Phaser.Rectangle = new Phaser.Rectangle(-this.view.x * scaleX - (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth), -this.view.y * scaleY - (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight),
         (Globals.Room45Util.mapTotalWidth * scaleX - GameConfig.GameWidth + Globals.Room45Util.tileWidth * scaleX / 2), (Globals.Room45Util.mapTotalHeight * scaleY - GameConfig.GameHeight + Globals.Room45Util.tileHeight * scaleY));
-      this.view.input.boundsRect = bounds;
-      this.view.input.enableDrag();
+        this.view.input.boundsRect = bounds;
+        this.view.input.enableDrag();
+      }
     } else if (this.em.mode === EditorEnum.Mode.BRUSH) {
       Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.ERASER) {
@@ -190,10 +192,12 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         Globals.game.input.onDown.add(this.onGameDown, this);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
-        this.view.terrainGridLayer.graphics.inputEnabled = true;
-        this.view.terrainGridLayer.inputEnableChildren = true;
-        this.view.terrainGridLayer.onChildInputUp.add(this.onTerrainLayerUp, this);
+        if (this.view) {
+          this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
+          this.view.terrainGridLayer.graphics.inputEnabled = true;
+          this.view.terrainGridLayer.inputEnableChildren = true;
+          this.view.terrainGridLayer.onChildInputUp.add(this.onTerrainLayerUp, this);
+        }
       }
     }
   }
@@ -244,6 +248,9 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private clearMode(): void {
+    if (!this.view) {
+      return;
+    }
     if (this.view.input) {
       this.view.input.disableDrag();
     }

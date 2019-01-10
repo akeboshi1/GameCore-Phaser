@@ -46,7 +46,7 @@ export class BasicRoleElement extends SceneEntity {
 
     public updateCharacterSpeed(speed: number): void {
         this.characterInfo.moveSpeed = speed;
-        this.mySpeed = this.characterInfo.moveSpeed;
+        // this.mySpeed = this.characterInfo.moveSpeed;
     }
 
     protected invalidAnimation(): void {
@@ -110,7 +110,7 @@ export class BasicRoleElement extends SceneEntity {
     protected onInitialize(): void {
         super.onInitialize();
 
-        this.mySpeed = this.characterInfo.moveSpeed; // Const.GameConst.MAP_TILE_WIDTH * 2
+        // this.mySpeed = this.characterInfo.moveSpeed; // Const.GameConst.MAP_TILE_WIDTH * 2
         this.setAngleIndex(this.characterInfo.avatarDir);
         this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z);
         this.mouseEnable = false;
@@ -125,7 +125,7 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected onUpdateByData(): void {
-        this.mySpeed = this.characterInfo.moveSpeed;
+        // this.mySpeed = this.characterInfo.moveSpeed;
         this.onUpdateByDataForAvatar();
     }
 

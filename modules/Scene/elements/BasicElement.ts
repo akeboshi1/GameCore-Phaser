@@ -56,7 +56,7 @@ export default class BasicElement extends SceneEntity {
 
     protected onInitialize() {
         super.onInitialize();
-        this.mySpeed = this.elementInfo.speed;
+        // this.mySpeed = this.elementInfo.speed;
         this.initBaseLoc();
         this.setAngleIndex(this.elementInfo.dir);
         this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);

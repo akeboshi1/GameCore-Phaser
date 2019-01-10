@@ -16,6 +16,7 @@ import {ElementInfo} from "../../common/struct/ElementInfo";
 import {PBpacket} from "net-socket-packet";
 import {GameConfig} from "../../GameConfig";
 import GameConst = Const.GameConst;
+import {Log} from "../../Log";
 
 export class SceneMediator extends MediatorBase {
     private hasRegisterHandler: boolean = false;
@@ -268,8 +269,11 @@ export class SceneMediator extends MediatorBase {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity) {
+                imove.destinationPoint3f.x = imove.destinationPoint3f.x >> 0;
+                imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
                 entity.moveToTarget(imove);
             }
+            Log.warn("[走路]：" + Date.now() + "|" + imove.timeSpan, imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 
@@ -285,6 +289,7 @@ export class SceneMediator extends MediatorBase {
             if (entity) {
                 entity.moveStopTarget(imove);
             }
+            Log.warn("[停止]： " + Date.now(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 
