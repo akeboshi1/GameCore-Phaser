@@ -61,7 +61,6 @@ export default class Game extends Phaser.Game implements IGame {
         GameConfig.GameHeight = bounds.height;
         this.scale.setGameSize(bounds.width, bounds.height);
         Log.trace(this.camera.x, this.camera.y);
-        Globals.LayerManager.onStateResize();
         Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
     }
 
@@ -74,6 +73,9 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.TickManager.dispose();
         Globals.SceneManager.dispose();
         Globals.DataCenter.dispose();
+        Globals.MessageCenter.dispose();
+        Globals.LayerManager.dispose();
+        Globals.SocketManager.dispose();
         this.state.destroy();
         this.destroy();
     }

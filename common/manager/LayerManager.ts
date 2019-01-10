@@ -43,8 +43,8 @@ export class LayerManager extends BaseSingleton {
 
   }
 
-  public onStateResize(): void {
-    // this.container.x = this.game.camera.x;
-    // this.container.y = this.game.camera.y;
+  public dispose(): void {
+    this.container.removeAll(true, true, true);
+    super.dispose();
   }
 }

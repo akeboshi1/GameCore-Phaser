@@ -60,6 +60,7 @@ export class TickManager extends BaseSingleton {
         tick.onDispose();
       }
       this.m_TickList.length = 0;
+      super.dispose();
     }
 }
 

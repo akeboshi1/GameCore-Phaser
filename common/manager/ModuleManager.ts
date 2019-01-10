@@ -44,6 +44,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
             module.onDispose();
         }
         this.m_ModuleList.clear();
+        super.dispose();
     }
 
     private createModule(info: IModuleInfo): void {

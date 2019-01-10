@@ -30,5 +30,6 @@ export class ServiceCenter extends BaseSingleton {
         this.GameService.unRegister();
         this.SceneService.unRegister();
         this.ChatService.unRegister();
+        super.dispose();
     }
 }

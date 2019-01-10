@@ -254,5 +254,6 @@ export class KeyboardMod extends BaseSingleton {
         this.dKey.onDown.remove(this.keyDownHandle, this);
         this.dKey.onUp.remove(this.keyUpHandle, this);
       }
+      super.dispose();
     }
 }
