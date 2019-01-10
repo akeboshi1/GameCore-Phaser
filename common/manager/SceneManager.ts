@@ -49,5 +49,6 @@ export class SceneManager extends BaseSingleton {
         (<SceneBasic>this.mActivedScenesStack[this.mActivedScenesStack.length - 1]).deactiveScene();
       }
       this.mActivedScenesStack.length = 0;
+      super.dispose();
     }
 }

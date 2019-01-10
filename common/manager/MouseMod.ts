@@ -102,6 +102,7 @@ export class MouseMod extends BaseSingleton {
         activePointer.rightButton.onDown.remove(this.keyDownHandle, this);
         activePointer.rightButton.onUp.remove(this.keyUpHandle, this);
       }
+      super.dispose();
     }
 
 }

@@ -87,5 +87,6 @@ export class SoundManager extends BaseSingleton {
        if (this.m_BgSound) {
          this.m_BgSound.destroy(true);
        }
+      super.dispose();
     }
 }

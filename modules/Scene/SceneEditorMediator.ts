@@ -36,6 +36,11 @@ export class SceneEditorMediator extends SceneMediator {
     return Globals.DataCenter.EditorData.editorMode;
   }
 
+  protected stageResizeHandler(): void {
+    Globals.game.world.setBounds(0, 0, Globals.Room45Util.mapTotalWidth, Globals.Room45Util.mapTotalHeight);
+    this.view.requestStageResize();
+  }
+
   public onRegister(): void {
     this.mTick = new Tick(33);
     this.mTick.setCallBack(this.onTick, this);
@@ -138,7 +143,9 @@ export class SceneEditorMediator extends SceneMediator {
 
     this.view.initializeScene(mapSceneInfo);
 
-    this.view.terrainGridLayer.initializeMap(mapSceneInfo);
+    if (this.view.terrainGridLayer) {
+      this.view.terrainGridLayer.initializeMap(mapSceneInfo);
+    }
 
     this.initializeTerrainItems(mapSceneInfo.terrainConfig);
     this.initializeElementItems(mapSceneInfo.elementConfig);
@@ -194,7 +201,7 @@ export class SceneEditorMediator extends SceneMediator {
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
         if (this.view) {
           this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
-          this.view.terrainGridLayer.graphics.inputEnabled = true;
+          this.view.terrainGridLayer.graphicsArea.inputEnabled = true;
           this.view.terrainGridLayer.inputEnableChildren = true;
           this.view.terrainGridLayer.onChildInputUp.add(this.onTerrainLayerUp, this);
         }
@@ -203,7 +210,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private sendScenePoint(x: number, y: number): void {
-    Log.trace("点击地块-->", x, y);
+    Log.trace("点击场景-->", x, y);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
     content.point = {x: x, y: y};
@@ -211,7 +218,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private sendSceneObject(value: number[]): void {
-    Log.trace("点击物件-->", value);
+    Log.trace("选择物件-->", value);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_OBJECT);
     let content: OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = pkt.content;
     content.ids = value;
@@ -255,12 +262,14 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.input.disableDrag();
     }
 
-    this.view.terrainGridLayer.graphics.inputEnabled = false;
-    this.view.terrainGridLayer.inputEnableChildren = false;
+    if (this.view.terrainGridLayer) {
+      this.view.terrainGridLayer.graphicsArea.inputEnabled = false;
+      this.view.terrainGridLayer.inputEnableChildren = false;
+      this.view.terrainGridLayer.onChildInputUp.remove(this.onTerrainLayerUp, this);
+    }
 
     // Layer events
     this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
-    this.view.terrainGridLayer.onChildInputUp.remove(this.onTerrainLayerUp, this);
 
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
@@ -280,6 +289,7 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
   }
 
+  private elementOldPoint: Phaser.Point = new Phaser.Point;
   private onElementLayerDown(item: any): void {
     let elementId: number = item.owner.data.id;
     this.sendSceneObject([elementId]);
@@ -287,7 +297,9 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.mSelectElement) {
         this.mSelectElement.collisionArea.hide();
       }
-      this.mSelectElement = item.owner; // 0xfffab0
+      this.mSelectElement = item.owner;
+      this.elementOldPoint.x = this.mSelectElement.ox;
+      this.elementOldPoint.y = this.mSelectElement.oy;
       this.mSelectElement.collisionArea.show();
     }
     this.isElementDown = true;
@@ -352,7 +364,15 @@ export class SceneEditorMediator extends SceneMediator {
     }
 
     if (this.mSelectElement) {
-      this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
+      let screenX: number = (pointer.x - this.view.x) / this.view.scale.x;
+      let screenY: number = (pointer.y - this.view.y) / this.view.scale.y;
+      let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
+      if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
+        this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
+      } else {
+        this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y);
+        this.sendScenePoint(this.elementOldPoint.x, this.elementOldPoint.y);
+      }
     }
 
     if (this.isElementDown) {

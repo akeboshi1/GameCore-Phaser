@@ -45,6 +45,6 @@ export class DataCenter extends BaseSingleton {
       this.EditorData.dispose();
       this.SceneData.dispose();
       this.PlayerData.dispose();
+      super.dispose();
     }
-
 }

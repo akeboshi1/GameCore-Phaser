@@ -30,7 +30,9 @@ export class SceneBase extends SceneBasic {
     public onTick(deltaTime: number): void {
         super.onTick(deltaTime);
 
-        this.terrainGridLayer.onTick(deltaTime);
+        if (this.terrainGridLayer) {
+          this.terrainGridLayer.onTick(deltaTime);
+        }
         if (this.terrainSceneLayer) {
             this.terrainSceneLayer.onTick(deltaTime);
         }
@@ -46,8 +48,9 @@ export class SceneBase extends SceneBasic {
 
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
-
-        this.terrainGridLayer.onFrame(deltaTime);
+        if (this.terrainGridLayer) {
+            this.terrainGridLayer.onFrame(deltaTime);
+        }
         if (this.terrainSceneLayer) {
             this.terrainSceneLayer.onFrame(deltaTime);
         }
