@@ -7,12 +7,4 @@ export class GameConfig {
     public static GameWidth: number;
     public static GameHeight: number;
     public static preLoadList: IPhaserLoadList;
-
-    public static get CameraWidth(): number {
-        return this.GameWidth + Globals.Room45Util.mapTotalWidth;
-    }
-
-    public static get CameraHeight(): number {
-        return this.GameHeight + Globals.Room45Util.mapTotalHeight;
-    }
 }

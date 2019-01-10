@@ -19,7 +19,6 @@ import GameConst = Const.GameConst;
 import {Log} from "../../Log";
 
 export class SceneMediator extends MediatorBase {
-    private hasRegisterHandler = false;
     private flowManager: FlowManager;
 
     private sceneLoader: SceneLoader;
@@ -73,50 +72,39 @@ export class SceneMediator extends MediatorBase {
 
     // server handler
     public registerSceneListenerHandler(): void {
-        if (!this.hasRegisterHandler) {
-            Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
-            Globals.MessageCenter.on(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
-            Globals.MessageCenter.on(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
+        Globals.MessageCenter.on(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
+        Globals.MessageCenter.on(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
+        Globals.MessageCenter.on(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
 
-            Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
-            Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
-            Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
-            Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
-            Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
-            Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
-
-            this.hasRegisterHandler = true;
-        }
+        Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
+        Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
+        Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
+        Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
+        Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
+        Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
     }
 
     public unRegisterSceneListenerHandler(): void {
-        if (this.hasRegisterHandler) {
-            Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
-            Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
-            Globals.MessageCenter.cancel(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_TO, this.moveToHandle, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_MOVE_STOP, this.moveStopHandle, this);
+        Globals.MessageCenter.cancel(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
 
-            Globals.MessageCenter.cancel(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
-            Globals.MessageCenter.cancel(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
-            Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
-            Globals.MessageCenter.cancel(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
-            Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
-            Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
-            this.hasRegisterHandler = false;
-        }
+        Globals.MessageCenter.cancel(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
     }
 
     /**
      * 监听添加地块
      * @param value
      */
-    protected handleAddTerrain(value: op_client.ITerrain[]): void {
-        let terrain: TerrainInfo;
-        let len: number = value.length;
-        for (let i = 0; i < len; i++) {
-            terrain = new TerrainInfo();
-            terrain.setInfo(value[i]);
-            this.addTerrain(terrain);
-        }
+    protected handleAddTerrain(value: op_client.ITerrain): void {
+      let terrain: TerrainInfo = new TerrainInfo();
+      terrain.setInfo(value);
+      this.addTerrain(terrain);
     }
 
     /**

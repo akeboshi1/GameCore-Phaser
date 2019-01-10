@@ -8,10 +8,6 @@ export class TerrainGridLayer extends BasicSceneLayer {
         super(game);
     }
 
-    public get clickArea(): Phaser.Graphics {
-      return this.graphicsGrid;
-    }
-
     public initializeMap(value: SceneInfo): void {
         let cols: number = value.cols;
         let rows: number = value.rows;
@@ -28,16 +24,6 @@ export class TerrainGridLayer extends BasicSceneLayer {
             this.graphicsGrid.lineTo(p.x, p.y + value.tileHeight);
             this.graphicsGrid.lineTo(p.x + value.tileWidth / 2, p.y + value.tileHeight / 2);
             this.graphicsGrid.lineTo(p.x, p.y);
-            this.graphicsGrid.endFill();
-
-            this.graphicsGrid.lineStyle(0);
-            this.graphicsGrid.beginFill(0x00ffff, 0);
-            let p1 = Globals.Room45Util.tileToPixelCoords(colIndex, rowIndex);
-            let p2 = Globals.Room45Util.tileToPixelCoords(colIndex + 1, rowIndex);
-            let p3 = Globals.Room45Util.tileToPixelCoords(colIndex + 1, rowIndex + 1);
-            let p4 = Globals.Room45Util.tileToPixelCoords(colIndex, rowIndex + 1);
-            let poly: Phaser.Polygon = new Phaser.Polygon([p1, p2, p3, p4]);
-            this.graphicsGrid.drawPolygon(poly.points);
             this.graphicsGrid.endFill();
         }
         this.graphicsGrid.cacheAsBitmap = true;

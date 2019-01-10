@@ -105,7 +105,11 @@ class Handler extends BasePacketHandler {
 
     private handleAddTerrain(packet: PBpacket): void {
         let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_TERRAIN = packet.content;
-        Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrainData.terrains);
+        if (terrainData.all === true) {
+          Globals.MessageCenter.emit(MessageType.SCENE_ADD_ALL_TERRAIN, terrainData.terrain);
+        } else {
+          Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrainData.terrain);
+        }
     }
 
     private handleDeleteElement(packet: PBpacket): void {

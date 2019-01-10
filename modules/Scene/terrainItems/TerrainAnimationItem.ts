@@ -6,8 +6,6 @@ import {DrawArea} from "../../../common/struct/DrawArea";
 import {ITerrainLayer} from "../view/ITerrainLayer";
 
 export class TerrainAnimationItem extends BasicTerrainItem {
-  public collisionArea: DrawArea;
-  public mouseOverArea: DrawArea;
   protected mAnimationDirty = false;
   protected myAnimationName: string;
   protected baseLoc: Phaser.Point;
@@ -21,35 +19,6 @@ export class TerrainAnimationItem extends BasicTerrainItem {
       (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onDispose();
     }
     super.releaseTerrainItem();
-  }
-
-  public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-    if (this.walkableArea === undefined) {
-      this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
-    }
-    this.walkableArea.draw(hWidth, hHeight);
-  }
-
-  public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-    if (this.collisionArea === undefined) {
-      this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
-    }
-    this.collisionArea.draw(hWidth, hHeight);
-  }
-
-  public setMouseOverArea(hWidth: number, hHeight: number): void {
-    if (this.mouseOverArea === undefined) {
-      this.mouseOverArea = new DrawArea("1,1&1,1", 0xFF0000);
-      this.mouseOverArea.draw(hWidth, hHeight);
-    }
-  }
-
-  public triggerMouseOver(value: boolean): void {
-    if (value === true) {
-      this.mouseOverArea.show();
-    } else {
-      this.mouseOverArea.hide();
-    }
   }
 
   // Position

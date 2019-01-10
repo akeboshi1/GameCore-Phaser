@@ -24,6 +24,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     protected terrainIsoDisplayObject: IsoSprite;
     protected baseLoc: Phaser.Point;
     protected mTerrainItemDisplayObjectHadCreated = false;
+    public mouseOverArea: DrawArea;
 
     public constructor(game: Phaser.Game, owner: ITerrainLayer) {
         super(game);
@@ -47,6 +48,21 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
     public get oz(): number {
         return this._oz;
     }
+
+  public setMouseOverArea(hWidth: number, hHeight: number): void {
+    if (this.mouseOverArea === undefined) {
+      this.mouseOverArea = new DrawArea("1,1&1,1", 0xFF0000);
+      this.mouseOverArea.draw(hWidth, hHeight);
+    }
+  }
+
+  public triggerMouseOver(value: boolean): void {
+    if (value === true) {
+      this.mouseOverArea.show();
+    } else {
+      this.mouseOverArea.hide();
+    }
+  }
 
     public get key(): string {
         return this.data.col + "|" + this.data.row;

@@ -8,6 +8,7 @@ import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {TerrainAnimationItem} from "../terrainItems/TerrainAnimationItem";
 import {ITerrainLayer} from "./ITerrainLayer";
 import {Const} from "../../../common/const/Const";
+import {TerrainImageItem} from "../terrainItems/TerrainImageItem";
 
 export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer {
   protected curTerrainLoadCount = 0;
@@ -32,9 +33,9 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
   }
 
   public addTerrainItem(value: TerrainInfo): BasicTerrainItem {
-    let terrain: TerrainAnimationItem = this.mTerrainEntities.getValue(value.col + "|" + value.row);
+    let terrain: TerrainImageItem = this.mTerrainEntities.getValue(value.col + "|" + value.row);
     if (terrain === undefined) {
-      terrain = new TerrainAnimationItem(Globals.game, this);
+      terrain = new TerrainImageItem(Globals.game, this);
       this.setTerrainItem(terrain, value);
       this.mTerrainEntities.add(terrain);
       this.add(terrain);
@@ -163,8 +164,7 @@ export class TerrainEditorLayer extends BasicSceneLayer implements ITerrainLayer
     }
   }
 
-  protected setTerrainItem(terrain: TerrainAnimationItem, value: TerrainInfo): void {
-    // terrain.setCollisionArea(value.collisionArea, value.originCollisionPoint);
+  protected setTerrainItem(terrain: TerrainImageItem, value: TerrainInfo): void {
     terrain.setMouseOverArea(this.mapSceneInfo.tileWidth >> 1, this.mapSceneInfo.tileHeight >> 1);
     terrain.camera = this.camera;
     terrain.data = value;
