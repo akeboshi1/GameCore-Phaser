@@ -48,6 +48,7 @@ export class SceneEditorMediator extends SceneMediator {
     this.mTick.setRenderCallBack(this.onFrame, this);
     this.mTick.start();
     this.view.inputEnabled = true;
+    this.view.middleSceneLayer.inputEnableChildren = true;
     this.mousePointer = Globals.game.input.activePointer;
 
     Globals.game.input.mouse.mouseWheelCallback = (event: WheelEvent) => {
@@ -215,7 +216,6 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         Globals.game.input.onDown.add(this.onGameDown, this);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        this.view.middleSceneLayer.inputEnableChildren = true;
         this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
       }
     } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
@@ -224,10 +224,8 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         Globals.game.input.onDown.add(this.onGameDown, this);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        if (this.view) {
-          this.view.middleSceneLayer.inputEnableChildren = true;
-          this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
-        }
+        this.view.middleSceneLayer.inputEnableChildren = true;
+        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
       }
     }
   }

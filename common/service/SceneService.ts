@@ -4,6 +4,7 @@ import {PBpacket} from "net-socket-packet";
 import BaseSingleton from "../../base/BaseSingleton";
 import {MessageType} from "../const/MessageType";
 import {BasePacketHandler} from "./BasePacketHandler";
+import {Log} from "../../Log";
 
 export class SceneService extends BaseSingleton {
     private handle: Handler;
@@ -95,6 +96,7 @@ class Handler extends BasePacketHandler {
 
     private handleChangeEditorMode(packet: PBpacket): void {
         let modeData: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
+        Log.trace(modeData.mode, modeData.type);
         Globals.DataCenter.EditorData.changeEditorMode(modeData.mode, modeData.type);
     }
 
