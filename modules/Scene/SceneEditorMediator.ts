@@ -219,6 +219,7 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         Globals.game.input.onDown.add(this.onGameDown, this);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+        this.view.middleSceneLayer.inputEnableChildren = true;
         this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
       }
     } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
