@@ -211,6 +211,9 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.em.mode === EditorEnum.Mode.MOVE) {
         Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.BRUSH) {
+      if (this.em.type === EditorEnum.Type.ELEMENT) {
+        this.view.middleSceneLayer.inputEnableChildren = true;
+      }
       Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.ERASER) {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
@@ -276,13 +279,6 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private clearMode(): void {
-    if (!this.view) {
-      return;
-    }
-    if (this.view.input) {
-      this.view.input.disableDrag();
-    }
-
     // Layer events
     this.view.middleSceneLayer.inputEnableChildren = false;
     this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
@@ -291,6 +287,13 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.input.onDown.remove(this.onGameDown, this);
     Globals.game.input.onUp.remove(this.onGameUp, this);
 
+    this.mSelectElement = null;
+    this.mSelectTerrain = null;
+    this.movementX = 0;
+    this.movementY = 0;
+    this.deltaY = 0;
+    this.isElementDown = false;
+    this.isGameDown = false;
   }
 
   protected handleAddAllTerrain(value: op_client.ITerrain): void {
