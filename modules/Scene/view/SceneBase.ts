@@ -11,6 +11,7 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DrawSceneLayer} from "./DrawSceneLayer";
 import {GameConfig} from "../../../GameConfig";
+import {TerrainSortableSceneLayer} from "./TerrainSortableSceneLayer";
 
 export class SceneBase extends SceneBasic {
   public mapSceneInfo: SceneInfo;
@@ -173,7 +174,7 @@ export class SceneBase extends SceneBasic {
     super.onInitialize();
 
     if (GameConfig.isEditor) {
-      this.terrainEditorLayer = new DisplaySortableSceneLayer(this.game);
+      this.terrainEditorLayer = new TerrainSortableSceneLayer(this.game);
       this.terrainEditorLayer.scene = this;
       this.addChild(this.terrainEditorLayer);
     } else {

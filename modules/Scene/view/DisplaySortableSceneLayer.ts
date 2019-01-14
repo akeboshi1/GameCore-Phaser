@@ -11,11 +11,12 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
   protected mSceneEntities: UniqueLinkList;
   protected SCENE_LAYER_RENDER_DELAY = 200;
-  private mDepthSortDirtyFlag = false;
-  private mSortWaitTime = 0;
-  private mSortRectangle: Phaser.Rectangle;
-  private mQuadTree: QuadTree;
-  private mNeedSort = false;
+  protected mDepthSortDirtyFlag = false;
+  protected mRetrieveDirtyFlag = false;
+  protected mSortWaitTime = 0;
+  protected mSortRectangle: Phaser.Rectangle;
+  protected mQuadTree: QuadTree;
+  protected mNeedSort = false;
 
   // private mQuadTree: QuadTreeTest;
   private retrieves: IQuadTreeNode[];
@@ -41,6 +42,12 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.initialize();
 
     this.mSceneEntities.add(d);
+
+    if (this.mQuadTree) {
+      this.mQuadTree.insert(d);
+    }
+
+    this.mRetrieveDirtyFlag = true;
   }
 
   public onFrame(deltaTime: number): void {
@@ -57,7 +64,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     }
   }
 
-  private cleanTreeFlag = false;
+  protected cleanTreeFlag = false;
   public onTick(deltaTime: number): void {
     if (this.screenRectangle === undefined) {
       this.screenRectangle = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
@@ -74,17 +81,10 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
       if (!entity.isValidDisplay && entity.display.parent) {
         this.remove(entity.display);
-        if (this.mQuadTree) {
-          this.mQuadTree.remove(entity);
-        }
-        this.cleanTreeFlag = true;
       }
 
       if (entity.isValidDisplay && entity.display.parent == null) {
         this.add(entity.display);
-        if (this.mQuadTree) {
-          this.mQuadTree.insert(entity);
-        }
         this.cleanTreeFlag = true;
         entity.positionDirty = true;
       }
@@ -225,15 +225,21 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
   public removeEntity(d: BasicSceneEntity, dispose: boolean = true): void {
 
+    if (this.mQuadTree) {
+      this.mQuadTree.remove(d);
+    }
+
     this.mSceneEntities.remove(d);
 
     if (d && d.display && d.display.parent) {
-      this.removeChild(d.display);
+      this.remove(d.display);
     }
 
     if (dispose) {
       d.onDispose();
     }
+
+    this.mRetrieveDirtyFlag = true;
 
     d.scene = null;
     d.camera = null;
