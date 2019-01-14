@@ -110,7 +110,7 @@ class Handler extends BasePacketHandler {
         if (terrainData.all === true) {
           Globals.MessageCenter.emit(MessageType.SCENE_ADD_ALL_TERRAIN, terrainData.terrain);
         } else {
-          Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrainData.terrain);
+          Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, [terrainData.terrain]);
         }
     }
 

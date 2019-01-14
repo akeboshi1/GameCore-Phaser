@@ -101,11 +101,16 @@ export class SceneMediator extends MediatorBase {
      * 监听添加地块
      * @param value
      */
-    protected handleAddTerrain(value: op_client.ITerrain): void {
-      let terrain: TerrainInfo = new TerrainInfo();
-      terrain.setInfo(value);
-      terrain.setUid(Globals.Room45Util.cols);
-      this.addTerrain(terrain);
+    protected handleAddTerrain(value: op_client.ITerrain[]): void {
+        let len = value.length;
+        let iTerrain: op_client.ITerrain;
+        for (let i = 0; i < len; i++) {
+            iTerrain = value[i];
+            let terrain: TerrainInfo = new TerrainInfo();
+            terrain.setInfo(iTerrain);
+            terrain.setUid(Globals.Room45Util.cols);
+            this.addTerrain(terrain);
+        }
     }
 
     /**
