@@ -68,8 +68,12 @@ export class TerrainInfo implements ITerrain {
     }
   }
 
-  public get id(): string {
-     return this.col + "|" + this.row;
+  private _uid: number;
+  public get uid(): number {
+    return this._uid;
+  }
+  public setUid(cols: number) {
+     this._uid = 10000 + this.col + this.row + this.row * cols;
   }
 
   private setArea(): void {

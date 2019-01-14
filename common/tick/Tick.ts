@@ -38,7 +38,7 @@ export class Tick {
     }
 
     // 这里把计算和渲染分开，用于帧数降低时候，避免无谓的渲染消耗
-    protected render(timeElapsed: number): void {
+    public render(timeElapsed: number): void {
         if (undefined !== this.m_RenderCall) this.m_RenderCall.apply(this.m_RenderCallThisObj, [timeElapsed]);
     }
 
@@ -61,7 +61,7 @@ export class Tick {
                 this.m_Timer -= this.m_Delay;
             }
         }
-        this.render(timeElapsed);
+        // this.render(timeElapsed);
     }
 
     public start(): void {

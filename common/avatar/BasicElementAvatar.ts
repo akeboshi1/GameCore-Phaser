@@ -40,22 +40,14 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         this.mBodyAvatar.loadModel(elementInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
-    public onTick(deltaTime: number): void {
-        super.onTick(deltaTime);
-        if (this.mScaleDirty || this.mAnimationDirty) {
-            this.mBodyAvatar.invalidAnimationControlFunc();
-        }
-    }
-
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
         this.mBodyAvatar.onFrame(deltaTime);
+        if (this.mScaleDirty || this.mAnimationDirty) {
+          this.mBodyAvatar.invalidAnimationControlFunc();
+        }
         this.mScaleDirty = false;
         this.mAnimationDirty = false;
-    }
-
-    public get elementInfo(): ElementInfo {
-        return this.myData;
     }
 
     protected onInitialize(): void {

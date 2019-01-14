@@ -49,7 +49,6 @@ export class TerrainAnimationItem extends BasicTerrainItem {
       this.onAvatarAnimationChanged();
       this.mAnimationDirty = false;
     }
-    if (this.terrainIsoDisplayObject && (this.terrainIsoDisplayObject as BasicTerrainAvatar).onTick !== undefined) (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onTick(deltaTime);
     super.onTick(deltaTime);
   }
 

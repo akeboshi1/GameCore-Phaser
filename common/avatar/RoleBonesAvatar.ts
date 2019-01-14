@@ -11,7 +11,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAngleIndex: number = 3;
     protected mAngleIndexDirty: boolean = false;
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
-    protected mAnimationDirty: boolean = false;
+    protected mAnimationDirty = false;
 
     public get angleIndex(): number {
         return this.mAngleIndex;
@@ -39,16 +39,12 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
-    public onTick(deltaTime: number): void {
-        super.onTick(deltaTime);
-        if (this.mAngleIndexDirty || this.mAnimationDirty) {
-            this.mBodyAvatar.invalidAnimationControlFunc();
-        }
-    }
-
     public onFrame(deltaTime: number): void {
         super.onFrame(deltaTime);
         this.mBodyAvatar.onFrame(deltaTime);
+        if (this.mAngleIndexDirty || this.mAnimationDirty) {
+          this.mBodyAvatar.invalidAnimationControlFunc();
+        }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
     }

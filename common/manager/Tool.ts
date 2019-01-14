@@ -5,7 +5,7 @@ import {Const} from "../const/Const";
 
 export class Tool extends BaseSingleton {
     public SMALLEST_NUMBER: number = 0.000001;
-    public DOUBLE_PI: number = Math.PI * 2; //360
+    public DOUBLE_PI: number = Math.PI * 2; // 360
 
     public constructor() {
         super();
@@ -24,11 +24,17 @@ export class Tool extends BaseSingleton {
                               rect0Width: number, rect0Height: number,
                               rect1X: number, rect1Y: number,
                               rect1Width: number, rect1Height: number): boolean {
-        if (rect0X + rect0Width < rect1X) return false;
-        else if (rect0X > rect1X + rect1Width) return false;
+        if (rect0X + rect0Width < rect1X) {
+          return false;
+        } else if (rect0X > rect1X + rect1Width) {
+          return false;
+        }
 
-        if (rect0Y + rect0Height < rect1Y) return false;
-        else if (rect0Y > rect1Y + rect1Height) return false;
+        if (rect0Y + rect0Height < rect1Y) {
+          return false;
+        } else if (rect0Y > rect1Y + rect1Height) {
+          return false;
+        }
 
         return true;
     }

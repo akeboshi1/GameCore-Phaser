@@ -24,6 +24,10 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
         }
     }
 
+    public setData(value: any) {
+      this.myData = value;
+    }
+
     public onDispose(): void {
         this.myData = null;
     }
@@ -32,10 +36,7 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
     public onFrame(deltaTime: number): void {
 
     }
-
-    public onTick(deltaTime: number): void {
-    }
-
+    
     protected onInitialize(): void {
     }
 

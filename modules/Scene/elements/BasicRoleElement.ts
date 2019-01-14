@@ -112,7 +112,7 @@ export class BasicRoleElement extends SceneEntity {
 
         // this.mySpeed = this.characterInfo.moveSpeed; // Const.GameConst.MAP_TILE_WIDTH * 2
         this.setAngleIndex(this.characterInfo.avatarDir);
-        this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z);
+        this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
         this.mouseEnable = false;
 
         this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);

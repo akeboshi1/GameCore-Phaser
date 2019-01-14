@@ -9,203 +9,201 @@ import {op_client} from "../../protocol/protocols";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
 import {DrawArea} from "../common/struct/DrawArea";
 import {IDisposeObject} from "./IDisposeObject";
-import {GameConfig} from "../GameConfig";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode, IDisposeObject {
-    public uid: number;
-    public elementTypeId = 0;
-    public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
-    protected baseLoc: Phaser.Point;
-    public isValidDisplay = false;
+  public uid: number;
+  public elementTypeId = 0;
+  public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
+  public isValidDisplay = false;
+  public data: any;
+  public display: any;
+  public scene: SceneBasic;
+  public camera: Phaser.Camera;
+  public walkableArea: DrawArea;
+  public collisionArea: DrawArea;
 
-    public data: any;
-    public display: any;
-    public scene: SceneBasic;
-    public camera: Phaser.Camera;
-    public isNeedSort = true;
+  public positionDirty = false;
+  public isFirstAdd = true;
+  protected baseLoc: Phaser.Point;
+  protected isNeedSort = true;
+  private mInitilized = false;
 
-    public walkableArea: DrawArea;
-    public collisionArea: DrawArea;
+  public constructor() {
+  }
 
-    private mInitilized = false;
+  public get needSort(): boolean {
+    return this.isNeedSort;
+  }
 
-    public constructor() {
+  protected _ox = 0;
+
+  public get ox(): number {
+    return this._ox;
+  }
+
+  protected _oy = 0;
+
+  public get oy(): number {
+    return this._oy;
+  }
+
+  private _oz = 0;
+
+  public get oz(): number {
+    return this._oz;
+  }
+
+  public get initilized(): boolean {
+    return this.mInitilized;
+  }
+
+  public get key(): any {
+    return this.uid;
+  }
+
+  public get sortX(): number {
+    return this.ox + (this.collisionArea.width >> 1);
+  }
+
+  public get sortY(): number {
+    return this.oy + (this.collisionArea.height >> 1);
+  }
+
+  public get quadH(): number {
+    return this.collisionArea.height;
+  }
+
+  public get quadW(): number {
+    return this.collisionArea.width;
+  }
+
+  public get quadX(): number {
+    return this.collisionArea.ox;
+  }
+
+  public get quadY(): number {
+    return this.collisionArea.oy;
+  }
+
+  public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+    if (this.walkableArea === undefined) {
+      this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
     }
+    this.walkableArea.draw(hWidth, hHeight);
+  }
 
-    protected _ox = 0;
-
-    public get ox(): number {
-        return this._ox;
+  public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
+    if (this.collisionArea === undefined) {
+      this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
     }
+    this.collisionArea.draw(hWidth, hHeight);
+  }
 
-    protected _oy = 0;
+  public moveToTarget(value: op_client.IMoveData): void {
+  }
 
-    public get oy(): number {
-        return this._oy;
+  public moveStopTarget(value: op_client.IMovePosition): void {
+  }
+
+  public setPosition(x: number, y: number, z?: number, silent: boolean = false): void {
+    // Log.trace("[x,y,z]", x, y, z);
+    this._ox = x >> 0;
+    this._oy = y >> 0;
+    this._oz = z || 0;
+    if (this.collisionArea) {
+      this.collisionArea.setPosition(x, y, z);
     }
-
-    private _oz = 0;
-
-    public get oz(): number {
-        return this._oz;
+    if (!silent) {
+      this.positionDirty = true;
     }
+  }
 
-    public get initilized(): boolean {
-        return this.mInitilized;
+  public isInScreen(): boolean {
+    return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
+      this.camera.width, this.camera.height, this._ox - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2, this._oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
+  }
+
+  public initialize(): void {
+    if (!this.mInitilized) {
+      this.onInitialize();
+      this.mInitilized = true;
+      this.onInitializeCompleted();
     }
+  }
 
-    public get key(): any {
-        return this.uid;
+  public updateByData(data: any = null): void {
+    if (!this.mInitilized) return;
+
+    this.data = data;
+
+    this.onUpdateByData();
+  }
+
+  public onDispose(): void {
+    if (!this.initilized) return;
+    this.isValidDisplay = false;
+    if ((this.display as IDisposeObject).onDispose() !== undefined) (<IDisposeObject>this.display).onDispose();
+  }
+
+  public onClear(): void {
+  }
+
+  public onTick(deltaTime: number): void {
+    // Log.trace("更新-->", deltaTime);
+    this.onPreUpdate(deltaTime);
+    this.onUpdating(deltaTime);
+    // may remove is the updating.
+    if (this.scene) {
+      this.onUpdated(deltaTime);
     }
+  }
 
-    public get quadH(): number {
-        return this.collisionArea.height;
+  public onFrame(deltaTime: number): void {
+    if (this.isValidDisplay) {
+      this.onUpdatingDisplay(deltaTime);
     }
+  }
 
-    public get quadW(): number {
-        return this.collisionArea.width;
-    }
+  protected onInitialize(): void {
+    if (!this.display) this.display = this.createDisplay();
 
-    public get quadX(): number {
-        return this.collisionArea.ox;
-    }
+    if (this.display instanceof BasicAvatar) (<BasicAvatar>this.display).initialize();
+    if ((this.display as IEntityComponent).owner !== undefined) (<IEntityComponent>this.display).owner = this;
+  }
 
-    public get quadY(): number {
-        return this.collisionArea.oy;
-    }
+  protected onInitializeCompleted(): void {
 
-    public get needSort(): boolean {
-        return this.isValidDisplay && this.isNeedSort;
-    }
+  }
 
-    public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-        if (this.walkableArea === undefined) {
-            this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
-        }
-        this.walkableArea.draw(hWidth, hHeight);
-    }
+  protected createDisplay(): any {
+    let d: BasicAvatar = new BasicAvatar(Globals.game);
+    return d;
+  }
 
-    public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-        if (this.collisionArea === undefined) {
-            this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
-        }
-        this.collisionArea.draw(hWidth, hHeight);
-    }
+  protected onUpdateByData(): void {
+  }
 
-    public moveToTarget(value: op_client.IMoveData): void {
-    }
+  protected onPreUpdate(deltaTime: number): void {
+  }
 
-    public moveStopTarget(value: op_client.IMovePosition): void {
-    }
+  protected onUpdating(deltaTime: number): void {
+  }
 
-    // Position
-    public positionDirty = false;
-    public setPosition(x: number, y: number, z?: number): void {
-        // Log.trace("[x,y,z]", x, y, z);
-        this._ox = x >> 0;
-        this._oy = y >> 0;
-        this._oz = z || 0;
-        if (this.collisionArea) {
-            this.collisionArea.setPosition(x, y, z);
-        }
-        this.positionDirty = true;
-    }
+  protected onUpdated(deltaTime: number): void {
+    this.checkIsValidDisplayAvatar();
+  }
 
-    public isInScreen(): boolean {
-        // let p2 = Globals.Room45Util.p3top2(this._ox, this._oy, this._oz);
-        return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-            this.camera.width, this.camera.height, this._ox - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2, this._oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
-    }
+  protected checkIsValidDisplayAvatar(): void {
+    this.isValidDisplay = this.isInScreen();
+  }
 
-    public initialize(): void {
-        if (!this.mInitilized) {
-            this.onInitialize();
-            this.mInitilized = true;
-            this.onInitializeCompleted();
-        }
-    }
+  protected onUpdatingDisplay(deltaTime: number): void {
+    let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
 
-    public updateByData(data: any = null): void {
-        if (!this.mInitilized) return;
+    this.display.isoX = p3.x;
+    this.display.isoY = p3.y;
+    this.display.isoZ = p3.z;
 
-        this.data = data;
-
-        this.onUpdateByData();
-    }
-
-    public onDispose(): void {
-        this.isValidDisplay = false;
-        if (this.display) {
-            if ((this.display as IDisposeObject).onDispose() !== undefined) (<IDisposeObject>this.display).onDispose();
-            this.display = null;
-        }
-    }
-
-    public onClear(): void {
-    }
-
-    public onTick(deltaTime: number): void {
-        // Log.trace("更新-->", deltaTime);
-        this.onPreUpdate(deltaTime);
-        this.onUpdating(deltaTime);
-        // may remove is the updating.
-        if (this.scene) this.onUpdated(deltaTime);
-    }
-
-    public onFrame(deltaTime: number): void {
-        // Log.trace("渲染-->", deltaTime);
-        if (this.isValidDisplay) {
-            this.display.visible = true;
-            this.onUpdatingDisplay(deltaTime);
-        } else {
-            this.display.visible = false;
-        }
-    }
-
-    protected onInitialize(): void {
-        if (!this.display) this.display = this.createDisplay();
-
-        this.display.visible = false;
-        if (this.display instanceof BasicAvatar) (<BasicAvatar>this.display).initialize();
-        if ((this.display as IEntityComponent).onTick !== undefined) (<IEntityComponent>this.display).owner = this;
-    }
-
-    protected onInitializeCompleted(): void {
-
-    }
-
-    protected createDisplay(): any {
-        let d: BasicAvatar = new BasicAvatar(Globals.game);
-        return d;
-    }
-
-    protected onUpdateByData(): void {
-    }
-
-    protected onPreUpdate(deltaTime: number): void {
-    }
-
-    protected onUpdating(deltaTime: number): void {
-    }
-
-    protected onUpdated(deltaTime: number): void {
-
-        this.checkIsValidDisplayAvatar();
-        if ((this.display as IEntityComponent).onTick !== undefined) (<IEntityComponent>this.display).onTick(deltaTime);
-    }
-
-    protected checkIsValidDisplayAvatar(): void {
-        this.isValidDisplay = this.isInScreen();
-    }
-
-    protected onUpdatingDisplay(deltaTime: number): void {
-        let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
-        // let p3 = Globals.Room45Util.p2top3(this.ox, this.oy, this.oz);
-        // Log.trace(p3.x,p3.y,p3.z);
-        this.display.isoX = p3.x;
-        this.display.isoY = p3.y;
-        this.display.isoZ = p3.z;
-        // Log.trace(this.display.isoX,this.display.isoY,this.display.isoZ);
-        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
-    }
+    if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
+  }
 }

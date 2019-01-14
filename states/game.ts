@@ -6,6 +6,7 @@ import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource}
 import {GameConfig} from "../GameConfig";
 import WindowClose = UI.WindowClose;
 import DropDownBtn = UI.DropDownBtn;
+import {Log} from "../Log";
 
 export default class Game extends Phaser.State {
 
@@ -17,8 +18,10 @@ export default class Game extends Phaser.State {
         dragonBones.PhaserFactory.init(this.game);
         Globals.SoundManager.init(this.game);
         Globals.TickManager.init(this.game);
-        Globals.Keyboard.init(this.game);
-        Globals.MouseMod.init(this.game);
+        if (!GameConfig.isEditor) {
+          Globals.Keyboard.init(this.game);
+          Globals.MouseMod.init(this.game);
+        }
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
 
@@ -91,11 +94,20 @@ export default class Game extends Phaser.State {
         }
     }
 
+    public update(): void {
+      // Log.trace("update---->>>", this.game.time.now);
+
+      dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1.0);
+      // this.game.debug.text(this.game.time.fps.toString(), GameConfig.GameWidth - 20, 14, "#a7aebe");
+      // this.game.debug.text(this.game.world.width+"|"+this.game.world.height+"|"+this.game.time.fps.toString(), 2, 14, '#a7aebe');
+      // this.game.debug.cameraInfo(this.game.camera, 2, 32, '#a7aebe');
+    }
+
     public render(game: Phaser.Game): void {
         // Log.trace("render---->>>", this.game.time.now);
-        Globals.TickManager.onEnterFrame();
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1.0);
-        this.game.debug.text(this.game.time.fps.toString(), GameConfig.GameWidth - 20, 14, "#a7aebe");
+        //  Globals.TickManager.onFrame();
+        // dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1.0);
+         this.game.debug.text(this.game.time.fps.toString(), GameConfig.GameWidth - 20, 14, "#a7aebe");
         // this.game.debug.text(this.game.world.width+"|"+this.game.world.height+"|"+this.game.time.fps.toString(), 2, 14, '#a7aebe');
         // this.game.debug.cameraInfo(this.game.camera, 2, 32, '#a7aebe');
     }

@@ -29,24 +29,20 @@ export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
     return this.myData;
   }
 
-  public loadModel(callBack: Function, thisObj: any): void {
+  public loadModel(callBack?: Function, thisObj?: any): void {
     this.mBodyAvatar.setAnimationConfig(this.terrainInfo.animations);
     this.callBack = callBack;
     this.callThisObj = thisObj;
     this.mBodyAvatar.loadModel(this.terrainInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
   }
 
-  public onTick(deltaTime: number): void {
-    super.onTick(deltaTime);
-    if (this.mAnimationDirty) {
-      this.mBodyAvatar.invalidAnimationControlFunc();
-    }
-  }
-
   public onFrame(deltaTime: number): void {
     super.onFrame(deltaTime);
     this.mBodyAvatar.onFrame(deltaTime);
-    this.mAnimationDirty = false;
+    if (this.mAnimationDirty) {
+      this.mBodyAvatar.invalidAnimationControlFunc();
+      this.mAnimationDirty = false;
+    }
   }
 
   protected onInitialize(): void {
@@ -66,7 +62,7 @@ export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
 
   protected bodyAvatarPartLoadCompleteHandler(): void {
     if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-    if (this.callBack != null) {
+    if (this.callBack) {
       let cb: Function = this.callBack;
       this.callBack = null;
       cb.apply(this.callThisObj);

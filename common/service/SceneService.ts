@@ -96,7 +96,7 @@ class Handler extends BasePacketHandler {
 
     private handleChangeEditorMode(packet: PBpacket): void {
         let modeData: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
-        Log.trace(modeData.mode, modeData.type);
+        // Log.trace(modeData.mode, modeData.type);
         Globals.DataCenter.EditorData.changeEditorMode(modeData.mode, modeData.type);
     }
 

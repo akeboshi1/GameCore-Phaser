@@ -104,6 +104,7 @@ export class SceneMediator extends MediatorBase {
     protected handleAddTerrain(value: op_client.ITerrain): void {
       let terrain: TerrainInfo = new TerrainInfo();
       terrain.setInfo(value);
+      terrain.setUid(Globals.Room45Util.cols);
       this.addTerrain(terrain);
     }
 

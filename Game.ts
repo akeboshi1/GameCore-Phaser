@@ -60,8 +60,23 @@ export default class Game extends Phaser.Game implements IGame {
         GameConfig.GameWidth = bounds.width;
         GameConfig.GameHeight = bounds.height;
         this.scale.setGameSize(bounds.width, bounds.height);
-        Log.trace(this.camera.x, this.camera.y);
+        // Log.trace(this.camera.x, this.camera.y);
         Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
+    }
+
+  // public update(time: number): void {
+  //   super.update(time);
+  //   Globals.TickManager.onTick();
+  // }
+
+  public updateLogic(timeStep: number): void {
+    super.updateLogic(timeStep);
+    Globals.TickManager.onTick();
+  }
+
+    public updateRender(elapsedTime: number): void {
+      super.updateRender(elapsedTime);
+      Globals.TickManager.onFrame(elapsedTime);
     }
 
     public dispose(): void {
@@ -73,8 +88,6 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.TickManager.dispose();
         Globals.SceneManager.dispose();
         Globals.DataCenter.dispose();
-        // this.removeFromDOM(this.canvas);
-        Phaser.Canvas.removeFromDOM(this.canvas);
         Globals.MessageCenter.dispose();
         Globals.LayerManager.dispose();
         Globals.SocketManager.dispose();

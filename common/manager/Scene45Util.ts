@@ -20,17 +20,15 @@ export class Scene45Util extends BaseSingleton {
 
     // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
     public sortFunc(a: any, b: any): number {
-        let a3 = Globals.Room45Util.p2top3(a.ox, a.oy, a.oz);
-        let b3 = Globals.Room45Util.p2top3(b.ox, b.oy, b.oz);
-        if (a3.y > b3.y) {
+        if (a.sortY > b.sortY) {
             return 1;
-        } else if (a3.y < b3.y) {
+        } else if (a.sortY < b.sortY) {
             return -1;
         } else {
             // 左边的排在下面
-            if (a3.x > b3.x) {
+            if (a.sortX > b.sortX) {
                 return 1;
-            } else if (a3.x < b3.x) {
+            } else if (a.sortX < b.sortX) {
                 return -1;
             }
         }

@@ -38,6 +38,4 @@ export class BasicRoleAvatar extends Phaser.Group implements IAnimatedObject, IE
 
     public onFrame(deltaTime: number): void {
     }
-
-    public onTick(deltaTime: number): void { }
 }

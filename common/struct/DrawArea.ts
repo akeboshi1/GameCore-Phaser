@@ -88,7 +88,7 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
     this._ox = x - this.room45.originX - (this._orgin.x - this._orgin.y) * this.room45.hTileWidth;
     this._oy = y - (this._orgin.x + this._orgin.y) * this.room45.hTileHeight;
     this._oz = z;
-      this.mPosDirty = true;
+    this.mPosDirty = true;
     if (this.mPosInit === false) {
       this.mPosInit = true;
     }

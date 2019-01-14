@@ -3,6 +3,7 @@ import {ElementInfo} from "./ElementInfo";
 import Globals from "../../Globals";
 import {op_client, op_gateway} from "../../../protocol/protocols";
 import {Log} from "../../Log";
+import {t} from "@angular/core/src/render3";
 
 export class SceneInfo {
 
@@ -98,6 +99,7 @@ export class SceneInfo {
         for (let i = 0; i < len; i++) {
           terrain = new TerrainInfo();
           terrain.setInfo(terrains[i]);
+          terrain.setUid(this._cols);
           this._terrainConfig.push(terrain);
         }
     }

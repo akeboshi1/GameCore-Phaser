@@ -12,6 +12,8 @@ export class MouseMod extends BaseSingleton {
     private m_d = false;
     private r_d = false;
 
+    private activePointer: Phaser.Pointer;
+
     /**
      * 构造函数
      */
@@ -21,14 +23,14 @@ export class MouseMod extends BaseSingleton {
 
     public init(game: Phaser.Game): void {
         this.game = game;
-        let activePointer: Phaser.Pointer = this.game.input.activePointer;
-        if (activePointer) {
-          activePointer.leftButton.onDown.add(this.keyDownHandle, this);
-          activePointer.leftButton.onUp.add(this.keyUpHandle, this);
-          activePointer.middleButton.onDown.add(this.keyDownHandle, this);
-          activePointer.middleButton.onUp.add(this.keyUpHandle, this);
-          activePointer.rightButton.onDown.add(this.keyDownHandle, this);
-          activePointer.rightButton.onUp.add(this.keyUpHandle, this);
+        this.activePointer = this.game.input.activePointer;
+        if (this.activePointer) {
+          this.activePointer.leftButton.onDown.add(this.keyDownHandle, this);
+          this.activePointer.leftButton.onUp.add(this.keyUpHandle, this);
+          this.activePointer.middleButton.onDown.add(this.keyDownHandle, this);
+          this.activePointer.middleButton.onUp.add(this.keyUpHandle, this);
+          this.activePointer.rightButton.onDown.add(this.keyDownHandle, this);
+          this.activePointer.rightButton.onUp.add(this.keyUpHandle, this);
           this.resume();
         }
     }
@@ -51,32 +53,31 @@ export class MouseMod extends BaseSingleton {
     }
 
     public onUpdate(): void {
-        if (this.running === false) {
+        if (this.running === false || this.activePointer === undefined) {
             return;
         }
 
-        let activePointer: Phaser.Pointer = this.game.input.activePointer;
         let events: number[] = [];
-        if (activePointer.leftButton.isDown) {
+        if (this.activePointer.leftButton.isDown) {
             this.l_d = true;
             events.push(op_virtual_world.MouseEvent.LeftMouseDown);
-        } else if (activePointer.leftButton.isUp && this.l_d) {
+        } else if (this.activePointer.leftButton.isUp && this.l_d) {
             this.l_d = false;
             events.push(op_virtual_world.MouseEvent.LeftMouseUp);
         }
 
-        if (activePointer.middleButton.isDown) {
+        if (this.activePointer.middleButton.isDown) {
             this.m_d = true;
             events.push(op_virtual_world.MouseEvent.WheelDown);
-        } else if (activePointer.middleButton.isUp && this.m_d) {
+        } else if (this.activePointer.middleButton.isUp && this.m_d) {
             this.m_d = false;
             events.push(op_virtual_world.MouseEvent.WheelUp);
         }
 
-        if (activePointer.rightButton.isDown) {
+        if (this.activePointer.rightButton.isDown) {
             this.r_d = true;
             events.push(op_virtual_world.MouseEvent.RightMouseDown);
-        } else if (activePointer.rightButton.isUp && this.r_d) {
+        } else if (this.activePointer.rightButton.isUp && this.r_d) {
             this.r_d = false;
             events.push(op_virtual_world.MouseEvent.RightMouseUp);
         }
@@ -88,20 +89,20 @@ export class MouseMod extends BaseSingleton {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.mouseEvent = events;
-        content.point3f = {x: activePointer.x + this.game.camera.x, y: activePointer.y + this.game.camera.y};
+        content.point3f = {x: this.activePointer.x + this.game.camera.x, y: this.activePointer.y + this.game.camera.y};
         Globals.SocketManager.send(pkt);
     }
 
     public dispose(): void {
-      let activePointer: Phaser.Pointer = this.game.input ? this.game.input.activePointer : null;
-      if (activePointer) {
-        activePointer.leftButton.onDown.remove(this.keyDownHandle, this);
-        activePointer.leftButton.onUp.remove(this.keyUpHandle, this);
-        activePointer.middleButton.onDown.remove(this.keyDownHandle, this);
-        activePointer.middleButton.onUp.remove(this.keyUpHandle, this);
-        activePointer.rightButton.onDown.remove(this.keyDownHandle, this);
-        activePointer.rightButton.onUp.remove(this.keyUpHandle, this);
+      if (this.activePointer) {
+        this.activePointer.leftButton.onDown.remove(this.keyDownHandle, this);
+        this.activePointer.leftButton.onUp.remove(this.keyUpHandle, this);
+        this.activePointer.middleButton.onDown.remove(this.keyDownHandle, this);
+        this.activePointer.middleButton.onUp.remove(this.keyUpHandle, this);
+        this.activePointer.rightButton.onDown.remove(this.keyDownHandle, this);
+        this.activePointer.rightButton.onUp.remove(this.keyUpHandle, this);
       }
+      this.game = null;
       super.dispose();
     }
 

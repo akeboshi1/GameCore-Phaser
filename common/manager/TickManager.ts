@@ -35,17 +35,31 @@ export class TickManager extends BaseSingleton {
             this.m_TickList.push(tick);
     }
 
-    public onEnterFrame(): void {
+  public onTick(): void {
+    if (this.game === undefined || this.game == null || this.m_TickList === undefined || this.m_TickList.length === 0) return;
+    let nowTime: number = this.game.time.now;
+    let timeElapsed: number = nowTime - this.m_LastTime;
+    this.m_LastTime = nowTime;
+    let len: number = this.m_TickList.length;
+    let tick: Tick;
+    for (let i = len - 1; i >= 0; i--) {
+      tick = this.m_TickList[i];
+      if (!tick.isEnd()) {
+        tick.onTick(timeElapsed);
+      } else {
+        this.m_TickList.splice(i, 1);
+      }
+    }
+  }
+
+    public onFrame(elapsedTime: number): void {
         if (this.game === undefined || null === this.m_TickList) return;
-        let nowTime: number = this.game.time.now;
-        let timeElapsed: number = nowTime - this.m_LastTime;
-        this.m_LastTime = nowTime;
         let len: number = this.m_TickList.length;
         let tick: Tick;
         for (let i = len - 1; i >= 0; i--) {
             tick = this.m_TickList[i];
-            if (tick && !tick.isEnd()) {
-                tick.onTick(timeElapsed);
+            if (!tick.isEnd()) {
+                tick.render(elapsedTime);
             } else {
                 this.m_TickList.splice(i, 1);
             }
@@ -60,6 +74,7 @@ export class TickManager extends BaseSingleton {
         tick.onDispose();
       }
       this.m_TickList.length = 0;
+      this.game = null;
       super.dispose();
     }
 }

@@ -1,16 +1,14 @@
 import {BasicTerrainItem} from "./BasicTerrainItem";
-import {TerrainSceneLayer} from "../view/TerrainSceneLayer";
 import BitmapData = Phaser.BitmapData;
 import Globals from "../../../Globals";
 import {Const} from "../../../common/const/Const";
 import {Images} from "../../../Assets";
-import {TerrainEditorLayer} from "../view/TerrainEditorLayer";
-import {DrawArea} from "../../../common/struct/DrawArea";
+import {ITerrainLayer} from "../view/ITerrainLayer";
 
 export class TerrainImageItem extends BasicTerrainItem {
     private bmd: BitmapData;
 
-    public constructor(game: Phaser.Game, owner: TerrainEditorLayer) {
+    public constructor(game: Phaser.Game, owner: ITerrainLayer) {
         super(game, owner);
     }
 
