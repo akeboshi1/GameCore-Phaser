@@ -18,7 +18,6 @@ import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
 import {IRectangle} from "./base/ds/IRectangle";
-import {Log} from "./Log";
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
@@ -37,11 +36,12 @@ export default class Game extends Phaser.Game implements IGame {
             Globals.DataCenter.EditorData.setEditorMode({mode: value.editorMode.mode, type: value.editorMode.type});
         }
 
-        GameConfig.preLoadList =  value.preLoadList;
+        GameConfig.preLoadList = value.preLoadList;
         GameConfig.GameWidth = value.width;
         GameConfig.GameHeight = value.height;
         GameConfig.HomeDir = value.homeDir;
 
+        dragonBones.PhaserFactory.init(this);
         Globals.SocketManager.setSocketConnection(value.iSocketConnection);
         Globals.ServiceCenter.register();
 
@@ -64,19 +64,16 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
     }
 
-  // public update(time: number): void {
-  //   super.update(time);
-  //   Globals.TickManager.onTick();
-  // }
-
-  public updateLogic(timeStep: number): void {
-    super.updateLogic(timeStep);
-    Globals.TickManager.onTick();
-  }
+    public updateLogic(timeStep: number): void {
+        super.updateLogic(timeStep);
+        // 0.01666
+        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(timeStep * 1.005);
+        Globals.TickManager.onTick();
+    }
 
     public updateRender(elapsedTime: number): void {
-      super.updateRender(elapsedTime);
-      Globals.TickManager.onFrame(elapsedTime);
+        super.updateRender(elapsedTime);
+        Globals.TickManager.onFrame(elapsedTime);
     }
 
     public dispose(): void {

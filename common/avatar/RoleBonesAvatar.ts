@@ -3,6 +3,7 @@ import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold: boolean = true;
@@ -29,6 +30,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     }
 
     public set animationName(value: string) {
+        Log.trace("动画--->" + value);
         if (this.mAnimationName !== value) {
             this.mAnimationName = value;
             this.mAnimationDirty = true;

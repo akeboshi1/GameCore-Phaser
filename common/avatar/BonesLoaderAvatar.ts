@@ -7,6 +7,7 @@ import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import {Avatar} from "../../Assets";
 import * as Assets from "../../Assets";
 import {IDisposeObject} from "../../base/IDisposeObject";
+import {Log} from "../../Log";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
     private static readonly BONES_SCALE: number = 1;
@@ -46,6 +47,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
      */
     public playAnimation(animationName: string, angleIndex: number): void {
         // console.log(this.direct);
+        Log.trace("播放动画--->" + animationName + "|" + angleIndex);
         this.armature.scale.x = BonesLoaderAvatar.BONES_SCALE;
         let t_direct = angleIndex;
         if (angleIndex === 7) {
@@ -57,6 +59,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             t_direct = 3;
             this.armature.scale.x = -BonesLoaderAvatar.BONES_SCALE;
         }
+        // this.armature.animation.timeScale = 0.69;
         this.armature.animation.play(animationName + "_" + t_direct);
         // Log.trace("[动画]", animationName + "_" + t_direct);
     }
