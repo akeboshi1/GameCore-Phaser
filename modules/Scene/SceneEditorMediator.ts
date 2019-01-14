@@ -335,13 +335,14 @@ export class SceneEditorMediator extends SceneMediator {
 
   private elementOldPoint: Phaser.Point = new Phaser.Point;
   private onElementLayerDown(item: any): void {
-    let elementId: number = item.owner.data.id;
+    let tempElement = item.getOwner();
+    let elementId: number = tempElement.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
       if (this.mSelectElement) {
         this.mSelectElement.collisionArea.hide();
       }
-      this.mSelectElement = item.owner;
+      this.mSelectElement = tempElement;
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
       this.mSelectElement.collisionArea.show();

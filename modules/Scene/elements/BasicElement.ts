@@ -58,7 +58,6 @@ export default class BasicElement extends SceneEntity {
       this.onAvatarAnimationChanged();
       this.mAnimationDirty = false;
     }
-
     super.onUpdating(deltaTime);
   }
 

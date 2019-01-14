@@ -10,13 +10,12 @@ import {IQuadTreeNode} from "../../../base/ds/IQuadTreeNode";
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
   protected mSceneEntities: UniqueLinkList;
-  protected SCENE_LAYER_RENDER_DELAY = 200;
+  protected SCENE_LAYER_RENDER_DELAY = 100;
   protected mDepthSortDirtyFlag = false;
   protected mRetrieveDirtyFlag = false;
   protected mSortWaitTime = 0;
   protected mSortRectangle: Phaser.Rectangle;
   protected mQuadTree: QuadTree;
-  protected mNeedSort = false;
 
   // private mQuadTree: QuadTreeTest;
   private retrieves: IQuadTreeNode[];
@@ -39,7 +38,8 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.scene = this.scene;
     d.camera = this.camera;
 
-    d.initialize();
+    d.initPosition();
+    // d.initialize();
 
     this.mSceneEntities.add(d);
 
@@ -60,12 +60,16 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     let entity: BasicSceneEntity;
     for (let i = 0; i < len; i++) {
       entity = screenFounds[i];
-      entity.onFrame(deltaTime);
+      if (!entity.initilized) {
+        entity.initialize();
+      } else {
+        entity.onFrame(deltaTime);
+      }
     }
   }
 
-  protected cleanTreeFlag = false;
   public onTick(deltaTime: number): void {
+
     if (this.screenRectangle === undefined) {
       this.screenRectangle = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
     } else {
@@ -75,63 +79,98 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       this.screenRectangle.height = GameConfig.GameHeight;
     }
 
-    let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
-    while (entity) {
-      entity.onTick(deltaTime);
-
-      if (!entity.isValidDisplay && entity.display.parent) {
-        this.remove(entity.display);
-      }
-
-      if (entity.isValidDisplay && entity.display.parent == null) {
-        this.add(entity.display);
-        this.cleanTreeFlag = true;
-        entity.positionDirty = true;
-      }
-
-      if (entity.needSort) {
-        if (entity.isValidDisplay && entity.positionDirty) {
-          this.markDirty(entity.quadX, entity.quadY, entity.quadW, entity.quadH);
-          if (this.mQuadTree) {
-            this.mQuadTree.remove(entity);
-            this.mQuadTree.insert(entity);
-          }
-        }
-        entity.positionDirty = false;
-      }
-
-      entity = this.mSceneEntities.moveNext();
+    if (this.mQuadTree && (this.retrieves === undefined || this.mRetrieveDirtyFlag)) {
+      this.retrieves = this.mQuadTree.retrieve(this.screenRectangle).concat();
+      this.mRetrieveDirtyFlag = false;
     }
 
-    if (this.mQuadTree && this.cleanTreeFlag) {
+    let screenFounds: BasicSceneEntity[] = this.retrieves as BasicSceneEntity[];
+    let len = screenFounds.length;
+    let entity: BasicSceneEntity;
+
+    let cleanTreeFlag = false;
+
+    for (let i = 0; i < len; i++) {
+      entity = screenFounds[i];
+      if (entity.initilized) {
+        entity.onTick(deltaTime);
+
+        if (!entity.isValidDisplay && entity.display.parent) {
+          this.remove(entity.display);
+          cleanTreeFlag = true;
+        }
+
+        if (entity.isValidDisplay && entity.display.parent == null) {
+          this.add(entity.display);
+          cleanTreeFlag = true;
+          entity.positionDirty = true;
+        }
+
+        if (entity.needSort) {
+          if (entity.isValidDisplay && entity.positionDirty) {
+            this.markDirty(entity.quadX, entity.quadY, entity.quadW, entity.quadH);
+          }
+          entity.positionDirty = false;
+        }
+      }
+    }
+
+
+    // let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
+    // while (entity) {
+    //   if (entity.initilized) {
+    //     entity.onTick(deltaTime);
+    //
+    //     if (!entity.isValidDisplay && entity.display.parent) {
+    //       this.remove(entity.display);
+    //     }
+    //
+    //     if (entity.isValidDisplay && entity.display.parent == null) {
+    //       this.add(entity.display);
+    //       this.cleanTreeFlag = true;
+    //       entity.positionDirty = true;
+    //     }
+    //
+    //     if (entity.needSort) {
+    //       if (entity.isValidDisplay && entity.positionDirty) {
+    //         this.markDirty(entity.quadX, entity.quadY, entity.quadW, entity.quadH);
+    //         if (this.mQuadTree) {
+    //           this.mQuadTree.remove(entity);
+    //           this.mQuadTree.insert(entity);
+    //         }
+    //       }
+    //       entity.positionDirty = false;
+    //     }
+    //   }
+    //   entity = this.mSceneEntities.moveNext();
+    // }
+
+    if (this.mQuadTree && cleanTreeFlag) {
       this.retrieves = this.mQuadTree.retrieve(this.screenRectangle).concat();
-      this.cleanTreeFlag = false;
     }
 
     this.mSortWaitTime += deltaTime;
 
     let needSort = false;
-    if (this.mSortWaitTime > this.SCENE_LAYER_RENDER_DELAY && !this.mNeedSort) {
+    if (this.mSortWaitTime > this.SCENE_LAYER_RENDER_DELAY) {
       this.mSortWaitTime = 0;
       needSort = this.needRealTimeDepthSort || this.mDepthSortDirtyFlag;
       if (needSort) {
         this.mDepthSortDirtyFlag = false;
-        this.mNeedSort = true;
       }
     }
 
     let founds: BasicSceneEntity[];
-    if (this.mNeedSort) {
-      Log.trace("needSort:", this.mSortRectangle.x + "|" + this.mSortRectangle.y + "|" + this.mSortRectangle.width + "|" + this.mSortRectangle.height);
+    if (needSort) {
+      // Log.trace("needSort:", this.mSortRectangle.x + "|" + this.mSortRectangle.y + "|" + this.mSortRectangle.width + "|" + this.mSortRectangle.height);
       let sortRetrieves: IQuadTreeNode[] = this.mQuadTree.retrieve(this.mSortRectangle);
       founds = sortRetrieves.concat() as BasicSceneEntity[];
       this.mSortRectangle.setTo(0, 0, 0, 0);
-      this.mNeedSort = false;
     }
 
     if (founds && founds.length > 0) {
       let childIdxList = [];
-      let len = founds.length;
+      len = founds.length;
       for (let i = 0; i < len; i++) {
         if (!founds[i].isValidDisplay) {
           founds.splice(i, 1);

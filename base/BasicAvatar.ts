@@ -3,46 +3,56 @@ import {IEntityComponent} from "./IEntityComponent";
 import {IDisposeObject} from "./IDisposeObject";
 
 export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent, IDisposeObject {
-    public owner: any;
-    protected myData: any = null;
-    private mInitilized = false;
 
-    public constructor(game: Phaser.Game) {
-        super(game, 0, 0, 0);
-    }
+  protected myData: any = null;
+  private mInitilized = false;
 
-    public get initilized(): boolean {
-        return this.mInitilized;
-    }
+  public constructor(game: Phaser.Game) {
+    super(game, 0, 0, 0);
+  }
 
-    public initialize(value: any = null): void {
-        if (!this.mInitilized) {
-            this.myData = value;
-            this.onInitialize();
-            this.mInitilized = true;
-            this.onInitializeComplete();
-        }
-    }
+  private _owner: any;
 
-    public setData(value: any) {
+  public getOwner(): any {
+    return this._owner;
+  }
+
+  public setOwner(value: any) {
+    this._owner = value;
+  }
+
+  public get initilized(): boolean {
+    return this.mInitilized;
+  }
+
+  public initialize(value: any = null): void {
+    if (!this.mInitilized) {
       this.myData = value;
+      this.onInitialize();
+      this.mInitilized = true;
+      this.onInitializeComplete();
     }
+  }
 
-    public onDispose(): void {
-        this.myData = null;
-    }
+  public setData(value: any) {
+    this.myData = value;
+  }
 
-    // IAnimatedObject Interface
-    public onFrame(deltaTime: number): void {
+  public onDispose(): void {
+    this.myData = null;
+  }
 
-    }
-    
-    protected onInitialize(): void {
-    }
+  // IAnimatedObject Interface
+  public onFrame(deltaTime: number): void {
 
-    protected onInitializeComplete(): void {
-    }
+  }
 
-    public onClear(): void {
-    }
+  public onClear(): void {
+  }
+
+  protected onInitialize(): void {
+  }
+
+  protected onInitializeComplete(): void {
+  }
 }

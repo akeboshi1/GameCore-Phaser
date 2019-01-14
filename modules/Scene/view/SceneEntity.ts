@@ -154,6 +154,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
     protected onUpdating(deltaTime: number): void {
         if (this.myIsWalking) this.onUpdatingPosition(deltaTime);
+        super.onUpdating(deltaTime);
     }
 
     protected onUpdatingPosition(deltaTime: number): void {

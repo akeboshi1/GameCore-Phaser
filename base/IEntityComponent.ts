@@ -1,5 +1,6 @@
 import {BasicSceneEntity} from "./BasicSceneEntity";
 
 export interface IEntityComponent {
-    owner: BasicSceneEntity;
+    setOwner(value: BasicSceneEntity): void ;
+    getOwner(): BasicSceneEntity ;
 }

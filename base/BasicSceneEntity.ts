@@ -9,6 +9,7 @@ import {op_client} from "../../protocol/protocols";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
 import {DrawArea} from "../common/struct/DrawArea";
 import {IDisposeObject} from "./IDisposeObject";
+import {Log} from "../Log";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode, IDisposeObject {
   public uid: number;
@@ -23,7 +24,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   public collisionArea: DrawArea;
 
   public positionDirty = false;
-  public isFirstAdd = true;
   protected baseLoc: Phaser.Point;
   protected isNeedSort = true;
   private mInitilized = false;
@@ -123,6 +123,10 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
       this.camera.width, this.camera.height, this._ox - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2, this._oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
   }
 
+  public initPosition(): void  {
+    this.setPosition(this.data.x, this.data.y , this.data.z);
+  }
+
   public initialize(): void {
     if (!this.mInitilized) {
       this.onInitialize();
@@ -168,11 +172,10 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     if (!this.display) this.display = this.createDisplay();
 
     if (this.display instanceof BasicAvatar) (<BasicAvatar>this.display).initialize();
-    if ((this.display as IEntityComponent).owner !== undefined) (<IEntityComponent>this.display).owner = this;
+    if ((this.display as IEntityComponent).setOwner !== undefined) (<IEntityComponent>this.display).setOwner(this);
   }
 
   protected onInitializeCompleted(): void {
-
   }
 
   protected createDisplay(): any {
