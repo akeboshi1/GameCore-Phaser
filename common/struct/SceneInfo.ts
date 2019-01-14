@@ -1,9 +1,6 @@
 import {TerrainInfo} from "./TerrainInfo";
 import {ElementInfo} from "./ElementInfo";
-import Globals from "../../Globals";
-import {op_client, op_gateway} from "../../../protocol/protocols";
-import {Log} from "../../Log";
-import {t} from "@angular/core/src/render3";
+import {op_client} from "../../../protocol/protocols";
 
 export class SceneInfo {
 
