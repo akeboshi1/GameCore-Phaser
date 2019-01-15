@@ -34,4 +34,10 @@ export class TerrainGridLayer extends BasicSceneLayer {
     p = Globals.Room45Util.tileToPixelCoords(x2, y2);
     graphics.lineTo(p.x, p.y);
   }
+
+  public clear(): void {
+    if (this.graphicsGrid) {
+        this.graphicsGrid.clear();
+    }
+  }
 }

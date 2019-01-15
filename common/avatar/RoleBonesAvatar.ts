@@ -30,7 +30,6 @@ export class RoleBonesAvatar extends BasicAvatar {
     }
 
     public set animationName(value: string) {
-        Log.trace("动画--->" + value);
         if (this.mAnimationName !== value) {
             this.mAnimationName = value;
             this.mAnimationDirty = true;

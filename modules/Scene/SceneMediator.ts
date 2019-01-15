@@ -82,6 +82,8 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
         Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
         Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
+
+        Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
 
     public unRegisterSceneListenerHandler(): void {
@@ -95,6 +97,8 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
+
+        Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
 
     /**
@@ -191,11 +195,13 @@ export class SceneMediator extends MediatorBase {
 
     protected changedToMapSceneCompleteHandler(): void {
         // clear the last one scene.
-        let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
 
-        if (this.view) this.view.clearScene();
-
+        if (this.view) {
+            this.view.clearScene();
+        }
         Globals.SceneManager.popupScene();
+
+        let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
 
         Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
@@ -209,18 +215,18 @@ export class SceneMediator extends MediatorBase {
 
         // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        // currentCharacterInfo.walkableArea.draw(Globals.game, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
         let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
         element.collisionArea.show();
 
         // 播放场景音效
         // Globals.SoundManager.playBgSound(1);
 
-        // set camera
         Globals.SceneManager.pushScene(this.view);
+        // set camera
         Globals.game.camera.follow(this.view.currentSelfPlayer.display);
-        this.sendSceneReady();
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
+
+        this.sendSceneReady();
     }
 
     private sendSceneReady(): void {
@@ -307,7 +313,6 @@ export class SceneMediator extends MediatorBase {
     }
 
     private onEnterScene(): void {
-
         this.sceneLoader = new SceneLoader();
         this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
 
@@ -319,6 +324,11 @@ export class SceneMediator extends MediatorBase {
         this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
 
         this.registerSceneListenerHandler();
+    }
+
+    private changeSceneToHandle(): void {
+        // mapScene
+        this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
     }
 
     private changedToMapSceneStartHandler(): void {

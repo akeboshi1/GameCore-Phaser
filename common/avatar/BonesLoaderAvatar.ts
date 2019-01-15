@@ -47,7 +47,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
      */
     public playAnimation(animationName: string, angleIndex: number): void {
         // console.log(this.direct);
-        Log.trace("播放动画--->" + animationName + "|" + angleIndex);
+        // Log.trace("播放动画--->" + animationName + "|" + angleIndex);
         this.armature.scale.x = BonesLoaderAvatar.BONES_SCALE;
         let t_direct = angleIndex;
         if (angleIndex === 7) {
