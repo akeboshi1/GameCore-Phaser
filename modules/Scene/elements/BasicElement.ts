@@ -41,7 +41,7 @@ export default class BasicElement extends SceneEntity {
     let _ox = this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0);
     let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
     return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-      this.camera.width, this.camera.height, _ox, _oy, this.collisionArea ? this.collisionArea.width : Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, this.collisionArea ? this.collisionArea.height : Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
+      this.camera.width, this.camera.height, _ox, _oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
   }
 
   protected invalidAnimation(): void {

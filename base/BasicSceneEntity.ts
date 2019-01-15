@@ -120,7 +120,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
 
   public isInScreen(): boolean {
     return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-      this.camera.width, this.camera.height, this._ox - Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS / 2, this._oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
+      this.camera.width, this.camera.height, this.ox, this.oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
   }
 
   public initPosition(): void  {

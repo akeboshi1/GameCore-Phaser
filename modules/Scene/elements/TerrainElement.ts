@@ -59,10 +59,10 @@ export class TerrainElement  extends SceneEntity {
   }
 
   public isInScreen(): boolean {
-    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
-    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
+    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
     return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-      this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth, Globals.Room45Util.tileHeight);
+      this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
   }
 
   protected onInitialize() {

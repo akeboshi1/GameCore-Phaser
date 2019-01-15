@@ -12,7 +12,6 @@ export class TerrainGridLayer extends BasicSceneLayer {
   public initializeMap(value: SceneInfo): void {
     let cols: number = value.cols;
     let rows: number = value.rows;
-    let n: number = cols * rows;
     this.graphicsGrid = this.game.make.graphics();
     this.graphicsGrid.clear();
     this.graphicsGrid.lineStyle(1, 0xffffff, 1);
