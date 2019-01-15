@@ -242,7 +242,7 @@ export class SceneEditorMediator extends SceneMediator {
     Log.trace("点击场景-->", x, y);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
-    content.point = {x: x, y: y};
+    content.point = {x: x >> 0, y: y >> 0};
     Globals.SocketManager.send(pkt);
   }
 
@@ -278,8 +278,6 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private addAllFlag = false;
-  private addAllIdx = 0;
-  private addAllCount = 10;
   private addAllTerrain: op_client.ITerrain;
   protected handleAddAllTerrain(value: op_client.ITerrain): void {
     this.handleRemoveAllTerrain();
