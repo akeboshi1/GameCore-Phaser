@@ -67,7 +67,7 @@ export default class Game extends Phaser.Game implements IGame {
     public updateLogic(timeStep: number): void {
         super.updateLogic(timeStep);
         // 0.01666
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(timeStep * 1.05);
+        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
         Globals.TickManager.onTick();
     }
 

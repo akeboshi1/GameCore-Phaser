@@ -101,6 +101,10 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
 
+    protected get camera(): Phaser.Camera {
+        return Globals.game.camera;
+    }
+
     /**
      * 监听添加地块
      * @param value
@@ -207,6 +211,11 @@ export class SceneMediator extends MediatorBase {
 
         Globals.game.world.setBounds(-GameConfig.GameWidth / 2, -GameConfig.GameHeight / 2, mapSceneInfo.mapTotalWidth + GameConfig.GameWidth, mapSceneInfo.mapTotalHeight + GameConfig.GameHeight);
 
+        Log.trace("[参数]", "mapW: " + mapSceneInfo.mapTotalWidth + "|mapH:" + mapSceneInfo.mapTotalHeight,
+            "cameraX: " + this.camera.x + "|cameraY:" + this.camera.x + "|cameraW:" + this.camera.width + "|cameraH:" + this.camera.height,
+            "gameW: " + GameConfig.GameWidth + "|gameH:" + GameConfig.GameHeight,
+        );
+
         this.view.initializeScene(mapSceneInfo);
 
         mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
@@ -216,14 +225,16 @@ export class SceneMediator extends MediatorBase {
         // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
+        element.initialize();
+        this.view.middleSceneLayer.add(element.display);
         element.collisionArea.show();
 
         // 播放场景音效
         // Globals.SoundManager.playBgSound(1);
 
         Globals.SceneManager.pushScene(this.view);
-        // set camera
-        Globals.game.camera.follow(this.view.currentSelfPlayer.display);
+        // follow camera
+        this.camera.follow(this.view.currentSelfPlayer.display);
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
 
         this.sendSceneReady();

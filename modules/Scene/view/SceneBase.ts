@@ -244,8 +244,4 @@ export class SceneBase extends SceneBasic {
     this.drawSceneLayer.clear();
     Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
   }
-
-  protected onStageResize(): void {
-    super.onStageResize();
-  }
 }
