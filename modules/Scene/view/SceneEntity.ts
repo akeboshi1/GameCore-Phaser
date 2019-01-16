@@ -14,7 +14,7 @@ export default class SceneEntity extends BasicSceneEntity {
     // moving
     protected mAngleIndex = 0;
     protected mWalkAngleIndex = 0; // 走路
-    protected mTarget: Phaser.Point;
+    protected mTarget: Phaser.Point = new Phaser.Point;
     protected mTimeSpan: number;
     protected mWalkTime: number;
 
@@ -128,7 +128,6 @@ export default class SceneEntity extends BasicSceneEntity {
 
     protected onInitialize(): void {
         super.onInitialize();
-        this.mTarget = new Phaser.Point();
     }
 
     protected resumeWalk(): void {

@@ -26,8 +26,6 @@ export class SceneBase extends SceneBasic {
   public bottomSceneLayer: DisplaySortableSceneLayer = null;
   // all scenes objects
   private mSceneElements: HashMap = new HashMap();
-  // all terrain objects
-  private mSceneTerrains: HashMap = new HashMap();
 
   public onTick(deltaTime: number): void {
     super.onTick(deltaTime);
@@ -239,11 +237,11 @@ export class SceneBase extends SceneBasic {
       this.terrainSceneLayer.clear();
     }
 
+    if (this.terrainGridLayer) {
+        this.terrainGridLayer.clear();
+    }
+
     this.drawSceneLayer.clear();
     Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
-  }
-
-  protected onStageResize(): void {
-    super.onStageResize();
   }
 }

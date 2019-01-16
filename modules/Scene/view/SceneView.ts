@@ -47,11 +47,6 @@ export class SceneView extends SceneBase {
     super.onInitializeScene(value);
   }
 
-  protected onActivedScene(): void {
-    super.onActivedScene();
-    // Globals.game.camera.follow(this.currentSelfPlayer.display);
-  }
-
   protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
     let element: BasicSceneEntity = null;
 
