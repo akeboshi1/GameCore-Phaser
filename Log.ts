@@ -10,51 +10,42 @@ export class Log {
     for (let key in optionalParams) {
       value = optionalParams[key];
       if (typeof  value === "object") {
+        if (str !== "") {
+          console.log(str);
+          str = "";
+        }
         console.log(value);
       } else {
         if (str !== "") {
           str += ",";
         }
         str += value;
-        console.log(str);
-        str = "";
       }
     }
-    // if (typeof optionalParams === "string") {
-    //   let text: string = optionalParams.join(", ");
-    //   console.log("[Log]" + text);
-    // } else {
-    //   console.log(optionalParams);
-    // }
-  }
-
-  public static debug(...optionalParams: any[]): void {
-    let text: string = optionalParams.join(", ");
-    Globals.game.debug.text("[Log]" + text, 0, 14, "#be0823");
-  }
-
-    public static warn(...optionalParams: any[]): void {
-        let value: any;
-        let str = "";
-        for (let key in optionalParams) {
-            value = optionalParams[key];
-            if (typeof  value === "object") {
-                console.warn(value);
-            } else {
-                if (str !== "") {
-                    str += ",";
-                }
-                str += value;
-                console.warn(str);
-                str = "";
-            }
-        }
-        // if (typeof optionalParams === "string") {
-        //   let text: string = optionalParams.join(", ");
-        //   console.log("[Log]" + text);
-        // } else {
-        //   console.log(optionalParams);
-        // }
+    if (str !== "") {
+      console.log(str);
     }
-
+  }
+    public static warn(...optionalParams: any[]): void {
+      let value: any;
+      let str = "";
+      for (let key in optionalParams) {
+        value = optionalParams[key];
+        if (typeof  value === "object") {
+          if (str !== "") {
+            console.warn(str);
+            str = "";
+          }
+          console.warn(value);
+        } else {
+          if (str !== "") {
+            str += ",";
+          }
+          str += value;
+        }
+      }
+      if (str !== "") {
+        console.warn(str);
+      }
+    }
 }
