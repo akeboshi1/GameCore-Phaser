@@ -33,6 +33,8 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     if (this.display) {
       this.display.onDispose();
     }
+    this.mousePointer = null;
+    this.display = null;
   }
 
   public initialize(): void {
@@ -88,7 +90,9 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
 
   public onFrame(): void {
     if (this.mousePointer == null || this.mousePointer === undefined) return;
-    this.display.x = this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
-    this.display.y = this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    this.display.visible = this.mousePointer.withinGame;
+    this.display.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
+    this.display.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    this.display.onFrame();
   }
 }

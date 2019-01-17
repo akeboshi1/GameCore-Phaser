@@ -67,6 +67,14 @@ export class SceneEditorMediator extends SceneMediator {
     super.onRegister();
   }
 
+  public onRemove(): void {
+    super.onRemove();
+    if (this.mMouseFollower) {
+      this.mMouseFollower.onDispose();
+      this.mMouseFollower = null;
+    }
+  }
+
   public registerSceneListenerHandler(): void {
     super.registerSceneListenerHandler();
     Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
@@ -116,8 +124,8 @@ export class SceneEditorMediator extends SceneMediator {
         }
         break;
       case EditorEnum.Mode.SELECT:
-        if (this.isElementDown && this.mSelectElement && this.mousePointer) {
-          this.moveElement(this.mSelectElement, this.mousePointer);
+        if (this.isElementDown && this.mSelectElement) {
+          this.moveElement(this.mSelectElement);
         }
         break;
       case EditorEnum.Mode.ZOOM:
@@ -158,6 +166,10 @@ export class SceneEditorMediator extends SceneMediator {
         this.addAllTerrain = null;
       }
       this.addAllFlag = false;
+    }
+
+    if (this.mMouseFollower) {
+      this.mMouseFollower.onFrame();
     }
   }
 
@@ -265,15 +277,20 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.SocketManager.send(pkt);
   }
 
-  private moveElement(element: BasicElement, pointer: Phaser.Pointer): void {
-    let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
-    let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
-    element.setPosition(screenX, screenY);
+  private moveElement(element: BasicElement): void {
+    element.isCanShow = false;
+    if (this.mMouseFollower) {
+      this.mMouseFollower.setData({display: element.data.display, animation: element.data.animations[0]});
+    }
   }
 
   private clearMode(): void {
     // Layer events
     this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
+
+    if (this.mMouseFollower) {
+      this.mMouseFollower.onClear();
+    }
 
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
@@ -348,19 +365,13 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
   }
 
-  private elementOldPoint: Phaser.Point = new Phaser.Point;
   private onElementLayerDown(item: any): void {
     let tempElement = item.getOwner();
     let elementId: number = tempElement.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
-      if (this.mSelectElement) {
-        this.mSelectElement.collisionArea.hide();
-      }
       this.mSelectElement = tempElement;
-      this.elementOldPoint.x = this.mSelectElement.ox;
-      this.elementOldPoint.y = this.mSelectElement.oy;
-      this.mSelectElement.collisionArea.show();
+      this.mSelectElement.isCanShow = false;
     }
     this.isElementDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
@@ -405,10 +416,8 @@ export class SceneEditorMediator extends SceneMediator {
       let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
       if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
         this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
-      } else {
-        this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y);
-        this.sendScenePoint(this.elementOldPoint.x, this.elementOldPoint.y);
       }
+      this.mSelectElement.isCanShow = true;
     }
 
     if (this.isElementDown) {
