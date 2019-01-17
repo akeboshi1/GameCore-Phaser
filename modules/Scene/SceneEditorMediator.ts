@@ -427,7 +427,7 @@ export class SceneEditorMediator extends SceneMediator {
       let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
       let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
       if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
-        this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
+        this.sendScenePoint(tempPoint.x, tempPoint.y);
       }
       this.mSelectElement.isCanShow = true;
     }
