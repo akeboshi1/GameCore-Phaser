@@ -2,11 +2,8 @@ import {Const} from "../../../common/const/Const";
 import {PlayerInfo} from "../../../common/struct/PlayerInfo";
 import SceneEntity from "../view/SceneEntity";
 import Globals from "../../../Globals";
-import {RoomNode} from "../grid/RoomNode";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import RoleAvatarModelVO from "../../../common/struct/RoleAvatarModelVO";
-import Point = Phaser.Point;
-import {SceneView} from "../view/SceneView";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
