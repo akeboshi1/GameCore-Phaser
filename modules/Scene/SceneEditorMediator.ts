@@ -124,8 +124,8 @@ export class SceneEditorMediator extends SceneMediator {
         }
         break;
       case EditorEnum.Mode.SELECT:
-        if (this.isElementDown && this.mSelectElement) {
-          this.moveElement(this.mSelectElement);
+        if (this.isElementDown && this.mSelectElement && this.mousePointer) {
+          this.moveElement(this.mSelectElement, this.mousePointer);
         }
         break;
       case EditorEnum.Mode.ZOOM:
@@ -183,18 +183,6 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
-  protected moveStopHandle(posData: op_client.IMovePosition[]): void {
-    let imove: op_client.IMovePosition;
-    let entity: BasicSceneEntity;
-    for (let i = 0; i < posData.length; i++) {
-      imove = posData[i];
-      entity = this.view.getSceneElement(imove.moveObjectId);
-      if (entity) {
-        entity.moveStopTarget(imove);
-      }
-    }
-  }
-
   private minScale = 0;
   protected changedToMapSceneCompleteHandler(): void {
     let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
@@ -211,9 +199,9 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.camera.setPosition((mapSceneInfo.mapTotalWidth - GameConfig.GameWidth) >> 1, 0);
 
     Log.trace("[参数]", "mapW: " + mapSceneInfo.mapTotalWidth + "|mapH:" + mapSceneInfo.mapTotalHeight,
-    "cameraX: " + this.camera.x + "|cameraY:" + this.camera.x + "|cameraW:" + this.camera.width + "|cameraH:" + this.camera.height,
+      "cameraX: " + this.camera.x + "|cameraY:" + this.camera.x + "|cameraW:" + this.camera.width + "|cameraH:" + this.camera.height,
       "gameW: " + GameConfig.GameWidth + "|gameH:" + GameConfig.GameHeight,
-      );
+    );
 
     this.view.initializeScene(mapSceneInfo);
 
@@ -253,7 +241,7 @@ export class SceneEditorMediator extends SceneMediator {
   private handleChangeMode(): void {
     this.clearMode();
     if (this.em.mode === EditorEnum.Mode.MOVE) {
-        Globals.game.input.onDown.add(this.onGameDown, this);
+      Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.BRUSH) {
       Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.ERASER) {
@@ -289,11 +277,10 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.SocketManager.send(pkt);
   }
 
-  private moveElement(element: BasicElement): void {
-    element.isCanShow = false;
-    if (this.mMouseFollower) {
-      this.mMouseFollower.setData({display: element.data.display, animation: element.data.animations[0]});
-    }
+  private moveElement(element: BasicElement, pointer: Phaser.Pointer): void {
+    let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
+    let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
+    element.setPosition(screenX, screenY);
   }
 
   private clearMode(): void {
@@ -377,13 +364,19 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
   }
 
+  private elementOldPoint: Phaser.Point = new Phaser.Point;
   private onElementLayerDown(item: any): void {
     let tempElement = item.getOwner();
     let elementId: number = tempElement.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
+      if (this.mSelectElement) {
+        this.mSelectElement.collisionArea.hide();
+      }
       this.mSelectElement = tempElement;
-      this.mSelectElement.isCanShow = false;
+      this.elementOldPoint.x = this.mSelectElement.ox;
+      this.elementOldPoint.y = this.mSelectElement.oy;
+      this.mSelectElement.collisionArea.show();
     }
     this.isElementDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
@@ -427,7 +420,7 @@ export class SceneEditorMediator extends SceneMediator {
       let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
       let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
       if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
-        this.sendScenePoint(screenX, screenY);
+        this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
       }
       this.mSelectElement.isCanShow = true;
     }
