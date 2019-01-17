@@ -42,6 +42,12 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_TERRAIN, this.handleAddTerrain);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_ELEMENT, this.handleDeleteElement);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.handleMouseFollow);
+    }
+
+    private handleMouseFollow(packet: PBpacket): void {
+      let follow: op_client.OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW = packet.content;
+      Globals.MessageCenter.emit(MessageType.SCENE_MOUSE_FOLLOW, follow);
     }
 
     // 没想到吧，这是潘老板写的

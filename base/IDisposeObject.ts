@@ -2,9 +2,9 @@ export interface IDisposeObject {
     /**
      *	清空为初始化状态
      */
-    onClear();
+    onClear(): void;
     /**
      *	清理对象
      */
-    onDispose();
+    onDispose(): void;
 }

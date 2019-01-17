@@ -17,6 +17,7 @@ import {ElementInfo} from "../../common/struct/ElementInfo";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {Const} from "../../common/const/Const";
 import {BasicTerrainItem} from "./terrainItems/BasicTerrainItem";
+import {MouseFollower} from "./view/MouseFollower";
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;
@@ -28,6 +29,7 @@ export class SceneEditorMediator extends SceneMediator {
   private mousePointer: Phaser.Pointer;
   private mSelectElement: BasicElement;
   private mSelectTerrain: BasicTerrainItem;
+  private mMouseFollower: MouseFollower;
 
   constructor() {
     super();
@@ -56,11 +58,13 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.middleSceneLayer.inputEnableChildren = true;
     this.mousePointer = Globals.game.input.activePointer;
 
+    this.mMouseFollower = new MouseFollower(Globals.game.world);
+    this.mMouseFollower.initialize();
+
     // Globals.game.input.mouse.mouseWheelCallback = (event: WheelEvent) => {
     //   this.deltaY = event.deltaY;
     // };
     super.onRegister();
-
   }
 
   public registerSceneListenerHandler(): void {
@@ -69,13 +73,15 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_ADD_ALL_TERRAIN, this.handleAddAllTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
+    Globals.MessageCenter.on(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
   }
 
   public unRegisterSceneListenerHandler(): void {
-    Globals.MessageCenter.on(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
-    Globals.MessageCenter.on(MessageType.SCENE_ADD_ALL_TERRAIN, this.handleAddAllTerrain, this);
-    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
-    Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
+    Globals.MessageCenter.cancel(MessageType.EDITOR_CHANGE_MODE, this.handleChangeMode, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_ADD_ALL_TERRAIN, this.handleAddAllTerrain, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     super.unRegisterSceneListenerHandler();
   }
 
@@ -126,19 +132,24 @@ export class SceneEditorMediator extends SceneMediator {
     }
 
     if (this.deltaY !== 0) {
+      let scaleX = this.view.scale.x;
+      let scaleY = this.view.scale.x;
       if (this.deltaY < 0) {
-        this.view.scale.add(0.02, 0.02);
+        scaleX += 0.01;
+        scaleY += 0.01;
       } else if (this.deltaY > 0) {
-        this.view.scale.add(-0.02, -0.02);
+        scaleX -= 0.01;
+        scaleY -= 0.01;
       }
 
-      if (this.view.scale.x < this.minScale) {
-        this.view.scale.x = this.minScale;
+      if (scaleX < this.minScale) {
+        scaleX = this.minScale;
       }
 
-      if (this.view.scale.y < this.minScale) {
-        this.view.scale.y = this.minScale;
+      if (scaleY < this.minScale) {
+        scaleY = this.minScale;
       }
+      this.view.scale.set(scaleX, scaleY);
     }
 
     if (this.addAllFlag) {
@@ -308,6 +319,12 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.removeAllSceneElements( (element: BasicSceneEntity) => {
       return element.elementTypeId === Const.SceneElementType.TERRAIN;
     });
+  }
+
+  private handleMouseFollow(value: op_client.OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW): void {
+    if (this.mMouseFollower) {
+      this.mMouseFollower.setData(value);
+    }
   }
 
   /**

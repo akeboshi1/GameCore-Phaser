@@ -5,8 +5,6 @@ export interface IMouseFollow {
   display?: (op_gameconfig.IDisplay|null);
 
   /** animations */
-  animations?: (op_gameconfig.IAnimation[]|null);
+  animation?: (op_gameconfig.IAnimation|null);
 
-  /** animationName */
-  animationName?: string;
 }
