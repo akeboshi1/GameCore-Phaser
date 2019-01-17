@@ -289,7 +289,7 @@ export class SceneMediator extends MediatorBase {
         }
     }
 
-    private moveStopHandle(posData: op_client.IMovePosition[]): void {
+    protected moveStopHandle(posData: op_client.IMovePosition[]): void {
         let imove: op_client.IMovePosition;
         let entity: BasicSceneEntity;
         for (let i = 0; i < posData.length; i++) {

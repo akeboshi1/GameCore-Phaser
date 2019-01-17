@@ -183,6 +183,18 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
+  protected moveStopHandle(posData: op_client.IMovePosition[]): void {
+    let imove: op_client.IMovePosition;
+    let entity: BasicSceneEntity;
+    for (let i = 0; i < posData.length; i++) {
+      imove = posData[i];
+      entity = this.view.getSceneElement(imove.moveObjectId);
+      if (entity) {
+        entity.moveStopTarget(imove);
+      }
+    }
+  }
+
   private minScale = 0;
   protected changedToMapSceneCompleteHandler(): void {
     let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
