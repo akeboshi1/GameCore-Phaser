@@ -97,9 +97,12 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     let key: string = Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath);
     this.element = this.game.make.sprite(0, 0, key);
     let animation: op_gameconfig.IAnimation;
-    for (let i = 0; i < this.config.length; i++) {
-      animation = this.config[i];
-      this.element.animations.add(animation.name, animation.frame, animation.frameRate, animation.loop);
+    // TODO 编辑器添加Character时没有动画，有了更好的解决方案再更改
+    if (this.config) {
+      for (let i = 0; i < this.config.length; i++) {
+        animation = this.config[i];
+        this.element.animations.add(animation.name, animation.frame, animation.frameRate, animation.loop);
+      }
     }
     this.addChild(this.element);
   }
