@@ -233,7 +233,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         this.mLoadCompleteCallback = null;
     }
 
-    public onFrame(deltaTime: number): void {
+    public onFrame(): void {
         if (this.myModelDirty) {
             this.onUpdateModelUrl();
             this.myModelDirty = false;

@@ -24,11 +24,11 @@ export class DrawSceneLayer extends BasicSceneLayer {
     }
   }
 
-  public onFrame(deltaTime: number): void {
-    super.onFrame(deltaTime);
+  public onFrame(): void {
+    super.onFrame();
     let len: number = this.graphicsList.length;
     for (let i = 0; i < len; i++) {
-      this.graphicsList[i].onFrame(deltaTime);
+      this.graphicsList[i].onFrame();
     }
   }
 

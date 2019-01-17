@@ -71,7 +71,7 @@ export default class BasicElement extends SceneEntity {
     this.setScaleX(this.elementInfo.scaleX);
   }
 
-  protected onUpdatingDisplay(deltaTime: number): void {
+  protected onUpdatingDisplay(): void {
     let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
 
     this.display.isoX = p3.x;
@@ -79,7 +79,7 @@ export default class BasicElement extends SceneEntity {
     this.display.isoZ = p3.z;
 
     if ((this.display as IAnimatedObject).onFrame !== undefined) {
-      (<IAnimatedObject>this.display).onFrame(deltaTime);
+      (<IAnimatedObject>this.display).onFrame();
     }
   }
 

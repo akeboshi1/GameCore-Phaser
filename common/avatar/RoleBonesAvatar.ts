@@ -40,9 +40,9 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
-    public onFrame(deltaTime: number): void {
-        super.onFrame(deltaTime);
-        this.mBodyAvatar.onFrame(deltaTime);
+    public onFrame(): void {
+        super.onFrame();
+        this.mBodyAvatar.onFrame();
         if (this.mAngleIndexDirty || this.mAnimationDirty) {
           this.mBodyAvatar.invalidAnimationControlFunc();
         }

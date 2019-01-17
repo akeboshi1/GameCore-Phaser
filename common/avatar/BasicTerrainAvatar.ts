@@ -36,9 +36,9 @@ export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
     this.mBodyAvatar.loadModel(this.terrainInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
   }
 
-  public onFrame(deltaTime: number): void {
-    super.onFrame(deltaTime);
-    this.mBodyAvatar.onFrame(deltaTime);
+  public onFrame(): void {
+    super.onFrame();
+    this.mBodyAvatar.onFrame();
     if (this.mAnimationDirty) {
       this.mBodyAvatar.invalidAnimationControlFunc();
       this.mAnimationDirty = false;

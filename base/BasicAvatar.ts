@@ -43,7 +43,7 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
   }
 
   // IAnimatedObject Interface
-  public onFrame(deltaTime: number): void {
+  public onFrame(): void {
 
   }
 

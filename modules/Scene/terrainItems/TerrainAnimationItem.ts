@@ -39,9 +39,9 @@ export class TerrainAnimationItem extends BasicTerrainItem {
     this.invalidAnimation();
   }
 
-  public onFrame(deltaTime: number) {
-    super.onFrame(deltaTime);
-    if (this.terrainIsoDisplayObject && (this.terrainIsoDisplayObject as BasicTerrainAvatar).onFrame !== undefined) (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onFrame(deltaTime);
+  public onFrame() {
+    super.onFrame();
+    if (this.terrainIsoDisplayObject && (this.terrainIsoDisplayObject as BasicTerrainAvatar).onFrame !== undefined) (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onFrame();
   }
 
   public onTick(deltaTime: number): void {

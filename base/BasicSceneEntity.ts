@@ -115,8 +115,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
 
     public setPosition(x: number, y: number, z?: number, silent: boolean = false): void {
         // Log.trace("[x,y,z]", x, y, z);
-        this._ox = x >> 0;
-        this._oy = y >> 0;
+        this._ox = x;
+        this._oy = y;
         this._oz = z || 0;
         if (this.collisionArea) {
             this.collisionArea.setPosition(x, y, z);
@@ -170,9 +170,9 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
         }
     }
 
-    public onFrame(deltaTime: number): void {
+    public onFrame(): void {
         if (this.isValidDisplay) {
-            this.onUpdatingDisplay(deltaTime);
+            this.onUpdatingDisplay();
         }
     }
 
@@ -208,13 +208,13 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
         this.isValidDisplay = this.isInScreen();
     }
 
-    protected onUpdatingDisplay(deltaTime: number): void {
+    protected onUpdatingDisplay(): void {
         let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
 
         this.display.isoX = p3.x;
         this.display.isoY = p3.y;
         this.display.isoZ = p3.z;
 
-        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame(deltaTime);
+        if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame();
     }
 }

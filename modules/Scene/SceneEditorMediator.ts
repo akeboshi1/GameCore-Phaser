@@ -49,7 +49,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   public onRegister(): void {
-    this.mTick = new Tick(33);
+    this.mTick = new Tick(60);
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.setRenderCallBack(this.onFrame, this);
     this.mTick.start();
@@ -85,7 +85,7 @@ export class SceneEditorMediator extends SceneMediator {
     super.unRegisterSceneListenerHandler();
   }
 
-  public onFrame(deltaTime: number): void {
+  public onFrame(): void {
     switch (this.em.mode) {
       case  EditorEnum.Mode.MOVE:
         if (this.isGameDown) {

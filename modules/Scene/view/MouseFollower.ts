@@ -86,7 +86,7 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     boneAvatar.playAnimation(this.mData.animation.name);
   }
 
-  public onFrame(deltaTime: number): void {
+  public onFrame(): void {
     if (this.mousePointer == null || this.mousePointer === undefined) return;
     this.display.x = this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
     this.display.y = this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);

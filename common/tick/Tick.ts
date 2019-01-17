@@ -12,14 +12,14 @@ export class Tick {
     protected m_RenderCallThisObj: any;
     protected m_Delay: number;
 
-    constructor(pDelay: number = 33, stopTime: number = 0) {
-        this.m_Delay = pDelay;
+    constructor(fps: number = 60, stopTime: number = 0) {
+        this.m_Delay = 1 / fps * 1000;
         this.m_StopTime = stopTime;
         Globals.TickManager.addTick(this);
     }
 
-    public setDelay(delay: number): void {
-        this.m_Delay = delay;
+    public setFps(value: number): void {
+        this.m_Delay = 1 / value * 1000;
     }
 
     public setCallBack(callBack: Function, thisObj: any): void {
@@ -38,8 +38,8 @@ export class Tick {
     }
 
     // 这里把计算和渲染分开，用于帧数降低时候，避免无谓的渲染消耗
-    public render(timeElapsed: number): void {
-        if (undefined !== this.m_RenderCall) this.m_RenderCall.apply(this.m_RenderCallThisObj, [timeElapsed]);
+    public render(): void {
+        if (undefined !== this.m_RenderCall) this.m_RenderCall.apply(this.m_RenderCallThisObj);
     }
 
     public onTick(timeElapsed: number): void {
@@ -61,7 +61,6 @@ export class Tick {
                 this.m_Timer -= this.m_Delay;
             }
         }
-        // this.render(timeElapsed);
     }
 
     public start(): void {

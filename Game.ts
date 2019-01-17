@@ -18,6 +18,7 @@ import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
 import {IRectangle} from "./base/ds/IRectangle";
+import {Log} from "./Log";
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
@@ -68,12 +69,12 @@ export default class Game extends Phaser.Game implements IGame {
         super.updateLogic(timeStep);
         // 0.01666
         dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
-        Globals.TickManager.onTick();
+        Globals.TickManager.onTick(timeStep * 1000);
     }
 
     public updateRender(elapsedTime: number): void {
         super.updateRender(elapsedTime);
-        Globals.TickManager.onFrame(elapsedTime);
+        Globals.TickManager.onFrame();
     }
 
     public dispose(): void {

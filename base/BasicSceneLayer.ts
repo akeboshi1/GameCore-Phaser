@@ -14,7 +14,7 @@ export class BasicSceneLayer extends Phaser.Group implements IAnimatedObject, IT
     }
 
     // IAnimatedObject Interface
-    public onFrame(deltaTime: number): void {
+    public onFrame(): void {
     }
 
     public onTick(deltaTime: number): void {

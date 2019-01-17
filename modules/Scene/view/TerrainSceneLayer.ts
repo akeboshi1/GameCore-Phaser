@@ -57,12 +57,12 @@ export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer 
         }
     }
 
-    public onFrame(deltaTime: number): void {
+    public onFrame(): void {
         let terrainItem: BasicTerrainItem = null;
 
         for (let i = 0, len: number = this._terrainItems.length; i < len; i++) {
             terrainItem = this._terrainItems[i];
-            terrainItem.onFrame(deltaTime);
+            terrainItem.onFrame();
         }
     }
 

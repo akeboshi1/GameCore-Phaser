@@ -46,21 +46,21 @@ export class SceneBase extends SceneBasic {
 
   }
 
-  public onFrame(deltaTime: number): void {
-    super.onFrame(deltaTime);
+  public onFrame(): void {
+    super.onFrame();
     if (this.terrainGridLayer) {
-      this.terrainGridLayer.onFrame(deltaTime);
+      this.terrainGridLayer.onFrame();
     }
     if (this.terrainSceneLayer) {
-      this.terrainSceneLayer.onFrame(deltaTime);
+      this.terrainSceneLayer.onFrame();
     }
     if (this.terrainEditorLayer) {
-      this.terrainEditorLayer.onFrame(deltaTime);
+      this.terrainEditorLayer.onFrame();
     }
-    this.topSceneLayer.onFrame(deltaTime);
-    this.middleSceneLayer.onFrame(deltaTime);
-    this.bottomSceneLayer.onFrame(deltaTime);
-    this.drawSceneLayer.onFrame(deltaTime);
+    this.topSceneLayer.onFrame();
+    this.middleSceneLayer.onFrame();
+    this.bottomSceneLayer.onFrame();
+    this.drawSceneLayer.onFrame();
 
   }
 

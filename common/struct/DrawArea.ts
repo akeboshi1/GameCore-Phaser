@@ -72,7 +72,7 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
     return this._graphics;
   }
 
-  public onFrame(deltaTime: number): void {
+  public onFrame(): void {
     if (this.mPosDirty) {
       this.graphics.x = this.ox;
       this.graphics.y = this.oy;

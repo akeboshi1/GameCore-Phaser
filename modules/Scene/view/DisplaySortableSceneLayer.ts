@@ -50,7 +50,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     this.mRetrieveDirtyFlag = true;
   }
 
-  public onFrame(deltaTime: number): void {
+  public onFrame(): void {
     if (this.retrieves === undefined) {
       return;
     }
@@ -63,7 +63,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       if (!entity.initilized) {
         entity.initialize();
       } else {
-        entity.onFrame(deltaTime);
+        entity.onFrame();
       }
     }
   }

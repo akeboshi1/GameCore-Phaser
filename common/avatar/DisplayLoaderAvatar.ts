@@ -69,7 +69,7 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
   }
 
-  public onFrame(deltaTime: number): void {
+  public onFrame(): void {
     if (this.myModelUrlDirty) {
       this.onUpdateModelURL();
       this.myModelUrlDirty = false;
