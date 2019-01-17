@@ -44,10 +44,10 @@ export class BasicRoleElement extends SceneEntity {
         (<RoleBonesAvatar>this.display).loadModel(model);
     }
 
-    public updateCharacterSpeed(speed: number): void {
-        this.characterInfo.moveSpeed = speed;
-        // this.mySpeed = this.characterInfo.moveSpeed;
-    }
+    // public updateCharacterSpeed(speed: number): void {
+    //     this.characterInfo.moveSpeed = speed;
+    //     this.mySpeed = this.characterInfo.moveSpeed;
+    // }
 
     protected invalidAnimation(): void {
         this.mAnimationDirty = true;
@@ -67,37 +67,37 @@ export class BasicRoleElement extends SceneEntity {
         (<RoleBonesAvatar>this.display).angleIndex = this.mAngleIndex;
     }
 
-    protected doAngleMoving(actualSpeed: number): void {
-        if (actualSpeed <= 0) return;
-
-        let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
-        let endP: Point;
-        let moveAngle: number;
-        if (this.walkAngleIndex === 8) {
-            endP = Globals.Room45Util.tileToPixelCoords(0, 0);
-        } else if (this.walkAngleIndex === 7) {
-            endP = Globals.Room45Util.tileToPixelCoords(1, 0);
-        } else if (this.walkAngleIndex === 6) {
-            endP = Globals.Room45Util.tileToPixelCoords(2, 0);
-        } else if (this.walkAngleIndex === 5) {
-            endP = Globals.Room45Util.tileToPixelCoords(2, 1);
-        } else if (this.walkAngleIndex === 4) {
-            endP = Globals.Room45Util.tileToPixelCoords(2, 2);
-        } else if (this.walkAngleIndex === 3) {
-            endP = Globals.Room45Util.tileToPixelCoords(1, 2);
-        } else if (this.walkAngleIndex === 2) {
-            endP = Globals.Room45Util.tileToPixelCoords(0, 2);
-        } else if (this.walkAngleIndex === 1) {
-            endP = Globals.Room45Util.tileToPixelCoords(0, 1);
-        }
-        moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
-
-        let _x = this.ox + actualSpeed * Math.cos(moveAngle);
-        let _y = this.oy + actualSpeed * Math.sin(moveAngle);
-        let _z = this.oz;
-
-        this.setPosition(_x, _y, _z);
-    }
+    // protected doAngleMoving(actualSpeed: number): void {
+    //     if (actualSpeed <= 0) return;
+    //
+    //     let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
+    //     let endP: Point;
+    //     let moveAngle: number;
+    //     if (this.walkAngleIndex === 8) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(0, 0);
+    //     } else if (this.walkAngleIndex === 7) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(1, 0);
+    //     } else if (this.walkAngleIndex === 6) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(2, 0);
+    //     } else if (this.walkAngleIndex === 5) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(2, 1);
+    //     } else if (this.walkAngleIndex === 4) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(2, 2);
+    //     } else if (this.walkAngleIndex === 3) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(1, 2);
+    //     } else if (this.walkAngleIndex === 2) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(0, 2);
+    //     } else if (this.walkAngleIndex === 1) {
+    //         endP = Globals.Room45Util.tileToPixelCoords(0, 1);
+    //     }
+    //     moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
+    //
+    //     let _x = this.ox + actualSpeed * Math.cos(moveAngle);
+    //     let _y = this.oy + actualSpeed * Math.sin(moveAngle);
+    //     let _z = this.oz;
+    //
+    //     this.setPosition(_x, _y, _z);
+    // }
 
     protected onUpdating(deltaTime: number): void {
         if (this.mAnimationDirty) {
@@ -134,11 +134,11 @@ export class BasicRoleElement extends SceneEntity {
         // avatar.changeAvatarModelByModeVO(this.characterInfo.model);
     }
 
-    protected onGridPositionChanged(colIndex: number, rowIndex: number): void {
-        let node: RoomNode = (<SceneView>this.scene).seaMapGrid.getNode(colIndex, rowIndex);
-
-        if (node) {
-            this.display.alpha = node.isMaskAlpha ? Const.GameConst.MASK_ALPHA : 1;
-        }
-    }
+    // protected onGridPositionChanged(colIndex: number, rowIndex: number): void {
+    //     let node: RoomNode = (<SceneView>this.scene).seaMapGrid.getNode(colIndex, rowIndex);
+    //
+    //     if (node) {
+    //         this.display.alpha = node.isMaskAlpha ? Const.GameConst.MASK_ALPHA : 1;
+    //     }
+    // }
 }

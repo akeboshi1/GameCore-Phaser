@@ -1,12 +1,8 @@
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
-import {Const} from "../../../common/const/Const";
-import Point = Phaser.Point;
-import {op_client, op_virtual_world} from "../../../../protocol/protocols";
-import Direction = op_client.Direction;
+import {op_client} from "../../../../protocol/protocols";
 import {Log} from "../../../Log";
-import KeyCode = op_virtual_world.KeyCode;
-import {GameConfig} from "../../../GameConfig";
+import Direction = op_client.Direction;
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
@@ -20,9 +16,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
     protected myIsWalking = false;
 
-    public constructor() {
-        super();
-    }
+    protected mMovementTween: Phaser.Tween | null;
 
     public get walkAngleIndex(): number {
         return this.mWalkAngleIndex;
@@ -36,9 +30,9 @@ export default class SceneEntity extends BasicSceneEntity {
         return this.mAngleIndex;
     }
 
-    public get isWalking(): boolean {
-        return this.myIsWalking;
-    }
+    // public get isWalking(): boolean {
+    //     return this.myIsWalking;
+    // }
 
     public onDispose(): void {
         if (this.mouseEnable) {
@@ -58,10 +52,11 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     public pauseWalk(): void {
-        if (this.myIsWalking) {
-            this.myIsWalking = false;
-            this.onPauseMove();
-        }
+        // if (this.myIsWalking) {
+        this.doPauseMove();
+        // this.myIsWalking = false;
+        this.onPauseMove();
+        // }
     }
 
     public moveToTarget(value: op_client.IMoveData): void {
@@ -112,7 +107,7 @@ export default class SceneEntity extends BasicSceneEntity {
         this.mTimeSpan = value.timeSpan;
         this.mWalkTime = 0;
 
-            // let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
+        // let distance = Phaser.Math.distance(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
 
         // this.mySpeed = distance / this.mTimeSpan;
 
@@ -131,10 +126,12 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected resumeWalk(): void {
-        if (!this.myIsWalking) {
-            this.myIsWalking = true;
-            this.onStartMove();
-        }
+        // if (!this.myIsWalking) {
+        // this.myIsWalking = true;
+        // by 7
+        this.doMove();
+        this.onStartMove();
+        // }
     }
 
     protected onInitializeCompleted(): void {
@@ -148,109 +145,135 @@ export default class SceneEntity extends BasicSceneEntity {
     protected onStartMove(): void {
     }
 
+    protected doMove() {
+        // by 7
+        Log.warn(`onStartMove`, this.display);
+        this.doPauseMove();
+
+        this.myIsWalking = true;
+        this.mMovementTween = Globals.game.add.tween(this).to({ox: this.mTarget.x, oy: this.mTarget.y},
+            this.mTimeSpan, Phaser.Easing.Linear.None, true);
+
+        this.mMovementTween.onComplete.add((target, tween) => {
+            Log.warn(`onComplete`, target);
+            target.stopWalk();
+        }, this);
+        this.mMovementTween.onUpdateCallback((tween, value, tweenData) => {
+            Log.trace(`Tween running -- percent: ${tweenData.percent} value: ${value}`);
+            Log.trace(`ox: ${this.ox} oy: ${this.oy}`);
+        });
+    }
+
     protected onPauseMove(): void {
     }
 
-    protected onUpdating(deltaTime: number): void {
-        if (this.myIsWalking) this.onUpdatingPosition(deltaTime);
-        super.onUpdating(deltaTime);
-    }
-
-    protected onUpdatingPosition(deltaTime: number): void {
-        this.mWalkTime += deltaTime;
-
-        if (this.mWalkTime >= this.mTimeSpan) {
-            this.doPathMoving(this.mTarget.x, this.mTarget.y);
-            this.stopWalk();
-        } else {
-            let _x = this.ox + (this.mTarget.x - this.ox) * (this.mTimeSpan - this.mWalkTime) / this.mTimeSpan;
-            let _y = this.oy + (this.mTarget.y - this.oy) * (this.mTimeSpan - this.mWalkTime) / this.mTimeSpan;
-            this.doPathMoving(_x, _y);
+    protected doPauseMove() {
+        if (this.mMovementTween) {
+            this.mMovementTween.stop();
         }
+        this.myIsWalking = false;
     }
 
-    protected doPathMoving(targetX: number, targetY: number): void {
+    // protected onUpdating(deltaTime: number): void {
+    //     if (this.myIsWalking) this.onUpdatingPosition(deltaTime);
+    //     super.onUpdating(deltaTime);
+    // }
 
-        let _x = targetX;
-        let _y = targetY;
-        let _z = this.oz;
+    // protected onUpdatingPosition(deltaTime: number): void {
+    //     this.mWalkTime += deltaTime;
+    //
+    //     if (this.mWalkTime >= this.mTimeSpan) {
+    //         this.doPathMoving(this.mTarget.x, this.mTarget.y);
+    //         this.stopWalk();
+    //     } else {
+    //         let _x = this.ox + (this.mTarget.x - this.ox) * (this.mTimeSpan - this.mWalkTime) / this.mTimeSpan;
+    //         let _y = this.oy + (this.mTarget.y - this.oy) * (this.mTimeSpan - this.mWalkTime) / this.mTimeSpan;
+    //         this.doPathMoving(_x, _y);
+    //     }
+    // }
 
-        this.setPosition(_x, _y, _z);
-    }
+    // protected doPathMoving(targetX: number, targetY: number): void {
+    //
+    //     let _x = targetX;
+    //     let _y = targetY;
+    //     let _z = this.oz;
+    //
+    //     this.setPosition(_x, _y, _z);
+    // }
 
     // protected doPathMoving(deltaTime: number): void {
     //     let actualSpeed = this.mySpeed * deltaTime;
     //     this.onMove(actualSpeed);
     // }
 
-    protected onMove(actualSpeed: number): void {
-
-        let atanAngle: number = Globals.Tool.caculateDirectionRadianByTwoPoint2(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
-        let targetX: number = this.ox + actualSpeed * Math.cos(atanAngle);
-        let targetY: number = this.oy + actualSpeed * Math.sin(atanAngle);
-        switch (this.walkAngleIndex) {
-            case Direction.UP:
-                if (targetY < this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                break;
-            case Direction.DOWN:
-                if (targetY > this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                break;
-            case Direction.LEFT:
-                if (targetX < this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.RIGHT:
-                if (targetX > this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.UPPER_LEFT:
-                if (targetY < this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX < this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.UPPER_RIGHT:
-                if (targetY < this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX > this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.LOWER_LEFT:
-                if (targetY > this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX < this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-            case Direction.LOWER_RIGHT:
-                if (targetY > this.mTarget.y) {
-                    targetY = this.mTarget.y;
-                }
-                if (targetX > this.mTarget.x) {
-                    targetX = this.mTarget.x;
-                }
-                break;
-        }
-
-        // Log.trace("moveAngle-->", moveAngle);
-
-        let _x = targetX;
-        let _y = targetY;
-        let _z = this.oz;
-
-        this.setPosition(_x, _y, _z);
-    }
+    // protected onMove(actualSpeed: number): void {
+    //
+    //     let atanAngle: number = Globals.Tool.caculateDirectionRadianByTwoPoint2(this.ox, this.oy, this.mTarget.x, this.mTarget.y);
+    //     let targetX: number = this.ox + actualSpeed * Math.cos(atanAngle);
+    //     let targetY: number = this.oy + actualSpeed * Math.sin(atanAngle);
+    //     switch (this.walkAngleIndex) {
+    //         case Direction.UP:
+    //             if (targetY < this.mTarget.y) {
+    //                 targetY = this.mTarget.y;
+    //             }
+    //             break;
+    //         case Direction.DOWN:
+    //             if (targetY > this.mTarget.y) {
+    //                 targetY = this.mTarget.y;
+    //             }
+    //             break;
+    //         case Direction.LEFT:
+    //             if (targetX < this.mTarget.x) {
+    //                 targetX = this.mTarget.x;
+    //             }
+    //             break;
+    //         case Direction.RIGHT:
+    //             if (targetX > this.mTarget.x) {
+    //                 targetX = this.mTarget.x;
+    //             }
+    //             break;
+    //         case Direction.UPPER_LEFT:
+    //             if (targetY < this.mTarget.y) {
+    //                 targetY = this.mTarget.y;
+    //             }
+    //             if (targetX < this.mTarget.x) {
+    //                 targetX = this.mTarget.x;
+    //             }
+    //             break;
+    //         case Direction.UPPER_RIGHT:
+    //             if (targetY < this.mTarget.y) {
+    //                 targetY = this.mTarget.y;
+    //             }
+    //             if (targetX > this.mTarget.x) {
+    //                 targetX = this.mTarget.x;
+    //             }
+    //             break;
+    //         case Direction.LOWER_LEFT:
+    //             if (targetY > this.mTarget.y) {
+    //                 targetY = this.mTarget.y;
+    //             }
+    //             if (targetX < this.mTarget.x) {
+    //                 targetX = this.mTarget.x;
+    //             }
+    //             break;
+    //         case Direction.LOWER_RIGHT:
+    //             if (targetY > this.mTarget.y) {
+    //                 targetY = this.mTarget.y;
+    //             }
+    //             if (targetX > this.mTarget.x) {
+    //                 targetX = this.mTarget.x;
+    //             }
+    //             break;
+    //     }
+    //
+    //     // Log.trace("moveAngle-->", moveAngle);
+    //
+    //     let _x = targetX;
+    //     let _y = targetY;
+    //     let _z = this.oz;
+    //
+    //     this.setPosition(_x, _y, _z);
+    // }
 
     protected checkIsValidDisplayAvatar(): void {
         this.isValidDisplay = this.isCanShow && this.isInScreen();
