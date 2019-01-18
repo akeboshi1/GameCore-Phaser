@@ -115,36 +115,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       }
     }
 
-
-    // let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
-    // while (entity) {
-    //   if (entity.initilized) {
-    //     entity.onTick(deltaTime);
-    //
-    //     if (!entity.isValidDisplay && entity.display.parent) {
-    //       this.remove(entity.display);
-    //     }
-    //
-    //     if (entity.isValidDisplay && entity.display.parent == null) {
-    //       this.add(entity.display);
-    //       this.cleanTreeFlag = true;
-    //       entity.positionDirty = true;
-    //     }
-    //
-    //     if (entity.needSort) {
-    //       if (entity.isValidDisplay && entity.positionDirty) {
-    //         this.markDirty(entity.quadX, entity.quadY, entity.quadW, entity.quadH);
-    //         if (this.mQuadTree) {
-    //           this.mQuadTree.remove(entity);
-    //           this.mQuadTree.insert(entity);
-    //         }
-    //       }
-    //       entity.positionDirty = false;
-    //     }
-    //   }
-    //   entity = this.mSceneEntities.moveNext();
-    // }
-
     if (this.mQuadTree && cleanTreeFlag) {
       this.retrieves = this.mQuadTree.retrieve(this.screenRectangle).concat();
     }
@@ -201,7 +171,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   }
 
   /**
-   * Indicates this layer is dirty and needs to resort.
+   * 计算脏区域.
    */
   public markDirty(x: number, y: number, w: number, h: number): void {
     if (this.mSortRectangle === undefined || this.mSortRectangle == null) {
@@ -262,7 +232,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     this.mDepthSortDirtyFlag = true;
   }
 
-  public removeEntity(d: BasicSceneEntity, dispose: boolean = true): void {
+  public removeEntity(d: BasicSceneEntity): void {
 
     if (this.mQuadTree) {
       this.mQuadTree.remove(d);
@@ -270,13 +240,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
     this.mSceneEntities.remove(d);
 
-    if (d && d.display && d.display.parent) {
-      this.remove(d.display);
-    }
-
-    if (dispose) {
-      d.onDispose();
-    }
+    this.remove(d.display);
 
     this.mRetrieveDirtyFlag = true;
 

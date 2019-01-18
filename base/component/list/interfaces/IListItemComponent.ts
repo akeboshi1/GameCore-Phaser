@@ -1,4 +1,4 @@
-import {IDisposeObject} from "../../../IDisposeObject";
+import {IDisposeObject} from "../../../object/interfaces/IDisposeObject";
 import {IListItemEventListener} from "./IListItemEventListener";
 import {ILayoutItem} from "../../../layout/interfaces/ILayoutItem";
 

@@ -6,6 +6,7 @@ import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import Globals from "../../../Globals";
 import {ITerrainLayer} from "./ITerrainLayer";
 import {TerrainAnimationItem} from "../terrainItems/TerrainAnimationItem";
+import {HashMap} from "../../../base/ds/HashMap";
 
 export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer {
     protected curTerrainLoadCount = 0;
@@ -52,7 +53,7 @@ export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer 
     public releaseTerrainItems(): void {
         if (this._terrainItems && this._terrainItems.length > 0) {
             for (let i = 0, len: number = this._terrainItems.length; i < len; i++) {
-                this._terrainItems[i].onDispose();
+                this._terrainItems[i].onClear();
             }
         }
     }
@@ -78,7 +79,7 @@ export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer 
     public clear(): void {
         if (this._terrainItems && this._terrainItems.length > 0) {
             for (let i = 0, len = this._terrainItems.length; i < len; i++) {
-                this._terrainItems[i].onDispose();
+                this._terrainItems[i].onClear();
             }
 
             this._terrainItems.length = 0;

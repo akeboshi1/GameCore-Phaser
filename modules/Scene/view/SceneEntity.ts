@@ -7,6 +7,7 @@ import Direction = op_client.Direction;
 import {Log} from "../../../Log";
 import KeyCode = op_virtual_world.KeyCode;
 import {GameConfig} from "../../../GameConfig";
+import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
@@ -20,10 +21,6 @@ export default class SceneEntity extends BasicSceneEntity {
     protected mWalkTime: number;
 
     protected myIsWalking = false;
-
-    public constructor() {
-        super();
-    }
 
     public get walkAngleIndex(): number {
         return this.mWalkAngleIndex;

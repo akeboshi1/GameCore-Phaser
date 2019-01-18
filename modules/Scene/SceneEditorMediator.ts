@@ -317,17 +317,15 @@ export class SceneEditorMediator extends SceneMediator {
     let terrain: TerrainInfo;
     let cols: number = Globals.Room45Util.cols;
     let rows: number = Globals.Room45Util.rows;
-    let len = cols * rows;
 
-    for (; i < len; i++) {
-      let colIndex: number = Math.floor(i % cols);
-      let rowIndex: number = Math.floor(i / cols);
-      terrain = new TerrainInfo();
-      terrain.setInfo(value);
-      terrain.x = colIndex;
-      terrain.y = rowIndex;
-      terrain.setUid(cols);
-      this.addTerrain(terrain);
+    for (; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        terrain = new TerrainInfo();
+        terrain.setInfo(value);
+        terrain.x = i;
+        terrain.y = j;
+        this.addTerrain(terrain);
+      }
     }
   }
 
@@ -356,7 +354,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @elementId elementId
    */
   private handleRemoveTerrain(value: any): void {
-    let uid: number = 10000 + value[0] + value[1] + value[1] * Globals.Room45Util.cols;
+    let uid: number = Globals.Room45Util.getUid(+value[0], +value[1]);
     this.removeElement(uid);
   }
 

@@ -1,4 +1,4 @@
-import {IDisposeObject} from "../../../IDisposeObject";
+import {IDisposeObject} from "../../../object/interfaces/IDisposeObject";
 
 export interface IPageComponent extends IDisposeObject {
     setCurIndex( index: number ): void;

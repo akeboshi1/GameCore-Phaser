@@ -6,6 +6,7 @@ import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {BasicAvatar} from "../../../base/BasicAvatar";
+import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
 
 export class TerrainElement  extends SceneEntity {
 
@@ -13,8 +14,8 @@ export class TerrainElement  extends SceneEntity {
   protected mScaleX = 1;
   protected myAnimationName: string;
 
-  public constructor() {
-    super();
+  public constructor(value?: IObjectPool) {
+    super(value);
     this.sceneLayerType = Const.SceneConst.SceneLayerTerrain;
   }
 

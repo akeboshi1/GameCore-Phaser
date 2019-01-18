@@ -6,7 +6,7 @@ import Slot = dragonBones.Slot;
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import {Avatar} from "../../Assets";
 import * as Assets from "../../Assets";
-import {IDisposeObject} from "../../base/IDisposeObject";
+import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {Log} from "../../Log";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {

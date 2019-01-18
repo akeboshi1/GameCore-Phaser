@@ -1,4 +1,3 @@
-import {RoomGridUtil} from "../util/RoomGridUtil";
 import {SceneInfo} from "../../../common/struct/SceneInfo";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {Const} from "../../../common/const/Const";
@@ -8,11 +7,15 @@ import {SelfRoleElement} from "../elements/SelfRoleElement";
 import {RoleElement} from "../elements/RoleElement";
 import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "./SceneBase";
+import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
+import {ObjectPool} from "../../../pool/base/ObjectPool";
 import {TerrainElement} from "../elements/TerrainElement";
 
 export class SceneView extends SceneBase {
-  public seaMapGrid: RoomGridUtil;
   public currentSelfPlayer: SelfRoleElement;
+  protected m_TerrainPool: IObjectPool;
+  protected m_ElementPool: IObjectPool;
+  protected m_PlayerPool: IObjectPool;
 
   public addSceneElement(sceneElementType: number,
                          uid: number, elemetData: any,
@@ -35,15 +38,40 @@ export class SceneView extends SceneBase {
     return element;
   }
 
+  public deleteSceneElement(uid: number): BasicSceneEntity {
+    let element: BasicSceneEntity = super.deleteSceneElement(uid);
+    if (element == null) return null;
+    switch (element.elementTypeId) {
+      case Const.SceneElementType.ROLE :
+        // 当前玩家
+        if (uid !== this.currentSelfPlayer.uid) {
+          this.m_PlayerPool.free(element);
+        }
+        break;
+
+      case Const.SceneElementType.ELEMENT :
+        this.m_ElementPool.free(element);
+        break;
+
+      case Const.SceneElementType.TERRAIN :
+        this.m_TerrainPool.free(element);
+        break;
+
+      default:
+        break;
+    }
+    return element;
+  }
+
   protected onInitialize(): void {
     super.onInitialize();
-    this.seaMapGrid = new RoomGridUtil();
+    this.m_ElementPool = new ObjectPool();
+    this.m_PlayerPool = new ObjectPool();
+    this.m_TerrainPool = new ObjectPool();
   }
 
   protected onInitializeScene(value: SceneInfo): void {
     this.mapSceneInfo = value;
-    // this.seaMapGrid.initGrid(this.mapSceneInfo.cols, this.mapSceneInfo.rows);
-
     super.onInitializeScene(value);
   }
 
@@ -57,16 +85,25 @@ export class SceneView extends SceneBase {
         if (isSelf) {
           element = this.currentSelfPlayer = new SelfRoleElement();
         } else {
-          element = new RoleElement();
+          element = this.m_PlayerPool.alloc() as RoleElement;
+          if (null == element) {
+            element = new RoleElement(this.m_PlayerPool);
+          }
         }
         break;
 
       case Const.SceneElementType.ELEMENT :
-        element = new BasicElement();
+        element = this.m_ElementPool.alloc() as BasicElement;
+        if (null == element) {
+          element = new BasicElement();
+        }
         break;
 
       case Const.SceneElementType.TERRAIN :
-        element = new TerrainElement();
+        element = this.m_TerrainPool.alloc() as TerrainElement;
+        if (null == element) {
+          element = new TerrainElement();
+        }
         break;
 
       default:

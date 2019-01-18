@@ -1,4 +1,4 @@
-import {IDisposeObject} from "../../IDisposeObject";
+import {IDisposeObject} from "../../object/interfaces/IDisposeObject";
 import {ILayoutItem} from "./ILayoutItem";
 
 export interface ILayout extends IDisposeObject {

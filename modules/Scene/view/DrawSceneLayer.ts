@@ -10,9 +10,11 @@ export class DrawSceneLayer extends BasicSceneLayer {
   }
 
   public addDraw(value: DrawArea): void {
-    this.addChild(value.graphics);
+    // this.addChild(value.graphics);
     this.graphicsList.push(value);
   }
+
+  //todo: duixiangchi
 
   public removeDraw(value: DrawArea): void {
     if (value.graphics.parent) {

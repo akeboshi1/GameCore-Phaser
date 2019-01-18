@@ -1,5 +1,5 @@
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
-import {IDisposeObject} from "../../../base/IDisposeObject";
+import {IDisposeObject} from "../../../base/object/interfaces/IDisposeObject";
 import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {IMouseFollow} from "../../../interface/IMouseFollow";
 import Globals from "../../../Globals";
@@ -48,7 +48,6 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     this.mousePointer = Globals.game.input.activePointer;
     this.display = new DisplayLoaderAvatar(Globals.game);
     this.display.setAnimationControlFunc(this.bodyControlHandler, this);
-    this.display.visible = false;
     if (this.parent) {
       this.parent.add(this.display);
     }
@@ -59,7 +58,7 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
       this.mData = value;
       this.setBaseLoc();
       this.display.setAnimationConfig([value.animation]);
-      this.display.loadModel(value.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+      this.display.loadModel(value.display);
     } else {
       this.onClear();
     }
@@ -75,13 +74,6 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     } else {
       this.baseLoc.set(+(tmp[0]), +(tmp[1]));
     }
-  }
-
-  protected bodyAvatarPartLoadStartHandler(): void {
-  }
-
-  protected bodyAvatarPartLoadCompleteHandler(): void {
-    this.display.visible = true;
   }
 
   protected bodyControlHandler(boneAvatar: DisplayLoaderAvatar): void {

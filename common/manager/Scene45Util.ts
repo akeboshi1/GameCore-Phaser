@@ -6,7 +6,6 @@ import {Log} from "../../Log";
 
 export class Scene45Util extends BaseSingleton {
 
-
     public rows: number;
     public cols: number;
     public tileWidth: number;
@@ -17,6 +16,10 @@ export class Scene45Util extends BaseSingleton {
     constructor() {
         super();
     }
+
+  public getUid(col: number, row: number): number {
+    return 10000 + col + row + row * this.cols;
+  }
 
     // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
     public sortFunc(a: any, b: any): number {
@@ -70,13 +73,13 @@ export class Scene45Util extends BaseSingleton {
         return this._originX;
     }
 
-    private _mapTotalWidth: number = 0;
+    private _mapTotalWidth = 0;
 
     public get mapTotalWidth(): number {
         return this._mapTotalWidth;
     }
 
-    private _mapTotalHeight: number = 0;
+    private _mapTotalHeight = 0;
 
     public get mapTotalHeight(): number {
         return this._mapTotalHeight;

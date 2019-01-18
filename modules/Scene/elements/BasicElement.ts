@@ -11,10 +11,6 @@ export default class BasicElement extends SceneEntity {
   protected mScaleX = 1;
   protected myAnimationName: string;
 
-  public constructor() {
-    super();
-  }
-
   public get elementInfo(): ElementInfo {
     return this.data;
   }

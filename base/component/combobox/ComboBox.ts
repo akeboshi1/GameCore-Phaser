@@ -1,7 +1,7 @@
 import {ListComponent} from "../list/core/ListComponent";
 import {UI} from "../../../Assets";
 import {ComboTextItem} from "./item/ComboTextItem";
-import {IDisposeObject} from "../../IDisposeObject";
+import {IDisposeObject} from "../../object/interfaces/IDisposeObject";
 import {UIEvents} from "../event/UIEvents";
 
 export class ComboBox extends Phaser.Group implements IDisposeObject{

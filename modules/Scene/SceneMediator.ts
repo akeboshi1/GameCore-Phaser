@@ -116,7 +116,6 @@ export class SceneMediator extends MediatorBase {
             iTerrain = value[i];
             let terrain: TerrainInfo = new TerrainInfo();
             terrain.setInfo(iTerrain);
-            terrain.setUid(Globals.Room45Util.cols);
             this.addTerrain(terrain);
         }
     }
@@ -178,7 +177,7 @@ export class SceneMediator extends MediatorBase {
      */
     protected addTerrain(value: TerrainInfo): void {
         this.view.terrainSceneLayer.addTerrainItem(value);
-}
+    }
 
     /**
      * 添加物件

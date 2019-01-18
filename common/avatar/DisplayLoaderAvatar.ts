@@ -2,7 +2,7 @@ import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {Load} from "../../Assets";
 import {op_gameconfig} from "../../../protocol/protocols";
 import Globals from "../../Globals";
-import {IDisposeObject} from "../../base/IDisposeObject";
+import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 
 export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
     private mUrl: op_gameconfig.IDisplay = {};
@@ -47,7 +47,7 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     this.mAnimatonControlFuncDitry = true;
   }
 
-  public loadModel(url: op_gameconfig.IDisplay, thisArg: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
+  public loadModel(url: op_gameconfig.IDisplay, thisArg?: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
     if (this.mUrl.dataPath === url.dataPath && this.mUrl.texturePath === url.texturePath) {
       return;
     }
@@ -91,6 +91,16 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
 
   public onDispose(): void {
     this.closeLoadModel();
+    if (this.element) {
+      this.element.destroy(true);
+    }
+    this.element = null;
+    this.config = null;
+    this.mLoadCompleteCallback = null;
+    this.mLoadErrorCallback = null;
+    this.mAnimatonControlFunc = null;
+    this.mLoadThisArg = null;
+    this.mAnimatonControlThisObj = null;
   }
 
   protected onCompleteLoadModel(): void {

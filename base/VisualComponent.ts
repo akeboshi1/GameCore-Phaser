@@ -1,4 +1,4 @@
-import {IDisposeObject} from "./IDisposeObject";
+import {IDisposeObject} from "./object/interfaces/IDisposeObject";
 
 export class VisualComponent extends Phaser.Group implements IDisposeObject {
     protected signals: { [name: string]: Phaser.Signal } = {};

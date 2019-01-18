@@ -96,7 +96,6 @@ export class SceneInfo {
         for (let i = 0; i < len; i++) {
           terrain = new TerrainInfo();
           terrain.setInfo(terrains[i]);
-          terrain.setUid(this._cols);
           this._terrainConfig.push(terrain);
         }
     }

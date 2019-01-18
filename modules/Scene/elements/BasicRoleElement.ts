@@ -4,14 +4,15 @@ import SceneEntity from "../view/SceneEntity";
 import Globals from "../../../Globals";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import RoleAvatarModelVO from "../../../common/struct/RoleAvatarModelVO";
+import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
     private mAnimationDirty = false;
 
 
-    public constructor() {
-        super();
+    public constructor(value?: IObjectPool) {
+        super(value);
         this.baseLoc = new Phaser.Point(0, 7.75);
     }
 

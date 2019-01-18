@@ -1,6 +1,6 @@
 import {Scene45Util} from "../manager/Scene45Util";
 import Globals from "../../Globals";
-import {IDisposeObject} from "../../base/IDisposeObject";
+import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {GameConfig} from "../../GameConfig";
 

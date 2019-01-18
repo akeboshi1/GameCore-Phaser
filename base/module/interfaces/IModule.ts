@@ -1,4 +1,4 @@
-import {IDisposeObject} from "../../IDisposeObject";
+import {IDisposeObject} from "../../object/interfaces/IDisposeObject";
 
 export interface IModule extends IDisposeObject{
     name: string;

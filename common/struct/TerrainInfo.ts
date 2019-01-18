@@ -1,5 +1,6 @@
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
 import ITerrain = op_client.ITerrain;
+import Globals from "../../Globals";
 
 export class TerrainInfo implements ITerrain {
   public name: string;
@@ -68,12 +69,8 @@ export class TerrainInfo implements ITerrain {
     }
   }
 
-  private _uid: number;
   public get uid(): number {
-    return this._uid;
-  }
-  public setUid(cols: number) {
-     this._uid = 10000 + this.col + this.row + this.row * cols;
+    return Globals.Room45Util.getUid(this.col, this.row);
   }
 
   private setArea(): void {
