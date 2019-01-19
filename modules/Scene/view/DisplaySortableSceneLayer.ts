@@ -240,6 +240,8 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
     this.mSceneEntities.remove(d);
 
+    d.onClear();
+
     this.remove(d.display);
 
     this.mRetrieveDirtyFlag = true;

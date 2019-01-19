@@ -7,7 +7,7 @@ import Direction = op_client.Direction;
 import {Log} from "../../../Log";
 import KeyCode = op_virtual_world.KeyCode;
 import {GameConfig} from "../../../GameConfig";
-import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
@@ -116,10 +116,6 @@ export default class SceneEntity extends BasicSceneEntity {
     public moveStopTarget(value: op_client.IMovePosition): void {
         this.stopWalk();
         this.setPosition(value.destinationPoint3f.x, value.destinationPoint3f.y, value.destinationPoint3f.z);
-    }
-
-    protected onInitialize(): void {
-        super.onInitialize();
     }
 
     protected resumeWalk(): void {

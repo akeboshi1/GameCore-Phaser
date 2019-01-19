@@ -42,7 +42,7 @@ export class VisualComponent extends Phaser.Group implements IDisposeObject {
     }
 
     public onClear(): void {
-    }
+  }
 
     public onDispose(): void {
         for ( let name in this.signals ) {

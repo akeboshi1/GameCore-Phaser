@@ -9,7 +9,7 @@ import {op_client} from "../../protocol/protocols";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
 import {DrawArea} from "../common/struct/DrawArea";
 import {IDisposeObject} from "./object/interfaces/IDisposeObject";
-import {IObjectPool} from "../pool/interfaces/IObjectPool";
+import {IObjectPool} from "./pool/interfaces/IObjectPool";
 import {RecycleObject} from "./object/base/RecycleObject";
 
 export class BasicSceneEntity extends RecycleObject implements ITickedObject, IAnimatedObject, IQuadTreeNode {
@@ -156,16 +156,26 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
 
   public onDispose(): void {
     if (!this.initilized) {
-      this.onRecycle();
       return;
     }
     this.mInitilized = false;
     this.isValidDisplay = false;
-    if ((this.display as IDisposeObject).onDispose() !== undefined) (<IDisposeObject>this.display).onDispose();
-    this.onRecycle();
+    if ((this.display as IDisposeObject).onDispose !== undefined) (<IDisposeObject>this.display).onDispose();
   }
 
   public onClear(): void {
+    if (!this.initilized) {
+      return;
+    }
+    this.mInitilized = false;
+    this.isValidDisplay = false;
+    if ((this.display as IDisposeObject).onClear !== undefined) (<IDisposeObject>this.display).onClear();
+    this.displayPool.free(this.display);
+    this.display = null;
+  }
+
+  protected get displayPool(): IObjectPool {
+    return null;
   }
 
   public onTick(deltaTime: number): void {

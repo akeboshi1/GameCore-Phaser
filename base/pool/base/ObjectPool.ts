@@ -1,4 +1,4 @@
-import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
+import {IRecycleObject} from "../../object/interfaces/IRecycleObject";
 import {IObjectPool} from "../interfaces/IObjectPool";
 
 export class ObjectPool implements IObjectPool {
@@ -6,8 +6,8 @@ export class ObjectPool implements IObjectPool {
   protected totalFree = 0;
   protected max = 0;
 
-  constructor(value?: number) {
-    this.max = value || 100;
+  constructor(value: number) {
+    this.max = value;
     this.m_ObjectList = [];
   }
 
@@ -35,8 +35,15 @@ export class ObjectPool implements IObjectPool {
     let len = value || this.totalFree;
     for (let i = 0; i < len; i++) {
       let obj: IRecycleObject = this.m_ObjectList.pop();
-      this.totalFree--;
       obj.onDispose();
+      this.totalFree--;
     }
+  }
+
+  public onClear(): void {
+  }
+
+  public onDispose(): void {
+    this.collect();
   }
 }

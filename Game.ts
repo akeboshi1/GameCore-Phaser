@@ -89,6 +89,7 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.MessageCenter.dispose();
         Globals.LayerManager.dispose();
         Globals.SocketManager.dispose();
+        Globals.ObjectPoolManager.dispose();
         this.state.destroy();
         this.destroy();
     }

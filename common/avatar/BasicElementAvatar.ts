@@ -2,7 +2,6 @@ import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {BasicAvatar} from "../../base/BasicAvatar";
 import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 import Globals from "../../Globals";
-import {Const} from "../const/Const";
 import {ElementInfo} from "../struct/ElementInfo";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {

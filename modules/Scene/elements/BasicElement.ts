@@ -5,6 +5,8 @@ import SceneEntity from "../view/SceneEntity";
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import {Const} from "../../../common/const/Const";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 
 export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;
@@ -44,8 +46,16 @@ export default class BasicElement extends SceneEntity {
     this.mAnimationDirty = true;
   }
 
+  protected get displayPool(): IObjectPool {
+    let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
+    return op;
+  }
+
   protected createDisplay() {
-    let element = new BasicElementAvatar(Globals.game);
+    let element = this.displayPool.alloc() as BasicElementAvatar;
+    if (null == element) {
+      element = new BasicElementAvatar(Globals.game);
+    }
     return element;
   }
 

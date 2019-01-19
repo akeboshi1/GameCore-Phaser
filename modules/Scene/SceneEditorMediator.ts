@@ -64,6 +64,7 @@ export class SceneEditorMediator extends SceneMediator {
     // Globals.game.input.mouse.mouseWheelCallback = (event: WheelEvent) => {
     //   this.deltaY = event.deltaY;
     // };
+     Globals.game.input.addMoveCallback(this.onMouseMove, this);
     super.onRegister();
   }
 
@@ -107,13 +108,6 @@ export class SceneEditorMediator extends SceneMediator {
           }
           this.movementX = newMoveX;
           this.movementY = newMoveY;
-        }
-        break;
-      case  EditorEnum.Mode.BRUSH:
-        if (this.isGameDown) {
-          if (this.em.type === EditorEnum.Type.TERRAIN) {
-            this.preSendSceneDown(this.mousePointer);
-          }
         }
         break;
       case  EditorEnum.Mode.ERASER:
@@ -180,6 +174,12 @@ export class SceneEditorMediator extends SceneMediator {
       } else if (this.deltaY > 0) {
         this.deltaY -= 10;
       }
+    }
+  }
+
+  private onMouseMove(): void {
+    if (this.em.mode === EditorEnum.Mode.BRUSH && this.em.type === EditorEnum.Type.TERRAIN && this.isGameDown) {
+      this.preSendSceneDown(this.mousePointer);
     }
   }
 

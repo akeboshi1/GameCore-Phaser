@@ -77,9 +77,16 @@ export class BasicTerrainAvatar extends BasicAvatar implements IAnimatedObject {
   protected onRemovePlaceHoldAvatarPart(): void {
   }
 
+  public onClear(): void {
+    if (this.mBodyAvatar) {
+      this.mBodyAvatar.onClear();
+    }
+    super.onClear();
+  }
+
   public onDispose(): void {
     if (this.mBodyAvatar) {
-      this.mBodyAvatar.destroy(true);
+      this.mBodyAvatar.onDispose();
     }
     super.onDispose();
   }

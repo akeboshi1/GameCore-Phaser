@@ -7,8 +7,7 @@ import {SelfRoleElement} from "../elements/SelfRoleElement";
 import {RoleElement} from "../elements/RoleElement";
 import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "./SceneBase";
-import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
-import {ObjectPool} from "../../../pool/base/ObjectPool";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 import {TerrainElement} from "../elements/TerrainElement";
 
 export class SceneView extends SceneBase {
@@ -65,9 +64,9 @@ export class SceneView extends SceneBase {
 
   protected onInitialize(): void {
     super.onInitialize();
-    this.m_ElementPool = new ObjectPool();
-    this.m_PlayerPool = new ObjectPool();
-    this.m_TerrainPool = new ObjectPool();
+    this.m_ElementPool = Globals.ObjectPoolManager.getObjectPool("elements");
+    this.m_PlayerPool = Globals.ObjectPoolManager.getObjectPool("players");
+    this.m_TerrainPool = Globals.ObjectPoolManager.getObjectPool("terrains");
   }
 
   protected onInitializeScene(value: SceneInfo): void {

@@ -4,7 +4,7 @@ import SceneEntity from "../view/SceneEntity";
 import Globals from "../../../Globals";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import RoleAvatarModelVO from "../../../common/struct/RoleAvatarModelVO";
-import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;

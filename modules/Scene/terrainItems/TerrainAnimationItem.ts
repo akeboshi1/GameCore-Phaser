@@ -2,8 +2,8 @@ import {BasicTerrainItem} from "./BasicTerrainItem";
 import Globals from "../../../Globals";
 import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {op_gameconfig} from "../../../../protocol/protocols";
-import {DrawArea} from "../../../common/struct/DrawArea";
 import {ITerrainLayer} from "../view/ITerrainLayer";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export class TerrainAnimationItem extends BasicTerrainItem {
   protected mAnimationDirty = false;
@@ -12,13 +12,6 @@ export class TerrainAnimationItem extends BasicTerrainItem {
 
   public constructor(game: Phaser.Game, owner: ITerrainLayer) {
     super(game, owner);
-  }
-
-  protected releaseTerrainItem() {
-    if ((<BasicTerrainAvatar>this.terrainIsoDisplayObject)) {
-      (<BasicTerrainAvatar>this.terrainIsoDisplayObject).onDispose();
-    }
-    super.releaseTerrainItem();
   }
 
   // Position
@@ -52,8 +45,16 @@ export class TerrainAnimationItem extends BasicTerrainItem {
     super.onTick(deltaTime);
   }
 
+  protected get terrainAvatarPool(): IObjectPool {
+    let op = Globals.ObjectPoolManager.getObjectPool("BasicTerrainAvatar");
+    return op;
+  }
+
   protected onTerrainItemCreate(): void {
-    this.terrainIsoDisplayObject = new BasicTerrainAvatar(Globals.game);
+    this.terrainIsoDisplayObject = this.terrainAvatarPool.alloc() as BasicTerrainAvatar;
+    if (null == this.terrainIsoDisplayObject) {
+      this.terrainIsoDisplayObject = new BasicTerrainAvatar(Globals.game);
+    }
     (<BasicTerrainAvatar>this.terrainIsoDisplayObject).initialize(this.data);
     this.initBaseLoc();
     super.onTerrainItemCreate();

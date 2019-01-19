@@ -3,15 +3,17 @@ import {Load} from "../../Assets";
 import {op_gameconfig} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
+import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
+import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 
 export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
-    private mUrl: op_gameconfig.IDisplay = {};
+  private mUrl: op_gameconfig.IDisplay = {};
   private mLoadThisArg: any;
   private myModelUrlDirty = false;
   private mModelLoaded = false;
   private mLoadCompleteCallback: Function;
   private mLoadErrorCallback: Function;
-  private element: Phaser.Sprite;
+  private element: LoaderSprite;
   private config: op_gameconfig.IAnimation[];
   private mAnimatonControlFunc: Function;
   private mAnimatonControlFuncDitry: boolean;
@@ -87,6 +89,7 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
 
   public onClear(): void {
     this.closeLoadModel();
+    this.element = null;
   }
 
   public onDispose(): void {
@@ -101,36 +104,39 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     this.mAnimatonControlFunc = null;
     this.mLoadThisArg = null;
     this.mAnimatonControlThisObj = null;
+    this.destroy(true);
+  }
+
+  protected getLoaderPool(key: string): IObjectPool {
+    return Globals.ObjectPoolManager.getObjectPool(key + "_DisplayLoaderAvatar");
   }
 
   protected onCompleteLoadModel(): void {
     let key: string = Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath);
-    this.element = this.game.make.sprite(0, 0, key);
-    let animation: op_gameconfig.IAnimation;
-    // TODO 编辑器添加Character时没有动画，有了更好的解决方案再更改
-    if (this.config) {
-      for (let i = 0; i < this.config.length; i++) {
-        animation = this.config[i];
-        this.element.animations.add(animation.name, animation.frame, animation.frameRate, animation.loop);
-      }
-    }
-    this.addChild(this.element);
-  }
+    this.element = this.getLoaderPool(key).alloc() as LoaderSprite;
+    if (null == this.element) {
+      this.element = new LoaderSprite(this.game, 0, 0, key);
 
-  protected clear(): void {
-    if (this.element) {
-      if (this.element.parent) {
-        this.element.parent.removeChild(this.element);
+      let animation: op_gameconfig.IAnimation;
+      // TODO 编辑器添加Character时没有动画，有了更好的解决方案再更改
+      if (this.config) {
+        for (let i = 0; i < this.config.length; i++) {
+          animation = this.config[i];
+          this.element.animations.add(animation.name, animation.frame, animation.frameRate, animation.loop);
+        }
       }
-      this.element.destroy(true);
     }
-    this.element = null;
+    this.add(this.element);
   }
 
   protected closeLoadModel() {
     if (this.mUrl.dataPath && this.mUrl.texturePath) {
       if (this.mModelLoaded) {
-        this.clear();
+        let key: string = Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath);
+        if (this.element) {
+          this.getLoaderPool(key).free(this.element);
+        }
+        this.remove(this.element);
         this.mModelLoaded = false;
       }
       this.mUrl.texturePath = "";
@@ -163,4 +169,16 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
 
     this.invalidAnimationControlFunc();
   }
+}
+
+export class LoaderSprite extends Phaser.Sprite implements IRecycleObject {
+  public onClear(): void {
+  }
+
+  public onDispose(): void {
+  }
+
+  public onRecycle(): void {
+  }
+
 }

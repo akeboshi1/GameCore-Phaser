@@ -13,6 +13,7 @@ import {ServiceCenter} from "./common/manager/ServiceCenter";
 import {SoundManager} from "./common/manager/SoundManager";
 import {MouseMod} from "./common/manager/MouseMod";
 import {PromptManager} from "./common/manager/PromptManager";
+import {ObjectPoolManager} from "./common/manager/ObjectPoolManager";
 
 export default class Globals {
   private static _game: Phaser.Game;
@@ -130,6 +131,13 @@ export default class Globals {
    */
   public static get SceneManager(): SceneManager {
     return SceneManager.getInstance();
+  }
+
+  /**
+   * 对象池管理
+   */
+  public static get ObjectPoolManager(): ObjectPoolManager {
+    return ObjectPoolManager.getInstance();
   }
 
 }

@@ -5,8 +5,8 @@ import {ITickedObject} from "../../../base/ITickedObject";
 import {DrawArea} from "../../../common/struct/DrawArea";
 import {ITerrainLayer} from "../view/ITerrainLayer";
 import {IRecycleObject} from "../../../base/object/interfaces/IRecycleObject";
-import {ObjectPool} from "../../../pool/base/ObjectPool";
 import {BasicAvatar} from "../../../base/BasicAvatar";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, ITickedObject, IRecycleObject {
   public data: any;
@@ -26,7 +26,9 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
   protected baseLoc: Phaser.Point;
   protected mTerrainItemDisplayObjectHadCreated = false;
 
-  public static terrainPool: ObjectPool = new ObjectPool();
+  protected get terrainAvatarPool(): IObjectPool {
+    return null;
+  }
 
   public constructor(game: Phaser.Game, owner: ITerrainLayer) {
     super(game);
@@ -59,10 +61,6 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
       return true;
     }
     return false;
-  }
-
-  public get display(): any {
-    return this.terrainIsoDisplayObject;
   }
 
   public setMouseOverArea(hWidth: number, hHeight: number): void {
@@ -133,6 +131,9 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
   }
 
   public onClear(): void {
+    if (this.terrainIsoDisplayObject) {
+      this.terrainIsoDisplayObject.onClear();
+    }
     this.releaseTerrainItem();
     this.data = null;
   }
@@ -150,7 +151,7 @@ export class BasicTerrainItem extends Phaser.Group implements IAnimatedObject, I
       this.mTerrainItemDisplayObjectCreated = false;
 
       this.remove(this.terrainIsoDisplayObject);
-      BasicTerrainItem.terrainPool.free(this.terrainIsoDisplayObject);
+      this.terrainAvatarPool.free(this.terrainIsoDisplayObject);
       this.terrainIsoDisplayObject = null;
 
       if (this.mTerrainItemIsLoading) {

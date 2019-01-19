@@ -1,5 +1,5 @@
 import {IRecycleObject} from "../interfaces/IRecycleObject";
-import {IObjectPool} from "../../../pool/interfaces/IObjectPool";
+import {IObjectPool} from "../../pool/interfaces/IObjectPool";
 
 export class RecycleObject implements IRecycleObject {
   private m_ObjectPool: IObjectPool;
