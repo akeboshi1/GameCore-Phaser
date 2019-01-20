@@ -16,13 +16,6 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     this.parent = value;
   }
 
-  public setParent(value: Phaser.Group): void {
-    this.parent = value;
-    if (this.display && value) {
-      this.parent.add(this.display);
-    }
-  }
-
   public onClear(): void {
     if (this.display) {
       this.display.onClear();

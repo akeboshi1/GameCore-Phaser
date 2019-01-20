@@ -65,22 +65,22 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
     return this._room45;
   }
 
-  protected _graphics: Phaser.Graphics;
+  /**protected _graphics: Phaser.Graphics;
 
   public get graphics(): Phaser.Graphics {
     if (this._graphics === undefined || this._graphics === null) this._graphics = Globals.game.make.graphics();
     return this._graphics;
-  }
+  }**/
 
   public onFrame(): void {
-    if (this.mPosDirty) {
+    /**if (this.mPosDirty) {
       this.graphics.x = this.ox;
       this.graphics.y = this.oy;
       this.graphics.z = this.oz;
       this.graphics.visible = true;
       this.mPosDirty = false;
     }
-    this.graphics.visible = this.mPosInit && this.mCanShow;
+    this.graphics.visible = this.mPosInit && this.mCanShow;**/
   }
 
   public setPosition(x: number, y: number, z: number): void {
@@ -95,7 +95,8 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
   }
 
   public draw(hTileWidth: number, hTileHeight: number): void {
-    if (this.areaArr === undefined || this.areaArr === null || this.areaArr.length === 0) return;
+    this.room45.setting(this.rows, this.cols, hTileWidth, hTileHeight);
+    /**if (this.areaArr === undefined || this.areaArr === null || this.areaArr.length === 0) return;
 
     this.room45.setting(this.rows, this.cols, hTileWidth, hTileHeight);
     this.graphics.clear();
@@ -122,14 +123,14 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
         }
       }
     }
-    this.graphics.endFill();
+    this.graphics.endFill();**/
   }
 
   public onClear(): void {
   }
 
   public onDispose() {
-    this.graphics.destroy(true);
+    // this.graphics.destroy(true);
   }
 
   protected init(): void {
@@ -152,7 +153,7 @@ export class DrawArea implements IAnimatedObject, IDisposeObject {
         this.areaArr[j][i] = +tempArr[i];
       }
     }
-    this.graphics.visible = false;
+    // this.graphics.visible = false;
   }
 
   public show(): void {

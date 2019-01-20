@@ -14,12 +14,12 @@ export class DrawSceneLayer extends BasicSceneLayer {
     this.graphicsList.push(value);
   }
 
-  //todo: duixiangchi
+  // todo: duixiangchi
 
   public removeDraw(value: DrawArea): void {
-    if (value.graphics.parent) {
-        value.graphics.parent.removeChild(value.graphics);
-    }
+    // if (value.graphics.parent) {
+    //    value.graphics.parent.removeChild(value.graphics);
+   //  }
     let idx = this.graphicsList.indexOf(value);
     if (idx !== -1) {
       this.graphicsList.splice(idx, 1);
