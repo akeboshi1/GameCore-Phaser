@@ -6,7 +6,6 @@ import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource}
 import {GameConfig} from "../GameConfig";
 import WindowClose = UI.WindowClose;
 import DropDownBtn = UI.DropDownBtn;
-import {Log} from "../Log";
 
 export default class Game extends Phaser.State {
 
@@ -23,6 +22,7 @@ export default class Game extends Phaser.State {
         }
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
+        dragonBones.PhaserFactory.init(this.game);
 
         if (!GameConfig.isEditor) {
             let chatResource: INineSliceImageResource[] = [{
@@ -96,6 +96,7 @@ export default class Game extends Phaser.State {
     public update(game: Phaser.Game): void {
         super.update(game);
         Globals.TickManager.onTick();
+        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
     }
 
     public render(game: Phaser.Game): void {

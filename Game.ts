@@ -18,7 +18,6 @@ import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "../protocol/protocols";
 import {IRectangle} from "./base/ds/IRectangle";
-import {Log} from "./Log";
 
 export default class Game extends Phaser.Game implements IGame {
     constructor(value: IGameParam) {
@@ -42,7 +41,6 @@ export default class Game extends Phaser.Game implements IGame {
         GameConfig.GameHeight = value.height;
         GameConfig.HomeDir = value.homeDir;
 
-        dragonBones.PhaserFactory.init(this);
         Globals.SocketManager.setSocketConnection(value.iSocketConnection);
         Globals.ServiceCenter.register();
 
