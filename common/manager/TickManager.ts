@@ -36,31 +36,20 @@ export class TickManager extends BaseSingleton {
             this.m_TickList.push(tick);
     }
 
-  public onTick(timeStep: number): void {
-    if (this.game === undefined || this.game == null || this.m_TickList === undefined || this.m_TickList.length === 0) return;
-    let len: number = this.m_TickList.length;
-    let tick: Tick;
-    for (let i = len - 1; i >= 0; i--) {
-      tick = this.m_TickList[i];
-      if (!tick.isEnd()) {
-        tick.onTick(timeStep);
-      } else {
-        this.m_TickList.splice(i, 1);
-      }
-    }
-  }
-
-    public onFrame(): void {
-        if (this.game === undefined || null === this.m_TickList) return;
+    public onTick(): void {
+        if (this.game === undefined || this.game == null || this.m_TickList === undefined || this.m_TickList.length === 0) return;
         let len: number = this.m_TickList.length;
         let tick: Tick;
+        let now = this.game.time.now;
+        let timeElapsed = now - this.m_LastTime;
+        this.m_LastTime = now;
         for (let i = len - 1; i >= 0; i--) {
-            tick = this.m_TickList[i];
-            if (!tick.isEnd()) {
-                tick.render();
-            } else {
-                this.m_TickList.splice(i, 1);
-            }
+          tick = this.m_TickList[i];
+          if (!tick.isEnd()) {
+            tick.onTick(timeElapsed);
+          } else {
+            this.m_TickList.splice(i, 1);
+          }
         }
     }
 

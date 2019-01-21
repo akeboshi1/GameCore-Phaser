@@ -6,6 +6,7 @@ import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource}
 import {GameConfig} from "../GameConfig";
 import WindowClose = UI.WindowClose;
 import DropDownBtn = UI.DropDownBtn;
+import {Log} from "../Log";
 
 export default class Game extends Phaser.State {
 
@@ -90,6 +91,11 @@ export default class Game extends Phaser.State {
         } else {
             Globals.MessageCenter.on(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene);
         }
+    }
+
+    public update(game: Phaser.Game): void {
+        super.update(game);
+        Globals.TickManager.onTick();
     }
 
     public render(game: Phaser.Game): void {

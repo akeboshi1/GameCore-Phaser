@@ -57,24 +57,13 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.SocketManager.send(pkt);
     }
 
+
     public resize(bounds: IRectangle): void {
         GameConfig.GameWidth = bounds.width;
         GameConfig.GameHeight = bounds.height;
         this.scale.setGameSize(bounds.width, bounds.height);
         // Log.trace(this.camera.x, this.camera.y);
         Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
-    }
-
-    public updateLogic(timeStep: number): void {
-        super.updateLogic(timeStep);
-        // 0.01666
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
-        Globals.TickManager.onTick(timeStep * 1000);
-    }
-
-    public updateRender(elapsedTime: number): void {
-        super.updateRender(elapsedTime);
-        Globals.TickManager.onFrame();
     }
 
     public dispose(): void {
