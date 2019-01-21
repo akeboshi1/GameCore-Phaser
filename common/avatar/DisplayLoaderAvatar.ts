@@ -6,7 +6,7 @@ import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 
-export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
+export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject, IRecycleObject {
   private mUrl: op_gameconfig.IDisplay = {};
   private mLoadThisArg: any;
   private myModelUrlDirty = false;
@@ -168,6 +168,9 @@ export class DisplayLoaderAvatar extends Phaser.Group implements IAnimatedObject
     }
 
     this.invalidAnimationControlFunc();
+  }
+
+  public onRecycle(): void {
   }
 }
 

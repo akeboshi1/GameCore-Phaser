@@ -294,7 +294,7 @@ export class SceneMediator extends MediatorBase {
         for (let i = 0; i < posData.length; i++) {
             imove = posData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
-            if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
+            if (this.view.currentSelfPlayer && this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity) {

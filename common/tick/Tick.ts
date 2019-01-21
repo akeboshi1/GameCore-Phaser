@@ -1,25 +1,21 @@
 import Globals from "../../Globals";
 
 export class Tick {
-    protected m_Timer: number = 0;
-    protected m_StopTime: number = 0;	// 停止时间
-    protected m_AccumulativeTime: number = 0;	// 累计时间
-    protected m_StopFlag: boolean = true;
-    protected m_EndFlag: boolean = false;
+    protected m_Timer = 0;
+    protected m_StopTime = 0;	// 停止时间
+    protected m_AccumulativeTime = 0;	// 累计时间
+    protected m_StopFlag = true;
+    protected m_EndFlag = false;
     protected m_CallBack: Function;
     protected m_CallBackThisObj: any;
     protected m_RenderCall: Function;
     protected m_RenderCallThisObj: any;
     protected m_Delay: number;
 
-    constructor(fps: number = 60, stopTime: number = 0) {
-        this.m_Delay = 1 / fps * 1000;
+    constructor(delay: number = 33, stopTime: number = 0) {
+        this.m_Delay = delay;
         this.m_StopTime = stopTime;
         Globals.TickManager.addTick(this);
-    }
-
-    public setFps(value: number): void {
-        this.m_Delay = 1 / value * 1000;
     }
 
     public setCallBack(callBack: Function, thisObj: any): void {

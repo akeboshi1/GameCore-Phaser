@@ -3,6 +3,7 @@ import {BasicAvatar} from "../../base/BasicAvatar";
 import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 import Globals from "../../Globals";
 import {ElementInfo} from "../struct/ElementInfo";
+import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -15,6 +16,11 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     constructor(game: Phaser.Game) {
         super(game);
     }
+
+  protected get loaderPool(): IObjectPool {
+    let op = Globals.ObjectPoolManager.getObjectPool("DisplayLoaderAvatar");
+    return op;
+  }
 
     public get scaleX(): number {
         return this.mScaleX;
@@ -50,7 +56,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     }
 
     protected onInitialize(): void {
-        this.mBodyAvatar = new DisplayLoaderAvatar(Globals.game);
+        this.mBodyAvatar = this.loaderPool.alloc() as DisplayLoaderAvatar;
+        if (null == this.mBodyAvatar) {
+          this.mBodyAvatar = new DisplayLoaderAvatar(Globals.game);
+        }
         this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
         this.mBodyAvatar.visible = false;
         this.addChild(this.mBodyAvatar);

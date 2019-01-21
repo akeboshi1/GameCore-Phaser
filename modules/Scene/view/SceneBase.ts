@@ -11,7 +11,6 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DrawSceneLayer} from "./DrawSceneLayer";
 import {GameConfig} from "../../../GameConfig";
-import {TerrainSortableSceneLayer} from "./TerrainSortableSceneLayer";
 
 export class SceneBase extends SceneBasic {
   public mapSceneInfo: SceneInfo;
@@ -171,14 +170,14 @@ export class SceneBase extends SceneBasic {
   protected onInitialize(): void {
     super.onInitialize();
 
-    if (GameConfig.isEditor) {
-      this.terrainEditorLayer = new TerrainSortableSceneLayer(this.game);
-      this.terrainEditorLayer.scene = this;
-      this.addChild(this.terrainEditorLayer);
-    } else {
+    if (!GameConfig.isEditor) {
       this.terrainSceneLayer = new TerrainSceneLayer(this.game);
       this.terrainSceneLayer.scene = this;
       this.addChild(this.terrainSceneLayer);
+    } else {
+      this.terrainEditorLayer = new DisplaySortableSceneLayer(this.game);
+      this.terrainEditorLayer.scene = this;
+      this.addChild(this.terrainEditorLayer);
     }
 
     this.terrainGridLayer = new TerrainGridLayer(this.game);
@@ -207,15 +206,6 @@ export class SceneBase extends SceneBasic {
     this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
     if (this.terrainSceneLayer) {
       this.terrainSceneLayer.initializeMap(this.mapSceneInfo);
-    }
-
-    let rect: Phaser.Rectangle = new Phaser.Rectangle(0, 0, this.mapSceneInfo.mapTotalWidth, this.mapSceneInfo.mapTotalHeight);
-    this.bottomSceneLayer.initialize(rect);
-    this.middleSceneLayer.initialize(rect);
-    this.topSceneLayer.initialize(rect);
-
-    if (this.terrainEditorLayer) {
-      this.terrainEditorLayer.initialize(rect);
     }
   }
 
