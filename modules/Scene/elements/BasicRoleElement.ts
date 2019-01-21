@@ -5,6 +5,7 @@ import Globals from "../../../Globals";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import RoleAvatarModelVO from "../../../common/struct/RoleAvatarModelVO";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {BasicElementAvatar} from "../../../common/avatar/BasicElementAvatar";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
@@ -27,6 +28,11 @@ export class BasicRoleElement extends SceneEntity {
 
             this.invalidAnimation();
         }
+    }
+
+    protected get displayPool(): IObjectPool {
+        let op = Globals.ObjectPoolManager.getObjectPool("BasicRoleElement");
+        return op;
     }
 
     public setAnimation(value: string): void {
@@ -118,7 +124,10 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected createDisplay(): any {
-        let avatar = new RoleBonesAvatar(Globals.game);
+        let avatar = this.displayPool.alloc() as RoleBonesAvatar;
+        if (null == avatar) {
+            avatar = new RoleBonesAvatar(Globals.game);
+        }
         return avatar;
     }
 

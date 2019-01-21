@@ -169,7 +169,6 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     }
     this.mInitilized = false;
     this.isValidDisplay = false;
-    if ((this.display as IDisposeObject).onClear !== undefined) (<IDisposeObject>this.display).onClear();
     this.displayPool.free(this.display);
     this.display = null;
   }

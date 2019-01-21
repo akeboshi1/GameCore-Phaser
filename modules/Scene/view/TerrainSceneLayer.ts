@@ -6,7 +6,6 @@ import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import Globals from "../../../Globals";
 import {ITerrainLayer} from "./ITerrainLayer";
 import {TerrainAnimationItem} from "../terrainItems/TerrainAnimationItem";
-import {HashMap} from "../../../base/ds/HashMap";
 
 export class TerrainSceneLayer extends BasicSceneLayer implements ITerrainLayer {
     protected curTerrainLoadCount = 0;
