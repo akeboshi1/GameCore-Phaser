@@ -6,14 +6,13 @@ import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import {Const} from "../../../common/const/Const";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 
 export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;
   protected mScaleX = 1;
   protected myAnimationName: string;
 
-  public get elementInfo(): ElementInfo {
+  public get elementInfo(): any {
     return this.data;
   }
 
@@ -32,7 +31,7 @@ export default class BasicElement extends SceneEntity {
   }
 
   public loadModel(value: ElementInfo) {
-    (<BasicElementAvatar>this.display).loadModel(value);
+    this.display.loadModel(value);
   }
 
   public isInScreen(): boolean {

@@ -12,7 +12,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
   protected SCENE_LAYER_RENDER_DELAY = 100;
   protected mDepthSortDirtyFlag = false;
   protected mSortWaitTime = 0;
-  protected mSortRectangle: Phaser.Rectangle;
 
   public constructor(game: Phaser.Game) {
     super(game);

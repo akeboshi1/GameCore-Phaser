@@ -8,7 +8,7 @@ import {RoleElement} from "../elements/RoleElement";
 import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "./SceneBase";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import {TerrainElement} from "../elements/TerrainElement";
+import {BasicTerrain} from "../elements/BasicTerrain";
 
 export class SceneView extends SceneBase {
   public currentSelfPlayer: SelfRoleElement;
@@ -86,7 +86,7 @@ export class SceneView extends SceneBase {
         } else {
           element = this.m_PlayerPool.alloc() as RoleElement;
           if (null == element) {
-            element = new RoleElement(this.m_PlayerPool);
+            element = new RoleElement();
           }
         }
         break;
@@ -99,9 +99,9 @@ export class SceneView extends SceneBase {
         break;
 
       case Const.SceneElementType.TERRAIN :
-        element = this.m_TerrainPool.alloc() as TerrainElement;
+        element = this.m_TerrainPool.alloc() as BasicTerrain;
         if (null == element) {
-          element = new TerrainElement();
+          element = new BasicTerrain();
         }
         break;
 

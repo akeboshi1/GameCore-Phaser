@@ -16,7 +16,6 @@ import {op_client, op_editor} from "../../../protocol/protocols";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {Const} from "../../common/const/Const";
-import {BasicTerrainItem} from "./terrainItems/BasicTerrainItem";
 import {MouseFollower} from "./view/MouseFollower";
 
 export class SceneEditorMediator extends SceneMediator {
@@ -28,7 +27,6 @@ export class SceneEditorMediator extends SceneMediator {
   private isElementDown = false;
   private mousePointer: Phaser.Pointer;
   private mSelectElement: BasicElement;
-  private mSelectTerrain: BasicTerrainItem;
   private mMouseFollower: MouseFollower;
 
   constructor() {
@@ -294,7 +292,6 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.input.onUp.remove(this.onGameUp, this);
 
     this.mSelectElement = null;
-    this.mSelectTerrain = null;
     this.movementX = 0;
     this.movementY = 0;
     this.deltaY = 0;

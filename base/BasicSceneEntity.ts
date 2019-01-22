@@ -30,8 +30,8 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
 
   private mInitilized = false;
 
-  public constructor(value?: IObjectPool) {
-    super(value);
+  public constructor() {
+    super();
   }
 
   public get needSort(): boolean {

@@ -12,8 +12,8 @@ export class BasicRoleElement extends SceneEntity {
     private mAnimationDirty = false;
 
 
-    public constructor(value?: IObjectPool) {
-        super(value);
+    public constructor() {
+        super();
         this.baseLoc = new Phaser.Point(0, 7.75);
     }
 

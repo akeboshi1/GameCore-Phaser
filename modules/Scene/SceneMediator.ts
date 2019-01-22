@@ -11,11 +11,9 @@ import {op_client, op_virtual_world} from "../../../protocol/protocols";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {SceneLoader} from "./view/SceneLoader";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
-import {TerrainAnimationItem} from "./terrainItems/TerrainAnimationItem";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {PBpacket} from "net-socket-packet";
 import {GameConfig} from "../../GameConfig";
-import GameConst = Const.GameConst;
 import {Log} from "../../Log";
 
 export class SceneMediator extends MediatorBase {
@@ -172,11 +170,11 @@ export class SceneMediator extends MediatorBase {
     }
 
     /**
-     * 添加地块
+     * 添加物件
      * @element ElementInfo
      */
     protected addTerrain(value: TerrainInfo): void {
-        this.view.terrainSceneLayer.addTerrainItem(value);
+        this.view.addSceneElement(Const.SceneElementType.TERRAIN, value.uid, value);
     }
 
     /**
@@ -217,7 +215,7 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
-        mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
+        // mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
         this.initializeTerrainItems(mapSceneInfo.terrainConfig);
         this.initializeElementItems(mapSceneInfo.elementConfig);
 
@@ -249,7 +247,7 @@ export class SceneMediator extends MediatorBase {
         let value: TerrainInfo;
         for (let i = 0; i < len; i++) {
             value = datas[i];
-            this.view.terrainSceneLayer.addTerrainItem(value);
+            this.addTerrain(value);
         }
     }
 
