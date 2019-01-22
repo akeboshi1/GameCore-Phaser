@@ -9,6 +9,7 @@ import {HashMap} from "../../../base/ds/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DrawSceneLayer} from "./DrawSceneLayer";
+import {DisplaySortableTerrainLayer} from "./DisplaySortableTerrainLayer";
 
 export class SceneBase extends SceneBasic {
     public mapSceneInfo: SceneInfo;
@@ -16,7 +17,7 @@ export class SceneBase extends SceneBasic {
     // layers...
     public terrainGridLayer: TerrainGridLayer = null;
     public drawSceneLayer: DrawSceneLayer = null;
-    public terrainSceneLayer: DisplaySortableSceneLayer = null;
+    public terrainSceneLayer: DisplaySortableTerrainLayer = null;
     public topSceneLayer: DisplaySortableSceneLayer = null;
     public middleSceneLayer: DisplaySortableSceneLayer = null;
     public bottomSceneLayer: DisplaySortableSceneLayer = null;
@@ -161,7 +162,7 @@ export class SceneBase extends SceneBasic {
     protected onInitialize(): void {
         super.onInitialize();
 
-        this.terrainSceneLayer = new DisplaySortableSceneLayer(this.game);
+        this.terrainSceneLayer = new DisplaySortableTerrainLayer(this.game);
         this.terrainSceneLayer.scene = this;
         this.addChild(this.terrainSceneLayer);
 
