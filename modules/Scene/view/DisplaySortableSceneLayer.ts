@@ -29,6 +29,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     this.mSceneEntities.add(d);
 
     // this.add(d.display);
+    this.markDirty();
   }
 
   public onFrame(): void {
@@ -36,6 +37,15 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     while (entity) {
       entity.onFrame();
       entity = this.mSceneEntities.moveNext();
+    }
+  }
+
+  /**
+   * Indicates this layer is dirty and needs to resort.
+   */
+  public markDirty(force: boolean = false): void {
+    if (!this.needRealTimeDepthSort || force) {
+      this.mDepthSortDirtyFlag = true;
     }
   }
 
