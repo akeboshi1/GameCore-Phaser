@@ -227,11 +227,9 @@ export class SceneEditorMediator extends SceneMediator {
     let i = 0;
     let len: number = datas.length;
     let data: TerrainInfo;
-    let element: BasicSceneEntity;
     for (; i < len; i++) {
       data = datas[i];
-      element = this.view.addSceneElement(Const.SceneElementType.TERRAIN, data.uid, data);
-      element.collisionArea.hide();
+      this.addTerrain(data);
     }
   }
 
