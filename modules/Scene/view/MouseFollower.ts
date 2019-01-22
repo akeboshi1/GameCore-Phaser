@@ -17,8 +17,8 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
   }
 
   public onClear(): void {
-    if (this.display) {
-      this.display.onClear();
+    if (this.parent) {
+      this.parent.remove(this.display);
     }
   }
 
@@ -41,9 +41,6 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     this.mousePointer = Globals.game.input.activePointer;
     this.display = new DisplayLoaderAvatar(Globals.game);
     this.display.setAnimationControlFunc(this.bodyControlHandler, this);
-    if (this.parent) {
-      this.parent.add(this.display);
-    }
   }
 
   public setData(value: IMouseFollow): void {
@@ -52,6 +49,9 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
       this.setBaseLoc();
       this.display.setAnimationConfig([value.animation]);
       this.display.loadModel(value.display);
+      if (this.parent) {
+        this.parent.add(this.display);
+      }
     } else {
       this.onClear();
     }
@@ -74,7 +74,7 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
   }
 
   public onFrame(): void {
-    if (this.mousePointer == null || this.mousePointer === undefined) return;
+    if (!this.mInitilized) return;
     this.display.visible = this.mousePointer.withinGame;
     this.display.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
     this.display.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
