@@ -106,7 +106,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     protected onCompleteLoadModel(): void {
         let key: string = Load.Atlas.getKey(this.mUrl.texturePath + this.mUrl.dataPath);
-        this.loadTexture(key);
+        this.loadTexture(key, 1);
         // TODO: 编辑器添加Character时没有动画，有了更好的解决方案再更改
         let iAnimation: op_gameconfig.IAnimation;
         let animation: Phaser.Animation;
@@ -126,8 +126,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
             if (this.mModelLoaded) {
                 this.kill();
                 this.mModelLoaded = false;
-            } else {
-                this.game.load.reset();
             }
             this.mUrl.texturePath = "";
             this.mUrl.dataPath = "";

@@ -25,6 +25,7 @@ export class ObjectPoolManager extends BaseSingleton {
       op = this.mObjectPoolHash.valueList[i];
       op.onDispose();
     }
+    this.mObjectPoolHash.clear();
     super.dispose();
   }
 }

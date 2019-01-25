@@ -565,8 +565,6 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
                 }
                 this.getArmaturePool(this.myModel.id).free(this.armature);
                 this.armature = null;
-            } else {
-                this.game.load.reset();
             }
             this.mModelLoaded = false;
         }
