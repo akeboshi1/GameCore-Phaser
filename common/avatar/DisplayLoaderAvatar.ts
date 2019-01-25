@@ -4,6 +4,7 @@ import {op_gameconfig} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
+import {GameConfig} from "../../GameConfig";
 
 export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObject, IDisposeObject, IRecycleObject {
     private mUrl: op_gameconfig.IDisplay = {};
@@ -109,7 +110,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         // TODO: 编辑器添加Character时没有动画，有了更好的解决方案再更改
         let iAnimation: op_gameconfig.IAnimation;
         let animation: Phaser.Animation;
-        if (this.config) {
+        if (!GameConfig.isEditor && this.config) {
             for (let i = 0; i < this.config.length; i++) {
                 iAnimation = this.config[i];
                 animation = this.animations.getAnimation(iAnimation.name);
