@@ -98,6 +98,7 @@ class Handler extends BasePacketHandler {
         }
         if (sceneData.scene) {
             Globals.DataCenter.SceneData.setMapInfo(sceneData.scene);
+            Log.trace(sceneData.scene);
         }
     }
 
