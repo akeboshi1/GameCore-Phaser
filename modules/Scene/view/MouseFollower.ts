@@ -10,8 +10,8 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
   protected mInitilized = false;
   protected mData: IMouseFollow;
   protected baseLoc: Phaser.Point;
-  private mousePointer: Phaser.Pointer;
-  private parent: Phaser.Group;
+  protected mousePointer: Phaser.Pointer;
+  protected parent: Phaser.Group;
   public constructor(value: Phaser.Group) {
     this.parent = value;
   }
@@ -47,6 +47,7 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     if (value.animation && value.display) {
       this.mData = value;
       this.setBaseLoc();
+      this.display.setReferenceArea(value.animation.collisionArea, new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]));
       this.display.setAnimationConfig([value.animation]);
       this.display.loadModel(value.display);
       if (this.parent) {

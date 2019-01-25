@@ -11,15 +11,21 @@ export class TickManager extends BaseSingleton {
     private game: Phaser.Game;
     private m_TickList: Tick[];
     private m_LastTime = 0;
+    private mInitilized = false;
 
     public constructor() {
         super();
     }
 
+  public get initilized(): boolean {
+    return this.mInitilized;
+  }
+
     public init(game: Phaser.Game): void {
         this.game = game;
         this.m_LastTime = this.game.time.now;
         this.m_TickList = [];
+        this.mInitilized = true;
     }
 
     /**
@@ -68,6 +74,9 @@ export class TickManager extends BaseSingleton {
     }
 
     public dispose(): void {
+      if (!this.initilized) {
+        return;
+      }
       let len: number = this.m_TickList.length;
       let tick: Tick;
       for (let i = len - 1; i >= 0; i--) {
@@ -76,6 +85,7 @@ export class TickManager extends BaseSingleton {
       }
       this.m_TickList.length = 0;
       this.game = null;
+      this.mInitilized = false;
       super.dispose();
     }
 }

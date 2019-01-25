@@ -5,6 +5,7 @@ import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import {GameConfig} from "../../GameConfig";
+import {ReferenceArea} from "../struct/ReferenceArea";
 
 export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObject, IDisposeObject, IRecycleObject {
     private mUrl: op_gameconfig.IDisplay = {};
@@ -17,6 +18,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
     private mAnimatonControlThisObj: any;
+    private mReferenceArea: ReferenceArea;
 
     public constructor(game: Phaser.Game) {
         super(game, 0, 0);
@@ -30,9 +32,15 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         this.config = value;
     }
 
-    /**
-     * 动画
-     */
+    public setReferenceArea(value: string, orgin?: Phaser.Point, color?: number): void {
+        if (this.mReferenceArea === undefined) {
+          this.mReferenceArea = new ReferenceArea(this.game, value, orgin, color);
+          this.addChildAt(this.mReferenceArea, 0);
+        } else {
+          this.mReferenceArea.onReset(value, orgin, color);
+        }
+    }
+
     public playAnimation(animationName: string, scaleX?: number): void {
         this.animations.play(animationName);
         this.scale.x = scaleX || 1;

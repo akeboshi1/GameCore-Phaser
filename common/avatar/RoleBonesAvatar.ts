@@ -6,14 +6,17 @@ import Globals from "../../Globals";
 import {Log} from "../../Log";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
+import {DrawArea} from "../struct/DrawArea";
 
 export class RoleBonesAvatar extends BasicAvatar {
-    protected hasPlaceHold: boolean = true;
+    protected hasPlaceHold = true;
 
-    protected mAngleIndex: number = 3;
-    protected mAngleIndexDirty: boolean = false;
+    protected mAngleIndex = 3;
+    protected mAngleIndexDirty = false;
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mAnimationDirty = false;
+
+    public collisionArea: DrawArea;
 
     public get angleIndex(): number {
         return this.mAngleIndex;
@@ -54,6 +57,7 @@ export class RoleBonesAvatar extends BasicAvatar {
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
+        this.cacheAsBitmap
     }
 
     public get Loader(): BonesLoaderAvatar {

@@ -1,5 +1,4 @@
 import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
-import {UI} from "../../../Assets";
 
 export class MainMenuView extends ModuleViewBase {
     protected m_Bt: Phaser.Button;

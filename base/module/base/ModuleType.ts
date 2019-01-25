@@ -8,4 +8,5 @@ export class ModuleTypeEnum {
     public static ROLEINFO = "RoleInfo"; // 聊天
     public static SHORTCUTMENU = "ShortcutMenu"; // 聊天
     public static PROMPT = "Prompt"; // 聊天
+    public static MINIMAP = "MiniMap"; // 小地图
 }
