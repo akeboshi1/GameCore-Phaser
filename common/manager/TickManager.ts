@@ -53,6 +53,20 @@ export class TickManager extends BaseSingleton {
         }
     }
 
+    public onRender(): void {
+        if (this.game === undefined || this.game == null || this.m_TickList === undefined || this.m_TickList.length === 0) return;
+        let len: number = this.m_TickList.length;
+        let tick: Tick;
+        for (let i = len - 1; i >= 0; i--) {
+            tick = this.m_TickList[i];
+            if (!tick.isEnd()) {
+                tick.onRender();
+            } else {
+                this.m_TickList.splice(i, 1);
+            }
+        }
+    }
+
     public dispose(): void {
       let len: number = this.m_TickList.length;
       let tick: Tick;

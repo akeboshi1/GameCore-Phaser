@@ -9,7 +9,7 @@ export class ObjectPoolManager extends BaseSingleton {
     super();
   }
 
-  public getObjectPool(key: string, OPClass: any = ObjectPool, max: number = 100): IObjectPool {
+  public getObjectPool(key: string, OPClass: any = ObjectPool, max: number = 0): IObjectPool {
     let op: IObjectPool = this.mObjectPoolHash.getValue(key);
     if (null == op) {
       op = new OPClass(max);

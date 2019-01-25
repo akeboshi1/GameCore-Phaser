@@ -10,7 +10,7 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
 
   protected myData: any = null;
   private mInitilized = false;
-  protected mLoaderAvatar: DisplayLoaderAvatar;
+  protected mLoaderAvatar: IRecycleObject;
 
   public constructor(game: Phaser.Game) {
     super(game, 0, 0, 0);
@@ -53,12 +53,12 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
   }
 
   public onClear(): void {
-    if (this.mLoaderAvatar && this.mLoaderAvatar.parent) {
-        this.mLoaderAvatar.parent.removeChild(this.mLoaderAvatar);
+    if (!this.initilized) {
+        return;
     }
+    this.mInitilized = false;
     this.avatarPool.free(this.mLoaderAvatar);
     this.mLoaderAvatar = null;
-    this.mInitilized = false;
   }
 
   protected onInitialize(): void {

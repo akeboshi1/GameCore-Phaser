@@ -1,5 +1,6 @@
 import {IRecycleObject} from "../../object/interfaces/IRecycleObject";
 import {IObjectPool} from "../interfaces/IObjectPool";
+import {IAnimatedObject} from "../../IAnimatedObject";
 
 export class ObjectPool implements IObjectPool {
   protected m_ObjectList: any[];
@@ -11,8 +12,7 @@ export class ObjectPool implements IObjectPool {
     this.m_ObjectList = [];
   }
 
-  public alloc(): IRecycleObject {
-    let obj: IRecycleObject = null;
+  public alloc(): any {
     if (this.totalFree === 0) {
       return null;
     }
@@ -20,13 +20,13 @@ export class ObjectPool implements IObjectPool {
     return this.m_ObjectList.pop();
   }
 
-  public free(obj: IRecycleObject): void {
+  public free(obj: any): void {
     // 判断是否是对象池里的对象
     if (null == obj) return;
-    obj.onClear();
+    if ((obj as IRecycleObject).onClear !== undefined) (<IRecycleObject>obj).onClear();
     this.m_ObjectList.push(obj);
     this.totalFree++;
-    if (this.totalFree > this.max) {
+    if (this.totalFree > this.max && this.max > 0) {
       this.collect(this.totalFree - this.max);
     }
   }
@@ -34,8 +34,8 @@ export class ObjectPool implements IObjectPool {
   public collect(value?: number): void {
     let len = value || this.totalFree;
     for (let i = 0; i < len; i++) {
-      let obj: IRecycleObject = this.m_ObjectList.pop();
-      obj.onDispose();
+      let obj: Object = this.m_ObjectList.pop();
+      if ((obj as IRecycleObject).onDispose !== undefined) (<IRecycleObject>obj).onDispose();
       this.totalFree--;
     }
   }

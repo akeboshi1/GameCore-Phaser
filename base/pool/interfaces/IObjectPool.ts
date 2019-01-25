@@ -5,12 +5,12 @@ export interface IObjectPool extends IDisposeObject {
   /**
    * 借出对象
    */
-  alloc(): IRecycleObject;
+  alloc(): any;
 
   /**
    * 回收对象
    */
-  free(obj: IRecycleObject): void;
+  free(obj: any): void;
   /**
    * 清理对象
    */

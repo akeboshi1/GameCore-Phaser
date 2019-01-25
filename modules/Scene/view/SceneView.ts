@@ -11,104 +11,107 @@ import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 import {BasicTerrain} from "../elements/BasicTerrain";
 
 export class SceneView extends SceneBase {
-  public currentSelfPlayer: SelfRoleElement;
-  protected m_TerrainPool: IObjectPool;
-  protected m_ElementPool: IObjectPool;
-  protected m_PlayerPool: IObjectPool;
+    public currentSelfPlayer: SelfRoleElement;
+    protected m_TerrainPool: IObjectPool;
+    protected m_ElementPool: IObjectPool;
+    protected m_PlayerPool: IObjectPool;
 
-  public addSceneElement(sceneElementType: number,
-                         uid: number, elemetData: any,
-                         isSelf: boolean = false): BasicSceneEntity {
+    public addSceneElement(sceneElementType: number,
+                           uid: number, elemetData: any,
+                           isSelf: boolean = false): BasicSceneEntity {
 
-    let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
+        let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
 
-    element.uid = uid;
-    element.elementTypeId = sceneElementType;
-    element.data = elemetData;
+        element.uid = uid;
+        element.elementTypeId = sceneElementType;
+        element.data = elemetData;
 
-    element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-      , this.mapSceneInfo.tileHeight >> 1);
-    // this.drawSceneLayer.addDraw(element.collisionArea);
+        element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+            , this.mapSceneInfo.tileHeight >> 1);
+        // this.drawSceneLayer.addDraw(element.collisionArea);
 
-    this.addSceneEntity(element);
+        this.addSceneEntity(element);
 
-    Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
+        Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
 
-    return element;
-  }
-
-  public deleteSceneElement(uid: number): BasicSceneEntity {
-    let element: BasicSceneEntity = super.deleteSceneElement(uid);
-    if (element == null) return null;
-    switch (element.elementTypeId) {
-      case Const.SceneElementType.ROLE :
-        // 当前玩家
-        if (uid !== this.currentSelfPlayer.uid) {
-          this.m_PlayerPool.free(element);
-        }
-        break;
-
-      case Const.SceneElementType.ELEMENT :
-        this.m_ElementPool.free(element);
-        break;
-
-      case Const.SceneElementType.TERRAIN :
-        this.m_TerrainPool.free(element);
-        break;
-
-      default:
-        break;
-    }
-    return element;
-  }
-
-  protected onInitialize(): void {
-    super.onInitialize();
-    this.m_ElementPool = Globals.ObjectPoolManager.getObjectPool("elements");
-    this.m_PlayerPool = Globals.ObjectPoolManager.getObjectPool("players");
-    this.m_TerrainPool = Globals.ObjectPoolManager.getObjectPool("terrains");
-  }
-
-  protected onInitializeScene(value: SceneInfo): void {
-    this.mapSceneInfo = value;
-    super.onInitializeScene(value);
-  }
-
-  protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
-    let element: BasicSceneEntity = null;
-
-    switch (sceneElementType) {
-
-      case Const.SceneElementType.ROLE :
-        // 当前玩家
-        if (isSelf) {
-          element = this.currentSelfPlayer = new SelfRoleElement();
-        } else {
-          element = this.m_PlayerPool.alloc() as RoleElement;
-          if (null == element) {
-            element = new RoleElement();
-          }
-        }
-        break;
-
-      case Const.SceneElementType.ELEMENT :
-        element = this.m_ElementPool.alloc() as BasicElement;
-        if (null == element) {
-          element = new BasicElement();
-        }
-        break;
-
-      case Const.SceneElementType.TERRAIN :
-        element = this.m_TerrainPool.alloc() as BasicTerrain;
-        if (null == element) {
-          element = new BasicTerrain();
-        }
-        break;
-
-      default:
-        break;
+        return element;
     }
 
-    return element;
-  }
+    public deleteSceneElement(uid: number): BasicSceneEntity {
+        let element: BasicSceneEntity = super.deleteSceneElement(uid);
+        if (element == null) return null;
+        switch (element.elementTypeId) {
+            case Const.SceneElementType.ROLE :
+                // 当前玩家
+                if (uid !== this.currentSelfPlayer.uid) {
+                    this.m_PlayerPool.free(element);
+                }
+                break;
+
+            case Const.SceneElementType.ELEMENT :
+                this.m_ElementPool.free(element);
+                break;
+
+            case Const.SceneElementType.TERRAIN :
+                this.m_TerrainPool.free(element);
+                break;
+
+            default:
+                break;
+        }
+        return element;
+    }
+
+    protected onInitialize(): void {
+        super.onInitialize();
+        this.m_ElementPool = Globals.ObjectPoolManager.getObjectPool("elements");
+        this.m_PlayerPool = Globals.ObjectPoolManager.getObjectPool("players");
+        this.m_TerrainPool = Globals.ObjectPoolManager.getObjectPool("terrains");
+    }
+
+    protected onInitializeScene(value: SceneInfo): void {
+        this.mapSceneInfo = value;
+        super.onInitializeScene(value);
+    }
+
+    protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
+        let element: BasicSceneEntity = null;
+
+        switch (sceneElementType) {
+
+            case Const.SceneElementType.ROLE :
+                // 当前玩家
+                if (isSelf) {
+                    if (this.currentSelfPlayer === undefined) {
+                        this.currentSelfPlayer = new SelfRoleElement();
+                    }
+                    element = this.currentSelfPlayer;
+                } else {
+                    element = this.m_PlayerPool.alloc() as RoleElement;
+                    if (null == element) {
+                        element = new RoleElement();
+                    }
+                }
+                break;
+
+            case Const.SceneElementType.ELEMENT :
+                element = this.m_ElementPool.alloc() as BasicElement;
+                if (null == element) {
+                    element = new BasicElement();
+                }
+                break;
+
+            case Const.SceneElementType.TERRAIN :
+                element = this.m_TerrainPool.alloc() as BasicTerrain;
+                if (null == element) {
+                    element = new BasicTerrain();
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return element;
+    }
 }

@@ -4,10 +4,11 @@ import {Const} from "../const/Const";
 import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import Globals from "../../Globals";
 import {Log} from "../../Log";
+import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
+import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold: boolean = true;
-    protected mBodyAvatar: BonesLoaderAvatar;
 
     protected mAngleIndex: number = 3;
     protected mAngleIndexDirty: boolean = false;
@@ -36,25 +37,37 @@ export class RoleBonesAvatar extends BasicAvatar {
         }
     }
 
+    protected get avatarPool(): IObjectPool {
+        let op = Globals.ObjectPoolManager.getObjectPool("BonesLoaderAvatar");
+        return op;
+    }
+
     public loadModel(model: RoleAvatarModelVO): void {
-        this.mBodyAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        this.Loader.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
     public onFrame(): void {
         super.onFrame();
-        this.mBodyAvatar.onFrame();
+        this.Loader.onFrame();
         if (this.mAngleIndexDirty || this.mAnimationDirty) {
-          this.mBodyAvatar.invalidAnimationControlFunc();
+          this.Loader.invalidAnimationControlFunc();
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
     }
 
+    public get Loader(): BonesLoaderAvatar {
+        return this.mLoaderAvatar as BonesLoaderAvatar;
+    }
+
     protected onInitialize(): void {
-        this.mBodyAvatar = new BonesLoaderAvatar(Globals.game);
-        this.mBodyAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.mBodyAvatar.visible = false;
-        this.addChild(this.mBodyAvatar);
+        this.mLoaderAvatar = this.avatarPool.alloc() as BonesLoaderAvatar;
+        if (null == this.mLoaderAvatar) {
+            this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
+        }
+        this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
+        this.Loader.visible = false;
+        this.addChild(this.Loader);
     }
 
     protected onInitializeComplete(): void {
@@ -76,6 +89,6 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        this.mBodyAvatar.visible = true;
+        this.Loader.visible = true;
     }
 }

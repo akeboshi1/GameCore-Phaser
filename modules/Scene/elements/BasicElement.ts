@@ -70,7 +70,7 @@ export default class BasicElement extends SceneEntity {
     super.onInitialize();
     this.initBaseLoc();
     this.setAngleIndex(this.elementInfo.dir);
-    this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z, true);
+    // this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z, true);
     this.loadModel(this.elementInfo);
     this.setAnimation(this.elementInfo.animationName);
     this.setScaleX(this.elementInfo.scaleX);

@@ -40,13 +40,6 @@ export default class RoleAvatarModelVO {
     public constructor() {
     }
 
-    public get sign(): string {
-        return [this.id, this.body_base_id, this.body_spec_id, this.body_wing_id, this.body_tail_id, this.body_cost_id, this.farm_base_id,
-            this.farm_spec_id, this.farm_cost_id, this.barm_base_id, this.barm_spec_id, this.barm_cost_id, this.bleg_base_id,
-            this.bleg_spec_id, this.bleg_cost_id, this.fleg_base_id, this.fleg_spec_id, this.fleg_cost_id, this.head_base_id,
-            this.head_hair_id, this.head_hats_id, this.head_spec_id, this.farm_shld_id, this.farm_weap_id].toString();
-    }
-
     public test(): void {
         this.id = "10000";
         this.body_base_id = "1";

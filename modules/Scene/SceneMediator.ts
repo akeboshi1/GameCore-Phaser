@@ -221,17 +221,12 @@ export class SceneMediator extends MediatorBase {
 
         // 初始化当前玩家其他信息
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
-        element.initialize();
-        this.view.middleSceneLayer.add(element.display);
-        element.collisionArea.show();
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
 
         // 播放场景音效
         // Globals.SoundManager.playBgSound(1);
 
         Globals.SceneManager.pushScene(this.view);
-        // follow camera
-        this.camera.follow(this.view.currentSelfPlayer.display);
         Globals.MessageCenter.emit(MessageType.SCENE_INITIALIZED);
 
         this.sendSceneReady();

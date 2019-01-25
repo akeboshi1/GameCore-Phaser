@@ -31,7 +31,7 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BasicRoleElement");
+        let op = Globals.ObjectPoolManager.getObjectPool("RoleBonesAvatar");
         return op;
     }
 
@@ -114,9 +114,8 @@ export class BasicRoleElement extends SceneEntity {
     protected onInitialize(): void {
         super.onInitialize();
 
-        // this.mySpeed = this.characterInfo.moveSpeed; // Const.GameConst.MAP_TILE_WIDTH * 2
         this.setAngleIndex(this.characterInfo.avatarDir);
-        this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
+        // this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
         this.mouseEnable = false;
 
         this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);

@@ -57,6 +57,10 @@ export class Tick {
                 this.m_Timer -= this.m_Delay;
             }
         }
+        // this.render();
+    }
+
+    public onRender(): void {
         this.render();
     }
 

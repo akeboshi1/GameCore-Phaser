@@ -4,7 +4,6 @@ import Globals from "../../../Globals";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
-import {BasicTerrainAvatar} from "../../../common/avatar/BasicTerrainAvatar";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export class BasicTerrain  extends SceneEntity {
@@ -38,14 +37,14 @@ export class BasicTerrain  extends SceneEntity {
     }
 
     protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BasicTerrainAvatar");
+        let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
         return op;
     }
 
     protected createDisplay() {
-        let terrain = this.displayPool.alloc() as BasicTerrainAvatar;
+        let terrain = this.displayPool.alloc() as BasicElementAvatar;
         if (null == terrain) {
-            terrain = new BasicTerrainAvatar(Globals.game);
+            terrain = new BasicElementAvatar(Globals.game);
         }
         return terrain;
     }
@@ -69,7 +68,7 @@ export class BasicTerrain  extends SceneEntity {
     protected onInitialize() {
         super.onInitialize();
         this.initBaseLoc();
-        this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z, true);
+        // this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z, true);
         this.loadModel(this.terrainInfo);
         this.setAnimation(this.terrainInfo.animationName);
     }

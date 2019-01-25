@@ -14,6 +14,7 @@ export default class Game extends Phaser.State {
     }
 
     public create(): void {
+        this.tempNow = new Date().getTime();
         Globals.SoundManager.init(this.game);
         Globals.TickManager.init(this.game);
         if (!GameConfig.isEditor) {
@@ -93,10 +94,16 @@ export default class Game extends Phaser.State {
         }
     }
 
+    private tempNow = 0;
     public update(game: Phaser.Game): void {
-        super.update(game);
+        let now = new Date().getTime();
+        dragonBones.PhaserFactory.factory.dragonBones.advanceTime((now - this.tempNow) / 1000);
+        this.tempNow = now;
         Globals.TickManager.onTick();
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
+    }
+
+    public preRender(): void {
+        Globals.TickManager.onRender();
     }
 
     public render(game: Phaser.Game): void {
