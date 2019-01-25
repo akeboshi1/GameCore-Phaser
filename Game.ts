@@ -26,7 +26,7 @@ export default class Game extends Phaser.Game implements IGame {
             height: value.height,
             renderer: Phaser.AUTO,
             parent: "game",
-            resolution: 1,
+            resolution: 1
         };
         super(config);
 

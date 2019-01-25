@@ -6,7 +6,6 @@ import * as Assets from "../../Assets";
 import {Avatar} from "../../Assets";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
-import PhaserSlotDisplay = dragonBones.PhaserSlotDisplay;
 import Slot = dragonBones.Slot;
 import {GameConfig} from "../../GameConfig";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
@@ -560,11 +559,14 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     protected closeLoadModel(): void {
         if (this.modelLoaded) {
             if (this.armature) {
+                this.kill();
                 if (this.armature.parent) {
                     this.armature.parent.removeChild(this.armature);
                 }
                 this.getArmaturePool(this.myModel.id).free(this.armature);
                 this.armature = null;
+            } else {
+                this.game.load.reset();
             }
             this.mModelLoaded = false;
         }
@@ -619,7 +621,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         let resKey: string = Avatar.AvatarBone.getPartName(soltPart.replace("#", partStr)).replace("$", soltDir.toString());
         let isCache: boolean = Globals.game.cache.checkImageKey(resKey);
         if (isCache) {
-            let dis: PhaserSlotDisplay = new PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
+            let dis: dragonBones.PhaserSlotDisplay = new dragonBones.PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
             dis.anchor.set(0.5, 0.5);
             dis.smoothed = false;
             slot.replaceDisplay(dis);

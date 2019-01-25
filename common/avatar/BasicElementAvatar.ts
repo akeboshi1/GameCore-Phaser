@@ -4,6 +4,7 @@ import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
+import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -11,7 +12,6 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected mAnimationName: string;
     protected mAnimationDirty = false;
     protected mScaleX = 1;
-    protected mLoaderAvatar: DisplayLoaderAvatar;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -40,16 +40,20 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         this.mAnimationDirty = true;
     }
 
+    public get Loader(): DisplayLoaderAvatar {
+        return this.mLoaderAvatar as DisplayLoaderAvatar;
+    }
+
     public loadModel(elementInfo: any): void {
-        this.mLoaderAvatar.setAnimationConfig(elementInfo.animations);
-        this.mLoaderAvatar.loadModel(elementInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        this.Loader.setAnimationConfig(elementInfo.animations);
+        this.Loader.loadModel(elementInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
     public onFrame(): void {
         super.onFrame();
-        this.mLoaderAvatar.onFrame();
+        this.Loader.onFrame();
         if (this.mScaleDirty || this.mAnimationDirty) {
-          this.mLoaderAvatar.invalidAnimationControlFunc();
+          this.Loader.invalidAnimationControlFunc();
         }
         this.mScaleDirty = false;
         this.mAnimationDirty = false;
@@ -60,9 +64,9 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (null == this.mLoaderAvatar) {
           this.mLoaderAvatar = new DisplayLoaderAvatar(Globals.game);
         }
-        this.mLoaderAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.mLoaderAvatar.visible = false;
-        this.addChild(this.mLoaderAvatar);
+        this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
+        this.Loader.visible = false;
+        this.addChild(this.Loader);
     }
 
     protected bodyControlHandler(boneAvatar: DisplayLoaderAvatar): void {
@@ -75,7 +79,9 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
 
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        this.mLoaderAvatar.visible = true;
+        if (this.Loader) {
+            this.Loader.visible = true;
+        }
     }
 
     protected onAddPlaceHoldAvatarPart(): void {

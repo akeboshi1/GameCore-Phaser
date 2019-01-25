@@ -124,7 +124,10 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     protected closeLoadModel() {
         if (this.mUrl.dataPath && this.mUrl.texturePath) {
             if (this.mModelLoaded) {
-              this.mModelLoaded = false;
+                this.kill();
+                this.mModelLoaded = false;
+            } else {
+                this.game.load.reset();
             }
             this.mUrl.texturePath = "";
             this.mUrl.dataPath = "";
