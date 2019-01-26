@@ -5,8 +5,6 @@ import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import Globals from "../../Globals";
 import {Log} from "../../Log";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
-import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
-import {DrawArea} from "../struct/DrawArea";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
@@ -15,8 +13,6 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAngleIndexDirty = false;
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mAnimationDirty = false;
-
-    public collisionArea: DrawArea;
 
     public get angleIndex(): number {
         return this.mAngleIndex;
@@ -57,7 +53,6 @@ export class RoleBonesAvatar extends BasicAvatar {
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
-        this.cacheAsBitmap
     }
 
     public get Loader(): BonesLoaderAvatar {

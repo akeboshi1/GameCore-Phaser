@@ -6,6 +6,7 @@ import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import {Const} from "../../../common/const/Const";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {GameConfig} from "../../../GameConfig";
 
 export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;
@@ -32,6 +33,9 @@ export default class BasicElement extends SceneEntity {
 
   public loadModel(value: ElementInfo) {
     this.display.loadModel(value);
+    /** if (GameConfig.isEditor) {
+      this.display.setReferenceArea(value.collisionArea, value.originCollisionPoint);
+    } **/
   }
 
   public isInScreen(): boolean {

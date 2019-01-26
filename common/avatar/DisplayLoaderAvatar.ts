@@ -18,7 +18,8 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
     private mAnimatonControlThisObj: any;
-    private mReferenceArea: ReferenceArea;
+
+    protected mReferenceArea: ReferenceArea;
 
     public constructor(game: Phaser.Game) {
         super(game, 0, 0);
@@ -30,15 +31,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     public setAnimationConfig(value: op_gameconfig.IAnimation[]): void {
         this.config = value;
-    }
-
-    public setReferenceArea(value: string, orgin?: Phaser.Point, color?: number): void {
-        if (this.mReferenceArea === undefined) {
-          this.mReferenceArea = new ReferenceArea(this.game, value, orgin, color);
-          this.addChildAt(this.mReferenceArea, 0);
-        } else {
-          this.mReferenceArea.onReset(value, orgin, color);
-        }
     }
 
     public playAnimation(animationName: string, scaleX?: number): void {
@@ -54,6 +46,15 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     public invalidAnimationControlFunc(): void {
         this.mAnimatonControlFuncDitry = true;
+    }
+
+    public setReferenceArea(value: string, orgin?: Phaser.Point, color?: number): void {
+      if (this.mReferenceArea === undefined) {
+        this.mReferenceArea = new ReferenceArea(this.game, value, orgin, color);
+        this.addChildAt(this.mReferenceArea, 0);
+      } else {
+        this.mReferenceArea.onReset(value, orgin, color);
+      }
     }
 
     public loadModel(url: op_gameconfig.IDisplay, thisArg?: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
@@ -96,6 +97,9 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     public onClear(): void {
         this.closeLoadModel();
+        if (this.mReferenceArea) {
+          this.mReferenceArea.onClear();
+        }
     }
 
     public onDispose(): void {
@@ -107,9 +111,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         this.mLoadThisArg = null;
         this.mAnimatonControlThisObj = null;
         this.destroy(true);
-    }
-
-    public onRecycle(): void {
     }
 
     protected onCompleteLoadModel(): void {
@@ -165,5 +166,8 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         }
 
         this.invalidAnimationControlFunc();
+    }
+
+    public onRecycle(): void {
     }
 }

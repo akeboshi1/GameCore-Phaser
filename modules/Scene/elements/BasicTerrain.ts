@@ -5,6 +5,7 @@ import {op_gameconfig} from "../../../../protocol/protocols";
 import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {GameConfig} from "../../../GameConfig";
 
 export class BasicTerrain  extends SceneEntity {
 
@@ -76,30 +77,6 @@ export class BasicTerrain  extends SceneEntity {
     public setPosition(x: number, y: number, z?: number, silent: boolean = false): void {
         let p2: Phaser.Point = Globals.Room45Util.tileToPixelCoords(x, y);
         super.setPosition(p2.x, p2.y, z, silent);
-    }
-
-    public get quadH(): number {
-        return this.collisionArea.height;
-    }
-
-    public get quadW(): number {
-        return this.collisionArea.width;
-    }
-
-    public get quadX(): number {
-        return this.collisionArea.ox;
-    }
-
-    public get quadY(): number {
-        return this.collisionArea.oy;
-    }
-
-    public get sortX(): number {
-        return this.ox;
-    }
-
-    public get sortY(): number {
-        return this.oy;
     }
 
     protected onAvatarAnimationChanged(): void {

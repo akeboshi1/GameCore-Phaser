@@ -76,22 +76,12 @@ export class TerrainInfo implements ITerrain {
   private setArea(): void {
     let curAnimation: op_gameconfig.IAnimation = this.config;
     if (curAnimation) {
-      if (curAnimation.walkableArea) {
-        if (this.walkableArea !== curAnimation.walkableArea || this.originWalkablePoint.x !== curAnimation.walkOriginPoint[0] || this.originWalkablePoint.y !== curAnimation.walkOriginPoint[1]) {
-          this.setWalkableArea(curAnimation.walkableArea, curAnimation.walkOriginPoint ? new Phaser.Point(curAnimation.walkOriginPoint[0], curAnimation.walkOriginPoint[1]) : new Phaser.Point());
-        }
-      }
       if (curAnimation.collisionArea) {
         if (this.collisionArea !== curAnimation.collisionArea || this.originCollisionPoint.x !== curAnimation.originPoint[0] || this.originCollisionPoint.y !== curAnimation.originPoint[1]) {
           this.setCollisionArea(curAnimation.collisionArea, curAnimation.originPoint ? new Phaser.Point(curAnimation.originPoint[0], curAnimation.originPoint[1]) : new Phaser.Point());
         }
       }
     }
-  }
-
-  private setWalkableArea(value: string, orgin: Phaser.Point): void {
-    this.walkableArea = value;
-    this.originWalkablePoint = orgin;
   }
 
   private setCollisionArea(value: string, orgin: Phaser.Point): void {

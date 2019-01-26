@@ -24,8 +24,17 @@ export class ReferenceArea extends Phaser.Graphics {
     this._orgin = orgin || new Phaser.Point(0, 0);
     this.areaArr.splice(0);
 
-    this.cacheAsBitmap = false;
+    if (this.cacheAsBitmap) {
+      this.cacheAsBitmap = false;
+    }
     this.init();
+  }
+
+  public onClear(): void {
+    if (this.cacheAsBitmap) {
+      this.cacheAsBitmap = false;
+    }
+    this.clear();
   }
 
   protected static _room45: Scene45Util;
@@ -113,6 +122,8 @@ export class ReferenceArea extends Phaser.Graphics {
     this.clear();
     this.onDraw(Globals.Room45Util.hTileWidth, Globals.Room45Util.hTileHeight);
 
-    this.cacheAsBitmap = true;
+    if (!this.cacheAsBitmap) {
+      this.cacheAsBitmap = true;
+    }
   }
 }

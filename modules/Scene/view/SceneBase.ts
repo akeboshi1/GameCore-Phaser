@@ -8,7 +8,6 @@ import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {HashMap} from "../../../base/ds/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
-import {DrawSceneLayer} from "./DrawSceneLayer";
 import {DisplaySortableTerrainLayer} from "./DisplaySortableTerrainLayer";
 
 export class SceneBase extends SceneBasic {
@@ -16,7 +15,6 @@ export class SceneBase extends SceneBasic {
 
     // layers...
     public terrainGridLayer: TerrainGridLayer = null;
-    public drawSceneLayer: DrawSceneLayer = null;
     public terrainSceneLayer: DisplaySortableTerrainLayer = null;
     public topSceneLayer: DisplaySortableSceneLayer = null;
     public middleSceneLayer: DisplaySortableSceneLayer = null;
@@ -36,8 +34,6 @@ export class SceneBase extends SceneBasic {
         this.topSceneLayer.onTick(deltaTime);
         this.middleSceneLayer.onTick(deltaTime);
         this.bottomSceneLayer.onTick(deltaTime);
-        this.drawSceneLayer.onTick(deltaTime);
-
     }
 
     public onFrame(): void {
@@ -51,8 +47,6 @@ export class SceneBase extends SceneBasic {
         this.topSceneLayer.onFrame();
         this.middleSceneLayer.onFrame();
         this.bottomSceneLayer.onFrame();
-        this.drawSceneLayer.onFrame();
-
     }
 
     public addSceneEntity(sceneEntity: BasicSceneEntity): BasicSceneEntity {
@@ -170,10 +164,6 @@ export class SceneBase extends SceneBasic {
         this.terrainGridLayer.scene = this;
         this.addChild(this.terrainGridLayer);
 
-        this.drawSceneLayer = new DrawSceneLayer(this.game);
-        this.drawSceneLayer.scene = this;
-        this.addChild(this.drawSceneLayer);
-
         this.bottomSceneLayer = new DisplaySortableSceneLayer(this.game);
         this.bottomSceneLayer.scene = this;
         this.addChild(this.bottomSceneLayer);
@@ -210,7 +200,6 @@ export class SceneBase extends SceneBasic {
             this.terrainGridLayer.clear();
         }
 
-        this.drawSceneLayer.clear();
         Globals.MessageCenter.emit(MessageType.SCENE_CLEARED);
     }
 }

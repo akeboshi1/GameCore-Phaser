@@ -5,6 +5,7 @@ import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
+import {ReferenceArea} from "../struct/ReferenceArea";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -48,6 +49,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         this.Loader.setAnimationConfig(elementInfo.animations);
         this.Loader.loadModel(elementInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
+
+  public setReferenceArea(value: string, orgin?: Phaser.Point): void {
+    this.Loader.setReferenceArea(value, orgin);
+  }
 
     public onFrame(): void {
         super.onFrame();

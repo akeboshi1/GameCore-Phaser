@@ -56,8 +56,9 @@ export class SceneEditorMediator extends SceneMediator {
     this.view.middleSceneLayer.inputEnableChildren = true;
     this.mousePointer = Globals.game.input.activePointer;
 
-    this.mMouseFollower = new MouseFollower(Globals.game.world);
-    this.mMouseFollower.initialize();
+    this.mMouseFollower = new MouseFollower(Globals.game);
+    this.mMouseFollower.inputEnabled = false;
+    Globals.game.world.add(this.mMouseFollower);
 
     // Globals.game.input.mouse.mouseWheelCallback = (event: WheelEvent) => {
     //   this.deltaY = event.deltaY;
@@ -172,6 +173,9 @@ export class SceneEditorMediator extends SceneMediator {
       } else if (this.deltaY > 0) {
         this.deltaY -= 10;
       }
+    }
+    if (this.mMouseFollower) {
+      this.mMouseFollower.onTick();
     }
   }
 
@@ -363,13 +367,9 @@ export class SceneEditorMediator extends SceneMediator {
     let elementId: number = tempElement.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
-      if (this.mSelectElement) {
-        this.mSelectElement.collisionArea.hide();
-      }
       this.mSelectElement = tempElement;
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
-      this.mSelectElement.collisionArea.show();
     }
     this.isElementDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
@@ -439,11 +439,9 @@ export class SceneEditorMediator extends SceneMediator {
     let i = 0;
     let len: number = datas.length;
     let data: ElementInfo;
-    let element: BasicSceneEntity;
     for (; i < len; i++) {
       data = datas[i];
-      element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
-      element.collisionArea.hide();
+      this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
     }
   }
 }

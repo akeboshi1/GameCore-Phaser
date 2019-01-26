@@ -4,30 +4,34 @@ import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {IMouseFollow} from "../../../interface/IMouseFollow";
 import Globals from "../../../Globals";
 import {op_gameconfig} from "../../../../protocol/protocols";
+import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {ITickedObject} from "../../../base/ITickedObject";
 
-export class MouseFollower implements IAnimatedObject, IDisposeObject {
+export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITickedObject, IDisposeObject {
   protected display: DisplayLoaderAvatar;
   protected mInitilized = false;
   protected mData: IMouseFollow;
   protected baseLoc: Phaser.Point;
-  protected mousePointer: Phaser.Pointer;
-  protected parent: Phaser.Group;
-  public constructor(value: Phaser.Group) {
-    this.parent = value;
+  public constructor(game: Phaser.Game) {
+    super(game, 0, 0);
   }
 
   public onClear(): void {
-    if (this.parent) {
-      this.parent.remove(this.display);
+    if (!this.mInitilized) {
+      return;
     }
+
+    if (this.display && this.display.parent) {
+      this.display.parent.removeChild(this.display);
+    }
+    this.avatarPool.free(this.display);
+    this.display = null;
+
+    this.mInitilized = false;
   }
 
   public onDispose(): void {
-    if (this.display) {
-      this.display.onDispose();
-    }
-    this.mousePointer = null;
-    this.display = null;
+    this.onClear();
   }
 
   public initialize(): void {
@@ -37,24 +41,33 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     }
   }
 
+  protected get avatarPool(): IObjectPool {
+    let op = Globals.ObjectPoolManager.getObjectPool("DisplayLoaderAvatar");
+    return op;
+  }
+
+  public get mousePointer(): Phaser.Pointer {
+    return Globals.game.input.activePointer;
+  }
+
   protected onInitialize(): void {
-    this.mousePointer = Globals.game.input.activePointer;
-    this.display = new DisplayLoaderAvatar(Globals.game);
+    this.display = this.avatarPool.alloc() as DisplayLoaderAvatar;
+    if (null == this.display) {
+      this.display = new DisplayLoaderAvatar(Globals.game);
+    }
     this.display.setAnimationControlFunc(this.bodyControlHandler, this);
+    this.addChild(this.display);
   }
 
   public setData(value: IMouseFollow): void {
     if (value.animation && value.display) {
       this.mData = value;
+      this.initialize();
       this.setBaseLoc();
-      this.display.setReferenceArea(value.animation.collisionArea, new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]));
+      this.display.setReferenceArea(value.animation.collisionArea, value.animation.originPoint ? new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]) : new Phaser.Point());
       this.display.setAnimationConfig([value.animation]);
-      this.display.loadModel(value.display);
-      if (this.parent) {
-        this.parent.add(this.display);
-      }
-    } else {
-      this.onClear();
+      this.display.visible = false;
+      this.display.loadModel(value.display, this, null, this.bodyAvatarPartLoadCompleteHandler);
     }
   }
 
@@ -70,15 +83,27 @@ export class MouseFollower implements IAnimatedObject, IDisposeObject {
     }
   }
 
+  protected bodyAvatarPartLoadCompleteHandler(): void {
+    this.display.visible = true;
+  }
+
   protected bodyControlHandler(boneAvatar: DisplayLoaderAvatar): void {
     boneAvatar.playAnimation(this.mData.animation.name);
   }
 
+  public onTick(): void {
+    if (!this.mInitilized) {
+      return;
+    }
+    this.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
+    this.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+  }
+
   public onFrame(): void {
-    if (!this.mInitilized) return;
-    this.display.visible = this.mousePointer.withinGame;
-    this.display.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
-    this.display.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    if (!this.mInitilized) {
+      return;
+    }
+    this.visible = this.mousePointer.withinGame;
     this.display.onFrame();
   }
 }

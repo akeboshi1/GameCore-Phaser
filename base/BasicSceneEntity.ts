@@ -7,7 +7,6 @@ import {IEntityComponent} from "./IEntityComponent";
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 import {op_client} from "../../protocol/protocols";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
-import {DrawArea} from "../common/struct/DrawArea";
 import {IDisposeObject} from "./object/interfaces/IDisposeObject";
 import {IObjectPool} from "./pool/interfaces/IObjectPool";
 import {RecycleObject} from "./object/base/RecycleObject";
@@ -21,8 +20,11 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     public display: any;
     public scene: SceneBasic;
     public camera: Phaser.Camera;
-    public walkableArea: DrawArea;
-    public collisionArea: DrawArea;
+
+    public collisionWidth = 0;
+    public collisionHeight = 0;
+    public collisionOffsetX = 0;
+    public collisionOffsetY = 0;
 
     public positionDirty = false;
     protected baseLoc: Phaser.Point;
@@ -73,45 +75,43 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     }
 
     public get sortX(): number {
-        return this.ox + (this.collisionArea.width >> 1);
+        return this.ox + (this.collisionWidth >> 1);
     }
 
     public get sortY(): number {
-        return this.oy + (this.collisionArea.height >> 1);
-    }
-
-    public get quadH(): number {
-        return this.collisionArea.height;
+        return this.oy + (this.collisionHeight >> 1);
     }
 
     public get quadW(): number {
-        return this.collisionArea.width;
+        return this.collisionWidth;
     }
 
+  public get quadH(): number {
+    return this.collisionHeight;
+  }
+
     public get quadX(): number {
-        return this.collisionArea.ox;
+        return this.ox + this.collisionOffsetX;
     }
 
     public get quadY(): number {
-        return this.collisionArea.oy;
+        return this.oy + this.collisionOffsetY;
     }
 
     protected get displayPool(): IObjectPool {
         return null;
     }
 
-    public setWalkableArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-        if (this.walkableArea === undefined) {
-            this.walkableArea = new DrawArea(value, 0x00FF00, orgin);
-        }
-        this.walkableArea.draw(hWidth, hHeight);
-    }
-
     public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-        if (this.collisionArea === undefined) {
-            this.collisionArea = new DrawArea(value, 0xFF0000, orgin);
-        }
-        this.collisionArea.draw(hWidth, hHeight);
+        let arr = value.split("&");
+        let rows = arr.length;
+        let cols = arr[0].split(",").length;
+
+        this.collisionWidth = (rows + cols) * (hWidth / 2);
+        this.collisionHeight = (rows + cols) * (hHeight / 2);
+
+        this.collisionOffsetX = -rows * (hWidth / 2) - (orgin.x - orgin.y) * (hWidth / 2);
+        this.collisionOffsetY = -(orgin.x + orgin.y) * (hHeight / 2);
     }
 
     public moveToTarget(value: op_client.IMoveData): void {
@@ -129,9 +129,7 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
         this._ox = x;
         this._oy = y;
         this._oz = z || 0;
-        if (this.collisionArea) {
-            this.collisionArea.setPosition(x, y, z);
-        }
+
         if (!silent) {
             this.positionDirty = true;
         }

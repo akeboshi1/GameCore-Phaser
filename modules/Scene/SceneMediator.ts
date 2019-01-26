@@ -123,8 +123,7 @@ export class SceneMediator extends MediatorBase {
      * @param value
      */
     protected handleAddPlayer(value: op_client.IActor): void {
-      let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value);
-      element.collisionArea.show();
+      this.view.addSceneElement(Const.SceneElementType.ROLE, value.uuid, value);
     }
 
     /**
@@ -182,8 +181,7 @@ export class SceneMediator extends MediatorBase {
      * @element ElementInfo
      */
     protected addElement(value: ElementInfo): void {
-      let element: BasicSceneEntity = this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
-      element.collisionArea.hide();
+      this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
     }
 
     /**
@@ -250,11 +248,9 @@ export class SceneMediator extends MediatorBase {
       let i = 0;
       let len: number = datas.length;
       let data: ElementInfo;
-      let element: BasicSceneEntity;
       for (; i < len; i++) {
         data = datas[i];
-        element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
-        element.collisionArea.show();
+        this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
       }
     }
 
