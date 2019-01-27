@@ -69,6 +69,10 @@ export class SceneEditorMediator extends SceneMediator {
 
   public onRemove(): void {
     super.onRemove();
+    if (this.mTick) {
+      this.mTick.onDispose();
+      this.mTick = null;
+    }
     if (this.mMouseFollower) {
       this.mMouseFollower.onDispose();
       this.mMouseFollower = null;

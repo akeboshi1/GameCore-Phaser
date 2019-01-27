@@ -85,12 +85,14 @@ export default class Game extends Phaser.State {
                 frameHeight: WindowClose.getHeight()
             }];
             Globals.ModuleManager.openModule(ModuleTypeEnum.PROMPT, {nineslices: promptResource, sheets: promtSheet});
+        } else {
+            Globals.ModuleManager.openModule(ModuleTypeEnum.MINIMAP);
         }
 
         if (Globals.DataCenter.SceneData.initialize) {
             this.onHandleEnterScene();
         } else {
-            Globals.MessageCenter.on(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene);
+            Globals.MessageCenter.once(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene, this);
         }
     }
 

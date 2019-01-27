@@ -48,7 +48,7 @@ export class MediatorBase implements IMediator {
         if (this.viewComponent === undefined) {
             return;
         }
-        if ((this.viewComponent as IResizeObject).onResize() !== undefined) (<IResizeObject>this.viewComponent).onResize();
+        if ((this.viewComponent as IResizeObject).onResize !== undefined) (<IResizeObject>this.viewComponent).onResize();
     }
 
     public setViewComponent(viewComponent: any): void {
