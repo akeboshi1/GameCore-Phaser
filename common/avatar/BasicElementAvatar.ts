@@ -50,10 +50,6 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         this.Loader.loadModel(elementInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
-  public setReferenceArea(value: string, orgin?: Phaser.Point): void {
-    this.Loader.setReferenceArea(value, orgin);
-  }
-
     public onFrame(): void {
         super.onFrame();
         this.Loader.onFrame();

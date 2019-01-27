@@ -33,9 +33,6 @@ export default class BasicElement extends SceneEntity {
 
   public loadModel(value: ElementInfo) {
     this.display.loadModel(value);
-    /** if (GameConfig.isEditor) {
-      this.display.setReferenceArea(value.collisionArea, value.originCollisionPoint);
-    } **/
   }
 
   public isInScreen(): boolean {

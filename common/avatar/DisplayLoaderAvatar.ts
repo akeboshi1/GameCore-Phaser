@@ -19,8 +19,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     private mAnimatonControlFuncDitry: boolean;
     private mAnimatonControlThisObj: any;
 
-    protected mReferenceArea: ReferenceArea;
-
     public constructor(game: Phaser.Game) {
         super(game, 0, 0);
     }
@@ -46,15 +44,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     public invalidAnimationControlFunc(): void {
         this.mAnimatonControlFuncDitry = true;
-    }
-
-    public setReferenceArea(value: string, orgin?: Phaser.Point, color?: number): void {
-      if (this.mReferenceArea === undefined) {
-        this.mReferenceArea = new ReferenceArea(this.game, value, orgin, color);
-        this.addChildAt(this.mReferenceArea, 0);
-      } else {
-        this.mReferenceArea.onReset(value, orgin, color);
-      }
     }
 
     public loadModel(url: op_gameconfig.IDisplay, thisArg?: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
@@ -97,9 +86,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     public onClear(): void {
         this.closeLoadModel();
-        if (this.mReferenceArea) {
-          this.mReferenceArea.onClear();
-        }
     }
 
     public onDispose(): void {

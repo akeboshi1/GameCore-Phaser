@@ -6,12 +6,14 @@ import Globals from "../../../Globals";
 import {op_gameconfig} from "../../../../protocol/protocols";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 import {ITickedObject} from "../../../base/ITickedObject";
+import {ReferenceArea} from "../../../common/struct/ReferenceArea";
 
 export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITickedObject, IDisposeObject {
   protected display: DisplayLoaderAvatar;
   protected mInitilized = false;
   protected mData: IMouseFollow;
   protected baseLoc: Phaser.Point;
+  protected mReferenceArea: ReferenceArea;
   public constructor(game: Phaser.Game) {
     super(game, 0, 0);
   }
@@ -26,6 +28,10 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     }
     this.avatarPool.free(this.display);
     this.display = null;
+
+    if (this.mReferenceArea) {
+      this.mReferenceArea.onClear();
+    }
 
     this.mInitilized = false;
   }
@@ -59,12 +65,21 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     this.addChild(this.display);
   }
 
+  protected setReferenceArea(value: string, orgin?: Phaser.Point, color?: number): void {
+    if (this.mReferenceArea === undefined) {
+      this.mReferenceArea = new ReferenceArea(this.game, value, orgin, color);
+      this.addChildAt(this.mReferenceArea, 0);
+    } else {
+      this.mReferenceArea.onReset(value, orgin, color);
+    }
+  }
+
   public setData(value: IMouseFollow): void {
     if (value.animation && value.display) {
       this.mData = value;
       this.initialize();
       this.setBaseLoc();
-      this.display.setReferenceArea(value.animation.collisionArea, value.animation.originPoint ? new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]) : new Phaser.Point());
+      this.setReferenceArea(value.animation.collisionArea, value.animation.originPoint ? new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]) : new Phaser.Point());
       this.display.setAnimationConfig([value.animation]);
       this.display.visible = false;
       this.display.loadModel(value.display, this, null, this.bodyAvatarPartLoadCompleteHandler);
