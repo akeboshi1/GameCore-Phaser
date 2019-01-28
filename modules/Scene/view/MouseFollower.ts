@@ -26,6 +26,7 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     if (this.display && this.display.parent) {
       this.display.parent.removeChild(this.display);
     }
+    this.display.alpha = 1;
     this.avatarPool.free(this.display);
     this.display = null;
 
@@ -61,6 +62,7 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     if (null == this.display) {
       this.display = new DisplayLoaderAvatar(Globals.game);
     }
+    this.display.alpha = 0.8;
     this.display.setAnimationControlFunc(this.bodyControlHandler, this);
     this.addChild(this.display);
   }

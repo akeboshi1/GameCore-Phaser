@@ -91,8 +91,7 @@ export class MiniMapMediator extends MediatorBase {
         this.view.curRect.cacheAsBitmap = false;
       }
       this.view.curRect.clear();
-      this.view.curRect.lineStyle(1, 0xffcc00, 1);
-      this.view.curRect.beginFill(0x000000, 0.1);
+      this.view.curRect.lineStyle(1, 0xffff00, 1);
       this.view.curRect.drawRect(0, 0, setWidth, setHeight);
       this.view.curRect.endFill();
       this.view.curRect.cacheAsBitmap = true;

@@ -8,9 +8,9 @@ export class MiniMapView extends ModuleViewBase {
   }
 
   protected init(): void {
-    this.curRect = this.game.make.graphics();
-    this.add(this.curRect);
     this.mapRect = this.game.make.graphics();
     this.add(this.mapRect);
+    this.curRect = this.game.make.graphics();
+    this.add(this.curRect);
   }
 }
