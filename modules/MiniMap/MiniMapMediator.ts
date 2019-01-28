@@ -8,8 +8,9 @@ import {Tick} from "../../common/tick/Tick";
 
 export class MiniMapMediator extends MediatorBase {
   private mTick: Tick;
-  protected maxWidth = 100;
+  protected maxWidth = 200;
   protected curScale = 0;
+  protected curHeight = 0;
   private get view(): MiniMapView {
     return this.viewComponent as MiniMapView;
   }
@@ -45,6 +46,8 @@ export class MiniMapMediator extends MediatorBase {
   }
 
   public onFrame(): void {
+    this.view.x = GameConfig.GameWidth - this.maxWidth - 1;
+    this.view.y = GameConfig.GameHeight - this.curHeight - 1;
     this.view.curRect.x = this.setX;
     this.view.curRect.y = this.setY;
   }
@@ -65,29 +68,30 @@ export class MiniMapMediator extends MediatorBase {
     let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
     this.curScale = this.maxWidth / mapSceneInfo.mapTotalWidth;
     let setWidth = this.maxWidth;
-    let setHeight = mapSceneInfo.mapTotalHeight * this.curScale;
+    let setHeight = (mapSceneInfo.mapTotalHeight * this.curScale) >> 0;
+    this.curHeight = setHeight;
 
     if (this.view.mapRect.height !== setHeight) {
       if (this.view.mapRect.cacheAsBitmap) {
         this.view.mapRect.cacheAsBitmap = false;
       }
       this.view.mapRect.clear();
-      this.view.mapRect.lineStyle(1, 0x000000, 0.8);
-      this.view.mapRect.beginFill(0xffffff, 0.1);
+      this.view.mapRect.lineStyle(1, 0xffffff, 1);
+      this.view.mapRect.beginFill(0x000000, 0.2);
       this.view.mapRect.drawRect(0, 0, setWidth, setHeight);
       this.view.mapRect.endFill();
       this.view.mapRect.cacheAsBitmap = true;
     }
 
-    setWidth = GameConfig.GameWidth * this.curScale;
-    setHeight = GameConfig.GameHeight * this.curScale;
+    setWidth = (GameConfig.GameWidth * this.curScale) >> 0;
+    setHeight = (GameConfig.GameHeight * this.curScale) >> 0;
 
     if (this.view.curRect.width !== setWidth || this.view.curRect.height !== setHeight) {
       if (this.view.curRect.cacheAsBitmap) {
         this.view.curRect.cacheAsBitmap = false;
       }
       this.view.curRect.clear();
-      this.view.curRect.lineStyle(1, 0xffcc00, 0.8);
+      this.view.curRect.lineStyle(1, 0xffcc00, 1);
       this.view.curRect.beginFill(0x000000, 0.1);
       this.view.curRect.drawRect(0, 0, setWidth, setHeight);
       this.view.curRect.endFill();

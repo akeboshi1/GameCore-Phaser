@@ -26,7 +26,7 @@ export class LayerManager extends BaseSingleton {
     this.animationLayer = new Phaser.Group(game, this.container, "animationLayer");
     this.animationLayer.fixedToCamera = true;
 
-    this.mainUiLayer = new Phaser.Group(game, this.container, "uiLayer");
+    this.mainUiLayer = new Phaser.Group(game, this.container, "mainUiLayer");
     this.mainUiLayer.fixedToCamera = true;
 
     this.uiLayer = new Phaser.Group(game, this.container, "uiLayer");
