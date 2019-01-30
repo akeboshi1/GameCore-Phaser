@@ -67,6 +67,7 @@ export class TerrainInfo implements ITerrain {
           this[key] = value;
       }
     }
+    this.setArea();
   }
 
   public get uid(): number {

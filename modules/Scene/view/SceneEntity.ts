@@ -162,8 +162,8 @@ export default class SceneEntity extends BasicSceneEntity {
 
     protected doPathMoving(targetX: number, targetY: number): void {
 
-        let _x = targetX >> 0;
-        let _y = targetY >> 0;
+        let _x = targetX;
+        let _y = targetY;
         let _z = this.oz;
 
         this.setPosition(_x, _y, _z);
