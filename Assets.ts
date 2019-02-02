@@ -96,7 +96,7 @@ export namespace Avatar {
         }
 
         static getPartUrl(value: string): string {
-            return require("assets/avatar/part/" + value + ".png");
+            return Load.Url.getRes("avatar/part/" + value + ".png");
         }
     }
 }

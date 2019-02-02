@@ -581,7 +581,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         }
 
         for (let obj of this.replaceArr) {
-            let key: string = obj.part.replace("#", Globals.Tool.caclNumStr(obj.skin)).replace("$", obj.dir);
+            let key: string = obj.part.replace("#", obj.skin).replace("$", obj.dir);
             if (Globals.game.cache.checkImageKey(Avatar.AvatarBone.getPartName(key))) continue;
             Globals.game.load.image(Avatar.AvatarBone.getPartName(key), Avatar.AvatarBone.getPartUrl(key));
             ++loadNum;
@@ -615,8 +615,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     private replacePart(soltName: string, soltPart: string, soltDir: number, skin: number): void {
         let part: string = soltName.replace("$", soltDir.toString());
         let slot: Slot = this.armature.armature.getSlot(part);
-        let partStr: string = Globals.Tool.caclNumStr(skin);
-        let resKey: string = Avatar.AvatarBone.getPartName(soltPart.replace("#", partStr)).replace("$", soltDir.toString());
+        let resKey: string = Avatar.AvatarBone.getPartName(soltPart.replace("#", skin.toString())).replace("$", soltDir.toString());
         let isCache: boolean = Globals.game.cache.checkImageKey(resKey);
         if (isCache) {
             let dis: dragonBones.PhaserSlotDisplay = new dragonBones.PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
