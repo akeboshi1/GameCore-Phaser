@@ -5,7 +5,7 @@ import {op_gameconfig} from "../../../../protocol/protocols";
 import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import {GameConfig} from "../../../GameConfig";
+import GameConst = Const.GameConst;
 
 export class BasicTerrain  extends SceneEntity {
 
@@ -59,6 +59,16 @@ export class BasicTerrain  extends SceneEntity {
         super.onUpdating(deltaTime);
     }
 
+    public getRect(): Phaser.Rectangle {
+        if (this._rect === undefined) {
+            this._rect = new Phaser.Rectangle();
+        }
+        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
+        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+        this._rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth ,  Globals.Room45Util.tileHeight + GameConst.MAP_TILE_DEPTH);
+        return this._rect;
+    }
+
     public isInScreen(): boolean {
         let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
         let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
@@ -66,10 +76,42 @@ export class BasicTerrain  extends SceneEntity {
             this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
     }
 
+    protected onDisplayLoadCompleted(): void {
+        if (this.drawDrawDirty) {
+            this.drawDrawDirty = false;
+            this.onDrawBack();
+        }
+    }
+
+    private drawFunc: Function;
+    private drawThisObj: any;
+    private drawParam: any[];
+    private drawDrawDirty = false;
+    public drawBack(drawFunc: Function, thisObj?: any, ... param: any[]): void {
+        this.drawFunc = drawFunc;
+        this.drawThisObj = thisObj;
+        this.drawParam = param;
+        if (this.display.Loader.modelLoaded) {
+            this.onDrawBack();
+        } else {
+            this.drawDrawDirty = true;
+        }
+    }
+
+    private onDrawBack(): void {
+        if (this.drawFunc) {
+            let cb = this.drawFunc;
+            this.drawFunc = null;
+            cb.apply(this.drawThisObj, [this].concat(this.drawParam));
+            this.drawThisObj = null;
+            this.drawParam = null;
+        }
+    }
+
     protected onInitialize() {
         super.onInitialize();
         this.initBaseLoc();
-        // this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z, true);
+        this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z, true);
         this.loadModel(this.terrainInfo);
         this.setAnimation(this.terrainInfo.animationName);
     }

@@ -9,13 +9,14 @@ import {HashMap} from "../../../base/ds/HashMap";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DisplaySortableTerrainLayer} from "./DisplaySortableTerrainLayer";
+import {GameConfig} from "../../../GameConfig";
 
 export class SceneBase extends SceneBasic {
     public mapSceneInfo: SceneInfo;
 
     // layers...
     public terrainGridLayer: TerrainGridLayer = null;
-    public terrainSceneLayer: DisplaySortableTerrainLayer = null;
+    public terrainSceneLayer: DisplaySortableSceneLayer = null;
     public topSceneLayer: DisplaySortableSceneLayer = null;
     public middleSceneLayer: DisplaySortableSceneLayer = null;
     public bottomSceneLayer: DisplaySortableSceneLayer = null;
@@ -156,9 +157,15 @@ export class SceneBase extends SceneBasic {
     protected onInitialize(): void {
         super.onInitialize();
 
-        this.terrainSceneLayer = new DisplaySortableTerrainLayer(this.game);
-        this.terrainSceneLayer.scene = this;
-        this.addChild(this.terrainSceneLayer);
+        if (GameConfig.isEditor) {
+            this.terrainSceneLayer = new DisplaySortableSceneLayer(this.game);
+            this.terrainSceneLayer.scene = this;
+            this.addChild(this.terrainSceneLayer);
+        } else {
+            this.terrainSceneLayer = new DisplaySortableTerrainLayer(this.game);
+            this.terrainSceneLayer.scene = this;
+            this.addChild(this.terrainSceneLayer);
+        }
 
         this.terrainGridLayer = new TerrainGridLayer(this.game);
         this.terrainGridLayer.scene = this;
@@ -181,7 +188,6 @@ export class SceneBase extends SceneBasic {
     protected onInitializeScene(value: SceneInfo): void {
         this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
         this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
-
     }
 
     protected onActivedScene(): void {

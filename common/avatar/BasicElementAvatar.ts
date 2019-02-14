@@ -83,6 +83,9 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (this.Loader) {
             this.Loader.visible = true;
         }
+        if (this.getOwner()) {
+            this.getOwner().onDisplayLoadCompleted();
+        }
     }
 
     protected onAddPlaceHoldAvatarPart(): void {

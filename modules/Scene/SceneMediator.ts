@@ -75,6 +75,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.CHANGE_ELEMENT_ANIMATION, this.changeElementHandle, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN, this.handleAddTerrain, this);
+        Globals.MessageCenter.on(MessageType.SCENE_ADD_TERRAIN_END, this.handleAddTerrainEnd, this);
         Globals.MessageCenter.on(MessageType.SCENE_ADD_ELEMENT, this.handleAddElement, this);
         Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ELEMENT, this.handleRemoveElement, this);
         Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
@@ -116,6 +117,10 @@ export class SceneMediator extends MediatorBase {
             terrain.setInfo(iTerrain);
             this.addTerrain(terrain);
         }
+    }
+
+    protected handleAddTerrainEnd(): void {
+        this.view.terrainSceneLayer.onAddComplete();
     }
 
     /**
@@ -211,6 +216,9 @@ export class SceneMediator extends MediatorBase {
             "gameW: " + GameConfig.GameWidth + "|gameH:" + GameConfig.GameHeight,
         );
 
+        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+        this.camera.focusOnXY(currentCharacterInfo.x, currentCharacterInfo.y);
+
         this.view.initializeScene(mapSceneInfo);
 
         // mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
@@ -218,7 +226,6 @@ export class SceneMediator extends MediatorBase {
         this.initializeElementItems(mapSceneInfo.elementConfig);
 
         // 初始化当前玩家其他信息
-        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
         this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
 
         // 播放场景音效

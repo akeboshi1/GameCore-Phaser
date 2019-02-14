@@ -24,6 +24,7 @@ export class MessageType {
     public static SCENE_UPDATE_PLAYER = "scene_update_player";
     public static SCENE_ADD_ELEMENT = "scene_add_element";
     public static SCENE_ADD_TERRAIN = "scene_add_terrain";
+    public static SCENE_ADD_TERRAIN_END = "scene_add_terrain_end";
     public static SCENE_ADD_ALL_TERRAIN = "scene_add_all_terrain";
     public static SCENE_REMOVE_ELEMENT = "scene_remove_element";
     public static SCENE_REMOVE_TERRAIN = "scene_remove_terrain";

@@ -102,6 +102,9 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
         return null;
     }
 
+    protected onDisplayLoadCompleted(): void {
+    }
+
     public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
         let arr = value.split("&");
         let rows = arr.length;
@@ -225,6 +228,20 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
 
     public updateDisplay(): void {
         this.onUpdatingDisplay();
+    }
+
+    public drawBack(drawFunc: Function, thisObj?: any, ... param: any[]): void {
+    }
+
+    protected _rect: Phaser.Rectangle;
+    public getRect(): Phaser.Rectangle {
+        if (this._rect === undefined) {
+            this._rect = new Phaser.Rectangle();
+        }
+        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
+        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+        this._rect.setTo(_ox, _oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
+        return this._rect;
     }
 
     protected onUpdatingDisplay(): void {

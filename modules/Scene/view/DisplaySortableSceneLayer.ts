@@ -2,6 +2,7 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
+import {GameConfig} from "../../../GameConfig";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
     public needRealTimeDepthSort = false;
@@ -26,6 +27,9 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
         // this.add(d.display);
         this.markDirty();
+    }
+
+    public onAddComplete(): void {
     }
 
     public onFrame(): void {

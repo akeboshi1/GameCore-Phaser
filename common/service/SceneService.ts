@@ -36,6 +36,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.handleAddCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.handleRemoveCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN, this.handleServerAddTerrain);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN_END, this.handleServerAddTerrainEnd);
         // Editor
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
@@ -54,6 +55,10 @@ class Handler extends BasePacketHandler {
     private handleServerAddTerrain(packet: PBpacket): void {
         let terrain: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrain.terrain);
+    }
+
+    private handleServerAddTerrainEnd(packet: PBpacket): void {
+        Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN_END);
     }
 
     private handleServerAddElement(packet: PBpacket): void {
