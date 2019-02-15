@@ -1,7 +1,8 @@
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
 import IElement = op_client.IElement;
+import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 
-export class ElementInfo implements IElement {
+export class ElementInfo implements IElement, IDisplayLoaderParam {
   public id: number;
   public type: string;
   public dir: number;
@@ -25,6 +26,10 @@ export class ElementInfo implements IElement {
   public speed = 4;
 
   public constructor() {
+  }
+
+  public get defaultAnimation(): string {
+    return this.animationName;
   }
 
   public get scaleX(): number {

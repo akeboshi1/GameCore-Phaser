@@ -12,6 +12,7 @@ export class BasicTerrain  extends SceneEntity {
     protected mAnimationDirty = false;
     protected mScaleX = 1;
     protected myAnimationName: string;
+    public display: BasicElementAvatar;
 
     public constructor() {
         super();

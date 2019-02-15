@@ -83,7 +83,7 @@ export class ReferenceArea extends Phaser.Graphics {
         p2 = ReferenceArea.room45.tileToPixelCoords(i + 1, j);
         p3 = ReferenceArea.room45.tileToPixelCoords(i + 1, j + 1);
         p4 = ReferenceArea.room45.tileToPixelCoords(i, j + 1);
-        this.beginFill(this._color === -1 ? (this.areaArr[i][j] === 1 ?  0x00FF00 : 0xFF0000) : this._color, this._alpha === 0 ? 0.8 : this._alpha);
+        this.beginFill(this._color === -1 ? (this.areaArr[i][j] === 1 ?  0x00FF00 : 0xFF0000) : this._color, this._alpha === 0 ? 1 : this._alpha);
         ReferenceArea.poly.setTo([p1, p2, p3, p4]);
         this.drawPolygon(ReferenceArea.poly.points);
       }
@@ -91,11 +91,19 @@ export class ReferenceArea extends Phaser.Graphics {
 
     this.endFill();
 
-    let ox =  -ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * (hTileWidth >> 1);
-    let oy =  -(this._orgin.x + this._orgin.y) * (hTileHeight >> 1);
+    // let ox =  -ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * (hTileWidth >> 1);
+    // let oy =  -(this._orgin.x + this._orgin.y) * (hTileHeight >> 1);
 
-    this.x = ox;
-    this.y = oy;
+    // let ox =  -ReferenceArea.room45.originX
+    // let oy =  0;
+    //
+    // this.x = ox;
+    // this.y = oy;
+  }
+
+  public setPosition(x: number, y: number): void {
+    this.x = x - ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
+    this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
   }
 
   protected init(): void {

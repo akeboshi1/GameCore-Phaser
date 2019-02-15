@@ -6,6 +6,7 @@ import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {ReferenceArea} from "../struct/ReferenceArea";
+import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -45,9 +46,9 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         return this.mLoaderAvatar as DisplayLoaderAvatar;
     }
 
-    public loadModel(elementInfo: any): void {
+    public loadModel(elementInfo: IDisplayLoaderParam): void {
         this.Loader.setAnimationConfig(elementInfo.animations);
-        this.Loader.loadModel(elementInfo.display, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        this.Loader.loadModel(elementInfo, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
     public onFrame(): void {

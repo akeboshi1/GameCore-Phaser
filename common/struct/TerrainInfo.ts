@@ -1,8 +1,9 @@
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
 import ITerrain = op_client.ITerrain;
 import Globals from "../../Globals";
+import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 
-export class TerrainInfo implements ITerrain {
+export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
   public name: string;
 
   public des: string;
@@ -27,6 +28,10 @@ export class TerrainInfo implements ITerrain {
   public originCollisionPoint: Phaser.Point;
 
   public constructor() {
+  }
+
+  public get defaultAnimation(): string {
+    return this.animationName;
   }
 
   public set animationName(value: string) {

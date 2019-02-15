@@ -7,6 +7,7 @@ import {op_gameconfig} from "../../../../protocol/protocols";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 import {ITickedObject} from "../../../base/ITickedObject";
 import {ReferenceArea} from "../../../common/struct/ReferenceArea";
+import {EditorEnum} from "../../../common/const/EditorEnum";
 
 export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITickedObject, IDisposeObject {
   protected display: DisplayLoaderAvatar;
@@ -76,15 +77,17 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     }
   }
 
-  public setData(value: IMouseFollow): void {
+  public setData(value: IMouseFollow, type: string): void {
     if (value.animation && value.display) {
       this.mData = value;
       this.initialize();
       this.setBaseLoc();
-      this.setReferenceArea(value.animation.collisionArea, value.animation.originPoint ? new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]) : new Phaser.Point());
+      if (type === EditorEnum.Type.ELEMENT) {
+        this.setReferenceArea(value.animation.collisionArea, value.animation.originPoint ? new Phaser.Point(value.animation.originPoint[0], value.animation.originPoint[1]) : new Phaser.Point());
+      }
       this.display.setAnimationConfig([value.animation]);
       this.display.visible = false;
-      this.display.loadModel(value.display, this, null, this.bodyAvatarPartLoadCompleteHandler);
+      this.display.loadModel({defaultAnimation: value.animation.name, animations: [value.animation], display: value.display}, this, null, this.bodyAvatarPartLoadCompleteHandler);
     }
   }
 
@@ -112,8 +115,11 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     if (!this.mInitilized) {
       return;
     }
-    this.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
-    this.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    this.display.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
+    this.display.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    if (this.mReferenceArea) {
+      this.mReferenceArea.setPosition(Globals.game.camera.x + this.mousePointer.x, Globals.game.camera.y + this.mousePointer.y);
+    }
   }
 
   public onFrame(): void {

@@ -12,6 +12,7 @@ export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;
   protected mScaleX = 1;
   protected myAnimationName: string;
+  public display: BasicElementAvatar;
 
   public get elementInfo(): any {
     return this.data;

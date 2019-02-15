@@ -339,8 +339,8 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private handleMouseFollow(value: op_client.OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW): void {
-    if (this.mMouseFollower) {
-      this.mMouseFollower.setData(value);
+    if (this.mMouseFollower ) {
+      this.mMouseFollower.setData(value, this.em.type);
     }
   }
 
