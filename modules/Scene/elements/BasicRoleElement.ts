@@ -71,38 +71,6 @@ export class BasicRoleElement extends SceneEntity {
         (<RoleBonesAvatar>this.display).angleIndex = this.mAngleIndex;
     }
 
-    // protected doAngleMoving(actualSpeed: number): void {
-    //     if (actualSpeed <= 0) return;
-    //
-    //     let startP: Point = Globals.Room45Util.tileToPixelCoords(1, 1);
-    //     let endP: Point;
-    //     let moveAngle: number;
-    //     if (this.walkAngleIndex === 8) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(0, 0);
-    //     } else if (this.walkAngleIndex === 7) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(1, 0);
-    //     } else if (this.walkAngleIndex === 6) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(2, 0);
-    //     } else if (this.walkAngleIndex === 5) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(2, 1);
-    //     } else if (this.walkAngleIndex === 4) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(2, 2);
-    //     } else if (this.walkAngleIndex === 3) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(1, 2);
-    //     } else if (this.walkAngleIndex === 2) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(0, 2);
-    //     } else if (this.walkAngleIndex === 1) {
-    //         endP = Globals.Room45Util.tileToPixelCoords(0, 1);
-    //     }
-    //     moveAngle = Globals.Tool.caculateDirectionRadianByTwoPoint2(startP.x, startP.y, endP.x, endP.y);
-    //
-    //     let _x = this.ox + actualSpeed * Math.cos(moveAngle);
-    //     let _y = this.oy + actualSpeed * Math.sin(moveAngle);
-    //     let _z = this.oz;
-    //
-    //     this.setPosition(_x, _y, _z);
-    // }
-
     protected onUpdating(deltaTime: number): void {
         if (this.mAnimationDirty) {
             this.onAvatarAnimationChanged();
@@ -115,6 +83,7 @@ export class BasicRoleElement extends SceneEntity {
         super.onInitialize();
 
         this.setAngleIndex(this.characterInfo.avatarDir);
+        (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
         // this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
         this.mouseEnable = false;
 

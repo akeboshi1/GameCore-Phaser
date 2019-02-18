@@ -13,6 +13,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAngleIndexDirty = false;
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mAnimationDirty = false;
+    protected mHeadName: Phaser.Text;
 
     public get angleIndex(): number {
         return this.mAngleIndex;
@@ -34,6 +35,11 @@ export class RoleBonesAvatar extends BasicAvatar {
             this.mAnimationName = value;
             this.mAnimationDirty = true;
         }
+    }
+
+    public setModelName(value: string, color: string): void {
+        this.mHeadName.text = value;
+        this.mHeadName.fill = color;
     }
 
     protected get avatarPool(): IObjectPool {
@@ -67,6 +73,9 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);
+
+        this.mHeadName = Globals.game.make.text(-12, -96, "" , {fontSize: 12});
+        this.addChild(this.mHeadName);
     }
 
     protected onInitializeComplete(): void {
