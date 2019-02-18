@@ -122,7 +122,8 @@ export class SceneEditorMediator extends SceneMediator {
         break;
       case EditorEnum.Mode.SELECT:
         if (this.isElementDown && this.mSelectElement && this.mousePointer) {
-          this.moveElement(this.mSelectElement, this.mousePointer);
+          let offset: Phaser.Point = new Phaser.Point(this.mousePointer.x - this.mouseDownPos.x, this.mousePointer.y - this.mouseDownPos.y);
+          this.moveElement(this.mSelectElement, offset);
         }
         break;
       case EditorEnum.Mode.ZOOM:
@@ -257,11 +258,7 @@ export class SceneEditorMediator extends SceneMediator {
     } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
       Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.SELECT) {
-      if (this.em.type === EditorEnum.Type.TERRAIN) {
-        Globals.game.input.onDown.add(this.onGameDown, this);
-      } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
-      }
+      this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
     }
   }
 
@@ -281,9 +278,9 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.SocketManager.send(pkt);
   }
 
-  private moveElement(element: BasicElement, pointer: Phaser.Pointer): void {
-    let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
-    let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
+  private moveElement(element: BasicElement, offset: Phaser.Point): void {
+    let screenX: number = (this.elementOldPoint.x + offset.x) / this.view.scale.x;
+    let screenY: number = (this.elementOldPoint.y + offset.y) / this.view.scale.y;
     element.setPosition(screenX, screenY);
   }
 
@@ -366,6 +363,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private elementOldPoint: Phaser.Point = new Phaser.Point;
+  private mouseDownPos: Phaser.Point = new Phaser.Point;
   private onElementLayerDown(item: any): void {
     let tempElement = item.getOwner();
     let elementId: number = tempElement.data.id;
@@ -375,6 +373,7 @@ export class SceneEditorMediator extends SceneMediator {
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
     }
+    this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
     this.isElementDown = true;
     Globals.game.input.onUp.add(this.onGameUp, this);
   }
