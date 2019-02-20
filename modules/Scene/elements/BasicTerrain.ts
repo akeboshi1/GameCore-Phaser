@@ -54,10 +54,10 @@ export class BasicTerrain extends SceneEntity {
   }
 
   public isInScreen(): boolean {
-    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
-    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
-    return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-      this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth, Globals.Room45Util.tileHeight + GameConst.MAP_TILE_DEPTH);
+      let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
+      let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
+      return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
+          this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
   }
 
   public drawBack(drawFunc: Function, thisObj?: any, ...param: any[]): void {
@@ -125,12 +125,13 @@ export class BasicTerrain extends SceneEntity {
   protected initBaseLoc(): void {
     // 图片坐标
     let config: op_gameconfig.IAnimation = this.terrainInfo.config;
-    if (this.baseLoc || config == null) return;
+    if (config == null) return;
     let tmp: Array<string> = config.baseLoc.split(",");
     if (this.baseLoc === undefined) {
-      this.baseLoc = new Phaser.Point();
+      this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
+    } else {
+        this.baseLoc.set(+(tmp[0]), +(tmp[1]));
     }
-    this.baseLoc.set(+(tmp[0]), +(tmp[1]));
   }
 
   private onDrawBack(): void {
