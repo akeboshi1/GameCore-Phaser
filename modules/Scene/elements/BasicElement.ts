@@ -72,7 +72,7 @@ export default class BasicElement extends SceneEntity {
     super.onInitialize();
     this.initBaseLoc();
     this.setAngleIndex(this.elementInfo.dir);
-    // this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z, true);
+    // this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
     this.loadModel(this.elementInfo);
     this.setAnimation(this.elementInfo.animationName);
     this.setScaleX(this.elementInfo.scaleX);
@@ -93,6 +93,11 @@ export default class BasicElement extends SceneEntity {
   protected onAvatarAnimationChanged(): void {
     (<BasicElementAvatar>this.display).animationName = this.myAnimationName;
     (<BasicElementAvatar>this.display).scaleX = this.mScaleX;
+  }
+
+  public initPosition(): void {
+    this.initBaseLoc();
+    this.setPosition(this.data.x, this.data.y, this.data.z);
   }
 
   protected initBaseLoc(): void {

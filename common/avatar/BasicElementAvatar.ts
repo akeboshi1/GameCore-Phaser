@@ -14,6 +14,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected mAnimationName: string;
     protected mAnimationDirty = false;
     protected mScaleX = 1;
+    protected mLoaderAvatar: DisplayLoaderAvatar;
 
     constructor(game: Phaser.Game) {
         super(game);

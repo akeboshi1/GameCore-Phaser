@@ -342,7 +342,7 @@ export class SceneMediator extends MediatorBase {
 }
 
 class MyGraphics extends Phaser.Graphics {
-    private _color: number;
+    protected _color: number;
     constructor(game: Phaser.Game, color: number) {
         super(game);
         this._color = color;

@@ -123,9 +123,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     this.destroy(true);
   }
 
-  public onRecycle(): void {
-  }
-
   protected onCompleteLoadModel(): void {
     let key: string = this.resKey;
     this.loadTexture(key);
@@ -140,7 +137,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
       }
     }
 
-    this.playAnimation(this.mLoadParam.defaultAnimation);
+    // this.playAnimation(this.mLoadParam.defaultAnimation);
   }
 
   protected closeLoadModel() {
@@ -148,8 +145,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
       if (this.mModelLoaded) {
         this.mModelLoaded = false;
       }
-      this.mLoadParam.display.texturePath = "";
-      this.mLoadParam.display.dataPath = "";
     }
     this.myModelUrlDirty = false;
   }
@@ -178,5 +173,8 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     }
 
     this.invalidAnimationControlFunc();
+  }
+
+  public onRecycle(): void {
   }
 }

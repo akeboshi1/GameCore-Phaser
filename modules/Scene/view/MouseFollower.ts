@@ -27,9 +27,6 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     if (this.display && this.display.parent) {
       this.display.parent.removeChild(this.display);
     }
-    this.display.alpha = 1;
-    this.avatarPool.free(this.display);
-    this.display = null;
 
     if (this.mReferenceArea) {
       this.mReferenceArea.onClear();
@@ -49,21 +46,15 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     }
   }
 
-  protected get avatarPool(): IObjectPool {
-    let op = Globals.ObjectPoolManager.getObjectPool("DisplayLoaderAvatar");
-    return op;
-  }
-
   public get mousePointer(): Phaser.Pointer {
     return Globals.game.input.activePointer;
   }
 
   protected onInitialize(): void {
-    this.display = this.avatarPool.alloc() as DisplayLoaderAvatar;
-    if (null == this.display) {
+    if (this.display === undefined) {
       this.display = new DisplayLoaderAvatar(Globals.game);
+      this.display.alpha = 0.8;
     }
-    this.display.alpha = 0.8;
     this.display.setAnimationControlFunc(this.bodyControlHandler, this);
     this.addChild(this.display);
   }
@@ -87,7 +78,7 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
       }
       this.display.setAnimationConfig([value.animation]);
       this.display.visible = false;
-      this.display.loadModel({defaultAnimation: value.animation.name, animations: [value.animation], display: value.display}, this, null, this.bodyAvatarPartLoadCompleteHandler);
+      this.display.loadModel({animations: [value.animation], display: value.display}, this, null, this.bodyAvatarPartLoadCompleteHandler);
     }
   }
 

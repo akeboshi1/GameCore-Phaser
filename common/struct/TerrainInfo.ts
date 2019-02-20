@@ -30,10 +30,6 @@ export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
   public constructor() {
   }
 
-  public get defaultAnimation(): string {
-    return this.animationName;
-  }
-
   public set animationName(value: string) {
     this._animationName = value;
     this.setArea();

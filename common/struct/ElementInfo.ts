@@ -28,10 +28,6 @@ export class ElementInfo implements IElement, IDisplayLoaderParam {
   public constructor() {
   }
 
-  public get defaultAnimation(): string {
-    return this.animationName;
-  }
-
   public get scaleX(): number {
     return this.scale ? -1 : 1;
   }

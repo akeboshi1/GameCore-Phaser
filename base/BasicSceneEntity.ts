@@ -27,7 +27,7 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     public collisionOffsetY = 0;
 
     public positionDirty = false;
-    protected baseLoc: Phaser.Point;
+    public baseLoc: Phaser.Point;
     protected isNeedSort = true;
 
     private mInitilized = false;
@@ -124,18 +124,14 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     }
 
     public initPosition(): void {
-        this.setPosition(this.data.x, this.data.y, this.data.z, true);
+        this.setPosition(this.data.x, this.data.y, this.data.z);
     }
 
-    public setPosition(x: number, y: number, z?: number, silent: boolean = false): void {
+    public setPosition(x: number, y: number, z?: number): void {
         // Log.trace("[x,y,z]", x, y, z);
         this._ox = x;
         this._oy = y;
         this._oz = z || 0;
-
-        if (!silent) {
-            this.positionDirty = true;
-        }
     }
 
     public isInScreen(): boolean {
@@ -160,18 +156,11 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     }
 
     public onDispose(): void {
-        if (!this.initilized) {
-            return;
-        }
-        this.mInitilized = false;
-        this.isValidDisplay = false;
-        if ((this.display as IDisposeObject).onDispose !== undefined) (<IDisposeObject>this.display).onDispose();
+        this.onClear();
+        // if (this.display && (this.display as IDisposeObject).onDispose !== undefined) (<IDisposeObject>this.display).onDispose();
     }
 
     public onClear(): void {
-        if (!this.initilized) {
-            return;
-        }
         this.mInitilized = false;
         this.isValidDisplay = false;
         this.displayPool.free(this.display);
@@ -245,7 +234,9 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     }
 
     protected onUpdatingDisplay(): void {
-        let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
+        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
+        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+        let p3 = Globals.Room45Util.p2top3(_ox, _oy, this.oz);
 
         this.display.isoX = p3.x;
         this.display.isoY = p3.y;

@@ -7,131 +7,139 @@ import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 import GameConst = Const.GameConst;
 
-export class BasicTerrain  extends SceneEntity {
+export class BasicTerrain extends SceneEntity {
 
-    protected mAnimationDirty = false;
-    protected mScaleX = 1;
-    protected myAnimationName: string;
-    public display: BasicElementAvatar;
+  public display: BasicElementAvatar;
+  protected mAnimationDirty = false;
+  protected mScaleX = 1;
+  protected myAnimationName: string;
+  private drawFunc: Function;
+  private drawThisObj: any;
+  private drawParam: any[];
+  private drawDrawDirty = false;
 
-    public constructor() {
-        super();
-        this.sceneLayerType = Const.SceneConst.SceneLayerTerrain;
+  public constructor() {
+    super();
+    this.sceneLayerType = Const.SceneConst.SceneLayerTerrain;
+  }
+
+  public get terrainInfo(): TerrainInfo {
+    return this.data;
+  }
+
+  protected get displayPool(): IObjectPool {
+    let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
+    return op;
+  }
+
+  public setAnimation(value: string): void {
+    // Log.trace("角度-->"+value);
+    this.myAnimationName = value;
+
+    this.invalidAnimation();
+  }
+
+  public loadModel(value: TerrainInfo) {
+    this.display.loadModel(value);
+  }
+
+  public getRect(): Phaser.Rectangle {
+    if (this._rect === undefined) {
+      this._rect = new Phaser.Rectangle();
+    }
+    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
+    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+    this._rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth, Globals.Room45Util.tileHeight + GameConst.MAP_TILE_DEPTH);
+    return this._rect;
+  }
+
+  public isInScreen(): boolean {
+    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
+    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+    return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
+      this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth, Globals.Room45Util.tileHeight + GameConst.MAP_TILE_DEPTH);
+  }
+
+  public drawBack(drawFunc: Function, thisObj?: any, ...param: any[]): void {
+    this.drawFunc = drawFunc;
+    this.drawThisObj = thisObj;
+    this.drawParam = param;
+    if (this.display.Loader.modelLoaded) {
+      this.onDrawBack();
+    } else {
+      this.drawDrawDirty = true;
+    }
+  }
+
+  public setPosition(x: number, y: number, z?: number): void {
+    let p2: Phaser.Point = Globals.Room45Util.tileToPixelCoords(x, y);
+    super.setPosition(p2.x, p2.y, z);
+  }
+
+  protected invalidAnimation(): void {
+    this.mAnimationDirty = true;
+  }
+
+  protected createDisplay() {
+    let terrain = this.displayPool.alloc() as BasicElementAvatar;
+    if (null == terrain) {
+      terrain = new BasicElementAvatar(Globals.game);
+    }
+    return terrain;
+  }
+
+  protected onUpdating(deltaTime: number): void {
+    if (this.mAnimationDirty) {
+      this.onAvatarAnimationChanged();
+      this.mAnimationDirty = false;
     }
 
-    public get terrainInfo(): TerrainInfo {
-        return this.data;
+    super.onUpdating(deltaTime);
+  }
+
+  protected onDisplayLoadCompleted(): void {
+    if (this.drawDrawDirty) {
+      this.drawDrawDirty = false;
+      this.onDrawBack();
     }
+  }
 
-    public setAnimation(value: string): void {
-        // Log.trace("角度-->"+value);
-        this.myAnimationName = value;
+  public initPosition(): void {
+    this.initBaseLoc();
+    this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z);
+  }
 
-        this.invalidAnimation();
+  protected onInitialize() {
+    super.onInitialize();
+    this.initBaseLoc();
+    this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z);
+    this.setAnimation(this.terrainInfo.animationName);
+    this.loadModel(this.terrainInfo);
+  }
+
+  protected onAvatarAnimationChanged(): void {
+    (<BasicElementAvatar>this.display).animationName = this.myAnimationName;
+    (<BasicElementAvatar>this.display).scaleX = this.mScaleX;
+  }
+
+  protected initBaseLoc(): void {
+    // 图片坐标
+    let config: op_gameconfig.IAnimation = this.terrainInfo.config;
+    if (this.baseLoc || config == null) return;
+    let tmp: Array<string> = config.baseLoc.split(",");
+    if (this.baseLoc === undefined) {
+      this.baseLoc = new Phaser.Point();
     }
+    this.baseLoc.set(+(tmp[0]), +(tmp[1]));
+  }
 
-    public loadModel(value: TerrainInfo) {
-        this.display.loadModel(value);
+  private onDrawBack(): void {
+    if (this.drawFunc) {
+      let cb = this.drawFunc;
+      this.drawFunc = null;
+      cb.apply(this.drawThisObj, [this].concat(this.drawParam));
+      this.drawThisObj = null;
+      this.drawParam = null;
     }
-
-    protected invalidAnimation(): void {
-        this.mAnimationDirty = true;
-    }
-
-    protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
-        return op;
-    }
-
-    protected createDisplay() {
-        let terrain = this.displayPool.alloc() as BasicElementAvatar;
-        if (null == terrain) {
-            terrain = new BasicElementAvatar(Globals.game);
-        }
-        return terrain;
-    }
-
-    protected onUpdating(deltaTime: number): void {
-        if (this.mAnimationDirty) {
-            this.onAvatarAnimationChanged();
-            this.mAnimationDirty = false;
-        }
-
-        super.onUpdating(deltaTime);
-    }
-
-    public getRect(): Phaser.Rectangle {
-        if (this._rect === undefined) {
-            this._rect = new Phaser.Rectangle();
-        }
-        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
-        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
-        this._rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth ,  Globals.Room45Util.tileHeight + GameConst.MAP_TILE_DEPTH);
-        return this._rect;
-    }
-
-    public isInScreen(): boolean {
-        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
-        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
-        return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-            this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
-    }
-
-    protected onDisplayLoadCompleted(): void {
-        if (this.drawDrawDirty) {
-            this.drawDrawDirty = false;
-            this.onDrawBack();
-        }
-    }
-
-    private drawFunc: Function;
-    private drawThisObj: any;
-    private drawParam: any[];
-    private drawDrawDirty = false;
-    public drawBack(drawFunc: Function, thisObj?: any, ... param: any[]): void {
-        this.drawFunc = drawFunc;
-        this.drawThisObj = thisObj;
-        this.drawParam = param;
-        if (this.display.Loader.modelLoaded) {
-            this.onDrawBack();
-        } else {
-            this.drawDrawDirty = true;
-        }
-    }
-
-    private onDrawBack(): void {
-        if (this.drawFunc) {
-            let cb = this.drawFunc;
-            this.drawFunc = null;
-            cb.apply(this.drawThisObj, [this].concat(this.drawParam));
-            this.drawThisObj = null;
-            this.drawParam = null;
-        }
-    }
-
-    protected onInitialize() {
-        super.onInitialize();
-        this.initBaseLoc();
-        this.setPosition(this.terrainInfo.x, this.terrainInfo.y, this.terrainInfo.z, true);
-        this.loadModel(this.terrainInfo);
-        this.setAnimation(this.terrainInfo.animationName);
-    }
-
-    public setPosition(x: number, y: number, z?: number, silent: boolean = false): void {
-        let p2: Phaser.Point = Globals.Room45Util.tileToPixelCoords(x, y);
-        super.setPosition(p2.x, p2.y, z, silent);
-    }
-
-    protected onAvatarAnimationChanged(): void {
-        (<BasicElementAvatar>this.display).animationName = this.myAnimationName;
-        (<BasicElementAvatar>this.display).scaleX = this.mScaleX;
-    }
-
-    protected initBaseLoc(): void {
-        // 图片坐标
-        let config: op_gameconfig.IAnimation = this.terrainInfo.config;
-        if (config === null) return;
-        let tmp: Array<string> = config.baseLoc.split(",");
-        this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
-    }
+  }
 }

@@ -74,13 +74,15 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
                     entity.initialize();
                     entity.updateDisplay();
                     this.add(entity.display);
+                  entity.display.alpha = 1;
                 }
             } else {
                 entity.onTick(deltaTime);
                 if (entity.isValidDisplay) {
                     this.setChildIndex(entity.display, this.children.length - 1);
                 } else {
-                    this.remove(entity.display);
+                    // this.remove(entity.display);
+                  entity.display.alpha = 0.5;
                     entity.onClear();
                 }
             }
@@ -91,6 +93,8 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     public removeEntity(d: BasicSceneEntity): void {
         this.mSceneEntities.remove(d);
         this.remove(d.display);
+        d.scene = null;
+        d.camera = null;
         d.onClear();
     }
 }

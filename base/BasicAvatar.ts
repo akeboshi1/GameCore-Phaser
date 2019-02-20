@@ -9,7 +9,7 @@ import {DisplayLoaderAvatar} from "../common/avatar/DisplayLoaderAvatar";
 export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent, IDisposeObject, IRecycleObject {
 
   protected myData: any = null;
-  private mInitilized = false;
+  protected mInitilized = false;
   protected mLoaderAvatar: IRecycleObject;
 
   public constructor(game: Phaser.Game) {

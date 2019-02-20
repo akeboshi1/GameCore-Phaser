@@ -41,7 +41,6 @@ export class Tool extends BaseSingleton {
 
     public mapDecode(mapData: string, compression: string, encoding: string) {
         // Get some base64 encoded binary data from the server. Imagine we got this:
-        // var b64Data     = "eJztV9GOwzAI+6FN6u5p//9lUw5xwYDp1JCXU4WUReu6GGxTejzez5/n8bhjLV6/VdT19bffddphTpP9ONPjmGh2YJAs9VxEMa/pOq7vQyGn26pI9bFGc93Fi801q4KtWbf2JgP4jdVkzssOpSAeX/8Mrf1lzKJfS1lloou9prKrVvu9/mcsnfEcUasm9dNn1KlBxjxj2/9+Zo67nm7F9R+Vxqpfa2BdoWcnMyz8KYQ66OpFGddRk4z96CrmNlQt+q3D/REh83rNS/4/eMeaJvgzzbs5IvM4Yn4dSGuv8Y5bsVF5NVP3ddSRL65T5rlaUx3qjTl/15/qrGq39nXhTAcMH6qS1TffS7wvq4Jjwwyimyo++D0D69jpes2D+QSMk3nehSsds2p75ON+2a95sH6ynE9mTNfxLsxgHX098fCOG99RzmYU4Uz0jcq5pnjerXJffjfFZ3nN/0D0sl/RkJ1Lsimonvcybc0ris+ugrVn1sf3U965ccqUb7GCVgtdb3X8TTLXd1bniKwPn7KgXNkeGucFW2tktA+PZWSuypdlDbFaLVqdddYJlcLeLKMruxxaVcyf5F29I5CPydbewGdOf0UZ7+iY/pO85u+44447/nF8AF258Ys=";
         let strData;
         // Decode base64 (convert ascii to binary)
         if (encoding === "base64") {
