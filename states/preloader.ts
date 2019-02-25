@@ -14,6 +14,7 @@ export default class Preloader extends Phaser.State {
             this.loadAtlases(GameConfig.preLoadList.atlas);
           }
         }
+        this.loadScripts();
     }
 
     public init(): void {
@@ -49,10 +50,11 @@ export default class Preloader extends Phaser.State {
         }
     }
 
-    private loadJsons(): void {
-    }
+    private loadScripts(): void {
+        // this.game.load.script("gray", "https://cdn.rawgit.com/photonstorm/phaser-ce/master/filters/Gray.js");
 
-    private loadAvatar(): void {
+        // var gray = game.add.filter('Gray');
+        // game.world.filters = [gray];
     }
 
     private startGame(): void {

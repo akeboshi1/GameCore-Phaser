@@ -184,20 +184,20 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             let cRect: Phaser.Rectangle;
             if (offsetX !== 0) {
                 if (offsetX < 0) {
-                    cRect = new Phaser.Rectangle(this.mCameraRect.width + offsetX, 0, -offsetX, this.mCameraRect.height);
-                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, this.mCameraRect.width + offsetX, 0);
+                    cRect = new Phaser.Rectangle(cameraRect.width + offsetX, 0, -offsetX, cameraRect.height);
+                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, cameraRect.width + offsetX, 0);
                 } else {
-                    cRect = new Phaser.Rectangle(0, 0, offsetX, this.mCameraRect.height);
+                    cRect = new Phaser.Rectangle(0, 0, offsetX, cameraRect.height);
                     this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, 0);
                 }
             }
 
             if (offsetY !== 0) {
                 if (offsetY < 0) {
-                    cRect = new Phaser.Rectangle(0, this.mCameraRect.height + offsetY, this.mCameraRect.width, -offsetY);
-                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, this.mCameraRect.height + offsetY);
+                    cRect = new Phaser.Rectangle(0, cameraRect.height + offsetY, cameraRect.width, -offsetY);
+                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, cameraRect.height + offsetY);
                 } else {
-                    cRect = new Phaser.Rectangle(0, 0, this.mCameraRect.width, offsetY);
+                    cRect = new Phaser.Rectangle(0, 0, cameraRect.width, offsetY);
                     this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, 0);
                 }
             }

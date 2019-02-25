@@ -1,7 +1,5 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import * as pako from "pako";
-import {Log} from "../../Log";
-import {Const} from "../const/Const";
 
 export class Tool extends BaseSingleton {
     public SMALLEST_NUMBER: number = 0.000001;
@@ -25,16 +23,30 @@ export class Tool extends BaseSingleton {
                               rect1X: number, rect1Y: number,
                               rect1Width: number, rect1Height: number): boolean {
         if (rect0X + rect0Width < rect1X) {
-          return false;
+            return false;
         } else if (rect0X > rect1X + rect1Width) {
-          return false;
+            return false;
         }
 
         if (rect0Y + rect0Height < rect1Y) {
-          return false;
+            return false;
         } else if (rect0Y > rect1Y + rect1Height) {
-          return false;
+            return false;
         }
+
+        return true;
+    }
+
+    public isOverlapCircleAndRectangle(circleCenterX: number,
+                                       circleCenterY: number,
+                                       circleRadius: number,
+                                       rectX: number, rectY: number,
+                                       rectWidth: number, rectHeight: number): boolean {
+        if (circleCenterX + circleRadius < rectX) return false;
+        else if (circleCenterX - circleRadius > rectX + rectWidth) return false;
+
+        if (circleCenterY + circleRadius < rectY) return false;
+        else if (circleCenterY - circleRadius > rectY + rectHeight) return false;
 
         return true;
     }
