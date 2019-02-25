@@ -29,9 +29,6 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
         this.markDirty();
     }
 
-    public onAddComplete(): void {
-    }
-
     public onFrame(): void {
         let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
         while (entity) {

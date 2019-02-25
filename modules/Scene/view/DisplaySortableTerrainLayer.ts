@@ -11,8 +11,6 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     protected mCameraRect: Phaser.Rectangle;
     protected testGraph: Phaser.Graphics;
     private drawFlag = false;
-    private addComplete = false;
-    private initShow = false;
 
     public constructor(game: Phaser.Game) {
         super(game);
@@ -41,16 +39,13 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
 
         d.initialize();
         this.mSceneEntities.add(d);
-    }
 
-    public onAddComplete(): void {
-        this.addComplete = true;
+        if (d.isInScreen()) {
+            d.drawBack(this.drawShowRegion, this, this.mCameraRect);
+        }
     }
 
     public onFrame(): void {
-        if (!this.addComplete) {
-            return;
-        }
 
         let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
 
@@ -62,7 +57,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
 
     private totalDraw = 0;
     public onTick(deltaTime: number): void {
-        if (!this.addComplete || this.drawFlag) {
+        if (this.drawFlag) {
             return;
         }
 
@@ -76,7 +71,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         let changeDirty = false;
         let offsetX, offsetY = 0;
 
-        if (this.initShow && !Phaser.Rectangle.equals(newCameraRect, this.mCameraRect)) {
+        if (!Phaser.Rectangle.equals(newCameraRect, this.mCameraRect)) {
             changeDirty = true;
 
             offsetX = (this.mCameraRect.x - newCameraRect.x);
@@ -120,35 +115,28 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         while (entity) {
             entity.onTick(deltaTime);
 
-            if ((!this.initShow || changeDirty) && entity.isValidDisplay) {
+            if (changeDirty && entity.isValidDisplay) {
                 reDrawEntitys.push(entity);
             }
             entity = this.mSceneEntities.moveNext();
         }
 
-        if (!this.initShow || changeDirty) {
+        if (changeDirty) {
             this.totalDraw = reDrawEntitys.length;
             if (this.totalDraw > 0) {
-                if (this.initShow) {
-                    this.memoryBitmapData.cls();
-                }
+                this.memoryBitmapData.cls();
                 this.drawFlag = true;
 
                 let len = this.totalDraw;
                 for (let i = 0; i < len; i++) {
                     entity = reDrawEntitys[i];
-                    if (!this.initShow) {
-                        entity.drawBack(this.initRegion, this, this.mCameraRect);
-                    } else {
-                        entity.drawBack(this.drawRegion, this, drawAreas, this.mCameraRect, offsetX, offsetY);
-                    }
+                    entity.drawBack(this.drawMemoryRegion, this, drawAreas, this.mCameraRect, offsetX, offsetY);
                 }
             }
         }
     }
 
-    private initRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
-        --this.totalDraw;
+    private drawShowRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
         let loader: DisplayLoaderAvatar = d.display.Loader;
         let tx, ty = 0;
         let dRect = d.getRect();
@@ -158,13 +146,9 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             ty = dRect.y - cameraRect.y;
             this.showBitmapData.draw(loader, tx, ty);
         }
-        if (this.totalDraw === 0) {
-            this.initShow = true;
-            this.drawFlag = false;
-        }
     }
 
-    private drawRegion(d: BasicSceneEntity, cRects: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number): void {
+    private drawMemoryRegion(d: BasicSceneEntity, cRects: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number): void {
         --this.totalDraw;
         let len = cRects.length;
         let loader: DisplayLoaderAvatar = d.display.Loader;

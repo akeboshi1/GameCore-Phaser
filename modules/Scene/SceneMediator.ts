@@ -120,7 +120,7 @@ export class SceneMediator extends MediatorBase {
     }
 
     protected handleAddTerrainEnd(): void {
-        this.view.terrainSceneLayer.onAddComplete();
+        // this.view.terrainSceneLayer.onAddComplete(); 暂时不用了
     }
 
     /**
