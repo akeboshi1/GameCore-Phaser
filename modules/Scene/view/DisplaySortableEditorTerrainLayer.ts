@@ -163,9 +163,9 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     }
 
     if (changeDirty) {
-      this.memoryBitmapData.cls();
       len = validEntitys.length;
       if (len > 0) {
+        this.memoryBitmapData.cls();
         this.drawFlag = true;
         let last = false;
         for (let i = 0; i < len; i++) {

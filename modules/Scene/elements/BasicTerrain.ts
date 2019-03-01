@@ -5,6 +5,7 @@ import {op_gameconfig} from "../../../../protocol/protocols";
 import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import GameConst = Const.GameConst;
 
 export class BasicTerrain extends SceneEntity {
 
@@ -55,9 +56,9 @@ export class BasicTerrain extends SceneEntity {
     if (this.s_rect === undefined) {
       this.s_rect = new Phaser.Rectangle();
     }
-    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth * 2;
-    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight * 2;
-    this.s_rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth * 5, Globals.Room45Util.tileHeight * 5);
+    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
+    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
+    this.s_rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
     return this.s_rect;
   }
 
@@ -101,6 +102,9 @@ export class BasicTerrain extends SceneEntity {
     if (this.mAnimationDirty) {
       this.onAvatarAnimationChanged();
       this.mAnimationDirty = false;
+    }
+    if (this.display.Loader.modelLoaded && this.drawDrawDirty) {
+
     }
 
     super.onUpdating(deltaTime);

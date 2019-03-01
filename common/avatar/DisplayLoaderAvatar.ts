@@ -165,6 +165,10 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     this.onCompleteLoadModel();
 
+    if (this.mAnimatonControlFunc != null) {
+      this.mAnimatonControlFunc.call(this.mAnimatonControlThisObj, this);
+    }
+
     if (this.mLoadCompleteCallback != null) {
       let cb: Function = this.mLoadCompleteCallback;
       this.mLoadCompleteCallback = null;
@@ -172,7 +176,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
       this.mLoadThisArg = null;
     }
 
-    this.invalidAnimationControlFunc();
+    // this.invalidAnimationControlFunc();
   }
 
   public onRecycle(): void {
