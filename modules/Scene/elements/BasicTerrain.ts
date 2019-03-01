@@ -5,7 +5,6 @@ import {op_gameconfig} from "../../../../protocol/protocols";
 import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import GameConst = Const.GameConst;
 
 export class BasicTerrain extends SceneEntity {
 
@@ -20,7 +19,6 @@ export class BasicTerrain extends SceneEntity {
 
   public constructor() {
     super();
-    this.sceneLayerType = Const.SceneConst.SceneLayerTerrain;
   }
 
   public get terrainInfo(): TerrainInfo {
@@ -53,6 +51,16 @@ export class BasicTerrain extends SceneEntity {
     return this._rect;
   }
 
+  public getScreenRect(): Phaser.Rectangle {
+    if (this.s_rect === undefined) {
+      this.s_rect = new Phaser.Rectangle();
+    }
+    let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth * 2;
+    let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight * 2;
+    this.s_rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth * 5, Globals.Room45Util.tileHeight * 5);
+    return this.s_rect;
+  }
+
   public isInScreen(): boolean {
       let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
       let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
@@ -61,6 +69,7 @@ export class BasicTerrain extends SceneEntity {
   }
 
   public drawBack(drawFunc: Function, thisObj?: any, ...param: any[]): void {
+
     this.drawFunc = drawFunc;
     this.drawThisObj = thisObj;
     this.drawParam = param;

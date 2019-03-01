@@ -158,14 +158,6 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.scale.set(scaleX, scaleY);
     }
 
-    if (this.addAllFlag) {
-      if (this.addAllTerrain) {
-        this.onAddAllTerrain(this.addAllTerrain);
-        this.addAllTerrain = null;
-      }
-      this.addAllFlag = false;
-    }
-
     if (this.mMouseFollower) {
       this.mMouseFollower.onFrame();
     }
@@ -178,6 +170,11 @@ export class SceneEditorMediator extends SceneMediator {
       } else if (this.deltaY > 0) {
         this.deltaY -= 10;
       }
+    }
+    if (this.addAllFlag) {
+      this.onAddAllTerrain(this.addAllTerrain);
+      this.addAllTerrain = null;
+      this.addAllFlag = false;
     }
     if (this.mMouseFollower) {
       this.mMouseFollower.onTick();
@@ -239,6 +236,61 @@ export class SceneEditorMediator extends SceneMediator {
       this.addTerrain(data);
     }
   }
+
+  /**
+   * 监听添加地块
+   * @param value
+   */
+  protected handleAddTerrain(value: op_client.ITerrain[]): void {
+    let len = value.length;
+    let iTerrain: op_client.ITerrain;
+    for (let i = 0; i < len; i++) {
+      iTerrain = value[i];
+      let terrain: TerrainInfo = new TerrainInfo();
+      terrain.setInfo(iTerrain);
+      this.insertTerrain(terrain);
+    }
+  }
+
+  private addAllFlag = false;
+  private addAllTerrain: op_client.ITerrain;
+  protected handleAddAllTerrain(value: op_client.ITerrain): void {
+    this.handleRemoveAllTerrain();
+    this.addAllTerrain = value;
+    this.addAllFlag = true;
+  }
+
+  private onAddAllTerrain(value: op_client.ITerrain): void {
+    let i = 0;
+    let terrain: TerrainInfo;
+    let cols: number = Globals.Room45Util.cols;
+    let rows: number = Globals.Room45Util.rows;
+
+    for (; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        terrain = new TerrainInfo();
+        terrain.setInfo(value);
+        terrain.x = i;
+        terrain.y = j;
+        this.insertTerrain(terrain, true);
+      }
+    }
+
+    this.view.terrainSceneLayer.fillEntityEnd();
+  }
+
+  private handleRemoveAllTerrain(): void {
+    this.view.removeAllTerrainElements();
+  }
+
+  /**
+   * 添加物件
+   * @element ElementInfo
+   */
+  protected insertTerrain(value: TerrainInfo, all: boolean = false): void {
+    this.view.insertTerrainElement(value.uid, value, all);
+  }
+
 
   /**
    * 切换编辑器状态
@@ -304,37 +356,6 @@ export class SceneEditorMediator extends SceneMediator {
     this.isGameDown = false;
   }
 
-  private addAllFlag = false;
-  private addAllTerrain: op_client.ITerrain;
-  protected handleAddAllTerrain(value: op_client.ITerrain): void {
-    this.handleRemoveAllTerrain();
-    this.addAllTerrain = value;
-    this.addAllFlag = true;
-  }
-
-  private onAddAllTerrain(value: op_client.ITerrain): void {
-    let i = 0;
-    let terrain: TerrainInfo;
-    let cols: number = Globals.Room45Util.cols;
-    let rows: number = Globals.Room45Util.rows;
-
-    for (; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        terrain = new TerrainInfo();
-        terrain.setInfo(value);
-        terrain.x = i;
-        terrain.y = j;
-        this.addTerrain(terrain);
-      }
-    }
-  }
-
-  private handleRemoveAllTerrain(): void {
-    this.view.removeAllSceneElements( (element: BasicSceneEntity) => {
-      return element.elementTypeId === Const.SceneElementType.TERRAIN;
-    });
-  }
-
   private handleMouseFollow(value: op_client.OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW): void {
     if (this.mMouseFollower ) {
       this.mMouseFollower.setData(value, this.em.type);
@@ -346,7 +367,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @element ElementInfo
    */
   protected addTerrain(value: TerrainInfo): void {
-    this.view.addSceneElement(Const.SceneElementType.TERRAIN, value.uid, value);
+    this.view.addTerrainElement(value.uid, value);
   }
 
   /**
@@ -355,7 +376,7 @@ export class SceneEditorMediator extends SceneMediator {
    */
   private handleRemoveTerrain(value: any): void {
     let uid: number = Globals.Room45Util.getUid(+value[0], +value[1]);
-    this.removeElement(uid);
+    this.view.removeTerrainElement(uid);
   }
 
   protected addElement(value: ElementInfo): void {

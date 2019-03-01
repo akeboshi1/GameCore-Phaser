@@ -9,6 +9,7 @@ import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "./SceneBase";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 import {BasicTerrain} from "../elements/BasicTerrain";
+import {Log} from "../../../Log";
 
 export class SceneView extends SceneBase {
     public currentSelfPlayer: SelfRoleElement;
@@ -37,7 +38,41 @@ export class SceneView extends SceneBase {
         return element;
     }
 
-    public deleteSceneElement(uid: number): BasicSceneEntity {
+    public addTerrainElement(uid: number, elementData: any): BasicSceneEntity {
+
+      let element: BasicSceneEntity = this.m_TerrainPool.alloc() as BasicTerrain;
+      if (null == element) {
+        element = new BasicTerrain();
+      }
+      element.uid = uid;
+      element.data = elementData;
+
+      this.addTerrainEntity(element);
+      return element;
+    }
+
+  public insertTerrainElement(uid: number, elementData: any, all: boolean = false): BasicSceneEntity {
+
+    let element: BasicSceneEntity = this.m_TerrainPool.alloc() as BasicTerrain;
+    if (null == element) {
+      element = new BasicTerrain();
+    }
+
+    element.uid = uid;
+    element.data = elementData;
+
+    this.insertTerrainEntity(element, all);
+    return element;
+  }
+
+  public removeTerrainElement(uid: number): BasicSceneEntity {
+    let element: BasicSceneEntity = super.removeTerrainElement(uid);
+    if (element == null) return null;
+    this.m_TerrainPool.free(element);
+    return element;
+  }
+
+  public deleteSceneElement(uid: number): BasicSceneEntity {
         let element: BasicSceneEntity = super.deleteSceneElement(uid);
         if (element == null) return null;
         switch (element.elementTypeId) {
@@ -50,10 +85,6 @@ export class SceneView extends SceneBase {
 
             case Const.SceneElementType.ELEMENT :
                 this.m_ElementPool.free(element);
-                break;
-
-            case Const.SceneElementType.TERRAIN :
-                this.m_TerrainPool.free(element);
                 break;
 
             default:
@@ -98,13 +129,6 @@ export class SceneView extends SceneBase {
                 element = this.m_ElementPool.alloc() as BasicElement;
                 if (null == element) {
                     element = new BasicElement();
-                }
-                break;
-
-            case Const.SceneElementType.TERRAIN :
-                element = this.m_TerrainPool.alloc() as BasicTerrain;
-                if (null == element) {
-                    element = new BasicTerrain();
                 }
                 break;
 

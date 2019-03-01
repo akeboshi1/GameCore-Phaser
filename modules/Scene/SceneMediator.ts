@@ -178,7 +178,7 @@ export class SceneMediator extends MediatorBase {
      * @element ElementInfo
      */
     protected addTerrain(value: TerrainInfo): void {
-        this.view.addSceneElement(Const.SceneElementType.TERRAIN, value.uid, value);
+        this.view.addTerrainElement(value.uid, value);
     }
 
     /**

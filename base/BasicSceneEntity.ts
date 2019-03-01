@@ -233,6 +233,17 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
         return this._rect;
     }
 
+    protected s_rect: Phaser.Rectangle;
+    public getScreenRect(): Phaser.Rectangle {
+      if (this.s_rect === undefined) {
+        this.s_rect = new Phaser.Rectangle();
+      }
+      let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
+      let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
+      this.s_rect.setTo(_ox, _oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
+      return this.s_rect;
+    }
+
     protected onUpdatingDisplay(): void {
         let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
         let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);

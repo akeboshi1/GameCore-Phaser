@@ -1,6 +1,5 @@
 export namespace Const {
     export enum SceneConst {
-        SceneLayerTerrain = 0,
         SceneLayerTop = 1,
         SceneLayerMiddle = 2,
         SceneLayerBottom = 3
@@ -25,7 +24,6 @@ export namespace Const {
     }
 
     export enum SceneElementType {
-        TERRAIN = 0,
         ROLE = 1,
         ELEMENT = 2
     }
