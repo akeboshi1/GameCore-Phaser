@@ -10,7 +10,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     protected memoryBitmapData: Phaser.BitmapData;
     protected mCameraRect: Phaser.Rectangle;
     protected testGraph: Phaser.Graphics;
-    private drawFlag = false;
+    protected drawFlag = false;
 
     public constructor(game: Phaser.Game) {
         super(game);
@@ -63,58 +63,63 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     }
 
     private totalDraw = 0;
+    private newCameraRect: Phaser.Rectangle;
     public onTick(deltaTime: number): void {
         if (this.drawFlag) {
             return;
         }
 
-        let newCameraRect: Phaser.Rectangle = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
+        if (this.newCameraRect === undefined) {
+            this.newCameraRect = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
+        } else {
+            this.newCameraRect.setTo(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
+        }
 
         if (this.mCameraRect === undefined) {
-            this.mCameraRect = new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, newCameraRect.width, newCameraRect.height);
+            this.mCameraRect = new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, this.newCameraRect.width, this.newCameraRect.height);
         }
 
         let drawAreas: Phaser.Rectangle[] = [];
         let changeDirty = false;
         let offsetX, offsetY = 0;
 
-        if (!Phaser.Rectangle.equals(newCameraRect, this.mCameraRect)) {
+        if (!Phaser.Rectangle.equals(this.newCameraRect, this.mCameraRect)) {
             changeDirty = true;
 
-            offsetX = (this.mCameraRect.x - newCameraRect.x);
-            offsetY = (this.mCameraRect.y - newCameraRect.y);
+            offsetX = (this.mCameraRect.x - this.newCameraRect.x);
+            offsetY = (this.mCameraRect.y - this.newCameraRect.y);
 
             if (offsetX !== 0 && offsetY !== 0) {
                 if (offsetX < 0 && offsetY < 0) {
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.right + offsetX, newCameraRect.y, -offsetX, newCameraRect.height));
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.bottom + offsetY, newCameraRect.width + offsetX, -offsetY));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.right + offsetX, this.newCameraRect.y, -offsetX, this.newCameraRect.height));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.bottom + offsetY, this.newCameraRect.width + offsetX, -offsetY));
                 } else if (offsetX > 0 && offsetY > 0) {
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, offsetX, newCameraRect.height));
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.x + offsetX, newCameraRect.y, newCameraRect.width - offsetX, offsetY));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, offsetX, this.newCameraRect.height));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x + offsetX, this.newCameraRect.y, this.newCameraRect.width - offsetX, offsetY));
                 } else if (offsetX < 0 && offsetY > 0) {
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.right + offsetX, newCameraRect.y, -offsetX, newCameraRect.height));
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, newCameraRect.width - offsetX, offsetY));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.right + offsetX, this.newCameraRect.y, -offsetX, this.newCameraRect.height));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, this.newCameraRect.width - offsetX, offsetY));
                 } else if (offsetX > 0 && offsetY < 0) {
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, offsetX, newCameraRect.height));
-                    drawAreas.push(new Phaser.Rectangle(newCameraRect.x + offsetX, newCameraRect.bottom + offsetY, newCameraRect.width - offsetX, -offsetY));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, offsetX, this.newCameraRect.height));
+                    drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x + offsetX, this.newCameraRect.bottom + offsetY, this.newCameraRect.width - offsetX, -offsetY));
                 }
             } else {
                 if (offsetX !== 0) {
                     if (offsetX < 0) {
-                        drawAreas.push(new Phaser.Rectangle(newCameraRect.right + offsetX, newCameraRect.y, -offsetX, newCameraRect.height));
+                        drawAreas.push(new Phaser.Rectangle(this.newCameraRect.right + offsetX, this.newCameraRect.y, -offsetX, this.newCameraRect.height));
                     } else {
-                        drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, offsetX, newCameraRect.height));
+                        drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, offsetX, this.newCameraRect.height));
                     }
                 }
                 if (offsetY !== 0) {
                     if (offsetY < 0) {
-                        drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.bottom + offsetY, newCameraRect.width, -offsetY));
+                        drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.bottom + offsetY, this.newCameraRect.width, -offsetY));
                     } else {
-                        drawAreas.push(new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, newCameraRect.width, offsetY));
+                        drawAreas.push(new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, this.newCameraRect.width, offsetY));
                     }
                 }
             }
-            this.mCameraRect.setTo(newCameraRect.x, newCameraRect.y, newCameraRect.width, newCameraRect.height);
+            this.mCameraRect.setTo(this.newCameraRect.x, this.newCameraRect.y, this.newCameraRect.width, this.newCameraRect.height);
         }
 
         let reDrawEntitys: BasicSceneEntity[] = [];

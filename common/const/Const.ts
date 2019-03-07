@@ -15,7 +15,8 @@ export namespace Const {
         MAX_TERRAIN_LOAD_COUNT = 1,
         OUT_OF_CAMERA_RELEASE_WAITE_TIME = 3000,
         DEFAULT_VISIBLE_TEST_RADIUS = 150,
-        MASK_ALPHA = 0.5
+        MASK_ALPHA = 0.5,
+        ROLE_AVATAR_OFFSET_Y = 8
     }
 
     export enum UIConst {

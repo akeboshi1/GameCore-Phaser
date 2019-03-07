@@ -15,6 +15,7 @@ import {ElementInfo} from "../../common/struct/ElementInfo";
 import {PBpacket} from "net-socket-packet";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
+import GameConst = Const.GameConst;
 
 export class SceneMediator extends MediatorBase {
     private flowManager: FlowManager;
@@ -217,7 +218,7 @@ export class SceneMediator extends MediatorBase {
         );
 
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        this.camera.focusOnXY(currentCharacterInfo.x, currentCharacterInfo.y);
+        this.camera.focusOnXY(currentCharacterInfo.x, currentCharacterInfo.y + GameConst.ROLE_AVATAR_OFFSET_Y);
 
         this.view.initializeScene(mapSceneInfo);
 
