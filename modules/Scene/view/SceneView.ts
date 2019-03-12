@@ -65,8 +65,8 @@ export class SceneView extends SceneBase {
     return element;
   }
 
-  public removeTerrainElement(uid: number): BasicSceneEntity {
-    let element: BasicSceneEntity = super.removeTerrainElement(uid);
+  public removeTerrainElement(uid: number, all: boolean = false): BasicSceneEntity {
+    let element: BasicSceneEntity = super.removeTerrainElement(uid, all);
     if (element == null) return null;
     this.m_TerrainPool.free(element);
     return element;

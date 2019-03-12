@@ -126,6 +126,10 @@ export default class UniqueLinkList {
         return this.mCursorNode ? this.mCursorNode.value : null;
     }
 
+    public get tailNode(): any {
+      return this.mTailNode ? this.mTailNode.value : null;
+    }
+
     public moveNext(): any {
         this.mCursorNode = this.mCursorNode ? this.mCursorNode.next : this.mHeadNode;
         return this.mCursorNode ? this.mCursorNode.value : null;

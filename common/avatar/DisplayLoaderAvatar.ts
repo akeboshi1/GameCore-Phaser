@@ -8,7 +8,7 @@ import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 
 export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObject, IDisposeObject, IRecycleObject {
   private mLoadThisArg: any;
-  private myModelUrlDirty = false;
+  // private myModelUrlDirty = false;
   private mModelLoaded = false;
   private mLoadCompleteCallback: Function;
   private mLoadErrorCallback: Function;
@@ -89,14 +89,15 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     this.mLoadCompleteCallback = onLoadComplete;
     this.mLoadErrorCallback = onLoadError;
     this.mLoadThisArg = thisArg;
-    this.myModelUrlDirty = true;
+    // this.myModelUrlDirty = true;
+    this.onUpdateModelURL();
   }
 
   public onFrame(): void {
-    if (this.myModelUrlDirty) {
-      this.onUpdateModelURL();
-      this.myModelUrlDirty = false;
-    }
+    // if (this.myModelUrlDirty) {
+    //   this.onUpdateModelURL();
+    //   this.myModelUrlDirty = false;
+    // }
 
     if (this.modelLoaded) {
       if (this.mAnimatonControlFuncDitry) {
@@ -110,6 +111,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
   public onClear(): void {
     this.closeLoadModel();
+    this.loadTexture(null);
   }
 
   public onDispose(): void {
@@ -136,17 +138,11 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         this.animations.add(iAnimation.name, iAnimation.frame, iAnimation.frameRate, iAnimation.loop);
       }
     }
-
-    // this.playAnimation(this.mLoadParam.defaultAnimation);
   }
 
   protected closeLoadModel() {
-    if (this.mLoadParam) {
-      if (this.mModelLoaded) {
-        this.mModelLoaded = false;
-      }
-    }
-    this.myModelUrlDirty = false;
+    this.mModelLoaded = false;
+    // this.myModelUrlDirty = false;
   }
 
   protected onUpdateModelURL() {

@@ -266,6 +266,7 @@ export class SceneEditorMediator extends SceneMediator {
     let cols: number = Globals.Room45Util.cols;
     let rows: number = Globals.Room45Util.rows;
 
+    this.view.terrainSceneLayer.clearShowBitmap();
     for (; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
         terrain = new TerrainInfo();
@@ -275,8 +276,6 @@ export class SceneEditorMediator extends SceneMediator {
         this.insertTerrain(terrain, true);
       }
     }
-
-    this.view.terrainSceneLayer.fillEntityEnd();
   }
 
   private handleRemoveAllTerrain(): void {

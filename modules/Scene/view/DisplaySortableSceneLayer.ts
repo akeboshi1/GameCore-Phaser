@@ -31,7 +31,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     public insertEntity(d: BasicSceneEntity, all: boolean = false): void {
     }
 
-    public fillEntityEnd(): void {
+    public clearShowBitmap(): void {
     }
 
     public onFrame(): void {

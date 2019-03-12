@@ -7,7 +7,6 @@ import {IEntityComponent} from "./IEntityComponent";
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 import {op_client} from "../../protocol/protocols";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
-import {IDisposeObject} from "./object/interfaces/IDisposeObject";
 import {IObjectPool} from "./pool/interfaces/IObjectPool";
 import {RecycleObject} from "./object/base/RecycleObject";
 
@@ -147,6 +146,10 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
         }
     }
 
+    public drawDirty = false;
+    public drawBit(value: Phaser.BitmapData, offset: Phaser.Point): void {
+    }
+
     public updateByData(data: any = null): void {
         if (!this.mInitilized) return;
 
@@ -217,9 +220,6 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
 
     public updateDisplay(): void {
         this.onUpdatingDisplay();
-    }
-
-    public drawBack(drawFunc: Function, thisObj?: any, ... param: any[]): void {
     }
 
     protected _rect: Phaser.Rectangle;

@@ -14,6 +14,7 @@ import {SoundManager} from "./common/manager/SoundManager";
 import {MouseMod} from "./common/manager/MouseMod";
 import {PromptManager} from "./common/manager/PromptManager";
 import {ObjectPoolManager} from "./common/manager/ObjectPoolManager";
+import {ShareObjectCacheManager} from "./common/manager/ShareObjectCacheManager";
 
 export default class Globals {
   private static _game: Phaser.Game;
@@ -52,6 +53,13 @@ export default class Globals {
    */
   public static get LayerManager(): LayerManager {
     return LayerManager.getInstance();
+  }
+
+  /**
+   * 缓存管理器
+   */
+  public static get ShareObjectCacheManager(): ShareObjectCacheManager {
+    return ShareObjectCacheManager.getInstance();
   }
 
   /**

@@ -1,8 +1,8 @@
 import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {GameConfig} from "../../../GameConfig";
-import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import Globals from "../../../Globals";
+import {SceneBuffer} from "./SceneBuffer";
 
 export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer {
   protected mStaticContainer: Phaser.Image;
@@ -11,19 +11,25 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
   protected memoryBitmapData: Phaser.BitmapData;
   protected mCameraRect: Phaser.Rectangle;
   protected testGraph: Phaser.Graphics;
-  private drawFlag = false;
+  private delEntityRects: Phaser.Rectangle[];
   private changeEntityRects: Phaser.Rectangle[];
+  private sceneBuffer: SceneBuffer;
+  private drawMemoryList: BasicSceneEntity[];
 
   public constructor(game: Phaser.Game) {
     super(game);
 
+    this.delEntityRects = [];
     this.changeEntityRects = [];
+    this.drawMemoryList = [];
 
     this.showBitmapData = game.make.bitmapData(GameConfig.GameWidth, GameConfig.GameHeight);
     this.showBitmapData.smoothed = false;
 
     this.memoryBitmapData = game.make.bitmapData(GameConfig.GameWidth, GameConfig.GameHeight);
     this.memoryBitmapData.smoothed = false;
+
+    this.sceneBuffer = new SceneBuffer(this.showBitmapData, this.memoryBitmapData);
 
     this.mStaticContainer = this.game.make.image(0, 0, this.showBitmapData);
     this.mStaticContainer.fixedToCamera = true;
@@ -46,14 +52,13 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     this.mSceneEntities.add(d);
 
     if (d.isInScreen()) {
-      d.drawBack(this.drawShowRegion, this, this.mCameraRect);
+      this.drawShowRegion(d, this.mCameraRect);
     }
   }
 
-
   public removeEntity(d: BasicSceneEntity, all: boolean = false): void {
     if (!all && d.isInScreen()) {
-      this.clearShowRegion(d);
+      this.delEntityRects.push(d.getRect());
       this.changeEntityRects.push(d.getScreenRect());
     }
 
@@ -70,13 +75,18 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     d.initialize();
     this.mSceneEntities.add(d);
 
-    if (!all && d.isInScreen()) {
-      this.changeEntityRects.push(d.getScreenRect());
+    if (d.isInScreen()) {
+      if (all) {
+        this.drawShowRegion(d, this.mCameraRect);
+      } else {
+        this.delEntityRects.push(d.getRect());
+        this.changeEntityRects.push(d.getScreenRect());
+      }
     }
   }
 
-  public fillEntityEnd(): void {
-    this.changeEntityRects.push(this.mCameraRect);
+  public clearShowBitmap(): void {
+    this.showBitmapData.cls();
   }
 
   public onFrame(): void {
@@ -91,7 +101,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
 
   public onTick(deltaTime: number): void {
 
-    if (this.drawFlag) {
+    if (this.sceneBuffer.copyDirty) {
       return;
     }
 
@@ -99,8 +109,16 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     let drawAreas: Phaser.Rectangle[] = [];
     let offsetX = 0, offsetY = 0;
 
+    let delAreas: Phaser.Rectangle[] = this.delEntityRects.splice(0);
+    let len = delAreas.length;
+    let dRect: Phaser.Rectangle;
+    for (let i = 0; i < len; i++) {
+      dRect = delAreas[i];
+      this.showBitmapData.clear(dRect.x - this.mCameraRect.x, dRect.y - this.mCameraRect.y, dRect.width, dRect.height);
+    }
+
     let changeAreas: Phaser.Rectangle[] = this.changeEntityRects.splice(0);
-    let len = changeAreas.length;
+    len = changeAreas.length;
     if (len > 0) {
       this.mSceneEntities.sort(Globals.Room45Util.sortFunc);
       drawAreas = drawAreas.concat(changeAreas);
@@ -166,20 +184,21 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       len = validEntitys.length;
       if (len > 0) {
         this.memoryBitmapData.cls();
-        this.drawFlag = true;
         let last = false;
         for (let i = 0; i < len; i++) {
           entity = validEntitys[i];
           last = (i === len - 1);
-          // entity.drawBack(this.drawMemoryRegion, this, drawAreas, this.mCameraRect, offsetX, offsetY, changeAreas);
-          this.pushDrawMemory(entity, this.drawMemoryRegion, this, drawAreas, this.mCameraRect, offsetX, offsetY, changeAreas, last);
+          this.drawMemoryRegion(entity, drawAreas, this.mCameraRect);
         }
+
+        this.sceneBuffer.draw(validEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
+        // todo:保证绘制完成
+        // this.copyMemoryRegion(drawAreas, offsetX, offsetY);
       }
     }
   }
 
   private drawShowRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
-    let loader: DisplayLoaderAvatar = d.display.Loader;
     let tx, ty = 0;
     let dRect = d.getRect();
     let mRect = Phaser.Rectangle.intersection(dRect, cameraRect);
@@ -187,41 +206,12 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     if (mRect.width > 0 && mRect.height > 0) {
       tx = dRect.x - cameraRect.x;
       ty = dRect.y - cameraRect.y;
-      this.showBitmapData.draw(loader, tx, ty);
+      d.drawBit(this.showBitmapData, new Phaser.Point(tx, ty));
     }
   }
 
-  private clearShowRegion(d: BasicSceneEntity): void {
-    let dRect = d.getRect();
-    this.showBitmapData.clear(dRect.x - this.mCameraRect.x, dRect.y - this.mCameraRect.y, dRect.width, dRect.height);
-  }
-
-  private drawMemoryList = [];
-  private drawMemoryIng = false;
-  private pushDrawMemory(d: BasicSceneEntity, ... param: any[]): void {
-    this.drawMemoryList.push({entity: d, param: param});
-    this.onDrawMemory();
-  }
-
-  private onDrawMemory(): void {
-    if (this.drawMemoryIng || this.drawMemoryList.length === 0) {
-      return;
-    }
-    this.drawMemoryIng = true;
-    let obj = this.drawMemoryList.shift();
-    let entity = obj.entity;
-    let param = obj.param;
-    entity.drawBack.apply(entity, param);
-  }
-
-  private onDrawComplete(): void {
-    this.drawMemoryIng = false;
-    this.onDrawMemory();
-  }
-
-  private drawMemoryRegion(d: BasicSceneEntity, cRects: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number, changeAreas: Phaser.Rectangle[], last: boolean): void {
+  private drawMemoryRegion(d: BasicSceneEntity, cRects: Phaser.Rectangle[], cameraRect: Phaser.Rectangle): void {
     let len = cRects.length;
-    let loader: DisplayLoaderAvatar = d.display.Loader;
     let tx, ty = 0;
     for (let i = 0; i < len; i++) {
       let dRect = d.getRect();
@@ -230,38 +220,9 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       if (mRect.width > 0 && mRect.height > 0) {
         tx = dRect.x - cameraRect.x;
         ty = dRect.y - cameraRect.y;
-        this.memoryBitmapData.draw(loader, tx, ty);
+        d.drawBit(this.memoryBitmapData, new Phaser.Point(tx, ty));
+        this.drawMemoryList.push(d);
       }
-    }
-    this.onDrawComplete();
-    if (last) {
-      this.showBitmapData.move(offsetX, offsetY, false);
-      let cRect: Phaser.Rectangle;
-      if (offsetX !== 0) {
-        if (offsetX < 0) {
-          cRect = new Phaser.Rectangle(cameraRect.width + offsetX, 0, -offsetX, cameraRect.height);
-          this.showBitmapData.copyRect(this.memoryBitmapData, cRect, cameraRect.width + offsetX, 0);
-        } else {
-          cRect = new Phaser.Rectangle(0, 0, offsetX, cameraRect.height);
-          this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, 0);
-        }
-      }
-
-      if (offsetY !== 0) {
-        if (offsetY < 0) {
-          cRect = new Phaser.Rectangle(0, cameraRect.height + offsetY, cameraRect.width, -offsetY);
-          this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, cameraRect.height + offsetY);
-        } else {
-          cRect = new Phaser.Rectangle(0, 0, cameraRect.width, offsetY);
-          this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, 0);
-        }
-      }
-      len = changeAreas.length;
-      for (let i = 0; i < len; i++) {
-        cRect = new Phaser.Rectangle(changeAreas[i].x - cameraRect.x, changeAreas[i].y - cameraRect.y, changeAreas[i].width, changeAreas[i].height);
-        this.showBitmapData.copyRect(this.memoryBitmapData, cRect, cRect.x, cRect.y);
-      }
-      this.drawFlag = false;
     }
   }
 }

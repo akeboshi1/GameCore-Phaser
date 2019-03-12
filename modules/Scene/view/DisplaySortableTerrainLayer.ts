@@ -41,7 +41,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         this.mSceneEntities.add(d);
 
         if (d.isInScreen()) {
-            d.drawBack(this.drawShowRegion, this, this.mCameraRect);
+          this.drawShowRegion(d, this.mCameraRect);
         }
     }
 
@@ -142,7 +142,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
                 let len = this.totalDraw;
                 for (let i = 0; i < len; i++) {
                     entity = reDrawEntitys[i];
-                    entity.drawBack(this.drawMemoryRegion, this, drawAreas, this.mCameraRect, offsetX, offsetY);
+                    this.drawMemoryRegion(entity, drawAreas, this.mCameraRect, offsetX, offsetY);
                 }
             }
         }

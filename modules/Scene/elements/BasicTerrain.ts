@@ -13,10 +13,6 @@ export class BasicTerrain extends SceneEntity {
   protected mAnimationDirty = false;
   protected mScaleX = 1;
   protected myAnimationName: string;
-  private drawFunc: Function;
-  private drawThisObj: any;
-  private drawParam: any[];
-  private drawDrawDirty = false;
 
   public constructor() {
     super();
@@ -69,18 +65,6 @@ export class BasicTerrain extends SceneEntity {
           this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
   }
 
-  public drawBack(drawFunc: Function, thisObj?: any, ...param: any[]): void {
-
-    this.drawFunc = drawFunc;
-    this.drawThisObj = thisObj;
-    this.drawParam = param;
-    if (this.display.Loader.modelLoaded) {
-      this.onDrawBack();
-    } else {
-      this.drawDrawDirty = true;
-    }
-  }
-
   public setPosition(x: number, y: number, z?: number): void {
     let p2: Phaser.Point = Globals.Room45Util.tileToPixelCoords(x, y);
     super.setPosition(p2.x, p2.y, z);
@@ -103,18 +87,32 @@ export class BasicTerrain extends SceneEntity {
       this.onAvatarAnimationChanged();
       this.mAnimationDirty = false;
     }
-    if (this.display.Loader.modelLoaded && this.drawDrawDirty) {
-
-    }
-
     super.onUpdating(deltaTime);
   }
 
   protected onDisplayLoadCompleted(): void {
-    if (this.drawDrawDirty) {
-      this.drawDrawDirty = false;
-      this.onDrawBack();
+    if (this.drawDirty) {
+      this.onDraw();
+      this.drawDirty = false;
     }
+  }
+
+  private dBitmapData: Phaser.BitmapData;
+  private dPoint: Phaser.Point;
+  public drawBit(value: Phaser.BitmapData, offset: Phaser.Point): void {
+    this.dBitmapData = value;
+    this.dPoint = offset;
+    if (this.display.Loader.modelLoaded) {
+      this.onDraw();
+      this.drawDirty = false;
+    } else {
+      this.drawDirty = true;
+    }
+  }
+
+  private onDraw(): void {
+    let loader = this.display.Loader;
+    this.dBitmapData.draw(loader, this.dPoint.x, this.dPoint.y);
   }
 
   public initPosition(): void {
@@ -144,16 +142,6 @@ export class BasicTerrain extends SceneEntity {
       this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
     } else {
         this.baseLoc.set(+(tmp[0]), +(tmp[1]));
-    }
-  }
-
-  private onDrawBack(): void {
-    if (this.drawFunc) {
-      let cb = this.drawFunc;
-      this.drawFunc = null;
-      cb.apply(this.drawThisObj, [this].concat(this.drawParam));
-      this.drawThisObj = null;
-      this.drawParam = null;
     }
   }
 }
