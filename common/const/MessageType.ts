@@ -35,6 +35,10 @@ export class MessageType {
     public static PLAYER_DATA_INITIALIZE = "player_data_initialize";
     public static SCENE_DATA_INITIALIZE = "scene_data_initialize";
 
+    public static PACKAGE_ITEM_ADD = "package_item_add";
+    public static PACKAGE_ITEM_REMOVE = "package_item_remove";
+    public static PACKAGE_EXCHANGE_ITEM_POS = "package_exchange_item_pos";
+
     public static SEFL_TARGET_START_MOVE = "SEFL_TARGET_START_MOVE";
     public static SEFL_TARGET_PAUSE_MOVE = "SEFL_TARGET_PAUSE_MOVE";
 
