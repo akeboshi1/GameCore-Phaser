@@ -210,6 +210,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
   private drawShowRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
     let tx, ty = 0;
     let dRect = d.getRect();
+    cameraRect = cameraRect || new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
     let mRect = Phaser.Rectangle.intersection(dRect, cameraRect);
 
     if (mRect.width > 0 && mRect.height > 0) {
