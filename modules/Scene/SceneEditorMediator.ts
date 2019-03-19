@@ -213,6 +213,7 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.terrainGridLayer.initializeMap(mapSceneInfo);
     }
 
+    mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
     this.initializeTerrainItems(mapSceneInfo.terrainConfig);
     this.initializeElementItems(mapSceneInfo.elementConfig);
 
