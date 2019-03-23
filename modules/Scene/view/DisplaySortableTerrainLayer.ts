@@ -2,6 +2,7 @@ import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {GameConfig} from "../../../GameConfig";
 import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
+import {SceneBuffer} from "./SceneBuffer";
 
 export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     protected mStaticContainer: Phaser.Image;
@@ -11,6 +12,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     protected mCameraRect: Phaser.Rectangle;
     protected testGraph: Phaser.Graphics;
     protected drawFlag = false;
+    private sceneBuffer: SceneBuffer;
 
     public constructor(game: Phaser.Game) {
         super(game);
@@ -19,6 +21,8 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
 
         this.memoryBitmapData = game.make.bitmapData(GameConfig.GameWidth, GameConfig.GameHeight);
         this.memoryBitmapData.smoothed = false;
+
+        this.sceneBuffer = new SceneBuffer(this.showBitmapData, this.memoryBitmapData);
 
         this.mStaticContainer = this.game.make.image(0, 0, this.showBitmapData);
         this.mStaticContainer.fixedToCamera = true;
@@ -62,10 +66,10 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         }
     }
 
-    private totalDraw = 0;
     private newCameraRect: Phaser.Rectangle;
     public onTick(deltaTime: number): void {
-        if (this.drawFlag) {
+        this.sceneBuffer.onTick(deltaTime);
+        if (this.sceneBuffer.copyDirty) {
             return;
         }
 
@@ -123,81 +127,64 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         }
 
         let reDrawEntitys: BasicSceneEntity[] = [];
+
         let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
         while (entity) {
             entity.onTick(deltaTime);
 
-            if (changeDirty && entity.isValidDisplay) {
+            if (changeDirty && entity.isValidDisplay && this.isIntersectionRect(entity, drawAreas)) {
                 reDrawEntitys.push(entity);
             }
             entity = this.mSceneEntities.moveNext();
         }
 
         if (changeDirty) {
-            this.totalDraw = reDrawEntitys.length;
-            if (this.totalDraw > 0) {
+            let len = reDrawEntitys.length;
+            if (len > 0) {
                 this.memoryBitmapData.cls();
                 this.drawFlag = true;
 
-                let len = this.totalDraw;
                 for (let i = 0; i < len; i++) {
                     entity = reDrawEntitys[i];
-                    this.drawMemoryRegion(entity, drawAreas, this.mCameraRect, offsetX, offsetY);
+                    this.drawMemoryRegion(entity, this.mCameraRect);
                 }
+                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
             }
         }
     }
 
+    public isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
+        let len = cRects.length;
+        for (let i = 0; i < len; i++) {
+            let dRect = d.getRect();
+            let cRect = cRects[i];
+            let mRect = Phaser.Rectangle.intersection(dRect, cRect);
+            if (mRect.width > 0 && mRect.height > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private drawShowRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
-        let loader: DisplayLoaderAvatar = d.display.Loader;
         let tx, ty = 0;
         let dRect = d.getRect();
         let mRect = Phaser.Rectangle.intersection(dRect, cameraRect);
         if (mRect.width > 0 && mRect.height > 0) {
             tx = dRect.x - cameraRect.x;
             ty = dRect.y - cameraRect.y;
-            this.showBitmapData.draw(loader, tx, ty);
+            d.drawBit(this.showBitmapData, new Phaser.Point(tx, ty));
         }
     }
 
-    private drawMemoryRegion(d: BasicSceneEntity, cRects: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number): void {
-        --this.totalDraw;
-        let len = cRects.length;
-        let loader: DisplayLoaderAvatar = d.display.Loader;
+    private drawMemoryRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
         let tx, ty = 0;
-        for (let i = 0; i < len; i++) {
-            let dRect = d.getRect();
-            let cRect = cRects[i];
-            let mRect = Phaser.Rectangle.intersection(dRect, cRect);
-            if (mRect.width > 0 && mRect.height > 0) {
-                tx = dRect.x - cameraRect.x;
-                ty = dRect.y - cameraRect.y;
-                this.memoryBitmapData.draw(loader, tx, ty);
-            }
-        }
-        if (this.totalDraw === 0) {
-            this.showBitmapData.move(offsetX, offsetY, false);
-            let cRect: Phaser.Rectangle;
-            if (offsetX !== 0) {
-                if (offsetX < 0) {
-                    cRect = new Phaser.Rectangle(cameraRect.width + offsetX, 0, -offsetX, cameraRect.height);
-                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, cameraRect.width + offsetX, 0);
-                } else {
-                    cRect = new Phaser.Rectangle(0, 0, offsetX, cameraRect.height);
-                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, 0);
-                }
-            }
-
-            if (offsetY !== 0) {
-                if (offsetY < 0) {
-                    cRect = new Phaser.Rectangle(0, cameraRect.height + offsetY, cameraRect.width, -offsetY);
-                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, cameraRect.height + offsetY);
-                } else {
-                    cRect = new Phaser.Rectangle(0, 0, cameraRect.width, offsetY);
-                    this.showBitmapData.copyRect(this.memoryBitmapData, cRect, 0, 0);
-                }
-            }
-            this.drawFlag = false;
+        let dRect = d.getRect();
+        let mRect = Phaser.Rectangle.intersection(dRect, cameraRect);
+        if (mRect.width > 0 && mRect.height > 0) {
+            tx = dRect.x - cameraRect.x;
+            ty = dRect.y - cameraRect.y;
+            d.drawBit(this.memoryBitmapData, new Phaser.Point(tx, ty));
         }
     }
 }

@@ -1,4 +1,4 @@
-import {Atlases, Load} from "../Assets";
+import {Atlases, Font, Load} from "../Assets";
 import {GameConfig} from "../GameConfig";
 import {IAtlasResource, IImageResource} from "../interface/IPhaserLoadList";
 export default class Preloader extends Phaser.State {
@@ -14,6 +14,7 @@ export default class Preloader extends Phaser.State {
             this.loadAtlases(GameConfig.preLoadList.atlas);
           }
         }
+        this.loadFonts();
         this.loadScripts();
     }
 
@@ -48,6 +49,10 @@ export default class Preloader extends Phaser.State {
         for (let i = 0; i < len; i++) {
             this.game.load.atlas(atlas[i].key, Load.Url.getRes(atlas[i].png), Load.Url.getRes(atlas[i].json));
         }
+    }
+
+    private loadFonts(): void {
+        this.game.load.bitmapFont(Font.NumsLatinUppercase.getName(), Font.NumsLatinUppercase.getUrl(), Font.NumsLatinUppercase.getXml());
     }
 
     private loadScripts(): void {

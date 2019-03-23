@@ -4,7 +4,7 @@ import {ILayoutItem} from "../../../../base/layout/interfaces/ILayoutItem";
 import {ListItemComponent} from "../../../../base/component/list/core/ListItemComponent";
 import {UI} from "../../../../Assets";
 
-export class BagListItem extends ListItemComponent implements IListItemComponent {
+export class EvidenceListItem extends ListItemComponent implements IListItemComponent {
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;

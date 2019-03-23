@@ -2,12 +2,15 @@ import {IListItemComponent} from "../../../../base/component/list/interfaces/ILi
 import {IListItemEventListener} from "../../../../base/component/list/interfaces/IListItemEventListener";
 import {ILayoutItem} from "../../../../base/layout/interfaces/ILayoutItem";
 import {ListItemComponent} from "../../../../base/component/list/core/ListItemComponent";
-import {UI} from "../../../../Assets";
+import {Font, UI} from "../../../../Assets";
 
-export class BagListItem extends ListItemComponent implements IListItemComponent {
+export class VoteResultListItem extends ListItemComponent implements IListItemComponent {
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;
+    protected m_Icon: Phaser.Image;
+    protected m_NumTxt: Phaser.BitmapText;
+    protected m_Text: Phaser.Text;
 
     constructor( game: Phaser.Game ) {
         super(game);
@@ -15,7 +18,18 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
 
     protected init(): void {
         this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
+        this.m_Icon = this.game.make.image(0, 160);
+        this.add(this.m_Icon);
+        this.m_NumTxt = this.game.make.bitmapText(128, 0, Font.NumsLatinUppercase.getName(), "", 24);
+        this.add(this.m_NumTxt);
+        this.m_Text = this.game.make.text(128, 0, "剧本角色");
+        this.add(this.m_Text);
         super.init();
+    }
+
+    public render(): void {
+        let data: any = this.m_Data;
+
     }
 
     public setSelect(value: boolean) {

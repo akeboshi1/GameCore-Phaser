@@ -37,6 +37,7 @@ export class SceneLoader {
     }
 
     protected modelLoadCompleteHandler(): void {
+        Log.trace("Scene加载完成");
         if (this.loadCompleteCallback != null) this.loadCompleteCallback.apply(this.callBackObj);
     }
 }

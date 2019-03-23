@@ -1,17 +1,15 @@
 import {CommWindowModuleView} from "../../../common/view/CommWindowModuleView ";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
-import {BagListItem} from "./item/BagListItem";
+import {EvidenceListItem} from "./item/EvidenceListItem";
 import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
 import {GameConfig} from "../../../GameConfig";
 import {UI} from "../../../Assets";
-import {BagList} from "./BagList";
+import {EvidenceList} from "./EvidenceList";
 import {Const} from "../../../common/const/Const";
-import {PageComponent} from "../../../base/component/page/core/PageComponent";
 
-export class BagView extends CommWindowModuleView {
-    public m_List: ListComponent;
-    public m_BagTitle: Phaser.Image;
-    public m_Page: PageComponent;
+export class EvidenceView extends CommWindowModuleView {
+    private m_List: ListComponent;
+    public m_EvidenceTitle: Phaser.Image;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -34,31 +32,24 @@ export class BagView extends CommWindowModuleView {
     protected init(): void {
         this.m_Bg = this.game.add.nineSlice(0, 0, UI.BagBg.getName(), null, this.width, this.height, this);
 
-        this.m_BagTitle = this.game.make.image(12, -14,  UI.BagTitle.getName());
-        this.add(this.m_BagTitle);
+        this.m_EvidenceTitle = this.game.make.image(12, -14,  UI.EvidenceTitle.getName());
+        this.add(this.m_EvidenceTitle);
 
         this.m_CloseBt = this.game.make.button(this.width - 30, -8, UI.WindowClose.getName(), null, this
             , 1, 0 , 2);
         this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
         this.add(this.m_CloseBt);
 
-        this.m_List = new BagList(this.game);
+        this.m_List = new EvidenceList(this.game);
         this.m_List.x = 8;
         this.m_List.y = 32;
         let i: number = 0;
         let len: number = 36;
-        let item: BagListItem;
+        let item: EvidenceListItem;
         for (; i < len; i++) {
-            item = new BagListItem(this.game);
+            item = new EvidenceListItem(this.game);
             this.m_List.addItem(item);
         }
         this.add(this.m_List);
-
-        this.m_Page = new PageComponent(this.game, {
-            LeftBtnX: -36,
-            LeftBtnY: 96,
-            RightBtnX: 732,
-            RightBtnY: 96});
-        this.add(this.m_Page);
     }
 }

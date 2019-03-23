@@ -3,6 +3,8 @@ export class ModuleTypeEnum {
     public static MAINMENU = "MainMenu"; // 主界面菜单
     public static SCENE = "Scene"; // 场景
     public static BAG = "Bag"; // 背包
+    public static EVIDENCE = "Evidence"; //证物箱
+    public static ITEMDETAIL = "ItemDetail"; //证物箱
     public static STORE = "Store"; // 商店
     public static CHAT = "Chat"; // 聊天
     public static ROLEINFO = "RoleInfo"; // 聊天

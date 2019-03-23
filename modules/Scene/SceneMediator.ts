@@ -16,6 +16,7 @@ import {PBpacket} from "net-socket-packet";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
 import GameConst = Const.GameConst;
+import OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE;
 
 export class SceneMediator extends MediatorBase {
     private flowManager: FlowManager;
@@ -200,7 +201,7 @@ export class SceneMediator extends MediatorBase {
 
     protected changedToMapSceneCompleteHandler(): void {
         // clear the last one scene.
-
+        Log.trace("Scene加载完成监听");
         if (this.view) {
             this.view.clearScene();
         }
@@ -241,6 +242,14 @@ export class SceneMediator extends MediatorBase {
     private sendSceneReady(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
         Globals.SocketManager.send(pkt);
+
+        pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+        let content: OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = pkt.content;
+        content.width = GameConfig.GameWidth;
+        content.height = GameConfig.GameHeight;
+        Globals.SocketManager.send(pkt);
+
+        Log.trace("【场景已就绪】");
     }
 
     protected initializeTerrainItems(datas: Array<any>): void {

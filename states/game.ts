@@ -6,6 +6,7 @@ import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource}
 import {GameConfig} from "../GameConfig";
 import WindowClose = UI.WindowClose;
 import DropDownBtn = UI.DropDownBtn;
+import {Log} from "../Log";
 
 export default class Game extends Phaser.State {
 
@@ -62,12 +63,22 @@ export default class Game extends Phaser.State {
             ];
             Globals.ModuleManager.openModule(ModuleTypeEnum.ROLEINFO, {nineslices: roleInfoResource});
 
+
             let shortcutMenuResource: IImageResource[] = [{
-                key: UI.ItemBg.getName(),
-                png: UI.ItemBg.getPNG()
+                key: UI.ShortcutItemBg.getName(),
+                png: UI.ShortcutItemBg.getPNG()
             }, {
-                key: UI.ItemShortcutBg.getName(),
-                png: UI.ItemShortcutBg.getPNG()
+                key: UI.ShortcutItemIcon.getName(),
+                png: UI.ShortcutItemIcon.getPNG()
+            }, {
+                key: UI.MenuItemBg.getName(),
+                png: UI.MenuItemBg.getPNG()
+            }, {
+                key: UI.MenuItemOver.getName(),
+                png: UI.MenuItemOver.getPNG()
+            }, {
+                key: UI.MenuBtBag.getName(),
+                png: UI.MenuBtBag.getPNG()
             }];
             Globals.ModuleManager.openModule(ModuleTypeEnum.SHORTCUTMENU, {images: shortcutMenuResource});
             let promptResource: INineSliceImageResource[] = [{
@@ -89,6 +100,7 @@ export default class Game extends Phaser.State {
             Globals.ModuleManager.openModule(ModuleTypeEnum.MINIMAP);
         }
 
+        Log.trace("game启动", Globals.DataCenter.SceneData.initialize)
         if (Globals.DataCenter.SceneData.initialize) {
             this.onHandleEnterScene();
         } else {
@@ -113,6 +125,7 @@ export default class Game extends Phaser.State {
     }
 
     private onHandleEnterScene(): void {
+        Log.trace("打开场景");
         Globals.ModuleManager.openModule(ModuleTypeEnum.SCENE);
     }
 }

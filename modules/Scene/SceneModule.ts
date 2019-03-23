@@ -3,6 +3,7 @@ import {SceneContext} from "./SceneContext";
 import {SceneView} from "./view/SceneView";
 import {Module} from "../../base/module/core/Module";
 import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class SceneModule extends Module {
     public onStartUp(): void {

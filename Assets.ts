@@ -123,26 +123,149 @@ export namespace Sound {
     }
 }
 
-export namespace UI {
-    export class SpriteSheetsCloseBtn {
+export namespace Font {
+    export class NumsLatinUppercase {
         static getName(): string {
-            return "ui_btn_close_sprite_sheet_png";
+            return "NumsLatinUppercase_font";
+        }
+
+        static getUrl(): string {
+            return require("assets/fonts/NumsLatinUppercase.png");
+        }
+
+        static getXml(): string {
+            return require("assets/fonts/NumsLatinUppercase.xml");
+        }
+    }
+}
+
+
+export namespace UI {
+    export class MenuBtBag {
+        static getName(): string {
+            return "bt_bag_png";
         }
 
         static getPNG(): string {
-            return require("assets/spritesheets/btn_close_sprite_sheet.png");
+            return require("assets/images/ui/bt_bag.png");
+        }
+    }
+
+    export class VoteFlag {
+        static getName(): string {
+            return "vote_flag_png";
         }
 
-        static getFrameWidth(): number {
-            return 118;
+        static getPNG(): string {
+            return require("assets/images/ui/Vote/Flag.png");
+        }
+    }
+
+    export class VoteLight {
+        static getName(): string {
+            return "vote_light_png";
         }
 
-        static getFrameHeight(): number {
-            return 120;
+        static getPNG(): string {
+            return require("assets/images/ui/Vote/Light.png");
+        }
+    }
+
+    export class PageBt {
+        static getName(): string {
+            return "page_bt_png";
         }
 
-        static getFrameMax(): number {
-            return 3;
+        static getPNG(): string {
+            return require("assets/images/ui/page_bt.png");
+        }
+
+        static getWidth(): number {
+            return 64;
+        }
+
+        static getHeight(): number {
+            return 64;
+        }
+    }
+
+    export class MenuItemBg {
+        static getName(): string {
+            return "menu_item_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/menu_item_bg.png");
+        }
+    }
+
+    export class MenuItemOver {
+        static getName(): string {
+            return "menu_item_over_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/menu_item_over.png");
+        }
+    }
+
+    export class ShortcutItemBg {
+        static getName(): string {
+            return "ui_item_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/item_shortcut_bg.png");
+        }
+    }
+
+    export class ShortcutItemIcon {
+        static getName(): string {
+            return "item_shortcut_icon_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/item_shortcut_icon.png");
+        }
+    }
+
+    export class BagTitle {
+        static getName(): string {
+            return "bag_title_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/bag/bag_title.png");
+        }
+    }
+
+    export class EvidenceTitle {
+        static getName(): string {
+            return "evidence_title_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/bag/evidence_title.png");
+        }
+    }
+
+    export class BagBg {
+        static getName(): string {
+            return "bag_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/bag/bag_bg.png");
+        }
+    }
+
+    export class BagItemBg {
+        static getName(): string {
+            return "bag_item_bg_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/bag/bag_item_bg.png");
         }
     }
 
@@ -215,26 +338,6 @@ export namespace UI {
         }
     }
 
-    export class ItemBg {
-        static getName(): string {
-            return "ui_item_bg_png";
-        }
-
-        static getPNG(): string {
-            return require("assets/images/ui/item_bg.png");
-        }
-    }
-
-    export class ItemShortcutBg {
-        static getName(): string {
-            return "ui_item_shortcut_bg_png";
-        }
-
-        static getPNG(): string {
-            return require("assets/images/ui/item_shortcut_bg.png");
-        }
-    }
-
     export class DropDownBtn {
         static getName(): string {
             return "ui_drop_down_png";
@@ -260,6 +363,28 @@ export namespace UI {
 
         static getPNG(): string {
             return require("assets/images/ui/button.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/button.json");
+        }
+
+        static getWidth(): number {
+            return 15;
+        }
+
+        static getHeight(): number {
+            return 15;
+        }
+    }
+
+    export class ButtonRed {
+        static getName(): string {
+            return "ui_button_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/button_red.png");
         }
 
         static getJSON(): string {

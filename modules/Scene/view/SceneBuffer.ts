@@ -25,9 +25,9 @@ export class SceneBuffer implements ITickedObject, IDisposeObject {
   public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
     this.showBd = showBd;
     this.memoryBd = memoryBd;
-    this.mTick = new Tick(60);
-    this.mTick.setCallBack(this.onTick, this);
-    this.mTick.start();
+    // this.mTick = new Tick(60);
+    // this.mTick.setCallBack(this.onTick, this);
+    // this.mTick.start();
   }
 
   public onTick(deltaTime: number): void {
