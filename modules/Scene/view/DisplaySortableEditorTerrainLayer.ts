@@ -45,7 +45,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
   }
 
   public onInitialize(): void {
-
+    this.mCameraRect = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
   }
 
   public addEntity(d: BasicSceneEntity): void {
@@ -100,10 +100,10 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       entity.onFrame();
       entity = this.mSceneEntities.moveNext();
     }
-    this.sceneBuffer.onFrame();
   }
 
   public onTick(deltaTime: number): void {
+    this.sceneBuffer.onTick(deltaTime);
     if (this.sceneBuffer.copyDirty) {
       return;
     }
@@ -129,10 +129,6 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     }
 
     let newCameraRect: Phaser.Rectangle = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
-
-    if (this.mCameraRect === undefined) {
-      this.mCameraRect = new Phaser.Rectangle(newCameraRect.x, newCameraRect.y, newCameraRect.width, newCameraRect.height);
-    }
 
     if (!Phaser.Rectangle.equals(newCameraRect, this.mCameraRect)) {
       changeDirty = true;
@@ -196,7 +192,8 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
             reDrawEntitys.push(entity);
           }
         }
-        this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
+        this.showBitmapData.move(offsetX, offsetY, false);
+        this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, drawAreas);
       }
     }
   }

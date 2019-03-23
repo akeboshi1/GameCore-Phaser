@@ -1,8 +1,8 @@
+import {ITickedObject} from "../../../base/ITickedObject";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {IDisposeObject} from "../../../base/object/interfaces/IDisposeObject";
-import {IAnimatedObject} from "../../../base/IAnimatedObject";
 
-export class SceneBuffer implements IAnimatedObject, IDisposeObject {
+export class SceneBuffer implements ITickedObject, IDisposeObject {
   public onClear(): void {
   }
 
@@ -21,7 +21,7 @@ export class SceneBuffer implements IAnimatedObject, IDisposeObject {
     this.memoryBd = memoryBd;
   }
 
-  public onFrame(): void {
+  public onTick(deltaTime: number): void {
     if (this.copyDirty) {
       let boo = true;
       let len = this.terrains.length;
@@ -34,36 +34,14 @@ export class SceneBuffer implements IAnimatedObject, IDisposeObject {
         }
       }
       if (boo) {
-        this.copyMemoryRegion(this.changeAreas, this.cameraRect, this.offsetX, this.offsetY);
+        this.copyMemoryRegion(this.changeAreas, this.cameraRect);
         this.copyDirty = false;
       }
     }
   }
 
-  private copyMemoryRegion(changeAreas: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number): void {
-    this.showBd.move(offsetX, offsetY, false);
-
+  private copyMemoryRegion(changeAreas: Phaser.Rectangle[], cameraRect: Phaser.Rectangle): void {
     let cRect: Phaser.Rectangle;
-    if (offsetX !== 0) {
-      if (offsetX < 0) {
-        cRect = new Phaser.Rectangle(cameraRect.width + offsetX, 0, -offsetX, cameraRect.height);
-        this.showBd.copyRect(this.memoryBd, cRect, cameraRect.width + offsetX, 0);
-      } else {
-        cRect = new Phaser.Rectangle(0, 0, offsetX, cameraRect.height);
-        this.showBd.copyRect(this.memoryBd, cRect, 0, 0);
-      }
-    }
-
-    if (offsetY !== 0) {
-      if (offsetY < 0) {
-        cRect = new Phaser.Rectangle(0, cameraRect.height + offsetY, cameraRect.width, -offsetY);
-        this.showBd.copyRect(this.memoryBd, cRect, 0, cameraRect.height + offsetY);
-      } else {
-        cRect = new Phaser.Rectangle(0, 0, cameraRect.width, offsetY);
-        this.showBd.copyRect(this.memoryBd, cRect, 0, 0);
-      }
-    }
-
     let len = changeAreas.length;
     for (let i = 0; i < len; i++) {
       cRect = new Phaser.Rectangle(changeAreas[i].x - cameraRect.x, changeAreas[i].y - cameraRect.y, changeAreas[i].width, changeAreas[i].height);
@@ -74,14 +52,10 @@ export class SceneBuffer implements IAnimatedObject, IDisposeObject {
   private terrains: BasicSceneEntity[];
   private changeAreas: Phaser.Rectangle[];
   private cameraRect: Phaser.Rectangle;
-  private offsetX: number;
-  private offsetY: number;
-  public draw(terrains: BasicSceneEntity[], cameraRect: Phaser.Rectangle, changeAreas: Phaser.Rectangle[], offsetX: number, offsetY: number): void {
-      this.terrains = terrains;
-      this.cameraRect = cameraRect;
-      this.changeAreas = changeAreas;
-      this.offsetX = offsetX;
-      this.offsetY = offsetY;
-      this.copyDirty = true;
+  public draw(terrains: BasicSceneEntity[], cameraRect: Phaser.Rectangle, changeAreas: Phaser.Rectangle[]): void {
+    this.terrains = terrains;
+    this.cameraRect = cameraRect;
+    this.changeAreas = changeAreas;
+    this.copyDirty = true;
   }
 }

@@ -35,6 +35,10 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         this.add(this.testGraph);
     }
 
+  public onInitialize(): void {
+    this.mCameraRect = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
+  }
+
     public addEntity(d: BasicSceneEntity): void {
         d.scene = this.scene;
         d.camera = this.camera;
@@ -60,8 +64,6 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             entity.onFrame();
             entity = this.mSceneEntities.moveNext();
         }
-
-        this.sceneBuffer.onFrame();
     }
 
     private newCameraRect: Phaser.Rectangle;
@@ -74,10 +76,6 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             this.newCameraRect = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
         } else {
             this.newCameraRect.setTo(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
-        }
-
-        if (this.mCameraRect === undefined) {
-            this.mCameraRect = new Phaser.Rectangle(this.newCameraRect.x, this.newCameraRect.y, this.newCameraRect.width, this.newCameraRect.height);
         }
 
         let drawAreas: Phaser.Rectangle[] = [];
@@ -147,7 +145,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
                         reDrawEntitys.push(entity);
                     }
                 }
-                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
+                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, drawAreas);
             }
         }
     }
