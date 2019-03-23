@@ -181,10 +181,10 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
 
     if (changeDirty) {
       len = validEntitys.length;
-      let reDrawEntitys: BasicSceneEntity[] = [];
       if (len > 0) {
         this.memoryBitmapData.cls();
         let boo = false;
+        let reDrawEntitys: BasicSceneEntity[] = [];
         for (let i = 0; i < len; i++) {
           entity = validEntitys[i];
           boo = this.drawMemoryRegion(entity, drawAreas, this.mCameraRect);
@@ -192,15 +192,12 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
             reDrawEntitys.push(entity);
           }
         }
-        len = reDrawEntitys.length;
-        if (len > 0) {
-            this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
-        }
+        this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
       }
     }
   }
 
-  public isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
+  protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
     let len = cRects.length;
     for (let i = 0; i < len; i++) {
       let dRect = d.getRect();
