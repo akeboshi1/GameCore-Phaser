@@ -147,15 +147,12 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
                         reDrawEntitys.push(entity);
                     }
                 }
-                len = reDrawEntitys.length;
-                if (len > 0) {
-                    this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
-                }
+                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
             }
         }
     }
 
-    public isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
+    protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
         let len = cRects.length;
         for (let i = 0; i < len; i++) {
             let dRect = d.getRect();
