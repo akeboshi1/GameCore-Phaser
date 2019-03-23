@@ -192,7 +192,10 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
             reDrawEntitys.push(entity);
           }
         }
-        this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
+        len = reDrawEntitys.length;
+        if (len > 0) {
+            this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
+        }
       }
     }
   }

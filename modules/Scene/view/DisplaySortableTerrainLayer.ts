@@ -1,7 +1,6 @@
 import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {GameConfig} from "../../../GameConfig";
-import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {SceneBuffer} from "./SceneBuffer";
 
 export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
@@ -11,7 +10,6 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     protected memoryBitmapData: Phaser.BitmapData;
     protected mCameraRect: Phaser.Rectangle;
     protected testGraph: Phaser.Graphics;
-    protected drawFlag = false;
     private sceneBuffer: SceneBuffer;
 
     public constructor(game: Phaser.Game) {
@@ -57,13 +55,12 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
     }
 
     public onFrame(): void {
-
         let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
-
         while (entity) {
             entity.onFrame();
             entity = this.mSceneEntities.moveNext();
         }
+
         this.sceneBuffer.onFrame();
     }
 
@@ -132,7 +129,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         while (entity) {
             entity.onTick(deltaTime);
 
-            if (changeDirty && entity.isValidDisplay && this.isIntersectionRect(entity, drawAreas)) {
+            if (changeDirty && entity.isValidDisplay) {
                 reDrawEntitys.push(entity);
             }
             entity = this.mSceneEntities.moveNext();
@@ -142,13 +139,18 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             let len = reDrawEntitys.length;
             if (len > 0) {
                 this.memoryBitmapData.cls();
-                this.drawFlag = true;
-
+                let boo = false;
                 for (let i = 0; i < len; i++) {
                     entity = reDrawEntitys[i];
-                    this.drawMemoryRegion(entity, this.mCameraRect);
+                    boo = this.drawMemoryRegion(entity, drawAreas, this.mCameraRect);
+                    if (boo) {
+                        reDrawEntitys.push(entity);
+                    }
                 }
-                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
+                len = reDrawEntitys.length;
+                if (len > 0) {
+                    this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
+                }
             }
         }
     }
@@ -166,25 +168,27 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         return false;
     }
 
-    private drawShowRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
+    private drawShowRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): boolean {
         let tx, ty = 0;
         let dRect = d.getRect();
-        let mRect = Phaser.Rectangle.intersection(dRect, cameraRect);
-        if (mRect.width > 0 && mRect.height > 0) {
+        if (this.isIntersectionRect(d, [cameraRect])) {
             tx = dRect.x - cameraRect.x;
             ty = dRect.y - cameraRect.y;
             d.drawBit(this.showBitmapData, new Phaser.Point(tx, ty));
+            return true;
         }
+        return false;
     }
 
-    private drawMemoryRegion(d: BasicSceneEntity, cameraRect: Phaser.Rectangle): void {
+    private drawMemoryRegion(d: BasicSceneEntity, cRects: Phaser.Rectangle[], cameraRect: Phaser.Rectangle): boolean {
         let tx, ty = 0;
         let dRect = d.getRect();
-        let mRect = Phaser.Rectangle.intersection(dRect, cameraRect);
-        if (mRect.width > 0 && mRect.height > 0) {
+        if (this.isIntersectionRect(d, cRects)) {
             tx = dRect.x - cameraRect.x;
             ty = dRect.y - cameraRect.y;
             d.drawBit(this.memoryBitmapData, new Phaser.Point(tx, ty));
+            return true;
         }
+        return false;
     }
 }
