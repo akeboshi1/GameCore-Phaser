@@ -84,8 +84,8 @@ export class ShortcutMenuMediator extends MediatorBase {
             frameWidth: UI.PageBt.getWidth(),
             frameHeight: UI.PageBt.getHeight()
         }];
-        // Globals.ModuleManager.openModule(ModuleTypeEnum.BAG, {nineslices: nineslices, images: images, sheets: sheets});
+        Globals.ModuleManager.openModule(ModuleTypeEnum.BAG, {nineslices: nineslices, images: images, sheets: sheets});
 
-        Globals.ModuleManager.openModule(ModuleTypeEnum.ITEMDETAIL, {sheets: sheets});
+        // Globals.ModuleManager.openModule(ModuleTypeEnum.ITEMDETAIL, {sheets: sheets});
     }
 }

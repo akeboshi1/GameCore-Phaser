@@ -74,8 +74,10 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.Loader.visible = false;
         this.addChild(this.Loader);
 
-        this.mHeadName = Globals.game.make.text(-12, -96, "" , {fontSize: 12});
-        this.addChild(this.mHeadName);
+        if (this.mHeadName === undefined) {
+            this.mHeadName = Globals.game.make.text(-12, -96, "" , {fontSize: 12});
+            this.addChild(this.mHeadName);
+        }
     }
 
     protected onInitializeComplete(): void {
