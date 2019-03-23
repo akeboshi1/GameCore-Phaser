@@ -1,17 +1,12 @@
-import {ITickedObject} from "../../../base/ITickedObject";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
-import {Tick} from "../../../common/tick/Tick";
 import {IDisposeObject} from "../../../base/object/interfaces/IDisposeObject";
+import {IAnimatedObject} from "../../../base/IAnimatedObject";
 
-export class SceneBuffer implements ITickedObject, IDisposeObject {
+export class SceneBuffer implements IAnimatedObject, IDisposeObject {
   public onClear(): void {
   }
 
   public onDispose(): void {
-    if (this.mTick) {
-      this.mTick.onDispose();
-    }
-    this.mTick = null;
     this.showBd = null;
     this.memoryBd = null;
     this.terrains = null;
@@ -21,16 +16,12 @@ export class SceneBuffer implements ITickedObject, IDisposeObject {
   private showBd: Phaser.BitmapData;
   private memoryBd: Phaser.BitmapData;
   public copyDirty = false;
-  private mTick: Tick;
   public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
     this.showBd = showBd;
     this.memoryBd = memoryBd;
-    // this.mTick = new Tick(60);
-    // this.mTick.setCallBack(this.onTick, this);
-    // this.mTick.start();
   }
 
-  public onTick(deltaTime: number): void {
+  public onFrame(): void {
     if (this.copyDirty) {
       let boo = true;
       let len = this.terrains.length;

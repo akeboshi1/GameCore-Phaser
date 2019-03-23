@@ -64,11 +64,11 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             entity.onFrame();
             entity = this.mSceneEntities.moveNext();
         }
+        this.sceneBuffer.onFrame();
     }
 
     private newCameraRect: Phaser.Rectangle;
     public onTick(deltaTime: number): void {
-        this.sceneBuffer.onTick(deltaTime);
         if (this.sceneBuffer.copyDirty) {
             return;
         }
