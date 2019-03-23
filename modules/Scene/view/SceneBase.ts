@@ -205,6 +205,7 @@ export class SceneBase extends SceneBasic {
   protected onInitializeScene(value: SceneInfo): void {
     this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
     this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;
+    this.terrainSceneLayer.onInitialize();
   }
 
   protected onActivedScene(): void {

@@ -44,6 +44,10 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     this.add(this.testGraph);
   }
 
+  public onInitialize(): void {
+
+  }
+
   public addEntity(d: BasicSceneEntity): void {
     d.scene = this.scene;
     d.camera = this.camera;

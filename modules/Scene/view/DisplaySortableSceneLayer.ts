@@ -15,6 +15,9 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
         this.mSceneEntities = new UniqueLinkList();
     }
 
+    public onInitialize(): void {
+    }
+
     public addEntity(d: BasicSceneEntity): void {
         d.scene = this.scene;
         d.camera = this.camera;
