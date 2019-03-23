@@ -25,7 +25,7 @@ export class MiniMapMediator extends MediatorBase {
     if (Globals.DataCenter.SceneData.initialize) {
       this.drawMap();
     } else {
-      Globals.MessageCenter.once(MessageType.SCENE_DATA_INITIALIZE, this.onHandleSceneInitialize, this);
+      Globals.MessageCenter.on(MessageType.SCENE_DATA_INITIALIZE, this.onHandleSceneInitialize, this);
     }
     Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
   }
@@ -53,6 +53,7 @@ export class MiniMapMediator extends MediatorBase {
   }
 
   private onHandleSceneInitialize(): void {
+    Globals.MessageCenter.cancel(MessageType.SCENE_DATA_INITIALIZE, this.onHandleSceneInitialize, this);
     this.drawMap();
   }
 

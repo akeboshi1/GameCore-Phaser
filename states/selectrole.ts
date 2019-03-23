@@ -1,9 +1,7 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world} from "../../protocol/protocols";
+import {PBpacket} from "net-socket-packet";
+import { op_virtual_world} from "../../protocol/protocols";
 import Globals from "../Globals";
 import {MessageType} from "../common/const/MessageType";
-import OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE;
-import {GameConfig} from "../GameConfig";
 
 export default class SelectRole extends Phaser.State {
     public create(): void {

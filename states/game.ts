@@ -104,7 +104,7 @@ export default class Game extends Phaser.State {
         if (Globals.DataCenter.SceneData.initialize) {
             this.onHandleEnterScene();
         } else {
-            Globals.MessageCenter.once(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene, this);
+            Globals.MessageCenter.on(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene, this);
         }
     }
 
@@ -125,6 +125,7 @@ export default class Game extends Phaser.State {
     }
 
     private onHandleEnterScene(): void {
+        Globals.MessageCenter.cancel(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene, this);
         Log.trace("打开场景");
         Globals.ModuleManager.openModule(ModuleTypeEnum.SCENE);
     }
