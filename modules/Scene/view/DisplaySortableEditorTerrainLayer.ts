@@ -103,7 +103,6 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
   }
 
   public onTick(deltaTime: number): void {
-    this.sceneBuffer.onTick(deltaTime);
     if (this.sceneBuffer.copyDirty) {
       return;
     }
@@ -192,10 +191,10 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
             reDrawEntitys.push(entity);
           }
         }
-        this.showBitmapData.move(offsetX, offsetY, false);
-        this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, drawAreas);
+        this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
       }
     }
+    this.sceneBuffer.onTick(deltaTime);
   }
 
   protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {

@@ -145,9 +145,11 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
                         reDrawEntitys.push(entity);
                     }
                 }
-                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, drawAreas);
+                this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
             }
         }
+
+        this.sceneBuffer.onTick(deltaTime);
     }
 
     protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
