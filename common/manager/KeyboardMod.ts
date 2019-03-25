@@ -22,6 +22,20 @@ export class KeyboardMod extends BaseSingleton {
     public sKey: Key;
     public aKey: Key;
     public dKey: Key;
+
+    public key1: Key;
+    public key2: Key;
+    public key3: Key;
+    public key4: Key;
+    public key5: Key;
+    public key6: Key;
+    public key7: Key;
+    public key8: Key;
+    public key9: Key;
+    public key10: Key;
+    public multiplyKey: Key;
+    public addKey: Key;
+
     protected keyDownHandleDic: HashMap;
     protected keyUpHandleDic: HashMap;
 
@@ -69,6 +83,43 @@ export class KeyboardMod extends BaseSingleton {
         this.dKey.onDown.add(this.keyDownHandle, this);
         this.dKey.onUp.add(this.keyUpHandle, this);
 
+        this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_1);
+        this.key1.onDown.add(this.keyDownHandle, this);
+        this.key1.onUp.add(this.keyUpHandle, this);
+        this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_2);
+        this.key2.onDown.add(this.keyDownHandle, this);
+        this.key2.onUp.add(this.keyUpHandle, this);
+        this.key3 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3);
+        this.key3.onDown.add(this.keyDownHandle, this);
+        this.key3.onUp.add(this.keyUpHandle, this);
+        this.key4 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_4);
+        this.key4.onDown.add(this.keyDownHandle, this);
+        this.key4.onUp.add(this.keyUpHandle, this);
+        this.key5 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_5);
+        this.key5.onDown.add(this.keyDownHandle, this);
+        this.key5.onUp.add(this.keyUpHandle, this);
+        this.key6 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_6);
+        this.key6.onDown.add(this.keyDownHandle, this);
+        this.key6.onUp.add(this.keyUpHandle, this);
+        this.key7 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_7);
+        this.key7.onDown.add(this.keyDownHandle, this);
+        this.key7.onUp.add(this.keyUpHandle, this);
+        this.key8 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_8);
+        this.key8.onDown.add(this.keyDownHandle, this);
+        this.key8.onUp.add(this.keyUpHandle, this);
+        this.key9 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_9);
+        this.key9.onDown.add(this.keyDownHandle, this);
+        this.key9.onUp.add(this.keyUpHandle, this);
+        this.key10 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_0);
+        this.key10.onDown.add(this.keyDownHandle, this);
+        this.key10.onUp.add(this.keyUpHandle, this);
+        this.multiplyKey = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_MULTIPLY);
+        this.multiplyKey.onDown.add(this.keyDownHandle, this);
+        this.multiplyKey.onUp.add(this.keyUpHandle, this);
+        this.addKey = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_ADD);
+        this.addKey.onDown.add(this.keyDownHandle, this);
+        this.addKey.onUp.add(this.keyUpHandle, this);
+
         this.keyDownHandleDic = new HashMap();
         this.keyUpHandleDic = new HashMap();
         this.game.input.keyboard.addCallbacks(this, this.onDown, this.onUp);
@@ -79,7 +130,7 @@ export class KeyboardMod extends BaseSingleton {
         if (!boo) {
             return;
         }
-
+1
         let arr: any[] = this.keyDownHandleDic.getValue(key);
         let len: number = arr.length;
         for (let i = 0; i < len; i++) {
