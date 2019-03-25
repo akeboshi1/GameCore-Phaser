@@ -88,7 +88,7 @@ export class BasicRoleElement extends SceneEntity {
         // this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
         this.mouseEnable = false;
 
-        this.loadModel(Globals.DataCenter.PlayerData.mainPlayerInfo.model);
+        this.loadModel(this.characterInfo.model);
 
     }
 
