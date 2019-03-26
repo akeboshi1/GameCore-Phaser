@@ -8,7 +8,6 @@ import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 
 export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObject, IDisposeObject, IRecycleObject {
   private mLoadThisArg: any;
-  // private myModelUrlDirty = false;
   private mModelLoaded = false;
   private mLoadCompleteCallback: Function;
   private mLoadErrorCallback: Function;
@@ -74,31 +73,24 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
   }
 
   public loadModel(value: IDisplayLoaderParam, thisArg?: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
-    if (value.display.dataPath == null || value.display.texturePath == null) {
-      return;
+    if (value.display.dataPath && value.display.texturePath) {
+
+        this.closeLoadModel();
+
+        this.mLoadParam = value;
+
+        if (onLoadStart != null) {
+            onLoadStart.apply(thisArg);
+        }
+
+        this.mLoadCompleteCallback = onLoadComplete;
+        this.mLoadErrorCallback = onLoadError;
+        this.mLoadThisArg = thisArg;
+        this.onUpdateModelURL();
     }
-
-    this.closeLoadModel();
-
-    this.mLoadParam = value;
-
-    if (onLoadStart != null) {
-      onLoadStart.apply(thisArg);
-    }
-
-    this.mLoadCompleteCallback = onLoadComplete;
-    this.mLoadErrorCallback = onLoadError;
-    this.mLoadThisArg = thisArg;
-    // this.myModelUrlDirty = true;
-    this.onUpdateModelURL();
   }
 
   public onFrame(): void {
-    // if (this.myModelUrlDirty) {
-    //   this.onUpdateModelURL();
-    //   this.myModelUrlDirty = false;
-    // }
-
     if (this.modelLoaded) {
       if (this.mAnimatonControlFuncDitry) {
         if (this.mAnimatonControlFunc != null) {
@@ -142,7 +134,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
   protected closeLoadModel() {
     this.mModelLoaded = false;
-    // this.myModelUrlDirty = false;
   }
 
   protected onUpdateModelURL() {
@@ -171,8 +162,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
       cb.apply(this.mLoadThisArg);
       this.mLoadThisArg = null;
     }
-
-    // this.invalidAnimationControlFunc();
   }
 
   public onRecycle(): void {

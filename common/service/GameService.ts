@@ -22,6 +22,12 @@ class Handler extends BasePacketHandler {
         super();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.handleSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_GAME_OVER, this.handleGameOver);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
+    }
+
+    private handleShowUI(packet: PBpacket): void {
+        let ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
+        // Globals.ModuleManager.openModule(ui.id)
     }
 
     private handleSelectCharacter(packet: PBpacket): void {

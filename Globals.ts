@@ -15,6 +15,7 @@ import {MouseMod} from "./common/manager/MouseMod";
 import {PromptManager} from "./common/manager/PromptManager";
 import {ObjectPoolManager} from "./common/manager/ObjectPoolManager";
 import {ShareObjectCacheManager} from "./common/manager/ShareObjectCacheManager";
+import {DragManager} from "./base/drag/DragManager";
 
 export default class Globals {
   private static _game: Phaser.Game;
@@ -47,6 +48,13 @@ export default class Globals {
   public static get ModuleManager(): ModuleManager {
     return ModuleManager.getInstance();
   }
+
+    /**
+     * 拖拽管理
+     */
+    public static get DragManager(): DragManager {
+      return DragManager.getInstance();
+    }
 
   /**
    * 图层管理器

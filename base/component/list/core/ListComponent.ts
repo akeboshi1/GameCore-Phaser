@@ -52,13 +52,25 @@ export class ListComponent extends VisualComponent implements IListComponent {
         return this.m_Layout.getItemByFunction(filterFunction) as IListItemComponent;
     }
 
-    public onTriggerClick(item: IListItemComponent) {
+    public onTriggerOver(item: IListItemComponent) {
+        this.emit(UIEvents.LIST_ITEM_OVER, item);
+    }
+
+    public onTriggerOut(item: IListItemComponent) {
+        this.emit(UIEvents.LIST_ITEM_OUT, item);
+    }
+
+    public onTriggerDown(item: IListItemComponent) {
+        this.emit(UIEvents.LIST_ITEM_DOWN, item);
+    }
+
+    public onTriggerUp(item: IListItemComponent) {
         if ( this.m_SelectItem && this.m_SelectItem !== item ) {
             this.m_SelectItem.setSelect( false );
         }
         this.m_SelectItem = item;
         this.m_SelectItem.setSelect( true ) ;
-        this.emit(UIEvents.LIST_ITEM_CLICK, item);
+        this.emit(UIEvents.LIST_ITEM_UP, item);
     }
 
     public get selectItem(): IListItemComponent {

@@ -40,13 +40,13 @@ export class ComboBox extends Phaser.Group implements IDisposeObject{
         this.add(this.mDropDownBt);
         this.mListBg = this.game.make.nineSlice(0, this.mHeight, UI.InputBg.getName(), null, this.mWidth, 1);
         this.mList = new ListComponent(this.game);
-        this.mList.on(UIEvents.LIST_ITEM_CLICK, this.onListItemClick, this);
+        this.mList.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
         this.mList.y = this.mHeight;
         this.render();
         this.addEvent();
     }
 
-    private onListItemClick(item: ComboTextItem): void {
+    private onListItemUp(item: ComboTextItem): void {
         this.mLabel.text = item.data;
         this.mOpen = false;
         this.remove(this.mListBg);

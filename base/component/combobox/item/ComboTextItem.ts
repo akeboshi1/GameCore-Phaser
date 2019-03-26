@@ -30,12 +30,33 @@ export class ComboTextItem extends ListItemComponent {
         this.mBg.endFill();
         this.add(this.mBg);
         this.mBg.inputEnabled = true;
+        this.mBg.events.onInputOver.add(this.handleOver, this);
+        this.mBg.events.onInputOut.add(this.handleOut, this);
+        this.mBg.events.onInputDown.add(this.handleDown, this);
         this.mBg.events.onInputUp.add(this.handleUp, this);
+    }
+
+    protected handleOver(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerOver(this);
+        }
+    }
+
+    protected handleOut(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerOut(this);
+        }
+    }
+
+    protected handleDown(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerDown(this);
+        }
     }
 
     protected handleUp(): void {
         if (this.m_List) {
-            this.m_List.onTriggerClick(this);
+            this.m_List.onTriggerUp(this);
         }
     }
 

@@ -12,7 +12,6 @@ import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = op_virtual_world.IOP_CLIENT_REQ_GATE
 import {HashMap} from "../../base/ds/HashMap";
 
 export class KeyboardMod extends BaseSingleton {
-    private _isKeyDown = false;
     private game: Phaser.Game;
     public upKey: Key;
     public downKey: Key;
@@ -32,9 +31,9 @@ export class KeyboardMod extends BaseSingleton {
     public key7: Key;
     public key8: Key;
     public key9: Key;
-    public key10: Key;
-    public multiplyKey: Key;
-    public addKey: Key;
+    public key0: Key;
+    public underscoreKey: Key;
+    public equalsKey: Key;
 
     protected keyDownHandleDic: HashMap;
     protected keyUpHandleDic: HashMap;
@@ -44,10 +43,6 @@ export class KeyboardMod extends BaseSingleton {
      */
     public constructor() {
         super();
-    }
-
-    public get isKeyDown(): boolean {
-        return this._isKeyDown;
     }
 
     public init(game: Phaser.Game): void {
@@ -83,42 +78,42 @@ export class KeyboardMod extends BaseSingleton {
         this.dKey.onDown.add(this.keyDownHandle, this);
         this.dKey.onUp.add(this.keyUpHandle, this);
 
-        this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_1);
+        this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
         this.key1.onDown.add(this.keyDownHandle, this);
         this.key1.onUp.add(this.keyUpHandle, this);
-        this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_2);
+        this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
         this.key2.onDown.add(this.keyDownHandle, this);
         this.key2.onUp.add(this.keyUpHandle, this);
-        this.key3 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3);
+        this.key3 = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
         this.key3.onDown.add(this.keyDownHandle, this);
         this.key3.onUp.add(this.keyUpHandle, this);
-        this.key4 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_4);
+        this.key4 = this.game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
         this.key4.onDown.add(this.keyDownHandle, this);
         this.key4.onUp.add(this.keyUpHandle, this);
-        this.key5 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_5);
+        this.key5 = this.game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
         this.key5.onDown.add(this.keyDownHandle, this);
         this.key5.onUp.add(this.keyUpHandle, this);
-        this.key6 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_6);
+        this.key6 = this.game.input.keyboard.addKey(Phaser.Keyboard.SIX);
         this.key6.onDown.add(this.keyDownHandle, this);
         this.key6.onUp.add(this.keyUpHandle, this);
-        this.key7 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_7);
+        this.key7 = this.game.input.keyboard.addKey(Phaser.Keyboard.SEVEN);
         this.key7.onDown.add(this.keyDownHandle, this);
         this.key7.onUp.add(this.keyUpHandle, this);
-        this.key8 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_8);
+        this.key8 = this.game.input.keyboard.addKey(Phaser.Keyboard.EIGHT);
         this.key8.onDown.add(this.keyDownHandle, this);
         this.key8.onUp.add(this.keyUpHandle, this);
-        this.key9 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_9);
+        this.key9 = this.game.input.keyboard.addKey(Phaser.Keyboard.NINE);
         this.key9.onDown.add(this.keyDownHandle, this);
         this.key9.onUp.add(this.keyUpHandle, this);
-        this.key10 = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_0);
-        this.key10.onDown.add(this.keyDownHandle, this);
-        this.key10.onUp.add(this.keyUpHandle, this);
-        this.multiplyKey = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_MULTIPLY);
-        this.multiplyKey.onDown.add(this.keyDownHandle, this);
-        this.multiplyKey.onUp.add(this.keyUpHandle, this);
-        this.addKey = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_ADD);
-        this.addKey.onDown.add(this.keyDownHandle, this);
-        this.addKey.onUp.add(this.keyUpHandle, this);
+        this.key0 = this.game.input.keyboard.addKey(Phaser.Keyboard.ZERO);
+        this.key0.onDown.add(this.keyDownHandle, this);
+        this.key0.onUp.add(this.keyUpHandle, this);
+        this.underscoreKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UNDERSCORE);
+        this.underscoreKey.onDown.add(this.keyDownHandle, this);
+        this.underscoreKey.onUp.add(this.keyUpHandle, this);
+        this.equalsKey = this.game.input.keyboard.addKey(Phaser.Keyboard.EQUALS);
+        this.equalsKey.onDown.add(this.keyDownHandle, this);
+        this.equalsKey.onUp.add(this.keyUpHandle, this);
 
         this.keyDownHandleDic = new HashMap();
         this.keyUpHandleDic = new HashMap();
@@ -130,11 +125,11 @@ export class KeyboardMod extends BaseSingleton {
         if (!boo) {
             return;
         }
-1
+
         let arr: any[] = this.keyDownHandleDic.getValue(key);
         let len: number = arr.length;
         for (let i = 0; i < len; i++) {
-            let cb: Function
+            let cb: Function;
             if (arr[i].once) {
                 cb = arr[i].cb;
                 arr[i].cb = null;
@@ -160,7 +155,7 @@ export class KeyboardMod extends BaseSingleton {
         let arr: any[] = this.keyUpHandleDic.getValue(key);
         let len: number = arr.length;
         for (let i = 0; i < len; i++) {
-            let cb: Function
+            let cb: Function;
             if (arr[i].once) {
                 cb = arr[i].cb;
                 arr[i].cb = null;
@@ -239,8 +234,8 @@ export class KeyboardMod extends BaseSingleton {
         let keyArr: number[] = this.getKeyDowns();
         if (this.tempKeys === keyArr.toString()) return;
         this.tempKeys = keyArr.toString();
-        // Log.trace("down-->", keyArr);
-        // Log.warn("[按键]：" + keyArr.toString());
+        Log.trace("down-->", keyArr);
+        Log.warn("[按键]：" + keyArr.toString());
         content.keyCodes = keyArr;
         Globals.SocketManager.send(pkt);
     }
@@ -263,6 +258,20 @@ export class KeyboardMod extends BaseSingleton {
         if (this.sKey.isDown) keyCodes.push(Phaser.Keyboard.S);
         if (this.aKey.isDown) keyCodes.push(Phaser.Keyboard.A);
         if (this.dKey.isDown) keyCodes.push(Phaser.Keyboard.D);
+
+        if (this.key1.isDown) keyCodes.push(Phaser.Keyboard.ONE);
+        if (this.key2.isDown) keyCodes.push(Phaser.Keyboard.TWO);
+        if (this.key3.isDown) keyCodes.push(Phaser.Keyboard.THREE);
+        if (this.key4.isDown) keyCodes.push(Phaser.Keyboard.FOUR);
+        if (this.key5.isDown) keyCodes.push(Phaser.Keyboard.FIVE);
+        if (this.key6.isDown) keyCodes.push(Phaser.Keyboard.SIX);
+        if (this.key7.isDown) keyCodes.push(Phaser.Keyboard.SEVEN);
+        if (this.key8.isDown) keyCodes.push(Phaser.Keyboard.EIGHT);
+        if (this.key9.isDown) keyCodes.push(Phaser.Keyboard.NINE);
+        if (this.key0.isDown) keyCodes.push(Phaser.Keyboard.ZERO);
+        if (this.underscoreKey.isDown) keyCodes.push(Phaser.Keyboard.UNDERSCORE);
+        if (this.equalsKey.isDown) keyCodes.push(Phaser.Keyboard.EQUALS);
+
         return keyCodes;
     }
 

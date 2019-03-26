@@ -7,6 +7,8 @@ import {ShortcutMenuListItem} from "./view/item/ShortcutMenuListItem";
 import {IImageResource, INineSliceImageResource, ISheetResource} from "../../interface/IPhaserLoadList";
 import {UI} from "../../Assets";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
+import {UIEvents} from "../../base/component/event/UIEvents";
+import {ComboTextItem} from "../../base/component/combobox/item/ComboTextItem";
 
 export class ShortcutMenuMediator extends MediatorBase {
 
@@ -25,35 +27,39 @@ export class ShortcutMenuMediator extends MediatorBase {
   }
 
     private addEvent(): void {
-        // Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdate, this);
+        this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
+        this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
+    }
+
+    private onListItemDown(item: ShortcutMenuListItem): void {
+        Globals.DragManager.startDrag(item.icon);
+    }
+
+    private onListItemUp(item: ShortcutMenuListItem): void {
     }
 
     private handleInit(): void {
         this.initView();
     }
 
-    // private handleUpdate(player: PlayerInfo): void {
-    //
-    // }
-
     private initView(): void {
         let packs: op_gameconfig.IPackage[] = Globals.DataCenter.PlayerData.mainPlayerInfo.package;
         if (packs == null || packs.length === 0) {
             return;
         }
-        let pack: op_gameconfig.IPackage = packs[0];
-        let len = pack.maxIndex;
-        let item: ShortcutMenuListItem;
-        let temps = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="];
-        for (let i = 0; i < len; i++) {
-            item = new ShortcutMenuListItem(Globals.game);
-            item.data = pack.items[i];
-            this.view.m_List.addItem(item);
-            if (i < temps.length) {
-                item.setShortCut(temps[i]);
-            }
-        }
-        this.view.m_BagBt.events.onInputDown.add(this.onBagClick, this);
+        // let pack: op_gameconfig.IPackage = packs[0];
+        // let item: ShortcutMenuListItem;
+        // let temps = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="];
+        // let len = temps.length;
+        // for (let i = 0; i < len; i++) {
+        //     item = new ShortcutMenuListItem(Globals.game);
+        //     item.data = pack.items[i];
+        //     this.view.m_List.addItem(item);
+        //     if (i < temps.length) {
+        //         item.setShortCut(temps[i]);
+        //     }
+        // }
+        // this.view.m_BagBt.events.onInputDown.add(this.onBagClick, this);
     }
 
     private onBagClick(): void {
