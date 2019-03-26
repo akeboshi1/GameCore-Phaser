@@ -11,7 +11,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
   protected memoryBitmapData: Phaser.BitmapData;
   protected mCameraRect: Phaser.Rectangle;
   protected testGraph: Phaser.Graphics;
-  private delEntityRects: Phaser.Rectangle[];
+  private delEntitys: BasicSceneEntity[];
   private changeEntityRects: Phaser.Rectangle[];
   private sceneBuffer: SceneBuffer;
   private drawMemoryList: BasicSceneEntity[];
@@ -19,7 +19,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
   public constructor(game: Phaser.Game) {
     super(game);
 
-    this.delEntityRects = [];
+    this.delEntitys = [];
     this.changeEntityRects = [];
     this.drawMemoryList = [];
 
@@ -62,7 +62,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
 
   public removeEntity(d: BasicSceneEntity, all: boolean = false): void {
     if (!all && d.isInScreen()) {
-      this.delEntityRects.push(d.getRect());
+      this.delEntitys.push(d);
       this.changeEntityRects.push(d.getScreenRect());
     }
 
@@ -83,7 +83,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       if (all) {
         this.drawShowRegion(d, this.mCameraRect);
       } else {
-        this.delEntityRects.push(d.getRect());
+        this.delEntitys.push(d);
         this.changeEntityRects.push(d.getScreenRect());
       }
     }
@@ -111,11 +111,11 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     let drawAreas: Phaser.Rectangle[] = [];
     let offsetX = 0, offsetY = 0;
 
-    let delAreas: Phaser.Rectangle[] = this.delEntityRects.splice(0);
-    let len = delAreas.length;
+    let delEntitys: BasicSceneEntity[] = this.delEntitys.splice(0);
+    let len = delEntitys.length;
     let dRect: Phaser.Rectangle;
     for (let i = 0; i < len; i++) {
-      dRect = delAreas[i];
+      dRect = delEntitys[i].getRect();
       this.showBitmapData.clear(dRect.x - this.mCameraRect.x, dRect.y - this.mCameraRect.y, dRect.width, dRect.height);
     }
 
