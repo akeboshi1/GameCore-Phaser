@@ -21,7 +21,9 @@ export namespace Const {
 
     export enum UIConst {
         UI_DEFAULT_WIDTH = 500,
-        UI_DEFAULT_HEIGHT = 300
+        UI_DEFAULT_HEIGHT = 300,
+        UI_DRAG_WIDTH = 50,
+        UI_DRAG_HEIGHT = 50
     }
 
     export enum SceneElementType {

@@ -11,6 +11,7 @@ export class LayerManager extends BaseSingleton {
   public animationLayer: Phaser.Group;
   public mainUiLayer: Phaser.Group;
   public uiLayer: Phaser.Group;
+  public dragLayer: Phaser.Group;
   public dialogLayer: Phaser.Group;
   public tipLayer: Phaser.Group;
   public debugLayer: Phaser.Group;
@@ -31,6 +32,9 @@ export class LayerManager extends BaseSingleton {
 
     this.uiLayer = new Phaser.Group(game, this.container, "uiLayer");
     this.uiLayer.fixedToCamera = true;
+
+    this.dragLayer = new Phaser.Group(game, this.container, "dragLayer");
+    this.dragLayer.fixedToCamera = true;
 
     this.tipLayer = new Phaser.Group(game, this.container, "tipLayer");
     this.tipLayer.fixedToCamera = true;
