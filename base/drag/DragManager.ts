@@ -17,11 +17,15 @@ export class DragManager  extends BaseSingleton implements IDragManager {
 
     constructor(game: Phaser.Game) {
         super();
+    }
+
+    public init(game: Phaser.Game): void {
         this.game = game;
         this.m_Proxy = game.make.sprite(0, 0);
         this.m_Proxy.inputEnabled = true;
         this.m_Proxy.input.enableDrag(true);
     }
+
     public setup(container: Phaser.Group): void {
         this.m_DragLayer = container;
         this.m_DragLayer.inputEnableChildren = false;

@@ -73,7 +73,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
   }
 
   public loadModel(value: IDisplayLoaderParam, thisArg?: any, onLoadStart?: Function, onLoadComplete?: Function, onLoadError?: Function) {
-    if (value.display.dataPath && value.display.texturePath) {
+    if (value.animations && value.animations.length > 0 && value.display && value.display.dataPath && value.display.texturePath) {
 
         this.closeLoadModel();
 

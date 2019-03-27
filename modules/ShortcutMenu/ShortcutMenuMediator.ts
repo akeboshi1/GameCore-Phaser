@@ -8,7 +8,6 @@ import {IImageResource, INineSliceImageResource, ISheetResource} from "../../int
 import {UI} from "../../Assets";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 import {UIEvents} from "../../base/component/event/UIEvents";
-import {ComboTextItem} from "../../base/component/combobox/item/ComboTextItem";
 
 export class ShortcutMenuMediator extends MediatorBase {
 
@@ -29,6 +28,7 @@ export class ShortcutMenuMediator extends MediatorBase {
     private addEvent(): void {
         this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
+        this.view.m_BagBt.events.onInputDown.add(this.onBagClick, this);
     }
 
     private onListItemDown(item: ShortcutMenuListItem): void {
@@ -50,16 +50,29 @@ export class ShortcutMenuMediator extends MediatorBase {
         let pack: op_gameconfig.IPackage = packs[0];
         let item: ShortcutMenuListItem;
         let temps = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="];
-        let len = temps.length;
+        let len = packs.length < temps.length ? packs.length : temps.length;
         for (let i = 0; i < len; i++) {
             item = new ShortcutMenuListItem(Globals.game);
+            item.setEnable(true);
+            let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
+            animation.baseLoc = "-102,-149";
+            animation.collisionArea = "1,1,1,1&1,1,1,1&1,1,1,1&1,1,1,1";
+            animation.frame = [0];
+            animation.frameRate = 12;
+            animation.id = 11095928;
+            animation.name = "idle";
+            animation.originPoint = [3, 3];
+            animation.walkOriginPoint = [3, 3];
+            animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
+            pack.items[i].animations = [animation];
+            pack.items[i].display = {texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
+                 dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"};
             item.data = pack.items[i];
             this.view.m_List.addItem(item);
             if (i < temps.length) {
                 item.setShortCut(temps[i]);
             }
         }
-        this.view.m_BagBt.events.onInputDown.add(this.onBagClick, this);
     }
 
     private onBagClick(): void {

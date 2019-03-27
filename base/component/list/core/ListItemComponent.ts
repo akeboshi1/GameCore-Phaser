@@ -35,13 +35,27 @@ export class ListItemComponent extends Phaser.Group implements IListItemComponen
     }
 
     public onClear() {
+        this.removeEvent();
     }
 
     public onDispose() {
+        this.onClear();
         this.removeAll(true);
     }
 
     public setEnable(value: boolean) {
+        this.inputEnableChildren = value;
+        if (value) {
+            this.addEvent();
+        } else {
+            this.removeEvent();
+        }
+    }
+
+    protected addEvent(): void {
+    }
+
+    protected removeEvent(): void {
     }
 
     public setEventListener(listener: IListItemEventListener) {

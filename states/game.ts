@@ -24,6 +24,7 @@ export default class Game extends Phaser.State {
         }
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
+        Globals.DragManager.init(this.game);
         dragonBones.PhaserFactory.init(this.game);
 
         if (!GameConfig.isEditor) {

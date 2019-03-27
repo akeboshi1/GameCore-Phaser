@@ -34,6 +34,20 @@ export class ShortcutMenuListItem extends ListItemComponent {
         super.init();
     }
 
+    protected addEvent(): void {
+        this.onChildInputDown.add(this.handleChildDown, this);
+    }
+
+    protected removeEvent(): void {
+        this.onChildInputDown.remove(this.handleChildDown, this);
+    }
+
+    protected handleChildDown(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerDown(this);
+        }
+    }
+
     protected onLoadComplete(): void {
         if (this.m_Icon) {
             this.m_Icon.playAnimation(this.data.animationName);
