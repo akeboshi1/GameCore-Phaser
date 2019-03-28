@@ -29,11 +29,11 @@ export namespace Atlases {
 export namespace Load {
     export class Url {
         static getRes(value: string): string {
-            if (GameConfig.isEditor) {
-                return `${path.resolve(GameConfig.HomeDir, value)}`;
-            } else {
+            const isRemote: boolean = /^(http|https):/i.test(GameConfig.HomeDir);
+            if (isRemote) {
                 return `${url.resolve(GameConfig.HomeDir, value)}`;
             }
+            return `${path.resolve(GameConfig.HomeDir, value)}`;
         }
     }
 
