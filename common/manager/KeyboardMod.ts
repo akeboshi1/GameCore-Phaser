@@ -22,6 +22,10 @@ export class KeyboardMod extends BaseSingleton {
     public aKey: Key;
     public dKey: Key;
 
+    public bKey: Key;
+    public fKey: Key;
+
+
     public key1: Key;
     public key2: Key;
     public key3: Key;
@@ -77,6 +81,13 @@ export class KeyboardMod extends BaseSingleton {
         this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
         this.dKey.onDown.add(this.keyDownHandle, this);
         this.dKey.onUp.add(this.keyUpHandle, this);
+
+        this.bKey = this.game.input.keyboard.addKey(Phaser.Keyboard.B);
+        this.bKey.onDown.add(this.keyDownHandle, this);
+        this.bKey.onUp.add(this.keyUpHandle, this);
+        this.fKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
+        this.fKey.onDown.add(this.keyDownHandle, this);
+        this.fKey.onUp.add(this.keyUpHandle, this);
 
         this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
         this.key1.onDown.add(this.keyDownHandle, this);
@@ -259,6 +270,10 @@ export class KeyboardMod extends BaseSingleton {
         if (this.aKey.isDown) keyCodes.push(Phaser.Keyboard.A);
         if (this.dKey.isDown) keyCodes.push(Phaser.Keyboard.D);
 
+        if (this.bKey.isDown) keyCodes.push(Phaser.Keyboard.B);
+        if (this.fKey.isDown) keyCodes.push(Phaser.Keyboard.F);
+        
+
         if (this.key1.isDown) keyCodes.push(Phaser.Keyboard.ONE);
         if (this.key2.isDown) keyCodes.push(Phaser.Keyboard.TWO);
         if (this.key3.isDown) keyCodes.push(Phaser.Keyboard.THREE);
@@ -315,6 +330,17 @@ export class KeyboardMod extends BaseSingleton {
         this.dKey.onDown.remove(this.keyDownHandle, this);
         this.dKey.onUp.remove(this.keyUpHandle, this);
       }
+
+      if (this.bKey) {
+          this.bKey.onDown.remove(this.keyDownHandle, this);
+          this.bKey.onUp.remove(this.keyUpHandle, this);
+      }
+
+      if (this.fKey) {
+          this.fKey.onDown.remove(this.keyDownHandle, this);
+          this.fKey.onUp.remove(this.keyUpHandle, this);
+      }
+
       this.game = null;
       super.dispose();
     }
