@@ -48,5 +48,8 @@ export class MessageType {
     public static REMOVE_SCENE_ELEMENT = "REMOVE_SCENE_ELEMENT";
 
     public static CHANGE_SELF_AVATAR = "CHANGE_SELF_AVATAR";
+
+    public static DRAG_TO_DROP = "DRAG_TO_DROP";
+    public static DRAG_OVER_DROP = "DRAG_OVER_DROP";
 }
 

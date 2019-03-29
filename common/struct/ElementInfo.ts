@@ -16,6 +16,7 @@ export class ElementInfo implements IElement, IDisplayLoaderParam {
   public display: op_gameconfig.IDisplay;
   public animations: op_gameconfig.IAnimation[];
   public attributes: op_gameconfig.IAttribute[];
+  public package: op_gameconfig.IPackage;
 
   public walkableArea: string;
   public originWalkablePoint: Phaser.Point;

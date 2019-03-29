@@ -111,4 +111,14 @@ export class SceneInfo {
             this._elementConfig.push(element);
         }
     }
+
+    public getElementInfo(value: number): ElementInfo {
+        let len = this._elementConfig.length;
+        for (let i = 0; i < len; i++) {
+            if (this._elementConfig[i].id === value) {
+                return this._elementConfig[i];
+            }
+        }
+        return null;
+    }
 }

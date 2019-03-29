@@ -2,10 +2,10 @@ import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
 import {PageComponent} from "../../../base/component/page/core/PageComponent";
 import {UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
+import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 
 export class ItemDetailView extends CommModalWindowView {
-  public m_Icon: Phaser.Image;
-  public m_Page: PageComponent;
+  public m_Icon: DisplayLoaderAvatar;
   public m_Text: Phaser.Text;
   constructor(game: Phaser.Game) {
     super(game);
@@ -25,14 +25,10 @@ export class ItemDetailView extends CommModalWindowView {
           , 1, 0 , 2);
       this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
-      this.m_Icon = this.game.make.image(GameConfig.GameWidth >> 1, 200);
+      this.m_Icon = new DisplayLoaderAvatar(this.game);
       this.add(this.m_Icon);
-      this.m_Page = new PageComponent(this.game, {
-          LeftBtnX: -36,
-          LeftBtnY: 96,
-          RightBtnX: 732,
-          RightBtnY: 96});
-      this.add(this.m_Page);
+      this.m_Text = this.game.make.text(340, 370, "", {fontSize: 24, fill: "#FFF"});
+      this.add(this.m_Text);
   }
 
   public setData(): void {

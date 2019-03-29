@@ -78,6 +78,8 @@ export class PageComponent extends VisualComponent implements IPageComponent {
         this.m_RightBtnY = this.m_Param.RightBtnY;
         this.m_LastBtnX = this.m_Param.LastBtnX;
         this.m_LastBtnY = this.m_Param.LastBtnY;
+        this.m_CurIndex = 1;
+        this.m_MaxIndex = 1;
     }
 
     protected init(): void {

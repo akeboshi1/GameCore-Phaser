@@ -31,6 +31,16 @@ export namespace Const {
         ELEMENT = 2
     }
 
+    export enum DragType {
+        DRAG_TYPE_SHORTCUT = 1,
+        DRAG_TYPE_BAG = 2
+    }
+
+    export enum DropType {
+        DROP_TYPE_SHORTCUT = 1,
+        DROP_TYPE_BAG = 2
+    }
+
     export enum ModelStateType {
         BONES_JUMP = "jump",
         BONES_RUN = "run",

@@ -2,7 +2,8 @@ import {IDragable} from "./IDragable";
 
 export interface IDropable {
     dragDrop(dragable: IDragable): void;
-    getAcceptDragImage(): Phaser.BitmapData;
+    dragOver(dragable: IDragable): void;
     getDropType(): number;
     getDropData(): any;
+    getBound(): Phaser.Rectangle;
 }

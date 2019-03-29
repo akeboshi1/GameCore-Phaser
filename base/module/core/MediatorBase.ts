@@ -6,7 +6,7 @@ import {IResizeObject} from "../../IResizeObject";
 export class MediatorBase implements IMediator {
     protected m_Param: any;
     protected viewComponent: any;
-    public getParam(): void {
+    public getParam(): any {
         return this.m_Param;
     }
 

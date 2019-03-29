@@ -9,7 +9,7 @@ import DropType = Const.DropType;
 import Globals from "../../../../Globals";
 import DragType = Const.DragType;
 
-export class BagListItem extends ListItemComponent implements IListItemComponent {
+export class StorageListItem extends ListItemComponent implements IListItemComponent {
     protected m_Icon: DragDropIcon;
 
     constructor( game: Phaser.Game ) {

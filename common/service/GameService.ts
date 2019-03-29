@@ -27,7 +27,7 @@ class Handler extends BasePacketHandler {
 
     private handleShowUI(packet: PBpacket): void {
         let ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
-        Globals.ModuleManager.openModule(ui.name, null, ui);
+        Globals.ModuleManager.openModule(ui.name, {}, ui);
     }
 
     private handleSelectCharacter(packet: PBpacket): void {
