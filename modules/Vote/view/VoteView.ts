@@ -5,6 +5,7 @@ import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteList} from "./VoteList";
 import {VoteListItem} from "./item/VoteListItem";
+import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 
 export class VoteView extends CommModalWindowView {
 
@@ -14,6 +15,7 @@ export class VoteView extends CommModalWindowView {
   public m_TimeTxt: Phaser.BitmapText;
   public m_LeftText: Phaser.Text;
   public m_LeftNumTxt: Phaser.BitmapText;
+  public m_Bt: NiceSliceButton;
   constructor(game: Phaser.Game) {
     super(game);
   }
@@ -23,8 +25,8 @@ export class VoteView extends CommModalWindowView {
         this.graphics.beginFill(0x000, 0.6);
         this.graphics.drawRect(0, 0, GameConfig.GameWidth, GameConfig.GameHeight);
         this.graphics.endFill();
-        this.m_Width = 1280;
-        this.m_Height = 730;
+        this.m_Width = GameConfig.GameWidth;
+        this.m_Height = GameConfig.GameHeight;
     }
 
   protected init(): void {
@@ -33,36 +35,32 @@ export class VoteView extends CommModalWindowView {
       this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
 
-      this.m_Title = this.game.make.text(560, 37, "疑凶投票");
+      this.m_Title = this.game.make.text((this.width - 178) >> 1, 150, "・疑凶投票・", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
       this.add(this.m_Title);
 
-      this.m_Text = this.game.make.text(560, 37, "投票阶段倒计时");
+      this.m_Text = this.game.make.text(430, this.height - 250, "投票阶段倒计时", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
       this.add(this.m_Text);
 
-      this.m_TimeTxt = this.game.make.bitmapText(540, 613, Font.NumsLatinUppercase.getName(), "00:00", 24);
+      this.m_TimeTxt = this.game.make.bitmapText(640, this.height - 255, Font.NumsLatinUppercase.getName(), "00:00", 24);
       this.add(this.m_TimeTxt);
 
-      this.m_LeftText = this.game.make.text(1092, 675, "剩余未投票");
-      this.add(this.m_LeftText);
+      // this.m_LeftText = this.game.make.text(1092, 675, "剩余未投票");
+      // this.add(this.m_LeftText);
 
-      this.m_LeftNumTxt = this.game.make.bitmapText(1234, 687, Font.NumsLatinUppercase.getName(), "0", 24);
-      this.add(this.m_LeftNumTxt);
-
+      // this.m_LeftNumTxt = this.game.make.bitmapText(1234, 687, Font.NumsLatinUppercase.getName(), "0", 24);
+      // this.add(this.m_LeftNumTxt);
 
       this.m_List = new VoteList(this.game);
-      this.m_List.x = 8;
-      this.m_List.y = 64;
-      let i: number = 0;
-      let len: number = 36;
-      let item: VoteListItem;
-      for (; i < len; i++) {
-          item = new VoteListItem(this.game);
-          this.m_List.addItem(item);
-      }
+      this.m_List.x = 430;
+      this.m_List.y = 240;
       this.add(this.m_List);
-  }
 
-  public setData(): void {
-
+      this.m_Bt = new NiceSliceButton(this.game, this.width - 400, this.height - 250, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+          top: 7,
+          bottom: 7,
+          left: 7,
+          right: 7
+      }, "确认投票", 24);
+      this.add(this.m_Bt);
   }
 }

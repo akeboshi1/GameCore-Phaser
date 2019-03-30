@@ -161,6 +161,16 @@ export namespace UI {
         }
     }
 
+    export class KillerFlag {
+        static getName(): string {
+            return "vote_killer_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/Vote/Killer.png");
+        }
+    }
+
     export class VoteLight {
         static getName(): string {
             return "vote_light_png";
@@ -256,6 +266,16 @@ export namespace UI {
 
         static getPNG(): string {
             return require("assets/images/ui/bag/bag_bg.png");
+        }
+    }
+
+    export class StorageTitle {
+        static getName(): string {
+            return "storage_title_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/Storage/storage_title.png");
         }
     }
 
@@ -380,7 +400,7 @@ export namespace UI {
 
     export class ButtonRed {
         static getName(): string {
-            return "ui_button_png";
+            return "ui_button_red_png";
         }
 
         static getPNG(): string {
@@ -388,7 +408,29 @@ export namespace UI {
         }
 
         static getJSON(): string {
-            return require("assets/images/ui/button.json");
+            return require("assets/images/ui/button_red.json");
+        }
+
+        static getWidth(): number {
+            return 15;
+        }
+
+        static getHeight(): number {
+            return 15;
+        }
+    }
+
+    export class ButtonBlue {
+        static getName(): string {
+            return "ui_button_blue_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/button_blue.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/button_blue.json");
         }
 
         static getWidth(): number {

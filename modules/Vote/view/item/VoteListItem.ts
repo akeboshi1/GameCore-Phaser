@@ -13,8 +13,7 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
     protected m_Light: Phaser.Image;
     protected m_Icon: Phaser.Image;
     protected m_Flag: Phaser.Image;
-    protected m_NumTxt: Phaser.BitmapText;
-    protected m_Text: Phaser.Text;
+    public m_Text: Phaser.Text;
     protected m_Bt: NiceSliceButton;
 
     constructor( game: Phaser.Game ) {
@@ -22,40 +21,30 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
     }
 
     protected init(): void {
-        this.m_Light = this.game.make.image(0, 0, UI.VoteLight);
+        this.m_Light = this.game.make.image(0, 0, UI.VoteLight.getName());
         this.add(this.m_Light);
+        this.m_Light.visible = false;
         this.m_Icon = this.game.make.image(0, 160);
         this.add(this.m_Icon);
-        this.m_Flag = this.game.make.image(110, 60, UI.VoteFlag);
+        this.m_Flag = this.game.make.image(110, 60, UI.VoteFlag.getName());
+        this.m_Flag.visible = false;
         this.add(this.m_Flag);
-        this.m_NumTxt = this.game.make.bitmapText(128, 0, Font.NumsLatinUppercase.getName(), "", 24);
-        this.add(this.m_NumTxt);
-        this.m_Text = this.game.make.text(128, 0, "剧本角色");
+        this.m_Text = this.game.make.text(20, 230, "剧本角色", {fontSize: 24, fill: "#FFCC00", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add(this.m_Text);
-        this.m_Bt = new NiceSliceButton(this.game, 262, GameConfig.GameHeight - 30, UI.ButtonRed.getName(), "button_over.png", "button_out.png", "button_down.png", 30, 24, {
-            top: 7,
-            bottom: 7,
-            left: 7,
-            right: 7
-        }, "投Ta");
-        this.add(this.m_Bt);
         super.init();
     }
 
-    public render(): void {
-        let data: any = this.m_Data;
-
-    }
-
     public setSelect(value: boolean) {
+        this.m_Flag.visible = value;
+        this.m_Light.visible = value;
     }
 
     public getHeight(): number {
-        return 52;
+        return 185;
     }
 
     public getWidth(): number {
-        return 52;
+        return 185;
     }
 
 

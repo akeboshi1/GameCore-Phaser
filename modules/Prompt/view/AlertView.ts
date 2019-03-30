@@ -15,7 +15,7 @@ export class AlertView extends CommWindowModuleView {
     }
 
     public onDispose(): void {
-        this.m_OkBt.events.onInputUp.remove(this.onCloseClick, this);
+        this.m_OkBt.onChildInputUp.remove(this.onCloseClick, this);
         this.callBack = null;
         this.callThisObj = null;
         super.onDispose();
@@ -51,7 +51,7 @@ export class AlertView extends CommWindowModuleView {
             right: 7
         }, "确定");
         this.add(this.m_OkBt);
-        this.m_OkBt.events.onInputUp.add(this.onCloseClick, this);
+        this.m_OkBt.onChildInputUp.add(this.onCloseClick, this);
 
         this.m_Text = this.game.make.text(0, 25, "", {fontSize: 12, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"} );
         this.m_Text.setTextBounds(0, 0, this.width, this.height - bt_h - 30);

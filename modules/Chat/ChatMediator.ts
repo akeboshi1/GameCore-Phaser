@@ -14,18 +14,14 @@ export class ChatMediator extends MediatorBase {
     public onRegister(): void {
         Globals.MessageCenter.on(MessageType.CHAT_TO, this.onHandleChat, this);
         Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ENTER, this.onEnterHandle, this);
-        this.view.bt.events.onInputUp.add(this.onHandleBt, this);
-        this.view.bt.events.onInputOver.add(this.onHandleOver, this);
-        this.view.bt.events.onInputOut.add(this.onHandleOut, this);
+        this.view.bt.on("up", this.onHandleBt, this);
         super.onRegister();
     }
 
     public onRemove(): void {
         Globals.MessageCenter.cancel(MessageType.CHAT_TO, this.onHandleChat, this);
         Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.ENTER, this.onEnterHandle, this);
-        this.view.bt.events.onInputUp.remove(this.onHandleBt, this);
-        this.view.bt.events.onInputOver.remove(this.onHandleOver, this);
-        this.view.bt.events.onInputOut.remove(this.onHandleOut, this);
+        this.view.bt.cancel("up", this.onHandleBt);
         if (this.view.input_tf) {
           this.view.input_tf.endFocus();
         }
@@ -39,14 +35,6 @@ export class ChatMediator extends MediatorBase {
     private onHandleChat(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
         this.view.out_tf.text += chat.chatContext + "\n";
         this.view.scroller.scroll();
-    }
-
-    private onHandleOver(): void {
-        // Globals.MouseMod.pause();
-    }
-
-    private onHandleOut(): void {
-        // Globals.MouseMod.resume();
     }
 
     private onHandleBt(): void {

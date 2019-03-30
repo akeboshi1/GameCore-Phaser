@@ -8,21 +8,27 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;
+    protected m_Light: Phaser.Image;
     protected m_Icon: Phaser.Image;
+    protected m_Flag: Phaser.Image;
     protected m_NumTxt: Phaser.BitmapText;
-    protected m_Text: Phaser.Text;
+    public m_Text: Phaser.Text;
 
     constructor( game: Phaser.Game ) {
         super(game);
     }
 
     protected init(): void {
-        this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
+        this.m_Light = this.game.make.image(0, 0, UI.VoteLight.getName());
+        this.add(this.m_Light);
+        this.m_Light.visible = false;
         this.m_Icon = this.game.make.image(0, 160);
         this.add(this.m_Icon);
-        this.m_NumTxt = this.game.make.bitmapText(128, 0, Font.NumsLatinUppercase.getName(), "", 24);
+        this.m_Flag = this.game.make.image(30, 60, UI.KillerFlag.getName());
+        this.m_Flag.visible = false;
+        this.m_NumTxt = this.game.make.bitmapText(0, 156, Font.NumsLatinUppercase.getName(), "", 24);
         this.add(this.m_NumTxt);
-        this.m_Text = this.game.make.text(128, 0, "剧本角色");
+        this.m_Text = this.game.make.text(20, 230, "剧本角色", {fontSize: 24, fill: "#FFCC00", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add(this.m_Text);
         super.init();
     }
@@ -36,13 +42,10 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
     }
 
     public getHeight(): number {
-        return 52;
+        return 190;
     }
 
     public getWidth(): number {
-        return 52;
+        return 240;
     }
-
-
-
 }

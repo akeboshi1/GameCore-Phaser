@@ -18,12 +18,12 @@ export class StorageView extends CommWindowModuleView {
 
     public onResize(): void {
         this.x = (GameConfig.GameWidth - this.width) >> 1;
-        this.y = GameConfig.GameHeight - 278;
+        this.y = (GameConfig.GameHeight - this.height) >> 1;
     }
 
     protected preInit(): void {
-        this.m_Width = 693;
-        this.m_Height = 208;
+        this.m_Width = 180;
+        this.m_Height = 205;
     }
 
     public onDispose(): void {
@@ -33,7 +33,7 @@ export class StorageView extends CommWindowModuleView {
     protected init(): void {
         this.m_Bg = this.game.add.nineSlice(0, 0, UI.BagBg.getName(), null, this.width, this.height, this);
 
-        this.m_BagTitle = this.game.make.image(12, -14,  UI.BagTitle.getName());
+        this.m_BagTitle = this.game.make.image(12, -14,  UI.StorageTitle.getName());
         this.add(this.m_BagTitle);
 
         this.m_CloseBt = this.game.make.button(this.width - 30, -8, UI.WindowClose.getName(), null, this

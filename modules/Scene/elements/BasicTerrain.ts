@@ -34,6 +34,7 @@ export class BasicTerrain extends SceneEntity {
         if (this.display) {
             this.display.animationName = value;
         }
+
         this.invalidAnimation();
     }
 

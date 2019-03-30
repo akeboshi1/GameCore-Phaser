@@ -53,9 +53,41 @@ export class ListItemComponent extends Phaser.Group implements IListItemComponen
     }
 
     protected addEvent(): void {
+        this.onChildInputOver.add(this.handleChildOver, this);
+        this.onChildInputOut.add(this.handleChildOut, this);
+        this.onChildInputDown.add(this.handleChildDown, this);
+        this.onChildInputUp.add(this.handleChildUp, this);
     }
 
     protected removeEvent(): void {
+        this.onChildInputOver.remove(this.handleChildOver, this);
+        this.onChildInputOut.remove(this.handleChildOut, this);
+        this.onChildInputDown.remove(this.handleChildDown, this);
+        this.onChildInputUp.remove(this.handleChildUp, this);
+    }
+
+    protected handleChildOver(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerOver(this);
+        }
+    }
+
+    protected handleChildOut(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerOut(this);
+        }
+    }
+
+    protected handleChildDown(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerDown(this);
+        }
+    }
+
+    protected handleChildUp(): void {
+        if (this.m_List) {
+            this.m_List.onTriggerUp(this);
+        }
     }
 
     public setEventListener(listener: IListItemEventListener) {

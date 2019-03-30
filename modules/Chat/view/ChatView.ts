@@ -30,7 +30,7 @@ export class ChatView extends ModuleViewBase {
             bottom: 7,
             left: 7,
             right: 7
-        }, "发送");
+        }, "发送", 12);
         this.add(this.bt);
 
         const bounds = new Phaser.Rectangle(10, GameConfig.GameHeight - 190, 280, 160);

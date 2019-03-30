@@ -178,7 +178,7 @@ export class KeyboardMod extends BaseSingleton {
         let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         let keyArr: number[] = this.getKeyDowns();
         if (this.tempKeys === keyArr.toString()) return;
-        this.tempKeys = keyArr.toString();
+        // this.tempKeys = keyArr.toString();
         // Log.trace("down-->", keyArr.toString());
         // Log.warn("[按键]：" + keyArr.toString());
         content.keyCodes = keyArr;

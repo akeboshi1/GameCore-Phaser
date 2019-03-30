@@ -96,34 +96,7 @@ export class ShortcutMenuMediator extends MediatorBase {
     }
 
     private onBagClick(): void {
-        let nineslices: INineSliceImageResource[] = [{
-            key: UI.BagBg.getName(),
-            png: UI.BagBg.getPNG(),
-            top: 29,
-            left: 13,
-            right: 13,
-            bottom: 7
-        }];
-        let images: IImageResource[] = [{
-            key: UI.BagItemBg.getName(),
-            png: UI.BagItemBg.getPNG()
-        }, {
-            key: UI.BagBg.getName(),
-            png: UI.BagBg.getPNG()
-        }, {
-            key: UI.BagTitle.getName(),
-            png: UI.BagTitle.getPNG()
-        }, {
-            key: UI.PageBt.getName(),
-            png: UI.PageBt.getPNG()
-        }];
-        let sheets: ISheetResource[] = [{
-            key: UI.PageBt.getName(),
-            png: UI.PageBt.getPNG(),
-            frameWidth: UI.PageBt.getWidth(),
-            frameHeight: UI.PageBt.getHeight()
-        }];
-        Globals.ModuleManager.openModule(ModuleTypeEnum.BAG, {nineslices: nineslices, images: images, sheets: sheets});
+        Globals.ModuleManager.openModule(ModuleTypeEnum.BAG);
     }
 
     public onRemove(): void {

@@ -4,7 +4,14 @@ import {IModule} from "../../base/module/interfaces/IModule";
 import {IModuleInfo} from "../../base/module/interfaces/IModuleInfo";
 import {HashMap} from "../../base/ds/HashMap";
 import Globals from "../../Globals";
-import {IPhaserLoadList} from "../../interface/IPhaserLoadList";
+import {
+    IAtlasResource, IImageResource,
+    INineSliceImageResource,
+    IPhaserLoadList,
+    ISheetResource
+} from "../../interface/IPhaserLoadList";
+import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
+import {UI} from "../../Assets";
 
 
 export class ModuleManager extends BaseSingleton implements IModuleManager {
@@ -16,7 +23,194 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         this.m_ModuleList = new HashMap();
     }
 
-    public openModule(moduleName: string, loadList?: IPhaserLoadList, param?: any): void {
+    public openModule(moduleName: string, ...param: any[]): void {
+        let loadList: IPhaserLoadList = {};
+        let nineSliceImageResource: INineSliceImageResource[];
+        let sheetResource: ISheetResource[];
+        let atlasResource: IAtlasResource[];
+        let imageResource: IImageResource[];
+        switch (moduleName) {
+            case ModuleTypeEnum.CHAT:
+                nineSliceImageResource = [{
+                    key: UI.DialogBg.getName(),
+                    png: UI.DialogBg.getPNG(),
+                    top: 7,
+                    left: 7,
+                    right: 7,
+                    bottom: 7
+                },
+                    {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
+                ];
+                sheetResource = [{
+                    key: UI.DropDownBtn.getName(),
+                    png: UI.DropDownBtn.getPNG(),
+                    frameWidth: UI.DropDownBtn.getWidth(),
+                    frameHeight: UI.DropDownBtn.getHeight()
+                }
+                ];
+                atlasResource = [{
+                    key: UI.Button.getName(),
+                    png: UI.Button.getPNG(),
+                    json: UI.Button.getJSON()
+                }];
+                break;
+            case ModuleTypeEnum.ROLEINFO:
+                nineSliceImageResource = [{
+                    key: UI.ProgressBg.getName(),
+                    png: UI.ProgressBg.getPNG(),
+                    top: 6,
+                    left: 6,
+                    right: 6,
+                    bottom: 6
+                },
+                    {key: UI.ProgressFill.getName(), png: UI.ProgressFill.getPNG(), top: 6, left: 6, right: 6, bottom: 6}
+                ];
+                break;
+            case ModuleTypeEnum.SHORTCUTMENU:
+                imageResource = [{
+                    key: UI.ShortcutItemBg.getName(),
+                    png: UI.ShortcutItemBg.getPNG()
+                }, {
+                    key: UI.ShortcutItemIcon.getName(),
+                    png: UI.ShortcutItemIcon.getPNG()
+                }, {
+                    key: UI.MenuItemBg.getName(),
+                    png: UI.MenuItemBg.getPNG()
+                }, {
+                    key: UI.MenuItemOver.getName(),
+                    png: UI.MenuItemOver.getPNG()
+                }, {
+                    key: UI.MenuBtBag.getName(),
+                    png: UI.MenuBtBag.getPNG()
+                }];
+                break;
+            case ModuleTypeEnum.PROMPT:
+                nineSliceImageResource = [{
+                    key: UI.WindowBg.getName(),
+                    png: UI.WindowBg.getPNG(),
+                    top: 29,
+                    left: 13,
+                    right: 13,
+                    bottom: 7
+                }];
+                sheetResource = [{
+                    key: UI.WindowClose.getName(),
+                    png: UI.WindowClose.getPNG(),
+                    frameWidth: UI.WindowClose.getWidth(),
+                    frameHeight: UI.WindowClose.getHeight()
+                }];
+                break;
+            case ModuleTypeEnum.BAG:
+                nineSliceImageResource = [{
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG(),
+                    top: 29,
+                    left: 13,
+                    right: 13,
+                    bottom: 7
+                }];
+                imageResource = [{
+                    key: UI.BagItemBg.getName(),
+                    png: UI.BagItemBg.getPNG()
+                }, {
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG()
+                }, {
+                    key: UI.BagTitle.getName(),
+                    png: UI.BagTitle.getPNG()
+                }, {
+                    key: UI.PageBt.getName(),
+                    png: UI.PageBt.getPNG()
+                }];
+                sheetResource = [{
+                    key: UI.PageBt.getName(),
+                    png: UI.PageBt.getPNG(),
+                    frameWidth: UI.PageBt.getWidth(),
+                    frameHeight: UI.PageBt.getHeight()
+                }];
+                break;
+            case ModuleTypeEnum.STORAGE:
+                nineSliceImageResource = [{
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG(),
+                    top: 29,
+                    left: 13,
+                    right: 13,
+                    bottom: 7
+                }];
+                imageResource = [{
+                    key: UI.BagItemBg.getName(),
+                    png: UI.BagItemBg.getPNG()
+                }, {
+                    key: UI.StorageTitle.getName(),
+                    png: UI.StorageTitle.getPNG()
+                }];
+                break;
+            case ModuleTypeEnum.CONTROLF:
+                nineSliceImageResource = [{
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG(),
+                    top: 29,
+                    left: 13,
+                    right: 13,
+                    bottom: 7
+                }];
+                atlasResource = [{
+                    key: UI.Button.getName(),
+                    png: UI.Button.getPNG(),
+                    json: UI.Button.getJSON()
+                }];
+                break;
+            case ModuleTypeEnum.ITEMDETAIL:
+                atlasResource = [{
+                    key: UI.ButtonBlue.getName(),
+                    png: UI.ButtonBlue.getPNG(),
+                    json: UI.ButtonBlue.getJSON()
+                }];
+                break;
+            case ModuleTypeEnum.VOTE:
+                imageResource = [{
+                    key: UI.VoteFlag.getName(),
+                    png: UI.VoteFlag.getPNG()
+                }, {
+                    key: UI.VoteLight.getName(),
+                    png: UI.VoteLight.getPNG()
+                }];
+                atlasResource = [{
+                    key: UI.ButtonRed.getName(),
+                    png: UI.ButtonRed.getPNG(),
+                    json: UI.ButtonRed.getJSON()
+                }];
+                break;
+            case ModuleTypeEnum.VOTERESULT:
+                imageResource = [{
+                    key: UI.KillerFlag.getName(),
+                    png: UI.KillerFlag.getPNG()
+                }, {
+                    key: UI.VoteLight.getName(),
+                    png: UI.VoteLight.getPNG()
+                }];
+                atlasResource = [{
+                    key: UI.ButtonBlue.getName(),
+                    png: UI.ButtonBlue.getPNG(),
+                    json: UI.ButtonBlue.getJSON()
+                }];
+                break;
+        }
+
+        if (nineSliceImageResource) {
+            loadList.nineslices = nineSliceImageResource;
+        }
+        if (sheetResource) {
+            loadList.sheets = sheetResource;
+        }
+        if (atlasResource) {
+            loadList.atlas = atlasResource;
+        }
+        if (imageResource) {
+            loadList.images = imageResource;
+        }
+
         let module: IModuleInfo = {
             name: moduleName,
             data: param,

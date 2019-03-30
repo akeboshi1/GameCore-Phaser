@@ -29,28 +29,6 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
         super.init();
     }
 
-    protected addEvent(): void {
-        this.onChildInputDown.add(this.handleChildDown, this);
-        this.onChildInputUp.add(this.handleChildUp, this);
-    }
-
-    protected removeEvent(): void {
-        this.onChildInputDown.remove(this.handleChildDown, this);
-        this.onChildInputUp.remove(this.handleChildUp, this);
-    }
-
-    protected handleChildDown(): void {
-        if (this.m_List) {
-            this.m_List.onTriggerDown(this);
-        }
-    }
-
-    protected handleChildUp(): void {
-        if (this.m_List) {
-            this.m_List.onTriggerUp(this);
-        }
-    }
-
     public onDispose(): void {
         super.onDispose();
     }

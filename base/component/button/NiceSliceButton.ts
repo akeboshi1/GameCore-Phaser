@@ -1,46 +1,109 @@
 import NineSliceCacheData = PhaserNineSlice.NineSliceCacheData;
 
-export class NiceSliceButton extends Phaser.Sprite {
+export class NiceSliceButton extends Phaser.Group {
     protected mOverFrame: PhaserNineSlice.NineSlice;
     protected mOutFrame: PhaserNineSlice.NineSlice;
     protected mDownFrame: PhaserNineSlice.NineSlice;
     protected mText: Phaser.Text;
+    protected signals: { [name: string]: Phaser.Signal } = {};
+    protected m_Width: number;
+    protected m_Height: number;
 
+    constructor(game: Phaser.Game, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData, text?: string, fontSize?: number) {
+        super(game);
+        this.x = x;
+        this.y = y;
+        this.m_Width = width;
+        this.m_Height = height;
 
-    constructor(game: Phaser.Game, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData, text?: string) {
-        super(game, 0, 0);
-        this.mOverFrame = new PhaserNineSlice.NineSlice(game, x, y, key, overFrame, width, height, data);
+        this.inputEnableChildren = true;
+        this.mOverFrame = new PhaserNineSlice.NineSlice(game, 0, 0, key, overFrame, width, height, data);
         this.mOverFrame.visible = false;
-        this.mOutFrame = new PhaserNineSlice.NineSlice(game, x, y, key, outFrame, width, height, data);
+        this.mOutFrame = new PhaserNineSlice.NineSlice(game, 0, 0, key, outFrame, width, height, data);
         this.mOutFrame.visible = true;
-        this.mDownFrame = new PhaserNineSlice.NineSlice(game, x, y, key, downFrame, width, height, data);
+        this.mDownFrame = new PhaserNineSlice.NineSlice(game, 0, 0, key, downFrame, width, height, data);
         this.mDownFrame.visible = false;
-        this.addChild(this.mOverFrame);
-        this.addChild(this.mOutFrame);
-        this.addChild(this.mDownFrame);
-        if (text) {
-            this.mText = this.game.make.text(x, y, text || "", {fontSize: 12, fill: "#000"});
-            this.mText.x += ((width - this.mText.width) >> 1) + 1;
-            this.mText.y += ((height - this.mText.height) >> 1) + 1;
-            this.mText.setTextBounds(0, 0, width, height);
-            this.mText.inputEnabled = false;
-            this.addChild(this.mText);
-        }
+        this.add(this.mOverFrame);
+        this.add(this.mOutFrame);
+        this.add(this.mDownFrame);
+
+        this.mText = this.game.make.text(0, 0, "", {fontSize: fontSize || 12, fill: "#000", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.add(this.mText);
+        this.setText(text);
+
         this.init();
+    }
+
+    public get width(): number {
+        return this.m_Width;
+    }
+
+    public get height(): number {
+        return this.m_Height;
     }
 
     public setText(value: string): void {
         if (this.mText) {
             this.mText.text = value;
         }
+        this.mText.x = (this.width - this.mText.width) >> 1;
+        this.mText.y = (this.height - this.mText.height) >> 1;
+    }
+
+    public on(name: string, callback: Function, context?: any) {
+        if (!this.signals[name]) {
+            this.signals[name] = new Phaser.Signal();
+        }
+
+        this.signals[name].add(callback, context || this);
+    }
+
+    public once(name: string, callback: Function, context?: any) {
+        if (!this.signals[name]) {
+            this.signals[name] = new Phaser.Signal();
+        }
+
+        this.signals[name].addOnce(callback, context || this);
+    }
+
+    public emit(name: string, args?: any) {
+        if (!this.signals[name]) {
+            this.signals[name] = new Phaser.Signal();
+        }
+
+        this.signals[name].dispatch(args);
+    }
+
+    public cancel( name: string, callback: Function, context?: any) {
+        if (this.signals[name]) {
+            this.signals[name].remove( callback, context || this) ;
+            if ( this.signals[name].getNumListeners() === 0 ) {
+                this.signals[name].dispose();
+                delete this.signals[name];
+            }
+        }
     }
 
     protected init(): void {
-        this.inputEnabled = true;
-        this.events.onInputOver.add(this.handleOver, this);
-        this.events.onInputOut.add(this.handleOut, this);
-        this.events.onInputDown.add(this.handleDown, this);
-        this.events.onInputUp.add(this.handleUp, this);
+        this.addEvent();
+    }
+
+    protected addEvent(): void {
+        this.onChildInputOver.add(this.handleOver, this);
+        this.onChildInputOut.add(this.handleOut, this);
+        this.onChildInputDown.add(this.handleDown, this);
+        this.onChildInputUp.add(this.handleUp, this);
+    }
+
+    protected removeEvent(): void {
+        this.onChildInputOver.remove(this.handleOver, this);
+        this.onChildInputOut.remove(this.handleOut, this);
+        this.onChildInputDown.remove(this.handleDown, this);
+        this.onChildInputUp.remove(this.handleUp, this);
+        for ( let name in this.signals ) {
+            this.signals[name].dispose();
+            delete this.signals[name];
+        }
     }
 
     private handleOver(): void {
@@ -59,15 +122,18 @@ export class NiceSliceButton extends Phaser.Sprite {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = false;
         this.mDownFrame.visible = true;
+        this.emit("down");
     }
 
     private handleUp(): void {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = true;
         this.mDownFrame.visible = false;
+        this.emit("up");
     }
 
     public destroy(destroyChildren?: boolean): void {
+        this.removeEvent();
         if (this.mOverFrame) {
             this.mOverFrame.destroy(true);
         }
