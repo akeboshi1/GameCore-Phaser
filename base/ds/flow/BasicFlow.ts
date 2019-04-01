@@ -4,7 +4,7 @@ export class BasicFlow implements IFlow {
     protected mParent: IFlow;
     protected myData: any;
     private mIsInited = false;
-    private mCalllaterExcuteFlowCompleteTimeHandler: number = -1;
+    private mCalllaterExcuteFlowCompleteTimeHandler = -1;
 
     public constructor() {
     }
