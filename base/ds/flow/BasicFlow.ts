@@ -4,7 +4,7 @@ export class BasicFlow implements IFlow {
     protected mParent: IFlow;
     protected myData: any;
     private mIsInited = false;
-    private mCalllaterExcuteFlowCompleteTimeHandler: number | NodeJS.Timer = -1;
+    private mCalllaterExcuteFlowCompleteTimeHandler = -1;
 
     public constructor() {
     }
@@ -71,7 +71,7 @@ export class BasicFlow implements IFlow {
         if (time === 0) {
             this.onExcuteFlowComplete();
         } else {
-            this.mCalllaterExcuteFlowCompleteTimeHandler = setTimeout(this.onExcuteFlowComplete, this, time);
+            this.mCalllaterExcuteFlowCompleteTimeHandler = setTimeout(this.onExcuteFlowComplete, time, this);
         }
     }
 }
