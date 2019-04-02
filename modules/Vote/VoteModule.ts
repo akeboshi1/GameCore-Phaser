@@ -9,4 +9,9 @@ export class VoteModule extends CommWindowModule {
     Globals.LayerManager.uiLayer.add( this.m_View );
     this.m_Context = new VoteContext(this.m_View);
   }
+
+  public onDispose() {
+      super.onDispose();
+      Globals.LayerManager.uiLayer.remove( this.m_View );
+  }
 }
