@@ -1,10 +1,11 @@
 import {IFlow} from "./IFlow";
+import Globals from "../../../Globals";
 
 export class BasicFlow implements IFlow {
     protected mParent: IFlow;
     protected myData: any;
     private mIsInited = false;
-    private mCalllaterExcuteFlowCompleteTimeHandler: number = -1;
+    private mCalllaterExcuteFlowCompleteTimeEvent: Phaser.TimerEvent;
 
     public constructor() {
     }
@@ -62,7 +63,7 @@ export class BasicFlow implements IFlow {
     }
 
     protected onExcuteFlowComplete(): void {
-        this.mCalllaterExcuteFlowCompleteTimeHandler = -1;
+        Globals.game.time.events.remove(this.mCalllaterExcuteFlowCompleteTimeEvent);
         if (this.mParent) this.mParent.notifyChildFlowComplete(this);
         this.dispose();
     }
@@ -71,7 +72,7 @@ export class BasicFlow implements IFlow {
         if (time === 0) {
             this.onExcuteFlowComplete();
         } else {
-            this.mCalllaterExcuteFlowCompleteTimeHandler = setTimeout(this.onExcuteFlowComplete, this, time);
+            this.mCalllaterExcuteFlowCompleteTimeEvent = Globals.game.time.events.add(time, this.onExcuteFlowComplete, this);
         }
     }
 }
