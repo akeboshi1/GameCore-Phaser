@@ -52,7 +52,7 @@ export class VoteMediator extends MediatorBase {
         for (let i = 0; i < len; i++) {
             item = new VoteListItem(Globals.game);
             item.setEnable(true);
-            item.data = param.Data[i];
+            item.data = param.data[i];
             this.view.m_List.addItem(item);
             item.m_Text.text = param.text[i].text;
         }
