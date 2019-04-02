@@ -64,6 +64,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             entity.onFrame();
             entity = this.mSceneEntities.moveNext();
         }
+        this.sceneBuffer.onFrame();
     }
 
     private newCameraRect: Phaser.Rectangle;
@@ -149,7 +150,7 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             }
         }
 
-        this.sceneBuffer.onTick(deltaTime);
+        // this.sceneBuffer.onTick(deltaTime);
     }
 
     protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {

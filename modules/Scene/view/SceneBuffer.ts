@@ -3,7 +3,7 @@ import {IDisposeObject} from "../../../base/object/interfaces/IDisposeObject";
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {ITickedObject} from "../../../base/ITickedObject";
 
-export class SceneBuffer implements ITickedObject, IDisposeObject {
+export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
     public onClear(): void {
     }
 
@@ -20,25 +20,6 @@ export class SceneBuffer implements ITickedObject, IDisposeObject {
     public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
         this.showBd = showBd;
         this.memoryBd = memoryBd;
-    }
-
-    public onTick(deltaTime: number): void {
-        if (this.copyDirty) {
-            let boo = true;
-            let len = this.terrains.length;
-            let terrain: BasicSceneEntity;
-            for (let i = 0; i < len; i++) {
-                terrain = this.terrains[i];
-                if (terrain.drawDirty) {
-                    boo = false;
-                    break;
-                }
-            }
-            if (boo) {
-                this.copyMemoryRegion(this.changeAreas, this.cameraRect, this.offsetX, this.offsetY);
-                this.copyDirty = false;
-            }
-        }
     }
 
     private copyMemoryRegion(changeAreas: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number): void {
@@ -83,5 +64,24 @@ export class SceneBuffer implements ITickedObject, IDisposeObject {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.copyDirty = true;
+    }
+
+    public onFrame(): void {
+        if (this.copyDirty) {
+            let boo = true;
+            let len = this.terrains.length;
+            let terrain: BasicSceneEntity;
+            for (let i = 0; i < len; i++) {
+                terrain = this.terrains[i];
+                if (terrain.drawDirty) {
+                    boo = false;
+                    break;
+                }
+            }
+            if (boo) {
+                this.copyMemoryRegion(this.changeAreas, this.cameraRect, this.offsetX, this.offsetY);
+                this.copyDirty = false;
+            }
+        }
     }
 }
