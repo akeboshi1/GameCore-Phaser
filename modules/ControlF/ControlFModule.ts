@@ -10,4 +10,9 @@ export class ControlFModule extends Module {
         Globals.LayerManager.sceneLayer.add( this.m_View );
         this.m_Context = new ControlFContext(this.m_View);
     }
+
+    public onDispose() {
+        super.onDispose();
+        Globals.LayerManager.sceneLayer.remove( this.m_View );
+    }
 }

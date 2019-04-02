@@ -1,6 +1,7 @@
 import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
 import {UI} from "../../../Assets";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
+import {GameConfig} from "../../../GameConfig";
 
 export class ControlFView extends ModuleViewBase {
     public m_Bg: PhaserNineSlice.NineSlice;
@@ -14,8 +15,8 @@ export class ControlFView extends ModuleViewBase {
     }
 
     public onResize(): void {
-        this.x = this.game.input.activePointer.x + this.game.camera.x;
-        this.y = this.game.input.activePointer.y + this.game.camera.y;
+        this.x = this.game.camera.x + this.game.camera.width >> 1;
+        this.y = this.game.camera.y + this.game.camera.height >> 1;
     }
 
     protected init(): void {
