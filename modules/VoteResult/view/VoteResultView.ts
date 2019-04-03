@@ -1,5 +1,5 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
-import {UI} from "../../../Assets";
+import {CustomWebFonts, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteResultList} from "./VoteResultList";
@@ -8,6 +8,7 @@ export class VoteResultView extends CommModalWindowView {
 
   public m_List: ListComponent;
   public m_Desc: Phaser.Text;
+  protected m_Tip: Phaser.Text;
   constructor(game: Phaser.Game) {
     super(game);
   }
@@ -34,5 +35,11 @@ export class VoteResultView extends CommModalWindowView {
       this.m_List.x = 320;
       this.m_List.y = 130;
       this.add(this.m_List);
+
+      this.m_Tip = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "...按任意位置退出该局游戏...", {
+          font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily()
+      });
+      this.m_Tip.anchor.setTo(0.5);
+      this.add(this.m_Tip);
   }
 }

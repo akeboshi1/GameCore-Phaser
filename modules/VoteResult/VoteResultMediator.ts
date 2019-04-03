@@ -28,6 +28,8 @@ export class VoteResultMediator extends MediatorBase {
             item.setEnable(true);
             item.data = param.text[i].node.id;
             this.view.m_List.addItem(item);
+            item.setSelect(true);
+            item.m_NumTxt.text = param.data[i] + "票";
             item.m_Text.text = param.text[i].text;
         }
     }

@@ -3,6 +3,7 @@ import {IListItemEventListener} from "../../../../base/component/list/interfaces
 import {ILayoutItem} from "../../../../base/layout/interfaces/ILayoutItem";
 import {ListItemComponent} from "../../../../base/component/list/core/ListItemComponent";
 import {Font, UI} from "../../../../Assets";
+import {GameConfig} from "../../../../GameConfig";
 
 export class VoteResultListItem extends ListItemComponent implements IListItemComponent {
     protected m_Data: any;
@@ -11,7 +12,7 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
     protected m_Light: Phaser.Image;
     protected m_Icon: Phaser.Image;
     protected m_Flag: Phaser.Image;
-    protected m_NumTxt: Phaser.BitmapText;
+    public m_NumTxt: Phaser.BitmapText;
     public m_Text: Phaser.Text;
 
     constructor( game: Phaser.Game ) {
@@ -25,6 +26,7 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
         this.m_Icon = this.game.make.image(0, 160);
         this.add(this.m_Icon);
         this.m_Flag = this.game.make.image(30, 60, UI.KillerFlag.getName());
+        this.add(this.m_Flag);
         this.m_Flag.visible = false;
         this.m_NumTxt = this.game.make.bitmapText(0, 156, Font.NumsLatinUppercase.getName(), "", 24);
         this.add(this.m_NumTxt);
@@ -33,12 +35,9 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
         super.init();
     }
 
-    public render(): void {
-        let data: any = this.m_Data;
-
-    }
-
     public setSelect(value: boolean) {
+        this.m_Flag.visible = value;
+        this.m_Light.visible = value;
     }
 
     public getHeight(): number {

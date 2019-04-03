@@ -1,6 +1,6 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
 import {PageComponent} from "../../../base/component/page/core/PageComponent";
-import {Font, UI} from "../../../Assets";
+import {CustomWebFonts, Font, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteList} from "./VoteList";
@@ -38,7 +38,11 @@ export class VoteView extends CommModalWindowView {
       this.m_Title = this.game.make.text((this.width - 178) >> 1, 150, "・疑凶投票・", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
       this.add(this.m_Title);
 
-      this.m_Text = this.game.make.text(430, this.height - 250, "投票阶段倒计时", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
+      // this.m_Text = this.game.make.text(430, this.height - 250, "投票阶段倒计时", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
+
+      this.m_Text = this.game.add.text(430, this.height - 250, "投票阶段倒计时", {
+          font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily()
+      });
       this.add(this.m_Text);
 
       this.m_TimeTxt = this.game.make.bitmapText(640, this.height - 255, Font.NumsLatinUppercase.getName(), "00:00", 24);

@@ -42,19 +42,21 @@ export class VoteMediator extends MediatorBase {
     private initView(): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
         this.renderList(param);
-        this.view.m_Bt.setText(param.button[0].text);
+        if (param.button.length > 0) {
+            this.view.m_Bt.setText(param.button[0].text);
+        }
     }
 
     private renderList(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI): void {
         this.view.m_List.onClear();
-        let len = param.text.length;
+        let len = param.actors.length;
         let item: VoteListItem;
         for (let i = 0; i < len; i++) {
             item = new VoteListItem(Globals.game);
             item.setEnable(true);
-            item.data = param.data[i];
+            item.data = param.actors[i].id;
             this.view.m_List.addItem(item);
-            item.m_Text.text = param.text[i].text;
+            item.m_Text.text = param.actors[i].name;
         }
     }
 
