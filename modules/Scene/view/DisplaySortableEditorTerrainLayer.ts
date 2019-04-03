@@ -100,6 +100,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       entity.onFrame();
       entity = this.mSceneEntities.moveNext();
     }
+      this.sceneBuffer.onFrame();
   }
 
   public onTick(deltaTime: number): void {
@@ -194,7 +195,6 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
         this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, changeAreas, offsetX, offsetY);
       }
     }
-    this.sceneBuffer.onTick(deltaTime);
   }
 
   protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
