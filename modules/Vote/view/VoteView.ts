@@ -40,7 +40,7 @@ export class VoteView extends CommModalWindowView {
 
       // this.m_Text = this.game.make.text(430, this.height - 250, "投票阶段倒计时", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
 
-      this.m_Text = this.game.add.text(430, this.height - 250, "投票阶段倒计时", {
+      this.m_Text = this.game.make.text(430, this.height - 250, "投票阶段倒计时", {
           font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily()
       });
       this.add(this.m_Text);

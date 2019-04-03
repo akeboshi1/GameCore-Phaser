@@ -36,8 +36,8 @@ export class VoteResultView extends CommModalWindowView {
       this.m_List.y = 130;
       this.add(this.m_List);
 
-      this.m_Tip = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "...按任意位置退出该局游戏...", {
-          font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily()
+      this.m_Tip = this.game.add.text(this.game.world.centerX, this.height - 150, "...按ABCabc任意位置退出该局游戏...", {
+          font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"
       });
       this.m_Tip.anchor.setTo(0.5);
       this.add(this.m_Tip);
