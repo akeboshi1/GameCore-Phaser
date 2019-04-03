@@ -283,7 +283,7 @@ export class SceneMediator extends MediatorBase {
             imove = moveData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                this.onDraw(this.move_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
             }
             if (entity) {
                 imove.destinationPoint3f.x = imove.destinationPoint3f.x >> 0;
@@ -301,9 +301,11 @@ export class SceneMediator extends MediatorBase {
             imove = posData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer && this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                this.onDraw(this.stop_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
             }
             if (entity) {
+                imove.destinationPoint3f.x = imove.destinationPoint3f.x >> 0;
+                imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
                 entity.moveStopTarget(imove);
             }
             // Log.warn("[停止]： " + Date.now(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
