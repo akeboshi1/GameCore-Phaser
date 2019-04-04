@@ -15,12 +15,17 @@ export class KeyboardMod extends BaseSingleton {
     private game: Phaser.Game;
     protected keyDownHandleDic: HashMap;
     protected keyUpHandleDic: HashMap;
+    private mInitilized = false;
 
     /**
      * 构造函数
      */
     public constructor() {
         super();
+    }
+
+    public get initilized(): boolean {
+        return this.mInitilized;
     }
 
     public init(game: Phaser.Game): void {
@@ -46,6 +51,8 @@ export class KeyboardMod extends BaseSingleton {
         this.keyDownHandleDic = new HashMap();
         this.keyUpHandleDic = new HashMap();
         this.game.input.keyboard.addCallbacks(this, this.onDown, this.onUp);
+
+        this.mInitilized = true;
     }
 
     protected keyList: Key[];
@@ -195,6 +202,9 @@ export class KeyboardMod extends BaseSingleton {
 
     public getKeyDowns(): number[] {
         let keyCodes = [];
+        if (!this.initilized) {
+            return keyCodes;
+        }
         let key: Key;
         let len = this.keyList.length;
         for (let i = 0; i < len; i++) {
@@ -207,8 +217,12 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     public dispose(): void {
-      this.removeKeyEvents();
-      this.game = null;
-      super.dispose();
+        if (!this.initilized) {
+            return;
+        }
+        this.removeKeyEvents();
+        this.game = null;
+        super.dispose();
+        this.mInitilized = false;
     }
 }
