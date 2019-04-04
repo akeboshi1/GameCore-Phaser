@@ -33,7 +33,7 @@ export namespace Load {
             if (isRemote) {
                 return `${url.resolve(GameConfig.HomeDir, value)}`;
             }
-            return `${path.resolve(GameConfig.HomeDir, value)}`;
+            return `file:///${path.resolve(GameConfig.HomeDir, value)}`;
         }
     }
 
