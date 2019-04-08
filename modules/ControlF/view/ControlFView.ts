@@ -20,7 +20,7 @@ export class ControlFView extends ModuleViewBase {
     }
 
     protected init(): void {
-        this.m_Bg = this.game.add.nineSlice(28, 0, UI.BagBg.getName(), null, 100, 36, this);
+        this.m_Bg = this.game.add.nineSlice(26, 0, UI.BagBg.getName(), null, 120, 36, this);
         this.add(this.m_Bg);
 
         this.m_Text = this.game.make.text(38, 4, "", {fontSize: 24, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"});
@@ -29,7 +29,7 @@ export class ControlFView extends ModuleViewBase {
         this.m_Bg1 = this.game.add.nineSlice(0, 42, UI.BagBg.getName(), null, 222, 64, this);
         this.add(this.m_Bg1);
 
-        this.m_Text1 = this.game.make.text(4, 46, "", {fontSize: 24, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.m_Text1 = this.game.make.text(4, 46, "", {fontSize: 24, fill: "#fff", align: "left", wordWrap: true, wordWrapWidth: 220});
         this.add(this.m_Text1);
 
         this.bt = new NiceSliceButton(this.game, 0, 0, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 36, 36, {

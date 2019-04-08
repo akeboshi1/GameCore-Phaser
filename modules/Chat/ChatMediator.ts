@@ -118,6 +118,9 @@ export class ChatMediator extends MediatorBase {
     }
 
     private handleFive(): void {
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
+        param.id = 1;
+        Globals.ModuleManager.openModule(ModuleTypeEnum.STORAGE, param);
     }
 
     private handleSix(): void {

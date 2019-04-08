@@ -8,23 +8,22 @@ import {Const} from "../../../../common/const/Const";
 import DropType = Const.DropType;
 import Globals from "../../../../Globals";
 import DragType = Const.DragType;
+import {DisplayLoaderAvatar} from "../../../../common/avatar/DisplayLoaderAvatar";
 
 export class StorageListItem extends ListItemComponent implements IListItemComponent {
-    protected m_Icon: DragDropIcon;
+    protected m_Icon: DisplayLoaderAvatar;
 
     constructor( game: Phaser.Game ) {
         super(game);
     }
 
-    public get icon(): DragDropIcon {
+    public get icon(): DisplayLoaderAvatar {
         return this.m_Icon;
     }
 
     protected init(): void {
         this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
-        this.m_Icon = new DragDropIcon(this.game);
-        this.m_Icon.setDropType(DragType.DRAG_TYPE_BAG);
-        this.m_Icon.setDropType(DropType.DROP_TYPE_BAG);
+        this.m_Icon = new DisplayLoaderAvatar(this.game);
         this.add(this.m_Icon);
         super.init();
     }
