@@ -1,6 +1,3 @@
-import RoleAvatarModelVO from "./RoleAvatarModelVO";
-import Globals from "../../Globals";
-import {MessageType} from "../const/MessageType";
 import {op_client, op_gameconfig} from "../../../protocol/protocols";
 import IActor = op_client.IActor;
 import {SlotInfo} from "./SlotInfo";
@@ -12,7 +9,7 @@ export class PlayerInfo implements IActor {
     /** Character name. */
     public name: string;
 
-    public nickname: string
+    public nickname: string;
 
     /** Character maxNum. */
     public maxNum: number;
@@ -20,7 +17,6 @@ export class PlayerInfo implements IActor {
     /** Character camp. */
     public camp: string;
 
-    /** Character avatar. */
     public avatar?: (op_gameconfig.IAvatar | null);
 
     /** Character attributes. */
@@ -60,13 +56,10 @@ export class PlayerInfo implements IActor {
     public slot?: (op_gameconfig.ISlot[]|null);
 
     public uuid = 0; // 玩家ID
-    public moveSpeed = 10; // 速度
 
-    public model: RoleAvatarModelVO;
     protected _originWalkPoint: Phaser.Point;
 
     public constructor() {
-        this.model = new RoleAvatarModelVO();
     }
 
     public setInfo(obj: any): void {
@@ -137,11 +130,6 @@ export class PlayerInfo implements IActor {
 
     public get originWalkPoint(): Phaser.Point {
         return this._originWalkPoint;
-    }
-
-    public changeAvatarModelByModeVO(mode: op_gameconfig.IAvatar): void {
-        this.model.changeAvatarModelByModeVO(mode);
-        Globals.MessageCenter.emit(MessageType.CHANGE_SELF_AVATAR);
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {

@@ -30,6 +30,8 @@ export default class Game extends Phaser.Game implements IGame {
         };
         super(config);
 
+        Globals.game = this;
+
         // 初始化地图数据
         GameConfig.isEditor = value.isEditor;
         if (value.isEditor) {
@@ -53,6 +55,8 @@ export default class Game extends Phaser.Game implements IGame {
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
         Globals.SocketManager.send(pkt);
+
+
     }
 
 
@@ -77,7 +81,9 @@ export default class Game extends Phaser.Game implements IGame {
         Globals.LayerManager.dispose();
         Globals.SocketManager.dispose();
         Globals.ObjectPoolManager.dispose();
-        this.state.destroy();
+        Globals.game = null;
+        // this.state.destroy();
+        this.cache.destroy();
         this.destroy();
     }
 }

@@ -32,10 +32,7 @@ export class PlayerData extends BaseSingleton {
     }
 
     public setMainPlayerInfo(obj: op_client.IActor): void {
-        this.mainPlayerInfo.setInfo(obj)
-        if (obj.avatar) {
-            this.mainPlayerInfo.changeAvatarModelByModeVO(obj.avatar);
-        }
+        this.mainPlayerInfo.setInfo(obj);
         if (obj.walkOriginPoint) {
             this.mainPlayerInfo.setOriginWalkPoint(obj.walkOriginPoint);
         }
@@ -51,9 +48,6 @@ export class PlayerData extends BaseSingleton {
     public addPlayer(obj: op_client.IActor): void {
         let playerInfo: PlayerInfo = new PlayerInfo();
         playerInfo.setInfo(obj);
-        if (obj.avatar) {
-            playerInfo.changeAvatarModelByModeVO(obj.avatar);
-        }
         if (obj.walkOriginPoint) {
             playerInfo.setOriginWalkPoint(obj.walkOriginPoint);
         }

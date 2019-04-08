@@ -1,7 +1,6 @@
 import {IAnimatedObject} from "../../base/IAnimatedObject";
 import Globals from "../../Globals";
 import {Const} from "../const/Const";
-import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import * as Assets from "../../Assets";
 import {Avatar} from "../../Assets";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
@@ -9,11 +8,12 @@ import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import Slot = dragonBones.Slot;
 import {GameConfig} from "../../GameConfig";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
+import {op_gameconfig} from "../../../protocol/protocols";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject, IRecycleObject {
     private static readonly BONES_SCALE: number = 1;
     protected armature: dragonBones.PhaserArmatureDisplay;
-    private myModel: RoleAvatarModelVO;
+    private myModel: op_gameconfig.IAvatar;
     private myModelDirty = false;
     private mModelLoaded = false;
     private mLoadCompleteCallback: Function;
@@ -25,8 +25,6 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
 
     public constructor(game: Phaser.Game) {
         super(game);
-        this.myModel = new RoleAvatarModelVO();
-        // this.init();
     }
 
     public get modelLoaded(): boolean {
@@ -65,427 +63,427 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         // Log.trace("[动画]", animationName + "_" + t_direct);
     }
 
-    public loadModel(model: RoleAvatarModelVO, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {
+    public loadModel(model: op_gameconfig.IAvatar, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {
         this.closeLoadModel();
         this.myModel = model;
 
-        if (model.body_base_id) {
+        if (model.bodyBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyBase,
                 part: Const.AvatarPartType.BodyBase,
                 dir: 3,
-                skin: model.body_base_id
+                skin: model.bodyBaseId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyBase,
                 part: Const.AvatarPartType.BodyBase,
                 dir: 1,
-                skin: model.body_base_id
+                skin: model.bodyBaseId
             });
         }
 
-        if (model.body_spec_id) {
+        if (model.bodySpecId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodySpec,
                 part: Const.AvatarPartType.BodySpec,
                 dir: 3,
-                skin: model.body_spec_id
+                skin: model.bodySpecId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodySpec,
                 part: Const.AvatarPartType.BodySpec,
                 dir: 1,
-                skin: model.body_spec_id
+                skin: model.bodySpecId
             });
         }
 
-        if (model.body_wing_id) {
+        if (model.bodyWingId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyWing,
                 part: Const.AvatarPartType.BodyWing,
                 dir: 3,
-                skin: model.body_wing_id
+                skin: model.bodyWingId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyWing,
                 part: Const.AvatarPartType.BodyWing,
                 dir: 1,
-                skin: model.body_wing_id
+                skin: model.bodyWingId
             });
         }
 
-        if (model.body_tail_id) {
+        if (model.bodyTailId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyTail,
                 part: Const.AvatarPartType.BodyTail,
                 dir: 3,
-                skin: model.body_tail_id
+                skin: model.bodyTailId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyTail,
                 part: Const.AvatarPartType.BodyTail,
                 dir: 1,
-                skin: model.body_tail_id
+                skin: model.bodyTailId
             });
         }
 
-        if (model.body_cost_id) {
+        if (model.bodyCostId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyCost,
                 part: Const.AvatarPartType.BodyCost,
                 dir: 3,
-                skin: model.body_cost_id
+                skin: model.bodyCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyCost,
                 part: Const.AvatarPartType.BodyCost,
                 dir: 1,
-                skin: model.body_cost_id
+                skin: model.bodyCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyCostDres,
                 part: Const.AvatarPartType.BodyCostDres,
                 dir: 3,
-                skin: model.body_cost_id
+                skin: model.bodyCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyCostDres,
                 part: Const.AvatarPartType.BodyCostDres,
                 dir: 1,
-                skin: model.body_cost_id
+                skin: model.bodyCostId
             });
         }
 
-        if (model.farm_base_id) {
+        if (model.farmBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FarmBase,
                 part: Const.AvatarPartType.FarmBase,
                 dir: 3,
-                skin: model.farm_base_id
+                skin: model.farmBaseId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FarmBase,
                 part: Const.AvatarPartType.FarmBase,
                 dir: 1,
-                skin: model.farm_base_id
+                skin: model.farmBaseId
             });
         }
 
-        if (model.farm_spec_id) {
+        if (model.farmSpecId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FarmSpec,
                 part: Const.AvatarPartType.FarmSpec,
                 dir: 3,
-                skin: model.farm_spec_id
+                skin: model.farmSpecId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FarmSpec,
                 part: Const.AvatarPartType.FarmSpec,
                 dir: 1,
-                skin: model.farm_spec_id
+                skin: model.farmSpecId
             });
         }
 
-        if (model.farm_cost_id) {
+        if (model.farmCostId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FarmCost,
                 part: Const.AvatarPartType.FarmCost,
                 dir: 3,
-                skin: model.farm_cost_id
+                skin: model.farmCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FarmCost,
                 part: Const.AvatarPartType.FarmCost,
                 dir: 1,
-                skin: model.farm_cost_id
+                skin: model.farmCostId
             });
         }
 
-        if (model.barm_base_id) {
+        if (model.barmBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BarmBase,
                 part: Const.AvatarPartType.BarmBase,
                 dir: 3,
-                skin: model.barm_base_id
+                skin: model.barmBaseId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BarmBase,
                 part: Const.AvatarPartType.BarmBase,
                 dir: 1,
-                skin: model.barm_base_id
+                skin: model.barmBaseId
             });
         }
 
-        if (model.barm_spec_id) {
+        if (model.barmSpecId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BarmSpec,
                 part: Const.AvatarPartType.BarmSpec,
                 dir: 3,
-                skin: model.barm_spec_id
+                skin: model.barmSpecId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BarmSpec,
                 part: Const.AvatarPartType.BarmSpec,
                 dir: 1,
-                skin: model.barm_spec_id
+                skin: model.barmSpecId
             });
         }
 
-        if (model.barm_cost_id) {
+        if (model.barmCostId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BarmCost,
                 part: Const.AvatarPartType.BarmCost,
                 dir: 3,
-                skin: model.barm_cost_id
+                skin: model.barmCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BarmCost,
                 part: Const.AvatarPartType.BarmCost,
                 dir: 1,
-                skin: model.barm_cost_id
+                skin: model.barmCostId
             });
         }
 
-        if (model.bleg_base_id) {
+        if (model.blegBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BlegBase,
                 part: Const.AvatarPartType.BlegBase,
                 dir: 3,
-                skin: model.bleg_base_id
+                skin: model.blegBaseId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BlegBase,
                 part: Const.AvatarPartType.BlegBase,
                 dir: 1,
-                skin: model.bleg_base_id
+                skin: model.blegBaseId
             });
         }
 
-        if (model.bleg_spec_id) {
+        if (model.blegSpecId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BlegSpec,
                 part: Const.AvatarPartType.BlegSpec,
                 dir: 3,
-                skin: model.bleg_spec_id
+                skin: model.blegSpecId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BlegSpec,
                 part: Const.AvatarPartType.BlegSpec,
                 dir: 1,
-                skin: model.bleg_spec_id
+                skin: model.blegSpecId
             });
         }
 
-        if (model.bleg_cost_id) {
+        if (model.blegCostId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BlegCost,
                 part: Const.AvatarPartType.BlegCost,
                 dir: 3,
-                skin: model.bleg_cost_id
+                skin: model.blegCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BlegCost,
                 part: Const.AvatarPartType.BlegCost,
                 dir: 1,
-                skin: model.bleg_cost_id
+                skin: model.blegCostId
             });
         }
 
-        if (model.fleg_base_id) {
+        if (model.flegBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FlegBase,
                 part: Const.AvatarPartType.FlegBase,
                 dir: 3,
-                skin: model.fleg_base_id
+                skin: model.flegBaseId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FlegBase,
                 part: Const.AvatarPartType.FlegBase,
                 dir: 1,
-                skin: model.fleg_base_id
+                skin: model.flegBaseId
             });
         }
 
-        if (model.fleg_spec_id) {
+        if (model.flegSpecId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FlegSpec,
                 part: Const.AvatarPartType.FlegSpec,
                 dir: 3,
-                skin: model.fleg_spec_id
+                skin: model.flegSpecId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FlegSpec,
                 part: Const.AvatarPartType.FlegSpec,
                 dir: 1,
-                skin: model.fleg_spec_id
+                skin: model.flegSpecId
             });
         }
 
-        if (model.fleg_cost_id) {
+        if (model.flegCostId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FlegCost,
                 part: Const.AvatarPartType.FlegCost,
                 dir: 3,
-                skin: model.fleg_cost_id
+                skin: model.flegCostId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.FlegCost,
                 part: Const.AvatarPartType.FlegCost,
                 dir: 1,
-                skin: model.fleg_cost_id
+                skin: model.flegCostId
             });
         }
 
-        if (model.head_base_id) {
+        if (model.headBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadBase,
                 part: Const.AvatarPartType.HeadBase,
                 dir: 3,
-                skin: model.head_base_id
+                skin: model.headBaseId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadBase,
                 part: Const.AvatarPartType.HeadBase,
                 dir: 1,
-                skin: model.head_base_id
+                skin: model.headBaseId
             });
         }
 
-        if (model.head_hair_id) {
+        if (model.headHairId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadHair,
                 part: Const.AvatarPartType.HeadHair,
                 dir: 3,
-                skin: model.head_hair_id
+                skin: model.headHairId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadHair,
                 part: Const.AvatarPartType.HeadHair,
                 dir: 1,
-                skin: model.head_hair_id
+                skin: model.headHairId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadHairBack,
                 part: Const.AvatarPartType.HeadHairBack,
                 dir: 3,
-                skin: model.head_hair_id
+                skin: model.headHairId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadHairBack,
                 part: Const.AvatarPartType.HeadHairBack,
                 dir: 1,
-                skin: model.head_hair_id
+                skin: model.headHairId
             });
         }
 
-        if (model.head_hats_id) {
+        if (model.headHatsId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadHats,
                 part: Const.AvatarPartType.HeadHats,
                 dir: 3,
-                skin: model.head_hats_id
+                skin: model.headHatsId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadHats,
                 part: Const.AvatarPartType.HeadHats,
                 dir: 1,
-                skin: model.head_hats_id
+                skin: model.headHatsId
             });
         }
 
-        if (model.head_spec_id) {
+        if (model.headSpecId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadSpec,
                 part: Const.AvatarPartType.HeadSpec,
                 dir: 3,
-                skin: model.head_spec_id
+                skin: model.headSpecId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadSpec,
                 part: Const.AvatarPartType.HeadSpec,
                 dir: 1,
-                skin: model.head_spec_id
+                skin: model.headSpecId
             });
         }
 
-        if (model.head_eyes_id) {
+        if (model.headEyesId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadEyes,
                 part: Const.AvatarPartType.HeadEyes,
                 dir: 3,
-                skin: model.head_eyes_id
+                skin: model.headEyesId
             });
         }
 
-        if (model.head_mous_id) {
+        if (model.headMousId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadMous,
                 part: Const.AvatarPartType.HeadMous,
                 dir: 3,
-                skin: model.head_mous_id
+                skin: model.headMousId
             });
         }
 
-        if (model.head_mask_id) {
+        if (model.headMaskId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.HeadMask,
                 part: Const.AvatarPartType.HeadMask,
                 dir: 3,
-                skin: model.head_mask_id
+                skin: model.headMaskId
             });
         }
 
-        if (model.farm_shld_id) {
+        if (model.farmShldId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.ShldFarm,
                 part: Const.AvatarPartType.ShldFarm,
                 dir: 3,
-                skin: model.farm_shld_id
+                skin: model.farmShldId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.ShldFarm,
                 part: Const.AvatarPartType.ShldFarm,
                 dir: 1,
-                skin: model.farm_shld_id
+                skin: model.farmShldId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.ShldBarm,
                 part: Const.AvatarPartType.ShldBarm,
                 dir: 3,
-                skin: model.farm_shld_id
+                skin: model.farmShldId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.ShldBarm,
                 part: Const.AvatarPartType.ShldBarm,
                 dir: 1,
-                skin: model.farm_shld_id
+                skin: model.farmShldId
             });
         }
 
-        if (model.farm_weap_id) {
+        if (model.farmWeapId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.WeapFarm,
                 part: Const.AvatarPartType.WeapFarm,
                 dir: 3,
-                skin: model.farm_weap_id
+                skin: model.farmWeapId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.WeapFarm,
                 part: Const.AvatarPartType.WeapFarm,
                 dir: 1,
-                skin: model.farm_weap_id
+                skin: model.farmWeapId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.WeapBarm,
                 part: Const.AvatarPartType.WeapBarm,
                 dir: 3,
-                skin: model.farm_weap_id
+                skin: model.farmWeapId
             });
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.WeapBarm,
                 part: Const.AvatarPartType.WeapBarm,
                 dir: 1,
-                skin: model.farm_weap_id
+                skin: model.farmWeapId
             });
         }
 

@@ -3,12 +3,15 @@ import {CustomWebFonts, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteResultList} from "./VoteResultList";
+import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
 
 export class VoteResultView extends CommModalWindowView {
 
   public m_List: ListComponent;
+  protected m_Static: Phaser.Text;
   public m_Desc: Phaser.Text;
   protected m_Tip: Phaser.Text;
+  public scroller: ScrollArea;
   constructor(game: Phaser.Game) {
     super(game);
   }
@@ -28,16 +31,28 @@ export class VoteResultView extends CommModalWindowView {
       this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
 
-      this.m_Desc = this.game.make.text(this.width - 350, 200, "完整剧情", {fontSize: 12, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"});
-      this.add(this.m_Desc);
+      this.m_Static = this.game.make.text(this.width - 350, 200, "完整剧情", {
+          font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"
+      });
+      this.add(this.m_Static);
+
+      this.m_Desc = this.game.make.text(this.width - 350, 240, "", {
+          font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"
+      });
+
+      const bounds = new Phaser.Rectangle(this.width - 350, 240, 510, 520);
+      this.scroller = new ScrollArea(this.game, bounds);
+      this.scroller.add(this.m_Desc);
+      this.scroller.start();
+      this.add(this.scroller);
 
       this.m_List = new VoteResultList(this.game);
       this.m_List.x = 320;
       this.m_List.y = 130;
       this.add(this.m_List);
 
-      this.m_Tip = this.game.add.text(this.game.world.centerX, this.height - 150, "...按ABCabc任意位置退出该局游戏...", {
-          font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"
+      this.m_Tip = this.game.make.text(this.game.world.centerX, this.height - 150, "...按任意位置退出该局游戏...", {
+          font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"
       });
       this.m_Tip.anchor.setTo(0.5);
       this.add(this.m_Tip);

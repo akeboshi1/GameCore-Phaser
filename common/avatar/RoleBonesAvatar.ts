@@ -1,10 +1,9 @@
 import {BasicAvatar} from "../../base/BasicAvatar";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
-import RoleAvatarModelVO from "../struct/RoleAvatarModelVO";
 import Globals from "../../Globals";
-import {Log} from "../../Log";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
+import {op_gameconfig} from "../../../protocol/protocols";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
@@ -47,7 +46,7 @@ export class RoleBonesAvatar extends BasicAvatar {
         return op;
     }
 
-    public loadModel(model: RoleAvatarModelVO): void {
+    public loadModel(model: op_gameconfig.IAvatar): void {
         this.Loader.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 

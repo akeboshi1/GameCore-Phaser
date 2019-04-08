@@ -3,10 +3,9 @@ import {PlayerInfo} from "../../../common/struct/PlayerInfo";
 import SceneEntity from "../view/SceneEntity";
 import Globals from "../../../Globals";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
-import RoleAvatarModelVO from "../../../common/struct/RoleAvatarModelVO";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import {BasicElementAvatar} from "../../../common/avatar/BasicElementAvatar";
 import GameConst = Const.GameConst;
+import {op_gameconfig} from "../../../../protocol/protocols";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
@@ -45,7 +44,7 @@ export class BasicRoleElement extends SceneEntity {
         }
     }
 
-    public loadModel(model: RoleAvatarModelVO): void {
+    public loadModel(model: op_gameconfig.IAvatar): void {
         (<RoleBonesAvatar>this.display).loadModel(model);
     }
 
@@ -88,7 +87,7 @@ export class BasicRoleElement extends SceneEntity {
         // this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
         this.mouseEnable = false;
 
-        this.loadModel(this.characterInfo.model);
+        this.loadModel(this.characterInfo.avatar);
 
     }
 

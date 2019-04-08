@@ -12,7 +12,7 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
     protected m_Light: Phaser.Image;
     protected m_Icon: Phaser.Image;
     protected m_Flag: Phaser.Image;
-    public m_NumTxt: Phaser.BitmapText;
+    public m_NumTxt: Phaser.Text;
     public m_Text: Phaser.Text;
 
     constructor( game: Phaser.Game ) {
@@ -28,11 +28,16 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
         this.m_Flag = this.game.make.image(30, 60, UI.KillerFlag.getName());
         this.add(this.m_Flag);
         this.m_Flag.visible = false;
-        this.m_NumTxt = this.game.make.bitmapText(0, 156, Font.NumsLatinUppercase.getName(), "", 24);
+        this.m_NumTxt = this.game.make.text(0, 156, "剧本角色", {fontSize: 24, fill: "#FFCC00", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add(this.m_NumTxt);
         this.m_Text = this.game.make.text(20, 230, "剧本角色", {fontSize: 24, fill: "#FFCC00", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add(this.m_Text);
         super.init();
+    }
+
+    public render(): void {
+        this.setSelect(this.data.camp === "真凶");
+        this.m_Text.text = this.data.name;
     }
 
     public setSelect(value: boolean) {

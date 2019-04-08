@@ -133,4 +133,23 @@ export class Tool extends BaseSingleton {
         return String.fromCharCode.apply(null, new Uint16Array(buf));
     }
 
+    /**
+     * 00 : 00
+     * @param value
+     */
+    public formatLeftTime(value: number): string {
+
+        //Convert seconds into minutes and seconds
+        let minutes = Math.floor(value / 60);
+        let seconds = Math.floor(value) - (60 * minutes);
+
+        //Display minutes, add a 0 to the start if less than 10
+        let result: string = (minutes < 10) ? "0" + minutes : minutes + "";
+
+        //Display seconds, add a 0 to the start if less than 10
+        result += (seconds < 10) ? ":0" + seconds : ":" + seconds;
+
+        return result;
+    }
+
 }

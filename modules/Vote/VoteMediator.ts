@@ -33,7 +33,7 @@ export class VoteMediator extends MediatorBase {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
         content.uiId = param.id;
-        content.data = [item.data];
+        content.data = [item.data.id];
 
         Globals.SocketManager.send(pkt);
         Globals.ModuleManager.destroyModule(ModuleTypeEnum.STORAGE);
@@ -45,6 +45,9 @@ export class VoteMediator extends MediatorBase {
         if (param.button.length > 0) {
             this.view.m_Bt.setText(param.button[0].text);
         }
+        if (param.time.length > 0) {
+            this.view.m_TimeTxt.text = Globals.Tool.formatLeftTime(param.time[0]);
+        }
     }
 
     private renderList(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI): void {
@@ -54,9 +57,8 @@ export class VoteMediator extends MediatorBase {
         for (let i = 0; i < len; i++) {
             item = new VoteListItem(Globals.game);
             item.setEnable(true);
-            item.data = param.actors[i].id;
+            item.data = param.actors[i];
             this.view.m_List.addItem(item);
-            item.m_Text.text = param.actors[i].name;
         }
     }
 

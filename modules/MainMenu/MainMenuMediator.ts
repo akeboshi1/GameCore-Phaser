@@ -5,15 +5,15 @@ import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 
 export class MainMenuMediator extends MediatorBase {
 
-  private get view(): MainMenuView {
-    return this.viewComponent as MainMenuView;
-  }
+    private get view(): MainMenuView {
+        return this.viewComponent as MainMenuView;
+    }
 
-  public onRegister(): void {
-    this.view.on("open", this.openHandle, this);
-  }
+    public onRegister(): void {
+        this.view.on("open", this.openHandle, this);
+    }
 
-  private openHandle(): void {
-      Globals.ModuleManager.openModule(ModuleTypeEnum.BAG);
-  }
+    private openHandle(): void {
+        Globals.ModuleManager.openModule(ModuleTypeEnum.BAG);
+    }
 }

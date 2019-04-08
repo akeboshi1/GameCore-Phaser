@@ -50,7 +50,6 @@ export class KeyboardMod extends BaseSingleton {
 
         this.keyDownHandleDic = new HashMap();
         this.keyUpHandleDic = new HashMap();
-        this.game.input.keyboard.addCallbacks(this, this.onDown, this.onUp);
 
         this.mInitilized = true;
     }
@@ -97,8 +96,7 @@ export class KeyboardMod extends BaseSingleton {
         }
     }
 
-    protected onUp(event: KeyboardEvent): void {
-        let key = event.code;
+    protected onUp(key: number): void {
         let boo: boolean = this.keyUpHandleDic.has(key);
         if (!boo) {
             return;
@@ -192,12 +190,14 @@ export class KeyboardMod extends BaseSingleton {
         Globals.SocketManager.send(pkt);
     }
 
-    private keyDownHandle( key: any ): void {
+    private keyDownHandle( key: Phaser.Key ): void {
         this.onUpdate();
+        this.onDown(key.keyCode);
     }
 
-    private keyUpHandle( key: any ): void {
+    private keyUpHandle( key: Phaser.Key ): void {
         this.onUpdate();
+        this.onUp(key.keyCode);
     }
 
     public getKeyDowns(): number[] {

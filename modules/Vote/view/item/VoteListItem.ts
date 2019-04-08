@@ -5,13 +5,16 @@ import {ListItemComponent} from "../../../../base/component/list/core/ListItemCo
 import {Font, UI} from "../../../../Assets";
 import {NiceSliceButton} from "../../../../base/component/button/NiceSliceButton";
 import {GameConfig} from "../../../../GameConfig";
+import {RoleBonesAvatar} from "../../../../common/avatar/RoleBonesAvatar";
+import Globals from "../../../../Globals";
+import {IObjectPool} from "../../../../base/pool/interfaces/IObjectPool";
 
 export class VoteListItem extends ListItemComponent implements IListItemComponent {
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;
     protected m_Light: Phaser.Image;
-    protected m_Icon: Phaser.Image;
+    public m_Avatar: RoleBonesAvatar;
     protected m_Flag: Phaser.Image;
     public m_Text: Phaser.Text;
     protected m_Bt: NiceSliceButton;
@@ -24,8 +27,11 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
         this.m_Light = this.game.make.image(0, 0, UI.VoteLight.getName());
         this.add(this.m_Light);
         this.m_Light.visible = false;
-        this.m_Icon = this.game.make.image(0, 160);
-        this.add(this.m_Icon);
+        this.m_Avatar = this.displayPool.alloc() as RoleBonesAvatar;
+        if (null == this.m_Avatar) {
+            this.m_Avatar = new RoleBonesAvatar(Globals.game);
+        }
+        this.add(this.m_Avatar);
         this.m_Flag = this.game.make.image(110, 60, UI.VoteFlag.getName());
         this.m_Flag.visible = false;
         this.add(this.m_Flag);
@@ -34,9 +40,19 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
         super.init();
     }
 
+    protected get displayPool(): IObjectPool {
+        let op = Globals.ObjectPoolManager.getObjectPool("RoleBonesAvatar");
+        return op;
+    }
+
     public setSelect(value: boolean) {
         this.m_Flag.visible = value;
         this.m_Light.visible = value;
+    }
+
+    public render(): void {
+        this.m_Avatar.loadModel(this.data.avatar);
+        this.m_Text.text = this.data.name;
     }
 
     public getHeight(): number {
