@@ -33,9 +33,7 @@ export class ItemDetailMediator extends MediatorBase {
   private initView(): void {
       let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
 
-      let loaderParam: IDisplayLoaderParam = {animations: [param.animation], display: {texturePath: param.display[0].texturePath,
-              dataPath: param.display[0].dataPath}};
-      this.view.m_Icon.loadModel(loaderParam, this, null, this.onLoadComplete);
+      this.view.m_Icon.load(param.display[0]);
 
       let len = param.text.length;
       for (let i = 0; i < len; i++) {
@@ -46,12 +44,6 @@ export class ItemDetailMediator extends MediatorBase {
           this.view.m_Bt.setText(param.button[0].text);
       }
   }
-
-    protected onLoadComplete(): void {
-        if (this.view.m_Icon) {
-            this.view.m_Icon.playAnimation("idle");
-        }
-    }
 
   public onRemove(): void {
     super.onRemove();

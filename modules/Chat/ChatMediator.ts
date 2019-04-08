@@ -42,10 +42,7 @@ export class ChatMediator extends MediatorBase {
     private handleTwo(): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
 
-        let display: op_gameconfig_01.Display = new op_gameconfig_01.Display();
-        display.texturePath = "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png";
-        display.dataPath = "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json";
-        param.display = [display];
+        param.display = ["lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png"];
 
         let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
         animation.baseLoc = "-102,-149";
@@ -56,7 +53,6 @@ export class ChatMediator extends MediatorBase {
         animation.originPoint = [3, 3];
         animation.walkOriginPoint = [3, 3];
         animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
-        param.animation = animation;
 
         let txt: op_gameconfig_01.Text = new op_gameconfig_01.Text();
         txt.text = "这是个炸弹";

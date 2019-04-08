@@ -1,11 +1,9 @@
-import {op_gameconfig} from "../../../../protocol/protocols";
-import IDisplay = op_gameconfig.IDisplay;
 import Globals from "../../../Globals";
 import {Load} from "../../../Assets";
 
 export class BaseIcon extends Phaser.Sprite {
     protected m_Icon: Phaser.Image;
-    protected m_Param: IDisplay;
+    protected m_Url: string;
 
     private mLoadThisArg: any;
     private mLoadCompleteCallback: Function;
@@ -14,6 +12,7 @@ export class BaseIcon extends Phaser.Sprite {
 
     constructor(game: Phaser.Game) {
         super(game, 0, 0);
+        this.inputEnabled = false;
         this.m_Icon = game.make.image(0, 0);
         this.addChild(this.m_Icon);
     }
@@ -23,19 +22,19 @@ export class BaseIcon extends Phaser.Sprite {
         this.m_Icon.loadTexture(key);
     }
 
-    public load(value: IDisplay, thisArg?: any, onLoadComplete?: Function) {
+    public load(value: string, thisArg?: any, onLoadComplete?: Function) {
         this.mLoadCompleteCallback = onLoadComplete;
         this.mLoadThisArg = thisArg;
 
         this.closeLoadModel();
 
-        this.m_Param = value;
+        this.m_Url = value;
         let key: string = this.resKey;
         if (Globals.game.cache.checkImageKey(key)) {
             this.modelLoadCompleteHandler();
         } else {
             Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.image(key, Load.Url.getRes(this.m_Param.texturePath));
+            this.game.load.image(key, Load.Url.getRes(this.m_Url));
             this.game.load.start();
         }
     }
@@ -58,8 +57,8 @@ export class BaseIcon extends Phaser.Sprite {
     }
 
     public get resKey(): string {
-        if (this.m_Param == null) return null;
-        let key: string = Load.Atlas.getKey(this.m_Param.texturePath + this.m_Param.dataPath);
+        if (this.m_Url === undefined) return "";
+        let key: string = Load.Image.getKey(this.m_Url);
         return key;
     }
 }

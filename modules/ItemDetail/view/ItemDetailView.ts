@@ -1,12 +1,12 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
-import {PageComponent} from "../../../base/component/page/core/PageComponent";
 import {UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
+import {BaseIcon} from "../../../base/component/icon/BaseIcon";
 
 export class ItemDetailView extends CommModalWindowView {
-  public m_Icon: DisplayLoaderAvatar;
+  public m_Icon: BaseIcon;
   public m_Text: Phaser.Text;
   public m_Bt: NiceSliceButton;
   constructor(game: Phaser.Game) {
@@ -28,7 +28,7 @@ export class ItemDetailView extends CommModalWindowView {
           , 1, 0 , 2);
       this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
-      this.m_Icon = new DisplayLoaderAvatar(this.game);
+      this.m_Icon = new BaseIcon(this.game);
       this.m_Icon.x = this.width >> 1;
       this.m_Icon.y = this.height / 3;
       this.add(this.m_Icon);
