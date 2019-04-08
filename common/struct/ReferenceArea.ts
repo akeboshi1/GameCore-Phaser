@@ -2,11 +2,6 @@ import {Scene45Util} from "../manager/Scene45Util";
 import Globals from "../../Globals";
 
 export class ReferenceArea extends Phaser.Graphics {
-  protected areaStr: string;
-  protected _orgin: Phaser.Point;
-  protected areaArr: number[][];
-  protected _color = 0;
-  protected _alpha = 0;
 
   constructor(game: Phaser.Game, value: string, orgin?: Phaser.Point, color?: number, alpha?: number) {
     super(game);
@@ -16,6 +11,41 @@ export class ReferenceArea extends Phaser.Graphics {
     this._orgin = orgin || new Phaser.Point(0, 0);
     this.init();
   }
+
+  public static get room45(): Scene45Util {
+    if ( this._room45 === undefined) {
+      this._room45 = new Scene45Util();
+    }
+    return this._room45;
+  }
+
+  public static get poly(): Phaser.Polygon {
+    if ( this._poly === undefined) {
+      this._poly = new Phaser.Polygon();
+    }
+    return this._poly;
+  }
+
+  public get cols(): number {
+    return this._cols;
+  }
+
+  public get rows(): number {
+    return this._rows;
+  }
+
+  protected static _room45: Scene45Util;
+
+  protected static _poly: Phaser.Polygon;
+  protected areaStr: string;
+  protected _orgin: Phaser.Point;
+  protected areaArr: number[][];
+  protected _color = 0;
+  protected _alpha = 0;
+
+  protected _cols = 0;
+
+  protected _rows = 0;
 
   public onReset(value: string, orgin?: Phaser.Point, color?: number, alpha?: number): void {
     this.areaStr = value;
@@ -35,36 +65,6 @@ export class ReferenceArea extends Phaser.Graphics {
       this.cacheAsBitmap = false;
     }
     this.clear();
-  }
-
-  protected static _room45: Scene45Util;
-
-  public static get room45(): Scene45Util {
-    if ( this._room45 === undefined) {
-      this._room45 = new Scene45Util();
-    }
-    return this._room45;
-  }
-
-  protected static _poly: Phaser.Polygon;
-
-  public static get poly(): Phaser.Polygon {
-    if ( this._poly === undefined) {
-      this._poly = new Phaser.Polygon();
-    }
-    return this._poly;
-  }
-
-  protected _cols = 0;
-
-  public get cols(): number {
-    return this._cols;
-  }
-
-  protected _rows = 0;
-
-  public get rows(): number {
-    return this._rows;
   }
 
   protected onDraw(hTileWidth: number, hTileHeight: number): void {

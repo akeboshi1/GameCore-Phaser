@@ -106,8 +106,10 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
     if (!this.mInitilized) {
       return;
     }
-    this.display.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
-    this.display.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    if (this.display) {
+      this.display.x = Globals.game.camera.x + this.mousePointer.x + (this.baseLoc ? this.baseLoc.x : 0);
+      this.display.y = Globals.game.camera.y + this.mousePointer.y + (this.baseLoc ? this.baseLoc.y : 0);
+    }
     if (this.mReferenceArea) {
       this.mReferenceArea.setPosition(Globals.game.camera.x + this.mousePointer.x, Globals.game.camera.y + this.mousePointer.y);
     }

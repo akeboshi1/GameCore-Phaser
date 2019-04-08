@@ -4,6 +4,19 @@ import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {ITickedObject} from "../../../base/ITickedObject";
 
 export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
+    public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
+        this.showBd = showBd;
+        this.memoryBd = memoryBd;
+    }
+    private showBd: Phaser.BitmapData;
+    private memoryBd: Phaser.BitmapData;
+    public copyDirty = false;
+
+    private terrains: BasicSceneEntity[];
+    private changeAreas: Phaser.Rectangle[];
+    private cameraRect: Phaser.Rectangle;
+    private offsetX: number;
+    private offsetY: number;
     public onClear(): void {
     }
 
@@ -13,13 +26,6 @@ export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
         this.terrains = null;
         this.changeAreas = null;
         this.cameraRect = null;
-    }
-    private showBd: Phaser.BitmapData;
-    private memoryBd: Phaser.BitmapData;
-    public copyDirty = false;
-    public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
-        this.showBd = showBd;
-        this.memoryBd = memoryBd;
     }
 
     private copyMemoryRegion(changeAreas: Phaser.Rectangle[], cameraRect: Phaser.Rectangle, offsetX: number, offsetY: number): void {
@@ -51,12 +57,6 @@ export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
             this.showBd.copyRect(this.memoryBd, cRect, cRect.x, cRect.y);
         }
     }
-
-    private terrains: BasicSceneEntity[];
-    private changeAreas: Phaser.Rectangle[];
-    private cameraRect: Phaser.Rectangle;
-    private offsetX: number;
-    private offsetY: number;
     public draw(terrains: BasicSceneEntity[], cameraRect: Phaser.Rectangle, changeAreas: Phaser.Rectangle[], offsetX: number, offsetY: number): void {
         this.terrains = terrains;
         this.cameraRect = cameraRect;
