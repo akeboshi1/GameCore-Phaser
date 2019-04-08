@@ -56,6 +56,7 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     protected keyList: Key[];
+
     protected addKeyEvent(key: Key): void {
         key.onDown.add(this.keyDownHandle, this);
         key.onUp.add(this.keyUpHandle, this);
@@ -63,12 +64,13 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     protected removeKeyEvents(): void {
-        let key: Key;
-        let len = this.keyList.length;
-        for (let i = 0; i < len; i++) {
-            key = this.keyList[i];
-            key.onDown.remove(this.keyDownHandle, this);
-            key.onUp.remove(this.keyUpHandle, this);
+        if (this.keyList) {
+            const len = this.keyList.length;
+            for (let i = 0; i < len; i++) {
+                const key: Key = this.keyList[i];
+                key.onDown.remove(this.keyDownHandle, this);
+                key.onUp.remove(this.keyUpHandle, this);
+            }
         }
     }
 
@@ -123,7 +125,7 @@ export class KeyboardMod extends BaseSingleton {
         }
     }
 
-    public addListenerKeyUp(key: number, callBack: Function, context?: any, once?: boolean ): void {
+    public addListenerKeyUp(key: number, callBack: Function, context?: any, once?: boolean): void {
         let boo: boolean = this.keyUpHandleDic.has(key);
         let arr: any[];
         if (boo) {
@@ -151,7 +153,7 @@ export class KeyboardMod extends BaseSingleton {
         }
     }
 
-    public addListenerKeyDown(key: number, callBack: Function, context?: any, once?: boolean ): void {
+    public addListenerKeyDown(key: number, callBack: Function, context?: any, once?: boolean): void {
         let boo: boolean = this.keyDownHandleDic.has(key);
         let arr: any[];
         if (boo) {
@@ -180,6 +182,7 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     private tempKeys: string;
+
     protected onUpdate(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
@@ -192,11 +195,11 @@ export class KeyboardMod extends BaseSingleton {
         Globals.SocketManager.send(pkt);
     }
 
-    private keyDownHandle( key: any ): void {
+    private keyDownHandle(key: any): void {
         this.onUpdate();
     }
 
-    private keyUpHandle( key: any ): void {
+    private keyUpHandle(key: any): void {
         this.onUpdate();
     }
 
