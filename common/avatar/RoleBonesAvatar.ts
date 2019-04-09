@@ -98,6 +98,8 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        this.Loader.visible = true;
+        if (this.Loader) {
+            this.Loader.visible = true;
+        }
     }
 }

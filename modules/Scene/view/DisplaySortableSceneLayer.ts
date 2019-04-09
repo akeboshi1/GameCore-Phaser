@@ -96,8 +96,11 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     public removeEntity(d: BasicSceneEntity, all: boolean = false): void {
         this.mSceneEntities.remove(d);
         this.remove(d.display);
+        d.onClear();
         d.scene = null;
         d.camera = null;
-        d.onClear();
+    }
+
+    public onClear(): void {
     }
 }

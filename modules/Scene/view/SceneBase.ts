@@ -219,6 +219,10 @@ export class SceneBase extends SceneBasic {
   protected onClearScene(): void {
     super.onClearScene();
     this.removeSceneElementsBy();
+    this.removeAllTerrainElements();
+    if (this.terrainSceneLayer) {
+      this.terrainSceneLayer.onClear();
+    }
 
     if (this.terrainGridLayer) {
       this.terrainGridLayer.clear();

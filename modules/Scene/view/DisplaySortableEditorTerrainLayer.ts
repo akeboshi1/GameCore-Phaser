@@ -233,4 +233,9 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     }
     return false;
   }
+
+  public onClear(): void {
+      this.showBitmapData.cls();
+      this.memoryBitmapData.cls();
+  }
 }

@@ -53,9 +53,9 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
 
     public removeEntity(d: BasicSceneEntity): void {
       this.mSceneEntities.remove(d);
+      d.onClear();
       d.scene = null;
       d.camera = null;
-      d.onClear();
     }
 
     public onFrame(): void {
@@ -188,5 +188,10 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             return true;
         }
         return false;
+    }
+
+    public onClear(): void {
+        this.showBitmapData.cls();
+        this.memoryBitmapData.cls();
     }
 }
