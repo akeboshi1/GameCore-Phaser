@@ -139,6 +139,10 @@ export class Tool extends BaseSingleton {
      */
     public formatLeftTime(value: number): string {
 
+        if (value < 0) {
+            return "00:00";
+        }
+
         //Convert seconds into minutes and seconds
         let minutes = Math.floor(value / 60);
         let seconds = Math.floor(value) - (60 * minutes);
@@ -150,6 +154,22 @@ export class Tool extends BaseSingleton {
         result += (seconds < 10) ? ":0" + seconds : ":" + seconds;
 
         return result;
+    }
+
+    // add space ecah n characters
+    protected chunk(str, n) {
+        let result = [];
+        for (let i = 0; i < str.length; i += n) {
+            result.push(str.substr(i, n));
+        }
+        return result;
+    }
+
+    public formatChinese(text, lineWidth: number) {
+        let fontSize = text.fontSize;
+        let context = text.text;
+        let wrapWidth = Math.floor(lineWidth / fontSize);
+        text.setText(this.chunk(context, wrapWidth).join(" "));
     }
 
 }

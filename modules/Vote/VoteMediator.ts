@@ -1,31 +1,55 @@
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {VoteView} from "./view/VoteView";
-import {op_client, op_gameconfig, op_virtual_world} from "../../../protocol/protocols";
-import {ElementInfo} from "../../common/struct/ElementInfo";
+import {op_client, op_virtual_world} from "../../../protocol/protocols";
 import Globals from "../../Globals";
-import {StorageListItem} from "../Storage/view/item/StorageListItem";
 import {PBpacket} from "net-socket-packet";
-import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
-import {UIEvents} from "../../base/component/event/UIEvents";
 import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 import {VoteListItem} from "./view/item/VoteListItem";
+import {Tick} from "../../common/tick/Tick";
 
 export class VoteMediator extends MediatorBase {
+  private mTick: Tick;
   private get view(): VoteView {
     return this.viewComponent as VoteView;
   }
 
   public onRegister(): void {
-    super.onRegister();
+      super.onRegister();
       this.initView();
       this.view.m_Bt.on("up", this.onBtUp, this);
+
+      this.mTick = new Tick(60);
+      this.mTick.setRenderCallBack(this.onFrame, this);
+      this.mTick.start();
   }
 
-    private onBtUp(): void {
-        let item = this.view.m_List.selectItem;
+    public onFrame(): void {
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+        if (param.time.length > 0) {
+            let leftT = param.time[0] - Globals.DataCenter.getCurrentTime();
+            this.view.m_TimeTxt.text = Globals.Tool.formatLeftTime(leftT / 1000);
+        }
+        let len = this.view.m_List.getLength();
+        let item: VoteListItem;
+        for (let i = 0; i < len; i++) {
+            item = this.view.m_List.getItem(i) as VoteListItem;
+            item.m_Avatar.onFrame();
+        }
+    }
 
-        if (item === undefined || item == null) {
-          return;
+    private onBtUp(): void {
+        let len = this.view.m_List.getLength();
+        let item: VoteListItem;
+        let selectIds: number[] = [];
+        for (let i = 0; i < len; i++) {
+            item = this.view.m_List.getItem(i) as VoteListItem;
+            if (item.getSelect()) {
+                selectIds.push(item.data.id);
+            }
+        }
+
+        if (selectIds.length === 0) {
+            return;
         }
 
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
@@ -33,10 +57,9 @@ export class VoteMediator extends MediatorBase {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
         content.uiId = param.id;
-        content.data = [item.data.id];
+        content.data = selectIds;
 
         Globals.SocketManager.send(pkt);
-        Globals.ModuleManager.destroyModule(ModuleTypeEnum.STORAGE);
     }
 
     private initView(): void {
@@ -63,6 +86,16 @@ export class VoteMediator extends MediatorBase {
     }
 
   public onRemove(): void {
-    super.onRemove();
+      let len = this.view.m_List.getLength();
+      let item: VoteListItem;
+      for (let i = 0; i < len; i++) {
+          item = this.view.m_List.getItem(i) as VoteListItem;
+          item.onDispose();
+      }
+      if (this.mTick) {
+          this.mTick.onDispose();
+          this.mTick = null;
+      }
+      super.onRemove();
   }
 }

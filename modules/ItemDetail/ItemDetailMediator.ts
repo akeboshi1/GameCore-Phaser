@@ -35,9 +35,9 @@ export class ItemDetailMediator extends MediatorBase {
           this.view.m_Icon.load(param.display[0]);
       }
 
-      let len = param.text.length;
-      for (let i = 0; i < len; i++) {
-        this.view.m_Text.text += param.text[i].text + "\n";
+      if (param.text.length > 0) {
+          this.view.m_Text.text = param.text[0].text;
+          Globals.Tool.formatChinese(this.view.m_Text, 608);
       }
 
       if (param.button.length > 0) {

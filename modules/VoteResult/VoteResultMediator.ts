@@ -3,8 +3,10 @@ import {VoteResultView} from "./view/VoteResultView";
 import {op_client} from "../../../protocol/protocols";
 import Globals from "../../Globals";
 import {VoteResultListItem} from "./view/item/VoteResultListItem";
+import {Tick} from "../../common/tick/Tick";
 
 export class VoteResultMediator extends MediatorBase {
+  private mTick: Tick;
   private get view(): VoteResultView {
     return this.viewComponent as VoteResultView;
   }
@@ -12,14 +14,26 @@ export class VoteResultMediator extends MediatorBase {
   public onRegister(): void {
     super.onRegister();
       this.initView();
+
+      this.mTick = new Tick(60);
+      this.mTick.setRenderCallBack(this.onFrame, this);
+      this.mTick.start();
   }
+
+    public onFrame(): void {
+        let len = this.view.m_List.getLength();
+        let item: VoteResultListItem;
+        for (let i = 0; i < len; i++) {
+            item = this.view.m_List.getItem(i) as VoteResultListItem;
+            item.m_Avatar.onFrame();
+        }
+    }
 
     private initView(): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
         this.renderList(param);
-        let len = param.text.length;
-        for (let i = 0; i < len; i++) {
-            this.view.m_Desc.text += param.text[i].text + "\n";
+        if (param.text.length > 0) {
+            this.view.setDesc(param.text[0].text);
         }
     }
 
@@ -36,6 +50,16 @@ export class VoteResultMediator extends MediatorBase {
     }
 
   public onRemove(): void {
-    super.onRemove();
+      let len = this.view.m_List.getLength();
+      let item: VoteResultListItem;
+      for (let i = 0; i < len; i++) {
+          item = this.view.m_List.getItem(i) as VoteResultListItem;
+          item.onDispose();
+      }
+      if (this.mTick) {
+          this.mTick.onDispose();
+          this.mTick = null;
+      }
+      super.onRemove();
   }
 }

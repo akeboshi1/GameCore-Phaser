@@ -33,7 +33,7 @@ export class ChatMediator extends MediatorBase {
         let txt: op_gameconfig_01.Text = new op_gameconfig_01.Text();
         txt.text = "选择角色";
         let txt1: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt1.text = "从前有座山山上有座庙，庙里有和尚来讲故事";
+        txt1.text = "从前有座山山上有座庙，庙里有和尚来？";
         param.text = [txt, txt1];
 
         Globals.ModuleManager.openModule(ModuleTypeEnum.CONTROLF, param);
@@ -47,7 +47,7 @@ export class ChatMediator extends MediatorBase {
         let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
         animation.baseLoc = "-102,-149";
         animation.collisionArea = "1,1,1,1&1,1,1,1&1,1,1,1&1,1,1,1";
-        animation.frame = [0];
+        animation.frame = [0];2
         animation.frameRate = 12;
         animation.name = "idle";
         animation.originPoint = [3, 3];
@@ -55,10 +55,8 @@ export class ChatMediator extends MediatorBase {
         animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
 
         let txt: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt.text = "这是个炸弹";
-        let txt1: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt1.text = "从前有座山山上有座庙，庙里有和尚来讲故事，我们速度快没时间啊啊啦访问量可问撒旦法文峰";
-        param.text = [txt, txt1];
+        txt.text = "这是个炸弹,从前有座山山上有座庙，庙里有和尚来讲故事，我们速度快没时间啊啊啦访问量可问撒旦法文峰";
+        param.text = [txt];
         let bt: op_gameconfig_01.Button = new op_gameconfig_01.Button();
         bt.text = "获取";
         param.button = [bt];
@@ -74,8 +72,8 @@ export class ChatMediator extends MediatorBase {
         actor.name = "剧本角色";
         let avatar: op_gameconfig.Avatar = new op_gameconfig.Avatar();
         avatar.id = "10000";
-        avatar.bodyBaseId = avatar.farmBaseId = avatar.barmBaseId = avatar.blegBaseId = avatar.flegBaseId = avatar.headBaseId = avatar.headEyesId = "1";
-        avatar.bodyCostId = avatar.farmCostId = avatar.barmCostId = avatar.blegCostId = avatar.flegCostId = avatar.headHairId = "5";
+        avatar.bodyBaseId = avatar.farmBaseId = avatar.barmBaseId = avatar.blegBaseId = avatar.flegBaseId = avatar.headBaseId = avatar.headEyesId = "0001";
+        avatar.bodyCostId = avatar.farmCostId = avatar.barmCostId = avatar.blegCostId = avatar.flegCostId = avatar.headHairId = "0005";
         actor.avatar = avatar;
         param.actors = [actor, actor, actor, actor, actor, actor, actor, actor];
 
@@ -97,20 +95,26 @@ export class ChatMediator extends MediatorBase {
         actor.camp = "真凶";
         let avatar: op_gameconfig.Avatar = new op_gameconfig.Avatar();
         avatar.id = "10000";
-        avatar.bodyBaseId = avatar.farmBaseId = avatar.barmBaseId = avatar.blegBaseId = avatar.flegBaseId = avatar.headBaseId = avatar.headEyesId = "1";
-        avatar.bodyCostId = avatar.farmCostId = avatar.barmCostId = avatar.blegCostId = avatar.flegCostId = avatar.headHairId = "5";
+        avatar.bodyBaseId = avatar.farmBaseId = avatar.barmBaseId = avatar.blegBaseId = avatar.flegBaseId = avatar.headBaseId = avatar.headEyesId = "0001";
+        avatar.bodyCostId = avatar.farmCostId = avatar.barmCostId = avatar.blegCostId = avatar.flegCostId = avatar.headHairId = "0005";
         actor.avatar = avatar;
-        param.actors = [actor, actor, actor, actor, actor, actor, actor, actor];
+
+        let actor1: op_client.Actor = new op_client.Actor();
+        actor1.id = 2;
+        actor1.name = "剧本角色";
+        actor1.camp = "假凶";
+        actor1.avatar = avatar;
+        param.actors = [actor1, actor, actor1, actor1, actor1, actor, actor1, actor1];
 
         let txt: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt.text = "完整剧情";
-        let txt1: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt1.text = "从前有座山山上有座庙，庙里有和尚来讲故事，我们速度快没时间啊啊啦访问量可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大，" +
-            "三打打飞机撒富士达撒打飞机爱舒服卡";
-        let txt2: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt2.text = "斯蒂芬是的圣诞节说的，戊二醛你男人二位，沃尔沃乔纳森打飞机就排名玩儿莫文蔚玩儿玩儿，似懂非懂洒而威尔水电费是，" +
-            "破我完全日文阿斯蒂芬家使得房价斯蒂";
-        param.text = [txt, txt1, txt2];
+        txt.text = "从前有座山山上有座庙，庙里有和尚来讲故事，我们速度快没时间啊啊啦访问量可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡我们速度快没时间啊啊啦访问量" +
+            "可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大" +
+            "可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大" +
+            "可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大" +
+            "可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大" +
+            "可问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大" +
+            "三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡问撒旦法文峰，斯蒂芬第三方斯蒂芬森大三打打飞机撒富士达撒打飞机爱舒服卡";
+        param.text = [txt];
 
         param.data = [0, 3, 0, 0, 5, 0, 0, 0];
 

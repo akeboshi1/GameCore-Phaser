@@ -1,4 +1,5 @@
 import NineSliceCacheData = PhaserNineSlice.NineSliceCacheData;
+import {CustomWebFonts} from "../../../Assets";
 
 export class NiceSliceButton extends Phaser.Group {
     protected mOverFrame: PhaserNineSlice.NineSlice;
@@ -27,7 +28,7 @@ export class NiceSliceButton extends Phaser.Group {
         this.add(this.mOutFrame);
         this.add(this.mDownFrame);
 
-        this.mText = this.game.make.text(0, 0, "", {fontSize: fontSize || 12, fill: "#000", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.mText = this.game.make.text(0, 0, "", {font: (fontSize > 0 ? fontSize : 12) + "px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#000", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add(this.mText);
         this.setText(text);
 
@@ -47,7 +48,7 @@ export class NiceSliceButton extends Phaser.Group {
             this.mText.text = value;
         }
         this.mText.x = (this.width - this.mText.width) >> 1;
-        this.mText.y = (this.height - this.mText.height) >> 1;
+        this.mText.y = ((this.height - this.mText.height) >> 1) + 4;
     }
 
     public on(name: string, callback: Function, context?: any) {
