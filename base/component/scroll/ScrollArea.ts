@@ -198,7 +198,7 @@ export class ScrollArea extends Phaser.Group {
             this.scrollTween.pause();
         }
 
-        if (this.maskGraphics.getBounds().contains(this.game.input.x, this.game.input.y)) {
+        if (this.game && this.game.input && this.maskGraphics.getBounds().contains(this.game.input.x, this.game.input.y)) {
             this.startedInside = true;
 
             this.startX = this.inputX = this.game.input.x;
