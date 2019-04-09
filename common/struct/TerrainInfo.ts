@@ -4,6 +4,8 @@ import Globals from "../../Globals";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 
 export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
+  public id: number;
+
   public name: string;
 
   public des: string;
@@ -72,7 +74,7 @@ export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
   }
 
   public get uid(): number {
-    return Globals.Room45Util.getUid(this.col, this.row);
+    return this.id;
   }
 
   private setArea(): void {
