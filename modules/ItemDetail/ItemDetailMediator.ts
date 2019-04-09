@@ -1,10 +1,8 @@
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {ItemDetailView} from "./view/ItemDetailView";
-import {op_client, op_gameconfig, op_gameconfig_01, op_virtual_world} from "../../../protocol/protocols";
-import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
+import {op_client, op_virtual_world} from "../../../protocol/protocols";
 import {PBpacket} from "net-socket-packet";
 import Globals from "../../Globals";
-import {ElementInfo} from "../../common/struct/ElementInfo";
 import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 
 export class ItemDetailMediator extends MediatorBase {
@@ -33,7 +31,9 @@ export class ItemDetailMediator extends MediatorBase {
   private initView(): void {
       let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
 
-      this.view.m_Icon.load(param.display[0]);
+      if (param.display.length > 0) {
+          this.view.m_Icon.load(param.display[0]);
+      }
 
       let len = param.text.length;
       for (let i = 0; i < len; i++) {

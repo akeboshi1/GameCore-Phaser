@@ -254,6 +254,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         let moduleName: string = info.name;
         let module: IModule = this.getModule(moduleName);
         if (module) {
+            module.setParam(info.data);
             module.recover();
         } else {
             if (info.loadList === undefined) {
