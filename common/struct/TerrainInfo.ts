@@ -25,7 +25,6 @@ export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
   public display: op_gameconfig.IDisplay;
 
   public walkableArea: string;
-  public originWalkablePoint: Phaser.Point;
   public collisionArea: string;
   public originCollisionPoint: Phaser.Point;
 
@@ -73,8 +72,8 @@ export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
     this.setArea();
   }
 
-  public get uid(): number {
-    return this.id;
+  public get uid(): string {
+    return Globals.Room45Util.getUid(this.col, this.row);
   }
 
   private setArea(): void {

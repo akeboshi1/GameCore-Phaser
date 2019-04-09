@@ -11,7 +11,7 @@ import {IObjectPool} from "./pool/interfaces/IObjectPool";
 import {RecycleObject} from "./object/base/RecycleObject";
 
 export class BasicSceneEntity extends RecycleObject implements ITickedObject, IAnimatedObject, IQuadTreeNode {
-    public uid: number;
+    public uid: any;
     public elementTypeId = 0;
     public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
     public isValidDisplay = false;

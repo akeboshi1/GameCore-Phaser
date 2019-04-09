@@ -45,14 +45,20 @@ export class RoleBonesUIAvatar extends BasicUIAvatar {
     }
 
     public loadModel(model: op_gameconfig.IAvatar): void {
-        this.Loader.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        if (this.Loader) {
+            this.Loader.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        }
     }
 
     public onFrame(): void {
         super.onFrame();
-        this.Loader.onFrame();
+        if (this.Loader) {
+            this.Loader.onFrame();
+        }
         if (this.mAngleIndexDirty || this.mAnimationDirty) {
-          this.Loader.invalidAnimationControlFunc();
+            if (this.Loader) {
+                this.Loader.invalidAnimationControlFunc();
+            }
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;

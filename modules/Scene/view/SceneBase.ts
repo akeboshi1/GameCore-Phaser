@@ -102,7 +102,7 @@ export class SceneBase extends SceneBasic {
     this.terrainSceneLayer.insertEntity(sceneEntity, all);
   }
 
-  public removeTerrainElement(uid: number, all: boolean = false): BasicSceneEntity {
+  public removeTerrainElement(uid: string, all: boolean = false): BasicSceneEntity {
     let element: BasicSceneEntity = this.mSceneTerrains.getValue(uid) as BasicSceneEntity;
 
     if (!element) {

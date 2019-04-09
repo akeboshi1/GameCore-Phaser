@@ -17,8 +17,8 @@ export class Scene45Util extends BaseSingleton {
         super();
     }
 
-  public getUid(col: number, row: number): number {
-    return 10000 + col + row + row * this.cols;
+  public getUid(col: number, row: number): string {
+    return col + "&" + row;
   }
 
     // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层

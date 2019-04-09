@@ -7,7 +7,6 @@ import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export class BasicTerrain extends SceneEntity {
-
     public display: BasicElementAvatar;
     protected mAnimationDirty = false;
     protected mScaleX = 1;

@@ -375,7 +375,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @elementId elementId
    */
   private handleRemoveTerrain(value: any): void {
-    let uid: number = Globals.Room45Util.getUid(+value[0], +value[1]);
+    let uid: string = Globals.Room45Util.getUid(+value[0], +value[1]);
     this.view.removeTerrainElement(uid);
   }
 

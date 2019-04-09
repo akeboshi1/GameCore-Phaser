@@ -38,7 +38,7 @@ export class SceneView extends SceneBase {
         return element;
     }
 
-    public addTerrainElement(uid: number, elementData: any): BasicSceneEntity {
+    public addTerrainElement(uid: string, elementData: any): BasicSceneEntity {
 
       let element: BasicSceneEntity = this.m_TerrainPool.alloc() as BasicTerrain;
       if (null == element) {
@@ -51,7 +51,7 @@ export class SceneView extends SceneBase {
       return element;
     }
 
-  public insertTerrainElement(uid: number, elementData: any, all: boolean = false): BasicSceneEntity {
+  public insertTerrainElement(uid: string, elementData: any, all: boolean = false): BasicSceneEntity {
 
     let element: BasicSceneEntity = this.m_TerrainPool.alloc() as BasicTerrain;
     if (null == element) {
@@ -65,7 +65,7 @@ export class SceneView extends SceneBase {
     return element;
   }
 
-  public removeTerrainElement(uid: number, all: boolean = false): BasicSceneEntity {
+  public removeTerrainElement(uid: string, all: boolean = false): BasicSceneEntity {
     let element: BasicSceneEntity = super.removeTerrainElement(uid, all);
     if (element == null) return null;
     this.m_TerrainPool.free(element);
