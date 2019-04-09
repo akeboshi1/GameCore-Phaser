@@ -11,6 +11,8 @@ export class Module implements IModule {
     protected m_ModuleParam: any;
     protected m_Context: IModuleContext;
 
+    protected m_ParentContainer: Phaser.Group;
+
     public setParam(param: any) {
         this.m_ModuleParam = param;
     }
@@ -71,8 +73,13 @@ export class Module implements IModule {
     }
 
     public onDispose() {
-        if ( this.m_Context ) this.m_Context.dispose();
-        this.m_Context = null;
+        if ( this.m_Context ) {
+            this.m_Context.dispose();
+            this.m_Context = null;
+        }
+        if ( this.m_View ) {
+            this.m_View.onDispose();
+            this.m_View = null;
+        }
     }
-
 }

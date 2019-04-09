@@ -7,7 +7,8 @@ import {CommWindowModule} from "../../common/view/CommWindowModule";
 export class MainMenuModule extends CommWindowModule {
     public onStartUp(): void {
         this.m_View = new MainMenuView(Globals.game);
-        Globals.LayerManager.uiLayer.add( this.m_View );
+        this.m_ParentContainer = Globals.LayerManager.uiLayer;
+        this.m_ParentContainer.add( this.m_View );
         this.m_Context = new MainMenuContext(this.m_View);
     }
 }

@@ -8,6 +8,9 @@ export interface IModuleManager {
     /**创建模块**/
     openModule( moduleName: string, loadList?: IPhaserLoadList, param?: any);
 
+    /**关闭模块**/
+    closeModule( moduleName: string);
+
     /**销毁模块**/
     destroyModule( moduleName: string);
 }

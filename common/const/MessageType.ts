@@ -51,5 +51,14 @@ export class MessageType {
 
     public static DRAG_TO_DROP = "DRAG_TO_DROP";
     public static DRAG_OVER_DROP = "DRAG_OVER_DROP";
+
+    /**
+    * 模块视图添加到显示列表
+    */
+    public static MODULE_VIEW_ADD: string = "module_view_add";
+    /**
+     * 模块视图移除从显示列表
+     */
+    public static MODULE_VIEW_REM: string = "module_view_rem";
 }
 
