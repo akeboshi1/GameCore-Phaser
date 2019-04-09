@@ -33,6 +33,7 @@ export class ItemDetailView extends CommModalWindowView {
       this.m_Icon.y = this.height / 3;
       this.add(this.m_Icon);
       this.m_Text = this.game.make.text(this.width >> 1, this.height / 2, "", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
+      this.m_Text.setTextBounds(0, 0, this.width, this.height);
       this.add(this.m_Text);
 
       this.m_Bt = new NiceSliceButton(this.game, this.width >> 1, this.height * 2 / 3, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {

@@ -317,7 +317,14 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
             return;
         }
 
-        Globals.game.load.onLoadComplete.addOnce(callBack, thisObj);
+        Globals.game.load.onLoadComplete.addOnce(() => {
+            if (callBack != null) {
+                let cb: Function = callBack;
+                callBack = null;
+                cb.apply(thisObj);
+                thisObj = null;
+            }
+        }, this);
         Globals.game.load.start();
     }
 
