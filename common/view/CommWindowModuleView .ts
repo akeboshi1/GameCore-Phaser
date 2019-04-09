@@ -8,8 +8,8 @@ export class CommWindowModuleView extends ModuleViewBase {
     public m_Bg: PhaserNineSlice.NineSlice;
     public m_Title: Phaser.Text;
 
-    protected m_Width: number;
-    protected m_Height: number;
+    protected m_Width = 0;
+    protected m_Height = 0;
 
     constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer) {
         super(game, parent);

@@ -13,7 +13,6 @@ export class CommModalWindowView extends CommWindowModuleView {
     }
 
     public onResize(): void {
-        super.onResize();
         this.graphics.x = -this.x;
         this.graphics.y = -this.y;
     }

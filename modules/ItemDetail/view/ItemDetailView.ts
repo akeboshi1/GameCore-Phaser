@@ -1,5 +1,5 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
-import {UI} from "../../../Assets";
+import {CustomWebFonts, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
@@ -28,15 +28,18 @@ export class ItemDetailView extends CommModalWindowView {
           , 1, 0 , 2);
       this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
+
       this.m_Icon = new BaseIcon(this.game);
       this.m_Icon.x = this.width >> 1;
-      this.m_Icon.y = this.height / 3;
+      this.m_Icon.y = (this.height / 4);
+      this.m_Icon.anchor.set(0.5);
       this.add(this.m_Icon);
-      this.m_Text = this.game.make.text(this.width >> 1, this.height / 2, "", {fontSize: 24, fill: "#FFF", boundsAlignH: "center", boundsAlignV: "middle"});
-      this.m_Text.setTextBounds(0, 0, this.width, this.height);
+
+      this.m_Text = this.game.make.text(this.width >> 1, this.height >> 1, "", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF", align: "left", wordWrap: true, wordWrapWidth: 600});
+      this.m_Text.anchor.set(0.5, 0.5);
       this.add(this.m_Text);
 
-      this.m_Bt = new NiceSliceButton(this.game, this.width >> 1, this.height * 2 / 3, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+      this.m_Bt = new NiceSliceButton(this.game, (this.width - 110) >> 1, this.height * 3 / 4, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
           top: 7,
           bottom: 7,
           left: 7,
@@ -44,4 +47,5 @@ export class ItemDetailView extends CommModalWindowView {
       }, "获取", 24);
       this.add(this.m_Bt);
   }
+
 }
