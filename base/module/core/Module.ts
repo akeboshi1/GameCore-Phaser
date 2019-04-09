@@ -2,6 +2,8 @@ import "phaser-ce";
 import {IModule} from "../interfaces/IModule";
 import {Const} from "../../../common/const/Const";
 import {IModuleContext} from "../interfaces/IModuleContext";
+import {IAnimatedObject} from "../../IAnimatedObject";
+import {IDisposeObject} from "../../object/interfaces/IDisposeObject";
 
 export class Module implements IModule {
     protected m_Name: string;
@@ -77,9 +79,9 @@ export class Module implements IModule {
             this.m_Context.dispose();
             this.m_Context = null;
         }
-        if ( this.m_View ) {
+        if ( this.m_View && (this.m_View as IDisposeObject).onDispose !== undefined) {
             this.m_View.onDispose();
-            this.m_View = null;
         }
+        this.m_View = null;
     }
 }
