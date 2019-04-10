@@ -1,4 +1,4 @@
-import {op_client, op_gameconfig} from "../../../protocol/protocols";
+import {op_client, op_gameconfig} from "pixelpai_proto";
 import IElement = op_client.IElement;
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 

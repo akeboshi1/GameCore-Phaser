@@ -3,7 +3,6 @@
  * author aaron
  */
 import BaseSingleton from "../../base/BaseSingleton";
-import {GameConfig} from "../../GameConfig";
 
 export class LayerManager extends BaseSingleton {
   public container: Phaser.Group;

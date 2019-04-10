@@ -1,10 +1,8 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {PBpacket} from "net-socket-packet";
-import {op_virtual_world} from "../../../protocol/protocols";
+import {op_virtual_world} from "pixelpai_proto";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT;
-import {SceneBasic} from "../../modules/Scene/view/SceneBasic";
-import {GameConfig} from "../../GameConfig";
 
 export class MouseMod extends BaseSingleton {
     private game: Phaser.Game;

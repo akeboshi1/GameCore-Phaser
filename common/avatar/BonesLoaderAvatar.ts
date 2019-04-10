@@ -8,7 +8,7 @@ import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import Slot = dragonBones.Slot;
 import {GameConfig} from "../../GameConfig";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
-import {op_gameconfig} from "../../../protocol/protocols";
+import {op_gameconfig} from "pixelpai_proto";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject, IRecycleObject {
     private static readonly BONES_SCALE: number = 1;

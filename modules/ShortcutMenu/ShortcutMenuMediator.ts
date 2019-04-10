@@ -2,13 +2,10 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {ShortcutMenuView} from "./view/ShortcutMenuView";
 import Globals from "../../Globals";
 import {MessageType} from "../../common/const/MessageType";
-import {op_gameconfig} from "../../../protocol/protocols";
+import {op_gameconfig} from "pixelpai_proto";
 import {ShortcutMenuListItem} from "./view/item/ShortcutMenuListItem";
-import {IImageResource, INineSliceImageResource, ISheetResource} from "../../interface/IPhaserLoadList";
-import {UI} from "../../Assets";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 import {UIEvents} from "../../base/component/event/UIEvents";
-import {BagListItem} from "../Bag/view/item/BagListItem";
 import {IDragable} from "../../base/drag/interfaces/IDragable";
 import {IDropable} from "../../base/drag/interfaces/IDropable";
 import {Log} from "../../Log";
@@ -18,19 +15,19 @@ import DragType = Const.DragType;
 
 export class ShortcutMenuMediator extends MediatorBase {
 
-  private get view(): ShortcutMenuView {
-    return this.viewComponent as ShortcutMenuView;
-  }
+    private get view(): ShortcutMenuView {
+        return this.viewComponent as ShortcutMenuView;
+    }
 
-  public onRegister(): void {
-      super.onRegister();
-      if (Globals.DataCenter.PlayerData.initialize) {
-          this.initView();
-      } else {
-          Globals.MessageCenter.on(MessageType.PLAYER_DATA_INITIALIZE, this.handleInit, this);
-      }
-      this.addEvent();
-  }
+    public onRegister(): void {
+        super.onRegister();
+        if (Globals.DataCenter.PlayerData.initialize) {
+            this.initView();
+        } else {
+            Globals.MessageCenter.on(MessageType.PLAYER_DATA_INITIALIZE, this.handleInit, this);
+        }
+        this.addEvent();
+    }
 
     protected handleDrop(value: any): void {
         let drag: IDragable = value[0];
@@ -52,7 +49,7 @@ export class ShortcutMenuMediator extends MediatorBase {
     }
 
     private onListItemUp(item: ShortcutMenuListItem): void {
-        if (Phaser.Rectangle.contains(item.icon.getBound(), Globals.game.input.activePointer.x, Globals.game.input.activePointer.y)){
+        if (Phaser.Rectangle.contains(item.icon.getBound(), Globals.game.input.activePointer.x, Globals.game.input.activePointer.y)) {
             // Globals.ModuleManager.openModule(ModuleTypeEnum.ITEMDETAIL, {}, item.data);
         }
     }
@@ -84,8 +81,10 @@ export class ShortcutMenuMediator extends MediatorBase {
             animation.walkOriginPoint = [3, 3];
             animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
             pack.items[i].animations = [animation];
-            pack.items[i].display = {texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
-                 dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"};
+            pack.items[i].display = {
+                texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
+                dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"
+            };
             item.data = pack.items[i];
             this.view.m_List.addItem(item);
             Globals.DragManager.registerDrop(item.icon);

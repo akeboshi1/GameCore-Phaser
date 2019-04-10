@@ -5,7 +5,7 @@ import Globals from "../Globals";
 import {BasicAvatar} from "./BasicAvatar";
 import {IEntityComponent} from "./IEntityComponent";
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
-import {op_client} from "../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
 import {IObjectPool} from "./pool/interfaces/IObjectPool";
 import {RecycleObject} from "./object/base/RecycleObject";

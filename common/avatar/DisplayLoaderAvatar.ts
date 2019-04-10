@@ -1,6 +1,6 @@
 import {IAnimatedObject} from "../../base/IAnimatedObject";
 import {Load} from "../../Assets";
-import {op_gameconfig} from "../../../protocol/protocols";
+import {op_gameconfig} from "pixelpai_proto";
 import Globals from "../../Globals";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";

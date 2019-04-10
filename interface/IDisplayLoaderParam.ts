@@ -1,4 +1,4 @@
-import {op_gameconfig} from "../../protocol/protocols";
+import {op_gameconfig} from "pixelpai_proto";
 
 export class IDisplayLoaderParam {
   display: op_gameconfig.IDisplay;
