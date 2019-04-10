@@ -127,7 +127,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
       iAnimation = this.mLoadParam.animations[i];
       animation = this.animations.getAnimation(iAnimation.name);
       if (null == animation) {
-        this.animations.add(iAnimation.name, iAnimation.frame, iAnimation.frameRate, iAnimation.loop);
+        this.animations.add(iAnimation.name, iAnimation.frameName, iAnimation.frameRate, iAnimation.loop);
       }
     }
   }
