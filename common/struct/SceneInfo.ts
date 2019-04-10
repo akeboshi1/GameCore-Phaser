@@ -1,6 +1,6 @@
 import {TerrainInfo} from "./TerrainInfo";
 import {ElementInfo} from "./ElementInfo";
-import {op_client} from "pixelpai_proto";
+import {op_client, op_gameconfig} from "pixelpai_proto";
 
 export class SceneInfo {
 
@@ -110,6 +110,30 @@ export class SceneInfo {
             element.setInfo(elements[i]);
             this._elementConfig.push(element);
         }
+    }
+
+    public addElementPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
+        let element = this.getElementInfo(elementId);
+        if (element) {
+            if (!element.package) {
+                element.package = op_gameconfig.Package.create();
+            }
+            element.package.items = element.package.items.concat(items);
+        }
+    }
+
+    public removeElementPackItems(elementId: number, itemId: number): boolean {
+        let element = this.getElementInfo(elementId);
+        if (element) {
+            let len = element.package.items.length;
+            for (let i = 0; i < len; i++) {
+                if (itemId === element.package.items[i].id) {
+                    element.package.items.splice(i, 1);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public getElementInfo(value: number): ElementInfo {

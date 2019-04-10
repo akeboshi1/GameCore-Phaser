@@ -24,13 +24,6 @@ export class SelfRoleElement extends RoleElement {
             this.camera.unfollow();
         }
     }
-
-    protected onUpdating(deltaTime: number): void {
-        // Globals.Keyboard.onUpdate();
-        // Globals.MouseMod.onUpdate();
-      super.onUpdating(deltaTime);
-    }
-
     protected checkIsValidDisplayAvatar(): void {
         this.isValidDisplay = this.isCanShow;
     }

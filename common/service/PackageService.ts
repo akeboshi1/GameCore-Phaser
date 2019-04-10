@@ -28,11 +28,16 @@ class Handler extends BasePacketHandler {
 
     private handleAddItem(packet: PBpacket): void {
         let content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM = packet.content;
+        Globals.DataCenter.SceneData.mapInfo.addElementPackItems(content.elementid, content.item);
         Globals.MessageCenter.emit(MessageType.PACKAGE_ITEM_ADD, content);
     }
 
     private handleRemoveItem(packet: PBpacket): void {
         let content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM = packet.content;
+        let len = content.itemId.length;
+        for (let i = 0; i < len; i++) {
+            Globals.DataCenter.SceneData.mapInfo.removeElementPackItems(content.elementid, content.itemId[i]);
+        }
         Globals.MessageCenter.emit(MessageType.PACKAGE_ITEM_REMOVE, content);
     }
 

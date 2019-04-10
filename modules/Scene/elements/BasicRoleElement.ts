@@ -48,11 +48,6 @@ export class BasicRoleElement extends SceneEntity {
         (<RoleBonesAvatar>this.display).loadModel(model);
     }
 
-    // public updateCharacterSpeed(speed: number): void {
-    //     this.characterInfo.moveSpeed = speed;
-    //     this.mySpeed = this.characterInfo.moveSpeed;
-    // }
-
     protected invalidAnimation(): void {
         this.mAnimationDirty = true;
     }
@@ -100,20 +95,8 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected onUpdateByData(): void {
-        // this.mySpeed = this.characterInfo.moveSpeed;
-        this.onUpdateByDataForAvatar();
+        this.setAngleIndex(this.characterInfo.avatarDir);
+        (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
+        this.loadModel(this.characterInfo.avatar);
     }
-
-    protected onUpdateByDataForAvatar(): void {
-        // var avatar: RoleAvatarBasic = this.display as RoleAvatarBasic;
-        // avatar.changeAvatarModelByModeVO(this.characterInfo.model);
-    }
-
-    // protected onGridPositionChanged(colIndex: number, rowIndex: number): void {
-    //     let node: RoomNode = (<SceneView>this.scene).seaMapGrid.getNode(colIndex, rowIndex);
-    //
-    //     if (node) {
-    //         this.display.alpha = node.isMaskAlpha ? Const.GameConst.MASK_ALPHA : 1;
-    //     }
-    // }
 }
