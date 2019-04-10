@@ -16,8 +16,8 @@ export class ControlFView extends ModuleViewBase {
     }
 
     public onResize(): void {
-        this.x = Globals.DataCenter.PlayerData.mainPlayerInfo.x - 120;
-        this.y = Globals.DataCenter.PlayerData.mainPlayerInfo.y;
+        this.x = this.game.camera.x + (this.game.camera.width >> 1);
+        this.y = this.game.camera.y + (this.game.camera.height >> 1);
     }
 
     protected init(): void {
