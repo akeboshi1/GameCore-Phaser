@@ -79,20 +79,24 @@ export class ScrollArea extends Phaser.Group {
     }*/
 
     public start(): void {
-        this.game.input.onDown.add(this.beginMove, this);
-        this.game.input.addMoveCallback(this.moveCanvas, this);
-        this.game.input.onUp.add(this.endMove, this);
-        this.game.input.mouse.mouseWheelCallback = this.mouseWheel.bind(this);
+        if (this.game && this.game.input) {
+            this.game.input.onDown.add(this.beginMove, this);
+            this.game.input.addMoveCallback(this.moveCanvas, this);
+            this.game.input.onUp.add(this.endMove, this);
+            this.game.input.mouse.mouseWheelCallback = this.mouseWheel.bind(this);
+        }
     }
 
     public stop(): void {
-        this.game.input.onDown.remove(this.beginMove, this);
+        if (this.game && this.game.input) {
+            this.game.input.onDown.remove(this.beginMove, this);
 
-        this.game.input.deleteMoveCallback(this.moveCanvas, this);
+            this.game.input.deleteMoveCallback(this.moveCanvas, this);
 
-        this.game.input.onUp.remove(this.endMove, this);
+            this.game.input.onUp.remove(this.endMove, this);
 
-        this.game.input.mouse.mouseWheelCallback = null;
+            this.game.input.mouse.mouseWheelCallback = null;
+        }
     }
 
     public update(): void {

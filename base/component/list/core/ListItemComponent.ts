@@ -40,7 +40,6 @@ export class ListItemComponent extends Phaser.Group implements IListItemComponen
 
     public onDispose() {
         this.onClear();
-        this.removeAll(true);
     }
 
     public setEnable(value: boolean) {

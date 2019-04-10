@@ -4,7 +4,6 @@
  */
 import BaseSingleton from "../../base/BaseSingleton";
 import {Tick} from "../tick/Tick";
-import {Log} from "../../Log";
 
 export class TickManager extends BaseSingleton {
 

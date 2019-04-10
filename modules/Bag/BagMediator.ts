@@ -5,14 +5,12 @@ import Globals from "../../Globals";
 import {MessageType} from "../../common/const/MessageType";
 import {IDragable} from "../../base/drag/interfaces/IDragable";
 import {IDropable} from "../../base/drag/interfaces/IDropable";
-import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 import {Const} from "../../common/const/Const";
+import {Log} from "../../Log";
+import {op_gameconfig} from "pixelpai_proto";
+import {UIEvents} from "../../base/component/event/UIEvents";
 import DropType = Const.DropType;
 import DragType = Const.DragType;
-import {Log} from "../../Log";
-import {op_gameconfig} from "../../../protocol/protocols";
-import {ShortcutMenuListItem} from "../ShortcutMenu/view/item/ShortcutMenuListItem";
-import {UIEvents} from "../../base/component/event/UIEvents";
 
 export class BagMediator extends MediatorBase {
 

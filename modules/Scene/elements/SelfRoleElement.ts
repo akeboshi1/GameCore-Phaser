@@ -1,6 +1,4 @@
 import {RoleElement} from "./RoleElement";
-import Globals from "../../../Globals";
-import {Const} from "../../../common/const/Const";
 
 export class SelfRoleElement extends RoleElement {
     public constructor() {

@@ -10,13 +10,12 @@ import {Tick} from "../../common/tick/Tick";
 import {PBpacket} from "net-socket-packet";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import BasicElement from "./elements/BasicElement";
-import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
-import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
-import {op_client, op_editor} from "../../../protocol/protocols";
+import {op_client, op_editor} from "pixelpai_proto";
 import {ElementInfo} from "../../common/struct/ElementInfo";
-import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {Const} from "../../common/const/Const";
 import {MouseFollower} from "./view/MouseFollower";
+import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
+import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
 
 export class SceneEditorMediator extends SceneMediator {
   private mTick: Tick;

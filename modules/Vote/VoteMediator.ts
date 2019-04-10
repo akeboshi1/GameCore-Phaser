@@ -1,11 +1,11 @@
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {VoteView} from "./view/VoteView";
-import {op_client, op_virtual_world} from "../../../protocol/protocols";
+import {op_client, op_virtual_world} from "pixelpai_proto";
 import Globals from "../../Globals";
 import {PBpacket} from "net-socket-packet";
-import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 import {VoteListItem} from "./view/item/VoteListItem";
 import {Tick} from "../../common/tick/Tick";
+import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 
 export class VoteMediator extends MediatorBase {
   private mTick: Tick;
@@ -92,6 +92,9 @@ export class VoteMediator extends MediatorBase {
           item = this.view.m_List.getItem(i) as VoteListItem;
           item.onDispose();
       }
+      this.view.m_Bt.cancel("up", this.onBtUp, this);
+      this.view.m_Bt.destroy();
+      this.view.m_Bt = null;
       if (this.mTick) {
           this.mTick.onDispose();
           this.mTick = null;

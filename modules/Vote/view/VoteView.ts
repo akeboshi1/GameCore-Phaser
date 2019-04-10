@@ -30,9 +30,8 @@ export class VoteView extends CommModalWindowView {
     }
 
   protected init(): void {
-      this.m_CloseBt = this.game.make.button(this.width * 5 / 6, this.height / 8, UI.WindowClose.getName(), null, this
+      this.m_CloseBt = this.game.make.button(this.width * 5 / 6, this.height / 8, UI.WindowClose.getName(), this.onCloseClick, this
           , 1, 0 , 2);
-      this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
 
       this.m_Title = this.game.make.text(this.width >> 1, this.height / 8, "・疑凶投票・", {font: "36px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF"});
@@ -56,7 +55,7 @@ export class VoteView extends CommModalWindowView {
       this.m_LeftNumTxt = this.game.make.bitmapText(this.m_LeftText.x + 140, this.m_LeftText.y + 4, Font.NumsLatinUppercase.getName(), "0", 24);
       this.add(this.m_LeftNumTxt);
 
-      this.m_Bt = new NiceSliceButton(this.game, (this.width * 3 / 4) + 38, this.m_LeftNumTxt.y - 68, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+      this.m_Bt = new NiceSliceButton(this.game, (this.width * 3 / 4) + 18, this.m_LeftNumTxt.y - 68, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
           top: 7,
           bottom: 7,
           left: 7,

@@ -19,16 +19,20 @@ export class NiceSliceButton extends Phaser.Group {
 
         this.inputEnableChildren = true;
         this.mOverFrame = new PhaserNineSlice.NineSlice(game, 0, 0, key, overFrame, width, height, data);
+        this.mOverFrame.inputEnabled = true;
         this.mOverFrame.visible = false;
         this.mOutFrame = new PhaserNineSlice.NineSlice(game, 0, 0, key, outFrame, width, height, data);
+        this.mOutFrame.inputEnabled = true;
         this.mOutFrame.visible = true;
         this.mDownFrame = new PhaserNineSlice.NineSlice(game, 0, 0, key, downFrame, width, height, data);
+        this.mDownFrame.inputEnabled = true;
         this.mDownFrame.visible = false;
         this.add(this.mOverFrame);
         this.add(this.mOutFrame);
         this.add(this.mDownFrame);
 
         this.mText = this.game.make.text(0, 0, "", {font: (fontSize > 0 ? fontSize : 12) + "px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#000", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.mText.inputEnabled = false;
         this.add(this.mText);
         this.setText(text);
 

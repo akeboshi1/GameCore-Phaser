@@ -1,5 +1,5 @@
 import {PBpacket} from "net-socket-packet";
-import { op_virtual_world} from "../../protocol/protocols";
+import { op_virtual_world} from "pixelpai_proto";
 import Globals from "../Globals";
 import {MessageType} from "../common/const/MessageType";
 

@@ -1,6 +1,6 @@
 import {TerrainInfo} from "./TerrainInfo";
 import {ElementInfo} from "./ElementInfo";
-import {op_client} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 
 export class SceneInfo {
 

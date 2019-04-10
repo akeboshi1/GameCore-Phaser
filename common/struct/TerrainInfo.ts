@@ -1,4 +1,4 @@
-import {op_client, op_gameconfig} from "../../../protocol/protocols";
+import {op_client, op_gameconfig} from "pixelpai_proto";
 import ITerrain = op_client.ITerrain;
 import Globals from "../../Globals";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";

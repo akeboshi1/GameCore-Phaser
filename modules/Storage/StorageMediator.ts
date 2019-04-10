@@ -2,12 +2,12 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {StorageView} from "./view/StorageView";
 import {StorageListItem} from "./view/item/StorageListItem";
 import Globals from "../../Globals";
-import {op_client, op_gameconfig, op_virtual_world} from "../../../protocol/protocols";
+import {op_client, op_gameconfig, op_virtual_world} from "pixelpai_proto";
 import {UIEvents} from "../../base/component/event/UIEvents";
 import {PBpacket} from "net-socket-packet";
-import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
+import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 
 export class StorageMediator extends MediatorBase {
 
@@ -62,8 +62,10 @@ export class StorageMediator extends MediatorBase {
             animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
             value[i].animations = [animation];
             value[i].animationName = "idle";
-            value[i].display = {texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
-                dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"};
+            value[i].display = {
+                texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
+                dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"
+            };
             item.data = value[i];
             this.view.m_List.addItem(item);
         }

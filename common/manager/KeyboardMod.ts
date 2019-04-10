@@ -1,15 +1,13 @@
 /**
  * author aaron
  */
-import {Log} from "../../Log";
-import Key = Phaser.Key;
 import BaseSingleton from "../../base/BaseSingleton";
 import {PBpacket} from "net-socket-packet";
-import {op_virtual_world} from "../../../protocol/protocols";
+import {op_virtual_world} from "pixelpai_proto";
 import Globals from "../../Globals";
-import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
-import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP;
 import {HashMap} from "../../base/ds/HashMap";
+import Key = Phaser.Key;
+import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
 
 export class KeyboardMod extends BaseSingleton {
     private game: Phaser.Game;
@@ -55,6 +53,7 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     protected keyList: Key[];
+
     protected addKeyEvent(key: Key): void {
         key.onDown.add(this.keyDownHandle, this);
         key.onUp.add(this.keyUpHandle, this);
@@ -121,7 +120,7 @@ export class KeyboardMod extends BaseSingleton {
         }
     }
 
-    public addListenerKeyUp(key: number, callBack: Function, context?: any, once?: boolean ): void {
+    public addListenerKeyUp(key: number, callBack: Function, context?: any, once?: boolean): void {
         let boo: boolean = this.keyUpHandleDic.has(key);
         let arr: any[];
         if (boo) {
@@ -149,7 +148,7 @@ export class KeyboardMod extends BaseSingleton {
         }
     }
 
-    public addListenerKeyDown(key: number, callBack: Function, context?: any, once?: boolean ): void {
+    public addListenerKeyDown(key: number, callBack: Function, context?: any, once?: boolean): void {
         let boo: boolean = this.keyDownHandleDic.has(key);
         let arr: any[];
         if (boo) {
@@ -178,6 +177,7 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     private tempKeys: string;
+
     protected onUpdate(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
@@ -190,12 +190,12 @@ export class KeyboardMod extends BaseSingleton {
         Globals.SocketManager.send(pkt);
     }
 
-    private keyDownHandle( key: Phaser.Key ): void {
+    private keyDownHandle(key: Phaser.Key): void {
         this.onUpdate();
         this.onDown(key.keyCode);
     }
 
-    private keyUpHandle( key: Phaser.Key ): void {
+    private keyUpHandle(key: Phaser.Key): void {
         this.onUpdate();
         this.onUp(key.keyCode);
     }
