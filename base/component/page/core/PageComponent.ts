@@ -160,7 +160,6 @@ export class PageComponent extends VisualComponent implements IPageComponent {
         this.m_LeftBtn.onInputDown.remove( this.onLeftHandle , this);
         this.m_RightBtn.onInputDown.remove( this.onRightHandle , this);
         this.m_LastBtn.onInputDown.remove( this.onLastHandle , this);
-        this.removeAll(true);
         for ( let name in this.signals ) {
             this.signals[name].removeAll( this );
             delete this.signals[name];

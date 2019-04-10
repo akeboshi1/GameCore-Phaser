@@ -57,6 +57,11 @@ export class VoteResultView extends CommModalWindowView {
       this.add(this.m_Tip);
   }
 
+    public onDispose(): void {
+        super.onDispose();
+        this.scroller.stop();
+    }
+
   public setDesc(value: string): void {
       this.m_Desc.text = value;
       Globals.Tool.formatChinese(this.m_Desc, 510);

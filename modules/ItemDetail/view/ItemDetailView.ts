@@ -1,7 +1,6 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
 import {CustomWebFonts, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
-import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 import {BaseIcon} from "../../../base/component/icon/BaseIcon";
 
@@ -24,7 +23,7 @@ export class ItemDetailView extends CommModalWindowView {
     }
 
   protected init(): void {
-      this.m_CloseBt = this.game.make.button(this.width - 30, 4, UI.WindowClose.getName(), null, this
+      this.m_CloseBt = this.game.make.button(this.width * 5 / 6, this.height / 8, UI.WindowClose.getName(), null, this
           , 1, 0 , 2);
       this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
@@ -47,5 +46,4 @@ export class ItemDetailView extends CommModalWindowView {
       }, "获取", 24);
       this.add(this.m_Bt);
   }
-
 }

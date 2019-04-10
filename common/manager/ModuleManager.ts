@@ -261,9 +261,15 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 module = this.linkModule(info);
                 module.startUp();
             } else {
-                module = this.linkModule(info);
                 this.loadModule(info, () => {
-                    module.startUp();
+                    module = this.getModule(moduleName);
+                    if (module) {
+                        module.setParam(info.data);
+                        module.recover();
+                    } else {
+                        module = this.linkModule(info);
+                        module.startUp();
+                    }
                 }, this);
             }
         }

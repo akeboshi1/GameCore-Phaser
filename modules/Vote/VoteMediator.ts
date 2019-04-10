@@ -92,6 +92,9 @@ export class VoteMediator extends MediatorBase {
           item = this.view.m_List.getItem(i) as VoteListItem;
           item.onDispose();
       }
+      this.view.m_Bt.cancel("up", this.onBtUp, this);
+      this.view.m_Bt.destroy();
+      this.view.m_Bt = null;
       if (this.mTick) {
           this.mTick.onDispose();
           this.mTick = null;
