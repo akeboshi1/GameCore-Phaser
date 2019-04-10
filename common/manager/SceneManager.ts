@@ -1,6 +1,5 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {SceneBasic} from "../../modules/Scene/view/SceneBasic";
-import {SceneView} from "../../modules/Scene/view/SceneView";
 
 export class SceneManager extends BaseSingleton {
     private mActivedScenesStack: Array<any> = [];

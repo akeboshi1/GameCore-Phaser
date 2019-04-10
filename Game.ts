@@ -16,7 +16,7 @@ import {MessageType} from "./common/const/MessageType";
 import {GameConfig} from "./GameConfig";
 import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
-import {op_virtual_world} from "../protocol/protocols";
+import {op_virtual_world} from "pixelpai_proto";
 import {IRectangle} from "./base/ds/IRectangle";
 
 export default class Game extends Phaser.Game implements IGame {

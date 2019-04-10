@@ -1,5 +1,5 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 
 export class BasePacketHandler extends PacketHandler {
     constructor() {

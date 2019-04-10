@@ -1,24 +1,25 @@
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {VoteResultView} from "./view/VoteResultView";
-import {op_client} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import Globals from "../../Globals";
 import {VoteResultListItem} from "./view/item/VoteResultListItem";
 import {Tick} from "../../common/tick/Tick";
 
 export class VoteResultMediator extends MediatorBase {
-  private mTick: Tick;
-  private get view(): VoteResultView {
-    return this.viewComponent as VoteResultView;
-  }
+    private mTick: Tick;
 
-  public onRegister(): void {
-    super.onRegister();
-      this.initView();
+    private get view(): VoteResultView {
+        return this.viewComponent as VoteResultView;
+    }
 
-      this.mTick = new Tick(60);
-      this.mTick.setRenderCallBack(this.onFrame, this);
-      this.mTick.start();
-  }
+    public onRegister(): void {
+        super.onRegister();
+        this.initView();
+
+        this.mTick = new Tick(60);
+        this.mTick.setRenderCallBack(this.onFrame, this);
+        this.mTick.start();
+    }
 
     public onFrame(): void {
         let len = this.view.m_List.getLength();
@@ -49,17 +50,17 @@ export class VoteResultMediator extends MediatorBase {
         }
     }
 
-  public onRemove(): void {
-      let len = this.view.m_List.getLength();
-      let item: VoteResultListItem;
-      for (let i = 0; i < len; i++) {
-          item = this.view.m_List.getItem(i) as VoteResultListItem;
-          item.onDispose();
-      }
-      if (this.mTick) {
-          this.mTick.onDispose();
-          this.mTick = null;
-      }
-      super.onRemove();
-  }
+    public onRemove(): void {
+        let len = this.view.m_List.getLength();
+        let item: VoteResultListItem;
+        for (let i = 0; i < len; i++) {
+            item = this.view.m_List.getItem(i) as VoteResultListItem;
+            item.onDispose();
+        }
+        if (this.mTick) {
+            this.mTick.onDispose();
+            this.mTick = null;
+        }
+        super.onRemove();
+    }
 }

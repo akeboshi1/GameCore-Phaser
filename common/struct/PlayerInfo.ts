@@ -1,6 +1,6 @@
-import {op_client, op_gameconfig} from "../../../protocol/protocols";
-import IActor = op_client.IActor;
+import {op_client, op_gameconfig} from "pixelpai_proto";
 import {SlotInfo} from "./SlotInfo";
+import IActor = op_client.IActor;
 
 export class PlayerInfo implements IActor {
     /** Character id. */
@@ -53,7 +53,7 @@ export class PlayerInfo implements IActor {
     public walkOriginPoint: number[];
 
     /** Actor slot */
-    public slot?: (op_gameconfig.ISlot[]|null);
+    public slot?: (op_gameconfig.ISlot[] | null);
 
     public uuid = 0; // 玩家ID
 

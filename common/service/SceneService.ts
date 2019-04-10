@@ -1,5 +1,5 @@
 import Globals from "../../Globals";
-import {op_client} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import {PBpacket} from "net-socket-packet";
 import BaseSingleton from "../../base/BaseSingleton";
 import {MessageType} from "../const/MessageType";
@@ -47,8 +47,8 @@ class Handler extends BasePacketHandler {
     }
 
     private handleMouseFollow(packet: PBpacket): void {
-      let follow: op_client.OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW = packet.content;
-      Globals.MessageCenter.emit(MessageType.SCENE_MOUSE_FOLLOW, follow);
+        let follow: op_client.OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW = packet.content;
+        Globals.MessageCenter.emit(MessageType.SCENE_MOUSE_FOLLOW, follow);
     }
 
     // 没想到吧，这是潘老板写的
@@ -134,9 +134,9 @@ class Handler extends BasePacketHandler {
     private handleAddTerrain(packet: PBpacket): void {
         let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_TERRAIN = packet.content;
         if (terrainData.all === true) {
-          Globals.MessageCenter.emit(MessageType.SCENE_ADD_ALL_TERRAIN, terrainData.terrain);
+            Globals.MessageCenter.emit(MessageType.SCENE_ADD_ALL_TERRAIN, terrainData.terrain);
         } else {
-          Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, [terrainData.terrain]);
+            Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, [terrainData.terrain]);
         }
     }
 

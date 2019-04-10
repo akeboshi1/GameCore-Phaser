@@ -1,6 +1,6 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {SceneInfo} from "../struct/SceneInfo";
-import {op_client, op_gateway} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
 

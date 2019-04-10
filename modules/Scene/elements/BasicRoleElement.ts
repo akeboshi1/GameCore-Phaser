@@ -4,8 +4,8 @@ import SceneEntity from "../view/SceneEntity";
 import Globals from "../../../Globals";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {op_gameconfig} from "pixelpai_proto";
 import GameConst = Const.GameConst;
-import {op_gameconfig} from "../../../../protocol/protocols";
 
 export class BasicRoleElement extends SceneEntity {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;

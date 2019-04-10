@@ -1,11 +1,9 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {MainPlayerInfo} from "../struct/MainPlayerInfo";
 import {PlayerInfo} from "../struct/PlayerInfo";
-import {Log} from "../../Log";
-import {op_client} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
-import {GameConfig} from "../../GameConfig";
 
 export class PlayerData extends BaseSingleton {
     private _initialize: boolean = false;

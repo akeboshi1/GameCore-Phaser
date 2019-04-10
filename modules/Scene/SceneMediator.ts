@@ -7,7 +7,7 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
-import {op_client, op_virtual_world} from "../../../protocol/protocols";
+import {op_client, op_virtual_world} from "pixelpai_proto";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {SceneLoader} from "./view/SceneLoader";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";

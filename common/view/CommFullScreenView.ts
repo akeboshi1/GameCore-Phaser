@@ -1,5 +1,4 @@
 import {ModuleViewBase} from "./ModuleViewBase";
-import {Const} from "../const/Const";
 import {GameConfig} from "../../GameConfig";
 
 export class CommFullScreenView  extends ModuleViewBase {

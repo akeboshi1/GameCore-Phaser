@@ -1,13 +1,6 @@
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
-import Globals from "../../../Globals";
-import {Const} from "../../../common/const/Const";
-import Point = Phaser.Point;
-import {op_client, op_virtual_world} from "../../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import Direction = op_client.Direction;
-import {Log} from "../../../Log";
-import KeyCode = op_virtual_world.KeyCode;
-import {GameConfig} from "../../../GameConfig";
-import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;

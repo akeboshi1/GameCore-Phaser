@@ -1,6 +1,6 @@
 import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {ControlFView} from "./view/ControlFView";
-import {op_client, op_virtual_world} from "../../../protocol/protocols";
+import {op_client, op_virtual_world} from "pixelpai_proto";
 import {PBpacket} from "net-socket-packet";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;

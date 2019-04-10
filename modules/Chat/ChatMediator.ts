@@ -2,10 +2,10 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {ChatView} from "./view/ChatView";
 import Globals from "../../Globals";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_gameconfig, op_gameconfig_01, op_virtual_world} from "../../../protocol/protocols";
+import {op_client, op_gameconfig, op_gameconfig_01, op_virtual_world} from "pixelpai_proto";
 import {MessageType} from "../../common/const/MessageType";
-import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT;
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
+import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT;
 
 export class ChatMediator extends MediatorBase {
     private get view(): ChatView {

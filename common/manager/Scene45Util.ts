@@ -1,8 +1,7 @@
 import BaseSingleton from "../../base/BaseSingleton";
-import Point = Phaser.Point;
 import Globals from "../../Globals";
+import Point = Phaser.Point;
 import Point3 = Phaser.Plugin.Isometric.Point3;
-import {Log} from "../../Log";
 
 export class Scene45Util extends BaseSingleton {
 

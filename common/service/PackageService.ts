@@ -1,7 +1,7 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
 import {BasePacketHandler} from "./BasePacketHandler";
-import {op_client} from "../../../protocol/protocols";
+import {op_client} from "pixelpai_proto";
 import {PBpacket} from "net-socket-packet";
 import {MessageType} from "../const/MessageType";
 
