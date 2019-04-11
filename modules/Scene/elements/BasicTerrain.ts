@@ -4,6 +4,8 @@ import {op_gameconfig} from "pixelpai_proto";
 import SceneEntity from "../view/SceneEntity";
 import {TerrainInfo} from "../../../common/struct/TerrainInfo";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import {Const} from "../../../common/const/Const";
+import GameConst = Const.GameConst;
 
 export class BasicTerrain extends SceneEntity {
     public display: BasicElementAvatar;
@@ -48,9 +50,7 @@ export class BasicTerrain extends SceneEntity {
         }
         let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
         let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
-        if (this.display && this.display.Loader) {
-          this._rect.setTo(_ox, _oy, this.display.Loader.width, this.display.Loader.height);
-        }
+        this._rect.setTo(_ox, _oy, GameConst.MAP_TILE_WIDTH, GameConst.MAP_TILE_HEIGHT + GameConst.MAP_TILE_DEPTH);
         return this._rect;
     }
 
