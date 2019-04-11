@@ -3,7 +3,8 @@ import {IDisposeObject} from "../../../base/object/interfaces/IDisposeObject";
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {ITickedObject} from "../../../base/ITickedObject";
 
-export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
+export class SceneBuffer implements  IDisposeObject, IAnimatedObject, ITickedObject {
+
     public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
         this.showBd = showBd;
         this.memoryBd = memoryBd;
@@ -64,6 +65,11 @@ export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.copyDirty = true;
+        this.onFrame();
+    }
+
+    public onTick(deltaTime: number): void {
+      this.onFrame();
     }
 
     public onFrame(): void {

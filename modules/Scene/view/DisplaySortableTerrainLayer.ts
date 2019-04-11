@@ -4,13 +4,6 @@ import {GameConfig} from "../../../GameConfig";
 import {SceneBuffer} from "./SceneBuffer";
 
 export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
-    protected mStaticContainer: Phaser.Image;
-    protected mAnimationContainer: Phaser.Sprite;
-    protected showBitmapData: Phaser.BitmapData;
-    protected memoryBitmapData: Phaser.BitmapData;
-    protected mCameraRect: Phaser.Rectangle;
-    protected testGraph: Phaser.Graphics;
-    private sceneBuffer: SceneBuffer;
 
     public constructor(game: Phaser.Game) {
         super(game);
@@ -34,6 +27,15 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         this.testGraph.fixedToCamera = true;
         this.add(this.testGraph);
     }
+    protected mStaticContainer: Phaser.Image;
+    protected mAnimationContainer: Phaser.Sprite;
+    protected showBitmapData: Phaser.BitmapData;
+    protected memoryBitmapData: Phaser.BitmapData;
+    protected mCameraRect: Phaser.Rectangle;
+    protected testGraph: Phaser.Graphics;
+    private sceneBuffer: SceneBuffer;
+
+    private newCameraRect: Phaser.Rectangle;
 
   public onInitialize(): void {
     this.mCameraRect = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
@@ -64,11 +66,10 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             entity.onFrame();
             entity = this.mSceneEntities.moveNext();
         }
-        this.sceneBuffer.onFrame();
     }
 
-    private newCameraRect: Phaser.Rectangle;
     public onTick(deltaTime: number): void {
+        this.sceneBuffer.onTick(deltaTime);
         if (this.sceneBuffer.copyDirty) {
             return;
         }
@@ -149,8 +150,6 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
                 this.sceneBuffer.draw(reDrawEntitys, this.mCameraRect, [], offsetX, offsetY);
             }
         }
-
-        // this.sceneBuffer.onTick(deltaTime);
     }
 
     protected isIntersectionRect(d: BasicSceneEntity, cRects: Phaser.Rectangle[]): boolean {
