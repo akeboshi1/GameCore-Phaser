@@ -1,4 +1,3 @@
-import Globals from "../Globals";
 import * as Assets from "../Assets";
 
 export default class Boot extends Phaser.State {
@@ -13,7 +12,6 @@ export default class Boot extends Phaser.State {
         // this.game.scale.pageAlignHorizontally = true;
         // this.game.scale.pageAlignVertically = true;
 
-        // Globals.game = this.game;
         this.game.state.start("preloader");
     }
 }

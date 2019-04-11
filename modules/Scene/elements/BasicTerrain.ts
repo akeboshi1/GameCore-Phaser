@@ -48,7 +48,9 @@ export class BasicTerrain extends SceneEntity {
         }
         let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
         let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
-        this._rect.setTo(_ox, _oy, this.display.Loader.width, this.display.Loader.height);
+        if (this.display && this.display.Loader) {
+          this._rect.setTo(_ox, _oy, this.display.Loader.width, this.display.Loader.height);
+        }
         return this._rect;
     }
 
