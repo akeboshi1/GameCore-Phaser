@@ -26,10 +26,7 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
         this.m_Light = this.game.make.image(0, 0, UI.VoteLight.getName());
         this.add(this.m_Light);
         this.m_Light.visible = false;
-        this.m_Avatar = this.displayPool.alloc() as RoleBonesUIAvatar;
-        if (null == this.m_Avatar) {
-            this.m_Avatar = new RoleBonesUIAvatar(Globals.game);
-        }
+        this.m_Avatar = new RoleBonesUIAvatar(Globals.game);
         this.m_Avatar.anchor.set(0.5);
         this.m_Avatar.scale.set(2, 2);
         this.m_Avatar.x = this.getWidth() >> 1;
@@ -42,11 +39,6 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
         this.m_Text.anchor.set(0.5);
         this.add(this.m_Text);
         super.init();
-    }
-
-    protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("RoleBonesUIAvatar");
-        return op;
     }
 
     private m_Select = false;
@@ -66,7 +58,9 @@ export class VoteListItem extends ListItemComponent implements IListItemComponen
     }
 
     public onDispose() {
-        this.m_Avatar.onClear();
+        this.remove(this.m_Avatar);
+        this.m_Avatar.onDispose();
+        this.m_Avatar = null;
         super.onDispose();
     }
 

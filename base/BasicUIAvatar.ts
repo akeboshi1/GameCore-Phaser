@@ -4,7 +4,7 @@ import {IDisposeObject} from "./object/interfaces/IDisposeObject";
 import {IRecycleObject} from "./object/interfaces/IRecycleObject";
 import {IObjectPool} from "./pool/interfaces/IObjectPool";
 
-export class BasicUIAvatar extends Phaser.Sprite implements IAnimatedObject, IEntityComponent, IDisposeObject, IRecycleObject {
+export class BasicUIAvatar extends Phaser.Sprite implements IAnimatedObject, IEntityComponent, IDisposeObject {
 
   protected mLoaderAvatar: IRecycleObject;
 
@@ -28,17 +28,17 @@ export class BasicUIAvatar extends Phaser.Sprite implements IAnimatedObject, IEn
   }
 
   public onDispose(): void {
-    this.onClear();
+    if (this.mLoaderAvatar) {
+        this.avatarPool.free(this.mLoaderAvatar);
+    }
+    this.mLoaderAvatar = null;
   }
 
   // IAnimatedObject Interface
   public onFrame(): void {
-
   }
 
   public onClear(): void {
-    this.avatarPool.free(this.mLoaderAvatar);
-    this.mLoaderAvatar = null;
   }
 
   protected onInitialize(): void {

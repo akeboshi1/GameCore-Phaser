@@ -1,11 +1,10 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
-import {PageComponent} from "../../../base/component/page/core/PageComponent";
 import {CustomWebFonts, Font, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteList} from "./VoteList";
-import {VoteListItem} from "./item/VoteListItem";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
+import {VoteListItem} from "./item/VoteListItem";
 
 export class VoteView extends CommModalWindowView {
 
@@ -62,5 +61,11 @@ export class VoteView extends CommModalWindowView {
           right: 7
       }, "确认投票", 24);
       this.add(this.m_Bt);
+  }
+
+  public onDispose(): void {
+      this.m_List.onDispose();
+      this.m_List = null;
+      super.onDispose();
   }
 }

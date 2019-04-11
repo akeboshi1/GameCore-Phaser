@@ -55,9 +55,8 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
 
     public removeEntity(d: BasicSceneEntity): void {
       this.mSceneEntities.remove(d);
-      d.onClear();
-      d.scene = null;
-      d.camera = null;
+      d.onDispose();
+      d = null;
     }
 
     public onFrame(): void {

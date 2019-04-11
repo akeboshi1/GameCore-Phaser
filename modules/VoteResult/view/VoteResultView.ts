@@ -58,8 +58,11 @@ export class VoteResultView extends CommModalWindowView {
   }
 
     public onDispose(): void {
-        super.onDispose();
+        this.m_List.onDispose();
+        this.m_List = null;
         this.scroller.stop();
+        this.scroller = null;
+        super.onDispose();
     }
 
   public setDesc(value: string): void {

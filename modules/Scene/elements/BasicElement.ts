@@ -46,16 +46,8 @@ export default class BasicElement extends SceneEntity {
         this.mAnimationDirty = true;
     }
 
-    protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
-        return op;
-    }
-
     protected createDisplay() {
-        let element = this.displayPool.alloc() as BasicElementAvatar;
-        if (null == element) {
-            element = new BasicElementAvatar(Globals.game);
-        }
+        let element = new BasicElementAvatar(Globals.game);
         return element;
     }
 

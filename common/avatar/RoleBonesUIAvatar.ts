@@ -101,4 +101,11 @@ export class RoleBonesUIAvatar extends BasicUIAvatar {
             this.Loader.visible = true;
         }
     }
+
+    public onDispose(): void {
+        if (this.contains(this.Loader)) {
+            this.removeChild(this.Loader);
+        }
+        super.onDispose();
+    }
 }

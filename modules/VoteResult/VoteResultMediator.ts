@@ -51,12 +51,6 @@ export class VoteResultMediator extends MediatorBase {
     }
 
     public onRemove(): void {
-        let len = this.view.m_List.getLength();
-        let item: VoteResultListItem;
-        for (let i = 0; i < len; i++) {
-            item = this.view.m_List.getItem(i) as VoteResultListItem;
-            item.onDispose();
-        }
         if (this.mTick) {
             this.mTick.onDispose();
             this.mTick = null;

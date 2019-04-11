@@ -530,12 +530,6 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         for (let obj of this.replaceArr) {
             this.replacePart(obj.slot, obj.part, obj.dir, obj.skin);
         }
-        this.replaceArr.splice(0);
-    }
-
-    protected getArmaturePool(value: string): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("PhaserArmatureDisplay_" + value);
-        return op;
     }
 
     protected init(): void {
@@ -546,27 +540,19 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             factory.parseDragonBonesData(dragonBonesData, this.myModel.id);
         }
 
-        this.armature = this.getArmaturePool(this.myModel.id).alloc();
-        if (null == this.armature) {
-            this.armature = factory.buildArmatureDisplay(GameConfig.ArmatureName, this.myModel.id);
-            this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
-        }
+        this.armature = factory.buildArmatureDisplay(GameConfig.ArmatureName, this.myModel.id);
+        this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
         this.add(this.armature);
     }
 
     protected closeLoadModel(): void {
         if (this.modelLoaded) {
             if (this.armature) {
-                this.kill();
-                if (this.armature.parent) {
-                    this.armature.parent.removeChild(this.armature);
-                }
-                this.getArmaturePool(this.myModel.id).free(this.armature);
+                this.armature.dispose(true);
                 this.armature = null;
             }
             this.mModelLoaded = false;
         }
-        this.replaceArr = [];
         this.myModelDirty = false;
     }
 
@@ -621,5 +607,11 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             dis.smoothed = false;
             slot.replaceDisplay(dis);
         }
+    }
+
+    private clearPart(soltName: string, soltDir: number): void {
+        let part: string = soltName.replace("$", soltDir.toString());
+        let slot: Slot = this.armature.armature.getSlot(part);
+        slot.display.loadTexture(null);
     }
 }

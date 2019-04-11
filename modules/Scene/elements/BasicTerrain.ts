@@ -23,11 +23,6 @@ export class BasicTerrain extends SceneEntity {
         return this.data;
     }
 
-    protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
-        return op;
-    }
-
     public setAnimation(value: string): void {
         // Log.trace("角度-->"+value);
         this.myAnimationName = value;
@@ -97,10 +92,7 @@ export class BasicTerrain extends SceneEntity {
     }
 
     protected createDisplay() {
-        let terrain = this.displayPool.alloc() as BasicElementAvatar;
-        if (null == terrain) {
-            terrain = new BasicElementAvatar(Globals.game);
-        }
+        let terrain = new BasicElementAvatar(Globals.game);
         return terrain;
     }
 
