@@ -100,10 +100,10 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       entity.onFrame();
       entity = this.mSceneEntities.moveNext();
     }
+    this.sceneBuffer.onFrame();
   }
 
   public onTick(deltaTime: number): void {
-    this.sceneBuffer.onTick(deltaTime);
     if (this.sceneBuffer.copyDirty) {
       return;
     }
