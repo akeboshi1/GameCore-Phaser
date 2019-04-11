@@ -83,7 +83,7 @@ export class ReferenceArea extends Phaser.Graphics {
         p2 = ReferenceArea.room45.tileToPixelCoords(x + 1, y);
         p3 = ReferenceArea.room45.tileToPixelCoords(x + 1, y + 1);
         p4 = ReferenceArea.room45.tileToPixelCoords(x, y + 1);
-        this.beginFill(this._color === -1 ? (this.areaArr[x][y] === 1 ?  0x00FF00 : 0xFF0000) : this._color, this._alpha === 0 ? 1 : this._alpha);
+        this.beginFill(this._color === -1 ? (this.areaArr[y][x] === 1 ?  0x00FF00 : 0xFF0000) : this._color, this._alpha === 0 ? 1 : this._alpha);
         ReferenceArea.poly.setTo([p1, p2, p3, p4]);
         this.drawPolygon(ReferenceArea.poly.points);
       }
