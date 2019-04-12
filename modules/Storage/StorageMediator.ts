@@ -8,6 +8,7 @@ import {PBpacket} from "net-socket-packet";
 import {ElementInfo} from "../../common/struct/ElementInfo";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
+import {Log} from "../../Log";
 
 export class StorageMediator extends MediatorBase {
 
@@ -24,14 +25,15 @@ export class StorageMediator extends MediatorBase {
     private onListItemUp(item: StorageListItem): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
         let elementInfo: ElementInfo = Globals.DataCenter.SceneData.mapInfo.getElementInfo(param.id);
+        if (elementInfo) {
+            let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+            let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+            content.uiId = elementInfo.package.id;
+            content.componentId = item.data.id;
 
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
-        let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
-        content.uiId = elementInfo.package.id;
-        content.componentId = item.data.id;
-
-        Globals.SocketManager.send(pkt);
-        Globals.ModuleManager.destroyModule(ModuleTypeEnum.STORAGE);
+            Globals.SocketManager.send(pkt);
+            Globals.ModuleManager.destroyModule(ModuleTypeEnum.STORAGE);
+        }
     }
 
     private initView(): void {
