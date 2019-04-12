@@ -4,6 +4,7 @@ import {Const} from "../const/Const";
 import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {op_gameconfig} from "pixelpai_proto";
+import {Log} from "../../Log";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
@@ -13,6 +14,10 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mAnimationDirty = false;
     protected mHeadName: Phaser.Text;
+
+    public constructor(game: Phaser.Game) {
+        super(game);
+    }
 
     public get angleIndex(): number {
         return this.mAngleIndex;
@@ -41,42 +46,28 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mHeadName.fill = color;
     }
 
-    protected get avatarPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BonesLoaderAvatar");
-        return op;
-    }
-
     public loadModel(model: op_gameconfig.IAvatar): void {
-        this.Loader.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        this.mLoaderAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
     public onFrame(): void {
         super.onFrame();
-        this.Loader.onFrame();
+        this.mLoaderAvatar.onFrame();
         if (this.mAngleIndexDirty || this.mAnimationDirty) {
-          this.Loader.invalidAnimationControlFunc();
+          this.mLoaderAvatar.invalidAnimationControlFunc();
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
     }
 
-    public get Loader(): BonesLoaderAvatar {
-        return this.mLoaderAvatar as BonesLoaderAvatar;
-    }
-
     protected onInitialize(): void {
-        this.mLoaderAvatar = this.avatarPool.alloc() as BonesLoaderAvatar;
-        if (null == this.mLoaderAvatar) {
-            this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
-        }
-        this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.Loader.visible = false;
-        this.addChild(this.Loader);
+        this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
+        this.mLoaderAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
+        this.mLoaderAvatar.visible = false;
+        this.addChild(this.mLoaderAvatar);
 
-        if (this.mHeadName === undefined) {
-            this.mHeadName = Globals.game.make.text(-12, -96, "" , {fontSize: 12});
-            this.addChild(this.mHeadName);
-        }
+        this.mHeadName = Globals.game.make.text(-12, -96, "" , {fontSize: 12});
+        this.addChild(this.mHeadName);
     }
 
     protected onInitializeComplete(): void {
@@ -98,8 +89,17 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        if (this.Loader) {
-            this.Loader.visible = true;
+        if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.visible = true;
         }
+    }
+
+    public onDispose(): void {
+        this.mHeadName.text = "";
+        if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.onDispose();
+            this.mLoaderAvatar = null;
+        }
+        super.onDispose();
     }
 }

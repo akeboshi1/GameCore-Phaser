@@ -1,72 +1,57 @@
 import {IAnimatedObject} from "./IAnimatedObject";
 import {IEntityComponent} from "./IEntityComponent";
 import {IDisposeObject} from "./object/interfaces/IDisposeObject";
-import {IRecycleObject} from "./object/interfaces/IRecycleObject";
-import {IObjectPool} from "./pool/interfaces/IObjectPool";
-import Globals from "../Globals";
-import {DisplayLoaderAvatar} from "../common/avatar/DisplayLoaderAvatar";
 
-export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent, IDisposeObject, IRecycleObject {
+export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent, IDisposeObject {
 
-  protected myData: any = null;
-  protected mInitilized = false;
-  protected mLoaderAvatar: IRecycleObject;
+    protected myData: any = null;
+    protected mInitilized = false;
+    protected mLoaderAvatar: any;
+    private _owner: any;
 
-  public constructor(game: Phaser.Game) {
-    super(game, 0, 0, 0);
-  }
-
-  private _owner: any;
-
-  public getOwner(): any {
-    return this._owner;
-  }
-
-  public setOwner(value: any) {
-    this._owner = value;
-  }
-
-  public get initilized(): boolean {
-    return this.mInitilized;
-  }
-
-  public initialize(value: any = null): void {
-    if (!this.initilized) {
-      this.myData = value;
-      this.onInitialize();
-      this.mInitilized = true;
-      this.onInitializeComplete();
+    public constructor(game: Phaser.Game) {
+        super(game, 0, 0, 0);
     }
-  }
 
-  protected get avatarPool(): IObjectPool {
-      return null;
-  }
-
-  public onDispose(): void {
-    this.onClear();
-  }
-
-  // IAnimatedObject Interface
-  public onFrame(): void {
-
-  }
-
-  public onClear(): void {
-    if (!this.initilized) {
-        return;
+    public get initilized(): boolean {
+        return this.mInitilized;
     }
-    this.avatarPool.free(this.mLoaderAvatar);
-    this.mLoaderAvatar = null;
-    this.mInitilized = false;
-  }
 
-  protected onInitialize(): void {
-  }
+    public getOwner(): any {
+        return this._owner;
+    }
 
-  protected onInitializeComplete(): void {
-  }
+    public setOwner(value: any) {
+        this._owner = value;
+    }
 
-  public onRecycle(): void {
-  }
+    public initialize(value: any = null): void {
+        if (!this.initilized) {
+            this.myData = value;
+            this.onInitialize();
+            this.mInitilized = true;
+            this.onInitializeComplete();
+        }
+    }
+
+    public onDispose(): void {
+        if (this.initilized) {
+            this.myData = null;
+            this._owner = null;
+            this.mInitilized = false;
+        }
+    }
+
+    // IAnimatedObject Interface
+    public onFrame(): void {
+    }
+
+    public onClear(): void {
+    }
+
+    protected onInitialize(): void {
+    }
+
+    protected onInitializeComplete(): void {
+    }
 }

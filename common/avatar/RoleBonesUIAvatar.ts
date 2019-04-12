@@ -39,43 +39,31 @@ export class RoleBonesUIAvatar extends BasicUIAvatar {
         }
     }
 
-    protected get avatarPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("BonesLoaderAvatar");
-        return op;
-    }
-
     public loadModel(model: op_gameconfig.IAvatar): void {
-        if (this.Loader) {
-            this.Loader.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
+        if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
         }
     }
 
     public onFrame(): void {
         super.onFrame();
-        if (this.Loader) {
-            this.Loader.onFrame();
+        if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.onFrame();
         }
         if (this.mAngleIndexDirty || this.mAnimationDirty) {
-            if (this.Loader) {
-                this.Loader.invalidAnimationControlFunc();
+            if (this.mLoaderAvatar) {
+                this.mLoaderAvatar.invalidAnimationControlFunc();
             }
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;
     }
 
-    public get Loader(): BonesLoaderAvatar {
-        return this.mLoaderAvatar as BonesLoaderAvatar;
-    }
-
     protected onInitialize(): void {
-        this.mLoaderAvatar = this.avatarPool.alloc() as BonesLoaderAvatar;
-        if (null == this.mLoaderAvatar) {
-            this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
-        }
-        this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.Loader.visible = false;
-        this.addChild(this.Loader);
+        this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
+        this.mLoaderAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
+        this.mLoaderAvatar.visible = false;
+        this.addChild(this.mLoaderAvatar);
     }
 
     protected onInitializeComplete(): void {
@@ -97,15 +85,8 @@ export class RoleBonesUIAvatar extends BasicUIAvatar {
 
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
-        if (this.Loader) {
-            this.Loader.visible = true;
+        if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.visible = true;
         }
-    }
-
-    public onDispose(): void {
-        if (this.contains(this.Loader)) {
-            this.removeChild(this.Loader);
-        }
-        super.onDispose();
     }
 }

@@ -1,12 +1,9 @@
 import {IListItemComponent} from "../../../../base/component/list/interfaces/IListItemComponent";
 import {IListItemEventListener} from "../../../../base/component/list/interfaces/IListItemEventListener";
-import {ILayoutItem} from "../../../../base/layout/interfaces/ILayoutItem";
 import {ListItemComponent} from "../../../../base/component/list/core/ListItemComponent";
 import {CustomWebFonts, Font, UI} from "../../../../Assets";
-import {GameConfig} from "../../../../GameConfig";
 import {RoleBonesUIAvatar} from "../../../../common/avatar/RoleBonesUIAvatar";
 import Globals from "../../../../Globals";
-import {IObjectPool} from "../../../../base/pool/interfaces/IObjectPool";
 
 export class VoteResultListItem extends ListItemComponent implements IListItemComponent {
     protected m_List: IListItemEventListener;

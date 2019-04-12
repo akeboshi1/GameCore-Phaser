@@ -4,7 +4,6 @@ import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteList} from "./VoteList";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
-import {VoteListItem} from "./item/VoteListItem";
 
 export class VoteView extends CommModalWindowView {
 

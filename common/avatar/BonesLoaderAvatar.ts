@@ -9,10 +9,11 @@ import Slot = dragonBones.Slot;
 import {GameConfig} from "../../GameConfig";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {op_gameconfig} from "pixelpai_proto";
+import PhaserArmatureDisplay = dragonBones.PhaserArmatureDisplay;
 
-export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject, IRecycleObject {
+export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
     private static readonly BONES_SCALE: number = 1;
-    protected armature: dragonBones.PhaserArmatureDisplay;
+    protected armature: PhaserArmatureDisplay;
     private myModel: op_gameconfig.IAvatar;
     private myModelDirty = false;
     private mModelLoaded = false;
@@ -501,7 +502,14 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     }
 
     public onDispose(): void {
-        this.onClear();
+        this.closeLoadModel();
+        if (this.armature && this.pool) {
+            this.pool.free(this.armature);
+            this.armature = null;
+        }
+        this.mAnimatonControlFunc = null;
+        this.mAnimatonControlThisObj = null;
+        this.mAnimatonControlFuncDitry = false;
     }
 
     public onFrame(): void {
@@ -520,7 +528,13 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         }
     }
 
-    public onRecycle(): void {
+    protected m_Pool: IObjectPool;
+    protected setObjectPool(value): void {
+        this.m_Pool = Globals.ObjectPoolManager.getObjectPool("Armature" + value);
+    }
+
+    protected get pool(): IObjectPool {
+        return this.m_Pool;
     }
 
     /**
@@ -540,16 +554,23 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             factory.parseDragonBonesData(dragonBonesData, this.myModel.id);
         }
 
-        this.armature = factory.buildArmatureDisplay(GameConfig.ArmatureName, this.myModel.id);
-        this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
+        this.setObjectPool(this.myModel.id);
+        this.armature = this.pool.alloc() as PhaserArmatureDisplay;
+        if (this.armature == null) {
+            this.armature = factory.buildArmatureDisplay(GameConfig.ArmatureName, this.myModel.id);
+            this.armature.scale.x = this.armature.scale.y = BonesLoaderAvatar.BONES_SCALE;
+        }
         this.add(this.armature);
     }
 
     protected closeLoadModel(): void {
         if (this.modelLoaded) {
             if (this.armature) {
-                this.armature.dispose(true);
-                this.armature = null;
+                this.armature.animation.stop();
+                for (let obj of this.replaceArr) {
+                    this.clearPart(obj.slot, obj.dir);
+                }
+                this.replaceArr.splice(0);
             }
             this.mModelLoaded = false;
         }
@@ -566,9 +587,10 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
 
         for (let obj of this.replaceArr) {
             let key: string = obj.part.replace("#", obj.skin).replace("$", obj.dir);
-            if (Globals.game.cache.checkImageKey(Avatar.AvatarBone.getPartName(key))) continue;
-            Globals.game.load.image(Avatar.AvatarBone.getPartName(key), Avatar.AvatarBone.getPartUrl(key));
-            ++loadNum;
+            if (!Globals.game.cache.checkImageKey(Avatar.AvatarBone.getPartName(key))) {
+                Globals.game.load.image(Avatar.AvatarBone.getPartName(key), Avatar.AvatarBone.getPartUrl(key));
+                ++loadNum;
+            }
         }
 
         if (loadNum > 0) {

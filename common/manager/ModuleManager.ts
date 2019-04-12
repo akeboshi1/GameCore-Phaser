@@ -309,8 +309,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         i = 0;
         len = info.loadList.atlas ? info.loadList.atlas.length : 0;
         for (; i < len; i++) {
-            Globals.game.load.atlas(info.loadList.atlas[i].key, info.loadList.atlas[i].png, info.loadList.atlas[i].json);
-            ++loadNum;
+            if (!Globals.game.cache.checkImageKey(info.loadList.atlas[i].key)) {
+                Globals.game.load.atlas(info.loadList.atlas[i].key, info.loadList.atlas[i].png, info.loadList.atlas[i].json);
+                ++loadNum;
+            }
         }
 
         if (loadNum === 0) {

@@ -30,11 +30,6 @@ export class BasicRoleElement extends SceneEntity {
         }
     }
 
-    protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("RoleBonesAvatar");
-        return op;
-    }
-
     public setAnimation(value: string): void {
         // Log.trace("动作-->"+value);
         if (this.myAnimationName !== value) {
@@ -77,7 +72,9 @@ export class BasicRoleElement extends SceneEntity {
     protected onInitialize(): void {
         super.onInitialize();
 
-        this.setAngleIndex(this.characterInfo.avatarDir);
+        if (this.characterInfo.avatarDir) {
+            this.setAngleIndex(this.characterInfo.avatarDir);
+        }
         (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
         // this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
         this.mouseEnable = false;
@@ -87,10 +84,7 @@ export class BasicRoleElement extends SceneEntity {
     }
 
     protected createDisplay(): any {
-        let avatar = this.displayPool.alloc() as RoleBonesAvatar;
-        if (null == avatar) {
-            avatar = new RoleBonesAvatar(Globals.game);
-        }
+        let avatar = new RoleBonesAvatar(Globals.game);
         return avatar;
     }
 

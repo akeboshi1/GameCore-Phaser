@@ -155,10 +155,12 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     }
 
     public onDispose(): void {
-        if (!this.mInitilized) return;
-        if (this.display && (this.display as IDisposeObject).onDispose !== undefined) (<IDisposeObject>this.display).onDispose();
-        this.isValidDisplay = false;
-        this.mInitilized = false;
+        if (this.mInitilized) {
+            if (this.display && (this.display as IDisposeObject).onDispose !== undefined) (<IDisposeObject>this.display).onDispose();
+            this.display = null;
+            this.isValidDisplay = false;
+            this.mInitilized = false;
+        }
     }
 
     public onClear(): void {
@@ -191,8 +193,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     }
 
     protected createDisplay(): any {
-        let d: BasicAvatar = new BasicAvatar(Globals.game);
-        return d;
     }
 
     protected onUpdateByData(): void {
