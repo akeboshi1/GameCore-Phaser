@@ -26,8 +26,8 @@ export class VoteMediator extends MediatorBase {
     public onFrame(): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
         if (param.time.length > 0) {
-            let leftT = param.time[0] - Globals.DataCenter.getCurrentTime();
-            this.view.m_TimeTxt.text = Globals.Tool.formatLeftTime(leftT / 1000);
+            let leftT = param.time[0] - Globals.DataCenter.getCurrentTime() / 1000;
+            this.view.m_TimeTxt.text = Globals.Tool.formatLeftTime(leftT);
         }
         let len = this.view.m_List.getLength();
         let item: VoteListItem;
