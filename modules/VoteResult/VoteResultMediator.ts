@@ -32,7 +32,7 @@ export class VoteResultMediator extends MediatorBase {
 
     private initView(): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
-        // this.renderList(param);
+        this.renderList(param);
         if (param.text.length > 0) {
             this.view.setDesc(param.text[0].text);
         }
