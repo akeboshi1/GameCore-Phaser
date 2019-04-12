@@ -275,7 +275,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         let i = 0;
         let len = info.loadList.images ? info.loadList.images.length : 0;
         for (; i < len; i++) {
-            if (!Globals.game.cache.checkImageKey(info.loadList.images[i].png)) {
+            if (!Globals.game.cache.checkImageKey(info.loadList.images[i].key)) {
                 Globals.game.load.image(info.loadList.images[i].key, info.loadList.images[i].png);
                 ++loadNum;
             }
@@ -293,7 +293,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         i = 0;
         len = info.loadList.nineslices ? info.loadList.nineslices.length : 0;
         for (; i < len; i++) {
-            if (Globals.game.cache.getNineSlice(info.loadList.nineslices[i].png) === undefined) {
+            if (Globals.game.cache.getNineSlice(info.loadList.nineslices[i].key) === undefined) {
                 Globals.game.load.nineSlice(info.loadList.nineslices[i].key, info.loadList.nineslices[i].png,
                     info.loadList.nineslices[i].top, info.loadList.nineslices[i].left, info.loadList.nineslices[i].right,
                     info.loadList.nineslices[i].bottom);
