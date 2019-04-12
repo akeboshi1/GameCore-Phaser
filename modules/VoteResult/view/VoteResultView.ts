@@ -22,14 +22,14 @@ export class VoteResultView extends CommModalWindowView {
         this.graphics.beginFill(0x000, 0.6);
         this.graphics.drawRect(0, 0, GameConfig.GameWidth, GameConfig.GameHeight);
         this.graphics.endFill();
+        this.graphics.inputEnabled = true;
         this.m_Width = GameConfig.GameWidth;
         this.m_Height = GameConfig.GameHeight;
     }
 
   protected init(): void {
-      this.m_CloseBt = this.game.make.button(this.width * 15 / 16, this.height / 16, UI.WindowClose.getName(), null, this
+      this.m_CloseBt = this.game.make.button(this.width * 15 / 16, this.height / 16, UI.WindowClose.getName(), this.onCloseClick, this
           , 1, 0 , 2);
-      this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
       this.add(this.m_CloseBt);
 
       this.m_Static = this.game.make.text(this.width * 6 / 8, this.height / 10, "完整剧情", {
