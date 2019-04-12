@@ -83,10 +83,11 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
             } else {
                 entity.onTick(deltaTime);
                 if (entity.isValidDisplay) {
+                  if (this.contains(entity.display)) {
                     this.setChildIndex(entity.display, this.children.length - 1);
+                  }
                 } else {
                     this.remove(entity.display);
-                    entity.onClear();
                 }
             }
             entity = this.mSceneEntities.moveNext();

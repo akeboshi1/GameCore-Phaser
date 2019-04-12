@@ -47,7 +47,7 @@ export class ChatMediator extends MediatorBase {
         let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
         animation.baseLoc = "-102,-149";
         animation.collisionArea = "1,1,1,1&1,1,1,1&1,1,1,1&1,1,1,1";
-        animation.frame = [0];2
+        animation.frame = [0];
         animation.frameRate = 12;
         animation.name = "idle";
         animation.originPoint = [3, 3];
