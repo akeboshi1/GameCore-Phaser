@@ -23,6 +23,7 @@ export class VoteView extends CommModalWindowView {
         this.graphics.beginFill(0x000, 0.6);
         this.graphics.drawRect(0, 0, GameConfig.GameWidth, GameConfig.GameHeight);
         this.graphics.endFill();
+        this.graphics.inputEnabled = true;
         this.m_Width = GameConfig.GameWidth;
         this.m_Height = GameConfig.GameHeight;
     }
