@@ -53,7 +53,7 @@ export class VoteView extends CommModalWindowView {
       this.m_LeftNumTxt = this.game.make.bitmapText(this.m_LeftText.x + 140, this.m_LeftText.y + 4, Font.NumsLatinUppercase.getName(), "0", 24);
       this.add(this.m_LeftNumTxt);
 
-      this.m_Bt = new NiceSliceButton(this.game, (this.width * 3 / 4) + 18, this.m_LeftNumTxt.y - 68, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+      this.m_Bt = new NiceSliceButton(this.game, (this.width * 3 / 4) + 18, this.m_LeftNumTxt.y - 68, UI.ButtonRed.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
           top: 7,
           bottom: 7,
           left: 7,

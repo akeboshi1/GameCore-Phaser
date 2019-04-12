@@ -190,11 +190,6 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     key: UI.VoteLight.getName(),
                     png: UI.VoteLight.getPNG()
                 }];
-                atlasResource = [{
-                    key: UI.ButtonBlue.getName(),
-                    png: UI.ButtonBlue.getPNG(),
-                    json: UI.ButtonBlue.getJSON()
-                }];
                 break;
         }
 
