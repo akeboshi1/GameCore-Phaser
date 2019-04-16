@@ -13,7 +13,18 @@ export class CommModalWindowView extends CommWindowModuleView {
     }
 
     public onResize(): void {
-        this.graphics.x = -this.x;
-        this.graphics.y = -this.y;
+        if (this.graphics) {
+            this.graphics.x = -this.x;
+            this.graphics.y = -this.y;
+        }
+    }
+
+    public onDispose(): void {
+        if (this.graphics) {
+            this.graphics.inputEnabled = false;
+            this.graphics.clear();
+            this.graphics = null;
+        }
+        super.onDispose();
     }
 }

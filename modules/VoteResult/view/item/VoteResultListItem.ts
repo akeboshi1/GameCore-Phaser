@@ -1,12 +1,9 @@
 import {IListItemComponent} from "../../../../base/component/list/interfaces/IListItemComponent";
 import {IListItemEventListener} from "../../../../base/component/list/interfaces/IListItemEventListener";
-import {ILayoutItem} from "../../../../base/layout/interfaces/ILayoutItem";
 import {ListItemComponent} from "../../../../base/component/list/core/ListItemComponent";
 import {CustomWebFonts, Font, UI} from "../../../../Assets";
-import {GameConfig} from "../../../../GameConfig";
 import {RoleBonesUIAvatar} from "../../../../common/avatar/RoleBonesUIAvatar";
 import Globals from "../../../../Globals";
-import {IObjectPool} from "../../../../base/pool/interfaces/IObjectPool";
 
 export class VoteResultListItem extends ListItemComponent implements IListItemComponent {
     protected m_List: IListItemEventListener;
@@ -25,10 +22,7 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
         this.add(this.m_Light);
         this.m_Light.visible = false;
 
-        this.m_Avatar = this.displayPool.alloc() as RoleBonesUIAvatar;
-        if (null == this.m_Avatar) {
-            this.m_Avatar = new RoleBonesUIAvatar(Globals.game);
-        }
+        this.m_Avatar = new RoleBonesUIAvatar(Globals.game);
         this.m_Avatar.anchor.set(0.5);
         this.m_Avatar.scale.set(2, 2);
         this.m_Avatar.x = this.getWidth() >> 1;
@@ -46,11 +40,6 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
         this.add(this.m_Text);
 
         super.init();
-    }
-
-    protected get displayPool(): IObjectPool {
-        let op = Globals.ObjectPoolManager.getObjectPool("RoleBonesUIAvatar");
-        return op;
     }
 
     public render(): void {
@@ -73,7 +62,9 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
     }
 
     public onDispose() {
-        this.m_Avatar.onClear();
+        this.remove(this.m_Avatar);
+        this.m_Avatar.onDispose();
+        this.m_Avatar = null;
         super.onDispose();
     }
 }

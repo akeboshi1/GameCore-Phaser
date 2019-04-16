@@ -1,10 +1,8 @@
 import {CommModalWindowView} from "../../../common/view/CommModalWindowView";
-import {PageComponent} from "../../../base/component/page/core/PageComponent";
 import {CustomWebFonts, Font, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {ListComponent} from "../../../base/component/list/core/ListComponent";
 import {VoteList} from "./VoteList";
-import {VoteListItem} from "./item/VoteListItem";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 
 export class VoteView extends CommModalWindowView {
@@ -25,6 +23,7 @@ export class VoteView extends CommModalWindowView {
         this.graphics.beginFill(0x000, 0.6);
         this.graphics.drawRect(0, 0, GameConfig.GameWidth, GameConfig.GameHeight);
         this.graphics.endFill();
+        this.graphics.inputEnabled = true;
         this.m_Width = GameConfig.GameWidth;
         this.m_Height = GameConfig.GameHeight;
     }
@@ -55,12 +54,18 @@ export class VoteView extends CommModalWindowView {
       this.m_LeftNumTxt = this.game.make.bitmapText(this.m_LeftText.x + 140, this.m_LeftText.y + 4, Font.NumsLatinUppercase.getName(), "0", 24);
       this.add(this.m_LeftNumTxt);
 
-      this.m_Bt = new NiceSliceButton(this.game, (this.width * 3 / 4) + 18, this.m_LeftNumTxt.y - 68, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+      this.m_Bt = new NiceSliceButton(this.game, (this.width * 3 / 4) + 18, this.m_LeftNumTxt.y - 68, UI.ButtonRed.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
           top: 7,
           bottom: 7,
           left: 7,
           right: 7
       }, "确认投票", 24);
       this.add(this.m_Bt);
+  }
+
+  public onDispose(): void {
+      this.m_List.onDispose();
+      this.m_List = null;
+      super.onDispose();
   }
 }

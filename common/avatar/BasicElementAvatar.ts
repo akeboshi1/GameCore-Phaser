@@ -90,6 +90,14 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         }
     }
 
+    public onDispose(): void {
+        if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.onRecycle();
+            this.mLoaderAvatar = null;
+        }
+        super.onDispose();
+    }
+
     protected onAddPlaceHoldAvatarPart(): void {
     }
 

@@ -17,13 +17,14 @@ export class SelfRoleElement extends RoleElement {
         return true;
     }
 
-    public onClear(): void {
-        super.onClear();
+    public onDispose(): void {
+        super.onDispose();
         // unFollow camera
         if (this.camera) {
             this.camera.unfollow();
         }
     }
+
     protected checkIsValidDisplayAvatar(): void {
         this.isValidDisplay = this.isCanShow;
     }

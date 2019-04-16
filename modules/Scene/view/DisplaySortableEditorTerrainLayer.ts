@@ -67,9 +67,8 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     }
 
     this.mSceneEntities.remove(d);
-    d.scene = null;
-    d.camera = null;
-    d.onClear();
+    d.onDispose();
+    d = null;
   }
 
   public insertEntity(d: BasicSceneEntity, all: boolean = false): void {

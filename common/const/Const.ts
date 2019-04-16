@@ -11,12 +11,15 @@ export namespace Const {
     }
 
     export enum GameConst {
+        MAP_TILE_WIDTH = 62,
+        MAP_TILE_HEIGHT = 32,
         MAP_TILE_DEPTH = 12,
         MAX_TERRAIN_LOAD_COUNT = 1,
         OUT_OF_CAMERA_RELEASE_WAITE_TIME = 3000,
         DEFAULT_VISIBLE_TEST_RADIUS = 150,
         MASK_ALPHA = 0.5,
-        ROLE_AVATAR_OFFSET_Y = 8
+        ROLE_AVATAR_OFFSET_Y = 8,
+        BONES_SCALE = 1
     }
 
     export enum UIConst {
