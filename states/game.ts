@@ -1,12 +1,7 @@
 import Globals from "../Globals";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
-import {UI} from "../Assets";
-import {IAtlasResource, IImageResource, INineSliceImageResource, ISheetResource} from "../interface/IPhaserLoadList";
 import {GameConfig} from "../GameConfig";
-import WindowClose = UI.WindowClose;
-import DropDownBtn = UI.DropDownBtn;
-import {Log} from "../Log";
 
 export default class Game extends Phaser.State {
 
@@ -26,7 +21,6 @@ export default class Game extends Phaser.State {
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
         Globals.DragManager.init(this.game);
-        dragonBones.PhaserFactory.init(this.game);
 
         if (!GameConfig.isEditor) {
             Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT);
@@ -44,11 +38,7 @@ export default class Game extends Phaser.State {
         }
     }
 
-    private tempNow = 0;
     public update(game: Phaser.Game): void {
-        let now = new Date().getTime();
-        dragonBones.PhaserFactory.factory.dragonBones.advanceTime((now - this.tempNow) / 1000);
-        this.tempNow = now;
         Globals.TickManager.onTick();
     }
 
