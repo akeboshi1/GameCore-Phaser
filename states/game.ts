@@ -10,8 +10,8 @@ export default class Game extends Phaser.State {
     }
 
     public create(): void {
-        this.tempNow = new Date().getTime();
-        Globals.DataCenter.setServerTime(this.tempNow);
+        let tempNow = new Date().getTime();
+        Globals.DataCenter.setServerTime(tempNow);
         Globals.SoundManager.init(this.game);
         Globals.TickManager.init(this.game);
         if (!GameConfig.isEditor) {
