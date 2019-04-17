@@ -74,6 +74,7 @@ export class SceneBuffer implements  IDisposeObject, ITickedObject {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.copyDirty = true;
+        this.onTick();
     }
 
     public onTick(): void {
