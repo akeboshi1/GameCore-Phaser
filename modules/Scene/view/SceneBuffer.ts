@@ -2,12 +2,15 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {IDisposeObject} from "../../../base/object/interfaces/IDisposeObject";
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {ITickedObject} from "../../../base/ITickedObject";
+import Globals from "../../../Globals";
+import {MessageType} from "../../../common/const/MessageType";
 
-export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
+export class SceneBuffer implements  IDisposeObject, ITickedObject {
 
     public constructor(showBd: Phaser.BitmapData, memoryBd: Phaser.BitmapData) {
         this.showBd = showBd;
         this.memoryBd = memoryBd;
+        this.init();
     }
     private showBd: Phaser.BitmapData;
     private memoryBd: Phaser.BitmapData;
@@ -18,10 +21,16 @@ export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
     private cameraRect: Phaser.Rectangle;
     private offsetX: number;
     private offsetY: number;
+
+    protected init(): void {
+      Globals.MessageCenter.on(MessageType.GAME_GLOBALS_TICK, this.onTick, this);
+    }
+
     public onClear(): void {
     }
 
     public onDispose(): void {
+        Globals.MessageCenter.cancel(MessageType.GAME_GLOBALS_TICK, this.onTick, this);
         this.showBd = null;
         this.memoryBd = null;
         this.terrains = null;
@@ -65,25 +74,24 @@ export class SceneBuffer implements  IDisposeObject, IAnimatedObject {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.copyDirty = true;
-        this.onFrame();
     }
 
-    public onFrame(): void {
-        if (this.copyDirty) {
-            let boo = true;
-            let len = this.terrains.length;
-            let terrain: BasicSceneEntity;
-            for (let i = 0; i < len; i++) {
-                terrain = this.terrains[i];
-                if (terrain.drawDirty) {
-                    boo = false;
-                    break;
-                }
-            }
-            if (boo) {
-                this.copyMemoryRegion(this.changeAreas, this.cameraRect, this.offsetX, this.offsetY);
-                this.copyDirty = false;
-            }
+    public onTick(): void {
+      if (this.copyDirty) {
+        let boo = true;
+        let len = this.terrains.length;
+        let terrain: BasicSceneEntity;
+        for (let i = 0; i < len; i++) {
+          terrain = this.terrains[i];
+          if (terrain.drawDirty) {
+            boo = false;
+            break;
+          }
         }
+        if (boo) {
+          this.copyMemoryRegion(this.changeAreas, this.cameraRect, this.offsetX, this.offsetY);
+          this.copyDirty = false;
+        }
+      }
     }
 }

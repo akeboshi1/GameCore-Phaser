@@ -22,6 +22,11 @@ export namespace Const {
         BONES_SCALE = 1
     }
 
+  export enum ClockIDEnum {
+    SceneEditor = 1,
+    Vote = 2
+  }
+
     export enum UIConst {
         UI_DEFAULT_WIDTH = 500,
         UI_DEFAULT_HEIGHT = 300,

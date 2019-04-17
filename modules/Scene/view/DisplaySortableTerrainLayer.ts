@@ -23,16 +23,16 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
         this.mAnimationContainer = this.game.make.sprite(0, 0);
         this.add(this.mAnimationContainer);
 
-        this.testGraph = this.game.make.graphics();
-        this.testGraph.fixedToCamera = true;
-        this.add(this.testGraph);
+        // this.testGraph = this.game.make.graphics();
+        // this.testGraph.fixedToCamera = true;
+        // this.add(this.testGraph);
     }
     protected mStaticContainer: Phaser.Image;
     protected mAnimationContainer: Phaser.Sprite;
     protected showBitmapData: Phaser.BitmapData;
     protected memoryBitmapData: Phaser.BitmapData;
     protected mCameraRect: Phaser.Rectangle;
-    protected testGraph: Phaser.Graphics;
+    // protected testGraph: Phaser.Graphics;
     private sceneBuffer: SceneBuffer;
 
     private newCameraRect: Phaser.Rectangle;
@@ -65,7 +65,6 @@ export class DisplaySortableTerrainLayer extends DisplaySortableSceneLayer {
             entity.onFrame();
             entity = this.mSceneEntities.moveNext();
         }
-        this.sceneBuffer.onFrame();
     }
 
     public onTick(deltaTime: number): void {

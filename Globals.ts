@@ -16,6 +16,7 @@ import {PromptManager} from "./common/manager/PromptManager";
 import {ObjectPoolManager} from "./common/manager/ObjectPoolManager";
 import {ShareObjectCacheManager} from "./common/manager/ShareObjectCacheManager";
 import {DragManager} from "./base/drag/DragManager";
+import {TimeManager} from "./common/manager/TimeManager";
 
 export default class Globals {
   private static _game: Phaser.Game;
@@ -133,6 +134,13 @@ export default class Globals {
    */
   public static get TickManager(): TickManager {
     return TickManager.getInstance();
+  }
+
+  /**
+   * 时间管理器
+   */
+  public static get TimeManager(): TimeManager {
+    return TimeManager.getInstance();
   }
 
   /**

@@ -12,25 +12,6 @@ import {RecycleObject} from "./object/base/RecycleObject";
 import {IDisposeObject} from "./object/interfaces/IDisposeObject";
 
 export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode {
-    public uid: any;
-    public elementTypeId = 0;
-    public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
-    public isValidDisplay = false;
-    public data: any;
-    public display: any;
-    public scene: SceneBasic;
-    public camera: Phaser.Camera;
-
-    public collisionWidth = 0;
-    public collisionHeight = 0;
-    public collisionOffsetX = 0;
-    public collisionOffsetY = 0;
-
-    public positionDirty = false;
-    public baseLoc: Phaser.Point;
-    protected isNeedSort = true;
-
-    private mInitilized = false;
 
     public constructor() {
     }
@@ -38,8 +19,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public get needSort(): boolean {
         return this.isNeedSort;
     }
-
-    protected _ox = 0;
 
     public get ox(): number {
         return this._ox;
@@ -49,8 +28,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
         this._ox = x;
     }
 
-    protected _oy = 0;
-
     public get oy(): number {
         return this._oy;
     }
@@ -58,8 +35,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public set oy(y: number) {
         this._oy = y;
     }
-
-    private _oz = 0;
 
     public get oz(): number {
         return this._oz;
@@ -96,6 +71,37 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public get quadY(): number {
         return this.oy + this.collisionOffsetY;
     }
+    public uid: any;
+    public elementTypeId = 0;
+    public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
+    public isValidDisplay = false;
+    public data: any;
+    public display: any;
+    public scene: SceneBasic;
+    public camera: Phaser.Camera;
+
+    public collisionWidth = 0;
+    public collisionHeight = 0;
+    public collisionOffsetX = 0;
+    public collisionOffsetY = 0;
+
+    public positionDirty = false;
+    public baseLoc: Phaser.Point;
+    protected isNeedSort = true;
+
+    private mInitilized = false;
+
+    protected _ox = 0;
+
+    protected _oy = 0;
+
+    private _oz = 0;
+
+    public drawDirty = false;
+
+    protected _rect: Phaser.Rectangle;
+
+    protected s_rect: Phaser.Rectangle;
 
     protected onDisplayLoadCompleted(): void {
     }
@@ -141,8 +147,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
             this.onInitializeCompleted();
         }
     }
-
-    public drawDirty = false;
     public drawBit(value: Phaser.BitmapData, offset: Phaser.Point): void {
     }
 
@@ -215,8 +219,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     public updateDisplay(): void {
         this.onUpdatingDisplay();
     }
-
-    protected _rect: Phaser.Rectangle;
     public getRect(): Phaser.Rectangle {
         if (this._rect === undefined) {
             this._rect = new Phaser.Rectangle();
@@ -226,8 +228,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
         this._rect.setTo(_ox, _oy, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS, Const.GameConst.DEFAULT_VISIBLE_TEST_RADIUS);
         return this._rect;
     }
-
-    protected s_rect: Phaser.Rectangle;
     public getScreenRect(): Phaser.Rectangle {
       if (this.s_rect === undefined) {
         this.s_rect = new Phaser.Rectangle();

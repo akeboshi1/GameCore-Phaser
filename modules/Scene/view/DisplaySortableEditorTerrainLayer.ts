@@ -3,6 +3,7 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {GameConfig} from "../../../GameConfig";
 import Globals from "../../../Globals";
 import {SceneBuffer} from "./SceneBuffer";
+import {Log} from "../../../Log";
 
 export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer {
   protected mStaticContainer: Phaser.Image;
@@ -99,11 +100,11 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
       entity.onFrame();
       entity = this.mSceneEntities.moveNext();
     }
-    this.sceneBuffer.onFrame();
   }
 
   public onTick(deltaTime: number): void {
     if (this.sceneBuffer.copyDirty) {
+      Log.trace("停下来。。。。。。。。。");
       return;
     }
 
@@ -128,12 +129,15 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     }
 
     let newCameraRect: Phaser.Rectangle = new Phaser.Rectangle(this.game.camera.x, this.game.camera.y, GameConfig.GameWidth, GameConfig.GameHeight);
-
+    Log.trace("2坐标", "X : ", this.game.camera.x, "| Y : ", this.game.camera.y);
     if (!Phaser.Rectangle.equals(newCameraRect, this.mCameraRect)) {
       changeDirty = true;
 
       offsetX = (this.mCameraRect.x - newCameraRect.x);
       offsetY = (this.mCameraRect.y - newCameraRect.y);
+
+      Log.trace("2偏移量", "TX : ", offsetX, "| TY : ", offsetY);
+      Log.trace("----------------------------------------------");
 
       if (offsetX !== 0 && offsetY !== 0) {
         if (offsetX < 0 && offsetY < 0) {

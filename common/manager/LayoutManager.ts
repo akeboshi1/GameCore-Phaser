@@ -50,8 +50,8 @@ export class LayoutManager extends BaseSingleton {
     }
 
     private getLayoutIdx(iLayout: IAutoLayout): number {
-        let i: number = 0;
-        let len: number = this.layoutList.length;
+        let i = 0;
+        let len = this.layoutList.length;
         for (; i < len; i++) {
             if (this.layoutList[i] === iLayout) {
                 return i;

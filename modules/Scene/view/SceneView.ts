@@ -8,9 +8,12 @@ import {RoleElement} from "../elements/RoleElement";
 import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "./SceneBase";
 import {BasicTerrain} from "../elements/BasicTerrain";
+import {SelectElementEffect} from "../effects/SelectElementEffect";
 
 export class SceneView extends SceneBase {
     public currentSelfPlayer: SelfRoleElement;
+
+  protected selectEffect: SelectElementEffect;
     public addSceneElement(sceneElementType: number,
                            uid: number, elemetData: any,
                            isSelf: boolean = false): BasicSceneEntity {
@@ -50,6 +53,22 @@ export class SceneView extends SceneBase {
 
     this.insertTerrainEntity(element, all);
     return element;
+  }
+
+  public playSelectElementEffect(value: number): void {
+    if (this.selectEffect) {
+      this.stopSelectElementEffect();
+    }
+    this.selectEffect = new SelectElementEffect();
+    this.selectEffect.data = value;
+    this.addSceneEffect(this.selectEffect);
+  }
+
+  public stopSelectElementEffect(): void {
+    if (this.selectEffect) {
+      this.removeSceneEffect(this.selectEffect);
+      this.selectEffect = null;
+    }
   }
 
     protected onInitializeScene(value: SceneInfo): void {

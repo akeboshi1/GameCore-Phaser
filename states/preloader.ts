@@ -1,4 +1,4 @@
-import {Atlases, Font, Load} from "../Assets";
+import {Atlases, EDITOR, Font, Load} from "../Assets";
 import {GameConfig} from "../GameConfig";
 import {IAtlasResource, IImageResource} from "../interface/IPhaserLoadList";
 export default class Preloader extends Phaser.State {
@@ -16,6 +16,9 @@ export default class Preloader extends Phaser.State {
         }
         this.loadFonts();
         this.loadScripts();
+        if (GameConfig.isEditor) {
+          this.game.load.image(EDITOR.SelectFlag.getName(), EDITOR.SelectFlag.getPNG());
+        }
     }
 
     public init(): void {

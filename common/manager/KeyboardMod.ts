@@ -10,10 +10,6 @@ import Key = Phaser.Key;
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
 
 export class KeyboardMod extends BaseSingleton {
-    private game: Phaser.Game;
-    protected keyDownHandleDic: HashMap;
-    protected keyUpHandleDic: HashMap;
-    private mInitilized = false;
 
     /**
      * 构造函数
@@ -25,6 +21,14 @@ export class KeyboardMod extends BaseSingleton {
     public get initilized(): boolean {
         return this.mInitilized;
     }
+    private game: Phaser.Game;
+    protected keyDownHandleDic: HashMap;
+    protected keyUpHandleDic: HashMap;
+    private mInitilized = false;
+
+    protected keyList: Key[];
+
+    private tempKeys: string;
 
     public init(game: Phaser.Game): void {
         this.game = game;
@@ -51,8 +55,6 @@ export class KeyboardMod extends BaseSingleton {
 
         this.mInitilized = true;
     }
-
-    protected keyList: Key[];
 
     protected addKeyEvent(key: Key): void {
         key.onDown.add(this.keyDownHandle, this);
@@ -175,8 +177,6 @@ export class KeyboardMod extends BaseSingleton {
             }
         }
     }
-
-    private tempKeys: string;
 
     protected onUpdate(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);

@@ -202,6 +202,14 @@ export class SceneBase extends SceneBasic {
     this.addChild(this.topSceneLayer);
   }
 
+  public addSceneEffect(element: BasicSceneEntity): void {
+    this.topSceneLayer.addEntity(element);
+  }
+
+  public removeSceneEffect(element: BasicSceneEntity): void {
+    this.topSceneLayer.removeEntity(element);
+  }
+
   protected onInitializeScene(value: SceneInfo): void {
     this.mSceneScrollWidth = this.mapSceneInfo.mapTotalWidth;
     this.mSceneScrollHeight = this.mapSceneInfo.mapTotalHeight + Const.GameConst.MAP_TILE_DEPTH;

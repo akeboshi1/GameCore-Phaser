@@ -139,6 +139,18 @@ export namespace Font {
     }
 }
 
+export namespace EDITOR {
+  export class SelectFlag {
+    static getName(): string {
+      return "selectFlag_png";
+    }
+
+    static getPNG(): string {
+      return require("assets/images/editor/selectFlag.png");
+    }
+  }
+}
+
 
 export namespace UI {
     export class MenuBtBag {

@@ -18,15 +18,6 @@ import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
 
 export class SceneEditorMediator extends SceneMediator {
-  private mTick: Tick;
-  private movementX = 0;
-  private movementY = 0;
-  private deltaY = 0;
-  private isGameDown = false;
-  private isElementDown = false;
-  private mousePointer: Phaser.Pointer;
-  private mSelectElement: BasicElement;
-  private mMouseFollower: MouseFollower;
 
   constructor() {
     super();
@@ -39,6 +30,22 @@ export class SceneEditorMediator extends SceneMediator {
   protected get camera(): Phaser.Camera {
     return Globals.game.camera;
   }
+  private movementX = 0;
+  private movementY = 0;
+  private deltaY = 0;
+  private isGameDown = false;
+  private isElementDown = false;
+  private mousePointer: Phaser.Pointer;
+  private mSelectElement: BasicElement;
+  private mMouseFollower: MouseFollower;
+
+  private minScale = 0;
+
+  private addAllFlag = false;
+  private addAllTerrain: op_client.ITerrain;
+
+  private elementOldPoint: Phaser.Point = new Phaser.Point;
+  private mouseDownPos: Phaser.Point = new Phaser.Point;
 
   protected stageResizeHandler(): void {
     Globals.game.world.setBounds(0, 0, Globals.Room45Util.mapTotalWidth, Globals.Room45Util.mapTotalHeight);
@@ -46,10 +53,8 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   public onRegister(): void {
-    this.mTick = new Tick(60);
-    this.mTick.setCallBack(this.onTick, this);
-    this.mTick.setRenderCallBack(this.onFrame, this);
-    this.mTick.start();
+    Globals.MessageCenter.on(MessageType.GAME_GLOBALS_TICK, this.onTick, this);
+    Globals.MessageCenter.on(MessageType.GAME_GLOBALS_FRAME, this.onFrame, this);
 
     this.view.inputEnabled = true;
     this.view.middleSceneLayer.inputEnableChildren = true;
@@ -68,10 +73,10 @@ export class SceneEditorMediator extends SceneMediator {
 
   public onRemove(): void {
     super.onRemove();
-    if (this.mTick) {
-      this.mTick.onDispose();
-      this.mTick = null;
-    }
+
+    Globals.MessageCenter.cancel(MessageType.GAME_GLOBALS_TICK, this.onTick, this);
+    Globals.MessageCenter.cancel(MessageType.GAME_GLOBALS_FRAME, this.onFrame, this);
+
     if (this.mMouseFollower) {
       this.mMouseFollower.onDispose();
       this.mMouseFollower = null;
@@ -85,6 +90,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
+    Globals.MessageCenter.on(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
   }
 
   public unRegisterSceneListenerHandler(): void {
@@ -93,49 +99,11 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_TERRAIN, this.handleRemoveTerrain, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
     super.unRegisterSceneListenerHandler();
   }
 
   public onFrame(): void {
-    switch (this.em.mode) {
-      case  EditorEnum.Mode.MOVE:
-        if (this.isGameDown) {
-          let camera = Globals.game.camera;
-          let newMoveX = this.mousePointer.x;
-          let newMoveY = this.mousePointer.y;
-          let targetX = camera.x - (newMoveX - this.movementX);
-          let targetY =  camera.y - (newMoveY - this.movementY);
-          if (targetX > 0 || targetY > 0) {
-            camera.setPosition(targetX, targetY);
-          }
-          this.movementX = newMoveX;
-          this.movementY = newMoveY;
-        }
-        break;
-      case  EditorEnum.Mode.ERASER:
-        if (this.isGameDown) {
-          if (this.em.type === EditorEnum.Type.TERRAIN) {
-            this.preSendSceneDown(this.mousePointer);
-          }
-        }
-        break;
-      case EditorEnum.Mode.SELECT:
-        if (this.isElementDown && this.mSelectElement && this.mousePointer) {
-          let offset: Phaser.Point = new Phaser.Point(this.mousePointer.x - this.mouseDownPos.x, this.mousePointer.y - this.mouseDownPos.y);
-          this.moveElement(this.mSelectElement, offset);
-        }
-        break;
-      case EditorEnum.Mode.ZOOM:
-        let scale = 0;
-        if (this.isGameDown) {
-          let newMoveY: number = this.mousePointer.y;
-          let add = this.movementY - newMoveY;
-          scale = (add / GameConfig.GameHeight) * 0.1;
-          this.view.scale.add(scale, scale);
-        }
-        break;
-    }
-
     if (this.deltaY !== 0) {
       let scaleX = this.view.scale.x;
       let scaleY = this.view.scale.x;
@@ -170,6 +138,52 @@ export class SceneEditorMediator extends SceneMediator {
         this.deltaY -= 10;
       }
     }
+
+    switch (this.em.mode) {
+      case  EditorEnum.Mode.MOVE:
+        if (this.isGameDown) {
+          let newMoveX = this.mousePointer.x;
+          let newMoveY = this.mousePointer.y;
+          let offsetX = newMoveX - this.movementX;
+          let offsetY = newMoveY - this.movementY;
+          let targetX = this.camera.x - offsetX;
+          let targetY = this.camera.y - offsetY;
+          this.movementX = newMoveX;
+          this.movementY = newMoveY;
+
+          if (offsetX !== 0 || offsetY !== 0) {
+            this.camera.setPosition(targetX, targetY);
+            // this.camera.x = targetX;
+            // this.camera.y = targetY;
+          }
+          Log.trace("1坐标", "X : ", this.camera.x, "| Y : ", this.camera.y);
+          Log.trace("1偏移量", "TX : ", offsetX, "| TY : ", offsetY);
+        }
+        break;
+      case  EditorEnum.Mode.ERASER:
+        if (this.isGameDown) {
+          if (this.em.type === EditorEnum.Type.TERRAIN) {
+            this.preSendSceneDown(this.mousePointer);
+          }
+        }
+        break;
+      case EditorEnum.Mode.SELECT:
+        if (this.isElementDown && this.mSelectElement && this.mousePointer) {
+          let offset: Phaser.Point = new Phaser.Point(this.mousePointer.x - this.mouseDownPos.x, this.mousePointer.y - this.mouseDownPos.y);
+          this.moveElement(this.mSelectElement, offset);
+        }
+        break;
+      case EditorEnum.Mode.ZOOM:
+        let scale = 0;
+        if (this.isGameDown) {
+          let newMoveY: number = this.mousePointer.y;
+          let add = this.movementY - newMoveY;
+          scale = (add / GameConfig.GameHeight) * 0.1;
+          this.view.scale.add(scale, scale);
+        }
+        break;
+    }
+
     if (this.addAllFlag) {
       this.onAddAllTerrain(this.addAllTerrain);
       this.addAllTerrain = null;
@@ -185,8 +199,6 @@ export class SceneEditorMediator extends SceneMediator {
       this.preSendSceneDown(this.mousePointer);
     }
   }
-
-  private minScale = 0;
   protected changedToMapSceneCompleteHandler(): void {
     let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
     // clear the last one scene.
@@ -237,6 +249,10 @@ export class SceneEditorMediator extends SceneMediator {
     }
   }
 
+  protected handleSelectElement(value: number): void {
+      this.view.playSelectElementEffect(value);
+  }
+
   /**
    * 监听添加地块
    * @param value
@@ -251,9 +267,6 @@ export class SceneEditorMediator extends SceneMediator {
       this.insertTerrain(terrain);
     }
   }
-
-  private addAllFlag = false;
-  private addAllTerrain: op_client.ITerrain;
   protected handleAddAllTerrain(value: op_client.ITerrain): void {
     this.handleRemoveAllTerrain();
     this.addAllTerrain = value;
@@ -343,6 +356,8 @@ export class SceneEditorMediator extends SceneMediator {
       this.mMouseFollower.onClear();
     }
 
+    this.view.stopSelectElementEffect();
+
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
     Globals.game.input.onUp.remove(this.onGameUp, this);
@@ -381,15 +396,13 @@ export class SceneEditorMediator extends SceneMediator {
   protected addElement(value: ElementInfo): void {
     this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
   }
-
-  private elementOldPoint: Phaser.Point = new Phaser.Point;
-  private mouseDownPos: Phaser.Point = new Phaser.Point;
   private onElementLayerDown(item: any): void {
     let tempElement = item.getOwner();
     let elementId: number = tempElement.data.id;
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
       this.mSelectElement = tempElement;
+      this.view.playSelectElementEffect(tempElement.data.id);
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
     }

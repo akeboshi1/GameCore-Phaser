@@ -78,6 +78,7 @@ export default class Game extends Phaser.Game implements IGame {
 
   public dispose(): void {
     Globals.TickManager.dispose();
+    Globals.TimeManager.dispose();
     Globals.ServiceCenter.dispose();
     Globals.ModuleManager.dispose();
     Globals.SoundManager.dispose();
@@ -90,10 +91,9 @@ export default class Game extends Phaser.Game implements IGame {
     Globals.SocketManager.dispose();
     Globals.ObjectPoolManager.dispose();
     // dragonBones.PhaserFactory.factory.clear();
-    // dragonBones.PhaserFactory.game = null;
+    // (dragonBones.PhaserFactory as any)._game = null;
     this.cache.destroy();
     this.destroy();
     Globals.game = null;
-    // (dragonBones.PhaserFactory as any)._game = null;
   }
 }

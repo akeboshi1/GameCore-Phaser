@@ -44,6 +44,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_ELEMENT, this.handleDeleteElement);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.handleMouseFollow);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SELECT_ELEMENT, this.handleSelectElement);
     }
 
     private handleMouseFollow(packet: PBpacket): void {
@@ -129,6 +130,11 @@ class Handler extends BasePacketHandler {
     private handleAddElement(packet: PBpacket): void {
         let elementData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_ELEMENT = packet.content;
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, [elementData.element]);
+    }
+
+    private handleSelectElement(packet: PBpacket): void {
+      let elementData: op_client.IOP_EDITOR_REQ_CLIENT_SELECT_ELEMENT = packet.content;
+      Globals.MessageCenter.emit(MessageType.SCENE_SELECT_ELEMENT, elementData.id);
     }
 
     private handleAddTerrain(packet: PBpacket): void {

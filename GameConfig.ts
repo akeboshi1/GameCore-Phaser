@@ -7,5 +7,5 @@ export class GameConfig {
     public static GameWidth: number;
     public static GameHeight: number;
     public static preLoadList: IPhaserLoadList;
-    public static ArmatureName: string = "Armature";
+    public static ArmatureName = "Armature";
 }
