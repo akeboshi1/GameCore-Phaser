@@ -22,7 +22,11 @@ export class SelectElementEffect extends BasicSceneEntity {
     let element: BasicElement = (<SceneBase>this.scene).getSceneElement(elementId) as BasicElement;
     if (element) {
       this.setPosition(element.ox, element.oy);
-      this.baseLoc = new Phaser.Point(-(this.display.width >> 1), -element.display.Loader.height - this.display.height);
+      if (this.baseLoc === undefined) {
+        this.baseLoc = new Phaser.Point(-(this.display.width >> 1), -element.display.Loader.height - this.display.height);
+      } else {
+        this.baseLoc.setTo(-(this.display.width >> 1), -element.display.Loader.height - this.display.height);
+      }
     }
   }
 

@@ -48,11 +48,13 @@ export class TickManager extends BaseSingleton {
         let now = this.game.time.now;
         let timeElapsed = now - this.m_LastTime;
         this.m_LastTime = now;
-        for (let i = len - 1; i >= 0; i--) {
+        for (let i = 0; i < len; i++) {
           tick = this.m_TickList[i];
           if (!tick.isEnd()) {
             tick.onTick(timeElapsed);
           } else {
+            --i;
+            --len;
             this.m_TickList.splice(i, 1);
           }
         }
@@ -62,12 +64,14 @@ export class TickManager extends BaseSingleton {
         if (this.game === undefined || this.game == null || this.m_TickList === undefined || this.m_TickList.length === 0) return;
         let len: number = this.m_TickList.length;
         let tick: Tick;
-        for (let i = len - 1; i >= 0; i--) {
+        for (let i = 0; i < len; i++) {
             tick = this.m_TickList[i];
             if (!tick.isEnd()) {
                 tick.onRender();
             } else {
-                this.m_TickList.splice(i, 1);
+              --i;
+              --len;
+              this.m_TickList.splice(i, 1);
             }
         }
     }
