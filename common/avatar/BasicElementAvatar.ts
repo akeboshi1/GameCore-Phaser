@@ -92,6 +92,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
 
     public onDispose(): void {
         if (this.mLoaderAvatar) {
+            this.removeChild(this.mLoaderAvatar);
             this.mLoaderAvatar.onRecycle();
             this.mLoaderAvatar = null;
         }

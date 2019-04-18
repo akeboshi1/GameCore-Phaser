@@ -7,10 +7,9 @@ import {IEntityComponent} from "./IEntityComponent";
 import {SceneBasic} from "../modules/Scene/view/SceneBasic";
 import {op_client} from "pixelpai_proto";
 import {IQuadTreeNode} from "./ds/IQuadTreeNode";
-import {IObjectPool} from "./pool/interfaces/IObjectPool";
-import {RecycleObject} from "./object/base/RecycleObject";
+import {IDisposeObject} from "./object/interfaces/IDisposeObject";
 
-export class BasicSceneEntity extends RecycleObject implements ITickedObject, IAnimatedObject, IQuadTreeNode {
+export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTreeNode {
   public uid: any;
   public elementTypeId = 0;
   public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
@@ -32,7 +31,6 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
   private mInitilized = false;
 
   public constructor() {
-    super();
   }
 
   public get needSort(): boolean {
@@ -97,10 +95,6 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
     return this.oy + this.collisionOffsetY;
   }
 
-  protected get displayPool(): IObjectPool {
-    return null;
-  }
-
   protected onDisplayLoadCompleted(): void {
   }
 
@@ -159,14 +153,17 @@ export class BasicSceneEntity extends RecycleObject implements ITickedObject, IA
   }
 
   public onDispose(): void {
-    this.onClear();
+    if (this.initilized) {
+        if (this.display) {
+            if ((this.display as IDisposeObject).onDispose !== undefined) (<IDisposeObject>this.display).onDispose();
+            this.display = null;
+        }
+        this.scene = null;
+        this.camera = null;
+    }
   }
 
   public onClear(): void {
-    this.mInitilized = false;
-    this.isValidDisplay = false;
-    this.displayPool.free(this.display);
-    this.display = null;
   }
 
   public onTick(deltaTime: number): void {

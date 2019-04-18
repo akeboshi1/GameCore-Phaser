@@ -76,6 +76,11 @@ export class SceneView extends SceneBase {
         super.onInitializeScene(value);
     }
 
+    protected onClearScene(): void {
+        super.onClearScene();
+        this.currentSelfPlayer = null;
+    }
+
     protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
         let element: BasicSceneEntity = null;
 
@@ -84,7 +89,7 @@ export class SceneView extends SceneBase {
             case Const.SceneElementType.ROLE :
                 // 当前玩家
                 if (isSelf) {
-                    if (this.currentSelfPlayer === undefined) {
+                    if (!this.currentSelfPlayer) {
                         this.currentSelfPlayer = new SelfRoleElement();
                     }
                     element = this.currentSelfPlayer;

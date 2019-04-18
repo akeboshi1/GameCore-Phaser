@@ -198,6 +198,7 @@ export class SceneMediator extends MediatorBase {
         this.view.deleteSceneElement(elementId);
     }
 
+    private first = false;
     protected changedToMapSceneCompleteHandler(): void {
         // clear the last one scene.
         Log.trace("Scene加载完成监听");
@@ -205,6 +206,12 @@ export class SceneMediator extends MediatorBase {
             this.view.clearScene();
         }
         Globals.SceneManager.popupScene();
+
+        // if (this.first) {
+        //     return;
+        // }
+
+        this.first = true;
 
         let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
 
@@ -222,7 +229,7 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
-        // mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
+        mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
         this.initializeTerrainItems(mapSceneInfo.terrainConfig);
         this.initializeElementItems(mapSceneInfo.elementConfig);
 
@@ -289,7 +296,7 @@ export class SceneMediator extends MediatorBase {
                 imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
                 entity.moveToTarget(imove);
             }
-            // Log.warn("[走路]：" + Date.now() + "|" + imove.timeSpan, imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
+            Log.warn("[走路]：" + Date.now() + "|" + imove.timeSpan, imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 
@@ -331,20 +338,19 @@ export class SceneMediator extends MediatorBase {
 
     private onEnterScene(): void {
         this.sceneLoader = new SceneLoader();
-        this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
 
         this.flowManager = new FlowManager();
         this.flowManager.initialize();
         this.flowManager.setView(this.view);
 
-        // mapScene
-        this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
-
         this.registerSceneListenerHandler();
+
+        this.changeSceneToHandle();
     }
 
     private changeSceneToHandle(): void {
         // mapScene
+        this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
         this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
     }
 

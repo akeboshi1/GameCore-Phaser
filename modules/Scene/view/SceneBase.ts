@@ -11,6 +11,7 @@ import {TerrainGridLayer} from "./TerrainGridLayer";
 import {DisplaySortableTerrainLayer} from "./DisplaySortableTerrainLayer";
 import {GameConfig} from "../../../GameConfig";
 import {DisplaySortableEditorTerrainLayer} from "./DisplaySortableEditorTerrainLayer";
+import {DisplaySortableEditorSceneLayer} from "./DisplaySortableEditorSceneLayer";
 
 export class SceneBase extends SceneBasic {
   public mapSceneInfo: SceneInfo;
@@ -37,9 +38,9 @@ export class SceneBase extends SceneBasic {
     if (this.terrainSceneLayer) {
       this.terrainSceneLayer.onTick(deltaTime);
     }
-    this.topSceneLayer.onTick(deltaTime);
     this.middleSceneLayer.onTick(deltaTime);
     this.bottomSceneLayer.onTick(deltaTime);
+    this.topSceneLayer.onTick(deltaTime);
   }
 
   public onFrame(): void {
@@ -50,9 +51,9 @@ export class SceneBase extends SceneBasic {
     if (this.terrainSceneLayer) {
       this.terrainSceneLayer.onFrame();
     }
-    this.topSceneLayer.onFrame();
     this.middleSceneLayer.onFrame();
     this.bottomSceneLayer.onFrame();
+    this.topSceneLayer.onFrame();
   }
 
   public addSceneEntity(sceneEntity: BasicSceneEntity): BasicSceneEntity {
@@ -129,6 +130,15 @@ export class SceneBase extends SceneBasic {
     }
   }
 
+    public removeAllSceneElements(): void {
+        let element: BasicSceneEntity;
+        for (let i = 0; i < this.mSceneElements.valueList.length; i++) {
+            element = this.mSceneElements.valueList[i];
+            this.deleteSceneElement(element.uid);
+            --i;
+        }
+    }
+
   public removeAllTerrainElements(): void {
 
     let element: BasicSceneEntity;
@@ -192,10 +202,18 @@ export class SceneBase extends SceneBasic {
     this.bottomSceneLayer.scene = this;
     this.addChild(this.bottomSceneLayer);
 
-    this.middleSceneLayer = new DisplaySortableSceneLayer(this.game);
-    this.middleSceneLayer.scene = this;
-    this.middleSceneLayer.needRealTimeDepthSort = true;
-    this.addChild(this.middleSceneLayer);
+    if (GameConfig.isEditor) {
+        this.middleSceneLayer = new DisplaySortableEditorSceneLayer(this.game);
+        this.middleSceneLayer.scene = this;
+        this.middleSceneLayer.needRealTimeDepthSort = true;
+        this.addChild(this.middleSceneLayer);
+    } else {
+        this.middleSceneLayer = new DisplaySortableSceneLayer(this.game);
+        this.middleSceneLayer.scene = this;
+        this.middleSceneLayer.needRealTimeDepthSort = true;
+        this.addChild(this.middleSceneLayer);
+    }
+
 
     this.topSceneLayer = new DisplaySortableSceneLayer(this.game);
     this.topSceneLayer.scene = this;
@@ -226,7 +244,7 @@ export class SceneBase extends SceneBasic {
 
   protected onClearScene(): void {
     super.onClearScene();
-    this.removeSceneElementsBy();
+    this.removeAllSceneElements();
     this.removeAllTerrainElements();
     if (this.terrainSceneLayer) {
       this.terrainSceneLayer.onClear();

@@ -2,8 +2,9 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
+import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 
-export class DisplaySortableSceneLayer extends BasicSceneLayer {
+export class DisplaySortableEditorSceneLayer extends DisplaySortableSceneLayer {
   public needRealTimeDepthSort = false;
   protected mSceneEntities: UniqueLinkList;
   protected SCENE_LAYER_RENDER_DELAY = 100;
@@ -22,12 +23,12 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     d.scene = this.scene;
     d.camera = this.camera;
 
-    d.initialize();
+    // d.initialize();
     d.initPosition();
 
     this.mSceneEntities.add(d);
 
-    this.add(d.display);
+    // this.add(d.display);
     this.markDirty();
   }
 
@@ -74,9 +75,22 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
 
     let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
     while (entity) {
-      entity.onTick(deltaTime);
-      if (entity.isValidDisplay) {
+      if (!entity.initilized) {
+        if (entity.isInScreen()) {
+          entity.initialize();
+          entity.updateDisplay();
+          this.add(entity.display);
+        }
+      } else {
+        entity.onTick(deltaTime);
+        if (entity.isValidDisplay) {
+          if (!this.contains(entity.display)) {
+              this.add(entity.display);
+          }
           this.setChildIndex(entity.display, this.children.length - 1);
+        } else {
+          this.remove(entity.display);
+        }
       }
       entity = this.mSceneEntities.moveNext();
     }

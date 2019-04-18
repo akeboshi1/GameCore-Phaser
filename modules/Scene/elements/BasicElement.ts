@@ -46,16 +46,8 @@ export default class BasicElement extends SceneEntity {
     this.mAnimationDirty = true;
   }
 
-  protected get displayPool(): IObjectPool {
-    let op = Globals.ObjectPoolManager.getObjectPool("BasicElementAvatar");
-    return op;
-  }
-
   protected createDisplay() {
-    let element = this.displayPool.alloc() as BasicElementAvatar;
-    if (null == element) {
-      element = new BasicElementAvatar(Globals.game);
-    }
+    let element = new BasicElementAvatar(Globals.game);
     return element;
   }
 
@@ -71,7 +63,7 @@ export default class BasicElement extends SceneEntity {
     super.onInitialize();
     this.initBaseLoc();
     this.setAngleIndex(this.elementInfo.dir);
-    // this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
+    this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
     this.loadModel(this.elementInfo);
     this.setAnimation(this.elementInfo.animationName);
     this.setScaleX(this.elementInfo.scaleX);

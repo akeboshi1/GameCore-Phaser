@@ -53,9 +53,9 @@ export class TickManager extends BaseSingleton {
           if (!tick.isEnd()) {
             tick.onTick(timeElapsed);
           } else {
-            --i;
-            --len;
             this.m_TickList.splice(i, 1);
+              --i;
+              --len;
           }
         }
     }
@@ -69,9 +69,9 @@ export class TickManager extends BaseSingleton {
             if (!tick.isEnd()) {
                 tick.onRender();
             } else {
-              --i;
-              --len;
               this.m_TickList.splice(i, 1);
+                --i;
+                --len;
             }
         }
     }

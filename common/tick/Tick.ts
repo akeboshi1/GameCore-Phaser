@@ -89,7 +89,7 @@ export class Tick {
     public onClear(): void {}
 
     public onDispose(): void {
-        stop();
+        this.stop();
         this.m_CallBack = null;
         this.m_RenderCall = null;
         this.m_EndFlag = true;

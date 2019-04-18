@@ -104,7 +104,6 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
 
   public onTick(deltaTime: number): void {
     if (this.sceneBuffer.copyDirty) {
-      Log.trace("停下来。。。。。。。。。");
       return;
     }
 

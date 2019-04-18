@@ -76,7 +76,7 @@ export class BasicRoleElement extends SceneEntity {
             this.setAngleIndex(this.characterInfo.avatarDir);
         }
         (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
-        // this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z, true);
+        this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z);
         this.mouseEnable = false;
 
         this.loadModel(this.characterInfo.avatar);

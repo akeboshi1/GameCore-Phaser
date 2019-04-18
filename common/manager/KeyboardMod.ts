@@ -8,6 +8,7 @@ import Globals from "../../Globals";
 import {HashMap} from "../../base/ds/HashMap";
 import Key = Phaser.Key;
 import IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN;
+import {Log} from "../../Log";
 
 export class KeyboardMod extends BaseSingleton {
 
@@ -183,9 +184,9 @@ export class KeyboardMod extends BaseSingleton {
         let content: IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         let keyArr: number[] = this.getKeyDowns();
         if (this.tempKeys === keyArr.toString()) return;
-        // this.tempKeys = keyArr.toString();
+        this.tempKeys = keyArr.toString();
         // Log.trace("down-->", keyArr.toString());
-        // Log.warn("[按键]：" + keyArr.toString());
+        Log.warn("[按键]：" + keyArr.toString());
         content.keyCodes = keyArr;
         Globals.SocketManager.send(pkt);
     }
