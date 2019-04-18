@@ -63,7 +63,7 @@ export default class Game extends Phaser.Game implements IGame {
   public update(value: number): void {
     super.update(value);
     if (!GameConfig.isEditor) {
-      dragonBones.PhaserFactory.factory.dragonBones.advanceTime(value);
+      dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
     }
   }
 
