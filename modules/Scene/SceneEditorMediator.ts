@@ -153,11 +153,7 @@ export class SceneEditorMediator extends SceneMediator {
 
           if (offsetX !== 0 || offsetY !== 0) {
             this.camera.setPosition(targetX, targetY);
-            // this.camera.x = targetX;
-            // this.camera.y = targetY;
           }
-          Log.trace("1坐标", "X : ", this.camera.x, "| Y : ", this.camera.y);
-          Log.trace("1偏移量", "TX : ", offsetX, "| TY : ", offsetY);
         }
         break;
       case  EditorEnum.Mode.ERASER:
