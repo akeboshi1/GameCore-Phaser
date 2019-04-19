@@ -50,7 +50,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         let config = this.getAnimationConfig(animationName);
         if (config) {
             this.animations.play(animationName);
-            this.mIsAnimation = config.frame.length > 1;
+            this.mIsAnimation = config.frameName.length > 1;
         }
         this.scale.x = scaleX || 1;
     }
@@ -133,7 +133,8 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
         let iAnimation: op_gameconfig.IAnimation;
         let animation: Phaser.Animation;
-        for (let i = 0; i < this.mLoadParam.animations.length; i++) {
+        let len  = this.mLoadParam.animations.length;
+        for (let i = 0; i < len; i++) {
             iAnimation = this.mLoadParam.animations[i];
             animation = this.animations.getAnimation(iAnimation.name);
             if (null == animation) {
@@ -143,7 +144,12 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     }
 
     protected closeLoadModel() {
-        this.mModelLoaded = false;
+        if (this.mModelLoaded) {
+            this.animations.destroy();
+            this.mModelLoaded = false;
+        } else {
+            this.game.load.reset();
+        }
     }
 
     protected onUpdateModelURL() {

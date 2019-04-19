@@ -29,9 +29,9 @@ export class TerrainGridLayer extends BasicSceneLayer {
   }
 
   private drawLine(graphics: Phaser.Graphics, x1: number, y1: number, x2: number, y2: number): void {
-    let p = Globals.Room45Util.tileToPixelCoords(x1, y1);
+    let p = Globals.Scene45Util.tileToPixelCoords(x1, y1);
     graphics.moveTo(p.x, p.y);
-    p = Globals.Room45Util.tileToPixelCoords(x2, y2);
+    p = Globals.Scene45Util.tileToPixelCoords(x2, y2);
     graphics.lineTo(p.x, p.y);
   }
 

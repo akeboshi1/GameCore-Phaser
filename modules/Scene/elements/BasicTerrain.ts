@@ -53,21 +53,21 @@ export class BasicTerrain extends SceneEntity {
         if (this.s_rect === undefined) {
             this.s_rect = new Phaser.Rectangle();
         }
-        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
-        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
-        this.s_rect.setTo(_ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
+        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Scene45Util.tileWidth;
+        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Scene45Util.tileHeight;
+        this.s_rect.setTo(_ox, _oy, Globals.Scene45Util.tileWidth * 3, Globals.Scene45Util.tileHeight * 3);
         return this.s_rect;
     }
 
     public isInScreen(): boolean {
-        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Room45Util.tileWidth;
-        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Room45Util.tileHeight;
+        let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0) - Globals.Scene45Util.tileWidth;
+        let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0) - Globals.Scene45Util.tileHeight;
         return Globals.Tool.isRectangleOverlap(this.camera.x, this.camera.y,
-            this.camera.width, this.camera.height, _ox, _oy, Globals.Room45Util.tileWidth * 3, Globals.Room45Util.tileHeight * 3);
+            this.camera.width, this.camera.height, _ox, _oy, Globals.Scene45Util.tileWidth * 3, Globals.Scene45Util.tileHeight * 3);
     }
 
     public setPosition(x: number, y: number, z?: number): void {
-        let p2: Phaser.Point = Globals.Room45Util.tileToPixelCoords(x, y);
+        let p2: Phaser.Point = Globals.Scene45Util.tileToPixelCoords(x, y);
         super.setPosition(p2.x, p2.y, z);
     }
 

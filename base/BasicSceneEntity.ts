@@ -243,7 +243,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   protected onUpdatingDisplay(): void {
     let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
     let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
-    let p3 = Globals.Room45Util.p2top3(_ox, _oy, this.oz);
+    let p3 = Globals.Scene45Util.p2top3(_ox, _oy, this.oz);
 
     this.display.isoX = p3.x;
     this.display.isoY = p3.y;

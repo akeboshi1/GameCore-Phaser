@@ -38,33 +38,50 @@ export class DisplayArmatureDisplay implements IRecycleObject {
     // Log.trace("[动画]", animationName + "_" + t_direct);
   }
 
-  public stopAnimation(): void {
+  protected stopAnimation(): void {
     this.armature.armature.animation.stop();
   }
 
+  private replaceArr = [];
   public replacePart(soltName: string, soltPart: string, soltDir: number, skin: number): void {
     let part: string = soltName.replace("$", soltDir.toString());
     let slot: Slot = this.armature.armature.getSlot(part);
-    let resKey: string = Avatar.AvatarBone.getPartName(soltPart.replace("#", skin.toString())).replace("$", soltDir.toString());
-    let isCache: boolean = Globals.game.cache.checkImageKey(resKey);
+    let key = soltPart.replace("#", skin.toString()).replace("$", soltDir.toString());
+    let resKey: string = Avatar.AvatarBone.getPartName(key);
+    let isCache = Globals.game.cache.checkImageKey(resKey);
     if (isCache) {
       let dis: dragonBones.PhaserSlotDisplay = new dragonBones.PhaserSlotDisplay(Globals.game, slot.display.x, slot.display.y, resKey);
       dis.anchor.set(0.5, 0.5);
       dis.smoothed = false;
       slot.replaceDisplay(dis);
+      this.replaceArr.push({soltName: soltName, soltDir: soltDir});
     }
   }
 
-  public clearPart(soltName: string, soltDir: number): void {
+  public clearParts(): void {
+    if (!this.replaceArr || this.replaceArr.length === 0) {
+      return ;
+    }
+    let len = this.replaceArr.length;
+    for (let i = 0; i < len; i++) {
+      this.clearPart(this.replaceArr[i].soltName, this.replaceArr[i].soltDir);
+    }
+    this.replaceArr.splice(0);
+  }
+
+  protected clearPart(soltName: string, soltDir: number): void {
     let part: string = soltName.replace("$", soltDir.toString());
     let slot: Slot = this.armature.armature.getSlot(part);
     slot.display.loadTexture(null);
   }
 
   public onClear(): void {
+    this.stopAnimation();
+    this.clearParts();
   }
 
   public onDispose(): void {
+    this.onClear();
     if (this.armature) {
       this.armature.destroy();
       this.armature = null;

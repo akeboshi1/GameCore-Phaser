@@ -65,7 +65,7 @@ export class SceneMediator extends MediatorBase {
     }
 
     protected stageResizeHandler(): void {
-        Globals.game.world.setBounds(-GameConfig.GameWidth / 2, -GameConfig.GameHeight / 2, Globals.Room45Util.mapTotalWidth + GameConfig.GameWidth, Globals.Room45Util.mapTotalHeight + GameConfig.GameHeight);
+        Globals.game.world.setBounds(-GameConfig.GameWidth / 2, -GameConfig.GameHeight / 2, Globals.Scene45Util.mapTotalWidth + GameConfig.GameWidth, Globals.Scene45Util.mapTotalHeight + GameConfig.GameHeight);
         this.view.requestStageResize();
     }
 
@@ -198,42 +198,35 @@ export class SceneMediator extends MediatorBase {
         this.view.deleteSceneElement(elementId);
     }
 
-    private first = false;
     protected changedToMapSceneCompleteHandler(): void {
         // clear the last one scene.
-        Log.trace("Scene加载完成监听");
         if (this.view) {
             this.view.clearScene();
         }
         Globals.SceneManager.popupScene();
 
-        // if (this.first) {
-        //     return;
-        // }
-
-        this.first = true;
-
         let mapSceneInfo: SceneInfo = Globals.DataCenter.SceneData.mapInfo;
 
-        Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
+        Globals.Scene45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
         Globals.game.world.setBounds(-GameConfig.GameWidth / 2, -GameConfig.GameHeight / 2, mapSceneInfo.mapTotalWidth + GameConfig.GameWidth, mapSceneInfo.mapTotalHeight + GameConfig.GameHeight);
 
+        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+
+        this.camera.setPosition(currentCharacterInfo.x - GameConfig.GameWidth / 2, currentCharacterInfo.y - GameConfig.GameHeight / 2);
+
         Log.trace("[参数]", "mapW: " + mapSceneInfo.mapTotalWidth + "|mapH:" + mapSceneInfo.mapTotalHeight,
-            "cameraX: " + this.camera.x + "|cameraY:" + this.camera.x + "|cameraW:" + this.camera.width + "|cameraH:" + this.camera.height,
+            "cameraX: " + this.camera.x + "|cameraY:" + this.camera.y + "|cameraW:" + this.camera.width + "|cameraH:" + this.camera.height,
             "gameW: " + GameConfig.GameWidth + "|gameH:" + GameConfig.GameHeight,
         );
 
-        let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
-        this.camera.focusOnXY(currentCharacterInfo.x, currentCharacterInfo.y + GameConst.ROLE_AVATAR_OFFSET_Y);
-
         this.view.initializeScene(mapSceneInfo);
 
-        mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
         this.initializeTerrainItems(mapSceneInfo.terrainConfig);
         this.initializeElementItems(mapSceneInfo.elementConfig);
 
         // 初始化当前玩家其他信息
+
         this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
 
         // 播放场景音效

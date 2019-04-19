@@ -10,6 +10,7 @@ import {GameConfig} from "../../GameConfig";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {op_gameconfig} from "pixelpai_proto";
 import {DisplayArmatureDisplay} from "./DisplayArmatureDisplay";
+import {Log} from "../../Log";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
 
@@ -527,6 +528,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         for (let obj of this.replaceArr) {
             this.armatureDisplay.replacePart(obj.slot, obj.part, obj.dir, obj.skin);
         }
+        this.replaceArr.splice(0);
     }
 
     protected init(): void {
@@ -547,13 +549,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
 
     protected closeLoadModel(): void {
         if (this.modelLoaded) {
-            if (this.armatureDisplay) {
-                this.armatureDisplay.stopAnimation();
-                for (let obj of this.replaceArr) {
-                    this.armatureDisplay.clearPart(obj.slot, obj.dir);
-                }
-                this.replaceArr.splice(0);
-            }
+            this.armatureDisplay.onClear();
             this.mModelLoaded = false;
         }
         this.myModelDirty = false;
@@ -567,12 +563,19 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             ++loadNum;
         }
 
-        for (let obj of this.replaceArr) {
-            let key: string = obj.part.replace("#", obj.skin).replace("$", obj.dir);
-            if (!Globals.game.cache.checkImageKey(Avatar.AvatarBone.getPartName(key))) {
-                Globals.game.load.image(Avatar.AvatarBone.getPartName(key), Avatar.AvatarBone.getPartUrl(key));
+        let len = this.replaceArr.length;
+        let obj;
+        for (let i = 0; i < len; i++) {
+            obj = this.replaceArr[i];
+            let key: string = obj.part.replace("#", obj.skin.toString()).replace("$", obj.dir.toString());
+            let resKey: string = Avatar.AvatarBone.getPartName(key);
+            let urlKey: string = Avatar.AvatarBone.getPartUrl(key);
+            let isCache = Globals.game.cache.checkImageKey(resKey);
+            // if (!isCache) {
+                Globals.game.load.image(resKey, urlKey);
+                Log.trace("resKey-->" + resKey, "urlKey-->" + urlKey);
                 ++loadNum;
-            }
+            // }
         }
 
         if (loadNum > 0) {
@@ -585,6 +588,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
 
     protected modelLoadCompleteHandler(): void {
         this.mModelLoaded = true;
+        Globals.game.load.onLoadComplete.remove(this.modelLoadCompleteHandler, this);
 
         if (this.mLoadCompleteCallback != null) {
             let cb: Function = this.mLoadCompleteCallback;

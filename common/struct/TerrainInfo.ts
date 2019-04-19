@@ -73,7 +73,7 @@ export class TerrainInfo implements ITerrain, IDisplayLoaderParam {
   }
 
   public get uid(): string {
-    return Globals.Room45Util.getUid(this.col, this.row);
+    return Globals.Scene45Util.getUid(this.col, this.row);
   }
 
   private setArea(): void {

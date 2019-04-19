@@ -128,7 +128,7 @@ export class ReferenceArea extends Phaser.Graphics {
     }
 
     this.clear();
-    this.onDraw(Globals.Room45Util.hTileWidth, Globals.Room45Util.hTileHeight);
+    this.onDraw(Globals.Scene45Util.hTileWidth, Globals.Scene45Util.hTileHeight);
 
     if (!this.cacheAsBitmap) {
       this.cacheAsBitmap = true;

@@ -48,7 +48,7 @@ export class SceneEditorMediator extends SceneMediator {
   private mouseDownPos: Phaser.Point = new Phaser.Point;
 
   protected stageResizeHandler(): void {
-    Globals.game.world.setBounds(0, 0, Globals.Room45Util.mapTotalWidth, Globals.Room45Util.mapTotalHeight);
+    Globals.game.world.setBounds(0, 0, Globals.Scene45Util.mapTotalWidth, Globals.Scene45Util.mapTotalHeight);
     this.view.requestStageResize();
   }
 
@@ -204,7 +204,7 @@ export class SceneEditorMediator extends SceneMediator {
 
     Globals.SceneManager.popupScene();
 
-    Globals.Room45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
+    Globals.Scene45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
     Globals.game.world.setBounds(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
     Globals.game.camera.setPosition((mapSceneInfo.mapTotalWidth - GameConfig.GameWidth) >> 1, 0);
@@ -220,7 +220,7 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.terrainGridLayer.initializeMap(mapSceneInfo);
     }
 
-    mapSceneInfo.terrainConfig.sort(Globals.Room45Util.sortDataFunc);
+    mapSceneInfo.terrainConfig.sort(Globals.Scene45Util.sortDataFunc);
     this.initializeTerrainItems(mapSceneInfo.terrainConfig);
     this.initializeElementItems(mapSceneInfo.elementConfig);
 
@@ -272,8 +272,8 @@ export class SceneEditorMediator extends SceneMediator {
   private onAddAllTerrain(value: op_client.ITerrain): void {
     let i = 0;
     let terrain: TerrainInfo;
-    let cols: number = Globals.Room45Util.cols;
-    let rows: number = Globals.Room45Util.rows;
+    let cols: number = Globals.Scene45Util.cols;
+    let rows: number = Globals.Scene45Util.rows;
 
     this.view.terrainSceneLayer.clearShowBitmap();
     for (; i < cols; i++) {
@@ -385,7 +385,7 @@ export class SceneEditorMediator extends SceneMediator {
    * @elementId elementId
    */
   private handleRemoveTerrain(value: any): void {
-    let uid: string = Globals.Room45Util.getUid(+value[0], +value[1]);
+    let uid: string = Globals.Scene45Util.getUid(+value[0], +value[1]);
     this.view.removeTerrainElement(uid);
   }
 
@@ -417,8 +417,8 @@ export class SceneEditorMediator extends SceneMediator {
   private preSendSceneDown(pointer: Phaser.Pointer): void {
     let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
     let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
-    let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
-    if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
+    let tempPoint: Phaser.Point = Globals.Scene45Util.pixelToTileCoords(screenX, screenY);
+    if (tempPoint.x >= 0 && tempPoint.x < Globals.Scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Scene45Util.rows) {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         this.sendScenePoint(tempPoint.x, tempPoint.y);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
@@ -443,8 +443,8 @@ export class SceneEditorMediator extends SceneMediator {
     if (this.mSelectElement) {
       let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
       let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
-      let tempPoint: Phaser.Point = Globals.Room45Util.pixelToTileCoords(screenX, screenY);
-      if (tempPoint.x >= 0 && tempPoint.x < Globals.Room45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Room45Util.rows) {
+      let tempPoint: Phaser.Point = Globals.Scene45Util.pixelToTileCoords(screenX, screenY);
+      if (tempPoint.x >= 0 && tempPoint.x < Globals.Scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Scene45Util.rows) {
         this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
       } else {
         this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y, 0);

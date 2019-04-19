@@ -70,7 +70,7 @@ export default class BasicElement extends SceneEntity {
   }
 
   protected onUpdatingDisplay(): void {
-    let p3 = Globals.Room45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
+    let p3 = Globals.Scene45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
 
     this.display.isoX = p3.x;
     this.display.isoY = p3.y;

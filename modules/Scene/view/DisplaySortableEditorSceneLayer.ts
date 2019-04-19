@@ -70,7 +70,7 @@ export class DisplaySortableEditorSceneLayer extends DisplaySortableSceneLayer {
     }
 
     if (needSort) {
-      this.mSceneEntities.sort(Globals.Room45Util.sortFunc);
+      this.mSceneEntities.sort(Globals.Scene45Util.sortFunc);
     }
 
     let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();

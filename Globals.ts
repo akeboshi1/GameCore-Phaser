@@ -146,7 +146,7 @@ export default class Globals {
   /**
    * 地图工具
    */
-  public static get Room45Util(): Scene45Util {
+  public static get Scene45Util(): Scene45Util {
     return Scene45Util.getInstance();
   }
 
