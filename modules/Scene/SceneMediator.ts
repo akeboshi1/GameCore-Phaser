@@ -289,7 +289,7 @@ export class SceneMediator extends MediatorBase {
                 imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
                 entity.moveToTarget(imove);
             }
-            Log.warn("[走路]：" + Date.now() + "|" + imove.timeSpan, imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
+            // Log.warn("[走路]：" + Date.now() + "|" + imove.timeSpan, imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 

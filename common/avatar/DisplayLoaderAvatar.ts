@@ -144,6 +144,7 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     protected closeLoadModel() {
         if (this.mModelLoaded) {
+            this.animations.stop();
             this.mModelLoaded = false;
         }
     }

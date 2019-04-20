@@ -6,7 +6,7 @@ export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
     public isCanShow = true;
     // moving
-    protected mAngleIndex = 0;
+    protected mAngleIndex = 3;
     protected mWalkAngleIndex = 0; // 走路
     protected mStart: Phaser.Point = new Phaser.Point;
     protected mTarget: Phaser.Point = new Phaser.Point;
@@ -49,56 +49,20 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     public pauseWalk(): void {
-        if (this.myIsWalking) {
+        if (this.isWalking) {
             this.myIsWalking = false;
             this.onPauseMove();
         }
     }
 
+    private newMoveTarget: op_client.IMoveData;
     public moveToTarget(value: op_client.IMoveData): void {
 
-        this.walkAngleIndex = value.direction.valueOf();
-        let angle;
-        switch (this.walkAngleIndex) {
-            case Direction.UP:
-                if (this.angleIndex === 1 || this.angleIndex === 3)
-                    angle = 1;
-                else
-                    angle = 7;
-                break;
-            case Direction.DOWN:
-                if (this.angleIndex === 1 || this.angleIndex === 3)
-                    angle = 3;
-                else
-                    angle = 5;
-                break;
-            case Direction.LEFT:
-                if (this.angleIndex === 1 || this.angleIndex === 7)
-                    angle = 1;
-                else
-                    angle = 3;
-                break;
-            case Direction.RIGHT:
-                if (this.angleIndex === 1 || this.angleIndex === 7)
-                    angle = 7;
-                else
-                    angle = 5;
-                break;
-            case Direction.UPPER_RIGHT:
-                angle = 7;
-                break;
-            case Direction.UPPER_LEFT:
-                angle = 1;
-                break;
-            case Direction.LOWER_RIGHT:
-                angle = 5;
-                break;
-            case Direction.LOWER_LEFT:
-                angle = 3;
-                break;
+        if (this.isWalking) {
+            this.newMoveTarget = value;
+            return;
         }
 
-        this.setAngleIndex(angle);
         this.mTarget.set(value.destinationPoint3f.x, value.destinationPoint3f.y);
         this.mTimeSpan = value.timeSpan;
         this.mWalkTime = 0;
@@ -141,15 +105,29 @@ export default class SceneEntity extends BasicSceneEntity {
         if (this.mWalkTime === 0) {
             this.mStart.set(this.ox, this.oy);
         }
+
         this.mWalkTime += deltaTime;
 
         if (this.mWalkTime >= this.mTimeSpan) {
             this.doPathMoving(this.mTarget.x, this.mTarget.y);
-            this.stopWalk();
+            if (this.newMoveTarget) {
+                this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
+                this.mTimeSpan = this.newMoveTarget.timeSpan;
+                this.mWalkTime = 0;
+                this.newMoveTarget = null;
+            } else {
+                this.stopWalk();
+            }
         } else {
             let _x = this.mStart.x + (this.mTarget.x - this.mStart.x) * this.mWalkTime / this.mTimeSpan;
             let _y = this.mStart.y + (this.mTarget.y - this.mStart.y) * this.mWalkTime / this.mTimeSpan;
             this.doPathMoving(_x, _y);
+            if (this.newMoveTarget) {
+                this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
+                this.mTimeSpan = this.newMoveTarget.timeSpan - deltaTime;
+                this.mWalkTime = 0;
+                this.newMoveTarget = null;
+            }
         }
     }
 
@@ -158,6 +136,43 @@ export default class SceneEntity extends BasicSceneEntity {
         let _x = targetX;
         let _y = targetY;
         let _z = this.oz;
+
+        let dirX = _x - this.ox;
+        let dirY = _y - this.oy;
+
+        if (dirX === 0 && dirY < 0) {
+            if (this.angleIndex === 1 || this.angleIndex === 3) {
+                this.setAngleIndex(1);
+            } else {
+                this.setAngleIndex(7);
+            }
+        } else if (dirX < 0 && dirY < 0) {
+            this.setAngleIndex(1);
+        } else if (dirX < 0 && dirY === 0) {
+            if (this.angleIndex === 1 || this.angleIndex === 7) {
+                this.setAngleIndex(1);
+            } else {
+                this.setAngleIndex(3);
+            }
+        } else if (dirX < 0 && dirY > 0) {
+            this.setAngleIndex(3);
+        } else if (dirX === 0 && dirY > 0) {
+            if (this.angleIndex === 3 || this.angleIndex === 1) {
+                this.setAngleIndex(3);
+            } else {
+                this.setAngleIndex(5);
+            }
+        } else if (dirX > 0 && dirY > 0) {
+            this.setAngleIndex(5);
+        } else if (dirX > 0 && dirY === 0) {
+            if (this.angleIndex === 3 || this.angleIndex === 5) {
+                this.setAngleIndex(5);
+            } else {
+                this.setAngleIndex(7);
+            }
+        } else if (dirX > 0 && dirY < 0) {
+            this.setAngleIndex(7);
+        }
 
         this.setPosition(_x, _y, _z);
     }
