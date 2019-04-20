@@ -10,6 +10,14 @@ export namespace Const {
         MODULE_STATUS_STOP = 2
     }
 
+    export enum LoaderTypeEnum {
+        ImageResource = 1,
+        SheetResource = 2,
+        AudioResource = 3,
+        AtlasResource = 4,
+        NineSliceImageResource = 5
+    }
+
     export enum GameConst {
         MAP_TILE_WIDTH = 62,
         MAP_TILE_HEIGHT = 32,

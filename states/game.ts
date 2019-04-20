@@ -2,6 +2,7 @@ import Globals from "../Globals";
 import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
 import {GameConfig} from "../GameConfig";
+import {LoaderManager} from "../common/manager/LoaderManager";
 
 export default class Game extends Phaser.State {
 
@@ -20,6 +21,7 @@ export default class Game extends Phaser.State {
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
         Globals.DragManager.init(this.game);
+        Globals.LoaderManager.init(this.game);
 
         if (!GameConfig.isEditor) {
             Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT);

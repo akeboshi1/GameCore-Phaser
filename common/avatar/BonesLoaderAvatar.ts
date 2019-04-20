@@ -34,6 +34,8 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     private mAnimatonControlThisObj: any;
     private replaceArr = [];
 
+    protected mLoader: Phaser.Loader;
+
     public setAnimationControlFunc(value: Function, thisObj: any): void {
         this.mAnimatonControlFunc = value;
         this.mAnimatonControlThisObj = thisObj;
@@ -552,14 +554,21 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             this.armatureDisplay.onClear();
             this.mModelLoaded = false;
         }
+        if (this.mLoader) {
+            this.mLoader.reset(true, true);
+        }
         this.myModelDirty = false;
     }
 
     protected onUpdateModelUrl(): void {
         let loadNum = 0;
 
+        if (this.mLoader === undefined) {
+            this.mLoader = new Phaser.Loader(Globals.game);
+        }
+
         if (!Globals.game.cache.checkBinaryKey(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id))) {
-            this.game.load.binary(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id), Assets.Avatar.AvatarBone.getSkeUrl(this.myModel.id));
+            this.mLoader.binary(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id), Assets.Avatar.AvatarBone.getSkeUrl(this.myModel.id));
             ++loadNum;
         }
 
@@ -571,16 +580,15 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             let resKey: string = Avatar.AvatarBone.getPartName(key);
             let urlKey: string = Avatar.AvatarBone.getPartUrl(key);
             let isCache = Globals.game.cache.checkImageKey(resKey);
-            // if (!isCache) {
-                Globals.game.load.image(resKey, urlKey);
-                Log.trace("resKey-->" + resKey, "urlKey-->" + urlKey);
+            if (!isCache) {
+                this.mLoader.image(resKey, urlKey);
                 ++loadNum;
-            // }
+            }
         }
 
         if (loadNum > 0) {
-            Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            Globals.game.load.start();
+            this.mLoader.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
+            this.mLoader.start();
         } else {
             this.modelLoadCompleteHandler();
         }
@@ -588,7 +596,6 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
 
     protected modelLoadCompleteHandler(): void {
         this.mModelLoaded = true;
-        Globals.game.load.onLoadComplete.remove(this.modelLoadCompleteHandler, this);
 
         if (this.mLoadCompleteCallback != null) {
             let cb: Function = this.mLoadCompleteCallback;

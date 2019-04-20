@@ -17,6 +17,7 @@ import {ObjectPoolManager} from "./common/manager/ObjectPoolManager";
 import {ShareObjectCacheManager} from "./common/manager/ShareObjectCacheManager";
 import {DragManager} from "./base/drag/DragManager";
 import {TimeManager} from "./common/manager/TimeManager";
+import {LoaderManager} from "./common/manager/LoaderManager";
 
 export default class Globals {
   private static _game: Phaser.Game;
@@ -63,6 +64,13 @@ export default class Globals {
   public static get LayerManager(): LayerManager {
     return LayerManager.getInstance();
   }
+
+    /**
+     * 加载管理器
+     */
+    public static get LoaderManager(): LoaderManager {
+        return LoaderManager.getInstance();
+    }
 
   /**
    * 缓存管理器

@@ -147,19 +147,16 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         if (this.mModelLoaded) {
             this.animations.destroy();
             this.mModelLoaded = false;
-        } else {
-            this.game.load.reset();
         }
     }
 
     protected onUpdateModelURL() {
         let key: string = this.resKey;
-        if (Globals.game.cache.checkImageKey(key)) {
+        if (this.game.cache.checkImageKey(key)) {
             this.modelLoadCompleteHandler();
         } else {
-            Globals.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.game.load.atlas(key, Load.Url.getRes(this.mLoadParam.display.texturePath), Load.Url.getRes(this.mLoadParam.display.dataPath));
-            this.game.load.start();
+            let loader = Globals.LoaderManager.createAtlasLoader(key, Load.Url.getRes(this.mLoadParam.display.texturePath), Load.Url.getRes(this.mLoadParam.display.dataPath));
+            loader.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
         }
     }
 
