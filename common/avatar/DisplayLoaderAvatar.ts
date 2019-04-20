@@ -109,7 +109,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     public onClear(): void {
         this.closeLoadModel();
-        this.loadTexture(null);
         this.config = null;
         this.mLoadCompleteCallback = null;
         this.mLoadErrorCallback = null;
@@ -145,7 +144,6 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
 
     protected closeLoadModel() {
         if (this.mModelLoaded) {
-            this.animations.destroy();
             this.mModelLoaded = false;
         }
     }
