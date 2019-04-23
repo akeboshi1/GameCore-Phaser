@@ -90,24 +90,43 @@ export class SceneInfo {
 
     public setTerrainInfo(value: op_client.ITerrain[]): void {
         this._terrainConfig = [];
-        let terrains = value;
-        let len: number = terrains.length;
+        let len: number = value.length;
         let terrain: TerrainInfo;
         for (let i = 0; i < len; i++) {
           terrain = new TerrainInfo();
-          terrain.setInfo(terrains[i]);
+          terrain.setInfo(value[i]);
           this._terrainConfig.push(terrain);
+        }
+    }
+
+    public addTerrainInfo(value: op_client.ITerrain[]): void {
+        let len: number = value.length;
+        let terrain: TerrainInfo;
+        for (let i = 0; i < len; i++) {
+            terrain = new TerrainInfo();
+            terrain.setInfo(value[i]);
+            this._terrainConfig.push(terrain);
         }
     }
 
     public setElementInfo(value: op_client.IElement[]): void {
         this._elementConfig = [];
-        let elements = value;
-        let len: number = elements.length;
+        let len: number = value.length;
         let element: ElementInfo;
         for (let i = 0; i < len; i++) {
             element = new ElementInfo();
-            element.setInfo(elements[i]);
+            element.setInfo(value[i]);
+            this._elementConfig.push(element);
+        }
+    }
+
+    public addElementInfo(value: op_client.IElement[]): void {
+        this._elementConfig = [];
+        let len: number = value.length;
+        let element: ElementInfo;
+        for (let i = 0; i < len; i++) {
+            element = new ElementInfo();
+            element.setInfo(value[i]);
             this._elementConfig.push(element);
         }
     }

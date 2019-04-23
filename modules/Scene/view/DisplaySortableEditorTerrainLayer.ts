@@ -3,7 +3,6 @@ import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {GameConfig} from "../../../GameConfig";
 import Globals from "../../../Globals";
 import {SceneBuffer} from "./SceneBuffer";
-import {Log} from "../../../Log";
 
 export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer {
   protected mStaticContainer: Phaser.Image;

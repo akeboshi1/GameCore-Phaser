@@ -110,18 +110,22 @@ export class SceneMediator extends MediatorBase {
      * @param value
      */
     protected handleAddTerrain(value: op_client.ITerrain[]): void {
-        let len = value.length;
-        let iTerrain: op_client.ITerrain;
-        for (let i = 0; i < len; i++) {
-            iTerrain = value[i];
-            let terrain: TerrainInfo = new TerrainInfo();
-            terrain.setInfo(iTerrain);
-            this.addTerrain(terrain);
-        }
+        // todo:分批的
     }
 
+    /**
+     * 监听添加地块完成
+     * @param value
+     */
     protected handleAddTerrainEnd(): void {
-        // this.view.terrainSceneLayer.onAddComplete(); 暂时不用了
+        let value = Globals.DataCenter.SceneData.mapInfo.terrainConfig;
+        value.sort(Globals.Scene45Util.sortDataFunc);
+        let len = value.length;
+        let terrain: TerrainInfo
+        for (let i = 0; i < len; i++) {
+            terrain = value[i];
+            this.addTerrain(terrain);
+        }
     }
 
     /**
@@ -289,7 +293,7 @@ export class SceneMediator extends MediatorBase {
                 imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
                 entity.moveToTarget(imove);
             }
-            // Log.warn("[走路]：" + Date.now() + "|" + imove.timeSpan, imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
+            Log.warn("[走路]： " + imove.direction.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 
@@ -300,11 +304,11 @@ export class SceneMediator extends MediatorBase {
             imove = posData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer && this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.stop_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
+                this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
             }
             if (entity) {
-                imove.destinationPoint3f.x = imove.destinationPoint3f.x >> 0;
-                imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
+                imove.destinationPoint3f.x = imove.destinationPoint3f.x;
+                imove.destinationPoint3f.y = imove.destinationPoint3f.y;
                 entity.moveStopTarget(imove);
             }
             // Log.warn("[停止]： " + Date.now(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);

@@ -55,7 +55,7 @@ class Handler extends BasePacketHandler {
     // 没想到吧，这是潘老板写的
     private handleServerAddTerrain(packet: PBpacket): void {
         let terrain: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
-        Globals.DataCenter.SceneData.mapInfo.setTerrainInfo(terrain.terrain)
+        Globals.DataCenter.SceneData.mapInfo.addTerrainInfo(terrain.terrain);
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, terrain.terrain);
     }
 
@@ -65,7 +65,7 @@ class Handler extends BasePacketHandler {
 
     private handleServerAddElement(packet: PBpacket): void {
         let element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
-        Globals.DataCenter.SceneData.mapInfo.setElementInfo(element.elements)
+        Globals.DataCenter.SceneData.mapInfo.addElementInfo(element.elements)
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, element.elements);
     }
 

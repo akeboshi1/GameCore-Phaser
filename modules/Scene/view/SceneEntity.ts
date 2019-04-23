@@ -56,10 +56,11 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     private newMoveTarget: op_client.IMoveData;
+    private newMoveTime = 0;
     public moveToTarget(value: op_client.IMoveData): void {
-
         if (this.isWalking) {
             this.newMoveTarget = value;
+            this.newMoveTime = Date.now();
             return;
         }
 
@@ -108,12 +109,16 @@ export default class SceneEntity extends BasicSceneEntity {
 
         this.mWalkTime += deltaTime;
 
+        let temp = 0;
         if (this.mWalkTime >= this.mTimeSpan) {
-            this.doPathMoving(this.mTarget.x, this.mTarget.y);
+            this.doPathMoving(this.mTarget.x, this.mTarget.y, this.angleIndex);
+
             if (this.newMoveTarget) {
                 this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
-                this.mTimeSpan = this.newMoveTarget.timeSpan;
+                temp = Date.now() - this.newMoveTime;
+                this.mTimeSpan = this.newMoveTarget.timeSpan - temp;
                 this.mWalkTime = 0;
+                this.newMoveTime = 0;
                 this.newMoveTarget = null;
             } else {
                 this.stopWalk();
@@ -122,56 +127,63 @@ export default class SceneEntity extends BasicSceneEntity {
             let _x = this.mStart.x + (this.mTarget.x - this.mStart.x) * this.mWalkTime / this.mTimeSpan;
             let _y = this.mStart.y + (this.mTarget.y - this.mStart.y) * this.mWalkTime / this.mTimeSpan;
             this.doPathMoving(_x, _y);
+
             if (this.newMoveTarget) {
                 this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
-                this.mTimeSpan = this.newMoveTarget.timeSpan - deltaTime;
+                temp = Date.now() - this.newMoveTime;
+                this.mTimeSpan = this.newMoveTarget.timeSpan - temp;
                 this.mWalkTime = 0;
+                this.newMoveTime = 0;
                 this.newMoveTarget = null;
             }
         }
     }
 
-    protected doPathMoving(targetX: number, targetY: number): void {
+    protected doPathMoving(targetX: number, targetY: number, angleIndex?: number): void {
 
         let _x = targetX;
         let _y = targetY;
         let _z = this.oz;
 
-        let dirX = _x - this.ox;
-        let dirY = _y - this.oy;
+        if (angleIndex) {
+            this.setAngleIndex(angleIndex);
+        } else {
+            let dirX = _x - this.ox;
+            let dirY = _y - this.oy;
 
-        if (dirX === 0 && dirY < 0) {
-            if (this.angleIndex === 1 || this.angleIndex === 3) {
+            if (dirX === 0 && dirY < 0) {
+                if (this.angleIndex === 1 || this.angleIndex === 3) {
+                    this.setAngleIndex(1);
+                } else {
+                    this.setAngleIndex(7);
+                }
+            } else if (dirX < 0 && dirY < 0) {
                 this.setAngleIndex(1);
-            } else {
+            } else if (dirX < 0 && dirY === 0) {
+                if (this.angleIndex === 1 || this.angleIndex === 7) {
+                    this.setAngleIndex(1);
+                } else {
+                    this.setAngleIndex(3);
+                }
+            } else if (dirX < 0 && dirY > 0) {
+                this.setAngleIndex(3);
+            } else if (dirX === 0 && dirY > 0) {
+                if (this.angleIndex === 3 || this.angleIndex === 1) {
+                    this.setAngleIndex(3);
+                } else {
+                    this.setAngleIndex(5);
+                }
+            } else if (dirX > 0 && dirY > 0) {
+                this.setAngleIndex(5);
+            } else if (dirX > 0 && dirY === 0) {
+                if (this.angleIndex === 3 || this.angleIndex === 5) {
+                    this.setAngleIndex(5);
+                } else {
+                    this.setAngleIndex(7);
+                }
+            } else if (dirX > 0 && dirY < 0) {
                 this.setAngleIndex(7);
             }
-        } else if (dirX < 0 && dirY < 0) {
-            this.setAngleIndex(1);
-        } else if (dirX < 0 && dirY === 0) {
-            if (this.angleIndex === 1 || this.angleIndex === 7) {
-                this.setAngleIndex(1);
-            } else {
-                this.setAngleIndex(3);
-            }
-        } else if (dirX < 0 && dirY > 0) {
-            this.setAngleIndex(3);
-        } else if (dirX === 0 && dirY > 0) {
-            if (this.angleIndex === 3 || this.angleIndex === 1) {
-                this.setAngleIndex(3);
-            } else {
-                this.setAngleIndex(5);
-            }
-        } else if (dirX > 0 && dirY > 0) {
-            this.setAngleIndex(5);
-        } else if (dirX > 0 && dirY === 0) {
-            if (this.angleIndex === 3 || this.angleIndex === 5) {
-                this.setAngleIndex(5);
-            } else {
-                this.setAngleIndex(7);
-            }
-        } else if (dirX > 0 && dirY < 0) {
-            this.setAngleIndex(7);
         }
 
         this.setPosition(_x, _y, _z);
