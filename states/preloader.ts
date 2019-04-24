@@ -14,6 +14,23 @@ export default class Preloader extends Phaser.State {
             this.loadAtlases(GameConfig.preLoadList.atlas);
           }
         }
+        //todo: 测试
+
+        let texturePath = "404/terrains/5caea3b530542d555307c2ac/1/5caea3b530542d555307c2ac.png";
+        let dataPath = "404/terrains/5caea3b530542d555307c2ac/1/5caea3b530542d555307c2ac.json";
+        let key: string = Load.Atlas.getKey(texturePath + dataPath);
+        this.game.load.atlas(key, Load.Url.getRes(texturePath), Load.Url.getRes(dataPath));
+
+        texturePath = "404/terrains/5caea2f330542d555307c2a5/1/5caea2f330542d555307c2a5.png";
+        dataPath = "404/terrains/5caea2f330542d555307c2a5/1/5caea2f330542d555307c2a5.json";
+        key = Load.Atlas.getKey(texturePath + dataPath);
+        this.game.load.atlas(key, Load.Url.getRes(texturePath), Load.Url.getRes(dataPath));
+
+        texturePath = "404/terrains/5caea39330542d555307c2a9/1/5caea39330542d555307c2a9.png";
+        dataPath = "404/terrains/5caea39330542d555307c2a9/1/5caea39330542d555307c2a9.json";
+        key = Load.Atlas.getKey(texturePath + dataPath);
+        this.game.load.atlas(key, Load.Url.getRes(texturePath), Load.Url.getRes(dataPath));
+
         this.loadFonts();
         this.loadScripts();
         if (GameConfig.isEditor) {

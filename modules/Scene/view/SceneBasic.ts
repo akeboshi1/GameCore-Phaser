@@ -61,10 +61,6 @@ export class SceneBasic extends BasicAnimatedViewElement {
         }
     }
 
-    public onTick(deltaTime: number): void {
-        // this.camera.onTick(deltaTime);
-    }
-
     protected onActivedScene(): void {
         //
         this.visible = this.registerForUpdates = true;

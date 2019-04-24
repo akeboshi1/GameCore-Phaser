@@ -126,6 +126,7 @@ export class SceneMediator extends MediatorBase {
             terrain = value[i];
             this.addTerrain(terrain);
         }
+        // this.camera.follow(this.view.currentSelfPlayer.display);
     }
 
     /**
@@ -217,6 +218,10 @@ export class SceneMediator extends MediatorBase {
 
         let currentCharacterInfo: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
 
+        // 初始化当前玩家其他信息
+
+
+
         this.camera.setPosition(currentCharacterInfo.x - GameConfig.GameWidth / 2, currentCharacterInfo.y - GameConfig.GameHeight / 2);
 
         Log.trace("[参数]", "mapW: " + mapSceneInfo.mapTotalWidth + "|mapH:" + mapSceneInfo.mapTotalHeight,
@@ -226,12 +231,12 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
+
+        // this.camera.follow(this.view.currentSelfPlayer.display);
+
         this.initializeTerrainItems(mapSceneInfo.terrainConfig);
         this.initializeElementItems(mapSceneInfo.elementConfig);
-
-        // 初始化当前玩家其他信息
-
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
 
         // 播放场景音效
         // Globals.SoundManager.playBgSound(1);
@@ -287,6 +292,9 @@ export class SceneMediator extends MediatorBase {
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
+                if (this.camera.target == null) {
+                    this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+                }
             }
             if (entity) {
                 imove.destinationPoint3f.x = imove.destinationPoint3f.x >> 0;

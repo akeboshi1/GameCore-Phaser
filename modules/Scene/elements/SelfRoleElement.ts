@@ -8,9 +8,9 @@ export class SelfRoleElement extends RoleElement {
     public initialize(): void {
         super.initialize();
         // follow camera
-        if (this.camera) {
-            this.camera.follow(this.display);
-        }
+        // if (this.camera) {
+        //     this.camera.follow(this.display);
+        // }
     }
 
     public isInScreen(): boolean {
@@ -20,9 +20,9 @@ export class SelfRoleElement extends RoleElement {
     public onDispose(): void {
         super.onDispose();
         // unFollow camera
-        if (this.camera) {
-            this.camera.unfollow();
-        }
+        // if (this.camera) {
+        //     this.camera.unfollow();
+        // }
     }
 
     protected checkIsValidDisplayAvatar(): void {
