@@ -3,9 +3,7 @@ import {ReferenceArea} from "../../../common/struct/ReferenceArea";
 import Globals from "../../../Globals";
 import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "../view/SceneBase";
-import {Log} from "../../../Log";
-import { ElementInfo } from "game-core/common/struct/ElementInfo";
-import { GameConfig } from "app/core/models/game-config/game-config";
+import {ElementInfo} from "../../../common/struct/ElementInfo";
 
 export class ReferenceElementEffect extends BasicSceneEntity {
   constructor() {
