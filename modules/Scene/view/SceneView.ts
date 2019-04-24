@@ -9,41 +9,41 @@ import BasicElement from "../elements/BasicElement";
 import {SceneBase} from "./SceneBase";
 import {BasicTerrain} from "../elements/BasicTerrain";
 import {SelectElementEffect} from "../effects/SelectElementEffect";
+import {ReferenceArea} from "../../../common/struct/ReferenceArea";
+import {ReferenceElementEffect} from "../effects/ReferenceElementEffect";
 
 export class SceneView extends SceneBase {
-    public currentSelfPlayer: SelfRoleElement;
+  public currentSelfPlayer: SelfRoleElement;
 
-  protected selectEffect: SelectElementEffect;
-    public addSceneElement(sceneElementType: number,
-                           uid: number, elemetData: any,
-                           isSelf: boolean = false): BasicSceneEntity {
+  public addSceneElement(sceneElementType: number,
+                         uid: number, elemetData: any,
+                         isSelf: boolean = false): BasicSceneEntity {
 
-        let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
+    let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
 
-        element.uid = uid;
-        element.elementTypeId = sceneElementType;
-        element.data = elemetData;
+    element.uid = uid;
+    element.elementTypeId = sceneElementType;
+    element.data = elemetData;
 
-        element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-            , this.mapSceneInfo.tileHeight >> 1);
-        // this.drawSceneLayer.addDraw(element.collisionArea);
+    element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+      , this.mapSceneInfo.tileHeight >> 1);
 
-        this.addSceneEntity(element);
+    this.addSceneEntity(element);
 
-        Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
+    Globals.MessageCenter.emit(MessageType.ADD_SCENE_ELEMENT, element);
 
-        return element;
-    }
+    return element;
+  }
 
-    public addTerrainElement(uid: string, elementData: any): BasicSceneEntity {
+  public addTerrainElement(uid: string, elementData: any): BasicSceneEntity {
 
-      let element: BasicSceneEntity = new BasicTerrain();
-      element.uid = uid;
-      element.data = elementData;
+    let element: BasicSceneEntity = new BasicTerrain();
+    element.uid = uid;
+    element.data = elementData;
 
-      this.addTerrainEntity(element);
-      return element;
-    }
+    this.addTerrainEntity(element);
+    return element;
+  }
 
   public insertTerrainElement(uid: string, elementData: any, all: boolean = false): BasicSceneEntity {
 
@@ -55,6 +55,7 @@ export class SceneView extends SceneBase {
     return element;
   }
 
+  protected selectEffect: SelectElementEffect;
   public playSelectElementEffect(value: number): void {
     if (this.selectEffect) {
       this.stopSelectElementEffect();
@@ -71,41 +72,58 @@ export class SceneView extends SceneBase {
     }
   }
 
-    protected onInitializeScene(value: SceneInfo): void {
-        this.mapSceneInfo = value;
-        super.onInitializeScene(value);
+  protected referenceEffect: ReferenceElementEffect;
+  public showReferenceEffect(value: number): void {
+    if (this.referenceEffect) {
+      this.stopReferenceEffect();
     }
+    this.referenceEffect = new ReferenceElementEffect();
+    this.referenceEffect.data = value;
+    this.addSceneEffect(this.referenceEffect, 0);
+  }
 
-    protected onClearScene(): void {
-        super.onClearScene();
-        this.currentSelfPlayer = null;
+  public stopReferenceEffect(): void {
+    if (this.referenceEffect) {
+      this.removeSceneEffect(this.referenceEffect, 0);
+      this.referenceEffect = null;
     }
+  }
 
-    protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
-        let element: BasicSceneEntity = null;
+  protected onInitializeScene(value: SceneInfo): void {
+    this.mapSceneInfo = value;
+    super.onInitializeScene(value);
+  }
 
-        switch (sceneElementType) {
+  protected onClearScene(): void {
+    super.onClearScene();
+    this.currentSelfPlayer = null;
+  }
 
-            case Const.SceneElementType.ROLE :
-                // 当前玩家
-                if (isSelf) {
-                    if (!this.currentSelfPlayer) {
-                        this.currentSelfPlayer = new SelfRoleElement();
-                    }
-                    element = this.currentSelfPlayer;
-                } else {
-                    element = new RoleElement();
-                }
-                break;
+  protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
+    let element: BasicSceneEntity = null;
 
-            case Const.SceneElementType.ELEMENT :
-                element = new BasicElement();
-                break;
+    switch (sceneElementType) {
 
-            default:
-                break;
+      case Const.SceneElementType.ROLE :
+        // 当前玩家
+        if (isSelf) {
+          if (!this.currentSelfPlayer) {
+            this.currentSelfPlayer = new SelfRoleElement();
+          }
+          element = this.currentSelfPlayer;
+        } else {
+          element = new RoleElement();
         }
+        break;
 
-        return element;
+      case Const.SceneElementType.ELEMENT :
+        element = new BasicElement();
+        break;
+
+      default:
+        break;
     }
+
+    return element;
+  }
 }

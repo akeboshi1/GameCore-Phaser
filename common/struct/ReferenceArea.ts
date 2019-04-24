@@ -3,9 +3,9 @@ import Globals from "../../Globals";
 
 export class ReferenceArea extends Phaser.Graphics {
 
-  constructor(game: Phaser.Game, value: string, orgin?: Phaser.Point, color?: number, alpha?: number) {
+  constructor(game: Phaser.Game, value?: string, orgin?: Phaser.Point, color?: number, alpha?: number) {
     super(game);
-    this.areaStr = value;
+    this.areaStr = value || "";
     this._color = color || -1;
     this._alpha = alpha || 0;
     this._orgin = orgin || new Phaser.Point(0, 0);
@@ -47,12 +47,11 @@ export class ReferenceArea extends Phaser.Graphics {
 
   protected _rows = 0;
 
-  public onReset(value: string, orgin?: Phaser.Point, color?: number, alpha?: number): void {
+  public setting(value: string, orgin?: Phaser.Point, color?: number, alpha?: number): void {
     this.areaStr = value;
     this._color = color || -1;
     this._alpha = alpha || 0;
     this._orgin = orgin || new Phaser.Point(0, 0);
-    this.areaArr.splice(0);
 
     if (this.cacheAsBitmap) {
       this.cacheAsBitmap = false;
@@ -90,15 +89,6 @@ export class ReferenceArea extends Phaser.Graphics {
     }
 
     this.endFill();
-
-    // let ox =  -ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * (hTileWidth >> 1);
-    // let oy =  -(this._orgin.x + this._orgin.y) * (hTileHeight >> 1);
-
-    // let ox =  -ReferenceArea.room45.originX
-    // let oy =  0;
-    //
-    // this.x = ox;
-    // this.y = oy;
   }
 
   public setPosition(x: number, y: number): void {

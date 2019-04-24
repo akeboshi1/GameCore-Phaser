@@ -64,7 +64,7 @@ export class MouseFollower extends Phaser.Sprite implements IAnimatedObject, ITi
             this.mReferenceArea = new ReferenceArea(this.game, value, orgin, color);
             this.addChildAt(this.mReferenceArea, 0);
         } else {
-            this.mReferenceArea.onReset(value, orgin, color);
+            this.mReferenceArea.setting(value, orgin, color);
         }
     }
 

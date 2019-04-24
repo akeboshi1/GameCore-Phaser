@@ -19,9 +19,9 @@ export class SceneBase extends SceneBasic {
   // layers...
   public terrainGridLayer: TerrainGridLayer = null;
   public terrainSceneLayer: DisplaySortableSceneLayer = null;
-  public topSceneLayer: DisplaySortableSceneLayer = null;
-  public middleSceneLayer: DisplaySortableSceneLayer = null;
   public bottomSceneLayer: DisplaySortableSceneLayer = null;
+  public middleSceneLayer: DisplaySortableSceneLayer = null;
+  public topSceneLayer: DisplaySortableSceneLayer = null;
 
   // all scenes terrains
   private mSceneTerrains: HashMap = new HashMap();
@@ -220,12 +220,20 @@ export class SceneBase extends SceneBasic {
     this.addChild(this.topSceneLayer);
   }
 
-  public addSceneEffect(element: BasicSceneEntity): void {
-    this.topSceneLayer.addEntity(element);
+  public addSceneEffect(element: BasicSceneEntity, layer: number  = 1): void {
+    if (layer === 1) {
+      this.topSceneLayer.addEntity(element);
+    } else {
+      this.bottomSceneLayer.addEntity(element);
+    }
   }
 
-  public removeSceneEffect(element: BasicSceneEntity): void {
-    this.topSceneLayer.removeEntity(element);
+  public removeSceneEffect(element: BasicSceneEntity, layer: number  = 1): void {
+    if (layer === 1) {
+      this.topSceneLayer.removeEntity(element);
+    } else {
+      this.bottomSceneLayer.removeEntity(element);
+    }
   }
 
   protected onInitializeScene(value: SceneInfo): void {

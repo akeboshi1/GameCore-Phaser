@@ -9,9 +9,6 @@ export class SelectElementEffect extends BasicSceneEntity {
     super();
   }
 
-  private offsetX = 0;
-  private offsetY = 0;
-
   protected createDisplay() {
     let dis = Globals.game.make.image(0, 0, EDITOR.SelectFlag.getName());
     return dis;

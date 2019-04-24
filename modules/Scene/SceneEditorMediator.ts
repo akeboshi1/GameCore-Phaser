@@ -91,6 +91,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
     Globals.MessageCenter.on(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     Globals.MessageCenter.on(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
+    Globals.MessageCenter.on(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
   }
 
   public unRegisterSceneListenerHandler(): void {
@@ -100,6 +101,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_ALL_TERRAIN, this.handleRemoveAllTerrain, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
     super.unRegisterSceneListenerHandler();
   }
 
@@ -247,6 +249,14 @@ export class SceneEditorMediator extends SceneMediator {
 
   protected handleSelectElement(value: number): void {
       this.view.playSelectElementEffect(value);
+      this.view.showReferenceEffect(value);
+  }
+
+  protected handleFixedToElement(value: number): void {
+    let element = this.view.getSceneElement(value);
+    if (element) {
+      Globals.game.camera.setPosition(element.ox, element.oy);
+    }
   }
 
   /**
@@ -353,6 +363,7 @@ export class SceneEditorMediator extends SceneMediator {
     }
 
     this.view.stopSelectElementEffect();
+    this.view.stopReferenceEffect();
 
     // Game events
     Globals.game.input.onDown.remove(this.onGameDown, this);
@@ -398,7 +409,7 @@ export class SceneEditorMediator extends SceneMediator {
     this.sendSceneObject([elementId]);
     if (this.em.mode === EditorEnum.Mode.SELECT) {
       this.mSelectElement = tempElement;
-      this.view.playSelectElementEffect(tempElement.data.id);
+      this.handleSelectElement(tempElement.data.id);
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
     }

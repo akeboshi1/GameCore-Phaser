@@ -45,6 +45,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.handleDeleteTerrain);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.handleMouseFollow);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SELECT_ELEMENT, this.handleSelectElement);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FIXED_TO_ELEMENT, this.handleFixedToElement);
     }
 
     private handleMouseFollow(packet: PBpacket): void {
@@ -65,7 +66,7 @@ class Handler extends BasePacketHandler {
 
     private handleServerAddElement(packet: PBpacket): void {
         let element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
-        Globals.DataCenter.SceneData.mapInfo.addElementInfo(element.elements)
+        Globals.DataCenter.SceneData.mapInfo.addElementInfo(element.elements);
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, element.elements);
     }
 
@@ -123,18 +124,23 @@ class Handler extends BasePacketHandler {
 
     private handleChangeEditorMode(packet: PBpacket): void {
         let modeData: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
-        // Log.trace(modeData.mode, modeData.type);
         Globals.DataCenter.EditorData.changeEditorMode(modeData.mode, modeData.type);
     }
 
     private handleAddElement(packet: PBpacket): void {
         let elementData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_ELEMENT = packet.content;
+        Globals.DataCenter.SceneData.mapInfo.addElementInfo([elementData.element]);
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, [elementData.element]);
     }
 
     private handleSelectElement(packet: PBpacket): void {
       let elementData: op_client.IOP_EDITOR_REQ_CLIENT_SELECT_ELEMENT = packet.content;
       Globals.MessageCenter.emit(MessageType.SCENE_SELECT_ELEMENT, elementData.id);
+    }
+
+    private handleFixedToElement(packet: PBpacket): void {
+      let elementData: op_client.IOP_EDITOR_REQ_CLIENT_FIXED_TO_ELEMENT = packet.content;
+      Globals.MessageCenter.emit(MessageType.SCENE_FIXED_TO_ELEMENT, elementData.id);
     }
 
     private handleAddTerrain(packet: PBpacket): void {
