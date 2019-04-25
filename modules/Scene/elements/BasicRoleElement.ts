@@ -49,11 +49,13 @@ export class BasicRoleElement extends SceneEntity {
 
     protected onPauseMove(): void {
         this.invalidAnimation();
+        super.onPauseMove();
     }
 
     protected onStartMove(): void {
         this.myAnimationName = Const.ModelStateType.BONES_STAND;
         this.invalidAnimation();
+        super.onStartMove();
     }
 
     protected onAvatarAnimationChanged(): void {
