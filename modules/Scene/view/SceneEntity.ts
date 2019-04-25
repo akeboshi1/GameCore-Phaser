@@ -1,6 +1,7 @@
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {op_client} from "pixelpai_proto";
 import Direction = op_client.Direction;
+import Globals from "../../../Globals";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
@@ -45,6 +46,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
     public stopWalk(): void {
         this.pauseWalk();
+        this.doPauseMove();
         this.mWalkTime = this.mTimeSpan = 0;
     }
 
@@ -55,20 +57,56 @@ export default class SceneEntity extends BasicSceneEntity {
         }
     }
 
-    private newMoveTarget: op_client.IMoveData;
-    private newMoveTime = 0;
     public moveToTarget(value: op_client.IMoveData): void {
-        if (this.isWalking) {
-            this.newMoveTarget = value;
-            this.newMoveTime = Date.now();
-            return;
+        this.walkAngleIndex = value.direction.valueOf();
+        let angle;
+        switch (this.walkAngleIndex) {
+            case Direction.UP:
+                if (this.angleIndex === 1 || this.angleIndex === 3)
+                    angle = 1;
+                else
+                    angle = 7;
+                break;
+            case Direction.DOWN:
+                if (this.angleIndex === 1 || this.angleIndex === 3)
+                    angle = 3;
+                else
+                    angle = 5;
+                break;
+            case Direction.LEFT:
+                if (this.angleIndex === 1 || this.angleIndex === 7)
+                    angle = 1;
+                else
+                    angle = 3;
+                break;
+            case Direction.RIGHT:
+                if (this.angleIndex === 1 || this.angleIndex === 7)
+                    angle = 7;
+                else
+                    angle = 5;
+                break;
+            case Direction.UPPER_RIGHT:
+                angle = 7;
+                break;
+            case Direction.UPPER_LEFT:
+                angle = 1;
+                break;
+            case Direction.LOWER_RIGHT:
+                angle = 5;
+                break;
+            case Direction.LOWER_LEFT:
+                angle = 3;
+                break;
         }
+
+        this.setAngleIndex(angle);
 
         this.mTarget.set(value.destinationPoint3f.x, value.destinationPoint3f.y);
         this.mTimeSpan = value.timeSpan;
         this.mWalkTime = 0;
 
         this.resumeWalk();
+        this.doMove();
     }
 
     public moveStopTarget(value: op_client.IMovePosition): void {
@@ -97,96 +135,27 @@ export default class SceneEntity extends BasicSceneEntity {
     protected onPauseMove(): void {
     }
 
-    protected onUpdating(deltaTime: number): void {
-        if (this.myIsWalking) this.onUpdatingPosition(deltaTime);
-        super.onUpdating(deltaTime);
+    protected mMovementTween: Phaser.Tween | null;
+    protected doMove() {
+        // by 7
+        this.doPauseMove();
+
+        this.myIsWalking = true;
+        this.mMovementTween = Globals.game.add.tween(this).to({ox: this.mTarget.x, oy: this.mTarget.y},
+            this.mTimeSpan, Phaser.Easing.Linear.None, true);
+
+        this.mMovementTween.onComplete.add((target, tween) => {
+            target.stopWalk();
+        }, this);
+        this.mMovementTween.onUpdateCallback((tween, value, tweenData) => {
+        });
     }
 
-    protected onUpdatingPosition(deltaTime: number): void {
-        if (this.mWalkTime === 0) {
-            this.mStart.set(this.ox, this.oy);
+    protected doPauseMove() {
+        if (this.mMovementTween) {
+            this.mMovementTween.stop();
         }
-
-        this.mWalkTime += deltaTime;
-
-        let temp = 0;
-        if (this.mWalkTime >= this.mTimeSpan) {
-            this.doPathMoving(this.mTarget.x, this.mTarget.y, this.angleIndex);
-
-            if (this.newMoveTarget) {
-                this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
-                temp = Date.now() - this.newMoveTime;
-                this.mTimeSpan = this.newMoveTarget.timeSpan - temp;
-                this.mWalkTime = 0;
-                this.newMoveTime = 0;
-                this.newMoveTarget = null;
-            } else {
-                this.stopWalk();
-            }
-        } else {
-            let _x = this.mStart.x + (this.mTarget.x - this.mStart.x) * this.mWalkTime / this.mTimeSpan;
-            let _y = this.mStart.y + (this.mTarget.y - this.mStart.y) * this.mWalkTime / this.mTimeSpan;
-            this.doPathMoving(_x, _y);
-
-            if (this.newMoveTarget) {
-                this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
-                temp = Date.now() - this.newMoveTime;
-                this.mTimeSpan = this.newMoveTarget.timeSpan - temp;
-                this.mWalkTime = 0;
-                this.newMoveTime = 0;
-                this.newMoveTarget = null;
-            }
-        }
-    }
-
-    protected doPathMoving(targetX: number, targetY: number, angleIndex?: number): void {
-
-        let _x = targetX;
-        let _y = targetY;
-        let _z = this.oz;
-
-        if (angleIndex) {
-            this.setAngleIndex(angleIndex);
-        } else {
-            let dirX = _x - this.ox;
-            let dirY = _y - this.oy;
-
-            if (dirX === 0 && dirY < 0) {
-                if (this.angleIndex === 1 || this.angleIndex === 3) {
-                    this.setAngleIndex(1);
-                } else {
-                    this.setAngleIndex(7);
-                }
-            } else if (dirX < 0 && dirY < 0) {
-                this.setAngleIndex(1);
-            } else if (dirX < 0 && dirY === 0) {
-                if (this.angleIndex === 1 || this.angleIndex === 7) {
-                    this.setAngleIndex(1);
-                } else {
-                    this.setAngleIndex(3);
-                }
-            } else if (dirX < 0 && dirY > 0) {
-                this.setAngleIndex(3);
-            } else if (dirX === 0 && dirY > 0) {
-                if (this.angleIndex === 3 || this.angleIndex === 1) {
-                    this.setAngleIndex(3);
-                } else {
-                    this.setAngleIndex(5);
-                }
-            } else if (dirX > 0 && dirY > 0) {
-                this.setAngleIndex(5);
-            } else if (dirX > 0 && dirY === 0) {
-                if (this.angleIndex === 3 || this.angleIndex === 5) {
-                    this.setAngleIndex(5);
-                } else {
-                    this.setAngleIndex(7);
-                }
-            } else if (dirX > 0 && dirY < 0) {
-                this.setAngleIndex(7);
-            }
-        }
-
-        this.setPosition(_x, _y, _z);
+        this.myIsWalking = false;
     }
 
     protected checkIsValidDisplayAvatar(): void {
