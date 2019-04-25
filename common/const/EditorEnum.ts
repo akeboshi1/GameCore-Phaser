@@ -12,7 +12,7 @@ export namespace EditorEnum {
 }
 
   export enum Type {
-    TERRAIN = "terrains",
-    ELEMENT = "elements"
+    TERRAIN = "TerrainNode",
+    ELEMENT = "ElementNode"
   }
 }
