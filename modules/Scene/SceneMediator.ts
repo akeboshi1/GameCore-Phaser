@@ -293,7 +293,7 @@ export class SceneMediator extends MediatorBase {
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
                 if (this.camera.target == null) {
-                    this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+                    this.camera.follow(this.view.currentSelfPlayer.display);
                 }
             }
             if (entity) {
@@ -301,7 +301,7 @@ export class SceneMediator extends MediatorBase {
                 imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
                 entity.moveToTarget(imove);
             }
-            Log.warn("[走路]： " + imove.direction.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
+            // Log.warn("[走路]： " + imove.direction.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 
@@ -355,6 +355,9 @@ export class SceneMediator extends MediatorBase {
 
     private changeSceneToHandle(): void {
         // mapScene
+        if (this.camera.target) {
+            this.camera.unfollow();
+        }
         this.sceneLoader.setLoadCallback(this.changedToMapSceneStartHandler, this.changedToMapSceneCompleteHandler, this);
         this.sceneLoader.changedToMap(Globals.DataCenter.SceneData.mapInfo);
     }
