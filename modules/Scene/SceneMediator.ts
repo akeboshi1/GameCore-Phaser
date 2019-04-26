@@ -258,7 +258,7 @@ export class SceneMediator extends MediatorBase {
         Globals.SocketManager.send(pkt);
 
         Log.trace("【场景已就绪】");
-    }
+    }sdf
 
     protected initializeTerrainItems(datas: Array<any>): void {
         let len: number = datas.length;
@@ -293,7 +293,7 @@ export class SceneMediator extends MediatorBase {
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
                 if (this.camera.target == null) {
-                    this.camera.follow(this.view.currentSelfPlayer.display);
+                    this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
                 }
             }
             if (entity) {
