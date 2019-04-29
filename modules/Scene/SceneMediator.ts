@@ -291,17 +291,18 @@ export class SceneMediator extends MediatorBase {
             imove = moveData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.move_graphics, imove.destinationPoint3f.x >> 0, imove.destinationPoint3f.y >> 0);
+                this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
                 if (this.camera.target == null) {
-                    this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+                    this.camera.follow(this.view.currentSelfPlayer.display);
                 }
             }
             if (entity) {
-                imove.destinationPoint3f.x = imove.destinationPoint3f.x >> 0;
-                imove.destinationPoint3f.y = imove.destinationPoint3f.y >> 0;
+                imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
+                imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
+
                 entity.moveToTarget(imove);
             }
-            // Log.warn("[走路]： " + imove.direction.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
+            Log.warn("[走路]： " + imove.timeSpan.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 

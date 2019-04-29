@@ -2,9 +2,7 @@ import {BasicAvatar} from "../../base/BasicAvatar";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import Globals from "../../Globals";
-import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {op_gameconfig} from "pixelpai_proto";
-import {Log} from "../../Log";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
@@ -43,7 +41,7 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     public setModelName(value: string, color: string): void {
         this.mHeadName.text = value;
-        this.mHeadName.fill = color;
+        // this.mHeadName.fill = color;
     }
 
     public loadModel(model: op_gameconfig.IAvatar): void {
@@ -66,7 +64,11 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar.visible = false;
         this.addChild(this.mLoaderAvatar);
 
-        this.mHeadName = Globals.game.make.text(-12, -96, "" , {fontSize: 12});
+        this.mHeadName = Globals.game.make.text(0, -96, "" , {fontSize: 15, fill: "#FFF"});
+        this.mHeadName.anchor.set(0.5);
+        this.mHeadName.align = "center";
+        this.mHeadName.stroke = "#000";
+        this.mHeadName.strokeThickness = 3;
         this.addChild(this.mHeadName);
     }
 
