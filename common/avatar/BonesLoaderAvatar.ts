@@ -579,8 +579,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             let key: string = obj.part.replace("#", obj.skin.toString()).replace("$", obj.dir.toString());
             let resKey: string = Avatar.AvatarBone.getPartName(key);
             let urlKey: string = Avatar.AvatarBone.getPartUrl(key);
-            let isCache = Globals.game.cache.checkImageKey(resKey);
-            if (!isCache) {
+            if (!Globals.game.cache.checkImageKey(resKey)) {
                 this.mLoader.image(resKey, urlKey);
                 ++loadNum;
             }

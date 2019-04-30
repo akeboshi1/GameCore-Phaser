@@ -52,22 +52,6 @@ export class StorageMediator extends MediatorBase {
         for (let i = 0; i < len; i++) {
             item = new StorageListItem(Globals.game);
             item.setEnable(true);
-            // let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
-            // animation.baseLoc = "-102,-149";
-            // animation.collisionArea = "1,1,1,1&1,1,1,1&1,1,1,1&1,1,1,1";
-            // animation.frame = [0];
-            // animation.frameRate = 12;
-            // animation.id = 11095928;
-            // animation.name = "idle";
-            // animation.originPoint = [3, 3];
-            // animation.walkOriginPoint = [3, 3];
-            // animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
-            // value[i].animations = [animation];
-            // value[i].animationName = "idle";
-            // value[i].display = {
-            //     texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
-            //     dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"
-            // };
             item.data = value[i];
             this.view.m_List.addItem(item);
         }

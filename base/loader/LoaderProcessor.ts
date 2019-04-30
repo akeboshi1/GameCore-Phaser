@@ -32,6 +32,9 @@ export class LoaderProcessor {
             loader = new Phaser.Loader(this.game);
         }
         switch (type) {
+            case LoaderTypeEnum.ImageResource:
+                loader.image(key, param[0]);
+                break;
             case LoaderTypeEnum.AtlasResource:
                 loader.atlas(key, param[0], param[1]);
                 break;
