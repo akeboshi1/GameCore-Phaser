@@ -9,21 +9,22 @@ import DropType = Const.DropType;
 import Globals from "../../../../Globals";
 import DragType = Const.DragType;
 import {DisplayLoaderAvatar} from "../../../../common/avatar/DisplayLoaderAvatar";
+import {BaseIcon} from "../../../../base/component/icon/BaseIcon";
 
 export class StorageListItem extends ListItemComponent implements IListItemComponent {
-    protected m_Icon: DisplayLoaderAvatar;
+    protected m_Icon: BaseIcon;
 
     constructor( game: Phaser.Game ) {
         super(game);
     }
 
-    public get icon(): DisplayLoaderAvatar {
+    public get icon(): BaseIcon {
         return this.m_Icon;
     }
 
     protected init(): void {
         this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
-        this.m_Icon = new DisplayLoaderAvatar(this.game);
+        this.m_Icon = new BaseIcon(this.game);
         this.add(this.m_Icon);
         super.init();
     }
@@ -45,16 +46,7 @@ export class StorageListItem extends ListItemComponent implements IListItemCompo
 
     protected render(): void {
         if (this.m_Icon) {
-            this.m_Icon.loadModel({
-                animations: this.data.animations,
-                display: this.data.display
-            }, this, null, this.onLoadComplete);
-        }
-    }
-
-    protected onLoadComplete(): void {
-        if (this.m_Icon) {
-            this.m_Icon.playAnimation(this.data.animationName);
+            this.m_Icon.load(this.data.display.texturePath);
         }
     }
 }
