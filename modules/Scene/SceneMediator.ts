@@ -258,7 +258,7 @@ export class SceneMediator extends MediatorBase {
         Globals.SocketManager.send(pkt);
 
         Log.trace("【场景已就绪】");
-    }sdf
+    }
 
     protected initializeTerrainItems(datas: Array<any>): void {
         let len: number = datas.length;
@@ -299,6 +299,9 @@ export class SceneMediator extends MediatorBase {
             if (entity) {
                 imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
                 imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
+
+                // imove.destinationPoint3f.x = entity.ox + 10;
+                // imove.destinationPoint3f.y = entity.oy + 10;
 
                 entity.moveToTarget(imove);
             }

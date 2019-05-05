@@ -11,6 +11,7 @@ import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {op_gameconfig} from "pixelpai_proto";
 import {DisplayArmatureDisplay} from "./DisplayArmatureDisplay";
 import {Log} from "../../Log";
+import {Load} from "../../Assets";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
 
@@ -33,8 +34,6 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     private mAnimatonControlFuncDitry: boolean;
     private mAnimatonControlThisObj: any;
     private replaceArr = [];
-
-    protected mLoader: Phaser.Loader;
 
     public setAnimationControlFunc(value: Function, thisObj: any): void {
         this.mAnimatonControlFunc = value;
@@ -554,22 +553,17 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             this.armatureDisplay.onClear();
             this.mModelLoaded = false;
         }
-        if (this.mLoader) {
-            this.mLoader.reset(true, true);
-        }
         this.myModelDirty = false;
     }
 
+    private m_LoadNum = 0;
     protected onUpdateModelUrl(): void {
-        let loadNum = 0;
-
-        if (this.mLoader === undefined) {
-            this.mLoader = new Phaser.Loader(Globals.game);
-        }
-
-        if (!Globals.game.cache.checkBinaryKey(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id))) {
-            this.mLoader.binary(Assets.Avatar.AvatarBone.getSkeName(this.myModel.id), Assets.Avatar.AvatarBone.getSkeUrl(this.myModel.id));
-            ++loadNum;
+        this.m_LoadNum = 0;
+        let resKey = Assets.Avatar.AvatarBone.getSkeName(this.myModel.id);
+        if (!Globals.game.cache.checkBinaryKey(resKey)) {
+            ++this.m_LoadNum;
+            let bloader = Globals.LoaderManager.createBinaryLoader(resKey, Assets.Avatar.AvatarBone.getSkeUrl(this.myModel.id));
+            bloader.onLoadComplete.addOnce(this.binaryLoadCompleteHandler, this);
         }
 
         let len = this.replaceArr.length;
@@ -577,18 +571,29 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         for (let i = 0; i < len; i++) {
             obj = this.replaceArr[i];
             let key: string = obj.part.replace("#", obj.skin.toString()).replace("$", obj.dir.toString());
-            let resKey: string = Avatar.AvatarBone.getPartName(key);
-            let urlKey: string = Avatar.AvatarBone.getPartUrl(key);
+            resKey = Avatar.AvatarBone.getPartName(key);
             if (!Globals.game.cache.checkImageKey(resKey)) {
-                this.mLoader.image(resKey, urlKey);
-                ++loadNum;
+                ++this.m_LoadNum;
+                let mloader = Globals.LoaderManager.createImageLoader(resKey, Avatar.AvatarBone.getPartUrl(key));
+                mloader.onLoadComplete.addOnce(this.imageLoadCompleteHandler, this);
             }
         }
 
-        if (loadNum > 0) {
-            this.mLoader.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-            this.mLoader.start();
-        } else {
+        if (this.m_LoadNum === 0) {
+            this.modelLoadCompleteHandler();
+        }
+    }
+
+    protected binaryLoadCompleteHandler(): void {
+        --this.m_LoadNum;
+        if (this.m_LoadNum === 0) {
+            this.modelLoadCompleteHandler();
+        }
+    }
+
+    protected imageLoadCompleteHandler(): void {
+        --this.m_LoadNum;
+        if (this.m_LoadNum === 0) {
             this.modelLoadCompleteHandler();
         }
     }
