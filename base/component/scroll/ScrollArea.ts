@@ -38,7 +38,7 @@ export class ScrollArea extends Phaser.Group {
         clickXThreshold: 5,
         clickYThreshold: 5,
         offsetX: 0,
-        offsetY: 20
+        offsetY: 0
     };
     private velocityWheelXAbs: number;
     private velocityWheelYAbs: number;

@@ -115,7 +115,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
             if (this.newMoveTarget) {
                 this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
-                temp = Date.now() - this.newMoveTime;
+                temp = 0; // Date.now() - this.newMoveTime;
                 this.mTimeSpan = this.newMoveTarget.timeSpan - temp;
                 this.mWalkTime = 0;
                 this.newMoveTime = 0;
@@ -130,7 +130,7 @@ export default class SceneEntity extends BasicSceneEntity {
 
             if (this.newMoveTarget) {
                 this.mTarget.set(this.newMoveTarget.destinationPoint3f.x, this.newMoveTarget.destinationPoint3f.y);
-                temp = Date.now() - this.newMoveTime;
+                temp = 0; // Date.now() - this.newMoveTime;
                 this.mTimeSpan = this.newMoveTarget.timeSpan - temp;
                 this.mWalkTime = 0;
                 this.newMoveTime = 0;

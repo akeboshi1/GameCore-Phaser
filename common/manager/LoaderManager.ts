@@ -17,12 +17,20 @@ export class LoaderManager extends BaseSingleton {
         this.m_LoaderProcessor = new LoaderProcessor(this.game);
     }
 
-    public createImageLoader(key: string, png: string): Phaser.Loader {
+    public createBinaryLoader(key: string, value: string): Phaser.Loader {
         if (null == key) {
             Log.warn("加载路径为空");
             return null;
         }
-        return this.m_LoaderProcessor.getLoader(key, LoaderTypeEnum.ImageResource);
+        return this.m_LoaderProcessor.getLoader(key, LoaderTypeEnum.BinaryResource, value);
+    }
+
+    public createImageLoader(key: string, value: string): Phaser.Loader {
+        if (null == key) {
+            Log.warn("加载路径为空");
+            return null;
+        }
+        return this.m_LoaderProcessor.getLoader(key, LoaderTypeEnum.ImageResource, value);
     }
 
     public createAtlasLoader(key: string, textureURL: string, atlasURL: string): Phaser.Loader {

@@ -15,7 +15,8 @@ export namespace Const {
         SheetResource = 2,
         AudioResource = 3,
         AtlasResource = 4,
-        NineSliceImageResource = 5
+        NineSliceImageResource = 5,
+        BinaryResource = 6
     }
 
     export enum GameConst {
