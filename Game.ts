@@ -26,7 +26,8 @@ export default class Game extends Phaser.Game implements IGame {
       height: value.height,
       renderer: Phaser.AUTO,
       parent: "game",
-      resolution: 1
+      resolution: 1,
+      disableVisibilityChange: true
     };
     super(config);
 
@@ -65,6 +66,10 @@ export default class Game extends Phaser.Game implements IGame {
     if (!GameConfig.isEditor) {
       dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1);
     }
+  }
+
+  public wake(): void {
+    
   }
 
 
