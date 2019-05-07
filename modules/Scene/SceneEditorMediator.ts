@@ -193,7 +193,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private onMouseMove(): void {
-    if (this.em.mode === EditorEnum.Mode.BRUSH && this.em.type === EditorEnum.Type.TERRAIN && this.isGameDown) {
+    if (this.em.mode === EditorEnum.Mode.BRUSH && this.em.type === EditorEnum.Type.TERRAIN && this.isGameDown && this.mousePointer.isDown) {
       this.preSendSceneDown(this.mousePointer);
     }
   }
