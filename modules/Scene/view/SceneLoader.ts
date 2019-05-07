@@ -3,11 +3,11 @@ import {SceneInfo} from "../../../common/struct/SceneInfo";
 import Globals from "../../../Globals";
 import "phaser-ce";
 import {Sound} from "../../../Assets";
-import { TerrainInfo } from "game-core/common/struct/TerrainInfo";
 import {Load} from "../../../Assets";
 import { Hash } from "crypto";
-import { HashMap } from "game-core/base/ds/HashMap";
 import { op_gameconfig } from "pixelpai_proto";
+import {TerrainInfo} from "../../../common/struct/TerrainInfo";
+import {HashMap} from "../../../base/ds/HashMap";
 
 export class SceneLoader {
     public loadStartCallback: Function;
