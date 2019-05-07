@@ -1,32 +1,34 @@
-import {SceneInfo} from "../../../common/struct/SceneInfo";
-import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
-import {Const} from "../../../common/const/Const";
+import { SceneInfo } from "../../../common/struct/SceneInfo";
+import { BasicSceneEntity } from "../../../base/BasicSceneEntity";
+import { Const } from "../../../common/const/Const";
 import Globals from "../../../Globals";
-import {MessageType} from "../../../common/const/MessageType";
-import {SelfRoleElement} from "../elements/SelfRoleElement";
-import {RoleElement} from "../elements/RoleElement";
+import { MessageType } from "../../../common/const/MessageType";
+import { SelfRoleElement } from "../elements/SelfRoleElement";
+import { RoleElement } from "../elements/RoleElement";
 import BasicElement from "../elements/BasicElement";
-import {SceneBase} from "./SceneBase";
-import {BasicTerrain} from "../elements/BasicTerrain";
-import {SelectElementEffect} from "../effects/SelectElementEffect";
-import {ReferenceArea} from "../../../common/struct/ReferenceArea";
-import {ReferenceElementEffect} from "../effects/ReferenceElementEffect";
+import { SceneBase } from "./SceneBase";
+import { BasicTerrain } from "../elements/BasicTerrain";
+import { SelectElementEffect } from "../effects/SelectElementEffect";
+import { ReferenceArea } from "../../../common/struct/ReferenceArea";
+import { ReferenceElementEffect } from "../effects/ReferenceElementEffect";
 
 export class SceneView extends SceneBase {
   public currentSelfPlayer: SelfRoleElement;
 
-  public addSceneElement(sceneElementType: number,
-                         uid: number, elemetData: any,
-                         isSelf: boolean = false): BasicSceneEntity {
-
+  public addSceneElement(
+    sceneElementType: number,
+    uid: number,
+    elemetData: any,
+    isSelf: boolean = false
+  ): BasicSceneEntity {
     let element: BasicSceneEntity = this.createElementByType(sceneElementType, elemetData, isSelf);
 
     element.uid = uid;
     element.elementTypeId = sceneElementType;
     element.data = elemetData;
 
-    element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
-      , this.mapSceneInfo.tileHeight >> 1);
+    // element.setCollisionArea(elemetData.collisionArea, elemetData.originCollisionPoint, this.mapSceneInfo.tileWidth >> 1
+    //   , this.mapSceneInfo.tileHeight >> 1);
 
     this.addSceneEntity(element);
 
@@ -36,7 +38,6 @@ export class SceneView extends SceneBase {
   }
 
   public addTerrainElement(uid: string, elementData: any): BasicSceneEntity {
-
     let element: BasicSceneEntity = new BasicTerrain();
     element.uid = uid;
     element.data = elementData;
@@ -45,8 +46,11 @@ export class SceneView extends SceneBase {
     return element;
   }
 
-  public insertTerrainElement(uid: string, elementData: any, all: boolean = false): BasicSceneEntity {
-
+  public insertTerrainElement(
+    uid: string,
+    elementData: any,
+    all: boolean = false
+  ): BasicSceneEntity {
     let element: BasicSceneEntity = new BasicTerrain();
     element.uid = uid;
     element.data = elementData;
@@ -99,12 +103,15 @@ export class SceneView extends SceneBase {
     this.currentSelfPlayer = null;
   }
 
-  protected createElementByType(sceneElementType: number, elemetData: any, isSelf: boolean = false): BasicSceneEntity {
+  protected createElementByType(
+    sceneElementType: number,
+    elemetData: any,
+    isSelf: boolean = false
+  ): BasicSceneEntity {
     let element: BasicSceneEntity = null;
 
     switch (sceneElementType) {
-
-      case Const.SceneElementType.ROLE :
+      case Const.SceneElementType.ROLE:
         // 当前玩家
         if (isSelf) {
           if (!this.currentSelfPlayer) {
@@ -116,7 +123,7 @@ export class SceneView extends SceneBase {
         }
         break;
 
-      case Const.SceneElementType.ELEMENT :
+      case Const.SceneElementType.ELEMENT:
         element = new BasicElement();
         break;
 
