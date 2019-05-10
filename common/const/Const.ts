@@ -28,7 +28,8 @@ export namespace Const {
         DEFAULT_VISIBLE_TEST_RADIUS = 150,
         MASK_ALPHA = 0.5,
         ROLE_AVATAR_OFFSET_Y = 8,
-        BONES_SCALE = 1
+        BONES_SCALE = 1,
+        EDITOR_BORDER = 200
     }
 
   export enum ClockIDEnum {

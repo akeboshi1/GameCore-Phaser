@@ -208,8 +208,8 @@ export class SceneEditorMediator extends SceneMediator {
 
     Globals.Scene45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
 
-    Globals.game.world.setBounds(-100, -100, mapSceneInfo.mapTotalWidth + 200, mapSceneInfo.mapTotalHeight + 200);
-    Globals.game.camera.setPosition((mapSceneInfo.mapTotalWidth - GameConfig.GameWidth) >> 1, -100);
+    Globals.game.world.setBounds(-Const.GameConst.EDITOR_BORDER >> 1, -Const.GameConst.EDITOR_BORDER >> 1, mapSceneInfo.mapTotalWidth + Const.GameConst.EDITOR_BORDER, mapSceneInfo.mapTotalHeight + Const.GameConst.EDITOR_BORDER);
+    Globals.game.camera.setPosition((mapSceneInfo.mapTotalWidth - GameConfig.GameWidth) >> 1, -Const.GameConst.EDITOR_BORDER >> 1);
 
     Log.trace("[参数]", "mapW: " + mapSceneInfo.mapTotalWidth + "|mapH:" + mapSceneInfo.mapTotalHeight,
       "cameraX: " + this.camera.x + "|cameraY:" + this.camera.x + "|cameraW:" + this.camera.width + "|cameraH:" + this.camera.height,
