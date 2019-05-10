@@ -3,29 +3,6 @@ import {GameConfig} from "./GameConfig";
 import * as path from "path";
 import * as url from "url";
 
-export namespace Atlases {
-    export class AtlasesPreloadSpritesArray {
-        static getName(): string {
-            return "preload_sprites_array";
-        }
-
-        static getJSONArray(): string {
-            return require("assets/atlases/preload_sprites_array.json");
-        }
-
-        static getPNG(): string {
-            return require("assets/atlases/preload_sprites_array.png");
-        }
-    }
-
-    export namespace AtlasesPreloadSpritesArray {
-        export enum Frames {
-            PreloadBar = "preload_bar.png",
-            PreloadFrame = "preload_frame.png",
-        }
-    }
-}
-
 export namespace Load {
     export class Url {
         static getRes(value: string): string {
@@ -65,18 +42,6 @@ export namespace Load {
     export class Nineslice {
         static getKey(key: string): string {
             return key + "_nineslice";
-        }
-    }
-}
-
-export namespace Images {
-    export class ImagesTile {
-        static getName(id: number): string {
-            return "tile_" + id + "_png";
-        }
-
-        static getPNG(id: number): string {
-            return "assets/images/terrain/terrain_" + id + ".png";
         }
     }
 }
@@ -385,6 +350,28 @@ export namespace UI {
 
         static getHeight(): number {
             return 16;
+        }
+    }
+
+    export class Loading {
+        static getName(): string {
+            return "loading_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/loading.png");
+        }
+
+        static getWidth(): number {
+            return 30;
+        }
+
+        static getHeight(): number {
+            return 30;
+        }
+
+        static getFrame(): number {
+            return 8;
         }
     }
 

@@ -20,6 +20,7 @@ export class ReferenceElementEffect extends BasicSceneEntity {
     let element: ElementInfo = Globals.DataCenter.SceneData.mapInfo.getElementInfo(this.data);
     if (element) {
       this.display.setting(element.config.collisionArea, element.config.originPoint ? new Phaser.Point(element.config.originPoint[0], element.config.originPoint[1]) : new Phaser.Point());
+      this.display.setScale(element.scaleX);
     }
   }
 

@@ -1,11 +1,11 @@
-import * as Assets from "../Assets";
+import {UI} from "../Assets";
 
 export default class Boot extends Phaser.State {
     public preload(): void {
         this.game.plugins.add(Phaser.Plugin.Isometric);
         this.game.plugins.add(PhaserNineSlice.Plugin);
         this.game.plugins.add(PhaserInput.Plugin);
-        this.game.load.atlasJSONArray(Assets.Atlases.AtlasesPreloadSpritesArray.getName(), Assets.Atlases.AtlasesPreloadSpritesArray.getPNG(), Assets.Atlases.AtlasesPreloadSpritesArray.getJSONArray());
+        this.game.load.spritesheet(UI.Loading.getName(), UI.Loading.getPNG(), UI.Loading.getWidth(), UI.Loading.getHeight(), UI.Loading.getFrame());
     }
 
     public create(): void {
