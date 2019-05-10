@@ -38,7 +38,7 @@ export class KeyboardMod extends BaseSingleton {
         // this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT,
         //     Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D]);
 
-        let codeList: number[] = [Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.W, Phaser.Keyboard.A, Phaser.Keyboard.S, Phaser.Keyboard.D,
+        let codeList: number[] = [Phaser.Keyboard.ENTER, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.W, Phaser.Keyboard.A, Phaser.Keyboard.S, Phaser.Keyboard.D,
             Phaser.Keyboard.B, Phaser.Keyboard.F, Phaser.Keyboard.ONE, Phaser.Keyboard.TWO, Phaser.Keyboard.THREE, Phaser.Keyboard.FOUR, Phaser.Keyboard.FIVE, Phaser.Keyboard.SIX, Phaser.Keyboard.SEVEN,
             Phaser.Keyboard.EIGHT, Phaser.Keyboard.NINE, Phaser.Keyboard.ZERO, Phaser.Keyboard.UNDERSCORE, Phaser.Keyboard.EQUALS];
 
@@ -192,13 +192,13 @@ export class KeyboardMod extends BaseSingleton {
     }
 
     private keyDownHandle(key: Phaser.Key): void {
-        this.onUpdate();
         this.onDown(key.keyCode);
+        this.onUpdate();
     }
 
     private keyUpHandle(key: Phaser.Key): void {
-        this.onUpdate();
         this.onUp(key.keyCode);
+        this.onUpdate();
     }
 
     public getKeyDowns(): number[] {

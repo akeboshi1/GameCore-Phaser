@@ -14,17 +14,32 @@ export class ChatMediator extends MediatorBase {
 
     public onRegister(): void {
         Globals.MessageCenter.on(MessageType.CHAT_TO, this.onHandleChat, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ENTER, this.onEnterHandle, this);
         this.view.bt.on("up", this.onHandleBt, this);
+        this.view.input_tf.focusIn.add(this.onFocusIn, this);
+        this.view.input_tf.focusOut.add(this.onFocusOut, this);
+
+        (<any>this.view.input_tf).domElement.element.addEventListener("keydown", this.sayHello.bind(this));
+
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.TWO, this.handleTwo, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.THREE, this.handleThree, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.FOUR, this.handleFour, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.FIVE, this.handleFive, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.SIX, this.handleSix, this);
+
         super.onRegister();
+    }
 
+    private sayHello(event) {
+        if (event.keyCode === Phaser.Keyboard.ENTER) {
+            this.onHandleBt();
+        }
+    }
 
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.TWO, this.handleTwo, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.THREE, this.handleThree, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.FOUR, this.handleFour, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.FIVE, this.handleFive, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.SIX, this.handleSix, this);
+    private onFocusIn(): void {
+    }
+
+    private onFocusOut(): void {
     }
 
     private handleOne(): void {
@@ -132,16 +147,19 @@ export class ChatMediator extends MediatorBase {
 
     public onRemove(): void {
         Globals.MessageCenter.cancel(MessageType.CHAT_TO, this.onHandleChat, this);
-        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.ENTER, this.onEnterHandle, this);
         this.view.bt.cancel("up", this.onHandleBt);
-        if (this.view.input_tf) {
-          this.view.input_tf.endFocus();
-        }
-        super.onRemove();
-    }
+        this.view.input_tf.focusIn.remove(this.onFocusIn, this);
+        this.view.input_tf.focusOut.remove(this.onFocusOut, this);
 
-    private onEnterHandle(): void {
-        this.onHandleBt();
+        (<any>this.view.input_tf).domElement.element.removeEventListener("keydown", this.sayHello.bind(this));
+
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.TWO, this.handleTwo, this);
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.THREE, this.handleThree, this);
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.FOUR, this.handleFour, this);
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.FIVE, this.handleFive, this);
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.SIX, this.handleSix, this);
+        super.onRemove();
     }
 
     private onHandleChat(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
@@ -153,6 +171,7 @@ export class ChatMediator extends MediatorBase {
         if (this.view.inputValue === "") {
             return;
         }
+        this.view.input_tf.endFocus();
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT);
         let content: IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = pkt.content;
         content.chatChannel = 0;
