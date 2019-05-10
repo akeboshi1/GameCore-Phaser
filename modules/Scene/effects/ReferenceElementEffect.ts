@@ -24,6 +24,12 @@ export class ReferenceElementEffect extends BasicSceneEntity {
     }
   }
 
+  public setScale(scaleX: boolean) {
+    if (this.display) {
+      this.display.setScale(scaleX);
+    }
+  }
+
   protected onUpdating(deltaTime: number): void {
     let elementId: number = this.data;
     let element: BasicElement = (<SceneBase>this.scene).getSceneElement(elementId) as BasicElement;

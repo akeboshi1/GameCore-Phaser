@@ -337,6 +337,7 @@ export class SceneMediator extends MediatorBase {
                 entity.setAnimation(ichange.animationName);
                 entity.setScaleX(ichange.scale);
             }
+            this.view.setReferenceScale(ichange.scale);
         }
     }
 

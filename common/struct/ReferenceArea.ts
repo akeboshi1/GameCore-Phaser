@@ -103,9 +103,13 @@ export class ReferenceArea extends Phaser.Graphics {
     }
   }
 
-  public setScale(value: number): void {
-    this._scale = value;
-    this.scale.x = value;
+  public setScale(value: number|boolean): void {
+    if (typeof value === "boolean") {
+      this._scale = value ? -1 : 1;
+    } else {
+      this._scale = value;
+    }
+    this.scale.x = this._scale;
   }
 
   protected init(): void {
