@@ -47,6 +47,8 @@ export class ReferenceArea extends Phaser.Graphics {
 
   protected _rows = 0;
 
+  protected _scale = 1;
+
   public setting(value: string, orgin?: Phaser.Point, color?: number, alpha?: number): void {
     this.areaStr = value;
     this._color = color || -1;
@@ -92,8 +94,18 @@ export class ReferenceArea extends Phaser.Graphics {
   }
 
   public setPosition(x: number, y: number): void {
-    this.x = x - ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
-    this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
+    if (this._scale === 1) {
+      this.x = x - ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
+      this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
+    } else {
+      this.x = x + ReferenceArea.room45.mapTotalWidth - (ReferenceArea.room45.mapTotalWidth - ReferenceArea.room45.originX) - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
+      this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
+    }
+  }
+
+  public setScale(value: number): void {
+    this._scale = value;
+    this.scale.x = value;
   }
 
   protected init(): void {
