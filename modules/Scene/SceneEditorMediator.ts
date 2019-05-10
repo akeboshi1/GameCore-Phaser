@@ -92,6 +92,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     Globals.MessageCenter.on(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
+    Globals.MessageCenter.on(MessageType.SCENE_UPDATE_ELEMENT, this.handlerUpdateElement, this);
   }
 
   public unRegisterSceneListenerHandler(): void {
@@ -102,6 +103,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.cancel(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_ELEMENT, this.handlerUpdateElement, this);
     super.unRegisterSceneListenerHandler();
   }
 
@@ -256,6 +258,13 @@ export class SceneEditorMediator extends SceneMediator {
     let element = this.view.getSceneElement(value);
     if (element) {
       Globals.game.camera.setPosition(element.ox, element.oy);
+    }
+  }
+
+  protected handlerUpdateElement(value: number): void {
+    const element = this.view.getSceneElement(value);
+    if (element) {
+      this.view.showReferenceEffect(value);
     }
   }
 

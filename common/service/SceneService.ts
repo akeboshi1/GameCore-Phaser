@@ -46,6 +46,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.handleMouseFollow);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SELECT_ELEMENT, this.handleSelectElement);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FIXED_TO_ELEMENT, this.handleFixedToElement);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_ELEMENT, this.handlerUpdateElement);
     }
 
     private handleMouseFollow(packet: PBpacket): void {
@@ -141,6 +142,15 @@ class Handler extends BasePacketHandler {
     private handleFixedToElement(packet: PBpacket): void {
       let elementData: op_client.IOP_EDITOR_REQ_CLIENT_FIXED_TO_ELEMENT = packet.content;
       Globals.MessageCenter.emit(MessageType.SCENE_FIXED_TO_ELEMENT, elementData.id);
+    }
+
+    private handlerUpdateElement(packet: PBpacket): void {
+        let elementData: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_ELEMENT = packet.content;
+        const element = Globals.DataCenter.SceneData.mapInfo.getElementInfo(elementData.element[0].id);
+        if (element) {
+            element.setInfo(elementData.element[0]);
+            Globals.MessageCenter.emit(MessageType.SCENE_UPDATE_ELEMENT, element.id);
+        }
     }
 
     private handleAddTerrain(packet: PBpacket): void {
