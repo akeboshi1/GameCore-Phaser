@@ -121,7 +121,6 @@ export class SceneInfo {
     }
 
     public addElementInfo(value: op_client.IElement[]): void {
-        this._elementConfig = [];
         let len: number = value.length;
         let element: ElementInfo;
         for (let i = 0; i < len; i++) {
