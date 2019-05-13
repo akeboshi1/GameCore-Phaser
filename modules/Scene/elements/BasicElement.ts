@@ -24,6 +24,10 @@ export default class BasicElement extends SceneEntity {
     this.invalidAnimation();
   }
 
+  public get scaleX(): number {
+    return this.mScaleX;
+  }
+
   public setScaleX(value: number|boolean): void {
     // Log.trace("角度-->"+value);
     if (typeof value === "boolean") {

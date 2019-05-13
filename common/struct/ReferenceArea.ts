@@ -98,7 +98,7 @@ export class ReferenceArea extends Phaser.Graphics {
       this.x = x - ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
       this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
     } else {
-      this.x = x + ReferenceArea.room45.mapTotalWidth - (ReferenceArea.room45.mapTotalWidth - ReferenceArea.room45.originX) - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
+      this.x = x + ReferenceArea.room45.originX + (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
       this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
     }
   }

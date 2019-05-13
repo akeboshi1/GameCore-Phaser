@@ -93,12 +93,6 @@ export class SceneView extends SceneBase {
     }
   }
 
-  public setReferenceScale(scaleX: boolean): void {
-    if (this.referenceEffect) {
-      this.referenceEffect.setScale(scaleX);
-    }
-  }
-
   protected onInitializeScene(value: SceneInfo): void {
     this.mapSceneInfo = value;
     super.onInitializeScene(value);

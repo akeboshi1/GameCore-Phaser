@@ -231,7 +231,7 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true);
 
         // this.camera.follow(this.view.currentSelfPlayer.display);
 
@@ -293,7 +293,7 @@ export class SceneMediator extends MediatorBase {
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
                 if (this.camera.target == null) {
-                    this.camera.follow(this.view.currentSelfPlayer.display);
+                    this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
                 }
             }
             if (entity) {
@@ -337,7 +337,6 @@ export class SceneMediator extends MediatorBase {
                 entity.setAnimation(ichange.animationName);
                 entity.setScaleX(ichange.scale);
             }
-            this.view.setReferenceScale(ichange.scale);
         }
     }
 
