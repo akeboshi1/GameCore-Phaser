@@ -23,9 +23,14 @@ export class BagMediator extends MediatorBase {
         super.onRegister();
         this.initView();
         Globals.MessageCenter.on(MessageType.DRAG_TO_DROP, this.handleDrop);
+        Globals.MessageCenter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
         this.view.m_Page.on("change", this.handlePageChange);
+    }
+
+    private handleSynchroPackage(): void {
+        this.initView();
     }
 
     private onListItemDown(item: BagListItem): void {

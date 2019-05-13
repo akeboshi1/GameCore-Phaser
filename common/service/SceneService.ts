@@ -33,6 +33,8 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.handleServerAddElement);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT, this.handleServerRemoveElement);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_CHARACTER, this.handleUpdateCharacter);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_PACKAGE, this.handleUpdatePackage);
+
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.handleAddCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.handleRemoveCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN, this.handleServerAddTerrain);
@@ -195,5 +197,16 @@ class Handler extends BasePacketHandler {
         for (let i = 0; i < len; i++) {
             Globals.DataCenter.PlayerData.updatePlayer(character.actors[i]);
         }
+    }
+
+    private handleUpdatePackage(packet: PBpacket): void {
+        let pg: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_PACKAGE = packet.content;
+        if (Globals.DataCenter.PlayerData.mainPlayerInfo.package) {
+            Globals.DataCenter.PlayerData.mainPlayerInfo.package.splice(0);
+            Globals.DataCenter.PlayerData.mainPlayerInfo.package.push(pg.package);
+        } else {
+            Globals.DataCenter.PlayerData.mainPlayerInfo.package = [pg.package];
+        }
+        Globals.MessageCenter.emit(MessageType.SCENE_SYNCHRO_PACKAGE);
     }
 }
