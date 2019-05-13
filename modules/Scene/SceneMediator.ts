@@ -293,7 +293,7 @@ export class SceneMediator extends MediatorBase {
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
                 this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
                 if (this.camera.target == null) {
-                    this.camera.follow(this.view.currentSelfPlayer.display);
+                    this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
                 }
             }
             if (entity) {
