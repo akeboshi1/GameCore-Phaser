@@ -75,18 +75,9 @@ export class ShortcutMenuListItem extends ListItemComponent {
         }
     }
 
-    protected onLoadComplete(): void {
-        if (this.m_Icon) {
-            this.m_Icon.playAnimation(this.data.animationName);
-        }
-    }
-
     protected render(): void {
         if (this.m_Icon) {
-            this.m_Icon.loadModel({
-                animations: this.data.animations,
-                display: this.data.display
-            }, this, null, this.onLoadComplete);
+            this.m_Icon.load(this.data.display.texturePath);
         }
     }
 }

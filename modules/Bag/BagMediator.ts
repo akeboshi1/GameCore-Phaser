@@ -7,10 +7,13 @@ import {IDragable} from "../../base/drag/interfaces/IDragable";
 import {IDropable} from "../../base/drag/interfaces/IDropable";
 import {Const} from "../../common/const/Const";
 import {Log} from "../../Log";
-import {op_gameconfig} from "pixelpai_proto";
+import {op_client, op_gameconfig, op_virtual_world} from "pixelpai_proto";
 import {UIEvents} from "../../base/component/event/UIEvents";
 import DropType = Const.DropType;
 import DragType = Const.DragType;
+import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
+import {PBpacket} from "net-socket-packet";
+import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 
 export class BagMediator extends MediatorBase {
 
@@ -38,8 +41,15 @@ export class BagMediator extends MediatorBase {
     }
 
     private onListItemUp(item: BagListItem): void {
-        if (Phaser.Rectangle.contains(item.icon.getBound(), Globals.game.input.activePointer.x, Globals.game.input.activePointer.y)){
-            // Globals.ModuleManager.openModule(ModuleTypeEnum.ITEMDETAIL, {}, item.data);
+        if (Phaser.Rectangle.contains(item.icon.getBound(), Globals.game.input.activePointer.x, Globals.game.input.activePointer.y)) {
+            let pack: op_gameconfig.IPackage = Globals.DataCenter.PlayerData.mainPlayerInfo.package[0];
+
+            let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+            let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+            content.uiId = pack.id;
+            content.componentId = item.data.id;
+
+            Globals.SocketManager.send(pkt);
         }
     }
 
@@ -62,25 +72,12 @@ export class BagMediator extends MediatorBase {
 
     private renderList(value: any[]): void {
         this.view.m_List.onClear();
-        let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum)
+        let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum);
         let len = items.length;
         let item: BagListItem;
         for (let i = 0; i < len; i++) {
             item = new BagListItem(Globals.game);
             item.setEnable(true);
-            let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
-            animation.baseLoc = "-102,-149";
-            animation.collisionArea = "1,1,1,1&1,1,1,1&1,1,1,1&1,1,1,1";
-            animation.frame = [0];
-            animation.frameRate = 12;
-            animation.id = 11095928;
-            animation.name = "idle";
-            animation.originPoint = [3, 3];
-            animation.walkOriginPoint = [3, 3];
-            animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
-            items[i].animations = [animation];
-            items[i].display = {texturePath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.png",
-                dataPath: "lainson/elements/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d/4/fce84fe9db16315e04be8be0b0f2c4cfdf5d8c0d.json"};
             item.data = items[i];
             this.view.m_List.addItem(item);
             Globals.DragManager.registerDrop(item.icon);

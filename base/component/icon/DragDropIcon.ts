@@ -1,8 +1,9 @@
 import {DisplayLoaderAvatar} from "../../../common/avatar/DisplayLoaderAvatar";
 import {IDragable} from "../../drag/interfaces/IDragable";
 import {IDropable} from "../../drag/interfaces/IDropable";
+import {BaseIcon} from "./BaseIcon";
 
-export class DragDropIcon extends DisplayLoaderAvatar implements IDragable, IDropable {
+export class DragDropIcon extends BaseIcon implements IDragable, IDropable {
     protected m_DropType: number;
     protected m_DragType: number;
     public constructor(game: Phaser.Game) {

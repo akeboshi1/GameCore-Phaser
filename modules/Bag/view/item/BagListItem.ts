@@ -46,16 +46,12 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
 
     protected render(): void {
         if (this.m_Icon) {
-            this.m_Icon.loadModel({
-                animations: this.data.animations,
-                display: this.data.display
-            }, this, null, this.onLoadComplete);
+            this.m_Icon.load(this.data.display.texturePath, this, this.handleLoadComplete);
         }
     }
 
-    protected onLoadComplete(): void {
-        if (this.m_Icon) {
-            this.m_Icon.playAnimation(this.data.animationName);
-        }
+    protected handleLoadComplete(): void {
+        this.m_Icon.x = (48 - this.m_Icon.width) >> 1;
+        this.m_Icon.y = (48 - this.m_Icon.height) >> 1;
     }
 }

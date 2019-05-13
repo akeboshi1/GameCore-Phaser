@@ -300,8 +300,13 @@ export class SceneMediator extends MediatorBase {
                 imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
                 imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
 
-                // imove.destinationPoint3f.x = entity.ox + 10;
-                // imove.destinationPoint3f.y = entity.oy + 10;
+                // if (imove.direction.valueOf() === 4) {
+                //     imove.destinationPoint3f.x = entity.ox + 20;
+                //     imove.destinationPoint3f.y = entity.oy + 20;
+                // } else {
+                //     imove.destinationPoint3f.x = entity.ox - 20;
+                //     imove.destinationPoint3f.y = entity.oy - 20;
+                // }
 
                 entity.moveToTarget(imove);
             }

@@ -32,7 +32,7 @@ export class ItemDetailMediator extends MediatorBase {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
 
         if (param.display.length > 0) {
-            this.view.m_Icon.load(param.display[0]);
+            this.view.loadIcon(param.display[0]);
         }
 
         if (param.text.length > 0) {

@@ -46,4 +46,15 @@ export class ItemDetailView extends CommModalWindowView {
       }, "获取", 24);
       this.add(this.m_Bt);
   }
+
+  public loadIcon(value: string): void {
+      if (this.m_Icon) {
+          this.m_Icon.load(value, this, this.handleLoadComplete);
+      }
+  }
+
+    protected handleLoadComplete(): void {
+        this.m_Icon.x = (GameConfig.GameWidth - this.m_Icon.width) >> 1;
+        this.m_Icon.y = 90;
+    }
 }
