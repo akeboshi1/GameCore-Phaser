@@ -231,7 +231,7 @@ export class SceneMediator extends MediatorBase {
 
         this.view.initializeScene(mapSceneInfo);
 
-        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true) as SelfRoleElement;
+        this.view.addSceneElement(Const.SceneElementType.ROLE, currentCharacterInfo.uuid, currentCharacterInfo, true);
 
         // this.camera.follow(this.view.currentSelfPlayer.display);
 
@@ -337,7 +337,6 @@ export class SceneMediator extends MediatorBase {
                 entity.setAnimation(ichange.animationName);
                 entity.setScaleX(ichange.scale);
             }
-            this.view.setReferenceScale(ichange.scale);
         }
     }
 
