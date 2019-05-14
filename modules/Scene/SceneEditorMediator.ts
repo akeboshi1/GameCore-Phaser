@@ -255,7 +255,7 @@ export class SceneEditorMediator extends SceneMediator {
   protected handleFixedToElement(value: number): void {
     let element = this.view.getSceneElement(value);
     if (element) {
-      Globals.game.camera.setPosition(element.ox, element.oy);
+      Globals.game.camera.setPosition(element.ox - GameConfig.GameWidth / 2, element.oy - GameConfig.GameHeight / 2);
     }
   }
 
