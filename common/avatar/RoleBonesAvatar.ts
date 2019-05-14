@@ -3,6 +3,7 @@ import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import Globals from "../../Globals";
 import {op_gameconfig} from "pixelpai_proto";
+import {Log} from "../../Log";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
