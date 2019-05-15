@@ -8,4 +8,6 @@ export class GameConfig {
     public static GameHeight: number;
     public static preLoadList: IPhaserLoadList;
     public static ArmatureName = "Armature";
+    public static AlignGrid = true;
+    public static VisibleGrid = true;
 }

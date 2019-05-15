@@ -62,10 +62,10 @@ export class MessageType {
     /**
     * 模块视图添加到显示列表
     */
-    public static MODULE_VIEW_ADD: string = "module_view_add";
+    public static MODULE_VIEW_ADD = "module_view_add";
     /**
      * 模块视图移除从显示列表
      */
-    public static MODULE_VIEW_REM: string = "module_view_rem";
+    public static MODULE_VIEW_REM = "module_view_rem";
 }
 

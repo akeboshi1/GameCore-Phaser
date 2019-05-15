@@ -323,11 +323,15 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         Globals.game.input.onDown.add(this.onGameDown, this);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+        this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOver, this);
+        this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOut, this);
         this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
       }
     } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
       Globals.game.input.onDown.add(this.onGameDown, this);
     } else if (this.em.mode === EditorEnum.Mode.SELECT) {
+      this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOver, this);
+      this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOut, this);
       this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
     }
   }
@@ -356,6 +360,8 @@ export class SceneEditorMediator extends SceneMediator {
 
   private clearMode(): void {
     // Layer events
+    this.view.middleSceneLayer.onChildInputOver.remove(this.onElementLayerOver, this);
+    this.view.middleSceneLayer.onChildInputOver.remove(this.onElementLayerOut, this);
     this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
 
     if (this.mMouseFollower) {
@@ -418,11 +424,12 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.input.onUp.add(this.onGameUp, this);
   }
 
-  // todo:
-  private onTerrainLayerUp(item: any): void {
-    if (this.em.mode === EditorEnum.Mode.SELECT) {
-      this.sendSceneObject([]);
-    }
+  private onElementLayerOver(item: any): void {
+    item.input.pixelPerfectOver = true;
+  }
+
+  private onElementLayerOut(item: any): void {
+    item.input.pixelPerfectOver = false;
   }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {
@@ -433,7 +440,7 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         this.sendScenePoint(tempPoint.x, tempPoint.y);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        if (this.em.boo) {
+        if (GameConfig.AlignGrid) {
           tempPoint = Globals.Scene45Util.tileToPixelCoords(tempPoint.x, tempPoint.y);
           this.sendScenePoint(tempPoint.x, tempPoint.y);
         } else {
