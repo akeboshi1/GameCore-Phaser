@@ -333,7 +333,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private sendScenePoint(x: number, y: number): void {
-    Log.trace("点击场景-->", x, y);
+    // Log.trace("点击场景-->", x, y);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
     content.point = {x: x >> 0, y: y >> 0};
@@ -341,7 +341,7 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private sendSceneObject(value: number[]): void {
-    Log.trace("选择物件-->", value);
+    // Log.trace("选择物件-->", value);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_OBJECT);
     let content: OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = pkt.content;
     content.ids = value;
@@ -433,7 +433,12 @@ export class SceneEditorMediator extends SceneMediator {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         this.sendScenePoint(tempPoint.x, tempPoint.y);
       } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        this.sendScenePoint(screenX, screenY);
+        if (this.em.boo) {
+          tempPoint = Globals.Scene45Util.tileToPixelCoords(tempPoint.x, tempPoint.y);
+          this.sendScenePoint(tempPoint.x, tempPoint.y);
+        } else {
+          this.sendScenePoint(screenX, screenY);
+        }
       }
     }
   }
