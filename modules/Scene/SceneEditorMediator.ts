@@ -322,17 +322,9 @@ export class SceneEditorMediator extends SceneMediator {
     } else if (this.em.mode === EditorEnum.Mode.ERASER) {
       if (this.em.type === EditorEnum.Type.TERRAIN) {
         Globals.game.input.onDown.add(this.onGameDown, this);
-      } else if (this.em.type === EditorEnum.Type.ELEMENT) {
-        this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOver, this);
-        this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOut, this);
-        this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
       }
     } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
       Globals.game.input.onDown.add(this.onGameDown, this);
-    } else if (this.em.mode === EditorEnum.Mode.SELECT) {
-      this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOver, this);
-      this.view.middleSceneLayer.onChildInputOver.add(this.onElementLayerOut, this);
-      this.view.middleSceneLayer.onChildInputDown.add(this.onElementLayerDown, this);
     }
   }
 
@@ -359,11 +351,6 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private clearMode(): void {
-    // Layer events
-    this.view.middleSceneLayer.onChildInputOver.remove(this.onElementLayerOver, this);
-    this.view.middleSceneLayer.onChildInputOver.remove(this.onElementLayerOut, this);
-    this.view.middleSceneLayer.onChildInputDown.remove(this.onElementLayerDown, this);
-
     if (this.mMouseFollower) {
       this.mMouseFollower.onClear();
     }
@@ -407,29 +394,25 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   protected addElement(value: ElementInfo): void {
-    this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value);
+    let element: BasicElement = this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value) as BasicElement;
+    element.addDownBack(this.onElementLayerDown, this);
   }
-  private onElementLayerDown(item: any): void {
-    let tempElement = item.getOwner();
-    let elementId: number = tempElement.data.id;
+  private onElementLayerDown(item: BasicElement): void {
+    let elementId: number = item.data.id;
     this.sendSceneObject([elementId]);
+    if (this.em.mode === EditorEnum.Mode.ERASER) {
+      return;
+    }
     if (this.em.mode === EditorEnum.Mode.SELECT) {
-      this.mSelectElement = tempElement;
-      this.handleSelectElement(tempElement.data.id);
+      this.mSelectElement = item;
+      this.handleSelectElement(item.data.id);
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
+
+      this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
+      this.isElementDown = true;
+      Globals.game.input.onUp.add(this.onGameUp, this);
     }
-    this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
-    this.isElementDown = true;
-    Globals.game.input.onUp.add(this.onGameUp, this);
-  }
-
-  private onElementLayerOver(item: any): void {
-    item.input.pixelPerfectOver = true;
-  }
-
-  private onElementLayerOut(item: any): void {
-    item.input.pixelPerfectOver = false;
   }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {

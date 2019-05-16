@@ -7,6 +7,7 @@ import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {ReferenceArea} from "../struct/ReferenceArea";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
+import { Log } from "game-core/Log";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -15,6 +16,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected mAnimationDirty = false;
     protected mScaleX = 1;
     protected mLoaderAvatar: DisplayLoaderAvatar;
+    public inMouse = false;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -67,6 +69,9 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (null == this.mLoaderAvatar) {
           this.mLoaderAvatar = new DisplayLoaderAvatar(Globals.game);
         }
+        this.mLoaderAvatar.inputEnabled = true;
+        this.mLoaderAvatar.input.pixelPerfectClick = true;
+        this.mLoaderAvatar.events.onInputDown.add(this.onDown, this);
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);
@@ -90,8 +95,17 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         }
     }
 
+    protected onDown(sprite: any): void {
+      if (this.getOwner()) {
+          this.getOwner().onDownCall();
+      }
+    }
+
     public onDispose(): void {
         if (this.mLoaderAvatar) {
+            this.mLoaderAvatar.inputEnabled = false;
+            this.mLoaderAvatar.input.pixelPerfectClick = false;
+            this.mLoaderAvatar.events.onInputDown.remove(this.onDown, this);
             this.removeChild(this.mLoaderAvatar);
             this.mLoaderAvatar.onRecycle();
             this.mLoaderAvatar = null;

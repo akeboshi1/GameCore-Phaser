@@ -41,7 +41,7 @@ export class ReferenceArea extends Phaser.Graphics {
   protected _orgin: Phaser.Point;
   protected areaArr: number[][];
   protected _color = 0;
-  protected _alpha = 0;
+  protected _alpha = 1;
 
   protected _cols = 0;
 
@@ -52,7 +52,7 @@ export class ReferenceArea extends Phaser.Graphics {
   public setting(value: string, orgin?: Phaser.Point, color?: number, alpha?: number): void {
     this.areaStr = value;
     this._color = color || -1;
-    this._alpha = alpha || 0;
+    this._alpha = alpha || 1;
     this._orgin = orgin || new Phaser.Point(0, 0);
 
     if (this.cacheAsBitmap) {
@@ -84,7 +84,10 @@ export class ReferenceArea extends Phaser.Graphics {
         p2 = ReferenceArea.room45.tileToPixelCoords(x + 1, y);
         p3 = ReferenceArea.room45.tileToPixelCoords(x + 1, y + 1);
         p4 = ReferenceArea.room45.tileToPixelCoords(x, y + 1);
-        this.beginFill(this._color === -1 ? (this.areaArr[y][x] === 1 ?  0x00FF00 : 0xFF0000) : this._color, this._alpha === 0 ? 1 : this._alpha);
+        if (this.areaArr[y][x] === 1) {
+          this.beginFill(this._color === -1 ?  0x00FF00 : this._color, this._alpha);
+        }
+        // this.beginFill(this._color === -1 ? (this.areaArr[y][x] === 1 ?  0x00FF00 : 0xFF0000) : this._color, this._alpha === 0 ? 1 : this._alpha);
         ReferenceArea.poly.setTo([p1, p2, p3, p4]);
         this.drawPolygon(ReferenceArea.poly.points);
       }
