@@ -25,7 +25,7 @@ export class EditorData extends BaseSingleton {
     this.m_EditorMode = value;
   }
 
-  public changeEditorMode(mode: string, type?: any) {
+  public changeEditorMode(mode: string, type?: any ) {
     this.m_EditorMode.mode = mode;
     this.m_EditorMode.type = type === undefined ? "" : type;
     Globals.MessageCenter.emit(MessageType.EDITOR_CHANGE_MODE);

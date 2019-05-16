@@ -5,6 +5,7 @@ import BaseSingleton from "../../base/BaseSingleton";
 import {MessageType} from "../const/MessageType";
 import {BasePacketHandler} from "./BasePacketHandler";
 import {Log} from "../../Log";
+import { GameConfig } from "game-core/GameConfig";
 
 export class SceneService extends BaseSingleton {
     private handle: Handler;
@@ -48,7 +49,9 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.handleMouseFollow);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SELECT_ELEMENT, this.handleSelectElement);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FIXED_TO_ELEMENT, this.handleFixedToElement);
-        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_ELEMENT, this.handlerUpdateElement);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_ELEMENT, this.handleUpdateElement);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ALIGN_GRID, this.handleAlignGrid);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_VISIBLE_GRID, this.handleVisibleGrid);
     }
 
     private handleMouseFollow(packet: PBpacket): void {
@@ -146,13 +149,23 @@ class Handler extends BasePacketHandler {
       Globals.MessageCenter.emit(MessageType.SCENE_FIXED_TO_ELEMENT, elementData.id);
     }
 
-    private handlerUpdateElement(packet: PBpacket): void {
+    private handleUpdateElement(packet: PBpacket): void {
         let elementData: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_ELEMENT = packet.content;
         const element = Globals.DataCenter.SceneData.mapInfo.getElementInfo(elementData.element[0].id);
         if (element) {
             element.setInfo(elementData.element[0]);
             Globals.MessageCenter.emit(MessageType.SCENE_UPDATE_ELEMENT, element.id);
         }
+    }
+
+    private handleAlignGrid(packet: PBpacket): void {
+        let data: op_client.IOP_EDITOR_REQ_CLIENT_ALIGN_GRID = packet.content;
+        GameConfig.AlignGrid = data.align;
+    }
+
+    private handleVisibleGrid(packet: PBpacket): void {
+        let data: op_client.IOP_EDITOR_REQ_CLIENT_VISIBLE_GRID = packet.content;
+        GameConfig.VisibleGrid = data.visible;
     }
 
     private handleAddTerrain(packet: PBpacket): void {

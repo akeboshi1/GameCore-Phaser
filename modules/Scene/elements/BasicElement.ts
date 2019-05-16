@@ -6,11 +6,13 @@ import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "pixelpai_proto";
 import {Const} from "../../../common/const/Const";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
+import { Log } from "game-core/Log";
 
 export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;
   protected mScaleX = 1;
   protected myAnimationName: string;
+  protected downSignal: Phaser.Signal = new Phaser.Signal;
   public display: BasicElementAvatar;
 
   public get elementInfo(): any {
@@ -59,6 +61,18 @@ export default class BasicElement extends SceneEntity {
     return element;
   }
 
+  public addDownBack(callback: Function, context?: any): void {
+    if (this.downSignal) {
+      this.downSignal.add(callback, context);
+    }
+  }
+
+  public onDownCall(): void {
+    if (this.downSignal) {
+      this.downSignal.dispatch(this);
+    }
+  }
+
   protected onUpdating(deltaTime: number): void {
     if (this.mAnimationDirty) {
       this.onAvatarAnimationChanged();
@@ -105,5 +119,11 @@ export default class BasicElement extends SceneEntity {
     if (config === null) return;
     let tmp: Array<string> = config.baseLoc.split(",");
     this.baseLoc = new Phaser.Point(+(tmp[0]), +(tmp[1]));
+  }
+
+  public onDispose(): void {
+    this.downSignal.dispose();
+    this.downSignal = null;
+    super.onDispose();
   }
 }

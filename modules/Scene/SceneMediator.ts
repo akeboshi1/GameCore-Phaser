@@ -121,7 +121,7 @@ export class SceneMediator extends MediatorBase {
         let value = Globals.DataCenter.SceneData.mapInfo.terrainConfig;
         value.sort(Globals.Scene45Util.sortDataFunc);
         let len = value.length;
-        let terrain: TerrainInfo
+        let terrain: TerrainInfo;
         for (let i = 0; i < len; i++) {
             terrain = value[i];
             this.addTerrain(terrain);
