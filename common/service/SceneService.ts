@@ -5,7 +5,7 @@ import BaseSingleton from "../../base/BaseSingleton";
 import {MessageType} from "../const/MessageType";
 import {BasePacketHandler} from "./BasePacketHandler";
 import {Log} from "../../Log";
-import { GameConfig } from "game-core/GameConfig";
+import {GameConfig} from "../../GameConfig";
 
 export class SceneService extends BaseSingleton {
     private handle: Handler;
