@@ -16,6 +16,7 @@ import {Const} from "../../common/const/Const";
 import {MouseFollower} from "./view/MouseFollower";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
+import { Scene45Util } from "game-core/common/manager/Scene45Util";
 
 export class SceneEditorMediator extends SceneMediator {
 
@@ -46,6 +47,7 @@ export class SceneEditorMediator extends SceneMediator {
 
   private elementOldPoint: Phaser.Point = new Phaser.Point;
   private mouseDownPos: Phaser.Point = new Phaser.Point;
+  private scene45Util: Scene45Util = new Scene45Util;
 
   protected stageResizeHandler(): void {
     Globals.game.world.setBounds(0, 0, Globals.Scene45Util.mapTotalWidth, Globals.Scene45Util.mapTotalHeight);
@@ -207,6 +209,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.SceneManager.popupScene();
 
     Globals.Scene45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
+    this.scene45Util.setting(mapSceneInfo.rows * 2, mapSceneInfo.cols * 2, mapSceneInfo.tileWidth >> 1, mapSceneInfo.tileHeight >> 1);
 
     Globals.game.world.setBounds(-Const.GameConst.EDITOR_BORDER >> 1, -Const.GameConst.EDITOR_BORDER >> 1, mapSceneInfo.mapTotalWidth + Const.GameConst.EDITOR_BORDER, mapSceneInfo.mapTotalHeight + Const.GameConst.EDITOR_BORDER);
     Globals.game.camera.setPosition((mapSceneInfo.mapTotalWidth - GameConfig.GameWidth) >> 1, -Const.GameConst.EDITOR_BORDER >> 1);
@@ -398,12 +401,11 @@ export class SceneEditorMediator extends SceneMediator {
     element.addDownBack(this.onElementLayerDown, this);
   }
   private onElementLayerDown(item: BasicElement): void {
-    let elementId: number = item.data.id;
-    this.sendSceneObject([elementId]);
-    if (this.em.mode === EditorEnum.Mode.ERASER) {
+    if (this.em.mode !== EditorEnum.Mode.SELECT) {
       return;
     }
-    if (this.em.mode === EditorEnum.Mode.SELECT) {
+    let elementId: number = item.data.id;
+      this.sendSceneObject([elementId]);
       this.mSelectElement = item;
       this.handleSelectElement(item.data.id);
       this.elementOldPoint.x = this.mSelectElement.ox;
@@ -412,19 +414,22 @@ export class SceneEditorMediator extends SceneMediator {
       this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
       this.isElementDown = true;
       Globals.game.input.onUp.add(this.onGameUp, this);
-    }
   }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {
     let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
     let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
-    let tempPoint: Phaser.Point = Globals.Scene45Util.pixelToTileCoords(screenX, screenY);
-    if (tempPoint.x >= 0 && tempPoint.x < Globals.Scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Scene45Util.rows) {
-      if (this.em.type === EditorEnum.Type.TERRAIN) {
+    let tempPoint: Phaser.Point;
+    if (this.em.type === EditorEnum.Type.TERRAIN) {
+      tempPoint = Globals.Scene45Util.pixelToTileCoords(screenX, screenY);
+      if (tempPoint.x >= 0 && tempPoint.x < Globals.Scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Scene45Util.rows) {
         this.sendScenePoint(tempPoint.x, tempPoint.y);
-      } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+      }
+    } else if (this.em.type === EditorEnum.Type.ELEMENT) {
+      tempPoint = this.scene45Util.pixelToTileCoords(screenX, screenY);
+      if (tempPoint.x >= 0 && tempPoint.x < this.scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < this.scene45Util.rows) {
         if (GameConfig.AlignGrid) {
-          tempPoint = Globals.Scene45Util.tileToPixelCoords(tempPoint.x, tempPoint.y);
+          tempPoint = this.scene45Util.tileToPixelCoords(tempPoint.x, tempPoint.y);
           this.sendScenePoint(tempPoint.x, tempPoint.y);
         } else {
           this.sendScenePoint(screenX, screenY);
@@ -447,13 +452,17 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.game.input.onUp.remove(this.onGameUp, this);
 
     if (this.mSelectElement) {
-      let screenX: number = (pointer.x + this.camera.x) / this.view.scale.x;
-      let screenY: number = (pointer.y + this.camera.y) / this.view.scale.y;
-      let tempPoint: Phaser.Point = Globals.Scene45Util.pixelToTileCoords(screenX, screenY);
-      if (tempPoint.x >= 0 && tempPoint.x < Globals.Scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < Globals.Scene45Util.rows) {
-        this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
+      let tempPoint: Phaser.Point = this.scene45Util.pixelToTileCoords(this.mSelectElement.ox, this.mSelectElement.oy);
+      if (tempPoint.x >= 0 && tempPoint.x < this.scene45Util.cols && tempPoint.y >= 0 && tempPoint.y < this.scene45Util.rows) {
+        if (GameConfig.AlignGrid) {
+          tempPoint = this.scene45Util.tileToPixelCoords(tempPoint.x, tempPoint.y);
+          this.mSelectElement.setPosition(tempPoint.x, tempPoint.y);
+          this.sendScenePoint(tempPoint.x, tempPoint.y);
+        } else {
+          this.sendScenePoint(this.mSelectElement.ox, this.mSelectElement.oy);
+        }
       } else {
-        this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y, 0);
+        this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y);
       }
       this.mSelectElement.isCanShow = true;
     }
@@ -479,9 +488,11 @@ export class SceneEditorMediator extends SceneMediator {
     let i = 0;
     let len: number = datas.length;
     let data: ElementInfo;
+    let element: BasicElement;
     for (; i < len; i++) {
       data = datas[i];
-      this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data);
+      element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data) as BasicElement;
+      element.addDownBack(this.onElementLayerDown, this);
     }
   }
 }
