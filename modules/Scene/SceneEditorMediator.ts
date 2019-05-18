@@ -16,7 +16,7 @@ import {Const} from "../../common/const/Const";
 import {MouseFollower} from "./view/MouseFollower";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
-import { Scene45Util } from "game-core/common/manager/Scene45Util";
+import { Scene45Util } from "../../common/manager/Scene45Util";
 
 export class SceneEditorMediator extends SceneMediator {
 
