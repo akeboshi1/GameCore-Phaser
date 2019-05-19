@@ -14,12 +14,16 @@ export class ChatMediator extends MediatorBase {
 
     public onRegister(): void {
         Globals.MessageCenter.on(MessageType.CHAT_TO, this.onHandleChat, this);
+        /// never start
+        Globals.MessageCenter.on(MessageType.QCLOUD_AUTH, this.onHandleQcloudAuth, this);
+        Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.onHandleChangeChatRoom, this);
+        Globals.MessageCenter.on(MessageType.ENTER_SCENE, this.onHandleChangeChatRoom, this);
+        /// never end
         this.view.bt.on("up", this.onHandleBt, this);
         this.view.input_tf.focusIn.add(this.onFocusIn, this);
         this.view.input_tf.focusOut.add(this.onFocusOut, this);
 
         (<any>this.view.input_tf).domElement.element.addEventListener("keydown", this.sayHello.bind(this));
-
         // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
         // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.TWO, this.handleTwo, this);
         // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.THREE, this.handleThree, this);
@@ -40,6 +44,13 @@ export class ChatMediator extends MediatorBase {
     }
 
     private onFocusOut(): void {
+    }
+
+    private onHandleChangeChatRoom(): void {
+        this.view.exitRoom();
+        this.view.playerId = Globals.DataCenter.PlayerData.mainPlayerInfo.id;
+        this.view.roomId = Globals.DataCenter.PlayerData.mainPlayerInfo.sceneId;
+        this.view.sendGenAuthBuffer();
     }
 
     private handleOne(): void {
@@ -145,8 +156,12 @@ export class ChatMediator extends MediatorBase {
     private handleSix(): void {
     }
 
+
     public onRemove(): void {
         Globals.MessageCenter.cancel(MessageType.CHAT_TO, this.onHandleChat, this);
+        Globals.MessageCenter.cancel(MessageType.QCLOUD_AUTH, this.onHandleQcloudAuth, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.onHandleChangeChatRoom, this);
+        Globals.MessageCenter.cancel(MessageType.ENTER_SCENE, this.onHandleChangeChatRoom, this);
         this.view.bt.cancel("up", this.onHandleBt);
         this.view.input_tf.focusIn.remove(this.onFocusIn, this);
         this.view.input_tf.focusOut.remove(this.onFocusOut, this);
@@ -165,6 +180,10 @@ export class ChatMediator extends MediatorBase {
     private onHandleChat(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
         this.view.out_tf.text += chat.chatContext + "\n";
         this.view.scroller.scroll();
+    }
+
+    private onHandleQcloudAuth(authBuffer: string): void {
+        this.view.authBuffer = authBuffer;
     }
 
     private onHandleBt(): void {

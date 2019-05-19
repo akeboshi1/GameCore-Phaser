@@ -19,6 +19,11 @@ export class MessageType {
     public static CHAT_TO = "chat_to";
     public static PROMPT_ALERT = "prompt_alert";
 
+    /// never start
+    public static QCLOUD_AUTH = "qcloud_auth";
+    public static ENTER_SCENE = "enter_scene";
+    /// never end
+
     public static SCENE_ADD_PLAYER = "scene_add_player";
     public static SCENE_REMOVE_PLAYER = "scene_remove_player";
     public static SCENE_UPDATE_PLAYER = "scene_update_player";

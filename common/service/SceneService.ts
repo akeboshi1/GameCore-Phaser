@@ -115,6 +115,7 @@ class Handler extends BasePacketHandler {
             Globals.DataCenter.SceneData.setMapInfo(sceneData.scene);
             Log.trace(sceneData.scene);
         }
+        Globals.MessageCenter.emit(MessageType.ENTER_SCENE);
     }
 
     private handleChangeScene(packet: PBpacket): void {

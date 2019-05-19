@@ -8,6 +8,14 @@ import {ComboBox} from "../../../base/component/combobox/ComboBox";
 import {CheckButton} from "../../../base/component/button/CheckButton";
 import "../../../web-rtc-service";
 import LabaBt = UI.LabaBt;
+import {PlayerInfo} from "../../../common/struct/PlayerInfo";
+import Globals from "../../../Globals";
+import {MessageType} from "../../../common/const/MessageType";
+import {ModuleTypeEnum} from "../../../base/module/base/ModuleType";
+import {PBpacket} from "net-socket-packet";
+import {op_virtual_world} from "pixelpai_proto";
+import {Log} from "../../../Log";
+import OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER;
 
 const GMEApi = new WebGMEAPI();
 // TODO just for test, need get sdkAppId from settings
@@ -22,6 +30,9 @@ export class ChatView extends ModuleViewBase {
     public comobox: ComboBox;
     public labaButton: CheckButton;
     public voiceButton: CheckButton;
+    public roomId: number;
+    public authBuffer: string;
+    public playerId: number;
     private _inRoom: boolean;
 
     constructor(game: Phaser.Game) {
@@ -61,54 +72,53 @@ export class ChatView extends ModuleViewBase {
         this.voiceButton.onCallBack(this.handleVoice, this);
         this.add(this.voiceButton);
 
-        // TODO need set button close by default
-        // this.labaButton.select = false;
-        // this.voiceButton.select = false;
+        this.labaButton.select = true;
+        this.voiceButton.select = true;
+        let player: PlayerInfo = Globals.DataCenter.PlayerData.mainPlayerInfo;
+        this.playerId = player.id;
+        this.roomId = player.sceneId;
         this._initGME();
+    }
+
+    public exitRoom(): void {
+        GMEApi.EnableMic(false);
+        GMEApi.ExitRoom();
+        this._inRoom = false;
+        console.log(`---------------Exit Room!!!!!`);
+    }
+
+    public enterRoom(): void {
+        // TODO Get sceneId authBuffer, and set room Type enum
+        // roomType 1, 2, 3 for audio quality， 3 is the best
+        console.log(`---------------Enter Room !!!!!!`);
+        GMEApi.EnterRoom(this.roomId, 1, this.authBuffer);
+        this._inRoom = true;
     }
 
     private handleLaba(value: boolean): void {
         //todo:
+        value = this.labaButton.select;
+        console.log(`room info: ${this.playerId}, ${this.authBuffer}, ${this.roomId}`);
+        console.log(`---------------Laba Turns : ${value}`);
         if (value) {
-            // TODO Get sceneId authBuffer, and set room Type enum
-            // roomType 1, 2, 3 for audio quality， 3 is the best
-            // GMEApi.EnterRoom(roomId, 1, authBuffer);
-            this._inRoom = true;
+            this.exitRoom();
         } else {
-            GMEApi.EnableMic(false);
-            GMEApi.ExitRoom();
-            this._inRoom = false;
+            this.enterRoom();
         }
-
-        // $("#start_btn").click(() => {
-//     //     // let auth = new AuthBufferService(sdkAppId, roomId.toString(), openId.toString(), "U7vKcMeURdJlCXSy");
-//     //     // authBuffer = auth.getSignature();
-//     //     __log(`Start -- roomid: ${roomId}, userSig: ${authBuffer}`);
-//     //     gmeAPI.EnterRoom(roomId, roomType, authBuffer);
-//     // });
-//     // $("#quit_btn").click(function () {
-//     //     gmeAPI.ExitRoom();
-//     // });
-//     // $("#open_autio_btn").click(() => {
-//     //     gmeAPI.EnableMic(true);
-//     // });
-//     //
-//     // $("#close_autio_btn").click(() => {
-//     //     gmeAPI.EnableMic(false);
-//     // });
-// };
     }
 
     private handleVoice(value: boolean): void {
         //todo:
-        if (!this.labaButton.select) {
-            if (value) {
-                this.voiceButton.select = false;
+        value = this.voiceButton.select;
+        console.log(`---------------Voice Turns : ${value ? "True" : "false"}`);
+        if (this.labaButton.select) {
+            if (!value) {
+                this.voiceButton.select = true;
             }
             return;
         }
         if (this._inRoom) {
-            GMEApi.EnableMic(value);
+            GMEApi.EnableMic(!value);
         }
     }
 
@@ -125,8 +135,7 @@ export class ChatView extends ModuleViewBase {
     /// never start
     public _initGME() {
         // TODO just test
-        let openId = "243547575";
-        GMEApi.Init(document, sdkAppId, openId);
+        GMEApi.Init(document, sdkAppId, this.playerId);
         GMEApi.SetTMGDelegate((event, result) => {
             switch (event) {
                 case GMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
@@ -142,11 +151,19 @@ export class ChatView extends ModuleViewBase {
                     console.log(`[GME]: Room Disconnect!!!`);
                     break;
                 default:
-                    console.log("[GME]: Sth wrong...")
+                    console.log("[GME]: Sth wrong...");
                     break;
             }
         });
+        this.sendGenAuthBuffer();
         this._inRoom = false;
+    }
+
+    public sendGenAuthBuffer(): void {
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER);
+        let content: OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = pkt.content;
+        content.roomId = this.roomId;
+        Globals.SocketManager.send(pkt);
     }
     /// never end
 
