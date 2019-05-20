@@ -4,6 +4,7 @@ import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
+import {GameConfig} from "../../GameConfig";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -67,8 +68,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         }
         this.mLoaderAvatar.inputEnabled = true;
         this.mLoaderAvatar.input.pixelPerfectClick = true;
-        this.mLoaderAvatar.events.onInputDown.add(this.onDown, this);
-        this.mLoaderAvatar.events.onInputUp.add(this.onUp, this);
+        if (GameConfig.isEditor) {
+            this.mLoaderAvatar.events.onInputDown.add(this.onDown, this);
+            this.mLoaderAvatar.events.onInputUp.add(this.onUp, this);
+        }
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);
@@ -107,8 +110,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (this.mLoaderAvatar) {
             this.mLoaderAvatar.inputEnabled = false;
             this.mLoaderAvatar.input.pixelPerfectClick = false;
-            this.mLoaderAvatar.events.onInputDown.remove(this.onDown, this);
-            this.mLoaderAvatar.events.onInputUp.remove(this.onUp, this);
+            if (GameConfig.isEditor) {
+                this.mLoaderAvatar.events.onInputDown.remove(this.onDown, this);
+                this.mLoaderAvatar.events.onInputUp.remove(this.onUp, this);
+            }
             this.removeChild(this.mLoaderAvatar);
             this.mLoaderAvatar.onRecycle();
             this.mLoaderAvatar = null;

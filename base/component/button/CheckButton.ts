@@ -18,16 +18,22 @@ export class CheckButton extends Phaser.Sprite {
         }
     }
 
+    public cancelCallBack(callback: Function, context?: any): void {
+        if (this.signal) {
+            this.signal.remove(callback, context);
+        }
+    }
+
     private handleDown(): void {
         this.select = !this.select;
         if (this.signal) {
-            this.signal.dispatch(this, this.select);
+            this.signal.dispatch(this.select);
         }
     }
 
     public set select(value: boolean) {
         this.isSelect = value;
-        this.frame = value ? 1 : 0;
+        this.frame = value ? 0 : 1;
     }
 
     public get select(): boolean {
