@@ -71,7 +71,6 @@ export class ChatMediator extends MediatorBase {
     /// never end
 
     private handleLaba(value: boolean): void {
-        console.log(`---------------Laba Turns : ${value}`);
         if (value) {
             this.enterRoom();
         } else {
@@ -81,7 +80,6 @@ export class ChatMediator extends MediatorBase {
     }
 
     private handleVoice(value: boolean): void {
-        console.log(`---------------Voice Turns : ${value}`);
         if (!this.view.labaButton.select) {
             this.view.voiceButton.select = false;
             return;
@@ -100,7 +98,6 @@ export class ChatMediator extends MediatorBase {
     public enterRoom(): void {
         // TODO Get sceneId authBuffer, and set room Type enum
         // roomType 1, 2, 3 for audio quality， 3 is the best
-        console.log(`---------------Enter Room !!!!!!`);
         let roomId = Globals.DataCenter.PlayerData.mainPlayerInfo.sceneId;
         GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
         this._inRoom = true;
