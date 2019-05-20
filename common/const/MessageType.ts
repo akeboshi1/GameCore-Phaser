@@ -39,6 +39,7 @@ export class MessageType {
     public static SCENE_FIXED_TO_ELEMENT = "scene_fixed_to_element";
     public static SCENE_UPDATE_ELEMENT = "sceneUpdateElement";
     public static SCENE_SYNCHRO_PACKAGE = "sceneSynchroPackage";
+    public static SCENE_VISIBLE_GRID = "sceneVisibleGrid";
 
     public static PLAYER_SELECT_CHARACTER = "player_select_character";
     public static PLAYER_DATA_INITIALIZE = "player_data_initialize";

@@ -167,11 +167,12 @@ class Handler extends BasePacketHandler {
     private handleVisibleGrid(packet: PBpacket): void {
         let data: op_client.IOP_EDITOR_REQ_CLIENT_VISIBLE_GRID = packet.content;
         GameConfig.VisibleGrid = data.visible;
+        Globals.MessageCenter.emit(MessageType.SCENE_VISIBLE_GRID);
     }
 
     private handleAddTerrain(packet: PBpacket): void {
         let terrainData: op_client.IOP_EDITOR_REQ_CLIENT_ADD_TERRAIN = packet.content;
-        if (terrainData.all === true) {
+        if (terrainData.all) {
             Globals.MessageCenter.emit(MessageType.SCENE_ADD_ALL_TERRAIN, terrainData.terrain);
         } else {
             Globals.MessageCenter.emit(MessageType.SCENE_ADD_TERRAIN, [terrainData.terrain]);
