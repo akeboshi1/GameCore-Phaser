@@ -7,8 +7,7 @@ import {MessageType} from "../../common/const/MessageType";
 import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT;
 import OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER;
 const GMEApi = new WebGMEAPI();
-// TODO just for test, need get sdkAppId from settings
-const sdkAppId: string = "1400209172";
+
 export class ChatMediator extends MediatorBase {
     private authBuffer: string;
     private _inRoom = false;
@@ -35,7 +34,8 @@ export class ChatMediator extends MediatorBase {
 
     /// never start
     public _initGME() {
-        // TODO just test
+        // TODO just for test, need get sdkAppId from settings
+        const sdkAppId: string = "1400209172";
         let playerId = Globals.DataCenter.PlayerData.mainPlayerInfo.id;
         GMEApi.Init(document, sdkAppId, playerId.toString());
         GMEApi.SetTMGDelegate((event, result) => {
@@ -113,7 +113,9 @@ export class ChatMediator extends MediatorBase {
     }
 
     private onHandleChangeChatRoom(): void {
-        this.exitRoom();
+        if (this._inRoom || this.view.labaButton.select) {
+            this.exitRoom();
+        }
         this.sendGenAuthBuffer();
     }
 
@@ -138,6 +140,12 @@ export class ChatMediator extends MediatorBase {
 
     private onHandleQcloudAuth(value: string): void {
         this.authBuffer = value;
+        if (this.view.labaButton.select) {
+            this.enterRoom();
+            if (this.view.voiceButton.select) {
+                GMEApi.EnableMic(true);
+            }
+        }
     }
 
     private onHandleBt(): void {
