@@ -5,9 +5,9 @@
 
 declare class WebGMEAPI {
     event;
-    Init(document: any, sdkAppId: string, openId: number): void;
+    Init(document: any, sdkAppId: string, openId: string): void;
     SetTMGDelegate(event: any): void;
-    EnterRoom(roomId: number, roomType: number, authBuffer: string): void;
+    EnterRoom(roomId: string, roomType: number, authBuffer: string): void;
     ExitRoom(): void;
     EnableMic(enable: boolean): void;
 }

@@ -37,7 +37,7 @@ export class ChatMediator extends MediatorBase {
     public _initGME() {
         // TODO just test
         let playerId = Globals.DataCenter.PlayerData.mainPlayerInfo.id;
-        GMEApi.Init(document, sdkAppId, playerId);
+        GMEApi.Init(document, sdkAppId, playerId.toString());
         GMEApi.SetTMGDelegate((event, result) => {
             switch (event) {
                 case GMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
@@ -102,7 +102,7 @@ export class ChatMediator extends MediatorBase {
         // roomType 1, 2, 3 for audio quality， 3 is the best
         console.log(`---------------Enter Room !!!!!!`);
         let roomId = Globals.DataCenter.PlayerData.mainPlayerInfo.sceneId;
-        GMEApi.EnterRoom(roomId, 1, this.authBuffer);
+        GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
         this._inRoom = true;
     }
 
