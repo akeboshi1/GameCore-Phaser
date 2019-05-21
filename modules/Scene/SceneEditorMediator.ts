@@ -17,6 +17,7 @@ import {MouseFollower} from "./view/MouseFollower";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
 import { Scene45Util } from "game-core/common/manager/Scene45Util";
+import {QuadTree} from "../../base/ds/QuadTree";
 
 export class SceneEditorMediator extends SceneMediator {
 
@@ -48,6 +49,7 @@ export class SceneEditorMediator extends SceneMediator {
   private elementOldPoint: Phaser.Point = new Phaser.Point;
   private mouseDownPos: Phaser.Point = new Phaser.Point;
   private scene45Util: Scene45Util = new Scene45Util;
+  protected mQuadTree: QuadTree;
 
   protected stageResizeHandler(): void {
     Globals.game.world.setBounds(0, 0, Globals.Scene45Util.mapTotalWidth, Globals.Scene45Util.mapTotalHeight);
@@ -58,8 +60,8 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.GAME_GLOBALS_TICK, this.onTick, this);
     Globals.MessageCenter.on(MessageType.GAME_GLOBALS_FRAME, this.onFrame, this);
 
-    this.view.inputEnabled = true;
-    this.view.middleSceneLayer.inputEnableChildren = true;
+    // this.view.inputEnabled = true;
+    // this.view.middleSceneLayer.inputEnableChildren = true;
     this.mousePointer = Globals.game.input.activePointer;
 
     this.mMouseFollower = new MouseFollower(Globals.game);
@@ -206,6 +208,12 @@ export class SceneEditorMediator extends SceneMediator {
       this.view.clearScene();
     }
 
+    if (this.mQuadTree === undefined) {
+      let rect = new Phaser.Rectangle(0, 0, mapSceneInfo.mapTotalWidth, mapSceneInfo.mapTotalHeight);
+      this.mQuadTree = new QuadTree(rect);
+    }
+    this.mQuadTree.clear();
+
     Globals.SceneManager.popupScene();
 
     Globals.Scene45Util.setting(mapSceneInfo.rows, mapSceneInfo.cols, mapSceneInfo.tileWidth, mapSceneInfo.tileHeight);
@@ -238,6 +246,17 @@ export class SceneEditorMediator extends SceneMediator {
     this.minScale = minScaleX >= minScaleY ? minScaleX : minScaleY;
 
     this.handleChangeMode();
+  }
+
+  /**
+     * 删除物件
+     * @elementId elementId
+     */
+    protected removeElement(elementId: number): void {
+      let element = this.view.deleteSceneElement(elementId);
+      if (this.mQuadTree) {
+        this.mQuadTree.remove(element);
+      }
   }
 
   protected initializeTerrainItems(datas: Array<any>): void {
@@ -328,6 +347,8 @@ export class SceneEditorMediator extends SceneMediator {
       }
     } else if (this.em.mode === EditorEnum.Mode.ZOOM) {
       Globals.game.input.onDown.add(this.onGameDown, this);
+    } else if (this.em.mode === EditorEnum.Mode.SELECT) {
+      Globals.game.input.onDown.add(this.onGameDown, this);
     }
   }
 
@@ -398,22 +419,50 @@ export class SceneEditorMediator extends SceneMediator {
 
   protected addElement(value: ElementInfo): void {
     let element: BasicElement = this.view.addSceneElement(Const.SceneElementType.ELEMENT, value.id, value) as BasicElement;
-    element.addDownBack(this.onElementLayerDown, this);
+    // element.addDownBack(this.onElementLayerDown, this);
+    element.addLoadBack(this.onElementLoadBack, this);
   }
-  private onElementLayerDown(item: BasicElement): void {
-    if (this.em.mode !== EditorEnum.Mode.SELECT) {
+
+  private onElementLoadBack(item: BasicElement): void {
+    this.mQuadTree.insert(item);
+  }
+
+  private onElementDown(): void {
+    let screenX: number = (this.mousePointer.x + this.camera.x) / this.view.scale.x;
+    let screenY: number = (this.mousePointer.y + this.camera.y) / this.view.scale.y;
+
+    let rect: Phaser.Rectangle = new Phaser.Rectangle(screenX, screenY, 1, 1);
+
+    let elements = this.mQuadTree.retrieve(rect);
+    elements.sort(Globals.Scene45Util.sortFunc);
+    elements = elements.reverse();
+    let len = elements.length;
+    let element: BasicElement;
+    let boo = false;
+    for (let i = 0; i < len; i++) {
+      element = elements[i] as BasicElement;
+      if (element.checkPixel(this.mousePointer)) {
+         boo = true;
+         break;
+      }
+    }
+
+    if (!boo) {
       return;
     }
-    let elementId: number = item.data.id;
-      this.sendSceneObject([elementId]);
-      this.mSelectElement = item;
-      this.handleSelectElement(item.data.id);
+
+    let elementId: number = element.data.id;
+    this.sendSceneObject([elementId]);
+    if (this.em.mode === EditorEnum.Mode.SELECT) {
+      this.mSelectElement = element;
+      // this.mSelectElement.display.Loader.tint = 0x7878ff;
+      this.handleSelectElement(element.data.id);
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
-
-      this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
-      this.isElementDown = true;
-      Globals.game.input.onUp.add(this.onGameUp, this);
+    }
+    this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
+    this.isElementDown = true;
+    Globals.game.input.onUp.add(this.onGameUp, this);
   }
 
   private preSendSceneDown(pointer: Phaser.Pointer): void {
@@ -439,6 +488,10 @@ export class SceneEditorMediator extends SceneMediator {
   }
 
   private onGameDown(pointer: Phaser.Pointer, event: any): void {
+    if (this.em.mode === EditorEnum.Mode.SELECT) {
+      this.onElementDown();
+      return;
+    }
     if (this.em.type === EditorEnum.Type.TERRAIN) {
       this.preSendSceneDown(this.mousePointer);
     }
@@ -465,6 +518,7 @@ export class SceneEditorMediator extends SceneMediator {
         this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y);
       }
       this.mSelectElement.isCanShow = true;
+      // this.mSelectElement.display.Loader.tint = 16777215;
     }
 
     if (this.isElementDown) {
@@ -492,7 +546,8 @@ export class SceneEditorMediator extends SceneMediator {
     for (; i < len; i++) {
       data = datas[i];
       element = this.view.addSceneElement(Const.SceneElementType.ELEMENT, data.id, data) as BasicElement;
-      element.addDownBack(this.onElementLayerDown, this);
+      // element.addDownBack(this.onElementLayerDown, this);
+      element.addLoadBack(this.onElementLoadBack, this);
     }
   }
 }

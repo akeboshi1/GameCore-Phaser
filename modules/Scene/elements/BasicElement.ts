@@ -12,8 +12,11 @@ export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;
   protected mScaleX = 1;
   protected myAnimationName: string;
-  protected downSignal: Phaser.Signal = new Phaser.Signal;
+  protected loadSignal: Phaser.Signal = new Phaser.Signal;
   public display: BasicElementAvatar;
+
+  protected mWidth = 0;
+  protected mHeight = 0;
 
   public get elementInfo(): any {
     return this.data;
@@ -61,16 +64,30 @@ export default class BasicElement extends SceneEntity {
     return element;
   }
 
-  public addDownBack(callback: Function, context?: any): void {
-    if (this.downSignal) {
-      this.downSignal.add(callback, context);
+  public addLoadBack(callback: Function, context?: any): void {
+    if (this.loadSignal) {
+      this.loadSignal.add(callback, context);
     }
   }
 
-  public onDownCall(): void {
-    if (this.downSignal) {
-      this.downSignal.dispatch(this);
+  public checkPixel(pointer: Phaser.Pointer): boolean {
+    return this.display.Loader.input.checkPixel(null, null, pointer);
+  }
+
+  protected onDisplayLoadCompleted(): void {
+    this.mWidth = this.display.Loader.width;
+    this.mHeight = this.display.Loader.height;
+    if (this.loadSignal) {
+      this.loadSignal.dispatch(this);
     }
+  }
+
+  public get quadW(): number {
+    return this.mWidth;
+  }
+
+  public get quadH(): number {
+    return this.mHeight;
   }
 
   protected onUpdating(deltaTime: number): void {
@@ -122,8 +139,10 @@ export default class BasicElement extends SceneEntity {
   }
 
   public onDispose(): void {
-    this.downSignal.dispose();
-    this.downSignal = null;
+    if (this.loadSignal) {
+      this.loadSignal.dispose();
+      this.loadSignal = null;
+    }
     super.onDispose();
   }
 }

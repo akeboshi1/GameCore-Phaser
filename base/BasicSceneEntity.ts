@@ -19,11 +19,6 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   public scene: SceneBasic;
   public camera: Phaser.Camera;
 
-  public collisionWidth = 0;
-  public collisionHeight = 0;
-  public collisionOffsetX = 0;
-  public collisionOffsetY = 0;
-
   public positionDirty = false;
   public baseLoc: Phaser.Point;
   protected isNeedSort = true;
@@ -72,42 +67,30 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   }
 
   public get sortX(): number {
-    return this.ox + (this.collisionWidth >> 1);
+    return this.ox;
   }
 
   public get sortY(): number {
-    return this.oy + (this.collisionHeight >> 1);
+    return this.oy;
   }
 
   public get quadW(): number {
-    return this.collisionWidth;
+    return 0;
   }
 
   public get quadH(): number {
-    return this.collisionHeight;
+    return 0;
   }
 
   public get quadX(): number {
-    return this.ox + this.collisionOffsetX;
+    return this.ox + (this.baseLoc ? this.baseLoc.x : 0);
   }
 
   public get quadY(): number {
-    return this.oy + this.collisionOffsetY;
+    return this.oy + (this.baseLoc ? this.baseLoc.y : 0);
   }
 
   protected onDisplayLoadCompleted(): void {
-  }
-
-  public setCollisionArea(value: string, orgin: Phaser.Point, hWidth: number, hHeight: number): void {
-    let arr = value.split("&");
-    let rows = arr.length;
-    let cols = arr[0].split(",").length;
-
-    this.collisionWidth = (rows + cols) * (hWidth / 2);
-    this.collisionHeight = (rows + cols) * (hHeight / 2);
-
-    this.collisionOffsetX = -rows * (hWidth / 2) - (orgin.x - orgin.y) * (hWidth / 2);
-    this.collisionOffsetY = -(orgin.x + orgin.y) * (hHeight / 2);
   }
 
   public moveToTarget(value: op_client.IMoveData): void {

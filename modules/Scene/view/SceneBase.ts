@@ -130,14 +130,14 @@ export class SceneBase extends SceneBasic {
     }
   }
 
-    public removeAllSceneElements(): void {
-        let element: BasicSceneEntity;
-        for (let i = 0; i < this.mSceneElements.valueList.length; i++) {
-            element = this.mSceneElements.valueList[i];
-            this.deleteSceneElement(element.uid);
-            --i;
-        }
-    }
+  public removeAllSceneElements(): void {
+      let element: BasicSceneEntity;
+      for (let i = 0; i < this.mSceneElements.valueList.length; i++) {
+          element = this.mSceneElements.valueList[i];
+          this.deleteSceneElement(element.uid);
+          --i;
+      }
+  }
 
   public removeAllTerrainElements(): void {
 

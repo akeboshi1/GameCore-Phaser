@@ -68,11 +68,6 @@ export default class Game extends Phaser.Game implements IGame {
     }
   }
 
-  public wake(): void {
-    
-  }
-
-
   public resize(bounds: IRectangle): void {
     GameConfig.GameWidth = bounds.width;
     GameConfig.GameHeight = bounds.height;

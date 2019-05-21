@@ -70,9 +70,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
           this.mLoaderAvatar = new DisplayLoaderAvatar(Globals.game);
         }
         this.mLoaderAvatar.inputEnabled = true;
-        this.mLoaderAvatar.input.pixelPerfectClick = true;
-        this.mLoaderAvatar.events.onInputDown.add(this.onDown, this);
-        this.mLoaderAvatar.events.onInputUp.add(this.onUp, this);
+        // this.mLoaderAvatar.input.pixelPerfectClick = true;
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);
@@ -96,23 +94,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         }
     }
 
-    protected onDown(sprite: any): void {
-      if (this.getOwner()) {
-          this.getOwner().onDownCall();
-      }
-      sprite.tint = 0x7878ff;
-    }
-
-    protected onUp(sprite: any): void {
-        sprite.tint = 16777215;
-    }
-
     public onDispose(): void {
         if (this.mLoaderAvatar) {
             this.mLoaderAvatar.inputEnabled = false;
             this.mLoaderAvatar.input.pixelPerfectClick = false;
-            this.mLoaderAvatar.events.onInputDown.remove(this.onDown, this);
-            this.mLoaderAvatar.events.onInputUp.remove(this.onUp, this);
             this.removeChild(this.mLoaderAvatar);
             this.mLoaderAvatar.onRecycle();
             this.mLoaderAvatar = null;
