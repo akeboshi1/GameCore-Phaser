@@ -46,7 +46,19 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     png: UI.DropDownBtn.getPNG(),
                     frameWidth: UI.DropDownBtn.getWidth(),
                     frameHeight: UI.DropDownBtn.getHeight()
-                }
+                    },
+                    {
+                        key: UI.LabaBt.getName(),
+                        png: UI.LabaBt.getPNG(),
+                        frameWidth: UI.LabaBt.getWidth(),
+                        frameHeight: UI.LabaBt.getHeight()
+                    },
+                    {
+                        key: UI.VoiceBt.getName(),
+                        png: UI.VoiceBt.getPNG(),
+                        frameWidth: UI.VoiceBt.getWidth(),
+                        frameHeight: UI.VoiceBt.getHeight()
+                    }
                 ];
                 atlasResource = [{
                     key: UI.Button.getName(),

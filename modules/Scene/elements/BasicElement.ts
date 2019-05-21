@@ -5,8 +5,6 @@ import SceneEntity from "../view/SceneEntity";
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
 import {op_gameconfig} from "pixelpai_proto";
 import {Const} from "../../../common/const/Const";
-import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import { Log } from "game-core/Log";
 
 export default class BasicElement extends SceneEntity {
   protected mAnimationDirty = false;

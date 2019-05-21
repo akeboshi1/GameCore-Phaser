@@ -5,6 +5,8 @@ import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 import {GameConfig} from "../../../GameConfig";
 import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
 import {ComboBox} from "../../../base/component/combobox/ComboBox";
+import {CheckButton} from "../../../base/component/button/CheckButton";
+import "../../../web-rtc-service";
 
 export class ChatView extends ModuleViewBase {
     public out_tf: Phaser.Text;
@@ -12,6 +14,8 @@ export class ChatView extends ModuleViewBase {
     public bt: NiceSliceButton;
     public scroller: ScrollArea;
     public comobox: ComboBox;
+    public labaButton: CheckButton;
+    public voiceButton: CheckButton;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -42,8 +46,16 @@ export class ChatView extends ModuleViewBase {
         this.add(this.scroller);
 
         this.comobox = new ComboBox(this.game, 5, GameConfig.GameHeight - 226, this, ["世界频道", "当前场景", "小喇叭"]);
-    }
 
+        this.labaButton = new CheckButton(this.game, 238, GameConfig.GameHeight - 232, UI.LabaBt.getName());
+        this.add(this.labaButton);
+
+        this.voiceButton = new CheckButton(this.game, 272, GameConfig.GameHeight - 232, UI.VoiceBt.getName());
+        this.add(this.voiceButton);
+
+        this.labaButton.select = false;
+        this.voiceButton.select = false;
+    }
 
     public get inputValue(): string {
         if (this.input_tf)

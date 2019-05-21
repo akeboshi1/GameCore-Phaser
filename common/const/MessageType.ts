@@ -19,6 +19,11 @@ export class MessageType {
     public static CHAT_TO = "chat_to";
     public static PROMPT_ALERT = "prompt_alert";
 
+    /// never start
+    public static QCLOUD_AUTH = "qcloud_auth";
+    public static ENTER_SCENE = "enter_scene";
+    /// never end
+
     public static SCENE_ADD_PLAYER = "scene_add_player";
     public static SCENE_REMOVE_PLAYER = "scene_remove_player";
     public static SCENE_UPDATE_PLAYER = "scene_update_player";
@@ -34,6 +39,7 @@ export class MessageType {
     public static SCENE_FIXED_TO_ELEMENT = "scene_fixed_to_element";
     public static SCENE_UPDATE_ELEMENT = "sceneUpdateElement";
     public static SCENE_SYNCHRO_PACKAGE = "sceneSynchroPackage";
+    public static SCENE_VISIBLE_GRID = "sceneVisibleGrid";
 
     public static PLAYER_SELECT_CHARACTER = "player_select_character";
     public static PLAYER_DATA_INITIALIZE = "player_data_initialize";

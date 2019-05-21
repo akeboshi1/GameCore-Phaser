@@ -176,6 +176,42 @@ export namespace UI {
         }
     }
 
+    export class LabaBt {
+        static getName(): string {
+            return "laba_bt_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/laba_bt.png");
+        }
+
+        static getWidth(): number {
+            return 28;
+        }
+
+        static getHeight(): number {
+            return 28;
+        }
+    }
+
+    export class VoiceBt {
+        static getName(): string {
+            return "voice_bt_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/voice_bt.png");
+        }
+
+        static getWidth(): number {
+            return 28;
+        }
+
+        static getHeight(): number {
+            return 28;
+        }
+    }
+
     export class MenuItemBg {
         static getName(): string {
             return "menu_item_bg_png";
