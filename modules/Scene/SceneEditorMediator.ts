@@ -458,6 +458,7 @@ export class SceneEditorMediator extends SceneMediator {
       this.handleSelectElement(element.data.id);
       this.elementOldPoint.x = this.mSelectElement.ox;
       this.elementOldPoint.y = this.mSelectElement.oy;
+      this.mQuadTree.remove(this.mSelectElement);
     }
     this.mouseDownPos.set(this.mousePointer.x, this.mousePointer.y);
     this.isElementDown = true;
@@ -516,6 +517,7 @@ export class SceneEditorMediator extends SceneMediator {
       } else {
         this.mSelectElement.setPosition(this.elementOldPoint.x, this.elementOldPoint.y);
       }
+      this.mQuadTree.insert(this.mSelectElement);
       this.mSelectElement.isCanShow = true;
       // this.mSelectElement.display.Loader.tint = 16777215;
     }
