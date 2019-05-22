@@ -6,7 +6,6 @@ import {IEditorMode} from "../../interface/IEditorMode";
 import {EditorEnum} from "../../common/const/EditorEnum";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
-import {Tick} from "../../common/tick/Tick";
 import {PBpacket} from "net-socket-packet";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
 import BasicElement from "./elements/BasicElement";
@@ -16,8 +15,8 @@ import {Const} from "../../common/const/Const";
 import {MouseFollower} from "./view/MouseFollower";
 import OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = op_editor.OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT;
 import OP_CLIENT_REQ_EDITOR_FETCH_OBJECT = op_editor.OP_CLIENT_REQ_EDITOR_FETCH_OBJECT;
-import { Scene45Util } from "game-core/common/manager/Scene45Util";
 import {QuadTree} from "../../base/ds/QuadTree";
+import {Scene45Util} from "../../common/manager/Scene45Util";
 
 export class SceneEditorMediator extends SceneMediator {
 
