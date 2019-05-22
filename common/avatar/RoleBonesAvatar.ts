@@ -69,7 +69,7 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mHeadName.anchor.set(0.5);
         this.mHeadName.align = "center";
         this.mHeadName.stroke = "#000";
-        this.mHeadName.strokeThickness = 3;
+        this.mHeadName.strokeThickness = 2;
         this.addChild(this.mHeadName);
     }
 
