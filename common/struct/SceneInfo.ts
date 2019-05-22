@@ -12,6 +12,7 @@ export class SceneInfo {
 
     private _mapTotalWidth = 0;
     private _bgSound = 1;
+    private _voiceChatRoomId = 0;
 
     public get bgSound(): number {
         return this._bgSound;
@@ -75,6 +76,14 @@ export class SceneInfo {
 
     public set rows(value: number) {
         this._rows = value;
+    }
+
+    public get voiceChatRoomId(): number {
+        return this._voiceChatRoomId;
+    }
+
+    public set voiceChatRoomId(value: number) {
+        this._voiceChatRoomId = value;
     }
 
     public setConfig(cols: number, rows: number, zStart: number, zEnd: number, tileWidth: number, tileHeight: number): void {

@@ -14,6 +14,7 @@ export class SceneData extends BaseSingleton {
 
     public setMapInfo(value: op_client.IScene): void {
         this._mapInfo.mapId = value.id;
+        this._mapInfo.voiceChatRoomId = value.voiceChatRoomId;
         this._mapInfo.setConfig(value.cols, value.rows, value.zStart, value.zEnd, value.tileWidth, value.tileHeight);
         this._mapInfo.setTerrainInfo(value.terrains);
         this._mapInfo.setElementInfo(value.elements);

@@ -64,8 +64,7 @@ export class ChatMediator extends MediatorBase {
     public sendGenAuthBuffer(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER);
         let content: OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = pkt.content;
-        let roomId = Globals.DataCenter.PlayerData.mainPlayerInfo.sceneId;
-        content.roomId = roomId;
+        content.roomId = Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId;;
         Globals.SocketManager.send(pkt);
     }
     /// never end
@@ -98,7 +97,7 @@ export class ChatMediator extends MediatorBase {
     public enterRoom(): void {
         // TODO Get sceneId authBuffer, and set room Type enum
         // roomType 1, 2, 3 for audio quality， 3 is the best
-        let roomId = Globals.DataCenter.PlayerData.mainPlayerInfo.sceneId;
+        let roomId = Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId;
         GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
         this._inRoom = true;
     }
