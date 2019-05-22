@@ -65,7 +65,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
           this.mLoaderAvatar = new DisplayLoaderAvatar(Globals.game);
         }
         this.mLoaderAvatar.inputEnabled = true;
-        // this.mLoaderAvatar.input.pixelPerfectClick = true;
+        this.mLoaderAvatar.input.pixelPerfectClick = true;
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);
