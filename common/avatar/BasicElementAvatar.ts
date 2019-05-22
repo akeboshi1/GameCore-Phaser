@@ -3,11 +3,7 @@ import {BasicAvatar} from "../../base/BasicAvatar";
 import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
-import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
-import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
-import {ReferenceArea} from "../struct/ReferenceArea";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
-import { Log } from "game-core/Log";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -16,7 +12,6 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected mAnimationDirty = false;
     protected mScaleX = 1;
     protected mLoaderAvatar: DisplayLoaderAvatar;
-    public inMouse = false;
 
     constructor(game: Phaser.Game) {
         super(game);
