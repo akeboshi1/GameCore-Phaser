@@ -280,8 +280,8 @@ export class SceneMediator extends MediatorBase {
     }
 
     private onDraw(graphics: MyGraphics, x: number, y: number) {
-        graphics.haha();
-        graphics.drawCircle(x, y, 5 );
+        // graphics.haha();
+        // graphics.drawCircle(x, y, 5 );
     }
 
     private moveToHandle(moveData: op_client.IMoveData[]): void {
