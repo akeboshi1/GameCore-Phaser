@@ -96,6 +96,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     Globals.MessageCenter.on(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
+    Globals.MessageCenter.on(MessageType.SCENE_VISIBLE_GRID, this.handleVisibleGrid, this);
   }
 
   public unRegisterSceneListenerHandler(): void {
@@ -106,6 +107,7 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.cancel(MessageType.SCENE_MOUSE_FOLLOW, this.handleMouseFollow, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
     Globals.MessageCenter.cancel(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_VISIBLE_GRID, this.handleVisibleGrid, this);
     super.unRegisterSceneListenerHandler();
   }
 
@@ -279,6 +281,10 @@ export class SceneEditorMediator extends SceneMediator {
     if (element) {
       Globals.game.camera.setPosition(element.ox - GameConfig.GameWidth / 2, element.oy - GameConfig.GameHeight / 2);
     }
+  }
+
+  protected handleVisibleGrid(): void {
+    this.view.terrainGridLayer.visible = GameConfig.VisibleGrid;
   }
 
   /**
