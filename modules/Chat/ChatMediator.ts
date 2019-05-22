@@ -29,7 +29,7 @@ export class ChatMediator extends MediatorBase {
         this.view.voiceButton.onCallBack(this.handleVoice, this);
 
         super.onRegister();
-        this._initGME();
+        this.handleInitPlayer();
     }
 
     /// never start
@@ -59,6 +59,14 @@ export class ChatMediator extends MediatorBase {
         });
         this.sendGenAuthBuffer();
         this._inRoom = false;
+    }
+
+    private handleInitPlayer() {
+        if (Globals.DataCenter.PlayerData.initialize) {
+            this._initGME();
+        } else {
+            Globals.MessageCenter.on(MessageType.PLAYER_DATA_INITIALIZE, this._initGME, this);
+        }
     }
 
     public sendGenAuthBuffer(): void {
@@ -120,6 +128,7 @@ export class ChatMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.QCLOUD_AUTH, this.onHandleQcloudAuth, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.onHandleChangeChatRoom, this);
         Globals.MessageCenter.cancel(MessageType.ENTER_SCENE, this.onHandleChangeChatRoom, this);
+        Globals.MessageCenter.cancel(MessageType.PLAYER_DATA_INITIALIZE, this._initGME, this);
         this.view.bt.cancel("up", this.onHandleBt);
 
         (<any>this.view.input_tf).domElement.element.removeEventListener("keydown", this.sayHello.bind(this));
