@@ -12,6 +12,7 @@ import {DisplaySortableTerrainLayer} from "./DisplaySortableTerrainLayer";
 import {GameConfig} from "../../../GameConfig";
 import {DisplaySortableEditorTerrainLayer} from "./DisplaySortableEditorTerrainLayer";
 import {DisplaySortableEditorSceneLayer} from "./DisplaySortableEditorSceneLayer";
+import { QuadTreeTest } from "game-core/base/ds/QuadTreeTest";
 
 export class SceneBase extends SceneBasic {
   public mapSceneInfo: SceneInfo;
@@ -214,6 +215,9 @@ export class SceneBase extends SceneBasic {
         this.addChild(this.middleSceneLayer);
     }
 
+    // this.addChild(QuadTreeTest.graphicsTree);
+    // this.addChild(QuadTreeTest.graphicsNode);
+    // this.addChild(QuadTreeTest.graphicsRetrieve);
 
     this.topSceneLayer = new DisplaySortableSceneLayer(this.game);
     this.topSceneLayer.scene = this;

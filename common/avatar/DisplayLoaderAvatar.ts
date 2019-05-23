@@ -6,6 +6,7 @@ import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
+import { GameConfig } from "game-core/GameConfig";
 
 export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObject, IDisposeObject, IRecycleObject {
     private mLoadThisArg: any;
@@ -49,7 +50,11 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
     public playAnimation(animationName: string, scaleX?: number): void {
         let config = this.getAnimationConfig(animationName);
         if (config) {
-            this.animations.play(animationName);
+            if (GameConfig.isEditor) {
+                this.animations.play(animationName, 0);
+            } else {
+                this.animations.play(animationName);
+            }
             this.mIsAnimation = config.frameName.length > 1;
         }
         this.scale.x = scaleX || 1;
@@ -131,11 +136,9 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         this.loadTexture(key);
 
         let iAnimation: op_gameconfig.IAnimation;
-        let animation: Phaser.Animation;
         let len  = this.mLoadParam.animations.length;
         for (let i = 0; i < len; i++) {
             iAnimation = this.mLoadParam.animations[i];
-            animation = this.animations.getAnimation(iAnimation.name);
             this.animations.add(iAnimation.name, iAnimation.frameName, iAnimation.frameRate, iAnimation.loop);
         }
     }
@@ -161,6 +164,8 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         this.mModelLoaded = true;
 
         this.onCompleteLoadModel();
+
+        this.mAnimatonControlFuncDitry = false;
 
         if (this.mAnimatonControlFunc != null) {
             this.mAnimatonControlFunc.call(this.mAnimatonControlThisObj, this);

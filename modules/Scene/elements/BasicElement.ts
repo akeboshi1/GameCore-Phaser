@@ -72,6 +72,10 @@ export default class BasicElement extends SceneEntity {
     return this.display.Loader.input.checkPointerDown(pointer);
   }
 
+  public set selected(value: boolean) {
+    this.display.Loader.tint = value ? 0x7878ff : 16777215;
+  }
+
   protected onDisplayLoadCompleted(): void {
     this.mWidth = this.display.Loader.width;
     this.mHeight = this.display.Loader.height;
@@ -101,9 +105,10 @@ export default class BasicElement extends SceneEntity {
     this.initBaseLoc();
     this.setAngleIndex(this.elementInfo.dir);
     this.setPosition(this.elementInfo.x, this.elementInfo.y, this.elementInfo.z);
-    this.loadModel(this.elementInfo);
     this.setAnimation(this.elementInfo.animationName);
     this.setScaleX(this.elementInfo.scaleX);
+    this.onAvatarAnimationChanged();
+    this.loadModel(this.elementInfo);
   }
 
   protected onUpdatingDisplay(): void {

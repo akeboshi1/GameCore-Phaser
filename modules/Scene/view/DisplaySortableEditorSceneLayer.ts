@@ -11,13 +11,6 @@ export class DisplaySortableEditorSceneLayer extends DisplaySortableSceneLayer {
   protected mDepthSortDirtyFlag = false;
   protected mSortWaitTime = 0;
 
-  public constructor(game: Phaser.Game) {
-    super(game);
-    this.mSceneEntities = new UniqueLinkList();
-  }
-
-  public onInitialize(): void {
-  }
 
   public addEntity(d: BasicSceneEntity): void {
     d.scene = this.scene;

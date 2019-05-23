@@ -435,14 +435,13 @@ export class SceneEditorMediator extends SceneMediator {
   private onElementDown(): void {
     let screenX: number = (this.mousePointer.x + this.camera.x) / this.view.scale.x;
     let screenY: number = (this.mousePointer.y + this.camera.y) / this.view.scale.y;
-
-    let rect: Phaser.Rectangle = new Phaser.Rectangle(screenX, screenY, 1, 1);
-
+    let element: BasicElement;
+    let rect: Phaser.Rectangle = new Phaser.Rectangle(screenX - 64, screenY - 64, 128, 128);
     let elements = this.mQuadTree.retrieve(rect);
     elements.sort(Globals.Scene45Util.sortFunc);
     elements = elements.reverse();
     let len = elements.length;
-    let element: BasicElement;
+    // let element: BasicElement;
     let boo = false;
     for (let i = 0; i < len; i++) {
       element = elements[i] as BasicElement;
