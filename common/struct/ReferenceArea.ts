@@ -99,10 +99,10 @@ export class ReferenceArea extends Phaser.Graphics {
   public setPosition(x: number, y: number): void {
     if (this._scale === 1) {
       this.x = x - ReferenceArea.room45.originX - (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
-      this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight - ReferenceArea.room45.hTileHeight / 2;
+      this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
     } else {
       this.x = x + ReferenceArea.room45.originX + (this._orgin.x - this._orgin.y) * ReferenceArea.room45.hTileWidth;
-      this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight - ReferenceArea.room45.hTileHeight / 2;
+      this.y = y - (this._orgin.x + this._orgin.y) * ReferenceArea.room45.hTileHeight;
     }
   }
 
