@@ -22,8 +22,15 @@ export class StorageMediator extends MediatorBase {
         this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
     }
 
+    public onRemove(): void {
+        super.onRemove();
+        this.view.m_List.cancel(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
+        this.view.m_List.onDispose();
+        this.view.m_List = null;
+    }
+
     private onListItemUp(item: StorageListItem): void {
-        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.param[0];
         let elementInfo: ElementInfo = Globals.DataCenter.SceneData.mapInfo.getElementInfo(param.id);
         if (elementInfo) {
             let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
@@ -37,7 +44,7 @@ export class StorageMediator extends MediatorBase {
     }
 
     private initView(): void {
-        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.param[0];
         let elementInfo: ElementInfo = Globals.DataCenter.SceneData.mapInfo.getElementInfo(param.id);
         if (elementInfo == null || elementInfo.package.items.length === 0) {
             return;

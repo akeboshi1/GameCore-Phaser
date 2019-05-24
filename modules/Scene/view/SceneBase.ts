@@ -12,7 +12,6 @@ import {DisplaySortableTerrainLayer} from "./DisplaySortableTerrainLayer";
 import {GameConfig} from "../../../GameConfig";
 import {DisplaySortableEditorTerrainLayer} from "./DisplaySortableEditorTerrainLayer";
 import {DisplaySortableEditorSceneLayer} from "./DisplaySortableEditorSceneLayer";
-import { QuadTreeTest } from "game-core/base/ds/QuadTreeTest";
 
 export class SceneBase extends SceneBasic {
   public mapSceneInfo: SceneInfo;

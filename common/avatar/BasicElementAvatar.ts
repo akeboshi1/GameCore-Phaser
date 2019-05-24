@@ -4,6 +4,7 @@ import {DisplayLoaderAvatar} from "./DisplayLoaderAvatar";
 import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
+import {GameConfig} from "../../GameConfig";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -64,8 +65,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (null == this.mLoaderAvatar) {
           this.mLoaderAvatar = new DisplayLoaderAvatar(Globals.game);
         }
-        this.mLoaderAvatar.inputEnabled = true;
-        this.mLoaderAvatar.input.pixelPerfectClick = true;
+        if (GameConfig.isEditor) {
+            this.mLoaderAvatar.inputEnabled = true;
+            this.mLoaderAvatar.input.pixelPerfectClick = true;
+        }
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);
@@ -91,8 +94,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
 
     public onDispose(): void {
         if (this.mLoaderAvatar) {
-            this.mLoaderAvatar.inputEnabled = false;
-            this.mLoaderAvatar.input.pixelPerfectClick = false;
+            if (GameConfig.isEditor) {
+                this.mLoaderAvatar.inputEnabled = false;
+                this.mLoaderAvatar.input.pixelPerfectClick = false;
+            }
             this.removeChild(this.mLoaderAvatar);
             this.mLoaderAvatar.onRecycle();
             this.mLoaderAvatar = null;

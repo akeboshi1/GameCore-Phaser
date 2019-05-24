@@ -26,10 +26,6 @@ export class StorageView extends CommWindowModuleView {
         this.m_Height = 205;
     }
 
-    public onDispose(): void {
-        super.onDispose();
-    }
-
     protected init(): void {
         this.m_Bg = this.game.add.nineSlice(0, 0, UI.BagBg.getName(), null, this.width, this.height, this);
 

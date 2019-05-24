@@ -6,7 +6,7 @@ import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
 import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
-import { GameConfig } from "game-core/GameConfig";
+import {GameConfig} from "../../GameConfig";
 
 export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObject, IDisposeObject, IRecycleObject {
     private mLoadThisArg: any;

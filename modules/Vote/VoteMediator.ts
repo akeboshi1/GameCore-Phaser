@@ -24,7 +24,7 @@ export class VoteMediator extends MediatorBase {
   }
 
     public onFrame(): void {
-        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.param[0];
         if (param.time.length > 0) {
             let leftT = param.time[0] - Globals.TimeManager.getCurrentTime() / 1000;
             this.view.m_TimeTxt.text = Globals.Tool.formatLeftTime(leftT);
@@ -52,7 +52,7 @@ export class VoteMediator extends MediatorBase {
             return;
         }
 
-        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.param[0];
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
@@ -63,7 +63,7 @@ export class VoteMediator extends MediatorBase {
     }
 
     private initView(): void {
-        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.param[0];
         this.renderList(param);
         if (param.button.length > 0) {
             this.view.m_Bt.setText(param.button[0].text);

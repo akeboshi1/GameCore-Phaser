@@ -49,5 +49,6 @@ export class VisualComponent extends Phaser.Group implements IDisposeObject {
             this.signals[name].dispose();
             delete this.signals[name];
         }
+        this.destroy(true);
     }
 }

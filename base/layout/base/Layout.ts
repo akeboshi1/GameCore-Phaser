@@ -57,7 +57,8 @@ export class Layout implements ILayout {
         for (let i = 0; i < len; i++) {
             this.m_LayoutItems[i].onDispose();
         }
-        this.m_LayoutItems = null;
+        this.m_LayoutItems.length = 0;
+
     }
 
     public get size(): number {

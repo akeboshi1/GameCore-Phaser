@@ -2,7 +2,7 @@ export interface IMediator {
     setViewComponent(viewComponent: any): void;
 
     setParam( param: any ): void;
-    getParam(): void;
+    readonly param: void;
 
     preRegister(): void;
     onRegister(): void;

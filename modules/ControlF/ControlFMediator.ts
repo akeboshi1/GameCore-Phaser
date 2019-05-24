@@ -22,7 +22,7 @@ export class ControlFMediator extends MediatorBase {
     }
 
   private initView(): void {
-      let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.getParam()[0];
+      let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.param[0];
       if (param.text.length > 0) {
           this.view.setName(param.text[0].text);
       }
