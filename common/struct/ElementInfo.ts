@@ -61,7 +61,7 @@ export class ElementInfo implements IElement, IDisplayLoaderParam {
     let value: any;
     for (let key in base) {
       value = base[key];
-      if (value) {
+      if (value !== undefined) {
           this[key] = value;
       }
     }
