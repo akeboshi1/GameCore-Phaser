@@ -7,7 +7,7 @@ export class ReferenceArea extends Phaser.Graphics {
     super(game);
     this.areaStr = value || "";
     this._color = color || -1;
-    this._alpha = alpha || 0;
+    this._alpha = alpha || 1;
     this._orgin = orgin || new Phaser.Point(0, 0);
     this.init();
   }
