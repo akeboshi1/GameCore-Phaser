@@ -361,7 +361,7 @@ export class SceneEditorMediator extends SceneMediator {
     // Log.trace("点击场景-->", x, y);
     let pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT);
     let content: OP_CLIENT_RES_EDITOR_SCENE_POINT_RESULT = pkt.content;
-    content.point = {x: x >> 0, y: y >> 0};
+    content.point = {x: x, y: y};
     Globals.SocketManager.send(pkt);
   }
 
