@@ -66,6 +66,7 @@ export class DisplaySortableEditorSceneLayer extends DisplaySortableSceneLayer {
           entity.initialize();
           entity.updateDisplay();
           this.add(entity.display);
+          this.setChildIndex(entity.display, this.children.length - 1);
         }
       } else {
         entity.onTick(deltaTime);
