@@ -67,13 +67,17 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   }
 
   public get sortX(): number {
-    let tempPoint = Globals.Scene45Util.pixelToTileCoords(this.ox, this.oy);
-    return tempPoint.x;
+      if (this.display) {
+          return this.display.isoX;
+      }
+      return 0;
   }
 
   public get sortY(): number {
-    let tempPoint = Globals.Scene45Util.pixelToTileCoords(this.ox, this.oy);
-    return tempPoint.y;
+      if (this.display) {
+          return this.display.isoY;
+      }
+      return 0;
   }
 
   public get quadW(): number {

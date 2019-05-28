@@ -29,7 +29,6 @@ export class ItemDetailView extends CommModalWindowView {
       this.add(this.m_CloseBt);
 
       this.m_Icon = new BaseIcon(this.game);
-      this.m_Icon.x = this.width >> 1;
       this.m_Icon.y = (this.height / 4);
       this.m_Icon.anchor.set(0.5);
       this.add(this.m_Icon);
@@ -54,7 +53,6 @@ export class ItemDetailView extends CommModalWindowView {
   }
 
     protected handleLoadComplete(): void {
-        this.m_Icon.x = (GameConfig.GameWidth - this.m_Icon.width) >> 1;
-        this.m_Icon.y = 90;
+        this.m_Icon.x = (this.width - this.m_Icon.texture.width) >> 1;
     }
 }

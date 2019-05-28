@@ -32,7 +32,7 @@ export class VoteResultView extends CommModalWindowView {
           , 1, 0 , 2);
       this.add(this.m_CloseBt);
 
-      this.m_Static = this.game.make.text(this.width * 6 / 8, this.height / 10, "完整剧情", {
+      this.m_Static = this.game.make.text(this.width - 325, this.height / 10, "完整剧情", {
           font: "30px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"
       });
       this.add(this.m_Static);
@@ -40,7 +40,7 @@ export class VoteResultView extends CommModalWindowView {
       this.m_Desc = this.game.make.text(0, 0, "", {
           font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff", wordWrap: true, wordWrapWidth: 510});
 
-      const bounds = new Phaser.Rectangle(this.width * 2 / 3, this.m_Static.y + 100, 510, 660);
+      const bounds = new Phaser.Rectangle(this.width - 520, this.m_Static.y + 100, 510, 660);
       this.scroller = new ScrollArea(this.game, bounds);
       this.scroller.add(this.m_Desc);
       this.scroller.start();
@@ -51,7 +51,7 @@ export class VoteResultView extends CommModalWindowView {
       this.m_List.y = this.height / 16;
       this.add(this.m_List);
 
-      this.m_Tip = this.game.make.text(this.width >> 1, this.height * 19 / 20, "...按任意位置退出该局游戏...", {
+      this.m_Tip = this.game.make.text(this.width >> 1, this.height - 50, "...按任意位置退出该局游戏...", {
           font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff"});
       this.m_Tip.anchor.setTo(0.5);
       this.add(this.m_Tip);
