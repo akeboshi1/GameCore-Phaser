@@ -3,11 +3,14 @@ import {CustomWebFonts, UI} from "../../../Assets";
 import {GameConfig} from "../../../GameConfig";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 import {BaseIcon} from "../../../base/component/icon/BaseIcon";
+import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
+import {Log} from "../../../Log";
 
 export class ItemDetailView extends CommModalWindowView {
   public m_Icon: BaseIcon;
   public m_Text: Phaser.Text;
   public m_Bt: NiceSliceButton;
+  public scroller: ScrollArea;
   constructor(game: Phaser.Game) {
     super(game);
   }
@@ -19,7 +22,6 @@ export class ItemDetailView extends CommModalWindowView {
         this.graphics.endFill();
         this.m_Width = GameConfig.GameWidth;
         this.m_Height = GameConfig.GameHeight;
-
     }
 
   protected init(): void {
@@ -29,15 +31,19 @@ export class ItemDetailView extends CommModalWindowView {
       this.add(this.m_CloseBt);
 
       this.m_Icon = new BaseIcon(this.game);
-      this.m_Icon.y = (this.height / 4);
-      this.m_Icon.anchor.set(0.5);
+      this.m_Icon.x = this.width >> 1;
+      this.m_Icon.y = 95;
       this.add(this.m_Icon);
 
-      this.m_Text = this.game.make.text(this.width >> 1, this.height >> 1, "", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF", align: "left", wordWrap: true, wordWrapWidth: 600});
-      this.m_Text.anchor.set(0.5, 0.5);
-      this.add(this.m_Text);
+      this.m_Text = this.game.make.text(0, 0, "", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF", align: "left", wordWrap: true, wordWrapWidth: 600});
 
-      this.m_Bt = new NiceSliceButton(this.game, (this.width - 110) >> 1, this.height * 3 / 4, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+      const bounds = new Phaser.Rectangle((this.width - 600) >> 1, this.height - 420, 600, 300);
+      this.scroller = new ScrollArea(this.game, bounds);
+      this.scroller.add(this.m_Text);
+      this.scroller.start();
+      this.add(this.scroller);
+
+      this.m_Bt = new NiceSliceButton(this.game, (this.width - 110) >> 1, this.height - 95, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
           top: 7,
           bottom: 7,
           left: 7,
@@ -48,11 +54,11 @@ export class ItemDetailView extends CommModalWindowView {
 
   public loadIcon(value: string): void {
       if (this.m_Icon) {
-          this.m_Icon.load(value, this, this.handleLoadComplete);
+          this.m_Icon.load(value, this, this.loadComplete);
       }
   }
 
-    protected handleLoadComplete(): void {
-        this.m_Icon.x = (this.width - this.m_Icon.texture.width) >> 1;
-    }
+  private loadComplete(): void {
+      // Log.trace("图标宽度", this.m_Icon.iconWidth);
+  }
 }

@@ -5,13 +5,6 @@ import Globals from "../../../Globals";
 import {DisplaySortableSceneLayer} from "./DisplaySortableSceneLayer";
 
 export class DisplaySortableEditorSceneLayer extends DisplaySortableSceneLayer {
-  public needRealTimeDepthSort = false;
-  protected mSceneEntities: UniqueLinkList;
-  protected SCENE_LAYER_RENDER_DELAY = 100;
-  protected mDepthSortDirtyFlag = false;
-  protected mSortWaitTime = 0;
-
-
   public addEntity(d: BasicSceneEntity): void {
     d.scene = this.scene;
     d.camera = this.camera;
