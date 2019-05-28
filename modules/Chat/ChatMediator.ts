@@ -32,7 +32,7 @@ export class ChatMediator extends MediatorBase {
 
         super.onRegister();
 
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
 
         this.handleInitPlayer();
     }
