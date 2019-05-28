@@ -67,17 +67,13 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   }
 
   public get sortX(): number {
-      if (this.display) {
-          return this.display.isoX;
-      }
-      return 0;
+      let p3 = Globals.Scene45Util.p2top3(this.ox, this.oy, this.oz);
+      return p3.x;
   }
 
   public get sortY(): number {
-      if (this.display) {
-          return this.display.isoY;
-      }
-      return 0;
+      let p3 = Globals.Scene45Util.p2top3(this.ox, this.oy, this.oz);
+      return p3.y;
   }
 
   public get quadW(): number {
