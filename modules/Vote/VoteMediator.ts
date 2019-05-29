@@ -18,7 +18,7 @@ export class VoteMediator extends MediatorBase {
       this.initView();
       this.view.m_Bt.on("up", this.onBtUp, this);
 
-      this.mTick = new Tick(60);
+      this.mTick = new Tick();
       this.mTick.setRenderCallBack(this.onFrame, this);
       this.mTick.start();
   }

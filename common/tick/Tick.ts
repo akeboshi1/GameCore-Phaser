@@ -1,7 +1,7 @@
 import Globals from "../../Globals";
+import {Log} from "../../Log";
 
 export class Tick {
-    protected m_Timer = 0;
     protected m_StopTime = 0;	// 停止时间
     protected m_AccumulativeTime = 0;	// 累计时间
     protected m_StopFlag = true;
@@ -10,10 +10,8 @@ export class Tick {
     protected m_CallBackThisObj: any;
     protected m_RenderCall: Function;
     protected m_RenderCallThisObj: any;
-    protected m_Delay: number;
 
-    constructor(delay: number = 33, stopTime: number = 0) {
-        this.m_Delay = delay;
+    constructor(stopTime: number = 0) {
         this.m_StopTime = stopTime;
         Globals.TickManager.addTick(this);
     }
@@ -21,11 +19,6 @@ export class Tick {
     public setCallBack(callBack: Function, thisObj: any): void {
         this.m_CallBack = callBack;
         this.m_CallBackThisObj = thisObj;
-    }
-
-    // 具体执行过程，使用override
-    protected update(): void {
-        if (undefined !== this.m_CallBack) this.m_CallBack.apply(this.m_CallBackThisObj, [this.m_Delay]);
     }
 
     public setRenderCallBack(callBack: Function, thisObj: any): void {
@@ -48,16 +41,12 @@ export class Tick {
                 return;
             }
         }
-        if (this.m_Delay > 0) {
-            this.m_Timer += timeElapsed;
-            while (this.m_Timer >= this.m_Delay) {
-                this.update();
-                if (this.isEnd()) break;
-                if (this.isStop()) break;
-                this.m_Timer -= this.m_Delay;
-            }
-        }
-        // this.render();
+        this.update(timeElapsed);
+    }
+
+    // 具体执行过程，使用override
+    protected update(value: number): void {
+        if (undefined !== this.m_CallBack) this.m_CallBack.apply(this.m_CallBackThisObj, [value]);
     }
 
     public onRender(): void {
@@ -70,7 +59,6 @@ export class Tick {
 
     public reStart(): void {
         this.m_StopFlag = false;
-        this.m_Timer = 0;
         this.m_AccumulativeTime = 0;
     }
 

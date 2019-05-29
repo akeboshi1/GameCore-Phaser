@@ -23,7 +23,7 @@ export class TimeManager extends BaseSingleton {
   public init(): void {
     let tempNow = new Date().getTime(); // todo:临时
     this.setServerTime(tempNow);
-    this.mTick = new Tick(60);
+    this.mTick = new Tick();
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.setRenderCallBack(this.onFrame, this);
     this.mTick.start();

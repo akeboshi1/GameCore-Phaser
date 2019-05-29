@@ -16,7 +16,7 @@ export class VoteResultMediator extends MediatorBase {
         super.onRegister();
         this.initView();
 
-        this.mTick = new Tick(60);
+        this.mTick = new Tick();
         this.mTick.setRenderCallBack(this.onFrame, this);
         this.mTick.start();
     }

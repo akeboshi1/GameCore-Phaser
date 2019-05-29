@@ -17,7 +17,7 @@ export class MiniMapMediator extends MediatorBase {
 
   public onRegister(): void {
     super.onRegister();
-    this.mTick = new Tick(60);
+    this.mTick = new Tick();
     this.mTick.setCallBack(this.onTick, this);
     this.mTick.setRenderCallBack(this.onFrame, this);
     this.mTick.start();
