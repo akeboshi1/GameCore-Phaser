@@ -5,6 +5,7 @@ import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 import {BaseIcon} from "../../../base/component/icon/BaseIcon";
 import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
 import {Log} from "../../../Log";
+import Globals from "../../../Globals";
 
 export class ItemDetailView extends CommModalWindowView {
   public m_Icon: BaseIcon;
@@ -32,18 +33,18 @@ export class ItemDetailView extends CommModalWindowView {
 
       this.m_Icon = new BaseIcon(this.game);
       this.m_Icon.x = this.width >> 1;
-      this.m_Icon.y = 95;
+      this.m_Icon.y = 60;
       this.add(this.m_Icon);
 
       this.m_Text = this.game.make.text(0, 0, "", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF", align: "left", wordWrap: true, wordWrapWidth: 600});
 
-      const bounds = new Phaser.Rectangle((this.width - 600) >> 1, this.height - 420, 600, 300);
+      const bounds = new Phaser.Rectangle((this.width - 600) >> 1, this.height - 450, 600, 300);
       this.scroller = new ScrollArea(this.game, bounds);
       this.scroller.add(this.m_Text);
       this.scroller.start();
       this.add(this.scroller);
 
-      this.m_Bt = new NiceSliceButton(this.game, (this.width - 110) >> 1, this.height - 95, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
+      this.m_Bt = new NiceSliceButton(this.game, (this.width - 110) >> 1, this.height - 100, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 110, 45, {
           top: 7,
           bottom: 7,
           left: 7,
@@ -52,13 +53,14 @@ export class ItemDetailView extends CommModalWindowView {
       this.add(this.m_Bt);
   }
 
-  public loadIcon(value: string): void {
-      if (this.m_Icon) {
-          this.m_Icon.load(value, this, this.loadComplete);
-      }
+  public setText(value: string): void {
+      this.m_Text.text = value;
+      Globals.Tool.formatChinese(this.m_Text, 608);
   }
 
-  private loadComplete(): void {
-      // Log.trace("图标宽度", this.m_Icon.iconWidth);
+  public loadIcon(value: string): void {
+      if (this.m_Icon) {
+          this.m_Icon.load(value, this);
+      }
   }
 }

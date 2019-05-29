@@ -41,8 +41,7 @@ export class ItemDetailMediator extends MediatorBase {
         }
 
         if (param.text.length > 0) {
-            this.view.m_Text.text = param.text[0].text;
-            Globals.Tool.formatChinese(this.view.m_Text, 608);
+            this.view.setText(param.text[0].text);
         }
 
         if (param.button.length > 0) {

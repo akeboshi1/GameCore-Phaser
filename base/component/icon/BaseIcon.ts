@@ -14,7 +14,7 @@ export class BaseIcon extends Phaser.Sprite {
         super(game, 0, 0);
         this.inputEnabled = false;
         this.m_Icon = game.make.image(0, 0);
-        this.m_Icon.anchor.set(0.5);
+        this.m_Icon.anchor.set(0.5, 0);
         this.addChild(this.m_Icon);
     }
 
