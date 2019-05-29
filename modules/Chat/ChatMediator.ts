@@ -6,7 +6,6 @@ import {op_client, op_virtual_world} from "pixelpai_proto";
 import {MessageType} from "../../common/const/MessageType";
 import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT;
 import OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER;
-import {op_gameconfig, op_gameconfig_01} from "../../../protocol";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 const GMEApi = new WebGMEAPI();
 
@@ -32,34 +31,15 @@ export class ChatMediator extends MediatorBase {
 
         super.onRegister();
 
-        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
+        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
 
         this.handleInitPlayer();
     }
 
     private handleOne(): void {
         let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-
-        param.display = ["pixelpai/ElementNode/5ce27853d0627e1840a1519a/1/5ce27853d0627e1840a1519a.png"];
-
-        let animation: op_gameconfig.Animation = new op_gameconfig.Animation();
-        animation.baseLoc = "-102,-149";
-        animation.collisionArea = "1,1,1,1&1,1,1,1&1,1,1,1&1,1,1,1";
-        animation.frame = [0];2
-        animation.frameRate = 12;
-        animation.name = "idle";
-        animation.originPoint = [3, 3];
-        animation.walkOriginPoint = [3, 3];
-        animation.walkableArea = "1,0,0,1&0,0,0,0&0,0,0,0&0,0,0,1";
-
-        let txt: op_gameconfig_01.Text = new op_gameconfig_01.Text();
-        txt.text = "这是个炸弹,从前有座山山上有座庙，庙里有和尚来讲故事，我们速度快没时间啊啊啦访问量可问撒旦法文峰";
-        param.text = [txt];
-        let bt: op_gameconfig_01.Button = new op_gameconfig_01.Button();
-        bt.text = "获取";
-        param.button = [bt];
-
-        Globals.ModuleManager.openModule(ModuleTypeEnum.ITEMDETAIL, param);
+        param.id = 1;
+        Globals.ModuleManager.openModule(ModuleTypeEnum.STORAGE, param);
     }
 
     /// never start
@@ -102,7 +82,7 @@ export class ChatMediator extends MediatorBase {
     public sendGenAuthBuffer(): void {
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER);
         let content: OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = pkt.content;
-        content.roomId = Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId;;
+        content.roomId = Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId;
         Globals.SocketManager.send(pkt);
     }
     /// never end

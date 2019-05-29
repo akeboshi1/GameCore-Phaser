@@ -11,6 +11,7 @@ import {PageComponent} from "../../../base/component/page/core/PageComponent";
 export class StorageView extends CommWindowModuleView {
     public m_List: ListComponent;
     public m_BagTitle: Phaser.Image;
+    public scroller: ScrollArea;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -38,8 +39,14 @@ export class StorageView extends CommWindowModuleView {
         this.add(this.m_CloseBt);
 
         this.m_List = new StorageList(this.game);
-        this.m_List.x = 8;
-        this.m_List.y = 32;
-        this.add(this.m_List);
+        // this.m_List.x = 8;
+        // this.m_List.y = 32;
+        // this.add(this.m_List);
+
+        const bounds = new Phaser.Rectangle(8, 32, 180, 160);
+        this.scroller = new ScrollArea(this.game, bounds);
+        this.scroller.add(this.m_List);
+        this.scroller.start();
+        this.add(this.scroller);
     }
 }
