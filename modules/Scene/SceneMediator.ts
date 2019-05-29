@@ -17,6 +17,7 @@ import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
 import GameConst = Const.GameConst;
 import OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE;
+import { Scene45Util } from "../../common/manager/Scene45Util";
 
 export class SceneMediator extends MediatorBase {
     private flowManager: FlowManager;
@@ -280,8 +281,8 @@ export class SceneMediator extends MediatorBase {
     }
 
     private onDraw(graphics: MyGraphics, x: number, y: number) {
-        // graphics.haha();
-        // graphics.drawCircle(x, y, 5 );
+        graphics.haha();
+        graphics.drawCircle(x, y, 5 );
     }
 
     private moveToHandle(moveData: op_client.IMoveData[]): void {
@@ -291,14 +292,14 @@ export class SceneMediator extends MediatorBase {
             imove = moveData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
             if (this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
                 if (this.camera.target == null) {
                     this.camera.follow(this.view.currentSelfPlayer.display, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
                 }
             }
             if (entity) {
                 imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
-                imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
+                imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0) + GameConst.MAP_TILE_HEIGHT / 4;
+                // this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
 
                 // if (imove.direction.valueOf() === 4) {
                 //     imove.destinationPoint3f.x = entity.ox + 20;
@@ -307,7 +308,7 @@ export class SceneMediator extends MediatorBase {
                 //     imove.destinationPoint3f.x = entity.ox - 20;
                 //     imove.destinationPoint3f.y = entity.oy - 20;
                 // }
-
+                console.log(imove);
                 entity.moveToTarget(imove);
             }
             Log.warn("[走路]： " + imove.timeSpan.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
