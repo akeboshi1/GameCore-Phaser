@@ -38,7 +38,8 @@ export class ItemDetailView extends CommModalWindowView {
       this.add(this.m_Icon);
 
       this.m_Text = this.game.make.text(0, 0, "", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF", align: "left", wordWrap: true, wordWrapWidth: 600});
-
+      this.m_Text.stroke = "#000";
+      this.m_Text.strokeThickness = 2;
       const bounds = new Phaser.Rectangle((this.width - 600) >> 1, this.height - 450, 600, 300);
       this.scroller = new ScrollArea(this.game, bounds);
       this.scroller.add(this.m_Text);

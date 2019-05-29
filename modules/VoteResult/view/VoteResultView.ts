@@ -39,6 +39,8 @@ export class VoteResultView extends CommModalWindowView {
 
       this.m_Desc = this.game.make.text(0, 0, "", {
           font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff", wordWrap: true, wordWrapWidth: 510});
+      this.m_Desc.stroke = "#000";
+      this.m_Desc.strokeThickness = 2;
 
       const bounds = new Phaser.Rectangle(this.width - 520, this.m_Static.y + 100, 510, 660);
       this.scroller = new ScrollArea(this.game, bounds);
