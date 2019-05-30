@@ -23,6 +23,9 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
     protected init(): void {
         this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
         this.m_Icon = new DragDropIcon(this.game);
+        this.m_Icon.icon.anchor.set(0.5, 0.5);
+        this.m_Icon.x = 26;
+        this.m_Icon.y = 26;
         this.m_Icon.setDropType(DragType.DRAG_TYPE_BAG);
         this.m_Icon.setDropType(DropType.DROP_TYPE_BAG);
         this.add(this.m_Icon);

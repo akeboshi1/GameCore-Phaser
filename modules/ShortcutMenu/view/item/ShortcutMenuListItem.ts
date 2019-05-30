@@ -29,8 +29,11 @@ export class ShortcutMenuListItem extends ListItemComponent {
     protected init(): void {
         this.game.add.image(0, 0, UI.ShortcutItemBg.getName(), 0, this);
         this.m_Icon = new DragDropIcon(this.game);
+        this.m_Icon.icon.anchor.set(0.5, 0.5);
         this.m_Icon.setDropType(DragType.DRAG_TYPE_SHORTCUT);
         this.m_Icon.setDropType(DropType.DROP_TYPE_SHORTCUT);
+        this.m_Icon.x = 28;
+        this.m_Icon.y = 30.5;
         this.add(this.m_Icon);
         this.game.add.image(0, 0, UI.ShortcutItemIcon.getName(), 0, this);
         this.m_ShortcutTxt = this.game.add.bitmapText(4, 2, Font.NumsLatinUppercase.getName(), "", 12, this);
