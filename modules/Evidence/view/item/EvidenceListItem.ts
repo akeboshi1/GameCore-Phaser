@@ -1,6 +1,5 @@
 import {IListItemComponent} from "../../../../base/component/list/interfaces/IListItemComponent";
 import {IListItemEventListener} from "../../../../base/component/list/interfaces/IListItemEventListener";
-import {ILayoutItem} from "../../../../base/layout/interfaces/ILayoutItem";
 import {ListItemComponent} from "../../../../base/component/list/core/ListItemComponent";
 import {UI} from "../../../../Assets";
 
@@ -14,7 +13,8 @@ export class EvidenceListItem extends ListItemComponent implements IListItemComp
     }
 
     protected init(): void {
-        this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
+        let bg = this.game.add.image(0, 0, UI.BagItemBg.getName(), 0);
+        this.addChild(bg);
         super.init();
     }
 

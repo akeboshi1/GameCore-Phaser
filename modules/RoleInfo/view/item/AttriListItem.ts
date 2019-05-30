@@ -18,10 +18,12 @@ export class AttriListItem extends ListItemComponent {
     }
 
     protected init(): void {
-        this.game.add.nineSlice(0, 0, UI.ProgressBg.getName(), null, 138, 26, this);
+        let bg = this.game.add.nineSlice(0, 0, UI.ProgressBg.getName(), null, 138, 26);
+        this.addChild(bg);
         this.bar = this.game.make.graphics(0, 0);
         this.addChild(this.bar);
-        this.game.add.nineSlice(0, 0, UI.ProgressFill.getName(), null, 138, 26, this);
+        let nineSlice = this.game.add.nineSlice(0, 0, UI.ProgressFill.getName(), null, 138, 26);
+        this.addChild(nineSlice);
         super.init();
     }
 

@@ -21,14 +21,15 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
     }
 
     protected init(): void {
-        this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
+        let bg = this.game.add.image(0, 0, UI.BagItemBg.getName(), 0);
+        this.addChild(bg);
         this.m_Icon = new DragDropIcon(this.game);
         this.m_Icon.icon.anchor.set(0.5, 0.5);
         this.m_Icon.x = 26;
         this.m_Icon.y = 26;
         this.m_Icon.setDropType(DragType.DRAG_TYPE_BAG);
         this.m_Icon.setDropType(DropType.DROP_TYPE_BAG);
-        this.add(this.m_Icon);
+        this.addChild(this.m_Icon);
         super.init();
     }
 
@@ -49,12 +50,7 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
 
     protected render(): void {
         if (this.m_Icon) {
-            this.m_Icon.load(this.data.display.texturePath, this, this.handleLoadComplete);
+            this.m_Icon.load(this.data.display.texturePath, this);
         }
-    }
-
-    protected handleLoadComplete(): void {
-        this.m_Icon.x = (48 - this.m_Icon.width) >> 1;
-        this.m_Icon.y = (48 - this.m_Icon.height) >> 1;
     }
 }

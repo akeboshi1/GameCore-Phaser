@@ -2,7 +2,7 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {ShortcutMenuView} from "./view/ShortcutMenuView";
 import Globals from "../../Globals";
 import {MessageType} from "../../common/const/MessageType";
-import {op_gameconfig} from "pixelpai_proto";
+import {op_gameconfig, op_virtual_world} from "pixelpai_proto";
 import {ShortcutMenuListItem} from "./view/item/ShortcutMenuListItem";
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 import {UIEvents} from "../../base/component/event/UIEvents";
@@ -12,6 +12,8 @@ import {Log} from "../../Log";
 import {Const} from "../../common/const/Const";
 import DropType = Const.DropType;
 import DragType = Const.DragType;
+import {PBpacket} from "net-socket-packet";
+import OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI;
 
 export class ShortcutMenuMediator extends MediatorBase {
 
@@ -54,9 +56,14 @@ export class ShortcutMenuMediator extends MediatorBase {
     }
 
     private onListItemUp(item: ShortcutMenuListItem): void {
-        if (Phaser.Rectangle.contains(item.icon.getBound(), Globals.game.input.activePointer.x, Globals.game.input.activePointer.y)) {
-            // Globals.ModuleManager.openModule(ModuleTypeEnum.ITEMDETAIL, {}, item.data);
-        }
+        let pack: op_gameconfig.IPackage = Globals.DataCenter.PlayerData.mainPlayerInfo.package[0];
+
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+        content.uiId = pack.id;
+        content.componentId = item.data.id;
+
+        Globals.SocketManager.send(pkt);
     }
 
     private handleInit(): void {

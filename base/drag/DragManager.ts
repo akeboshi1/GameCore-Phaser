@@ -43,16 +43,18 @@ export class DragManager extends BaseSingleton implements IDragManager {
     }
 
     public startDrag(dragable: IDragable): boolean {
-        if (null == dragable || this.m_IsDraging) {
+        if (null == dragable) {
             return false;
         }
         this.m_IsDraging = true;
         this.m_Dragable = dragable;
         this.m_DragData = new DragDropData(dragable);
-        this.m_BitmapData.draw(dragable, 0, 0, UIConst.UI_DRAG_WIDTH, UIConst.UI_DRAG_HEIGHT);
+        this.m_BitmapData.draw(dragable.getDragImage(), UIConst.UI_DRAG_WIDTH >> 1, UIConst.UI_DRAG_HEIGHT >> 1, UIConst.UI_DRAG_WIDTH, UIConst.UI_DRAG_HEIGHT);
         this.m_Proxy.inputEnabled = true;
+        this.m_Proxy.input.dragStopBlocksInputUp = true;
         this.m_Proxy.input.enableDrag(true);
         this.m_Proxy.events.onDragUpdate.add(this.handleDragUpdate, this);
+        this.m_Proxy.events.onDragStop.add(this.handleDragStop, this);
         this.m_Proxy.events.onDragStop.add(this.handleDragStop, this);
         this.m_Proxy.input.startDrag(this.game.input.activePointer);
         return true;

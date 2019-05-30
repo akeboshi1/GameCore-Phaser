@@ -19,7 +19,7 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
 
     protected init(): void {
         this.m_Light = this.game.make.image(0, 0, UI.VoteLight.getName());
-        this.add(this.m_Light);
+        this.addChild(this.m_Light);
         this.m_Light.visible = false;
 
         this.m_Avatar = new RoleBonesUIAvatar(Globals.game);
@@ -27,17 +27,17 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
         this.m_Avatar.scale.set(2, 2);
         this.m_Avatar.x = this.getWidth() >> 1;
         this.m_Avatar.y = 206;
-        this.add(this.m_Avatar);
+        this.addChild(this.m_Avatar);
 
         this.m_Flag = this.game.make.image(30, 30, UI.KillerFlag.getName());
-        this.add(this.m_Flag);
+        this.addChild(this.m_Flag);
         this.m_Flag.visible = false;
 
         this.m_NumTxt = this.game.make.text(0, 190, "", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFF"});
-        this.add(this.m_NumTxt);
+        this.addChild(this.m_NumTxt);
         this.m_Text = this.game.make.text(this.getWidth() >> 1, 240, "剧本角色", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFCC00"});
         this.m_Text.anchor.set(0.5);
-        this.add(this.m_Text);
+        this.addChild(this.m_Text);
 
         super.init();
     }
@@ -62,7 +62,9 @@ export class VoteResultListItem extends ListItemComponent implements IListItemCo
     }
 
     public onDispose() {
-        this.remove(this.m_Avatar);
+        if (this.contains(this.m_Avatar)) {
+            this.removeChild(this.m_Avatar);
+        }
         this.m_Avatar.onDispose();
         this.m_Avatar = null;
         super.onDispose();

@@ -27,55 +27,20 @@ export class ShortcutMenuListItem extends ListItemComponent {
     }
 
     protected init(): void {
-        this.game.add.image(0, 0, UI.ShortcutItemBg.getName(), 0, this);
+        let bg = this.game.add.image(0, 0, UI.ShortcutItemBg.getName(), 0);
+        this.addChild(bg);
         this.m_Icon = new DragDropIcon(this.game);
         this.m_Icon.icon.anchor.set(0.5, 0.5);
         this.m_Icon.setDropType(DragType.DRAG_TYPE_SHORTCUT);
         this.m_Icon.setDropType(DropType.DROP_TYPE_SHORTCUT);
         this.m_Icon.x = 28;
         this.m_Icon.y = 30.5;
-        this.add(this.m_Icon);
-        this.game.add.image(0, 0, UI.ShortcutItemIcon.getName(), 0, this);
-        this.m_ShortcutTxt = this.game.add.bitmapText(4, 2, Font.NumsLatinUppercase.getName(), "", 12, this);
+        this.addChild(this.m_Icon);
+        let icon = this.game.add.image(0, 0, UI.ShortcutItemIcon.getName(), 0);
+        this.addChild(icon);
+        this.m_ShortcutTxt = this.game.add.bitmapText(4, 2, Font.NumsLatinUppercase.getName(), "", 12);
+        this.addChild(this.m_ShortcutTxt);
         super.init();
-    }
-
-    protected addEvent(): void {
-        this.onChildInputDown.add(this.handleChildDown, this);
-        this.onChildInputUp.add(this.handleChildUp, this);
-        this.onChildInputOver.add(this.handleChildOver, this);
-        this.onChildInputOut.add(this.handleChildOut, this);
-    }
-
-    protected removeEvent(): void {
-        this.onChildInputDown.remove(this.handleChildDown, this);
-        this.onChildInputUp.remove(this.handleChildUp, this);
-        this.onChildInputOver.remove(this.handleChildOver, this);
-        this.onChildInputOut.remove(this.handleChildOut, this);
-    }
-
-    protected handleChildUp(): void {
-        if (this.m_List) {
-            this.m_List.onTriggerUp(this);
-        }
-    }
-
-    protected handleChildDown(): void {
-        if (this.m_List) {
-            this.m_List.onTriggerDown(this);
-        }
-    }
-
-    protected handleChildOver(): void {
-        if (this.m_List) {
-            this.m_List.onTriggerOver(this);
-        }
-    }
-
-    protected handleChildOut(): void {
-        if (this.m_List) {
-            this.m_List.onTriggerOut(this);
-        }
     }
 
     protected render(): void {

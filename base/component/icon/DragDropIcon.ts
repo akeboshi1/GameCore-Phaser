@@ -40,8 +40,8 @@ export class DragDropIcon extends BaseIcon implements IDragable, IDropable {
     public getDragData(): any {
     }
 
-    public getDragImage(): Phaser.BitmapData {
-        return undefined;
+    public getDragImage(): Phaser.Image {
+        return this.icon;
     }
 
     public getDragType(): number {

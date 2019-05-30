@@ -15,12 +15,13 @@ export class StorageListItem extends ListItemComponent implements IListItemCompo
     }
 
     protected init(): void {
-        this.game.add.image(0, 0, UI.BagItemBg.getName(), 0, this);
+        let bg = this.game.add.image(0, 0, UI.BagItemBg.getName(), 0);
+        this.addChild(bg);
         this.m_Icon = new BaseIcon(this.game);
         this.m_Icon.icon.anchor.set(0.5, 0.5);
         this.m_Icon.x = 26;
         this.m_Icon.y = 26;
-        this.add(this.m_Icon);
+        this.addChild(this.m_Icon);
         super.init();
     }
 

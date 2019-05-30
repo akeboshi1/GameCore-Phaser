@@ -1,14 +1,14 @@
 import {IListItemComponent} from "../interfaces/IListItemComponent";
 import {IListItemEventListener} from "../interfaces/IListItemEventListener";
 
-export class ListItemComponent extends Phaser.Group implements IListItemComponent {
+export class ListItemComponent extends Phaser.Sprite implements IListItemComponent {
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;
     protected m_Init = false;
 
     constructor(game) {
-        super(game);
+        super(game, 0, 0);
     }
 
     public get data(): any {
@@ -43,7 +43,7 @@ export class ListItemComponent extends Phaser.Group implements IListItemComponen
     }
 
     public setEnable(value: boolean) {
-        this.inputEnableChildren = value;
+        this.inputEnabled = value;
         if (value) {
             this.addEvent();
         } else {
@@ -52,17 +52,17 @@ export class ListItemComponent extends Phaser.Group implements IListItemComponen
     }
 
     protected addEvent(): void {
-        this.onChildInputOver.add(this.handleChildOver, this);
-        this.onChildInputOut.add(this.handleChildOut, this);
-        this.onChildInputDown.add(this.handleChildDown, this);
-        this.onChildInputUp.add(this.handleChildUp, this);
+        this.events.onInputOver.add(this.handleChildOver, this);
+        this.events.onInputOut.add(this.handleChildOut, this);
+        this.events.onInputDown.add(this.handleChildDown, this);
+        this.events.onInputUp.add(this.handleChildUp, this);
     }
 
     protected removeEvent(): void {
-        this.onChildInputOver.remove(this.handleChildOver, this);
-        this.onChildInputOut.remove(this.handleChildOut, this);
-        this.onChildInputDown.remove(this.handleChildDown, this);
-        this.onChildInputUp.remove(this.handleChildUp, this);
+        this.events.onInputOver.remove(this.handleChildOver, this);
+        this.events.onInputOut.remove(this.handleChildOut, this);
+        this.events.onInputDown.remove(this.handleChildDown, this);
+        this.events.onInputUp.remove(this.handleChildUp, this);
     }
 
     protected handleChildOver(): void {
@@ -83,7 +83,7 @@ export class ListItemComponent extends Phaser.Group implements IListItemComponen
         }
     }
 
-    protected handleChildUp(): void {
+    protected handleChildUp(item: any, pointer: Phaser.Pointer, isOver: boolean): void {
         if (this.m_List) {
             this.m_List.onTriggerUp(this);
         }

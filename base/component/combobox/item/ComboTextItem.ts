@@ -23,13 +23,13 @@ export class ComboTextItem extends ListItemComponent {
     protected preInit(): void {
         this.mLabel = this.game.make.text(0, 0, "", {fontSize: 12, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"});
         this.mLabel.setTextBounds(0, 0, this.mWidth, this.mHeight);
-        this.add(this.mLabel);
+        this.addChild(this.mLabel);
         this.mBg = this.game.make.graphics(0, 0);
         this.mBg.inputEnabled = true;
         this.mBg.beginFill(0x00ffff, 0);
         this.mBg.drawRect(0, 0, this.mWidth, this.mHeight);
         this.mBg.endFill();
-        this.add(this.mBg);
+        this.addChild(this.mBg);
     }
 
     protected addEvent(): void {

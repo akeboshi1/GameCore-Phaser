@@ -41,16 +41,14 @@ export class BagMediator extends MediatorBase {
     }
 
     private onListItemUp(item: BagListItem): void {
-        if (Phaser.Rectangle.contains(item.icon.getBound(), Globals.game.input.activePointer.x, Globals.game.input.activePointer.y)) {
-            let pack: op_gameconfig.IPackage = Globals.DataCenter.PlayerData.mainPlayerInfo.package[0];
+        let pack: op_gameconfig.IPackage = Globals.DataCenter.PlayerData.mainPlayerInfo.package[0];
 
-            let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
-            let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
-            content.uiId = pack.id;
-            content.componentId = item.data.id;
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        let content: OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+        content.uiId = pack.id;
+        content.componentId = item.data.id;
 
-            Globals.SocketManager.send(pkt);
-        }
+        Globals.SocketManager.send(pkt);
     }
 
     private handlePageChange(curPage: number): void {
