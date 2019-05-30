@@ -298,7 +298,7 @@ export class SceneMediator extends MediatorBase {
             }
             if (entity) {
                 imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
-                imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0) + GameConst.MAP_TILE_HEIGHT / 4;
+                imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
                 // this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
 
                 // if (imove.direction.valueOf() === 4) {
@@ -308,10 +308,9 @@ export class SceneMediator extends MediatorBase {
                 //     imove.destinationPoint3f.x = entity.ox - 20;
                 //     imove.destinationPoint3f.y = entity.oy - 20;
                 // }
-                console.log(imove);
                 entity.moveToTarget(imove);
             }
-            Log.warn("[走路]： " + imove.timeSpan.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
+            // Log.warn("[走路]： " + imove.timeSpan.toString(), imove.destinationPoint3f.x + "|" + imove.destinationPoint3f.y);
         }
     }
 
@@ -321,9 +320,9 @@ export class SceneMediator extends MediatorBase {
         for (let i = 0; i < posData.length; i++) {
             imove = posData[i];
             entity = this.view.getSceneElement(imove.moveObjectId);
-            if (this.view.currentSelfPlayer && this.view.currentSelfPlayer.uid === imove.moveObjectId) {
-                this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
-            }
+            // if (this.view.currentSelfPlayer && this.view.currentSelfPlayer.uid === imove.moveObjectId) {
+            //     this.onDraw(this.stop_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+            // }
             if (entity) {
                 imove.destinationPoint3f.x = imove.destinationPoint3f.x;
                 imove.destinationPoint3f.y = imove.destinationPoint3f.y;
