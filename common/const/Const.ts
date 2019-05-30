@@ -27,7 +27,7 @@ export namespace Const {
         OUT_OF_CAMERA_RELEASE_WAITE_TIME = 3000,
         DEFAULT_VISIBLE_TEST_RADIUS = 150,
         MASK_ALPHA = 0.5,
-        ROLE_AVATAR_OFFSET_Y = 8,
+        ROLE_AVATAR_OFFSET_Y = 16,
         BONES_SCALE = 1,
         EDITOR_BORDER = 200
     }
