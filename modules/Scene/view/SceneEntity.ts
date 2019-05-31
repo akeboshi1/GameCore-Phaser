@@ -190,6 +190,6 @@ export default class SceneEntity extends BasicSceneEntity {
     }
 
     protected checkIsValidDisplayAvatar(): void {
-        this.isValidDisplay = this.isCanShow && this.isInScreen();
+        // this.isValidDisplay = this.isCanShow && this.isInScreen();
     }
 }

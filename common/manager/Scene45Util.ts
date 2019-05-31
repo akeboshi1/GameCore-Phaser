@@ -2,7 +2,6 @@ import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
 import Point = Phaser.Point;
 import Point3 = Phaser.Plugin.Isometric.Point3;
-import {Log} from "../../Log";
 
 export class Scene45Util extends BaseSingleton {
 
@@ -15,63 +14,6 @@ export class Scene45Util extends BaseSingleton {
 
     constructor() {
         super();
-    }
-
-  public getUid(col: number, row: number): string {
-    return col + "&" + row;
-  }
-
-    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
-    public sortFunc(a: any, b: any): number {
-        if (a.sortY > b.sortY) {
-            return 1;
-        } else if (a.sortY < b.sortY) {
-            return -1;
-        } else {
-            // 左边的排在下面
-            if (a.sortX > b.sortX) {
-                return 1;
-            } else if (a.sortX < b.sortX) {
-                return -1;
-            }
-        }
-        // Log.trace("相同位置:", a.sortX, a.sortY, "|", b.sortX, b.sortY);
-        return 0;
-    }
-
-    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
-    public sortNodeFunc(a: any, b: any): number {
-        if (a.value.sortY > b.value.sortY) {
-            return 1;
-        } else if (a.value.sortY < b.value.sortY) {
-            return -1;
-        } else {
-            // 左边的排在下面
-            if (a.value.sortX > b.value.sortX) {
-                return 1;
-            } else if (a.value.sortX < b.value.sortX) {
-                return -1;
-            }
-        }
-        // Log.trace("相同位置:", a.sortX, a.sortY, "|", b.sortX, b.sortY);
-        return 0;
-    }
-
-    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
-    public sortDataFunc(a: any, b: any): number {
-        if (a.y > b.y) {
-            return 1;
-        } else if (a.y < b.y) {
-            return -1;
-        } else {
-            // 左边的排在下面
-            if (a.x > b.x) {
-                return 1;
-            } else if (a.x < b.x) {
-                return -1;
-            }
-        }
-        return 0;
     }
 
     private _hTileWidth: number;
@@ -102,6 +44,73 @@ export class Scene45Util extends BaseSingleton {
 
     public get mapTotalHeight(): number {
         return this._mapTotalHeight;
+    }
+
+    public getUid(col: number, row: number): string {
+        return col + "&" + row;
+    }
+
+    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+    public sortFunc(a: any, b: any): number {
+        if (a.sortY > b.sortY) {
+            return 1;
+        } else if (a.sortY < b.sortY) {
+            return -1;
+        } else {
+            // 左边的排在下面
+            if (a.sortX > b.sortX) {
+                return 1;
+            } else if (a.sortX < b.sortX) {
+                return -1;
+            } else {
+                if (a.zFighting > b.zFighting) return 1;
+                else if (a.zFighting < b.zFighting) return -1;
+                else {
+                    a.zFighting++;
+                    return 1;
+                }
+            }
+        }
+    }
+
+    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+    public sortNodeFunc(a: any, b: any): number {
+        if (a.value.sortY > b.value.sortY) {
+            return 1;
+        } else if (a.value.sortY < b.value.sortY) {
+            return -1;
+        } else {
+            // 左边的排在下面
+            if (a.value.sortX > b.value.sortX) {
+                return 1;
+            } else if (a.value.sortX < b.value.sortX) {
+                return -1;
+            } else {
+                if (a.value.zFighting > b.value.zFighting) return 1;
+                else if (a.value.zFighting < b.value.zFighting) return -1;
+                else {
+                    a.value.zFighting++;
+                    return 1;
+                }
+            }
+        }
+    }
+
+    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+    public sortDataFunc(a: any, b: any): number {
+        if (a.y > b.y) {
+            return 1;
+        } else if (a.y < b.y) {
+            return -1;
+        } else {
+            // 左边的排在下面
+            if (a.x > b.x) {
+                return 1;
+            } else if (a.x < b.x) {
+                return -1;
+            }
+        }
+        return 0;
     }
 
     public setting(rows: number, cols: number, tileWidth: number, tileHeight: number): void {

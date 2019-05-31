@@ -282,7 +282,7 @@ export class SceneMediator extends MediatorBase {
 
     private onDraw(graphics: MyGraphics, x: number, y: number) {
         graphics.haha();
-        graphics.drawCircle(x, y, 5 );
+        graphics.drawCircle(x, y, 4 );
     }
 
     private moveToHandle(moveData: op_client.IMoveData[]): void {
@@ -299,7 +299,7 @@ export class SceneMediator extends MediatorBase {
             if (entity) {
                 imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
                 imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
-                // this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
 
                 // if (imove.direction.valueOf() === 4) {
                 //     imove.destinationPoint3f.x = entity.ox + 20;
