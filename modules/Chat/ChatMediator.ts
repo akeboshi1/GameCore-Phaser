@@ -31,16 +31,16 @@ export class ChatMediator extends MediatorBase {
 
         super.onRegister();
 
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
 
         this.handleInitPlayer();
     }
 
-    private handleOne(): void {
-        let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        param.id = 1;
-        Globals.ModuleManager.openModule(ModuleTypeEnum.STORAGE, param);
-    }
+    // private handleOne(): void {
+    //     let param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
+    //     param.id = 1;
+    //     Globals.ModuleManager.openModule(ModuleTypeEnum.STORAGE, param);
+    // }
 
     /// never start
     public _initGME() {
