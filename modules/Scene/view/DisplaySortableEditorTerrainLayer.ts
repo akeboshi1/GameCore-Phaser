@@ -121,7 +121,7 @@ export class DisplaySortableEditorTerrainLayer extends DisplaySortableSceneLayer
     let changeAreas: Phaser.Rectangle[] = this.changeEntityRects.splice(0);
     len = changeAreas.length;
     if (len > 0) {
-      this.mSceneEntities.sort(Globals.Scene45Util.sortFunc);
+      this.mSceneEntities.sort(Globals.Scene45Util.sortNodeFunc);
       drawAreas = drawAreas.concat(changeAreas);
       changeDirty = true;
     }
