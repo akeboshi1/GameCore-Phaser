@@ -232,7 +232,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
 
     this.display.isoX = p3.x >> 0;
     this.display.isoY = p3.y >> 0;
-    this.display.isoZ = p3.z >> 0;
+    this.display.isoZ = 0;
 
     if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame();
   }
