@@ -67,13 +67,13 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   }
 
   public get sortX(): number {
-      let p3 = Globals.Scene45Util.p2top3(this.ox, this.oy, this.oz);
-      return p3.x;
+      let p3 = Globals.Scene45Util.p2top3(this.ox, this.oy);
+      return p3.x >> 0;
   }
 
   public get sortY(): number {
-      let p3 = Globals.Scene45Util.p2top3(this.ox, this.oy, this.oz);
-      return p3.y;
+      let p3 = Globals.Scene45Util.p2top3(this.ox, this.oy);
+      return p3.y >> 0;
   }
 
   public get quadW(): number {
@@ -228,7 +228,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   protected onUpdatingDisplay(): void {
     let _ox = this.ox + (this.baseLoc ? this.baseLoc.x : 0);
     let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
-    let p3 = Globals.Scene45Util.p2top3(_ox, _oy, this.oz);
+    let p3 = Globals.Scene45Util.p2top3(_ox, _oy);
 
     this.display.isoX = p3.x >> 0;
     this.display.isoY = p3.y >> 0;

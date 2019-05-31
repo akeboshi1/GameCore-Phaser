@@ -112,15 +112,13 @@ export default class BasicElement extends SceneEntity {
   }
 
   protected onUpdatingDisplay(): void {
-    let p3 = Globals.Scene45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0), this.oz);
+    let p3 = Globals.Scene45Util.p2top3(this.ox + (this.baseLoc ? this.baseLoc.x * this.mScaleX : 0), this.oy + (this.baseLoc ? this.baseLoc.y : 0));
 
     this.display.isoX = p3.x;
     this.display.isoY = p3.y;
     this.display.isoZ = p3.z;
 
-    if ((this.display as IAnimatedObject).onFrame !== undefined) {
-      (<IAnimatedObject>this.display).onFrame();
-    }
+    if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame();
   }
 
   protected onAvatarAnimationChanged(): void {

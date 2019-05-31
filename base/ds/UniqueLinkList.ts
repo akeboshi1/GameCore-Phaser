@@ -1,4 +1,5 @@
 import {LinkNode} from "./LinkNode";
+import Globals from "../../Globals";
 
 export default class UniqueLinkList {
     private mLength: number;
@@ -136,10 +137,11 @@ export default class UniqueLinkList {
     }
 
     public sort(func: any): void {
-        let self = this;
         if (this.mLength === 0) return;
 
-        if (!this.mNodeSortArray) this.mNodeSortArray = new Array<LinkNode>();
+        if (this.mNodeSortArray === undefined) {
+            this.mNodeSortArray = new Array<LinkNode>();
+        }
 
         let node: LinkNode = this.mHeadNode;
         while (node) {
@@ -147,11 +149,7 @@ export default class UniqueLinkList {
             node = node.next;
         }
 
-        this.mSortCampareFunction = func;
-        this.mNodeSortArray.sort((a: LinkNode, b: LinkNode) => {
-            return self.mSortCampareFunction(a.value, b.value);
-        });
-        this.mSortCampareFunction = null;
+        this.mNodeSortArray.sort(func);
 
         let nextNode: LinkNode = null;
         let n: number = this.mNodeSortArray.length - 1;
@@ -169,7 +167,7 @@ export default class UniqueLinkList {
         this.mHeadNode.pre = null;
         this.mTailNode.next = null;
 
-        this.mNodeSortArray.length = 0;
+        this.mNodeSortArray.splice(0);
     }
 
     public clear(): void {

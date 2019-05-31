@@ -2,11 +2,12 @@ import {BasicSceneLayer} from "../../../base/BasicSceneLayer";
 import UniqueLinkList from "../../../base/ds/UniqueLinkList";
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import Globals from "../../../Globals";
+import {Log} from "../../../Log";
 
 export class DisplaySortableSceneLayer extends BasicSceneLayer {
   public needRealTimeDepthSort = false;
   protected mSceneEntities: UniqueLinkList;
-  protected SCENE_LAYER_RENDER_DELAY = 100;
+  protected SCENE_LAYER_RENDER_DELAY = 200;
   protected mDepthSortDirtyFlag = false;
   protected mSortWaitTime = 0;
 
@@ -68,17 +69,16 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
       }
     }
 
+    // let temp = Date.now();
     if (needSort) {
-      this.mSceneEntities.sort(Globals.Scene45Util.sortFunc);
+      this.mSceneEntities.sort(Globals.Scene45Util.sortNodeFunc);
     }
-
+    // Log.trace("排序消耗:", Date.now() - temp);
     let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
     while (entity) {
       entity.onTick(deltaTime);
       if (entity.isValidDisplay) {
           this.setChildIndex(entity.display, this.children.length - 1);
-      } else {
-        entity.updateDisplay();
       }
       entity = this.mSceneEntities.moveNext();
     }

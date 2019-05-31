@@ -2,6 +2,7 @@ import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
 import Point = Phaser.Point;
 import Point3 = Phaser.Plugin.Isometric.Point3;
+import {Log} from "../../Log";
 
 export class Scene45Util extends BaseSingleton {
 
@@ -34,6 +35,25 @@ export class Scene45Util extends BaseSingleton {
                 return -1;
             }
         }
+        // Log.trace("相同位置:", a.sortX, a.sortY, "|", b.sortX, b.sortY);
+        return 0;
+    }
+
+    // 这里返回的结果是，场景中层次高在数组的前面， 1表示在上层- 1表示在下层
+    public sortNodeFunc(a: any, b: any): number {
+        if (a.value.sortY > b.value.sortY) {
+            return 1;
+        } else if (a.value.sortY < b.value.sortY) {
+            return -1;
+        } else {
+            // 左边的排在下面
+            if (a.value.sortX > b.value.sortX) {
+                return 1;
+            } else if (a.value.sortX < b.value.sortX) {
+                return -1;
+            }
+        }
+        // Log.trace("相同位置:", a.sortX, a.sortY, "|", b.sortX, b.sortY);
         return 0;
     }
 
@@ -114,8 +134,8 @@ export class Scene45Util extends BaseSingleton {
      * @param tileY 垂直格子坐标
      * @version Egret 3.0.3
      */
-    public p2top3(x: number, y: number, z: number = 0): Point3 {
-        let point3: Phaser.Plugin.Isometric.Point3 = Globals.game.iso.unproject(new Phaser.Point(x + Globals.game.world.x, y + Globals.game.world.y), undefined, z);
+    public p2top3(x: number, y: number): Point3 {
+        let point3: Phaser.Plugin.Isometric.Point3 = Globals.game.iso.unproject(new Phaser.Point(x + Globals.game.world.x, y + Globals.game.world.y));
         return point3;
     }
 

@@ -486,7 +486,7 @@ export class SceneEditorMediator extends SceneMediator {
           tempPoint = this.scene45Util.tileToPixelCoords(tempPoint.x, tempPoint.y);
           this.sendScenePoint(tempPoint.x, tempPoint.y);
         } else {
-          this.sendScenePoint(screenX, screenY);
+          this.sendScenePoint(screenX >> 0, screenY >> 0);
         }
       }
     }
