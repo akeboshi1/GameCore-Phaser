@@ -13,7 +13,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   public uid: any;
   public elementTypeId = 0;
   public sceneLayerType: number = Const.SceneConst.SceneLayerMiddle;
-  public isValidDisplay = true;
+  public isValidDisplay = false;
   public data: any;
   public display: any;
   public scene: SceneBasic;
@@ -197,7 +197,7 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
   }
 
   protected checkIsValidDisplayAvatar(): void {
-    // this.isValidDisplay = this.isInScreen();
+    this.isValidDisplay = this.isInScreen();
   }
 
   public updateDisplay(): void {

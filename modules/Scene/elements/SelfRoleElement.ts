@@ -26,6 +26,6 @@ export class SelfRoleElement extends RoleElement {
     }
 
     protected checkIsValidDisplayAvatar(): void {
-        // this.isValidDisplay = this.isCanShow;
+        this.isValidDisplay = this.isCanShow;
     }
 }

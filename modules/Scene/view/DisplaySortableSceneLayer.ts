@@ -77,9 +77,7 @@ export class DisplaySortableSceneLayer extends BasicSceneLayer {
     let entity: BasicSceneEntity = this.mSceneEntities.moveFirst();
     while (entity) {
       entity.onTick(deltaTime);
-      if (entity.isValidDisplay) {
-          this.setChildIndex(entity.display, this.children.length - 1);
-      }
+      this.setChildIndex(entity.display, this.children.length - 1);
       entity = this.mSceneEntities.moveNext();
     }
   }
