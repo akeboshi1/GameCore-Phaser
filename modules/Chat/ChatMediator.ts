@@ -149,7 +149,13 @@ export class ChatMediator extends MediatorBase {
     }
 
     private onHandleChat(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
-        this.view.out_tf.text += chat.chatContext + "\n";
+        let chatStr = "";
+        if (chat.chatSenderid) {
+            let player = Globals.DataCenter.PlayerData.getPlayer(chat.chatSenderid);
+            if (player) chatStr += player.name + ": ";
+        }
+        chatStr += chat.chatContext + "\n";
+        this.view.out_tf.text += chatStr;
         this.view.scroller.scroll();
     }
 

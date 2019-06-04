@@ -88,4 +88,12 @@ export class PlayerData extends BaseSingleton {
             }
         }
     }
+
+    public getPlayer(uuid: number) {
+        let player =  this._playerInfoList.find(player => player.id === uuid);
+        if (!!player === false) {
+            if (uuid === this._mainPlayerInfo.id) return this._mainPlayerInfo;
+        }
+        return player;
+    }
 }
