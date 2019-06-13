@@ -3,14 +3,26 @@ import {PBpacket} from "net-socket-packet";
 import {op_virtual_world} from "pixelpai_proto";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT;
+import { Tick } from "../tick/Tick";
 
 export class MouseMod extends BaseSingleton {
     private game: Phaser.Game;
     private l_d = false;
     private m_d = false;
     private r_d = false;
+    private l_h = false;
+    private m_h = false;
+    private r_h = false;
 
     private activePointer: Phaser.Pointer;
+    private input: Phaser.Input;
+    private mTick: Tick;
+
+    private mInterval = 500;
+    private mAccumulative = 0;
+    private mLastX = 0;
+    private mLastY = 0;
+    private minimumDistance = 4;
 
     /**
      * 构造函数
@@ -22,6 +34,7 @@ export class MouseMod extends BaseSingleton {
     public init(game: Phaser.Game): void {
         this.game = game;
         this.activePointer = this.game.input.activePointer;
+        this.input = this.game.input;
         if (this.activePointer) {
           this.activePointer.leftButton.onDown.add(this.keyDownHandle, this);
           this.activePointer.leftButton.onUp.add(this.keyUpHandle, this);
@@ -31,6 +44,15 @@ export class MouseMod extends BaseSingleton {
           this.activePointer.rightButton.onUp.add(this.keyUpHandle, this);
           this.resume();
         }
+
+        if (this.input) {
+            this.input.onHold.add(this.keyHoldHandle, this);
+        }
+
+
+        this.mTick = new Tick();
+        this.mTick.setCallBack(this.onTick, this);
+        this.mTick.start();
     }
 
     private running = false;
@@ -50,6 +72,62 @@ export class MouseMod extends BaseSingleton {
         this.onUpdate();
     }
 
+    private keyHoldHandle( key: any ): void {
+        this.mLastX = 0;
+        this.mLastY = 0;
+        if (this.l_d) {
+            this.l_h = true;
+        }
+        if (this.r_d) {
+            this.r_h = true;
+        }
+        
+    }
+
+    private onTick(deltaTime: number): void {
+        this.mAccumulative += deltaTime;
+        if (this.mAccumulative > this.mInterval)
+        {
+            this.onHoldUpdate();
+            this.mAccumulative = 0;
+        }
+    }
+
+    public onHoldUpdate(): void {
+        if (this.running === false || this.activePointer === undefined) {
+            return;
+        }
+        if (!this.r_h && !this.l_h)
+        {
+            return;
+        }
+        const currentX = this.activePointer.x + this.game.camera.x;
+        const currentY = this.activePointer.y + this.game.camera.y;
+        let events: number[] = [];
+        if (this.game.input.mousePointer.isDown && 
+            ((this.mLastX - currentX) ** 2 + (this.mLastY - currentY) ** 2) > this.minimumDistance) {
+                if (this.game.input.activePointer.leftButton.isDown && this.l_h) {
+                    events.push(op_virtual_world.MouseEvent.LeftMouseHolding);
+                }
+                if (this.game.input.activePointer.rightButton.isDown && this.r_h) {
+                    events.push(op_virtual_world.MouseEvent.LeftMouseHolding);
+                }
+                this.mLastX = currentX;
+                this.mLastY = currentY;
+        }
+
+        if (events.length === 0) {
+            return;
+        }
+
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
+        let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
+        content.mouseEvent = events;
+        content.point3f = {x: currentX, y: currentY};
+        Globals.SocketManager.send(pkt);
+
+    }
+
     public onUpdate(): void {
         if (this.running === false || this.activePointer === undefined) {
             return;
@@ -61,6 +139,7 @@ export class MouseMod extends BaseSingleton {
             events.push(op_virtual_world.MouseEvent.LeftMouseDown);
         } else if (this.activePointer.leftButton.isUp && this.l_d) {
             this.l_d = false;
+            this.l_h = false;
             events.push(op_virtual_world.MouseEvent.LeftMouseUp);
         }
 
@@ -69,6 +148,7 @@ export class MouseMod extends BaseSingleton {
             events.push(op_virtual_world.MouseEvent.WheelDown);
         } else if (this.activePointer.middleButton.isUp && this.m_d) {
             this.m_d = false;
+            this.m_h = false;
             events.push(op_virtual_world.MouseEvent.WheelUp);
         }
 
@@ -77,12 +157,14 @@ export class MouseMod extends BaseSingleton {
             events.push(op_virtual_world.MouseEvent.RightMouseDown);
         } else if (this.activePointer.rightButton.isUp && this.r_d) {
             this.r_d = false;
+            this.r_h = false;
             events.push(op_virtual_world.MouseEvent.RightMouseUp);
         }
 
         if (events.length === 0) {
             return;
         }
+
 
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
