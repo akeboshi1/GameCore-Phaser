@@ -4,10 +4,11 @@ import SceneEntity from "../view/SceneEntity";
 import Globals from "../../../Globals";
 import {RoleBonesAvatar} from "../../../common/avatar/RoleBonesAvatar";
 import {IObjectPool} from "../../../base/pool/interfaces/IObjectPool";
-import {op_gameconfig} from "pixelpai_proto";
+import {op_gameconfig, op_client} from "pixelpai_proto";
 import GameConst = Const.GameConst;
+import { IBubbleObject } from "../../../base/IBubbleObject";
 
-export class BasicRoleElement extends SceneEntity {
+export class BasicRoleElement extends SceneEntity implements IBubbleObject {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
     private mAnimationDirty = false;
 
@@ -94,5 +95,9 @@ export class BasicRoleElement extends SceneEntity {
         this.setAngleIndex(this.characterInfo.avatarDir);
         (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
         this.loadModel(this.characterInfo.avatar);
+    }
+
+    public addBubble(text: string, bubble: op_client.IChat_Bubble) {
+        (<RoleBonesAvatar>this.display).addBubble(text, bubble);
     }
 }

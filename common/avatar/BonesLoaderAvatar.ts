@@ -12,6 +12,7 @@ import {op_gameconfig} from "pixelpai_proto";
 import {DisplayArmatureDisplay} from "./DisplayArmatureDisplay";
 import {Log} from "../../Log";
 import {Load} from "../../Assets";
+import { Rectangle, Matrix } from "phaser-ce";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
 
@@ -33,6 +34,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
     private mAnimatonControlThisObj: any;
+    private mHeadBitmapData: Phaser.BitmapData;
     private replaceArr = [];
 
     public setAnimationControlFunc(value: Function, thisObj: any): void {
@@ -518,6 +520,16 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         }
     }
 
+    public get headBitmapdata(): Phaser.BitmapData {
+        if (!!this.mHeadBitmapData === false) {
+            this.mHeadBitmapData = this.game.make.bitmapData(64, 64);
+            if (this.armatureDisplay.armature) {
+                // TODO;
+            }
+        }
+        return this.mHeadBitmapData;
+    }
+
     protected getObjectPool(value: string): IObjectPool {
       return Globals.ObjectPoolManager.getObjectPool("DisplayArmature" + value);
     }
@@ -530,6 +542,10 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             this.armatureDisplay.replacePart(obj.slot, obj.part, obj.dir, obj.skin);
         }
         this.replaceArr.splice(0);
+        if (this.mHeadBitmapData) {
+            this.mHeadBitmapData.destroy();
+            this.mHeadBitmapData = null;
+        }
     }
 
     protected init(): void {

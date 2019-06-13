@@ -15,4 +15,5 @@ export class ModuleTypeEnum {
     public static MINIMAP = "MiniMap"; // 小地图
     public static VOTE = "Vote"; // 投票
     public static VOTERESULT = "VoteResult"; // 投票
+    public static NOTICE = "Notice"; //跑马灯公告
 }

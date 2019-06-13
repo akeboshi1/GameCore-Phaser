@@ -15,9 +15,7 @@ import {ElementInfo} from "../../common/struct/ElementInfo";
 import {PBpacket} from "net-socket-packet";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
-import GameConst = Const.GameConst;
 import OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE;
-import { Scene45Util } from "../../common/manager/Scene45Util";
 
 export class SceneMediator extends MediatorBase {
     private flowManager: FlowManager;
@@ -83,6 +81,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
         Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
         Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
+        Globals.MessageCenter.on(MessageType.SHOW_CHAT_BUBBLE, this.handleShowChatBubble, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -98,6 +97,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.SCENE_ADD_PLAYER, this.handleAddPlayer, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
+        Globals.MessageCenter.cancel(MessageType.SHOW_CHAT_BUBBLE, this.handleShowChatBubble, this);
 
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -157,7 +157,6 @@ export class SceneMediator extends MediatorBase {
         this.view.deleteSceneElement(uuid);
     }
 
-
     /**
      * 监听添加物件
      * @param value
@@ -202,6 +201,16 @@ export class SceneMediator extends MediatorBase {
      */
     protected removeElement(elementId: number): void {
         this.view.deleteSceneElement(elementId);
+    }
+
+    protected handleShowChatBubble(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
+        let entity: any;
+        if (chat.chatSenderid) {
+            entity = <any>this.view.getSceneElement(chat.chatSenderid);
+            if (entity) {
+                entity.addBubble(chat.chatContext, chat.chatBubble);
+            }
+        }
     }
 
     protected changedToMapSceneCompleteHandler(): void {
@@ -299,7 +308,7 @@ export class SceneMediator extends MediatorBase {
             if (entity) {
                 imove.destinationPoint3f.x = (imove.destinationPoint3f.x >> 0);
                 imove.destinationPoint3f.y = (imove.destinationPoint3f.y >> 0);
-                this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
+                // this.onDraw(this.move_graphics, imove.destinationPoint3f.x, imove.destinationPoint3f.y);
 
                 // if (imove.direction.valueOf() === 4) {
                 //     imove.destinationPoint3f.x = entity.ox + 20;

@@ -3,6 +3,7 @@ import {SceneService} from "../service/SceneService";
 import {GameService} from "../service/GameService";
 import {ChatService} from "../service/ChatService";
 import {PackageService} from "../service/PackageService";
+import { NoticeService } from "../service/NoticeService";
 
 export class ServiceCenter extends BaseSingleton {
     public constructor() {
@@ -25,11 +26,16 @@ export class ServiceCenter extends BaseSingleton {
         return ChatService.getInstance();
     }
 
+    public get noticeServie(): NoticeService {
+        return NoticeService.getInstance();
+    }
+
     public register(): void {
         this.GameService.register();
         this.SceneService.register();
         this.ChatService.register();
         this.PackageService.register();
+        this.noticeServie.register();
     }
 
     public dispose(): void {
@@ -37,6 +43,7 @@ export class ServiceCenter extends BaseSingleton {
         this.SceneService.unRegister();
         this.ChatService.unRegister();
         this.PackageService.unRegister();
+        this.noticeServie.unRegister();
         super.dispose();
     }
 }

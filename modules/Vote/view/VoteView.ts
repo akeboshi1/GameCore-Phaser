@@ -42,7 +42,7 @@ export class VoteView extends CommModalWindowView {
 
       this.m_TimeTxt = this.game.make.text(this.m_Text.x + this.m_Text.width + 20, this.m_Text.y, "00:00", {font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FF0000"});
       this.add(this.m_TimeTxt);
-3
+
       this.m_List = new VoteList(this.game);
       this.m_List.x = (this.width - 848) >> 1;
       this.m_List.y = (this.height - 538) >> 1;

@@ -361,6 +361,16 @@ export namespace UI {
         }
     }
 
+    export class Background {
+        static getName(): string {
+            return "background_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/background.png");
+        }
+    }
+
     export class InputBg {
         static getName(): string {
             return "ui_input_bg_png";
@@ -386,6 +396,26 @@ export namespace UI {
 
         static getHeight(): number {
             return 16;
+        }
+    }
+
+    export class ArrowDown {
+        static getName(): string {
+            return "arrow_down_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/arrow_down.png");
+        }
+    }
+
+    export class ChatBubble {
+        static getName(): string {
+            return "chat_bubble_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/chat_bubble.png");
         }
     }
 
@@ -474,6 +504,28 @@ export namespace UI {
 
         static getHeight(): number {
             return 15;
+        }
+    }
+
+    export class ButtonChat {
+        static getName(): string {
+            return "ui_button_chat_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/button_chat.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/button_chat.json");
+        }
+
+        static getWidth(): number {
+            return 10;
+        }
+
+        static getHeight(): number {
+            return 10;
         }
     }
 }

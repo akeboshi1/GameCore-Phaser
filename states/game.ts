@@ -24,6 +24,7 @@ export default class Game extends Phaser.State {
         Globals.LoaderManager.init(this.game);
 
         if (!GameConfig.isEditor) {
+            Globals.ModuleManager.openModule(ModuleTypeEnum.NOTICE);
             Globals.ModuleManager.openModule(ModuleTypeEnum.CHAT);
             Globals.ModuleManager.openModule(ModuleTypeEnum.ROLEINFO);
             Globals.ModuleManager.openModule(ModuleTypeEnum.SHORTCUTMENU);

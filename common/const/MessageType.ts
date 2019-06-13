@@ -17,6 +17,7 @@ export class MessageType {
     public static CHANGE_ELEMENT_ANIMATION = "change_element_animation";
 
     public static CHAT_TO = "chat_to";
+    public static SHOW_CHAT_BUBBLE = "show_chat_bubble";
     public static PROMPT_ALERT = "prompt_alert";
 
     /// never start
@@ -73,5 +74,10 @@ export class MessageType {
      * 模块视图移除从显示列表
      */
     public static MODULE_VIEW_REM = "module_view_rem";
+
+    /**
+     * 跑马灯公告
+     */
+    public static SHOW_NOTICE = "show_notice";
 }
 

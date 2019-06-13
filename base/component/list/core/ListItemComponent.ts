@@ -1,5 +1,6 @@
 import {IListItemComponent} from "../interfaces/IListItemComponent";
 import {IListItemEventListener} from "../interfaces/IListItemEventListener";
+import { IComoboxData } from "../../combobox/ComboBox";
 
 export class ListItemComponent extends Phaser.Sprite implements IListItemComponent {
     protected m_Data: any;

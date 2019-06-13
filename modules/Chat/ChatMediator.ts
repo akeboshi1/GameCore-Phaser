@@ -8,10 +8,17 @@ import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIR
 import OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER;
 import {ModuleTypeEnum} from "../../base/module/base/ModuleType";
 const GMEApi = new WebGMEAPI();
+const setTimeout = window.setTimeout;
 
 export class ChatMediator extends MediatorBase {
     private authBuffer: string;
     private _inRoom = false;
+    private _timeout: number;
+    private _chatCD = 2000;
+    private _historyIndex: number;
+    private _historyChat: string[] = [];
+    private _allMessage: IMessage[] = [];
+    private _maxMessageNum  = 50;
     private get view(): ChatView {
         return this.viewComponent as ChatView;
     }
@@ -28,6 +35,7 @@ export class ChatMediator extends MediatorBase {
         (<any>this.view.input_tf).domElement.element.addEventListener("keydown", this.sayHello.bind(this));
         this.view.labaButton.onCallBack(this.handleLaba, this);
         this.view.voiceButton.onCallBack(this.handleVoice, this);
+        this.view.comobox.onSelectedItem.add(this.changeMessageChannel, this);
 
         super.onRegister();
 
@@ -121,8 +129,17 @@ export class ChatMediator extends MediatorBase {
     }
 
     private sayHello(event) {
+        event.stopPropagation();
         if (event.keyCode === Phaser.Keyboard.ENTER) {
             this.onHandleBt();
+        } else if (event.keyCode === Phaser.Keyboard.TAB) {
+            this.view.changedChannel();
+        } else if (event.keyCode === Phaser.Keyboard.UP) {
+            this._historyIndex--;
+            this.showHistoryChat(this._historyIndex);
+        } else if (event.keyCode === Phaser.Keyboard.DOWN) {
+            this._historyIndex++;
+            this.showHistoryChat(this._historyIndex);
         }
     }
 
@@ -144,6 +161,7 @@ export class ChatMediator extends MediatorBase {
         (<any>this.view.input_tf).domElement.element.removeEventListener("keydown", this.sayHello.bind(this));
         this.view.labaButton.cancelCallBack(this.handleLaba, this);
         this.view.voiceButton.cancelCallBack(this.handleVoice, this);
+        this.view.selectedChanel.onSelectedItem.remove(this.changeMessageChannel, this);
 
         super.onRemove();
     }
@@ -155,8 +173,19 @@ export class ChatMediator extends MediatorBase {
             if (player) chatStr += player.name + ": ";
         }
         chatStr += chat.chatContext + "\n";
-        this.view.out_tf.text += chatStr;
-        this.view.scroller.scroll();
+        this.appendMessage(this._allMessage, { chat: chatStr, channel: chat.chatChannel, color: chat.chatSetting ? chat.chatSetting.textColor : this.generateHexColor() });
+        this.changeMessageChannel();
+    }
+
+    private appendMessage(ary: IMessage[], message: IMessage) {
+        ary.push(message);
+        if (ary.length > this._maxMessageNum) {
+            ary.shift();
+        }
+    }
+
+    private generateHexColor() {
+        return "#" + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
     }
 
     private onHandleQcloudAuth(value: string): void {
@@ -173,13 +202,57 @@ export class ChatMediator extends MediatorBase {
         if (this.view.inputValue === "") {
             return;
         }
+        if (!!this._timeout === true) {
+            return;
+        }
+        this._historyChat.push(this.view.inputValue);
+        this._historyIndex = this._historyChat.length;
+        if (this._historyChat.length > 5) {
+            this._historyChat.shift();
+        }
         this.view.input_tf.endFocus();
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT);
         let content: IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = pkt.content;
-        content.chatChannel = 0;
+        content.chatChannel = this.view.inputChannel;
         content.chatContext = this.view.inputValue;
         this.view.inputValue = "";
         Globals.SocketManager.send(pkt);
         this.view.input_tf.startFocus();
+        this._timeout = setTimeout(() => {
+            clearTimeout(this._timeout);
+            this._timeout = 0;
+        }, this._chatCD);
     }
+
+    private changeMessageChannel() {
+        let showMessage = this._allMessage.filter(message => message.channel === this.view.outChannel || message.channel === op_client.ChatChannel.System || this.view.outChannel === null);
+        const len = showMessage.length;
+        this.view.clearOutTf();
+        let message: IMessage = null;
+        let colorIndex = 0;
+        for (let i = 0; i < len; i++) {
+            message = showMessage[i];
+            colorIndex += message.chat.length;
+            this.view.appendMessage(message.chat, message.color, colorIndex);
+        }
+        // this.view.out_tf.text += chatStr;
+        this.view.scroller.scroll();
+    }
+
+    private showHistoryChat(index: number) {
+        if (this._historyIndex < 0) {
+            this._historyIndex = this._historyChat.length - 1;
+        }
+        if (this._historyIndex >= this._historyChat.length) {
+            this._historyIndex = 0;
+        }
+        this.view.input_tf.setText(this._historyChat[this._historyIndex]);
+        this.view.input_tf.startFocus();
+    }
+}
+
+export interface IMessage {
+    chat: string;
+    channel: op_client.ChatChannel;
+    color: string;
 }

@@ -32,14 +32,14 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         switch (moduleName) {
             case ModuleTypeEnum.CHAT:
                 nineSliceImageResource = [{
-                    key: UI.DialogBg.getName(),
-                    png: UI.DialogBg.getPNG(),
-                    top: 7,
-                    left: 7,
-                    right: 7,
-                    bottom: 7
+                    key: UI.Background.getName(),
+                    png: UI.Background.getPNG(),
+                    top: 4,
+                    left: 4,
+                    right: 4,
+                    bottom: 4
                 },
-                    {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 2, right: 2, bottom: 4}
+                    {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 4, right: 4, bottom: 4}
                 ];
                 sheetResource = [{
                     key: UI.DropDownBtn.getName(),
@@ -64,7 +64,15 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     key: UI.Button.getName(),
                     png: UI.Button.getPNG(),
                     json: UI.Button.getJSON()
+                },
+                {
+                    key: UI.ButtonChat.getName(),
+                    png: UI.ButtonChat.getPNG(),
+                    json: UI.ButtonChat.getJSON()
                 }];
+                imageResource = [
+                    {key: UI.ArrowDown.getName(), png: UI.ArrowDown.getPNG()}
+                ];
                 break;
             case ModuleTypeEnum.ROLEINFO:
                 nineSliceImageResource = [{
@@ -75,7 +83,8 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     right: 6,
                     bottom: 6
                 },
-                    {key: UI.ProgressFill.getName(), png: UI.ProgressFill.getPNG(), top: 6, left: 6, right: 6, bottom: 6}
+                    {key: UI.ProgressFill.getName(), png: UI.ProgressFill.getPNG(), top: 6, left: 6, right: 6, bottom: 6},
+                    {key: UI.ChatBubble.getName(), png: UI.ChatBubble.getPNG(), top: 9, left: 9, right: 9, bottom: 9}
                 ];
                 break;
             case ModuleTypeEnum.SHORTCUTMENU:
@@ -202,6 +211,18 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     key: UI.VoteLight.getName(),
                     png: UI.VoteLight.getPNG()
                 }];
+                break;
+            case ModuleTypeEnum.NOTICE:
+                    nineSliceImageResource = [{
+                        key: UI.Background.getName(),
+                        png: UI.Background.getPNG(),
+                        top: 4,
+                        left: 4,
+                        right: 4,
+                        bottom: 4
+                    },
+                        {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 4, right: 4, bottom: 4}
+                    ];
                 break;
         }
 

@@ -44,12 +44,17 @@ export class ScrollArea extends Phaser.Group {
     private velocityWheelYAbs: number;
     private elapsed: number;
 
-    constructor(game: Phaser.Game, rect: Phaser.Rectangle, params?: any) {
+    private slideSize: Phaser.Rectangle;
+    private sliderBG: Phaser.Graphics;
+    private sliderContainer: Phaser.Group;
+
+    constructor(game: Phaser.Game, rect: Phaser.Rectangle, params?: any, slideSize?: Phaser.Rectangle) {
         super(game);
         this.x = this._x = rect.x;
         this.y = this._y = rect.y;
         this._w = rect.width;
         this._h = rect.height;
+        this.slideSize = slideSize;
         if (params) {
             this.configure(params);
         }

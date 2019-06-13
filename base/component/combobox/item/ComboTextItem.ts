@@ -30,6 +30,8 @@ export class ComboTextItem extends ListItemComponent {
         this.mBg.drawRect(0, 0, this.mWidth, this.mHeight);
         this.mBg.endFill();
         this.addChild(this.mBg);
+
+        this.addEvent();
     }
 
     protected addEvent(): void {
@@ -71,7 +73,11 @@ export class ComboTextItem extends ListItemComponent {
     }
 
     protected render(): void {
-        this.mLabel.text = this.data;
+        this.mLabel.text = this.data.label;
+    }
+
+    public get value() {
+        return this.data.value;
     }
 
     public onDispose(): void {
