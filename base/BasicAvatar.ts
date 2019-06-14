@@ -45,7 +45,7 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
         }
     }
 
-    public addBubble(text: string, bubble: op_client.IChat_Bubble) {
+    public addBubble(text: string, bubble: op_client.IChat_Setting) {
         if (!!this.mBubble === false) {
             this.initBubble();
         }

@@ -8,7 +8,7 @@ export class BubbleContainer extends Phaser.Group {
     this._bubbles = [];
   }
 
-  public addBubble(text: string, bubble: op_client.IChat_Bubble) {
+  public addBubble(text: string, bubble: op_client.IChat_Setting) {
     this.createBubble(text, bubble);
     const len = this._bubbles.length;
     let ele: BubbleElement = null;
@@ -30,14 +30,12 @@ export class BubbleContainer extends Phaser.Group {
     bubble.destroy();
   }
 
-  private createBubble(text: string, bubble: op_client.IChat_Bubble) {
+  private createBubble(text: string, bubble: op_client.IChat_Setting) {
+    if (!!bubble === false) return;
     const bubbleEle = new BubbleElement(this.game, this);
     bubbleEle.showText(text, bubble);
     this._bubbles.push(bubbleEle);
-    let duration = 5000;
-    if (bubble.chatsetting && bubble.chatsetting.duration) {
-      duration = bubble.chatsetting.duration;
-    }
+    let duration = bubble.duration ? bubble.duration : 5000;
     bubbleEle.durationRemove(duration, this.removeBubble, this);
   }
 

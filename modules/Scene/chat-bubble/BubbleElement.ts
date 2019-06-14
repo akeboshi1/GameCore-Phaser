@@ -15,7 +15,7 @@ export class BubbleElement extends Phaser.Group {
     super(game, parent);
   }
 
-  public showText(text: string, bubble: op_client.IChat_Bubble) {
+  public showText(text: string, bubble: op_client.IChat_Setting) {
     this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12, wordWrap: true, wordWrapWidth: 600 });
     Globals.Tool.formatChinese(this.chat_content, 600);
     this.add(this.chat_content);

@@ -75,8 +75,17 @@ class Handler extends BasePacketHandler {
     private handleCharacterChat(packet: PBpacket) {
         const chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
         if (chat.chatBubble) {
-            Globals.MessageCenter.emit(MessageType.SHOW_CHAT_BUBBLE, chat);
+            const bubble = op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE.create();
+            bubble.receiverid = chat.chatSenderid;
+            bubble.context = chat.chatContext;
+            bubble.chatsetting = chat.chatBubble.chatsetting;
+            Globals.MessageCenter.emit(MessageType.SHOW_CHAT_BUBBLE, bubble);
         }
+    }
+
+    private handlerAddBubble(packet: PBpacket) {
+        const bubble: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
+        Globals.MessageCenter.emit(MessageType.SHOW_CHAT_BUBBLE, bubble);
     }
 
     private handleServerAddElement(packet: PBpacket): void {

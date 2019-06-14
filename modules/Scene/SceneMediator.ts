@@ -16,6 +16,7 @@ import {PBpacket} from "net-socket-packet";
 import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
 import OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE;
+import SceneEntity from "./view/SceneEntity";
 
 export class SceneMediator extends MediatorBase {
     private flowManager: FlowManager;
@@ -203,12 +204,12 @@ export class SceneMediator extends MediatorBase {
         this.view.deleteSceneElement(elementId);
     }
 
-    protected handleShowChatBubble(chat: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CHAT): void {
-        let entity: any;
-        if (chat.chatSenderid) {
-            entity = <any>this.view.getSceneElement(chat.chatSenderid);
+    protected handleShowChatBubble(chat: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE): void {
+        let entity: SceneEntity;
+        if (chat.receiverid) {
+            entity = <SceneEntity>this.view.getSceneElement(chat.receiverid);
             if (entity) {
-                entity.addBubble(chat.chatContext, chat.chatBubble);
+                entity.addBubble(chat.context, chat.chatsetting);
             }
         }
     }
