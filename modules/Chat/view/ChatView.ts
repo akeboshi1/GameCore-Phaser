@@ -36,6 +36,8 @@ export class ChatView extends ModuleViewBase {
         this.out_tf = this.game.make.text(10, 0, "", {fontSize: 14, fill: "#b3b3b3", align: "left", wordWrap: true, wordWrapWidth: 420});
         this.add(this.out_tf);
         // this.out_tf.width = 430;
+        this.out_tf.events.onInputDown.add(this.test, this);
+        this.onChildInputDown.add(this.test, this);
 
         const line = this.game.add.graphics();
         line.lineStyle(2, 0x808080);
@@ -79,6 +81,10 @@ export class ChatView extends ModuleViewBase {
 
         this.labaButton.select = false;
         this.voiceButton.select = false;
+    }
+
+    private test() {
+        console.log("clicked!!!");
     }
 
     public update() {

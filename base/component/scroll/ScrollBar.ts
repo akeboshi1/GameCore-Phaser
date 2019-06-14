@@ -185,18 +185,23 @@ export class ScrollBar {
         sliderLine.lineTo(this.slideSize.width + 10, this.slideSize.height);
         this.parent.addChild(sliderLine);
 
+        // let s = this.game.make.bitmapData();
+        // s.rect(0, 0, 10, 10);
+        // s.fill(255, 255, 0);
+
         this.slider = this.game.make.sprite(this.slideSize.x, this.slideSize.y);
         this.parent.addChild(this.slider);
         let button = new NiceSliceButton(this.game, 0, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 20, 60, {
           top: 4,
           bottom: 4,
           left: 4,
-          right: 4
-      }, "");
+          right: 4}, "");
         this.slider.addChild(button);
         this.slider.inputEnabled = true;
         this.slider.events.onDragUpdate.add(this.dragSliderHandler, this);
         this.slider.input.enableDrag();
+        button.inputEnableChildren = true;
+        console.log(this.slider.width, this.slider.height);
         this.slider.events.onInputDown.add(() => {
           console.log("================");
         });
