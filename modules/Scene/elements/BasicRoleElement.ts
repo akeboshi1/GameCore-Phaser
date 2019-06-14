@@ -96,8 +96,4 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
         (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
         this.loadModel(this.characterInfo.avatar);
     }
-
-    public addBubble(text: string, bubble: op_client.IChat_Bubble) {
-        (<RoleBonesAvatar>this.display).addBubble(text, bubble);
-    }
 }

@@ -8,12 +8,13 @@ import {ComboBox, IComoboxData} from "../../../base/component/combobox/ComboBox"
 import {CheckButton} from "../../../base/component/button/CheckButton";
 import "../../../web-rtc-service";
 import { op_client } from "pixelpai_proto";
+import { ScrollBar } from "../../../base/component/scroll/ScrollBar";
 
 export class ChatView extends ModuleViewBase {
     public out_tf: Phaser.Text;
     public input_tf: PhaserInput.InputField;
     public bt: NiceSliceButton;
-    public scroller: ScrollArea;
+    public scroller: ScrollBar;
     public comobox: ComboBox;
     public selectedChanel: ComboBox;
     public labaButton: CheckButton;
@@ -29,9 +30,11 @@ export class ChatView extends ModuleViewBase {
     }
 
     protected init(): void {
+        this.inputEnableChildren = true;
         this.game.add.nineSlice(0, GameConfig.GameHeight - 286, UI.Background.getName(), null, 464, 281, this);
         this.game.add.nineSlice(10, GameConfig.GameHeight - 40, UI.InputBg.getName(), null, 368, 30, this);
-        this.out_tf = this.game.make.text(0, 0, "", {fontSize: 14, fill: "#b3b3b3", align: "left", wordWrap: true, wordWrapWidth: 420});
+        this.out_tf = this.game.make.text(10, 0, "", {fontSize: 14, fill: "#b3b3b3", align: "left", wordWrap: true, wordWrapWidth: 420});
+        this.add(this.out_tf);
         // this.out_tf.width = 430;
 
         const line = this.game.add.graphics();
@@ -51,9 +54,10 @@ export class ChatView extends ModuleViewBase {
         }, "发送", 12);
         this.add(this.bt);
 
-        const bounds = new Phaser.Rectangle(10, GameConfig.GameHeight - 260, 430, 220);
-        this.scroller = new ScrollArea(this.game, bounds);
-        this.scroller.add(this.out_tf);
+        const bounds = new Phaser.Rectangle(0, GameConfig.GameHeight - 260, 430, 220);
+        this.scroller = new ScrollBar(this.game, this.out_tf, this, bounds);
+        // this.scroller = new ScrollArea(this.game, bounds);
+        // this.scroller.add(this.out_tf);
         this.scroller.start();
         this.add(this.scroller);
 
@@ -75,6 +79,11 @@ export class ChatView extends ModuleViewBase {
 
         this.labaButton.select = false;
         this.voiceButton.select = false;
+    }
+
+    public update() {
+        super.update();
+        if (this.scroller) this.scroller.update();
     }
 
     public appendMessage(message: string, color?: string, index?: number) {

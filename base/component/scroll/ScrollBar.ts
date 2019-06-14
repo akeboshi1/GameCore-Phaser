@@ -1,6 +1,11 @@
 import "phaser-ce";
+import { UI } from "../../../Assets";
+import { NiceSliceButton } from "../button/NiceSliceButton";
 
-export class ScrollArea extends Phaser.Group {
+export class ScrollBar {
+    protected game: Phaser.Game;
+    protected target: PIXI.DisplayObjectContainer;
+    protected parent: PIXI.DisplayObjectContainer;
     protected _x: number;
     protected _y: number;
     protected _w: number;
@@ -44,12 +49,20 @@ export class ScrollArea extends Phaser.Group {
     private velocityWheelYAbs: number;
     private elapsed: number;
 
-    constructor(game: Phaser.Game, rect: Phaser.Rectangle, params?: any, slideSize?: Phaser.Rectangle) {
-        super(game);
-        this.x = this._x = rect.x;
-        this.y = this._y = rect.y;
+    private slideSize: Phaser.Rectangle;
+    private slider: Phaser.Sprite;
+    private sliderBG: Phaser.Graphics;
+    private sliderContainer: Phaser.Group;
+
+    constructor(game: Phaser.Game, target: PIXI.DisplayObjectContainer, parent: PIXI.DisplayObjectContainer, rect: Phaser.Rectangle, slideSize?: Phaser.Rectangle, params?: any, ) {
+        this.game = game;
+        this.target = target;
+        this.parent = parent;
+        this._x = rect.x;
+        this._y = rect.y;
         this._w = rect.width;
         this._h = rect.height;
+        this.slideSize = slideSize;
         if (params) {
             this.configure(params);
         }
@@ -71,12 +84,6 @@ export class ScrollArea extends Phaser.Group {
             }
         }
     }
-
-    /*public addChild(child: PIXI.DisplayObject): PIXI.DisplayObject {
-        this.maskGraphics.x = this.parent.x + this._x;
-        this.maskGraphics.y = this.parent.y + this._y;
-        return super.addChild(child);
-    }*/
 
     public start(): void {
         if (this.game && this.game.input) {
@@ -107,7 +114,7 @@ export class ScrollArea extends Phaser.Group {
         if (this.autoScrollX && this.amplitudeX !== 0) {
             let delta = -this.amplitudeX * Math.exp(-this.elapsed / this.settings.timeConstantScroll);
             if (delta > 0.5 || delta < -0.5) {
-                this.x = this.targetX + delta;
+                this.target.x = this.targetX + delta;
             }
             else {
                 this.autoScrollX = false;
@@ -119,7 +126,7 @@ export class ScrollArea extends Phaser.Group {
 
             let delta = -this.amplitudeY * Math.exp(-this.elapsed / this.settings.timeConstantScroll);
             if (delta > 0.5 || delta < -0.5) {
-                this.y = this.targetY + delta;
+                this.target.y = this.targetY + delta;
             }
             else {
                 this.autoScrollY = false;
@@ -135,14 +142,14 @@ export class ScrollArea extends Phaser.Group {
             this.dragging = true;
             this.amplitudeX = 0;
             this.autoScrollX = false;
-            this.x += this.velocityWheelX;
+            this.target.x += this.velocityWheelX;
             this.velocityWheelX *= 0.95;
         }
 
         if (this.settings.verticalWheel && this.velocityWheelYAbs > 0.1) {
             this.dragging = true;
             this.autoScrollY = false;
-            this.y += this.velocityWheelY;
+            this.target.y += this.velocityWheelY;
             this.velocityWheelY *= 0.95;
         }
 
@@ -151,23 +158,48 @@ export class ScrollArea extends Phaser.Group {
 
     public setPosition(position: Phaser.Point) {
         if (position.x) {
-            this.x += position.x - this._x;
-            this.maskGraphics.x = this._x = position.x;
+            this.target.x += position.x - this._x;
+            // this.maskGraphics.x = this._x = position.x;
         }
         if (position.y) {
-            this.y += position.y - this._y;
-            this.maskGraphics.y = this._y = position.y;
+            this.target.y += position.y - this._y;
+            // this.maskGraphics.y = this._y = position.y;
         }
     }
 
     protected init(): void {
         this._maskGraphics = this.game.make.graphics(0, 0);
         this._maskGraphics.beginFill(0x00ffff);
-        this._maskGraphics.drawRect(0, 0, this._w, this._h);
+        this._maskGraphics.drawRect(this._x, this._y, this._w, this._h);
         this._maskGraphics.endFill();
-        this.add(this._maskGraphics);
+        this.parent.addChild(this._maskGraphics);
         // this._maskGraphics.inputEnabled = true;
-        // this.mask = this._maskGraphics;
+        this.target.mask = this._maskGraphics;
+
+        this.slideSize = new Phaser.Rectangle(this._x + this._w, this._y, this._x + this._w, this._y + this._h);
+
+        let sliderLine = this.game.make.graphics();
+        sliderLine.clear();
+        sliderLine.lineStyle(2, 0x808080);
+        sliderLine.moveTo(this.slideSize.x + 10,  this.slideSize.y);
+        sliderLine.lineTo(this.slideSize.width + 10, this.slideSize.height);
+        this.parent.addChild(sliderLine);
+
+        this.slider = this.game.make.sprite(this.slideSize.x, this.slideSize.y);
+        this.parent.addChild(this.slider);
+        let button = new NiceSliceButton(this.game, 0, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 20, 60, {
+          top: 4,
+          bottom: 4,
+          left: 4,
+          right: 4
+      }, "");
+        this.slider.addChild(button);
+        this.slider.inputEnabled = true;
+        this.slider.events.onDragUpdate.add(this.dragSliderHandler, this);
+        this.slider.input.enableDrag();
+        this.slider.events.onInputDown.add(() => {
+          console.log("================");
+        });
 
         this.dragging = false;
         this.pressedDown = false;
@@ -195,6 +227,10 @@ export class ScrollArea extends Phaser.Group {
 
         this.velocityWheelX = 0;
         this.velocityWheelY = 0;
+    }
+
+    private dragSliderHandler(target, pointer, dragX, dragY) {
+      console.log("ee:  ", target, pointer, dragX, dragY);
     }
 
     protected beginMove(): void {
@@ -228,7 +264,7 @@ export class ScrollArea extends Phaser.Group {
             if (delta !== 0) this.dragging = true;
             this.startX = x;
             this.velocityX = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * this.velocityX;
-            this.x += delta;
+            this.target.x += delta;
         }
 
         if (this.settings.verticalScroll) {
@@ -236,7 +272,7 @@ export class ScrollArea extends Phaser.Group {
             if (delta !== 0) this.dragging = true;
             this.startY = y;
             this.velocityY = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * this.velocityY;
-            this.y += delta;
+            this.target.y += delta;
         }
 
         this.limitMovement();
@@ -255,13 +291,13 @@ export class ScrollArea extends Phaser.Group {
             if (this.game.input.activePointer.withinGame) {
                 if (this.velocityX > 10 || this.velocityX < -10) {
                     this.amplitudeX = 0.8 * this.velocityX;
-                    this.targetX = Math.round(this.x + this.amplitudeX);
+                    this.targetX = Math.round(this.target.x + this.amplitudeX);
                     this.autoScrollX = true;
                 }
 
                 if (this.velocityY > 10 || this.velocityY < -10) {
                     this.amplitudeY = 0.8 * this.velocityY;
-                    this.targetY = Math.round(this.y + this.amplitudeY);
+                    this.targetY = Math.round(this.target.y + this.amplitudeY);
                     this.autoScrollY = true;
                 }
             }
@@ -278,12 +314,12 @@ export class ScrollArea extends Phaser.Group {
 
             if (Math.abs(this.game.input.x - this.inputX) <= this.settings.clickXThreshold && Math.abs(this.game.input.y - this.inputY) <= this.settings.clickYThreshold) {
                 let child: any;
-                for (let i = 0; i < this.children.length; i++) {
-                    child = this.getChildAt(i);
-                    if (child.getBounds().contains(this.game.input.x, this.game.input.y) && child.inputEnabled && child.events.onInputUp.getNumListeners() > 0) {
-                        child.events.onInputUp.dispatch();
-                    }
-                }
+                // for (let i = 0; i < this.children.length; i++) {
+                //     child = this.getChildAt(i);
+                //     if (child.getBounds().contains(this.game.input.x, this.game.input.y) && child.inputEnabled && child.events.onInputUp.getNumListeners() > 0) {
+                //         child.events.onInputUp.dispatch();
+                //     }
+                // }
             }
         }
     }
@@ -316,45 +352,45 @@ export class ScrollArea extends Phaser.Group {
 
     protected limitMovement(): void {
         if (this.settings.horizontalScroll) {
-            if (this.x > this._x)
-                this.x = this._x;
-            if (this.x < -(this.width - this._w - this._x)) {
+            if (this.target.x > this._x)
+                this.target.x = this._x;
+            if (this.target.x < -(this.width - this._w - this._x)) {
                 if (this.width > this._w) {
-                    this.x = -(this.width - this._w - this._x);
+                    this.target.x = -(this.width - this._w - this._x);
                 }
                 else {
-                    this.x = this._x;
+                    this.target.x = this._x;
                 }
             }
         }
 
         if (this.settings.verticalScroll) {
-            if (this.y > this._y)
-                this.y = this._y;
-            if (this.y < -(this.height - this._h - this._y)) {
+            if (this.target.y > this._y)
+                this.target.y = this._y;
+            if (this.target.y < -(this.height - this._h - this._y)) {
                 if (this.height > this._h) {
-                    this.y = -(this.height - this._h - this._y);
+                    this.target.y = -(this.height - this._h - this._y);
                 }
                 else {
-                    this.y = this._y;
+                    this.target.y = this._y;
                 }
             }
         }
 
-        this.maskGraphics.x = this._x - this.x;
-        this.maskGraphics.y = this._y - this.y;
+        // this.maskGraphics.x = this._x - this.target.x;
+        // this.maskGraphics.y = this._y - this.target.y;
     }
 
     public get width(): number {
-        return super.width - this.settings.offsetX;
+        return this.target.width - this.settings.offsetX;
     }
 
     public get height(): number {
-        return super.height - this.settings.offsetY;
+        return this.target.height - this.settings.offsetY;
     }
 
     public scroll(value: number = 1): void {
-        this.y = this._y - (this.height - this._h) * value;
+        this.target.y = this._y - (this.height - this._h) * value;
         this.limitMovement();
     }
 }

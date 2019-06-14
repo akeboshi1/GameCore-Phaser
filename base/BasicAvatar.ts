@@ -1,12 +1,15 @@
 import {IAnimatedObject} from "./IAnimatedObject";
 import {IEntityComponent} from "./IEntityComponent";
 import {IDisposeObject} from "./object/interfaces/IDisposeObject";
+import { BubbleContainer } from "../modules/Scene/chat-bubble/BubbleContainer";
+import { op_client } from "pixelpai_proto";
 
 export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IAnimatedObject, IEntityComponent, IDisposeObject {
 
     protected myData: any = null;
     protected mInitilized = false;
     protected mLoaderAvatar: any;
+    protected mBubble: BubbleContainer;
     private _owner: any;
 
     public constructor(game: Phaser.Game) {
@@ -42,6 +45,18 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
         }
     }
 
+    public addBubble(text: string, bubble: op_client.IChat_Bubble) {
+        if (!!this.mBubble === false) {
+            this.initBubble();
+        }
+        this.mBubble.addBubble(text, bubble);
+        if (this.mLoaderAvatar.headBitmapdata) {
+            // test;
+            let image = this.game.make.image(0, 0, this.mLoaderAvatar.headBitmapdata);
+            this.addChild(image);
+        }
+    }
+
     // IAnimatedObject Interface
     public onFrame(): void {
     }
@@ -53,5 +68,11 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
     }
 
     protected onInitializeComplete(): void {
+    }
+
+    protected initBubble() {
+        this.mBubble = new BubbleContainer(this.game, this);
+        this.mBubble.x = -60;
+        this.mBubble.y = -this.height;
     }
 }

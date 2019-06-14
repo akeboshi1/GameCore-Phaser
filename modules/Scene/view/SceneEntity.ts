@@ -1,6 +1,7 @@
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
 import {op_client} from "pixelpai_proto";
 import Direction = op_client.Direction;
+import { BasicAvatar } from "../../../base/BasicAvatar";
 
 export default class SceneEntity extends BasicSceneEntity {
     public mouseEnable = true;
@@ -187,6 +188,10 @@ export default class SceneEntity extends BasicSceneEntity {
         }
 
         this.setPosition(_x, _y, _z);
+    }
+
+    public addBubble(text: string, bubble: op_client.IChat_Bubble) {
+        (<BasicAvatar>this.display).addBubble(text, bubble);
     }
 
     protected checkIsValidDisplayAvatar(): void {

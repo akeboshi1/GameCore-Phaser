@@ -16,10 +16,11 @@ export class BubbleElement extends Phaser.Group {
   }
 
   public showText(text: string, bubble: op_client.IChat_Bubble) {
-    this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12 });
+    this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12, wordWrap: true, wordWrapWidth: 600 });
+    Globals.Tool.formatChinese(this.chat_content, 600);
     this.add(this.chat_content);
 
-    this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 20);
+    this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 18);
     this.addAt(this.bg, 0);
     this.alpha = 0;
   }

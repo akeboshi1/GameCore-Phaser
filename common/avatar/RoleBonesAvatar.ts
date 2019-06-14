@@ -14,7 +14,6 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mAnimationDirty = false;
     protected mHeadName: Phaser.Text;
-    protected mBubble: BubbleContainer;
 
     public constructor(game: Phaser.Game) {
         super(game);
@@ -51,13 +50,6 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
-    public addBubble(text: string, bubble: op_client.IChat_Bubble) {
-        this.mBubble.addBubble(text, bubble);
-        let image = this.game.make.image(0, 0);
-        image.loadTexture(this.mLoaderAvatar.headBitmapdata);
-        this.addChild(image);
-    }
-
     public onFrame(): void {
         super.onFrame();
         this.mLoaderAvatar.onFrame();
@@ -80,10 +72,6 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mHeadName.stroke = "#000";
         this.mHeadName.strokeThickness = 2;
         this.addChild(this.mHeadName);
-
-        this.mBubble = new BubbleContainer(this.game, this);
-        this.mBubble.x = -60;
-        this.mBubble.y = -120;
     }
 
     protected onInitializeComplete(): void {
@@ -108,6 +96,11 @@ export class RoleBonesAvatar extends BasicAvatar {
         if (this.mLoaderAvatar) {
             this.mLoaderAvatar.visible = true;
         }
+    }
+
+    protected initBubble() {
+        super.initBubble();
+        this.mBubble.y = -120;
     }
 
     public onDispose(): void {
