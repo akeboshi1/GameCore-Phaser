@@ -41,7 +41,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN, this.handleServerAddTerrain);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN_END, this.handleServerAddTerrainEnd);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.handleCharacterChat);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.handlerAddBubble);
         // Editor
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
