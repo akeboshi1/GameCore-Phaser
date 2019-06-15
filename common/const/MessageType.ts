@@ -15,6 +15,7 @@ export class MessageType {
     public static SCENE_MOVE_TO = "scene_move_to";
     public static SCENE_MOVE_STOP = "scene_move_stop";
     public static CHANGE_ELEMENT_ANIMATION = "change_element_animation";
+    public static CHANGE_CHARACTER_ANIMATION = "change_character_animation";
 
     public static CHAT_TO = "chat_to";
     public static SHOW_CHAT_BUBBLE = "show_chat_bubble";
@@ -79,5 +80,7 @@ export class MessageType {
      * 跑马灯公告
      */
     public static SHOW_NOTICE = "show_notice";
+    public static USER_UPDATED_VOICE_PEER = "user_updated_voice_peer";
+    public static HIDE_VOICE = "hide_voice";
 }
 

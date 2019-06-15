@@ -86,6 +86,12 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     {key: UI.ProgressFill.getName(), png: UI.ProgressFill.getPNG(), top: 6, left: 6, right: 6, bottom: 6},
                     {key: UI.ChatBubble.getName(), png: UI.ChatBubble.getPNG(), top: 9, left: 9, right: 9, bottom: 9}
                 ];
+                sheetResource = [{
+                    key: UI.VoiceIcon.getName(),
+                    png: UI.VoiceIcon.getPNG(),
+                    frameWidth: UI.VoiceIcon.getWidth(),
+                    frameHeight: UI.VoiceIcon.getHeight()
+                }];
                 break;
             case ModuleTypeEnum.SHORTCUTMENU:
                 imageResource = [{

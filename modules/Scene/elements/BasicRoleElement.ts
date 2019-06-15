@@ -40,6 +40,14 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
         }
     }
 
+    public setScaleX(value: number|boolean): void {
+
+    }
+
+    public updateVoiceIcon(jitterReceived: number) {
+        (<RoleBonesAvatar>this.display).setVoiceIcon(jitterReceived);
+    }
+
     public loadModel(model: op_gameconfig.IAvatar): void {
         (<RoleBonesAvatar>this.display).loadModel(model);
     }
@@ -49,18 +57,20 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
     }
 
     protected onPauseMove(): void {
+        this.myAnimationName = Const.ModelStateType.BONES_STAND;
         this.invalidAnimation();
         super.onPauseMove();
     }
 
-    protected onStartMove(): void {
-        this.myAnimationName = Const.ModelStateType.BONES_STAND;
-        this.invalidAnimation();
-        super.onStartMove();
-    }
+    // protected onStartMove(): void {
+    //     this.myAnimationName = Const.ModelStateType.BONES_STAND;
+    //     this.invalidAnimation();
+    //     super.onStartMove();
+    // }
 
     protected onAvatarAnimationChanged(): void {
-        (<RoleBonesAvatar>this.display).animationName = this.myIsWalking ? Const.ModelStateType.BONES_WALK : this.myAnimationName;
+        // (<RoleBonesAvatar>this.display).animationName = this.myIsWalking ? Const.ModelStateType.BONES_WALK : this.myAnimationName;
+        (<RoleBonesAvatar>this.display).animationName = this.myAnimationName;
         (<RoleBonesAvatar>this.display).angleIndex = this.mAngleIndex;
     }
 

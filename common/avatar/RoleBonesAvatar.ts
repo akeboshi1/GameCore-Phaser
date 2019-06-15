@@ -4,7 +4,7 @@ import {Const} from "../const/Const";
 import Globals from "../../Globals";
 import {op_gameconfig, op_client} from "pixelpai_proto";
 import {Log} from "../../Log";
-import { BubbleContainer } from "../../modules/Scene/chat-bubble/BubbleContainer";
+import { UI } from "../../Assets";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
@@ -13,6 +13,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAngleIndexDirty = false;
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mAnimationDirty = false;
+    protected mVoiceIcon: Phaser.Sprite;
     protected mHeadName: Phaser.Text;
 
     public constructor(game: Phaser.Game) {
@@ -44,6 +45,20 @@ export class RoleBonesAvatar extends BasicAvatar {
     public setModelName(value: string, color: string): void {
         this.mHeadName.text = value;
         // this.mHeadName.fill = color;
+        this.updateVoiceIcon();
+    }
+
+    public setVoiceIcon(jitterReceived: number) {
+        if (!!this.mVoiceIcon === false) {
+            this.createVoiceIcon();
+        }
+        if (this.mVoiceIcon.visible === false && jitterReceived > 0) {
+            this.mVoiceIcon.visible = true;
+            this.mVoiceIcon.animations.play("idle", 16, true);
+        } else if (this.mVoiceIcon.visible === true && jitterReceived <= 0) {
+            this.mVoiceIcon.visible = false;
+            this.mVoiceIcon.animations.stop();
+        }
     }
 
     public loadModel(model: op_gameconfig.IAvatar): void {
@@ -103,6 +118,13 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mBubble.y = -120;
     }
 
+    protected createVoiceIcon() {
+        this.mVoiceIcon = this.game.make.sprite(0, -106, UI.VoiceIcon.getName());
+        this.mVoiceIcon.animations.add("idle");
+        this.addChild(this.mVoiceIcon);
+        this.updateVoiceIcon();
+    }
+
     public onDispose(): void {
         this.mHeadName.text = "";
         if (this.mLoaderAvatar) {
@@ -112,6 +134,16 @@ export class RoleBonesAvatar extends BasicAvatar {
         if (this.mBubble) {
             this.mBubble.destroy();
         }
+        if (this.mVoiceIcon) {
+            this.mVoiceIcon.animations.stop();
+            this.mVoiceIcon.destroy();
+        }
         super.onDispose();
+    }
+
+    private updateVoiceIcon() {
+        if (this.mHeadName && this.mVoiceIcon) {
+            this.mVoiceIcon.x = -((this.mVoiceIcon.width + 4) + (this.mHeadName.width >> 1));
+        }
     }
 }

@@ -63,6 +63,7 @@ export class ChatMediator extends MediatorBase {
                     break;
                 case GMEApi.event.ITMG_MAIN_EVNET_TYPE_USER_UPDATE:
                     console.log(`Info: 发送码率: ${result.UploadBRSend} | RTT: ${result.UploadRTT} -- Peer: ${JSON.stringify(result.PeerInfo)}`);
+                    if (result.PeerInfo.length > 0) Globals.MessageCenter.emit(MessageType.USER_UPDATED_VOICE_PEER, result.PeerInfo[0]);
                     break;
                 case GMEApi.event.ITMG_MAIN_EVENT_TYPE_EXIT_ROOM:
                     console.log(`[GME]: ExitRoom`);
@@ -222,6 +223,12 @@ export class ChatMediator extends MediatorBase {
             clearTimeout(this._timeout);
             this._timeout = 0;
         }, this._chatCD);
+
+        // Globals.MessageCenter.emit(MessageType.USER_UPDATED_VOICE_PEER, { uin: 269852194, jitterReceived: 1 });
+
+        // setTimeout(() => {
+        //     Globals.MessageCenter.emit(MessageType.USER_UPDATED_VOICE_PEER, { uin: 269852194, jitterReceived: 0 });
+        // }, 5000);
     }
 
     private changeMessageChannel() {

@@ -35,6 +35,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ELEMENT, this.handleServerRemoveElement);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_CHARACTER, this.handleUpdateCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNCHRO_PACKAGE, this.handleUpdatePackage);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_CHARACTER_ANIMATION, this.handleChangeCharacterAnimation);
 
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.handleAddCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.handleRemoveCharacter);
@@ -122,6 +123,11 @@ class Handler extends BasePacketHandler {
     private handleChangeElement(packet: PBpacket): void {
         let changeData: op_client.OP_GATEWAY_REQ_CLIENT_CHANGE_ELEMENT_ANIMATION = packet.content;
         Globals.MessageCenter.emit(MessageType.CHANGE_ELEMENT_ANIMATION, changeData.changeAnimation);
+    }
+
+    private handleChangeCharacterAnimation(packet: PBpacket) {
+        let changeData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_CHARACTER_ANIMATION = packet.content;
+        Globals.MessageCenter.emit(MessageType.CHANGE_ELEMENT_ANIMATION, changeData.changeCharacterAnimation);
     }
 
     private handleEnterScene(packet: PBpacket): void {

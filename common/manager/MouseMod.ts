@@ -170,7 +170,7 @@ export class MouseMod extends BaseSingleton {
         let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.mouseEvent = events;
         content.point3f = {x: this.activePointer.x + this.game.camera.x, y: this.activePointer.y + this.game.camera.y};
-        // Globals.SocketManager.send(pkt);
+        Globals.SocketManager.send(pkt);
     }
 
     public dispose(): void {

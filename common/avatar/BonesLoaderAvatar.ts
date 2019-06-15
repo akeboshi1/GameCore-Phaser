@@ -526,7 +526,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             if (this.armatureDisplay.armature) {
                 // console.log(this.armatureDisplay.armature.children);
                 // let sprite = this.game.make.sprite(-30, -100);
-                // this.mHeadBitmapData = this.mHeadBitmapData.draw(this.armatureDisplay.armature, -30, -70, 164, 164);
+                this.mHeadBitmapData = this.mHeadBitmapData.draw(this.armatureDisplay.armature, -30, -70, 164, 164);
                 // sprite.loadTexture(this.mHeadBitmapData);
                 // this.add(sprite);
 

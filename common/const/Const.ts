@@ -60,10 +60,10 @@ export namespace Const {
     }
 
     export enum ModelStateType {
-        BONES_JUMP = "jump",
-        BONES_RUN = "run",
-        BONES_STAND = "stand",
-        BONES_WALK = "walk"
+        BONES_JUMP = "human01_jump",
+        BONES_RUN = "human01_run",
+        BONES_STAND = "human01_stand",
+        BONES_WALK = "human01_walk"
     }
 
     export enum AvatarSlotType {

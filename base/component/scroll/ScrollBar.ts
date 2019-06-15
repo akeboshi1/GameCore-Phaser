@@ -1,6 +1,7 @@
 import "phaser-ce";
 import { UI } from "../../../Assets";
 import { NiceSliceButton } from "../button/NiceSliceButton";
+import { Rectangle, TileSprite } from "phaser-ce";
 
 export class ScrollBar {
     protected game: Phaser.Game;
@@ -33,7 +34,7 @@ export class ScrollBar {
     private scrollTween: Phaser.Tween;
     private now: number;
     private settings = {
-        kineticMovement: true,
+        kineticMovement: false,
         timeConstantScroll: 325, //really mimic iOS
         horizontalScroll: false,
         verticalScroll: true,
@@ -150,6 +151,7 @@ export class ScrollBar {
             this.dragging = true;
             this.autoScrollY = false;
             this.target.y += this.velocityWheelY;
+            this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
             this.velocityWheelY *= 0.95;
         }
 
@@ -163,6 +165,8 @@ export class ScrollBar {
         }
         if (position.y) {
             this.target.y += position.y - this._y;
+            this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
+            this.judgeBoundary();
             // this.maskGraphics.y = this._y = position.y;
         }
     }
@@ -185,11 +189,13 @@ export class ScrollBar {
         sliderLine.lineTo(this.slideSize.width + 10, this.slideSize.height);
         this.parent.addChild(sliderLine);
 
-        // let s = this.game.make.bitmapData();
-        // s.rect(0, 0, 10, 10);
-        // s.fill(255, 255, 0);
+        let s = this.game.make.bitmapData();
+        s.rect(0, 0, 10, 10);
+        s.fill(255, 255, 0);
 
         this.slider = this.game.make.sprite(this.slideSize.x, this.slideSize.y);
+        this.slider.width = 20;
+        this.slider.height = 60;
         this.parent.addChild(this.slider);
         let button = new NiceSliceButton(this.game, 0, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 20, 60, {
           top: 4,
@@ -197,14 +203,14 @@ export class ScrollBar {
           left: 4,
           right: 4}, "");
         this.slider.addChild(button);
-        this.slider.inputEnabled = true;
+        // this.slider.inputEnabled = true;
         this.slider.events.onDragUpdate.add(this.dragSliderHandler, this);
-        this.slider.input.enableDrag();
-        button.inputEnableChildren = true;
-        console.log(this.slider.width, this.slider.height);
-        this.slider.events.onInputDown.add(() => {
-          console.log("================");
-        });
+        // this.slider.input.enableDrag(false, false, false, 255, new Rectangle(this.slideSize.x + 10, this.slideSize.y, 1, sliderLine.height));
+        // button.inputEnableChildren = true;
+        // console.log(this.slider.width, this.slider.height);
+        // this.slider.events.onInputDown.add (() => {
+        //   console.log("================");
+        // });
 
         this.dragging = false;
         this.pressedDown = false;
@@ -243,7 +249,7 @@ export class ScrollBar {
             this.scrollTween.pause();
         }
 
-        if (this.game && this.game.input && this.maskGraphics.getBounds().contains(this.game.input.x, this.game.input.y)) {
+        if (this.game && this.game.input) {
             this.startedInside = true;
 
             this.startX = this.inputX = this.game.input.x;
@@ -278,9 +284,15 @@ export class ScrollBar {
             this.startY = y;
             this.velocityY = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * this.velocityY;
             this.target.y += delta;
+
+            // this.slider.y += delta;
+            this.slider.y = (this.startY / this.target.height) * this.slideSize.height;
+            // this.judgeBoundary();
+
+            console.log(this.target.y);
         }
 
-        this.limitMovement();
+        // this.limitMovement();
     }
 
     protected endMove(): void {
@@ -379,6 +391,8 @@ export class ScrollBar {
                 else {
                     this.target.y = this._y;
                 }
+                this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
+                this.judgeBoundary();
             }
         }
 
@@ -396,6 +410,17 @@ export class ScrollBar {
 
     public scroll(value: number = 1): void {
         this.target.y = this._y - (this.height - this._h) * value;
+        this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
+        this.judgeBoundary();
         this.limitMovement();
+    }
+
+    private judgeBoundary() {
+        if (this.slider.y > this.slideSize.height) {
+            this.slider.y = this.slideSize.height;
+        }
+        if (this.slider.y < this.slideSize.y) {
+            this.slider.y = this.slideSize.y;
+        }
     }
 }

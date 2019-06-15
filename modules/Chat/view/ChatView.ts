@@ -20,7 +20,6 @@ export class ChatView extends ModuleViewBase {
     public labaButton: CheckButton;
     public voiceButton: CheckButton;
     private _inputComoboxData: IComoboxData[];
-    private _curInputCommoboxIndex: number;
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -31,9 +30,9 @@ export class ChatView extends ModuleViewBase {
 
     protected init(): void {
         this.inputEnableChildren = true;
-        this.game.add.nineSlice(0, GameConfig.GameHeight - 286, UI.Background.getName(), null, 464, 281, this);
-        this.game.add.nineSlice(10, GameConfig.GameHeight - 40, UI.InputBg.getName(), null, 368, 30, this);
-        this.out_tf = this.game.make.text(10, 0, "", {fontSize: 14, fill: "#b3b3b3", align: "left", wordWrap: true, wordWrapWidth: 420});
+        this.game.add.nineSlice(0, 0, UI.Background.getName(), null, 464, 287, this);
+        this.game.add.nineSlice(10, this.height - 40, UI.InputBg.getName(), null, 368, 29, this);
+        this.out_tf = this.game.make.text(10, 34, "", {fontSize: 14, fill: "#b3b3b3", align: "left", wordWrap: true, wordWrapWidth: 420});
         this.add(this.out_tf);
         // this.out_tf.width = 430;
         this.out_tf.events.onInputDown.add(this.test, this);
@@ -41,14 +40,14 @@ export class ChatView extends ModuleViewBase {
 
         const line = this.game.add.graphics();
         line.lineStyle(2, 0x808080);
-        line.moveTo(55, GameConfig.GameHeight - 34);
-        line.lineTo(55, GameConfig.GameHeight - 20);
+        line.moveTo(55, this.height - 34);
+        line.lineTo(55, this.height - 20);
         this.add(line);
 
-        this.input_tf = this.game.add.inputField(66, GameConfig.GameHeight - 34, {fill: "#808080", backgroundColor: "#d6d6d6", borderColor: "#d6d6d6", fontSize: 14, width: 290}, this);
+        this.input_tf = this.game.add.inputField(66, this.height - 34, {fill: "#808080", backgroundColor: "#d6d6d6", borderColor: "#d6d6d6", fontSize: 14, width: 290}, this);
         this.input_tf.focusOutOnEnter = false;
         this.input_tf.blockInput = true;
-        this.bt = new NiceSliceButton(this.game, 380, GameConfig.GameHeight - 39, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
+        this.bt = new NiceSliceButton(this.game, 380, this.height - 42, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
             top: 4,
             bottom: 4,
             left: 4,
@@ -56,12 +55,12 @@ export class ChatView extends ModuleViewBase {
         }, "发送", 12);
         this.add(this.bt);
 
-        const bounds = new Phaser.Rectangle(0, GameConfig.GameHeight - 260, 430, 220);
+        const bounds = new Phaser.Rectangle(10, 34, 430, 210);
         this.scroller = new ScrollBar(this.game, this.out_tf, this, bounds);
         // this.scroller = new ScrollArea(this.game, bounds);
         // this.scroller.add(this.out_tf);
         this.scroller.start();
-        this.add(this.scroller);
+        // this.add(this.scroller);
 
 
         this._inputComoboxData = [
@@ -70,17 +69,20 @@ export class ChatView extends ModuleViewBase {
         ];
         const outComobox = [...this._inputComoboxData];
         outComobox.unshift({ label: "全部", value: null });
-        this.comobox = new ComboBox(this.game, 0, GameConfig.GameHeight - 280, this, outComobox, 60);
-        this.selectedChanel = new ComboBox(this.game, 8, GameConfig.GameHeight - 36, this, this._inputComoboxData, 60);
+        this.comobox = new ComboBox(this.game, 0, 6, this, outComobox, 60);
+        this.selectedChanel = new ComboBox(this.game, 0, this.height - 36, this, this._inputComoboxData, 60);
 
-        this.labaButton = new CheckButton(this.game, 338 + 50, GameConfig.GameHeight - 272 - 46, UI.LabaBt.getName());
+        this.labaButton = new CheckButton(this.game, 338 + 50, -33, UI.LabaBt.getName());
         this.add(this.labaButton);
 
-        this.voiceButton = new CheckButton(this.game, 372 + 50, GameConfig.GameHeight - 272 - 46, UI.VoiceBt.getName());
+        this.voiceButton = new CheckButton(this.game, 372 + 50, -33, UI.VoiceBt.getName());
         this.add(this.voiceButton);
 
-        this.labaButton.select = false;
+        this.labaButton.select = true;
         this.voiceButton.select = false;
+
+        this.x = 8;
+        this.y = GameConfig.GameHeight - 281 - 15;
     }
 
     private test() {

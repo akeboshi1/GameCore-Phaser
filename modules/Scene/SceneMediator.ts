@@ -83,6 +83,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
         Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
         Globals.MessageCenter.on(MessageType.SHOW_CHAT_BUBBLE, this.handleShowChatBubble, this);
+        Globals.MessageCenter.on(MessageType.USER_UPDATED_VOICE_PEER, this.handleUserUpdatedVoicePeer, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -99,6 +100,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.SCENE_UPDATE_PLAYER, this.handleUpdatePlayer, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
         Globals.MessageCenter.cancel(MessageType.SHOW_CHAT_BUBBLE, this.handleShowChatBubble, this);
+        Globals.MessageCenter.cancel(MessageType.USER_UPDATED_VOICE_PEER, this.handleUserUpdatedVoicePeer, this);
 
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -210,6 +212,16 @@ export class SceneMediator extends MediatorBase {
             entity = <SceneEntity>this.view.getSceneElement(chat.receiverid);
             if (entity) {
                 entity.addBubble(chat.context, chat.chatsetting);
+            }
+        }
+    }
+
+    protected handleUserUpdatedVoicePeer(peer: any) {
+        let entity: any;
+        if (peer.uin) {
+            entity = this.view.getSceneElement(parseInt(peer.uin, 10));
+            if (entity) {
+                entity.updateVoiceIcon(peer.jitterReceived);
             }
         }
     }

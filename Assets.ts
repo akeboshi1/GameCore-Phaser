@@ -212,6 +212,24 @@ export namespace UI {
         }
     }
 
+    export class VoiceIcon {
+        static getName(): string {
+            return "voice_icon_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/voice_icon.png");
+        }
+
+        static getWidth(): number {
+            return 34;
+        }
+
+        static getHeight(): number {
+            return 34;
+        }
+    }
+
     export class MenuItemBg {
         static getName(): string {
             return "menu_item_bg_png";
