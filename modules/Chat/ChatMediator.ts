@@ -174,6 +174,7 @@ export class ChatMediator extends MediatorBase {
             if (player) chatStr += player.name + ": ";
         }
         chatStr += chat.chatContext + "\n";
+        chatStr += "asjdlk\n拉开圣诞节\n卢卡斯觉得\n";
         this.appendMessage(this._allMessage, { chat: chatStr, channel: chat.chatChannel, color: chat.chatSetting ? chat.chatSetting.textColor : this.generateHexColor() });
         this.changeMessageChannel();
     }

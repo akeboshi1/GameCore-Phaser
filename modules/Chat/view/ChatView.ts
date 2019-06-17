@@ -35,8 +35,6 @@ export class ChatView extends ModuleViewBase {
         this.out_tf = this.game.make.text(10, 34, "", {fontSize: 14, fill: "#b3b3b3", align: "left", wordWrap: true, wordWrapWidth: 420});
         this.add(this.out_tf);
         // this.out_tf.width = 430;
-        this.out_tf.events.onInputDown.add(this.test, this);
-        this.onChildInputDown.add(this.test, this);
 
         const line = this.game.add.graphics();
         line.lineStyle(2, 0x808080);
@@ -47,6 +45,7 @@ export class ChatView extends ModuleViewBase {
         this.input_tf = this.game.add.inputField(66, this.height - 34, {fill: "#808080", backgroundColor: "#d6d6d6", borderColor: "#d6d6d6", fontSize: 14, width: 290}, this);
         this.input_tf.focusOutOnEnter = false;
         this.input_tf.blockInput = true;
+        console.log(this.height);
         this.bt = new NiceSliceButton(this.game, 380, this.height - 42, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
             top: 4,
             bottom: 4,
@@ -70,7 +69,7 @@ export class ChatView extends ModuleViewBase {
         const outComobox = [...this._inputComoboxData];
         outComobox.unshift({ label: "全部", value: null });
         this.comobox = new ComboBox(this.game, 0, 6, this, outComobox, 60);
-        this.selectedChanel = new ComboBox(this.game, 0, this.height - 36, this, this._inputComoboxData, 60);
+        this.selectedChanel = new ComboBox(this.game, 10, 250, this, this._inputComoboxData, 60);
 
         this.labaButton = new CheckButton(this.game, 338 + 50, -33, UI.LabaBt.getName());
         this.add(this.labaButton);
@@ -83,10 +82,6 @@ export class ChatView extends ModuleViewBase {
 
         this.x = 8;
         this.y = GameConfig.GameHeight - 281 - 15;
-    }
-
-    private test() {
-        console.log("clicked!!!");
     }
 
     public update() {

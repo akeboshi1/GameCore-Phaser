@@ -20,6 +20,8 @@ export class ScrollBar {
     private autoScrollY: boolean;
     private inputX: number;
     private inputY: number;
+    private slideX: number;
+    private slideY: number;
     private startX: number;
     private startY: number;
     private velocityX: number;
@@ -52,6 +54,7 @@ export class ScrollBar {
 
     private slideSize: Phaser.Rectangle;
     private slider: Phaser.Sprite;
+    private slideTarget: any;
     private sliderBG: Phaser.Graphics;
     private sliderContainer: Phaser.Group;
 
@@ -151,7 +154,7 @@ export class ScrollBar {
             this.dragging = true;
             this.autoScrollY = false;
             this.target.y += this.velocityWheelY;
-            this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
+            this.updateSlide();
             this.velocityWheelY *= 0.95;
         }
 
@@ -165,7 +168,7 @@ export class ScrollBar {
         }
         if (position.y) {
             this.target.y += position.y - this._y;
-            this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
+            this.updateSlide();
             this.judgeBoundary();
             // this.maskGraphics.y = this._y = position.y;
         }
@@ -173,7 +176,7 @@ export class ScrollBar {
 
     protected init(): void {
         this._maskGraphics = this.game.make.graphics(0, 0);
-        this._maskGraphics.beginFill(0x00ffff);
+        this._maskGraphics.beginFill(0x00ffff, 0.2);
         this._maskGraphics.drawRect(this._x, this._y, this._w, this._h);
         this._maskGraphics.endFill();
         this.parent.addChild(this._maskGraphics);
@@ -189,13 +192,9 @@ export class ScrollBar {
         sliderLine.lineTo(this.slideSize.width + 10, this.slideSize.height);
         this.parent.addChild(sliderLine);
 
-        let s = this.game.make.bitmapData();
-        s.rect(0, 0, 10, 10);
-        s.fill(255, 255, 0);
-
+        this.slideX = this.slideSize.x;
+        this.slideY = this.slideSize.y;
         this.slider = this.game.make.sprite(this.slideSize.x, this.slideSize.y);
-        this.slider.width = 20;
-        this.slider.height = 60;
         this.parent.addChild(this.slider);
         let button = new NiceSliceButton(this.game, 0, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 20, 60, {
           top: 4,
@@ -203,14 +202,17 @@ export class ScrollBar {
           left: 4,
           right: 4}, "");
         this.slider.addChild(button);
-        // this.slider.inputEnabled = true;
-        this.slider.events.onDragUpdate.add(this.dragSliderHandler, this);
-        // this.slider.input.enableDrag(false, false, false, 255, new Rectangle(this.slideSize.x + 10, this.slideSize.y, 1, sliderLine.height));
-        // button.inputEnableChildren = true;
-        // console.log(this.slider.width, this.slider.height);
-        // this.slider.events.onInputDown.add (() => {
-        //   console.log("================");
-        // });
+        this.slider.inputEnabled = true;
+
+        let graphics = this.game.make.graphics();
+        graphics.beginFill(0xFF9900, 0);
+        graphics.drawRect(0, 0, button.width, button.height);
+        graphics.endFill();
+        this.slider.addChild(graphics);
+        // this.slider.events.onInputDown.halt();
+        graphics.inputEnabled = true;
+        graphics.events.onInputDown.add(this.beginSlideMove, this);
+        graphics.events.onInputUp.add(this.endSlideMove, this);
 
         this.dragging = false;
         this.pressedDown = false;
@@ -224,6 +226,9 @@ export class ScrollBar {
 
         this.inputX = 0;
         this.inputY = 0;
+
+        this.slideX = this.slideSize.x;
+        this.slideY = this.slideSize.y;
 
         this.startX = 0;
         this.startY = 0;
@@ -240,14 +245,14 @@ export class ScrollBar {
         this.velocityWheelY = 0;
     }
 
-    private dragSliderHandler(target, pointer, dragX, dragY) {
-      console.log("ee:  ", target, pointer, dragX, dragY);
-    }
-
-    protected beginMove(): void {
+    protected beginMove(target): void {
+        if (this.slideTarget === "slide") {
+            return;
+        }
         if (this.allowScrollStopOnTouch && this.scrollTween) {
             this.scrollTween.pause();
         }
+        console.log("target: ", target);
 
         if (this.game && this.game.input) {
             this.startedInside = true;
@@ -257,15 +262,31 @@ export class ScrollBar {
             this.pressedDown = true;
             this.timestamp = Date.now();
             this.velocityY = this.amplitudeY = this.velocityX = this.amplitudeX = 0;
+            this.slideTarget = "game";
+            console.log("game");
         }
         else {
             this.startedInside = false;
         }
     }
 
+    protected beginSlideMove() {
+        if (this.slider) {
+            this.startX = this.inputX = this.game.input.x;
+            this.startY = this.inputY = this.game.input.y;
+
+            this.startedInside = true;
+            this.pressedDown = true;
+            this.timestamp = Date.now();
+            this.velocityY = this.amplitudeY = this.velocityX = this.amplitudeX = 0;
+            this.slideTarget = "slide";
+            console.log("slide");
+        }
+    }
+
     protected moveCanvas(pointer: Phaser.Pointer, x: number, y: number): void {
         if (!this.pressedDown) return;
-
+        console.log("target: ", this.slideTarget);
         this.now = Date.now();
         let elapsed = this.now - this.timestamp;
         this.timestamp = this.now;
@@ -274,6 +295,7 @@ export class ScrollBar {
             let delta = x - this.startX; //Compute move distance
             if (delta !== 0) this.dragging = true;
             this.startX = x;
+            // console.log();
             this.velocityX = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * this.velocityX;
             this.target.x += delta;
         }
@@ -283,13 +305,18 @@ export class ScrollBar {
             if (delta !== 0) this.dragging = true;
             this.startY = y;
             this.velocityY = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * this.velocityY;
-            this.target.y += delta;
+            if (this.slideTarget === "game") {
+                this.target.y += delta;
+                this.updateSlide();
+                this.judgeBoundary();
+            } else {
+                this.slider.y += delta;
+                console.log("slider.y: ", this.slider.y, delta);
+                this.updateTarget();
+                this.judgeBoundary();
+            }
 
             // this.slider.y += delta;
-            this.slider.y = (this.startY / this.target.height) * this.slideSize.height;
-            // this.judgeBoundary();
-
-            console.log(this.target.y);
         }
 
         // this.limitMovement();
@@ -338,7 +365,12 @@ export class ScrollBar {
                 //     }
                 // }
             }
+            this.slideTarget = null;
         }
+    }
+
+    protected endSlideMove() {
+        this.slideTarget = null;
     }
 
     protected mouseWheel(event: any): void {
@@ -391,8 +423,8 @@ export class ScrollBar {
                 else {
                     this.target.y = this._y;
                 }
-                this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
-                this.judgeBoundary();
+                // this.updateSlide();
+                // this.judgeBoundary();
             }
         }
 
@@ -410,17 +442,27 @@ export class ScrollBar {
 
     public scroll(value: number = 1): void {
         this.target.y = this._y - (this.height - this._h) * value;
-        this.slider.y = (this.velocityY / this.target.height) * this.slideSize.height;
+        this.updateSlide();
         this.judgeBoundary();
         this.limitMovement();
     }
 
     private judgeBoundary() {
-        if (this.slider.y > this.slideSize.height) {
-            this.slider.y = this.slideSize.height;
+        if (this.slider.y > this.slideSize.height - 60) {
+            this.slider.y = this.slideSize.height - 60;
         }
         if (this.slider.y < this.slideSize.y) {
             this.slider.y = this.slideSize.y;
         }
+    }
+
+    private updateSlide() {
+        let height = Math.abs(this.target.y) - this.slideSize.y;
+        this.slider.y = (height / (this.target.height - this.slideSize.height)) * (this.slideSize.height);
+    }
+
+    private updateTarget() {
+        this.target.y = -((this.slider.y / (this.slideSize.height) * this.target.height) + this.slideSize.y);
+        console.log(this.target.y);
     }
 }

@@ -41,7 +41,7 @@ export class StorageListItem extends ListItemComponent implements IListItemCompo
     }
 
     protected render(): void {
-        if (this.m_Icon) {
+        if (this.m_Icon && this.data.display) {
             this.m_Icon.load(this.data.display.texturePath, this);
         }
     }

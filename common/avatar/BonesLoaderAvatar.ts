@@ -526,31 +526,44 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
             if (this.armatureDisplay.armature) {
                 // console.log(this.armatureDisplay.armature.children);
                 // let sprite = this.game.make.sprite(-30, -100);
-                this.mHeadBitmapData = this.mHeadBitmapData.draw(this.armatureDisplay.armature, -30, -70, 164, 164);
+                // this.mHeadBitmapData = this.mHeadBitmapData.draw(this.armatureDisplay.armature, -30, -70, 164, 164);
                 // sprite.loadTexture(this.mHeadBitmapData);
                 // this.add(sprite);
 
+                let children = this.armatureDisplay.armature.children;
+                for (const child of children) {
+                    child.x += 30;
+                    child.y += 70;
+                }
+
                 // console.log(this.armatureDisplay.armature.generateTexture());
 
-                // this.mHeadBitmapData = this.mHeadBitmapData.drawFull(this.armatureDisplay.armature);
-                let sprite = this.game.make.sprite(0, 0);
-                // this.add(sprite);
+                this.mHeadBitmapData = this.mHeadBitmapData.drawFull(this.armatureDisplay.armature);
+                let sprite = this.game.make.sprite(-30, -60);
+                sprite.loadTexture(this.mHeadBitmapData);
+                this.add(sprite);
 
-                let image = this.game.make.image(-30, -30);
-                let bmd = this.game.make.bitmapData(30, 30);
-                bmd.circle(0, 0, 15, "#FFFF00");
-                image.loadTexture(this.armatureDisplay.armature.texture);
-                sprite.addChild(image);
+                // for (const child of children) {
+                //     child.x -= 30;
+                //     child.y -= 70;
+                // }
+                this.armatureDisplay.armature.updateTransform();
 
-                let image2 = this.game.make.image(-30, -10);
-                let bmd2 = this.game.make.bitmapData(30, 30);
-                bmd2.circle(0, 0, 30);
-                image2.loadTexture(bmd2);
-                sprite.addChild(image2);
+                // let image = this.game.make.image(-30, -30);
+                // let bmd = this.game.make.bitmapData(30, 30);
+                // bmd.circle(0, 0, 15, "#FFFF00");
+                // image.loadTexture(this.armatureDisplay.armature.texture);
+                // sprite.addChild(image);
 
-                let sp = this.game.make.sprite(-20, -40);
-                sp.loadTexture(this.mHeadBitmapData);
-                this.add(sp);
+                // let image2 = this.game.make.image(-30, -10);
+                // let bmd2 = this.game.make.bitmapData(30, 30);
+                // bmd2.circle(0, 0, 30);
+                // image2.loadTexture(bmd2);
+                // sprite.addChild(image2);
+
+                // let sp = this.game.make.sprite(-20, -40);
+                // sp.loadTexture(this.mHeadBitmapData);
+                // this.add(sp);
 
                 // let graphics = this.game.make.graphics();
                 // graphics.beginFill(0xFFFF00, 0.6);
