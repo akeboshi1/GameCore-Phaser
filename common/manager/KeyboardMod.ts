@@ -40,7 +40,7 @@ export class KeyboardMod extends BaseSingleton {
 
         let codeList: number[] = [Phaser.Keyboard.ENTER, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.W, Phaser.Keyboard.A, Phaser.Keyboard.S, Phaser.Keyboard.D,
             Phaser.Keyboard.B, Phaser.Keyboard.F, Phaser.Keyboard.ONE, Phaser.Keyboard.TWO, Phaser.Keyboard.THREE, Phaser.Keyboard.FOUR, Phaser.Keyboard.FIVE, Phaser.Keyboard.SIX, Phaser.Keyboard.SEVEN,
-            Phaser.Keyboard.EIGHT, Phaser.Keyboard.NINE, Phaser.Keyboard.ZERO, Phaser.Keyboard.UNDERSCORE, Phaser.Keyboard.EQUALS];
+            Phaser.Keyboard.EIGHT, Phaser.Keyboard.NINE, Phaser.Keyboard.ZERO, Phaser.Keyboard.UNDERSCORE, Phaser.Keyboard.EQUALS, Phaser.KeyCode.F2];
 
         let len = codeList.length;
         let code: number;

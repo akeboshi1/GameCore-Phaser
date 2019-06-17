@@ -174,7 +174,7 @@ export class ChatMediator extends MediatorBase {
             if (player) chatStr += player.name + ": ";
         }
         chatStr += chat.chatContext + "\n";
-        chatStr += "asjdlk\n拉开圣诞节\n卢卡斯觉得\n";
+        // chatStr += "asjdlk\n拉开圣诞节\n卢卡斯觉得\n";
         this.appendMessage(this._allMessage, { chat: chatStr, channel: chat.chatChannel, color: chat.chatSetting ? chat.chatSetting.textColor : this.generateHexColor() });
         this.changeMessageChannel();
     }
@@ -240,8 +240,8 @@ export class ChatMediator extends MediatorBase {
         let colorIndex = 0;
         for (let i = 0; i < len; i++) {
             message = showMessage[i];
-            colorIndex += message.chat.length;
             this.view.appendMessage(message.chat, message.color, colorIndex);
+            colorIndex += message.chat.length;
         }
         // this.view.out_tf.text += chatStr;
         this.view.scroller.scroll();

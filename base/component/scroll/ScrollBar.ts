@@ -20,8 +20,6 @@ export class ScrollBar {
     private autoScrollY: boolean;
     private inputX: number;
     private inputY: number;
-    private slideX: number;
-    private slideY: number;
     private startX: number;
     private startY: number;
     private velocityX: number;
@@ -55,8 +53,9 @@ export class ScrollBar {
     private slideSize: Phaser.Rectangle;
     private slider: Phaser.Sprite;
     private slideTarget: any;
-    private sliderBG: Phaser.Graphics;
-    private sliderContainer: Phaser.Group;
+    private slideLine: Phaser.Graphics;
+    private slideButton: Phaser.Graphics;
+    private slideNineButton: NiceSliceButton;
 
     constructor(game: Phaser.Game, target: PIXI.DisplayObjectContainer, parent: PIXI.DisplayObjectContainer, rect: Phaser.Rectangle, slideSize?: Phaser.Rectangle, params?: any, ) {
         this.game = game;
@@ -175,6 +174,11 @@ export class ScrollBar {
     }
 
     protected init(): void {
+        if (this._maskGraphics) {
+            this.parent.removeChild(this._maskGraphics);
+            this._maskGraphics.destroy();
+            this._maskGraphics = null;
+        }
         this._maskGraphics = this.game.make.graphics(0, 0);
         this._maskGraphics.beginFill(0x00ffff, 0.2);
         this._maskGraphics.drawRect(this._x, this._y, this._w, this._h);
@@ -185,15 +189,24 @@ export class ScrollBar {
 
         this.slideSize = new Phaser.Rectangle(this._x + this._w, this._y, this._x + this._w, this._y + this._h);
 
-        let sliderLine = this.game.make.graphics();
-        sliderLine.clear();
-        sliderLine.lineStyle(2, 0x808080);
-        sliderLine.moveTo(this.slideSize.x + 10,  this.slideSize.y);
-        sliderLine.lineTo(this.slideSize.width + 10, this.slideSize.height);
-        this.parent.addChild(sliderLine);
+        if (this.slideLine) {
+            this.slideLine.clear();
+            this.parent.removeChild(this.slideLine);
+            this.slideLine = null;
+        }
+        this.slideLine = this.game.make.graphics();
+        this.slideLine.clear();
+        this.slideLine.lineStyle(2, 0x808080);
+        this.slideLine.moveTo(this.slideSize.x + 10,  this.slideSize.y);
+        this.slideLine.lineTo(this.slideSize.width + 10, this.slideSize.height);
+        this.parent.addChild(this.slideLine);
 
-        this.slideX = this.slideSize.x;
-        this.slideY = this.slideSize.y;
+        if (this.slider) {
+            this.parent.removeChild(this.slider);
+            this.slider.destroy();
+            this.slider = null;
+        }
+
         this.slider = this.game.make.sprite(this.slideSize.x, this.slideSize.y);
         this.parent.addChild(this.slider);
         let button = new NiceSliceButton(this.game, 0, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 20, 60, {
@@ -204,15 +217,14 @@ export class ScrollBar {
         this.slider.addChild(button);
         this.slider.inputEnabled = true;
 
-        let graphics = this.game.make.graphics();
-        graphics.beginFill(0xFF9900, 0);
-        graphics.drawRect(0, 0, button.width, button.height);
-        graphics.endFill();
-        this.slider.addChild(graphics);
-        // this.slider.events.onInputDown.halt();
-        graphics.inputEnabled = true;
-        graphics.events.onInputDown.add(this.beginSlideMove, this);
-        graphics.events.onInputUp.add(this.endSlideMove, this);
+        this.slideButton = this.game.make.graphics();
+        this.slideButton.beginFill(0xFF9900, 0);
+        this.slideButton.drawRect(0, 0, button.width, button.height);
+        this.slideButton.endFill();
+        this.slider.addChild(this.slideButton);
+        this.slideButton.inputEnabled = true;
+        this.slideButton.events.onInputDown.add(this.beginSlideMove, this);
+        this.slideButton.events.onInputUp.add(this.endSlideMove, this);
 
         this.dragging = false;
         this.pressedDown = false;
@@ -226,9 +238,6 @@ export class ScrollBar {
 
         this.inputX = 0;
         this.inputY = 0;
-
-        this.slideX = this.slideSize.x;
-        this.slideY = this.slideSize.y;
 
         this.startX = 0;
         this.startY = 0;
@@ -447,6 +456,27 @@ export class ScrollBar {
         this.limitMovement();
     }
 
+    public resize(rect: Phaser.Rectangle, slideSize?: Phaser.Rectangle) {
+        this._x = rect.x;
+        this._y = rect.y;
+        this._w = rect.width;
+        this._h = rect.height;
+        this.slideSize = slideSize;
+        this.init();
+    }
+
+    private makeSlide() {
+        
+    }
+
+    private drawMaskRect() {
+        if (!this._maskGraphics) return;
+        this._maskGraphics.clear();
+        this._maskGraphics.beginFill(0x00ffff, 0.2);
+        this._maskGraphics.drawRect(this._x, this._y, this._w, this._h);
+        this._maskGraphics.endFill();
+    }
+
     private judgeBoundary() {
         if (this.slider.y > this.slideSize.height - 60) {
             this.slider.y = this.slideSize.height - 60;
@@ -458,11 +488,10 @@ export class ScrollBar {
 
     private updateSlide() {
         let height = Math.abs(this.target.y) - this.slideSize.y;
-        this.slider.y = (height / (this.target.height - this.slideSize.height)) * (this.slideSize.height);
+        this.slider.y = (height / (this.target.height)) * (this.slideSize.height) + this.slideSize.y;
     }
 
     private updateTarget() {
-        this.target.y = -((this.slider.y / (this.slideSize.height) * this.target.height) + this.slideSize.y);
-        console.log(this.target.y);
+        this.target.y = -((this.slider.y / (this.slideSize.height) * (this.target.height)) - this.slideSize.y);
     }
 }

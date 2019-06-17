@@ -59,6 +59,9 @@ export default class Game extends Phaser.Game implements IGame {
 
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
     Globals.SocketManager.send(pkt);
+
+    this.onFocus.add(this.onFocusHandl, this);
+    this.onBlur.add(this.onBlurHandl, this);
   }
 
   public update(value: number): void {
@@ -95,5 +98,12 @@ export default class Game extends Phaser.Game implements IGame {
     this.cache.destroy();
     this.destroy();
     Globals.game = null;
+  }
+
+  private onFocusHandl() {
+
+  }
+
+  private onBlurHandl() {
   }
 }
