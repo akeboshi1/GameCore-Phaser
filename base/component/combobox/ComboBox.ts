@@ -32,6 +32,12 @@ export class ComboBox extends Phaser.Group implements IDisposeObject {
         this.render();
     }
 
+    public setLabelStyle(style: Phaser.PhaserTextStyle, update?: boolean) {
+        if (this.mLabel) {
+            this.mLabel.setStyle(style, update);
+        }
+    }
+
     protected init(): void {
         // this.game.add.nineSlice(0, 0, UI.Background.getName(), null, this.mWidth, this.mHeight, this);
         this.mLabel = this.game.make.text(0, 0, "", {fontSize: 12, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"} );

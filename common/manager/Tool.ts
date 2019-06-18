@@ -172,4 +172,10 @@ export class Tool extends BaseSingleton {
         text.setText(this.chunk(context, wrapWidth).join(" "));
     }
 
+    public formatChineseString(context: string, fontSize: number | string, lineWidth: number) {
+        if (typeof fontSize === "string") fontSize = parseInt(fontSize, 10);
+        let wrapWidth = Math.floor(lineWidth / fontSize);
+        return this.chunk(context, wrapWidth).join(" ");
+    }
+
 }

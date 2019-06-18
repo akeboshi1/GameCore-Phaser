@@ -116,6 +116,9 @@ export class ChatMediator extends MediatorBase {
         if (this._inRoom) {
             GMEApi.EnableMic(value);
         }
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS);
+        const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS = pkt.content;
+        Globals.SocketManager.send(pkt);
     }
 
     public exitRoom(): void {
@@ -203,7 +206,8 @@ export class ChatMediator extends MediatorBase {
             if (player) chatStr += player.name + ": ";
         }
         chatStr += chat.chatContext + "\n";
-        this.appendMessage(this._allMessage, { chat: chatStr, channel: chat.chatChannel, color: chat.chatSetting.textColor ? chat.chatSetting.textColor : "#FFFFFF" });
+        let chinese = Globals.Tool.formatChineseString(chatStr, this.view.out_tf.fontSize, this.view.out_tf.wordWrapWidth);
+        this.appendMessage(this._allMessage, { chat: chinese, channel: chat.chatChannel, color: chat.chatSetting.textColor ? chat.chatSetting.textColor : "#FFFFFF" });
         this.changeMessageChannel();
     }
 
