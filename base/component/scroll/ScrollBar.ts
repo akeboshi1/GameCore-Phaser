@@ -495,6 +495,7 @@ export class ScrollBar {
     }
 
     private updateTarget() {
-        this.target.y = -((this.slider.y / (this.slideSize.height) * (this.target.height)));
+        const rate = (this.slider.y + this.slideSize.y) / (this._h);
+        this.target.y = this.slideSize.y + rate * (this.target.height);
     }
 }
