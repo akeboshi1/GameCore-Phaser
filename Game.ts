@@ -103,14 +103,14 @@ export default class Game extends Phaser.Game implements IGame {
   private onFocusHandl() {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
     let context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
-    context.gameStatus = op_virtual_world.GameStatus.Focus;
+    context.gameStatus = op_client.GameStatus.Focus;
     Globals.SocketManager.send(pkt);
   }
 
   private onBlurHandl() {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
     let context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
-    context.gameStatus = op_virtual_world.GameStatus.Blur;
+    context.gameStatus = op_client.GameStatus.Blur;
     Globals.SocketManager.send(pkt);
   }
 }

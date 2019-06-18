@@ -126,7 +126,7 @@ export class ChatMediator extends MediatorBase {
         GMEApi.ExitRoom();
         this._inRoom = false;
 
-        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId, op_virtual_world.VoiceRoomStatus.OutsideVoiceRoom);
+        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId, op_client.VoiceRoomStatus.OutsideVoiceRoom);
     }
 
     public enterRoom(): void {
@@ -136,10 +136,10 @@ export class ChatMediator extends MediatorBase {
         GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
         this._inRoom = true;
 
-        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, roomId, op_virtual_world.VoiceRoomStatus.InVoiceRoom);
+        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, roomId, op_client.VoiceRoomStatus.InVoiceRoom);
     }
 
-    private sendVoiceRoomStatus(voiceChannel: op_client.ChatChannel, voiceRoomId: number, voiceRoomStatus: op_virtual_world.VoiceRoomStatus) {
+    private sendVoiceRoomStatus(voiceChannel: op_client.ChatChannel, voiceRoomId: number, voiceRoomStatus: op_client.VoiceRoomStatus) {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS);
         const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS = pkt.content;
         context.voiceChannel = voiceChannel;
