@@ -44,7 +44,7 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
 
     }
 
-    public updateVoiceIcon(jitterReceived: number) {
+    public updateVoiceIcon(jitterReceived: boolean) {
         (<RoleBonesAvatar>this.display).setVoiceIcon(jitterReceived);
     }
 

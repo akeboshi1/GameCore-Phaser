@@ -48,14 +48,14 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.updateVoiceIcon();
     }
 
-    public setVoiceIcon(jitterReceived: number) {
+    public setVoiceIcon(jitterReceived: boolean) {
         if (!!this.mVoiceIcon === false) {
             this.createVoiceIcon();
         }
-        if (this.mVoiceIcon.visible === false && jitterReceived > 0) {
+        if (this.mVoiceIcon.visible === false && jitterReceived === true) {
             this.mVoiceIcon.visible = true;
             this.mVoiceIcon.animations.play("idle", 16, true);
-        } else if (this.mVoiceIcon.visible === true && jitterReceived <= 0) {
+        } else if (this.mVoiceIcon.visible === true && jitterReceived === false) {
             this.mVoiceIcon.visible = false;
             this.mVoiceIcon.animations.stop();
         }

@@ -20,6 +20,8 @@ export class MessageType {
     public static CHAT_TO = "chat_to";
     public static SHOW_CHAT_BUBBLE = "show_chat_bubble";
     public static PROMPT_ALERT = "prompt_alert";
+    public static CHARACTER_TALING = "characterTaling";
+    public static CHARACTER_SHUT_UP = "characterShutUp";
 
     /// never start
     public static QCLOUD_AUTH = "qcloud_auth";

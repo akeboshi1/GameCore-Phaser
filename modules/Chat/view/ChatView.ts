@@ -10,6 +10,7 @@ import "../../../web-rtc-service";
 import { op_client } from "pixelpai_proto";
 import { ScrollBar } from "../../../base/component/scroll/ScrollBar";
 import { Button } from "phaser-ce";
+import Globals from "../../../Globals";
 
 export class ChatView extends ModuleViewBase {
     private _background: PhaserNineSlice.NineSlice;
@@ -41,18 +42,19 @@ export class ChatView extends ModuleViewBase {
         this._background = this.game.add.nineSlice(0, 0, UI.Background.getName(), null, 464, 287, this);
         this._inputBackground = this.game.add.nineSlice(0, 0, UI.InputBg.getName(), null, 368, 29, this._inputGroup);
         this.out_tf = this.game.make.text(10, 34, "", {fontSize: 14, fill: "#FFF", align: "left", wordWrap: true, wordWrapWidth: 420});
+        this.out_tf.stroke = "#000000";
+        this.out_tf.strokeThickness = 1;
         this.add(this.out_tf);
         this.add(this._inputGroup);
         // this.out_tf.width = 430;
 
         const line = this.game.add.graphics();
         line.lineStyle(2, 0x808080);
-        line.moveTo(55, 2);
-        line.lineTo(55, 22);
+        line.moveTo(55, 3);
+        line.lineTo(55, 23);
         this._inputGroup.add(line);
 
-
-        this.input_tf = this.game.add.inputField(66, 4, {fill: "#808080", backgroundColor: "#d6d6d6", borderColor: "#d6d6d6", fontSize: 14, width: 290}, this._inputGroup);
+        this.input_tf = this.game.add.inputField(66, 5, {fill: "#808080", backgroundColor: "#dfdfdf", borderColor: "#dfdfdf", fontSize: 14, width: 290}, this._inputGroup);
         this.input_tf.focusOutOnEnter = false;
         this.input_tf.blockInput = true;
         this.bt = new NiceSliceButton(this.game, 380, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
@@ -79,18 +81,20 @@ export class ChatView extends ModuleViewBase {
         this.comobox = new ComboBox(this.game, 0, 6, this, outComobox, 60);
         this.selectedChanel = new ComboBox(this.game, 4, 4, this._inputGroup, this._inputComoboxData, 60);
 
-        this.labaButton = new CheckButton(this.game, 338 + 50, -28, UI.LabaBt.getName());
+        this.labaButton = new CheckButton(this.game, 338 + 50, -34, UI.LabaBt.getName());
         this.add(this.labaButton);
 
-        this.voiceButton = new CheckButton(this.game, 372 + 50, -28, UI.VoiceBt.getName());
+        this.voiceButton = new CheckButton(this.game, 372 + 50, -34, UI.VoiceBt.getName());
+        this.voiceButton.inputEnabled = false;
         this.add(this.voiceButton);
 
         this.labaButton.select = true;
         this.voiceButton.select = false;
 
+        this._inputGroup.x = 6;
+        this._inputGroup.y = 287 - 29 - 6;
         this.x = 8;
-        this.y = GameConfig.GameHeight - this.height - 15;
-        this._inputGroup.y = 287 - this._inputGroup.height - 15;
+        this.y = GameConfig.GameHeight - 287 - 6;
     }
 
     public update() {

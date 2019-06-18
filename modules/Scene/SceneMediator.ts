@@ -84,6 +84,8 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
         Globals.MessageCenter.on(MessageType.SHOW_CHAT_BUBBLE, this.handleShowChatBubble, this);
         Globals.MessageCenter.on(MessageType.USER_UPDATED_VOICE_PEER, this.handleUserUpdatedVoicePeer, this);
+        Globals.MessageCenter.on(MessageType.CHARACTER_TALING, this.characterTaling, this);
+        Globals.MessageCenter.on(MessageType.CHARACTER_SHUT_UP, this.characterShutUp, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -221,7 +223,27 @@ export class SceneMediator extends MediatorBase {
         if (peer.uin) {
             entity = this.view.getSceneElement(parseInt(peer.uin, 10));
             if (entity) {
-                entity.updateVoiceIcon(peer.jitterReceived);
+                entity.updateVoiceIcon(true);
+            }
+        }
+    }
+
+    protected characterTaling(context: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHARACTER_TALKING) {
+        let entity: any;
+        if (context) {
+            entity = this.view.getSceneElement(context.id);
+            if (entity) {
+                entity.updateVoiceIcon(true);
+            }
+        }
+    }
+
+    protected characterShutUp(context: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHARACTER_SHUT_UP) {
+        let entity: any;
+        if (context) {
+            entity = this.view.getSceneElement(context.id);
+            if (entity) {
+                entity.updateVoiceIcon(false);
             }
         }
     }

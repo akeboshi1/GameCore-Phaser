@@ -34,12 +34,14 @@ export class ChatMediator extends MediatorBase {
 
         (<any>this.view.input_tf).domElement.element.addEventListener("keydown", this.sayHello.bind(this));
         this.view.labaButton.onCallBack(this.handleLaba, this);
-        this.view.voiceButton.onCallBack(this.handleVoice, this);
+        // this.view.voiceButton.onCallBack(this.handleVoice, this);
         this.view.comobox.onSelectedItem.add(this.changeMessageChannel, this);
 
         super.onRegister();
 
         // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
+        Globals.Keyboard.addListenerKeyDown(Phaser.Keyboard.F2, this.startVoice, this);
+        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.F2, this.stopVoice, this);
 
         this.handleInitPlayer();
     }
@@ -110,6 +112,7 @@ export class ChatMediator extends MediatorBase {
             this.view.voiceButton.select = false;
             return;
         }
+        this.view.voiceButton.select = value;
         if (this._inRoom) {
             GMEApi.EnableMic(value);
         }
@@ -119,6 +122,8 @@ export class ChatMediator extends MediatorBase {
         GMEApi.EnableMic(false);
         GMEApi.ExitRoom();
         this._inRoom = false;
+
+        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId, op_virtual_world.VoiceRoomStatus.OutsideVoiceRoom);
     }
 
     public enterRoom(): void {
@@ -127,6 +132,17 @@ export class ChatMediator extends MediatorBase {
         let roomId = Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId;
         GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
         this._inRoom = true;
+
+        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, roomId, op_virtual_world.VoiceRoomStatus.InVoiceRoom);
+    }
+
+    private sendVoiceRoomStatus(voiceChannel: op_client.ChatChannel, voiceRoomId: number, voiceRoomStatus: op_virtual_world.VoiceRoomStatus) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS);
+        const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS = pkt.content;
+        context.voiceChannel = voiceChannel;
+        context.voiceRoomId = voiceRoomId;
+        context.voiceRoomStatus = voiceRoomStatus;
+        Globals.SocketManager.send(pkt);
     }
 
     private sayHello(event) {
@@ -141,7 +157,17 @@ export class ChatMediator extends MediatorBase {
         } else if (event.keyCode === Phaser.Keyboard.DOWN) {
             this._historyIndex++;
             this.showHistoryChat(this._historyIndex);
+        } else if (event.keyCode === Phaser.Keyboard.F2) {
+            this.handleVoice(true);
         }
+    }
+
+    private stopVoice() {
+        this.handleVoice(false);
+    }
+
+    private startVoice() {
+        this.handleVoice(true);
     }
 
     private onHandleChangeChatRoom(): void {
@@ -161,8 +187,11 @@ export class ChatMediator extends MediatorBase {
 
         (<any>this.view.input_tf).domElement.element.removeEventListener("keydown", this.sayHello.bind(this));
         this.view.labaButton.cancelCallBack(this.handleLaba, this);
-        this.view.voiceButton.cancelCallBack(this.handleVoice, this);
+        // this.view.voiceButton.cancelCallBack(this.handleVoice, this);
         this.view.selectedChanel.onSelectedItem.remove(this.changeMessageChannel, this);
+
+        Globals.Keyboard.removeListenerKeyDown(Phaser.Keyboard.F2, this.startVoice, this);
+        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.F2, this.stopVoice, this);
 
         super.onRemove();
     }
@@ -174,8 +203,7 @@ export class ChatMediator extends MediatorBase {
             if (player) chatStr += player.name + ": ";
         }
         chatStr += chat.chatContext + "\n";
-        // chatStr += "asjdlk\n拉开圣诞节\n卢卡斯觉得\n";
-        this.appendMessage(this._allMessage, { chat: chatStr, channel: chat.chatChannel, color: chat.chatSetting ? chat.chatSetting.textColor : this.generateHexColor() });
+        this.appendMessage(this._allMessage, { chat: chatStr, channel: chat.chatChannel, color: chat.chatSetting.textColor ? chat.chatSetting.textColor : "#FFFFFF" });
         this.changeMessageChannel();
     }
 
@@ -184,10 +212,6 @@ export class ChatMediator extends MediatorBase {
         if (ary.length > this._maxMessageNum) {
             ary.shift();
         }
-    }
-
-    private generateHexColor() {
-        return "#" + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
     }
 
     private onHandleQcloudAuth(value: string): void {
@@ -224,12 +248,6 @@ export class ChatMediator extends MediatorBase {
             clearTimeout(this._timeout);
             this._timeout = 0;
         }, this._chatCD);
-
-        // Globals.MessageCenter.emit(MessageType.USER_UPDATED_VOICE_PEER, { uin: 269852194, jitterReceived: 1 });
-
-        // setTimeout(() => {
-        //     Globals.MessageCenter.emit(MessageType.USER_UPDATED_VOICE_PEER, { uin: 269852194, jitterReceived: 0 });
-        // }, 5000);
     }
 
     private changeMessageChannel() {
@@ -243,7 +261,6 @@ export class ChatMediator extends MediatorBase {
             this.view.appendMessage(message.chat, message.color, colorIndex);
             colorIndex += message.chat.length;
         }
-        // this.view.out_tf.text += chatStr;
         this.view.scroller.scroll();
     }
 
