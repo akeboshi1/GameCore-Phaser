@@ -1,8 +1,10 @@
 import { BubbleElement } from "./BubbleElement";
 import { op_client } from "pixelpai_proto";
+import { UI } from "../../../Assets";
 
 export class BubbleContainer extends Phaser.Group {
   private _bubbles: BubbleElement[];
+  private _arrowImage: Phaser.Image;
   constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer) {
     super(game, parent);
     this._bubbles = [];
@@ -17,7 +19,16 @@ export class BubbleContainer extends Phaser.Group {
       ele = this._bubbles[i];
       height += ele.height + 5;
       ele.startTween(-height);
-      // this.game.add.tween(this._bubbles[i]).to({ y: -height, alpha: 1}, 200, Phaser.Easing.Sinusoidal.InOut, true);
+    }
+    if (!!this._arrowImage === false) {
+      this.createArrowImage();
+    }
+   this.visible = true;
+  }
+
+  public hideBubble() {
+    for (const bubble of this._bubbles) {
+      bubble.removeTween();
     }
   }
 
@@ -28,6 +39,9 @@ export class BubbleContainer extends Phaser.Group {
     this._bubbles = this._bubbles.filter(val => bubble !== val);
     this.remove(bubble);
     bubble.destroy();
+    if (this._bubbles.length <= 0) {
+      this.visible = false;
+    }
   }
 
   private createBubble(text: string, bubble: op_client.IChat_Setting) {
@@ -37,6 +51,14 @@ export class BubbleContainer extends Phaser.Group {
     this._bubbles.push(bubbleEle);
     let duration = bubble.duration ? bubble.duration : 5000;
     bubbleEle.durationRemove(duration, this.removeBubble, this);
+  }
+
+  private createArrowImage() {
+    if (this._arrowImage) {
+      this._arrowImage.destroy();
+    }
+    this._arrowImage = this.game.make.image(0 - this.x, -2, UI.ArrowDown.getName());
+    this.add(this._arrowImage);
   }
 
   public destroy() {

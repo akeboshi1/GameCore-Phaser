@@ -86,6 +86,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.USER_UPDATED_VOICE_PEER, this.handleUserUpdatedVoicePeer, this);
         Globals.MessageCenter.on(MessageType.CHARACTER_TALING, this.characterTaling, this);
         Globals.MessageCenter.on(MessageType.CHARACTER_SHUT_UP, this.characterShutUp, this);
+        Globals.MessageCenter.on(MessageType.REMOVE_CHAT_BUBBLE, this.handleRemoveBubble, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -103,6 +104,10 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.SCENE_REMOVE_PLAYER, this.handleRemovePlayer, this);
         Globals.MessageCenter.cancel(MessageType.SHOW_CHAT_BUBBLE, this.handleShowChatBubble, this);
         Globals.MessageCenter.cancel(MessageType.USER_UPDATED_VOICE_PEER, this.handleUserUpdatedVoicePeer, this);
+        Globals.MessageCenter.cancel(MessageType.CHARACTER_TALING, this.characterTaling, this);
+        Globals.MessageCenter.cancel(MessageType.CHARACTER_SHUT_UP, this.characterShutUp, this);
+        Globals.MessageCenter.cancel(MessageType.REMOVE_CHAT_BUBBLE, this.handleRemoveBubble, this);
+
 
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
     }
@@ -214,6 +219,16 @@ export class SceneMediator extends MediatorBase {
             entity = <SceneEntity>this.view.getSceneElement(chat.receiverid);
             if (entity) {
                 entity.addBubble(chat.context, chat.chatsetting);
+            }
+        }
+    }
+
+    protected handleRemoveBubble(bubble: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN): void {
+        let entity: SceneEntity;
+        if (bubble.receiverid) {
+            entity = <SceneEntity>this.view.getSceneElement(bubble.receiverid);
+            if (entity) {
+                entity.removeBubble();
             }
         }
     }

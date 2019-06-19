@@ -1,6 +1,6 @@
 import Globals from "../../Globals";
 import {op_client} from "pixelpai_proto";
-import {PBpacket} from "net-socket-packet";
+import {PBpacket, Packet} from "net-socket-packet";
 import BaseSingleton from "../../base/BaseSingleton";
 import {MessageType} from "../const/MessageType";
 import {BasePacketHandler} from "./BasePacketHandler";
@@ -43,6 +43,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN_END, this.handleServerAddTerrainEnd);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.handlerAddBubble);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.handleBubbleClean);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHARACTER_TALKING, this.handleTalking);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHARACTER_SHUT_UP, this.handleShutUp);
         // Editor
@@ -89,6 +90,11 @@ class Handler extends BasePacketHandler {
     private handlerAddBubble(packet: PBpacket) {
         const bubble: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
         Globals.MessageCenter.emit(MessageType.SHOW_CHAT_BUBBLE, bubble);
+    }
+
+    private handleBubbleClean(packet: PBpacket) {
+        const bubble: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
+        Globals.MessageCenter.emit(MessageType.REMOVE_CHAT_BUBBLE, bubble);
     }
 
     private handleTalking(packet: PBpacket) {

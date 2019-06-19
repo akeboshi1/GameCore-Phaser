@@ -92,6 +92,9 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     frameWidth: UI.VoiceIcon.getWidth(),
                     frameHeight: UI.VoiceIcon.getHeight()
                 }];
+                imageResource = [
+                    {key: UI.ArrowDown.getName(), png: UI.ArrowDown.getPNG()}
+                ];
                 break;
             case ModuleTypeEnum.SHORTCUTMENU:
                 imageResource = [{

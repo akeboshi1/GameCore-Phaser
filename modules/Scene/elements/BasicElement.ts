@@ -3,7 +3,7 @@ import {ElementInfo} from "../../../common/struct/ElementInfo";
 import {BasicElementAvatar} from "../../../common/avatar/BasicElementAvatar";
 import SceneEntity from "../view/SceneEntity";
 import {IAnimatedObject} from "../../../base/IAnimatedObject";
-import {op_gameconfig} from "pixelpai_proto";
+import {op_gameconfig, op_client} from "pixelpai_proto";
 import {Const} from "../../../common/const/Const";
 
 export default class BasicElement extends SceneEntity {
@@ -74,6 +74,10 @@ export default class BasicElement extends SceneEntity {
 
   public set selected(value: boolean) {
     this.display.Loader.tint = value ? 0x7878ff : 16777215;
+  }
+
+  public addBubble(text: string, bubble: op_client.IChat_Setting) {
+    super.addBubble(text, bubble, 1);
   }
 
   protected onDisplayLoadCompleted(): void {

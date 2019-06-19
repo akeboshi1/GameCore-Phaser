@@ -190,8 +190,12 @@ export default class SceneEntity extends BasicSceneEntity {
         this.setPosition(_x, _y, _z);
     }
 
-    public addBubble(text: string, bubble: op_client.IChat_Setting) {
-        (<BasicAvatar>this.display).addBubble(text, bubble);
+    public addBubble(text: string, bubble: op_client.IChat_Setting, offsetX?: number, offsetY?: number) {
+        (<BasicAvatar>this.display).addBubble(text, bubble, offsetX, offsetY);
+    }
+
+    public removeBubble() {
+        (<BasicAvatar>this.display).removeBubble();
     }
 
     protected checkIsValidDisplayAvatar(): void {

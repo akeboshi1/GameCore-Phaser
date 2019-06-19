@@ -16,8 +16,8 @@ export class BubbleElement extends Phaser.Group {
   }
 
   public showText(text: string, bubble: op_client.IChat_Setting) {
-    this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12, wordWrap: true, wordWrapWidth: 600 });
-    Globals.Tool.formatChinese(this.chat_content, 600);
+    this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12, wordWrap: true, wordWrapWidth: 320 });
+    Globals.Tool.formatChinese(this.chat_content, 320);
     this.add(this.chat_content);
 
     this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 18);
@@ -39,6 +39,7 @@ export class BubbleElement extends Phaser.Group {
   }
 
   public removeTween() {
+    clearTimeout(this._removeDelay);
     const endY = this._y - 50;
     const tween = this.game.add.tween(this).to({ y: endY, alpha: 0 }, 200, Phaser.Easing.Sinusoidal.InOut, true);
     tween.onComplete.addOnce(() => {
