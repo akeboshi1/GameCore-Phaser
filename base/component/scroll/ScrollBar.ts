@@ -489,13 +489,12 @@ export class ScrollBar {
             this.slider.visible = false;
             return;
         }
-        // let height = Math.abs(this.target.y) - (this.target.height - this._h);
         let height = Math.abs(this.target.y - this.slideSize.y);
         this.slider.y = (height / (this.target.height - this._h)) * (this.slideSize.height) + this.slideSize.y;
     }
 
     private updateTarget() {
-        const rate = (this.slider.y + this.slideSize.y) / (this._h);
-        this.target.y = this.slideSize.y + rate * (this.target.height);
+        const rate = (this.slider.y - this.slideSize.y) / (this._h - 60);
+        this.target.y = this.slideSize.y + (0 - rate * (this.target.height - this._h));
     }
 }
