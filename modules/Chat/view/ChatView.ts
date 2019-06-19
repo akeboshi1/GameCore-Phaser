@@ -27,7 +27,7 @@ export class ChatView extends ModuleViewBase {
     private _switchSize: Button;
     private _inputGroup: Phaser.Group;
     private _curSizeIndex = 1;
-    private readonly _sizeList: number[] = [144, 287, 530];
+    private readonly _sizeList: number[] = [530, 287, 144];
 
     constructor(game: Phaser.Game) {
         super(game);
@@ -62,7 +62,8 @@ export class ChatView extends ModuleViewBase {
             bottom: 4,
             left: 4,
             right: 4
-        }, "发送", 12);
+        }, "发送", 14);
+        this.bt.setLabelOffset(0, 3);
         this._inputGroup.add(this.bt);
 
         this._switchSize = this.game.make.button(440, 8, UI.DropDownBtn.getName(), this.onSwitchSizeHandle, this);
@@ -96,7 +97,7 @@ export class ChatView extends ModuleViewBase {
         this._inputGroup.x = 6;
         this._inputGroup.y = 287 - 29 - 6;
         this.x = 8;
-        this.y = GameConfig.GameHeight - 287 - 6;
+        this.y = GameConfig.GameHeight - 287 - 9;
     }
 
     public update() {
@@ -171,6 +172,6 @@ export class ChatView extends ModuleViewBase {
         this._inputGroup.y = this._sizeList[this._curSizeIndex] - this._inputGroup.height - 15;
 
         this.x = 8;
-        this.y = GameConfig.GameHeight - this._sizeList[this._curSizeIndex] - 15;
+        this.y = GameConfig.GameHeight - this._sizeList[this._curSizeIndex] - 9;
     }
 }

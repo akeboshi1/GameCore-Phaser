@@ -409,8 +409,8 @@ export class ScrollBar {
                 else {
                     this.target.y = this._y;
                 }
-                // this.updateSlide();
-                // this.judgeBoundary();
+                this.updateSlide();
+                this.judgeBoundary();
             }
         }
 

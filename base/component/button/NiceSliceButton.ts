@@ -91,6 +91,15 @@ export class NiceSliceButton extends Phaser.Group {
         }
     }
 
+    public setLabelOffset(x?: number, y?: number) {
+        if (x) {
+            this.mText.x += x;
+        }
+        if (y) {
+            this.mText.y += y;
+        }
+    }
+
     protected init(): void {
         this.addEvent();
     }
