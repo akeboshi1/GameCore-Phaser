@@ -4,6 +4,7 @@ import {op_virtual_world, op_client} from "pixelpai_proto";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT;
 import { Tick } from "../tick/Tick";
+import { LayerManager } from "./LayerManager";
 
 export class MouseMod extends BaseSingleton {
     private game: Phaser.Game;
@@ -33,16 +34,23 @@ export class MouseMod extends BaseSingleton {
 
     public init(game: Phaser.Game): void {
         this.game = game;
-        this.activePointer = this.game.input.activePointer;
-        this.input = this.game.input;
-        if (this.activePointer) {
-          this.activePointer.leftButton.onDown.add(this.keyDownHandle, this);
-          this.activePointer.leftButton.onUp.add(this.keyUpHandle, this);
-          this.activePointer.middleButton.onDown.add(this.keyDownHandle, this);
-          this.activePointer.middleButton.onUp.add(this.keyUpHandle, this);
-          this.activePointer.rightButton.onDown.add(this.keyDownHandle, this);
-          this.activePointer.rightButton.onUp.add(this.keyUpHandle, this);
-          this.resume();
+        // this.activePointer = this.game.input.activePointer;
+        // this.input = this.game.input;
+        // if (this.activePointer) {
+        //   this.activePointer.leftButton.onDown.add(this.keyDownHandle, this);
+        //   this.activePointer.leftButton.onUp.add(this.keyUpHandle, this);
+        //   this.activePointer.middleButton.onDown.add(this.keyDownHandle, this);
+        //   this.activePointer.middleButton.onUp.add(this.keyUpHandle, this);
+        //   this.activePointer.rightButton.onDown.add(this.keyDownHandle, this);
+        //   this.activePointer.rightButton.onUp.add(this.keyUpHandle, this);
+        //   this.resume();
+        // }
+        const scene = Globals.LayerManager.sceneLayer;
+        if (scene) {
+            this.resume();
+            scene.inputEnableChildren = true;
+            scene.onChildInputDown.add(this.onDownScene, this);
+            scene.onChildInputUp.add(this.onUpScene, this);
         }
 
         if (this.input) {
@@ -53,6 +61,16 @@ export class MouseMod extends BaseSingleton {
         this.mTick = new Tick();
         this.mTick.setCallBack(this.onTick, this);
         this.mTick.start();
+    }
+
+    private onDownScene(target, point) {
+        this.activePointer = point;
+        this.onUpdate();
+    }
+
+    private onUpScene(target, point) {
+        this.activePointer = point;
+        this.onUpdate();
     }
 
     private running = false;

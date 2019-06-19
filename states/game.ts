@@ -14,14 +14,14 @@ export default class Game extends Phaser.State {
         Globals.SoundManager.init(this.game);
         Globals.TickManager.init(this.game);
         Globals.TimeManager.init();
-        if (!GameConfig.isEditor) {
-          Globals.Keyboard.init(this.game);
-          Globals.MouseMod.init(this.game);
-        }
         Globals.LayerManager.init(this.game);
         Globals.LayoutManager.init(this.game);
         Globals.DragManager.init(this.game);
         Globals.LoaderManager.init(this.game);
+        if (!GameConfig.isEditor) {
+            Globals.Keyboard.init(this.game);
+            Globals.MouseMod.init(this.game);
+        }
 
         if (!GameConfig.isEditor) {
             Globals.ModuleManager.openModule(ModuleTypeEnum.NOTICE);
