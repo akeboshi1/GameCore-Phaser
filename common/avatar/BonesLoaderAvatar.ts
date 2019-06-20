@@ -522,69 +522,22 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
 
     public get headBitmapdata(): Phaser.BitmapData {
         if (!!this.mHeadBitmapData === false) {
-            this.mHeadBitmapData = this.game.make.bitmapData(64, 64);
-            if (this.armatureDisplay.armature) {
-                // console.log(this.armatureDisplay.armature.children);
-                // let sprite = this.game.make.sprite(-30, -100);
-                // this.mHeadBitmapData = this.mHeadBitmapData.draw(this.armatureDisplay.armature, -30, -70, 164, 164);
-                // sprite.loadTexture(this.mHeadBitmapData);
-                // this.add(sprite);
+            // this.mHeadBitmapData = this.game.make.bitmapData(64, 64);
+            // if (this.armatureDisplay.armature) {
+            //     let children = this.armatureDisplay.armature.children;
+            //     for (const child of children) {
+            //         console.log((<any>child).generateTexture());
+            //         child.x += 30;
+            //         child.y += 70;
+            //     }
+            //      this.armatureDisplay.armature.updateTransform();
 
-                // let children = this.armatureDisplay.armature.children;
-                // for (const child of children) {
-                //     console.log((<any>child).generateTexture());
-                //     child.x += 30;
-                //     child.y += 70;
-                // }
+            //     this.mHeadBitmapData = this.mHeadBitmapData.drawFull(this.armatureDisplay.armature);
+            //     let sprite = this.game.make.sprite(-30, -60);
+            //     sprite.loadTexture(this.mHeadBitmapData);
+            //     this.add(sprite);
 
-                // let renderTexture = this.game.make.renderTexture(100, 100, this.armatureDisplay.armature);
-                // renderTexture.render(this.armatureDisplay.armature);
-
-                // console.log(this.armatureDisplay.armature.generateTexture());
-
-                // this.mHeadBitmapData = this.mHeadBitmapData.drawFull(this);
-                // let sprite = this.game.make.sprite(-30, -60);
-                // sprite.loadTexture(this.mHeadBitmapData);
-                // this.add(sprite);
-
-                // for (const child of children) {
-                //     child.x -= 30;
-                //     child.y -= 70;
-                // }
-                // this.armatureDisplay.armature.updateTransform();
-
-                // let image = this.game.make.image(-30, -30);
-                // let bmd = this.game.make.bitmapData(30, 30);
-                // bmd.circle(0, 0, 15, "#FFFF00");
-                // image.loadTexture(this.armatureDisplay.armature.texture);
-                // sprite.addChild(image);
-
-                // let image2 = this.game.make.image(-30, -10);
-                // let bmd2 = this.game.make.bitmapData(30, 30);
-                // bmd2.circle(0, 0, 30);
-                // image2.loadTexture(bmd2);
-                // sprite.addChild(image2);
-
-                // let sp = this.game.make.sprite(-20, -40);
-                // sp.loadTexture(this.mHeadBitmapData);
-                // this.add(sp);
-
-                // let graphics = this.game.make.graphics();
-                // graphics.beginFill(0xFFFF00, 0.6);
-                // graphics.drawRect(-30, -76, 164, 164);
-                // graphics.endFill();
-                // this.add(graphics);
-                // graphics.mask = this.armatureDisplay.armature.armature.display.mask;
-                // this.mHeadBitmapData.draw();
-
-                // let sprite = this.game.make.sprite(0, 0);
-                // this.mHeadBitmapData.circle(0, 0, 100);
-                // this.mHeadBitmapData = this.mHeadBitmapData.copyRect(graphics.generateTexture(), new Rectangle(-30, -76, 64, 64), 0, 0);
-                // this.mHeadBitmapData.drawFull(this.armatureDisplay.armature);
-                // sprite.loadTexture(this.mHeadBitmapData);
-                // this.add(sprite);
-                // this.mHeadBitmapData.copyRect(graphics, new Rectangle(4, 1, 64, 64), 0, 0);
-            }
+            // }
         }
         return this.mHeadBitmapData;
     }

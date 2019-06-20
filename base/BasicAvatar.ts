@@ -59,7 +59,9 @@ export class BasicAvatar extends Phaser.Plugin.Isometric.IsoSprite implements IA
     }
 
     public removeBubble() {
-        this.mBubble.hideBubble();
+        if (this.mBubble) {
+            this.mBubble.hideBubble();
+        }
     }
 
     // IAnimatedObject Interface

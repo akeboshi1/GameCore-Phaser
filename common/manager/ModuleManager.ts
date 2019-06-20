@@ -233,6 +233,11 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                         {key: UI.InputBg.getName(), png: UI.InputBg.getPNG(), top: 4, left: 4, right: 4, bottom: 4}
                     ];
                 break;
+            case ModuleTypeEnum.SHOP:
+                // nineSliceImageResource = [{
+                //     key: 
+                // }]
+                break;
         }
 
         if (nineSliceImageResource) {
