@@ -1,5 +1,6 @@
 import NineSliceCacheData = PhaserNineSlice.NineSliceCacheData;
 import {CustomWebFonts} from "../../../Assets";
+import { op_gameconfig_01 } from "pixelpai_proto";
 
 export class NiceSliceButton extends Phaser.Group {
     protected mOverFrame: PhaserNineSlice.NineSlice;
@@ -9,6 +10,7 @@ export class NiceSliceButton extends Phaser.Group {
     protected signals: { [name: string]: Phaser.Signal } = {};
     protected m_Width: number;
     protected m_Height: number;
+    protected m_Node: op_gameconfig_01.INode;
 
     constructor(game: Phaser.Game, x: number, y: number, key: string, overFrame: string, outFrame: string, downFrame: string, width: number, height: number, data?: NineSliceCacheData, text?: string, fontSize?: number) {
         super(game);
@@ -146,6 +148,14 @@ export class NiceSliceButton extends Phaser.Group {
         this.mOutFrame.visible = true;
         this.mDownFrame.visible = false;
         this.emit("up");
+    }
+
+    public set node(node: op_gameconfig_01.INode) {
+        this.m_Node = node;
+    }
+
+    public get node(): op_gameconfig_01.INode {
+        return this.m_Node;
     }
 
     public destroy(destroyChildren?: boolean): void {

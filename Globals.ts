@@ -65,12 +65,12 @@ export default class Globals {
     return LayerManager.getInstance();
   }
 
-    /**
-     * 加载管理器
-     */
-    public static get LoaderManager(): LoaderManager {
-        return LoaderManager.getInstance();
-    }
+  /**
+   * 加载管理器
+   */
+  public static get LoaderManager(): LoaderManager {
+      return LoaderManager.getInstance();
+  }
 
   /**
    * 缓存管理器

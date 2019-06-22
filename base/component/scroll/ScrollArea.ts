@@ -167,7 +167,7 @@ export class ScrollArea extends Phaser.Group {
         this._maskGraphics.endFill();
         this.add(this._maskGraphics);
         // this._maskGraphics.inputEnabled = true;
-        // this.mask = this._maskGraphics;
+        this.mask = this._maskGraphics;
 
         this.dragging = false;
         this.pressedDown = false;

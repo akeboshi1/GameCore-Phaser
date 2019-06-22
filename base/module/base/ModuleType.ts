@@ -17,4 +17,5 @@ export class ModuleTypeEnum {
     public static VOTERESULT = "VoteResult"; // 投票
     public static NOTICE = "Notice"; //跑马灯公告
     public static SHOP = "Shop"; //内购商城
+    public static MESSAGE_BOX = "MessageBox"; //弹窗
 }

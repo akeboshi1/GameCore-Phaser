@@ -85,5 +85,7 @@ export class MessageType {
     public static SHOW_NOTICE = "show_notice";
     public static USER_UPDATED_VOICE_PEER = "user_updated_voice_peer";
     public static HIDE_VOICE = "hide_voice";
+
+    public static QUERY_PACKAGE = "query_package";
 }
 

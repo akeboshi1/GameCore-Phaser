@@ -52,14 +52,4 @@ export class BubbleElement extends Phaser.Group {
   public get locY(): number {
     return this._y;
   }
-
-  public destroy() {
-    if (this.bg) {
-      this.bg.destroy();
-    }
-    if (this.headImage) {
-      this.headImage.destroy();
-    }
-    super.destroy();
-  }
 }

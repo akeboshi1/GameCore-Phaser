@@ -546,6 +546,16 @@ export namespace UI {
             return 10;
         }
     }
+
+    export class ShopTitle {
+        static getName(): string {
+            return "ui_shop_shop_title_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/shop/shop_title.png");
+        }
+    }
 }
 
 export namespace CustomWebFonts {

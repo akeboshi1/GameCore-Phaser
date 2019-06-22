@@ -137,7 +137,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     top: 29,
                     left: 13,
                     right: 13,
-                    bottom: 7
+                    bottom: 11
                 }];
                 imageResource = [{
                     key: UI.BagItemBg.getName(),
@@ -166,7 +166,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     top: 29,
                     left: 13,
                     right: 13,
-                    bottom: 7
+                    bottom: 11
                 }];
                 imageResource = [{
                     key: UI.BagItemBg.getName(),
@@ -183,7 +183,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     top: 29,
                     left: 13,
                     right: 13,
-                    bottom: 7
+                    bottom: 11
                 }];
                 atlasResource = [{
                     key: UI.Button.getName(),
@@ -234,9 +234,21 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     ];
                 break;
             case ModuleTypeEnum.SHOP:
-                // nineSliceImageResource = [{
-                //     key: 
-                // }]
+                    nineSliceImageResource = [{
+                        key: UI.BagBg.getName(),
+                        png: UI.BagBg.getPNG(),
+                        top: 29,
+                        left: 13,
+                        right: 13,
+                        bottom: 11
+                    }];
+                    imageResource = [{
+                        key: UI.BagItemBg.getName(),
+                        png: UI.BagItemBg.getPNG()
+                    }, {
+                        key: UI.ShopTitle.getName(),
+                        png: UI.ShopTitle.getPNG()
+                    }];
                 break;
         }
 
