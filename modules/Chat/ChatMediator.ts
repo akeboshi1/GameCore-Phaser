@@ -2,7 +2,7 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {ChatView} from "./view/ChatView";
 import Globals from "../../Globals";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world} from "pixelpai_proto";
+import {op_client, op_virtual_world, op_def} from "pixelpai_proto";
 import {MessageType} from "../../common/const/MessageType";
 import IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT = op_virtual_world.IOP_GATEWAY_REQ_VIRTUAL_WORLD_CHAT;
 import OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_QCLOUD_GME_AUTHBUFFER;
@@ -126,7 +126,7 @@ export class ChatMediator extends MediatorBase {
         GMEApi.ExitRoom();
         this._inRoom = false;
 
-        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId, op_client.VoiceRoomStatus.OutsideVoiceRoom);
+        this.sendVoiceRoomStatus(op_def.ChatChannel.CurrentScene, Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId, op_def.VoiceRoomStatus.OutsideVoiceRoom);
     }
 
     public enterRoom(): void {
@@ -136,10 +136,10 @@ export class ChatMediator extends MediatorBase {
         GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
         this._inRoom = true;
 
-        this.sendVoiceRoomStatus(op_client.ChatChannel.CurrentScene, roomId, op_client.VoiceRoomStatus.InVoiceRoom);
+        this.sendVoiceRoomStatus(op_def.ChatChannel.CurrentScene, roomId, op_def.VoiceRoomStatus.InVoiceRoom);
     }
 
-    private sendVoiceRoomStatus(voiceChannel: op_client.ChatChannel, voiceRoomId: number, voiceRoomStatus: op_client.VoiceRoomStatus) {
+    private sendVoiceRoomStatus(voiceChannel: op_def.ChatChannel, voiceRoomId: number, voiceRoomStatus: op_def.VoiceRoomStatus) {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS);
         const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS = pkt.content;
         context.voiceChannel = voiceChannel;
@@ -255,7 +255,7 @@ export class ChatMediator extends MediatorBase {
     }
 
     private changeMessageChannel() {
-        let showMessage = this._allMessage.filter(message => message.channel === this.view.outChannel || message.channel === op_client.ChatChannel.System || this.view.outChannel === null);
+        let showMessage = this._allMessage.filter(message => message.channel === this.view.outChannel || message.channel === op_def.ChatChannel.System || this.view.outChannel === null);
         const len = showMessage.length;
         this.view.clearOutTf();
         let message: IMessage = null;
@@ -282,6 +282,6 @@ export class ChatMediator extends MediatorBase {
 
 export interface IMessage {
     chat: string;
-    channel: op_client.ChatChannel;
+    channel: op_def.ChatChannel;
     color: string;
 }

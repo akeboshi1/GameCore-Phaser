@@ -7,7 +7,7 @@ import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
 import {ComboBox, IComoboxData} from "../../../base/component/combobox/ComboBox";
 import {CheckButton} from "../../../base/component/button/CheckButton";
 import "../../../web-rtc-service";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { ScrollBar } from "../../../base/component/scroll/ScrollBar";
 import { Button } from "phaser-ce";
 import Globals from "../../../Globals";
@@ -74,8 +74,8 @@ export class ChatView extends ModuleViewBase {
         this.scroller.start();
 
         this._inputComoboxData = [
-            { label: "世界", value: op_client.ChatChannel.World },
-            { label: "场景", value: op_client.ChatChannel.CurrentScene },
+            { label: "世界", value: op_def.ChatChannel.World },
+            { label: "场景", value: op_def.ChatChannel.CurrentScene },
         ];
         const outComobox = [...this._inputComoboxData];
         outComobox.unshift({ label: "全部", value: null });
@@ -122,18 +122,18 @@ export class ChatView extends ModuleViewBase {
         this.input_tf.setText(v);
     }
 
-    public get outChannel(): op_client.ChatChannel {
+    public get outChannel(): op_def.ChatChannel {
         if (this.comobox) {
             return this.comobox.selectedItem.value;
         }
-        return op_client.ChatChannel.CurrentScene;
+        return op_def.ChatChannel.CurrentScene;
     }
 
-    public get inputChannel(): op_client.ChatChannel {
+    public get inputChannel(): op_def.ChatChannel {
         if (this.selectedChanel) {
             return this.selectedChanel.selectedItem.value;
         }
-        return op_client.ChatChannel.CurrentScene;
+        return op_def.ChatChannel.CurrentScene;
     }
 
     public changedChannel() {

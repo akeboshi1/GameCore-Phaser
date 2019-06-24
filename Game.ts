@@ -16,7 +16,7 @@ import {MessageType} from "./common/const/MessageType";
 import {GameConfig} from "./GameConfig";
 import SelectRole from "./states/selectrole";
 import {PBpacket} from "net-socket-packet";
-import {op_virtual_world, op_client} from "pixelpai_proto";
+import {op_virtual_world, op_client, op_def} from "pixelpai_proto";
 import {IRectangle} from "./base/ds/IRectangle";
 
 export default class Game extends Phaser.Game implements IGame {
@@ -103,14 +103,14 @@ export default class Game extends Phaser.Game implements IGame {
   private onFocusHandl() {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
     let context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
-    context.gameStatus = op_client.GameStatus.Focus;
+    context.gameStatus = op_def.GameStatus.Focus;
     Globals.SocketManager.send(pkt);
   }
 
   private onBlurHandl() {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
     let context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
-    context.gameStatus = op_client.GameStatus.Blur;
+    context.gameStatus = op_def.GameStatus.Blur;
     Globals.SocketManager.send(pkt);
   }
 }

@@ -1,6 +1,6 @@
 import {BasicSceneEntity} from "../../../base/BasicSceneEntity";
-import {op_client} from "pixelpai_proto";
-import Direction = op_client.Direction;
+import {op_client, op_def} from "pixelpai_proto";
+import Direction = op_def.Direction;
 import { BasicAvatar } from "../../../base/BasicAvatar";
 
 export default class SceneEntity extends BasicSceneEntity {
