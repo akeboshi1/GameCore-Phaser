@@ -74,7 +74,7 @@ export default class Game extends Phaser.Game implements IGame {
   public resize(bounds: IRectangle): void {
     GameConfig.GameWidth = bounds.width;
     GameConfig.GameHeight = bounds.height;
-    this.scale.setGameSize(bounds.width, bounds.height);
+    if (this.scale) this.scale.setGameSize(bounds.width, bounds.height);
     // Log.trace(this.camera.x, this.camera.y);
     Globals.MessageCenter.emit(MessageType.CLIENT_RESIZE);
   }

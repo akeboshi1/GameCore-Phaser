@@ -140,14 +140,14 @@ export class NiceSliceButton extends Phaser.Group {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = false;
         this.mDownFrame.visible = true;
-        this.emit("down");
+        this.emit("down", this);
     }
 
     private handleUp(): void {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = true;
         this.mDownFrame.visible = false;
-        this.emit("up");
+        this.emit("up", this);
     }
 
     public set node(node: op_gameconfig_01.INode) {

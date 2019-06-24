@@ -105,6 +105,7 @@ export class ShortcutMenuMediator extends MediatorBase {
             item.setEnable(false);
             Globals.DragManager.unRegisterDrop(item.icon);
             item.onDispose();
+            this.view.m_List.removeItem(item);
         }
         this.view.m_List.onClear();
     }

@@ -18,6 +18,7 @@ import {ShareObjectCacheManager} from "./common/manager/ShareObjectCacheManager"
 import {DragManager} from "./base/drag/DragManager";
 import {TimeManager} from "./common/manager/TimeManager";
 import {LoaderManager} from "./common/manager/LoaderManager";
+import { ToolTipManager } from "./base/component/tooltip/ToolTipManager";
 
 export default class Globals {
   private static _game: Phaser.Game;
@@ -51,12 +52,12 @@ export default class Globals {
     return ModuleManager.getInstance();
   }
 
-    /**
-     * 拖拽管理
-     */
-    public static get DragManager(): DragManager {
-      return DragManager.getInstance();
-    }
+  /**
+   * 拖拽管理
+   */
+  public static get DragManager(): DragManager {
+    return DragManager.getInstance();
+  }
 
   /**
    * 图层管理器
@@ -172,4 +173,7 @@ export default class Globals {
     return ObjectPoolManager.getInstance();
   }
 
+  public static get ToolTipManager(): ToolTipManager {
+    return ToolTipManager.getInstance();
+  }
 }

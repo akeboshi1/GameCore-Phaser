@@ -2,6 +2,8 @@ import { ListItemComponent } from "../../../base/component/list/core/ListItemCom
 import { IListItemComponent } from "../../../base/component/list/interfaces/IListItemComponent";
 import { UI } from "../../../Assets";
 import { BaseIcon } from "../../../base/component/icon/BaseIcon";
+import Globals from "../../../Globals";
+import { ToolTip } from "../../../base/component/tooltip/ToolTip";
 
 export class ShopListItem extends ListItemComponent implements IListItemComponent {
   protected m_icon: BaseIcon;
@@ -18,6 +20,7 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
     this.m_icon.x = 26;
     this.m_icon.y = 26;
     this.addChild(this.m_icon);
+    Globals.ToolTipManager.setToolTip(this, new ToolTip(this.game));
     super.init();
   }
 
@@ -33,5 +36,10 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
     if (this.m_icon && this.data && this.data.display) {
       this.m_icon.load(this.data.display.texturePath, this);
     }
+  }
+
+  public destroy() {
+    Globals.ToolTipManager.setToolTip(this, null);
+    super.destroy();
   }
 }

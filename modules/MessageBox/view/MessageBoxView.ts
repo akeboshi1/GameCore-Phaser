@@ -17,7 +17,6 @@ export class MessageBoxView extends CommWindowModuleView {
 
   protected init() {
     super.init();
-    super.init();
     this.setTitle("提示");
     // this.m_OkBt.onChildInputUp.add(this.onCloseClick, this);
 
@@ -33,14 +32,15 @@ export class MessageBoxView extends CommWindowModuleView {
 
     let bt_w: number = 46;
     let bt_h: number = 24;
-    for (const button of buttons) {
-      const btn = new NiceSliceButton(this.game, (this.width - bt_w) >> 1, this.height - bt_h - 5, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", bt_w, bt_h, {
+    const w = (this.width) / (buttons.length + 1);
+    for (let i = 0; i < buttons.length; i++) {
+      const btn = new NiceSliceButton(this.game, (i + 1) * w - (bt_w >> 1) , this.height - bt_h - 5, UI.Button.getName(), "button_over.png", "button_out.png", "button_down.png", bt_w, bt_h, {
           top: 7,
           bottom: 7,
           left: 7,
           right: 7
-      }, button.text);
-      btn.node = btn.node;
+      }, buttons[i].text);
+      btn.node = buttons[i].node;
       this.add(btn);
       this.mButtons.push(btn);
     }
