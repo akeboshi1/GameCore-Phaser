@@ -1,6 +1,6 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {PBpacket} from "net-socket-packet";
-import {op_virtual_world, op_client} from "pixelpai_proto";
+import {op_virtual_world, op_client, op_def} from "pixelpai_proto";
 import Globals from "../../Globals";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT;
 import { Tick } from "../tick/Tick";
@@ -125,10 +125,10 @@ export class MouseMod extends BaseSingleton {
         if (this.game.input.mousePointer.isDown && 
             ((this.mLastX - currentX) ** 2 + (this.mLastY - currentY) ** 2) > this.minimumDistance) {
                 if (this.game.input.activePointer.leftButton.isDown && this.l_h) {
-                    events.push(op_client.MouseEvent.LeftMouseHolding);
+                    events.push(op_def.MouseEvent.LeftMouseHolding);
                 }
                 if (this.game.input.activePointer.rightButton.isDown && this.r_h) {
-                    events.push(op_client.MouseEvent.LeftMouseHolding);
+                    events.push(op_def.MouseEvent.LeftMouseHolding);
                 }
                 this.mLastX = currentX;
                 this.mLastY = currentY;
@@ -154,29 +154,29 @@ export class MouseMod extends BaseSingleton {
         let events: number[] = [];
         if (this.activePointer.leftButton.isDown) {
             this.l_d = true;
-            events.push(op_client.MouseEvent.LeftMouseDown);
+            events.push(op_def.MouseEvent.LeftMouseDown);
         } else if (this.activePointer.leftButton.isUp && this.l_d) {
             this.l_d = false;
             this.l_h = false;
-            events.push(op_client.MouseEvent.LeftMouseUp);
+            events.push(op_def.MouseEvent.LeftMouseUp);
         }
 
         if (this.activePointer.middleButton.isDown) {
             this.m_d = true;
-            events.push(op_client.MouseEvent.WheelDown);
+            events.push(op_def.MouseEvent.WheelDown);
         } else if (this.activePointer.middleButton.isUp && this.m_d) {
             this.m_d = false;
             this.m_h = false;
-            events.push(op_client.MouseEvent.WheelUp);
+            events.push(op_def.MouseEvent.WheelUp);
         }
 
         if (this.activePointer.rightButton.isDown) {
             this.r_d = true;
-            events.push(op_client.MouseEvent.RightMouseDown);
+            events.push(op_def.MouseEvent.RightMouseDown);
         } else if (this.activePointer.rightButton.isUp && this.r_d) {
             this.r_d = false;
             this.r_h = false;
-            events.push(op_client.MouseEvent.RightMouseUp);
+            events.push(op_def.MouseEvent.RightMouseUp);
         }
 
         if (events.length === 0) {
