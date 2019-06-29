@@ -122,6 +122,11 @@ export class ComboBox extends Phaser.Group implements IDisposeObject {
         this.mSelectedItem = this.mDatas[index];
     }
 
+    public setSelectedData(item: any) {
+        this.mLabel.text = item.label;
+        this.mSelectedItem = item;
+    }
+
     public set selectedItem(item: ComboTextItem) {
         this.mLabel.text = item.data.label;
         this.mSelectedItem = item;

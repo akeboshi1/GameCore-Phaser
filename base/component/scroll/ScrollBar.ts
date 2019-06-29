@@ -55,7 +55,7 @@ export class ScrollBar {
     private slideTarget: any;
     private slideLine: Phaser.Graphics;
     private slideButton: Phaser.Graphics;
-    private slideNineButton: NiceSliceButton;
+    public  changeIndex: Phaser.Signal;
 
     constructor(game: Phaser.Game, target: PIXI.DisplayObjectContainer, parent: PIXI.DisplayObjectContainer, rect: Phaser.Rectangle, slideSize?: Phaser.Rectangle, params?: any, ) {
         this.game = game;
@@ -66,6 +66,7 @@ export class ScrollBar {
         this._w = rect.width;
         this._h = rect.height;
         this.slideSize = slideSize;
+        this.changeIndex = new Phaser.Signal();
         if (params) {
             this.configure(params);
         }
@@ -99,6 +100,7 @@ export class ScrollBar {
 
     public stop(): void {
         if (this.game && this.game.input) {
+            if (this.pressedDown) this.endMove();
             this.game.input.onDown.remove(this.beginMove, this);
 
             this.game.input.deleteMoveCallback(this.moveCanvas, this);
@@ -238,7 +240,6 @@ export class ScrollBar {
         if (this.allowScrollStopOnTouch && this.scrollTween) {
             this.scrollTween.pause();
         }
-        console.log("target: ", target);
 
         if (this.game && this.game.input) {
             this.startedInside = true;
@@ -249,7 +250,6 @@ export class ScrollBar {
             this.timestamp = Date.now();
             this.velocityY = this.amplitudeY = this.velocityX = this.amplitudeX = 0;
             this.slideTarget = "game";
-            console.log("game");
         }
         else {
             this.startedInside = false;
@@ -266,13 +266,11 @@ export class ScrollBar {
             this.timestamp = Date.now();
             this.velocityY = this.amplitudeY = this.velocityX = this.amplitudeX = 0;
             this.slideTarget = "slide";
-            console.log("slide");
         }
     }
 
     protected moveCanvas(pointer: Phaser.Pointer, x: number, y: number): void {
         if (!this.pressedDown) return;
-        console.log("target: ", this.slideTarget);
         this.now = Date.now();
         let elapsed = this.now - this.timestamp;
         this.timestamp = this.now;
@@ -281,7 +279,6 @@ export class ScrollBar {
             let delta = x - this.startX; //Compute move distance
             if (delta !== 0) this.dragging = true;
             this.startX = x;
-            // console.log();
             this.velocityX = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * this.velocityX;
             this.target.x += delta;
         }
@@ -297,7 +294,6 @@ export class ScrollBar {
                 this.judgeBoundary();
             } else {
                 this.slider.y += delta;
-                console.log("slider.y: ", this.slider.y, delta);
                 this.updateTarget();
                 this.judgeBoundary();
             }
@@ -491,10 +487,14 @@ export class ScrollBar {
         }
         let height = Math.abs(this.target.y - this.slideSize.y);
         this.slider.y = (height / (this.target.height - this._h)) * (this.slideSize.height) + this.slideSize.y;
+        const rate = (this.slider.y - this.slideSize.y) / (this._h - 60);
+        this.changeIndex.dispatch(rate);
     }
 
     private updateTarget() {
         const rate = (this.slider.y - this.slideSize.y) / (this._h - 60);
+        // console.log(0 - rate * (this.target.height - this._h));
         this.target.y = this.slideSize.y + (0 - rate * (this.target.height - this._h));
+        this.changeIndex.dispatch(rate);
     }
 }

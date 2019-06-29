@@ -83,6 +83,7 @@ export class ChatView extends ModuleViewBase {
         this.comobox.setLabelStyle({font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b3b3b3", boundsAlignH: "center", boundsAlignV: "middle"});
         this.selectedChanel = new ComboBox(this.game, 4, 4, this._inputGroup, this._inputComoboxData, 60);
         this.selectedChanel.setLabelStyle({font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#808080", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.selectedChanel.setSelectedData(this._inputComoboxData[1]);
 
         this.labaButton = new CheckButton(this.game, 338 + 50, -34, UI.LabaBt.getName());
         this.add(this.labaButton);
@@ -98,6 +99,10 @@ export class ChatView extends ModuleViewBase {
         this._inputGroup.y = 287 - 29 - 6;
         this.x = 8;
         this.y = GameConfig.GameHeight - 287 - 9;
+
+        this.onChildInputOver.add(this.inputOverHanlder, this);
+
+        this.onChildInputOut.add(this.inputOutHandler, this);
     }
 
     public update() {
@@ -173,5 +178,17 @@ export class ChatView extends ModuleViewBase {
 
         this.x = 8;
         this.y = GameConfig.GameHeight - this._sizeList[this._curSizeIndex] - 9;
+    }
+
+    private inputOverHanlder() {
+        this.scroller.start();
+    }
+
+    private inputOutHandler(target, pointer) {
+        const curHeight = this._sizeList[this._curSizeIndex];
+        if ((pointer.x > this.x + this.width || pointer.x < this.x) ||
+            (pointer.y > this.y + curHeight || pointer.y < this.y)) {
+            this.scroller.stop();
+        }
     }
 }

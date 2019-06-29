@@ -62,6 +62,7 @@ export class ChatMediator extends MediatorBase {
             switch (event) {
                 case GMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
                     console.log(`[GME]: EnterRoom >> ${result}`);
+                    GMEApi.EnableMic(false);
                     break;
                 case GMEApi.event.ITMG_MAIN_EVNET_TYPE_USER_UPDATE:
                     console.log(`Info: 发送码率: ${result.UploadBRSend} | RTT: ${result.UploadRTT} -- Peer: ${JSON.stringify(result.PeerInfo)}`);
@@ -222,9 +223,9 @@ export class ChatMediator extends MediatorBase {
         this.authBuffer = value;
         if (this.view.labaButton.select) {
             this.enterRoom();
-            if (this.view.voiceButton.select) {
-                GMEApi.EnableMic(true);
-            }
+            // if (this.view.voiceButton.select) {
+            //     GMEApi.EnableMic(true);
+            // }
         }
     }
 

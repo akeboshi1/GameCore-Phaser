@@ -556,6 +556,26 @@ export namespace UI {
             return require("assets/images/ui/shop/shop_title.png");
         }
     }
+
+    export class TuDing18 {
+        static getName(): string {
+            return "ui_shop_tuding_18_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/shop/tuding_18.png");
+        }
+    }
+
+    export class TuDing22 {
+        static getName(): string {
+            return "ui_shop_tuding_22_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/shop/tuding_22.png");
+        }
+    }
 }
 
 export namespace CustomWebFonts {

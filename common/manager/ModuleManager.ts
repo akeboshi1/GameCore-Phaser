@@ -248,6 +248,12 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     }, {
                         key: UI.ShopTitle.getName(),
                         png: UI.ShopTitle.getPNG()
+                    }, {
+                        key: UI.TuDing18.getName(),
+                        png: UI.TuDing18.getPNG()
+                    }, {
+                        key: UI.TuDing22.getName(),
+                        png: UI.TuDing22.getPNG()
                     }];
                 break;
         }
