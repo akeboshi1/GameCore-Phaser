@@ -9,7 +9,15 @@ export class CheckButton extends Phaser.Sprite {
     protected init(): void {
         this.select = false;
         this.inputEnabled = true;
+        this.addInput();
+    }
+
+    public addInput() {
         this.events.onInputDown.add(this.handleDown, this);
+    }
+
+    public removeInput() {
+        this.events.onInputDown.remove(this.handleDown, this);
     }
 
     public onCallBack(callback: Function, context?: any): void {

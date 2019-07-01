@@ -90,6 +90,7 @@ export class ChatView extends ModuleViewBase {
 
         this.voiceButton = new CheckButton(this.game, 372 + 50, -34, UI.VoiceBt.getName());
         this.voiceButton.inputEnabled = false;
+        this.voiceButton.removeInput();
         this.add(this.voiceButton);
 
         this.labaButton.select = true;
