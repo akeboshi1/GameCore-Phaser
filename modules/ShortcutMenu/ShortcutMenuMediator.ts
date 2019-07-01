@@ -100,7 +100,7 @@ export class ShortcutMenuMediator extends MediatorBase {
         super.onRemove();
         let len = this.view.m_List.getLength();
         let item: ShortcutMenuListItem;
-        for (let i = 0; i < len; i++) {
+        for (let i = len - 1; i >= 0; i--) {
             item = this.view.m_List.getItem(i) as ShortcutMenuListItem;
             item.setEnable(false);
             Globals.DragManager.unRegisterDrop(item.icon);
