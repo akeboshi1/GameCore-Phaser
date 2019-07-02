@@ -231,8 +231,8 @@ export class BasicSceneEntity implements ITickedObject, IAnimatedObject, IQuadTr
     let _oy = this.oy + (this.baseLoc ? this.baseLoc.y : 0);
     let p3 = Globals.Scene45Util.p2top3(_ox, _oy);
 
-    this.display.isoX = p3.x;
-    this.display.isoY = p3.y;
+    this.display.isoX = Math.round(p3.x);
+    this.display.isoY = Math.round(p3.y);
     this.display.isoZ = 0;
 
     if ((this.display as IAnimatedObject).onFrame !== undefined) (<IAnimatedObject>this.display).onFrame();
