@@ -486,7 +486,7 @@ export class ScrollBar {
             return;
         }
         let height = Math.abs(this.target.y - this.slideSize.y);
-        this.slider.y = (height / this.target.height  - this._h) * (this.slideSize.height) + this.slideSize.y;
+        this.slider.y = height / (this.target.height - this._h) * (this.slideSize.height - 60) + this.slideSize.y;
         const rate = (this.slider.y - this.slideSize.y) / (this._h - 60);
         this.changeIndex.dispatch(rate);
     }
