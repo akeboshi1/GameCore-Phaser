@@ -3,6 +3,9 @@ import {ModuleTypeEnum} from "../base/module/base/ModuleType";
 import {MessageType} from "../common/const/MessageType";
 import {GameConfig} from "../GameConfig";
 import {LoaderManager} from "../common/manager/LoaderManager";
+import { PBpacket } from "net-socket-packet";
+import { op_virtual_world, op_def } from "pixelpai_proto";
+import { Log } from "../Log";
 
 export default class Game extends Phaser.State {
 
@@ -21,6 +24,9 @@ export default class Game extends Phaser.State {
         if (!GameConfig.isEditor) {
             Globals.Keyboard.init(this.game);
             Globals.MouseMod.init(this.game);
+
+            this.game.onBlur.add(this.onBlurHandl, this);
+            this.game.onFocus.add(this.onFocusHandl, this);
         }
 
         if (!GameConfig.isEditor) {
@@ -55,5 +61,21 @@ export default class Game extends Phaser.State {
     private onHandleEnterScene(): void {
         Globals.MessageCenter.cancel(MessageType.SCENE_DATA_INITIALIZE, this.onHandleEnterScene, this);
         Globals.ModuleManager.openModule(ModuleTypeEnum.SCENE);
+    }
+
+    private onFocusHandl() {
+        Log.trace("onFocus");
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+        let context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+        context.gameStatus = op_def.GameStatus.Focus;
+        Globals.SocketManager.send(pkt);
+    }
+
+    private onBlurHandl() {
+        Log.trace("onBlur");
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+        let context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+        context.gameStatus = op_def.GameStatus.Blur;
+        Globals.SocketManager.send(pkt);
     }
 }

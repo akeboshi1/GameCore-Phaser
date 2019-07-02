@@ -113,6 +113,9 @@ export default class BasicElement extends SceneEntity {
     this.setScaleX(this.elementInfo.scaleX);
     this.onAvatarAnimationChanged();
     this.loadModel(this.elementInfo);
+    // 后端添加物件比渲染范围大，会造成位置异常
+    // 初始化好后，更新坐标或者isInScreen()范围跟后端同步
+    this.onUpdatingDisplay();
   }
 
   protected onUpdatingDisplay(): void {

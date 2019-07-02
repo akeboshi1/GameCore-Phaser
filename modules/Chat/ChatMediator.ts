@@ -206,7 +206,7 @@ export class ChatMediator extends MediatorBase {
             let player = Globals.DataCenter.PlayerData.getPlayer(chat.chatSenderid);
             if (player) chatStr += player.name + ": ";
         }
-        chatStr += chat.chatContext + "\n";
+        chatStr += chat.chatContext;
         let chinese = Globals.Tool.formatChineseString(chatStr, this.view.out_tf.fontSize, this.view.out_tf.wordWrapWidth);
         this.appendMessage(this._allMessage, { chat: chinese, channel: chat.chatChannel, color: chat.chatSetting.textColor ? chat.chatSetting.textColor : "#FFFFFF" });
         this.changeMessageChannel();
@@ -261,9 +261,11 @@ export class ChatMediator extends MediatorBase {
         this.view.clearOutTf();
         let message: IMessage = null;
         let colorIndex = 0;
+        let wrapStr = "\n";
         for (let i = 0; i < len; i++) {
             message = showMessage[i];
-            this.view.appendMessage(message.chat, message.color, colorIndex);
+            if (i === len - 1) wrapStr = "";
+            this.view.appendMessage(message.chat + wrapStr, message.color, colorIndex);
             colorIndex += message.chat.length;
         }
         this.view.scroller.scroll();
