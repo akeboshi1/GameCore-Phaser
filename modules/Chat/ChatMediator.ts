@@ -161,8 +161,6 @@ export class ChatMediator extends MediatorBase {
         } else if (event.keyCode === Phaser.Keyboard.DOWN) {
             this._historyIndex++;
             this.showHistoryChat(this._historyIndex);
-        } else if (event.keyCode === Phaser.Keyboard.F2) {
-            this.handleVoice(true);
         }
     }
 

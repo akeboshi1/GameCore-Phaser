@@ -49,7 +49,7 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
     }
 
     protected render(): void {
-        if (this.m_Icon) {
+        if (this.m_Icon && this.data && this.data.display) {
             this.m_Icon.load(this.data.display.texturePath, this);
         }
     }
