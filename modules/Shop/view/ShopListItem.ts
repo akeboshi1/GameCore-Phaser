@@ -5,6 +5,7 @@ import { BaseIcon } from "../../../base/component/icon/BaseIcon";
 import Globals from "../../../Globals";
 import { ToolTip } from "../../../base/component/tooltip/ToolTip";
 import { op_gameconfig, op_def } from "pixelpai_proto";
+import { Rectangle } from "phaser-ce";
 
 export class ShopListItem extends ListItemComponent implements IListItemComponent {
   protected m_icon: BaseIcon;
@@ -33,7 +34,7 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
   }
 
   public getHeight(): number {
-    return 52;
+    return 95;
   }
 
   public getWidth(): number {
@@ -90,6 +91,10 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
 
   public get width(): number {
     return this.getWidth();
+  }
+
+  public getBounds(): Rectangle {
+    return new Rectangle(this.x, this.y, this.getWidth(), this.getHeight());
   }
 
   public destroy() {

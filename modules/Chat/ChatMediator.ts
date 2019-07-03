@@ -260,11 +260,13 @@ export class ChatMediator extends MediatorBase {
         let message: IMessage = null;
         let colorIndex = 0;
         let wrapStr = "\n";
+        let chat: string;
         for (let i = 0; i < len; i++) {
             message = showMessage[i];
             if (i === len - 1) wrapStr = "";
-            this.view.appendMessage(message.chat + wrapStr, message.color, colorIndex);
-            colorIndex += message.chat.length;
+            chat = message.chat + wrapStr;
+            this.view.appendMessage(chat, message.color, colorIndex);
+            colorIndex += chat.length;
         }
         this.view.scroller.scroll();
     }

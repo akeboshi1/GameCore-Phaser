@@ -12,16 +12,10 @@ export class ToolTipManager extends BaseSingleton {
       target.events.onInputOver.add(this.onMouseOverHandler, this);
       target.events.onInputOut.add(this.onMouseOutHandler, this);
       target.events.onInputDown.add(this.onMouseOutHandler, this);
-      // target.onChildInputDown.add(this.onMouseOutHandler, this);
-      // target.onChildInputOver.add(this.onMouseOverHandler, this);
-      // target.onChildInputOut.add(this.onMouseOutHandler, this);
     } else {
       target.events.onInputOver.remove(this.onMouseOverHandler, this);
       target.events.onInputOut.remove(this.onMouseOutHandler, this);
       target.events.onInputDown.remove(this.onMouseOutHandler, this);
-      // target.onChildInputDown.remove(this.onMouseOutHandler, this);
-      // target.onChildInputOver.remove(this.onMouseOverHandler, this);
-      // target.onChildInputOut.remove(this.onMouseOutHandler, this);
       this.toolTipMap.delete(target);
     }
   }
