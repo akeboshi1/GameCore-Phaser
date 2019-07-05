@@ -34,14 +34,14 @@ export class ChatMediator extends MediatorBase {
 
         (<any>this.view.input_tf).domElement.element.addEventListener("keydown", this.sayHello.bind(this));
         this.view.labaButton.onCallBack(this.handleLaba, this);
-        // this.view.voiceButton.onCallBack(this.handleVoice, this);
+        this.view.voiceButton.onCallBack(this.handleVoice, this);
         this.view.comobox.onSelectedItem.add(this.changeMessageChannel, this);
 
         super.onRegister();
 
         // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.ONE, this.handleOne, this);
-        Globals.Keyboard.addListenerKeyDown(Phaser.Keyboard.F2, this.startVoice, this);
-        Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.F2, this.stopVoice, this);
+        // Globals.Keyboard.addListenerKeyDown(Phaser.Keyboard.F2, this.startVoice, this);
+        // Globals.Keyboard.addListenerKeyUp(Phaser.Keyboard.F2, this.stopVoice, this);
 
         this.handleInitPlayer();
     }
@@ -189,11 +189,11 @@ export class ChatMediator extends MediatorBase {
 
         (<any>this.view.input_tf).domElement.element.removeEventListener("keydown", this.sayHello.bind(this));
         this.view.labaButton.cancelCallBack(this.handleLaba, this);
-        // this.view.voiceButton.cancelCallBack(this.handleVoice, this);
+        this.view.voiceButton.cancelCallBack(this.handleVoice, this);
         this.view.selectedChanel.onSelectedItem.remove(this.changeMessageChannel, this);
 
-        Globals.Keyboard.removeListenerKeyDown(Phaser.Keyboard.F2, this.startVoice, this);
-        Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.F2, this.stopVoice, this);
+        // Globals.Keyboard.removeListenerKeyDown(Phaser.Keyboard.F2, this.startVoice, this);
+        // Globals.Keyboard.removeListenerKeyUp(Phaser.Keyboard.F2, this.stopVoice, this);
 
         super.onRemove();
     }

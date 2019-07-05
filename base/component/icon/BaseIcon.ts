@@ -30,8 +30,10 @@ export class BaseIcon extends Phaser.Sprite {
     }
 
     protected onCompleteLoadModel(): void {
-        let key: string = this.resKey;
-        this.m_Icon.loadTexture(key);
+        if (this.game) {
+            let key: string = this.resKey;
+            this.m_Icon.loadTexture(key);
+        }
     }
 
     public load(value: string, thisArg?: any, onLoadComplete?: Function) {
@@ -68,9 +70,19 @@ export class BaseIcon extends Phaser.Sprite {
         }
     }
 
+    public update() {
+        if (!this.game) {
+            console.log("runing");
+        }
+    }
+
     public get resKey(): string {
         if (this.m_Url === undefined) return "";
         let key: string = Load.Image.getKey(this.m_Url);
         return key;
+    }
+
+    public destroy() {
+        super.destroy();
     }
 }

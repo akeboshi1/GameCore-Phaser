@@ -41,7 +41,7 @@ export class ChatView extends ModuleViewBase {
         this._inputGroup = this.game.make.group();
         this._background = this.game.add.nineSlice(0, 0, UI.Background.getName(), null, 464, 287, this);
         this._inputBackground = this.game.add.nineSlice(0, 0, UI.InputBg.getName(), null, 368, 29, this._inputGroup);
-        this.out_tf = this.game.make.text(10, 34, "", {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", align: "left", wordWrap: true, wordWrapWidth: 450});
+        this.out_tf = this.game.make.text(10, 34, "", {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", align: "left", wordWrap: true, wordWrapWidth: 440});
         this.out_tf.stroke = "#000000";
         this.out_tf.strokeThickness = 1;
         this.add(this.out_tf);
@@ -89,8 +89,6 @@ export class ChatView extends ModuleViewBase {
         this.add(this.labaButton);
 
         this.voiceButton = new CheckButton(this.game, 372 + 50, -34, UI.VoiceBt.getName());
-        this.voiceButton.inputEnabled = false;
-        this.voiceButton.removeInput();
         this.add(this.voiceButton);
 
         this.labaButton.select = true;
