@@ -8,7 +8,7 @@ export class ListItemComponent extends Phaser.Sprite implements IListItemCompone
     protected m_List: IListItemEventListener;
     protected m_Init = false;
 
-    constructor(game) {
+    constructor(game: Phaser.Game) {
         super(game, 0, 0);
     }
 

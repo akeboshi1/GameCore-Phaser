@@ -96,4 +96,8 @@ export class PlayerData extends BaseSingleton {
         }
         return player;
     }
+
+    get playInfoList(): PlayerInfo[] {
+        return this._playerInfoList;
+    }
 }

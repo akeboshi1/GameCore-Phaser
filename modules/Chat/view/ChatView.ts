@@ -3,14 +3,17 @@ import {ModuleViewBase} from "../../../common/view/ModuleViewBase";
 import {UI, CustomWebFonts} from "../../../Assets";
 import {NiceSliceButton} from "../../../base/component/button/NiceSliceButton";
 import {GameConfig} from "../../../GameConfig";
-import {ScrollArea} from "../../../base/component/scroll/ScrollArea";
 import {ComboBox, IComoboxData} from "../../../base/component/combobox/ComboBox";
 import {CheckButton} from "../../../base/component/button/CheckButton";
 import "../../../web-rtc-service";
-import { op_client, op_def } from "pixelpai_proto";
+import {  op_def } from "pixelpai_proto";
 import { ScrollBar } from "../../../base/component/scroll/ScrollBar";
 import { Button } from "phaser-ce";
+import { SuggesltList } from "./SuggesltList";
+import { UIEvents } from "../../../base/component/event/UIEvents";
+import { SuggestItem } from "./SuggesItemt";
 import Globals from "../../../Globals";
+import { PlayerInfo } from "../../../common/struct/PlayerInfo";
 
 export class ChatView extends ModuleViewBase {
     private _background: PhaserNineSlice.NineSlice;
@@ -27,6 +30,8 @@ export class ChatView extends ModuleViewBase {
     private _switchSize: Button;
     private _inputGroup: Phaser.Group;
     private _curSizeIndex = 1;
+    private _focusInput: boolean;
+    private _suggesltList: SuggesltList;
     private readonly _sizeList: number[] = [530, 287, 144];
 
     constructor(game: Phaser.Game) {
@@ -43,7 +48,7 @@ export class ChatView extends ModuleViewBase {
         this._inputBackground = this.game.add.nineSlice(0, 0, UI.InputBg.getName(), null, 368, 29, this._inputGroup);
         this.out_tf = this.game.make.text(10, 34, "", {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", align: "left", wordWrap: true, wordWrapWidth: 440});
         this.out_tf.stroke = "#000000";
-        this.out_tf.strokeThickness = 1;
+        this.out_tf.strokeThickness = 2;
         this.add(this.out_tf);
         this.add(this._inputGroup);
         // this.out_tf.width = 430;
@@ -91,7 +96,7 @@ export class ChatView extends ModuleViewBase {
         this.voiceButton = new CheckButton(this.game, 372 + 50, -34, UI.VoiceBt.getName());
         this.add(this.voiceButton);
 
-        this.labaButton.select = true;
+        this.labaButton.select = false;
         this.voiceButton.select = false;
 
         this._inputGroup.x = 6;
@@ -102,11 +107,16 @@ export class ChatView extends ModuleViewBase {
         this.onChildInputOver.add(this.inputOverHanlder, this);
 
         this.onChildInputOut.add(this.inputOutHandler, this);
+        // this.input_tf.focusIn.add(this.onFocusInputHandler, this);
+        // this.input_tf.focusOut.add(this.foucesOutHandler, this);
     }
 
     public update() {
         super.update();
         if (this.scroller) this.scroller.update();
+        // if (this._focusInput) {
+        //     this.onTextChangeHandler(this.input_tf.value);
+        // }
     }
 
     public appendMessage(message: string, color?: string, index?: number) {
@@ -189,5 +199,55 @@ export class ChatView extends ModuleViewBase {
             (pointer.y > this.y + curHeight || pointer.y < this.y)) {
             this.scroller.stop();
         }
+    }
+
+    private startIndex = 0;
+    private endIndex = 0;
+    private onTextChangeHandler(value: string) {
+        if (!value || value.length === 0) return;
+        this.startIndex = value.lastIndexOf("@");
+        this.endIndex = value.lastIndexOf(" ");
+        if (this.startIndex > -1 && (this.startIndex > this.endIndex || this.endIndex < 0)) {
+            let name = value.slice(this.startIndex + 1);
+            // this.showSuggeslt([name]);
+            const playInfoList = Globals.DataCenter.PlayerData.playInfoList;
+            const filter = playInfoList.filter(play => play.name.indexOf(name) > -1);
+            if (filter.length > 0) {
+                this.showSuggeslt(filter);
+            } else {
+                this.remove(this._suggesltList);
+            }
+        } else {
+            if (this._suggesltList && this._suggesltList.parent) {
+                this.remove(this._suggesltList);
+            }
+        }
+    }
+
+    private showSuggeslt(names: PlayerInfo[]) {
+        if (!!this._suggesltList === false) {
+            this._suggesltList = new SuggesltList(this.game, this);
+            this._suggesltList.list.on(UIEvents.LIST_ITEM_UP, this.onSelectedItem, this);
+        }
+        if (!!this._suggesltList.parent === false) {
+            this.add(this._suggesltList);
+        }
+        this._suggesltList.setData(names);
+    }
+
+    private onFocusInputHandler() {
+        this._focusInput = true;
+    }
+
+    private foucesOutHandler() {
+        this._focusInput = false;
+    }
+
+    private onSelectedItem(item: SuggestItem) {
+        let tmp = this.input_tf.value.slice(0, this.startIndex + 1);
+        tmp += item.data + " ";
+        this.input_tf.setText(tmp);
+        this.input_tf.startFocus();
+        this.remove(this._suggesltList);
     }
 }
