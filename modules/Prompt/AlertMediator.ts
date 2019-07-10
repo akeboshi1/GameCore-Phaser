@@ -18,6 +18,7 @@ export class AlertMediator extends MediatorBase {
         this.view.m_Text.text = value.info;
         if (value.callBack) {
             this.view.setCallBack(value.callBack, value.thisObj);
+            this.view.setButtons(value.buttons);
         }
     }
 }

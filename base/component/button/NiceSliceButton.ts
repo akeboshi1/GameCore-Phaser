@@ -102,6 +102,12 @@ export class NiceSliceButton extends Phaser.Group {
         }
     }
 
+    public setTextFill(color: any) {
+        if (this.mText) {
+            this.mText.fill = color;
+        }
+    }
+
     protected init(): void {
         this.addEvent();
     }

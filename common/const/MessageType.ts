@@ -87,5 +87,6 @@ export class MessageType {
     public static HIDE_VOICE = "hide_voice";
 
     public static QUERY_PACKAGE = "query_package";
+    public static SYNC_USER_BALANCE = "syncUserBalance";
 }
 

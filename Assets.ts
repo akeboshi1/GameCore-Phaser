@@ -525,6 +525,28 @@ export namespace UI {
         }
     }
 
+    export class ButtonBlueGreen {
+        static getName(): string {
+            return "ui_button_blue_green_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/button_blue_green.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/button_blue_green.json");
+        }
+
+        static getWidth(): number {
+            return 15;
+        }
+
+        static getHeight(): number {
+            return 15;
+        }
+    }
+
     export class ButtonChat {
         static getName(): string {
             return "ui_button_chat_png";

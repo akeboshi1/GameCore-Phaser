@@ -8,8 +8,8 @@ export class PromptManager extends BaseSingleton  {
     super();
   }
 
-  public showAlert(info: string, callBack?: Function, context?: any): void {
-    let param: IAlertParam = {info: info, callBack: callBack, thisObj: context};
+  public showAlert(info: string, callBack?: Function, context?: any, buttons?: number): void {
+    let param: IAlertParam = {info: info, callBack: callBack, thisObj: context, buttons: buttons};
     Globals.MessageCenter.emit(MessageType.PROMPT_ALERT, param);
   }
 }

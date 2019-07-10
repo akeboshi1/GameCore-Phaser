@@ -1,14 +1,19 @@
 import { UI, CustomWebFonts } from "../../../Assets";
 import { CommWindowModuleView } from "../../../common/view/CommWindowModuleView ";
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_client } from "pixelpai_proto";
 import { ShopListItem } from "./ShopListItem";
 import { Rectangle } from "phaser-ce";
 import { ScrollBar } from "../../../base/component/scroll/ScrollBar";
+import { NiceSliceButton } from "../../../base/component/button/NiceSliceButton";
 
 export class ShopView extends CommWindowModuleView {
   private _items: op_gameconfig.IItem[];
   private _itemsGroup: Phaser.Group;
+  private _balanceIcon: Phaser.Image;
+  private _balance: Phaser.Text;
   private _scroll: ScrollBar;
+  public payBtn: NiceSliceButton;
+  public syncTuDing: NiceSliceButton;
   public onBuyItem: Phaser.Signal;
   constructor(game: Phaser.Game) {
     super(game);
@@ -30,7 +35,30 @@ export class ShopView extends CommWindowModuleView {
     const titleLabel = this.game.make.text(46, -10, "内购商店", {font: "20px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
     this.add(titleLabel);
 
-    this.m_CloseBt = this.game.make.button(this.width - 30, -8, UI.WindowClose.getName(), null, this, 1, 0 , 2);
+    this.payBtn = new NiceSliceButton(this.game, this.m_Width - 100, -14, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 30, {
+      top: 7,
+      bottom: 7,
+      left: 7,
+      right: 7
+    }, "＋充值", 14);
+    this.payBtn.setTextFill("#000000");
+    this.add(this.payBtn);
+
+    this.syncTuDing = new NiceSliceButton(this.game, this.payBtn.x - 70, this.payBtn.y, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 30, {
+      top: 7,
+      bottom: 7,
+      left: 7,
+      right: 7
+    }, "刷新", 14);
+    this.syncTuDing.setTextFill("#000000");
+    this.add(this.syncTuDing);
+
+    this._balanceIcon = this.game.make.image(this.m_Width - 230, this.payBtn.y, UI.TuDing22.getName());
+    this.add(this._balanceIcon);
+    this._balance = this.game.make.text(this.m_Width - 200, -11, "", {font: "16px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
+    this.add(this._balance);
+
+    this.m_CloseBt = this.game.make.button(this.width - 30, -5, UI.WindowClose.getName(), null, this, 1, 0 , 2);
     this.m_CloseBt.events.onInputUp.add(this.onCloseClick, this);
     this.add(this.m_CloseBt);
 
@@ -71,8 +99,24 @@ export class ShopView extends CommWindowModuleView {
     if (this._scroll) this._scroll.update();
   }
 
+  setUserBalance(balance: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_USER_BALANCE) {
+    const tuDing = balance.tuDing;
+    if (typeof tuDing === "number") {
+      this._balance.setText(balance.tuDing.toString());
+      this._balance.x = this.m_Width - this._balance.width - 180;
+      this._balanceIcon.x = this._balance.x - 30;
+    }
+  }
+
   public get scroll(): ScrollBar {
     return this._scroll;
+  }
+
+  public get price(): number {
+    if (!!this._balance === false) {
+      return 0;
+    }
+    return parseInt(this._balance.text);
   }
 
   private buyItemHandler(target) {

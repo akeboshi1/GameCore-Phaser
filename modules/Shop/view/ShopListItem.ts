@@ -45,8 +45,8 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
     if (this.m_icon && this.data && this.data.display) {
       const item: op_gameconfig.IItem = this.data;
       this.m_icon.load(item.display.texturePath, this);
-      // let prices = item.price;
-      let prices = [{ price: 100, coinType: op_def.CoinType.TU_DING_COIN }, { price: 80, coinType: op_def.CoinType.TU_DING_COIN }];
+      let prices = item.price;
+      // let prices = [{ price: 100, coinType: op_def.CoinType.TU_DING_COIN }, { price: 80, coinType: op_def.CoinType.TU_DING_COIN }];
       this.mMoneyGroup.removeAll(true);
       for (let i = 0; i < prices.length; i++) {
         this.makeCoin(prices[i], this.mMoneyGroup.width, i * 20);

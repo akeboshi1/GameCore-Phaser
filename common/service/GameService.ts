@@ -3,6 +3,7 @@ import Globals from "../../Globals";
 import {PBpacket} from "net-socket-packet";
 import {op_client} from "pixelpai_proto";
 import {BasePacketHandler} from "./BasePacketHandler";
+import { MessageType } from "../const/MessageType";
 
 export class GameService extends BaseSingleton {
     private handle: Handler;
@@ -24,6 +25,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_GAME_OVER, this.handleGameOver);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_USER_BALANCE, this.handleSyncUserBalance);
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -44,5 +46,10 @@ class Handler extends BasePacketHandler {
     private handleGameOver(packet: PBpacket): void {
         let GameOver: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_GAME_OVER = packet.content;
         Globals.PromptManager.showAlert(GameOver.msg);
+    }
+
+    private handleSyncUserBalance(packet: PBpacket) {
+        let balance: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_USER_BALANCE = packet.content;
+        Globals.MessageCenter.emit(MessageType.SYNC_USER_BALANCE, balance);
     }
 }
