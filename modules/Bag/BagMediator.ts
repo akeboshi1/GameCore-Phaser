@@ -29,7 +29,16 @@ export class BagMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
-        this.view.m_Page.on("change", this.handlePageChange);
+        this.view.m_Page.on("change", this.handlePageChange, this);
+    }
+
+    public preRemove() {
+        super.preRemove();
+        Globals.MessageCenter.cancel(MessageType.DRAG_TO_DROP, this.handleDrop, this);
+        Globals.MessageCenter.cancel(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
+        this.view.m_List.cancel(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
+        this.view.m_List.cancel(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
+        this.view.m_Page.cancel("change", this.handlePageChange, this);
     }
 
     private handleSynchroPackage(): void {
@@ -69,7 +78,7 @@ export class BagMediator extends MediatorBase {
     }
 
     private renderList(value: any[]): void {
-        this.view.m_List.onClear();
+        if (this.view.m_List) this.onRemove();
         let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum);
         let len = items.length;
         let item: BagListItem;
@@ -94,11 +103,13 @@ export class BagMediator extends MediatorBase {
         super.onRemove();
         let len = this.view.m_List.getLength();
         let item: BagListItem;
-        for (let i = 0; i < len; i++) {
+        for (let i = len - 1; i >= 0; i--) {
             item = this.view.m_List.getItem(i) as BagListItem;
             item.setEnable(false);
             Globals.DragManager.unRegisterDrop(item.icon);
             item.onDispose();
+            this.view.m_List.removeItem(item);
         }
+        this.view.m_List.onClear();
     }
 }

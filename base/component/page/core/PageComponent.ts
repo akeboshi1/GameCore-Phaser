@@ -175,6 +175,7 @@ export class PageComponent extends VisualComponent implements IPageComponent {
     }
 
     public setMaxIndex(index: number): void {
+        this.m_MaxIndex = index;
     }
 
     public setPagePolicy(needHide: boolean, needLoop: boolean): void {
