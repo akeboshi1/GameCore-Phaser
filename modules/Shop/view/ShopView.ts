@@ -32,7 +32,9 @@ export class ShopView extends CommWindowModuleView {
 
     const title = this.game.make.image(12, -14,  UI.ShopTitle.getName());
     this.add(title);
-    const titleLabel = this.game.make.text(46, -10, "内购商店", {font: "20px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
+    const titleLabel = this.game.make.text(46, -12, "内购商店", {font: "20px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
+    titleLabel.stroke = "#000000";
+    titleLabel.strokeThickness = 2;
     this.add(titleLabel);
 
     this.payBtn = new NiceSliceButton(this.game, this.m_Width - 100, -14, UI.ButtonBlue.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 30, {
@@ -56,6 +58,8 @@ export class ShopView extends CommWindowModuleView {
     this._balanceIcon = this.game.make.image(this.m_Width - 230, this.payBtn.y, UI.TuDing22.getName());
     this.add(this._balanceIcon);
     this._balance = this.game.make.text(this.m_Width - 200, -11, "", {font: "16px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
+    this._balance.stroke = "#000000";
+    this._balance.strokeThickness = 2;
     this.add(this._balance);
 
     this.m_CloseBt = this.game.make.button(this.width - 30, -5, UI.WindowClose.getName(), null, this, 1, 0 , 2);

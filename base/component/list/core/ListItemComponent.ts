@@ -1,12 +1,16 @@
 import {IListItemComponent} from "../interfaces/IListItemComponent";
 import {IListItemEventListener} from "../interfaces/IListItemEventListener";
 import { IComoboxData } from "../../combobox/ComboBox";
+import Globals from "../../../../Globals";
+import { ToolTip } from "../../tooltip/ToolTip";
 
 export class ListItemComponent extends Phaser.Sprite implements IListItemComponent {
     protected m_Data: any;
     protected m_Index: number;
     protected m_List: IListItemEventListener;
     protected m_Init = false;
+    protected mToolTipText: string;
+    protected mToolTip: ToolTip;
 
     constructor(game: Phaser.Game) {
         super(game, 0, 0);
@@ -49,6 +53,22 @@ export class ListItemComponent extends Phaser.Sprite implements IListItemCompone
             this.addEvent();
         } else {
             this.removeEvent();
+        }
+    }
+
+    public setToolTip(toolTip: ToolTip) {
+        this.mToolTip = toolTip;
+        Globals.ToolTipManager.setToolTip(this, toolTip);
+      }
+
+    public setToolTipText(text: string) {
+        this.mToolTipText = text;
+        this.setToolTip(ToolTip.getInstance(this.game));
+    }
+
+    public initToolTip() {
+        if (this.mToolTip) {
+            this.mToolTip.setText(this.mToolTipText);
         }
     }
 
@@ -125,5 +145,10 @@ export class ListItemComponent extends Phaser.Sprite implements IListItemCompone
     }
 
     protected render(): void {
+    }
+
+    public destroy() {
+        Globals.ToolTipManager.setToolTip(this, null);
+        super.destroy();
     }
 }

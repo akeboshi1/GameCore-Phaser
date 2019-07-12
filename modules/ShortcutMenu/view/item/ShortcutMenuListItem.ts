@@ -46,6 +46,8 @@ export class ShortcutMenuListItem extends ListItemComponent {
     protected render(): void {
         if (this.m_Icon && this.data && this.data.display) {
             this.m_Icon.load(this.data.display.texturePath);
+            const des = this.data.des ? "\n" + this.data.des : "";
+            this.setToolTipText(this.data.name + des);
         }
     }
 }

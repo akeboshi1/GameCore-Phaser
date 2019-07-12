@@ -40,7 +40,7 @@ export class ShortcutMenuMediator extends MediatorBase {
     }
 
     private addEvent(): void {
-        Globals.MessageCenter.on(MessageType.DRAG_TO_DROP, this.handleDrop);
+        // Globals.MessageCenter.on(MessageType.DRAG_TO_DROP, this.handleDrop);
         Globals.MessageCenter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
@@ -85,7 +85,7 @@ export class ShortcutMenuMediator extends MediatorBase {
             item.setEnable(true);
             item.data = pack.items[i];
             this.view.m_List.addItem(item);
-            Globals.DragManager.registerDrop(item.icon);
+            // Globals.DragManager.registerDrop(item.icon);
             if (i < temps.length) {
                 item.setShortCut(temps[i]);
             }
@@ -103,7 +103,7 @@ export class ShortcutMenuMediator extends MediatorBase {
         for (let i = len - 1; i >= 0; i--) {
             item = this.view.m_List.getItem(i) as ShortcutMenuListItem;
             item.setEnable(false);
-            Globals.DragManager.unRegisterDrop(item.icon);
+            // Globals.DragManager.unRegisterDrop(item.icon);
             item.onDispose();
             this.view.m_List.removeItem(item);
         }

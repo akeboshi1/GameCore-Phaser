@@ -87,7 +87,7 @@ export class BagMediator extends MediatorBase {
             item.setEnable(true);
             item.data = items[i];
             this.view.m_List.addItem(item);
-            Globals.DragManager.registerDrop(item.icon);
+            // Globals.DragManager.registerDrop(item.icon);
         }
     }
 
@@ -106,7 +106,7 @@ export class BagMediator extends MediatorBase {
         for (let i = len - 1; i >= 0; i--) {
             item = this.view.m_List.getItem(i) as BagListItem;
             item.setEnable(false);
-            Globals.DragManager.unRegisterDrop(item.icon);
+            // Globals.DragManager.unRegisterDrop(item.icon);
             item.onDispose();
             this.view.m_List.removeItem(item);
         }

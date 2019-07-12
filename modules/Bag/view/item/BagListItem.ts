@@ -50,7 +50,10 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
 
     protected render(): void {
         if (this.m_Icon && this.data && this.data.display) {
+
             this.m_Icon.load(this.data.display.texturePath, this);
+            const des = this.data.des ? "\n" + this.data.des : "";
+            this.setToolTipText(this.data.name + des);
         }
     }
 }

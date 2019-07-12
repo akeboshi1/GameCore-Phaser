@@ -9,8 +9,6 @@ import { Rectangle } from "phaser-ce";
 
 export class ShopListItem extends ListItemComponent implements IListItemComponent {
   protected m_icon: BaseIcon;
-  protected mToolTipText: string;
-  protected mToolTip: ToolTip;
   protected mPrice: Phaser.Text;
   protected mMoneyGroup: Phaser.Group;
   constructor(game: Phaser.Game) {
@@ -51,7 +49,8 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
       for (let i = 0; i < prices.length; i++) {
         this.makeCoin(prices[i], this.mMoneyGroup.width, i * 20);
       }
-      this.setToolTipText(`${item.name}\n${item.shopDes}`);
+      const des = item.des ? "\n" + item.des : "";
+      this.setToolTipText(item.name + des);
       this.mMoneyGroup.x = this.getWidth() - this.mMoneyGroup.width >> 1;
     }
   }
@@ -69,22 +68,6 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
     priceText.setText(price.price.toString());
   }
 
-  public setToolTip(toolTip: ToolTip) {
-    this.mToolTip = toolTip;
-    Globals.ToolTipManager.setToolTip(this, toolTip);
-  }
-
-  public setToolTipText(text: string) {
-    this.mToolTipText = text;
-    this.setToolTip(ToolTip.getInstance(this.game));
-  }
-
-  public initToolTip() {
-    if (this.mToolTip) {
-      this.mToolTip.setText(this.mToolTipText);
-    }
-  }
-
   public get height(): number {
     return this.getHeight();
   }
@@ -97,8 +80,4 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
     return new Rectangle(this.x, this.y, this.getWidth(), this.getHeight());
   }
 
-  public destroy() {
-    Globals.ToolTipManager.setToolTip(this, null);
-    super.destroy();
-  }
 }
