@@ -25,7 +25,7 @@ export class ShopView extends CommWindowModuleView {
   }
 
   protected init() {
-    this.inputEnableChildren = true;
+    // this.inputEnableChildren = true;
     this.m_Bg = this.game.add.nineSlice(0, 0, UI.BagBg.getName(), null, this.width, this.height, this);
     this.m_Bg.events.onInputOver.add(this.mouseOverHandler, this);
     this.m_Bg.events.onInputOut.add(this.mouseOutHandler, this);

@@ -31,8 +31,8 @@ export class ShortcutMenuListItem extends ListItemComponent {
         this.addChild(bg);
         this.m_Icon = new DragDropIcon(this.game);
         this.m_Icon.icon.anchor.set(0.5, 0.5);
-        this.m_Icon.setDropType(DragType.DRAG_TYPE_SHORTCUT);
-        this.m_Icon.setDropType(DropType.DROP_TYPE_SHORTCUT);
+        // this.m_Icon.setDropType(DragType.DRAG_TYPE_SHORTCUT);
+        // this.m_Icon.setDropType(DropType.DROP_TYPE_SHORTCUT);
         this.m_Icon.x = 28;
         this.m_Icon.y = 30.5;
         this.addChild(this.m_Icon);

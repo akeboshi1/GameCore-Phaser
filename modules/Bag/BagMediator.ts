@@ -27,7 +27,7 @@ export class BagMediator extends MediatorBase {
         this.initView();
         Globals.MessageCenter.on(MessageType.DRAG_TO_DROP, this.handleDrop, this);
         Globals.MessageCenter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
-        this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
+        // this.view.m_List.on(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.on(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
         this.view.m_Page.on("change", this.handlePageChange, this);
     }
@@ -36,7 +36,7 @@ export class BagMediator extends MediatorBase {
         super.preRemove();
         Globals.MessageCenter.cancel(MessageType.DRAG_TO_DROP, this.handleDrop, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
-        this.view.m_List.cancel(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
+        // this.view.m_List.cancel(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.cancel(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);
         this.view.m_Page.cancel("change", this.handlePageChange, this);
     }

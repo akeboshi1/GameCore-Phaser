@@ -27,8 +27,8 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
         this.m_Icon.icon.anchor.set(0.5, 0.5);
         this.m_Icon.x = 26;
         this.m_Icon.y = 26;
-        this.m_Icon.setDropType(DragType.DRAG_TYPE_BAG);
-        this.m_Icon.setDropType(DropType.DROP_TYPE_BAG);
+        // this.m_Icon.setDropType(DragType.DRAG_TYPE_BAG);
+        // this.m_Icon.setDropType(DropType.DROP_TYPE_BAG);
         this.addChild(this.m_Icon);
         super.init();
     }
@@ -50,7 +50,6 @@ export class BagListItem extends ListItemComponent implements IListItemComponent
 
     protected render(): void {
         if (this.m_Icon && this.data && this.data.display) {
-
             this.m_Icon.load(this.data.display.texturePath, this);
             const des = this.data.des ? "\n" + this.data.des : "";
             this.setToolTipText(this.data.name + des);
