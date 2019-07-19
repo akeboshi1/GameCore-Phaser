@@ -5,6 +5,7 @@ import Globals from "../../Globals";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {IDisplayLoaderParam} from "../../interface/IDisplayLoaderParam";
 import {GameConfig} from "../../GameConfig";
+import { Rectangle } from "phaser-ce";
 
 export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
     protected hasPlaceHold = true;
@@ -16,6 +17,7 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
 
     constructor(game: Phaser.Game) {
         super(game);
+        // this.inputEnabled = true;
     }
 
   protected get avatarPool(): IObjectPool {
@@ -65,10 +67,10 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (null == this.mLoaderAvatar) {
           this.mLoaderAvatar = new DisplayLoaderAvatar(Globals.game);
         }
-        if (GameConfig.isEditor) {
+        // if (GameConfig.isEditor) {
             this.mLoaderAvatar.inputEnabled = true;
             this.mLoaderAvatar.input.pixelPerfectClick = true;
-        }
+        // }
         this.Loader.setAnimationControlFunc(this.bodyControlHandler, this);
         this.Loader.visible = false;
         this.addChild(this.Loader);

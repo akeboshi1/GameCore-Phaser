@@ -341,6 +341,20 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
                 skin: model.headBaseId
             });
         }
+        if (model.barmWeapId) {
+            this.replaceArr.push({
+                slot: Const.AvatarSlotType.WeapBarm,
+                part: Const.AvatarPartType.WeapBarm,
+                dir: 3,
+                skin: model.barmWeapId
+            });
+            this.replaceArr.push({
+                slot: Const.AvatarSlotType.WeapBarm,
+                part: Const.AvatarPartType.WeapBarm,
+                dir: 1,
+                skin: model.barmWeapId
+            });
+        }
 
         if (model.headHairId) {
             this.replaceArr.push({

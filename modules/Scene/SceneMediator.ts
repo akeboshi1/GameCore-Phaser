@@ -7,7 +7,7 @@ import {MediatorBase} from "../../base/module/core/MediatorBase";
 import {SceneView} from "./view/SceneView";
 import {FlowManager} from "./flow/FlowManager";
 import {MessageType} from "../../common/const/MessageType";
-import {op_client, op_virtual_world} from "pixelpai_proto";
+import {op_client, op_virtual_world, op_def} from "pixelpai_proto";
 import {BasicSceneEntity} from "../../base/BasicSceneEntity";
 import {SceneLoader} from "./view/SceneLoader";
 import {TerrainInfo} from "../../common/struct/TerrainInfo";
@@ -17,6 +17,7 @@ import {GameConfig} from "../../GameConfig";
 import {Log} from "../../Log";
 import OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE;
 import SceneEntity from "./view/SceneEntity";
+import BasicElement from "./elements/BasicElement";
 
 export class SceneMediator extends MediatorBase {
     private flowManager: FlowManager;
@@ -89,6 +90,12 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.REMOVE_CHAT_BUBBLE, this.handleRemoveBubble, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
+
+        // Globals.game.input.onTap.add(this.onTapSceneHandler, this);
+        // Globals.LayerManager.sceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
+        // this.view.middleSceneLayer.inputEnableChildren = true;
+        // this.view.middleSceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
+        Globals.game.input.onTap.add(this.onTapSceneHandler, this);
     }
 
     public unRegisterSceneListenerHandler(): void {
@@ -110,6 +117,12 @@ export class SceneMediator extends MediatorBase {
 
 
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
+
+        // Globals.LayerManager.sceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
+        // Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
+        // this.view.middleSceneLayer.onChildInputDown.remove(this.onTapSceneHandler, this);
+        Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
+
     }
 
     protected get camera(): Phaser.Camera {
@@ -431,6 +444,30 @@ export class SceneMediator extends MediatorBase {
     }
 
     private changedToMapSceneStartHandler(): void {
+    }
+
+    onTapSceneHandler(target, pointer) {
+        // console.log(target, pointer);
+        // target.alpha = 0.5;
+        console.log("click: ", target);
+        const elements: BasicElement[] = this.view.getSceneElements();
+        for (const element of elements) {
+            // if (element instanceof BasicElement) {
+                if (element.checkPixel(target)) {
+                    // element.display.alpha = 0.5;
+                    this.sendClickElement(element);
+                    return;
+                }
+            // }
+        }
+    }
+
+    private sendClickElement(element: BasicElement) {
+        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SELECT_OBJECT);
+        let content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SELECT_OBJECT = pkt.content;
+        content.id = element.uid;
+        content.mouseEvent = op_def.MouseEvent.LeftMouseDown;
+        Globals.SocketManager.send(pkt);
     }
 }
 

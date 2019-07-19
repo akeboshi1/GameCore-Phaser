@@ -234,37 +234,72 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     ];
                 break;
             case ModuleTypeEnum.SHOP:
-                    nineSliceImageResource = [{
-                        key: UI.BagBg.getName(),
-                        png: UI.BagBg.getPNG(),
-                        top: 29,
-                        left: 13,
-                        right: 13,
-                        bottom: 11
-                    }];
-                    imageResource = [{
-                        key: UI.BagItemBg.getName(),
-                        png: UI.BagItemBg.getPNG()
-                    }, {
-                        key: UI.ShopTitle.getName(),
-                        png: UI.ShopTitle.getPNG()
-                    }, {
-                        key: UI.TuDing18.getName(),
-                        png: UI.TuDing18.getPNG()
-                    }, {
-                        key: UI.TuDing22.getName(),
-                        png: UI.TuDing22.getPNG()
-                    }];
-                    atlasResource = [{
-                        key: UI.ButtonBlue.getName(),
-                        png: UI.ButtonBlue.getPNG(),
-                        json: UI.ButtonBlue.getJSON()
-                    },
-                    {
-                        key: UI.ButtonBlueGreen.getName(),
-                        png: UI.ButtonBlueGreen.getPNG(),
-                        json: UI.ButtonBlueGreen.getJSON()
-                    }];
+                nineSliceImageResource = [{
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG(),
+                    top: 29,
+                    left: 13,
+                    right: 13,
+                    bottom: 11
+                }];
+                imageResource = [{
+                    key: UI.BagItemBg.getName(),
+                    png: UI.BagItemBg.getPNG()
+                }, {
+                    key: UI.ShopTitle.getName(),
+                    png: UI.ShopTitle.getPNG()
+                }, {
+                    key: UI.TuDing18.getName(),
+                    png: UI.TuDing18.getPNG()
+                }, {
+                    key: UI.TuDing22.getName(),
+                    png: UI.TuDing22.getPNG()
+                }];
+                atlasResource = [{
+                    key: UI.ButtonBlue.getName(),
+                    png: UI.ButtonBlue.getPNG(),
+                    json: UI.ButtonBlue.getJSON()
+                },
+                {
+                    key: UI.ButtonBlueGreen.getName(),
+                    png: UI.ButtonBlueGreen.getPNG(),
+                    json: UI.ButtonBlueGreen.getJSON()
+                }];
+                break;
+            case ModuleTypeEnum.UserMenu:
+                nineSliceImageResource = [{
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG(),
+                    top: 29,
+                    left: 13,
+                    right: 13,
+                    bottom: 11
+                }];
+                atlasResource = [{
+                    key: UI.ButtonBlue.getName(),
+                    png: UI.ButtonBlue.getPNG(),
+                    json: UI.ButtonBlue.getJSON()
+                },
+                {
+                    key: UI.ButtonBlueGreen.getName(),
+                    png: UI.ButtonBlueGreen.getPNG(),
+                    json: UI.ButtonBlueGreen.getJSON()
+                }];
+                break;
+            case ModuleTypeEnum.UserInfo:
+                nineSliceImageResource = [{
+                    key: UI.Background.getName(),
+                    png: UI.Background.getPNG(),
+                    top: 4,
+                    left: 4,
+                    right: 4,
+                    bottom: 4
+                }];
+                atlasResource = [{
+                    key: UI.ButtonChat.getName(),
+                    png: UI.ButtonChat.getPNG(),
+                    json: UI.ButtonChat.getJSON()
+                }];
                 break;
         }
 

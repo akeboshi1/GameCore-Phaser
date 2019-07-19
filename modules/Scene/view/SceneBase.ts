@@ -119,6 +119,10 @@ export class SceneBase extends SceneBasic {
     return this.mSceneElements.getValue(uid) as BasicSceneEntity;
   }
 
+  public getSceneElements() {
+    return this.mSceneElements.valueList;
+  }
+
   public removeSceneElementsBy(filterPassFunction: Function = null): void {
     let element: BasicSceneEntity;
     for (let i = 0; i < this.mSceneElements.valueList.length; i++) {

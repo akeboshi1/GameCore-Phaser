@@ -88,5 +88,7 @@ export class MessageType {
 
     public static QUERY_PACKAGE = "query_package";
     public static SYNC_USER_BALANCE = "syncUserBalance";
+
+    public static UPDATED_CHARACTER_PACKAGE = "updatedCharacterPackage";
 }
 

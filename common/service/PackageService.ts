@@ -1,7 +1,7 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import Globals from "../../Globals";
 import {BasePacketHandler} from "./BasePacketHandler";
-import {op_client} from "pixelpai_proto";
+import {op_client, op_def} from "pixelpai_proto";
 import {PBpacket} from "net-socket-packet";
 import {MessageType} from "../const/MessageType";
 
@@ -28,7 +28,11 @@ class Handler extends BasePacketHandler {
 
     private handleAddItem(packet: PBpacket): void {
         let content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM = packet.content;
-        Globals.DataCenter.SceneData.mapInfo.addElementPackItems(content.elementid, content.item);
+        if (content.nodetype === op_def.NodeType.ElementNodeType) {
+            Globals.DataCenter.SceneData.mapInfo.addElementPackItems(content.id, content.item);
+        } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
+            Globals.DataCenter.PlayerData.addCharacterPackItems(content.id, content.item);
+        }
         Globals.MessageCenter.emit(MessageType.PACKAGE_ITEM_ADD, content);
     }
 
@@ -36,8 +40,13 @@ class Handler extends BasePacketHandler {
         let content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM = packet.content;
         let len = content.itemId.length;
         for (let i = 0; i < len; i++) {
-            Globals.DataCenter.SceneData.mapInfo.removeElementPackItems(content.elementid, content.itemId[i]);
+            if (content.nodetype === op_def.NodeType.ElementNodeType) {
+                Globals.DataCenter.SceneData.mapInfo.removeElementPackItems(content.elementid, content.itemId[i]);
+            } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
+                Globals.DataCenter.PlayerData.removeCharacterPackItems(content.elementid, content.itemId[i]);
+            }
         }
+        Globals.MessageCenter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
         Globals.MessageCenter.emit(MessageType.PACKAGE_ITEM_REMOVE, content);
     }
 

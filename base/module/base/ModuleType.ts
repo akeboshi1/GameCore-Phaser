@@ -15,7 +15,9 @@ export class ModuleTypeEnum {
     public static MINIMAP = "MiniMap"; // 小地图
     public static VOTE = "Vote"; // 投票
     public static VOTERESULT = "VoteResult"; // 投票
-    public static NOTICE = "Notice"; //跑马灯公告
-    public static SHOP = "Shop"; //内购商城
-    public static MESSAGE_BOX = "MessageBox"; //弹窗
+    public static NOTICE = "Notice"; // 跑马灯公告
+    public static SHOP = "Shop"; // 内购商城
+    public static MESSAGE_BOX = "MessageBox"; // 弹窗
+    public static UserMenu = "UserMenu";  // 角色菜单
+    public static UserInfo = "UserInfo";  // 角色面板
 }

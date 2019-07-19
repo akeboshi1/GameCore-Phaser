@@ -35,6 +35,7 @@ export class ShopMediator extends MediatorBase {
     Globals.MessageCenter.cancel(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
     Globals.MessageCenter.cancel(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
 
+
     this.view.payBtn.cancel("up", this.onPayTuDingHandler, this);
     this.view.syncTuDing.cancel("up", this.syncUserBalance, this);
     this.view.scroll.changeIndex.remove(this.onChangeIndex, this);

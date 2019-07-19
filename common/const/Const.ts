@@ -96,7 +96,7 @@ export namespace Const {
         HeadHairBack = "head_hair_$_back",
         HeadMous = "head_mous_$",
         HeadHair = "head_hair_$",
-        HeadHats = "head_hats_$"
+        HeadHats = "head_hats_$",
     }
 
     export enum AvatarPartType {

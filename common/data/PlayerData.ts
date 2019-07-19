@@ -1,7 +1,7 @@
 import BaseSingleton from "../../base/BaseSingleton";
 import {MainPlayerInfo} from "../struct/MainPlayerInfo";
 import {PlayerInfo} from "../struct/PlayerInfo";
-import {op_client} from "pixelpai_proto";
+import {op_client, op_gameconfig} from "pixelpai_proto";
 import Globals from "../../Globals";
 import {MessageType} from "../const/MessageType";
 
@@ -87,6 +87,35 @@ export class PlayerData extends BaseSingleton {
                 break;
             }
         }
+    }
+
+    public addCharacterPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
+        let character = this.getPlayer(elementId);
+        if (character) {
+            if (!character.package) {
+                character.package = [];
+                character.package[0] = op_gameconfig.Package.create();
+                // element.package = op_gameconfig.Package.create();
+            }
+            character.package[0].items = character.package[0].items.concat(items);
+            if (character === this.mainPlayerInfo) {
+                Globals.MessageCenter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+            }
+        }
+    }
+
+    public removeCharacterPackItems(elementId: number, itemId: number): boolean {
+        let character = this.getPlayer(elementId);
+        if (character) {
+            let len = character.package[0].items.length;
+            for (let i = 0; i < len; i++) {
+                if (itemId === character.package[0].items[i].id) {
+                    character.package[i].items.splice(i, 1);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public getPlayer(uuid: number) {

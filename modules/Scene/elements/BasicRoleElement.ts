@@ -90,7 +90,9 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
         }
         (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
         this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z);
-        this.mouseEnable = false;
+        (<RoleBonesAvatar>this.display).inputEnabled = true;
+        // (<RoleBonesAvatar>this.display).input.pixelPerfectClick = true;
+        // this.mouseEnable = false;
 
         this.loadModel(this.characterInfo.avatar);
 
@@ -99,6 +101,10 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
     protected createDisplay(): any {
         let avatar = new RoleBonesAvatar(Globals.game);
         return avatar;
+    }
+
+    public checkPixel(pointer: Phaser.Pointer): boolean {
+        return this.display.input.checkPointerDown(pointer);
     }
 
     protected onUpdateByData(): void {
