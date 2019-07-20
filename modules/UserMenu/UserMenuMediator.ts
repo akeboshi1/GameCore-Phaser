@@ -8,6 +8,7 @@ import { ModuleTypeEnum } from "../../base/module/base/ModuleType";
 
 export class UserMenuMediator extends MediatorBase {
   onRegister() {
+    this.initView();
     super.onRegister();
     this.view.up.add(this.clickButtonHandler, this);
     Globals.MessageCenter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
@@ -19,7 +20,7 @@ export class UserMenuMediator extends MediatorBase {
     Globals.MessageCenter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
   }
 
-  preRecover() {
+  private initView() {
     if (this.param && this.param.length > 0) {
       this.view.addItem(this.param[0]);
     }

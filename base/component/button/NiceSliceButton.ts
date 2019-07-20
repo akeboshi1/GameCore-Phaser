@@ -130,26 +130,26 @@ export class NiceSliceButton extends Phaser.Group {
         }
     }
 
-    private handleOver(): void {
+    protected handleOver(): void {
         this.mOverFrame.visible = true;
         this.mOutFrame.visible = false;
         this.mDownFrame.visible = false;
     }
 
-    private handleOut(): void {
+    protected handleOut(): void {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = true;
         this.mDownFrame.visible = false;
     }
 
-    private handleDown(): void {
+    protected handleDown(): void {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = false;
         this.mDownFrame.visible = true;
         this.emit("down", this);
     }
 
-    private handleUp(): void {
+    protected handleUp(): void {
         this.mOverFrame.visible = false;
         this.mOutFrame.visible = true;
         this.mDownFrame.visible = false;

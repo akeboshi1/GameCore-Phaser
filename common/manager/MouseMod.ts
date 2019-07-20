@@ -35,7 +35,7 @@ export class MouseMod extends BaseSingleton {
 
     public init(game: Phaser.Game): void {
         this.game = game;
-        // this.activePointer = this.game.input.activePointer;
+        this.activePointer = this.game.input.activePointer;
         // this.input = this.game.input;
         // if (this.activePointer) {
         //   this.activePointer.leftButton.onDown.add(this.keyDownHandle, this);
@@ -139,6 +139,7 @@ export class MouseMod extends BaseSingleton {
         content.mouseEvent = events;
         content.point3f = {x: currentX, y: currentY};
         Globals.SocketManager.send(pkt);
+        console.log("click background");
         Globals.MessageCenter.emit(MessageType.SCENE_BACKGROUND_CLICK);
     }
 
@@ -185,6 +186,7 @@ export class MouseMod extends BaseSingleton {
         content.mouseEvent = events;
         content.point3f = {x: this.activePointer.x + this.game.camera.x, y: this.activePointer.y + this.game.camera.y};
         Globals.SocketManager.send(pkt);
+        Globals.MessageCenter.emit(MessageType.SCENE_BACKGROUND_CLICK);
     }
 
     public dispose(): void {

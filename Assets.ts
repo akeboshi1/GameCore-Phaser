@@ -569,6 +569,28 @@ export namespace UI {
         }
     }
 
+    export class ButtonTransparent {
+        static getName(): string {
+            return "ui_button_transparent_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/button_transparent.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/button_transparent.json");
+        }
+
+        static getWidth(): number {
+            return 10;
+        }
+
+        static getHeight(): number {
+            return 10;
+        }
+    }
+
     export class ShopTitle {
         static getName(): string {
             return "ui_shop_shop_title_png";

@@ -1,15 +1,12 @@
-import Globals from "../../../Globals";
-import { Point } from "phaser-ce";
 import { NiceSliceButton } from "../../../base/component/button/NiceSliceButton";
 import { UI } from "../../../Assets";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
-import { CommWindowModuleView } from "../../../common/view/CommWindowModuleView ";
 import { ModuleViewBase } from "../../../common/view/ModuleViewBase";
 import { MenuItem } from "./menu/MenuItem";
 
 export class UserMenuView extends ModuleViewBase {
   private background: PhaserNineSlice.NineSlice;
-  private btnList: MenuItem[] = [];
+  private menus: MenuItem[] = [];
 
   public up: Phaser.Signal = new Phaser.Signal();
   constructor(game: Phaser.Game) {
@@ -17,24 +14,21 @@ export class UserMenuView extends ModuleViewBase {
   }
 
   protected init() {
-    // this.background = new PhaserNineSlice.NineSlice(this.game, 0, 0, "", "", 0, 0);
-    // this.add(this.background);
+    super.init();
+    this.background = new PhaserNineSlice.NineSlice(this.game, 0, 0, UI.Background.getName(), null, 0, 0);
+    this.add(this.background);
   }
 
   public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
     this.clear();
     const menu: op_gameconfig_01.IMenuItem[] = params.menuItem;
     for (let i = 0; i < menu.length; i++) {
-      let button = new MenuItem(this.game, 0, i * 32, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
-        top: 4,
-        bottom: 4,
-        left: 4,
-        right: 4}, menu[i].text, 14);
-      this.add(button);
-      button.node = menu[i].node;
-      button.on("up", this.onClickButton, this);
-      this.btnList.push(button);
+      const btn = this.appendItem(menu[i], 0, i * 32);
+      this.add(btn);
+      this.menus.push(btn);
     }
+
+    this.resize(this.width, this.menus.length * 30);
 
     // let layer = Globals.LayerManager.sceneLayer;
     // const p = layer.toLocal(new Point(this.game.input.activePointer.x, this.game.input.activePointer.y), this.game.stage);
@@ -42,17 +36,45 @@ export class UserMenuView extends ModuleViewBase {
     this.y = this.game.input.activePointer.y;
   }
 
-  private onClickButton(target: NiceSliceButton) {
-    this.up.dispatch(target.node);
-    this.emit("close");
+  private appendItem(menu: op_gameconfig_01.IMenuItem, x: number, y: number): MenuItem {
+    let button = new MenuItem(this.game, x, y, UI.ButtonTransparent.getName(), "button_over.png", "button_out.png", "button_down.png", 70, 29, {
+      top: 4,
+      bottom: 4,
+      left: 4,
+      right: 4}, menu.text, 14);
+    button.node = menu.node;
+    button.on("up", this.onClickButton, this);
+    if (menu.child.length > 0) {
+      const menuChild = menu.child;
+      for (const child of menuChild) {
+        let btn = this.appendItem(child, 0, button.menus.length * 32);
+        button.appendItem(btn);
+      }
+    }
+    return button;
+  }
+
+  private onClickButton(target: MenuItem) {
+    if (target.menus.length > 0) {
+      target.show();
+    } else {
+      this.up.dispatch(target.node);
+      this.emit("close");
+    }
   }
 
   private clear() {
-    for (const btn of this.btnList) {
+    for (const btn of this.menus) {
       this.remove(btn);
       btn.destroy();
     }
-    this.btnList.length = 0;
+    this.menus.length = 0;
+  }
+
+  private resize(width: number, height: number) {
+    if (this.background) {
+      this.background.resize(width, height);
+    }
   }
 
 }

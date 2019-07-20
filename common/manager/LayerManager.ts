@@ -22,7 +22,7 @@ export class LayerManager extends BaseSingleton {
     this.container = game.add.group();
 
     this.sceneLayer = new Phaser.Group(game, this.container, "sceneLayer");
-    this.sceneLayer.inputEnableChildren = true;
+    // this.sceneLayer.inputEnableChildren = true;
 
     this.animationLayer = new Phaser.Group(game, this.container, "animationLayer");
     this.animationLayer.fixedToCamera = true;

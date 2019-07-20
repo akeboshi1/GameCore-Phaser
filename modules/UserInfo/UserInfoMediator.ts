@@ -21,6 +21,12 @@ export class UserInfoMediator extends MediatorBase {
     super.onRemove();
   }
 
+  preRecover() {
+    if (this.param && this.param.length > 0) {
+      this.view.setData(this.param[0]);
+    }
+  }
+
   private initView() {
     this.view.setData(this.param[0]);
   }

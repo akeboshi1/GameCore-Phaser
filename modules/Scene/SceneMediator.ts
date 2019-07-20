@@ -447,18 +447,13 @@ export class SceneMediator extends MediatorBase {
     }
 
     onTapSceneHandler(target, pointer) {
-        console.log(target, pointer);
-        // target.alpha = 0.5;
-        console.log("click: ", target);
         const elements: BasicElement[] = this.view.getSceneElements();
         for (const element of elements) {
-            // if (element instanceof BasicElement) {
-                if (element.checkPixel(pointer)) {
-                    element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
-                    this.sendClickElement(element);
-                    return;
-                }
-            // }
+            if (element.checkPixel(pointer)) {
+                // element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
+                this.sendClickElement(element);
+                return;
+            }
         }
     }
 

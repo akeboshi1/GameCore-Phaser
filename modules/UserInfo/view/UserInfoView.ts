@@ -17,6 +17,7 @@ export class UserInfoView extends CommWindowModuleView {
   }
 
   init() {
+    this.inputEnableChildren = true;
     this.background = this.game.add.nineSlice(0, 0, UI.BagBg.getName(), null, 360, 200, this);
 
     let nickNameLabel = this.game.make.text(20, -5, "昵称：", {font: "18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b4b4b4"});
@@ -69,6 +70,7 @@ export class UserInfoView extends CommWindowModuleView {
       this.mActor.load(display[0].texturePath);
     }
 
+    this.clearBadge();
     for (let i = 1; i < display.length; i++) {
       let badge = new DynamicImage(this.game, (i - 1) * 70 + 27, 68, null);
       badge.load(display[i].texturePath);
