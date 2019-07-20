@@ -3,17 +3,21 @@ import { UserInfoView } from "./view/UserInfoView";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import Globals from "../../Globals";
+import { MessageType } from "../../common/const/MessageType";
+import { ModuleTypeEnum } from "../../base/module/base/ModuleType";
 
 export class UserInfoMediator extends MediatorBase {
 
   onRegister() {
     this.initView();
     this.view.follwerBtn.on("up", this.showUIHandler, this);
+    Globals.MessageCenter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
     super.onRegister();
   }
 
   onRemove() {
-    this.view.follwerBtn.on("up", this.showUIHandler, this);
+    this.view.follwerBtn.cancel("up", this.showUIHandler, this);
+    Globals.MessageCenter.cancel(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
     super.onRemove();
   }
 
@@ -21,13 +25,23 @@ export class UserInfoMediator extends MediatorBase {
     this.view.setData(this.param[0]);
   }
 
+  public update() {
+    if (this.param && this.param.length > 0) {
+      this.view.setData(this.param[0]);
+    }
+  }
+
   private showUIHandler(item) {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
     let content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
     content.uiId = this.m_Param[0].id;
-    content.componentId = item.id;
+    content.componentId = item.node.id;
 
     Globals.SocketManager.send(pkt);
+  }
+
+  private onBackgroundClickHandler() {
+    Globals.ModuleManager.closeModule(ModuleTypeEnum.UserInfo);
   }
 
   get view(): UserInfoView {

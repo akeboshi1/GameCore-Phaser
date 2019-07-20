@@ -3,16 +3,20 @@ import { UserMenuView } from "./view/UserMenuView";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import Globals from "../../Globals";
+import { MessageType } from "../../common/const/MessageType";
+import { ModuleTypeEnum } from "../../base/module/base/ModuleType";
 
 export class UserMenuMediator extends MediatorBase {
   onRegister() {
     super.onRegister();
     this.view.up.add(this.clickButtonHandler, this);
+    Globals.MessageCenter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
   }
 
   onRemove() {
     super.onRemove();
     this.view.up.remove(this.clickButtonHandler, this);
+    Globals.MessageCenter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
   }
 
   preRecover() {
@@ -34,6 +38,10 @@ export class UserMenuMediator extends MediatorBase {
     content.componentId = item.id;
 
     Globals.SocketManager.send(pkt);
+  }
+
+  private onBackgroundClickHandler() {
+    Globals.ModuleManager.closeModule(ModuleTypeEnum.UserMenu);
   }
 
   private get view(): UserMenuView {

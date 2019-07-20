@@ -5,6 +5,7 @@ import Globals from "../../Globals";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT;
 import { Tick } from "../tick/Tick";
 import { LayerManager } from "./LayerManager";
+import { MessageType } from "../const/MessageType";
 
 export class MouseMod extends BaseSingleton {
     private game: Phaser.Game;
@@ -103,8 +104,7 @@ export class MouseMod extends BaseSingleton {
 
     private onTick(deltaTime: number): void {
         this.mAccumulative += deltaTime;
-        if (this.mAccumulative > this.mInterval)
-        {
+        if (this.mAccumulative > this.mInterval) {
             this.onHoldUpdate();
             this.mAccumulative = 0;
         }
@@ -139,7 +139,7 @@ export class MouseMod extends BaseSingleton {
         content.mouseEvent = events;
         content.point3f = {x: currentX, y: currentY};
         Globals.SocketManager.send(pkt);
-
+        Globals.MessageCenter.emit(MessageType.SCENE_BACKGROUND_CLICK);
     }
 
     public onUpdate(): void {
