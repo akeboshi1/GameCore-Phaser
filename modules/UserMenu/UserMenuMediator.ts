@@ -21,6 +21,12 @@ export class UserMenuMediator extends MediatorBase {
     }
   }
 
+  update() {
+    if (this.param && this.param.length > 0) {
+      this.view.addItem(this.param[0]);
+    }
+  }
+
   private clickButtonHandler(item) {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
     let content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;

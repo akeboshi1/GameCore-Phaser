@@ -41,9 +41,9 @@ class Handler extends BasePacketHandler {
         let len = content.itemId.length;
         for (let i = 0; i < len; i++) {
             if (content.nodetype === op_def.NodeType.ElementNodeType) {
-                Globals.DataCenter.SceneData.mapInfo.removeElementPackItems(content.elementid, content.itemId[i]);
+                Globals.DataCenter.SceneData.mapInfo.removeElementPackItems(content.id, content.itemId[i]);
             } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
-                Globals.DataCenter.PlayerData.removeCharacterPackItems(content.elementid, content.itemId[i]);
+                Globals.DataCenter.PlayerData.removeCharacterPackItems(content.id, content.itemId[i]);
             }
         }
         Globals.MessageCenter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);

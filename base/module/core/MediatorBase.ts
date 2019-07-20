@@ -44,6 +44,11 @@ export class MediatorBase implements IMediator {
         Globals.MessageCenter.on(MessageType.CLIENT_RESIZE, this.stageResizeHandler, this);
     }
 
+    public update(): void {
+    }
+
+    public onUpdate() { }
+
     protected stageResizeHandler(): void {
         if (this.viewComponent === undefined) {
             return;

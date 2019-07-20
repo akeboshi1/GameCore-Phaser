@@ -49,6 +49,17 @@ export class PromptContext implements IModuleContext {
         this.m_ModuleParam = param;
     }
 
+    public update() {
+        if (this.m_Mediator) {
+            this.m_Mediator.setParam(this.m_ModuleParam);
+            this.m_Mediator.update();
+        }
+        if (this.m_AlertMediator) {
+            this.m_AlertMediator.setParam(this.m_ModuleParam);
+            this.m_AlertMediator.update();
+        }
+    }
+
     protected registerMediator(): void {
         this.m_Mediator = new PromptMediator();
         this.m_AlertMediator = new AlertMediator();

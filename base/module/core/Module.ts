@@ -19,6 +19,10 @@ export class Module implements IModule {
         this.m_ModuleParam = param;
     }
 
+    public assignParam(param: any) {
+        this.m_ModuleParam = Object.assign(this.m_ModuleParam, param);
+    }
+
     public get context(): IModuleContext {
         return this.m_Context;
     }
@@ -50,6 +54,14 @@ export class Module implements IModule {
         if ( this.m_Context ) this.m_Context.recover();
         this.onRecover();
         this.m_Status = Const.ModuleEnum.MODULE_STATUS_RUN;
+    }
+
+    public update() {
+        if (this.m_Status === Const.ModuleEnum.MODULE_STATUS_STOP) return;
+        if (this.m_Context) {
+            this.m_Context.setParam(this.m_ModuleParam);
+            this.m_Context.update();
+        }
     }
 
     protected onRecover(): void {}

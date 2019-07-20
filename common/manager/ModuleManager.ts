@@ -324,6 +324,14 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         this.createModule(module);
     }
 
+    public updateModule(moduleName: string, ...param: any[]) {
+        let module: IModule = this.getModule(moduleName);
+        if (module) {
+            module.assignParam(param);
+            module.update();
+        }
+    }
+
     public closeModule(moduleName: string): void {
         let module: IModule = this.getModule(moduleName);
         if (module) {

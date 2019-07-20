@@ -95,7 +95,7 @@ export class SceneMediator extends MediatorBase {
         // Globals.LayerManager.sceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
         // this.view.middleSceneLayer.inputEnableChildren = true;
         // this.view.middleSceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
-        Globals.game.input.onTap.add(this.onTapSceneHandler, this);
+        // Globals.game.input.onTap.add(this.onTapSceneHandler, this);
     }
 
     public unRegisterSceneListenerHandler(): void {
@@ -121,7 +121,7 @@ export class SceneMediator extends MediatorBase {
         // Globals.LayerManager.sceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
         // Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
         // this.view.middleSceneLayer.onChildInputDown.remove(this.onTapSceneHandler, this);
-        Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
+        // Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
 
     }
 
@@ -447,14 +447,14 @@ export class SceneMediator extends MediatorBase {
     }
 
     onTapSceneHandler(target, pointer) {
-        // console.log(target, pointer);
+        console.log(target, pointer);
         // target.alpha = 0.5;
         console.log("click: ", target);
         const elements: BasicElement[] = this.view.getSceneElements();
         for (const element of elements) {
             // if (element instanceof BasicElement) {
-                if (element.checkPixel(target)) {
-                    // element.display.alpha = 0.5;
+                if (element.checkPixel(pointer)) {
+                    element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
                     this.sendClickElement(element);
                     return;
                 }

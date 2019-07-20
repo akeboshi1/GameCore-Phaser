@@ -92,7 +92,17 @@ export class BasicElementAvatar extends BasicAvatar implements IAnimatedObject {
         if (this.getOwner()) {
             this.getOwner().onDisplayLoadCompleted();
         }
+
+        // let graphics = this.game.make.graphics();
+        // graphics.beginFill(0xFFFF00, 0.5);
+        // graphics.drawRect(0, 0, this.mLoaderAvatar.width, this.mLoaderAvatar.height);
+        // graphics.endFill();
+        // this.addChild(graphics);
     }
+
+    // public getBounds(): Rectangle {
+    //     return new Phaser.Rectangle(this.mLoaderAvatar.x, this.mLoaderAvatar.y, this.mLoaderAvatar.width, this.mLoaderAvatar.height);
+    // }
 
     public onDispose(): void {
         if (this.mLoaderAvatar) {

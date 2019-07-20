@@ -6,7 +6,7 @@ import { UserInfoContext } from "./UserInfoContext";
 export class UserInfoModule extends CommWindowModule {
   onStartUp() {
     this.m_View = new UserInfoView(Globals.game);
-    this.m_ParentContainer = Globals.LayerManager.sceneLayer;
+    this.m_ParentContainer = Globals.LayerManager.uiLayer;
     this.m_ParentContainer.add(this.m_View);
     this.m_Context = new UserInfoContext(this.m_View);
   }

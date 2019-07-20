@@ -5,8 +5,8 @@ import { ToolTip } from "./ToolTip";
 export class ToolTipManager extends BaseSingleton {
   // private toolTipTarget: Phaser.Sprite;
   private currentToolTip: ToolTip;
-  private toolTipMap: Map<Phaser.Sprite, ToolTip> = new Map();
-  public setToolTip(target: Phaser.Sprite, tooltip: ToolTip) {
+  private toolTipMap: Map<Phaser.Sprite|Phaser.Image, ToolTip> = new Map();
+  public setToolTip(target: Phaser.Sprite|Phaser.Image, tooltip: ToolTip) {
     if (tooltip) {
       this.toolTipMap.set(target, tooltip);
       target.events.onInputOver.add(this.onMouseOverHandler, this);

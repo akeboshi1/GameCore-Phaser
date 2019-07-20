@@ -6,7 +6,7 @@ import { UserMenuView } from "./view/UserMenuView";
 export class UserMenuModule extends CommWindowModule {
   onStartUp() {
     this.m_View = new UserMenuView(Globals.game);
-    this.m_ParentContainer = Globals.LayerManager.sceneLayer;
+    this.m_ParentContainer = Globals.LayerManager.uiLayer;
     this.m_ParentContainer.add(this.m_View);
     this.m_Context = new UserMenuContext(this.m_View);
   }

@@ -5,10 +5,11 @@ import { UI } from "../../../Assets";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { CommWindowModuleView } from "../../../common/view/CommWindowModuleView ";
 import { ModuleViewBase } from "../../../common/view/ModuleViewBase";
+import { MenuItem } from "./menu/MenuItem";
 
 export class UserMenuView extends ModuleViewBase {
   private background: PhaserNineSlice.NineSlice;
-  private btnList: NiceSliceButton[] = [];
+  private btnList: MenuItem[] = [];
 
   public up: Phaser.Signal = new Phaser.Signal();
   constructor(game: Phaser.Game) {
@@ -16,15 +17,15 @@ export class UserMenuView extends ModuleViewBase {
   }
 
   protected init() {
-    this.background = new PhaserNineSlice.NineSlice(this.game, 0, 0, "", "", 0, 0);
-    this.add(this.background);
+    // this.background = new PhaserNineSlice.NineSlice(this.game, 0, 0, "", "", 0, 0);
+    // this.add(this.background);
   }
 
   public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
     this.clear();
     const menu: op_gameconfig_01.IMenuItem[] = params.menuItem;
     for (let i = 0; i < menu.length; i++) {
-      let button = new NiceSliceButton(this.game, 0, i * 32, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
+      let button = new MenuItem(this.game, 0, i * 32, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
         top: 4,
         bottom: 4,
         left: 4,
@@ -35,16 +36,15 @@ export class UserMenuView extends ModuleViewBase {
       this.btnList.push(button);
     }
 
-    let layer = Globals.LayerManager.sceneLayer;
-    const p = layer.toLocal(new Point(this.game.input.activePointer.x, this.game.input.activePointer.y), this.game.stage);
-    this.x = p.x;
-    this.y = p.y;
+    // let layer = Globals.LayerManager.sceneLayer;
+    // const p = layer.toLocal(new Point(this.game.input.activePointer.x, this.game.input.activePointer.y), this.game.stage);
+    this.x = this.game.input.activePointer.x;
+    this.y = this.game.input.activePointer.y;
   }
 
   private onClickButton(target: NiceSliceButton) {
-    // this.emit("close");
     this.up.dispatch(target.node);
-    // this.onCloseClick();
+    this.emit("close");
   }
 
   private clear() {

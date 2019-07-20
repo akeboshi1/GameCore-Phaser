@@ -38,6 +38,12 @@ export class ModuleContext implements IModuleContext {
         this.m_ModuleParam = param;
     }
 
+    public update() {
+        if (this.m_Mediator) {
+            this.m_Mediator.update();
+        }
+    }
+
     public getView(): Phaser.Sprite {
         return this.m_ModuleView;
     }

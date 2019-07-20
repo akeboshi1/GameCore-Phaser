@@ -110,7 +110,7 @@ export class PlayerData extends BaseSingleton {
             let len = character.package[0].items.length;
             for (let i = 0; i < len; i++) {
                 if (itemId === character.package[0].items[i].id) {
-                    character.package[i].items.splice(i, 1);
+                    character.package[0].items.splice(i, 1);
                     return true;
                 }
             }

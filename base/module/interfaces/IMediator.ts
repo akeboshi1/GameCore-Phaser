@@ -15,4 +15,7 @@ export interface IMediator {
 
     preRemove(): void;
     onRemove(): void;
+
+    update(): void;
+    onUpdate(): void;
 }

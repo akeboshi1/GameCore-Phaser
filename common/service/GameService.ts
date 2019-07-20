@@ -24,6 +24,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.handleSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_GAME_OVER, this.handleGameOver);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_USER_BALANCE, this.handleSyncUserBalance);
     }
@@ -31,6 +32,11 @@ class Handler extends BasePacketHandler {
     private handleShowUI(packet: PBpacket): void {
         let ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         Globals.ModuleManager.openModule(ui.name, ui);
+    }
+
+    private handleUpdateUI(packet: PBpacket) {
+        let ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
+        Globals.ModuleManager.updateModule(ui.name, ui);
     }
 
     private handleCloseUI(packet: PBpacket): void {

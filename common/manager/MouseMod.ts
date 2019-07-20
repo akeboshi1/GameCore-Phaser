@@ -99,7 +99,6 @@ export class MouseMod extends BaseSingleton {
         if (this.r_d) {
             this.r_h = true;
         }
-        
     }
 
     private onTick(deltaTime: number): void {
@@ -115,14 +114,11 @@ export class MouseMod extends BaseSingleton {
         if (this.running === false || this.activePointer === undefined) {
             return;
         }
-        if (!this.r_h && !this.l_h)
-        {
-            return;
-        }
+        if (!this.r_h && !this.l_h) return;
         const currentX = this.activePointer.x + this.game.camera.x;
         const currentY = this.activePointer.y + this.game.camera.y;
         let events: number[] = [];
-        if (this.game.input.mousePointer.isDown && 
+        if (this.game.input.mousePointer.isDown &&
             ((this.mLastX - currentX) ** 2 + (this.mLastY - currentY) ** 2) > this.minimumDistance) {
                 if (this.game.input.activePointer.leftButton.isDown && this.l_h) {
                     events.push(op_def.MouseEvent.LeftMouseHolding);

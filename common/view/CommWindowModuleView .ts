@@ -51,8 +51,10 @@ export class CommWindowModuleView extends ModuleViewBase {
     }
 
     public onDispose(): void {
-        this.m_CloseBt.events.onInputUp.remove(this.onCloseClick, this);
-        this.m_CloseBt = null;
+        if (this.m_CloseBt) {
+            this.m_CloseBt.events.onInputUp.remove(this.onCloseClick, this);
+            this.m_CloseBt = null;
+        }
         super.onDispose();
     }
 }
