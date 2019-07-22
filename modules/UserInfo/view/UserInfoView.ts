@@ -48,7 +48,9 @@ export class UserInfoView extends CommWindowModuleView {
     this.mFollwerBtn.setTextFill("#FFFFFF");
     this.add(this.mFollwerBtn);
 
-    this.mActor = new DynamicImage(this.game, 260, 0, null);
+    this.mActor = new DynamicImage(this.game, 250, 0, null);
+    this.mActor.scale.set(2, 2);
+    this.mActor.smoothed = false;
     this.add(this.mActor);
   }
 
@@ -67,7 +69,7 @@ export class UserInfoView extends CommWindowModuleView {
 
     const display = data.images;
     if (display && display.length) {
-      this.mActor.load(display[0].texturePath);
+      this.mActor.load(display[0].texturePath, this, null, this.avatarLoadError);
     }
 
     this.clearBadge();
@@ -84,6 +86,10 @@ export class UserInfoView extends CommWindowModuleView {
 
     this.x = this.game.width - 360 - 6;
     this.y = this.game.height - 200 - 70;
+  }
+
+  private avatarLoadError() {
+    this.mActor.load("show/avatar_default.png");
   }
 
   get follwerBtn(): NiceSliceButton {

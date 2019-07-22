@@ -9,6 +9,8 @@ import Slot = dragonBones.Slot;
 
 export class DisplayArmatureDisplay implements IRecycleObject {
   public armature: dragonBones.PhaserArmatureDisplay;
+  private mLoopCompleteCallBack: Function;
+  private mThisArgs: any;
   protected modelId: string;
 
   constructor(value: string) {
@@ -19,7 +21,7 @@ export class DisplayArmatureDisplay implements IRecycleObject {
   /**
    * 动画
    */
-  public playAnimation(animationName: string, angleIndex: number): void {
+  public playAnimation(animationName: string, angleIndex: number, playTimers?: number): void {
     // console.log(this.direct);
     // Log.trace("播放动画--->" + animationName + "|" + angleIndex);
     this.armature.scale.x = GameConst.BONES_SCALE;
@@ -34,7 +36,7 @@ export class DisplayArmatureDisplay implements IRecycleObject {
       this.armature.scale.x = -GameConst.BONES_SCALE;
     }
     // this.armature.animation.timeScale = 0.69;
-    this.armature.armature.animation.play(animationName + "_" + t_direct);
+    this.armature.armature.animation.play(animationName + "_" + t_direct, playTimers);
     // Log.trace("[动画]", animationName + "_" + t_direct);
   }
 
@@ -83,9 +85,15 @@ export class DisplayArmatureDisplay implements IRecycleObject {
   public onDispose(): void {
     this.onClear();
     if (this.armature) {
+      this.armature.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onLoopCompleteHandler, this);
       this.armature.destroy();
       this.armature = null;
     }
+  }
+
+  public setLoopCallBackCall(callBack: Function, thisArgs: any) {
+    this.mLoopCompleteCallBack = callBack;
+    this.mThisArgs = thisArgs;
   }
 
   public onRecycle(): void {
@@ -97,6 +105,14 @@ export class DisplayArmatureDisplay implements IRecycleObject {
     const factory = dragonBones.PhaserFactory.factory;
     this.armature = factory.buildArmatureDisplay(GameConfig.ArmatureName, this.modelId);
     this.armature.scale.x = this.armature.scale.y = GameConst.BONES_SCALE;
+    this.armature.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onLoopCompleteHandler, this);
+  }
+
+  private onLoopCompleteHandler() {
+    if (this.mLoopCompleteCallBack) {
+      this.mLoopCompleteCallBack.call(this.mThisArgs);
+      this.mLoopCompleteCallBack = null;
+    }
   }
 
   protected getObjectPool(value: string): IObjectPool {

@@ -79,6 +79,7 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
         this.mLoaderAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
         this.mLoaderAvatar.visible = false;
+        this.mLoaderAvatar.
         this.addChild(this.mLoaderAvatar);
 
         this.mHeadName = Globals.game.make.text(0, -96, "" , {fontSize: 15, fill: "#FFF"});

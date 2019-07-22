@@ -43,6 +43,7 @@ export default class Game extends Phaser.Game implements IGame {
     GameConfig.GameWidth = value.width;
     GameConfig.GameHeight = value.height;
     GameConfig.HomeDir = value.homeDir;
+    // GameConfig.HomeDir = "https://osd-dev.tooqing.com/";
 
     Globals.SocketManager.setSocketConnection(value.iSocketConnection);
     Globals.ServiceCenter.register();

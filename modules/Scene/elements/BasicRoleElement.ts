@@ -12,7 +12,6 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
     protected myAnimationName: string = Const.ModelStateType.BONES_STAND;
     private mAnimationDirty = false;
 
-
     public constructor() {
         super();
         this.baseLoc = new Phaser.Point(0, GameConst.ROLE_AVATAR_OFFSET_Y);

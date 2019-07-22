@@ -30,6 +30,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     private myModelDirty = false;
     private mModelLoaded = false;
     private mLoadCompleteCallback: Function;
+    private mDragonLoopCompleteCallBack: Function;
     private mLoadThisObj: any;
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
@@ -50,10 +51,10 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     /**
      * 动画
      */
-    public playAnimation(animationName: string, angleIndex: number): void {
+    public playAnimation(animationName: string, angleIndex: number, playTimers?: number): void {
         // console.log(this.direct);
         // Log.trace("播放动画--->" + animationName + "|" + angleIndex);
-        this.armatureDisplay.playAnimation(animationName, angleIndex);
+        this.armatureDisplay.playAnimation(animationName, angleIndex, playTimers);
     }
 
     public loadModel(model: op_gameconfig.IAvatar, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {

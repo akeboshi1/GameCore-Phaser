@@ -5,6 +5,7 @@ import { ToolTip } from "../tooltip/ToolTip";
 export class DynamicImage extends Phaser.Image {
   protected mLoadThisArg: any;
   protected mLoadCompleteCallback: Function;
+  protected mLoadErrorCallback: Function;
   protected m_Url: string;
   protected mModelLoaded = false;
 
@@ -15,8 +16,9 @@ export class DynamicImage extends Phaser.Image {
     super(game, x, y, key, frame);
   }
 
-  public load(value: string, thisArg?: any, onLoadComplete?: Function) {
+  public load(value: string, thisArg?: any, onLoadComplete?: Function, mLoadErrorCallback?: Function) {
     this.mLoadCompleteCallback = onLoadComplete;
+    this.mLoadErrorCallback = mLoadErrorCallback;
     this.mLoadThisArg = thisArg;
 
     this.closeLoadModel();
@@ -27,7 +29,7 @@ export class DynamicImage extends Phaser.Image {
         this.modelLoadCompleteHandler();
     } else {
         this.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-        // this.game.load.onFileError
+        this.game.load.onFileError.addOnce(this.moduleErrorHanlder, this);
         this.game.load.image(key, Load.Url.getRes(this.m_Url));
         this.game.load.start();
     }
@@ -82,5 +84,14 @@ export class DynamicImage extends Phaser.Image {
   public destroy(destroyChildren?: boolean) {
     Globals.ToolTipManager.setToolTip(this, null);
     super.destroy(destroyChildren);
+  }
+
+  private moduleErrorHanlder() {
+    if (this.mLoadErrorCallback) {
+      let cb: Function = this.mLoadErrorCallback;
+      this.mLoadErrorCallback = null;
+      cb.apply(this.mLoadThisArg);
+      this.mLoadThisArg = null;
+    }
   }
 }
