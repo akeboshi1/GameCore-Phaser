@@ -30,7 +30,6 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     private myModelDirty = false;
     private mModelLoaded = false;
     private mLoadCompleteCallback: Function;
-    private mDragonLoopCompleteCallBack: Function;
     private mLoadThisObj: any;
     private mAnimatonControlFunc: Function;
     private mAnimatonControlFuncDitry: boolean;
@@ -42,6 +41,12 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
         this.mAnimatonControlFunc = value;
         this.mAnimatonControlThisObj = thisObj;
         this.mAnimatonControlFuncDitry = true;
+    }
+
+    public setAnimationCompleteFunc(complete: Function, thisArgs: any): void {
+        if (this.armatureDisplay) {
+            this.armatureDisplay.setLoopCallBackCall(complete, thisArgs);
+        }
     }
 
     public invalidAnimationControlFunc(): void {
@@ -644,17 +649,17 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     protected modelLoadCompleteHandler(): void {
         this.mModelLoaded = true;
 
+        this.init();
+
+        this.replaceSkin();
+
+        this.invalidAnimationControlFunc();
+
         if (this.mLoadCompleteCallback != null) {
             let cb: Function = this.mLoadCompleteCallback;
             this.mLoadCompleteCallback = null;
             cb.apply(this.mLoadThisObj);
             this.mLoadThisObj = null;
         }
-
-        this.init();
-
-        this.replaceSkin();
-
-        this.invalidAnimationControlFunc();
     }
 }

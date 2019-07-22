@@ -9,9 +9,11 @@ import Slot = dragonBones.Slot;
 
 export class DisplayArmatureDisplay implements IRecycleObject {
   public armature: dragonBones.PhaserArmatureDisplay;
-  private mLoopCompleteCallBack: Function;
+  private mAnimationCompleteCallBack: Function;
   private mThisArgs: any;
   protected modelId: string;
+
+  protected mAnimationName: string;
 
   constructor(value: string) {
     this.modelId = value;
@@ -22,6 +24,7 @@ export class DisplayArmatureDisplay implements IRecycleObject {
    * 动画
    */
   public playAnimation(animationName: string, angleIndex: number, playTimers?: number): void {
+    this.mAnimationName = animationName;
     // console.log(this.direct);
     // Log.trace("播放动画--->" + animationName + "|" + angleIndex);
     this.armature.scale.x = GameConst.BONES_SCALE;
@@ -85,14 +88,14 @@ export class DisplayArmatureDisplay implements IRecycleObject {
   public onDispose(): void {
     this.onClear();
     if (this.armature) {
-      this.armature.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onLoopCompleteHandler, this);
+    this.armature.removeDBEventListener(dragonBones.EventObject.COMPLETE, this.onCompleteHandler, this);
       this.armature.destroy();
       this.armature = null;
     }
   }
 
   public setLoopCallBackCall(callBack: Function, thisArgs: any) {
-    this.mLoopCompleteCallBack = callBack;
+    this.mAnimationCompleteCallBack = callBack;
     this.mThisArgs = thisArgs;
   }
 
@@ -105,13 +108,12 @@ export class DisplayArmatureDisplay implements IRecycleObject {
     const factory = dragonBones.PhaserFactory.factory;
     this.armature = factory.buildArmatureDisplay(GameConfig.ArmatureName, this.modelId);
     this.armature.scale.x = this.armature.scale.y = GameConst.BONES_SCALE;
-    this.armature.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onLoopCompleteHandler, this);
+    this.armature.addDBEventListener(dragonBones.EventObject.COMPLETE, this.onCompleteHandler, this);
   }
 
-  private onLoopCompleteHandler() {
-    if (this.mLoopCompleteCallBack) {
-      this.mLoopCompleteCallBack.call(this.mThisArgs);
-      this.mLoopCompleteCallBack = null;
+  private onCompleteHandler(e) {
+    if (this.mAnimationCompleteCallBack) {
+      this.mAnimationCompleteCallBack.call(this.mThisArgs);
     }
   }
 

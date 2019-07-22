@@ -86,7 +86,8 @@ export class DynamicImage extends Phaser.Image {
     super.destroy(destroyChildren);
   }
 
-  private moduleErrorHanlder() {
+  private moduleErrorHanlder(fileKey, file) {
+    if (this.resKey !== fileKey) return;
     if (this.mLoadErrorCallback) {
       let cb: Function = this.mLoadErrorCallback;
       this.mLoadErrorCallback = null;
