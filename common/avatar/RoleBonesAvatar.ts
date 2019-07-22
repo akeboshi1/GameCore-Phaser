@@ -12,6 +12,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAngleIndex = 3;
     protected mAngleIndexDirty = false;
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
+    protected mLoop: number = -1;
     protected mAnimationDirty = false;
     protected mVoiceIcon: Phaser.Sprite;
     protected mHeadName: Phaser.Text;
@@ -79,7 +80,6 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
         this.mLoaderAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
         this.mLoaderAvatar.visible = false;
-        this.mLoaderAvatar.
         this.addChild(this.mLoaderAvatar);
 
         this.mHeadName = Globals.game.make.text(0, -96, "" , {fontSize: 15, fill: "#FFF"});

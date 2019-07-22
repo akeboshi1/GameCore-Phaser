@@ -11,10 +11,11 @@ export class UserInfoModule extends CommWindowModule {
     this.m_Context = new UserInfoContext(this.m_View);
   }
 
-  onRecover() {
-    super.onRecover();
+  recover() {
+    super.recover();
     if (this.m_Context) {
-      this.m_Context.recover();
+      this.m_Context.setParam(this.m_ModuleParam);
+      this.m_Context.update();
     }
   }
 }

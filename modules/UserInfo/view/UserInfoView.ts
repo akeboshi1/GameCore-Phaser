@@ -48,8 +48,9 @@ export class UserInfoView extends CommWindowModuleView {
     this.mFollwerBtn.setTextFill("#FFFFFF");
     this.add(this.mFollwerBtn);
 
-    this.mActor = new DynamicImage(this.game, 250, 0, null);
+    this.mActor = new DynamicImage(this.game, 300, 125, null);
     this.mActor.scale.set(2, 2);
+    this.mActor.anchor.set(0.5, 1);
     this.mActor.smoothed = false;
     this.add(this.mActor);
   }

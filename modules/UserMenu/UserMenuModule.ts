@@ -11,5 +11,12 @@ export class UserMenuModule extends CommWindowModule {
     this.m_Context = new UserMenuContext(this.m_View);
   }
 
+  recover() {
+    super.recover();
+    if (this.m_Context) {
+      this.m_Context.setParam(this.m_ModuleParam);
+      this.m_Context.update();
+    }
+  }
 }
 

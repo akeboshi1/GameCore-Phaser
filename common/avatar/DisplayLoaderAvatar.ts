@@ -79,6 +79,10 @@ export class DisplayLoaderAvatar extends Phaser.Sprite implements IAnimatedObjec
         this.mAnimatonControlFuncDitry = true;
     }
 
+    public setAnimationLoopComplete(): void {
+        
+    }
+
     public invalidAnimationControlFunc(): void {
         this.mAnimatonControlFuncDitry = true;
     }

@@ -20,6 +20,10 @@ export class UserMenuMediator extends MediatorBase {
     Globals.MessageCenter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onBackgroundClickHandler, this);
   }
 
+  onRecover() {
+    this.initView();
+  }
+
   private initView() {
     if (this.param && this.param.length > 0) {
       this.view.addItem(this.param[0]);
