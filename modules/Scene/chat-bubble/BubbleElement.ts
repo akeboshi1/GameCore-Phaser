@@ -1,10 +1,11 @@
 import { op_client } from "pixelpai_proto";
 import { UI } from "../../../Assets";
 import Globals from "../../../Globals";
+import { DynamicNiceSliceImage } from "../../../base/component/image/DynamicNiceSliceImage";
 const setTimeout = window.setTimeout;
 
 export class BubbleElement extends Phaser.Group {
-  protected bg: Phaser.Image;
+  protected bg: PhaserNineSlice.NineSlice;
   protected chat_content: Phaser.Text;
   protected headImage: Phaser.Image;
   protected _removeDelay: number;
@@ -21,6 +22,8 @@ export class BubbleElement extends Phaser.Group {
     this.add(this.chat_content);
 
     this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 18);
+    // this.bg = new DynamicNiceSliceImage(this.game, this.chat_content.width + 40, this.chat_content.height + 18);
+    // this.bg.load()
     this.addAt(this.bg, 0);
     this.alpha = 0;
   }

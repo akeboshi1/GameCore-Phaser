@@ -14,8 +14,13 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAnimationName: string = Const.ModelStateType.BONES_STAND;
     protected mLoop: number = -1;
     protected mAnimationDirty = false;
+    protected mFlagContainer: Phaser.Group;
     protected mVoiceIcon: Phaser.Sprite;
+    protected mVipIcon: Phaser.Image;
     protected mHeadName: Phaser.Text;
+
+    protected backEffect: Phaser.Sprite;
+    protected frontEffect: Phaser.Sprite;
 
     public constructor(game: Phaser.Game) {
         super(game);
@@ -62,6 +67,14 @@ export class RoleBonesAvatar extends BasicAvatar {
         }
     }
 
+    public addVIPIcon() {
+        if (!!this.mVipIcon === false) {
+            this.mVipIcon = this.game.make.image(0, 0, UI.VipIcon.getName());
+            this.mVipIcon.smoothed = false;
+        }
+        this.mFlagContainer.addAt(this.mVipIcon, 0);
+    }
+
     public loadModel(model: op_gameconfig.IAvatar): void {
         this.mLoaderAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
@@ -82,12 +95,22 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar.visible = false;
         this.addChild(this.mLoaderAvatar);
 
-        this.mHeadName = Globals.game.make.text(0, -96, "" , {fontSize: 15, fill: "#FFF"});
+        this.mFlagContainer = this.game.make.group(this);
+        this.mFlagContainer.x = 0;
+        this.mFlagContainer.y = -96;
+
+        this.mHeadName = Globals.game.make.text(0, 0, "" , {fontSize: 15, fill: "#FFF"});
         this.mHeadName.anchor.set(0.5);
         this.mHeadName.align = "center";
         this.mHeadName.stroke = "#000";
         this.mHeadName.strokeThickness = 2;
-        this.addChild(this.mHeadName);
+        this.mHeadName.smoothed = false;
+        this.mFlagContainer.add(this.mHeadName);
+
+        // setTimeout(() => {
+        //     this.addVIPIcon();
+        //     this.alignFlag(4);
+        // }, 1000);
     }
 
     protected onInitializeComplete(): void {
@@ -151,5 +174,24 @@ export class RoleBonesAvatar extends BasicAvatar {
         if (this.mHeadName && this.mVoiceIcon) {
             this.mVoiceIcon.x = -((this.mVoiceIcon.width + 4) + (this.mHeadName.width >> 1));
         }
+    }
+
+    protected get flag(): Phaser.Group {
+        if (!!this.mFlagContainer === false) {
+            this.mFlagContainer = this.game.make.group();
+            this.addChild(this.mFlagContainer);
+        }
+        return this.mFlagContainer;
+    }
+
+    protected alignFlag(offset: number) {
+        if (!this.mFlagContainer) return;
+        const children: any[] = this.mFlagContainer.children;
+        let _x = 0;
+        for (const child of children) {
+            child.x = _x;
+            if (child.width) _x += child.width + offset;
+        }
+        this.mFlagContainer.x = 0 - this.mFlagContainer.width >> 1;
     }
 }

@@ -66,6 +66,9 @@ export class UserInfoView extends CommWindowModuleView {
     if (buttons && buttons.length > 0) {
       this.mFollwerBtn.setText(data.button[0].text);
       this.mFollwerBtn.node = data.button[0].node;
+      this.add(this.mFollwerBtn);
+    } else {
+      this.remove(this.mFollwerBtn);
     }
 
     const display = data.images;

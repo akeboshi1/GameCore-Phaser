@@ -111,6 +111,7 @@ class Handler extends BasePacketHandler {
         let element: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
         Globals.DataCenter.SceneData.mapInfo.addElementInfo(element.elements);
         Globals.MessageCenter.emit(MessageType.SCENE_ADD_ELEMENT, element.elements);
+        console.warn("elements: ", element.elements);
     }
 
     private handleServerRemoveElement(packet: PBpacket): void {

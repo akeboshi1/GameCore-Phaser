@@ -230,6 +230,16 @@ export namespace UI {
         }
     }
 
+    export class VipIcon {
+        static getName(): string {
+            return "vip_icon_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/vip_icon.png");
+        }
+    }
+
     export class MenuItemBg {
         static getName(): string {
             return "menu_item_bg_png";

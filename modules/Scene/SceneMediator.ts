@@ -450,7 +450,7 @@ export class SceneMediator extends MediatorBase {
         const elements: BasicElement[] = this.view.getSceneElements();
         for (const element of elements) {
             if (element.checkPixel(pointer)) {
-                // element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
+                element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
                 this.sendClickElement(element);
                 return;
             }
@@ -462,6 +462,10 @@ export class SceneMediator extends MediatorBase {
         let content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SELECT_OBJECT = pkt.content;
         content.id = element.uid;
         content.mouseEvent = op_def.MouseEvent.LeftMouseDown;
+        content.pos = op_def.PBPoint3f.create();
+        content.pos.x = element.ox;
+        content.pos.y = element.oy;
+        content.pos.z = element.oz;
         Globals.SocketManager.send(pkt);
     }
 }
