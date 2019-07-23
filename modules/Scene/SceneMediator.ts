@@ -450,7 +450,7 @@ export class SceneMediator extends MediatorBase {
         const elements: BasicElement[] = this.view.getSceneElements();
         for (const element of elements) {
             if (element.checkPixel(pointer)) {
-                element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
+                // element.display.alpha = element.display.alpha === 1 ? 0.5 : 1;
                 this.sendClickElement(element);
                 return;
             }
