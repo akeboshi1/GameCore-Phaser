@@ -4,15 +4,9 @@ import {Const} from "../const/Const";
 import * as Assets from "../../Assets";
 import {Avatar} from "../../Assets";
 import {IDisposeObject} from "../../base/object/interfaces/IDisposeObject";
-import {IRecycleObject} from "../../base/object/interfaces/IRecycleObject";
-import Slot = dragonBones.Slot;
-import {GameConfig} from "../../GameConfig";
 import {IObjectPool} from "../../base/pool/interfaces/IObjectPool";
 import {op_gameconfig} from "pixelpai_proto";
 import {DisplayArmatureDisplay} from "./DisplayArmatureDisplay";
-import {Log} from "../../Log";
-import {Load} from "../../Assets";
-import { Rectangle, Matrix } from "phaser-ce";
 
 export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, IDisposeObject {
 

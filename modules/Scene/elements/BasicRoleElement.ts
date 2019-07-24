@@ -34,6 +34,7 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
         // Log.trace("动作-->"+value);
         if (this.myAnimationName !== value) {
             this.myAnimationName = value;
+            if (this.display) (<RoleBonesAvatar>this.display).setAnimatiomCompleteCallBack(this.animationCompleteHandler, this);
 
             this.invalidAnimation();
         }
@@ -95,6 +96,10 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
 
         this.loadModel(this.characterInfo.avatar);
 
+    }
+
+    protected animationCompleteHandler() {
+        this.setAnimation(Const.ModelStateType.BONES_STAND);
     }
 
     protected createDisplay(): any {

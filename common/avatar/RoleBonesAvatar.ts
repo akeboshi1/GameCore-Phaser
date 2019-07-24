@@ -79,6 +79,10 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar.loadModel(model, this, this.bodyAvatarPartLoadStartHandler, this.bodyAvatarPartLoadCompleteHandler);
     }
 
+    public setAnimatiomCompleteCallBack(callBack: Function, thisArgs: any) {
+        this.mLoaderAvatar.setAnimationCompleteFunc(callBack, thisArgs);
+    }
+
     public onFrame(): void {
         super.onFrame();
         this.mLoaderAvatar.onFrame();
@@ -133,7 +137,6 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
         if (this.mLoaderAvatar) {
-            this.mLoaderAvatar.setAnimationCompleteFunc(this.playCompleteHandler, this);
             this.mLoaderAvatar.visible = true;
         }
     }
@@ -164,10 +167,6 @@ export class RoleBonesAvatar extends BasicAvatar {
             this.mVoiceIcon.destroy();
         }
         super.onDispose();
-    }
-
-    protected playCompleteHandler() {
-        this.animationName = Const.ModelStateType.BONES_STAND;
     }
 
     private updateVoiceIcon() {

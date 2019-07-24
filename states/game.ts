@@ -25,8 +25,8 @@ export default class Game extends Phaser.State {
             Globals.Keyboard.init(this.game);
             Globals.MouseMod.init(this.game);
 
-            this.game.onBlur.add(this.onBlurHandl, this);
-            this.game.onFocus.add(this.onFocusHandl, this);
+            // this.game.onBlur.add(this.onBlurHandl, this);
+            // this.game.onFocus.add(this.onFocusHandl, this);
         }
 
         if (!GameConfig.isEditor) {

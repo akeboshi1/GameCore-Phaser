@@ -113,7 +113,9 @@ export class DisplayArmatureDisplay implements IRecycleObject {
 
   private onCompleteHandler(e) {
     if (this.mAnimationCompleteCallBack) {
-      this.mAnimationCompleteCallBack.call(this.mThisArgs);
+      const cb = this.mAnimationCompleteCallBack;
+      cb.call(this.mThisArgs);
+      this.mAnimationCompleteCallBack = null;
     }
   }
 
