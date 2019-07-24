@@ -27,6 +27,7 @@ export class UserMenuMediator extends MediatorBase {
   private initView() {
     if (this.param && this.param.length > 0) {
       this.view.addItem(this.param[0]);
+      this.view.updatePosition();
     }
   }
 

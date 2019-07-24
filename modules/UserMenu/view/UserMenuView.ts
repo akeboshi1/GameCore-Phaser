@@ -32,6 +32,9 @@ export class UserMenuView extends ModuleViewBase {
 
     // let layer = Globals.LayerManager.sceneLayer;
     // const p = layer.toLocal(new Point(this.game.input.activePointer.x, this.game.input.activePointer.y), this.game.stage);
+  }
+
+  public updatePosition() {
     this.x = this.game.input.activePointer.x;
     this.y = this.game.input.activePointer.y;
   }
