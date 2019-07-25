@@ -630,6 +630,34 @@ export namespace UI {
             return require("assets/images/ui/shop/tuding_22.png");
         }
     }
+
+    export class VipEffectFront {
+        static getName(): string {
+            return "vip_effect_front_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/vip/vip_effect_front.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/vip/vip_effect_front.json");
+        }
+    }
+
+    export class VipEffectBack {
+        static getName(): string {
+            return "vip_effect_back_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/vip/vip_effect_back.png");
+        }
+
+        static getJSON(): string {
+            return require("assets/images/ui/vip/vip_effect_back.json");
+        }
+    }
 }
 
 export namespace CustomWebFonts {

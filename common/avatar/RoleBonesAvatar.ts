@@ -114,6 +114,8 @@ export class RoleBonesAvatar extends BasicAvatar {
         // setTimeout(() => {
         //     this.addVIPIcon();
         //     this.alignFlag(4);
+        //     this.addFrontEffected();
+        //     this.addBackEffected();
         // }, 1000);
     }
 
@@ -192,5 +194,27 @@ export class RoleBonesAvatar extends BasicAvatar {
             if (child.width) _x += child.width + offset;
         }
         this.mFlagContainer.x = 0 - this.mFlagContainer.width >> 1;
+    }
+
+    protected addFrontEffected() {
+        if (!this.frontEffect) {
+            this.frontEffect = this.game.make.sprite(0, 0, UI.VipEffectFront.getName());
+        }
+        this.frontEffect.animations.add("front");
+        this.frontEffect.animations.play("front", 10, true);
+        this.frontEffect.x = -this.frontEffect.width >> 1;
+        this.frontEffect.y = -this.frontEffect.height + 20;
+        this.addChild(this.frontEffect);
+    }
+
+    protected addBackEffected() {
+        if (!this.backEffect) {
+            this.backEffect = this.game.make.sprite(0, 0, UI.VipEffectBack.getName());
+        }
+        this.backEffect.animations.add("back");
+        this.backEffect.animations.play("back", 10, true);
+        this.backEffect.x = -this.backEffect.width >> 1;
+        this.backEffect.y = -this.backEffect.height + 20;
+        this.addChildAt(this.backEffect, 0);
     }
 }

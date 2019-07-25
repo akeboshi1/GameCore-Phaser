@@ -243,6 +243,11 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     right: 13,
                     bottom: 11
                 }];
+                atlasResource = [{
+                    key: UI.ButtonBlue.getName(),
+                    png: UI.ButtonBlue.getPNG(),
+                    json: UI.ButtonBlue.getJSON()
+                }];
                 imageResource = [{
                     key: UI.BagItemBg.getName(),
                     png: UI.BagItemBg.getPNG()

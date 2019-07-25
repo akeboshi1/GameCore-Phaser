@@ -59,7 +59,7 @@ export class BonesLoaderAvatar extends Phaser.Group implements IAnimatedObject, 
     public loadModel(model: op_gameconfig.IAvatar, thisObj: any, onLoadStart: Function = null, onLoadComplete: Function = null): void {
         this.closeLoadModel();
         this.myModel = model;
-
+        this.replaceArr.length = 0;
         if (model.bodyBaseId) {
             this.replaceArr.push({
                 slot: Const.AvatarSlotType.BodyBase,

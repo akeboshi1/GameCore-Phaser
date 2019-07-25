@@ -120,7 +120,7 @@ export class SceneMediator extends MediatorBase {
 
         // Globals.LayerManager.sceneLayer.onChildInputDown.add(this.onTapSceneHandler, this);
         // Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
-        // this.view.middleSceneLayer.onChildInputDown.remove(this.onTapSceneHandler, this);
+        this.view.middleSceneLayer.onChildInputDown.remove(this.onTapSceneHandler, this);
         // Globals.game.input.onTap.remove(this.onTapSceneHandler, this);
 
     }

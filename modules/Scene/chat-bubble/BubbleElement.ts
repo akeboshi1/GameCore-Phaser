@@ -20,11 +20,13 @@ export class BubbleElement extends Phaser.Group {
     this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12, wordWrap: true, wordWrapWidth: 320 });
     this.chat_content.smoothed = false;
     Globals.Tool.formatChinese(this.chat_content, 320);
+    this.chat_content.inputEnabled = true;
     this.add(this.chat_content);
 
     this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 18);
     // this.bg = new DynamicNiceSliceImage(this.game, this.chat_content.width + 40, this.chat_content.height + 18);
     // this.bg.load()
+    this.bg.inputEnabled = true;
     this.addAt(this.bg, 0);
     this.alpha = 0;
   }

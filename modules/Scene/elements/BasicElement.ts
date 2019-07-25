@@ -69,7 +69,7 @@ export default class BasicElement extends SceneEntity {
   }
 
   public checkPixel(pointer: Phaser.Pointer): boolean {
-    return this.display.Loader.input.checkPointerDown(pointer);
+    return this.display.input.checkPointerDown(pointer);
   }
 
   public set selected(value: boolean) {

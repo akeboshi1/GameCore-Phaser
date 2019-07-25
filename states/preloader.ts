@@ -16,6 +16,19 @@ export default class Preloader extends Phaser.State {
           }
         }
 
+        let atlases: IAtlasResource[] = [{
+            key: UI.VipEffectFront.getName(),
+            png: UI.VipEffectFront.getPNG(),
+            json: UI.VipEffectFront.getJSON()
+        }, {
+            key: UI.VipEffectBack.getName(),
+            png: UI.VipEffectBack.getPNG(),
+            json: UI.VipEffectBack.getJSON()
+        }];
+
+        // for (const atlase of atlases) {
+        //     this.game.load.atlas(atlase.key, atlase.png, atlase.json);
+        // }
         this.loadFonts();
         this.loadScripts();
         if (GameConfig.isEditor) {
