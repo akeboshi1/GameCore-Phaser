@@ -1,5 +1,5 @@
 import {ListComponent} from "../list/core/ListComponent";
-import {UI} from "../../../Assets";
+import {UI, CustomWebFonts} from "../../../Assets";
 import {ComboTextItem} from "./item/ComboTextItem";
 import {IDisposeObject} from "../../object/interfaces/IDisposeObject";
 import {UIEvents} from "../event/UIEvents";
@@ -40,10 +40,11 @@ export class ComboBox extends Phaser.Group implements IDisposeObject {
 
     protected init(): void {
         // this.game.add.nineSlice(0, 0, UI.Background.getName(), null, this.mWidth, this.mHeight, this);
-        this.mLabel = this.game.make.text(0, 0, "", {fontSize: 12, fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"} );
+        this.mLabel = this.game.make.text(0, 0, "", {font: "bold 12px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"} );
         this.mLabel.setShadow(2, 2, 0x333333, 2, false, false);
         this.mLabel.setTextBounds(0, 0, this.mWidth - UI.DropDownBtn.getWidth(), this.mHeight);
         this.mLabel.inputEnabled = true;
+        this.mLabel.smoothed = false;
         this.add(this.mLabel);
         // this.mDropDownBt = this.game.make.button(this.mWidth - UI.DropDownBtn.getWidth() - 4, (this.mHeight - UI.DropDownBtn.getHeight()) / 2, UI.DropDownBtn.getName(), null, this
         // , 1, 0 , 2);

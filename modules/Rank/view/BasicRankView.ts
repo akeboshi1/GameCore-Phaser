@@ -22,7 +22,7 @@ export class BasicRankView extends ModuleViewBase {
     let titleIcon = this.game.make.image(20, -15, UI.RankIcon.getName());
     this.add(titleIcon);
 
-    this.mTitleLabel = this.game.make.text(54, -11, "排行榜", {font: "22px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
+    this.mTitleLabel = this.game.make.text(54, -11, "排行榜", {font: "bold 22px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
     this.add(this.mTitleLabel);
 
     this.game.add.nineSlice(7, 19, UI.Background.getName(), null, 315, 318, this.mContentGroup);
@@ -35,26 +35,23 @@ export class BasicRankView extends ModuleViewBase {
     this.mTitleLabel.setText(texts[0].text);
     this.mTitleLabel.data = texts[0].node;
 
-    const locX = [12, 60, 260];
+    const locX = [12, 60, 238];
     for (let i = 1; i < 4; i++) {
-      let text = this.game.add.text(locX[i - 1], 27, texts[i].text, {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"}, this.mContentGroup);
+      let text = this.game.add.text(locX[i - 1], 27, texts[i].text, {font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"}, this.mContentGroup);
       text.data = texts[i].node;
       text.stroke = "#000000";
-      text.strokeThickness = 2;
+      text.strokeThickness = 6;
       this.mTexts.push(text);
     }
 
-    locX[2] = 238;
+    // locX[2] = 238;
     for (let i = 4; i < texts.length; i++) {
       let t = texts[i];
       let x = (i - 4) % 3;
       let y = Math.floor((i - 4) / 3) * 27;
-      let text = this.game.add.text(locX[x], 60 + y, t.text, {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: t.color ? t.color : "#ffffff"}, this.mContentGroup);
+      let text = this.game.add.text(locX[x], 60 + y, t.text, {font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: t.color ? t.color : "#ffffff"}, this.mContentGroup);
       if (x === 0) {
         text.setTextBounds(0, 0, 30, 16);
-        text.boundsAlignH = "center";
-      } else if (x === 2) {
-        text.setTextBounds(0, 0, 80, 16);
         text.boundsAlignH = "center";
       }
       text.data = texts[i].node;

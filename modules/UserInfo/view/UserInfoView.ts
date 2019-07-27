@@ -20,22 +20,22 @@ export class UserInfoView extends CommWindowModuleView {
     this.inputEnableChildren = true;
     this.background = this.game.add.nineSlice(0, 0, UI.BagBg.getName(), null, 360, 200, this);
 
-    let nickNameLabel = this.game.make.text(20, -5, "昵称：", {font: "18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b4b4b4"});
+    let nickNameLabel = this.game.make.text(20, -5, "昵称：", {font: "bold 18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b4b4b4"});
     nickNameLabel.stroke = "#000000";
     nickNameLabel.strokeThickness = 2;
     this.add(nickNameLabel);
 
-    let lvLabel = this.game.make.text(20, 30, "等级：", {font: "18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b4b4b4"});
+    let lvLabel = this.game.make.text(20, 30, "等级：", {font: "bold 18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b4b4b4"});
     lvLabel.stroke = "#000000";
     lvLabel.strokeThickness = 2;
     this.add(lvLabel);
 
-    this.mNickName = this.game.make.text(nickNameLabel.x + 50,  nickNameLabel.y, "", {font: "18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
+    this.mNickName = this.game.make.text(nickNameLabel.x + 50,  nickNameLabel.y, "", {font: "bold 18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
     this.mNickName.stroke = "#000000";
     this.mNickName.strokeThickness = 2;
     this.add(this.mNickName);
 
-    this.mLv = this.game.make.text(lvLabel.x + 50, lvLabel.y, "", {font: "18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
+    this.mLv = this.game.make.text(lvLabel.x + 50, lvLabel.y, "", {font: "bold 18px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
     this.mLv.stroke = "#000000";
     this.mLv.strokeThickness = 2;
     this.add(this.mLv);

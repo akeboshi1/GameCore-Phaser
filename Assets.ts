@@ -682,12 +682,14 @@ export namespace UI {
 
 export namespace CustomWebFonts {
     export class Fonts2DumbWebfont {
-        static getName(): string { return "2Dumb-webfont"; }
+        // static getName(): string { return "2Dumb-webfont"; }
+        static getName(): string { return "Microsoft YaHei"; }
 
-        static getFamily(): string { return "2dumbregular"; }
+        static getFamily(): string { return "Microsoft YaHei"; }
+        // static getFamily(): string { return "2dumbregular"; }
 
-        static getCSS(): string { return require("!file-loader?name=assets/fonts/[name].[ext]!assets/fonts/2Dumb-webfont.css"); }
-        static getTTF(): string { return require("!file-loader?name=assets/fonts/[name].[ext]!assets/fonts/2Dumb-webfont.ttf"); }
-        static getWOFF(): string { return require("!file-loader?name=assets/fonts/[name].[ext]!assets/fonts/2Dumb-webfont.woff"); }
+        // static getCSS(): string { return require("!file-loader?name=assets/fonts/[name].[ext]!assets/fonts/2Dumb-webfont.css"); }
+        // static getTTF(): string { return require("!file-loader?name=assets/fonts/[name].[ext]!assets/fonts/2Dumb-webfont.ttf"); }
+        // static getWOFF(): string { return require("!file-loader?name=assets/fonts/[name].[ext]!assets/fonts/2Dumb-webfont.woff"); }
     }
 }

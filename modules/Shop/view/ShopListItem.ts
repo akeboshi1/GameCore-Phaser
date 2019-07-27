@@ -63,7 +63,7 @@ export class ShopListItem extends ListItemComponent implements IListItemComponen
     const moneyIcon = this.game.make.image(0, y, key);
     this.mMoneyGroup.add(moneyIcon);
 
-    const priceText = this.game.make.text(moneyIcon.x + moneyIcon.width + 4, y, "", {font: "16px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
+    const priceText = this.game.make.text(moneyIcon.x + moneyIcon.width + 4, y, "", {font: "bold 16px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF" });
     this.mMoneyGroup.add(priceText);
     priceText.setText(price.price.toString());
   }

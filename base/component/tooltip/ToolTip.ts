@@ -11,7 +11,7 @@ export class ToolTip extends Phaser.Sprite {
   }
 
   protected init() {
-    this.mText = this.game.make.text(6, 6, "", { font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", wordWrap: true, wordWrapWidth: 360 });
+    this.mText = this.game.make.text(6, 6, "", { font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", wordWrap: true, wordWrapWidth: 360 });
     this.mText.stroke = "#000000";
     this.mText.strokeThickness = 1;
     this.addChild(this.mText);

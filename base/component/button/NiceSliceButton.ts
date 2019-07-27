@@ -33,7 +33,7 @@ export class NiceSliceButton extends Phaser.Group {
         this.add(this.mOutFrame);
         this.add(this.mDownFrame);
 
-        this.mText = this.game.make.text(0, 0, "", {font: (fontSize > 0 ? fontSize : 12) + "px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b3b3b3", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.mText = this.game.make.text(0, 0, "", {font: "bold " + (fontSize > 0 ? fontSize : 12) + "px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b3b3b3", boundsAlignH: "center", boundsAlignV: "middle"});
         this.mText.inputEnabled = false;
         this.add(this.mText);
         this.setText(text);

@@ -15,7 +15,7 @@ export class NoticeView extends ModuleViewBase {
 
   protected init() {
     this.game.add.nineSlice(0, 0, UI.Background.getName(), null, 1200, 120, this);
-    this._context = this.game.make.text(6, 6, "", { font: "24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), wordWrap: true, wordWrapWidth: 1180, boundsAlignH: "center", boundsAlignV: "middle", fill: "#FFF"});
+    this._context = this.game.make.text(6, 6, "", { font: "bold 24px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), wordWrap: true, wordWrapWidth: 1180, boundsAlignH: "center", boundsAlignV: "middle", fill: "#FFF"});
     this._context.stroke = "#000000";
     this._context.strokeThickness = 2;
     this._context.setTextBounds(0, 0, 1180, 120);

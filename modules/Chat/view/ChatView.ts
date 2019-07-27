@@ -45,10 +45,11 @@ export class ChatView extends ModuleViewBase {
         this.inputEnableChildren = true;
         this._inputGroup = this.game.make.group();
         this._background = this.game.add.nineSlice(0, 0, UI.Background.getName(), null, 464, 287, this);
-        this._inputBackground = this.game.add.nineSlice(0, 0, UI.InputBg.getName(), null, 368, 29, this._inputGroup);
-        this.out_tf = this.game.make.text(10, 34, "", {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", align: "left", wordWrap: true, wordWrapWidth: 440});
+        // this._inputBackground = this.game.add.nineSlice(0, 0, UI.InputBg.getName(), null, 368, 29, this._inputGroup);
+        this.out_tf = this.game.make.text(10, 34, "", {font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", align: "left", wordWrap: true, wordWrapWidth: 440});
         this.out_tf.stroke = "#000000";
         this.out_tf.strokeThickness = 2;
+        this.out_tf.smoothed = false;
         this.add(this.out_tf);
         this.add(this._inputGroup);
         // this.out_tf.width = 430;
@@ -59,7 +60,7 @@ export class ChatView extends ModuleViewBase {
         line.lineTo(55, 23);
         this._inputGroup.add(line);
 
-        this.input_tf = this.game.add.inputField(66, 5, {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#808080", backgroundColor: "#dfdfdf", borderColor: "#dfdfdf", fontSize: 14, width: 290}, this._inputGroup);
+        this.input_tf = this.game.add.inputField(66, 5, {font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#808080", backgroundColor: "#dfdfdf", borderColor: "#dfdfdf", height: 20, width: 290}, this._inputGroup);
         this.input_tf.focusOutOnEnter = false;
         this.input_tf.blockInput = true;
         this.bt = new NiceSliceButton(this.game, 380, 0, UI.ButtonChat.getName(), "button_over.png", "button_out.png", "button_down.png", 60, 29, {
@@ -85,9 +86,9 @@ export class ChatView extends ModuleViewBase {
         const outComobox = [...this._inputComoboxData];
         outComobox.unshift({ label: "全部", value: null });
         this.comobox = new ComboBox(this.game, 0, 6, this, outComobox, 60);
-        this.comobox.setLabelStyle({font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b3b3b3", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.comobox.setLabelStyle({font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#b3b3b3", boundsAlignH: "center", boundsAlignV: "middle"});
         this.selectedChanel = new ComboBox(this.game, 4, 4, this._inputGroup, this._inputComoboxData, 60);
-        this.selectedChanel.setLabelStyle({font: "15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#808080", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.selectedChanel.setLabelStyle({font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#808080", boundsAlignH: "center", boundsAlignV: "middle"});
         this.selectedChanel.setSelectedData(this._inputComoboxData[1]);
 
         this.labaButton = new CheckButton(this.game, 338 + 50, -34, UI.LabaBt.getName());
