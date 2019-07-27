@@ -35,6 +35,13 @@ export class UserInfoMediator extends MediatorBase {
     }
   }
 
+  public onBreakOff() {
+    super.onBreakOff();
+    if (this.view) {
+      this.view.onClear();
+    }
+  }
+
   private showUIHandler(item) {
     let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
     let content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;

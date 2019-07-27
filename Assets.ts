@@ -236,7 +236,7 @@ export namespace UI {
         }
 
         static getPNG(): string {
-            return require("assets/images/ui/vip_icon.png");
+            return require("assets/images/ui/vip/vip_icon.png");
         }
     }
 
@@ -424,6 +424,16 @@ export namespace UI {
 
         static getHeight(): number {
             return 16;
+        }
+    }
+
+    export class ZoomArrowDown {
+        static getName(): string {
+            return "zoom_arrow_down_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/zoom_arrow_down.png");
         }
     }
 
@@ -656,6 +666,16 @@ export namespace UI {
 
         static getJSON(): string {
             return require("assets/images/ui/vip/vip_effect_back.json");
+        }
+    }
+
+    export class RankIcon {
+        static getName(): string {
+            return "rank_icon_png";
+        }
+
+        static getPNG(): string {
+            return require("assets/images/ui/rank/rank_icon.png");
         }
     }
 }

@@ -26,9 +26,9 @@ export default class Preloader extends Phaser.State {
             json: UI.VipEffectBack.getJSON()
         }];
 
-        // for (const atlase of atlases) {
-        //     this.game.load.atlas(atlase.key, atlase.png, atlase.json);
-        // }
+        for (const atlase of atlases) {
+            this.game.load.atlas(atlase.key, atlase.png, atlase.json);
+        }
         this.loadFonts();
         this.loadScripts();
         if (GameConfig.isEditor) {

@@ -15,7 +15,7 @@ export class UserInfoModule extends CommWindowModule {
     super.recover();
     if (this.m_Context) {
       this.m_Context.setParam(this.m_ModuleParam);
-      this.m_Context.update();
+      this.m_Context.update(this.m_ModuleParam);
     }
   }
 }

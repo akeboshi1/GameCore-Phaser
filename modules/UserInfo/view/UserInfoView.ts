@@ -92,6 +92,10 @@ export class UserInfoView extends CommWindowModuleView {
     this.y = this.game.height - 200 - 70;
   }
 
+  public onClear() {
+    this.clearBadge();
+  }
+
   private avatarLoadError() {
     this.mActor.load("show/avatar_default.png");
   }
@@ -102,6 +106,7 @@ export class UserInfoView extends CommWindowModuleView {
 
   private clearBadge() {
     for (const badge of this.mBadgeImages) {
+      badge.destroy();
       this.remove(badge);
     }
     this.mBadgeImages.length = 0;

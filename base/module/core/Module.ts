@@ -56,11 +56,11 @@ export class Module implements IModule {
         this.m_Status = Const.ModuleEnum.MODULE_STATUS_RUN;
     }
 
-    public update() {
+    public update(param: any) {
         if (this.m_Status === Const.ModuleEnum.MODULE_STATUS_STOP) return;
         if (this.m_Context) {
             this.m_Context.setParam(this.m_ModuleParam);
-            this.m_Context.update();
+            this.m_Context.update(param);
         }
     }
 

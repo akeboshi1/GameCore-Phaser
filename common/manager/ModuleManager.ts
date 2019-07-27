@@ -135,10 +135,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 nineSliceImageResource = [{
                     key: UI.BagBg.getName(),
                     png: UI.BagBg.getPNG(),
-                    top: 29,
-                    left: 13,
-                    right: 13,
-                    bottom: 11
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
                 }];
                 imageResource = [{
                     key: UI.BagItemBg.getName(),
@@ -164,10 +164,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 nineSliceImageResource = [{
                     key: UI.BagBg.getName(),
                     png: UI.BagBg.getPNG(),
-                    top: 29,
-                    left: 13,
-                    right: 13,
-                    bottom: 11
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
                 }];
                 imageResource = [{
                     key: UI.BagItemBg.getName(),
@@ -181,10 +181,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 nineSliceImageResource = [{
                     key: UI.BagBg.getName(),
                     png: UI.BagBg.getPNG(),
-                    top: 29,
-                    left: 13,
-                    right: 13,
-                    bottom: 11
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
                 }];
                 atlasResource = [{
                     key: UI.Button.getName(),
@@ -238,10 +238,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 nineSliceImageResource = [{
                     key: UI.BagBg.getName(),
                     png: UI.BagBg.getPNG(),
-                    top: 29,
-                    left: 13,
-                    right: 13,
-                    bottom: 11
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
                 }];
                 atlasResource = [{
                     key: UI.ButtonBlue.getName(),
@@ -266,10 +266,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 nineSliceImageResource = [{
                     key: UI.BagBg.getName(),
                     png: UI.BagBg.getPNG(),
-                    top: 29,
-                    left: 13,
-                    right: 13,
-                    bottom: 11
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
                 }];
                 imageResource = [{
                     key: UI.ArrowDown.getName(),
@@ -293,10 +293,10 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                 nineSliceImageResource = [{
                     key: UI.BagBg.getName(),
                     png: UI.BagBg.getPNG(),
-                    top: 29,
-                    left: 13,
-                    right: 13,
-                    bottom: 11
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
                 }];
                 atlasResource = [{
                     key: UI.ButtonBlue.getName(),
@@ -308,6 +308,35 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
                     png: UI.ButtonBlueGreen.getPNG(),
                     json: UI.ButtonBlueGreen.getJSON()
                 }];
+                break;
+            case ModuleTypeEnum.Rank:
+            case ModuleTypeEnum.ComponentRank:
+                nineSliceImageResource = [{
+                    key: UI.BagBg.getName(),
+                    png: UI.BagBg.getPNG(),
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: 10
+                },
+                {
+                    key: UI.Background.getName(),
+                    png: UI.Background.getPNG(),
+                    top: 4,
+                    left: 4,
+                    right: 4,
+                    bottom: 4
+                }];
+                sheetResource = [{
+                    key: UI.WindowClose.getName(),
+                    png: UI.WindowClose.getPNG(),
+                    frameWidth: UI.WindowClose.getWidth(),
+                    frameHeight: UI.WindowClose.getHeight()
+                }];
+                imageResource = [
+                    {key: UI.ZoomArrowDown.getName(), png: UI.ZoomArrowDown.getPNG()},
+                    {key: UI.RankIcon.getName(), png: UI.RankIcon.getPNG()},
+                ];
                 break;
         }
 
@@ -336,7 +365,7 @@ export class ModuleManager extends BaseSingleton implements IModuleManager {
         let module: IModule = this.getModule(moduleName);
         if (module) {
             module.assignParam(param);
-            module.update();
+            module.update(param);
         }
     }
 

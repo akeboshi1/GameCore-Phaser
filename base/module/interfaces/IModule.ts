@@ -7,5 +7,5 @@ export interface IModule extends IDisposeObject {
     assignParam(param: any);
     recover();
     stop();
-    update();
+    update(param: any);
 }

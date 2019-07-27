@@ -4,5 +4,5 @@ export interface IModuleContext {
     setParam( param: any ): void;
     breakOff(): void;
     recover(): void;
-    update(): void;
+    update(param: any): void;
 }

@@ -96,7 +96,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected onInitialize(): void {
         this.mLoaderAvatar = new BonesLoaderAvatar(Globals.game);
         this.mLoaderAvatar.setAnimationControlFunc(this.bodyControlHandler, this);
-        this.mLoaderAvatar.visible = false;
+        this.visible = false;
         this.addChild(this.mLoaderAvatar);
 
         this.mFlagContainer = this.game.make.group(this);
@@ -104,19 +104,19 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mFlagContainer.y = -96;
 
         this.mHeadName = Globals.game.make.text(0, 0, "" , {fontSize: 15, fill: "#FFF"});
-        this.mHeadName.anchor.set(0.5);
+        // this.mHeadName.anchor.set(0.5);
         this.mHeadName.align = "center";
         this.mHeadName.stroke = "#000";
         this.mHeadName.strokeThickness = 2;
         this.mHeadName.smoothed = false;
         this.mFlagContainer.add(this.mHeadName);
 
-        // setTimeout(() => {
-        //     this.addVIPIcon();
-        //     this.alignFlag(4);
-        //     this.addFrontEffected();
-        //     this.addBackEffected();
-        // }, 1000);
+        setTimeout(() => {
+            this.addVIPIcon();
+            this.alignFlag(4);
+        }, 1000);
+        this.addFrontEffected(this.frontEffect, UI.VipEffectFront.getName(), false, 15, false, true);
+        this.addFrontEffected(this.backEffect, UI.VipEffectBack.getName(), true, 15, false, true);
     }
 
     protected onInitializeComplete(): void {
@@ -139,7 +139,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected bodyAvatarPartLoadCompleteHandler(): void {
         if (this.hasPlaceHold) this.onRemovePlaceHoldAvatarPart();
         if (this.mLoaderAvatar) {
-            this.mLoaderAvatar.visible = true;
+            this.visible = true;
         }
     }
 
@@ -196,25 +196,21 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mFlagContainer.x = 0 - this.mFlagContainer.width >> 1;
     }
 
-    protected addFrontEffected() {
-        if (!this.frontEffect) {
-            this.frontEffect = this.game.make.sprite(0, 0, UI.VipEffectFront.getName());
+    protected addFrontEffected(target: Phaser.Sprite, key: string, isBack?: boolean, frameRate?: number, loop?: boolean, killComplete?: boolean) {
+        if (!target) {
+            target = this.game.make.sprite(0, 0, key);
         }
-        this.frontEffect.animations.add("front");
-        this.frontEffect.animations.play("front", 10, true);
-        this.frontEffect.x = -this.frontEffect.width >> 1;
-        this.frontEffect.y = -this.frontEffect.height + 20;
-        this.addChild(this.frontEffect);
-    }
-
-    protected addBackEffected() {
-        if (!this.backEffect) {
-            this.backEffect = this.game.make.sprite(0, 0, UI.VipEffectBack.getName());
+        let ani = target.animations.add(key + "_ani");
+        target.animations.play(key + "_ani", frameRate, loop, false);
+        target.x = -target.width >> 1;
+        target.y = -target.height + 20;
+        if (isBack) {
+            this.addChildAt(target, 0);
+        } else {
+            this.addChild(target);
         }
-        this.backEffect.animations.add("back");
-        this.backEffect.animations.play("back", 10, true);
-        this.backEffect.x = -this.backEffect.width >> 1;
-        this.backEffect.y = -this.backEffect.height + 20;
-        this.addChildAt(this.backEffect, 0);
+        ani.onComplete.addOnce(() => {
+            target.destroy();
+        });
     }
 }

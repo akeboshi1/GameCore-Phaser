@@ -20,4 +20,6 @@ export class ModuleTypeEnum {
     public static MESSAGE_BOX = "MessageBox"; // 弹窗
     public static UserMenu = "UserMenu";  // 角色菜单
     public static UserInfo = "UserInfo";  // 角色面板
+    public static Rank = "Rank"; // 固定排行榜
+    public static ComponentRank = "ComponentRank"; // 物件排行榜
 }

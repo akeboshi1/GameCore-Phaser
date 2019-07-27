@@ -38,10 +38,10 @@ export class ModuleContext implements IModuleContext {
         this.m_ModuleParam = param;
     }
 
-    public update() {
+    public update(param: any) {
         if (this.m_Mediator) {
             this.m_Mediator.setParam(this.m_ModuleParam);
-            this.m_Mediator.update();
+            this.m_Mediator.update(param);
         }
     }
 
