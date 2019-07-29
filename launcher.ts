@@ -23,7 +23,7 @@ export class Launcher {
     }
 
     private get config():IGameConfigure{
-        // TODO
+        // TODO 在这里整合app和phaser的配置文件
         return {
             audio: undefined,
             auth_token: "",
