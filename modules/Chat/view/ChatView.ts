@@ -47,8 +47,7 @@ export class ChatView extends ModuleViewBase {
         this._background = this.game.add.nineSlice(0, 0, UI.Background.getName(), null, 464, 287, this);
         // this._inputBackground = this.game.add.nineSlice(0, 0, UI.InputBg.getName(), null, 368, 29, this._inputGroup);
         this.out_tf = this.game.make.text(10, 34, "", {font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#FFFFFF", align: "left", wordWrap: true, wordWrapWidth: 440});
-        this.out_tf.stroke = "#000000";
-        this.out_tf.strokeThickness = 2;
+        this.out_tf.strokeThickness = 1;
         this.out_tf.smoothed = false;
         this.add(this.out_tf);
         this.add(this._inputGroup);

@@ -23,6 +23,8 @@ export class BasicRankView extends ModuleViewBase {
     this.add(titleIcon);
 
     this.mTitleLabel = this.game.make.text(54, -11, "排行榜", {font: "bold 22px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"});
+    this.mTitleLabel.stroke = "#000000";
+    this.mTitleLabel.strokeThickness = 2;
     this.add(this.mTitleLabel);
 
     this.game.add.nineSlice(7, 19, UI.Background.getName(), null, 315, 318, this.mContentGroup);
@@ -40,7 +42,7 @@ export class BasicRankView extends ModuleViewBase {
       let text = this.game.add.text(locX[i - 1], 27, texts[i].text, {font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"}, this.mContentGroup);
       text.data = texts[i].node;
       text.stroke = "#000000";
-      text.strokeThickness = 6;
+      text.strokeThickness = 3;
       this.mTexts.push(text);
     }
 
@@ -56,7 +58,7 @@ export class BasicRankView extends ModuleViewBase {
       }
       text.data = texts[i].node;
       text.stroke = "#000000";
-      text.strokeThickness = 2;
+      text.strokeThickness = 3;
       this.mTexts.push(text);
     }
   }

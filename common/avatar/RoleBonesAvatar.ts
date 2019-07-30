@@ -3,8 +3,8 @@ import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import Globals from "../../Globals";
 import {op_gameconfig, op_client} from "pixelpai_proto";
-import {Log} from "../../Log";
 import { UI } from "../../Assets";
+import { DynamicImage } from "../../base/component/image/DynamicImage";
 
 export class RoleBonesAvatar extends BasicAvatar {
     protected hasPlaceHold = true;
@@ -16,7 +16,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAnimationDirty = false;
     protected mFlagContainer: Phaser.Group;
     protected mVoiceIcon: Phaser.Sprite;
-    protected mVipIcon: Phaser.Image;
+    protected mVipIcon: DynamicImage;
     protected mHeadName: Phaser.Text;
 
     protected backEffect: Phaser.Sprite;
@@ -69,10 +69,15 @@ export class RoleBonesAvatar extends BasicAvatar {
 
     public addVIPIcon() {
         if (!!this.mVipIcon === false) {
-            this.mVipIcon = this.game.make.image(0, 0, UI.VipIcon.getName());
+            this.mVipIcon = new DynamicImage(this.game, 0, 0, null);
             this.mVipIcon.smoothed = false;
         }
         this.mFlagContainer.addAt(this.mVipIcon, 0);
+    }
+
+    public showEffect() {
+        this.addFrontEffected(this.frontEffect, UI.VipEffectFront.getName(), false, 15, false, true);
+        this.addFrontEffected(this.backEffect, UI.VipEffectBack.getName(), true, 15, false, true);
     }
 
     public loadModel(model: op_gameconfig.IAvatar): void {
@@ -115,8 +120,6 @@ export class RoleBonesAvatar extends BasicAvatar {
             this.addVIPIcon();
             this.alignFlag(4);
         }, 1000);
-        this.addFrontEffected(this.frontEffect, UI.VipEffectFront.getName(), false, 15, false, true);
-        this.addFrontEffected(this.backEffect, UI.VipEffectBack.getName(), true, 15, false, true);
     }
 
     protected onInitializeComplete(): void {

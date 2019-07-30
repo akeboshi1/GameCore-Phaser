@@ -40,6 +40,10 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
         }
     }
 
+    public showEffect() {
+        if (this.display) (<RoleBonesAvatar>this.display).showEffect();
+    }
+
     public setScaleX(value: number|boolean): void {
 
     }

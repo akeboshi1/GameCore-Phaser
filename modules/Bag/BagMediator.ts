@@ -37,7 +37,7 @@ export class BagMediator extends MediatorBase {
         super.preRemove();
         Globals.MessageCenter.cancel(MessageType.DRAG_TO_DROP, this.handleDrop, this);
         Globals.MessageCenter.cancel(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
-        Globals.MessageCenter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
+        Globals.MessageCenter.cancel(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
 
         // this.view.m_List.cancel(UIEvents.LIST_ITEM_DOWN, this.onListItemDown, this);
         this.view.m_List.cancel(UIEvents.LIST_ITEM_UP, this.onListItemUp, this);

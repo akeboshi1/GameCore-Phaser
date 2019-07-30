@@ -88,6 +88,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.on(MessageType.CHARACTER_TALING, this.characterTaling, this);
         Globals.MessageCenter.on(MessageType.CHARACTER_SHUT_UP, this.characterShutUp, this);
         Globals.MessageCenter.on(MessageType.REMOVE_CHAT_BUBBLE, this.handleRemoveBubble, this);
+        Globals.MessageCenter.on(MessageType.SHOW_EFFECT, this.handleShowEffect, this);
 
         Globals.MessageCenter.on(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
 
@@ -114,6 +115,7 @@ export class SceneMediator extends MediatorBase {
         Globals.MessageCenter.cancel(MessageType.CHARACTER_TALING, this.characterTaling, this);
         Globals.MessageCenter.cancel(MessageType.CHARACTER_SHUT_UP, this.characterShutUp, this);
         Globals.MessageCenter.cancel(MessageType.REMOVE_CHAT_BUBBLE, this.handleRemoveBubble, this);
+        Globals.MessageCenter.cancel(MessageType.SHOW_EFFECT, this.handleShowEffect, this);
 
 
         Globals.MessageCenter.cancel(MessageType.SCENE_CHANGE_TO, this.changeSceneToHandle, this);
@@ -467,6 +469,19 @@ export class SceneMediator extends MediatorBase {
         content.pos.y = element.oy;
         content.pos.z = element.oz;
         Globals.SocketManager.send(pkt);
+    }
+
+    private handleShowEffect(pb: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT) {
+        let ids = pb.id;
+        let element: any;
+        if (ids) {
+            for (const id of ids) {
+                element = this.view.getSceneElement(id);
+                if (element) {
+                    element.showEffect();
+                }
+            }
+        }
     }
 }
 

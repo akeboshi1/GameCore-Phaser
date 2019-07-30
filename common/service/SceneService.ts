@@ -46,6 +46,7 @@ class Handler extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.handleBubbleClean);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHARACTER_TALKING, this.handleTalking);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHARACTER_SHUT_UP, this.handleShutUp);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.handleShowEffect);
         // Editor
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.handleChangeEditorMode);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_ELEMENT, this.handleAddElement);
@@ -265,5 +266,10 @@ class Handler extends BasePacketHandler {
             Globals.DataCenter.PlayerData.mainPlayerInfo.package = [pg.package];
         }
         Globals.MessageCenter.emit(MessageType.SCENE_SYNCHRO_PACKAGE);
+    }
+
+    private handleShowEffect(packet: PBpacket) {
+        let pg = op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT = packet.content;
+        Globals.MessageCenter.emit(MessageType.SHOW_EFFECT, pg);
     }
 }

@@ -33,6 +33,8 @@ export default class Preloader extends Phaser.State {
         this.loadScripts();
         if (GameConfig.isEditor) {
           this.game.load.image(EDITOR.SelectFlag.getName(), EDITOR.SelectFlag.getPNG());
+        } else {
+            this.game.load.image(UI.VipIcon.getName(), UI.VipIcon.getPNG());
         }
     }
 

@@ -90,5 +90,7 @@ export class MessageType {
     public static SYNC_USER_BALANCE = "syncUserBalance";
 
     public static UPDATED_CHARACTER_PACKAGE = "updatedCharacterPackage";
+
+    public static SHOW_EFFECT = "showEffect";
 }
 
