@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/net/connection.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/world-service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/game/world.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +88,9 @@
       <workItem from="1563429954166" duration="11845000" />
       <workItem from="1563772349272" duration="604000" />
       <workItem from="1563949910946" duration="4996000" />
-      <workItem from="1564380592158" duration="2263000" />
+      <workItem from="1564380592158" duration="2694000" />
+      <workItem from="1564409638251" duration="2650000" />
+      <workItem from="1564477729270" duration="13000" />
     </task>
     <servers />
   </component>
