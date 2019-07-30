@@ -96,6 +96,8 @@ export class SceneEditorMediator extends SceneMediator {
     Globals.MessageCenter.on(MessageType.SCENE_SELECT_ELEMENT, this.handleSelectElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_FIXED_TO_ELEMENT, this.handleFixedToElement, this);
     Globals.MessageCenter.on(MessageType.SCENE_VISIBLE_GRID, this.handleVisibleGrid, this);
+
+    this.view.middleSceneLayer.inputEnableChildren = false;
   }
 
   public unRegisterSceneListenerHandler(): void {
