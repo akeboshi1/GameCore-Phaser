@@ -95,6 +95,7 @@ export class BasicRoleElement extends SceneEntity implements IBubbleObject {
         (<RoleBonesAvatar>this.display).setModelName(this.characterInfo.nickname, this.characterInfo.camp === Globals.DataCenter.PlayerData.mainPlayerInfo.camp ? "#000fff" : "#FF0000");
         this.setPosition(this.characterInfo.x, this.characterInfo.y, this.characterInfo.z);
         (<RoleBonesAvatar>this.display).inputEnabled = true;
+        (<RoleBonesAvatar>this.display).setDisplayBadges(this.characterInfo.displayBadgeCards);
         // (<RoleBonesAvatar>this.display).input.pixelPerfectClick = true;
         // this.mouseEnable = false;
 

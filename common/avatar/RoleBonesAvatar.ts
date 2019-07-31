@@ -2,7 +2,7 @@ import {BasicAvatar} from "../../base/BasicAvatar";
 import {BonesLoaderAvatar} from "./BonesLoaderAvatar";
 import {Const} from "../const/Const";
 import Globals from "../../Globals";
-import {op_gameconfig, op_client} from "pixelpai_proto";
+import {op_gameconfig, op_client, op_def} from "pixelpai_proto";
 import { UI } from "../../Assets";
 import { DynamicImage } from "../../base/component/image/DynamicImage";
 
@@ -16,7 +16,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     protected mAnimationDirty = false;
     protected mFlagContainer: Phaser.Group;
     protected mVoiceIcon: Phaser.Sprite;
-    protected mVipIcon: DynamicImage;
+    protected mBadges: Map<string, DynamicImage>;
     protected mHeadName: Phaser.Text;
 
     protected backEffect: Phaser.Sprite;
@@ -67,12 +67,18 @@ export class RoleBonesAvatar extends BasicAvatar {
         }
     }
 
-    public addVIPIcon() {
-        if (!!this.mVipIcon === false) {
-            this.mVipIcon = new DynamicImage(this.game, 0, 0, null);
-            this.mVipIcon.smoothed = false;
+    public setDisplayBadges(cards: op_def.IBadgeCard[]) {
+        if (!this.mBadges) {
+            this.mBadges = new Map();
+        } else {
+            this.clearBadges();
         }
-        this.mFlagContainer.addAt(this.mVipIcon, 0);
+        for (const card of cards) {
+            let badge = new DynamicImage(this.game, 0, 0, null);
+            badge.load(card.thumbnail, this, this.updateFlagPosition);
+            this.mFlagContainer.add(badge);
+            this.mBadges.set(card.name, badge);
+        }
     }
 
     public showEffect() {
@@ -115,11 +121,7 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mHeadName.strokeThickness = 2;
         this.mHeadName.smoothed = false;
         this.mFlagContainer.add(this.mHeadName);
-
-        setTimeout(() => {
-            this.addVIPIcon();
-            this.alignFlag(4);
-        }, 1000);
+        this.updateFlagPosition();
     }
 
     protected onInitializeComplete(): void {
@@ -188,13 +190,18 @@ export class RoleBonesAvatar extends BasicAvatar {
         return this.mFlagContainer;
     }
 
+    protected updateFlagPosition() {
+        this.mHeadName.bringToTop();
+        this.alignFlag(4);
+    }
+
     protected alignFlag(offset: number) {
         if (!this.mFlagContainer) return;
         const children: any[] = this.mFlagContainer.children;
         let _x = 0;
         for (const child of children) {
             child.x = _x;
-            if (child.width) _x += child.width + offset;
+            if (child.width) _x += child.width + (_x > 0 ? offset : 0);
         }
         this.mFlagContainer.x = 0 - this.mFlagContainer.width >> 1;
     }
@@ -215,5 +222,13 @@ export class RoleBonesAvatar extends BasicAvatar {
         ani.onComplete.addOnce(() => {
             target.destroy();
         });
+    }
+
+    private clearBadges() {
+        let badges = this.mBadges.values();
+        for (const badge of badges) {
+            badge.destroy();
+        }
+        this.mBadges.clear();
     }
 }

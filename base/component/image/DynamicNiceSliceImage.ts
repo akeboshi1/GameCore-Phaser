@@ -13,7 +13,7 @@ export class DynamicNiceSliceImage {
     private mParent?: Phaser.Group
   ) { }
 
-  public load(value: string, frame?: string, completeCallBack?: Function, thisArgs?: any) {
+  public load(value: string, top: number, left: number, right: number, bottom: number, frame?: string, completeCallBack?: Function, thisArgs?: any) {
     this.mLoadCompleteCallBack = completeCallBack;
     this.mLoadThisArgs = thisArgs;
 
@@ -23,19 +23,19 @@ export class DynamicNiceSliceImage {
       this.modelLoadCompleteHandler();
     } else {
       this.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-      this.game.load.image(key, Load.Url.getRes(this.mUrl));
+      this.game.load.nineSlice(key, Load.Url.getRes(this.mUrl), top, left, right, bottom);
       this.game.load.start();
     }
   }
 
   private modelLoadCompleteHandler() {
-    this.mImage = this.game.add.nineSlice(0, 0, null, null, this.mWidth, this.mHeight, this.mParent);
+    this.mImage = this.game.make.nineSlice(0, 0, this.resKey, null, this.mWidth, this.mHeight, this.mParent);
 
     if (this.mLoadCompleteCallBack) {
       let cb: Function = this.mLoadCompleteCallBack;
-    this.mLoadCompleteCallBack = null;
-    cb.apply(this.mLoadThisArgs, this.mImage);
-    this.mLoadThisArgs = null;
+      this.mLoadCompleteCallBack = null;
+      cb.call(this.mLoadThisArgs, this.mImage);
+      this.mLoadThisArgs = null;
     }
   }
 

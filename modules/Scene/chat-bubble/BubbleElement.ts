@@ -5,13 +5,15 @@ import { DynamicNiceSliceImage } from "../../../base/component/image/DynamicNice
 const setTimeout = window.setTimeout;
 
 export class BubbleElement extends Phaser.Group {
-  protected bg: PhaserNineSlice.NineSlice;
+  protected bg: DynamicNiceSliceImage;
   protected chat_content: Phaser.Text;
   protected headImage: Phaser.Image;
   protected _removeDelay: number;
   protected _completeCallback: Function;
   protected _completeCallbackContext: any;
   protected _y: number;
+  protected mMinheight: number;
+  protected mMinWidth: number;
   constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer) {
     super(game, parent);
   }
@@ -24,11 +26,14 @@ export class BubbleElement extends Phaser.Group {
     this.chat_content.inputEnabled = true;
     this.add(this.chat_content);
 
-    this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 18);
-    // this.bg = new DynamicNiceSliceImage(this.game, this.chat_content.width + 40, this.chat_content.height + 18);
-    // this.bg.load()
-    this.bg.inputEnabled = true;
-    this.addAt(this.bg, 0);
+    // this.bg = this.game.make.nineSlice(0, 0, UI.ChatBubble.getName(), null, this.chat_content.width + 40, this.chat_content.height + 18);
+    this.mMinheight = this.chat_content.height + 26;
+    this.mMinheight = this.mMinheight < 54 ? 54 : this.mMinheight;
+    this.mMinWidth = this.chat_content.width + 40;
+    this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
+
+    this.bg = new DynamicNiceSliceImage(this.game, this.mMinWidth, this.mMinheight);
+    this.bg.load(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png", 35, 43, 33, 10, null, this.loadComplete, this);
     this.alpha = 0;
   }
 
@@ -58,5 +63,21 @@ export class BubbleElement extends Phaser.Group {
 
   public get locY(): number {
     return this._y;
+  }
+
+  public get minWidth(): number {
+    return this.mMinWidth;
+  }
+
+  public get minHeight(): number {
+    return this.mMinheight;
+  }
+
+  private loadComplete(image: PhaserNineSlice.NineSlice) {
+    image.inputEnabled = true;
+    // image.smoothed = false;
+    this.addAt(image, 0);
+
+    this.chat_content.y = image.height - this.chat_content.height - 6;
   }
 }

@@ -17,7 +17,7 @@ export class BubbleContainer extends Phaser.Group {
     let height = 0;
     for (let i = len - 1; i >= 0; i--) {
       ele = this._bubbles[i];
-      height += ele.height + 5;
+      height += ele.minHeight + 5;
       ele.startTween(-height);
     }
     if (!!this._arrowImage === false) {
@@ -38,7 +38,7 @@ export class BubbleContainer extends Phaser.Group {
     }
     this._bubbles = this._bubbles.filter(val => bubble !== val);
     this.remove(bubble);
-    bubble.destroy();
+    bubble.destroy(false);
     if (this._bubbles.length <= 0) {
       this.visible = false;
     }

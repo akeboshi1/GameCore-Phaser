@@ -269,7 +269,7 @@ class Handler extends BasePacketHandler {
     }
 
     private handleShowEffect(packet: PBpacket) {
-        let pg = op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT = packet.content;
+        let pg: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT = packet.content;
         Globals.MessageCenter.emit(MessageType.SHOW_EFFECT, pg);
     }
 }

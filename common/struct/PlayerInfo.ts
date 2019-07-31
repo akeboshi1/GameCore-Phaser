@@ -1,4 +1,4 @@
-import {op_client, op_gameconfig} from "pixelpai_proto";
+import {op_client, op_gameconfig, op_def} from "pixelpai_proto";
 import {SlotInfo} from "./SlotInfo";
 import IActor = op_client.IActor;
 
@@ -56,6 +56,8 @@ export class PlayerInfo implements IActor {
     public slot?: (op_gameconfig.ISlot[] | null);
 
     public uuid = 0; // 玩家ID
+
+    public displayBadgeCards: op_def.IBadgeCard[];
 
     protected _originWalkPoint: Phaser.Point;
 
