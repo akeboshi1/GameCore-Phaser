@@ -51,7 +51,7 @@ export class RoleBonesAvatar extends BasicAvatar {
     public setModelName(value: string, color: string): void {
         this.mHeadName.text = value;
         // this.mHeadName.fill = color;
-        this.updateVoiceIcon();
+        this.updateFlagPosition();
     }
 
     public setVoiceIcon(jitterReceived: boolean) {
@@ -99,6 +99,7 @@ export class RoleBonesAvatar extends BasicAvatar {
         this.mLoaderAvatar.onFrame();
         if (this.mAngleIndexDirty || this.mAnimationDirty) {
           this.mLoaderAvatar.invalidAnimationControlFunc();
+          this.updateFlagPosition();
         }
         this.mAngleIndexDirty = false;
         this.mAnimationDirty = false;

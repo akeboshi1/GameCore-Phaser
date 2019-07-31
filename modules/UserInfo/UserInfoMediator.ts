@@ -1,7 +1,7 @@
 import { MediatorBase } from "../../base/module/core/MediatorBase";
 import { UserInfoView } from "./view/UserInfoView";
 import { PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world, op_client } from "pixelpai_proto";
 import Globals from "../../Globals";
 import { MessageType } from "../../common/const/MessageType";
 import { ModuleTypeEnum } from "../../base/module/base/ModuleType";
@@ -29,9 +29,11 @@ export class UserInfoMediator extends MediatorBase {
     this.view.setData(this.param[0]);
   }
 
-  public update() {
-    if (this.param && this.param.length > 0) {
-      this.view.setData(this.param[0]);
+  public update(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI[]) {
+    if (param && param.length > 0) {
+      if (param[0].id === this.param[0].id) {
+        this.view.updateItem(param[0]);
+      }
     }
   }
 

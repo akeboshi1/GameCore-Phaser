@@ -92,6 +92,15 @@ export class UserInfoView extends CommWindowModuleView {
     this.y = this.game.height - 200 - 70;
   }
 
+  public updateItem(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI) {
+    let buttons = data.button;
+    if (buttons && buttons.length > 0) {
+      if (buttons[0].node.id === this.mFollwerBtn.node.id) {
+        this.mFollwerBtn.setText(data.button[0].text);
+      }
+    }
+  }
+
   public onClear() {
     this.clearBadge();
   }

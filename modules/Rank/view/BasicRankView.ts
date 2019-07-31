@@ -42,7 +42,7 @@ export class BasicRankView extends ModuleViewBase {
       let text = this.game.add.text(locX[i - 1], 27, texts[i].text, {font: "bold 15px " + CustomWebFonts.Fonts2DumbWebfont.getFamily(), fill: "#ffffff"}, this.mContentGroup);
       text.data = texts[i].node;
       text.stroke = "#000000";
-      text.strokeThickness = 3;
+      text.strokeThickness = 2;
       this.mTexts.push(text);
     }
 
@@ -58,7 +58,7 @@ export class BasicRankView extends ModuleViewBase {
       }
       text.data = texts[i].node;
       text.stroke = "#000000";
-      text.strokeThickness = 3;
+      text.strokeThickness = 2;
       this.mTexts.push(text);
     }
   }

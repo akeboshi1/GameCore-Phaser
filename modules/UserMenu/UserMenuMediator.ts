@@ -31,9 +31,12 @@ export class UserMenuMediator extends MediatorBase {
     }
   }
 
-  update() {
-    if (this.param && this.param.length > 0) {
-      this.view.addItem(this.param[0]);
+  update(param) {
+    console.log(param);
+    if (param && param.length > 0) {
+      if (this.param[0].id === param[0].id) {
+        this.view.updateItem(param[0]);
+      }
     }
   }
 

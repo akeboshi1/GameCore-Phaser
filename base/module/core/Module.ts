@@ -20,7 +20,20 @@ export class Module implements IModule {
     }
 
     public assignParam(param: any) {
-        this.m_ModuleParam = Object.assign(this.m_ModuleParam, param);
+        // this.m_ModuleParam = Object.assign(this.m_ModuleParam, param);
+        // for (let i = 0; i < param.length; i++) {
+        //     let data = param[i];
+        //     for (const key in data) {
+        //         if (data.hasOwnProperty(key)) {
+        //             const element = data[key];
+        //             if (element) {
+        //                 let b = this.m_ModuleParam[i][key];
+        //                 let a = Object.assign([...b], element);
+        //                 console.log(a);
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     public get context(): IModuleContext {

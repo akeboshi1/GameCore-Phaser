@@ -34,6 +34,16 @@ export class UserMenuView extends ModuleViewBase {
     // const p = layer.toLocal(new Point(this.game.input.activePointer.x, this.game.input.activePointer.y), this.game.stage);
   }
 
+  public updateItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI) {
+    const menus: op_gameconfig_01.IMenuItem[] = params.menuItem;
+    for (const menu of menus) {
+      let btn = this.menus.find(m => m.node.id === menu.node.id);
+      if (btn) {
+        btn.setText(menu.text);
+      }
+    }
+  }
+
   public updatePosition() {
     this.x = this.game.input.activePointer.x;
     this.y = this.game.input.activePointer.y;

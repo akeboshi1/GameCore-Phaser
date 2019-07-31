@@ -19,7 +19,7 @@ export class BubbleElement extends Phaser.Group {
   }
 
   public showText(text: string, bubble: op_client.IChat_Setting) {
-    this.chat_content = this.game.make.text(20, 10, text, { fontSize: 12, wordWrap: true, wordWrapWidth: 320 });
+    this.chat_content = this.game.make.text(0, 18, text, { fontSize: 14, wordWrap: true, wordWrapWidth: 320, boundsAlignH: "center" });
     this.chat_content.fontWeight = "bold";
     this.chat_content.smoothed = false;
     Globals.Tool.formatChinese(this.chat_content, 320);
@@ -32,8 +32,10 @@ export class BubbleElement extends Phaser.Group {
     this.mMinWidth = this.chat_content.width + 40;
     this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
 
+    this.chat_content.setTextBounds(0, 0, this.mMinWidth, this.mMinheight);
+
     this.bg = new DynamicNiceSliceImage(this.game, this.mMinWidth, this.mMinheight);
-    this.bg.load(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png", { top: 43, left: 35, right: 33, bottom: 10 }, null, this.loadComplete, this);
+    this.bg.load(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png", { top: 42, left: 34, right: 32, bottom: 9 }, null, this.loadComplete, this);
     this.alpha = 0;
   }
 
