@@ -33,7 +33,7 @@ export class BubbleElement extends Phaser.Group {
     this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
 
     this.bg = new DynamicNiceSliceImage(this.game, this.mMinWidth, this.mMinheight);
-    this.bg.load(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png", 35, 43, 33, 10, null, this.loadComplete, this);
+    this.bg.load(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png", { top: 43, left: 35, right: 33, bottom: 10 }, null, this.loadComplete, this);
     this.alpha = 0;
   }
 

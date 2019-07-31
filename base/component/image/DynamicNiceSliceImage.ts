@@ -5,6 +5,7 @@ export class DynamicNiceSliceImage {
   protected mLoadCompleteCallBack: Function;
   protected mLoadThisArgs: any;
   protected mImage: PhaserNineSlice.NineSlice;
+  protected mNiceData: PhaserNineSlice.NineSlice;
   protected parent: Phaser.Sprite | Phaser.Group;
   constructor(
     private game: Phaser.Game,
@@ -13,7 +14,7 @@ export class DynamicNiceSliceImage {
     private mParent?: Phaser.Group
   ) { }
 
-  public load(value: string, top: number, left: number, right: number, bottom: number, frame?: string, completeCallBack?: Function, thisArgs?: any) {
+  public load(value: string, sliceData: PhaserNineSlice.NineSliceCacheData, frame?: string, completeCallBack?: Function, thisArgs?: any) {
     this.mLoadCompleteCallBack = completeCallBack;
     this.mLoadThisArgs = thisArgs;
 
@@ -23,7 +24,7 @@ export class DynamicNiceSliceImage {
       this.modelLoadCompleteHandler();
     } else {
       this.game.load.onLoadComplete.addOnce(this.modelLoadCompleteHandler, this);
-      this.game.load.nineSlice(key, Load.Url.getRes(this.mUrl), top, left, right, bottom);
+      this.game.load.nineSlice(key, Load.Url.getRes(this.mUrl), sliceData.top, sliceData.left, sliceData.right, sliceData.bottom);
       this.game.load.start();
     }
   }
