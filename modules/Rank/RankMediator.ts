@@ -18,7 +18,11 @@ export class RankMediator extends MediatorBase {
   }
 
   update(param: any) {
-    this.initView();
+    if (param && param.length > 0) {
+      if (param[0].id === this.m_Param[0].id) {
+        this.view.addItem(param[0]);
+      }
+    }
   }
 
   public get view(): RankView {

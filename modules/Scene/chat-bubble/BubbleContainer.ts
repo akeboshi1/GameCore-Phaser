@@ -38,7 +38,7 @@ export class BubbleContainer extends Phaser.Group {
     }
     this._bubbles = this._bubbles.filter(val => bubble !== val);
     this.remove(bubble);
-    bubble.destroy(false);
+    bubble.destroy();
     if (this._bubbles.length <= 0) {
       this.visible = false;
     }
