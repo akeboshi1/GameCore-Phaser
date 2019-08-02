@@ -9,22 +9,25 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
     },
+    devtool: "source-map",
     module: {
         rules: [
             {test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/'},
-            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'}
-        ]
+            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'},
+            {test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones'},
+        ],
     },
     devServer: {
         contentBase: path.resolve(__dirname, './'),
         publicPath: '/dist/',
         host: '127.0.0.1',
-        open: true
+        open: false
     },
     resolve: {
         extensions: ['.ts', '.js'],
         alias: {
-            phaser: phaser
+            phaser: phaser,
+            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js")
         }
     }
 };

@@ -2914,6 +2914,11 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+phaser3-plugin-isometric@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/phaser3-plugin-isometric/-/phaser3-plugin-isometric-0.0.7.tgz#a22ee6f0e44ce4d8d71525981e9dc97fc25b37bc"
+  integrity sha512-k8CSclGOBQdTuJXp6WoBeMC7wPJhdWLRDnYsyRHmIFixThfvlrrERePyO9P39dmxY2YBiEIhpI3DbVocF6WJXQ==
+
 phaser@^3.18.1:
   version "3.18.1"
   resolved "https://registry.npmjs.org/phaser/-/phaser-3.18.1.tgz#84a6e8e8319c851829c02f87d6d1060ad42effd6"
