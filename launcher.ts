@@ -21,6 +21,7 @@ export class Launcher {
 
   constructor() {
     this.mWorld = new World(this.config);
+    // this.mWorld.game.scene.start("PlayScene");
   }
 
   get config(): IGameConfigure {

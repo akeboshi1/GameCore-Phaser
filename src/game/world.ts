@@ -4,6 +4,7 @@ import {PacketHandler} from "net-socket-packet";
 import { Game } from "phaser";
 import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
 import { IGameConfigure } from "../../launcher";
+import { LayerManager } from "../layer/layer.manager";
 
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
@@ -13,6 +14,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConnection: SocketConnection;
     private mGame: Phaser.Game;
     private mConfig: IGameConfigure;
+    private mLayerManager: LayerManager;
 
     constructor(config: IGameConfigure) {
         super();
@@ -40,5 +42,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get game(): Phaser.Game {
         return this.mGame || new Game(this.mConfig);
+    }
+
+    get layerManager(): LayerManager {
+        return this.mLayerManager;
     }
 }
