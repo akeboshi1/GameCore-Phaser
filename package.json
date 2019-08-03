@@ -9,6 +9,8 @@
   "author": "Seven <seven@apowo.com>",
   "license": "MIT",
   "devDependencies": {
+    "config": "^3.2.2",
+    "config-webpack": "^1.0.4",
     "expose-loader": "^0.7.5",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
     "pixelpai_proto": "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript",
