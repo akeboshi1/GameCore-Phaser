@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/TODO.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rooms/room.manager.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rooms/room.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scenes/alpha.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scenes/edit.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scenes/play.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/ui.manager.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/net/connection.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/net/worker/custom.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/net/worker/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/connection.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/connection.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/socket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/socket.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,7 +40,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/net" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -45,13 +49,17 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="yarn" />
     <property name="ts.external.directory.path" value="C:\Users\Seven\git\game-core\node_modules\typescript\lib" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Seven\git\game-core\config" />
+      <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\net" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Seven\git\game-core\src\net\worker" />
       <recent name="C:\Users\Seven\git\game-core\lib\network" />
     </key>
   </component>
@@ -66,6 +74,23 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -97,7 +122,8 @@
       <workItem from="1564380592158" duration="2694000" />
       <workItem from="1564409638251" duration="2650000" />
       <workItem from="1564477729270" duration="674000" />
-      <workItem from="1564631527223" duration="1976000" />
+      <workItem from="1564631527223" duration="6541000" />
+      <workItem from="1564809075933" duration="9132000" />
     </task>
     <servers />
   </component>

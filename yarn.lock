@@ -894,6 +894,18 @@ concat-stream@^1.5.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+config-webpack@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/config-webpack/-/config-webpack-1.0.4.tgz#4768875d7394c799a135f9b6673be17e5ec04a1f"
+  integrity sha512-7Eb3HfaS855sW01JUwldttWflh3UejJn/ZRfDPCSyv4p/ao8eHyGrfIR5Lyerbl5CHTEEKIRwArXPXJHIQ2X3g==
+
+config@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.npmjs.org/config/-/config-3.2.2.tgz#c7d31bb2a9d30013a905ff420101e3b1ba58eead"
+  integrity sha512-rOsfIOAcG82AWouK4/vBS/OKz3UPl2T/kP0irExmXJJOoWg2CmdfPLdx56bCoMUMFNh+7soQkQWCUC8DyemiwQ==
+  dependencies:
+    json5 "^1.0.1"
+
 connect-history-api-fallback@^1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/connect-history-api-fallback/-/connect-history-api-fallback-1.6.0.tgz#8b32089359308d111115d81cad3fceab888f97bc"

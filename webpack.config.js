@@ -1,10 +1,11 @@
 const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser');
 const phaser = path.join(pathToPhaser, 'dist/phaser.js');
+const ConfigWebpackPlugin = require("config-webpack");
 
 module.exports = {
     entry: {
-        launcher: path.join(__dirname,'launcher.ts'),
+        launcher: path.join(__dirname, 'launcher.ts'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -17,6 +18,9 @@ module.exports = {
             {test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones'},
         ],
     },
+    plugins: [
+        new ConfigWebpackPlugin("StaticConfig")
+    ],
     devServer: {
         contentBase: path.resolve(__dirname, './'),
         publicPath: '/dist/',
