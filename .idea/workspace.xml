@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/net/connection.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/net/worker/custom.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/net/worker/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/connection.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/connection.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/socket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/socket.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TODO.md" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +113,8 @@
       <workItem from="1564409638251" duration="2650000" />
       <workItem from="1564477729270" duration="674000" />
       <workItem from="1564631527223" duration="6541000" />
-      <workItem from="1564809075933" duration="9132000" />
+      <workItem from="1564809075933" duration="10148000" />
+      <workItem from="1564970083630" duration="1311000" />
     </task>
     <servers />
   </component>
