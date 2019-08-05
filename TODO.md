@@ -9,7 +9,7 @@ TODO List
 
 ## 工程
 - [ ] Phaser3 + isometric项目运行 `@404`
-- [√] 编入龙骨 `@404`
+- [x] 编入龙骨 `@404`
 
 ## 编码
 - [ ] SocketConnection via webworker: ./net `@seven`
@@ -17,3 +17,5 @@ TODO List
 - [ ] 游戏主程序 : ./game `@404`
 - [ ] 游戏运行态（Phaser.Scene）: ./scenes `@404`
 - [ ] 资源动态加载 `@404`
+- [ ] 添加物件和地块
+- [ ] 键盘控制人物移动 
