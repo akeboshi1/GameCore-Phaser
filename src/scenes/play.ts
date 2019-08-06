@@ -1,6 +1,6 @@
 import IsoPlugin from "phaser3-plugin-isometric";
 import { LayerManager } from "../layer/layer.manager";
-import { PlayerDisplay } from "../rooms/gameobject/player/player.display";
+import { PlayerDisplay } from "../rooms/player/player.display";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
