@@ -8,8 +8,9 @@ TODO List
 
 
 ## 工程
-- [ ] Phaser3 + isometric项目运行 `@404`
+- [x] Phaser3 + isometric项目运行 `@404`
 - [x] 编入龙骨 `@404`
+- [ ] *WIP* 深度排序 `@404`
 
 ## 编码
 - [ ] *WIP* SocketConnection via webworker: ./net `@seven`
