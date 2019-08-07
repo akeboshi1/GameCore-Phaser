@@ -3,9 +3,9 @@ TODO List
 
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`
-- [ ] Webpack 动态加载代码块。
+- [ ] * WIP * Webpack 动态加载代码块。
 - [ ] 版本控制。根据版本列表加载主程序
-- [ ] *WIP* 深度排序 `@404`
+- [x] 深度排序 `@404`
 
 ## 工程
 - [x] Phaser3 + isometric项目运行 `@404`
