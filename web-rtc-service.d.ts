@@ -10,6 +10,7 @@ declare class WebGMEAPI {
     EnterRoom(roomId: string, roomType: number, authBuffer: string): void;
     ExitRoom(): void;
     EnableMic(enable: boolean): void;
+    isFirstMessage: boolean;
 }
 
 

@@ -54,17 +54,23 @@ export class ChatMediator extends MediatorBase {
 
     /// never start
     public _initGME() {
+        let self = this;
         // TODO just for test, need get sdkAppId from settings
         const sdkAppId: string = "1400209172";
         let playerId = Globals.DataCenter.PlayerData.mainPlayerInfo.id;
         GMEApi.Init(document, sdkAppId, playerId.toString());
+        GMEApi.isFirstMessage = true;
         GMEApi.SetTMGDelegate((event, result) => {
             switch (event) {
                 case GMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
                     console.log(`[GME]: EnterRoom >> ${result}`);
-                    GMEApi.EnableMic(false);
+                    // at this time the local media is still null, so you can not set mic or speaker here!!!
                     break;
                 case GMEApi.event.ITMG_MAIN_EVNET_TYPE_USER_UPDATE:
+                    if (GMEApi.isFirstMessage) {
+                        GMEApi.EnableMic(self.view.voiceButton.select);
+                        GMEApi.isFirstMessage = false;
+                    }
                     // console.log(`Info: 发送码率: ${result.UploadBRSend} | RTT: ${result.UploadRTT} -- Peer: ${JSON.stringify(result.PeerInfo)}`);
                     // if (result.PeerInfo.length > 0) Globals.MessageCenter.emit(MessageType.USER_UPDATED_VOICE_PEER, result.PeerInfo[0]);
                     break;
@@ -136,7 +142,6 @@ export class ChatMediator extends MediatorBase {
         // roomType 1, 2, 3 for audio quality， 3 is the best
         let roomId = Globals.DataCenter.SceneData.mapInfo.voiceChatRoomId;
         GMEApi.EnterRoom(roomId.toString(), 1, this.authBuffer);
-        GMEApi.EnableMic(this.view.voiceButton.select);
         console.log(`roomId ${roomId.toString()}, authBuffer: ${this.authBuffer}`);
         this._inRoom = true;
 
