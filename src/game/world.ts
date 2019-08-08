@@ -35,7 +35,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mGame || new Game(this.mConfig);
     }
 
-    getConnection(): ConnectionService {
+    get connection(): ConnectionService {
         return this.mConnection;
     }
 

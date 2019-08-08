@@ -3,5 +3,7 @@ import {ConnectionService} from "../net/connection.service";
 import {ServerAddress} from "../net/address";
 
 export interface WorldService {
-    getConnection(): ConnectionService;
+    connection: ConnectionService;
+
+    game: Phaser.Game;
 }
