@@ -2,8 +2,8 @@
   "name": "game-core",
   "version": "1.0.0",
   "scripts": {
-    "dev": "webpack --mode development && webpack-dev-server --mode development",
-    "build": "webpack --mode production && webpack-dev-server --mode production"
+    "dev": "rimraf dist && webpack --mode development && webpack-dev-server --mode development",
+    "build": "rimraf dist && webpack --mode production"
   },
   "repository": "git@code.apowo.com:PixelPai/game-core.git",
   "author": "Seven <seven@apowo.com>",
@@ -14,6 +14,7 @@
     "expose-loader": "^0.7.5",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
     "pixelpai_proto": "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript",
+    "rimraf": "^2.6.3",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.2",
     "webpack": "^4.35.2",

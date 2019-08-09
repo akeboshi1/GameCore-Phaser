@@ -90,9 +90,9 @@
   integrity sha512-Uy0PN4R5vgBUXFoJrKryf5aTk3kJ8Rv3PdlHjl6UaX+Cqp1QE0yPQ68MPXGrZOfG7gZVNDIJZYyot0B9ubXUrQ==
 
 "@types/node@^10.1.0":
-  version "10.14.12"
-  resolved "https://registry.npmjs.org/@types/node/-/node-10.14.12.tgz#0eec3155a46e6c4db1f27c3e588a205f767d622f"
-  integrity sha512-QcAKpaO6nhHLlxWBvpc4WeLrTvPqlHOvaj0s5GriKkA1zq+bsFBPpfYCvQhLqLgYlIko8A9YrPdaMHCo5mBcpg==
+  version "10.14.15"
+  resolved "https://registry.npmjs.org/@types/node/-/node-10.14.15.tgz#e8f7729b631be1b02ae130ff0b61f3e018000640"
+  integrity sha512-CBR5avlLcu0YCILJiDIXeU2pTw7UK/NIxfC63m7d7CVamho1qDEzXKkOtEauQRPMy6MI8mLozth+JJkas7HY6g==
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
@@ -2571,8 +2571,8 @@ neo-async@^2.5.0:
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
 "net-socket-packet@git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git":
-  version "1.0.24"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git#cb80c15c6f5086766efee6ef9233cb4053412cb7"
+  version "1.0.27"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git#cf24aa81d186ec6907081c69d3ca230650a927cf"
   dependencies:
     buffer "^5.2.1"
     typescript-collections "^1.3.2"
@@ -2972,8 +2972,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript":
-  version "1.0.33"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#b353cb3835549dd8a098f80a161998f69b30461c"
+  version "1.0.57"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#5bad162e3a69695ba20a2a27ceb2d2236bfa0c15"
   dependencies:
     protobufjs "^6.8.8"
 

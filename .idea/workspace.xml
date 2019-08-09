@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/net/networker.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/worker/custom.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/custom.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/worker/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/connection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/connection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/networker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/networker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/transport/websocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/transport/websocket.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +45,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="ts.external.directory.path" value="C:\Users\Seven\git\game-core\node_modules\typescript\lib" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -124,6 +124,7 @@
       <workItem from="1564980046684" duration="2637000" />
       <workItem from="1565235464091" duration="714000" />
       <workItem from="1565236208510" duration="525000" />
+      <workItem from="1565364784221" duration="5681000" />
     </task>
     <servers />
   </component>

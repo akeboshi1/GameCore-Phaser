@@ -2,7 +2,7 @@ import {EventEmitter} from "events";
 import {Buffer} from "buffer/";
 
 // @ts-ignore
-const Socket: any = window.WebSocket || window.MozWebSocket;
+const Socket: any = WebSocket || MozWebSocket;
 
 enum ReadyState {
     CONNECTING = 0,
