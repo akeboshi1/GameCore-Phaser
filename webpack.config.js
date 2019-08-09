@@ -6,9 +6,10 @@ const ConfigWebpackPlugin = require("config-webpack");
 module.exports = {
     entry: {
         launcher: path.join(__dirname, 'launcher.ts'),
+        worker: path.join(__dirname,'src/net/networker.ts')
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.join(__dirname,'dist')
     },
     devtool: "source-map",
     module: {

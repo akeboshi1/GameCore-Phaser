@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/net/networker.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/worker/custom.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/custom.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net/worker/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,14 +48,15 @@
     <property name="ts.external.directory.path" value="C:\Users\Seven\git\game-core\node_modules\typescript\lib" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Seven\git\game-core\src\net" />
+      <recent name="C:\Users\Seven\git\game-core\src\net\worker" />
+      <recent name="C:\Users\Seven\git\game-core\lib\network" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Seven\git\game-core\config" />
       <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\net" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Seven\git\game-core\src\net\worker" />
-      <recent name="C:\Users\Seven\git\game-core\lib\network" />
     </key>
   </component>
   <component name="RunDashboard">
