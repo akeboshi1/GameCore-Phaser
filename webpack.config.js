@@ -20,7 +20,7 @@ module.exports = {
         ],
     },
     plugins: [
-        new ConfigWebpackPlugin("StaticConfig")
+        new ConfigWebpackPlugin()
     ],
     devServer: {
         contentBase: path.resolve(__dirname, './'),

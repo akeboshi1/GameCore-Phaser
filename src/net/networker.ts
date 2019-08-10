@@ -7,38 +7,67 @@ const ctx: Worker = self as any;
 
 class ConnListener implements IConnectListener {
     onConnected(connection: SocketConnection): void {
+        ctx.postMessage({
+            "method": "onConnected"
+        });
+        console.info(`NetWorker[已连接]`);
     }
 
     onDisConnected(connection: SocketConnection): void {
+        console.info(`NetWorker[已断开]`);
     }
 
     onError(reason: SocketConnectionError | undefined): void {
+        console.error(`NetWorker[错误]:${reason.message}`);
     }
 
 }
 
+class WorkerClient extends SocketConnection {
+    protected mUuid: number = 0;
+
+    protected onData(data: any) {
+        let protobuf_packet: PBpacket = new PBpacket();
+        protobuf_packet.Deserialization(new Buffer(data));
+        this.mUuid = protobuf_packet.header.uuid;
+        console.log(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
+        // Send the packet to parent thread
+        ctx.postMessage({
+            "method": "onData",
+            "buffer": protobuf_packet.Serialization()
+        })
+    }
+
+    send(data: any): void {
+        let protobuf_packet: PBpacket = new PBpacket();
+        protobuf_packet.Deserialization(new Buffer(data));
+        protobuf_packet.header.uuid = this.mUuid || 0;
+        super.send(protobuf_packet.Serialization());
+        console.log(`NetWorker[发送] >>> ${protobuf_packet.toString()}`);
+    }
+}
+
 // run socket client through web-worker
-const socket: SocketConnection = new SocketConnection(new ConnListener());
+const socket: SocketConnection = new WorkerClient(new ConnListener());
 
 ctx.onmessage = ev => {
     const data: any = ev.data;
-    let addr: ServerAddress;
-    console.log(`I am the worker.`);
+
+    console.log(`Worker get the parent data.`);
     console.dir(data);
 
-    const pkt: PBpacket = new PBpacket();
-    console.log(data.method);
-    pkt.Deserialization(new Buffer(data['msg']));
-    console.dir(pkt.header);
-    console.dir(pkt.content);
     // ctx.postMessage(`bot: hello boss.`);
-    // switch (msg) {
-    //     case ''
-    //     case 'connect':
-    //         if (addr) socket.startConnect(addr);
-    //         break;
-    //
-    // }
+    switch (data.method) {
+        case 'connect':
+            let addr: ServerAddress = data.address;
+            if (addr) socket.startConnect(addr);
+            break;
+        case "send":
+            const buf = data.buffer;
+            socket.send(new Buffer(buf));
+            break;
+
+    }
 };
 
 

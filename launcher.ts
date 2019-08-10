@@ -11,7 +11,7 @@ export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
   readonly auth_token: string;
   readonly token_expire: string;
   readonly token_fingerprint: string;
-  readonly sever_addr: ServerAddress;
+  readonly server_addr: ServerAddress;
   readonly game_id: string;
   readonly virtual_world_id: string;
 }
@@ -27,12 +27,12 @@ export class Launcher {
   get config(): IGameConfigure {
     // TODO 在这里整合app和phaser的配置文件
     return {
-      auth_token: "",
-      token_expire: "",
-      token_fingerprint: "",
-      sever_addr: undefined,
-      game_id: "",
-      virtual_world_id: "",
+      auth_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWIyMjk0ZGFhMTFjMTZhYTBkMjU2MSIsImlhdCI6MTU2NTQwNzM2MiwiZXhwIjoxNTY2MDEyMTYyfQ.jt1PlIm9ocXOpiLxw7IqBN3Uu4dZDpwr8gWW7TCmHeU",
+      token_expire: "1566012162",
+      token_fingerprint: "f16547d1151d0ad45b7586286ef37d93793b255b",
+      server_addr: undefined,
+      game_id: "5d1ac9f9bf4529202107c561",
+      virtual_world_id: "0",
       type: Phaser.AUTO,
       zoom: 1,
       width: document.documentElement.clientWidth,

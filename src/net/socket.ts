@@ -1,12 +1,10 @@
 import {ServerAddress} from "./address";
-import {PacketHandler, PBpacket} from "net-socket-packet";
 import {WSWrapper} from "./transport/websocket";
-import {Buffer} from "buffer/";
 
 export interface IConnectListener {
-    onConnected(connection: SocketConnection): void;
+    onConnected(connection?: SocketConnection): void;
 
-    onDisConnected(connection: SocketConnection): void;
+    onDisConnected(connection?: SocketConnection): void;
 
     onError(reason: SocketConnectionError | undefined): void;
 }
@@ -55,6 +53,7 @@ export class SocketConnection {
     }
 
     protected onData(data: any) {
+        // do nothing.
     }
 
     startConnect(addr: ServerAddress): void {
@@ -88,42 +87,42 @@ export class SocketConnection {
     }
 }
 
-
-export class SocketClient extends SocketConnection {
-    protected mUuid: number = 0;
-    protected mPacketHandlers: PacketHandler[] = [];
-
-    protected onData(data: any) {
-        super.onData(data);
-
-        let protobuf_packet: PBpacket = new PBpacket();
-        this.mUuid = protobuf_packet.header.uuid;
-        protobuf_packet.Deserialization(new Buffer(data));
-        console.log(`[接收] <<< ${protobuf_packet.toString()} `);
-        this.mPacketHandlers.forEach((handler: PacketHandler) => {
-            handler.onPacketArrived(protobuf_packet);
-        });
-    }
-
-    addPacketListener(handler: PacketHandler) {
-        this.mPacketHandlers.push(handler);
-    }
-
-    removePacketListener(handler: PacketHandler) {
-        let idx: number = this.mPacketHandlers.indexOf(handler);
-        if (idx !== -1) {
-            this.mPacketHandlers.splice(idx, 1);
-        }
-    }
-
-    send(packet: PBpacket): void {
-        packet.header.uuid = this.mUuid || 0;
-        super.send(packet.Serialization());
-        console.log(`[发送] >>> ${packet.toString()}`);
-    }
-
-    destroy(): void {
-        super.destroy();
-        this.mPacketHandlers = [];
-    }
-}
+//
+// export class SocketClient extends SocketConnection {
+//     protected mUuid: number = 0;
+//     protected mPacketHandlers: PacketHandler[] = [];
+//
+//     protected onData(data: any) {
+//         super.onData(data);
+//
+//         let protobuf_packet: PBpacket = new PBpacket();
+//         this.mUuid = protobuf_packet.header.uuid;
+//         protobuf_packet.Deserialization(new Buffer(data));
+//         console.log(`[接收] <<< ${protobuf_packet.toString()} `);
+//         this.mPacketHandlers.forEach((handler: PacketHandler) => {
+//             handler.onPacketArrived(protobuf_packet);
+//         });
+//     }
+//
+//     addPacketListener(handler: PacketHandler) {
+//         this.mPacketHandlers.push(handler);
+//     }
+//
+//     removePacketListener(handler: PacketHandler) {
+//         let idx: number = this.mPacketHandlers.indexOf(handler);
+//         if (idx !== -1) {
+//             this.mPacketHandlers.splice(idx, 1);
+//         }
+//     }
+//
+//     send(packet: PBpacket): void {
+//         packet.header.uuid = this.mUuid || 0;
+//         super.send(packet.Serialization());
+//         console.log(`[发送] >>> ${packet.toString()}`);
+//     }
+//
+//     destroy(): void {
+//         super.destroy();
+//         this.mPacketHandlers = [];
+//     }
+// }
