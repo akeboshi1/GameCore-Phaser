@@ -5,5 +5,5 @@ import {ServerAddress} from "../net/address";
 export interface WorldService {
     connection: ConnectionService;
 
-    game: Phaser.Game;
+    readonly game: Phaser.Game;
 }
