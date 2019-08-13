@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/connection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/connection.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/networker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/networker.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/socket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/socket.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/transport/websocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/transport/websocket.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -126,7 +121,7 @@
       <workItem from="1565236208510" duration="525000" />
       <workItem from="1565364784221" duration="6097000" />
       <workItem from="1565420950324" duration="8548000" />
-      <workItem from="1565668797502" duration="6724000" />
+      <workItem from="1565668797502" duration="7642000" />
     </task>
     <servers />
   </component>
