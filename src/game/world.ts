@@ -7,13 +7,9 @@ import {IGameConfigure} from "../../launcher";
 import {ConnectionService} from "../net/connection.service";
 import Connection from "../net/connection";
 import {ServerAddress} from "../net/address";
-import {op_client, op_gameconfig, op_gateway, op_virtual_world} from "pixelpai_proto";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
+import {op_client, op_gateway} from "pixelpai_proto";
 
-PBpacket.addProtocol(op_client);
-PBpacket.addProtocol(op_gateway);
-PBpacket.addProtocol(op_gameconfig);
-PBpacket.addProtocol(op_virtual_world);
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -69,8 +65,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     onError(reason: SocketConnectionError | undefined): void {
     }
 
-    private onInitVirtualWorldPlayerInit() {
-        // start the game.
+    private onInitVirtualWorldPlayerInit(packet: PBpacket) {
+        console.dir(packet.content);
+        // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this.mGame = new Game(this.mConfig);
     }
 }

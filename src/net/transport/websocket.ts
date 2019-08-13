@@ -20,7 +20,7 @@ export class WSWrapper extends EventEmitter {
     _packets_q: Buffer[] = [];
     _writable: Boolean = false;
     _sent_count: number = 0;
-    _auto_reconnect: Boolean = true;
+    _auto_reconnect: Boolean = false;
     _force_close: Boolean = false;
 
     constructor();

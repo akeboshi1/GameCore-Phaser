@@ -14,10 +14,17 @@ class ConnListener implements IConnectListener {
     }
 
     onDisConnected(connection: SocketConnection): void {
+        ctx.postMessage({
+            "method": "onDisConnected"
+        });
         console.info(`NetWorker[已断开]`);
     }
 
     onError(reason: SocketConnectionError | undefined): void {
+        ctx.postMessage({
+            "method": "onConnectError",
+            "error": reason.message
+        });
         console.error(`NetWorker[错误]:${reason.message}`);
     }
 
@@ -53,10 +60,6 @@ const socket: SocketConnection = new WorkerClient(new ConnListener());
 ctx.onmessage = ev => {
     const data: any = ev.data;
 
-    console.log(`Worker get the parent data.`);
-    console.dir(data);
-
-    // ctx.postMessage(`bot: hello boss.`);
     switch (data.method) {
         case 'connect':
             let addr: ServerAddress = data.address;

@@ -3,45 +3,76 @@ import {ServerAddress} from "./address";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IConnectListener} from "./socket";
 import {Buffer} from "buffer/";
+import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
 
 const NetWorker = require("worker-loader?publicPath=/dist/&name=[hash].[name].js!./networker.ts");
-
+PBpacket.addProtocol(op_client);
+PBpacket.addProtocol(op_gateway);
+PBpacket.addProtocol(op_gameconfig);
+PBpacket.addProtocol(op_virtual_world);
+PBpacket.addProtocol(op_gameconfig_01);
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export default class Connection implements ConnectionService {
     private mListener: IConnectListener;
     private mWorker: any;
     protected mPacketHandlers: PacketHandler[] = [];
+    private mReConnectCount: number = 0;
+    private mCachedServerAddress: ServerAddress;
+    private mTimeout: any;
 
     constructor(listener: IConnectListener) {
         this.mListener = listener;
     }
 
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
-        const self = this;
+        this.mCachedServerAddress = addr;
         try {
             this.mWorker = new NetWorker();
+            this._doConnect();
+        } catch (e) {
+            throw new Error(`startConnect Error: ${e}`);
+        }
+    }
+
+    private _doConnect() {
+        console.info(`_doConnect `, this.mCachedServerAddress);
+        const self = this;
+        if (this.mWorker) {
             this.mWorker.onmessage = event => {
                 self.onWorkerMessage(event.data);
             };
             this.mWorker.postMessage({
                 "method": "connect",
-                "address": {
-                    host: "115.182.75.79",
-                    port: 12100
-                }
+                "address": self.mCachedServerAddress
             })
-        } catch (e) {
-            // TODO throw error message
         }
     }
 
     private onWorkerMessage(data) {
-        console.dir(data);
+        const self = this;
         const method = data.method;
         switch (method) {
             case "onConnected":
+                this.mReConnectCount = 0;
                 this.mListener.onConnected();
+                break;
+            case "onDisConnected":
+
+                if (!this.mTimeout) {
+                    if (this.mReConnectCount < 10)
+                        this.mReConnectCount++;
+                    const delay = this.mReConnectCount ** 2;
+                    console.info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
+
+                    this.mTimeout = setTimeout(() => {
+                        self.mTimeout = undefined;
+                        self._doConnect();
+                    }, delay * 1000);
+                }
+                break;
+            case "onConnectError":
+                // TODO
                 break;
             case "onData":
                 const buf = data.buffer;
@@ -55,7 +86,6 @@ export default class Connection implements ConnectionService {
     }
 
     private _onData(data: any) {
-        console.log(`_onData`);
         let protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         let handlers = this.mPacketHandlers;
