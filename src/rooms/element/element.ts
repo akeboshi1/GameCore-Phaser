@@ -1,4 +1,8 @@
-export class Element {
+export interface IElement {
+
+}
+
+export class Element implements IElement{
   protected mDisplay: any;
   constructor() {
 

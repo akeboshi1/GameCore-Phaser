@@ -68,6 +68,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
         console.dir(packet.content);
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
-        this.mGame = new Game(this.mConfig);
+        if (!this.mGame)
+            this.mGame = new Game(this.mConfig);
     }
 }

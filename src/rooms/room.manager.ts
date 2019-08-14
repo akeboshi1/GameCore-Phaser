@@ -1,16 +1,28 @@
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.mamager";
+import {ElementManager} from "./element/element.manager";
+import {PlayerManager} from "./player/player.mamager";
+import {WorldService} from "../game/world.service";
+import {ConnectionService} from "../net/connection.service";
+import {Room} from "./room";
 
-export class RoomManager {
-  protected mElementManager: ElementManager;
-  protected mPlayerManager: PlayerManager;
+export interface IRoomManager {
+    readonly connection: ConnectionService;
+    readonly scene: Phaser.Scene;
+}
 
-  constructor(private mScene: Phaser.Scene) {
-    this.initialize();
-  }
+export class RoomManager implements IRoomManager {
+    protected mWorld: WorldService;
+    protected mRoomList: Room[] = [];
 
-  private initialize() {
-    this.mElementManager = new ElementManager(this.mScene);
-    this.mPlayerManager = new PlayerManager(this.mScene);
-  }
+    constructor(world: WorldService) {
+        this.mWorld = world;
+    }
+
+    get scene(): Phaser.Scene {
+        // TODO
+        return;
+    }
+
+    get connection(): ConnectionService {
+        return this.mWorld.connection;
+    }
 }
