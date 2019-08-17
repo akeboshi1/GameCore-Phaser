@@ -1,9 +1,6 @@
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
-export class LauncherVersion {
-  public static version: string;
-}
 
 // export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
 //   readonly auth_token: string;
@@ -13,41 +10,42 @@ export class LauncherVersion {
 //   readonly game_id: string;
 //   readonly virtual_world_id: string;
 // }
-
+import { version } from "./lib/version";
 export class Launcher {
-  private _version;
 
   constructor() {
     let s = this;
-    let version = this._version;
-    this._version = version = document.getElementById("game_version");
-    if (version) {
-      console.log(version.content);
-    }
-    //todo window load 
-    ///this.mWorld.game.scene.start("PlayScene");
 
     setInterval(() => {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', "./version.json", true);
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', "./package.json", true);
       xhr.addEventListener("load", function () {
-        var manifest = JSON.parse(xhr.response);
-        var version = manifest.version;
-        if (s._version !== version) {
+        let manifest = JSON.parse(xhr.response);
+        let newVersion = manifest.version;
+       // console.log(version + ":1," + newVersion);
+        if (version !== newVersion) {
+          //console.log(newVersion + "3");
           const result = confirm("检测到新版本，是否刷新更新到最新版？");
           if (result) {
             window.location.reload();
           }
         }
       });
-      xhr.send(null)
-    }, 100000);
+      xhr.send(null);
+    }, 7200000);
+
+
+    //todo window load 
+    ///this.mWorld.game.scene.start("PlayScene");
+
 
     import(/* webpackChunkName: "game" */ "./src/game").then(game => {
       new game.Game();
     });
   }
 }
+
+
 
 window.onload = () => {
   new Launcher();
