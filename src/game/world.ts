@@ -26,6 +26,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConnection.addPacketListener(this);
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
+        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
 
         // @ts-ignore
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
@@ -64,6 +65,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onError(reason: SocketConnectionError | undefined): void {
+    }
+
+    onClientErrorHandler(packet: PBpacket): void {
+        let content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
+        console.error(content.msg);
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {

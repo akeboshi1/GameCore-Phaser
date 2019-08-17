@@ -2,7 +2,7 @@
   "api_root": "http://172.18.0.100/",
   "osd": "https://osd-dev.pixelpai.com/",
   "gateway": {
-    "host": "115.182.75.79",
+    "host": "172.18.0.100",
     "port": 12100
   }
 }

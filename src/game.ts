@@ -22,12 +22,12 @@ export class Game {
   get config(): IGameConfigure {
     // TODO 在这里整合app和phaser的配置文件
     return {
-      auth_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWIyMjk0ZGFhMTFjMTZhYTBkMjU2MSIsImlhdCI6MTU2NTQwNzM2MiwiZXhwIjoxNTY2MDEyMTYyfQ.jt1PlIm9ocXOpiLxw7IqBN3Uu4dZDpwr8gWW7TCmHeU",
-      token_expire: "1566012162",
-      token_fingerprint: "f16547d1151d0ad45b7586286ef37d93793b255b",
+      auth_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmRmOTQ4OTUxYTRmNGY2NGMzYmEzMSIsImlhdCI6MTU2NjAyODU0MCwiZXhwIjoxNTY2NjMzMzQwfQ._pd4aKVZL6pTC3kl0xwoWV94RBcA2V7mf98C1IjY2bc",
+      token_expire: "1566633340",
+      token_fingerprint: "27b63bf5c95d53b8bd6d95ffdfc7a1f599a18cbe",
       server_addr: undefined,
-      game_id: "5d1ac9f9bf4529202107c561",
-      virtual_world_id: "0",
+      game_id: "5d3fa04ee9a53c120dba1f1e",
+      virtual_world_id: "65539",
       type: Phaser.AUTO,
       zoom: 1,
       width: document.documentElement.clientWidth,
