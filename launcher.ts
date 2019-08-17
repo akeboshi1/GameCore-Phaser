@@ -6,6 +6,9 @@ import "dragonBones";
 import { ServerAddress } from "./src/net/address";
 import { World } from "./src/game/world";
 import { PlayScene } from "./src/scenes/play";
+export class LauncherVersion {
+  public static version: string;
+}
 
 export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
   readonly auth_token: string;
@@ -18,10 +21,34 @@ export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
 
 export class Launcher {
   private mWorld: World;
-
+  private _version;
   constructor() {
+    let s = this;
+    let version = this._version;
+    this._version = version = document.getElementById("xiaomin_version");
+    if (version) {
+      console.log(version.content);
+    }
+    //todo window load 
     this.mWorld = new World(this.config);
-    // this.mWorld.game.scene.start("PlayScene");
+    ///this.mWorld.game.scene.start("PlayScene");
+
+    setInterval(() => {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', "./test.json", true);
+      xhr.addEventListener("load", function () {
+        var manifest = JSON.parse(xhr.response);
+        var version = manifest.version;
+        if (s._version !== version) {
+          const result = confirm("检测到新版本，是否刷新更新到最新版？");
+          if (result) {
+            window.location.reload();
+          }
+        }
+      });
+      xhr.send(null)
+    }, 100000);
+
   }
 
   get config(): IGameConfigure {
@@ -44,9 +71,9 @@ export class Launcher {
       transparent: false,
       backgroundColor: 0x0,
       resolution: 1,
-      version: "",
+      version: this._version,
       seed: [],
-      plugins: {
+       plugins: {
         scene: [
           {
             key: "DragonBones",
@@ -66,3 +93,4 @@ export class Launcher {
 window.onload = () => {
   new Launcher();
 };
+
