@@ -3,8 +3,8 @@ TODO List
 
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`
-- [ ] * WIP * Webpack 动态加载代码块。
-- [ ] 版本控制。根据版本列表加载主程序
+- [x] Webpack 动态加载代码块。
+- [x] * WIP * 版本控制。根据版本列表加载主程序 `@gxm`
 - [x] 深度排序 `@404`
 
 ## 工程
@@ -13,12 +13,12 @@ TODO List
 
 ## 编码
 - [x] SocketConnection via webworker: ./net `@seven`
-- [ ] launcher `@404`
+- [ ] *WIP* launcher `@gxm`
 - [ ] 游戏主程序 : ./game `@404`
 - [ ] 游戏运行态（Phaser.Scene）: ./scenes `@404`
 - [ ] 资源动态加载 `@404`
-- [ ] 游戏结构
-- [ ] 层级管理
+- [ ] 游戏结构 `@seven`
+- [ ] 层级管理 `@gxm @404`
   - UI层：渲染UI对象
   - 前景层：预留
   - 舞台层
@@ -27,26 +27,29 @@ TODO List
     - ground 地皮：渲染Tarrain
   - 背景层若干[2~3层]：最后一层为天空盒
   - **跟随镜头移动的层在PlayScene中，其它在UIScene**
-- [ ] 将Terrain添加到ground层
+- [ ] 将Terrain添加到ground层 `@404 @gxm`
   - 使用`45°`格子坐标
-- [ ] 物件添加到surface层
+  - [ ] 深度排序 
+- [ ] 物件添加到surface层 `@404 @gxm`
   - 使用`90°`直角坐标
-- [ ] 添加z轴实现深度
-- [ ] surface层对象`x,y,z`变化, 修改depth
-- [ ] keyboard管理
+  - [ ] 深度排序 
+- [ ] 添加z轴实现深度 `@404`
+- [ ] surface层对象`x,y,z`变化, 修改depth `@404`
+- [ ] 鼠标事件管理 `@gxm`
+- [ ] keyboard管理 `@gxm`
   - `wasd、方向键`控制角色移动
   - `按下、松开`的键告诉服务器 
-- [ ] 人物移动逻辑
+- [ ] 人物移动逻辑 `@gxm`
   - 先客户端移动，再通过后端矫正坐标并移动至后端的正确坐标
   - 移动修改对应动画和方向
-- [ ] dragonbones换装
-- [ ] 深度排序
-- [ ] 物件、Character像素级选择
-- [ ] 动画状态管理
-- [ ] resize
-- [ ] Character特效
+  - [ ] 深度排序 
+- [ ] dragonbones换装 `@gxm`
+- [ ] 物件、Character像素级选择 `@404`
+- [ ] 动画状态管理 `@gxm`
+- [ ] resize `@gxm`
+- [ ] Character特效 `@gxm`
 
-### UI
+### UI `@404 @gxm`
   - 封装rex
   - 打开、更新面板（SHOW_UI、UPDATE_UI、CLOSE_UI）
   - 道具相关
