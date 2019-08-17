@@ -24,7 +24,7 @@ export class Launcher {
         let newVersion = manifest.version;
        // console.log(version + ":1," + newVersion);
         if (version !== newVersion) {
-          //console.log(newVersion + "3");
+          //Yconsole.log(newVersion + "3");
           const result = confirm("检测到新版本，是否刷新更新到最新版？");
           if (result) {
             window.location.reload();
