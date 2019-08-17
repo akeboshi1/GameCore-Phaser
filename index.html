@@ -19,51 +19,6 @@
       margin-right: auto;
     }
   </style>
-  <game_version id="game_version" hidden=true></game_version>
-  <script>
-    // var loadScript = function (list, callback) {
-    //   var loaded = 0;
-    //   var loadNext = function () {
-    //     loadSingleScript(list[loaded], function () {
-    //       loaded++;
-    //       if (loaded >= list.length) {
-    //         callback();
-    //       }
-    //       else {
-    //         loadNext();
-    //       }
-    //     })
-    //   };
-    //   loadNext();
-    // };
-
-    // var loadSingleScript = function (src, callback) {
-    //   var s = document.createElement('script');
-    //   s.async = false;
-    //   s.src = "dist/" + src;
-    //   s.addEventListener('load', function () {
-    //     s.parentNode.removeChild(s);
-    //     s.removeEventListener('load', arguments.callee, false);
-    //     callback();
-    //   }, false);
-    //   document.body.appendChild(s);
-    // };
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', "./version.json", true);
-    xhr.addEventListener("load", function () {
-      var manifest = JSON.parse(xhr.response);
-      var version = manifest.version;
-      document.getElementById("game_version").content = version;
-      // var list = manifest.loadList;
-      // loadScript(list, function () {
-      //   loadSingleScript("launcher.js", function () {
-      //     window.onload();
-      //   });
-      // });
-    });
-    xhr.send(null)
-  </script>
 </head>
 
 <body>

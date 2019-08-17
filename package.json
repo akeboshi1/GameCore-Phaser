@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "rimraf dist && webpack --mode development && webpack-dev-server --mode development",
-    "build": "rimraf dist && webpack --mode production"
+    "build": "rimraf dist && webpack --mode production",
+    "genersion":"genversion lib/version.js"
   },
   "repository": "git@code.apowo.com:PixelPai/game-core.git",
   "author": "Seven <seven@apowo.com>",
@@ -26,6 +27,8 @@
   "dependencies": {
     "buffer": "^5.2.1",
     "genversion": "^2.2.0",
+    "json-loader": "^0.5.7",
+    "json5-loader": "^3.0.0",
     "phaser": "^3.18.1",
     "phaser3-plugin-isometric": "^0.0.7",
     "uglifyjs-webpack-plugin": "^2.2.0"

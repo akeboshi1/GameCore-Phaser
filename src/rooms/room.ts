@@ -17,6 +17,7 @@ export class Room implements RoomService {
     constructor(manager: IRoomManager) {
         this.mElements = new ElementManager(this);
         this.mPlayers = new PlayerManager(this);
+
     }
 
     enter(element: IElement): void {

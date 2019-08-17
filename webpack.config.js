@@ -1,17 +1,17 @@
 const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser');
 const phaser = path.join(pathToPhaser, 'dist/phaser.js');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+//const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     entry: {
         launcher: path.join(__dirname, "./launcher.ts"),
-        worker: path.join(__dirname,'src/net/networker.ts')
+        worker: path.join(__dirname, 'src/net/networker.ts'),
     },
     output: {
-        path: path.join(__dirname,'dist/'),
+        path: path.join(__dirname, 'dist/'),
         filename: "[name].js",
         chunkFilename: "[hash].[name].js"
     },
@@ -29,17 +29,17 @@ module.exports = {
             title: "图轻播放器",
             template: path.join(__dirname, "index.html")
         }),
-        new UglifyJSPlugin({
-            parallel: true,
-            uglifyOptions: {
-                output: {
-                    comments: false,
-                    beautify: false,
-                },
-                compress: true,
-            },
-            cache: true,
-        })
+        // new UglifyJSPlugin({
+        //     parallel: true,
+        //     uglifyOptions: {
+        //         output: {
+        //             comments: false,
+        //             beautify: false,
+        //         },
+        //         compress: true,
+        //     },
+        //     cache: true,
+        // })
 
     ],
     devServer: {
