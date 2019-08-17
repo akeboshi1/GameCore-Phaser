@@ -1,7 +1,7 @@
 export class PlayerDisplay extends Phaser.GameObjects.Container {
-  protected mAnimationName: string;
-  protected mDragonbonesName: string;
-  protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
+  protected mAnimationName: string = "";
+  protected mDragonbonesName: string = "";
+  protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.dragonBonesName = "bones_human01";
@@ -30,7 +30,7 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     }
   }
 
-  protected onLoadCompleteHandler(loader?, totalComplete?, totalFailed?) {
+  protected onLoadCompleteHandler(loader?: any, totalComplete?: number, totalFailed?: number) {
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dbClear();
     }

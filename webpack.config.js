@@ -2,14 +2,17 @@ const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser');
 const phaser = path.join(pathToPhaser, 'dist/phaser.js');
 const ConfigWebpackPlugin = require("config-webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     entry: {
-        launcher: path.join(__dirname, 'launcher.ts'),
+        launcher: path.join(__dirname, "./launcher.ts"),
         worker: path.join(__dirname,'src/net/networker.ts')
     },
     output: {
-        path: path.join(__dirname,'dist')
+        path: path.join(__dirname,'dist/'),
+        filename: "[name].js",
+        chunkFilename: "[hash].[name].js"
     },
     devtool: "source-map",
     module: {
@@ -20,10 +23,14 @@ module.exports = {
         ],
     },
     plugins: [
-        new ConfigWebpackPlugin()
+        new ConfigWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title: "图轻播放器",
+            template: path.join(__dirname, "index.html")
+        })
     ],
     devServer: {
-        contentBase: path.resolve(__dirname, './'),
+        contentBase: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
         host: '127.0.0.1',
         port: 8081,

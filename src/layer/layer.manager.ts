@@ -3,9 +3,7 @@ export class LayerManager {
   protected mUILayer: Phaser.GameObjects.Container;
   protected mdialogLayer: Phaser.GameObjects.Container;
   protected mTipLayer: Phaser.GameObjects.Container;
-  constructor(private mScene: Phaser.Scene) { }
-  
-  public init() {
+  constructor(private mScene: Phaser.Scene) {
     this.mSceneLayer = this.mScene.add.container(0, 0);
   
     this.mUILayer = this.mScene.add.container(0, 0);

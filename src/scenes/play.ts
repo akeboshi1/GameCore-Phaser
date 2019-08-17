@@ -1,10 +1,9 @@
-import IsoPlugin from "phaser3-plugin-isometric";
 import { LayerManager } from "../layer/layer.manager";
 import { PlayerDisplay } from "../rooms/player/player.display";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
-  private mLayerManager: LayerManager;
+  // private mLayerManager: LayerManager;
   constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
     super(config || { key: "PlayScene" });
   }
@@ -18,7 +17,7 @@ export class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    this.mLayerManager = new LayerManager(this);
+    // this.mLayerManager = new LayerManager(this);
 
     let player = new PlayerDisplay(this);
   }

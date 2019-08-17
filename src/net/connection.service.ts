@@ -6,8 +6,8 @@ export interface ConnectionService {
 
     closeConnect(): void;
 
-    addPacketListener(listener: PacketHandler);
-    removePacketListener(listener:PacketHandler);
+    addPacketListener(listener: PacketHandler): void;
+    removePacketListener(listener:PacketHandler): void;
 
-    send(packet: PBpacket);
+    send(packet: PBpacket): void;
 }

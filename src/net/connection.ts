@@ -18,7 +18,7 @@ export default class Connection implements ConnectionService {
     private mWorker: any;
     protected mPacketHandlers: PacketHandler[] = [];
     private mReConnectCount: number = 0;
-    private mCachedServerAddress: ServerAddress;
+    private mCachedServerAddress: ServerAddress | undefined;
     private mTimeout: any;
 
     constructor(listener: IConnectListener) {
@@ -39,7 +39,7 @@ export default class Connection implements ConnectionService {
         console.info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
         if (this.mWorker) {
-            this.mWorker.onmessage = event => {
+            this.mWorker.onmessage = (event: any) => {
                 self.onWorkerMessage(event.data);
             };
             this.mWorker.postMessage({
@@ -49,7 +49,7 @@ export default class Connection implements ConnectionService {
         }
     }
 
-    private onWorkerMessage(data) {
+    private onWorkerMessage(data: any) {
         const self = this;
         const method = data.method;
         switch (method) {

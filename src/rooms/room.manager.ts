@@ -6,11 +6,11 @@ export class RoomManager {
   protected mPlayerManager: PlayerManager;
 
   constructor(private mScene: Phaser.Scene) {
-    this.initialize();
+    this.mElementManager = new ElementManager(this.mScene);
+    this.mPlayerManager = new PlayerManager(this.mScene);
   }
 
   private initialize() {
-    this.mElementManager = new ElementManager(this.mScene);
-    this.mPlayerManager = new PlayerManager(this.mScene);
+    
   }
 }
