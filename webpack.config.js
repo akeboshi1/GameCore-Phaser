@@ -28,21 +28,18 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: "图轻播放器",
             template: path.join(__dirname, "index.html")
+        }),
+        new UglifyJSPlugin({
+            parallel: true,
+            uglifyOptions: {
+                output: {
+                    comments: false,
+                    beautify: false,
+                },
+                compress: true,
+            },
+            cache: true,
         })
-        // new UglifyJSPlugin({
-        //     parallel: 4,
-        //     uglifyOptions: {
-        //         output: {
-        //             comments: false,
-        //             beautify: false,
-        //         },
-        //         compress: {
-                  
-        //         },
-        //     },
-        //     cache: true,
-        // })
-       
 
     ],
     devServer: {

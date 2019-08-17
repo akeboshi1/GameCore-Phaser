@@ -20,7 +20,7 @@ export class Launcher {
   constructor() {
     let s = this;
     let version = this._version;
-    this._version = version = document.getElementById("xiaomin_version");
+    this._version = version = document.getElementById("game_version");
     if (version) {
       console.log(version.content);
     }
@@ -29,7 +29,7 @@ export class Launcher {
 
     setInterval(() => {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', "./test.json", true);
+      xhr.open('GET', "./version.json", true);
       xhr.addEventListener("load", function () {
         var manifest = JSON.parse(xhr.response);
         var version = manifest.version;
