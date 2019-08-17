@@ -1,12 +1,9 @@
-import { Player } from "./player";
-import { ElementManager } from "../element/element.manager";
+import {Player} from "./player";
+import {ElementManager} from "../element/element.manager";
+import {IElement} from "../element/element";
 
-export class PlayerManager extends ElementManager{
-  constructor(scene: Phaser.Scene) {
-    super(scene);
-  }
-
-  addCharacter() {
-    let character = new Player();
-  }
+export class PlayerManager extends ElementManager {
+    // override super.add()
+    public add(player: IElement) {
+    }
 }

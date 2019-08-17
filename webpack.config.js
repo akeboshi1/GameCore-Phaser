@@ -1,6 +1,7 @@
 const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser');
 const phaser = path.join(pathToPhaser, 'dist/phaser.js');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -17,9 +18,9 @@ module.exports = {
     devtool: "source-map",
     module: {
         rules: [
-            {test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/'},
-            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'},
-            {test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones'},
+            { test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/' },
+            { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
+            { test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones' },
         ],
     },
     plugins: [
@@ -28,6 +29,21 @@ module.exports = {
             title: "图轻播放器",
             template: path.join(__dirname, "index.html")
         })
+        // new UglifyJSPlugin({
+        //     parallel: 4,
+        //     uglifyOptions: {
+        //         output: {
+        //             comments: false,
+        //             beautify: false,
+        //         },
+        //         compress: {
+                  
+        //         },
+        //     },
+        //     cache: true,
+        // })
+       
+
     ],
     devServer: {
         contentBase: path.resolve(__dirname, './dist'),

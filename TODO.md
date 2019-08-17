@@ -12,7 +12,7 @@ TODO List
 - [x] 编入龙骨 `@404`
 
 ## 编码
-- [ ] *WIP* SocketConnection via webworker: ./net `@seven`
+- [x] SocketConnection via webworker: ./net `@seven`
 - [ ] launcher `@404`
 - [ ] 游戏主程序 : ./game `@404`
 - [ ] 游戏运行态（Phaser.Scene）: ./scenes `@404`

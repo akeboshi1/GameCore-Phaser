@@ -1,10 +1,14 @@
+import {Room, RoomService} from "../room";
+import {IElement} from "./element";
+
 export class ElementManager {
-  protected mScene: Phaser.Scene;
-  constructor(scene: Phaser.Scene) {
-    this.mScene = scene;
-  }
+    protected mRoom: RoomService;
 
-  public add() {
+    constructor(room: RoomService) {
+        this.mRoom = room;
+    }
 
-  }
+    public add(element:IElement) {
+
+    }
 }
