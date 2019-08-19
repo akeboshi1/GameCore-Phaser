@@ -4,7 +4,7 @@ TODO List
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`
 - [x] Webpack 动态加载代码块。
-- [x] * WIP * 版本控制。根据版本列表加载主程序 `@gxm`
+- [x] 版本控制。根据版本列表加载主程序 `@gxm`
 - [x] 深度排序 `@404`
 
 ## 工程
@@ -18,7 +18,7 @@ TODO List
 - [ ] 游戏运行态（Phaser.Scene）: ./scenes `@404`
 - [ ] 资源动态加载 `@404`
 - [ ] 游戏结构 `@seven`
-- [ ] 层级管理 `@gxm @404`
+- [ ] * WIP * 层级管理 `@gxm @404`
   - UI层：渲染UI对象
   - 前景层：预留
   - 舞台层
