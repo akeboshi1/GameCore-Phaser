@@ -3,6 +3,7 @@ import "dragonBones";
 import { PlayScene } from "./scenes/play";
 import { ServerAddress } from "./net/address";
 import { World } from "./game/world";
+import { LoadingScene } from "./scenes/loading";
 
 export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
   readonly auth_token: string;
@@ -33,7 +34,7 @@ export class Game {
       width: document.documentElement.clientWidth,
       height: document.documentElement.clientHeight,
       parent: "game",
-      scene: [PlayScene],
+      scene: [LoadingScene, PlayScene],
       url: "",
       disableContextMenu: false,
       transparent: false,
