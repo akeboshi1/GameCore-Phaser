@@ -13,7 +13,7 @@ TODO List
 
 ## 编码
 - [x] SocketConnection via webworker: ./net `@seven`
-- [ ] *WIP* launcher `@gxm`
+- [x] launcher `@gxm`
 - [ ] 游戏主程序 : ./game `@404`
 - [ ] 游戏运行态（Phaser.Scene）: ./scenes `@404`
 - [ ] 资源动态加载 `@404`
