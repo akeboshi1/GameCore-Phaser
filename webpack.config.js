@@ -4,6 +4,7 @@ const phaser = path.join(pathToPhaser, 'dist/phaser.js');
 //const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -29,6 +30,9 @@ module.exports = {
             title: "图轻播放器",
             template: path.join(__dirname, "index.html")
         }),
+        new CopyWebpackPlugin([
+            { from: "resources", to: "./resources" }
+        ])
         // new UglifyJSPlugin({
         //     parallel: true,
         //     uglifyOptions: {

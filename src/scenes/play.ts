@@ -18,7 +18,6 @@ export class PlayScene extends Phaser.Scene {
 
   create() {
     // this.mLayerManager = new LayerManager(this);
-
     let player = new PlayerDisplay(this);
   }
 }
