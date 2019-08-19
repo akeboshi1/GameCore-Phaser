@@ -4,7 +4,7 @@ TODO List
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`
 - [x] Webpack 动态加载代码块。
-- [x] * WIP * 版本控制。根据版本列表加载主程序 `@gxm`
+- [x] 版本控制。根据版本列表加载主程序 `@gxm`
 - [x] 深度排序 `@404`
 
 ## 工程
@@ -13,12 +13,12 @@ TODO List
 
 ## 编码
 - [x] SocketConnection via webworker: ./net `@seven`
-- [ ] *WIP* launcher `@gxm`
+- [x] launcher `@gxm`
 - [ ] 游戏主程序 : ./game `@404`
 - [ ] 游戏运行态（Phaser.Scene）: ./scenes `@404`
 - [ ] 资源动态加载 `@404`
 - [ ] 游戏结构 `@seven`
-- [ ] 层级管理 `@gxm @404`
+- [ ] * WIP * 层级管理 `@gxm @404`周一19号
   - UI层：渲染UI对象
   - 前景层：预留
   - 舞台层
@@ -35,19 +35,19 @@ TODO List
   - [ ] 深度排序 
 - [ ] 添加z轴实现深度 `@404`
 - [ ] surface层对象`x,y,z`变化, 修改depth `@404`
-- [ ] 鼠标事件管理 `@gxm`
-- [ ] keyboard管理 `@gxm`
+- [ ] 鼠标事件管理 `@gxm`周三21号
+- [ ] keyboard管理 `@gxm`周二20号
   - `wasd、方向键`控制角色移动
   - `按下、松开`的键告诉服务器 
-- [ ] 人物移动逻辑 `@gxm`
+- [ ] 人物移动逻辑 `@gxm`周四-下周一26号
   - 先客户端移动，再通过后端矫正坐标并移动至后端的正确坐标
   - 移动修改对应动画和方向
   - [ ] 深度排序 
-- [ ] dragonbones换装 `@gxm`
+- [ ] dragonbones换装 `@gxm`周二27号
 - [ ] 物件、Character像素级选择 `@404`
-- [ ] 动画状态管理 `@gxm`
-- [ ] resize `@gxm`
-- [ ] Character特效 `@gxm`
+- [ ] 动画状态管理 `@gxm`周三-周四29号
+- [ ] resize `@gxm`周五-周六31号
+- [ ] Character特效 `@gxm`周一 9月2号
 
 ### UI `@404 @gxm`
   - 封装rex
