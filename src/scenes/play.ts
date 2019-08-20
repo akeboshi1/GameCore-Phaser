@@ -1,5 +1,3 @@
-import { LayerManager } from "../layer/layer.manager";
-import { PlayerDisplay } from "../rooms/player/player.display";
 import { SceneType } from "../const/scene.type";
 import { WorldService } from "../game/world.service";
 
@@ -17,7 +15,9 @@ export class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    // this.mLayerManager = new LayerManager(this);
-    let player = new PlayerDisplay(this);
   }
+
+
+
+
 }

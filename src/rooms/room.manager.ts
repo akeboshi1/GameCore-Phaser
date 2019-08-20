@@ -8,6 +8,7 @@ import { PlayerManager } from "./player/player.mamager";
 import { SceneType } from "../const/scene.type";
 import { TerrainManager } from "./terrain/terrain.manager";
 
+
 export interface IRoomManager {
   readonly connection: ConnectionService;
   readonly scene: Phaser.Scene;
@@ -48,6 +49,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     if (this.mWorld.game) {
       this.mWorld.game.scene.start(SceneType.Play);
     }
+
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
+  }
+
+  private onEnterSceneHandler(packet: PBpacket) {
+
   }
 
   get scene(): Phaser.Scene {

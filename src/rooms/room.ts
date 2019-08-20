@@ -1,5 +1,6 @@
 import {IRoomManager} from "./room.manager";
 
+
 export interface RoomService {
     enter(): void;
 }
@@ -9,6 +10,7 @@ export interface RoomService {
 export class Room implements RoomService {
 
     constructor(manager: IRoomManager) {
+
     }
 
     enter(): void {
