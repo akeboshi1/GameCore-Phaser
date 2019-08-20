@@ -1,11 +1,11 @@
 import "phaser";
-import {WorldService} from "./world.service";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "phaser";
-import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
-import {ConnectionService} from "../net/connection.service";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "phaser";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
+import { ConnectionService } from "../net/connection.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import {op_gateway, op_client, op_virtual_world} from "pixelpai_proto";
+import { op_gateway, op_client, op_virtual_world } from "pixelpai_proto";
 import { IGameConfigure } from "../game";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
@@ -24,6 +24,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConfig: IGameConfigure | undefined;
     private mSelectCharacterManager: SelectManager;
     private mRoomMamager: RoomManager;
+
 
     constructor(config: IGameConfigure) {
         super();
@@ -67,7 +68,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onEnterScene(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         console.dir("enter scene: ", content)
-        
+
         this.startScene(SceneType.Play);
     }
 
@@ -75,7 +76,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         console.info(`enterVirtualWorld`);
         this.enterVirtualWorld();
     }
- 
+
     onDisConnected(connection?: SocketConnection): void {
     }
 
@@ -88,7 +89,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     startScene(type: SceneType) {
-        switch(type) {
+        switch (type) {
             case SceneType.SelectCharacter:
                 this.mSelectCharacterManager = new SelectManager(this);
                 break;

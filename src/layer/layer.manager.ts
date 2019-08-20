@@ -1,3 +1,5 @@
+import { RoomManager } from "../rooms/room.manager";
+
 export enum LAYERTYPE {
   UGROUND1LAYER,
   UGROUND2LAYER,
@@ -57,37 +59,37 @@ export class LayerManager {
   protected mUILayer: Phaser.GameObjects.Container;
 
   protected totalLayerList: Phaser.GameObjects.Container[];
-
-  constructor(private mScene: Phaser.Scene) {
+  private _scene: Phaser.Scene;
+  constructor(private roomManager: RoomManager) {
 
     this.totalLayerList = [];
-
+    this._scene = roomManager.scene;
     //==========背景层
-    this.mUGroundLayer1 = this.mScene.add.container(0, 0);
+    this.mUGroundLayer1 = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mUGroundLayer1);
 
-    this.mUGroundLayer2 = this.mScene.add.container(0, 0);
+    this.mUGroundLayer2 = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mUGroundLayer2);
 
     //==========舞台层
-    this.mGroundLayer = this.mScene.add.container(0, 0);
+    this.mGroundLayer = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mGroundLayer);
 
-    this.mSurfaceLayer = this.mScene.add.container(0, 0);
+    this.mSurfaceLayer = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mSurfaceLayer);
 
-    this.mAtmosphere = this.mScene.add.container(0, 0);
+    this.mAtmosphere = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mAtmosphere);
 
     //==========前景层
-    this.mdialogLayer = this.mScene.add.container(0, 0);
+    this.mdialogLayer = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mdialogLayer);
 
-    this.mTipLayer = this.mScene.add.container(0, 0)
+    this.mTipLayer = this._scene.add.container(0, 0)
     this.totalLayerList.push(this.mTipLayer);
 
     //==========UI层
-    this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
+    this.mUILayer = this._scene.add.container(0, 0).setScrollFactor(0);
     this.totalLayerList.push(this.mUILayer);
   }
 
