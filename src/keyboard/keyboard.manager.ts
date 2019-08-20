@@ -5,12 +5,16 @@ import { op_client, op_virtual_world } from "pixelpai_proto";
 
 export class KeyBoardManager extends PacketHandler {
     private _keyList: any[];
+    private _keyDownList: any[];
+    private _tmpUpKeysStr: string;
+    private _tmpDownKeyStr: string;
     private _initilized: boolean = false;
     private _scene: Phaser.Scene;
     private _connect: ConnectionService;
     constructor(private roomManager: RoomManager) {
         super();
         this._keyList = [];
+        this._keyDownList = [];
         this._scene = this.roomManager.scene;
         this._connect = this.roomManager.connection;
 
@@ -37,6 +41,78 @@ export class KeyBoardManager extends PacketHandler {
         this._keyList.push(key);
     }
 
+    private keyDownHandle(e: KeyboardEvent) {
+        //TODO role action
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+        let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+        let keyArr: number[] = this.getKeyDowns();
+        if (this._tmpDownKeyStr === keyArr.toString()) return;
+        this._tmpDownKeyStr = keyArr.toString();
+        content.keyCodes = keyArr;
+        this._connect.send(pkt);
+    }
+
+    private keyUpHandle(e: KeyboardEvent) {
+        //TODO role action
+        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_UP);
+        let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
+        let keyArr: number[] = this.getKeyUps();
+        if (this._tmpUpKeysStr === keyArr.toString()) return;
+        this._tmpUpKeysStr = keyArr.toString();
+        content.keyCodes = keyArr;
+        this._connect.send(pkt);
+        let len: number = this._keyDownList.length;
+        let key: Phaser.Input.Keyboard.Key;
+        let keyCode: number;
+        let keyCodeLen: number = keyArr.length;
+        for (let j: number = 0; j < keyCodeLen; j++) {
+            keyCode = keyArr[j];
+            for (let i: number = 0; i < len; i++) {
+                key = this._keyDownList[i];
+                if (keyCode == key.keyCode) {
+                    this._keyDownList.splice(i, 1);
+                    i--;
+                    len--;
+                    break;
+                }
+            }
+        }
+    }
+
+    private getKeyDowns(): number[] {
+        let keyCodes = [];
+        if (!this._initilized) {
+            return keyCodes;
+        }
+        let key: Phaser.Input.Keyboard.Key;
+        let len = this._keyList.length;
+        for (let i = 0; i < len; i++) {
+            key = this._keyList[i];
+            if (key.isDown) {
+                keyCodes.push(key.keyCode);
+                this._keyDownList.push(key);
+            }
+        }
+        return keyCodes;
+    }
+
+    private getKeyUps(): number[] {
+        //在keyDown列表里面查找是否有键抬起，其余没按的键不必监听
+        let keyCodes = [];
+        if (!this._initilized) {
+            return keyCodes;
+        }
+        let key: Phaser.Input.Keyboard.Key;
+        let len = this._keyDownList.length;
+        for (let i = 0; i < len; i++) {
+            key = this._keyDownList[i];
+            if (key.isUp) {
+                keyCodes.push(key.keyCode);
+            }
+        }
+        return keyCodes;
+    }
+
     private removeKeyEvents(): void {
         let key: Phaser.Input.Keyboard.Key;
         let len = this._keyList.length;
@@ -50,23 +126,6 @@ export class KeyBoardManager extends PacketHandler {
         this._keyList = null;
     }
 
-    private keyDownHandle(e: KeyboardEvent) {
-        //TODO role action
-        //TODO socket 协议 后端修改成单个keyCode
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
-        let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-        content.keyCodes = [e.keyCode];
-        this._connect.send(pkt);
-    }
-
-    private keyUpHandle(e: KeyboardEvent) {
-        //TODO role action
-        //TODO socket 协议 后端修改成单个keyCode
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_UP);
-        let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
-        content.keyCodes = [e.keyCode];
-        this._connect.send(pkt);
-    }
 
     /**
      * 设置键盘开关
@@ -81,9 +140,15 @@ export class KeyBoardManager extends PacketHandler {
 
     public dispose() {
         this.removeKeyEvents();
+        if (this._keyDownList) {
+            this._keyDownList.length = 0;
+            this._keyDownList = null;
+        }
+        this._tmpDownKeyStr = null;
+        this._tmpUpKeysStr = null;
         this._scene = null;
         this._connect = null;
         this.roomManager = null;
+        this._initilized = false;
     }
-
 }

@@ -1,5 +1,6 @@
 import { RoomManager } from "../rooms/room.manager";
 import { ConnectionService } from "../net/connection.service";
+import { PacketHandler } from "net-socket-packet";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -9,17 +10,17 @@ export enum MouseEvent {
     WheelDown = 5,
     WheelUp = 6,
     RightMouseHolding = 7,
-    LeftMouseHolding = 8
+    LeftMouseHolding = 8,
+    
 }
 
-export class mouseManager {
+export class mouseManager extends PacketHandler {
     private _scene: Phaser.Scene;
     private _connect: ConnectionService;
     constructor(private roomManager: RoomManager) {
+        super();
         this._scene = this.roomManager.scene;
         this._connect = this.roomManager.connection;
-
-
     }
 
     /**
@@ -28,6 +29,10 @@ export class mouseManager {
      * @param callBack 
      */
     public addElementMouseHandler(element: any, callBack: Function) {
+
+    }
+
+    public removeElementMouseHandler() {
 
     }
 
@@ -40,6 +45,10 @@ export class mouseManager {
 
     public get enable(): boolean {
         return this._scene.input.mouse.enabled;
+    }
+
+    public dispose() {
+
     }
 
 
