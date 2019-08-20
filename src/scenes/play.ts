@@ -1,19 +1,19 @@
 import { LayerManager } from "../layer/layer.manager";
 import { PlayerDisplay } from "../rooms/player/player.display";
+import { SceneType } from "../const/scene.type";
+import { WorldService } from "../game/world.service";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
-  // private mLayerManager: LayerManager;
+  protected mWorld: WorldService;
   constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
-    super(config || { key: "PlayScene" });
+    super(config || { key: SceneType.Play });
   }
 
-  preload() {
-    // this.load.scenePlugin({
-    //   key: "IsoPlugin",
-    //   url: IsoPlugin,
-    //   sceneKey: "iso"
-    // });
+  preload() { }
+
+  init(data: any) {
+    this.mWorld = data;
   }
 
   create() {

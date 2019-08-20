@@ -1,16 +1,15 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { RoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
 
 export interface IElementManager {
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
-  protected mRoom: RoomManager;
-
-  constructor(room: RoomManager) {
+  constructor(private mRoom: RoomManager) {
     super();
-    this.mRoom = room;
+    this.connection.addPacketListener(this);
   }
 
   protected registerHandler() {
@@ -20,11 +19,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
   }
 
-  protected onAdd(packet: PBpacket) {}
+  get connection(): ConnectionService {
+    return this.mRoom.connection;
+  }
 
-  protected onRemove(packet: PBpacket) { }
+  private onAdd(packet: PBpacket) { }
 
-  protected onMove(packet: PBpacket) { }
+  private onRemove(packet: PBpacket) { }
 
-  protected onSetPosition(packet: PBpacket) { }
+  private onMove(packet: PBpacket) { }
+
+  private onSetPosition(packet: PBpacket) { }
 }

@@ -5,6 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.mamager";
+import { SceneType } from "../const/scene.type";
 
 export interface IRoomManager {
   readonly connection: ConnectionService;
@@ -20,20 +21,23 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   constructor(world: WorldService) {
     super();
     this.mWorld = world;
+    this.startScene();
 
     this.mElemetnManager = new ElementManager(this);
     this.mPlayerManager = new PlayerManager(this);
-
-    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
   }
 
-  private onEnterSceneHandler(packet: PBpacket) {
-    
+  private startScene() {
+    if (this.mWorld.game) {
+      this.mWorld.game.scene.start(SceneType.Play);
+    }
   }
 
   get scene(): Phaser.Scene {
-    // TODO
-    return;
+    if (this.mWorld.game) {
+      return this.mWorld.game.scene.getScene(SceneType.Play);
+    }
+    return null;
   }
 
   get connection(): ConnectionService {

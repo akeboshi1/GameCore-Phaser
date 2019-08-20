@@ -34,7 +34,7 @@ export class Game {
       width: document.documentElement.clientWidth,
       height: document.documentElement.clientHeight,
       parent: "game",
-      scene: [LoadingScene, PlayScene],
+      scene: [],
       url: "",
       disableContextMenu: false,
       transparent: false,
