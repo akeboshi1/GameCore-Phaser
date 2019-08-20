@@ -1,5 +1,4 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { RoomService } from "../room";
 import { ConnectionService } from "../../net/connection.service";
 import { RoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
