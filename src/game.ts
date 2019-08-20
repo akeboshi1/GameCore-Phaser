@@ -36,7 +36,7 @@ export class Game {
       parent: "game",
       scene: [],
       url: "",
-      disableContextMenu: false,
+      disableContextMenu: true,
       transparent: false,
       backgroundColor: 0x0,
       resolution: 1,

@@ -61,7 +61,7 @@ export class WSWrapper extends EventEmitter {
         };
 
         this._connection.onmessage = (ev: any) => {
-            console.info(`_connection.onmessage`);
+            // console.info(`_connection.onmessage`);
             this.onData(ev.data);
         };
 
