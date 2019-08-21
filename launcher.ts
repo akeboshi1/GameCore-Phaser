@@ -79,6 +79,12 @@ export class Launcher {
           }
         ]
       },
+      scale: {
+        parent: 'game',
+        mode: Phaser.Scale.NONE,
+        width: window.innerWidth,
+        height: window.innerHeight
+      },
       render: {
         pixelArt: true,
         roundPixels: true

@@ -101,20 +101,25 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
         // TODO 进游戏前预加载资源
+
+        let s = this;
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         console.dir(content);
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
-        if (this.mGame) {
-            this.mGame.destroy(true);
+        if (s.mGame) {
+            s.mGame.destroy(true);
         }
-        this.mGame = new Game(this.mConfig);
-        this.mGame.scene.add(SceneType.Loading, LoadingScene);
-        this.mGame.scene.add(SceneType.SelectCharacter, SelectCharacter);
-        this.mGame.scene.add(SceneType.Play, PlayScene);
+        s.mGame = new Game(s.mConfig);
+        s.mGame.scene.add(SceneType.Loading, LoadingScene);
+        s.mGame.scene.add(SceneType.SelectCharacter, SelectCharacter);
+        s.mGame.scene.add(SceneType.Play, PlayScene);
 
-        this.startScene(SceneType.SelectCharacter);
 
-        this.gameCreated();
+        window.addEventListener('resize', function (event) {
+            s.mGame.scale.resize(window.innerWidth, window.innerHeight);
+        }, false);
+        s.startScene(SceneType.SelectCharacter);
+        s.gameCreated();
     }
 
     private gameCreated() {
