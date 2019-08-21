@@ -11,16 +11,17 @@ export enum MouseEvent {
     WheelUp = 6,
     RightMouseHolding = 7,
     LeftMouseHolding = 8,
-    
 }
 
 export class mouseManager extends PacketHandler {
     private _scene: Phaser.Scene;
     private _connect: ConnectionService;
+
     constructor(private roomManager: RoomManager) {
         super();
         this._scene = this.roomManager.scene;
         this._connect = this.roomManager.connection;
+
     }
 
     /**
@@ -28,7 +29,18 @@ export class mouseManager extends PacketHandler {
      * @param element 
      * @param callBack 
      */
-    public addElementMouseHandler(element: any, callBack: Function) {
+    public addElementMouseHandler(element: Phaser.GameObjects.GameObject, callBack: Function, once: boolean, target: any) {
+        element.setInteractive({ pixelperfect: true });
+        if (once) {
+            element.once("", () => {
+                callBack.apply(target);
+            }, target);
+        } else {
+            element.on("", () => {
+
+                callBack.apply(target);
+            }, target);
+        }
 
     }
 

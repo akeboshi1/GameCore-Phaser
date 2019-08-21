@@ -6,13 +6,13 @@ import { IConnectListener, SocketConnection, SocketConnectionError } from "../ne
 import { ConnectionService } from "../net/connection.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { op_gateway, op_client, op_virtual_world } from "pixelpai_proto";
-import { IGameConfigure } from "../game";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
 import { SelectCharacter, SelectManager } from "../scenes/select.character";
 import { PlayScene } from "../scenes/play";
 import { RoomManager } from "../rooms/room.manager";
 import { SceneType } from "../const/scene.type";
+import { IGameConfigure } from "../../launcher";
 
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器

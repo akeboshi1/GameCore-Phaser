@@ -88,7 +88,7 @@ export class KeyBoardManager extends PacketHandler {
         let len = this._keyList.length;
         for (let i = 0; i < len; i++) {
             key = this._keyList[i];
-            if (key.isDown) {
+            if (key && key.isDown) {
                 keyCodes.push(key.keyCode);
                 this._keyDownList.push(key);
             }
@@ -106,7 +106,7 @@ export class KeyBoardManager extends PacketHandler {
         let len = this._keyDownList.length;
         for (let i = 0; i < len; i++) {
             key = this._keyDownList[i];
-            if (key.isUp) {
+            if (key && key.isUp) {
                 keyCodes.push(key.keyCode);
             }
         }
@@ -118,6 +118,9 @@ export class KeyBoardManager extends PacketHandler {
         let len = this._keyList.length;
         for (let i = 0; i < len; i++) {
             key = this._keyList[i];
+            if (!key) {
+                continue;
+            }
             key.off("down", this.keyDownHandle);
             key.off("up", this.keyUpHandle);
             this._scene.input.keyboard.removeKey(key.keyCode);

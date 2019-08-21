@@ -93,6 +93,10 @@ export class LayerManager {
     this.totalLayerList.push(this.mUILayer);
   }
 
+  public getLayerByType(type: number): any {
+    return this.totalLayerList[type] || null;
+  }
+
   public addToLayerByType(element: any, type: number) {
     let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
     layer.add(element);
@@ -100,12 +104,16 @@ export class LayerManager {
 
   public sortLayerByType(type: number) {
     let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
-    layer.sort("depth");
+    if (layer) {
+      layer.sort("depth");
+    }
   }
 
   public removeFromLayerByType(element: any, type: number, destroyBoo?: boolean) {
     let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
-    layer.remove(element, destroyBoo);
+    if (layer) {
+      layer.remove(element, destroyBoo);
+    }
   }
 
   private _clearLayer() {
