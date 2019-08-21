@@ -38,7 +38,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
 
         // @ts-ignore
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway1;
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }

@@ -13,7 +13,7 @@ export enum MouseEvent {
     LeftMouseHolding = 8,
 }
 
-export class mouseManager extends PacketHandler {
+export class MouseManager extends PacketHandler {
     private _scene: Phaser.Scene;
     private _connect: ConnectionService;
 
@@ -44,19 +44,26 @@ export class mouseManager extends PacketHandler {
 
     }
 
-    public removeElementMouseHandler() {
+    public removeElementMouseHandler(element: Phaser.GameObjects.GameObject, target: any) {
+        element.off("", () => {
 
+        }, target);
     }
 
     /**
      * 设置鼠标事件开关
      */
     public set enable(value: boolean) {
-        this._scene.input.mouse.enabled = value;
+        if (this._scene && this._scene.input && this._scene.input.mouse) {
+            this._scene.input.mouse.enabled = value;
+        }
     }
 
     public get enable(): boolean {
-        return this._scene.input.mouse.enabled;
+        if (this._scene && this._scene.input && this._scene.input.mouse) {
+            return this._scene.input.mouse.enabled;
+        }
+        return false;
     }
 
     public dispose() {

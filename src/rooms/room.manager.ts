@@ -7,6 +7,9 @@ import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.mamager";
 import { SceneType } from "../const/scene.type";
 import { TerrainManager } from "./terrain/terrain.manager";
+import { LayerManager } from "../layer/layer.manager";
+import { KeyBoardManager } from "../keyboard/keyboard.manager";
+import { MouseManager } from "../mouse/mouse.manager";
 
 
 export interface IRoomManager {
@@ -19,6 +22,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   protected mElemetnManager: ElementManager;
   protected mPlayerManager: PlayerManager;
   protected mTerrainManager: TerrainManager;
+  protected mLayerManager: LayerManager;
+  protected mKeyBoardManager: KeyBoardManager;
+  protected mMouseManager: MouseManager
   protected mRoomList: Room[] = [];
 
   constructor(world: WorldService) {
@@ -29,6 +35,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     this.mElemetnManager = new ElementManager(this);
     this.mPlayerManager = new PlayerManager(this);
     this.mTerrainManager = new TerrainManager(this);
+    this.mLayerManager = new LayerManager(this);
+    this.mKeyBoardManager = new KeyBoardManager(this);
+    this.mMouseManager = new MouseManager(this);
 
     this.initScene();
   }

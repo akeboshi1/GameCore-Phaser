@@ -94,12 +94,17 @@ export class LayerManager {
   }
 
   public getLayerByType(type: number): any {
-    return this.totalLayerList[type] || null;
+    if (this.totalLayerList) {
+      return this.totalLayerList[type] || null;
+    }
+    return null;
   }
 
   public addToLayerByType(element: any, type: number) {
     let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
-    layer.add(element);
+    if (layer) {
+      layer.add(element);
+    }
   }
 
   public sortLayerByType(type: number) {
@@ -123,6 +128,9 @@ export class LayerManager {
     let child: any;
     for (let i: number = 0; i < len; i++) {
       layer = this.totalLayerList[i];
+      if (!layer) {
+        continue;
+      }
       childLen = layer.list.length;
       for (let j: number = 0; j < childLen; j++) {
         child = layer.list[j];
