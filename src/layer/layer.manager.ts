@@ -1,7 +1,7 @@
 import { RoomManager } from "../rooms/room.manager";
 
 export enum LAYERTYPE {
-  UGROUND1LAYER,
+  GROUNDCLICKLAYER,
   UGROUND2LAYER,
   GROUNDLAYER,
   SURFACELAYER,
@@ -14,9 +14,9 @@ export class LayerManager {
 
   //================ 背景层
   /**
-   * 背景层1
+   * 背景层1(用于鼠标点击移动)
    */
-  protected mUGroundLayer1: Phaser.GameObjects.Container;
+  protected mGroundClickLayer: Phaser.GameObjects.Container;
 
   /**
     * 背景层2
@@ -65,8 +65,8 @@ export class LayerManager {
     this.totalLayerList = [];
     this._scene = roomManager.scene;
     //==========背景层
-    this.mUGroundLayer1 = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mUGroundLayer1);
+    this.mGroundClickLayer = this._scene.add.container(0, 0);
+    this.totalLayerList.push(this.mGroundClickLayer);
 
     this.mUGroundLayer2 = this._scene.add.container(0, 0);
     this.totalLayerList.push(this.mUGroundLayer2);

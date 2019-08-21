@@ -79,6 +79,18 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     return this.mPlayerManager;
   }
 
+  get keyboardManager(): KeyBoardManager {
+    return this.keyboardManager;
+  }
+
+  get layerManager(): LayerManager {
+    return this.layerManager;
+  }
+
+  get mouseManager(): MouseManager {
+    return this.mouseManager;
+  }
+  
   get connection(): ConnectionService {
     return this.mWorld.connection;
   }
