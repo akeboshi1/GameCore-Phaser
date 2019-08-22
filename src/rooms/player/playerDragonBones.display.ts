@@ -8,6 +8,14 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
   }
 
   protected buildDragbones() {
+    if (this.mArmatureDisplay) {
+      if (this.mArmatureDisplay.parentContainer) {
+        this.mArmatureDisplay.parentContainer.remove(this.mArmatureDisplay);
+      }
+      this.mArmatureDisplay.destroy();
+      this.mArmatureDisplay = null;
+    }
+
     if (this.scene.cache.custom.dragonbone.get(this.dragonBonesName)) {
       this.onLoadCompleteHandler();
     } else {
@@ -61,5 +69,8 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
         this.mArmatureDisplay.animation.play(val);
       }
     }
+  }
+
+  public replaceSlotDisplay() {
   }
 }
