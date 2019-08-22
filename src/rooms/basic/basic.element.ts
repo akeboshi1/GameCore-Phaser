@@ -6,13 +6,30 @@ export class BasicElement {
   protected x: number;
   protected y: number;
   protected z: number;
-  protected display: op_gameconfig.IDisplay;
+  protected display: op_gameconfig.IDisplay | undefined;
+  protected animation: op_gameconfig.IAnimation | undefined;
   protected animationName: string;
 
-  constructor() {
+  protected mLayer: Phaser.GameObjects.Container;
+  constructor(parent?: Phaser.GameObjects.Container) {
+    this.layer = parent;
   }
 
   createDisplay(): any {
     return;
+  }
+
+  protected onLoadCompleteHandler() {
+    if (this.layer) {
+      console.error("layer is undefine");
+    }
+  }
+
+  set layer(layer: Phaser.GameObjects.Container) {
+    this.mLayer = layer;
+  }
+
+  get lyaer(): Phaser.GameObjects.Container {
+    return this.mLayer;
   }
 }

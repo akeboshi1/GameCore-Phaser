@@ -12,6 +12,7 @@ import { SelectCharacter, SelectManager } from "../scenes/select.character";
 import { PlayScene } from "../scenes/play";
 import { RoomManager } from "../rooms/room.manager";
 import { SceneType } from "../const/scene.type";
+import { ServerAddress } from "../net/address";
 import { IGameConfigure } from "../../launcher";
 
 
@@ -25,7 +26,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mSelectCharacterManager: SelectManager;
     private mRoomMamager: RoomManager;
 
-
     constructor(config: IGameConfigure) {
         super();
         this.mConfig = config;
@@ -37,8 +37,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
 
-        // @ts-ignore
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway1;
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
@@ -118,7 +117,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private gameCreated() {
-        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
-        this.connection.send(pkt);
+        if (this.connection) {
+            const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
+            this.connection.send(pkt);
+        } else {
+            console.error("connection is undefined")
+        }
     }
 }

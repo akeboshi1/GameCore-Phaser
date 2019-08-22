@@ -16,8 +16,4 @@ export class PlayScene extends Phaser.Scene {
 
   create() {
   }
-
-
-
-
 }

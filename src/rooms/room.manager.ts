@@ -43,26 +43,40 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   }
 
   private initScene() {
-    let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
-    this.connection.send(pkt);
-
-    let sizePacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
-    const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = sizePacket.content;
-    // TOOD move to cameras manager and not getting from document
-    size.width = document.documentElement.clientWidth;
-    size.height = document.documentElement.clientHeight;
-    this.connection.send(sizePacket);
+    if (this.connection) {
+      let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
+      this.connection.send(pkt);
+      
+      let sizePacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+      const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = sizePacket.content;
+      // TOOD move to cameras manager and not getting from document
+      size.width = document.documentElement.clientWidth;
+      size.height = document.documentElement.clientHeight;
+      this.connection.send(sizePacket);
+    } else {
+      console.error("connection is undefined");
+    }
   }
 
   private startScene() {
     if (this.mWorld.game) {
-      this.mWorld.game.scene.start(SceneType.Play);
+      let scene = this.mWorld.game.scene;
+      if (scene) {
+        scene.start(SceneType.Play);
+      } else {
+        console.error("scene is undefined");
+      }
     }
   }
 
   get scene(): Phaser.Scene {
     if (this.mWorld.game) {
-      return this.mWorld.game.scene.getScene(SceneType.Play);
+      const scene = this.mWorld.game.scene;
+      if (scene) {
+        return scene.getScene(SceneType.Play);
+      } else {
+        console.error("scene is undefined")
+      }
     }
     return null;
   }
@@ -80,18 +94,21 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   }
 
   get keyboardManager(): KeyBoardManager {
-    return this.keyboardManager;
+    return this.mKeyBoardManager;
   }
 
   get layerManager(): LayerManager {
-    return this.layerManager;
+    return this.mLayerManager;
   }
 
   get mouseManager(): MouseManager {
-    return this.mouseManager;
+    return this.mMouseManager;
   }
   
   get connection(): ConnectionService {
-    return this.mWorld.connection;
+    if (this.mWorld) {
+      return this.mWorld.connection;
+    }
+    console.error("world manager is undefined");
   }
 }

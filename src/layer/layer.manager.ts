@@ -1,14 +1,14 @@
 import { RoomManager } from "../rooms/room.manager";
 
-export enum LAYERTYPE {
-  GROUNDCLICKLAYER,
-  UGROUND2LAYER,
-  GROUNDLAYER,
-  SURFACELAYER,
-  ATMOSPHERE,
-  DIALOGLAYER,
-  TIPLAYER,
-  UILAYER
+export enum LayerType {
+  GroundClickLayer,
+  UGroundLayer,
+  GroundLayer,
+  SurfaceLayer,
+  Atmosphere,
+  DialogLayer,
+  TipLayer,
+  UILayer
 }
 export class LayerManager {
 
@@ -58,71 +58,72 @@ export class LayerManager {
    */
   protected mUILayer: Phaser.GameObjects.Container;
 
-  protected totalLayerList: Phaser.GameObjects.Container[];
+  protected totalLayerList: Map<LayerType, Phaser.GameObjects.Container>;
   private _scene: Phaser.Scene;
   constructor(private roomManager: RoomManager) {
 
-    this.totalLayerList = [];
+    this.totalLayerList = new Map();
     this._scene = roomManager.scene;
     //==========背景层
     this.mGroundClickLayer = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mGroundClickLayer);
+    this.totalLayerList.set(LayerType.GroundClickLayer, this.mGroundClickLayer);
+    // this.totalLayerList.push(this.mGroundClickLayer);
 
     this.mUGroundLayer2 = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mUGroundLayer2);
+    this.totalLayerList.set(LayerType.UGroundLayer, this.mUGroundLayer2);
 
     //==========舞台层
     this.mGroundLayer = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mGroundLayer);
+    this.totalLayerList.set(LayerType.GroundLayer, this.mGroundLayer);
 
     this.mSurfaceLayer = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mSurfaceLayer);
+    this.totalLayerList.set(LayerType.SurfaceLayer, this.mSurfaceLayer);
 
     this.mAtmosphere = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mAtmosphere);
+    this.totalLayerList.set(LayerType.Atmosphere, this.mAtmosphere);
 
     //==========前景层
     this.mdialogLayer = this._scene.add.container(0, 0);
-    this.totalLayerList.push(this.mdialogLayer);
+    this.totalLayerList.set(LayerType.DialogLayer, this.mdialogLayer);
 
     this.mTipLayer = this._scene.add.container(0, 0)
-    this.totalLayerList.push(this.mTipLayer);
-
+    this.totalLayerList.set(LayerType.TipLayer, this.mTipLayer);
     //==========UI层
     this.mUILayer = this._scene.add.container(0, 0).setScrollFactor(0);
-    this.totalLayerList.push(this.mUILayer);
+    this.totalLayerList.set(LayerType.UILayer, this.mUILayer);
   }
 
-  public getLayerByType(type: number): any {
+  public getLayerByType(type: LayerType): any {
     if (this.totalLayerList) {
-      return this.totalLayerList[type] || null;
+      return this.totalLayerList.get(type) || null;
     }
     return null;
   }
 
-  public addToLayerByType(element: any, type: number) {
-    let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
+  public addToLayerByType(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], type: LayerType) {
+    let layer: Phaser.GameObjects.Container = this.totalLayerList.get(type);
     if (layer) {
       layer.add(element);
     }
   }
 
-  public sortLayerByType(type: number) {
-    let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
+  public sortLayerByType(type: LayerType) {
+    let layer: Phaser.GameObjects.Container = this.totalLayerList.get(type);
     if (layer) {
       layer.sort("depth");
     }
   }
 
-  public removeFromLayerByType(element: any, type: number, destroyBoo?: boolean) {
-    let layer: Phaser.GameObjects.Container = this.totalLayerList[type];
+  public removeFromLayerByType(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], type: LayerType, destroyBoo?: boolean) {
+    let layer: Phaser.GameObjects.Container = this.totalLayerList.get(type);
     if (layer) {
       layer.remove(element, destroyBoo);
     }
   }
 
   private _clearLayer() {
-    let len: number = this.totalLayerList.length;
+    
+    let len: number = Array.from(this.totalLayerList).length;
     let layer: Phaser.GameObjects.Container;
     let childLen: number = 0;
     let child: any;
@@ -147,7 +148,7 @@ export class LayerManager {
 
   public dispose() {
     this._clearLayer();
-    this.totalLayerList.length = 0;
+    this.totalLayerList.clear();
     this.totalLayerList = null;
   }
 

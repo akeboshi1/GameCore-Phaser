@@ -30,14 +30,23 @@ export class SelectManager extends PacketHandler {
 
   get scene(): SelectCharacter {
     if (this.mWorldService.game) {
-      return <SelectCharacter>this.mWorldService.game.scene.getScene(SceneType.SelectCharacter);
+      const scene = this.mWorldService.game.scene;
+      if (scene) {
+        return <SelectCharacter>scene.getScene(SceneType.SelectCharacter)
+      }
+      console.error("scene is undefined");
     }
     return;
   }
 
   private startScene() {
     if (this.mWorldService.game) {
-      this.mWorldService.game.scene.start(SceneType.SelectCharacter);
+      const scene = this.mWorldService.game.scene;
+      if (scene) {
+        scene.start(SceneType.SelectCharacter);
+      } else {
+        console.error("scene is undefined");
+      }
     }
   }
 

@@ -15,7 +15,7 @@ TODO List
 - [x] SocketConnection via webworker: ./net `@seven`
 - [x] launcher `@gxm`
 - [ ] 游戏主程序 : ./game `@404`
-- [ ] /* WIP */ 游戏运行态（Phaser.Scene）: ./scenes `@404` 21号
+- [x] 游戏运行态（Phaser.Scene）: ./scenes `@404` 21号
 - [ ] 资源动态加载 `@404`
 - [ ] 游戏结构 `@seven`
 - [ ] * WIP * 层级管理 `@gxm @404`周一19号
@@ -27,7 +27,7 @@ TODO List
     - ground 地皮：渲染Tarrain
   - 背景层若干[2~3层]：最后一层为天空盒
   - **跟随镜头移动的层在PlayScene中，其它在UIScene**
-- [ ] 将Terrain添加到ground层 `@404 @gxm` 22号
+- [ ] /* WIP */ 将Terrain添加到ground层 `@404 @gxm` 22号
   - 使用`45°`格子坐标
   - [ ] 深度排序 
 - [ ] 物件添加到surface层 `@404 @gxm` 23号上午

@@ -51,12 +51,12 @@ export class Launcher {
   get config(): IGameConfigure {
     // TODO 在这里整合app和phaser的配置文件
     return {
-      auth_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmRmOTQ4OTUxYTRmNGY2NGMzYmEzMSIsImlhdCI6MTU2NjAyODU0MCwiZXhwIjoxNTY2NjMzMzQwfQ._pd4aKVZL6pTC3kl0xwoWV94RBcA2V7mf98C1IjY2bc",
-      token_expire: "1566633340",
-      token_fingerprint: "27b63bf5c95d53b8bd6d95ffdfc7a1f599a18cbe",
-      server_addr: undefined,
-      game_id: "5d18bdf8052e8c2a4622e079",
-      virtual_world_id: "0",
+      auth_token: CONFIG.auth_token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmRmOTQ4OTUxYTRmNGY2NGMzYmEzMSIsImlhdCI6MTU2NjAyODU0MCwiZXhwIjoxNTY2NjMzMzQwfQ._pd4aKVZL6pTC3kl0xwoWV94RBcA2V7mf98C1IjY2bc",
+      token_expire: CONFIG.token_expire || "1566633340",
+      token_fingerprint: CONFIG.token_fingerprint || "27b63bf5c95d53b8bd6d95ffdfc7a1f599a18cbe",
+      server_addr: CONFIG.server_addr || undefined,
+      game_id: CONFIG.game_id || "5d18bdf8052e8c2a4622e079",
+      virtual_world_id: CONFIG.virtual_world_id || "0",
       type: Phaser.AUTO,
       zoom: 1,
       width: document.documentElement.clientWidth,
