@@ -104,7 +104,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   get mouseManager(): MouseManager {
     return this.mMouseManager;
   }
-  
+
   get connection(): ConnectionService {
     if (this.mWorld) {
       return this.mWorld.connection;
