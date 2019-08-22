@@ -8,4 +8,17 @@ export class Player extends Element {
   protected createDisplay() {
     // let player = new PlayerDisplay();
   }
+
+  private changeState(){
+
+  }
+
+  public move(){
+
+  }
+
+
+
+
+
 }

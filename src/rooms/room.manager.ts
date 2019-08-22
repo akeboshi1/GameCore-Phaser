@@ -3,41 +3,21 @@ import { ConnectionService } from "../net/connection.service";
 import { Room } from "./room";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.mamager";
 import { SceneType } from "../const/scene.type";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { LayerManager } from "../layer/layer.manager";
-import { KeyBoardManager } from "../keyboard/keyboard.manager";
-import { MouseManager } from "../mouse/mouse.manager";
-
 
 export interface IRoomManager {
   readonly connection: ConnectionService;
-  readonly scene: Phaser.Scene;
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
   protected mWorld: WorldService;
-  protected mElemetnManager: ElementManager;
-  protected mPlayerManager: PlayerManager;
-  protected mTerrainManager: TerrainManager;
-  protected mLayerManager: LayerManager;
-  protected mKeyBoardManager: KeyBoardManager;
-  protected mMouseManager: MouseManager
-  protected mRoomList: Room[] = [];
+  protected mRoomObj: {} = {}
 
+  private _curSceneType: SceneType;
   constructor(world: WorldService) {
     super();
     this.mWorld = world;
-    this.startScene();
-
-    this.mElemetnManager = new ElementManager(this);
-    this.mPlayerManager = new PlayerManager(this);
-    this.mTerrainManager = new TerrainManager(this);
-    this.mLayerManager = new LayerManager(this);
-    this.mKeyBoardManager = new KeyBoardManager(this);
-    this.mMouseManager = new MouseManager(this);
+    this.startScene(SceneType.Play);
 
     this.initScene();
   }
@@ -46,7 +26,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     if (this.connection) {
       let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
       this.connection.send(pkt);
-      
+
       let sizePacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
       const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = sizePacket.content;
       // TOOD move to cameras manager and not getting from document
@@ -58,51 +38,58 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
   }
 
-  private startScene() {
+  public changeSceneByType(sceneType: SceneType) {
     if (this.mWorld.game) {
-      let scene = this.mWorld.game.scene;
-      if (scene) {
-        scene.start(SceneType.Play);
+      this.startScene(sceneType);
+    } else {
+      console.error("scene is undefined");
+    }
+  }
+
+  private startScene(type: SceneType) {
+    if (this.mWorld.game) {
+      let sceneMgr: Phaser.Scenes.SceneManager = this.mWorld.game.scene;
+      if (sceneMgr) {
+        let scene: Phaser.Scene = this.getScene(type);
+        if (!scene) {
+          console.error("scene is undefined");
+          return;
+        }
+        if (this.mRoomObj[this._curSceneType]) {
+          return;
+        }
+        this._curSceneType = type;
+        scene.events.on("create", this.sceneCreated, this);
+        sceneMgr.start(type);
       } else {
-        console.error("scene is undefined");
+        console.error("sceneMgr is undefined");
       }
     }
   }
 
-  get scene(): Phaser.Scene {
+  private sceneCreated(scene: Phaser.Scene) {
+    let room: Room = new Room(this, scene);
+    this.mRoomObj[this._curSceneType] = room;
+  }
+
+  public getRoomByType(type: string): Room {
+    return this.mRoomObj[type];
+  }
+
+  public getCurRoom(): Room {
+    return this.mRoomObj[this._curSceneType]
+  }
+
+  private getScene(type: string): Phaser.Scene {
     if (this.mWorld.game) {
-      const scene = this.mWorld.game.scene;
-      if (scene) {
-        return scene.getScene(SceneType.Play);
+      const sceneMgr = this.mWorld.game.scene;
+      if (sceneMgr) {
+        return sceneMgr.getScene(type);
       } else {
         console.error("scene is undefined")
       }
     }
     return null;
-  }
-
-  get terrainsManager(): TerrainManager {
-    return this.mTerrainManager;
-  }
-
-  get elementManager(): ElementManager {
-    return this.mElemetnManager;
-  }
-
-  get playManager(): PlayerManager {
-    return this.mPlayerManager;
-  }
-
-  get keyboardManager(): KeyBoardManager {
-    return this.mKeyBoardManager;
-  }
-
-  get layerManager(): LayerManager {
-    return this.mLayerManager;
-  }
-
-  get mouseManager(): MouseManager {
-    return this.mMouseManager;
   }
 
   get connection(): ConnectionService {

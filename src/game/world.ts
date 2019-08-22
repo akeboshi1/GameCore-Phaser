@@ -10,10 +10,13 @@ import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
 import { SelectCharacter, SelectManager } from "../scenes/select.character";
 import { PlayScene } from "../scenes/play";
-import { RoomManager } from "../rooms/room.manager";
+import { RoomManager, IRoomManager } from "../rooms/room.manager";
 import { SceneType } from "../const/scene.type";
 import { ServerAddress } from "../net/address";
 import { IGameConfigure } from "../../launcher";
+import { KeyBoardManager } from "./keyboard.manager";
+import { MouseManager } from "./mouse.manager";
+import { Room } from "../rooms/room";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -24,6 +27,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConfig: IGameConfigure | undefined;
     private mSelectCharacterManager: SelectManager;
     private mRoomMamager: RoomManager;
+    private mKeyBoardManager: KeyBoardManager;
+    private mMouseManager: MouseManager;
 
     constructor(config: IGameConfigure) {
         super();
@@ -37,6 +42,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+
+        this.mKeyBoardManager = new KeyBoardManager(this);
+        this.mMouseManager = new MouseManager(this);
+
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
@@ -68,6 +77,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         console.dir("enter scene: ", content)
 
         this.startScene(SceneType.Play);
+
     }
 
     onConnected(connection?: SocketConnection): void {
@@ -76,9 +86,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onDisConnected(connection?: SocketConnection): void {
+
     }
 
     onError(reason: SocketConnectionError | undefined): void {
+
     }
 
     onClientErrorHandler(packet: PBpacket): void {
@@ -97,11 +109,21 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    get gameWidth(): number {
+    /**
+     * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
+     * @param scene 当前激活的scene
+     */
+    public changeSceneToManager(scene: Phaser.Scene) {
+        let room: Room = this.mRoomMamager.getCurRoom();
+        this.mKeyBoardManager.setSceneToManager(room);
+        this.mMouseManager.setSceneToManager(room);
+    }
+
+    public getWidth(): number {
         return this.mGame != undefined ? this.mGame.scale.width : 0;
     }
 
-    get gameHeight(): number {
+    public getHeight(): number {
         return this.mGame != undefined ? this.mGame.scale.height : 0;
     }
 
@@ -119,7 +141,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(SceneType.Loading, LoadingScene);
         this.mGame.scene.add(SceneType.SelectCharacter, SelectCharacter);
         this.mGame.scene.add(SceneType.Play, PlayScene);
-
 
         // window.addEventListener("orientationchange", function(event) {
         //     // 根据event.orientation|screen.orientation.angle等于0|180、90|-90度来判断横竖屏

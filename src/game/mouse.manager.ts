@@ -1,9 +1,10 @@
-import { RoomManager } from "../rooms/room.manager";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { LAYERTYPE } from "../layer/layer.manager";
 import { Geom } from "phaser";
 import { op_virtual_world } from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { Room } from "../rooms/room";
+import { LayerType } from "../rooms/layer/layer.manager";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -17,21 +18,29 @@ export enum MouseEvent {
 }
 
 export class MouseManager extends PacketHandler {
-    private _scene: Phaser.Scene;
-    private _connect: ConnectionService;
     private _activePointer: Phaser.Input.Pointer;
     private _groundLayer: Phaser.GameObjects.Container;
     private running = false;
-    constructor(private roomManager: RoomManager) {
+    //===============================
+    private _game: Phaser.Game;
+    private _scene: Phaser.Scene;
+    private _connect: ConnectionService;
+    constructor(private worldService: WorldService) {
         super();
-        this._scene = this.roomManager.scene;
-        this._connect = this.roomManager.connection;
+        this._game = worldService.game;
+        this._connect = this.worldService.connection;
+    }
+
+    public setSceneToManager(room: Room) {
+        this._scene = room.getScene();
         this._activePointer = this._scene.input.activePointer;
-        this._groundLayer = roomManager.layerManager.getLayerByType(LAYERTYPE.GROUNDCLICKLAYER);
+
+        this._groundLayer = room.getLayerMgr().getLayerByType(LayerType.GroundClickLayer);
         this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
         this._groundLayer.on("gameobjectdown", this.groundDown, this);
         this._groundLayer.on("gameobjectup", this.groundUp, this)
     }
+
 
     public resize(width: number, height: number) {
         this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
@@ -92,13 +101,13 @@ export class MouseManager extends PacketHandler {
      * 设置鼠标事件开关
      */
     public set enable(value: boolean) {
-        if (this._scene && this._scene.input && this._scene.input.mouse) {
+        if (this._scene) {
             this._scene.input.mouse.enabled = value;
         }
     }
 
     public get enable(): boolean {
-        if (this._scene && this._scene.input && this._scene.input.mouse) {
+        if (this._scene) {
             return this._scene.input.mouse.enabled;
         }
         return false;

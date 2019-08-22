@@ -1,5 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { RoomManager } from "../room.manager";
+import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 
@@ -7,7 +7,7 @@ export interface IElementManager {
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
-  constructor(private mRoom: RoomManager) {
+  constructor(private mRoom: IRoomManager) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);

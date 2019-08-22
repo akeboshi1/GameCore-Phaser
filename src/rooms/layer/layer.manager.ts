@@ -1,4 +1,5 @@
-import { RoomManager } from "../rooms/room.manager";
+import { IRoomManager } from "../room.manager";
+import { Room } from "../room";
 
 export enum LayerType {
   GroundClickLayer,
@@ -60,10 +61,10 @@ export class LayerManager {
 
   protected totalLayerList: Map<LayerType, Phaser.GameObjects.Container>;
   private _scene: Phaser.Scene;
-  constructor(private roomManager: RoomManager) {
+  constructor(private roomManager: IRoomManager, scene: Phaser.Scene) {
 
     this.totalLayerList = new Map();
-    this._scene = roomManager.scene;
+    this._scene = scene;
     //==========背景层
     this.mGroundClickLayer = this._scene.add.container(0, 0);
     this.totalLayerList.set(LayerType.GroundClickLayer, this.mGroundClickLayer);
@@ -122,7 +123,7 @@ export class LayerManager {
   }
 
   private _clearLayer() {
-    
+
     let len: number = Array.from(this.totalLayerList).length;
     let layer: Phaser.GameObjects.Container;
     let childLen: number = 0;

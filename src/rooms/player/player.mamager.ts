@@ -1,11 +1,11 @@
 import { ElementManager } from "../element/element.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
-import { RoomManager } from "../room.manager";
+import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 
 export class PlayerManager extends PacketHandler {
-  constructor(private mRoom: RoomManager) {
+  constructor(private mRoom: IRoomManager) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
@@ -24,11 +24,13 @@ export class PlayerManager extends PacketHandler {
     console.error("room is undefined");
   }
 
-  private onAdd(packet: PBpacket) {}
+  private onAdd(packet: PBpacket) { }
 
   private onRemove(packet: PBpacket) { }
 
-  private onMove(packet: PBpacket) { }
+  private onMove(packet: PBpacket) {
+    //todo player move
+  }
 
   private onSetPosition(packet: PBpacket) { }
 }

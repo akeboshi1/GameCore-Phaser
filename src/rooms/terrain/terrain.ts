@@ -1,11 +1,11 @@
 import { TerrainDiaplsy } from "./terrain.display";
 import { TerrainManager } from "./terrain.manager";
 import { BasicElement } from "../basic/basic.element";
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_client } from "pixelpai_proto";
 
 export class Terrain extends BasicElement {
   protected mDisplay: TerrainDiaplsy;
-  
+
   constructor(private mTerrainManager: TerrainManager, parent: Phaser.GameObjects.Container) {
     super(parent);
   }
@@ -18,7 +18,7 @@ export class Terrain extends BasicElement {
     return this.mDisplay;
   }
 
-  public load(display: op_gameconfig.IDisplay) {
+  public load(display: op_client.Terrain) {
     if (this.mDisplay) {
       this.mDisplay.load(display);
     }

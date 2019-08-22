@@ -29,7 +29,7 @@ export class TerrainDiaplsy extends BasicDisplay {
       const animations = this.mData.animations;
     }
   }
- 
+
   get resKey() {
     if (this.mData && this.mData.display) {
       return this.mDisplay.texturePath + this.mDisplay.dataPath;
