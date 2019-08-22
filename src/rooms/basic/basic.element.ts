@@ -29,7 +29,7 @@ export class BasicElement {
     this.mLayer = layer;
   }
 
-  get lyaer(): Phaser.GameObjects.Container {
+  get layer(): Phaser.GameObjects.Container {
     return this.mLayer;
   }
 }

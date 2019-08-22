@@ -51,8 +51,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    get game(): Phaser.Game {
-        return this.mGame;
+    get game(): Phaser.Game | undefined {
+        return this.mGame || undefined;
     }
 
     get connection(): ConnectionService {

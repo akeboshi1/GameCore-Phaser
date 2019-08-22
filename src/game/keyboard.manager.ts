@@ -148,7 +148,7 @@ export class KeyBoardManager extends PacketHandler {
      * @param scene 
      */
     public setSceneToManager(room: Room) {
-        this.mScene = room.getScene();
+        this.mScene = room.scene;
         if (!this.mScene) return;
         let len = this.mCodeList.length;
         let code: number;

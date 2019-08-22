@@ -32,10 +32,11 @@ export class MouseManager extends PacketHandler {
     }
 
     public setSceneToManager(room: Room) {
-        this._scene = room.getScene();
+        this._scene = room.scene;
+        if (!this._scene) return;
         this._activePointer = this._scene.input.activePointer;
 
-        this._groundLayer = room.getLayerMgr().getLayerByType(LayerType.GroundClickLayer);
+        this._groundLayer = room.layerManager.getLayerByType(LayerType.GroundClickLayer);
         this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
         this._groundLayer.on("gameobjectdown", this.groundDown, this);
         this._groundLayer.on("gameobjectup", this.groundUp, this)
@@ -120,15 +121,5 @@ export class MouseManager extends PacketHandler {
         this._groundLayer = null;
         this.running = false;
     }
-
-
-
-
-
-
-
-
-
-
 
 }

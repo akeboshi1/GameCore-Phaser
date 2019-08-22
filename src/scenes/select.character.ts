@@ -6,7 +6,7 @@ import { SceneType } from "../const/scene.type";
 import { WorldService } from "../game/world.service";
 
 export class SelectCharacter extends Phaser.Scene {
-  private mWorld: World;
+  private mWorld: World | undefined;
   constructor() {
     super({key: SceneType.SelectCharacter})
   }
@@ -28,7 +28,7 @@ export class SelectManager extends PacketHandler {
     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
   }
 
-  get scene(): SelectCharacter {
+  get scene(): SelectCharacter | undefined{
     if (this.mWorldService.game) {
       const scene = this.mWorldService.game.scene;
       if (scene) {

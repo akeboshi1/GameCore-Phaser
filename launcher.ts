@@ -55,7 +55,7 @@ export class Launcher {
       token_expire: CONFIG.token_expire || "1566633340",
       token_fingerprint: CONFIG.token_fingerprint || "27b63bf5c95d53b8bd6d95ffdfc7a1f599a18cbe",
       server_addr: CONFIG.server_addr || undefined,
-      game_id: CONFIG.game_id || "5d18bdf8052e8c2a4622e079",
+      game_id: CONFIG.game_id || "5d2691baf2f97440d7bb43c3",
       virtual_world_id: CONFIG.virtual_world_id || "0",
       type: Phaser.AUTO,
       zoom: 1,

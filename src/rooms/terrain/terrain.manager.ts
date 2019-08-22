@@ -7,7 +7,7 @@ import { LayerType } from "../layer/layer.manager";
 import { Room } from "../room";
 
 export interface TerrainService {
-  connection: ConnectionService;
+  connection: ConnectionService | undefined;
 }
 export class TerrainManager extends PacketHandler implements TerrainService {
   private mTerrains: Map<number, Terrain>;
@@ -31,16 +31,23 @@ export class TerrainManager extends PacketHandler implements TerrainService {
       console.error("room manager is undefined");
       return;
     }
-    if (!!this.mRoom.getLayerMgr() === false) {
+    if (!!this.mRoom.layerManager === false) {
       console.error("layer manager is undefined");
       return;
     }
-    const layer = this.mRoom.getLayerMgr().getLayerByType(LayerType.GroundLayer);
+    const layer = this.mRoom.layerManager.getLayerByType(LayerType.GroundLayer);
+    if (!!layer === false) {
+      console.error("can't find ground layer");
+      return;
+    }
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
     const terrains = content.terrain;
-    for (const terrain of terrains) {
-      const ter = new Terrain(this, layer);
-      this.mTerrains.set(terrain.id, ter);
+    if (terrains) {
+      for (const terrain of terrains) {
+        const ter = new Terrain(this, layer);
+        ter.load(terrain);
+        this.mTerrains.set(terrain.id || 0, ter);
+      }
     }
     console.log(terrains);
   }
@@ -49,10 +56,16 @@ export class TerrainManager extends PacketHandler implements TerrainService {
 
   private onDeleteTerrainHandler(packet: PBpacket) { }
 
-  get connection(): ConnectionService {
-    if (this.mRoomMgr) {
-      return this.mRoomMgr.connection;
+  get connection(): ConnectionService | undefined {
+    if (this.mRoom) {
+      return this.mRoom.connection;
     }
     console.error("room manager is undefined");
   }
-}
+
+  get scene(): Phaser.Scene | undefined {
+    if (this.mRoom) {
+      return this.mRoom.scene;
+    }
+  }
+ }

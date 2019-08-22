@@ -2,7 +2,7 @@ import { World } from "../game/world";
 import { SceneType } from "../const/scene.type";
 
 export class LoadingScene extends Phaser.Scene {
-  private mWorld: World;
+  private mWorld: World | undefined;
   constructor() {
     super({ key: SceneType.Loading });
   }

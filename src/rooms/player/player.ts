@@ -1,4 +1,3 @@
-import { PlayerDisplay } from "./player.display";
 
 export class Player extends Element {
   constructor() {
@@ -16,9 +15,5 @@ export class Player extends Element {
   public move(){
 
   }
-
-
-
-
 
 }
