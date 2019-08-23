@@ -147,4 +147,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             console.error("connection is undefined")
         }
     }
+
+    get roomManager(): RoomManager {
+        return this.mRoomMamager;
+    }
+
+    get selectCharacterManager(): SelectManager {
+        return this.mSelectCharacterManager;
+    }
 }

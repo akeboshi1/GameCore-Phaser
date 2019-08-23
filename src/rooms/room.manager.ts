@@ -17,10 +17,11 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   constructor(world: WorldService) {
     super();
     this.mWorld = world;
-    this.start(SceneType.Play);
 
-    this.initScene();
-    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+    if (this.connection) {
+      this.connection.addPacketListener(this);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+    }
   }
 
   public changeSceneByType(sceneType: SceneType) {
@@ -54,10 +55,11 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
   private onEnterScene(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-    this.start(SceneType.Play);
+    this.enterScene();
   }
 
-  private initScene() {
+  private enterScene() {
+    this.start(SceneType.Play);
     if (this.connection) {
       let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
       this.connection.send(pkt);

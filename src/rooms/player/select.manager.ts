@@ -13,17 +13,6 @@ export class SelectManager extends PacketHandler {
     }
   }
 
-  get scene(): Phaser.Scene | undefined{
-    if (this.mWorldService.game) {
-      const scene = this.mWorldService.game.scene;
-      if (scene) {
-        return scene.getScene(SceneType.SelectCharacter)
-      }
-      console.error("scene is undefined");
-    }
-    return;
-  }
-
   public start() {
     if (this.mWorldService.game) {
       const scene = this.mWorldService.game.scene;
@@ -38,6 +27,17 @@ export class SelectManager extends PacketHandler {
   private onSelectCharacter() {
     const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
     this.connection.send(pkt);
+  }
+
+  get scene(): Phaser.Scene | undefined{
+    if (this.mWorldService.game) {
+      const scene = this.mWorldService.game.scene;
+      if (scene) {
+        return scene.getScene(SceneType.SelectCharacter)
+      }
+      console.error("scene is undefined");
+    }
+    return;
   }
 
   get connection(): ConnectionService | undefined {
