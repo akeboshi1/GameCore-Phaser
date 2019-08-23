@@ -2,12 +2,17 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
+import { Element } from "./element";
+import { Room } from "../room";
+import { LayerType } from "../layer/layer.manager";
+import { DisplayInfo } from "../display/frames/display.info";
 
 export interface IElementManager {
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
-  constructor(private mRoom: IRoomManager) {
+  private mElements: Map<number, Element>;
+  constructor(private mRoomManager: IRoomManager, private mRoom: Room) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
@@ -20,14 +25,40 @@ export class ElementManager extends PacketHandler implements IElementManager {
   }
 
   get connection(): ConnectionService {
-    if (this.mRoom) {
-      return this.mRoom.connection;
+    if (this.mRoomManager) {
+      return this.mRoomManager.connection;
     }
     console.log("roomManager is undefined");
     return;
   }
 
-  private onAdd(packet: PBpacket) { }
+  private onAdd(packet: PBpacket) {
+    if (!this.mElements) {
+      this.mElements = new Map();
+    }
+    if (!!this.mRoomManager === false || !!this.mRoom === false) {
+      console.error("room manager is undefined");
+      return;
+    }
+    if (!!this.mRoom.layerManager === false) {
+      console.error("layer manager is undefined");
+      return;
+    }
+    const layer = this.mRoom.layerManager.getLayerByType(LayerType.GroundLayer);
+    if (!!layer === false) {
+      console.error("can't find ground layer");
+      return;
+    }
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
+    const elements = content.elements;
+    for (const ele of elements) {
+      const element = new Element(this, layer);
+      const loader = new DisplayInfo();
+      loader.setInfo(element);
+      element.load(loader);
+      this.mElements.set(ele.id || 0, element);
+    }
+  }
 
   private onRemove(packet: PBpacket) { }
 

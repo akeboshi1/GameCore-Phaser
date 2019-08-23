@@ -1,10 +1,11 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
-import { RoomManager, IRoomManager } from "../room.manager";
+import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { LayerType } from "../layer/layer.manager";
 import { Room } from "../room";
+import { DisplayInfo } from "../display/frames/display.info";
 
 export interface TerrainService {
   connection: ConnectionService | undefined;
@@ -45,7 +46,9 @@ export class TerrainManager extends PacketHandler implements TerrainService {
     if (terrains) {
       for (const terrain of terrains) {
         const ter = new Terrain(this, layer);
-        ter.load(terrain);
+        const loader = new DisplayInfo();
+        loader.setInfo(terrain);
+        ter.load(loader);
         this.mTerrains.set(terrain.id || 0, ter);
       }
     }

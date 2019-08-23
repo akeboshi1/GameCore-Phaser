@@ -27,14 +27,14 @@ TODO List
     - ground 地皮：渲染Tarrain
   - 背景层若干[2~3层]：最后一层为天空盒
   - **跟随镜头移动的层在PlayScene中，其它在UIScene**
-- [ ] /* WIP */ 将Terrain添加到ground层 `@404 @gxm` 22号
+- [ ] /* WIP */ 将Terrain添加到ground层 `@404 @gxm` 24号
   - 使用`45°`格子坐标
   - [ ] 深度排序 
 - [ ] 物件添加到surface层 `@404 @gxm` 23号上午
   - 使用`90°`直角坐标
   - [ ] 深度排序 
 - [ ] 添加z轴实现深度 `@404` 24号
-- [ ] surface层对象`x,y,z`变化, 修改depth `@404` 24号
+- [ ] surface层对象`x,y,z`变化, 修改depth `@404` 27号
 - [ ] /* WIP */鼠标事件管理 `@gxm`周三21号
 - [ ] /* WIP */keyboard管理 `@gxm`周二20号
   - `wasd、方向键`控制角色移动
@@ -44,7 +44,7 @@ TODO List
   - 移动修改对应动画和方向
   - [ ] 深度排序 
 - [ ] dragonbones换装 `@gxm`周二27号
-- [ ] 物件、Character像素级选择 `@404` 27号
+- [ ] 物件、Character像素级选择 `@404` 29号
 - [ ] 动画状态管理 `@gxm`周三-周四29号
 - [ ] /* WIP */resize `@gxm`周五-周六31号
 - [ ] Character特效 `@gxm`周一 9月2号

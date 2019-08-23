@@ -2,12 +2,13 @@ import { PlayerDisplay } from "./playerDragonBones.display";
 import { PlayerManager } from "./player.mamager";
 import { BasicElement } from "../basic/basic.element";
 import { op_client } from "pixelpai_proto";
+import { IDisplayInfo } from "../display/frames/display.info";
 
-export class Player extends BasicElement {
+export class Player {
   private mPlayerDisplay: PlayerDisplay | undefined;
+  protected mLayer: Phaser.GameObjects.Container;
 
   constructor(private mPlayManager: PlayerManager, parent: Phaser.GameObjects.Container) {
-    super(parent);
     this.createDisplay();
   }
 
@@ -41,7 +42,13 @@ export class Player extends BasicElement {
     this.mPlayerDisplay.z = z;
   }
 
+  set layer(layer: Phaser.GameObjects.Container) {
+    this.mLayer = layer;
+  }
 
+  get layer(): Phaser.GameObjects.Container {
+    return this.mLayer;
+  }
 
 
 

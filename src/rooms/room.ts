@@ -20,7 +20,7 @@ export class Room implements RoomService {
   constructor(private manager: IRoomManager, scene: Phaser.Scene) {
     this.mScene = scene;
     this.mTerainManager = new TerrainManager(manager, this);
-    this.mElementManager = new ElementManager(manager);
+    this.mElementManager = new ElementManager(manager, this);
     this.mPlayerManager = new PlayerManager(manager, this);
     this.mLayManager = new LayerManager(manager, scene);
   }
