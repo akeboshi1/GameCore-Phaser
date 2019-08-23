@@ -18,6 +18,7 @@ import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
 import { Room } from "../rooms/room";
 import { SelectManager } from "../rooms/player/select.manager";
+import { LoadingManager } from "./loading.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -30,6 +31,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mRoomMamager: RoomManager;
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
+    private mLoadingManager: LoadingManager;
 
     constructor(config: IGameConfigure) {
         super();
@@ -41,12 +43,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
 
+        //================todo opcode
+        this.addHandlerFun(0, this.startSelectManager);
+        //this.addHandlerFun(1, this.startRoomManager);
+        this.addHandlerFun(2, this.stopSelectManager);
+        //this.addHandlerFun(3, this.stopRoomManager);
+
+
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
 
         this.mRoomMamager = new RoomManager(this);
         this.mSelectCharacterManager = new SelectManager(this);
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
+        this.mLoadingManager = new LoadingManager(this);
 
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
@@ -54,8 +64,19 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     get game(): Phaser.Game | undefined {
-        return this.mGame || undefined;
+        return this.mGame;
     }
+
+    get roomManager(): RoomManager | undefined {
+        return this.mRoomMamager;
+    }
+
+    get selectCharacterManager(): SelectManager | undefined {
+        return this.selectCharacterManager;
+    }
+
+
+
 
     get connection(): ConnectionService {
         return this.mConnection;
@@ -92,15 +113,33 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         console.error(content.msg);
     }
 
+    private startSelectManager(packet: PBpacket) {
+        let content = packet.content;
+        this.mSelectCharacterManager.start();
+    }
+
+    // public startRoomManager() {
+    //     this.mRoomMamager.start();
+    // }
+
+    private stopSelectManager(packet: PBpacket) {
+        let content = packet.content;
+        this.mSelectCharacterManager.stop();
+    }
+
+    private stopRoomManager(packet: PBpacket) {
+        let content = packet.content;
+        this.mRoomMamager.stop();
+    }
+
     /**
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
-     * @param scene 当前激活的scene
      */
-    public changeSceneToManager(scene: Phaser.Scene) {
-        let room: Room = this.mRoomMamager.getCurRoom();
-        this.mKeyBoardManager.setSceneToManager(room);
-        this.mMouseManager.setSceneToManager(room);
-    }
+    // public changeSceneToManager() {
+    //     let room: Room = this.mRoomMamager.getCurRoom();
+    //     this.mKeyBoardManager.setSceneToManager(room);
+    //     this.mMouseManager.setSceneToManager(room);
+    // }
 
     public getWidth(): number {
         return this.mGame != undefined ? this.mGame.scale.width : 0;
@@ -111,7 +150,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
-        // TODO 进游戏前预加载资源
+        // // TODO 进游戏前预加载资源
+        // this.mLoadingManager.start(()=>{
+        // });
 
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         console.dir(content);
@@ -125,10 +166,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(SceneType.SelectCharacter, SelectCharacter);
         this.mGame.scene.add(SceneType.Play, PlayScene);
 
+        //==================todo 请求选择角色信息
+        let pkt: PBpacket = new PBpacket(0);
+        this.mConnection.send(pkt);
+
         // window.addEventListener("orientationchange", function(event) {
         //     // 根据event.orientation|screen.orientation.angle等于0|180、90|-90度来判断横竖屏
         // }, false);
-        this.mSelectCharacterManager.start();
+        // this.mSelectCharacterManager.start();
 
         this.mGame.scale.on("resize", this.resize, this);
 
@@ -146,13 +191,5 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             console.error("connection is undefined")
         }
-    }
-
-    get roomManager(): RoomManager {
-        return this.mRoomMamager;
-    }
-
-    get selectCharacterManager(): SelectManager {
-        return this.mSelectCharacterManager;
     }
 }

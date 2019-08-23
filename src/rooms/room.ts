@@ -54,4 +54,18 @@ export class Room implements RoomService {
       return this.manager.connection;
     }
   }
+
+  public dispose() {
+    if (this.mScene) {
+      this.mScene.scene.stop();
+      this.mScene = null;
+    }
+    this.manager = null;
+    //this.mTerainManager.dispose();
+    this.mPlayerManager.dispose();
+    this.mLayManager.dispose();
+    // this.mElementManager.dispose();
+
+
+  }
 }

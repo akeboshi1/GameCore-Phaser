@@ -144,8 +144,8 @@ export class KeyBoardManager extends PacketHandler {
 
     /**
      * world中当scene发生变化时，传入当前激活的scene
-     * scene由world去休眠/激活
-     * @param scene 
+     * room由world去休眠/激活
+     * @param room
      */
     public setSceneToManager(room: Room) {
         this.mScene = room.scene;

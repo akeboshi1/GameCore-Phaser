@@ -42,6 +42,13 @@ export class Player {
     this.mPlayerDisplay.z = z;
   }
 
+  public disopse() {
+    if (this.mPlayerDisplay) {
+      this.mPlayerDisplay.dispose();
+      this.mPlayerDisplay = null;
+    }
+  }
+
   set layer(layer: Phaser.GameObjects.Container) {
     this.mLayer = layer;
   }

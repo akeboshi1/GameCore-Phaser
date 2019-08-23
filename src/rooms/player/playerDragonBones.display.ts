@@ -88,4 +88,16 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     const factory: dragonBones.phaser.Factory = ((<any>this.scene).dragonBones as dragonBones.phaser.Factory);
     factory.replaceSlotDisplay(this.dragonBonesName, this.mAnimationName, slotName, displayName, this.mArmatureDisplay.armature.getSlot(slotName));
   }
+
+  public dispose() {
+    this.mData = null;
+    if (this.mArmatureDisplay) {
+      this.mArmatureDisplay.dispose(true);
+      this.mArmatureDisplay = null;
+    }
+  }
+
+
+
+
 }

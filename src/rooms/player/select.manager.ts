@@ -24,6 +24,17 @@ export class SelectManager extends PacketHandler {
     }
   }
 
+  public stop() {
+    if (this.mWorldService.game) {
+      const scene = this.mWorldService.game.scene;
+      if (scene) {
+        scene.stop(SceneType.SelectCharacter);
+      } else {
+        console.error("scene is undefined");
+      }
+    }
+  }
+
   private onSelectCharacter() {
     const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
     this.connection.send(pkt);
