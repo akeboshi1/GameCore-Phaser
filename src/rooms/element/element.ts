@@ -1,10 +1,8 @@
 import { ElementManager } from "./element.manager";
-import { BasicElement } from "../basic/basic.element";
 import { FrameDisplay } from "../display/frames/display";
 import { IDisplayInfo } from "../display/frames/display.info";
-
 export interface IElement {
-
+  setPosition(x: number, y: number, z?: number): void;
 }
 
 export class Element implements IElement{
@@ -12,10 +10,21 @@ export class Element implements IElement{
   protected mDisplay: FrameDisplay | undefined;
   constructor(private mElementManager: ElementManager, parent: Phaser.GameObjects.Container) {
     this.layer = parent;
+    this.createDisplay();
   }
 
   createDisplay() {
-  
+    if (this.mDisplay) {
+      this.mDisplay.destroy();
+    }
+
+    let scene = this.mElementManager.scene;
+    if (scene) {
+      this.mDisplay = new FrameDisplay(scene);
+      this.layer.add(this.mDisplay);
+      return this.mDisplay;
+    }
+    return undefined;
   }
 
   public load(display: IDisplayInfo) {

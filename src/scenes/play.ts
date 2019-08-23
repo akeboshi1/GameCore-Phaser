@@ -11,7 +11,9 @@ export class PlayScene extends Phaser.Scene {
   preload() { }
 
   init(data: any) {
-    this.mCallBack = data;
+    if (data) {
+      this.mCallBack = data.callBack;
+    }
   }
 
   create() {

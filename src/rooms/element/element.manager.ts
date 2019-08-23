@@ -54,9 +54,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
     for (const ele of elements) {
       const element = new Element(this, layer);
       const loader = new DisplayInfo();
-      loader.setInfo(element);
+      loader.setInfo(ele);
       element.load(loader);
       this.mElements.set(ele.id || 0, element);
+    }
+  }
+
+  get scene(): Phaser.Scene | undefined {
+    if (this.mRoom) {
+      return this.mRoom.scene;
     }
   }
 

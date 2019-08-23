@@ -1,8 +1,6 @@
 import { PlayerDisplay } from "./playerDragonBones.display";
 import { PlayerManager } from "./player.mamager";
-import { BasicElement } from "../basic/basic.element";
 import { op_client } from "pixelpai_proto";
-import { IDisplayInfo } from "../display/frames/display.info";
 
 export class Player {
   private mPlayerDisplay: PlayerDisplay | undefined;

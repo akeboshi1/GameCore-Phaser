@@ -1,14 +1,13 @@
-import { BasicDisplay } from "../../basic/basic.display";
 import { IDisplayInfo } from "./display.info";
 
 /**
  * 序列帧显示对象
  */
-export class FrameDisplay extends BasicDisplay {
+export class FrameDisplay extends Phaser.GameObjects.Sprite {
   protected mDisplayInfo: IDisplayInfo | undefined;
   protected baseLoc: Phaser.Geom.Point;
-  constructor(scene: Phaser.Scene, x?: number, y?: number) {
-    super(scene, x, y);
+  constructor(scene: Phaser.Scene, x?: number, y?: number, texture?: string) {
+    super(scene, x, y, texture);
   }
 
   public load(display: IDisplayInfo) {
@@ -16,6 +15,7 @@ export class FrameDisplay extends BasicDisplay {
     if (!this.mDisplayInfo) return;
     if (this.resKey) {
       if (this.scene.cache.obj.has(this.resKey)) {
+        this.onLoadCompleteHandler();
       } else {
         const display = this.mDisplayInfo.display;
         if (display) {

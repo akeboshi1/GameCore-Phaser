@@ -1,7 +1,5 @@
 import { TerrainManager } from "./terrain.manager";
-import { BasicElement } from "../basic/basic.element";
 import { FrameDisplay } from "../display/frames/display";
-import { IDisplayInfo } from "../display/frames/display.info";
 import { Element } from "../element/element";
 
 export class Terrain extends Element {
@@ -10,7 +8,6 @@ export class Terrain extends Element {
   constructor(private mTerrainManager: TerrainManager, parent: Phaser.GameObjects.Container) {
     //todo ElementManager改成接口
     super(null, parent);
-    this.createDisplay();
   }
 
   public createDisplay(): FrameDisplay | undefined {

@@ -173,7 +173,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // window.addEventListener("orientationchange", function(event) {
         //     // 根据event.orientation|screen.orientation.angle等于0|180、90|-90度来判断横竖屏
         // }, false);
-        // this.mSelectCharacterManager.start();
+        this.mSelectCharacterManager.start();
 
         this.mGame.scale.on("resize", this.resize, this);
 

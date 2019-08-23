@@ -9,8 +9,10 @@ export class LoadingManager extends PacketHandler {
   }
 
 
-  public start(callback?: Function) {
-    this.mCallBack = callback;
+  public start(data?: any) {
+    if (data) {
+      this.mCallBack = data.callback;
+    }
     if (this.mWorld.game) {
       //todo load res
       //加载完之后调用返回函数

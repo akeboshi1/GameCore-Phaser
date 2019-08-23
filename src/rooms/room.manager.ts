@@ -15,7 +15,10 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   constructor(world: WorldService) {
     super();
     this.mWorld = world;
-    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+    if (this.connection) {
+      this.connection.addPacketListener(this);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+    }
   }
 
   private onEnterScene(packet: PBpacket) {
