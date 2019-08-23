@@ -17,36 +17,21 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   constructor(world: WorldService) {
     super();
     this.mWorld = world;
-    this.startScene(SceneType.Play);
+    this.start(SceneType.Play);
 
     this.initScene();
-  }
-
-  private initScene() {
-    if (this.connection) {
-      let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
-      this.connection.send(pkt);
-
-      let sizePacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
-      const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = sizePacket.content;
-      // TOOD move to cameras manager and not getting from document
-      size.width = document.documentElement.clientWidth;
-      size.height = document.documentElement.clientHeight;
-      this.connection.send(sizePacket);
-    } else {
-      console.error("connection is undefined");
-    }
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
   }
 
   public changeSceneByType(sceneType: SceneType) {
     if (this.mWorld.game) {
-      this.startScene(sceneType);
+      this.start(sceneType);
     } else {
       console.error("scene is undefined");
     }
   }
 
-  private startScene(type: SceneType) {
+  private start(type: SceneType) {
     if (this.mWorld.game) {
       let sceneMgr: Phaser.Scenes.SceneManager = this.mWorld.game.scene;
       if (sceneMgr) {
@@ -60,10 +45,31 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         this._curSceneType = type;
         scene.events.on("create", this.sceneCreated, this);
-        sceneMgr.start(type);
+        sceneMgr.start(SceneType.Play);
       } else {
         console.error("sceneMgr is undefined");
       }
+    }
+  }
+
+  private onEnterScene(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
+    this.start(SceneType.Play);
+  }
+
+  private initScene() {
+    if (this.connection) {
+      let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
+      this.connection.send(pkt);
+
+      let sizePacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+      const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = sizePacket.content;
+      // TOOD move to cameras manager and not getting from document
+      size.width = this.mWorld.getWidth();
+      size.height = this.mWorld.getHeight();
+      this.connection.send(sizePacket);
+    } else {
+      console.error("connection is undefined");
     }
   }
 

@@ -5,9 +5,11 @@ import { SceneType } from "../const/scene.type";
 import { KeyBoardManager } from "./keyboard.manager";
 
 export interface WorldService {
-    startScene(type: SceneType): void;
-
     connection: ConnectionService;
+
+    getWidth(): number;
+
+    getHeight(): number;
 
     readonly game: Phaser.Game;
 }

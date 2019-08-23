@@ -8,15 +8,16 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 import { op_gateway, op_client, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
-import { SelectCharacter, SelectManager } from "../scenes/select.character";
+import { SelectCharacter } from "../scenes/select.character";
 import { PlayScene } from "../scenes/play";
-import { RoomManager, IRoomManager } from "../rooms/room.manager";
+import { RoomManager } from "../rooms/room.manager";
 import { SceneType } from "../const/scene.type";
 import { ServerAddress } from "../net/address";
 import { IGameConfigure } from "../../launcher";
 import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
 import { Room } from "../rooms/room";
+import { SelectManager } from "../rooms/player/select.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -38,11 +39,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConnection.addPacketListener(this);
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
 
+        this.mRoomMamager = new RoomManager(this);
+        this.mSelectCharacterManager = new SelectManager(this);
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
 
@@ -72,14 +74,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    private onEnterScene(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-        console.dir("enter scene: ", content)
-
-        this.startScene(SceneType.Play);
-
-    }
-
     onConnected(connection?: SocketConnection): void {
         console.info(`enterVirtualWorld`);
         this.enterVirtualWorld();
@@ -96,17 +90,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     onClientErrorHandler(packet: PBpacket): void {
         let content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         console.error(content.msg);
-    }
-
-    startScene(type: SceneType) {
-        switch (type) {
-            case SceneType.SelectCharacter:
-                this.mSelectCharacterManager = new SelectManager(this);
-                break;
-            case SceneType.Play:
-                this.mRoomMamager = new RoomManager(this);
-                break;
-        }
     }
 
     /**
@@ -145,7 +128,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // window.addEventListener("orientationchange", function(event) {
         //     // 根据event.orientation|screen.orientation.angle等于0|180、90|-90度来判断横竖屏
         // }, false);
-        this.startScene(SceneType.SelectCharacter);
+        this.mSelectCharacterManager.start();
 
         this.mGame.scale.on("resize", this.resize, this);
 
