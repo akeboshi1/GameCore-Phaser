@@ -41,6 +41,13 @@ export class Player extends BasicElement {
     this.mPlayerDisplay.z = z;
   }
 
+  public disopse() {
+    if (this.mPlayerDisplay) {
+      this.mPlayerDisplay.dispose();
+      this.mPlayerDisplay = null;
+    }
+  }
+
 
 
 

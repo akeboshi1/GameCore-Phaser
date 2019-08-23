@@ -62,7 +62,7 @@ export class Room implements RoomService {
     }
     this.manager = null;
     //this.mTerainManager.dispose();
-    // this.mPlayerManager.dispose();
+    this.mPlayerManager.dispose();
     this.mLayManager.dispose();
     // this.mElementManager.dispose();
 

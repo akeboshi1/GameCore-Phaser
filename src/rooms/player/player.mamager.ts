@@ -63,4 +63,13 @@ export class PlayerManager extends PacketHandler {
       return this.mRoom.scene;
     }
   }
+
+  public dispose() {
+    if (this.mPlayerMap) {
+      this.mPlayerMap.forEach((player: Player) => {
+        player.disopse();
+      });
+      this.mPlayerMap = null;
+    }
+  }
 }
