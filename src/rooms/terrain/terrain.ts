@@ -5,13 +5,13 @@ import { op_gameconfig, op_client } from "pixelpai_proto";
 
 export class Terrain extends BasicElement {
   protected mDisplay: TerrainDiaplsy | undefined;
-  
+
   constructor(private mTerrainManager: TerrainManager, parent: Phaser.GameObjects.Container) {
     super(parent);
     this.createDisplay();
   }
 
-  public createDisplay(): TerrainDiaplsy | undefined{
+  public createDisplay(): TerrainDiaplsy | undefined {
     if (this.mDisplay) {
       this.mDisplay.destroy();
     }
@@ -21,6 +21,7 @@ export class Terrain extends BasicElement {
       this.layer.add(this.mDisplay);
       return this.mDisplay;
     }
+    return undefined;
   }
 
   public load(display: op_client.ITerrain) {

@@ -21,7 +21,7 @@ export class Room implements RoomService {
     this.mScene = scene;
     this.mTerainManager = new TerrainManager(manager, this);
     this.mElementManager = new ElementManager(manager);
-    this.mPlayerManager = new PlayerManager(manager);
+    this.mPlayerManager = new PlayerManager(manager, this);
     this.mLayManager = new LayerManager(manager, scene);
   }
 

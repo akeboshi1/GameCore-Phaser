@@ -1,21 +1,17 @@
+import { op_client } from "pixelpai_proto";
+
 export class PlayerDisplay extends Phaser.GameObjects.Container {
   protected mAnimationName: string = "";
   protected mDragonbonesName: string = "";
   protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
+
+  protected mData: op_client.IActor | undefined;
   constructor(scene: Phaser.Scene) {
     super(scene);
-    this.dragonBonesName = "bones_human01";
+    //this.dragonBonesName = "bones_human01";
   }
 
   protected buildDragbones() {
-    if (this.mArmatureDisplay) {
-      if (this.mArmatureDisplay.parentContainer) {
-        this.mArmatureDisplay.parentContainer.remove(this.mArmatureDisplay);
-      }
-      this.mArmatureDisplay.destroy();
-      this.mArmatureDisplay = null;
-    }
-
     if (this.scene.cache.custom.dragonbone.get(this.dragonBonesName)) {
       this.onLoadCompleteHandler();
     } else {
@@ -38,15 +34,27 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     }
   }
 
+  public load(display: op_client.IActor) {
+    this.mData = display;
+    if (!this.mData) return;
+    if (this.dragonBonesName) {
+      if (this.scene.cache.obj.has(this.dragonBonesName)) {
+
+      } else {
+        this.dragonBonesName = this.mData.avatar.id;
+      }
+    }
+  }
+
   protected onLoadCompleteHandler(loader?: any, totalComplete?: number, totalFailed?: number) {
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dbClear();
     }
     this.mArmatureDisplay = this.scene.add.armature(
       "Armature",
-      "bones_human01"
+      this.dragonBonesName,
     );
-    this.mArmatureDisplay.animation.play("human01_run_3");
+    this.mArmatureDisplay.animation.play("idle_" + this.mData.avatarDir);
 
     this.mArmatureDisplay.x = this.scene.cameras.main.centerX;
     this.mArmatureDisplay.y = this.scene.cameras.main.centerY + 200;
@@ -71,6 +79,13 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     }
   }
 
-  public replaceSlotDisplay() {
+  /**
+   * 按照格位换装
+   * @param slotName 插槽名
+   * @param displayName 显示对象资源名
+   */
+  public replaceSlotDisplay(slotName: string, displayName: string) {
+    const factory: dragonBones.phaser.Factory = ((<any>this.scene).dragonBones as dragonBones.phaser.Factory);
+    factory.replaceSlotDisplay(this.dragonBonesName, this.mAnimationName, slotName, displayName, this.mArmatureDisplay.armature.getSlot(slotName));
   }
 }
