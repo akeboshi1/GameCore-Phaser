@@ -2,18 +2,21 @@ import { World } from "../game/world";
 import { SceneType } from "../const/scene.type";
 
 export class LoadingScene extends Phaser.Scene {
-  private mWorld: World | undefined;
+  private mCallBack: Function;
   constructor() {
     super({ key: SceneType.Loading });
   }
 
-  preload() {}
+  preload() { }
 
   init(data: any) {
-    this.mWorld = data;
+    this.mCallBack = data;
+
   }
 
   create() {
-    this.scene.start("selectCharacter", this.mWorld);
+    if (this.mCallBack) {
+      this.mCallBack();
+    }
   }
 }

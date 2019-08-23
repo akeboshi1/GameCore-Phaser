@@ -11,55 +11,47 @@ export interface IRoomManager {
 
 export class RoomManager extends PacketHandler implements IRoomManager {
   protected mWorld: WorldService;
-  protected mRoomObj: {} = {}
-
-  private _curSceneType: SceneType;
+  private room: Room;
   constructor(world: WorldService) {
     super();
     this.mWorld = world;
-
-    if (this.connection) {
-      this.connection.addPacketListener(this);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
-    }
-  }
-
-  public changeSceneByType(sceneType: SceneType) {
-    if (this.mWorld.game) {
-      this.start(sceneType);
-    } else {
-      console.error("scene is undefined");
-    }
-  }
-
-  private start(type: SceneType) {
-    if (this.mWorld.game) {
-      let sceneMgr: Phaser.Scenes.SceneManager = this.mWorld.game.scene;
-      if (sceneMgr) {
-        let scene: Phaser.Scene = this.getScene(type);
-        if (!scene) {
-          console.error("scene is undefined");
-          return;
-        }
-        if (this.mRoomObj[this._curSceneType]) {
-          return;
-        }
-        this._curSceneType = type;
-        scene.events.on("create", this.sceneCreated, this);
-        sceneMgr.start(SceneType.Play);
-      } else {
-        console.error("sceneMgr is undefined");
-      }
-    }
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
   }
 
   private onEnterScene(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-    this.enterScene();
+    //todo 预加载资源
+    this.start();
   }
 
-  private enterScene() {
-    this.start(SceneType.Play);
+  /**
+   * 开启roomManager默认先开启loadingScene
+   * 原本是想在world里面调用，但是现在roomManager进入的触发条件是选角之后派发的EnterScene事件
+   */
+  private start() {
+    if (this.mWorld.game) {
+      this.mWorld.game.scene.start(SceneType.Loading, {
+        callBack: () => {
+          let scene: Phaser.Scene = this.mWorld.game.scene.getScene(SceneType.Play);
+          this.mWorld.game.scene.start(SceneType.Play, {
+            callBack: () => {
+              this.initScene();
+              this.room = new Room(this, scene);
+              //todo room start
+            }
+          });
+        }
+      });
+    }
+  }
+
+  public stop() {
+    if (this.mWorld.game) {
+      this.room.dispose();
+    }
+  }
+
+  private initScene() {
     if (this.connection) {
       let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
       this.connection.send(pkt);
@@ -73,31 +65,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     } else {
       console.error("connection is undefined");
     }
-  }
-
-  private sceneCreated(scene: Phaser.Scene) {
-    let room: Room = new Room(this, scene);
-    this.mRoomObj[this._curSceneType] = room;
-  }
-
-  public getRoomByType(type: string): Room {
-    return this.mRoomObj[type];
-  }
-
-  public getCurRoom(): Room {
-    return this.mRoomObj[this._curSceneType]
-  }
-
-  private getScene(type: string): Phaser.Scene {
-    if (this.mWorld.game) {
-      const sceneMgr = this.mWorld.game.scene;
-      if (sceneMgr) {
-        return sceneMgr.getScene(type);
-      } else {
-        console.error("scene is undefined")
-      }
-    }
-    return null;
   }
 
   get connection(): ConnectionService {
