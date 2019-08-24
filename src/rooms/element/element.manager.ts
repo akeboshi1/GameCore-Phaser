@@ -5,8 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { Room } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/atlas/display.info";
-import Connection from "../../net/connection";
+import { DisplayInfo } from "../display/atlas/display";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -20,7 +19,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
-      
+
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.onAdd);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onRemove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);

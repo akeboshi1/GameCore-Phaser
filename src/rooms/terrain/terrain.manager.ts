@@ -2,11 +2,11 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
 import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
-import { Terrain } from "../element/terrain";
 import { LayerType } from "../layer/layer.manager";
 import { Room } from "../room";
-import { DisplayInfo } from "../display/atlas/display.info";
 import { IElementManager } from "../element/element.manager";
+import { Terrain } from "./terrain";
+import { DisplayInfo } from "../display/Frame.display";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
@@ -69,4 +69,4 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       return this.mRoom.scene;
     }
   }
- }
+}

@@ -1,50 +1,41 @@
-import { PlayerDisplay } from "./playerDragonBones.display";
-import { PlayerManager } from "./player.mamager";
 import { op_client } from "pixelpai_proto";
+import { Element } from "../element/element";
+import { IDisplayInfo } from "../display/Frame.display";
+import { DragonBonesDisplay } from "../display/DragonBones.display";
+import { IElementManager } from "../element/element.manager";
+import { ElementsDisplay } from "../display/Element.display";
 
-export class Player {
-  private mPlayerDisplay: PlayerDisplay | undefined;
+export class Player extends Element {
   protected mLayer: Phaser.GameObjects.Container;
 
-  constructor(private mPlayManager: PlayerManager, parent: Phaser.GameObjects.Container) {
+  constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
+    super(mElementManager, parent);
     this.createDisplay();
   }
 
-  public createDisplay(): PlayerDisplay | undefined {
-    if (this.mPlayerDisplay) {
-      this.mPlayerDisplay.destroy();
+  public createDisplay(): ElementsDisplay | undefined {
+    if (this.mDisplay) {
+      this.mDisplay.destroy();
     }
-    let scene: Phaser.Scene = this.mPlayManager.scene;
+    let scene: Phaser.Scene = this.mElementManager.scene;
     if (scene) {
-      this.mPlayerDisplay = new PlayerDisplay(scene);
-      this.layer.add(this.mPlayerDisplay);
-      return this.mPlayerDisplay;
+      this.mDisplay = new DragonBonesDisplay(scene);
+      this.layer.add(this.mDisplay);
+      return this.mDisplay;
     }
     return undefined;
   }
 
-  public load(display: op_client.IActor) {
-    if (this.mPlayerDisplay) {
-      this.mPlayerDisplay.load(display);
-    }
+  public load(display: IDisplayInfo) {
+    super.load(display);
   }
 
   public setPosition(x: number, y: number, z?: number) {
-    if (z === undefined) z = 0;
-    if (!this.mPlayerDisplay) {
-      console.error("display is undefine")
-      return;
-    }
-    this.mPlayerDisplay.x = x;
-    this.mPlayerDisplay.y = y;
-    this.mPlayerDisplay.z = z;
+    super.setPosition(x, y, z);
   }
 
   public disopse() {
-    if (this.mPlayerDisplay) {
-      this.mPlayerDisplay.dispose();
-      this.mPlayerDisplay = null;
-    }
+    super.dispose();
   }
 
   set layer(layer: Phaser.GameObjects.Container) {

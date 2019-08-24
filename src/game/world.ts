@@ -17,6 +17,7 @@ import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
 import { SelectManager } from "../rooms/player/select.manager";
 import { LoadingManager } from "./loading.manager";
+import { Size } from "../utils/size";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -30,6 +31,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
     private mLoadingManager: LoadingManager;
+    private mSize: Size;
 
     constructor(config: IGameConfigure) {
         super();
@@ -136,12 +138,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     //     this.mMouseManager.setSceneToManager(room);
     // }
 
-    public getWidth(): number {
-        return this.mGame != undefined ? this.mGame.scale.width : 0;
-    }
-
-    public getHeight(): number {
-        return this.mGame != undefined ? this.mGame.scale.height : 0;
+    public getSize(): Size {
+        return this.mSize;
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
@@ -168,14 +166,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // window.addEventListener("orientationchange", function(event) {
         //     // 根据event.orientation|screen.orientation.angle等于0|180、90|-90度来判断横竖屏
         // }, false);
-        this.mSelectCharacterManager.start();
+        // this.mSelectCharacterManager.start();
 
         this.mGame.scale.on("resize", this.resize, this);
 
         this.gameCreated();
     }
 
-    private resize(gameSize, baseSize, displaySize, resolution) {
+    private resize(gameSize: Size, baseSize: Size, displaySize: Size, resolution) {
+        this.mSize.setSize(gameSize.width, gameSize.height);
         //TODO manager.resize
     }
 

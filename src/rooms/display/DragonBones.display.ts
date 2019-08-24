@@ -1,11 +1,13 @@
-import { op_client } from "pixelpai_proto";
 
-export class PlayerDisplay extends Phaser.GameObjects.Container {
+import { IDisplayInfo } from "./display";
+import { ElementsDisplay } from "./Element.display";
+
+export class DragonBonesDisplay extends ElementsDisplay {
   protected mAnimationName: string = "";
   protected mDragonbonesName: string = "";
   protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
 
-  protected mData: op_client.IActor | undefined;
+  protected mData: IDisplayInfo | undefined;
   constructor(scene: Phaser.Scene) {
     super(scene);
     //this.dragonBonesName = "bones_human01";
@@ -34,14 +36,14 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     }
   }
 
-  public load(display: op_client.IActor) {
+  public load(display: IDisplayInfo) {
     this.mData = display;
     if (!this.mData) return;
     if (this.dragonBonesName) {
       if (this.scene.cache.obj.has(this.dragonBonesName)) {
 
       } else {
-        this.dragonBonesName = this.mData.avatar.id;
+        this.dragonBonesName = this.mData.avater.id;
       }
     }
   }
@@ -89,7 +91,7 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     factory.replaceSlotDisplay(this.dragonBonesName, this.mAnimationName, slotName, displayName, this.mArmatureDisplay.armature.getSlot(slotName));
   }
 
-  public dispose() {
+  public destory() {
     this.mData = null;
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dispose(true);

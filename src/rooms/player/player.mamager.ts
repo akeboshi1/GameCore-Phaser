@@ -1,4 +1,4 @@
-import { ElementManager } from "../element/element.manager";
+import { ElementManager, IElementManager } from "../element/element.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
@@ -6,8 +6,9 @@ import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
 import { Room } from "../room";
 import { LayerType } from "../layer/layer.manager";
+import { IDisplayInfo, DisplayInfo } from "../display/Frame.display";
 
-export class PlayerManager extends PacketHandler {
+export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   constructor(private mRoomMgr: IRoomManager, private mRoom: Room) {
     super();
@@ -40,9 +41,12 @@ export class PlayerManager extends PacketHandler {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
     const players = content.actors;
     if (players) {
+      let displayInfo: DisplayInfo;
       for (const player of players) {
         const plyer = new Player(this, layer);
-        plyer.load(player);
+        displayInfo = new DisplayInfo();
+        displayInfo.setInfo(player);
+        plyer.load(displayInfo);
         this.mPlayerMap.set(player.id || 0, plyer);
       }
     }

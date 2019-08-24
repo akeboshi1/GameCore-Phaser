@@ -1,16 +1,51 @@
-import { IDisplayInfo } from "./display.info";
+import { op_gameconfig, op_client } from "pixelpai_proto";
+import { ElementsDisplay } from "./Element.display";
+
+export interface IDisplayInfo {
+  id: number;
+  x: number;
+  y: number;
+  type?: string;
+  display?: op_gameconfig.IDisplay | null;
+  animations?: op_gameconfig.IAnimation[] | null;
+  animationName: string;
+
+  avatarDir?: number;
+  avater?: op_gameconfig.Avatar | null;
+}
+
+export class DisplayInfo implements IDisplayInfo {
+  id: number;
+  x: number;
+  y: number;
+  type: string;
+  display: op_gameconfig.IDisplay | null;
+  animations: op_gameconfig.IAnimation[] | null;
+  animationName: string;
+  avatarDir?: number;
+  avater?: op_gameconfig.Avatar | null;
+  setInfo(val: any) {
+    const keys = Object.keys(this);
+    for (const key in val) {
+      if (val.hasOwnProperty(key)) {
+        this[key] = val[key];
+      }
+    }
+  }
+}
 
 /**
  * 序列帧显示对象
  */
-export class AtlasDisplay extends Phaser.GameObjects.Sprite {
+export class AtlasDisplay extends ElementsDisplay {
   protected mDisplayInfo: IDisplayInfo | undefined;
   protected baseLoc: Phaser.Geom.Point;
-  constructor(scene: Phaser.Scene, x?: number, y?: number, texture?: string) {
-    super(scene, x, y, texture);
+  private mSprite: Phaser.GameObjects.Sprite;
+  constructor(scene: Phaser.Scene) {
+    super(scene);
   }
 
-  public load(display: IDisplayInfo) {
+  public load(display: IDisplayInfo | undefined) {
     this.mDisplayInfo = display;
     if (!this.mDisplayInfo) return;
     if (this.resKey) {
@@ -19,6 +54,7 @@ export class AtlasDisplay extends Phaser.GameObjects.Sprite {
       } else {
         const display = this.mDisplayInfo.display;
         if (display) {
+
           this.scene.load.atlas(this.resKey, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
           this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
           this.scene.load.start();
@@ -31,9 +67,14 @@ export class AtlasDisplay extends Phaser.GameObjects.Sprite {
 
   private onLoadCompleteHandler() {
     this.analyzeAnimations();
-    this.setTexture(this.resKey);
     this.x = this.mDisplayInfo.x;
     this.y = this.mDisplayInfo.y;
+    if (!this.mSprite) {
+      this.mSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, this.resKey);
+      this.add(this.mSprite);
+    } else {
+      this.mSprite.setTexture(this.resKey);
+    }
     console.log(this.resKey);
   }
 
@@ -60,6 +101,13 @@ export class AtlasDisplay extends Phaser.GameObjects.Sprite {
     const display = this.mDisplayInfo.display;
     if (display && display.texturePath && display.dataPath) {
       return display.texturePath + display.dataPath;
+    }
+  }
+
+  public destory() {
+    this.mDisplayInfo = null;
+    if (this.parentContainer) {
+      this.parentContainer.remove(this);
     }
   }
 }
