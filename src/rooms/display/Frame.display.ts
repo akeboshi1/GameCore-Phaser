@@ -1,38 +1,5 @@
-import { op_gameconfig, op_client } from "pixelpai_proto";
-import { ElementsDisplay } from "./Element.display";
 
-export interface IDisplayInfo {
-  id: number;
-  x: number;
-  y: number;
-  type?: string;
-  display?: op_gameconfig.IDisplay | null;
-  animations?: op_gameconfig.IAnimation[] | null;
-  animationName: string;
-
-  avatarDir?: number;
-  avater?: op_gameconfig.Avatar | null;
-}
-
-export class DisplayInfo implements IDisplayInfo {
-  id: number;
-  x: number;
-  y: number;
-  type: string;
-  display: op_gameconfig.IDisplay | null;
-  animations: op_gameconfig.IAnimation[] | null;
-  animationName: string;
-  avatarDir?: number;
-  avater?: op_gameconfig.Avatar | null;
-  setInfo(val: any) {
-    const keys = Object.keys(this);
-    for (const key in val) {
-      if (val.hasOwnProperty(key)) {
-        this[key] = val[key];
-      }
-    }
-  }
-}
+import { ElementsDisplay, IDisplayInfo } from "./Element.display";
 
 /**
  * 序列帧显示对象

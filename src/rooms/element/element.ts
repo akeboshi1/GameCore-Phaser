@@ -1,6 +1,5 @@
 import { IElementManager } from "./element.manager";
-import { AtlasDisplay, IDisplayInfo } from "../display/Frame.display";
-import { ElementsDisplay } from "../display/Element.display";
+import { ElementsDisplay, IDisplayInfo } from "../display/Element.display";
 export interface IElement {
   setPosition(x: number, y: number, z?: number): void;
 }

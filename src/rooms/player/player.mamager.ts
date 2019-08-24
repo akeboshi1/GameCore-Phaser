@@ -6,8 +6,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
 import { Room } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { IDisplayInfo, DisplayInfo } from "../display/Frame.display";
-
+import { DisplayInfo } from "../display/Element.display";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   constructor(private mRoomMgr: IRoomManager, private mRoom: Room) {

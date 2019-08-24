@@ -5,7 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { Room } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/Frame.display";
+import { DisplayInfo } from "../display/Element.display";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;

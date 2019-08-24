@@ -1,7 +1,8 @@
+import { ElementsDisplay, IDisplayInfo } from "./Element.display";
 
-import { IDisplayInfo } from "./Frame.display";
-import { ElementsDisplay } from "./Element.display";
-
+/**
+ * 龙骨显示对象
+ */
 export class DragonBonesDisplay extends ElementsDisplay {
   protected mAnimationName: string = "";
   protected mDragonbonesName: string = "";

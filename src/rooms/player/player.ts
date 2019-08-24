@@ -1,13 +1,10 @@
 import { op_client } from "pixelpai_proto";
 import { Element } from "../element/element";
-import { IDisplayInfo } from "../display/Frame.display";
 import { DragonBonesDisplay } from "../display/DragonBones.display";
 import { IElementManager } from "../element/element.manager";
-import { ElementsDisplay } from "../display/Element.display";
+import { ElementsDisplay, IDisplayInfo } from "../display/Element.display";
 
 export class Player extends Element {
-  protected mLayer: Phaser.GameObjects.Container;
-
   constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
     super(mElementManager, parent);
     this.createDisplay();

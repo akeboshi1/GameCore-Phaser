@@ -1,11 +1,9 @@
-import { AtlasDisplay, IDisplayInfo } from "../display/Frame.display";
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
-import { ElementsDisplay } from "../display/Element.display";
+import { ElementsDisplay, IDisplayInfo } from "../display/Element.display";
+import { AtlasDisplay } from "../display/Frame.display";
 
 export class Terrain extends Element {
-  protected mDisplay: AtlasDisplay | undefined;
-
   constructor(mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
     super(mElementManager, parent);
   }

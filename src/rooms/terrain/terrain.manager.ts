@@ -6,7 +6,7 @@ import { LayerType } from "../layer/layer.manager";
 import { Room } from "../room";
 import { IElementManager } from "../element/element.manager";
 import { Terrain } from "./terrain";
-import { DisplayInfo } from "../display/Frame.display";
+import { DisplayInfo } from "../display/Element.display";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
