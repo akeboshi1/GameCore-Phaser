@@ -13,7 +13,7 @@ export class Terrain extends Element {
     if (this.mDisplay) {
       this.mDisplay.destroy();
     }
-    
+
     let scene = this.mElementManager.scene;
     if (scene) {
       this.mDisplay = new AtlasDisplay(scene);

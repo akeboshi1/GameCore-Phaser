@@ -1,11 +1,13 @@
-import { op_client } from "pixelpai_proto";
+import { ElementsDisplay, IDisplayInfo } from "./Element.display";
 
-export class PlayerDisplay extends Phaser.GameObjects.Container {
+/**
+ * 龙骨显示对象
+ */
+export class DragonBonesDisplay extends ElementsDisplay {
   protected mAnimationName: string = "";
   protected mDragonbonesName: string = "";
   protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
 
-  protected mData: op_client.IActor | undefined;
   constructor(scene: Phaser.Scene) {
     super(scene);
     //this.dragonBonesName = "bones_human01";
@@ -34,14 +36,14 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     }
   }
 
-  public load(display: op_client.IActor) {
-    this.mData = display;
-    if (!this.mData) return;
+  public load(display: IDisplayInfo) {
+    this.mDisplayInfo = display;
+    if (!this.mDisplayInfo) return;
     if (this.dragonBonesName) {
       if (this.scene.cache.obj.has(this.dragonBonesName)) {
 
       } else {
-        this.dragonBonesName = this.mData.avatar.id;
+        this.dragonBonesName = this.mDisplayInfo.avater.id;
       }
     }
   }
@@ -54,7 +56,7 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
       "Armature",
       this.dragonBonesName,
     );
-    this.mArmatureDisplay.animation.play("idle_" + this.mData.avatarDir);
+    this.mArmatureDisplay.animation.play("idle_" + this.mDisplayInfo.avatarDir);
 
     this.mArmatureDisplay.x = this.scene.cameras.main.centerX;
     this.mArmatureDisplay.y = this.scene.cameras.main.centerY + 200;
@@ -89,8 +91,8 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
     factory.replaceSlotDisplay(this.dragonBonesName, this.mAnimationName, slotName, displayName, this.mArmatureDisplay.armature.getSlot(slotName));
   }
 
-  public dispose() {
-    this.mData = null;
+  public destory() {
+    this.mDisplayInfo = null;
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dispose(true);
       this.mArmatureDisplay = null;

@@ -5,7 +5,7 @@ export interface IElement {
   setPosition(x: number, y: number, z?: number): void;
 }
 
-export class Element implements IElement{
+export class Element implements IElement {
   protected mLayer: Phaser.GameObjects.Container;
   protected mDisplay: AtlasDisplay | undefined;
   constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
@@ -13,9 +13,9 @@ export class Element implements IElement{
     this.createDisplay();
   }
 
-  createDisplay() {
+  createDisplay(): AtlasDisplay | undefined {
     if (this.mDisplay) {
-      this.mDisplay.destroy();
+      this.mDisplay.destroy()
     }
 
     let scene = this.mElementManager.scene;
@@ -43,6 +43,13 @@ export class Element implements IElement{
     this.mDisplay.x = x;
     this.mDisplay.y = y;
     this.mDisplay.z = z;
+  }
+
+  public dispose() {
+    if (this.mDisplay) {
+      this.mDisplay.destroy();
+      this.mDisplay = null;
+    }
   }
 
   set layer(layer: Phaser.GameObjects.Container) {

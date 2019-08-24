@@ -4,14 +4,13 @@ import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { LayerType } from "../layer/layer.manager";
-import { Room, RoomService } from "../room";
+import { RoomService } from "../room";
 import { DisplayInfo } from "../display/info";
 import { IElementManager } from "../element/element.manager";
-import { Position45Manager } from "./position45.manager";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
-  private mPosition45Manager: Position45Manager;
+
   constructor(private mRoomMgr: IRoomManager, private mRoom: RoomService) {
     super();
     
@@ -85,9 +84,5 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     if (this.mRoom) {
       return this.mRoom.scene;
     }
-  }
-
-  get positiom45(): Position45Manager | undefined {
-    return this.mPosition45Manager || undefined;
   }
  }
