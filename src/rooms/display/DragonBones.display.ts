@@ -1,5 +1,5 @@
 
-import { IDisplayInfo } from "./display";
+import { IDisplayInfo } from "./Frame.display";
 import { ElementsDisplay } from "./Element.display";
 
 export class DragonBonesDisplay extends ElementsDisplay {
