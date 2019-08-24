@@ -1,8 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { SceneType } from "../../const/scene.type";
 import { ConnectionService } from "../../net/connection.service";
+import { SelectCharacter } from "../../scenes/select.character";
 
 export class SelectManager extends PacketHandler {
   constructor(private mWorldService: WorldService) {
@@ -17,7 +17,7 @@ export class SelectManager extends PacketHandler {
     if (this.mWorldService.game) {
       const scene = this.mWorldService.game.scene;
       if (scene) {
-        scene.start(SceneType.SelectCharacter);
+        scene.start(SelectCharacter.name);
       } else {
         console.error("scene is undefined");
       }
@@ -28,7 +28,7 @@ export class SelectManager extends PacketHandler {
     if (this.mWorldService.game) {
       const scene = this.mWorldService.game.scene;
       if (scene) {
-        scene.stop(SceneType.SelectCharacter);
+        scene.stop(SelectCharacter.name);
       } else {
         console.error("scene is undefined");
       }
@@ -44,7 +44,7 @@ export class SelectManager extends PacketHandler {
     if (this.mWorldService.game) {
       const scene = this.mWorldService.game.scene;
       if (scene) {
-        return scene.getScene(SceneType.SelectCharacter)
+        return scene.getScene(SelectCharacter.name);
       }
       console.error("scene is undefined");
     }

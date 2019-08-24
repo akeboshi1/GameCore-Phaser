@@ -5,9 +5,13 @@ import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { Room } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/frames/display.info";
+import { DisplayInfo } from "../display/atlas/display.info";
+import Connection from "../../net/connection";
 
 export interface IElementManager {
+  readonly connection: ConnectionService | undefined;
+
+  readonly scene: Phaser.Scene | undefined;
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
@@ -44,7 +48,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
       console.error("layer manager is undefined");
       return;
     }
-    const layer = this.mRoom.layerManager.getLayerByType(LayerType.GroundLayer);
+    const layer = this.mRoom.layerManager.getLayerByType(LayerType.SurfaceLayer);
     if (!!layer === false) {
       console.error("can't find ground layer");
       return;

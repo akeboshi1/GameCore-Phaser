@@ -1,14 +1,14 @@
-import { ElementManager } from "./element.manager";
-import { FrameDisplay } from "../display/frames/display";
-import { IDisplayInfo } from "../display/frames/display.info";
+import { IElementManager } from "./element.manager";
+import { IDisplayInfo } from "../display/atlas/display.info";
+import { AtlasDisplay } from "../display/atlas/display";
 export interface IElement {
   setPosition(x: number, y: number, z?: number): void;
 }
 
 export class Element implements IElement{
   protected mLayer: Phaser.GameObjects.Container;
-  protected mDisplay: FrameDisplay | undefined;
-  constructor(private mElementManager: ElementManager, parent: Phaser.GameObjects.Container) {
+  protected mDisplay: AtlasDisplay | undefined;
+  constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
     this.layer = parent;
     this.createDisplay();
   }
@@ -20,7 +20,7 @@ export class Element implements IElement{
 
     let scene = this.mElementManager.scene;
     if (scene) {
-      this.mDisplay = new FrameDisplay(scene);
+      this.mDisplay = new AtlasDisplay(scene);
       this.layer.add(this.mDisplay);
       return this.mDisplay;
     }

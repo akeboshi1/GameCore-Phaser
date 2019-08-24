@@ -1,6 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
 import { WorldService } from "./world.service";
-import { SceneType } from "../const/scene.type";
 
 export class LoadingManager extends PacketHandler {
   private mCallBack: Function;
@@ -21,6 +20,8 @@ export class LoadingManager extends PacketHandler {
   }
 
   public stop() {
-    this.mCallBack();
+    if (this.mCallBack) {
+      this.mCallBack();
+    }
   }
 }

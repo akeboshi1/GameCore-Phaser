@@ -11,12 +11,10 @@ import { LoadingScene } from "../scenes/loading";
 import { SelectCharacter } from "../scenes/select.character";
 import { PlayScene } from "../scenes/play";
 import { RoomManager } from "../rooms/room.manager";
-import { SceneType } from "../const/scene.type";
 import { ServerAddress } from "../net/address";
 import { IGameConfigure } from "../../launcher";
 import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
-import { Room } from "../rooms/room";
 import { SelectManager } from "../rooms/player/select.manager";
 import { LoadingManager } from "./loading.manager";
 
@@ -74,9 +72,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     get selectCharacterManager(): SelectManager | undefined {
         return this.selectCharacterManager;
     }
-
-
-
 
     get connection(): ConnectionService {
         return this.mConnection;
@@ -162,9 +157,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mGame.destroy(true);
         }
         this.mGame = new Game(this.mConfig);
-        this.mGame.scene.add(SceneType.Loading, LoadingScene);
-        this.mGame.scene.add(SceneType.SelectCharacter, SelectCharacter);
-        this.mGame.scene.add(SceneType.Play, PlayScene);
+        this.mGame.scene.add(LoadingScene.name, LoadingScene);
+        this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
+        this.mGame.scene.add(PlayScene.name, PlayScene);
 
         //==================todo 请求选择角色信息
         let pkt: PBpacket = new PBpacket(0);

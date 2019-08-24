@@ -3,7 +3,7 @@ import { IDisplayInfo } from "./display.info";
 /**
  * 序列帧显示对象
  */
-export class FrameDisplay extends Phaser.GameObjects.Sprite {
+export class AtlasDisplay extends Phaser.GameObjects.Sprite {
   protected mDisplayInfo: IDisplayInfo | undefined;
   protected baseLoc: Phaser.Geom.Point;
   constructor(scene: Phaser.Scene, x?: number, y?: number, texture?: string) {

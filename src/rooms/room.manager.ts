@@ -3,7 +3,8 @@ import { ConnectionService } from "../net/connection.service";
 import { Room } from "./room";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { SceneType } from "../const/scene.type";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
 
 export interface IRoomManager {
   readonly connection: ConnectionService;
@@ -33,10 +34,10 @@ export class RoomManager extends PacketHandler implements IRoomManager {
    */
   private start() {
     if (this.mWorld.game) {
-      this.mWorld.game.scene.start(SceneType.Loading, {
+      this.mWorld.game.scene.start(LoadingScene.name, {
         callBack: () => {
-          let scene: Phaser.Scene = this.mWorld.game.scene.getScene(SceneType.Play);
-          this.mWorld.game.scene.start(SceneType.Play, {
+          let scene: Phaser.Scene = this.mWorld.game.scene.getScene(PlayScene.name);
+          this.mWorld.game.scene.start(PlayScene.name, {
             callBack: () => {
               this.initScene();
               this.room = new Room(this, scene);
