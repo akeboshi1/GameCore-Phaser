@@ -8,7 +8,6 @@ export class DragonBonesDisplay extends ElementsDisplay {
   protected mDragonbonesName: string = "";
   protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
 
-  protected mData: IDisplayInfo | undefined;
   constructor(scene: Phaser.Scene) {
     super(scene);
     //this.dragonBonesName = "bones_human01";
@@ -38,13 +37,13 @@ export class DragonBonesDisplay extends ElementsDisplay {
   }
 
   public load(display: IDisplayInfo) {
-    this.mData = display;
-    if (!this.mData) return;
+    this.mDisplayInfo = display;
+    if (!this.mDisplayInfo) return;
     if (this.dragonBonesName) {
       if (this.scene.cache.obj.has(this.dragonBonesName)) {
 
       } else {
-        this.dragonBonesName = this.mData.avater.id;
+        this.dragonBonesName = this.mDisplayInfo.avater.id;
       }
     }
   }
@@ -57,7 +56,7 @@ export class DragonBonesDisplay extends ElementsDisplay {
       "Armature",
       this.dragonBonesName,
     );
-    this.mArmatureDisplay.animation.play("idle_" + this.mData.avatarDir);
+    this.mArmatureDisplay.animation.play("idle_" + this.mDisplayInfo.avatarDir);
 
     this.mArmatureDisplay.x = this.scene.cameras.main.centerX;
     this.mArmatureDisplay.y = this.scene.cameras.main.centerY + 200;
@@ -93,7 +92,7 @@ export class DragonBonesDisplay extends ElementsDisplay {
   }
 
   public destory() {
-    this.mData = null;
+    this.mDisplayInfo = null;
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dispose(true);
       this.mArmatureDisplay = null;

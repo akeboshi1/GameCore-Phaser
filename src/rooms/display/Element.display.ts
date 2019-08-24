@@ -33,6 +33,7 @@ export class DisplayInfo implements IDisplayInfo {
     }
 }
 export class ElementsDisplay extends Phaser.GameObjects.Container {
+    protected mDisplayInfo: IDisplayInfo | undefined;
     constructor(scene: Phaser.Scene) {
         super(scene);
     }

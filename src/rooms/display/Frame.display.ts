@@ -5,9 +5,8 @@ import { ElementsDisplay, IDisplayInfo } from "./Element.display";
  * 序列帧显示对象
  */
 export class AtlasDisplay extends ElementsDisplay {
-  protected mDisplayInfo: IDisplayInfo | undefined;
   protected baseLoc: Phaser.Geom.Point;
-  private mSprite: Phaser.GameObjects.Sprite;
+  protected mSprite: Phaser.GameObjects.Sprite;
   constructor(scene: Phaser.Scene) {
     super(scene);
   }
