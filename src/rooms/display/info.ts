@@ -20,7 +20,6 @@ export class DisplayInfo implements IDisplayInfo {
   animationName: string
   
   setInfo(val: any) {
-    const keys = Object.keys(this);
     for (const key in val) {
       if (val.hasOwnProperty(key)) {
         this[key] = val[key];

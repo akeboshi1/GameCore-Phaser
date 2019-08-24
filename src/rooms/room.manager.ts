@@ -7,7 +7,7 @@ import { LoadingScene } from "../scenes/loading";
 import { PlayScene } from "../scenes/play";
 
 export interface IRoomManager {
-  readonly connection: ConnectionService;
+  readonly connection: ConnectionService | undefined;
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
@@ -25,14 +25,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
   private onEnterScene(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
     //todo 预加载资源
-    this.start();
+    this.start(content.scene);
   }
 
   /**
    * 开启roomManager默认先开启loadingScene
    * 原本是想在world里面调用，但是现在roomManager进入的触发条件是选角之后派发的EnterScene事件
    */
-  private start() {
+  private start(content: op_client.IScene) {
     if (this.mWorld.game) {
       this.mWorld.game.scene.start(LoadingScene.name, {
         callBack: () => {
@@ -41,6 +41,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             callBack: () => {
               this.initScene();
               this.room = new Room(this, scene);
+              this.room.enter(content)
               //todo room start
             }
           });

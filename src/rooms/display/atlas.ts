@@ -1,4 +1,4 @@
-import { IDisplayInfo } from "./display.info";
+import { IDisplayInfo } from "./info";
 
 /**
  * 序列帧显示对象
@@ -32,8 +32,6 @@ export class AtlasDisplay extends Phaser.GameObjects.Sprite {
   private onLoadCompleteHandler() {
     this.analyzeAnimations();
     this.setTexture(this.resKey);
-    this.x = this.mDisplayInfo.x;
-    this.y = this.mDisplayInfo.y;
     console.log(this.resKey);
   }
 

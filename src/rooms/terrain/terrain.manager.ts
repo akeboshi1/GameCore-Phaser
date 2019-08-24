@@ -2,16 +2,19 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
 import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
-import { Terrain } from "../element/terrain";
+import { Terrain } from "./terrain";
 import { LayerType } from "../layer/layer.manager";
-import { Room } from "../room";
-import { DisplayInfo } from "../display/atlas/display.info";
+import { Room, RoomService } from "../room";
+import { DisplayInfo } from "../display/info";
 import { IElementManager } from "../element/element.manager";
+import { Position45Manager } from "./position45.manager";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
-  constructor(private mRoomMgr: IRoomManager, private mRoom: Room) {
+  private mPosition45Manager: Position45Manager;
+  constructor(private mRoomMgr: IRoomManager, private mRoom: RoomService) {
     super();
+    
     if (this.connection) {
       this.connection.addPacketListener(this);
 
@@ -21,6 +24,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
   }
 
+  init() {
+    if (!this.mTerrains) {
+      this.mTerrains = new Map();
+    }
+    this.mTerrains.clear();
+  }
 
   private onAddHandler(packet: PBpacket) {
     if (!this.mTerrains) {
@@ -64,9 +73,21 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     console.error("room manager is undefined");
   }
 
+  get roomManager(): IRoomManager {
+    return this.mRoomMgr;
+  }
+
+  get roomService(): RoomService {
+    return this.mRoom;
+  }
+
   get scene(): Phaser.Scene | undefined {
     if (this.mRoom) {
       return this.mRoom.scene;
     }
+  }
+
+  get positiom45(): Position45Manager | undefined {
+    return this.mPosition45Manager || undefined;
   }
  }

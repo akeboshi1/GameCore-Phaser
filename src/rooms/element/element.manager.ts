@@ -3,20 +3,24 @@ import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
-import { Room } from "../room";
+import { Room, RoomService } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/atlas/display.info";
-import Connection from "../../net/connection";
+import { DisplayInfo } from "../display/info";
 
 export interface IElementManager {
+  init(): void;
+
   readonly connection: ConnectionService | undefined;
+
+  readonly roomManager: IRoomManager;
+  readonly roomService: RoomService;
 
   readonly scene: Phaser.Scene | undefined;
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
   private mElements: Map<number, Element>;
-  constructor(private mRoomManager: IRoomManager, private mRoom: Room) {
+  constructor(private mRoomManager: IRoomManager, private mRoom: RoomService) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
@@ -26,6 +30,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
     }
+  }
+
+  init() {
+    if (!this.mElements) {
+      this.mElements = new Map();
+    }
+    this.mElements.clear();
   }
 
   get connection(): ConnectionService {
@@ -62,6 +73,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
       element.load(loader);
       this.mElements.set(ele.id || 0, element);
     }
+  }
+
+  get roomManager(): IRoomManager {
+    return this.mRoomManager;
+  }
+
+  get roomService(): RoomService {
+    return this.mRoom;
   }
 
   get scene(): Phaser.Scene | undefined {

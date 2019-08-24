@@ -1,6 +1,6 @@
 import { IElementManager } from "./element.manager";
-import { IDisplayInfo } from "../display/atlas/display.info";
-import { AtlasDisplay } from "../display/atlas/display";
+import { IDisplayInfo } from "../display/info";
+import { AtlasDisplay } from "../display/atlas";
 export interface IElement {
   setPosition(x: number, y: number, z?: number): void;
 }
@@ -30,6 +30,7 @@ export class Element implements IElement{
   public load(display: IDisplayInfo) {
     if (this.mDisplay) {
       this.mDisplay.load(display);
+      this.setPosition(display.x, display.y);
     }
   }
 
