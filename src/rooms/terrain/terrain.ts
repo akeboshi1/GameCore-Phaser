@@ -6,8 +6,8 @@ import { FramesDisplay } from "../display/frames.display";
 
 export class Terrain extends Element {
   protected mDisplay: FramesDisplay | undefined;
-  constructor(mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
-    super(mElementManager, parent);
+  constructor(mElementManager: IElementManager) {
+    super(mElementManager);
   }
 
   public createDisplay(): FramesDisplay | undefined {
@@ -18,7 +18,6 @@ export class Terrain extends Element {
     let scene = this.mElementManager.scene;
     if (scene) {
       this.mDisplay = new FramesDisplay(scene);
-      this.layer.add(this.mDisplay);
       return this.mDisplay;
     }
     return undefined;

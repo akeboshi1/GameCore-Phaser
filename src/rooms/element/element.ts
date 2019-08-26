@@ -8,8 +8,7 @@ export interface IElement {
 export class Element implements IElement {
   protected mLayer: Phaser.GameObjects.Container;
   protected mDisplay: ElementDisplay | undefined;
-  constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
-    this.layer = parent;
+  constructor(protected mElementManager: IElementManager) {
     this.createDisplay();
   }
 
@@ -17,11 +16,9 @@ export class Element implements IElement {
     if (this.mDisplay) {
       this.mDisplay.destroy()
     }
-
     let scene = this.mElementManager.scene;
     if (scene) {
       this.mDisplay = new ElementDisplay(scene);
-      this.layer.add(this.mDisplay);
       return this.mDisplay;
     }
     return undefined;
@@ -58,13 +55,5 @@ export class Element implements IElement {
       this.mDisplay.destroy();
       this.mDisplay = null;
     }
-  }
-
-  set layer(layer: Phaser.GameObjects.Container) {
-    this.mLayer = layer;
-  }
-
-  get layer(): Phaser.GameObjects.Container {
-    return this.mLayer;
   }
 }

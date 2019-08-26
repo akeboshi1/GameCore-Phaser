@@ -1,6 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
-import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { LayerType } from "../layer/layer.manager";
@@ -13,7 +12,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
   constructor(private mRoom: RoomService) {
     super();
-    
+
     if (this.connection) {
       this.connection.addPacketListener(this);
 
@@ -34,27 +33,19 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     if (!this.mTerrains) {
       this.mTerrains = new Map();
     }
-    if (!!this.mRoom === false) {
-      console.error("room is undefined");
-      return;
-    }
-    if (!!this.mRoom.layerManager === false) {
+    if (!this.mRoom.layerManager) {
       console.error("layer manager is undefined");
-      return;
-    }
-    const layer = this.mRoom.layerManager.getLayerByType(LayerType.GroundLayer);
-    if (!!layer === false) {
-      console.error("can't find ground layer");
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
     const terrains = content.terrain;
     if (terrains) {
       for (const terrain of terrains) {
-        const ter = new Terrain(this, layer);
+        const ter = new Terrain(this);
         const loader = new DisplayInfo();
         loader.setInfo(terrain);
         ter.load(loader);
+        this.mRoom.addElement(ter.getDisplay(),LayerType.GroundLayer);
         this.mTerrains.set(terrain.id || 0, ter);
       }
     }
@@ -81,4 +72,4 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       return this.mRoom.scene;
     }
   }
- }
+}

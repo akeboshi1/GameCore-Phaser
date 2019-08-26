@@ -49,12 +49,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     if (obj.originPoint) {
       this.mMainRoleInfo.setOriginCollisionPoint(obj.originPoint);
     }
-    const layer = this.mRoom.layerManager.getLayerByType(LayerType.SurfaceLayer);
-    if (!!layer === false) {
-      console.error("can't find ground layer");
-      return;
-    }
-    let player: Player = new Player(this, layer);
+    let player: Player = new Player(this);
     (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"//obj.avatar.id;
     // if (this.initialize === false) {
     //   this._initialize = true;
@@ -66,20 +61,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     if (!this.mPlayerMap) {
       this.mPlayerMap = new Map();
     }
-    const layer = this.mRoom.layerManager.getLayerByType(LayerType.SurfaceLayer);
-    if (!!layer === false) {
-      console.error("can't find surface layer");
-      return;
-    }
-    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
-    const players = content.actors;
+    let content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
+    let players = content.actors;
     if (players) {
       let displayInfo: DisplayInfo;
-      for (const player of players) {
-        const plyer = new Player(this, layer);
+      let plyer: Player;
+      for (let player of players) {
+        plyer = new Player(this);
         displayInfo = new DisplayInfo();
         displayInfo.setInfo(player);
         plyer.load(displayInfo);
+        this.mRoom.addElement(plyer.getDisplay(), LayerType.SurfaceLayer);
         this.mPlayerMap.set(player.id || 0, plyer);
       }
     }
@@ -90,7 +82,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
   }
 
   private onMove(packet: PBpacket) {
-    //todo player move
+    const content: op_client.IOP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER = packet.content;
+    if (content.moveData) {
+      let moveDataList: op_client.IMoveData[] = content.moveData
+      let len: number = moveDataList.length;
+      let moveData: op_client.IMoveData;
+      for (let i: number = 0; i < len; i++) {
+        moveData = moveDataList[i];
+      }
+    }
+
+
   }
 
   private onChangeState(packet: PBpacket) {

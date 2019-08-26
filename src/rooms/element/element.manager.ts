@@ -50,26 +50,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
     if (!this.mElements) {
       this.mElements = new Map();
     }
-    if (!!this.mRoom === false) {
-      console.error("room is undefined");
-      return;
-    }
-    if (!!this.mRoom.layerManager === false) {
-      console.error("layer manager is undefined");
-      return;
-    }
-    const layer = this.mRoom.layerManager.getLayerByType(LayerType.SurfaceLayer);
-    if (!!layer === false) {
-      console.error("can't find ground layer");
-      return;
-    }
-    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
-    const elements = content.elements;
-    for (const ele of elements) {
-      const element = new Element(this, layer);
-      const loader = new DisplayInfo();
+
+
+    let content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
+    let elements = content.elements;
+    let element: Element;
+    let loader: DisplayInfo;
+    for (let ele of elements) {
+      element = new Element(this);
+      loader = new DisplayInfo();
       loader.setInfo(ele);
       element.load(loader);
+      this.mRoom.addElement(element.getDisplay(), LayerType.GroundLayer);
       this.mElements.set(ele.id || 0, element);
     }
   }

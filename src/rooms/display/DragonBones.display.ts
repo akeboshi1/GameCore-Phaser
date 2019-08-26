@@ -82,7 +82,7 @@ export class DragonBonesDisplay extends ElementDisplay {
   set play(val: string) {
     if (this.mAnimationName !== val) {
       if (this.mArmatureDisplay) {
-        this.mArmatureDisplay.animation.play(val);
+        this.mArmatureDisplay.animation.play("_"+val+ this.mDisplayInfo.avatarDir);
       }
     }
   }

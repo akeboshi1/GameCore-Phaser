@@ -26,8 +26,8 @@ export class Player extends Element {
 
   private mCurState: string;
 
-  constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
-    super(mElementManager, parent);
+  constructor(protected mElementManager: IElementManager) {
+    super(mElementManager);
     this.createDisplay();
   }
 
@@ -38,8 +38,6 @@ export class Player extends Element {
     let scene: Phaser.Scene = this.mElementManager.scene;
     if (scene) {
       this.mDisplay = new DragonBonesDisplay(scene);
-      this.layer.add(this.mDisplay);
-
       return this.mDisplay;
     }
     return undefined;
@@ -49,7 +47,7 @@ export class Player extends Element {
     // todo  state change
     //this.mElementManager.connection.send()
     //动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
-    //this.changeState(PlayerState.IDLE);
+    this.changeState(PlayerState.IDLE);
   }
 
   public load(display: IDisplayInfo) {
@@ -116,15 +114,4 @@ export class Player extends Element {
     (this.mDisplay as DragonBonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
     super.dispose();
   }
-
-  set layer(layer: Phaser.GameObjects.Container) {
-    this.mLayer = layer;
-  }
-
-  get layer(): Phaser.GameObjects.Container {
-    return this.mLayer;
-  }
-
-
-
 }

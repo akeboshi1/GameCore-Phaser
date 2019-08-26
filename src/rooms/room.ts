@@ -6,9 +6,12 @@ import { TerrainManager } from "./terrain/terrain.manager";
 import { ConnectionService } from "../net/connection.service";
 import { op_client } from "pixelpai_proto";
 import { Position45Manager } from "./terrain/position45.manager";
+import { ElementDisplay } from "./display/element.display";
 
 export interface RoomService {
   enter(room: op_client.IScene): void;
+  addElement(element: ElementDisplay, parentType: number);
+  removeElement(element: ElementDisplay);
 
   readonly id: number;
   readonly cols: number;
@@ -64,6 +67,17 @@ export class Room implements RoomService {
 
   public setMainRoleInfo(obj: op_client.IActor) {
     this.playerManager.setMainRoleInfo(obj);
+  }
+
+  public addElement(element: ElementDisplay, parentType: number) {
+    let layer: Phaser.GameObjects.Container = this.layerManager.getLayerByType(parentType);
+    layer.add(element);
+  }
+
+  public removeElement(element: ElementDisplay) {
+    if (element && element.parentContainer) {
+      element.parentContainer.remove(element);
+    }
   }
 
   get scene(): Phaser.Scene | undefined {
