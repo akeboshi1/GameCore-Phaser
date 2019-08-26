@@ -98,7 +98,6 @@ export class DragonBonesDisplay extends ElementDisplay {
   }
 
   public destory() {
-
     this.mDisplayInfo = null;
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dispose(true);

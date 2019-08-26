@@ -29,6 +29,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
   init() {
     if (!this.mPlayerMap) {
       this.mPlayerMap = new Map();
+      this.addHandlerFun(1, this.onChangeState)
     }
     this.mPlayerMap.clear();
   }

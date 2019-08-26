@@ -39,7 +39,7 @@ export class Player extends Element {
     if (scene) {
       this.mDisplay = new DragonBonesDisplay(scene);
       this.layer.add(this.mDisplay);
-     
+
       return this.mDisplay;
     }
     return undefined;
