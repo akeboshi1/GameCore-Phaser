@@ -1,14 +1,15 @@
-import { ElementsDisplay, IDisplayInfo } from "./Element.display";
+import { IDisplayInfo } from "./info";
+import { ElementDisplay } from "./element.display";
 
 /**
  * 龙骨显示对象
  */
-export class DragonBonesDisplay extends ElementsDisplay {
+export class DragonBonesDisplay extends ElementDisplay {
   protected mAnimationName: string = "";
   protected mDragonbonesName: string = "";
   protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
-
-  constructor(scene: Phaser.Scene) {
+  public mDisplayInfo: IDisplayInfo | undefined;
+  constructor(protected scene: Phaser.Scene) {
     super(scene);
     //this.dragonBonesName = "bones_human01";
   }
@@ -41,9 +42,8 @@ export class DragonBonesDisplay extends ElementsDisplay {
     if (!this.mDisplayInfo) return;
     if (this.dragonBonesName) {
       if (this.scene.cache.obj.has(this.dragonBonesName)) {
-
       } else {
-        this.dragonBonesName = this.mDisplayInfo.avater.id;
+        this.dragonBonesName = this.mDisplayInfo.avatar.id;
       }
     }
   }
@@ -56,11 +56,17 @@ export class DragonBonesDisplay extends ElementsDisplay {
       "Armature",
       this.dragonBonesName,
     );
+
     this.mArmatureDisplay.animation.play("idle_" + this.mDisplayInfo.avatarDir);
 
     this.mArmatureDisplay.x = this.scene.cameras.main.centerX;
     this.mArmatureDisplay.y = this.scene.cameras.main.centerY + 200;
   }
+
+  public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
+    return this.mArmatureDisplay;
+  }
+
 
   set dragonBonesName(val: string) {
     if (this.mDragonbonesName !== val) {
@@ -92,6 +98,7 @@ export class DragonBonesDisplay extends ElementsDisplay {
   }
 
   public destory() {
+
     this.mDisplayInfo = null;
     if (this.mArmatureDisplay) {
       this.mArmatureDisplay.dispose(true);

@@ -1,26 +1,27 @@
 import { IElementManager } from "./element.manager";
 import { IDisplayInfo } from "../display/info";
 import { AtlasDisplay } from "../display/atlas";
+import { ElementDisplay } from "../display/element.display";
 export interface IElement {
   setPosition(x: number, y: number, z?: number): void;
 }
 
 export class Element implements IElement {
   protected mLayer: Phaser.GameObjects.Container;
-  protected mDisplay: AtlasDisplay | undefined;
+  protected mDisplay: ElementDisplay | undefined;
   constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
     this.layer = parent;
     this.createDisplay();
   }
 
-  createDisplay(): AtlasDisplay | undefined {
+  createDisplay(): ElementDisplay | undefined {
     if (this.mDisplay) {
       this.mDisplay.destroy()
     }
 
     let scene = this.mElementManager.scene;
     if (scene) {
-      this.mDisplay = new AtlasDisplay(scene);
+      this.mDisplay = new ElementDisplay(scene);
       this.layer.add(this.mDisplay);
       return this.mDisplay;
     }
@@ -32,6 +33,10 @@ export class Element implements IElement {
       this.mDisplay.load(display);
       this.setPosition(display.x, display.y);
     }
+  }
+
+  public changeState(val: string) {
+
   }
 
   public setPosition(x: number, y: number, z?: number) {

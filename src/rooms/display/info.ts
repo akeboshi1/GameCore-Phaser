@@ -5,9 +5,12 @@ export interface IDisplayInfo {
   x: number;
   y: number;
   type?: string;
-  display?: op_gameconfig.IDisplay|null;
-  animations?: op_gameconfig.IAnimation[]|null;
-  animationName: string
+  display?: op_gameconfig.IDisplay | null;
+  animations?: op_gameconfig.IAnimation[] | null;
+  animationName: string;
+
+  avatarDir?: number;
+  avatar?: op_gameconfig.IAvatar;
 }
 
 export class DisplayInfo implements IDisplayInfo {
@@ -15,10 +18,12 @@ export class DisplayInfo implements IDisplayInfo {
   x: number;
   y: number;
   type: string;
-  display: op_gameconfig.IDisplay|null;
-  animations: op_gameconfig.IAnimation[]|null;
-  animationName: string
+  display: op_gameconfig.IDisplay | null;
+  animations: op_gameconfig.IAnimation[] | null;
+  animationName: string;
   
+  avatarDir?: number;
+  avatar?: op_gameconfig.IAvatar;
   setInfo(val: any) {
     for (const key in val) {
       if (val.hasOwnProperty(key)) {

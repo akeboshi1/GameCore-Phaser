@@ -8,7 +8,6 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 import { op_gateway, op_client, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
-import { SelectCharacter } from "../scenes/select.character";
 import { PlayScene } from "../scenes/play";
 import { RoomManager } from "../rooms/room.manager";
 import { ServerAddress } from "../net/address";
@@ -26,7 +25,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mConfig: IGameConfigure | undefined;
-    private mSelectCharacterManager: SelectManager;
+    //private mSelectCharacterManager: SelectManager;
     private mRoomMamager: RoomManager;
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
@@ -42,18 +41,21 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
         //================todo opcode
-        this.addHandlerFun(0, this.startSelectManager);
+        //this.addHandlerFun(0, this.startSelectManager);
         //this.addHandlerFun(1, this.startRoomManager);
-        this.addHandlerFun(2, this.stopSelectManager);
+        //this.addHandlerFun(2, this.stopSelectManager);
         //this.addHandlerFun(3, this.stopRoomManager);
+
+        this.mSize=new Size();
 
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
 
         this.mRoomMamager = new RoomManager(this);
-        this.mSelectCharacterManager = new SelectManager(this);
+        //this.mSelectCharacterManager = new SelectManager(this);
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mLoadingManager = new LoadingManager(this);
@@ -110,24 +112,24 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         console.error(content.msg);
     }
 
-    private startSelectManager(packet: PBpacket) {
-        let content = packet.content;
-        this.mSelectCharacterManager.start();
-    }
+    // private startSelectManager(packet: PBpacket) {
+    //     let content = packet.content;
+    //     this.mSelectCharacterManager.start();
+    // }
 
     // public startRoomManager() {
     //     this.mRoomMamager.start();
     // }
 
-    private stopSelectManager(packet: PBpacket) {
-        let content = packet.content;
-        this.mSelectCharacterManager.stop();
-    }
+    // private stopSelectManager(packet: PBpacket) {
+    //     let content = packet.content;
+    //     this.mSelectCharacterManager.stop();
+    // }
 
-    private stopRoomManager(packet: PBpacket) {
-        let content = packet.content;
-        this.mRoomMamager.stop();
-    }
+    // private stopRoomManager(packet: PBpacket) {
+    //     let content = packet.content;
+    //     this.mRoomMamager.stop();
+    // }
 
     /**
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
@@ -140,6 +142,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public getSize(): Size {
         return this.mSize;
+    }
+
+    private onSelectCharacter() {
+        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
+        this.connection.send(pkt);
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
@@ -156,10 +163,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.mGame = new Game(this.mConfig);
         this.mGame.scene.add(LoadingScene.name, LoadingScene);
-        this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
+        // this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
         this.mGame.scene.add(PlayScene.name, PlayScene);
 
-        //==================todo 请求选择角色信息
         let pkt: PBpacket = new PBpacket(0);
         this.mConnection.send(pkt);
 

@@ -1,13 +1,15 @@
 import { IDisplayInfo } from "./info";
+import { ElementDisplay } from "./element.display";
 
 /**
  * 序列帧显示对象
  */
-export class AtlasDisplay extends Phaser.GameObjects.Sprite {
-  protected mDisplayInfo: IDisplayInfo | undefined;
+export class AtlasDisplay extends ElementDisplay {
+  public mDisplayInfo: IDisplayInfo | undefined;
   protected baseLoc: Phaser.Geom.Point;
-  constructor(scene: Phaser.Scene, x?: number, y?: number, texture?: string) {
-    super(scene, x, y, texture);
+  private mSprite: Phaser.GameObjects.Sprite;
+  constructor(protected scene: Phaser.Scene) {
+    super(scene);
   }
 
   public load(display: IDisplayInfo) {
@@ -29,9 +31,18 @@ export class AtlasDisplay extends Phaser.GameObjects.Sprite {
     }
   }
 
+  public destroy() {
+
+  }
+
   private onLoadCompleteHandler() {
     this.analyzeAnimations();
-    this.setTexture(this.resKey);
+    if (!this.mSprite) {
+      this.mSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, this.resKey);
+      this.add(this.mSprite);
+    } else {
+      this.mSprite.setTexture(this.resKey);
+    }
     console.log(this.resKey);
   }
 

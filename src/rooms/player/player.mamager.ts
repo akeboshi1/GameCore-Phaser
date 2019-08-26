@@ -4,9 +4,9 @@ import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
-import { Room } from "../room";
+import { Room, RoomService } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/Element.display";
+import { DisplayInfo } from "../display/info";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   constructor(private mRoomMgr: IRoomManager, private mRoom: Room) {
@@ -18,7 +18,16 @@ export class PlayerManager extends PacketHandler implements IElementManager {
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
+      //todo playState change
+      this.addHandlerFun(1, this.onChangeState)
     }
+  }
+
+  init() {
+    if (!this.mPlayerMap) {
+      this.mPlayerMap = new Map();
+    }
+    this.mPlayerMap.clear();
   }
 
   get connection(): ConnectionService {
@@ -59,7 +68,26 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     //todo player move
   }
 
+  private onChangeState(packet: PBpacket) {
+    let content = packet.content;
+    let id: number = content.id;
+    let state: string = content.state;
+    let player: Player = this.mPlayerMap.get(id);
+    if (player) {
+      player.changeState(state);
+    }
+  }
+
   private onSetPosition(packet: PBpacket) { }
+
+
+  get roomManager(): IRoomManager {
+    return this.mRoomMgr;
+  }
+
+  get roomService(): RoomService {
+    return this.mRoom;
+  }
 
   get scene(): Phaser.Scene | undefined {
     if (this.mRoom) {

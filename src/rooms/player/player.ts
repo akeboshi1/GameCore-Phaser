@@ -1,16 +1,37 @@
 import { op_client } from "pixelpai_proto";
 import { Element } from "../element/element";
-import { DragonBonesDisplay } from "../display/DragonBones.display";
+import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { IElementManager } from "../element/element.manager";
-import { ElementsDisplay, IDisplayInfo } from "../display/Element.display";
+import { ElementDisplay } from "../display/element.display";
+import { IDisplayInfo } from "../display/info";
+
+export enum PlayerState {
+  IDLE = "idle",
+  WALK = "walk",
+  RUN = "run",
+  ATTACK = "attack",
+  JUMP = "jump",
+  INJURED = "injured",
+  FAILED = "failed",
+  DANCE01 = "dance01",
+  DANCE02 = "dance02",
+  FISHING = "fishing",
+  GREET01 = "greet01",
+  SIT = "sit",
+  LIE = "lit",
+  EMOTION01 = "emotion01"
+}
 
 export class Player extends Element {
+
+  private mCurState: string;
+
   constructor(protected mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
     super(mElementManager, parent);
     this.createDisplay();
   }
 
-  public createDisplay(): ElementsDisplay | undefined {
+  public createDisplay(): ElementDisplay | undefined {
     if (this.mDisplay) {
       this.mDisplay.destroy();
     }
@@ -18,9 +39,18 @@ export class Player extends Element {
     if (scene) {
       this.mDisplay = new DragonBonesDisplay(scene);
       this.layer.add(this.mDisplay);
+      //监听龙骨播放完成事件，便于客户端在完成时，向服务器发送变化状态事件
+      (this.mDisplay as DragonBonesDisplay).getDisplay().addListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
       return this.mDisplay;
     }
     return undefined;
+  }
+
+  private dragonBonesFrameComplete(e: Event) {
+    // todo  state change
+    //this.mElementManager.connection.send()
+    //动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
+    this.changeState(PlayerState.IDLE);
   }
 
   public load(display: IDisplayInfo) {
@@ -31,7 +61,60 @@ export class Player extends Element {
     super.setPosition(x, y, z);
   }
 
+  public changeState(val: string) {
+    if (this.mCheckStateHandle(val)) {
+      this.mCurState = val;
+      (this.mDisplay as DragonBonesDisplay).play = val;
+    }
+  }
+
+  private mCheckStateHandle(val: string): boolean {
+    let dragonBonesDisplay: DragonBonesDisplay = this.mDisplay as DragonBonesDisplay;
+    switch (val) {
+      case PlayerState.IDLE:
+
+        break;
+      case PlayerState.WALK:
+
+        break;
+      case PlayerState.RUN:
+
+        break;
+      case PlayerState.ATTACK:
+
+        break;
+      case PlayerState.JUMP:
+        break;
+      case PlayerState.INJURED:
+        break;
+      case PlayerState.FAILED:
+        break;
+      case PlayerState.DANCE01:
+        break;
+      case PlayerState.DANCE02:
+        break;
+      case PlayerState.FISHING:
+        break;
+      case PlayerState.GREET01:
+        break;
+      case PlayerState.SIT:
+        break;
+      case PlayerState.LIE:
+        break;
+      case PlayerState.EMOTION01:
+        break;
+    }
+    return true;
+  }
+
+
+
+
+
+
+
   public disopse() {
+    (this.mDisplay as DragonBonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
     super.dispose();
   }
 
