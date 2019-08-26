@@ -2,7 +2,7 @@ import { PBpacket, PacketHandler, Packet } from "net-socket-packet";
 import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import { Room } from "../rooms/room";
+import { Room, RoomService } from "../rooms/room";
 
 export class KeyBoardManager extends PacketHandler {
     //获取的需要监听的key值列表
@@ -16,14 +16,14 @@ export class KeyBoardManager extends PacketHandler {
     //所有按下key值字段
     private mTmpDownKeyStr: string;
     //是否初始化获取到了需要监听的key值列表
-    private mInitilized: boolean = false;
+    private mInitilized: boolean = true;
     //==============================
     private mGame: Phaser.Game;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     constructor(private worldService: WorldService) {
         super();
-        this.mCodeList = [];
+        this.mCodeList = [37, 38, 39, 40];
         this.mKeyList = [];
         this.mKeyDownList = [];
         this.mTmpUpKeysStr = "";
@@ -44,21 +44,22 @@ export class KeyBoardManager extends PacketHandler {
      */
     private keyCodeListCallBack(packet: PBpacket) {
         this.mInitilized = true;
-        this.mCodeList = packet.content;
+        //this.mCodeList = packet.content;
     }
 
     private addKeyEvent(key: Phaser.Input.Keyboard.Key): void {
-        key.on("down", this.keyDownHandle);
-        key.on("up", this.keyUpHandle);
+        key.on("down", this.keyDownHandle, this);
+        key.on("up", this.keyUpHandle, this);
         this.mKeyList.push(key);
     }
 
     private keyDownHandle(e: KeyboardEvent) {
+
         //TODO role action
         let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         let keyArr: number[] = this.getKeyDowns();
-        if (this.mTmpDownKeyStr === keyArr.toString()) return;
+        if (this.mTmpDownKeyStr === keyArr.toString() && keyArr.length > 0) return;
         this.mTmpDownKeyStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
@@ -147,7 +148,7 @@ export class KeyBoardManager extends PacketHandler {
      * room由world去休眠/激活
      * @param room
      */
-    public setSceneToManager(room: Room) {
+    public setRoom(room: RoomService) {
         this.mScene = room.scene;
         if (!this.mScene) return;
         let len = this.mCodeList.length;

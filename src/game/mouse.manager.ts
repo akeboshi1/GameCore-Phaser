@@ -31,7 +31,7 @@ export class MouseManager extends PacketHandler {
         this._connect = this.worldService.connection;
     }
 
-    public setSceneToManager(room: Room) {
+    public setRoom(room: Room) {
         this._scene = room.scene;
         if (!this._scene) return;
         this._activePointer = this._scene.input.activePointer;

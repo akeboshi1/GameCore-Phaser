@@ -104,6 +104,17 @@ export class Player extends Element {
     return true;
   }
 
+  get x(): number {
+    return this.mDisplay.x;
+  }
+
+  get y(): number {
+    return this.mDisplay.y;
+  }
+
+  get z(): number {
+    return this.mDisplay.z;
+  }
 
 
 

@@ -17,6 +17,7 @@ import { MouseManager } from "./mouse.manager";
 import { SelectManager } from "../rooms/player/select.manager";
 import { LoadingManager } from "./loading.manager";
 import { Size } from "../utils/size";
+import { RoomService } from "../rooms/room";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -49,7 +50,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         //this.addHandlerFun(2, this.stopSelectManager);
         //this.addHandlerFun(3, this.stopRoomManager);
 
-        this.mSize=new Size();
+        this.mSize = new Size();
 
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
@@ -134,11 +135,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     /**
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
-    // public changeSceneToManager() {
-    //     let room: Room = this.mRoomMamager.getCurRoom();
-    //     this.mKeyBoardManager.setSceneToManager(room);
-    //     this.mMouseManager.setSceneToManager(room);
-    // }
+    public changeRoom(room: RoomService) {
+        this.mKeyBoardManager.setRoom(room);
+        // this.mMouseManager.setSceneToManager(room);
+    }
 
     public getSize(): Size {
         return this.mSize;

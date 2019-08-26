@@ -9,6 +9,7 @@ import { LayerType } from "../layer/layer.manager";
 import { PlayerInfo } from "./playInfo";
 import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { DisplayInfo } from "../display/display.info";
+import { Tweens } from "phaser";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   private mMainRoleInfo: PlayerInfo;
@@ -17,6 +18,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     if (this.connection) {
       this.connection.addPacketListener(this);
       this.mMainRoleInfo = new PlayerInfo();
+      this.mPlayerMap = new Map();
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.onAdd);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
@@ -51,6 +53,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
     let player: Player = new Player(this);
     (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"//obj.avatar.id;
+    this.mPlayerMap.set(obj.id, player);
     // if (this.initialize === false) {
     //   this._initialize = true;
     //   Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
@@ -87,8 +90,29 @@ export class PlayerManager extends PacketHandler implements IElementManager {
       let moveDataList: op_client.IMoveData[] = content.moveData
       let len: number = moveDataList.length;
       let moveData: op_client.IMoveData;
+      let playID: number;
+      let player: Player;
       for (let i: number = 0; i < len; i++) {
         moveData = moveDataList[i];
+        playID = moveData.moveObjectId;
+        player = this.mPlayerMap.get(playID);
+        console.log(player.x + "," + player.y);
+        if (!player) {
+          continue;
+        }
+        player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+        // let time: number = moveData.timeSpan;
+        // let tw: Tweens.Tween = this.mRoom.scene.tweens.add({
+        //   targets: player.getDisplay(), x: moveData.destinationPoint3f.x, y: moveData.destinationPoint3f.y, duration: time, ease: "Sine.easeInOut", repeat: -1,
+        //   onComplete: function (tween, targets, player, tw) {
+        //     player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+        //     tw.stop();
+        //     tw = null;
+        //     //todo 通信服務端到達目的地
+        //   },
+        //   onCompleteParams: [this],
+        // })
+        //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
       }
     }
 

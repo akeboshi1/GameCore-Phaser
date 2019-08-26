@@ -45,7 +45,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             callBack: () => {
               this.initScene();
               this.room = new Room(this, scene);
-              this.room.enter(content)
+              this.room.enter(content);
+              this.mWorld.changeRoom(this.room);
               //todo room start
             }
           });

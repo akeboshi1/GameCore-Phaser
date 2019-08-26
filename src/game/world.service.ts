@@ -3,10 +3,13 @@ import { ConnectionService } from "../net/connection.service";
 import { RoomManager } from "../rooms/room.manager";
 import { SelectManager } from "../rooms/player/select.manager";
 import { Size } from "../utils/size";
+import { RoomService } from "../rooms/room";
 export interface WorldService {
     connection: ConnectionService;
 
     getSize(): Size;
+
+    changeRoom(room: RoomService);
 
     readonly game: Phaser.Game;
 
