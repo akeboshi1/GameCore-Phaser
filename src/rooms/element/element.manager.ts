@@ -5,7 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { Room, RoomService } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/info";
+import { DisplayInfo } from "../display/display.info";
 
 export interface IElementManager {
   init(): void;

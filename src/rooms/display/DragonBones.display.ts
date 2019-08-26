@@ -1,4 +1,4 @@
-import { IDisplayInfo } from "./info";
+import { IDisplayInfo } from "./display.info";
 import { ElementDisplay } from "./element.display";
 
 /**
@@ -56,8 +56,8 @@ export class DragonBonesDisplay extends ElementDisplay {
       "Armature",
       this.dragonBonesName,
     );
-
-    this.mArmatureDisplay.animation.play("idle_" + this.mDisplayInfo.avatarDir);
+    let dir: number = this.mDisplayInfo != undefined ? this.mDisplayInfo.avatarDir : 3
+    this.mArmatureDisplay.animation.play("human01_run_" + dir);
 
     this.mArmatureDisplay.x = this.scene.cameras.main.centerX;
     this.mArmatureDisplay.y = this.scene.cameras.main.centerY + 200;

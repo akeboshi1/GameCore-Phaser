@@ -3,7 +3,7 @@ import { Element } from "../element/element";
 import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { IElementManager } from "../element/element.manager";
 import { ElementDisplay } from "../display/element.display";
-import { IDisplayInfo } from "../display/info";
+import { IDisplayInfo } from "../display/display.info";
 
 export enum PlayerState {
   IDLE = "idle",
@@ -39,8 +39,7 @@ export class Player extends Element {
     if (scene) {
       this.mDisplay = new DragonBonesDisplay(scene);
       this.layer.add(this.mDisplay);
-      //监听龙骨播放完成事件，便于客户端在完成时，向服务器发送变化状态事件
-      (this.mDisplay as DragonBonesDisplay).getDisplay().addListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
+     
       return this.mDisplay;
     }
     return undefined;
@@ -50,7 +49,7 @@ export class Player extends Element {
     // todo  state change
     //this.mElementManager.connection.send()
     //动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
-    this.changeState(PlayerState.IDLE);
+    //this.changeState(PlayerState.IDLE);
   }
 
   public load(display: IDisplayInfo) {

@@ -1,10 +1,10 @@
-import { IDisplayInfo } from "./info";
+import { IDisplayInfo } from "./display.info";
 import { ElementDisplay } from "./element.display";
 
 /**
  * 序列帧显示对象
  */
-export class AtlasDisplay extends ElementDisplay {
+export class FramesDisplay extends ElementDisplay {
   public mDisplayInfo: IDisplayInfo | undefined;
   protected baseLoc: Phaser.Geom.Point;
   private mSprite: Phaser.GameObjects.Sprite;

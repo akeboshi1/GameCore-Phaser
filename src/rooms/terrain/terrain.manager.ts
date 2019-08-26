@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { LayerType } from "../layer/layer.manager";
 import { RoomService } from "../room";
-import { DisplayInfo } from "../display/info";
+import { DisplayInfo } from "../display/display.info";
 import { IElementManager } from "../element/element.manager";
 
 export class TerrainManager extends PacketHandler implements IElementManager {

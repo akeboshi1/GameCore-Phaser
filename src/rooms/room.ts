@@ -62,6 +62,10 @@ export class Room implements RoomService {
     this.mPosition45.settings(this.mRows, this.mCols, this.tileWidth, this.tileHeight);
   }
 
+  public setMainRoleInfo(obj: op_client.IActor) {
+    this.playerManager.setMainRoleInfo(obj);
+  }
+
   get scene(): Phaser.Scene | undefined {
     return this.mScene || undefined;
   }

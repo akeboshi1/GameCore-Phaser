@@ -1,22 +1,23 @@
-import { AtlasDisplay } from "../display/atlas";
+
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { Position45Manager } from "./position45.manager";
+import { FramesDisplay } from "../display/frames.display";
 
 export class Terrain extends Element {
-  protected mDisplay: AtlasDisplay | undefined;
+  protected mDisplay: FramesDisplay | undefined;
   constructor(mElementManager: IElementManager, parent: Phaser.GameObjects.Container) {
     super(mElementManager, parent);
   }
 
-  public createDisplay(): AtlasDisplay | undefined {
+  public createDisplay(): FramesDisplay | undefined {
     if (this.mDisplay) {
       this.mDisplay.destroy();
     }
 
     let scene = this.mElementManager.scene;
     if (scene) {
-      this.mDisplay = new AtlasDisplay(scene);
+      this.mDisplay = new FramesDisplay(scene);
       this.layer.add(this.mDisplay);
       return this.mDisplay;
     }

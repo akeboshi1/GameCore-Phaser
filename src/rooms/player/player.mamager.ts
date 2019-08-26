@@ -6,20 +6,23 @@ import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
 import { Room, RoomService } from "../room";
 import { LayerType } from "../layer/layer.manager";
-import { DisplayInfo } from "../display/info";
+import { PlayerInfo } from "./playInfo";
+import { DragonBonesDisplay } from "../display/dragonBones.display";
+import { DisplayInfo } from "../display/display.info";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
+  private mMainRoleInfo: PlayerInfo;
   constructor(private mRoomMgr: IRoomManager, private mRoom: Room) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
-
+      this.mMainRoleInfo = new PlayerInfo();
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.onAdd);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
       //todo playState change
-      this.addHandlerFun(1, this.onChangeState)
+      this.addHandlerFun(1, this.onChangeState);
     }
   }
 
@@ -35,6 +38,27 @@ export class PlayerManager extends PacketHandler implements IElementManager {
       return this.mRoom.connection;
     }
     console.error("room is undefined");
+  }
+
+  public setMainRoleInfo(obj: op_client.IActor) {
+    this.mMainRoleInfo.setInfo(obj);
+    if (obj.walkOriginPoint) {
+      this.mMainRoleInfo.setOriginWalkPoint(obj.walkOriginPoint);
+    }
+    if (obj.originPoint) {
+      this.mMainRoleInfo.setOriginCollisionPoint(obj.originPoint);
+    }
+    const layer = this.mRoom.layerManager.getLayerByType(LayerType.SurfaceLayer);
+    if (!!layer === false) {
+      console.error("can't find ground layer");
+      return;
+    }
+    let player: Player = new Player(this, layer);
+    (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"//obj.avatar.id;
+    // if (this.initialize === false) {
+    //   this._initialize = true;
+    //   Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
+    // }
   }
 
   private onAdd(packet: PBpacket) {
