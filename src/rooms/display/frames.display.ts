@@ -50,10 +50,12 @@ export class FramesDisplay extends ElementDisplay {
     if (this.mDisplayInfo) {
       const animations = this.mDisplayInfo.animations;
       for (const animation of animations) {
+        // Didn't find a good way to create an animation with frame names without a pattern.
+        let frames = [];
+        animation.frameName.forEach(frame => { frames.push({ key: animation.name, frame }) })
         const config: Phaser.Types.Animations.Animation = {
           key: this.mDisplayInfo.type + "_" + animation.name,
-          // @ts-ignore
-          frames: this.scene.anims.generateFrameNumbers(this.mDisplayInfo.type, { frames: animation.frameName }),
+          frames: frames,
           frameRate: animation.frameRate,
           repeat: -1
         }

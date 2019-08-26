@@ -12,7 +12,7 @@ import { DisplayInfo } from "../display/display.info";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   private mMainRoleInfo: PlayerInfo;
-  constructor(private mRoomMgr: IRoomManager, private mRoom: Room) {
+  constructor(private mRoom: Room) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
@@ -104,11 +104,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
   }
 
   private onSetPosition(packet: PBpacket) { }
-
-
-  get roomManager(): IRoomManager {
-    return this.mRoomMgr;
-  }
 
   get roomService(): RoomService {
     return this.mRoom;

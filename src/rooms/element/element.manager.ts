@@ -12,7 +12,6 @@ export interface IElementManager {
 
   readonly connection: ConnectionService | undefined;
 
-  readonly roomManager: IRoomManager;
   readonly roomService: RoomService;
 
   readonly scene: Phaser.Scene | undefined;
@@ -20,7 +19,7 @@ export interface IElementManager {
 
 export class ElementManager extends PacketHandler implements IElementManager {
   private mElements: Map<number, Element>;
-  constructor(private mRoomManager: IRoomManager, private mRoom: RoomService) {
+  constructor(private mRoom: RoomService) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
@@ -40,8 +39,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
   }
 
   get connection(): ConnectionService {
-    if (this.mRoomManager) {
-      return this.mRoomManager.connection;
+    if (this.mRoom) {
+      return this.mRoom.connection;
     }
     console.log("roomManager is undefined");
     return;
@@ -51,8 +50,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
     if (!this.mElements) {
       this.mElements = new Map();
     }
-    if (!!this.mRoomManager === false || !!this.mRoom === false) {
-      console.error("room manager is undefined");
+    if (!!this.mRoom === false) {
+      console.error("room is undefined");
       return;
     }
     if (!!this.mRoom.layerManager === false) {
@@ -73,10 +72,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
       element.load(loader);
       this.mElements.set(ele.id || 0, element);
     }
-  }
-
-  get roomManager(): IRoomManager {
-    return this.mRoomManager;
   }
 
   get roomService(): RoomService {

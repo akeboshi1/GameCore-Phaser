@@ -11,7 +11,7 @@ import { IElementManager } from "../element/element.manager";
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
 
-  constructor(private mRoomMgr: IRoomManager, private mRoom: RoomService) {
+  constructor(private mRoom: RoomService) {
     super();
     
     if (this.connection) {
@@ -34,8 +34,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     if (!this.mTerrains) {
       this.mTerrains = new Map();
     }
-    if (!!this.mRoomMgr === false) {
-      console.error("room manager is undefined");
+    if (!!this.mRoom === false) {
+      console.error("room is undefined");
       return;
     }
     if (!!this.mRoom.layerManager === false) {
@@ -70,10 +70,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       return this.mRoom.connection;
     }
     console.error("room manager is undefined");
-  }
-
-  get roomManager(): IRoomManager {
-    return this.mRoomMgr;
   }
 
   get roomService(): RoomService {
