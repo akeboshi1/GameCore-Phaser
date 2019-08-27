@@ -100,18 +100,35 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!player) {
           continue;
         }
-        player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
-        // let time: number = moveData.timeSpan;
-        // let tw: Tweens.Tween = this.mRoom.scene.tweens.add({
-        //   targets: player.getDisplay(), x: moveData.destinationPoint3f.x, y: moveData.destinationPoint3f.y, duration: time, ease: "Sine.easeInOut", repeat: -1,
-        //   onComplete: function (tween, targets, player, tw) {
-        //     player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
-        //     tw.stop();
-        //     tw = null;
-        //     //todo 通信服務端到達目的地
-        //   },
-        //   onCompleteParams: [this],
-        // })
+        //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+        let time: number = moveData.timeSpan;
+        let tw: Tweens.Tween = this.mRoom.scene.tweens.add({
+          targets: player.getDisplay(),
+          duration: time,
+          ease: "Sine.easeInOut",
+          repeat: -1,
+          onUpdate: function () {
+            if (player.x == moveData.destinationPoint3f.x && player.y == moveData.destinationPoint3f.y) {
+              tw.stop();
+              player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+            } else {
+              if (player.x != moveData.destinationPoint3f.x) {
+                x: "+=5"
+              }
+              if (player.y != moveData.destinationPoint3f.y) {
+                y: "+=5"
+              }
+            }
+          },
+          // onComplete: function (tween, targets, player, tw) {
+          //   player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+          //   tw.stop();
+          //   tw = null;
+          //   //todo 通信服務端到達目的地
+          // },
+          // onCompleteParams: [player,tw],
+        });
+        tw.play();
         //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
       }
     }
