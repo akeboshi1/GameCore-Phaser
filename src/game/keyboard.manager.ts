@@ -38,7 +38,7 @@ export class KeyBoardManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.keyCodeListCallBack);
     }
 
-    
+
 
     /**
      * 缓存服务器发送给客户端需要监听的key值，等获取scene之后把这些值添加到scene中
@@ -62,6 +62,7 @@ export class KeyBoardManager extends PacketHandler {
         let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         let keyArr: number[] = this.getKeyDowns();
         if (this.mTmpDownKeyStr === keyArr.toString()) return;
+        this.mTmpUpKeysStr = "";
         this.mTmpDownKeyStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
@@ -73,6 +74,7 @@ export class KeyBoardManager extends PacketHandler {
         let content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
         let keyArr: number[] = this.getKeyUps();
         if (this.mTmpUpKeysStr === keyArr.toString()) return;
+        this.mTmpDownKeyStr = "";
         this.mTmpUpKeysStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
