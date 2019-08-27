@@ -16,7 +16,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       this.connection.addPacketListener(this);
 
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN, this.onAddHandler);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN_END, this.onAddEndHanlder)
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN_END, this.onAddEndHanlder);
       this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_TERRAIN, this.onDeleteTerrainHandler);
     }
   }
@@ -49,7 +49,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         this.mTerrains.set(terrain.id || 0, ter);
       }
     }
-    console.log(terrains);
   }
 
   private onAddEndHanlder(packet: PBpacket) { }

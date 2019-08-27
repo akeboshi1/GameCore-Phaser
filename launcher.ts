@@ -16,7 +16,12 @@ import { version } from "./lib/version";
 import { World } from "./src/game/world";
 import { ServerAddress } from "./src/net/address";
 export class Launcher {
+  readonly minWidth = 0;
+  readonly minHeight = 0;
+  readonly maxWidth = 0;
+  readonly maxHeight = 0;
 
+  private world: World;
   constructor() {
     let s = this;
 
@@ -41,10 +46,27 @@ export class Launcher {
 
     //todo window load 
     ///this.mWorld.game.scene.start("PlayScene");
+    window.addEventListener("resize", () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      let width = this.minWidth;
+      let height = this.minHeight;
+      let maxWidth = this.maxWidth;
+      let maxHeight = this.maxHeight
+
+      let scale = Math.min(w / width, h / height)
+      let newWidth = Math.min(w / scale, maxWidth)
+      let newHeight = Math.min(h / scale, maxHeight)
+
+      if (this.world) {
+        this.world.resize(w, h);
+      }
+    });
 
 
     import(/* webpackChunkName: "game" */ "./src/game/world").then(game => {
-      new World(this.config);
+      this.world = new World(this.config);
     });
   }
 
@@ -58,7 +80,7 @@ export class Launcher {
       game_id: CONFIG.game_id || "5d2691baf2f97440d7bb43c3",
       virtual_world_id: CONFIG.virtual_world_id || "0",
       type: Phaser.AUTO,
-      zoom: 2,
+      zoom: 1,
       width: document.documentElement.clientWidth,
       height: document.documentElement.clientHeight,
       parent: "game",
@@ -78,12 +100,6 @@ export class Launcher {
             mapping: "dragonbone"
           }
         ]
-      },
-      scale: {
-        parent: 'game',
-        mode: Phaser.Scale.CENTER_BOTH,
-        width: "100 %",
-        height: "100 %"
       },
       render: {
         pixelArt: true,

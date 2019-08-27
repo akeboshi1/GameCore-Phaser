@@ -18,6 +18,7 @@ import { SelectManager } from "../rooms/player/select.manager";
 import { LoadingManager } from "./loading.manager";
 import { Size } from "../utils/size";
 import { RoomService } from "../rooms/room";
+import { ICameraService } from "../rooms/cameras/cameras.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -51,7 +52,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         //this.addHandlerFun(3, this.stopRoomManager);
 
         this.mSize = new Size();
-
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
 
@@ -113,25 +113,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         console.error(content.msg);
     }
 
-    // private startSelectManager(packet: PBpacket) {
-    //     let content = packet.content;
-    //     this.mSelectCharacterManager.start();
-    // }
-
-    // public startRoomManager() {
-    //     this.mRoomMamager.start();
-    // }
-
-    // private stopSelectManager(packet: PBpacket) {
-    //     let content = packet.content;
-    //     this.mSelectCharacterManager.stop();
-    // }
-
-    // private stopRoomManager(packet: PBpacket) {
-    //     let content = packet.content;
-    //     this.mRoomMamager.stop();
-    // }
-
     /**
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
@@ -151,36 +132,28 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
         // // TODO 进游戏前预加载资源
-        // this.mLoadingManager.start(()=>{
-        // });
-
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         console.dir(content);
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         if (this.mGame) {
-            this.mGame.scale.off("resize", this.resize, this);
             this.mGame.destroy(true);
         }
         this.mGame = new Game(this.mConfig);
         this.mGame.scene.add(LoadingScene.name, LoadingScene);
         // this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
         this.mGame.scene.add(PlayScene.name, PlayScene);
+        this.mSize.setSize(this.mGame.scale.width, this.mGame.scale.height);
 
         let pkt: PBpacket = new PBpacket(0);
         this.mConnection.send(pkt);
 
-        // window.addEventListener("orientationchange", function(event) {
-        //     // 根据event.orientation|screen.orientation.angle等于0|180、90|-90度来判断横竖屏
-        // }, false);
-        // this.mSelectCharacterManager.start();
-
-        this.mGame.scale.on("resize", this.resize, this);
-
         this.gameCreated();
     }
 
-    private resize(gameSize: Size, baseSize: Size, displaySize: Size, resolution) {
-        this.mSize.setSize(gameSize.width, gameSize.height);
+    public resize(width: number, height: number) {
+        this.mSize.setSize(width, height);
+        this.mGame.scale.resize(width, height);
+        this.mRoomMamager.resize(width, height);
         //TODO manager.resize
     }
 

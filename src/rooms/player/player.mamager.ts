@@ -67,6 +67,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
       player.setPosition(obj.x, obj.y, obj.z);
       this.mRoom.addToSurface(player.getDisplay());
     });
+    // test
+    this.mRoom.scene.cameras.main.startFollow(player.getDisplay());
   }
 
   private onAdd(packet: PBpacket) {

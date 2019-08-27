@@ -61,17 +61,21 @@ export class LayerManager {
     this.mUILayer = this._scene.add.container(0, 0).setScrollFactor(0);
   }
 
-  public addGround(ele: ElementDisplay) {
+  public addToGround(ele: ElementDisplay | ElementDisplay[]) {
     this.mGroundLayer.add(ele);
   }
 
-  public addSurface(ele: ElementDisplay) {
+  public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
     this.mSurfaceLayer.add(ele);
   }
 
   public addMouseListen(callBack?: Function) {
     this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     if (callBack) callBack(this.mGroundClickLayer)//callBack.apply(null, this.mGroundClickLayer);
+  }
+
+  public resize(width: number, height: number) {
+
   }
 
   private _clearLayer() {

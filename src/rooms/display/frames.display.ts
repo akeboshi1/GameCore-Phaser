@@ -23,6 +23,7 @@ export class FramesDisplay extends ElementDisplay {
         if (display) {
           this.scene.load.atlas(this.resKey, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
           this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+          this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadErrorHandler, this);
           this.scene.load.start();
         } else {
           console.error("display is undefined");
@@ -44,6 +45,11 @@ export class FramesDisplay extends ElementDisplay {
       this.mSprite.setTexture(this.resKey);
     }
     console.log(this.resKey);
+  }
+
+  private onLoadErrorHandler(file: Phaser.Loader.File) {
+    console.error(file.url + "loader error");
+    // TODO reload
   }
 
   private analyzeAnimations() {
