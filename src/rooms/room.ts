@@ -23,6 +23,7 @@ export interface RoomService {
   readonly elementManager: ElementManager;
   readonly playerManager: PlayerManager;
   readonly layerManager: LayerManager;
+  readonly cameraService: ICameraService;
 
   readonly scene: Phaser.Scene | undefined;
 
@@ -144,6 +145,10 @@ export class Room implements RoomService {
 
   public get layerManager(): LayerManager {
     return this.mLayManager || undefined;
+  }
+
+  public get cameraService(): ICameraService {
+    return this.mCameraService || undefined;
   }
 
   public get id(): number {

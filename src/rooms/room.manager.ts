@@ -74,6 +74,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     if (this.connection) {
       let pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED);
       this.connection.send(pkt);
+
+      let sizePacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+      const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = sizePacket.content;
+      // TOOD move to cameras manager and not getting from document
+      size.width = this.mWorld.getSize().width;
+      size.height = this.mWorld.getSize().height;
+      this.connection.send(sizePacket);
     } else {
       console.error("connection is undefined");
     }
@@ -89,4 +96,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
     console.error("world manager is undefined");
   }
+
+
 }

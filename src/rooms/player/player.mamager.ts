@@ -1,6 +1,5 @@
-import { ElementManager, IElementManager } from "../element/element.manager";
+import {  IElementManager } from "../element/element.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
-import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
@@ -8,7 +7,6 @@ import { Room, RoomService } from "../room";
 import { PlayerInfo } from "./playInfo";
 import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { DisplayInfo } from "../display/display.info";
-import { Tweens } from "phaser";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   private mMainRoleInfo: PlayerInfo;
@@ -67,8 +65,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
       player.setPosition(obj.x, obj.y, obj.z);
       this.mRoom.addToSurface(player.getDisplay());
     });
-    // test
-    this.mRoom.scene.cameras.main.startFollow(player.getDisplay());
+    const cameraService = this.mRoom.cameraService;
+    if (cameraService) {
+      if (player.getDisplay()) cameraService.startFollow(player.getDisplay());
+    }
   }
 
   private onAdd(packet: PBpacket) {

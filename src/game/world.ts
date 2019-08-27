@@ -18,7 +18,6 @@ import { SelectManager } from "../rooms/player/select.manager";
 import { LoadingManager } from "./loading.manager";
 import { Size } from "../utils/size";
 import { RoomService } from "../rooms/room";
-import { ICameraService } from "../rooms/cameras/cameras.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏

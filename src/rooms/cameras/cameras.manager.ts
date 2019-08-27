@@ -6,6 +6,7 @@ import { op_virtual_world } from "pixelpai_proto";
 
 export interface ICameraService {
   setCameras(camera: Phaser.Cameras.Scene2D.Camera): void;
+  startFollow(target: Phaser.GameObjects.GameObject): void;
   resize(width: number, height: number): void;
 }
 
@@ -21,6 +22,12 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
   public resize(width: number, height: number) {
     this.resetCameraSize(width, height) ;
+  }
+
+  startFollow(target: Phaser.GameObjects.GameObject) {
+    if (this.mCameras) {
+      this.mCameras.startFollow(target);
+    }
   }
 
   private resetCameraSize(width: number, height: number) {

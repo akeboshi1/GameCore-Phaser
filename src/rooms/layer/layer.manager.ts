@@ -1,5 +1,4 @@
 import { IRoomManager } from "../room.manager";
-import { Room } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { Geom } from "phaser";
 
@@ -69,13 +68,13 @@ export class LayerManager {
     this.mSurfaceLayer.add(ele);
   }
 
+  public resize(width: number, height: number) {
+    // todo 
+  }
+
   public addMouseListen(callBack?: Function) {
     this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     if (callBack) callBack(this.mGroundClickLayer)//callBack.apply(null, this.mGroundClickLayer);
-  }
-
-  public resize(width: number, height: number) {
-
   }
 
   private _clearLayer() {
