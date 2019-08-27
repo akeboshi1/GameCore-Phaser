@@ -27,6 +27,8 @@ export class Player extends Element {
 
   private mCurState: string;
 
+  private mTw: Tweens.Tween;
+
   constructor(protected mElementManager: IElementManager) {
     super(mElementManager);
     this.createDisplay();
@@ -51,8 +53,8 @@ export class Player extends Element {
     this.changeState(PlayerState.IDLE);
   }
 
-  public load(display: IDisplayInfo) {
-    super.load(display);
+  public load(display: IDisplayInfo, callBack?: Function) {
+    super.load(display, callBack);
   }
 
   public setPosition(x: number, y: number, z?: number) {
@@ -67,19 +69,24 @@ export class Player extends Element {
   }
 
   public move(moveData: op_client.IMoveData) {
+    if (this.mTw) {
+      this.mTw.stop();
+    }
     let time: number = moveData.timeSpan;
-    let tw: Tweens.Tween = this.mElementManager.scene.tweens.add({
-      targets: this.getDisplay(),
+    this.mTw = this.mElementManager.scene.tweens.add({
+      targets: this.mDisplay,
       props: {
         x: { value: moveData.destinationPoint3f.x, duration: time, ease: "Linear" },
         y: { value: moveData.destinationPoint3f.y, duration: time, ease: "Linear" },
       },
-      onComplete: function (tween, targets) {
+      onComplete: function (tween, targets, play) {
+        console.log("complete moveF");
         //todo 通信服務端到達目的地
+        play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
       },
-      // onCompleteParams: [player,tw],
+      onCompleteParams: [this],
     });
-    //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+
   }
 
   private mCheckStateHandle(val: string): boolean {
@@ -98,11 +105,6 @@ export class Player extends Element {
   get z(): number {
     return this.mDisplay.z;
   }
-
-
-
-
-
 
   public disopse() {
     (this.mDisplay as DragonBonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);

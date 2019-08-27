@@ -24,7 +24,8 @@ export class Element implements IElement {
     return undefined;
   }
 
-  public load(display: IDisplayInfo) {
+  public load(display: IDisplayInfo, callBack?: Function) {
+    if (callBack) callBack();
     if (this.mDisplay) {
       this.mDisplay.load(display);
       this.setPosition(display.x, display.y);

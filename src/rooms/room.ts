@@ -74,7 +74,7 @@ export class Room implements RoomService {
   }
 
   public addToSurface(element: ElementDisplay) {
-
+    this.layerManager.addSurface(element);
   }
 
   public removeElement(element: ElementDisplay) {

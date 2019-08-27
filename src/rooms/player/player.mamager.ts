@@ -51,12 +51,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
       this.mMainRoleInfo.setOriginCollisionPoint(obj.originPoint);
     }
     let player: Player = new Player(this);
-    (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"//obj.avatar.id;
-    this.mPlayerMap.set(obj.id, player);
-    // if (this.initialize === false) {
-    //   this._initialize = true;
-    //   Globals.MessageCenter.emit(MessageType.PLAYER_DATA_INITIALIZE);
-    // }
+    let displayInfo: DisplayInfo = new DisplayInfo();
+    displayInfo.setInfo(obj);
+    player.load(displayInfo, () => {
+      (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"//obj.avatar.id;
+      this.mPlayerMap.set(obj.id, player);
+      player.setPosition(obj.x, obj.y, obj.z);
+      this.mRoom.addToSurface(player.getDisplay());
+    });
   }
 
   private onAdd(packet: PBpacket) {
