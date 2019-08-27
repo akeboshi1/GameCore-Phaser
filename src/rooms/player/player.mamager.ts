@@ -108,6 +108,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
           ease: "Sine.easeInOut",
           repeat: -1,
           onUpdate: function () {
+            console.log("=================");
             if (player.x == moveData.destinationPoint3f.x && player.y == moveData.destinationPoint3f.y) {
               tw.stop();
               player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);

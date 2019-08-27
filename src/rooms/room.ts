@@ -7,23 +7,20 @@ import { ConnectionService } from "../net/connection.service";
 import { op_client } from "pixelpai_proto";
 import { Position45Manager } from "./terrain/position45.manager";
 import { ElementDisplay } from "./display/element.display";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { Point3, IPoint3 } from "../utils/point3";
 
 export interface RoomService {
   enter(room: op_client.IScene): void;
   addElement(element: ElementDisplay, parentType: number);
   removeElement(element: ElementDisplay);
-
-  readonly id: number;
-  readonly cols: number;
-  readonly rows: number;
-  readonly tileWidth: number;
-  readonly tileHeight: number;
+  transformTo45(point3: IPoint3): Phaser.Geom.Point;
+  transformTo90(point3: Phaser.Geom.Point): Point3;
 
   readonly terrainManager: TerrainManager;
   readonly elementManager: ElementManager;
   readonly playerManager: PlayerManager;
   readonly layerManager: LayerManager;
-  readonly position45Manager: Position45Manager;
 
   readonly scene: Phaser.Scene | undefined;
 
@@ -44,17 +41,21 @@ export class Room implements RoomService {
   private mPlayerManager: PlayerManager;
   private mLayManager: LayerManager;
   private mScene: Phaser.Scene | undefined;
-  private mPosition45: Position45Manager;
+  private mPosition45Object: IPosition45Obj;
+
   constructor(private manager: IRoomManager, scene: Phaser.Scene) {
     this.mScene = scene;
     this.mTerainManager = new TerrainManager(this);
     this.mElementManager = new ElementManager(this);
     this.mPlayerManager = new PlayerManager(this);
     this.mLayManager = new LayerManager(manager, scene);
-    this.mPosition45 = new Position45Manager();
   }
 
   enter(room: op_client.IScene): void {
+    if (!room) {
+      console.error("wrong room");
+      return;
+    }
     this.mID = room.id;
     this.mCols = room.cols;
     this.mRows = room.rows;
@@ -62,7 +63,14 @@ export class Room implements RoomService {
     this.mTileHeight = room.tileHeight;
     this.mTerainManager.init();
     this.mElementManager.init();
-    this.mPosition45.settings(this.mRows, this.mCols, this.tileWidth, this.tileHeight);
+
+    this.mPosition45Object = {
+      rows: room.cols,
+      cols: room.cols,
+      tileWidth: room.tileWidth,
+      tileHeight: room.tileHeight,
+      offset: new Phaser.Geom.Point(room.rows * room.tileWidth >> 1, 0)
+    }
   }
 
   public setMainRoleInfo(obj: op_client.IActor) {
@@ -71,6 +79,10 @@ export class Room implements RoomService {
 
   public addElement(element: ElementDisplay, parentType: number) {
     let layer: Phaser.GameObjects.Container = this.layerManager.getLayerByType(parentType);
+    if (!layer) {
+      console.error(`wrong ${parentType} layer`);
+      return;
+    }
     layer.add(element);
   }
 
@@ -78,6 +90,22 @@ export class Room implements RoomService {
     if (element && element.parentContainer) {
       element.parentContainer.remove(element);
     }
+  }
+
+  public transformTo90(point3d: Phaser.Geom.Point) {
+    if (!this.mPosition45Object) {
+      console.error("position object is undefined");
+      return;
+    }
+    return Position45.transformTo90(point3d, this.mPosition45Object);
+  }
+
+  public transformTo45(point3d: Point3) {
+    if (!this.mPosition45Object) {
+      console.error("position object is undefined");
+      return;
+    }
+    return Position45.transformTo45(point3d, this.mPosition45Object);
   }
 
   get scene(): Phaser.Scene | undefined {
@@ -98,10 +126,6 @@ export class Room implements RoomService {
 
   public get layerManager(): LayerManager {
     return this.mLayManager || undefined;
-  }
-
-  public get position45Manager(): Position45Manager {
-    return this.mPosition45 || undefined;
   }
 
   public get id(): number {

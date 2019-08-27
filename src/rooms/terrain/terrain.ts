@@ -29,16 +29,16 @@ export class Terrain extends Element {
       console.error("display is undefine");
       return;
     }
-    if (!this.mElementManager.roomService) {
+    const roomService = this.mElementManager.roomService;
+    if (!roomService) {
       console.error("room is undefine");
       return;
     }
-    const position45 = this.mElementManager.roomService.position45Manager;
-    if (!position45) {
-      console.error("position is undefined");
+    const point = roomService.transformTo90(new Phaser.Geom.Point(x, y));
+    if (!point) {
+      console.error("transform error");
       return;
     }
-    const point = position45.transformTo90(x, y);
     this.mDisplay.x = point.x;
     this.mDisplay.y = point.y;
     this.mDisplay.z = z;

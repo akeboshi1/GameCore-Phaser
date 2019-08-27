@@ -78,6 +78,7 @@ export class LayerManager {
     this.totalLayerList.set(LayerType.GroundLayer, this.mGroundLayer);
 
     this.mSurfaceLayer = this._scene.add.container(0, 0);
+    this.mSurfaceLayer.scale = 2;
     this.totalLayerList.set(LayerType.SurfaceLayer, this.mSurfaceLayer);
 
     this.mAtmosphere = this._scene.add.container(0, 0);

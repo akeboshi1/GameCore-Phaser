@@ -58,7 +58,7 @@ export class Launcher {
       game_id: CONFIG.game_id || "5d2691baf2f97440d7bb43c3",
       virtual_world_id: CONFIG.virtual_world_id || "0",
       type: Phaser.AUTO,
-      zoom: 1,
+      zoom: 2,
       width: document.documentElement.clientWidth,
       height: document.documentElement.clientHeight,
       parent: "game",
@@ -82,8 +82,6 @@ export class Launcher {
       scale: {
         parent: 'game',
         mode: Phaser.Scale.NONE,
-        width: "100 %",
-        height: "100 %"
       },
       render: {
         pixelArt: true,
