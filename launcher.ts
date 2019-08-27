@@ -81,13 +81,9 @@ export class Launcher {
       },
       scale: {
         parent: 'game',
-<<<<<<< HEAD
-        mode: Phaser.Scale.NONE,
-=======
         mode: Phaser.Scale.CENTER_BOTH,
         width: "100 %",
         height: "100 %"
->>>>>>> 8453e4d64cde842e3e190574d84f785fe20e75f5
       },
       render: {
         pixelArt: true,
