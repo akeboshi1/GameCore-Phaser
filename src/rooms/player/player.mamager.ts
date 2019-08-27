@@ -112,8 +112,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         player.move(moveData);
       }
     }
-
-
   }
 
   private onChangeState(packet: PBpacket) {
