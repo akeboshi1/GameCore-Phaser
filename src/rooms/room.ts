@@ -12,10 +12,16 @@ import { Point3, IPoint3 } from "../utils/point3";
 
 export interface RoomService {
   enter(room: op_client.IScene): void;
-  addElement(element: ElementDisplay, parentType: number);
-  removeElement(element: ElementDisplay);
   transformTo45(point3: IPoint3): Phaser.Geom.Point;
   transformTo90(point3: Phaser.Geom.Point): Point3;
+  addToGround(element);
+  addToSurface(element);
+
+  readonly id: number;
+  readonly cols: number;
+  readonly rows: number;
+  readonly tileWidth: number;
+  readonly tileHeight: number;
 
   readonly terrainManager: TerrainManager;
   readonly elementManager: ElementManager;
@@ -77,13 +83,12 @@ export class Room implements RoomService {
     this.playerManager.setMainRoleInfo(obj);
   }
 
-  public addElement(element: ElementDisplay, parentType: number) {
-    let layer: Phaser.GameObjects.Container = this.layerManager.getLayerByType(parentType);
-    if (!layer) {
-      console.error(`wrong ${parentType} layer`);
-      return;
-    }
-    layer.add(element);
+  public addToGround(element: ElementDisplay) {
+    this.layerManager.addGround(element);
+  }
+
+  public addToSurface(element: ElementDisplay) {
+    this.layerManager.addSurface(element);
   }
 
   public removeElement(element: ElementDisplay) {

@@ -2,7 +2,6 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
 import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
-import { LayerType } from "../layer/layer.manager";
 import { RoomService } from "../room";
 import { DisplayInfo } from "../display/display.info";
 import { IElementManager } from "../element/element.manager";
@@ -45,7 +44,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const loader = new DisplayInfo();
         loader.setInfo(terrain);
         ter.load(loader);
-        this.mRoom.addElement(ter.getDisplay(),LayerType.GroundLayer);
+        this.mRoom.addToGround(ter.getDisplay());
+       // addElement(ter.getDisplay(),LayerType.GroundLayer);
         this.mTerrains.set(terrain.id || 0, ter);
       }
     }

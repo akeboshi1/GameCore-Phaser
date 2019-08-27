@@ -4,6 +4,7 @@ import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { IElementManager } from "../element/element.manager";
 import { ElementDisplay } from "../display/element.display";
 import { IDisplayInfo } from "../display/display.info";
+import { Tweens } from "phaser";
 
 export enum PlayerState {
   IDLE = "idle",
@@ -25,6 +26,8 @@ export enum PlayerState {
 export class Player extends Element {
 
   private mCurState: string;
+
+  private mTw: Tweens.Tween;
 
   constructor(protected mElementManager: IElementManager) {
     super(mElementManager);
@@ -50,8 +53,8 @@ export class Player extends Element {
     this.changeState(PlayerState.IDLE);
   }
 
-  public load(display: IDisplayInfo) {
-    super.load(display);
+  public load(display: IDisplayInfo, callBack?: Function) {
+    super.load(display, callBack);
   }
 
   public setPosition(x: number, y: number, z?: number) {
@@ -65,42 +68,29 @@ export class Player extends Element {
     }
   }
 
+  public move(moveData: op_client.IMoveData) {
+    if (this.mTw) {
+      this.mTw.stop();
+    }
+    let time: number = moveData.timeSpan;
+    this.mTw = this.mElementManager.scene.tweens.add({
+      targets: this.mDisplay,
+      props: {
+        x: { value: moveData.destinationPoint3f.x, duration: time, ease: "Linear" },
+        y: { value: moveData.destinationPoint3f.y, duration: time, ease: "Linear" },
+      },
+      onComplete: function (tween, targets, play) {
+        console.log("complete moveF");
+        //todo 通信服務端到達目的地
+        play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+      },
+      onCompleteParams: [this],
+    });
+
+  }
+
   private mCheckStateHandle(val: string): boolean {
     let dragonBonesDisplay: DragonBonesDisplay = this.mDisplay as DragonBonesDisplay;
-    switch (val) {
-      case PlayerState.IDLE:
-
-        break;
-      case PlayerState.WALK:
-
-        break;
-      case PlayerState.RUN:
-
-        break;
-      case PlayerState.ATTACK:
-
-        break;
-      case PlayerState.JUMP:
-        break;
-      case PlayerState.INJURED:
-        break;
-      case PlayerState.FAILED:
-        break;
-      case PlayerState.DANCE01:
-        break;
-      case PlayerState.DANCE02:
-        break;
-      case PlayerState.FISHING:
-        break;
-      case PlayerState.GREET01:
-        break;
-      case PlayerState.SIT:
-        break;
-      case PlayerState.LIE:
-        break;
-      case PlayerState.EMOTION01:
-        break;
-    }
     return true;
   }
 
@@ -115,11 +105,6 @@ export class Player extends Element {
   get z(): number {
     return this.mDisplay.z;
   }
-
-
-
-
-
 
   public disopse() {
     (this.mDisplay as DragonBonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);

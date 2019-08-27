@@ -4,7 +4,7 @@ import { Geom } from "phaser";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { Room } from "../rooms/room";
-import { LayerType } from "../rooms/layer/layer.manager";
+
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -36,10 +36,10 @@ export class MouseManager extends PacketHandler {
         if (!this._scene) return;
         this._activePointer = this._scene.input.activePointer;
 
-        this._groundLayer = room.layerManager.getLayerByType(LayerType.GroundClickLayer);
-        this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
-        this._groundLayer.on("gameobjectdown", this.groundDown, this);
-        this._groundLayer.on("gameobjectup", this.groundUp, this)
+        // this._groundLayer = room.layerManager.getLayerByType(LayerType.GroundClickLayer);
+        // this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
+        // this._groundLayer.on("gameobjectdown", this.groundDown, this);
+        // this._groundLayer.on("gameobjectup", this.groundUp, this)
     }
 
 
