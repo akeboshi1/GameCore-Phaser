@@ -1,4 +1,4 @@
-import {  IElementManager } from "../element/element.manager";
+import { IElementManager } from "../element/element.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
@@ -114,8 +114,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         player.move(moveData);
       }
     }
-
-
   }
 
   private onChangeState(packet: PBpacket) {

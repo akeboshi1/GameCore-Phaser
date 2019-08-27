@@ -63,24 +63,18 @@ export class Player extends Element {
             throw new Error(`Player::move - Empty element-manager.`);
         }
 
-        const scene = this.mElementManager.scene;
-        if (!scene) {
-            throw new Error(`Player::move - Empty scene.`);
-        }
-
-        if (!this.mTimeline) {
-            this.mTimeline = scene.tweens.createTimeline({});
-        }
-
         const time: number = moveData.timeSpan
             , toX: number = moveData.destinationPoint3f.x
             , toY: number = moveData.destinationPoint3f.y;
 
-        const tw: Tweens.Tween = scene.tweens.add({
+        console.log(`${time}: ${toX},${toY}`);
+        const tw = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
+            duration: time,
+            ease: "Linear",
             props: {
-                x: {value: toX, duration: time, ease: "Linear"},
-                y: {value: toY, duration: time, ease: "Linear"},
+                x: {value: toX},
+                y: {value: toY},
             },
             onComplete: function (tween, targets, play) {
                 console.log("complete moveF");
@@ -90,7 +84,10 @@ export class Player extends Element {
             onCompleteParams: [this],
         });
 
-        this.mTimeline.add(tw);
+        if (this.mTw) this.mTw.stop();
+        this.mTw = tw;
+
+
     }
 
     private mCheckStateHandle(val: string): boolean {
