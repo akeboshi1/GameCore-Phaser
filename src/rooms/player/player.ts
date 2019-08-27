@@ -4,6 +4,7 @@ import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { IElementManager } from "../element/element.manager";
 import { ElementDisplay } from "../display/element.display";
 import { IDisplayInfo } from "../display/display.info";
+import { Tweens } from "phaser";
 
 export enum PlayerState {
   IDLE = "idle",
@@ -65,42 +66,24 @@ export class Player extends Element {
     }
   }
 
+  public move(moveData: op_client.IMoveData) {
+    let time: number = moveData.timeSpan;
+    let tw: Tweens.Tween = this.mElementManager.scene.tweens.add({
+      targets: this.getDisplay(),
+      props: {
+        x: { value: moveData.destinationPoint3f.x, duration: time, ease: "Linear" },
+        y: { value: moveData.destinationPoint3f.y, duration: time, ease: "Linear" },
+      },
+      onComplete: function (tween, targets) {
+        //todo 通信服務端到達目的地
+      },
+      // onCompleteParams: [player,tw],
+    });
+    //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+  }
+
   private mCheckStateHandle(val: string): boolean {
     let dragonBonesDisplay: DragonBonesDisplay = this.mDisplay as DragonBonesDisplay;
-    switch (val) {
-      case PlayerState.IDLE:
-
-        break;
-      case PlayerState.WALK:
-
-        break;
-      case PlayerState.RUN:
-
-        break;
-      case PlayerState.ATTACK:
-
-        break;
-      case PlayerState.JUMP:
-        break;
-      case PlayerState.INJURED:
-        break;
-      case PlayerState.FAILED:
-        break;
-      case PlayerState.DANCE01:
-        break;
-      case PlayerState.DANCE02:
-        break;
-      case PlayerState.FISHING:
-        break;
-      case PlayerState.GREET01:
-        break;
-      case PlayerState.SIT:
-        break;
-      case PlayerState.LIE:
-        break;
-      case PlayerState.EMOTION01:
-        break;
-    }
     return true;
   }
 

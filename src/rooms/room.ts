@@ -10,8 +10,8 @@ import { ElementDisplay } from "./display/element.display";
 
 export interface RoomService {
   enter(room: op_client.IScene): void;
-  addElement(element: ElementDisplay, parentType: number);
-  removeElement(element: ElementDisplay);
+  addToGround(element);
+  addToSurface(element);
 
   readonly id: number;
   readonly cols: number;
@@ -69,9 +69,12 @@ export class Room implements RoomService {
     this.playerManager.setMainRoleInfo(obj);
   }
 
-  public addElement(element: ElementDisplay, parentType: number) {
-    let layer: Phaser.GameObjects.Container = this.layerManager.getLayerByType(parentType);
-    layer.add(element);
+  public addToGround(element: ElementDisplay) {
+    this.layerManager.addGround(element);
+  }
+
+  public addToSurface(element: ElementDisplay) {
+
   }
 
   public removeElement(element: ElementDisplay) {

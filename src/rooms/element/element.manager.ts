@@ -4,7 +4,6 @@ import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { Room, RoomService } from "../room";
-import { LayerType } from "../layer/layer.manager";
 import { DisplayInfo } from "../display/display.info";
 
 export interface IElementManager {
@@ -61,7 +60,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
       loader = new DisplayInfo();
       loader.setInfo(ele);
       element.load(loader);
-      this.mRoom.addElement(element.getDisplay(), LayerType.GroundLayer);
+      this.mRoom.addToGround(element.getDisplay());
       this.mElements.set(ele.id || 0, element);
     }
   }

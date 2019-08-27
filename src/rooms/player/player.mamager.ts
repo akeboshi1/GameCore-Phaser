@@ -5,7 +5,6 @@ import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
 import { Room, RoomService } from "../room";
-import { LayerType } from "../layer/layer.manager";
 import { PlayerInfo } from "./playInfo";
 import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { DisplayInfo } from "../display/display.info";
@@ -74,7 +73,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         displayInfo = new DisplayInfo();
         displayInfo.setInfo(player);
         plyer.load(displayInfo);
-        this.mRoom.addElement(plyer.getDisplay(), LayerType.SurfaceLayer);
+        this.mRoom.addToSurface(plyer.getDisplay());
         this.mPlayerMap.set(player.id || 0, plyer);
       }
     }
@@ -96,40 +95,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         moveData = moveDataList[i];
         playID = moveData.moveObjectId;
         player = this.mPlayerMap.get(playID);
-        console.log(player.x + "," + player.y);
+        console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
         if (!player) {
           continue;
         }
-        //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
-        let time: number = moveData.timeSpan;
-        let tw: Tweens.Tween = this.mRoom.scene.tweens.add({
-          targets: player.getDisplay(),
-          duration: time,
-          ease: "Sine.easeInOut",
-          repeat: -1,
-          onUpdate: function () {
-            if (player.x == moveData.destinationPoint3f.x && player.y == moveData.destinationPoint3f.y) {
-              tw.stop();
-              player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
-            } else {
-              if (player.x != moveData.destinationPoint3f.x) {
-                x: "+=5"
-              }
-              if (player.y != moveData.destinationPoint3f.y) {
-                y: "+=5"
-              }
-            }
-          },
-          // onComplete: function (tween, targets, player, tw) {
-          //   player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
-          //   tw.stop();
-          //   tw = null;
-          //   //todo 通信服務端到達目的地
-          // },
-          // onCompleteParams: [player,tw],
-        });
-        tw.play();
-        //player.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
+        player.move(moveData);
       }
     }
 
