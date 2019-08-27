@@ -13,10 +13,6 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
-  update(){
-     
-  }
-
   create() {
     if (this.mCallBack) {
       this.mCallBack();

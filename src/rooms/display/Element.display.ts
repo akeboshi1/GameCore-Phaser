@@ -1,4 +1,6 @@
 import { IDisplayInfo } from "./display.info";
+import { DragonBonesDisplay } from "./dragonBones.display";
+import { FramesDisplay } from "./frames.display";
 
 export class ElementDisplay extends Phaser.GameObjects.Container {
 
@@ -6,7 +8,8 @@ export class ElementDisplay extends Phaser.GameObjects.Container {
         super(scene);
     }
 
-    public load(display: IDisplayInfo) { }
+    public load(displayInfo: IDisplayInfo, callBack?: Function) {
+    }
 
     public destory() { }
 }

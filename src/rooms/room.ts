@@ -11,12 +11,13 @@ import { IPosition45Obj, Position45 } from "../utils/position45";
 import { Point3, IPoint3 } from "../utils/point3";
 
 export interface RoomService {
-  enter(room: op_client.IScene): void;
-  transformTo45(point3: IPoint3): Phaser.Geom.Point;
-  transformTo90(point3: Phaser.Geom.Point): Point3;
+  enter(room: op_client.IScene, cb?: Function): void;
   addToGround(element);
   addToSurface(element);
+  transformTo45(point3: IPoint3): Phaser.Geom.Point;
+  transformTo90(point3: Phaser.Geom.Point): Point3;
 
+  addMouseListen(callback?: Function);
   readonly id: number;
   readonly cols: number;
   readonly rows: number;
@@ -57,7 +58,8 @@ export class Room implements RoomService {
     this.mLayManager = new LayerManager(manager, scene);
   }
 
-  enter(room: op_client.IScene): void {
+
+  enter(room: op_client.IScene, cb?: Function): void {
     if (!room) {
       console.error("wrong room");
       return;
@@ -69,7 +71,7 @@ export class Room implements RoomService {
     this.mTileHeight = room.tileHeight;
     this.mTerainManager.init();
     this.mElementManager.init();
-
+    this.mPlayerManager.init();
     this.mPosition45Object = {
       rows: room.cols,
       cols: room.cols,
@@ -77,6 +79,8 @@ export class Room implements RoomService {
       tileHeight: room.tileHeight,
       offset: new Phaser.Geom.Point(room.rows * room.tileWidth >> 1, 0)
     }
+
+    if (cb) cb();
   }
 
   public setMainRoleInfo(obj: op_client.IActor) {
@@ -111,6 +115,10 @@ export class Room implements RoomService {
       return;
     }
     return Position45.transformTo45(point3d, this.mPosition45Object);
+  }
+  
+  public addMouseListen(callback?: Function) {
+    this.layerManager.addMouseListen(callback);
   }
 
   get scene(): Phaser.Scene | undefined {

@@ -26,17 +26,19 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
 
     //todo 预加载资源
-    this.start(content.scene);
-    if (content.actor) {
-      this.room.setMainRoleInfo(content.actor);
-    }
+    this.start(content, () => {
+      //場景初始化之後才能去創建後續元素
+      if (content.actor) {
+        this.room.setMainRoleInfo(content.actor);
+      }
+    });
   }
 
   /**
    * 开启roomManager默认先开启loadingScene
    * 原本是想在world里面调用，但是现在roomManager进入的触发条件是选角之后派发的EnterScene事件
    */
-  private start(content: op_client.IScene) {
+  private start(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, cb: Function) {
     if (this.mWorld.game) {
       this.mWorld.game.scene.start(LoadingScene.name, {
         callBack: () => {
@@ -45,9 +47,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             callBack: () => {
               this.initScene();
               this.room = new Room(this, scene);
-              this.room.enter(content);
+              this.room.enter(content.scene, cb);
               this.mWorld.changeRoom(this.room);
-              //todo room start
             }
           });
         }

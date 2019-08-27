@@ -137,7 +137,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      */
     public changeRoom(room: RoomService) {
         this.mKeyBoardManager.setRoom(room);
-        // this.mMouseManager.setSceneToManager(room);
+        this.mMouseManager.setRoom(room);
     }
 
     public getSize(): Size {

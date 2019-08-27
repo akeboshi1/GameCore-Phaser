@@ -3,7 +3,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Geom } from "phaser";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import { Room } from "../rooms/room";
+import { Room, RoomService } from "../rooms/room";
 
 
 export enum MouseEvent {
@@ -18,8 +18,8 @@ export enum MouseEvent {
 }
 
 export class MouseManager extends PacketHandler {
-    private _activePointer: Phaser.Input.Pointer;
-    private _groundLayer: Phaser.GameObjects.Container;
+    private mActivePointer: Phaser.Input.Pointer;
+    private mGroundLayer: Phaser.GameObjects.Container;
     private running = false;
     //===============================
     private _game: Phaser.Game;
@@ -31,20 +31,22 @@ export class MouseManager extends PacketHandler {
         this._connect = this.worldService.connection;
     }
 
-    public setRoom(room: Room) {
+    public setRoom(room: RoomService) {
+        this.pause();
         this._scene = room.scene;
         if (!this._scene) return;
-        this._activePointer = this._scene.input.activePointer;
-
-        // this._groundLayer = room.layerManager.getLayerByType(LayerType.GroundClickLayer);
-        // this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
-        // this._groundLayer.on("gameobjectdown", this.groundDown, this);
-        // this._groundLayer.on("gameobjectup", this.groundUp, this)
+        this.mActivePointer = this._scene.input.activePointer;
+        room.addMouseListen((ground) => {
+            this.mGroundLayer = ground;
+            this.mGroundLayer.on("pointerdown", this.groundDown, this);
+            this.mGroundLayer.on("pointerup", this.groundUp, this);
+            this.resume();
+        });
     }
 
 
     public resize(width: number, height: number) {
-        this._groundLayer.setInteractive(new Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+
     }
 
     public pause(): void {
@@ -55,35 +57,35 @@ export class MouseManager extends PacketHandler {
         this.running = true;
     }
 
-    private groundDown(pointer, gameOject) {
-        this._activePointer = pointer;
+    private groundDown(pointer) {
+        this.mActivePointer = pointer;
         this.onUpdate(pointer);
     }
 
-    private groundUp(pointer, gameOject) {
-        this._activePointer = pointer;
+    private groundUp(pointer) {
+        this.mActivePointer = pointer;
         this.onUpdate(pointer);
     }
 
 
     public onUpdate(pointer: Phaser.Input.Pointer): void {
-        if (this.running === false || this._activePointer === undefined) {
+        if (this.running === false || this.mActivePointer === undefined) {
             return;
         }
         let events: number[] = [];
-        if (this._activePointer.leftButtonDown) {
+        if (this.mActivePointer.leftButtonDown) {
             events.push(MouseEvent.LeftMouseDown);
-        } else if (this._activePointer.leftButtonReleased) {
+        } else if (this.mActivePointer.leftButtonReleased) {
             events.push(MouseEvent.LeftMouseUp);
         }
-        if (this._activePointer.middleButtonDown) {
+        if (this.mActivePointer.middleButtonDown) {
             events.push(MouseEvent.WheelDown);
-        } else if (this._activePointer.middleButtonReleased) {
+        } else if (this.mActivePointer.middleButtonReleased) {
             events.push(MouseEvent.WheelUp);
         }
-        if (this._activePointer.rightButtonDown) {
+        if (this.mActivePointer.rightButtonDown) {
             events.push(MouseEvent.RightMouseDown);
-        } else if (this._activePointer.rightButtonReleased) {
+        } else if (this.mActivePointer.rightButtonReleased) {
             events.push(MouseEvent.RightMouseUp);
         }
         if (events.length === 0) {
@@ -115,10 +117,10 @@ export class MouseManager extends PacketHandler {
     }
 
     public dispose() {
-        this._activePointer = null;
+        this.mActivePointer = null;
         this._scene = null;
         this._connect = null;
-        this._groundLayer = null;
+        this.mGroundLayer = null;
         this.running = false;
     }
 

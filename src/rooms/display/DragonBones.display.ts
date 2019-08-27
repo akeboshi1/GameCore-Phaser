@@ -11,7 +11,6 @@ export class DragonBonesDisplay extends ElementDisplay {
     public mDisplayInfo: IDisplayInfo | undefined;
     constructor(protected scene: Phaser.Scene) {
         super(scene);
-        //this.dragonBonesName = "bones_human01";
     }
 
     protected buildDragbones() {
@@ -38,8 +37,8 @@ export class DragonBonesDisplay extends ElementDisplay {
     }
 
     public load(display: IDisplayInfo, callBack?: Function) {
-        this.mDisplayInfo = display;
         if (callBack) callBack();
+        this.mDisplayInfo = display;
         if (!this.mDisplayInfo) return;
         if (this.dragonBonesName) {
             if (this.scene.cache.obj.has(this.dragonBonesName)) {

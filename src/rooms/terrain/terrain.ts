@@ -3,25 +3,30 @@ import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { Position45Manager } from "./position45.manager";
 import { FramesDisplay } from "../display/frames.display";
+import { IDisplayInfo } from "../display/display.info";
 
 export class Terrain extends Element {
   protected mDisplay: FramesDisplay | undefined;
   constructor(mElementManager: IElementManager) {
     super(mElementManager);
+    //this.createDisplay();
   }
 
-  public createDisplay(): FramesDisplay | undefined {
-    if (this.mDisplay) {
-      this.mDisplay.destroy();
-    }
+  // public createDisplay(): FramesDisplay | undefined {
+  //   if (this.mDisplay) {
+  //     this.mDisplay.destroy();
+  //   }
+  //   let scene = this.mElementManager.scene;
+  //   if (scene) {
+  //     this.mDisplay = new FramesDisplay(scene);
+  //     return this.mDisplay;
+  //   }
+  //   return undefined;
+  // }
 
-    let scene = this.mElementManager.scene;
-    if (scene) {
-      this.mDisplay = new FramesDisplay(scene);
-      return this.mDisplay;
-    }
-    return undefined;
-  }
+  // public load(display: IDisplayInfo, callBack?: Function) {
+  //   super.load(display, callBack);
+  // }
 
   public setPosition(x: number, y: number, z?: number) {
     if (z === undefined) z = 0;

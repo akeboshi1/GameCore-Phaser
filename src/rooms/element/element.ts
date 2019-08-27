@@ -1,6 +1,8 @@
 import { IElementManager } from "./element.manager";
 import { IDisplayInfo } from "../display/display.info";
 import { ElementDisplay } from "../display/element.display";
+import { DragonBonesDisplay } from "../display/dragonBones.display";
+import { FramesDisplay } from "../display/frames.display";
 export interface IElement {
   setPosition(x: number, y: number, z?: number): void;
 }
@@ -9,27 +11,37 @@ export class Element implements IElement {
   protected mLayer: Phaser.GameObjects.Container;
   protected mDisplay: ElementDisplay | undefined;
   constructor(protected mElementManager: IElementManager) {
-    this.createDisplay();
+    //this.createDisplay();
   }
 
-  createDisplay(): ElementDisplay | undefined {
+  // createDisplay(): ElementDisplay | undefined {
+  //   if (this.mDisplay) {
+  //     this.mDisplay.destroy()
+  //   }
+  //   let scene = this.mElementManager.scene;
+  //   if (scene) {
+  //     this.mDisplay = new ElementDisplay(scene);
+  //     return this.mDisplay;
+  //   }
+  //   return undefined;
+  // }
+
+  public load(displayInfo: IDisplayInfo, callBack?: Function) {
+
     if (this.mDisplay) {
       this.mDisplay.destroy()
     }
     let scene = this.mElementManager.scene;
     if (scene) {
-      this.mDisplay = new ElementDisplay(scene);
-      return this.mDisplay;
+      if (displayInfo.avatar) {
+        this.mDisplay = new DragonBonesDisplay(scene);
+      } else if (displayInfo.animations) {
+        this.mDisplay = new FramesDisplay(scene);
+      }
+      this.mDisplay.load(displayInfo);
+      this.setPosition(displayInfo.x, displayInfo.y);
     }
-    return undefined;
-  }
-
-  public load(display: IDisplayInfo, callBack?: Function) {
     if (callBack) callBack();
-    if (this.mDisplay) {
-      this.mDisplay.load(display);
-      this.setPosition(display.x, display.y);
-    }
   }
 
   public changeState(val: string) {

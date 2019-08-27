@@ -31,20 +31,20 @@ export class Player extends Element {
 
   constructor(protected mElementManager: IElementManager) {
     super(mElementManager);
-    this.createDisplay();
+    //this.createDisplay();
   }
 
-  public createDisplay(): ElementDisplay | undefined {
-    if (this.mDisplay) {
-      this.mDisplay.destroy();
-    }
-    let scene: Phaser.Scene = this.mElementManager.scene;
-    if (scene) {
-      this.mDisplay = new DragonBonesDisplay(scene);
-      return this.mDisplay;
-    }
-    return undefined;
-  }
+  // public createDisplay(): ElementDisplay | undefined {
+  //   if (this.mDisplay) {
+  //     this.mDisplay.destroy();
+  //   }
+  //   let scene: Phaser.Scene = this.mElementManager.scene;
+  //   if (scene) {
+  //     this.mDisplay = new DragonBonesDisplay(scene);
+  //     return this.mDisplay;
+  //   }
+  //   return undefined;
+  // }
 
   private dragonBonesFrameComplete(e: Event) {
     // todo  state change

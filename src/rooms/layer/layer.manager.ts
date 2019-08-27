@@ -1,6 +1,7 @@
 import { IRoomManager } from "../room.manager";
 import { Room } from "../room";
 import { ElementDisplay } from "../display/element.display";
+import { Geom } from "phaser";
 
 export class LayerManager {
 
@@ -32,17 +33,6 @@ export class LayerManager {
    */
   protected mAtmosphere: Phaser.GameObjects.Container;
 
-  //===============前景层
-  /**
-   * 对话层
-   */
-  protected mdialogLayer: Phaser.GameObjects.Container;
-
-  /**
-   * tips层
-   */
-  protected mTipLayer: Phaser.GameObjects.Container;
-
   //===============UI层
 
   /**
@@ -67,10 +57,6 @@ export class LayerManager {
 
     this.mAtmosphere = this._scene.add.container(0, 0);
 
-    //==========前景层
-    this.mdialogLayer = this._scene.add.container(0, 0);
-
-    this.mTipLayer = this._scene.add.container(0, 0)
     //==========UI层
     this.mUILayer = this._scene.add.container(0, 0).setScrollFactor(0);
   }
@@ -83,9 +69,31 @@ export class LayerManager {
     this.mSurfaceLayer.add(ele);
   }
 
+  public addMouseListen(callBack?: Function) {
+    this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
+    if (callBack) callBack(this.mGroundClickLayer)//callBack.apply(null, this.mGroundClickLayer);
+  }
 
   private _clearLayer() {
-   
+     this.clearLayer(this.mGroundClickLayer);
+     this.clearLayer(this.mGroundLayer);
+     this.clearLayer(this.mSurfaceLayer);
+     this.clearLayer(this.mUGroundLayer2);
+     this.clearLayer(this.mUILayer);
+     this.clearLayer(this.mAtmosphere);
+  }
+
+  private clearLayer(container: Phaser.GameObjects.Container, destroy: boolean = false) {
+    let list: Phaser.GameObjects.GameObject[] = container.list;
+    if (list) {
+      let len: number = list.length;
+      let child: Phaser.GameObjects.GameObject;
+      for (let i: number = 0; i < len; i++) {
+        child = list[i];
+        child.destroy(destroy);
+      }
+    }
+    container.destroy(destroy);
   }
 
   public changeScene() {

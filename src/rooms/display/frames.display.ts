@@ -12,7 +12,7 @@ export class FramesDisplay extends ElementDisplay {
     super(scene);
   }
 
-  public load(display: IDisplayInfo) {
+  public load(display: IDisplayInfo, callback?: Function) {
     this.mDisplayInfo = display;
     if (!this.mDisplayInfo) return;
     if (this.resKey) {

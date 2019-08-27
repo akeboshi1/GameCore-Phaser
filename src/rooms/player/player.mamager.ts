@@ -16,22 +16,30 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
-      this.mMainRoleInfo = new PlayerInfo();
-      this.mPlayerMap = new Map();
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.onAdd);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
-      this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
-      this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
-      //todo playState change
-      this.addHandlerFun(1, this.onChangeState);
+      // this.mMainRoleInfo = new PlayerInfo();
+      // this.mPlayerMap = new Map();
+      // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.onAdd);
+      // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
+      // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
+      // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
+      // //todo playState change
+      // this.addHandlerFun(1, this.onChangeState);
     }
   }
 
   init() {
     if (!this.mPlayerMap) {
       this.mPlayerMap = new Map();
-      this.addHandlerFun(1, this.onChangeState)
     }
+    if (!this.mMainRoleInfo) {
+      this.mMainRoleInfo = new PlayerInfo();
+    }
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.onAdd);
+    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
+    this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
+    this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
+    //todo playState change
+    this.addHandlerFun(1, this.onChangeState);
     this.mPlayerMap.clear();
   }
 
