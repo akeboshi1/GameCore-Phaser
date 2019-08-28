@@ -11,6 +11,6 @@ export class MainUIScene extends Phaser.Scene {
   }
 
   public update() {
-    this.fps.setText(this.game.loop.actualFps.toFixed(2));
+    this.fps.setText(this.game.loop.actualFps.toFixed());
   }
 }

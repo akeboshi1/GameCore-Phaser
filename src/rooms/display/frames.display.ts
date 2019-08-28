@@ -37,11 +37,11 @@ export class FramesDisplay extends ElementDisplay {
 
   private onLoadCompleteHandler() {
     if (!this.mSprite) {
-      this.mSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, this.resKey);
+      this.mSprite = this.scene.make.sprite(undefined, false);
       this.add(this.mSprite);
     } else {
+      this.mSprite.setTexture(this.resKey);
     }
-    this.mSprite.setTexture(this.resKey);
     this.makeAnimations();
     this.mSprite.play(`${this.mDisplayInfo.type}_${this.mDisplayInfo.animationName}`);
     // console.log(this.resKey);
@@ -61,9 +61,6 @@ export class FramesDisplay extends ElementDisplay {
           frameRate: animation.frameRate,
           repeat: -1,
         };
-        if (frames.length > 2) {
-          console.log("==========");
-        }
         this.scene.anims.create(config);
       }
     }
