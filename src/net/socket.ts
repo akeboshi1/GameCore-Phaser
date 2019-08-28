@@ -18,6 +18,7 @@ export class SocketConnectionError extends Error {
     }
 }
 
+// 实际工作在Web-Worker内的WebSocket客户端
 export class SocketConnection {
     protected mTransport: WSWrapper;
     protected mServerAddr: ServerAddress = {host: "localhost", port: 80};
@@ -31,7 +32,7 @@ export class SocketConnection {
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
             let listener: IConnectListener = this.mConnectListener;
             this.mTransport.on("open", () => {
-                console.info(`SocketConnection ready.`);
+                console.info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this);
                 this.onConnected();
             });
@@ -47,13 +48,15 @@ export class SocketConnection {
     }
 
     protected onConnected() {
-        if (typeof this.mTransport !== "undefined") {
-            this.mTransport.on("packet", this.onData);
+        if (!this.mTransport) {
+            return console.error(`Empty transport.`);
         }
+        this.mTransport.on("packet", this.onData);
     }
 
     protected onData(data: any) {
         // do nothing.
+        // override by subclass.
     }
 
     startConnect(addr: ServerAddress): void {
@@ -62,26 +65,27 @@ export class SocketConnection {
     }
 
     stopConnect(): void {
-        if (typeof this.mTransport !== "undefined") {
-            this.mTransport.Close();
-        }
+        // TODO Maybe not necessary.
     }
 
     private doConnect() {
-        if (typeof this.mTransport !== "undefined") {
-            this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);
+        if (!this.mTransport) {
+            return console.error(`Empty transport.`);
         }
+        this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);
     }
 
     send(data: any): void {
-        if (typeof this.mTransport !== "undefined") {
-            this.mTransport.Send(data);
+        if (!this.mTransport) {
+            return console.error(`Empty transport.`);
         }
+        console.debug(`SocketConnection::send - state: ${this.mTransport._readyState}`);
+        this.mTransport.Send(data);
     }
 
     //Frees all resources for garbage collection.
     destroy(): void {
-        if (typeof this.mTransport !== "undefined") {
+        if (this.mTransport) {
             this.mTransport.destroy();
         }
     }

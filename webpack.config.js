@@ -1,10 +1,10 @@
 const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser');
 const phaser = path.join(pathToPhaser, 'dist/phaser.js');
-//const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -19,39 +19,10 @@ module.exports = {
     devtool: "source-map",
     module: {
         rules: [
-            { test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/' },
-            { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
-            { test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones' },
+            {test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/'},
+            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'},
+            {test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones'},
         ],
-    },
-    plugins: [
-        new ConfigWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            title: "图轻播放器",
-            template: path.join(__dirname, "index.html")
-        }),
-        new CopyWebpackPlugin([
-            { from: "resources", to: "./resources" }
-        ])
-        // new UglifyJSPlugin({
-        //     parallel: true,
-        //     uglifyOptions: {
-        //         output: {
-        //             comments: false,
-        //             beautify: false,
-        //         },
-        //         compress: true,
-        //     },
-        //     cache: true,
-        // })
-
-    ],
-    devServer: {
-        contentBase: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
-        host: '127.0.0.1',
-        port: 8081,
-        open: false
     },
     resolve: {
         extensions: ['.ts', '.js'],
@@ -59,5 +30,32 @@ module.exports = {
             phaser: phaser,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js")
         }
+    },
+    plugins: [
+        new CleanWebpackPlugin({
+            verbose: true,
+            // Automatically remove all unused webpack assets on rebuild
+            // default: true
+            cleanStaleWebpackAssets: false,
+        }),
+        new ConfigWebpackPlugin(),
+        new CopyWebpackPlugin([
+            {from: "**/*", to: "resources", force: true, context:'resources'}
+        ]),
+        new HtmlWebpackPlugin({
+            title: "图轻播放器",
+            template: path.join(__dirname, "./index.html")
+        })
+    ],
+    devServer: {
+        writeToDisk: true,
+        watchOptions: {
+            poll: 1000
+        },
+        contentBase: path.resolve(__dirname, './dist'),
+        publicPath: '/dist',
+        host: '127.0.0.1',
+        port: 8081,
+        open: false
     }
 };
