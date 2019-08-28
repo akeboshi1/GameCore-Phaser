@@ -8,7 +8,7 @@ export class ElementDisplay extends Phaser.GameObjects.Container {
         super(scene);
     }
 
-    public load(displayInfo: IDisplayInfo, callBack?: Function) {
+    public load(displayInfo: IDisplayInfo, callBack?: () => void) {
     }
 
     public destory() { }

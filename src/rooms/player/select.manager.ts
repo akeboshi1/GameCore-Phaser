@@ -40,7 +40,7 @@ export class SelectManager extends PacketHandler {
     this.connection.send(pkt);
   }
 
-  get scene(): Phaser.Scene | undefined{
+  get scene(): Phaser.Scene | undefined {
     if (this.mWorldService.game) {
       const scene = this.mWorldService.game.scene;
       if (scene) {

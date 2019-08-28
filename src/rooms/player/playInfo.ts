@@ -59,14 +59,14 @@ export class PlayerInfo implements IActor {
 
     public displayBadgeCards: op_def.IBadgeCard[];
 
-    protected _originWalkPoint: Phaser.Geom.Point;
-
+    protected mOriginWalkPoint: Phaser.Geom.Point;
+    protected mOriginCollisionPoint: Phaser.Geom.Point;
     public constructor() {
     }
 
     public setInfo(obj: any): void {
         let value: any;
-        for (let key in obj) {
+        for (const key in obj) {
             value = obj[key];
             if (value) {
                 this[key] = value;
@@ -76,10 +76,10 @@ export class PlayerInfo implements IActor {
 
     public getSlots(): SlotInfo[] {
         if (this.slot === undefined) return null;
-        let len = this.slot.length;
+        const len = this.slot.length;
         let info: SlotInfo;
         let attri: op_gameconfig.IAttribute;
-        let slots: SlotInfo[] = [];
+        const slots: SlotInfo[] = [];
         for (let i = 0; i < len; i++) {
             info = new SlotInfo();
             attri = this.getAttriByKey(this.slot[i].bondAttrCurkey);
@@ -95,7 +95,7 @@ export class PlayerInfo implements IActor {
 
     public getSlotByName(name: string): SlotInfo {
         if (this.slot === undefined) return null;
-        let len = this.slot.length;
+        const len = this.slot.length;
         let info: SlotInfo;
         let attri: op_gameconfig.IAttribute;
         for (let i = 0; i < len; i++) {
@@ -115,7 +115,7 @@ export class PlayerInfo implements IActor {
 
     public getAttriByKey(key: string): op_gameconfig.IAttribute {
         if (this.attributes === undefined) return null;
-        let len = this.attributes.length;
+        const len = this.attributes.length;
         for (let i = 0; i < len; i++) {
             if (this.attributes[i].name === key) {
                 return this.attributes[i];
@@ -124,34 +124,31 @@ export class PlayerInfo implements IActor {
         return null;
     }
 
-    protected _originCollisionPoint: Phaser.Geom.Point;
-
     public get originCollisionPoint(): Phaser.Geom.Point {
-        return this._originCollisionPoint;
+        return this.mOriginCollisionPoint;
     }
 
     public get originWalkPoint(): Phaser.Geom.Point {
-        return this._originWalkPoint;
+        return this.mOriginWalkPoint;
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
-        if (this._originCollisionPoint === undefined) {
-            this._originCollisionPoint = new Phaser.Geom.Point();
+        if (this.mOriginCollisionPoint === undefined) {
+            this.mOriginCollisionPoint = new Phaser.Geom.Point();
         }
         if (value && value.length > 1) {
-            this._originCollisionPoint.x = value[0];
-            this._originCollisionPoint.y = value[1];
+            this.mOriginCollisionPoint.x = value[0];
+            this.mOriginCollisionPoint.y = value[1];
         }
     }
 
     public setOriginWalkPoint(value: number[] | null): void {
-        if (this._originWalkPoint === undefined) {
-            this._originWalkPoint = new Phaser.Geom.Point();
+        if (this.mOriginWalkPoint === undefined) {
+            this.mOriginWalkPoint = new Phaser.Geom.Point();
         }
         if (value && value.length > 1) {
-            this._originWalkPoint.x = value[0];
-            this._originWalkPoint.y = value[1];
+            this.mOriginWalkPoint.x = value[0];
+            this.mOriginWalkPoint.y = value[1];
         }
     }
 }
-

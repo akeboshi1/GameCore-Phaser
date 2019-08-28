@@ -2,7 +2,6 @@ import { op_client } from "pixelpai_proto";
 import { Element } from "../element/element";
 import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { IElementManager } from "../element/element.manager";
-import { ElementDisplay } from "../display/element.display";
 import { IDisplayInfo } from "../display/display.info";
 import { Tweens } from "phaser";
 
@@ -20,7 +19,7 @@ export enum PlayerState {
   GREET01 = "greet01",
   SIT = "sit",
   LIE = "lit",
-  EMOTION01 = "emotion01"
+  EMOTION01 = "emotion01",
 }
 
 export class Player extends Element {
@@ -32,18 +31,9 @@ export class Player extends Element {
 
   constructor(protected mElementManager: IElementManager) {
     super(mElementManager);
-
   }
 
-
-  private dragonBonesFrameComplete(e: Event) {
-    // todo  state change
-    //this.mElementManager.connection.send()
-    //动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
-    this.changeState(PlayerState.IDLE);
-  }
-
-  public load(display: IDisplayInfo, callBack?: Function) {
+  public load(display: IDisplayInfo, callBack?: () => void) {
     super.load(display, callBack);
   }
 
@@ -76,9 +66,9 @@ export class Player extends Element {
         x: { value: toX },
         y: { value: toY },
       },
-      onComplete: function (tween, targets, play) {
+      onComplete: (tween, targets, play) => {
         console.log("complete moveF");
-        //todo 通信服務端到達目的地
+        // todo 通信服務端到達目的地
         play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
       },
       onCompleteParams: [this],
@@ -86,11 +76,15 @@ export class Player extends Element {
 
     if (this.mTw) this.mTw.stop();
     this.mTw = tw;
+  }
 
+  public disopse() {
+    (this.mDisplay as DragonBonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
+    super.dispose();
   }
 
   private mCheckStateHandle(val: string): boolean {
-    let dragonBonesDisplay: DragonBonesDisplay = this.mDisplay as DragonBonesDisplay;
+    const dragonBonesDisplay: DragonBonesDisplay = this.mDisplay as DragonBonesDisplay;
     return true;
   }
 
@@ -106,8 +100,10 @@ export class Player extends Element {
     return this.mDisplay.z;
   }
 
-  public disopse() {
-    (this.mDisplay as DragonBonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
-    super.dispose();
+  private dragonBonesFrameComplete(e: Event) {
+    // todo  state change
+    // this.mElementManager.connection.send()
+    // 动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
+    this.changeState(PlayerState.IDLE);
   }
 }

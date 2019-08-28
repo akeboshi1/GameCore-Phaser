@@ -8,20 +8,20 @@ export class Point3 implements IPoint3 {
   constructor(
     private mX?: number,
     private mY?: number,
-    private mZ?: number
+    private mZ?: number,
   ) {
     if (this.mX === undefined) this.x = 0;
     if (this.mY === undefined) this.y = 0;
     if (this.mZ === undefined) this.z = 0;
   }
 
-  set(x: number, y: number, z: number) {
+  public set(x: number, y: number, z: number) {
     this.x = x;
     this.y = y;
     this.z = z;
   }
 
-  add(x: number, y: number, z: number) {
+  public add(x: number, y: number, z: number) {
     this.x += x;
     this.y += y;
     this.z += z;

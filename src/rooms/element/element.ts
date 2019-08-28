@@ -11,7 +11,7 @@ export class Element implements IElement {
   protected mLayer: Phaser.GameObjects.Container;
   protected mDisplay: ElementDisplay | undefined;
   constructor(protected mElementManager: IElementManager) {
-    //this.createDisplay();
+    // this.createDisplay();
   }
 
   // createDisplay(): ElementDisplay | undefined {
@@ -26,12 +26,12 @@ export class Element implements IElement {
   //   return undefined;
   // }
 
-  public load(displayInfo: IDisplayInfo, callBack?: Function) {
+  public load(displayInfo: IDisplayInfo, callBack?: () => void) {
 
     if (this.mDisplay) {
-      this.mDisplay.destroy()
+      this.mDisplay.destroy();
     }
-    let scene = this.mElementManager.scene;
+    const scene = this.mElementManager.scene;
     if (scene) {
       if (displayInfo.avatar) {
         this.mDisplay = new DragonBonesDisplay(scene);
@@ -55,7 +55,7 @@ export class Element implements IElement {
   public setPosition(x: number, y: number, z?: number) {
     if (z === undefined) z = 0;
     if (!this.mDisplay) {
-      console.error("display is undefine")
+      console.error("display is undefine");
       return;
     }
     this.mDisplay.x = x;

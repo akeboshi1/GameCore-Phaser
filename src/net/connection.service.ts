@@ -7,7 +7,7 @@ export interface ConnectionService {
     closeConnect(): void;
 
     addPacketListener(listener: PacketHandler): void;
-    removePacketListener(listener:PacketHandler): void;
+    removePacketListener(listener: PacketHandler): void;
 
     send(packet: PBpacket): void;
 }

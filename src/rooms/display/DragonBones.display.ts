@@ -5,12 +5,46 @@ import { ElementDisplay } from "./element.display";
  * 龙骨显示对象
  */
 export class DragonBonesDisplay extends ElementDisplay {
+    public mDisplayInfo: IDisplayInfo | undefined;
     protected mAnimationName: string = "";
     protected mDragonbonesName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
-    public mDisplayInfo: IDisplayInfo | undefined;
     constructor(protected scene: Phaser.Scene) {
         super(scene);
+    }
+
+    public load(display: IDisplayInfo, callBack?: () => void) {
+        if (callBack) callBack();
+        this.mDisplayInfo = display;
+        if (!this.mDisplayInfo) return;
+        if (this.dragonBonesName) {
+            if (this.scene.cache.obj.has(this.dragonBonesName)) {
+            } else {
+                this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+            }
+        }
+    }
+
+    public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
+        return this.mArmatureDisplay;
+    }
+
+    /**
+     * 按照格位换装
+     * @param slotName 插槽名
+     * @param displayName 显示对象资源名
+     */
+    public replaceSlotDisplay(slotName: string, displayName: string) {
+        const factory: dragonBones.phaser.Factory = ((<any> this.scene).dragonBones as dragonBones.phaser.Factory);
+        factory.replaceSlotDisplay(this.dragonBonesName, this.mAnimationName, slotName, displayName, this.mArmatureDisplay.armature.getSlot(slotName));
+    }
+
+    public destory() {
+        this.mDisplayInfo = null;
+        if (this.mArmatureDisplay) {
+            this.mArmatureDisplay.dispose(true);
+            this.mArmatureDisplay = null;
+        }
     }
 
     protected buildDragbones() {
@@ -25,26 +59,14 @@ export class DragonBonesDisplay extends ElementDisplay {
                 `${res}/${this.dragonBonesName}_ske.dbbin`,
                 null,
                 null,
-                { responseType: "arraybuffer" }
+                { responseType: "arraybuffer" },
             );
             this.scene.load.once(
                 Phaser.Loader.Events.COMPLETE,
                 this.onLoadCompleteHandler,
-                this
+                this,
             );
             this.scene.load.start();
-        }
-    }
-
-    public load(display: IDisplayInfo, callBack?: Function) {
-        if (callBack) callBack();
-        this.mDisplayInfo = display;
-        if (!this.mDisplayInfo) return;
-        if (this.dragonBonesName) {
-            if (this.scene.cache.obj.has(this.dragonBonesName)) {
-            } else {
-                this.dragonBonesName = "bones_human01"//this.mDisplayInfo.avatar.id;
-            }
         }
     }
 
@@ -56,17 +78,12 @@ export class DragonBonesDisplay extends ElementDisplay {
             "Armature",
             this.dragonBonesName,
         );
-        let dir: number = this.mDisplayInfo != undefined ? this.mDisplayInfo.avatarDir : 3;
+        const dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
         this.mArmatureDisplay.animation.play("human01_run_" + dir);
         this.add( this.mArmatureDisplay);
         this.x = this.mDisplayInfo.x;
         this.y = this.mDisplayInfo.y;
     }
-
-    public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
-        return this.mArmatureDisplay;
-    }
-
 
     set dragonBonesName(val: string) {
         if (this.mDragonbonesName !== val) {
@@ -86,26 +103,4 @@ export class DragonBonesDisplay extends ElementDisplay {
             }
         }
     }
-
-    /**
-     * 按照格位换装
-     * @param slotName 插槽名
-     * @param displayName 显示对象资源名
-     */
-    public replaceSlotDisplay(slotName: string, displayName: string) {
-        const factory: dragonBones.phaser.Factory = ((<any>this.scene).dragonBones as dragonBones.phaser.Factory);
-        factory.replaceSlotDisplay(this.dragonBonesName, this.mAnimationName, slotName, displayName, this.mArmatureDisplay.armature.getSlot(slotName));
-    }
-
-    public destory() {
-        this.mDisplayInfo = null;
-        if (this.mArmatureDisplay) {
-            this.mArmatureDisplay.dispose(true);
-            this.mArmatureDisplay = null;
-        }
-    }
-
-
-
-
 }

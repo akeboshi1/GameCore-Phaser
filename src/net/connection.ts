@@ -14,9 +14,9 @@ PBpacket.addProtocol(op_gameconfig_01);
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export default class Connection implements ConnectionService {
+    protected mPacketHandlers: PacketHandler[] = [];
     private mListener: IConnectListener;
     private mWorker: any;
-    protected mPacketHandlers: PacketHandler[] = [];
     private mReConnectCount: number = 0;
     private mCachedServerAddress: ServerAddress | undefined;
     private mTimeout: any;
@@ -35,6 +35,30 @@ export default class Connection implements ConnectionService {
         }
     }
 
+    closeConnect(): void { }
+
+    addPacketListener(listener: PacketHandler) {
+        this.mPacketHandlers.push(listener);
+    }
+
+    send(packet: PBpacket) {
+        if (!this.mWorker) {
+            throw new Error(`NetWorker is undefined.`);
+        }
+
+        this.mWorker.postMessage({
+            "method": "send",
+            "buffer": packet.Serialization(),
+        });
+    }
+
+    removePacketListener(listener: PacketHandler) {
+        const idx: number = this.mPacketHandlers.indexOf(listener);
+        if (idx !== -1) {
+            this.mPacketHandlers.splice(idx, 1);
+        }
+    }
+
     private _doConnect() {
         console.info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
@@ -44,8 +68,8 @@ export default class Connection implements ConnectionService {
             };
             this.mWorker.postMessage({
                 "method": "connect",
-                "address": self.mCachedServerAddress
-            })
+                "address": self.mCachedServerAddress,
+            });
         }
     }
 
@@ -86,36 +110,11 @@ export default class Connection implements ConnectionService {
     }
 
     private _onData(data: any) {
-        let protobuf_packet: PBpacket = new PBpacket();
-        protobuf_packet.Deserialization(new Buffer(data));
-        let handlers = this.mPacketHandlers;
+        const protobufPacket: PBpacket = new PBpacket();
+        protobufPacket.Deserialization(new Buffer(data));
+        const handlers = this.mPacketHandlers;
         handlers.forEach((handler: PacketHandler) => {
-            handler.onPacketArrived(protobuf_packet);
+            handler.onPacketArrived(protobufPacket);
         });
-    }
-
-    closeConnect(): void {
-    }
-
-    addPacketListener(listener: PacketHandler) {
-        this.mPacketHandlers.push(listener);
-    }
-
-    send(packet: PBpacket) {
-        if (!this.mWorker) {
-            throw new Error(`NetWorker is undefined.`);
-        }
-
-        this.mWorker.postMessage({
-            "method": "send",
-            "buffer": packet.Serialization()
-        });
-    }
-
-    removePacketListener(listener: PacketHandler) {
-        let idx: number = this.mPacketHandlers.indexOf(listener);
-        if (idx !== -1) {
-            this.mPacketHandlers.splice(idx, 1);
-        }
     }
 }

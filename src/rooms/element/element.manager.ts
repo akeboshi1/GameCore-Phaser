@@ -3,22 +3,19 @@ import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
-import { Room, RoomService } from "../room";
+import { Room, IRoomService } from "../room";
 import { DisplayInfo } from "../display/display.info";
 
 export interface IElementManager {
-  init(): void;
-
   readonly connection: ConnectionService | undefined;
-
-  readonly roomService: RoomService;
-
+  readonly roomService: IRoomService;
   readonly scene: Phaser.Scene | undefined;
+  init(): void;
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
   private mElements: Map<number, Element>;
-  constructor(private mRoom: RoomService) {
+  constructor(private mRoom: IRoomService) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
@@ -30,7 +27,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
   }
 
-  init() {
+  public  init() {
     if (!this.mElements) {
       this.mElements = new Map();
     }
@@ -50,12 +47,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
       this.mElements = new Map();
     }
 
-
-    let content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
-    let elements = content.elements;
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
+    const elements = content.elements;
     let element: Element;
     let loader: DisplayInfo;
-    for (let ele of elements) {
+    for (const ele of elements) {
       element = new Element(this);
       loader = new DisplayInfo();
       loader.setInfo(ele);
@@ -65,7 +61,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
   }
 
-  get roomService(): RoomService {
+  get roomService(): IRoomService {
     return this.mRoom;
   }
 

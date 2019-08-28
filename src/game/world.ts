@@ -17,7 +17,8 @@ import {MouseManager} from "./mouse.manager";
 import {SelectManager} from "../rooms/player/select.manager";
 import {LoadingManager} from "./loading.manager";
 import {Size} from "../utils/size";
-import {RoomService} from "../rooms/room";
+import {IRoomService} from "../rooms/room";
+import { MainUIScene } from "../scenes/main.ui";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -49,11 +50,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
-        //================todo opcode
-        //this.addHandlerFun(0, this.startSelectManager);
-        //this.addHandlerFun(1, this.startRoomManager);
-        //this.addHandlerFun(2, this.stopSelectManager);
-        //this.addHandlerFun(3, this.stopRoomManager);
+        // ================todo opcode
+        // this.addHandlerFun(0, this.startSelectManager);
+        // this.addHandlerFun(1, this.startRoomManager);
+        // this.addHandlerFun(2, this.stopSelectManager);
+        // this.addHandlerFun(3, this.stopRoomManager);
 
         this.mSize = new Size();
         this.mSize.setSize(window.innerWidth, window.innerHeight);
@@ -61,7 +62,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
 
         this.mRoomMamager = new RoomManager(this);
-        //this.mSelectCharacterManager = new SelectManager(this);
+        // this.mSelectCharacterManager = new SelectManager(this);
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mLoadingManager = new LoadingManager(this);
@@ -69,6 +70,47 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
+    }
+
+    onConnected(connection?: SocketConnection): void {
+        console.info(`enterVirtualWorld`);
+        this.enterVirtualWorld();
+    }
+
+    onDisConnected(connection?: SocketConnection): void {
+
+    }
+
+    onError(reason: SocketConnectionError | undefined): void {
+
+    }
+
+    onClientErrorHandler(packet: PBpacket): void {
+        const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
+        console.error(content.msg);
+    }
+
+    /**
+     * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
+     */
+    public changeRoom(room: IRoomService) {
+        this.mKeyBoardManager.setRoom(room);
+        this.mMouseManager.setRoom(room);
+    }
+
+    public getSize(): Size {
+        return this.mSize;
+    }
+
+    public resize(width: number, height: number) {
+        this.mSize.setSize(width, height);
+        if (this.mGame) {
+            this.mGame.scale.resize(width, height);
+        }
+        if (this.mRoomMamager) {
+            this.mRoomMamager.resize(width, height);
+        }
+        // TODO manager.resize
     }
 
     get game(): Phaser.Game | undefined {
@@ -87,10 +129,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConnection;
     }
 
+    private onSelectCharacter() {
+        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
+        this.connection.send(pkt);
+    }
+
     private enterVirtualWorld() {
         if (this.mConfig && this.mConnection) {
-            let pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
-            let content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
+            const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
+            const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
             content.virtualWorldUuid = this.mConfig.virtual_world_id;
             content.gameId = this.mConfig.game_id;
             content.userToken = this.mConfig.auth_token;
@@ -100,43 +147,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    onConnected(connection?: SocketConnection): void {
-        console.info(`enterVirtualWorld`);
-        this.enterVirtualWorld();
-    }
-
-    onDisConnected(connection?: SocketConnection): void {
-
-    }
-
-    onError(reason: SocketConnectionError | undefined): void {
-
-    }
-
-    onClientErrorHandler(packet: PBpacket): void {
-        let content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        console.error(content.msg);
-    }
-
-    /**
-     * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
-     */
-    public changeRoom(room: RoomService) {
-        this.mKeyBoardManager.setRoom(room);
-        this.mMouseManager.setRoom(room);
-    }
-
-    public getSize(): Size {
-        return this.mSize;
-    }
-
-    private onSelectCharacter() {
-        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
-        this.connection.send(pkt);
-    }
-
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
-        // // TODO 进游戏前预加载资源
+        // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         console.dir(content);
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
@@ -147,23 +159,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(LoadingScene.name, LoadingScene);
         // this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
         this.mGame.scene.add(PlayScene.name, PlayScene);
+        this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mSize.setSize(this.mGame.scale.width, this.mGame.scale.height);
 
-        let pkt: PBpacket = new PBpacket(0);
+        const pkt: PBpacket = new PBpacket(0);
         this.mConnection.send(pkt);
 
         this.gameCreated();
-    }
-
-    public resize(width: number, height: number) {
-        this.mSize.setSize(width, height);
-        if (this.mGame) {
-            this.mGame.scale.resize(width, height);
-        }
-        if (this.mRoomMamager) {
-            this.mRoomMamager.resize(width, height);
-        }
-        //TODO manager.resize
     }
 
     private gameCreated() {
@@ -171,7 +173,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
         } else {
-            console.error("connection is undefined")
+            console.error("connection is undefined");
         }
     }
 }

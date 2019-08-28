@@ -10,14 +10,7 @@ import { IPosition45Obj, Position45 } from "../utils/position45";
 import { Point3, IPoint3 } from "../utils/point3";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
 
-export interface RoomService {
-  enter(room: op_client.IScene): void;
-  transformTo45(point3: IPoint3): Phaser.Geom.Point;
-  transformTo90(point3: Phaser.Geom.Point): Point3;
-  addToGround(element: ElementDisplay | ElementDisplay[]);
-  addToSurface(element: ElementDisplay | ElementDisplay[]);
-
-  addMouseListen(callback?: Function);
+export interface IRoomService {
   readonly id: number;
   readonly terrainManager: TerrainManager;
   readonly elementManager: ElementManager;
@@ -28,11 +21,19 @@ export interface RoomService {
   readonly scene: Phaser.Scene | undefined;
 
   readonly connection: ConnectionService | undefined;
+
+  enter(room: op_client.IScene): void;
+  transformTo45(point3: IPoint3): Phaser.Geom.Point;
+  transformTo90(point3: Phaser.Geom.Point): Point3;
+  addToGround(element: ElementDisplay | ElementDisplay[]);
+  addToSurface(element: ElementDisplay | ElementDisplay[]);
+
+  addMouseListen(callback?: (ground) => void);
 }
 
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
-export class Room implements RoomService {
+export class Room implements IRoomService {
   private mID: number;
 
   private mTerainManager: TerrainManager;
@@ -51,15 +52,14 @@ export class Room implements RoomService {
     this.mCameraService = new CamerasManager(this);
     this.mLayManager = new LayerManager(manager, scene);
 
-    let world = this.manager.world;
+    const world = this.manager.world;
     if (world) {
       const size = world.getSize();
       this.mCameraService.resize(size.width, size.height);
     }
   }
 
-
-  enter(room: op_client.IScene, cb?: Function): void {
+  public enter(room: op_client.IScene, cb?: () => void): void {
     if (!room) {
       console.error("wrong room");
       return;
@@ -68,14 +68,14 @@ export class Room implements RoomService {
     this.mTerainManager.init();
     this.mElementManager.init();
     this.mPlayerManager.init();
-  
+
     this.mPosition45Object = {
+      cols: room.rows,
       rows: room.cols,
-      cols: room.cols,
-      tileWidth: room.tileWidth,
       tileHeight: room.tileHeight,
-      offset: new Phaser.Geom.Point(room.rows * room.tileWidth >> 1, 0)
-    }
+      tileWidth: room.tileWidth,
+      offset: new Phaser.Geom.Point(room.rows * room.tileWidth >> 1, 0),
+    };
 
     if (this.scene) {
       this.mCameraService.setCameras(this.scene.cameras.main);
@@ -123,7 +123,7 @@ export class Room implements RoomService {
     return Position45.transformTo45(point3d, this.mPosition45Object);
   }
 
-  public addMouseListen(callback?: Function) {
+  public addMouseListen(callback?: (layer) => void) {
     this.layerManager.addMouseListen(callback);
   }
 
@@ -167,7 +167,7 @@ export class Room implements RoomService {
       this.mScene = null;
     }
     this.manager = null;
-    //this.mTerainManager.dispose();
+    // this.mTerainManager.dispose();
     this.mPlayerManager.dispose();
     this.mLayManager.dispose();
     // this.mElementManager.dispose();
