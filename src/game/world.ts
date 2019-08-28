@@ -51,6 +51,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         //this.addHandlerFun(3, this.stopRoomManager);
 
         this.mSize = new Size();
+        this.mSize.setSize(window.innerWidth, window.innerHeight);
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
 
@@ -151,8 +152,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public resize(width: number, height: number) {
         this.mSize.setSize(width, height);
-        this.mGame.scale.resize(width, height);
-        this.mRoomMamager.resize(width, height);
+        if (this.mGame) {
+            this.mGame.scale.resize(width, height);
+        }
+        if (this.mRoomMamager) {
+            this.mRoomMamager.resize(width, height);
+        }
         //TODO manager.resize
     }
 

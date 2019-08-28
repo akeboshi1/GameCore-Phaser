@@ -122,7 +122,7 @@ export class Room implements RoomService {
     }
     return Position45.transformTo45(point3d, this.mPosition45Object);
   }
-  
+
   public addMouseListen(callback?: Function) {
     this.layerManager.addMouseListen(callback);
   }
