@@ -2,14 +2,14 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
 import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
-import { RoomService } from "../room";
+import { IRoomService } from "../room";
 import { DisplayInfo } from "../display/display.info";
 import { IElementManager } from "../element/element.manager";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
 
-  constructor(private mRoom: RoomService) {
+  constructor(private mRoom: IRoomService) {
     super();
 
     if (this.connection) {
@@ -21,7 +21,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
   }
 
-  init() {
+  public init() {
     if (!this.mTerrains) {
       this.mTerrains = new Map();
     }
@@ -36,6 +36,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       console.error("layer manager is undefined");
       return;
     }
+    return;
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
     const terrains = content.terrain;
     if (terrains) {
@@ -62,7 +63,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     console.error("room manager is undefined");
   }
 
-  get roomService(): RoomService {
+  get roomService(): IRoomService {
     return this.mRoom;
   }
 

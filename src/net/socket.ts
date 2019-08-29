@@ -24,13 +24,13 @@ export class SocketConnection {
     protected mServerAddr: ServerAddress = {host: "localhost", port: 80};
     protected mConnectListener?: IConnectListener;
 
-    constructor(listener: IConnectListener) {
+    constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
-        this.mConnectListener = listener;
+        this.mConnectListener = $listener;
 
         // add connection event to listener
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
-            let listener: IConnectListener = this.mConnectListener;
+            const listener: IConnectListener = this.mConnectListener;
             this.mTransport.on("open", () => {
                 console.info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this);
@@ -40,10 +40,34 @@ export class SocketConnection {
                 console.info(`SocketConnection close.`);
                 listener.onDisConnected(this);
             });
-            this.mTransport.on("error", reason => {
+            this.mTransport.on("error", (reason: SocketConnectionError) => {
                 console.info(`SocketConnection error.`);
                 listener.onError(reason);
             });
+        }
+    }
+
+    startConnect(addr: ServerAddress): void {
+        this.mServerAddr = addr;
+        this.doConnect();
+    }
+
+    stopConnect(): void {
+        // TODO Maybe not necessary.
+    }
+
+    send(data: any): void {
+        if (!this.mTransport) {
+            return console.error(`Empty transport.`);
+        }
+        console.debug(`SocketConnection::send - state: ${this.mTransport._readyState}`);
+        this.mTransport.Send(data);
+    }
+
+    // Frees all resources for garbage collection.
+    destroy(): void {
+        if (this.mTransport) {
+            this.mTransport.destroy();
         }
     }
 
@@ -59,34 +83,10 @@ export class SocketConnection {
         // override by subclass.
     }
 
-    startConnect(addr: ServerAddress): void {
-        this.mServerAddr = addr;
-        this.doConnect();
-    }
-
-    stopConnect(): void {
-        // TODO Maybe not necessary.
-    }
-
     private doConnect() {
         if (!this.mTransport) {
             return console.error(`Empty transport.`);
         }
         this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);
-    }
-
-    send(data: any): void {
-        if (!this.mTransport) {
-            return console.error(`Empty transport.`);
-        }
-        console.debug(`SocketConnection::send - state: ${this.mTransport._readyState}`);
-        this.mTransport.Send(data);
-    }
-
-    //Frees all resources for garbage collection.
-    destroy(): void {
-        if (this.mTransport) {
-            this.mTransport.destroy();
-        }
     }
 }

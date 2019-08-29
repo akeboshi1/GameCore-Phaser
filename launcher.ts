@@ -1,14 +1,11 @@
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
-
-
 import "phaser";
 import "dragonBones";
 import {version} from "./lib/version";
 import {World} from "./src/game/world";
 import {ServerAddress} from "./src/net/address";
-
 
 export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
     readonly auth_token: string;
@@ -28,8 +25,6 @@ export class Launcher {
     private world: World;
 
     constructor() {
-        let s = this;
-
         setInterval(() => {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', "./package.json", true);
@@ -82,7 +77,7 @@ export class Launcher {
             token_expire: CONFIG.token_expire || "1567242456",
             token_fingerprint: CONFIG.token_fingerprint || "332244e001e10be33205fc8b51a7ce76fb80323b",
             server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-            game_id: CONFIG.game_id || "5d2691baf2f97440d7bb43c3",
+            game_id: CONFIG.game_id || "5d65e35fdb19b473d87c2023",
             virtual_world_id: CONFIG.virtual_world_id || "0",
             type: Phaser.AUTO,
             zoom: 1,

@@ -1,15 +1,13 @@
 
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
-import { Position45Manager } from "./position45.manager";
 import { FramesDisplay } from "../display/frames.display";
-import { IDisplayInfo } from "../display/display.info";
 
 export class Terrain extends Element {
   protected mDisplay: FramesDisplay | undefined;
   constructor(mElementManager: IElementManager) {
     super(mElementManager);
-    //this.createDisplay();
+    // this.createDisplay();
   }
 
   // public createDisplay(): FramesDisplay | undefined {
@@ -48,4 +46,4 @@ export class Terrain extends Element {
     this.mDisplay.y = point.y;
     this.mDisplay.z = z;
   }
-} 
+}

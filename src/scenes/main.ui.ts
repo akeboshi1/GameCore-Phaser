@@ -1,9 +1,16 @@
 export class MainUIScene extends Phaser.Scene {
-  constructor () {
+  private fps: Phaser.GameObjects.Text;
+  constructor() {
     super({ key: MainUIScene.name });
   }
 
-  preload() { }
+  public preload() { }
 
-  create() { }
+  public create() {
+    this.fps = this.add.text(0, 0, "");
+  }
+
+  public update() {
+    this.fps.setText(this.game.loop.actualFps.toFixed());
+  }
 }

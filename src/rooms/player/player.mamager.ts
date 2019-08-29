@@ -3,7 +3,7 @@ import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
-import { Room, RoomService } from "../room";
+import { Room, IRoomService } from "../room";
 import { PlayerInfo } from "./playInfo";
 import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { DisplayInfo } from "../display/display.info";
@@ -25,7 +25,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
   }
 
-  init() {
+  public init() {
     if (!this.mPlayerMap) {
       this.mPlayerMap = new Map();
     }
@@ -36,7 +36,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
     this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
-    //todo playState change
+    // todo playState change
     this.addHandlerFun(1, this.onChangeState);
     this.mPlayerMap.clear();
   }
@@ -56,11 +56,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     if (obj.originPoint) {
       this.mMainRoleInfo.setOriginCollisionPoint(obj.originPoint);
     }
-    let player: Player = new Player(this);
-    let displayInfo: DisplayInfo = new DisplayInfo();
+    const player: Player = new Player(this);
+    const displayInfo: DisplayInfo = new DisplayInfo();
     displayInfo.setInfo(obj);
     player.load(displayInfo, () => {
-      (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"//obj.avatar.id;
+      (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"; // obj.avatar.id;
       this.mPlayerMap.set(obj.id, player);
       player.setPosition(obj.x, obj.y, obj.z);
       this.mRoom.addToSurface(player.getDisplay());
@@ -71,16 +71,25 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
   }
 
+  public dispose() {
+    if (this.mPlayerMap) {
+      this.mPlayerMap.forEach((player: Player) => {
+        player.disopse();
+      });
+      this.mPlayerMap = null;
+    }
+  }
+
   private onAdd(packet: PBpacket) {
     if (!this.mPlayerMap) {
       this.mPlayerMap = new Map();
     }
-    let content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
-    let players = content.actors;
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
+    const players = content.actors;
     if (players) {
       let displayInfo: DisplayInfo;
       let plyer: Player;
-      for (let player of players) {
+      for (const player of players) {
         plyer = new Player(this);
         displayInfo = new DisplayInfo();
         displayInfo.setInfo(player);
@@ -98,8 +107,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
   private onMove(packet: PBpacket) {
     const content: op_client.IOP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER = packet.content;
     if (content.moveData) {
-      let moveDataList: op_client.IMoveData[] = content.moveData
-      let len: number = moveDataList.length;
+      const moveDataList: op_client.IMoveData[] = content.moveData;
+      const len: number = moveDataList.length;
       let moveData: op_client.IMoveData;
       let playID: number;
       let player: Player;
@@ -117,10 +126,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
   }
 
   private onChangeState(packet: PBpacket) {
-    let content = packet.content;
-    let id: number = content.id;
-    let state: string = content.state;
-    let player: Player = this.mPlayerMap.get(id);
+    const content = packet.content;
+    const id: number = content.id;
+    const state: string = content.state;
+    const player: Player = this.mPlayerMap.get(id);
     if (player) {
       player.changeState(state);
     }
@@ -128,22 +137,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
   private onSetPosition(packet: PBpacket) { }
 
-  get roomService(): RoomService {
+  get roomService(): IRoomService {
     return this.mRoom;
   }
 
   get scene(): Phaser.Scene | undefined {
     if (this.mRoom) {
       return this.mRoom.scene;
-    }
-  }
-
-  public dispose() {
-    if (this.mPlayerMap) {
-      this.mPlayerMap.forEach((player: Player) => {
-        player.disopse();
-      });
-      this.mPlayerMap = null;
     }
   }
 }

@@ -3,17 +3,13 @@ import { ConnectionService } from "../net/connection.service";
 import { RoomManager } from "../rooms/room.manager";
 import { SelectManager } from "../rooms/player/select.manager";
 import { Size } from "../utils/size";
-import { RoomService } from "../rooms/room";
+import { IRoomService } from "../rooms/room";
 export interface WorldService {
     connection: ConnectionService;
+    readonly game: Phaser.Game;
+    readonly roomManager: RoomManager;
+    readonly selectCharacterManager: SelectManager;
 
     getSize(): Size;
-
-    changeRoom(room: RoomService);
-
-    readonly game: Phaser.Game;
-
-    readonly roomManager: RoomManager;
-
-    readonly selectCharacterManager: SelectManager;
+    changeRoom(room: IRoomService);
 }

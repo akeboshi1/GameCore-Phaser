@@ -8,20 +8,20 @@ enum ReadyState {
     CONNECTING = 0,
     OPEN = 1,
     CLOSING = 2,
-    CLOSED = 3
+    CLOSED = 3,
 }
 
 export class WSWrapper extends EventEmitter {
-    public secure: Boolean = false;
+    public secure = false;
     _host: string;
     _port: number;
     _connection: any = undefined;
     _readyState: ReadyState = ReadyState.CLOSED;
     _packets_q: Buffer[] = [];
-    _writable: Boolean = false;
+    _writable = false;
     _sent_count: number = 0;
-    _auto_reconnect: Boolean = false;
-    _force_close: Boolean = false;
+    _auto_reconnect = false;
+    _force_close = false;
 
     constructor();
     constructor(host: string, port: number);
@@ -49,6 +49,19 @@ export class WSWrapper extends EventEmitter {
             this.doClose();
         }
     }
+    public Send(packet: Buffer) {
+        if (ReadyState.OPEN === this._readyState) {
+            this._packets_q.push(packet);
+            this.write();
+        } else {
+            this.emit(`error`, `Transport not open yet.`);
+        }
+    }
+
+    // Frees all resources for garbage collection.
+    public destroy(): void {
+        // TODO
+    }
 
     private addCallBacks() {
 
@@ -67,7 +80,7 @@ export class WSWrapper extends EventEmitter {
 
         this._connection.onerror = (e: Error) => {
             this.emit(`error`, e);
-        }
+        };
     }
 
     private onOpen() {
@@ -98,16 +111,16 @@ export class WSWrapper extends EventEmitter {
          */
         if (typeof Socket === "undefined") {
             this.emit(`error`, `WebSocket is NOT support by this Browser.`);
-            return
+            return;
         }
 
-        let uri = this.uri();
+        const uri = this.uri();
         try {
             this._connection = new Socket(uri);
             this._connection.binaryType = "arraybuffer";
             this.addCallBacks();
         } catch (e) {
-            this.emit(`error`, e)
+            this.emit(`error`, e);
         }
     }
 
@@ -121,7 +134,7 @@ export class WSWrapper extends EventEmitter {
     }
 
     private uri(): string {
-        let schema = this.secure ? "wss" : "ws";
+        const schema = this.secure ? "wss" : "ws";
         let port = "";
         if (this._port && (("wss" === schema && Number(this._port) !== 443) ||
             ("ws" === schema && Number(this._port) !== 80))) {
@@ -132,7 +145,7 @@ export class WSWrapper extends EventEmitter {
 
     private write() {
         if (this._packets_q.length > 0 && this._writable) {
-            let packet = this._packets_q.shift();
+            const packet = this._packets_q.shift();
 
             this._writable = false; // write lock!
             new Promise((resolve, reject) => {
@@ -145,26 +158,12 @@ export class WSWrapper extends EventEmitter {
             }).then(() => {
                 // send ok
                 this.emit(`sent`, [++this._sent_count, packet]);
-            }).catch(reason => {
-                this.emit(`error`, reason)
+            }).catch((reason: any) => {
+                this.emit(`error`, reason);
             }).finally(() => {
                 this._writable = true;
                 this.write();
-            })
+            });
         }
-    }
-
-    public Send(packet: Buffer) {
-        if (ReadyState.OPEN === this._readyState) {
-            this._packets_q.push(packet);
-            this.write();
-        } else {
-            this.emit(`error`, `Transport not open yet.`)
-        }
-    }
-
-    //Frees all resources for garbage collection.
-    public destroy(): void {
-        // TODO
     }
 }

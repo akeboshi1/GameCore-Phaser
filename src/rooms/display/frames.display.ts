@@ -12,8 +12,8 @@ export class FramesDisplay extends ElementDisplay {
     super(scene);
   }
 
-  public load(display: IDisplayInfo, callback?: Function) {
-    this.mDisplayInfo = display;
+  public load(displayInfo: IDisplayInfo, callback?: () => void) {
+    this.mDisplayInfo = displayInfo;
     if (!this.mDisplayInfo) return;
     if (this.resKey) {
       if (this.scene.cache.obj.has(this.resKey)) {
@@ -36,30 +36,32 @@ export class FramesDisplay extends ElementDisplay {
   }
 
   private onLoadCompleteHandler() {
-    this.analyzeAnimations();
     if (!this.mSprite) {
-      this.mSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, this.resKey);
+      this.mSprite = this.scene.make.sprite(undefined, false);
       this.add(this.mSprite);
     } else {
       this.mSprite.setTexture(this.resKey);
     }
-    console.log(this.resKey);
+    this.makeAnimations();
+    this.mSprite.play(`${this.mDisplayInfo.type}_${this.mDisplayInfo.animationName}`);
+    // console.log(this.resKey);
   }
 
-  private analyzeAnimations() {
+  private makeAnimations() {
     if (this.mDisplayInfo) {
       const animations = this.mDisplayInfo.animations;
+      const resKey = this.resKey;
       for (const animation of animations) {
         // Didn't find a good way to create an animation with frame names without a pattern.
-        let frames = [];
-        animation.frameName.forEach(frame => { frames.push({ key: animation.name, frame }) })
+        const frames = [];
+        animation.frameName.forEach((frame: string) => { frames.push({ key: resKey, frame }); });
         const config: Phaser.Types.Animations.Animation = {
           key: this.mDisplayInfo.type + "_" + animation.name,
-          frames: frames,
+          frames,
           frameRate: animation.frameRate,
-          repeat: -1
-        }
-        this.scene.anims.create(config)
+          repeat: -1,
+        };
+        this.scene.anims.create(config);
       }
     }
   }

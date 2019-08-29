@@ -10,31 +10,31 @@ import {Buffer} from "buffer/";
 const ctx: Worker = self as any;
 
 class ConnListener implements IConnectListener {
-    onConnected(connection: SocketConnection): void {
-        ctx.postMessage({
-            method: "onConnected"
-        });
-        console.info(`NetWorker[已连接]`);
-    }
+  onConnected(connection: SocketConnection): void {
+    ctx.postMessage({
+      method: "onConnected",
+    });
+    console.info(`NetWorker[已连接]`);
+  }
 
-    onDisConnected(connection: SocketConnection): void {
-        ctx.postMessage({
-            method: "onDisConnected"
-        });
-        console.info(`NetWorker[已断开]`);
-    }
+  onDisConnected(connection: SocketConnection): void {
+    ctx.postMessage({
+      method: "onDisConnected",
+    });
+    console.info(`NetWorker[已断开]`);
+  }
 
-    onError(reason: SocketConnectionError | undefined): void {
-        if (reason) {
-            ctx.postMessage({
-                method: "onConnectError",
-                error: reason.message
-            });
-            console.error(`NetWorker[错误]:${reason.message}`);
-        } else {
-            console.error(`NetWorker[错误]:${reason}`);
-        }
+  onError(reason: SocketConnectionError | undefined): void {
+    if (reason) {
+      ctx.postMessage({
+        method: "onConnectError",
+        error: reason.message,
+      });
+      console.error(`NetWorker[错误]:${reason.message}`);
+    } else {
+      console.error(`NetWorker[错误]:${reason}`);
     }
+  }
 }
 
 class WorkerClient extends SocketConnection {

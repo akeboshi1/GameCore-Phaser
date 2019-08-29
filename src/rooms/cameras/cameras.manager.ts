@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Cameras } from "./cameras";
-import { RoomService } from "../room";
+import { IRoomService } from "../room";
 import { ConnectionService } from "../../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 
@@ -12,7 +12,7 @@ export interface ICameraService {
 
 export class CamerasManager extends PacketHandler implements ICameraService {
   private mCameras: Phaser.Cameras.Scene2D.Camera;
-  constructor(private mRoomService: RoomService) {
+  constructor(private mRoomService: IRoomService) {
     super();
   }
 
@@ -24,7 +24,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     this.resetCameraSize(width, height) ;
   }
 
-  startFollow(target: Phaser.GameObjects.GameObject) {
+  public startFollow(target: Phaser.GameObjects.GameObject) {
     if (this.mCameras) {
       this.mCameras.startFollow(target);
     }
@@ -35,7 +35,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
       console.error("connection is undefined");
       return;
     }
-    let packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
     const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
     // TOOD move to cameras manager and not getting from document
     size.width = width;

@@ -3,14 +3,14 @@ import { World } from "../game/world";
 export class SelectCharacter extends Phaser.Scene {
   private mWorld: World | undefined;
   constructor() {
-    super({key: SelectCharacter.name})
+    super({key: SelectCharacter.name});
   }
 
-  preload() { }
+  public preload() { }
 
-  init(data: any) {
+  public init(data: any) {
     this.mWorld = data;
   }
 
-  create() { }
+  public create() { }
 }

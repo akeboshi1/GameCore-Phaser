@@ -1,10 +1,8 @@
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Geom } from "phaser";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import { Room, RoomService } from "../rooms/room";
-
+import { IRoomService } from "../rooms/room";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -21,21 +19,21 @@ export class MouseManager extends PacketHandler {
     private mActivePointer: Phaser.Input.Pointer;
     private mGroundLayer: Phaser.GameObjects.Container;
     private running = false;
-    //===============================
-    private _game: Phaser.Game;
-    private _scene: Phaser.Scene;
-    private _connect: ConnectionService;
+    // ===============================
+    private mGame: Phaser.Game;
+    private mScene: Phaser.Scene;
+    private mConnect: ConnectionService;
     constructor(private worldService: WorldService) {
         super();
-        this._game = worldService.game;
-        this._connect = this.worldService.connection;
+        this.mGame = worldService.game;
+        this.mConnect = this.worldService.connection;
     }
 
-    public setRoom(room: RoomService) {
+    public setRoom(room: IRoomService) {
         this.pause();
-        this._scene = room.scene;
-        if (!this._scene) return;
-        this.mActivePointer = this._scene.input.activePointer;
+        this.mScene = room.scene;
+        if (!this.mScene) return;
+        this.mActivePointer = this.mScene.input.activePointer;
         room.addMouseListen((ground) => {
             this.mGroundLayer = ground;
             this.mGroundLayer.on("pointerdown", this.groundDown, this);
@@ -43,7 +41,6 @@ export class MouseManager extends PacketHandler {
             this.resume();
         });
     }
-
 
     public resize(width: number, height: number) {
 
@@ -57,22 +54,11 @@ export class MouseManager extends PacketHandler {
         this.running = true;
     }
 
-    private groundDown(pointer) {
-        this.mActivePointer = pointer;
-        this.onUpdate(pointer);
-    }
-
-    private groundUp(pointer) {
-        this.mActivePointer = pointer;
-        this.onUpdate(pointer);
-    }
-
-
     public onUpdate(pointer: Phaser.Input.Pointer): void {
         if (this.running === false || this.mActivePointer === undefined) {
             return;
         }
-        let events: number[] = [];
+        const events: number[] = [];
         if (this.mActivePointer.leftButtonDown) {
             events.push(MouseEvent.LeftMouseDown);
         } else if (this.mActivePointer.leftButtonReleased) {
@@ -92,36 +78,44 @@ export class MouseManager extends PacketHandler {
             return;
         }
 
-
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
-        let content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.mouseEvent = events;
         content.point3f = { x: pointer.x, y: pointer.y };
-        this._connect.send(pkt);
+        this.mConnect.send(pkt);
     }
 
     /**
      * 设置鼠标事件开关
      */
     public set enable(value: boolean) {
-        if (this._scene) {
-            this._scene.input.mouse.enabled = value;
+        if (this.mScene) {
+            this.mScene.input.mouse.enabled = value;
         }
     }
 
     public get enable(): boolean {
-        if (this._scene) {
-            return this._scene.input.mouse.enabled;
+        if (this.mScene) {
+            return this.mScene.input.mouse.enabled;
         }
         return false;
     }
 
     public dispose() {
         this.mActivePointer = null;
-        this._scene = null;
-        this._connect = null;
+        this.mScene = null;
+        this.mConnect = null;
         this.mGroundLayer = null;
         this.running = false;
     }
 
+    private groundDown(pointer) {
+        this.mActivePointer = pointer;
+        this.onUpdate(pointer);
+    }
+
+    private groundUp(pointer) {
+        this.mActivePointer = pointer;
+        this.onUpdate(pointer);
+    }
 }

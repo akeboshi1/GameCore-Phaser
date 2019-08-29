@@ -1,19 +1,19 @@
 
 export class LoadingScene extends Phaser.Scene {
-  private mCallBack: Function;
+  private mCallBack: () => void;
   constructor() {
     super({ key: LoadingScene.name });
   }
 
-  preload() { }
+  public preload() { }
 
-  init(data: any) {
+  public init(data: any) {
     if (data) {
       this.mCallBack = data.callBack;
     }
   }
 
-  create() {
+  public create() {
     if (this.mCallBack) {
       this.mCallBack();
     }
