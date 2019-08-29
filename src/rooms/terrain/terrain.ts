@@ -2,6 +2,7 @@
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { FramesDisplay } from "../display/frames.display";
+import { IDisplayInfo } from "../display/display.info";
 
 export class Terrain extends Element {
   protected mDisplay: FramesDisplay | undefined;
@@ -22,7 +23,7 @@ export class Terrain extends Element {
   //   return undefined;
   // }
 
-  // public load(display: IDisplayInfo, callBack?: Function) {
+  // public load(display: IDisplayInfo, callBack?: () => void) {
   //   super.load(display, callBack);
   // }
 

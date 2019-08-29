@@ -5,7 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
 import { Room, IRoomService } from "../room";
 import { PlayerInfo } from "./playInfo";
-import { DragonBonesDisplay } from "../display/dragonBones.display";
+import { DragonBonesDisplay } from "../display/dragonbones.display";
 import { DisplayInfo } from "../display/display.info";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;

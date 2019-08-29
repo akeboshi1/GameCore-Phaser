@@ -3,9 +3,9 @@
 // 2. 做设备兼容
 import "phaser";
 import "dragonBones";
-import {version} from "./lib/version";
-import {World} from "./src/game/world";
-import {ServerAddress} from "./src/net/address";
+import { version } from "./lib/version";
+import { World } from "./src/game/world";
+import { ServerAddress } from "./src/net/address";
 
 export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
     readonly auth_token: string;
@@ -97,7 +97,7 @@ export class Launcher {
                     {
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-                        mapping: "dragonbone"
+                        mapping: "dragonbone",
                     }
                 ]
             },

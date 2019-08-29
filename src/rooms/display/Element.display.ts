@@ -1,5 +1,5 @@
 import { IDisplayInfo } from "./display.info";
-import { DragonBonesDisplay } from "./dragonBones.display";
+import { DragonBonesDisplay } from "./dragonbones.display";
 import { FramesDisplay } from "./frames.display";
 
 export class ElementDisplay extends Phaser.GameObjects.Container {

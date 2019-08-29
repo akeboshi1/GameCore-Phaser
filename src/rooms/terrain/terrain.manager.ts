@@ -46,7 +46,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         loader.setInfo(terrain);
         ter.load(loader);
         this.mRoom.addToGround(ter.getDisplay());
-       // addElement(ter.getDisplay(),LayerType.GroundLayer);
+        // addElement(ter.getDisplay(),LayerType.GroundLayer);
         this.mTerrains.set(terrain.id || 0, ter);
       }
     }

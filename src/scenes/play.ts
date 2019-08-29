@@ -22,4 +22,5 @@ export class PlayScene extends Phaser.Scene {
     }
     console.log("play created");
   }
+
 }
