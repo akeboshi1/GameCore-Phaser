@@ -1,24 +1,32 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_gateway, op_virtual_world} from "pixelpai_proto";
-import {SocketConnection} from "../net/socket";
+import {op_client, op_virtual_world} from "pixelpai_proto";
+import {ConnectionService} from "../net/connection.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
-import * as Long from "long";
+import {Algorithm} from "../utils/algorithm";
+
+const LATENCY_SAMPLES = 15; // Latency Array length
+const TICK_INTERVAL = 500; // (ms)
+const CHECK_INTERVAL = 100000; // (ms)
 
 export class Clock extends PacketHandler {
-    private mTimestamp: number; //The timestamp in JavaScript is expressed in milliseconds.
+    private mTimestamp: number; // The timestamp in JavaScript is expressed in milliseconds.
     private mTickHandler: any;
-    private mConn: SocketConnection;
-    private mDelay: number[] = [];
+    private mConn: ConnectionService;
+    private mLatency: number[] = [];
 
-    constructor(conn: SocketConnection) {
+    constructor(conn: ConnectionService) {
         super();
         this.mConn = conn;
-
+        this.mConn.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
 
         this._start();
         this._check();
+    }
+
+    get sysUnixTime(): number {
+        return new Date().getTime();
     }
 
     set unixTime(t: number) {
@@ -26,67 +34,59 @@ export class Clock extends PacketHandler {
     }
 
     get unixTime(): number {
-        return this.mTimestamp
+        return this.mTimestamp;
     }
 
-    protected _check():void{
+    protected _check(): void {
         const self = this;
-        setInterval(()=>{
-            self.sync();
-        },10000);
+        setInterval(() => {
+            self._sync();
+        }, CHECK_INTERVAL);
     }
 
     protected _start(): void {
         const self = this;
         this.mTickHandler = setInterval(() => {
             if (!self.mTimestamp) {
-                self.mTimestamp = new Date().getTime();
+                self.mTimestamp = self.sysUnixTime;
             } else
-                self.mTimestamp += 200
-        }, 200);
+                self.mTimestamp += TICK_INTERVAL;
+        }, TICK_INTERVAL);
     }
 
-    sync(): void {
+    private _sync(): void {
         if (!this.mConn) return;
-        let pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
-        let ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
-        ct.clientStartTs = this.mTimestamp;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
+        const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
+        ct.clientStartTs = this.sysUnixTime;
         this.mConn.send(pkt);
     }
 
     private proof(packet: PBpacket) {
         const ct: IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = packet.content;
-        const local_receive = this.mTimestamp
-            , local_send = Long.fromValue(ct.clientStartTs).toNumber()
-            , remote_receive = Long.fromValue(ct.serverReceiveTs).toNumber()
-            , remote_send = Long.fromValue(ct.serverSendTs).toNumber()
-            , delta_up = remote_receive - local_send
-            , delta_down = local_receive - remote_send;
+        const local_receive = this.sysUnixTime
+            , local_send = ct.clientStartTs
+            , remote_receive = ct.serverReceiveTs
+            , remote_send = ct.serverSendTs
+            , server_run = remote_send - remote_receive
+            , total_delay = (local_receive - local_send) - server_run
+            , latency = Math.round(total_delay / 2);
+        let timeSychronDelta = 0;
+        if (latency < 0) return;
 
-        console.log(`local_send = ${local_send} | remote_receive = ${remote_receive} | remote_send = ${remote_send}`);
-        if (delta_up <= 0) {
-            console.error(`RemoteReceive time is less than LocalSend time: ${delta_up}`);
-            return;
+        this.mLatency.push(latency);
+        if (this.mLatency.length > LATENCY_SAMPLES) {
+            this.mLatency.shift();
         }
-        if (delta_down <= 0) {
-            console.error(`LocalReceive time is less than RemoteSend time: ${delta_down}`);
-            this.unixTime = remote_send;
-            return;
-        }
+        const median_latency = Algorithm.median(this.mLatency);
+        timeSychronDelta = median_latency + server_run;
 
-        const avg_delay: number = Math.round((delta_up + delta_down) / 2);
-        this.mDelay.push(avg_delay);
-        if (this.mDelay.length > 3) {
-            this.mDelay.shift();
+        const remote_time = remote_send - timeSychronDelta;
+        const mistake = Math.abs(remote_time - this.mTimestamp);
+        // update timesychron
+        if (mistake > TICK_INTERVAL) {
+            this.mTimestamp = remote_time;
         }
-    }
-
-    get delay(): number {
-        if (this.mDelay.length < 1) return 0;
-        const total = this.mDelay.reduce((a, b) => {
-            return a + b;
-        })
-            , count = this.mDelay.length;
-        return Math.round(total / count);
+        console.log(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
     }
 }

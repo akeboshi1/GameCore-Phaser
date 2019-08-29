@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/game/clock.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/algorithm.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/clock.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/clock.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/net/networker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/networker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,6 +51,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
@@ -133,7 +139,7 @@
       <workItem from="1565933463638" duration="1584000" />
       <workItem from="1566195347910" duration="3997000" />
       <workItem from="1566210781753" duration="14640000" />
-      <workItem from="1566907507305" duration="27960000" />
+      <workItem from="1566907507305" duration="39456000" />
     </task>
     <servers />
   </component>

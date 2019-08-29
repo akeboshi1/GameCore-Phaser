@@ -18,7 +18,8 @@ import {SelectManager} from "../rooms/player/select.manager";
 import {LoadingManager} from "./loading.manager";
 import {Size} from "../utils/size";
 import {IRoomService} from "../rooms/room";
-import { MainUIScene } from "../scenes/main.ui";
+import {MainUIScene} from "../scenes/main.ui";
+import {Clock} from "./clock";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -32,6 +33,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mMouseManager: MouseManager;
     private mLoadingManager: LoadingManager;
     private mSize: Size;
+
+    private mClock: Clock;
 
     constructor(config: IGameConfigure) {
         super();
@@ -75,6 +78,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     onConnected(connection?: SocketConnection): void {
         console.info(`enterVirtualWorld`);
         this.enterVirtualWorld();
+
+        // Start clock
+        this.mClock = new Clock(this.mConnection);
     }
 
     onDisConnected(connection?: SocketConnection): void {
@@ -87,7 +93,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        console.error(content.msg);
+        console.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
@@ -138,7 +144,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mConfig && this.mConnection) {
             const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
             const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-            content.virtualWorldUuid = this.mConfig.virtual_world_id;
+            console.log(`VW_id: ${this.mConfig.virtual_world_id}`);
+            content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
             content.gameId = this.mConfig.game_id;
             content.userToken = this.mConfig.auth_token;
             content.expire = this.mConfig.token_expire;

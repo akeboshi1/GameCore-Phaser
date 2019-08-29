@@ -1,4 +1,8 @@
 {
+  "gateway": {
+    "host": "172.17.17.1",
+    "port": 12100
+  },
   "game_id": "5d2691baf2f97440d7bb43c3",
   "virtual_world_id": 65539
 }

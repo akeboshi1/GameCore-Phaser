@@ -41,13 +41,14 @@ module.exports = {
         }),
         new ConfigWebpackPlugin(),
         new CopyWebpackPlugin([
-            {from: "**/*", to: "resources", force: true, context:'resources'}
+            {from: "**/*", to: "resources", force: true, context: 'resources'}
         ]),
         new HtmlWebpackPlugin({
             title: "图轻播放器",
             template: path.join(__dirname, "./index.html")
         }),
         new TSLintPlugin({
+            config: path.resolve(__dirname,"./tslint.json"),
             files: ["./src/**/*.ts"]
         })
     ],
