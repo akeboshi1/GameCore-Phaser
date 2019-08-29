@@ -31,9 +31,6 @@ export class KeyBoardManager extends PacketHandler {
 
         this.mGame = this.worldService.game;
         this.mConnect = this.worldService.connection;
-        // todo 服务器添加获取监听按键协议
-        // this.mConnect.send(Packet);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.keyCodeListCallBack);
     }
 
     /**
@@ -82,15 +79,6 @@ export class KeyBoardManager extends PacketHandler {
         this.mConnect = null;
         this.mGame = null;
         this.mInitilized = false;
-    }
-
-    /**
-     * 缓存服务器发送给客户端需要监听的key值，等获取scene之后把这些值添加到scene中
-     * @param packet
-     */
-    private keyCodeListCallBack(packet: PBpacket) {
-        this.mInitilized = true;
-        // this.mCodeList = packet.content;
     }
 
     private addKeyEvent(key: Phaser.Input.Keyboard.Key): void {
