@@ -45,25 +45,24 @@ export class Launcher {
 
 
         // todo window load
-        ///this.mWorld.game.scene.start("PlayScene");
+        /// this.mWorld.game.scene.start("PlayScene");
         window.addEventListener("resize", () => {
             const w = window.innerWidth;
             const h = window.innerHeight;
 
-            let width = this.minWidth;
-            let height = this.minHeight;
-            let maxWidth = this.maxWidth;
-            let maxHeight = this.maxHeight;
+            const width = this.minWidth;
+            const height = this.minHeight;
+            const maxWidth = this.maxWidth;
+            const maxHeight = this.maxHeight;
 
-            let scale = Math.min(w / width, h / height);
-            let newWidth = Math.min(w / scale, maxWidth);
-            let newHeight = Math.min(h / scale, maxHeight);
+            const scale = Math.min(w / width, h / height);
+            const newWidth = Math.min(w / scale, maxWidth);
+            const newHeight = Math.min(h / scale, maxHeight);
 
             if (this.world) {
                 this.world.resize(w, h);
             }
         });
-
 
         import(/* webpackChunkName: "game" */ "./src/game/world").then(game => {
             this.world = new World(this.config);
@@ -77,7 +76,7 @@ export class Launcher {
             token_expire: CONFIG.token_expire || "1567242456",
             token_fingerprint: CONFIG.token_fingerprint || "332244e001e10be33205fc8b51a7ce76fb80323b",
             server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-            game_id: CONFIG.game_id || "5d65e35fdb19b473d87c2023",
+            game_id: CONFIG.game_id || "5d18c647c6f7526f96c2d621",
             virtual_world_id: CONFIG.virtual_world_id || "0",
             type: Phaser.AUTO,
             zoom: 1,

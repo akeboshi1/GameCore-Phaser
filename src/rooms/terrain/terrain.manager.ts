@@ -36,7 +36,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       console.error("layer manager is undefined");
       return;
     }
-    return;
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
     const terrains = content.terrain;
     if (terrains) {

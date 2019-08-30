@@ -71,6 +71,9 @@ export class Player extends Element {
         // todo 通信服務端到達目的地
         play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
       },
+      onUpdate: (tween, targets, play) => {
+        targets.depth = targets.x + targets.y;
+      },
       onCompleteParams: [this],
     });
 

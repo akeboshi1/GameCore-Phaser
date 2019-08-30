@@ -21,7 +21,8 @@
         "max-classes-per-file": false,
         "interface-name": false,
         "object-literal-key-quotes": false,
-        "no-namespace": false
+        "no-namespace": false,
+        "quotemark": [true, "double"]
     },
     "rulesDirectory": []
 }

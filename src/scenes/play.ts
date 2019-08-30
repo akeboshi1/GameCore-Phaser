@@ -23,4 +23,10 @@ export class PlayScene extends Phaser.Scene {
     console.log("play created");
   }
 
+  update() {
+    if (this.cameras.main) {
+      this.cameras.main.emit("renderer", this.cameras.main);
+    }
+  }
+
 }

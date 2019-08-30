@@ -27,7 +27,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
   }
 
-  public  init() {
+  public init() {
     if (!this.mElements) {
       this.mElements = new Map();
     }
