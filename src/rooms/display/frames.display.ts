@@ -44,6 +44,8 @@ export class FramesDisplay extends ElementDisplay {
     }
     this.makeAnimations();
     this.mSprite.play(`${this.mDisplayInfo.type}_${this.mDisplayInfo.animationName}`);
+    this.mSprite.setInteractive({ pixelPerfect: true });
+    this.mSprite.setData("id", this.mDisplayInfo.id);
     // console.log(this.resKey);
   }
 

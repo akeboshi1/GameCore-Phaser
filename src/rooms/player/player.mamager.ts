@@ -4,9 +4,9 @@ import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Player } from "./player";
 import { Room, IRoomService } from "../room";
-import { DragonBonesDisplay } from "../display/dragonbones.display";
-import { DisplayInfo } from "../display/display.info";
 import { PlayerInfo } from "./playInfo";
+import { DragonBonesDisplay } from "../display/dragonBones.display";
+import { DisplayInfo } from "../display/display.info";
 export class PlayerManager extends PacketHandler implements IElementManager {
   private mPlayerMap: Map<number, Player>;
   private mMainRoleInfo: PlayerInfo;
@@ -41,6 +41,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     this.mPlayerMap.clear();
   }
 
+  get connection(): ConnectionService {
+    if (this.mRoom) {
+      return this.mRoom.connection;
+    }
+    console.error("room is undefined");
+  }
+
   public setMainRoleInfo(obj: op_client.IActor) {
     this.mMainRoleInfo.setInfo(obj);
     if (obj.walkOriginPoint) {
@@ -54,10 +61,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     displayInfo.setInfo(obj);
     player.load(displayInfo, () => {
       (player.getDisplay() as DragonBonesDisplay).dragonBonesName = "bones_human01"; // obj.avatar.id;
+      this.mPlayerMap.set(obj.id, player);
       player.setPosition(obj.x, obj.y, obj.z);
       this.mRoom.addToSurface(player.getDisplay());
     });
-    this.mPlayerMap.set(obj.id, player);
     const cameraService = this.mRoom.cameraService;
     if (cameraService) {
       if (player.getDisplay()) cameraService.startFollow(player.getDisplay());
@@ -138,12 +145,5 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     if (this.mRoom) {
       return this.mRoom.scene;
     }
-  }
-
-  get connection(): ConnectionService {
-    if (this.mRoom) {
-      return this.mRoom.connection;
-    }
-    console.error("room is undefined");
   }
 }

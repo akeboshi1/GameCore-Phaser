@@ -94,6 +94,7 @@ export class DragonBonesDisplay extends ElementDisplay {
                 this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
             }
         }
+        this.setInteractive({ pixelPerfect: true });
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -153,6 +154,15 @@ export class DragonBonesDisplay extends ElementDisplay {
     }
 
     private clearArmature() {
+        const conList: Phaser.GameObjects.GameObject[] = this.mArmatureDisplay.getAll();
+        const len1: number = conList.length;
+        for (let j: number = 0; j < len1; j++) {
+            const obj: Phaser.GameObjects.GameObject = conList[j];
+            obj.setInteractive({ pixelPerfect: true });
+            obj.on("pointerdown", () => {
+                console.log("dragonBones" + j);
+            });
+        }
         const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {
@@ -650,10 +660,10 @@ export class DragonBonesDisplay extends ElementDisplay {
         if (nextLoad) {
             const partUrl: string = ResUtils.getPartUrl(nextLoad[1]);
             const partName: string = ResUtils.getPartName(nextLoad[1]);
-            const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(nextLoad[0]);
             const resKey: string = nextLoad[1];
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, (loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) => {
                 const name: string = ResUtils.getPartName(nextLoad[1]);
+                const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(nextLoad[0]);
                 const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                 if (img.texture.key === name) {
                     slot.replaceDisplay(img);

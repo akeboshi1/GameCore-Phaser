@@ -1,9 +1,9 @@
 import { op_client } from "pixelpai_proto";
 import { Element } from "../element/element";
-import { DragonBonesDisplay } from "../display/dragonBones.display";
 import { IElementManager } from "../element/element.manager";
 import { IDisplayInfo } from "../display/display.info";
 import { Tweens } from "phaser";
+import { DragonBonesDisplay } from "../display/DragonBones.display";
 
 export enum PlayerState {
   IDLE = "idle",

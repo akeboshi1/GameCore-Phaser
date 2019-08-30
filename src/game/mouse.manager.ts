@@ -35,9 +35,11 @@ export class MouseManager extends PacketHandler {
         if (!this.mScene) return;
         this.mActivePointer = this.mScene.input.activePointer;
         room.addMouseListen((ground) => {
-            this.mGroundLayer = ground;
-            this.mGroundLayer.on("pointerdown", this.groundDown, this);
-            this.mGroundLayer.on("pointerup", this.groundUp, this);
+            // this.mGroundLayer = ground;
+            // this.mGroundLayer.on("pointerdown", this.groundDown, this);
+            // this.mGroundLayer.on("pointerup", this.groundUp, this);
+            room.scene.input.on("gameobjectdown", this.groundDown, this);
+            room.scene.input.on("gameobjectup", this.groundUp, this);
             this.resume();
         });
     }
@@ -109,13 +111,15 @@ export class MouseManager extends PacketHandler {
         this.running = false;
     }
 
-    private groundDown(pointer) {
+    private groundDown(pointer, gameObject) {
         this.mActivePointer = pointer;
         this.onUpdate(pointer);
+       // if (gameObject)gameObject.setTint(0x44ff44);
     }
 
-    private groundUp(pointer) {
+    private groundUp(pointer, gameObject) {
         this.mActivePointer = pointer;
         this.onUpdate(pointer);
+       // if (gameObject) gameObject.clearTint();
     }
 }

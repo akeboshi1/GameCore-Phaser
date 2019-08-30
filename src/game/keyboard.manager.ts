@@ -1,8 +1,8 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {ConnectionService} from "../net/connection.service";
-import {op_virtual_world} from "pixelpai_proto";
-import {WorldService} from "./world.service";
-import {IRoomService} from "../rooms/room";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { ConnectionService } from "../net/connection.service";
+import { op_virtual_world } from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { IRoomService } from "../rooms/room";
 
 export interface KeyboardListener {
     onKeyUp(keys: number[]): void;
@@ -28,6 +28,7 @@ export class KeyBoardManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
 
+    // 所有需要监听key的监听事件
     private mKeyboardListeners: KeyboardListener[] = [];
 
     constructor(private worldService: WorldService) {
