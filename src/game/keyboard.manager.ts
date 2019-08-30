@@ -1,8 +1,14 @@
-import { PBpacket, PacketHandler, Packet } from "net-socket-packet";
-import { ConnectionService } from "../net/connection.service";
-import { op_virtual_world, op_client } from "pixelpai_proto";
-import { WorldService } from "./world.service";
-import { Room, IRoomService } from "../rooms/room";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {ConnectionService} from "../net/connection.service";
+import {op_virtual_world} from "pixelpai_proto";
+import {WorldService} from "./world.service";
+import {IRoomService} from "../rooms/room";
+
+export interface KeyboardListener {
+    onKeyUp(keys: number[]): void;
+
+    onKeyDown(keys: number[]): void;
+}
 
 export class KeyBoardManager extends PacketHandler {
     // 获取的需要监听的key值列表
@@ -21,6 +27,9 @@ export class KeyBoardManager extends PacketHandler {
     private mGame: Phaser.Game;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
+
+    private mKeyboardListeners: KeyboardListener[] = [];
+
     constructor(private worldService: WorldService) {
         super();
         this.mCodeList = [37, 38, 39, 40];
@@ -31,6 +40,17 @@ export class KeyBoardManager extends PacketHandler {
 
         this.mGame = this.worldService.game;
         this.mConnect = this.worldService.connection;
+    }
+
+    public addListener(l: KeyboardListener) {
+        this.mKeyboardListeners.push(l);
+    }
+
+    public removeListener(l: KeyboardListener) {
+        const idx: number = this.mKeyboardListeners.indexOf(l);
+        if (idx >= 0) {
+            this.mKeyboardListeners.splice(idx, 1);
+        }
     }
 
     /**
@@ -88,8 +108,6 @@ export class KeyBoardManager extends PacketHandler {
     }
 
     private keyDownHandle(e: KeyboardEvent) {
-
-        // TODO role action
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         const keyArr: number[] = this.getKeyDowns();
@@ -98,10 +116,13 @@ export class KeyBoardManager extends PacketHandler {
         this.mTmpDownKeyStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
+        // then trigger listener
+        this.mKeyboardListeners.forEach((l: KeyboardListener) => {
+            l.onKeyDown(keyArr);
+        });
     }
 
     private keyUpHandle(e: KeyboardEvent) {
-        // TODO role action
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_UP);
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
         const keyArr: number[] = this.getKeyUps();
@@ -110,6 +131,11 @@ export class KeyBoardManager extends PacketHandler {
         this.mTmpUpKeysStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
+        // then trigger listener
+        this.mKeyboardListeners.forEach((l: KeyboardListener) => {
+            l.onKeyUp(keyArr);
+        });
+
         let len: number = this.mKeyDownList.length;
         let key: Phaser.Input.Keyboard.Key;
         let keyCode: number;
@@ -126,6 +152,7 @@ export class KeyBoardManager extends PacketHandler {
                 }
             }
         }
+
     }
 
     private getKeyDowns(): number[] {
