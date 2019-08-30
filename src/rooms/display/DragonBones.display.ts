@@ -78,6 +78,8 @@ export class DragonBonesDisplay extends ElementDisplay {
     protected mActionName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     private replaceArr = [];
+    private misloading: boolean = false;
+    private mloadingList: any[] = [];
     constructor(protected scene: Phaser.Scene) {
         super(scene);
     }
@@ -156,7 +158,8 @@ export class DragonBonesDisplay extends ElementDisplay {
         for (let i: number = 0; i < len; i++) {
             const slot: dragonBones.Slot = slotList[i];
             console.log(i + ":" + slot.display.frame.name);
-            slot.replaceDisplay(null);
+            slot.display.visible = false;
+            // slot.replaceDisplay(null);
         }
     }
 
@@ -629,26 +632,46 @@ export class DragonBonesDisplay extends ElementDisplay {
         if (this.scene.cache.custom.dragonbone.get(this.dragonBonesName)) {
             const partName: string = ResUtils.getPartName(key);
             if (!this.scene.game.cache.obj.has(partName)) {
-                this.startLoad([slot.name, key]);
+                this.mloadingList.push([slot.name, key]);
+                if (!this.misloading) {
+                    this.misloading = true;
+                    this.startLoad();
+                }
             } else {
-                const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, key + "_png");
+                const resKey: string = ResUtils.getPartName(key);
+                const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, resKey);
                 slot.replaceDisplay(img);
             }
         }
     }
 
-    private startLoad(nextLoad: string[]) {
+    private startLoad() {
+        const nextLoad: string[] = this.mloadingList.shift();
         if (nextLoad) {
-            this.scene.load.once(Phaser.Loader.Events.COMPLETE, (e: Event) => {
-                const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(nextLoad[0]);
-                const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, nextLoad[1] + "_png");
-                slot.replaceDisplay(img);
-                console.log("success:" + nextLoad[1]);
-            }, this);
             const partUrl: string = ResUtils.getPartUrl(nextLoad[1]);
             const partName: string = ResUtils.getPartName(nextLoad[1]);
+            const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(nextLoad[0]);
+            const resKey: string = nextLoad[1];
+            this.scene.load.once(Phaser.Loader.Events.COMPLETE, (loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) => {
+                const name: string = ResUtils.getPartName(nextLoad[1]);
+                const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
+                if (img.texture.key === name) {
+                    slot.replaceDisplay(img);
+                    console.log("success:" + resKey);
+                }
+                this.misloading = false;
+                this.startLoad();
+            }, this);
+            this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (e: Event) => {
+                this.misloading = false;
+                this.startLoad();
+                console.log("fail:" + nextLoad[1]);
+            }, this);
             this.scene.load.image(partName, partUrl);
             this.scene.load.start();
+        } else {
+            this.misloading = false;
+            console.log("load complete");
         }
     }
 
