@@ -2,28 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.model.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rooms/display/element.display.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/loading.manager.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/DragonBones.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/Element.display.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/display.info.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/Actor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/Actor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/playInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/play.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.mamager.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -163,7 +143,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567132047108</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="修改 room 里的结构，和display里结构">
+      <created>1567230011160</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1567230011160</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,6 +198,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+    <MESSAGE value="修改 room 里的结构，和display里结构" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改 room 里的结构，和display里结构" />
   </component>
 </project>

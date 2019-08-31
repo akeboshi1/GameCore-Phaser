@@ -103,7 +103,7 @@ export class Room implements IRoomService {
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
-        this.mLayManager = new LayerManager(this.manager,this.mScene);
+        this.mLayManager = new LayerManager(this.manager, this.mScene);
         this.mWorld.game.scene.start(PlayScene.name, {
             callBack: () => {
                 // notify server, we are in.
@@ -127,10 +127,9 @@ export class Room implements IRoomService {
     }
 
     public removeElement(element: ElementDisplay) {
-        // TODO
-        // if (element && element.parentContainer) {
-        //     element.parentContainer.remove(element);
-        // }
+        if (element) {
+            element.removeFromParent();
+        }
     }
 
     public getViewPort(): Phaser.Geom.Rectangle {
