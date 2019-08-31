@@ -1,9 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IRoomManager } from "../room.manager";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
-import { Room, IRoomService } from "../room";
+import { IRoomService } from "../room";
 import { FramesModel } from "../display/frames.model";
 
 export interface IElementManager {
@@ -52,11 +51,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     let element: Element;
     let loader: FramesModel;
     for (const ele of elements) {
-      element = new Element(this);
+      element = new Element(ele, this);
       loader = new FramesModel();
       loader.setInfo(ele);
       element.load(loader);
-      this.mRoom.addToGround(element.getDisplay());
       this.mElements.set(ele.id || 0, element);
     }
   }

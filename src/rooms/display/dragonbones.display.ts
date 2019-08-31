@@ -102,12 +102,10 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (callBack) callBack();
         this.mDisplayInfo = display;
         if (!this.mDisplayInfo) return;
-        if (this.dragonBonesName) {
-            if (this.scene.cache.obj.has(this.dragonBonesName)) {
-            } else {
-                this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
-            }
-        }
+        this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+        // if (this.dragonBonesName) {
+        if (this.scene.cache.obj.has(this.dragonBonesName)) { }
+        // }
         this.setInteractive({pixelPerfect: true});
     }
 

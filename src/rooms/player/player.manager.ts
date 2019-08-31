@@ -50,16 +50,27 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const player: Player = new Player(this);
         const displayInfo: FramesModel = new FramesModel();
         displayInfo.setInfo(obj);
-        player.load(displayInfo, () => {
-            (player.getDisplay() as DragonbonesDisplay).dragonBonesName = "bones_human01"; // obj.avatar.id;
-            player.setPosition(obj.x, obj.y, obj.z);
-            this.mRoom.addToSurface(player.getDisplay());
-        });
+        player.load(displayInfo);
+        player.addDisplay();
         this.mPlayerMap.set(obj.id, player);
         const cameraService = this.mRoom.cameraService;
         if (cameraService) {
             const dis: ElementDisplay = player.getDisplay();
             if (dis) cameraService.startFollow(dis.GameObject);
+        }
+    }
+
+    public addToMap(id: number, player: Player) {
+        if (!this.mPlayerMap) {
+            this.mPlayerMap = new Map();
+        }
+        this.mPlayerMap.set(id, player);
+    }
+
+    public removeFromMap(id: number) {
+        if (!this.mPlayerMap) return;
+        if (this.mPlayerMap.has(id)) {
+            this.mPlayerMap.delete(id);
         }
     }
 
@@ -72,10 +83,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onAdd(packet: PBpacket) {
+    public get(id: number): Player {
         if (!this.mPlayerMap) {
-            this.mPlayerMap = new Map();
+            return;
         }
+        let player = this.mPlayerMap.get(id);
+        if (!player) {
+            const actor = this.roomService.actor;
+            if (actor && actor.id === id) {
+                player = actor;
+            }
+        }
+        return player;
+    }
+
+    private onAdd(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
         const players = content.actors;
         if (players) {
@@ -86,8 +108,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 displayInfo = new FramesModel();
                 displayInfo.setInfo(player);
                 plyer.load(displayInfo);
-                this.mRoom.addToSurface(plyer.getDisplay());
-                this.mPlayerMap.set(player.id || 0, plyer);
+                // this.mPlayerMap.set(player.id || 0, plyer);
+                this.addToMap(player.id || 0, plyer);
             }
         }
     }
@@ -107,7 +129,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             for (let i: number = 0; i < len; i++) {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;
-                player = this.mPlayerMap.get(playID);
+                player = this.get(playID);
                 console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!player) {
                     continue;

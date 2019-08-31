@@ -1,7 +1,7 @@
 import {op_client} from "pixelpai_proto";
 import {Element} from "../element/element";
 import {IElementManager} from "../element/element.manager";
-import {IFramesModel} from "../display/frames.model";
+import {IFramesModel, FramesModel} from "../display/frames.model";
 import {Tweens} from "phaser";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 
@@ -28,15 +28,7 @@ export class Player extends Element {
     private mTw: Tweens.Tween;
 
     constructor(protected mElementManager: IElementManager) {
-        super(mElementManager);
-    }
-
-    public load(display: IFramesModel, callBack?: () => void) {
-        super.load(display, callBack);
-    }
-
-    public setPosition(x: number, y: number, z?: number) {
-        super.setPosition(x, y, z);
+        super(undefined, mElementManager);
     }
 
     public changeState(val: string) {

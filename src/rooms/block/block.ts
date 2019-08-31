@@ -15,6 +15,7 @@ export class Block {
       element.block.remove(element);
     }
     this.mElements.push(element);
+    element.inCamera = this.mInCamera;
     element.block = this;
   }
 

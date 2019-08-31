@@ -25,6 +25,7 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
     readonly blocks: Block[];
+    readonly actor: Actor;
 
     readonly scene: Phaser.Scene | undefined;
 
@@ -92,6 +93,7 @@ export class Room implements IRoomService {
             offset: new Phaser.Geom.Point(data.rows * data.tileWidth >> 1, 0),
         };
 
+        this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         if (this.scene) {
             const cameras = this.scene.cameras.main;
             cameras.on("renderer", this.onCameraRender, this);
@@ -101,21 +103,22 @@ export class Room implements IRoomService {
             cameras.zoom = 2;
         }
 
-        this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
-        this.mLayManager = new LayerManager(this.manager,this.mScene);
+        this.mLayManager = new LayerManager(this.manager, this.mScene);
         this.mWorld.game.scene.start(PlayScene.name, {
             callBack: () => {
                 // notify server, we are in.
                 if (this.connection) {
                     this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
                 }
-            }
+            },
         });
     }
 
     public addActor(data: IActor): void {
         this.mActor = new Actor(data, this.mPlayerManager);
+        const dis: ElementDisplay = this.mActor.getDisplay();
+        if (dis) this.cameraService.startFollow(dis.GameObject);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {
@@ -208,6 +211,10 @@ export class Room implements IRoomService {
         return this.mBlocks || undefined;
     }
 
+    get actor(): Actor | undefined {
+        return this.mActor;
+    }
+
     get connection(): ConnectionService | undefined {
         if (this.manager) {
             return this.manager.connection;
@@ -231,7 +238,7 @@ export class Room implements IRoomService {
             return;
         }
         this.mBlocks = [];
-        const colSize = 10;
+        const colSize = 20;
         const viewW = (colSize + colSize) * (this.mPosition45Object.tileWidth / 2);
         const viewH = (colSize + colSize) * (this.mPosition45Object.tileHeight / 2);
         const blockW = this.mPosition45Object.sceneWidth / viewW;

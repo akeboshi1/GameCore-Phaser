@@ -72,11 +72,11 @@ export class Launcher {
     get config(): IGameConfigure {
         // TODO 在这里整合app和phaser的配置文件
         return {
-            auth_token: CONFIG.auth_token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmRmOTQ4OTUxYTRmNGY2NGMzYmEzMSIsImlhdCI6MTU2NjYzNzY1NiwiZXhwIjoxNTY3MjQyNDU2fQ.iAocnlNRL-E55RCxVsIdA4Uwv_AZcTQrvndetOQpZHg",
-            token_expire: CONFIG.token_expire || "1567242456",
-            token_fingerprint: CONFIG.token_fingerprint || "332244e001e10be33205fc8b51a7ce76fb80323b",
+            auth_token: CONFIG.auth_token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmRmOTQ4OTUxYTRmNGY2NGMzYmEzMSIsImlhdCI6MTU2NzI0NDQyOCwiZXhwIjoxNTY3ODQ5MjI4fQ.AuKs0Sp0So1SA2On6V1erz8nBXhcq2vnvttfPUmHPn4",
+            token_expire: CONFIG.token_expire || "1567849228",
+            token_fingerprint: CONFIG.token_fingerprint || "b67315a05dc852648c777023d1f996c2df593861",
             server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-            game_id: CONFIG.game_id || "5d18c647c6f7526f96c2d621",
+            game_id: CONFIG.game_id || "5d65e35fdb19b473d87c2023",
             virtual_world_id: CONFIG.virtual_world_id || "0",
             type: Phaser.AUTO,
             zoom: 1,

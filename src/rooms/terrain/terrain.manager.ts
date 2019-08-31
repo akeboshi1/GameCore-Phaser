@@ -40,11 +40,11 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     const terrains = content.terrain;
     if (terrains) {
       for (const terrain of terrains) {
-        const ter = new Terrain(this);
+        const ter = new Terrain(terrain, this);
         const loader = new FramesModel();
         loader.setInfo(terrain);
         ter.load(loader);
-        this.mRoom.addToGround(ter.getDisplay());
+        // this.mRoom.addToGround(ter.getDisplay());
         // addElement(ter.getDisplay(),LayerType.GroundLayer);
         this.mTerrains.set(terrain.id || 0, ter);
       }

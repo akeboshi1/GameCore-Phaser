@@ -22,7 +22,8 @@
         "interface-name": false,
         "object-literal-key-quotes": false,
         "no-namespace": false,
-        "quotemark": [true, "double"]
+        "quotemark": [true, "double"],
+        "trailing-comma": [false, {"multiline": "always", "singleline": "never"}]
     },
     "rulesDirectory": []
 }
