@@ -2,7 +2,8 @@ import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import IActor = op_client.IActor;
 import { SlotInfo } from "./slot.info";
 
-export class PlayerInfo implements IActor {
+// TODO 把这个类删掉， 管理Avatar 数据的功能移动到 ../display/dragonbones.model.ts;
+export class PlayerModel implements IActor {
     /** Character id. */
     public id: number;
 

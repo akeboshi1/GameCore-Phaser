@@ -3,7 +3,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IRoomService } from "../room";
-import { DisplayInfo } from "../display/display.info";
+import { FramesModel } from "../display/frames.model";
 import { IElementManager } from "../element/element.manager";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
@@ -41,7 +41,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     if (terrains) {
       for (const terrain of terrains) {
         const ter = new Terrain(this);
-        const loader = new DisplayInfo();
+        const loader = new FramesModel();
         loader.setInfo(terrain);
         ter.load(loader);
         this.mRoom.addToGround(ter.getDisplay());

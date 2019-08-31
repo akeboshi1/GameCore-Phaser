@@ -4,7 +4,7 @@ import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { Room, IRoomService } from "../room";
-import { DisplayInfo } from "../display/display.info";
+import { FramesModel } from "../display/frames.model";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -50,10 +50,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT = packet.content;
     const elements = content.elements;
     let element: Element;
-    let loader: DisplayInfo;
+    let loader: FramesModel;
     for (const ele of elements) {
       element = new Element(this);
-      loader = new DisplayInfo();
+      loader = new FramesModel();
       loader.setInfo(ele);
       element.load(loader);
       this.mRoom.addToGround(element.getDisplay());

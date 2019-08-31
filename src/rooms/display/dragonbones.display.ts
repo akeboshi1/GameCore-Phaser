@@ -1,7 +1,8 @@
-import { IDisplayInfo } from "./display.info";
-import { ElementDisplay } from "./element.display";
-import { op_gameconfig } from "pixelpai_proto";
-import { ResUtils } from "../../utils/resUtil";
+import {IFramesModel} from "./frames.model";
+import {op_gameconfig} from "pixelpai_proto";
+import {ResUtils} from "../../utils/resUtil";
+import {ElementDisplay} from "./element.display";
+import {IDragonbonesModel} from "./dragonbones.model";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -68,11 +69,13 @@ export enum AvatarPartType {
     ShldBarm = "shld_barm_#_$",
     WeapBarm = "weap_barm_#_$",
 }
+
 /**
  * 龙骨显示对象
  */
-export class DragonBonesDisplay extends ElementDisplay {
-    public mDisplayInfo: IDisplayInfo | undefined;
+export class DragonbonesDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
+
+    public mDisplayInfo: IDragonbonesModel | undefined;
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
     protected mActionName: string = "";
@@ -80,11 +83,22 @@ export class DragonBonesDisplay extends ElementDisplay {
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
+
     constructor(protected scene: Phaser.Scene) {
         super(scene);
     }
 
-    public load(display: IDisplayInfo, callBack?: () => void) {
+    get GameObject(): Phaser.GameObjects.Container {
+        return this;
+    }
+
+    public removeFromParent(): void {
+        if (this.parentContainer) {
+            this.parentContainer.remove(this);
+        }
+    }
+
+    public load(display: IDragonbonesModel, callBack?: () => void) {
         if (callBack) callBack();
         this.mDisplayInfo = display;
         if (!this.mDisplayInfo) return;
@@ -94,7 +108,7 @@ export class DragonBonesDisplay extends ElementDisplay {
                 this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
             }
         }
-        this.setInteractive({ pixelPerfect: true });
+        this.setInteractive({pixelPerfect: true});
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -121,7 +135,7 @@ export class DragonBonesDisplay extends ElementDisplay {
                 `${res}/${this.mDragonbonesName}_ske.dbbin`,
                 null,
                 null,
-                { responseType: "arraybuffer" },
+                {responseType: "arraybuffer"},
             );
             this.scene.load.once(
                 Phaser.Loader.Events.COMPLETE,
@@ -158,7 +172,7 @@ export class DragonBonesDisplay extends ElementDisplay {
         const len1: number = conList.length;
         for (let j: number = 0; j < len1; j++) {
             const obj: Phaser.GameObjects.GameObject = conList[j];
-            obj.setInteractive({ pixelPerfect: true });
+            obj.setInteractive({pixelPerfect: true});
             obj.on("pointerdown", () => {
                 console.log("dragonBones" + j);
             });

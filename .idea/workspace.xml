@@ -2,8 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rooms/display/element.display.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/keyboard.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/keyboard.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/loading.manager.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/DragonBones.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/Element.display.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/display.info.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/Actor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/Actor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/playInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/play.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.mamager.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +65,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
@@ -136,6 +156,14 @@
       <workItem from="1566907507305" duration="44695000" />
       <workItem from="1567128848939" duration="2985000" />
     </task>
+    <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <created>1567132047108</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1567132047108</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,11 +175,42 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="LONG_EDGES_VISIBLE" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="user">
+                    <value>
+                      <list>
+                        <option value="me" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="me" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
   </component>
 </project>
