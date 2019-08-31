@@ -130,10 +130,9 @@ export class Room implements IRoomService {
     }
 
     public removeElement(element: ElementDisplay) {
-        // TODO
-        // if (element && element.parentContainer) {
-        //     element.parentContainer.remove(element);
-        // }
+        if (element) {
+            element.removeFromParent();
+        }
     }
 
     public getViewPort(): Phaser.Geom.Rectangle {
