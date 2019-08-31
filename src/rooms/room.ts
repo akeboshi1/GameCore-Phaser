@@ -237,14 +237,15 @@ export class Room implements IRoomService {
             return;
         }
         this.mBlocks = [];
-        const colSize = 20;
+        const colSize = 10;
         const viewW = (colSize + colSize) * (this.mPosition45Object.tileWidth / 2);
         const viewH = (colSize + colSize) * (this.mPosition45Object.tileHeight / 2);
         const blockW = this.mPosition45Object.sceneWidth / viewW;
         const blockH = this.mPosition45Object.sceneHeight / viewH;
+        let index = 0;
         for (let i = 0; i < blockW; i++) {
             for (let j = 0; j < blockH; j++) {
-                this.mBlocks.push(new Block(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH)));
+                this.mBlocks.push(new Block(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH), index++));
             }
         }
     }

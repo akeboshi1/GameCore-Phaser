@@ -30,7 +30,7 @@ export class Element implements IElement {
   protected mLayer: Phaser.GameObjects.Container;
   protected mDisplay: ElementDisplay | undefined;
   protected mBlock: Block;
-  protected mInCamera: boolean;
+  protected mInCamera: boolean = false;
 
   constructor(data: op_client.IElement | op_client.IActor, protected mElementManager: IElementManager) {
     // if (data) {

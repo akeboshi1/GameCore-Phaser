@@ -4,14 +4,18 @@ import { Element } from "../element/element";
  * 显示区域
  */
 export class Block {
-  private mElements: Element[];
+  private mElements: Element[] = [];
   private mInCamera: boolean;
-  constructor(private mRect: Phaser.Geom.Rectangle) {
-    this.mElements = [];
+  private mIndex: number;
+  constructor(private mRect: Phaser.Geom.Rectangle, index: number) {
+    this.mIndex = index;
   }
 
   public add(element: Element) {
     if (element.block) {
+      if (element.block === this) {
+        return;
+      }
       element.block.remove(element);
     }
     this.mElements.push(element);
