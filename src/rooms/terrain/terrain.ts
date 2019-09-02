@@ -25,6 +25,9 @@ export class Terrain extends Element {
     }
 
     if (z === undefined) z = 0;
+    this.mX = point.x;
+    this.mY = point.y;
+    this.mZ = 0;
     if (this.mDisplay) {
       this.mDisplay.setPosition(this.mX, this.mY, 0);
       this.setDepth();
