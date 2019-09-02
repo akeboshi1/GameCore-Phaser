@@ -84,6 +84,9 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
+    /**
+     * 龙骨显示对象包围框
+     */
     private mClickCon: Phaser.GameObjects.Container;
     private mClickGraphics: Phaser.GameObjects.Graphics;
 
@@ -121,6 +124,15 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.dispose(true);
             this.mArmatureDisplay = null;
+        }
+        if (this.mClickGraphics) {
+            this.mClickGraphics.clear();
+            this.mClickGraphics.destroy(true);
+            this.mClickGraphics = null;
+        }
+        if (this.mClickCon) {
+            this.mClickCon.destroy(true);
+            this.mClickCon = null;
         }
     }
 
