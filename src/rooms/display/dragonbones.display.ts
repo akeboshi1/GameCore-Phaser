@@ -1,8 +1,9 @@
-import {IFramesModel} from "./frames.model";
-import {op_gameconfig} from "pixelpai_proto";
-import {ResUtils} from "../../utils/resUtil";
-import {ElementDisplay} from "./element.display";
-import {IDragonbonesModel} from "./dragonbones.model";
+import { IFramesModel } from "./frames.model";
+import { op_gameconfig } from "pixelpai_proto";
+import { ResUtils } from "../../utils/resUtil";
+import { ElementDisplay } from "./element.display";
+import { IDragonbonesModel } from "./dragonbones.model";
+import { Geom } from "phaser";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -83,6 +84,11 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
+    /**
+     * 龙骨显示对象包围框
+     */
+    private mClickCon: Phaser.GameObjects.Container;
+    private mClickGraphics: Phaser.GameObjects.Graphics;
 
     constructor(protected scene: Phaser.Scene) {
         super(scene);
@@ -106,7 +112,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         // if (this.dragonBonesName) {
         if (this.scene.cache.obj.has(this.dragonBonesName)) { }
         // }
-        this.setInteractive({pixelPerfect: true});
+        // this.setInteractive({ pixelPerfect: true });
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -129,6 +135,15 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             this.mArmatureDisplay.dispose(true);
             this.mArmatureDisplay = null;
         }
+        if (this.mClickGraphics) {
+            this.mClickGraphics.clear();
+            this.mClickGraphics.destroy(true);
+            this.mClickGraphics = null;
+        }
+        if (this.mClickCon) {
+            this.mClickCon.destroy(true);
+            this.mClickCon = null;
+        }
     }
 
     protected buildDragbones() {
@@ -143,7 +158,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
                 `${res}/${this.mDragonbonesName}_ske.dbbin`,
                 null,
                 null,
-                {responseType: "arraybuffer"},
+                { responseType: "arraybuffer" },
             );
             this.scene.load.once(
                 Phaser.Loader.Events.COMPLETE,
@@ -171,19 +186,38 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
 
         this.play("human01_run_");
         this.add(this.mArmatureDisplay);
+        this.x = this.mDisplayInfo.x;
+        this.y = this.mDisplayInfo.y;
+        const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
+        if (!this.mClickGraphics) {
+
+            this.mClickGraphics = this.scene.add.graphics();
+            this.mClickGraphics.fillStyle(0xff0000);
+            this.mClickGraphics.fillRectShape(rect);
+            this.mClickGraphics.visible = false;
+            this.add(this.mClickGraphics);
+        }
+        if (!this.mClickCon) {
+            this.mClickCon = this.scene.add.container(0, 0, this.mClickGraphics);
+            this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
+            this.mClickCon.x = -rect.width >> 1;
+            this.mClickCon.y = -rect.height;
+        }
+        this.mClickCon.setData("id", this.mDisplayInfo.id);
+        this.add(this.mClickCon);
         this.emit("initialized");
     }
 
     private clearArmature() {
-        const conList: Phaser.GameObjects.GameObject[] = this.mArmatureDisplay.getAll();
-        const len1: number = conList.length;
-        for (let j: number = 0; j < len1; j++) {
-            const obj: Phaser.GameObjects.GameObject = conList[j];
-            obj.setInteractive({pixelPerfect: true});
-            obj.on("pointerdown", () => {
-                console.log("dragonBones" + j);
-            });
-        }
+        // const conList: Phaser.GameObjects.GameObject[] = this.mArmatureDisplay.getAll();
+        // const len1: number = conList.length;
+        // for (let j: number = 0; j < len1; j++) {
+        //     const obj: Phaser.GameObjects.GameObject = conList[j];
+        //     obj.setInteractive({ pixelPerfect: true });
+        //     obj.on("pointerdown", () => {
+        //         console.log("dragonBones" + j);
+        //     });
+        // }
         const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {

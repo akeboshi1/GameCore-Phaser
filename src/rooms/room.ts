@@ -1,20 +1,20 @@
-import {IRoomManager} from "./room.manager";
-import {ElementManager} from "./element/element.manager";
-import {PlayerManager} from "./player/player.manager";
-import {LayerManager} from "./layer/layer.manager";
-import {TerrainManager} from "./terrain/terrain.manager";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_virtual_world} from "pixelpai_proto";
-import {IPosition45Obj, Position45} from "../utils/position45";
-import {Point3, IPoint3} from "../utils/point3";
-import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
-import {Block} from "./block/block";
+import { IRoomManager } from "./room.manager";
+import { ElementManager } from "./element/element.manager";
+import { PlayerManager } from "./player/player.manager";
+import { LayerManager } from "./layer/layer.manager";
+import { TerrainManager } from "./terrain/terrain.manager";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { Point3, IPoint3 } from "../utils/point3";
+import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
+import { Block } from "./block/block";
 import IActor = op_client.IActor;
-import {Actor} from "./player/Actor";
-import {PBpacket} from "net-socket-packet";
-import {WorldService} from "../game/world.service";
-import {PlayScene} from "../scenes/play";
-import {ElementDisplay} from "./display/element.display";
+import { Actor } from "./player/Actor";
+import { PBpacket } from "net-socket-packet";
+import { WorldService } from "../game/world.service";
+import { PlayScene } from "../scenes/play";
+import { ElementDisplay } from "./display/element.display";
 
 export interface IRoomService {
     readonly id: number;
@@ -103,7 +103,7 @@ export class Room implements IRoomService {
         }
 
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
-        this.mLayManager = new LayerManager(this.manager, this.mScene);
+        this.mLayManager = new LayerManager(this);
         this.mWorld.game.scene.start(PlayScene.name, {
             callBack: () => {
                 // notify server, we are in.
@@ -115,9 +115,7 @@ export class Room implements IRoomService {
     }
 
     public addActor(data: IActor): void {
-        this.mActor = new Actor(data, this.mPlayerManager);
-        const dis: ElementDisplay = this.mActor.getDisplay();
-        if (dis) this.cameraService.startFollow(dis.GameObject);
+        this.mActor = this.mPlayerManager.setMainRoleInfo(data); // new Actor(data, this.mPlayerManager);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

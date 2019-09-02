@@ -1,12 +1,12 @@
-import {IElementManager} from "../element/element.manager";
-import {PBpacket, PacketHandler} from "net-socket-packet";
-import {op_client} from "pixelpai_proto";
-import {ConnectionService} from "../../net/connection.service";
-import {Player} from "./player";
-import {Room, IRoomService} from "../room";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {FramesModel} from "../display/frames.model";
-import {ElementDisplay} from "../display/element.display";
+import { IElementManager } from "../element/element.manager";
+import { PBpacket, PacketHandler } from "net-socket-packet";
+import { op_client } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
+import { Player } from "./player";
+import { Room, IRoomService } from "../room";
+import { ElementDisplay } from "../display/element.display";
+import { DragonbonesModel } from "../display/dragonbones.model";
+import { Actor } from "./Actor";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
@@ -39,25 +39,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.clear();
     }
 
-    public setMainRoleInfo(obj: op_client.IActor) {
-        // this.mMainRoleInfo.setInfo(obj);
-        // if (obj.walkOriginPoint) {
-        //   this.mMainRoleInfo.setOriginWalkPoint(obj.walkOriginPoint);
-        // }
-        // if (obj.originPoint) {
-        //   this.mMainRoleInfo.setOriginCollisionPoint(obj.originPoint);
-        // }
-        const player: Player = new Player(this);
-        const displayInfo: FramesModel = new FramesModel();
-        displayInfo.setInfo(obj);
-        player.load(displayInfo);
-        player.addDisplay();
+    public setMainRoleInfo(obj: op_client.IActor): Actor {
+        const player: Actor = new Actor(obj, this);
         this.mPlayerMap.set(obj.id, player);
         const cameraService = this.mRoom.cameraService;
         if (cameraService) {
             const dis: ElementDisplay = player.getDisplay();
             if (dis) cameraService.startFollow(dis.GameObject);
         }
+        return player;
     }
 
     public addToMap(id: number, player: Player) {
@@ -101,11 +91,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER = packet.content;
         const players = content.actors;
         if (players) {
-            let displayInfo: FramesModel;
+            let displayInfo: DragonbonesModel;
             let plyer: Player;
             for (const player of players) {
                 plyer = new Player(this);
-                displayInfo = new FramesModel();
+                displayInfo = new DragonbonesModel();
                 displayInfo.setInfo(player);
                 plyer.load(displayInfo);
                 // this.mPlayerMap.set(player.id || 0, plyer);
