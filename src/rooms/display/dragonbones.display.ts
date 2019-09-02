@@ -178,10 +178,10 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (!this.mClickCon) {
             this.mClickCon = this.scene.add.container(0, 0, this.mClickGraphics);
             this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
+            this.mClickCon.x = -rect.width >> 1;
+            this.mClickCon.y = -rect.height;
         }
         this.mClickCon.setData("id", this.mDisplayInfo.id);
-        this.mClickCon.x = -rect.width >> 1;
-        this.mClickCon.y = -rect.height;
         this.add(this.mClickCon);
     }
 
