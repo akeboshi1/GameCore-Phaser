@@ -1,6 +1,7 @@
-import {IRoomManager} from "../room.manager";
-import {Geom} from "phaser";
-import {ElementDisplay} from "../display/element.display";
+import { IRoomManager } from "../room.manager";
+import { Geom } from "phaser";
+import { ElementDisplay } from "../display/element.display";
+import { Room } from "../room";
 
 export class LayerManager {
 
@@ -41,9 +42,9 @@ export class LayerManager {
 
     private mScene: Phaser.Scene;
 
-    constructor(private roomManager: IRoomManager, scene: Phaser.Scene) {
+    constructor(private room: Room) {
 
-        this.mScene = scene;
+        this.mScene = room.scene;
         // ==========背景层
         this.mGroundClickLayer = this.mScene.add.container(0, 0);
         // this.totalLayerList.push(this.mGroundClickLayer);
