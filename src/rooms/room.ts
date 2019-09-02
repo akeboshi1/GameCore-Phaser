@@ -116,9 +116,7 @@ export class Room implements IRoomService {
     }
 
     public addActor(data: IActor): void {
-        this.mActor = new Actor(data, this.mPlayerManager);
-        const dis: ElementDisplay = this.mActor.getDisplay();
-        if (dis) this.cameraService.startFollow(dis.GameObject);
+        this.mActor = this.mPlayerManager.setMainRoleInfo(data); // new Actor(data, this.mPlayerManager);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

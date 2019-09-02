@@ -47,7 +47,7 @@ TODO List
 - [ ] 镜头管理 `@404` 31号
 - [x] 场景缩放 `@404`
 - [x] dragonbones换装 `@gxm` 周二27号
-- [ ] 物件、Character像素级选择 `@gxm` 30号
+- [x] 物件、Character像素级选择 `@gxm` 30号
 - [ ] 动画状态管理 `@gxm` 角色状态管理 9月6日
 - [ ] resize `@404` 需和美术沟通 时间待定
 - [ ] Character特效 `@gxm`周一 9月2号
