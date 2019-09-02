@@ -113,6 +113,16 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         return this.mArmatureDisplay;
     }
 
+    public play(val: string) {
+        if (this.mActionName !== val) {
+            const dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
+            this.mActionName = val + dir;
+            if (this.mArmatureDisplay) {
+                this.mArmatureDisplay.animation.play(this.mActionName);
+            }
+        }
+    }
+
     public destory() {
         this.mDisplayInfo = null;
         if (this.mArmatureDisplay) {
@@ -159,10 +169,9 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.getReplaceArr();
         this.showReplaceArmatrue();
 
-        this.play = "human01_run_";
+        this.play("human01_run_");
         this.add(this.mArmatureDisplay);
-        this.x = this.mDisplayInfo.x;
-        this.y = this.mDisplayInfo.y;
+        this.emit("initialized");
     }
 
     private clearArmature() {
@@ -708,13 +717,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         return this.mDragonbonesName;
     }
 
-    set play(val: string) {
-        if (this.mActionName !== val) {
-            const dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
-            this.mActionName = val + dir;
-            if (this.mArmatureDisplay) {
-                this.mArmatureDisplay.animation.play(this.mActionName);
-            }
-        }
+    get baseLoc(): Phaser.Geom.Point {
+        return new Phaser.Geom.Point();
     }
 }

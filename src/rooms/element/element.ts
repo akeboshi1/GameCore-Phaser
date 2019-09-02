@@ -7,6 +7,7 @@ import { Block } from "../block/block";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel, DragonbonesModel } from "../display/dragonbones.model";
 import { op_client } from "pixelpai_proto";
+import { Tweens } from "phaser";
 
 export interface IElement {
   readonly id: number;
@@ -25,12 +26,12 @@ export class Element implements IElement {
   protected mX: number;
   protected mY: number;
   protected mZ: number;
-  protected mBaseLoc: Phaser.Geom.Point;
   protected mDisplayInfo: IFramesModel | IDragonbonesModel;
   protected mLayer: Phaser.GameObjects.Container;
   protected mDisplay: ElementDisplay | undefined;
   protected mBlock: Block;
   protected mInCamera: boolean = false;
+  protected mTw: Tweens.Tween;
 
   constructor(data: op_client.IElement | op_client.IActor, protected mElementManager: IElementManager) {
     // if (data) {
@@ -45,6 +46,7 @@ export class Element implements IElement {
 
   public load(displayInfo: IFramesModel | IDragonbonesModel) {
     this.mDisplayInfo = displayInfo;
+    // this.createDisplay();
     this.setPosition(displayInfo.x, displayInfo.y);
   }
 
@@ -77,13 +79,52 @@ export class Element implements IElement {
     return this.mDisplay;
   }
 
+  public move(moveData: op_client.IMoveData) {
+    if (!this.mElementManager) {
+        throw new Error(`Player::move - Empty element-manager.`);
+    }
+    if (!this.mDisplay) {
+      throw new Error("display is undefined");
+    }
+
+    const baseLoc = this.mDisplay.baseLoc;
+    const time: number = moveData.timeSpan
+        , toX: number = moveData.destinationPoint3f.x + baseLoc.x
+        , toY: number = moveData.destinationPoint3f.y + baseLoc.y;
+
+    console.log(`${time}: ${toX}, ${toY}`);
+    const tw = this.mElementManager.scene.tweens.add({
+        targets: this.mDisplay,
+        duration: time,
+        ease: "Linear",
+        props: {
+            x: {value: toX},
+            y: {value: toY},
+        },
+        onComplete: (tween, targets, play) => {
+            console.log("complete moveF");
+            // todo 通信服務端到達目的地
+            play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, 0);
+        },
+        onUpdate: (tween, targets, play) => {
+            this.setDepth();
+            this.setBlock();
+        },
+        onCompleteParams: [this],
+    });
+
+    if (this.mTw) this.mTw.stop();
+    this.mTw = tw;
+  }
+
   public setPosition(x: number, y: number, z?: number) {
     if (z === undefined) z = 0;
     this.mX = x;
     this.mY = y;
     this.mZ = z;
     if (this.mDisplay) {
-      this.mDisplay.GameObject.setPosition(x, y, z);
+      this.mDisplay.GameObject.setPosition(this.mX, this.mY, z);
+      this.setDepth();
     }
     this.setBlock();
   }
@@ -125,10 +166,23 @@ export class Element implements IElement {
       } else {
         this.mDisplay = new FramesDisplay(scene);
       }
+      this.mDisplay.GameObject.once("initialized", this.onDisplayReady, this);
       this.mDisplay.load(this.mDisplayInfo);
-      this.setPosition(this.mDisplayInfo.x, this.mDisplayInfo.y);
     }
     return this.mDisplay;
+  }
+
+  protected setDepth() {
+    if (this.mDisplay) {
+      this.mDisplay.GameObject.setDepth(this.mDisplay.x + this.mDisplay.y);
+    }
+  }
+
+  protected onDisplayReady() {
+    if (this.mDisplay) {
+      const baseLoc = this.mDisplay.baseLoc;
+      this.setPosition(this.mDisplayInfo.x + baseLoc.x, this.mDisplayInfo.y + baseLoc.y);
+    }
   }
 
   get roomService(): IRoomService {

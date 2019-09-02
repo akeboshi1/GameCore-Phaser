@@ -23,18 +23,13 @@ export class Terrain extends Element {
       console.error("transform error");
       return;
     }
+
     if (z === undefined) z = 0;
-    this.mX = point.x;
-    this.mY = point.y;
-    this.mZ = point.z;
     if (this.mDisplay) {
-      this.mDisplay.x = point.x;
-      this.mDisplay.y = point.y;
-      this.mDisplay.z = z;
-      this.mDisplay.depth = point.x + point.y;
+      this.mDisplay.setPosition(this.mX, this.mY, 0);
+      this.setDepth();
     }
     this.setBlock();
-    // this.mDisplay.setPosition(x, y, z);
   }
 
   public addDisplay() {
@@ -51,5 +46,18 @@ export class Terrain extends Element {
       return;
     }
     room.addToGround(this.mDisplay);
+  }
+
+  protected setDepth() {
+    if (this.mDisplay) {
+      this.mDisplay.setDepth(this.mDisplay.y);
+    }
+  }
+
+  protected onDisplayReady() {
+    if (this.mDisplay) {
+      const baseLoc = this.mDisplay.baseLoc;
+      this.setPosition(this.mDisplayInfo.x, this.mDisplayInfo.y);
+    }
   }
 }

@@ -90,7 +90,6 @@ export class Room implements IRoomService {
             tileWidth: data.tileWidth,
             sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),
             sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2),
-            offset: new Phaser.Geom.Point(data.rows * data.tileWidth >> 1, 0),
         };
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
@@ -100,7 +99,7 @@ export class Room implements IRoomService {
             this.mCameraService.setCameras(this.scene.cameras.main);
 
             this.initBlocks();
-            cameras.zoom = 2;
+            // cameras.zoom = 2;
         }
 
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！

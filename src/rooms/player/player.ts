@@ -23,9 +23,7 @@ export enum PlayerState {
 }
 
 export class Player extends Element {
-    private mCurState: string;
-
-    private mTw: Tweens.Tween;
+    protected mCurState: string;
 
     constructor(protected mElementManager: IElementManager) {
         super(undefined, mElementManager);
@@ -34,41 +32,12 @@ export class Player extends Element {
     public changeState(val: string) {
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
-            (this.mDisplay as DragonbonesDisplay).play = val;
+            (this.mDisplay as DragonbonesDisplay).play(val);
         }
     }
 
-    public move(moveData: op_client.IMoveData) {
-        if (!this.mElementManager) {
-            throw new Error(`Player::move - Empty element-manager.`);
-        }
-
-        const time: number = moveData.timeSpan
-            , toX: number = moveData.destinationPoint3f.x
-            , toY: number = moveData.destinationPoint3f.y;
-
-        console.log(`${time}: ${toX},${toY}`);
-        const tw = this.mElementManager.scene.tweens.add({
-            targets: this.mDisplay,
-            duration: time,
-            ease: "Linear",
-            props: {
-                x: {value: toX},
-                y: {value: toY},
-            },
-            onComplete: (tween, targets, play) => {
-                console.log("complete moveF");
-                // todo 通信服務端到達目的地
-                play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, moveData.destinationPoint3f.z);
-            },
-            onUpdate: (tween, targets, play) => {
-                targets.depth = targets.x + targets.y;
-            },
-            onCompleteParams: [this],
-        });
-
-        if (this.mTw) this.mTw.stop();
-        this.mTw = tw;
+    public removeDisplay() {
+        super.removeDisplay();
     }
 
     public disopse() {
