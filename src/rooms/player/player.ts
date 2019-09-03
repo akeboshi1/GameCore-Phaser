@@ -1,9 +1,9 @@
-import {op_client} from "pixelpai_proto";
-import {Element} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {IFramesModel, FramesModel} from "../display/frames.model";
-import {Tweens} from "phaser";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
+import { op_client } from "pixelpai_proto";
+import { Element } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { IFramesModel, FramesModel } from "../display/frames.model";
+import { Tweens } from "phaser";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -46,7 +46,8 @@ export class Player extends Element {
     }
 
     private mCheckStateHandle(val: string): boolean {
-        const dragonBonesDisplay: DragonbonesDisplay = this.mDisplay as DragonbonesDisplay;
+        if (this.mCurState === val) return true;
+        this.mCurState = val;
         return true;
     }
 
