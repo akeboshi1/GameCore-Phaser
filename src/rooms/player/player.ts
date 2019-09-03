@@ -1,6 +1,6 @@
-import {Element} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
+import { Element } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client } from "pixelpai_proto";
 
 export enum PlayerState {
@@ -29,9 +29,11 @@ export class Player extends Element {
 
     public move(moveData: op_client.IMoveData) {
         if (this.mCurState !== "walk") {
-            this.changeState("run");
+            this.changeState("walk");
         }
-        super.move(moveData);
+        super.move(moveData, () => {
+            this.changeState("idle");
+        });
     }
 
     public changeState(val: string) {

@@ -164,7 +164,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (this.mActionName !== val) {
             let dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
             dir = dir !== 0 ? dir : 3;
-            this.mActionName = "human01_" + val + "_" + dir;
+            this.mActionName = val + "_" + dir;
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
@@ -242,7 +242,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.getReplaceArr();
         this.showReplaceArmatrue();
 
-        this.play("run");
+        this.play("idle");
         this.add(this.mArmatureDisplay);
         this.x = this.mDisplayInfo.x;
         this.y = this.mDisplayInfo.y;

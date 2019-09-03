@@ -84,7 +84,7 @@ export class Element implements IElement {
     return this.mDisplay;
   }
 
-  public move(moveData: op_client.IMoveData) {
+  public move(moveData: op_client.IMoveData, callback?: () => void) {
     if (!this.mElementManager) {
       Console.error(`Player::move - Empty element-manager.`);
     }
@@ -119,6 +119,7 @@ export class Element implements IElement {
         this.mTw = null;
         // todo 通信服務端到達目的地
         play.setPosition(toX, toY, 0);
+        if (callback) callback();
       },
       onUpdate: (tween, targets, play) => {
         this.setDepth();
