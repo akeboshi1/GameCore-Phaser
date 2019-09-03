@@ -91,9 +91,9 @@ export class Element implements IElement {
     if (!this.mDisplay) {
       Console.error("display is undefined");
     }
-
+    const now = this.roomService.now();
     const baseLoc = this.mDisplay.baseLoc;
-    const time: number = moveData.timeSpan
+    const time: number = moveData.timestemp - now
       , toX: number = Math.floor(moveData.destinationPoint3f.x + baseLoc.x)
       , toY: number = Math.floor(moveData.destinationPoint3f.y + baseLoc.y);
     if (this.mTw) {
@@ -103,12 +103,16 @@ export class Element implements IElement {
         return;
       }
     }
+    if (time <= 0) {
+      Console.error("durTime is error");
+      return;
+    }
     this.mToX = toX;
     this.mToY = toY;
     Console.log(`${time}: ${toX}, ${toY}`);
     const tw = this.mElementManager.scene.tweens.add({
       targets: this.mDisplay,
-      duration: time + 500, // 由于两次有效协议之间的间隔大于一次移动所需要的时间，所以客户端做一个500毫秒的延时，让整个tween接受信息更流畅
+      duration: time,
       ease: "Linear",
       props: {
         x: { value: toX },

@@ -11,5 +11,6 @@ export interface WorldService {
     readonly selectCharacterManager: SelectManager;
 
     getSize(): Size;
+    getServerTime(): number;
     changeRoom(room: IRoomService);
 }

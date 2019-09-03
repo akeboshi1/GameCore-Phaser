@@ -32,6 +32,8 @@ export interface IRoomService {
 
     readonly connection: ConnectionService | undefined;
 
+    now(): number;
+
     enter(room: op_client.IScene): void;
 
     transformTo45(point3: IPoint3): Phaser.Geom.Point;
@@ -183,6 +185,10 @@ export class Room implements IRoomService {
         if (this.layerManager) {
             this.layerManager.update();
         }
+    }
+
+    public now(): number {
+        return this.mWorld.getServerTime();
     }
 
     get scene(): Phaser.Scene | undefined {

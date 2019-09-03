@@ -1,23 +1,23 @@
 import "phaser";
-import {WorldService} from "./world.service";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "phaser";
-import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_gateway, op_virtual_world} from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "phaser";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
-import {RoomManager} from "../rooms/room.manager";
-import {ServerAddress} from "../net/address";
-import {IGameConfigure} from "../../launcher";
-import {KeyBoardManager} from "./keyboard.manager";
-import {MouseManager} from "./mouse.manager";
-import {SelectManager} from "../rooms/player/select.manager";
-import {Size} from "../utils/size";
-import {IRoomService} from "../rooms/room";
-import {MainUIScene} from "../scenes/main.ui";
-import {Clock} from "./clock";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
+import { RoomManager } from "../rooms/room.manager";
+import { ServerAddress } from "../net/address";
+import { IGameConfigure } from "../../launcher";
+import { KeyBoardManager } from "./keyboard.manager";
+import { MouseManager } from "./mouse.manager";
+import { SelectManager } from "../rooms/player/select.manager";
+import { Size } from "../utils/size";
+import { IRoomService } from "../rooms/room";
+import { MainUIScene } from "../scenes/main.ui";
+import { Clock } from "./clock";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Console } from "../utils/log";
 
@@ -92,6 +92,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         Console.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+    }
+
+    public getServerTime(): number {
+        return this.mClock.unixTime;
     }
 
     /**
