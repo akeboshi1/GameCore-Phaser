@@ -1,5 +1,5 @@
-import {IFramesModel} from "./frames.model";
-import {IDragonbonesModel} from "./dragonbones.model";
+import { IFramesModel } from "./frames.model";
+import { IDragonbonesModel } from "./dragonbones.model";
 
 export interface ElementDisplay {
     readonly GameObject: Phaser.GameObjects.Container;
@@ -10,6 +10,10 @@ export interface ElementDisplay {
     z: number;
     load(data: IFramesModel | IDragonbonesModel);
     play(animationName: string);
+    playFrontEff(animationName: string);
+    playBackEff(animationName: string);
+
+    loadEff(data: IFramesModel);
 
     removeFromParent(): void;
     destroy(): void;

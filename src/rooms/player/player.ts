@@ -38,7 +38,8 @@ export class Player extends Element {
     }
 
     private mCheckStateHandle(val: string): boolean {
-        const dragonBonesDisplay: DragonbonesDisplay = this.mDisplay as DragonbonesDisplay;
+        if (this.mCurState === val) return true;
+        this.mCurState = val;
         return true;
     }
 

@@ -3,6 +3,7 @@ import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { Console } from "../../utils/log";
+import { IFramesModel } from "./frames.model";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -76,6 +77,8 @@ export enum AvatarPartType {
 export class DragonbonesDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
 
     public mDisplayInfo: IDragonbonesModel | undefined;
+    public frontEffDisplayInfo: IFramesModel;
+    public backEffDisplayInfo: IFramesModel;
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
     protected mActionName: string = "";
@@ -83,6 +86,9 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
+    private mFrontEffSprite: Phaser.GameObjects.Sprite;
+    private mBackEffSprite: Phaser.GameObjects.Sprite;
+
     /**
      * 龙骨显示对象包围框
      */
@@ -114,6 +120,42 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         // this.setInteractive({ pixelPerfect: true });
     }
 
+    public loadEff(displayInfo: IFramesModel, isBack: boolean = false) {
+        let loadDisplayInfo: IFramesModel;
+        let effKey: string;
+        loadDisplayInfo = displayInfo;
+        if (!loadDisplayInfo) return;
+        if (!isBack) {
+            this.frontEffDisplayInfo = loadDisplayInfo;
+            effKey = this.frontEffKey;
+        } else {
+            this.backEffDisplayInfo = loadDisplayInfo;
+            effKey = this.backEffKey;
+        }
+        if (effKey) {
+            if (this.scene.cache.obj.has(effKey)) {
+                if (!isBack) {
+                    this.onLoadFrontEffCompleteHandler();
+                } else {
+                    this.onLoadBackEffCompleteHandler();
+                }
+            } else {
+                const display = loadDisplayInfo.display;
+                if (display) {
+                    this.scene.load.atlas(effKey, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
+                    if (!isBack) {
+                        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadFrontEffCompleteHandler, this);
+                    } else {
+                        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadBackEffCompleteHandler, this);
+                    }
+                    this.scene.load.start();
+                } else {
+                    Console.error("display is undefined");
+                }
+            }
+        }
+    }
+
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
         return this.mArmatureDisplay;
     }
@@ -126,6 +168,22 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
         }
+    }
+
+    public playFrontEff(animationName: string) {
+        this.makeEffAnimations(animationName, false);
+        this.mFrontEffSprite.on("animationcomplete", () => {
+            this.mFrontEffSprite.destroy();
+        });
+        this.mFrontEffSprite.play(`${this.frontEffDisplayInfo.type}_${animationName}`);
+    }
+
+    public playBackEff(animationName: string) {
+        this.makeEffAnimations(animationName, true);
+        this.mBackEffSprite.on("animationcomplete", () => {
+            this.mBackEffSprite.destroy();
+        });
+        this.mBackEffSprite.play(`${this.frontEffDisplayInfo.type}_${animationName}`);
     }
 
     public destory() {
@@ -205,6 +263,28 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.mClickCon.setData("id", this.mDisplayInfo.id);
         this.add(this.mClickCon);
         this.emit("initialized");
+    }
+
+    private onLoadFrontEffCompleteHandler() {
+        if (!this.mFrontEffSprite) {
+            this.mFrontEffSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+            this.addAt(this.mFrontEffSprite, 2);
+        } else {
+            this.mFrontEffSprite.setTexture(this.frontEffKey);
+        }
+        this.playFrontEff(this.frontEffDisplayInfo.animationName);
+        this.emit("frontEffinitialized");
+    }
+
+    private onLoadBackEffCompleteHandler() {
+        if (!this.mBackEffSprite) {
+            this.mBackEffSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+            this.addAt(this.mBackEffSprite, 0);
+        } else {
+            this.mBackEffSprite.setTexture(this.backEffKey);
+        }
+        this.playBackEff(this.backEffDisplayInfo.animationName);
+        this.emit("backEffinitialized");
     }
 
     private clearArmature() {
@@ -738,6 +818,36 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             Console.log("load complete");
         }
     }
+    private makeEffAnimations(name: string, isBack: boolean = false) {
+        let displayInfo: IFramesModel;
+        if (isBack) {
+            displayInfo = this.frontEffDisplayInfo;
+        } else {
+            displayInfo = this.backEffDisplayInfo;
+        }
+        if (displayInfo) {
+            const animations = displayInfo.animations;
+            const resKey = isBack ? this.frontEffKey : this.backEffKey;
+            const animation = animations.find((ani) => {
+                return ani.name === name;
+            });
+            if (!animation) {
+                return;
+            }
+            const frames = [];
+            animation.frameName.forEach((frame) => {
+                frames.push({ key: resKey, frame });
+            });
+            const config: Phaser.Types.Animations.Animation = {
+                key: displayInfo.type + "_" + animation.name,
+                frames,
+                frameRate: animation.frameRate,
+                repeat: -1,
+            };
+            this.scene.anims.create(config);
+            // }
+        }
+    }
 
     set dragonBonesName(val: string) {
         if (this.mDragonbonesName !== val) {
@@ -752,5 +862,24 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
 
     get baseLoc(): Phaser.Geom.Point {
         return new Phaser.Geom.Point();
+    }
+    get frontEffKey(): string | undefined {
+        if (!this.frontEffDisplayInfo) {
+            return;
+        }
+        const display = this.frontEffDisplayInfo.display;
+        if (display && display.texturePath && display.dataPath) {
+            return display.texturePath + display.dataPath;
+        }
+    }
+
+    get backEffKey(): string | undefined {
+        if (!this.backEffDisplayInfo) {
+            return;
+        }
+        const display = this.backEffDisplayInfo.display;
+        if (display && display.texturePath && display.dataPath) {
+            return display.texturePath + display.dataPath;
+        }
     }
 }
