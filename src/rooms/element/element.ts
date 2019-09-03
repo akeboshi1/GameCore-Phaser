@@ -34,6 +34,9 @@ export class Element implements IElement {
   protected mInCamera: boolean = false;
   protected mTw: Tweens.Tween;
 
+  private mToX: number = 0;
+  private mToY: number = 0;
+
   constructor(data: op_client.IElement | op_client.IActor, protected mElementManager: IElementManager) {
     // if (data) {
     // TOOD displayInfo 在内部创建
@@ -51,7 +54,7 @@ export class Element implements IElement {
     this.setPosition(displayInfo.x, displayInfo.y);
   }
 
-  public changeState(val: string) {}
+  public changeState(val: string) { }
 
   public addDisplay() {
     if (!this.mDisplay) {
@@ -83,40 +86,54 @@ export class Element implements IElement {
 
   public move(moveData: op_client.IMoveData) {
     if (!this.mElementManager) {
-        throw new Error(`Player::move - Empty element-manager.`);
+      Console.error(`Player::move - Empty element-manager.`);
     }
     if (!this.mDisplay) {
-      throw new Error("display is undefined");
+      Console.error("display is undefined");
     }
 
     const baseLoc = this.mDisplay.baseLoc;
     const time: number = moveData.timeSpan
-        , toX: number = moveData.destinationPoint3f.x + baseLoc.x
-        , toY: number = moveData.destinationPoint3f.y + baseLoc.y;
-
+      , toX: number = Math.floor(moveData.destinationPoint3f.x + baseLoc.x)
+      , toY: number = Math.floor(moveData.destinationPoint3f.y + baseLoc.y);
+    if (this.mTw) {
+      if (this.mToX === toX && this.mToY === toY) {
+        Console.log("back");
+        // 兩次协议数据相同，不做处理
+        return;
+      }
+    }
+    this.mToX = toX;
+    this.mToY = toY;
     Console.log(`${time}: ${toX}, ${toY}`);
     const tw = this.mElementManager.scene.tweens.add({
-        targets: this.mDisplay,
-        duration: time,
-        ease: "Linear",
-        props: {
-            x: {value: toX},
-            y: {value: toY},
-        },
-        onComplete: (tween, targets, play) => {
-            Console.log("complete moveF");
-            // todo 通信服務端到達目的地
-            play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, 0);
-        },
-        onUpdate: (tween, targets, play) => {
-            this.setDepth();
-            this.setBlock();
-        },
-        onCompleteParams: [this],
+      targets: this.mDisplay,
+      duration: time + 500, // 由于两次有效协议之间的间隔大于一次移动所需要的时间，所以客户端做一个500毫秒的延时，让整个tween接受信息更流畅
+      ease: "Linear",
+      props: {
+        x: { value: toX },
+        y: { value: toY },
+      },
+      onComplete: (tween, targets, play) => {
+        Console.log("complete move");
+        this.mTw = null;
+        // todo 通信服務端到達目的地
+        play.setPosition(toX, toY, 0);
+      },
+      onUpdate: (tween, targets, play) => {
+        this.setDepth();
+        this.setBlock();
+      },
+      onCompleteParams: [this],
     });
 
     if (this.mTw) this.mTw.stop();
     this.mTw = tw;
+  }
+
+  public stopMove() {
+    if (this.mTw) this.mTw.stop();
+    Console.log("MoveStop");
   }
 
   public setPosition(x: number, y: number, z?: number) {

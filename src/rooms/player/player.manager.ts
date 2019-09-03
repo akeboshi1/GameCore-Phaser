@@ -125,7 +125,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;
                 player = this.get(playID);
-                Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                // Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!player) {
                     continue;
                 }
