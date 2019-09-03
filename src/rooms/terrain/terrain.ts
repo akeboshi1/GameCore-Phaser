@@ -50,11 +50,20 @@ export class Terrain extends Element {
       return;
     }
     room.addToGround(this.mDisplay);
+    this.setDepth();
   }
 
   protected setDepth() {
     if (this.mDisplay) {
       this.mDisplay.setDepth(this.mDisplay.y);
+      if (!this.roomService) {
+        throw new Error("roomService is undefined");
+      }
+      const layerManager = this.roomService.layerManager;
+      if (!layerManager) {
+        throw new Error("layerManager is undefined");
+      }
+      layerManager.depthGroundDirty = true;
     }
   }
 

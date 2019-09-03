@@ -65,6 +65,7 @@ export class Element implements IElement {
       return;
     }
     room.addToSurface(this.mDisplay);
+    this.setDepth();
   }
 
   public removeDisplay() {
@@ -131,9 +132,16 @@ export class Element implements IElement {
   }
 
   public dispose() {
+    if (this.block) {
+      this.block.remove(this);
+    }
     if (this.mDisplay) {
+      this.removeDisplay();
       this.mDisplay.destroy();
       this.mDisplay = null;
+    }
+    if (this.mTw) {
+      this.mTw.destroy();
     }
   }
 
@@ -176,6 +184,14 @@ export class Element implements IElement {
   protected setDepth() {
     if (this.mDisplay) {
       this.mDisplay.GameObject.setDepth(this.mDisplay.x + this.mDisplay.y);
+      if (!this.roomService) {
+        throw new Error("roomService is undefined");
+      }
+      const layerManager = this.roomService.layerManager;
+      if (!layerManager) {
+        throw new Error("layerManager is undefined");
+      }
+      layerManager.depthSurfaceDirty = true;
     }
   }
 

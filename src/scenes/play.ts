@@ -27,12 +27,12 @@ export class PlayScene extends Phaser.Scene {
     Console.log("play created");
   }
 
-  update() {
+  update(time: number, delta: number) {
     // if (this.cameras.main) {
     //   this.cameras.main.emit("renderer", this.cameras.main);
     // }
     if (this.mRoom) {
-      this.mRoom.update();
+      this.mRoom.update(time, delta);
     }
   }
 

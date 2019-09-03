@@ -1,8 +1,5 @@
-import {op_client} from "pixelpai_proto";
 import {Element} from "../element/element";
 import {IElementManager} from "../element/element.manager";
-import {IFramesModel, FramesModel} from "../display/frames.model";
-import {Tweens} from "phaser";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 
 export enum PlayerState {
@@ -38,11 +35,6 @@ export class Player extends Element {
 
     public removeDisplay() {
         super.removeDisplay();
-    }
-
-    public disopse() {
-        (this.mDisplay as DragonbonesDisplay).getDisplay().removeListener(dragonBones.EventObject.COMPLETE, this.dragonBonesFrameComplete, this);
-        super.dispose();
     }
 
     private mCheckStateHandle(val: string): boolean {

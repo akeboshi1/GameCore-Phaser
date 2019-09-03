@@ -42,6 +42,10 @@ export class LayerManager {
 
     private mScene: Phaser.Scene;
 
+    private mDepthSurface: boolean;
+
+    private mDepthGround: boolean;
+
     constructor(private room: Room) {
 
         this.mScene = room.scene;
@@ -72,6 +76,10 @@ export class LayerManager {
         this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
     }
 
+    public addToAtmosphere(child: Phaser.GameObjects.GameObject) {
+        this.mAtmosphere.add(child);
+    }
+
     public resize(width: number, height: number) {
         // todo
     }
@@ -85,12 +93,19 @@ export class LayerManager {
         this.mSurfaceLayer.sort("depth");
     }
 
-    public sortGround() {
-        this.mGroundLayer.sort("depth");
-    }
-
     public changeScene() {
         this._clearLayer();
+    }
+
+    public update() {
+        if (this.mDepthGround) {
+            this.mGroundLayer.sort("depth");
+            this.mDepthGround = false;
+        }
+        if (this.mDepthSurface) {
+            this.mDepthSurface = false;
+            this.mSurfaceLayer.sort("depth");
+        }
     }
 
     public dispose() {
@@ -117,5 +132,13 @@ export class LayerManager {
             }
         }
         container.destroy(destroy);
+    }
+
+    set depthSurfaceDirty(val: boolean) {
+        this.mDepthSurface = val;
+    }
+
+    set depthGroundDirty(val: boolean) {
+        this.mDepthGround = val;
     }
 }

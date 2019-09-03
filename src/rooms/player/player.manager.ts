@@ -68,7 +68,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public dispose() {
         if (this.mPlayerMap) {
             this.mPlayerMap.forEach((player: Player) => {
-                player.disopse();
+                player.dispose();
             });
             this.mPlayerMap = null;
         }
@@ -106,7 +106,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private onRemove(packet: PBpacket) {
-
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER = packet.content;
+        const player = this.get(content.uuid);
+        if (player) {
+            player.dispose();
+        }
     }
 
     private onMove(packet: PBpacket) {

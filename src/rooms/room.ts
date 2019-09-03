@@ -44,7 +44,7 @@ export interface IRoomService {
 
     addMouseListen(callback?: (ground) => void);
 
-    update(): void;
+    update(time: number, delta: number): void;
 }
 
 // 这一层管理数据和Phaser之间的逻辑衔接
@@ -96,6 +96,7 @@ export class Room implements IRoomService {
         };
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
+        this.mLayManager = new LayerManager(this);
         if (this.scene) {
             const cameras = this.scene.cameras.main;
             // cameras.on("renderer", this.onCameraRender, this);
@@ -106,7 +107,6 @@ export class Room implements IRoomService {
         }
 
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
-        this.mLayManager = new LayerManager(this);
         this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
             callBack: () => {
@@ -175,10 +175,13 @@ export class Room implements IRoomService {
         this.layerManager.addMouseListen(callback);
     }
 
-    public update() {
+    public update(time: number, delta: number) {
         const viewport = this.getViewPort();
         for (const block of this.blocks) {
             block.check(viewport);
+        }
+        if (this.layerManager) {
+            this.layerManager.update();
         }
     }
 
@@ -245,7 +248,7 @@ export class Room implements IRoomService {
             return;
         }
         this.mBlocks = [];
-        const colSize = 10;
+        const colSize = 20;
         const viewW = (colSize + colSize) * (this.mPosition45Object.tileWidth / 2);
         const viewH = (colSize + colSize) * (this.mPosition45Object.tileHeight / 2);
         const blockW = this.mPosition45Object.sceneWidth / viewW;
@@ -253,7 +256,9 @@ export class Room implements IRoomService {
         let index = 0;
         for (let i = 0; i < blockW; i++) {
             for (let j = 0; j < blockH; j++) {
-                this.mBlocks.push(new Block(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH), index++));
+                const block = new Block(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH), index++);
+                this.mBlocks.push(block);
+                this.layerManager.addToAtmosphere(block.drawBoard(this.scene));
             }
         }
     }

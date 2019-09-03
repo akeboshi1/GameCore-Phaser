@@ -1,4 +1,5 @@
 import { Element } from "../element/element";
+import { Console } from "../../utils/log";
 
 /**
  * 显示区域
@@ -7,8 +8,10 @@ export class Block {
   private mElements: Element[] = [];
   private mInCamera: boolean;
   private mIndex: number;
-  constructor(private mRect: Phaser.Geom.Rectangle, index: number) {
+  private mDebug: boolean;
+  constructor(private mRect: Phaser.Geom.Rectangle, index: number, debug?: boolean) {
     this.mIndex = index;
+    this.mDebug = debug;
   }
 
   public add(element: Element) {
@@ -19,6 +22,9 @@ export class Block {
       element.block.remove(element);
     }
     this.mElements.push(element);
+    if (this.mInCamera) {
+      Console.log("==============");
+    }
     element.inCamera = this.mInCamera;
     element.block = this;
   }
@@ -37,6 +43,16 @@ export class Block {
     } else {
       this.inCamera = false;
     }
+  }
+
+  public drawBoard(scene: Phaser.Scene) {
+    if (!scene) {
+      throw new Error("wrong scene");
+    }
+    const graphics = scene.make.graphics(undefined, false);
+    graphics.lineStyle(5, 0xFF, 1);
+    graphics.strokeRect(this.mRect.x, this.mRect.y, this.mRect.width, this.mRect.height);
+    return graphics;
   }
 
   private addDisplay() {
@@ -60,6 +76,10 @@ export class Block {
         this.removeDisplay();
       }
     }
+  }
+
+  get inCamera(): boolean {
+    return this.mInCamera;
   }
 
   get rectangle(): Phaser.Geom.Rectangle | undefined {
