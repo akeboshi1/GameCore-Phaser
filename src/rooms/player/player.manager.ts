@@ -109,6 +109,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER = packet.content;
         const player = this.get(content.uuid);
         if (player) {
+            this.removeFromMap(player.id);
             player.dispose();
         }
     }
