@@ -5,6 +5,7 @@ import {op_client, op_virtual_world} from "pixelpai_proto";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {LoadingScene} from "../scenes/loading";
 import {PlayScene} from "../scenes/play";
+import { Console } from "../utils/log";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;
@@ -72,6 +73,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (this.mWorld) {
             return this.mWorld.connection;
         }
-        console.error("world manager is undefined");
+        Console.error("world manager is undefined");
     }
 }

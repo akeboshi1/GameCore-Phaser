@@ -7,6 +7,7 @@ import { Room, IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel } from "../display/dragonbones.model";
 import { Actor } from "./Actor";
+import { Console } from "../../utils/log";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
@@ -120,7 +121,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;
                 player = this.get(playID);
-                console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!player) {
                     continue;
                 }
@@ -156,6 +157,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.connection;
         }
-        console.error("room is undefined");
+        Console.error("room is undefined");
     }
 }

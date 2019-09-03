@@ -4,6 +4,7 @@ import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IConnectListener} from "./socket";
 import {Buffer} from "buffer/";
 import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
+import { Console } from "../utils/log";
 
 const NetWorker = require("worker-loader?publicPath=/dist/&name=[hash].[name].js!./networker.ts");
 PBpacket.addProtocol(op_client);
@@ -60,7 +61,7 @@ export default class Connection implements ConnectionService {
     }
 
     private _doConnect() {
-        console.info(`_doConnect `, this.mCachedServerAddress);
+        Console.info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
         if (this.mWorker) {
             this.mWorker.onmessage = (event: any) => {
@@ -87,7 +88,7 @@ export default class Connection implements ConnectionService {
                     if (this.mReConnectCount < 10)
                         this.mReConnectCount++;
                     const delay = this.mReConnectCount ** 2;
-                    console.info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
+                    Console.info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
 
                     this.mTimeout = setTimeout(() => {
                         self.mTimeout = undefined;

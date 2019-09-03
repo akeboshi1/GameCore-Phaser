@@ -1,6 +1,7 @@
 import {IFramesModel} from "./frames.model";
 import {ElementDisplay} from "./element.display";
 import { op_gameconfig } from "pixelpai_proto";
+import { Console } from "../../utils/log";
 
 /**
  * 序列帧显示对象
@@ -37,7 +38,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
                     this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
                     this.scene.load.start();
                 } else {
-                    console.error("display is undefined");
+                    Console.error("display is undefined");
+                    Console.log();
                 }
             }
         }
@@ -59,7 +61,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     private onLoadCompleteHandler() {
         if (!this.mSprite) {
-            this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+            this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0.5, 0);
             this.add(this.mSprite);
         } else {
             this.mSprite.setTexture(this.resKey);

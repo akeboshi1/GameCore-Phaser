@@ -1,9 +1,8 @@
-import { IFramesModel } from "./frames.model";
 import { op_gameconfig } from "pixelpai_proto";
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IDragonbonesModel } from "./dragonbones.model";
-import { Geom } from "phaser";
+import { Console } from "../../utils/log";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -222,7 +221,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {
             const slot: dragonBones.Slot = slotList[i];
-            console.log(i + ":" + slot.display.frame.name);
+            Console.log(i + ":" + slot.display.frame.name);
             slot.display.visible = false;
             // slot.replaceDisplay(null);
         }
@@ -247,7 +246,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
             const part: string = obj.slot.replace("$", obj.dir.toString());
-            console.log(part);
+            Console.log(part);
         }
         this.replaceArr.splice(0);
     }
@@ -722,7 +721,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
                 const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                 if (img.texture.key === name) {
                     slot.replaceDisplay(img);
-                    console.log("success:" + resKey);
+                    Console.log("success:" + resKey);
                 }
                 this.misloading = false;
                 this.startLoad();
@@ -730,13 +729,13 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (e: Event) => {
                 this.misloading = false;
                 this.startLoad();
-                console.log("fail:" + nextLoad[1]);
+                Console.log("fail:" + nextLoad[1]);
             }, this);
             this.scene.load.image(partName, partUrl);
             this.scene.load.start();
         } else {
             this.misloading = false;
-            console.log("load complete");
+            Console.log("load complete");
         }
     }
 

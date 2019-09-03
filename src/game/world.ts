@@ -19,6 +19,7 @@ import {IRoomService} from "../rooms/room";
 import {MainUIScene} from "../scenes/main.ui";
 import {Clock} from "./clock";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
+import { Console } from "../utils/log";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -36,8 +37,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     constructor(config: IGameConfigure) {
         super();
-        console.log(`World constructor......`);
-        console.dir(config);
+        Console.log(`World constructor......`);
+        // Log.dir(config);
         // TODO 检测config内的必要参数如确实抛异常.
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
@@ -73,7 +74,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onConnected(connection?: SocketConnection): void {
-        console.info(`enterVirtualWorld`);
+        Console.info(`enterVirtualWorld`);
         this.enterVirtualWorld();
 
         // Start clock
@@ -90,7 +91,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        console.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        Console.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
@@ -141,7 +142,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mConfig && this.mConnection) {
             const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
             const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-            console.log(`VW_id: ${this.mConfig.virtual_world_id}`);
+            Console.log(`VW_id: ${this.mConfig.virtual_world_id}`);
             content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
             content.gameId = this.mConfig.game_id;
             content.userToken = this.mConfig.auth_token;
@@ -154,7 +155,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
-        console.dir(content);
+        // console.dir(content);
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         if (this.mGame) {
             this.mGame.destroy(true);
@@ -177,7 +178,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
         } else {
-            console.error("connection is undefined");
+            Console.error("connection is undefined");
         }
     }
 }

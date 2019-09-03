@@ -33,7 +33,7 @@ export class Launcher {
                 let newVersion = manifest.version;
                 // console.log(version + ":1," + newVersion);
                 if (version !== newVersion) {
-                    //Yconsole.log(newVersion + "3");
+                    // Yconsole.log(newVersion + "3");
                     const result = confirm("检测到新版本，是否刷新更新到最新版？");
                     if (result) {
                         window.location.reload();
@@ -42,7 +42,6 @@ export class Launcher {
             });
             xhr.send(null);
         }, 7200000);
-
 
         // todo window load
         /// this.mWorld.game.scene.start("PlayScene");
@@ -71,13 +70,14 @@ export class Launcher {
 
     get config(): IGameConfigure {
         // TODO 在这里整合app和phaser的配置文件
+        // TODO 没有登陆处理
         return {
-            auth_token: CONFIG.auth_token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmRmOTQ4OTUxYTRmNGY2NGMzYmEzMSIsImlhdCI6MTU2NzI0NDQyOCwiZXhwIjoxNTY3ODQ5MjI4fQ.AuKs0Sp0So1SA2On6V1erz8nBXhcq2vnvttfPUmHPn4",
-            token_expire: CONFIG.token_expire || "1567849228",
-            token_fingerprint: CONFIG.token_fingerprint || "b67315a05dc852648c777023d1f996c2df593861",
+            auth_token: CONFIG.auth_token,
+            token_expire: CONFIG.token_expire,
+            token_fingerprint: CONFIG.token_fingerprint,
             server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-            game_id: CONFIG.game_id || "5d65e35fdb19b473d87c2023",
-            virtual_world_id: CONFIG.virtual_world_id || "0",
+            game_id: CONFIG.game_id,
+            virtual_world_id: CONFIG.virtual_world_id,
             type: Phaser.AUTO,
             zoom: 1,
             width: document.documentElement.clientWidth,
@@ -111,4 +111,3 @@ export class Launcher {
 window.onload = () => {
     new Launcher();
 };
-

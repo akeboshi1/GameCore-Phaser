@@ -31,6 +31,7 @@ export class Block {
   }
 
   public check(viewPort: Phaser.Geom.Rectangle) {
+    if (!viewPort) return;
     if (Phaser.Geom.Intersects.RectangleToRectangle(viewPort, this.rectangle)) {
       this.inCamera = true;
     } else {

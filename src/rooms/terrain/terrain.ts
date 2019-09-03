@@ -4,6 +4,7 @@ import { IElementManager } from "../element/element.manager";
 import { FramesDisplay } from "../display/frames.display";
 import { op_client } from "pixelpai_proto";
 import { FramesModel } from "../display/frames.model";
+import { Console } from "../../utils/log";
 
 export class Terrain extends Element {
   protected mDisplay: FramesDisplay | undefined;
@@ -15,12 +16,12 @@ export class Terrain extends Element {
   public setPosition(x: number, y: number, z?: number) {
     const roomService = this.mElementManager.roomService;
     if (!roomService) {
-      console.error("room is undefine");
+      Console.error("room is undefine");
       return;
     }
     const point = roomService.transformTo90(new Phaser.Geom.Point(x, y));
     if (!point) {
-      console.error("transform error");
+      Console.error("transform error");
       return;
     }
 
@@ -40,12 +41,12 @@ export class Terrain extends Element {
      this.createDisplay();
     }
     if (!this.mElementManager) {
-      console.error("element manager is undefined");
+      Console.error("element manager is undefined");
       return;
     }
     const room = this.mElementManager.roomService;
     if (!room) {
-      console.error("roomService is undefined");
+      Console.error("roomService is undefined");
       return;
     }
     room.addToGround(this.mDisplay);

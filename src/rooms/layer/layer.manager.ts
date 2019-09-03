@@ -81,6 +81,14 @@ export class LayerManager {
         if (callBack) callBack(this.mGroundClickLayer); // callBack.apply(null, this.mGroundClickLayer);
     }
 
+    public sortSurface() {
+        this.mSurfaceLayer.sort("depth");
+    }
+
+    public sortGround() {
+        this.mGroundLayer.sort("depth");
+    }
+
     public changeScene() {
         this._clearLayer();
     }

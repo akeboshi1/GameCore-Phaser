@@ -15,6 +15,7 @@ import { PBpacket } from "net-socket-packet";
 import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
 import { ElementDisplay } from "./display/element.display";
+import { Console } from "../utils/log";
 
 export interface IRoomService {
     readonly id: number;
@@ -42,6 +43,8 @@ export interface IRoomService {
     addToSurface(element: ElementDisplay | ElementDisplay[]);
 
     addMouseListen(callback?: (ground) => void);
+
+    update(): void;
 }
 
 // 这一层管理数据和Phaser之间的逻辑衔接
@@ -75,7 +78,7 @@ export class Room implements IRoomService {
 
     public enter(data: op_client.IScene): void {
         if (!data) {
-            console.error("wrong room");
+            Console.error("wrong room");
             return;
         }
         this.mID = data.id;
@@ -95,16 +98,17 @@ export class Room implements IRoomService {
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         if (this.scene) {
             const cameras = this.scene.cameras.main;
-            cameras.on("renderer", this.onCameraRender, this);
+            // cameras.on("renderer", this.onCameraRender, this);
             this.mCameraService.setCameras(this.scene.cameras.main);
 
             this.initBlocks();
-            // cameras.zoom = 2;
+            cameras.zoom = 2;
         }
 
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
         this.mLayManager = new LayerManager(this);
         this.mWorld.game.scene.start(PlayScene.name, {
+            room: this,
             callBack: () => {
                 // notify server, we are in.
                 if (this.connection) {
@@ -153,7 +157,7 @@ export class Room implements IRoomService {
 
     public transformTo90(point3d: Phaser.Geom.Point) {
         if (!this.mPosition45Object) {
-            console.error("position object is undefined");
+            Console.error("position object is undefined");
             return;
         }
         return Position45.transformTo90(point3d, this.mPosition45Object);
@@ -161,7 +165,7 @@ export class Room implements IRoomService {
 
     public transformTo45(point3d: Point3) {
         if (!this.mPosition45Object) {
-            console.error("position object is undefined");
+            Console.error("position object is undefined");
             return;
         }
         return Position45.transformTo45(point3d, this.mPosition45Object);
@@ -169,6 +173,13 @@ export class Room implements IRoomService {
 
     public addMouseListen(callback?: (layer) => void) {
         this.layerManager.addMouseListen(callback);
+    }
+
+    public update() {
+        const viewport = this.getViewPort();
+        for (const block of this.blocks) {
+            block.check(viewport);
+        }
     }
 
     get scene(): Phaser.Scene | undefined {

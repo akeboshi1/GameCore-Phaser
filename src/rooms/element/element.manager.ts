@@ -4,6 +4,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { IRoomService } from "../room";
 import { FramesModel } from "../display/frames.model";
+import { Console } from "../../utils/log";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -37,7 +38,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     if (this.mRoom) {
       return this.mRoom.connection;
     }
-    console.log("roomManager is undefined");
+    Console.log("roomManager is undefined");
     return;
   }
 

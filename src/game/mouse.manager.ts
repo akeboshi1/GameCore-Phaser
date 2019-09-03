@@ -3,6 +3,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
+import { Console } from "../utils/log";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -115,7 +116,7 @@ export class MouseManager extends PacketHandler {
         this.mActivePointer = pointer;
         this.onUpdate(pointer);
         if (gameObject) {
-            console.log(gameObject.getData("id"));
+            Console.log(gameObject.getData("id"));
         }
     }
 
@@ -123,7 +124,7 @@ export class MouseManager extends PacketHandler {
         this.mActivePointer = pointer;
         this.onUpdate(pointer);
         if (gameObject) {
-            console.log(gameObject.getData("id"));
+            Console.log(gameObject.getData("id"));
         }
     }
 }

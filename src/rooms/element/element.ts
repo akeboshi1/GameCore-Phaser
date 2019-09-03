@@ -8,6 +8,7 @@ import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel, DragonbonesModel } from "../display/dragonbones.model";
 import { op_client } from "pixelpai_proto";
 import { Tweens } from "phaser";
+import { Console } from "../../utils/log";
 
 export interface IElement {
   readonly id: number;
@@ -60,7 +61,7 @@ export class Element implements IElement {
     }
     const room = this.roomService;
     if (!room) {
-      console.error("roomService is undefined");
+      Console.error("roomService is undefined");
       return;
     }
     room.addToSurface(this.mDisplay);
@@ -92,7 +93,7 @@ export class Element implements IElement {
         , toX: number = moveData.destinationPoint3f.x + baseLoc.x
         , toY: number = moveData.destinationPoint3f.y + baseLoc.y;
 
-    console.log(`${time}: ${toX}, ${toY}`);
+    Console.log(`${time}: ${toX}, ${toY}`);
     const tw = this.mElementManager.scene.tweens.add({
         targets: this.mDisplay,
         duration: time,
@@ -102,7 +103,7 @@ export class Element implements IElement {
             y: {value: toY},
         },
         onComplete: (tween, targets, play) => {
-            console.log("complete moveF");
+            Console.log("complete moveF");
             // todo 通信服務端到達目的地
             play.setPosition(moveData.destinationPoint3f.x, moveData.destinationPoint3f.y, 0);
         },
@@ -187,7 +188,7 @@ export class Element implements IElement {
 
   get roomService(): IRoomService {
     if (!this.mElementManager) {
-      console.error("element manager is undefined");
+      Console.error("element manager is undefined");
       return;
     }
     return this.mElementManager.roomService;

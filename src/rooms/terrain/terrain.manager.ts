@@ -5,6 +5,7 @@ import { Terrain } from "./terrain";
 import { IRoomService } from "../room";
 import { FramesModel } from "../display/frames.model";
 import { IElementManager } from "../element/element.manager";
+import { Console } from "../../utils/log";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
   private mTerrains: Map<number, Terrain>;
@@ -33,7 +34,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
       this.mTerrains = new Map();
     }
     if (!this.mRoom.layerManager) {
-      console.error("layer manager is undefined");
+      Console.error("layer manager is undefined");
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ADD_TERRAIN = packet.content;
@@ -59,7 +60,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     if (this.mRoom) {
       return this.mRoom.connection;
     }
-    console.error("room manager is undefined");
+    Console.error("room manager is undefined");
   }
 
   get roomService(): IRoomService {

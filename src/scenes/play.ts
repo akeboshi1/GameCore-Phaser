@@ -1,8 +1,11 @@
 import { MainUIScene } from "./main.ui";
+import { IRoomService } from "../rooms/room";
+import { Console } from "../utils/log";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
   private mCallBack: () => void;
+  private mRoom: IRoomService;
   constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
     super(config || { key: PlayScene.name });
   }
@@ -12,6 +15,7 @@ export class PlayScene extends Phaser.Scene {
   public init(data: any) {
     if (data) {
       this.mCallBack = data.callBack;
+      this.mRoom = data.room;
     }
   }
 
@@ -20,12 +24,15 @@ export class PlayScene extends Phaser.Scene {
       this.mCallBack();
       this.scene.launch(MainUIScene.name);
     }
-    console.log("play created");
+    Console.log("play created");
   }
 
   update() {
-    if (this.cameras.main) {
-      this.cameras.main.emit("renderer", this.cameras.main);
+    // if (this.cameras.main) {
+    //   this.cameras.main.emit("renderer", this.cameras.main);
+    // }
+    if (this.mRoom) {
+      this.mRoom.update();
     }
   }
 

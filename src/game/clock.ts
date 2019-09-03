@@ -4,6 +4,7 @@ import {ConnectionService} from "../net/connection.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 import {Algorithm} from "../utils/algorithm";
+import { Console } from "../utils/log";
 
 const LATENCY_SAMPLES = 15; // Latency Array length
 const TICK_INTERVAL = 500; // (ms)
@@ -87,6 +88,6 @@ export class Clock extends PacketHandler {
         if (mistake > TICK_INTERVAL) {
             this.mTimestamp = remote_time;
         }
-        console.log(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
+        Console.log(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
     }
 }
