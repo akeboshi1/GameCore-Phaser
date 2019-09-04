@@ -68,7 +68,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public stopActorMove() {
-        const actor = this.mPlayerMap[this.mActorID]
+        const actor = this.mPlayerMap[this.mActorID];
         if (!actor) {
             Console.error("MainHero miss");
         }
