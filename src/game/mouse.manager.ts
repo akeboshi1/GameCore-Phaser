@@ -35,13 +35,20 @@ export class MouseManager extends PacketHandler {
         this.mScene = room.scene;
         if (!this.mScene) return;
         this.mActivePointer = this.mScene.input.activePointer;
-        room.addMouseListen((ground) => {
-            // this.mGroundLayer = ground;
-            // this.mGroundLayer.on("pointerdown", this.groundDown, this);
-            // this.mGroundLayer.on("pointerup", this.groundUp, this);
+        new Promise((resolve, reject) => {
+            try {
+                room.addMouseListen();
+                resolve();
+            } catch (e) {
+                reject(e);
+            }
+        }).then(() => {
             room.scene.input.on("gameobjectdown", this.groundDown, this);
             room.scene.input.on("gameobjectup", this.groundUp, this);
             this.resume();
+        }).catch((reason: any) => {
+            Console.error(reason);
+        }).finally(() => {
         });
     }
 

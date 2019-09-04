@@ -109,8 +109,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         }
     }
 
-    public load(display: IDragonbonesModel, callBack?: () => void) {
-        if (callBack) callBack();
+    public load(display: IDragonbonesModel) {
         this.mDisplayInfo = display;
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;

@@ -1,15 +1,15 @@
-import {Element} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {FramesDisplay} from "../display/frames.display";
-import {op_client} from "pixelpai_proto";
-import {Console} from "../../utils/log";
-import {Pos} from "../../utils/pos";
+import { Element } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { FramesDisplay } from "../display/frames.display";
+import { op_client } from "pixelpai_proto";
+import { Console } from "../../utils/log";
+import { Pos } from "../../utils/pos";
 
 export class Terrain extends Element {
     protected mDisplay: FramesDisplay | undefined;
 
-    constructor(data: op_client.ITerrain, mElementManager: IElementManager) {
-        super(undefined, mElementManager);
+    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
+        super(objectPosition, nodeType, mElementManager);
     }
 
     public setPosition(p: Pos) {
