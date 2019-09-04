@@ -183,7 +183,8 @@ export class Element implements IElement {
 
   protected setDepth() {
     if (this.mDisplay) {
-      this.mDisplay.GameObject.setDepth(this.mDisplay.x + this.mDisplay.y);
+      const baseLoc = this.mDisplay.baseLoc;
+      this.mDisplay.GameObject.setDepth(this.mDisplay.x + Math.abs(baseLoc.x) + this.mDisplay.y + Math.abs(baseLoc.y));
       if (!this.roomService) {
         throw new Error("roomService is undefined");
       }

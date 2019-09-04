@@ -137,7 +137,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     private onLoadCompleteHandler() {
         if (!this.mSprite) {
-            this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0.5, 0);
+            this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
             this.addAt(this.mSprite, 1);
         } else {
             this.mSprite.setTexture(this.resKey);
