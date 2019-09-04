@@ -13,4 +13,8 @@ export class ResUtils {
     static getDebugPartUrl(value: string): string {
         return CONFIG.osd + "avatar/part/" + value + ".png";
     }
+
+    static getGameConfig(value: string): string {
+        return CONFIG.osd + value;
+    }
 }

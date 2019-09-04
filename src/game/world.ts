@@ -4,7 +4,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "phaser";
 import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
 import { ConnectionService } from "../net/connection.service";
-import { op_client, op_gateway, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_gateway, op_virtual_world, op_def } from "pixelpai_proto";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
 import { PlayScene } from "../scenes/play";
@@ -20,6 +20,9 @@ import { MainUIScene } from "../scenes/main.ui";
 import { Clock } from "./clock";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Console } from "../utils/log";
+import { GameConfigService } from "../config/gameconfig.service";
+import { ResUtils } from "../utils/resUtil";
+import { GameConfigManager } from "../config/gameconfig.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -31,6 +34,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mRoomMamager: RoomManager;
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
+    private mGameConfigService: GameConfigService;
     private mSize: Size;
 
     private mClock: Clock;
@@ -67,6 +71,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mSelectCharacterManager = new SelectManager(this);
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
+        this.mGameConfigService = new GameConfigManager(this);
 
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
@@ -129,6 +134,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mRoomMamager;
     }
 
+    get gameConfigService(): GameConfigService | undefined {
+        return this.mGameConfigService;
+    }
+
     get selectCharacterManager(): SelectManager | undefined {
         return this.selectCharacterManager;
     }
@@ -159,7 +168,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
+        this.mGameConfigService.load(content.configUrls)
+            .then(() => {
+                this.createGame();
+            })
+            .catch((err) => {
+                Console.log(err);
+            });
         // console.dir(content);
+    }
+
+    private createGame() {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         if (this.mGame) {
             this.mGame.destroy(true);
@@ -169,17 +188,37 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
         this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
+        this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus);
+        this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur);
         this.mSize.setSize(this.mGame.scale.width, this.mGame.scale.height);
-
-        const pkt: PBpacket = new PBpacket(0);
-        this.mConnection.send(pkt);
-
         this.gameCreated();
     }
 
     private gameCreated() {
         if (this.connection) {
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
+            this.connection.send(pkt);
+        } else {
+            Console.error("connection is undefined");
+        }
+    }
+
+    private onFocus() {
+        if (this.connection) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+            context.gameStatus = op_def.GameStatus.Focus;
+            this.connection.send(pkt);
+        } else {
+            Console.error("connection is undefined");
+        }
+    }
+
+    private onBlur() {
+        if (this.connection) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+            context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
         } else {
             Console.error("connection is undefined");
