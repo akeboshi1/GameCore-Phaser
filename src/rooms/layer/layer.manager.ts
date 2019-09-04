@@ -84,9 +84,8 @@ export class LayerManager {
         // todo
     }
 
-    public addMouseListen(callBack?: (layer) => void) {
+    public addMouseListen() {
         this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
-        if (callBack) callBack(this.mGroundClickLayer); // callBack.apply(null, this.mGroundClickLayer);
     }
 
     public sortSurface() {

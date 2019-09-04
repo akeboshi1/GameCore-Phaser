@@ -29,7 +29,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         }
     }
 
-    public load(displayInfo: IFramesModel, callback?: () => void) {
+    public load(displayInfo: IFramesModel) {
         this.mDisplayInfo = displayInfo;
         if (!this.mDisplayInfo) return;
         if (this.resKey) {
@@ -43,7 +43,6 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
                     this.scene.load.start();
                 } else {
                     Console.error("display is undefined");
-                    Console.log();
                 }
             }
         }

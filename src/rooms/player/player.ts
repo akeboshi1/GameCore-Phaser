@@ -23,17 +23,15 @@ export enum PlayerState {
 export class Player extends Element {
     protected mCurState: string;
 
-    constructor(protected mElementManager: IElementManager) {
-        super(undefined, mElementManager);
+    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
+        super(objectPosition, nodeType, mElementManager);
     }
 
     public move(moveData: op_client.IMoveData) {
         if (this.mCurState !== "walk") {
             this.changeState("walk");
         }
-        super.move(moveData, () => {
-            this.changeState("idle");
-        });
+        super.move(moveData);
     }
 
     public changeState(val: string) {
@@ -41,6 +39,10 @@ export class Player extends Element {
             this.mCurState = val;
             (this.mDisplay as DragonbonesDisplay).play(val);
         }
+    }
+
+    public stopMove() {
+        super.stopMove();
     }
 
     public removeDisplay() {
