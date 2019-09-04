@@ -35,8 +35,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
-        // todo playState change
-        this.addHandlerFun(1, this.onChangeState);
+        // todo playState change 由客户端进行修改
         this.mPlayerMap.clear();
     }
 
@@ -109,6 +108,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER = packet.content;
         const player = this.get(content.uuid);
         if (player) {
+            this.removeFromMap(player.id);
             player.dispose();
         }
     }
@@ -125,22 +125,12 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;
                 player = this.get(playID);
-                Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                // Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!player) {
                     continue;
                 }
                 player.move(moveData);
             }
-        }
-    }
-
-    private onChangeState(packet: PBpacket) {
-        const content = packet.content;
-        const id: number = content.id;
-        const state: string = content.state;
-        const player: Player = this.mPlayerMap.get(id);
-        if (player) {
-            player.changeState(state);
         }
     }
 

@@ -16,26 +16,6 @@ export class Actor extends Player implements KeyboardListener {
 
     onKeyDown(keys: number[]): void {
         // TODO
-        const len: number = keys.length;
-        let horizontalSpeed: number = 0;
-        let verticalSpeed: number = 0;
-        for (let i: number = 0; i < len; i++) {
-            const key: number = keys[i];
-            switch (key) {
-                case 37:
-                    horizontalSpeed += 10;
-                    break;
-                case 38:
-                    verticalSpeed += 10;
-                    break;
-                case 39:
-                    horizontalSpeed -= 10;
-                    break;
-                case 40:
-                    verticalSpeed -= 10;
-                    break;
-            }
-        }
     }
 
     onKeyUp(keys: number[]): void {

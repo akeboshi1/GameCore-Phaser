@@ -97,7 +97,7 @@ export class LayerManager {
         this._clearLayer();
     }
 
-    public update() {
+    public update(time: number, delta: number) {
         if (this.mDepthGround) {
             this.mGroundLayer.sort("depth");
             this.mDepthGround = false;
