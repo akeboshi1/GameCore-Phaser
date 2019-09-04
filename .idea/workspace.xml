@@ -2,8 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/rooms/cameras/viewblock.manager.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/pos.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/block/block.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/viewblock.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/cameras.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/point3.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/position45.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/position45.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +46,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
+    <property name="last_opened_file_path" value="$USER_HOME$/.ssh/id_rsa" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -45,20 +57,21 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Seven\git\game-core\src\game" />
-      <recent name="C:\Users\Seven\git\game-core\src\net" />
-      <recent name="C:\Users\Seven\git\game-core\src\net\worker" />
-      <recent name="C:\Users\Seven\git\game-core\lib\network" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Seven\git\game-core\config" />
       <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\net" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Seven\git\game-core\src\utils" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
+      <recent name="C:\Users\Seven\git\game-core\src\game" />
+      <recent name="C:\Users\Seven\git\game-core\src\net" />
+      <recent name="C:\Users\Seven\git\game-core\src\net\worker" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -89,6 +102,9 @@
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -135,6 +151,10 @@
       <workItem from="1566210781753" duration="14640000" />
       <workItem from="1566907507305" duration="44695000" />
       <workItem from="1567128848939" duration="2985000" />
+      <workItem from="1567407895193" duration="807000" />
+      <workItem from="1567478675060" duration="262000" />
+      <workItem from="1567478962416" duration="2515000" />
+      <workItem from="1567562861757" duration="13274000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -150,7 +170,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567230011160</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="M room">
+      <created>1567230937584</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1567230937584</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,6 +226,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="修改 room 里的结构，和display里结构" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改 room 里的结构，和display里结构" />
+    <MESSAGE value="M room" />
+    <option name="LAST_COMMIT_MESSAGE" value="M room" />
   </component>
 </project>

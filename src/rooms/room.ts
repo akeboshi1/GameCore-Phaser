@@ -1,21 +1,21 @@
-import { IRoomManager } from "./room.manager";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { Point3, IPoint3 } from "../utils/point3";
-import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { Block } from "./block/block";
+import {IRoomManager} from "./room.manager";
+import {ElementManager} from "./element/element.manager";
+import {PlayerManager} from "./player/player.manager";
+import {LayerManager} from "./layer/layer.manager";
+import {TerrainManager} from "./terrain/terrain.manager";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_virtual_world} from "pixelpai_proto";
+import {IPosition45Obj, Position45} from "../utils/position45";
+import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
+import {Actor} from "./player/Actor";
+import {PBpacket} from "net-socket-packet";
+import {WorldService} from "../game/world.service";
+import {PlayScene} from "../scenes/play";
+import {ElementDisplay} from "./display/element.display";
+import {Console} from "../utils/log";
+import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
+import {Pos} from "../utils/pos";
 import IActor = op_client.IActor;
-import { Actor } from "./player/Actor";
-import { PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ElementDisplay } from "./display/element.display";
-import { Console } from "../utils/log";
 
 export interface IRoomService {
     readonly id: number;
@@ -25,7 +25,7 @@ export interface IRoomService {
     readonly layerManager: LayerManager;
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
-    readonly blocks: Block[];
+    readonly blocks: ViewblockService;
     readonly actor: Actor;
 
     readonly scene: Phaser.Scene | undefined;
@@ -36,9 +36,9 @@ export interface IRoomService {
 
     enter(room: op_client.IScene): void;
 
-    transformTo45(point3: IPoint3): Phaser.Geom.Point;
+    transformTo45(p:Pos): Pos;
 
-    transformTo90(point3: Phaser.Geom.Point): Point3;
+    transformTo90(p: Pos): Pos;
 
     addToGround(element: ElementDisplay | ElementDisplay[]);
 
@@ -55,21 +55,21 @@ export class Room implements IRoomService {
     private mWorld: WorldService;
     private mActor: Actor;
     private mID: number;
-
     private mTerainManager: TerrainManager;
     private mElementManager: ElementManager;
     private mPlayerManager: PlayerManager;
     private mLayManager: LayerManager;
     private mScene: Phaser.Scene | undefined;
-    private mPosition45Object: IPosition45Obj;
+    private mSize: IPosition45Obj;
     private mCameraService: ICameraService;
-    private mBlocks: Block[];
+    private mBlocks: ViewblockService;
 
     constructor(private manager: IRoomManager) {
         this.mTerainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
         this.mCameraService = new CamerasManager(this);
+        this.mBlocks = new ViewblockManager(this.mCameraService);
 
         this.mWorld = this.manager.world;
         if (this.mWorld) {
@@ -88,7 +88,7 @@ export class Room implements IRoomService {
         this.mElementManager.init();
         this.mPlayerManager.init();
 
-        this.mPosition45Object = {
+        this.mSize = {
             cols: data.rows,
             rows: data.cols,
             tileHeight: data.tileHeight,
@@ -100,13 +100,12 @@ export class Room implements IRoomService {
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         this.mLayManager = new LayerManager(this);
         if (this.scene) {
-            const cameras = this.scene.cameras.main;
-            // cameras.on("renderer", this.onCameraRender, this);
-            this.mCameraService.setCameras(this.scene.cameras.main);
-
-            this.initBlocks();
+            const cameras = this.mCameraService.camera = this.scene.cameras.main;
+            // init block
+            this.mBlocks.int(this.mSize);
             cameras.zoom = 2;
         }
+
 
         // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
         this.mWorld.game.scene.start(PlayScene.name, {
@@ -138,39 +137,25 @@ export class Room implements IRoomService {
         }
     }
 
-    public getViewPort(): Phaser.Geom.Rectangle {
-        const cameras = this.scene.cameras.main;
-        if (!this.scene) {
-            return;
-        }
-        const worldView = cameras.worldView;
-        const out = new Phaser.Geom.Rectangle(worldView.x, worldView.y, worldView.width, worldView.height);
-        out.x -= out.width >> 1;
-        out.y -= out.height >> 1;
-        out.width *= 2;
-        out.height *= 2;
-        return out;
-    }
-
     public resize(width: number, height: number) {
         this.layerManager.resize(width, height);
         this.mCameraService.resize(width, height);
     }
 
-    public transformTo90(point3d: Phaser.Geom.Point) {
-        if (!this.mPosition45Object) {
+    public transformTo90(p: Pos) {
+        if (!this.mSize) {
             Console.error("position object is undefined");
             return;
         }
-        return Position45.transformTo90(point3d, this.mPosition45Object);
+        return Position45.transformTo90(p, this.mSize);
     }
 
-    public transformTo45(point3d: Point3) {
-        if (!this.mPosition45Object) {
+    public transformTo45(p: Pos) {
+        if (!this.mSize) {
             Console.error("position object is undefined");
             return;
         }
-        return Position45.transformTo45(point3d, this.mPosition45Object);
+        return Position45.transformTo45(p, this.mSize);
     }
 
     public addMouseListen(callback?: (layer) => void) {
@@ -178,10 +163,7 @@ export class Room implements IRoomService {
     }
 
     public update(time: number, delta: number) {
-        const viewport = this.getViewPort();
-        for (const block of this.blocks) {
-            block.check(viewport);
-        }
+        this.mBlocks.update(time, delta);
         if (this.layerManager) {
             this.layerManager.update();
         }
@@ -220,11 +202,11 @@ export class Room implements IRoomService {
     }
 
     get roomSize(): IPosition45Obj | undefined {
-        return this.mPosition45Object || undefined;
+        return this.mSize || undefined;
     }
 
-    get blocks(): Block[] | undefined {
-        return this.mBlocks || undefined;
+    get blocks(): ViewblockService {
+        return this.mBlocks;
     }
 
     get actor(): Actor | undefined {
@@ -243,36 +225,7 @@ export class Room implements IRoomService {
             this.mScene = null;
         }
         this.manager = null;
-        // this.mTerainManager.dispose();
         this.mPlayerManager.dispose();
         this.mLayManager.dispose();
-        // this.mElementManager.dispose();
-    }
-
-    private initBlocks() {
-        if (!this.mPosition45Object) {
-            return;
-        }
-        this.mBlocks = [];
-        const colSize = 20;
-        const viewW = (colSize + colSize) * (this.mPosition45Object.tileWidth / 2);
-        const viewH = (colSize + colSize) * (this.mPosition45Object.tileHeight / 2);
-        const blockW = this.mPosition45Object.sceneWidth / viewW;
-        const blockH = this.mPosition45Object.sceneHeight / viewH;
-        let index = 0;
-        for (let i = 0; i < blockW; i++) {
-            for (let j = 0; j < blockH; j++) {
-                const block = new Block(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH), index++);
-                this.mBlocks.push(block);
-                this.layerManager.addToAtmosphere(block.drawBoard(this.scene));
-            }
-        }
-    }
-
-    private onCameraRender() {
-        const viewport = this.getViewPort();
-        for (const block of this.blocks) {
-            block.check(viewport);
-        }
     }
 }
