@@ -24,7 +24,7 @@ export class KeyBoardManager extends PacketHandler {
     // 是否初始化获取到了需要监听的key值列表
     private mInitilized: boolean = true;
     // ==============================
-    private mGame: Phaser.Game;
+    private mRoom: IRoomService;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
 
@@ -39,7 +39,6 @@ export class KeyBoardManager extends PacketHandler {
         this.mTmpUpKeysStr = "";
         this.mTmpDownKeyStr = "";
 
-        this.mGame = this.worldService.game;
         this.mConnect = this.worldService.connection;
     }
 
@@ -60,6 +59,7 @@ export class KeyBoardManager extends PacketHandler {
      * @param room
      */
     public setRoom(room: IRoomService) {
+        this.mRoom = room;
         this.mScene = room.scene;
         if (!this.mScene) return;
         const len = this.mCodeList.length;
@@ -98,7 +98,6 @@ export class KeyBoardManager extends PacketHandler {
         this.mTmpUpKeysStr = null;
         this.mScene = null;
         this.mConnect = null;
-        this.mGame = null;
         this.mInitilized = false;
     }
 
@@ -113,7 +112,7 @@ export class KeyBoardManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         const keyArr: number[] = this.getKeyDowns();
         if (this.mTmpDownKeyStr === keyArr.toString()) return;
-        this.mTmpUpKeysStr = "";
+        // this.mTmpUpKeysStr = "";
         this.mTmpDownKeyStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
@@ -128,7 +127,7 @@ export class KeyBoardManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
         const keyArr: number[] = this.getKeyUps();
         if (this.mTmpUpKeysStr === keyArr.toString()) return;
-        this.mTmpDownKeyStr = "";
+        // this.mTmpDownKeyStr = "";
         this.mTmpUpKeysStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
@@ -137,23 +136,39 @@ export class KeyBoardManager extends PacketHandler {
             l.onKeyUp(keyArr);
         });
 
-        let len: number = this.mKeyDownList.length;
-        let key: Phaser.Input.Keyboard.Key;
-        let keyCode: number;
-        const keyCodeLen: number = keyArr.length;
-        for (let j: number = 0; j < keyCodeLen; j++) {
-            keyCode = keyArr[j];
-            for (let i: number = 0; i < len; i++) {
-                key = this.mKeyDownList[i];
-                if (keyCode === key.keyCode) {
-                    this.mKeyDownList.splice(i, 1);
-                    i--;
-                    len--;
-                    break;
-                }
-            }
+        if (this.checkMoveKeyAllUp()) {
+            this.mRoom.playerManager.stopActorMove();
         }
 
+        // let len: number = this.mKeyDownList.length;
+        // let key: Phaser.Input.Keyboard.Key;
+        // let keyCode: number;
+        // const keyCodeLen: number = keyArr.length;
+        // for (let j: number = 0; j < keyCodeLen; j++) {
+        //     keyCode = keyArr[j];
+        //     for (let i: number = 0; i < len; i++) {
+        //         key = this.mKeyDownList[i];
+        //         if (keyCode === key.keyCode) {
+        //             this.mKeyDownList.splice(i, 1);
+        //             i--;
+        //             len--;
+        //             break;
+        //         }
+        //     }
+        // }
+
+    }
+
+    private checkMoveKeyAllUp(): boolean {
+        let key: Phaser.Input.Keyboard.Key;
+        const len = this.mKeyList.length;
+        for (let i = 0; i < len; i++) {
+            key = this.mKeyList[i];
+            if (key && key.isDown) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private getKeyDowns(): number[] {

@@ -75,7 +75,7 @@ export class Element implements IElement {
 
     public move(moveData: op_client.IMoveData) {
         if (!this.mElementManager) {
-            Console.error(`Player::move - Empty element-manager.`);
+            Console.error(`Element::move - Empty element-manager.`);
         }
         if (!this.mDisplay) {
             Console.error("display is undefined");
@@ -128,6 +128,8 @@ export class Element implements IElement {
 
     public stopMove() {
         if (this.mTw) this.mTw.stop();
+        // todo socket
+        this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
         Console.log("MoveStop");
     }
 

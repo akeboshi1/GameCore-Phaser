@@ -41,6 +41,10 @@ export class Player extends Element {
         }
     }
 
+    public stopMove() {
+        super.stopMove();
+    }
+
     public removeDisplay() {
         super.removeDisplay();
     }

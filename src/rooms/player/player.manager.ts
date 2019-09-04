@@ -11,7 +11,7 @@ import { Console } from "../../utils/log";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
-
+    private mActorID: number;
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -48,14 +48,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 z: obj.z | 0,
             }
         };
-        const player: Actor = new Actor(position, obj, this);
-        this.mPlayerMap.set(obj.id, player);
+        this.mActorID = obj.id;
+        const actor = new Actor(position, obj, this);
+        this.mPlayerMap.set(obj.id, actor);
         const cameraService = this.mRoom.cameraService;
         if (cameraService) {
-            const dis: ElementDisplay = player.getDisplay();
+            const dis: ElementDisplay = actor.getDisplay();
             if (dis) cameraService.startFollow(dis.GameObject);
         }
-        return player;
+        return actor;
     }
 
     public removeFromMap(id: number) {
@@ -63,6 +64,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.mPlayerMap.has(id)) {
             this.mPlayerMap.delete(id);
         }
+        this.mActorID = 0;
+    }
+
+    public stopActorMove() {
+        const actor = this.mPlayerMap[this.mActorID]
+        if (!actor) {
+            Console.error("MainHero miss");
+        }
+        actor.stopMove();
     }
 
     public dispose() {
