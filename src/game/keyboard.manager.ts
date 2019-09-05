@@ -112,7 +112,7 @@ export class KeyBoardManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         const keyArr: number[] = this.getKeyDowns();
         if (this.mTmpDownKeyStr === keyArr.toString()) return;
-        // this.mTmpUpKeysStr = "";
+        this.mTmpUpKeysStr = "";
         this.mTmpDownKeyStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
@@ -127,7 +127,7 @@ export class KeyBoardManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
         const keyArr: number[] = this.getKeyUps();
         if (this.mTmpUpKeysStr === keyArr.toString()) return;
-        // this.mTmpDownKeyStr = "";
+        this.mTmpDownKeyStr = "";
         this.mTmpUpKeysStr = keyArr.toString();
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
