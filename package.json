@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "buffer": "^5.2.1",
-    "game-capsule": "^0.0.5",
+    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git",
     "genversion": "^2.2.0",
     "json-loader": "^0.5.7",
     "json5-loader": "^3.0.0",
