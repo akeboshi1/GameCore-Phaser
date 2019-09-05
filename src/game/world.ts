@@ -188,8 +188,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mGame.scene.add(SelectCharacter.name, SelectCharacter);
         this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
-        this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus);
-        this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur);
+        this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
+        this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         this.mSize.setSize(this.mGame.scale.width, this.mGame.scale.height);
         this.gameCreated();
     }
