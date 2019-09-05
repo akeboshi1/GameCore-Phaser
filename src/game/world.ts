@@ -168,6 +168,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
+        const configUrls = content.configUrls;
+        if (!configUrls || configUrls.length <= 0) {
+            Console.error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
+        }
         this.mGameConfigService.load(content.configUrls)
             .then(() => {
                 this.createGame();

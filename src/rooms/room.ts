@@ -27,6 +27,7 @@ export interface IRoomService {
     readonly roomSize: IPosition45Obj;
     readonly blocks: ViewblockService;
     readonly actor: Actor;
+    readonly world: WorldService;
 
     readonly scene: Phaser.Scene | undefined;
 
@@ -65,13 +66,13 @@ export class Room implements IRoomService {
     private mBlocks: ViewblockService;
 
     constructor(private manager: IRoomManager) {
+        this.mWorld = this.manager.world;
         this.mTerainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
         this.mCameraService = new CamerasManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
 
-        this.mWorld = this.manager.world;
         if (this.mWorld) {
             const size = this.mWorld.getSize();
             this.mCameraService.resize(size.width, size.height);
@@ -210,6 +211,10 @@ export class Room implements IRoomService {
 
     get actor(): Actor | undefined {
         return this.mActor;
+    }
+
+    get world(): WorldService | undefined {
+        return this.mWorld;
     }
 
     get connection(): ConnectionService | undefined {

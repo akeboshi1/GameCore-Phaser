@@ -6,9 +6,11 @@ import { IRoomService } from "../room";
 import { FramesModel } from "../display/frames.model";
 import { IElementManager } from "../element/element.manager";
 import { Console } from "../../utils/log";
+import { GameConfigService } from "../../config/gameconfig.service";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain>;
+    private mGameConfig: GameConfigService;
 
     constructor(private mRoom: IRoomService) {
         super();
@@ -16,8 +18,11 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.addPacketListener(this);
 
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT, this.onRemove);
+        }
+        if (this.mRoom && this.mRoom.world) {
+            this.mGameConfig = this.mRoom.world.gameConfigService;
         }
     }
 
@@ -54,6 +59,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             Console.error("layer manager is undefined");
             return;
         }
+        if (!this.mGameConfig) {
+            Console.error("gameconfig is undefined");
+            return;
+        }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
         const positions = content.objectPositions;
         const type = content.nodeType;
@@ -62,6 +71,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         let terrian: Terrain;
         for (const position of positions) {
+            const obj = this.mGameConfig.getObject(position.id);
+            Console.log(obj);
             terrian = new Terrain(position, type, this);
             this.mTerrains.set(terrian.id || 0, terrian);
             this.mRoom.blocks.add(terrian);
@@ -99,5 +110,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.scene;
         }
+    }
+
+    get gameconfig(): GameConfigService {
+        return this.mGameConfig;
     }
 }

@@ -3,9 +3,8 @@ import { op_client, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element } from "./element";
 import { IRoomService } from "../room";
-import { FramesModel } from "../display/frames.model";
 import { Console } from "../../utils/log";
-import { Pos } from "../../utils/pos";
+import { GameConfigService } from "../../config/gameconfig.service";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -16,15 +15,19 @@ export interface IElementManager {
 
 export class ElementManager extends PacketHandler implements IElementManager {
   private mElements: Map<number, Element>;
+  private mGameConfig: GameConfigService;
   constructor(private mRoom: IRoomService) {
     super();
     if (this.connection) {
       this.connection.addPacketListener(this);
 
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ELEMENT, this.onAdd);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT, this.onAdd);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT, this.onRemove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
+    }
+    if (this.mRoom && this.mRoom.world) {
+      this.mGameConfig = this.mRoom.world.gameConfigService;
     }
   }
 
@@ -64,6 +67,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
     if (!this.mElements) {
       this.mElements = new Map();
     }
+    if (!this.mRoom.layerManager) {
+      Console.error("layer manager is undefined");
+      return;
+    }
+    if (!this.mGameConfig) {
+      Console.error("gameconfig is undefined");
+      return;
+    }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
     const positions = content.objectPositions;
     const type = content.nodeType;
@@ -72,6 +83,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
     let element: Element;
     for (const position of positions) {
+      const obj = this.mGameConfig.getObject(position.id);
+      Console.log("Object: =====>", obj);
       element = new Element(position, type, this);
       this.mElements.set(element.id || 0, element);
     }
