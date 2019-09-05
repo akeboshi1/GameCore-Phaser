@@ -1,7 +1,8 @@
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -42,6 +43,19 @@ export class Player extends Element {
     }
 
     public stopMove() {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT = pkt.content;
+        ct.nodeType = op_def.NodeType.CharacterNodeType;
+        ct.objectPositions = {
+            id: this.id,
+            point3f: {
+                x: this.x | 0,
+                y: this.y | 0,
+                z: this.z | 0,
+            }
+        };
+        this.mElementManager.connection.send(pkt);
+        this.changeState("idle");
         super.stopMove();
     }
 

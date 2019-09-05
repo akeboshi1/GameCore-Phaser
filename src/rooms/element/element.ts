@@ -34,7 +34,7 @@ export class Element implements IElement {
     private mRenderable: boolean = false;
     private mElementID: number;
     constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        if (!objectPosition || nodeType) {
+        if (!objectPosition) {
             Console.error("content data is undefiend");
             return;
         }
@@ -91,6 +91,7 @@ export class Element implements IElement {
             if (this.mToPos.equal(toPos)) {
                 Console.log("back");
                 // 兩次协议数据相同，不做处理
+                this.changeState("idle");
                 return;
             }
         }

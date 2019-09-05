@@ -8,6 +8,7 @@ import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel } from "../display/dragonbones.model";
 import { Actor } from "./Actor";
 import { Console } from "../../utils/log";
+import { Pos } from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
@@ -33,6 +34,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT, this.onAdd);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT, this.onRemove);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
         // todo playState change 由客户端进行修改
@@ -54,7 +56,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const cameraService = this.mRoom.cameraService;
         if (cameraService) {
             const dis: ElementDisplay = actor.getDisplay();
-            if (dis) cameraService.startFollow(dis.GameObject);
+            if (dis) {
+                cameraService.startFollow(dis.GameObject);
+                this.mRoom.blocks.add(actor);
+            }
         }
         return actor;
     }
@@ -97,6 +102,25 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             }
         }
         return player;
+    }
+
+    private onAdjust(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
+        const positions = content.objectPositions;
+        const type = content.nodeType;
+        if (type !== op_def.NodeType.CharacterNodeType) {
+            return;
+        }
+        let player: Player;
+        let point: op_def.IPBPoint3f;
+        for (const position of positions) {
+            player = this.mPlayerMap.get(position.id);
+            if (!player) {
+                continue;
+            }
+            point = position.point3f;
+            player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
+        }
     }
 
     private onAdd(packet: PBpacket) {
