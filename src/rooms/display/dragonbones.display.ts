@@ -163,11 +163,27 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (this.mActionName !== val) {
             let dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
             dir = dir !== 0 ? dir : 3;
-            this.mActionName = val + "_" + dir;
+            let trunDir: number;
+            if (dir === 3 || dir === 5) {
+                this.scaleX = -dir + 4;
+                trunDir = 3;
+            } else if (dir === 1 || dir === 7) {
+                this.scaleX = -(1 / 3) * dir + (4 / 3);
+                trunDir = 1;
+            }
+            this.mActionName = val + "_" + trunDir;
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
         }
+    }
+
+    public getCurDirection(): number {
+        return this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
+    }
+
+    public changeDirection(dir: number) {
+        this.mDisplayInfo.avatarDir = dir;
     }
 
     public playFrontEff(animationName: string) {

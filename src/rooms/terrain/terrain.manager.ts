@@ -73,7 +73,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const position of positions) {
             const obj = this.mGameConfig.getObject(position.id);
             Console.log(obj);
-            terrian = new Terrain(position, type, this);
+            terrian = new Terrain(obj.id, this);
             this.mTerrains.set(terrian.id || 0, terrian);
             this.mRoom.blocks.add(terrian);
         }
@@ -114,5 +114,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     get gameconfig(): GameConfigService {
         return this.mGameConfig;
+    }
+
+    get camera(): Phaser.Cameras.Scene2D.Camera {
+        return this.camera;
     }
 }

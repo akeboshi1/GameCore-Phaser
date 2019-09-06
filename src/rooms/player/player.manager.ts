@@ -1,15 +1,15 @@
-import {IElementManager} from "../element/element.manager";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def} from "pixelpai_proto";
-import {ConnectionService} from "../../net/connection.service";
-import {Player} from "./player";
-import {IRoomService, Room} from "../room";
-import {Console} from "../../utils/log";
-import {Pos} from "../../utils/pos";
+import { IElementManager } from "../element/element.manager";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
+import { Player } from "./player";
+import { IRoomService, Room } from "../room";
+import { Console } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { Actor } from "./Actor";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
-    private mActorID: number;
 
     constructor(private mRoom: Room) {
         super();
@@ -44,16 +44,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.mPlayerMap.has(id)) {
             this.mPlayerMap.delete(id);
         }
-        this.mActorID = 0;
     }
 
     public stopActorMove() {
-        const actor = this.mPlayerMap.get(this.mActorID);
-        if (!actor) {
+        if (!this.mRoom.actor) {
             Console.error("MainHero miss");
             return;
         }
-        actor.stopMove();
+        this.mRoom.actor.stopMove();
     }
 
     public dispose() {

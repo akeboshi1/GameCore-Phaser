@@ -8,8 +8,8 @@ import { Pos } from "../../utils/pos";
 export class Terrain extends Element {
     protected mDisplay: FramesDisplay | undefined;
 
-    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        super(objectPosition, nodeType, mElementManager);
+    constructor(id: number, protected mElementManager: IElementManager) {
+        super(id, mElementManager);
     }
 
     public setPosition(p: Pos) {

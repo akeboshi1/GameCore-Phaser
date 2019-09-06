@@ -1,8 +1,8 @@
-import {Element} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {op_client, op_virtual_world, op_def} from "pixelpai_proto";
-import {PBpacket} from "net-socket-packet";
+import { Element } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -29,10 +29,21 @@ export class Player extends Element {
     }
 
     public move(moveData: op_client.IMoveData) {
+        if (this.getCurDirection() !== moveData.direction) {
+            this.changeDirection(moveData.direction);
+        }
         if (this.mCurState !== "walk") {
             this.changeState("walk");
         }
         super.move(moveData);
+    }
+
+    public getCurDirection(): number {
+        return (this.mDisplay as DragonbonesDisplay).getCurDirection();
+    }
+
+    public changeDirection(dir: number) {
+        (this.mDisplay as DragonbonesDisplay).changeDirection(dir);
     }
 
     public changeState(val?: string) {
