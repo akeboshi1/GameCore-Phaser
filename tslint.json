@@ -24,5 +24,10 @@
         "quotemark": [true, "double"],
         "trailing-comma": [false, {"multiline": "always", "singleline": "never"}]
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": [
+            "lib/"
+        ]
+    }
 }
