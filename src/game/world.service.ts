@@ -16,5 +16,4 @@ export interface WorldService {
     getSize(): Size;
     getServerTime(): number;
     changeRoom(room: IRoomService);
-    getConfigObject(id: number): IConfigObject;
 }
