@@ -141,4 +141,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     get gameconfig(): GameConfigService {
         return this.mGameConfig;
     }
+
+    get camera(): Phaser.Cameras.Scene2D.Camera {
+        return this.camera;
+    }
 }

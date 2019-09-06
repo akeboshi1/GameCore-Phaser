@@ -1,15 +1,15 @@
-import {IElementManager} from "./element.manager";
-import {FramesModel, IFramesModel} from "../display/frames.model";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {FramesDisplay} from "../display/frames.display";
-import {IRoomService} from "../room";
-import {Viewblock} from "../cameras/viewblock";
-import {ElementDisplay} from "../display/element.display";
-import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
-import {op_client, op_def} from "pixelpai_proto";
-import {Tweens} from "phaser";
-import {Console} from "../../utils/log";
-import {Pos} from "../../utils/pos";
+import { IElementManager } from "./element.manager";
+import { IFramesModel } from "../display/frames.model";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { FramesDisplay } from "../display/frames.display";
+import { IRoomService } from "../room";
+import { Viewblock } from "../cameras/viewblock";
+import { ElementDisplay } from "../display/element.display";
+import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
+import { op_client, op_def } from "pixelpai_proto";
+import { Tweens } from "phaser";
+import { Console } from "../../utils/log";
+import { Pos } from "../../utils/pos";
 
 export interface IElement {
     readonly id: number;
@@ -24,11 +24,10 @@ export interface IElement {
 }
 
 export class Element implements IElement {
+    protected mId: number;
     protected mPos: Pos = new Pos();
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    protected mLayer: Phaser.GameObjects.Container;
     protected mDisplay: ElementDisplay | undefined;
-    protected mBlock: Viewblock;
     protected mTw: Tweens.Tween;
     private mToPos: Pos = new Pos();
     private mRenderable: boolean = false;
@@ -53,7 +52,7 @@ export class Element implements IElement {
         this.setPosition(new Pos(displayInfo.x, displayInfo.y));
     }
 
-    public changeState(val: string) {
+    public changeState(val?: string) {
     }
 
     public setRenderable(isRenderable: boolean): void {
@@ -92,6 +91,7 @@ export class Element implements IElement {
             if (this.mToPos.equal(toPos)) {
                 Console.log("back");
                 // 兩次协议数据相同，不做处理
+                this.changeState("idle");
                 return;
             }
         }
@@ -106,15 +106,16 @@ export class Element implements IElement {
             duration: time,
             ease: "Linear",
             props: {
-                x: { value: toPos.x },
-                y: { value: toPos.y },
+                x: {value: toPos.x},
+                y: {value: toPos.y},
             },
             onComplete: (tween, targets, play) => {
                 Console.log("complete move");
                 this.mTw = null;
                 // todo 通信服務端到達目的地
                 play.setPosition(toPos);
-                this.changeState("idle");
+                this.stopMove();
+                // this.changeState("idle");
             },
             onUpdate: (tween, targets, play) => {
                 // TODO Update this.mX,this.mY !!
@@ -129,8 +130,20 @@ export class Element implements IElement {
 
     public stopMove() {
         if (this.mTw) this.mTw.stop();
-        // todo socket
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT = pkt.content;
+        ct.nodeType = op_def.NodeType.CharacterNodeType;
+        ct.objectPositions = {
+            id: this.id,
+            point3f: {
+                x: this.x | 0,
+                y: this.y | 0,
+                z: this.z | 0,
+            }
+        };
+        this.mElementManager.connection.send(pkt);
         this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
+        this.changeState();
         Console.log("MoveStop");
     }
 
@@ -209,9 +222,20 @@ export class Element implements IElement {
     protected onDisplayReady() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            const pos = this.getPosition();
-            this.setPosition(new Pos(pos.x + baseLoc.x, pos.y + baseLoc.y));
+            this.setPosition(new Pos(this.mDisplayInfo.x + baseLoc.x, this.mDisplayInfo.y + baseLoc.y));
         }
+    }
+
+    get x(): number {
+        return this.mDisplay.x;
+    }
+
+    get y(): number {
+        return this.mDisplay.y;
+    }
+
+    get z(): number {
+        return this.mDisplay.z;
     }
 
     get roomService(): IRoomService {

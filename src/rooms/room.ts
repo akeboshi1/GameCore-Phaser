@@ -119,7 +119,7 @@ export class Room implements IRoomService {
     }
 
     public addActor(data: IActor): void {
-        this.mActor = this.mPlayerManager.setMainRoleInfo(data); // new Actor(data, this.mPlayerManager);
+        this.mActor = new Actor(data, this.mPlayerManager); // new Actor(data, this.mPlayerManager);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

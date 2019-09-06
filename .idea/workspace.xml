@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/rooms/cameras/viewblock.manager.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/pos.ts" afterDir="false" />
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="Package.json">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/block/block.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/viewblock.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/cameras.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/Actor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/Actor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/point3.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/position45.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/position45.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +51,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.tslint" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
@@ -86,7 +80,10 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="dev JavaScript" type="JavascriptDebugType" engineId="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" uri="http://127.0.0.1:8081/">
+      <method v="2" />
+    </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -95,8 +92,14 @@
       </scripts>
       <node-interpreter value="project" />
       <envs />
-      <method v="2" />
+      <method v="2">
+        <option name="LaunchBrowser.Before.Run" browser="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" url="http://127.0.0.1:8081/" withDebugger="true" />
+      </method>
     </configuration>
+    <list>
+      <item itemvalue="npm.dev" />
+      <item itemvalue="JavaScript Debug.dev JavaScript" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
@@ -177,7 +180,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567230937584</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Package.json">
+      <created>1567671897799</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1567671897799</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,6 +237,7 @@
     <MESSAGE value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="修改 room 里的结构，和display里结构" />
     <MESSAGE value="M room" />
-    <option name="LAST_COMMIT_MESSAGE" value="M room" />
+    <MESSAGE value="Package.json" />
+    <option name="LAST_COMMIT_MESSAGE" value="Package.json" />
   </component>
 </project>

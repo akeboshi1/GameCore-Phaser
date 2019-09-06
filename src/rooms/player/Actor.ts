@@ -7,11 +7,11 @@ import { DragonbonesModel } from "../display/dragonbones.model";
 
 // ME 我自己
 export class Actor extends Player implements KeyboardListener {
-    constructor(id: number, protected mElementManager: IElementManager) {
-        super(id, mElementManager);
-        const dbModel = new DragonbonesModel(0);
+    constructor(position: op_client.IObjectPosition, data: IActor, protected mElementManager: IElementManager) {
+        super(position, op_def.NodeType.CharacterNodeType, mElementManager);
+        const dbModel = new DragonbonesModel(data);
         this.load(dbModel);
-        // this.createDisplay();
+        this.createDisplay();
     }
 
     onKeyDown(keys: number[]): void {

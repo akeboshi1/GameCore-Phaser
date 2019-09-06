@@ -28,13 +28,25 @@ export class Player extends Element {
     }
 
     public move(moveData: op_client.IMoveData) {
+        if (this.getCurDirection() !== moveData.direction) {
+            this.changeDirection(moveData.direction);
+        }
         if (this.mCurState !== "walk") {
             this.changeState("walk");
         }
         super.move(moveData);
     }
 
-    public changeState(val: string) {
+    public getCurDirection(): number {
+        return (this.mDisplay as DragonbonesDisplay).getCurDirection();
+    }
+
+    public changeDirection(dir: number) {
+        (this.mDisplay as DragonbonesDisplay).changeDirection(dir);
+    }
+
+    public changeState(val?: string) {
+        if (!val) val = "idle";
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             (this.mDisplay as DragonbonesDisplay).play(val);
@@ -53,18 +65,6 @@ export class Player extends Element {
         if (this.mCurState === val) return false;
         this.mCurState = val;
         return true;
-    }
-
-    get x(): number {
-        return this.mDisplay.x;
-    }
-
-    get y(): number {
-        return this.mDisplay.y;
-    }
-
-    get z(): number {
-        return this.mDisplay.z;
     }
 
     private dragonBonesFrameComplete(e: Event) {
