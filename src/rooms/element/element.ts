@@ -1,16 +1,16 @@
-import { IElementManager } from "./element.manager";
-import { IFramesModel } from "../display/frames.model";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { FramesDisplay } from "../display/frames.display";
-import { IRoomService } from "../room";
-import { Viewblock } from "../cameras/viewblock";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { Tweens } from "phaser";
-import { Console } from "../../utils/log";
-import { Pos } from "../../utils/pos";
-import { PBpacket } from "net-socket-packet";
+import {IElementManager} from "./element.manager";
+import {IFramesModel} from "../display/frames.model";
+import {DragonbonesDisplay} from "../display/dragonbones.display";
+import {FramesDisplay} from "../display/frames.display";
+import {IRoomService} from "../room";
+import {Viewblock} from "../cameras/viewblock";
+import {ElementDisplay} from "../display/element.display";
+import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {Tweens} from "phaser";
+import {Console} from "../../utils/log";
+import {Pos} from "../../utils/pos";
+import {PBpacket} from "net-socket-packet";
 
 export interface IElement {
     readonly id: number;
@@ -25,29 +25,17 @@ export interface IElement {
 }
 
 export class Element implements IElement {
+    protected mId: number;
     protected mPos: Pos = new Pos();
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    protected mLayer: Phaser.GameObjects.Container;
     protected mDisplay: ElementDisplay | undefined;
-    protected mBlock: Viewblock;
     protected mTw: Tweens.Tween;
-    private mToPos: Pos = new Pos();
-    private mRenderable: boolean = false;
-    private mElementID: number;
-    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        if (!objectPosition) {
-            Console.error("content data is undefiend");
-            return;
-        }
+    protected mRenderable: boolean = false;
+    protected mToPos: Pos = new Pos();
 
-        const point3f: op_def.IPBPoint3f = objectPosition.point3f;
-        if (!point3f) {
-            Console.error("point3f is undefiend");
-            return;
-        }
-        const objPos: Pos = new Pos(point3f.x | 0, point3f.y | 0, point3f.z | 0);
-        this.mElementID = objectPosition.id;
-        this.setPosition(objPos);
+    constructor(id: number, protected mElementManager: IElementManager) {
+        // TODO check if `id` is empty.
+        this.mId = id;
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -107,8 +95,8 @@ export class Element implements IElement {
             duration: time,
             ease: "Linear",
             props: {
-                x: { value: toPos.x },
-                y: { value: toPos.y },
+                x: {value: toPos.x},
+                y: {value: toPos.y},
             },
             onComplete: (tween, targets, play) => {
                 Console.log("complete move");
@@ -248,6 +236,6 @@ export class Element implements IElement {
     }
 
     get id(): number {
-        return this.mElementID; // this.mDisplayInfo.id || 0;
+        return this.mId; // this.mDisplayInfo.id || 0;
     }
 }

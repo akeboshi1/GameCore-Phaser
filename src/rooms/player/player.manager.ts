@@ -1,18 +1,16 @@
-import { IElementManager } from "../element/element.manager";
-import { PBpacket, PacketHandler } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
-import { Player } from "./player";
-import { Room, IRoomService } from "../room";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel } from "../display/dragonbones.model";
-import { Actor } from "./Actor";
-import { Console } from "../../utils/log";
-import { Pos } from "../../utils/pos";
+import {IElementManager} from "../element/element.manager";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def} from "pixelpai_proto";
+import {ConnectionService} from "../../net/connection.service";
+import {Player} from "./player";
+import {IRoomService, Room} from "../room";
+import {Console} from "../../utils/log";
+import {Pos} from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
     private mActorID: number;
+
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -39,29 +37,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
         // todo playState change 由客户端进行修改
         this.mPlayerMap.clear();
-    }
-
-    public setMainRoleInfo(obj: op_client.IActor): Actor {
-        const position: op_client.IObjectPosition = {
-            id: obj.id,
-            point3f: {
-                x: obj.x | 0,
-                y: obj.y | 0,
-                z: obj.z | 0,
-            }
-        };
-        this.mActorID = obj.id;
-        const actor = new Actor(position, obj, this);
-        this.mPlayerMap.set(obj.id, actor);
-        const cameraService = this.mRoom.cameraService;
-        if (cameraService) {
-            const dis: ElementDisplay = actor.getDisplay();
-            if (dis) {
-                cameraService.startFollow(dis.GameObject);
-                this.mRoom.blocks.add(actor);
-            }
-        }
-        return actor;
     }
 
     public removeFromMap(id: number) {
@@ -104,6 +79,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return player;
     }
 
+    get camera(): Phaser.Cameras.Scene2D.Camera {
+        return this.mRoom.cameraService.camera;
+    }
+
     private onAdjust(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
         const positions = content.objectPositions;
@@ -135,7 +114,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         let player: Player;
         for (const position of positions) {
-            player = new Player(position, type, this);
+            player = new Player(position.id, this);
+            player.setPosition(new Pos(position.point3f.x, position.point3f.y, position.point3f.z | 0));
             this.mPlayerMap.set(player.id || 0, player);
         }
     }

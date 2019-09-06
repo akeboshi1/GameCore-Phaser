@@ -1,20 +1,20 @@
-import { IRoomManager } from "./room.manager";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { Actor } from "./player/Actor";
-import { PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ElementDisplay } from "./display/element.display";
-import { Console } from "../utils/log";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../utils/pos";
+import {IRoomManager} from "./room.manager";
+import {ElementManager} from "./element/element.manager";
+import {PlayerManager} from "./player/player.manager";
+import {LayerManager} from "./layer/layer.manager";
+import {TerrainManager} from "./terrain/terrain.manager";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_virtual_world} from "pixelpai_proto";
+import {IPosition45Obj, Position45} from "../utils/position45";
+import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
+import {Actor} from "./player/Actor";
+import {PBpacket} from "net-socket-packet";
+import {WorldService} from "../game/world.service";
+import {PlayScene} from "../scenes/play";
+import {ElementDisplay} from "./display/element.display";
+import {Console} from "../utils/log";
+import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
+import {Pos} from "../utils/pos";
 import IActor = op_client.IActor;
 
 export interface IRoomService {
@@ -120,7 +120,7 @@ export class Room implements IRoomService {
     }
 
     public addActor(data: IActor): void {
-        this.mActor = this.mPlayerManager.setMainRoleInfo(data); // new Actor(data, this.mPlayerManager);
+        this.mActor = new Actor(data, this.mPlayerManager); // new Actor(data, this.mPlayerManager);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

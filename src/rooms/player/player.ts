@@ -1,8 +1,8 @@
-import { Element } from "../element/element";
-import { IElementManager } from "../element/element.manager";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
-import { PBpacket } from "net-socket-packet";
+import {Element} from "../element/element";
+import {IElementManager} from "../element/element.manager";
+import {DragonbonesDisplay} from "../display/dragonbones.display";
+import {op_client, op_virtual_world, op_def} from "pixelpai_proto";
+import {PBpacket} from "net-socket-packet";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -24,8 +24,8 @@ export enum PlayerState {
 export class Player extends Element {
     protected mCurState: string;
 
-    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        super(objectPosition, nodeType, mElementManager);
+    constructor(id: number, protected mElementManager: IElementManager) {
+        super(id, mElementManager);
     }
 
     public move(moveData: op_client.IMoveData) {
