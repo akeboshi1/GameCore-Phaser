@@ -2,29 +2,39 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Tooqing-phaser3</title>
-  <style>
-    body {
-      margin: 0;
-    }
+    <meta charset="UTF-8"/>
+    <title>Tooqing-phaser3</title>
+    <style>
+        body {
+            margin: 0;
+        }
 
-    body div.container {
-      text-align: center;
-    }
+        body div.container {
+            text-align: center;
+        }
 
-    body div.container div#game {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  </style>
+        body div.container div#game {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
+<div class="container">
     <div id="game"></div>
-  </div>
-</body>
+</div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        console.dir(Tooqing);
+        const launcher = Tooqing.launcher.Launcher;
+        const app = launcher.start();
+        window.addEventListener("resize", (e) => {
+            app.onResize(window.innerWidth, window.innerHeight);
+        });
+    });
+</script>
+</body>
 </html>

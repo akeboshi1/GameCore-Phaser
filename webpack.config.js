@@ -15,7 +15,10 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'dist/'),
         filename: "[name].js",
-        chunkFilename: "[hash].[name].js"
+        chunkFilename: "[hash].[name].js",
+        libraryTarget: 'umd',
+        globalObject: "this",
+        library: ["Tooqing","[name]"]
     },
     devtool: "source-map",
     module: {
@@ -44,6 +47,7 @@ module.exports = {
             {from: "**/*", to: "resources", force: true, context: 'resources'}
         ]),
         new HtmlWebpackPlugin({
+            inject: "head",
             title: "图轻播放器",
             template: path.join(__dirname, "./index.html")
         }),

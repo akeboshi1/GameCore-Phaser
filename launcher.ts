@@ -17,57 +17,6 @@ export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
 }
 
 export class Launcher {
-    readonly minWidth = 0;
-    readonly minHeight = 0;
-    readonly maxWidth = 0;
-    readonly maxHeight = 0;
-
-    private world: World;
-
-    constructor() {
-        setInterval(() => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "./package.json", true);
-            xhr.addEventListener("load", () => {
-                const manifest = JSON.parse(xhr.response);
-                const newVersion = manifest.version;
-                // console.log(version + ":1," + newVersion);
-                if (version !== newVersion) {
-                    // Yconsole.log(newVersion + "3");
-                    const result = confirm("检测到新版本，是否刷新更新到最新版？");
-                    if (result) {
-                        window.location.reload();
-                    }
-                }
-            });
-            xhr.send(null);
-        }, 7200000);
-
-        // todo window load
-        /// this.mWorld.game.scene.start("PlayScene");
-        window.addEventListener("resize", () => {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-
-            const width = this.minWidth;
-            const height = this.minHeight;
-            const maxWidth = this.maxWidth;
-            const maxHeight = this.maxHeight;
-
-            const scale = Math.min(w / width, h / height);
-            const newWidth = Math.min(w / scale, maxWidth);
-            const newHeight = Math.min(h / scale, maxHeight);
-
-            if (this.world) {
-                this.world.resize(w, h);
-            }
-        });
-
-        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
-            this.world = new World(this.config);
-        });
-    }
-
     get config(): IGameConfigure {
         // TODO 在这里整合app和phaser的配置文件
         // TODO 没有登陆处理
@@ -106,9 +55,46 @@ export class Launcher {
             }
         };
     }
-}
 
-window.onload = () => {
-    // tslint:disable-next-line:no-unused-expression
-    new Launcher();
-};
+    public static start(): Launcher {
+        return new this();
+    }
+
+    readonly minWidth = 1366;
+    readonly minHeight = 760;
+    readonly maxWidth = 1920;
+    readonly maxHeight = 1080;
+    private world: World;
+
+    constructor() {
+        setInterval(() => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "./package.json", true);
+            xhr.addEventListener("load", () => {
+                const manifest = JSON.parse(xhr.response);
+                const newVersion = manifest.version;
+                if (version !== newVersion) {
+                    const result = confirm("检测到新版本，是否刷新更新到最新版？");
+                    if (result) {
+                        window.location.reload();
+                    }
+                }
+            });
+            xhr.send(null);
+        }, 7200000);
+
+        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
+            this.world = new World(this.config);
+        });
+    }
+
+    public onResize(width: number, height: number) {
+        const scale = Math.min(width / this.minWidth, height / this.minHeight);
+        const newWidth = Math.min(width / scale, this.maxWidth);
+        const newHeight = Math.min(height / scale, this.maxHeight);
+
+        if (this.world) {
+            this.world.resize(newWidth, newHeight);
+        }
+    }
+}
