@@ -1,10 +1,11 @@
-import {op_gameconfig} from "pixelpai_proto";
+import { op_gameconfig } from "pixelpai_proto";
 
 export interface IFramesModel {
     readonly discriminator: string;
     id: number;
     x: number;
     y: number;
+    avatarDir?: number;
     type?: string;
     display?: op_gameconfig.IDisplay | null;
     animations?: op_gameconfig.IAnimation[] | null;

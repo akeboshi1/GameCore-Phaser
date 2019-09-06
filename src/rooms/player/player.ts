@@ -3,6 +3,7 @@ import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { Pos } from "../../utils/pos";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -24,13 +25,13 @@ export enum PlayerState {
 export class Player extends Element {
     protected mCurState: string;
 
-    constructor(id: number, protected mElementManager: IElementManager) {
-        super(id, mElementManager);
+    constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
+        super(id, pos, mElementManager);
     }
 
     public move(moveData: op_client.IMoveData) {
-        if (this.getCurDirection() !== moveData.direction) {
-            this.changeDirection(moveData.direction);
+        if (this.getDirection() !== moveData.direction) {
+            this.setDirection(moveData.direction);
         }
         if (this.mCurState !== "walk") {
             this.changeState("walk");
@@ -38,12 +39,12 @@ export class Player extends Element {
         super.move(moveData);
     }
 
-    public getCurDirection(): number {
-        return (this.mDisplay as DragonbonesDisplay).getCurDirection();
-    }
+    // public getDirection(): number {
+    //     return this.mDisplayInfo.avatarDir;
+    // }
 
-    public changeDirection(dir: number) {
-        (this.mDisplay as DragonbonesDisplay).changeDirection(dir);
+    public setDirection(dir: number) {
+        this.mDisplayInfo.avatarDir = dir;
     }
 
     public changeState(val?: string) {

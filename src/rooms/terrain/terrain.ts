@@ -7,9 +7,8 @@ import { Pos } from "../../utils/pos";
 
 export class Terrain extends Element {
     protected mDisplay: FramesDisplay | undefined;
-
-    constructor(id: number, protected mElementManager: IElementManager) {
-        super(id, mElementManager);
+    constructor(id: number, pos, protected mElementManager: IElementManager) {
+        super(id, pos, mElementManager);
     }
 
     public setPosition(p: Pos) {

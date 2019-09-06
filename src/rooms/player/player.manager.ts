@@ -15,14 +15,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
-            // this.mMainRoleInfo = new PlayerInfo();
-            // this.mPlayerMap = new Map();
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_CHARACTER, this.onAdd);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_CHARACTER, this.onRemove);
-            // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
-            // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
-            // //todo playState change
-            // this.addHandlerFun(1, this.onChangeState);
         }
     }
 
@@ -30,12 +22,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap) {
             this.mPlayerMap = new Map();
         }
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT, this.onAdd);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT, this.onRemove);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
-        // todo playState change 由客户端进行修改
         this.mPlayerMap.clear();
     }
 
@@ -83,7 +74,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private onAdjust(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
-        const positions = content.objectPositions;
+        const positions = content.spritePositions;
         const type = content.nodeType;
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
@@ -104,22 +95,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap) {
             this.mPlayerMap = new Map();
         }
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
-        const positions = content.objectPositions;
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
+        const sprites = content.spritePositions;
         const type = content.nodeType;
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
         let player: Player;
-        for (const position of positions) {
-            player = new Player(position.id, this);
-            player.setPosition(new Pos(position.point3f.x, position.point3f.y, position.point3f.z | 0));
+        for (const sprite of sprites) {
+            player = new Player(sprite.id, new Pos(sprite.point3f.x, sprite.point3f.y, sprite.point3f.z | 0), this);
             this.mPlayerMap.set(player.id || 0, player);
         }
     }
 
     private onRemove(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT = packet.content;
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
         if (type !== op_def.NodeType.CharacterNodeType) {
