@@ -7,8 +7,7 @@ import { FramesModel } from "../display/frames.model";
 import { IElementManager } from "../element/element.manager";
 import { Console } from "../../utils/log";
 import { GameConfigService } from "../../config/gameconfig.service";
-import {Element} from "../element/element";
-import {Pos} from "../../utils/pos";
+import { Pos } from "../../utils/pos";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain>;
@@ -20,8 +19,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.addPacketListener(this);
 
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT, this.onAdd);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT, this.onRemove);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.gameConfigService;
@@ -65,9 +64,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             Console.error("gameconfig is undefined");
             return;
         }
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
-        const objs: op_client.IObjectPosition[]|undefined = content.objectPositions;
-        if (!objs) return;
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
+        const sprites = content.spritePositions;
         const type = content.nodeType;
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
@@ -106,7 +104,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     private onRemove(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_OBJECT = packet.content;
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
         if (type !== op_def.NodeType.TerrainNodeType) {

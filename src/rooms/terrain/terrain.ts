@@ -1,15 +1,15 @@
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { FramesDisplay } from "../display/frames.display";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Console } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 
 export class Terrain extends Element {
     protected mDisplay: FramesDisplay | undefined;
-
-    constructor(id: number, protected mElementManager: IElementManager) {
-        super(id, mElementManager);
+    protected nodeType: number = op_def.NodeType.TerrainNodeType;
+    constructor(id: number, pos, protected mElementManager: IElementManager) {
+        super(id, pos, mElementManager);
     }
 
     public setPosition(p: Pos) {

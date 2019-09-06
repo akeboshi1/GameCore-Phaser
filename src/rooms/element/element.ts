@@ -1,22 +1,31 @@
-import { IElementManager } from "./element.manager";
-import { IFramesModel } from "../display/frames.model";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { FramesDisplay } from "../display/frames.display";
-import { IRoomService } from "../room";
-import { Viewblock } from "../cameras/viewblock";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def } from "pixelpai_proto";
-import { Tweens } from "phaser";
-import { Console } from "../../utils/log";
-import { Pos } from "../../utils/pos";
+import {IElementManager} from "./element.manager";
+import {IFramesModel} from "../display/frames.model";
+import {DragonbonesDisplay} from "../display/dragonbones.display";
+import {FramesDisplay} from "../display/frames.display";
+import {IRoomService} from "../room";
+import {Viewblock} from "../cameras/viewblock";
+import {ElementDisplay} from "../display/element.display";
+import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {Tweens} from "phaser";
+import {Console} from "../../utils/log";
+import {Pos} from "../../utils/pos";
+import {PBpacket} from "net-socket-packet";
 
 export interface IElement {
     readonly id: number;
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+    readonly dir: number;
 
     setPosition(p: Pos): void;
 
     getPosition(): Pos;
+
+    setDirection(val: number): void;
+
+    getDirection(): number;
 
     setRenderable(isRenderable: boolean): void;
 
@@ -50,6 +59,14 @@ export class Element implements IElement {
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
         this.setPosition(new Pos(displayInfo.x, displayInfo.y));
+    }
+
+    public setDirection(val: number) {
+        // if (this.mDisplayInfo && this.mDisplayInfo.avatarDir) this.mDisplayInfo.avatarDir = val;
+    }
+
+    public getDirection(): number {
+        return (this.mDisplayInfo && this.mDisplayInfo.avatarDir) ? this.mDisplayInfo.avatarDir : 3;
     }
 
     public changeState(val?: string) {
@@ -106,8 +123,8 @@ export class Element implements IElement {
             duration: time,
             ease: "Linear",
             props: {
-                x: {value: toPos.x},
-                y: {value: toPos.y},
+                x: { value: toPos.x },
+                y: { value: toPos.y },
             },
             onComplete: (tween, targets, play) => {
                 Console.log("complete move");
@@ -130,16 +147,17 @@ export class Element implements IElement {
 
     public stopMove() {
         if (this.mTw) this.mTw.stop();
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT = pkt.content;
-        ct.nodeType = op_def.NodeType.CharacterNodeType;
-        ct.objectPositions = {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        ct.nodeType = this.nodeType;
+        ct.spritePositions = {
             id: this.id,
             point3f: {
                 x: this.x | 0,
                 y: this.y | 0,
                 z: this.z | 0,
-            }
+            },
+            direction: this.dir
         };
         this.mElementManager.connection.send(pkt);
         this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
@@ -223,6 +241,7 @@ export class Element implements IElement {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
             this.setPosition(new Pos(this.mDisplayInfo.x + baseLoc.x, this.mDisplayInfo.y + baseLoc.y));
+            this.mDisplay.play("idle");
         }
     }
 
@@ -238,6 +257,10 @@ export class Element implements IElement {
         return this.mDisplay.z;
     }
 
+    get dir(): number {
+        return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
+    }
+
     get roomService(): IRoomService {
         if (!this.mElementManager) {
             Console.error("element manager is undefined");
@@ -247,6 +270,6 @@ export class Element implements IElement {
     }
 
     get id(): number {
-        return this.mElementID; // this.mDisplayInfo.id || 0;
+        return this.mId; // this.mDisplayInfo.id || 0;
     }
 }

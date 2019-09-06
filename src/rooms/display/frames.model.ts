@@ -7,6 +7,7 @@ export interface IFramesModel {
     id: number;
     x: number;
     y: number;
+    avatarDir?: number;
     type?: string;
     display?: IDisplay | null;
     animations?: IAnimationData[] | null;

@@ -178,14 +178,6 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         }
     }
 
-    public getCurDirection(): number {
-        return this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
-    }
-
-    public changeDirection(dir: number) {
-        this.mDisplayInfo.avatarDir = dir;
-    }
-
     public playFrontEff(animationName: string) {
         this.makeEffAnimations(animationName, false);
         this.mFrontEffSprite.on("animationcomplete", () => {
@@ -257,7 +249,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.getReplaceArr();
         this.showReplaceArmatrue();
 
-        this.play("idle");
+        // this.play("idle");
         this.add(this.mArmatureDisplay);
         this.x = this.mDisplayInfo.x;
         this.y = this.mDisplayInfo.y;

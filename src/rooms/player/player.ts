@@ -1,7 +1,9 @@
 import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+import { Pos } from "../../utils/pos";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -22,14 +24,14 @@ export enum PlayerState {
 
 export class Player extends Element {
     protected mCurState: string;
-
-    constructor(id: number, protected mElementManager: IElementManager) {
-        super(id, mElementManager);
+    protected nodeType: number = op_def.NodeType.CharacterNodeType;
+    constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
+        super(id, pos, mElementManager);
     }
 
     public move(moveData: op_client.IMoveData) {
-        if (this.getCurDirection() !== moveData.direction) {
-            this.changeDirection(moveData.direction);
+        if (this.getDirection() !== moveData.direction) {
+            this.setDirection(moveData.direction);
         }
         if (this.mCurState !== "walk") {
             this.changeState("walk");
@@ -37,12 +39,8 @@ export class Player extends Element {
         super.move(moveData);
     }
 
-    public getCurDirection(): number {
-        return (this.mDisplay as DragonbonesDisplay).getCurDirection();
-    }
-
-    public changeDirection(dir: number) {
-        (this.mDisplay as DragonbonesDisplay).changeDirection(dir);
+    public setDirection(dir: number) {
+        this.mDisplayInfo.avatarDir = dir;
     }
 
     public changeState(val?: string) {
@@ -53,10 +51,6 @@ export class Player extends Element {
         }
     }
 
-    public stopMove() {
-        super.stopMove();
-    }
-
     public removeDisplay() {
         super.removeDisplay();
     }
@@ -65,12 +59,5 @@ export class Player extends Element {
         if (this.mCurState === val) return false;
         this.mCurState = val;
         return true;
-    }
-
-    private dragonBonesFrameComplete(e: Event) {
-        // todo  state change
-        // this.mElementManager.connection.send()
-        // 动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
-        this.changeState(PlayerState.IDLE);
     }
 }
