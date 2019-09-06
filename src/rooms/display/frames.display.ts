@@ -17,12 +17,6 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     constructor(protected scene: Phaser.Scene) {
         super(scene);
-        // const graphics = scene.make.graphics(undefined, false);
-        // graphics.lineStyle(5, 0xFF00FF, 1.0);
-        // graphics.fillStyle(0xFFFFFF, 1.0);
-        // graphics.fillRect(50, 50, 400, 200);
-        // graphics.strokeRect(50, 50, 400, 200);
-        // this.add(graphics);
     }
 
     get GameObject(): Phaser.GameObjects.Container {

@@ -5,8 +5,6 @@ import { AnimationDataNode } from "game-capsule/lib/configobjects";
 export interface IFramesModel {
     readonly discriminator: string;
     id: number;
-    x: number;
-    y: number;
     avatarDir?: number;
     type?: string;
     display?: IDisplay | null;
@@ -30,8 +28,6 @@ export interface IAnimationData {
 export class FramesModel implements IFramesModel {
     discriminator: string = "FramesModel";
     public id: number;
-    public x: number;
-    public y: number;
     public type: string;
     public display: IDisplay | null;
     public animations: IAnimationData[] | null;

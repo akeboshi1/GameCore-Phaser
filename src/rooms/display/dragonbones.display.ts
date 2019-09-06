@@ -251,8 +251,6 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
 
         // this.play("idle");
         this.add(this.mArmatureDisplay);
-        this.x = this.mDisplayInfo.x;
-        this.y = this.mDisplayInfo.y;
         const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
         if (!this.mClickGraphics) {
 

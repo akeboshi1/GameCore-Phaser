@@ -3,8 +3,6 @@ import {op_gameconfig, op_client} from "pixelpai_proto";
 export interface IDragonbonesModel {
     readonly discriminator: string;
     id: number;
-    x: number;
-    y: number;
     avatarDir?: number;
     avatar?: IAvatar;
     // TODO
@@ -48,8 +46,6 @@ export interface IAvatar {
 export class DragonbonesModel implements IDragonbonesModel {
     discriminator: string = "DragonbonesModel";
     id: number;
-    x: number;
-    y: number;
     avatarDir?: number;
     avatar?: IAvatar;
 

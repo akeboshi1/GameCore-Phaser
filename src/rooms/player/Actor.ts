@@ -18,8 +18,11 @@ export class Actor extends Player implements KeyboardListener {
         this.addDisplay();
 
         const camera: Phaser.Cameras.Scene2D.Camera | undefined = this.mElementManager.camera;
-        if (camera && this.mDisplay) {
-            camera.startFollow(this.mDisplay.GameObject);
+        if (this.mElementManager) {
+            const roomService = this.mElementManager.roomService;
+            if (roomService && roomService.cameraService) {
+                roomService.cameraService.startFollow(this.mDisplay.GameObject);
+            }
         }
     }
 

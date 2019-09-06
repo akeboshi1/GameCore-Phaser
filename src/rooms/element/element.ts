@@ -1,9 +1,8 @@
 import {IElementManager} from "./element.manager";
-import {IFramesModel} from "../display/frames.model";
+import {FramesModel, IFramesModel} from "../display/frames.model";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {FramesDisplay} from "../display/frames.display";
 import {IRoomService} from "../room";
-import {Viewblock} from "../cameras/viewblock";
 import {ElementDisplay} from "../display/element.display";
 import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
 import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
@@ -37,14 +36,15 @@ export class Element implements IElement {
     protected mPos: Pos = new Pos();
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
+    protected nodeType: number = op_def.NodeType.ElementNodeType;
     protected mTw: Tweens.Tween;
-    private mToPos: Pos = new Pos();
-    private mRenderable: boolean = false;
-    private mElementID: number;
-    constructor(id: number, protected mElementManager: IElementManager) {
+    protected mToPos: Pos = new Pos();
+    protected mRenderable: boolean = false;
+    constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         const conf = this.mElementManager.roomService.world.gameConfigService.getObject(id);
         // TODO init DisplayInfo
-        // this.mElementID = element.id;
+        this.mId = id;
+        this.setPosition(pos);
         if (!conf) {
             Console.error("object does not exits");
             return;
@@ -58,7 +58,7 @@ export class Element implements IElement {
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
-        this.setPosition(new Pos(displayInfo.x, displayInfo.y));
+        this.setPosition(this.mPos);
     }
 
     public setDirection(val: number) {
@@ -240,7 +240,7 @@ export class Element implements IElement {
     protected onDisplayReady() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            this.setPosition(new Pos(this.mDisplayInfo.x + baseLoc.x, this.mDisplayInfo.y + baseLoc.y));
+            this.setPosition(new Pos(this.mPos.x + baseLoc.x, this.mPos.y + baseLoc.y));
             this.mDisplay.play("idle");
         }
     }

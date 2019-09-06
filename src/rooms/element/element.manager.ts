@@ -1,12 +1,11 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
-import {Element, IElement} from "./element";
-import { IRoomService } from "../room";
-import { Console } from "../../utils/log";
-import { GameConfigService } from "../../config/gameconfig.service";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def} from "pixelpai_proto";
+import {ConnectionService} from "../../net/connection.service";
+import {Element} from "./element";
+import {IRoomService} from "../room";
+import {Console} from "../../utils/log";
+import {GameConfigService} from "../../config/gameconfig.service";
 import {Pos} from "../../utils/pos";
-import IObjectPosition = op_client.IObjectPosition;
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -103,8 +102,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
       Console.error("gameConfig does not exits");
       return;
     }
-    const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
-    const objs: op_client.IObjectPosition[]|undefined = content.objectPositions;
+    const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
+    const objs: op_client.ISprite[]|undefined = content.spritePositions;
     if (!objs) return;
     const type = content.nodeType;
     if (type !== op_def.NodeType.ElementNodeType) {
@@ -115,8 +114,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     for (const obj of objs) {
       point = obj.point3f;
       if (point) {
-        element = new Element(obj.id, this);
-        element.setPosition(new Pos(point.x, point.y, point.z));
+        element = new Element(obj.id, new Pos(point.x, point.y, point.z), this);
         this._add(element);
       }
     }

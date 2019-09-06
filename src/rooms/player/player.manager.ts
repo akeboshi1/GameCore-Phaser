@@ -8,6 +8,7 @@ import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel } from "../display/dragonbones.model";
 import { Actor } from "./Actor";
 import { Console } from "../../utils/log";
+import {Pos} from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;

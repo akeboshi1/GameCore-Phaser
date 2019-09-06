@@ -72,11 +72,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         let terrain: Terrain;
         let point: op_def.IPBPoint3f;
-        for (const obj of objs) {
-            point = obj.point3f;
+        for (const sprite of sprites) {
+            point = sprite.point3f;
             if (point) {
-                terrain = new Terrain(obj.id, this);
-                terrain.setPosition(new Pos(point.x, point.y, point.z));
+                terrain = new Terrain(sprite.id, new Pos(point.x, point.y, point.z), this);
                 this._add(terrain);
             }
         }
