@@ -1,7 +1,7 @@
 import { op_gameconfig } from "pixelpai_proto";
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
-import {IAvatar, IDragonbonesModel} from "./dragonbones.model";
+import {IDragonbonesModel, IAvatar} from "./dragonbones.model";
 import { Console } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
 

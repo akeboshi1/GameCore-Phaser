@@ -1,15 +1,15 @@
-import {IElementManager} from "./element.manager";
-import {FramesModel, IFramesModel} from "../display/frames.model";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {FramesDisplay} from "../display/frames.display";
-import {IRoomService} from "../room";
-import {ElementDisplay} from "../display/element.display";
-import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {Tweens} from "phaser";
-import {Console} from "../../utils/log";
-import {Pos} from "../../utils/pos";
-import {PBpacket} from "net-socket-packet";
+import { IElementManager } from "./element.manager";
+import { FramesModel, IFramesModel } from "../display/frames.model";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { FramesDisplay } from "../display/frames.display";
+import { IRoomService } from "../room";
+import { ElementDisplay } from "../display/element.display";
+import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { Tweens } from "phaser";
+import { Console } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { PBpacket } from "net-socket-packet";
 
 export interface IElement {
     readonly id: number;
@@ -40,6 +40,7 @@ export class Element implements IElement {
     protected mTw: Tweens.Tween;
     protected mToPos: Pos = new Pos();
     protected mRenderable: boolean = false;
+    private mStop: boolean = false;
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         const conf = this.mElementManager.roomService.world.gameConfigService.getObject(id);
         // TODO init DisplayInfo
@@ -106,6 +107,7 @@ export class Element implements IElement {
         );
         if (this.mTw) {
             if (this.mToPos.equal(toPos)) {
+                this.mStop = true;
                 Console.log("back");
                 // 兩次协议数据相同，不做处理
                 this.changeState("idle");
@@ -116,8 +118,10 @@ export class Element implements IElement {
             Console.error("durTime is error");
             return;
         }
+        Console.log("start move");
         this.mToPos = toPos;
         Console.log(`${time}: ${toPos.toString}`);
+        this.mStop = false;
         const tw = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
             duration: time,
@@ -135,7 +139,12 @@ export class Element implements IElement {
                 // this.changeState("idle");
             },
             onUpdate: (tween, targets, play) => {
+                if (this.mStop) {
+                    tw.stop();
+                    return;
+                }
                 // TODO Update this.mX,this.mY !!
+                // Console.log(this.mStop);
                 this.setDepth();
             },
             onCompleteParams: [this],
@@ -162,6 +171,7 @@ export class Element implements IElement {
         this.mElementManager.connection.send(pkt);
         this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
         this.changeState();
+        this.mStop = true;
         Console.log("MoveStop");
     }
 
