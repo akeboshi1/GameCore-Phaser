@@ -35,7 +35,8 @@ export class Player extends Element {
         super.move(moveData);
     }
 
-    public changeState(val: string) {
+    public changeState(val?: string) {
+        if (!val) val = "idle";
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             (this.mDisplay as DragonbonesDisplay).play(val);
@@ -43,19 +44,6 @@ export class Player extends Element {
     }
 
     public stopMove() {
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_OBJECT = pkt.content;
-        ct.nodeType = op_def.NodeType.CharacterNodeType;
-        ct.objectPositions = {
-            id: this.id,
-            point3f: {
-                x: this.x | 0,
-                y: this.y | 0,
-                z: this.z | 0,
-            }
-        };
-        this.mElementManager.connection.send(pkt);
-        this.changeState("idle");
         super.stopMove();
     }
 
@@ -67,18 +55,6 @@ export class Player extends Element {
         if (this.mCurState === val) return false;
         this.mCurState = val;
         return true;
-    }
-
-    get x(): number {
-        return this.mDisplay.x;
-    }
-
-    get y(): number {
-        return this.mDisplay.y;
-    }
-
-    get z(): number {
-        return this.mDisplay.z;
     }
 
     private dragonBonesFrameComplete(e: Event) {
