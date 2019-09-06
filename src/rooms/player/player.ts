@@ -24,7 +24,7 @@ export enum PlayerState {
 
 export class Player extends Element {
     protected mCurState: string;
-
+    protected nodeType: number = op_def.NodeType.CharacterNodeType;
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         super(id, pos, mElementManager);
     }
@@ -39,10 +39,6 @@ export class Player extends Element {
         super.move(moveData);
     }
 
-    // public getDirection(): number {
-    //     return this.mDisplayInfo.avatarDir;
-    // }
-
     public setDirection(dir: number) {
         this.mDisplayInfo.avatarDir = dir;
     }
@@ -55,10 +51,6 @@ export class Player extends Element {
         }
     }
 
-    public stopMove() {
-        super.stopMove();
-    }
-
     public removeDisplay() {
         super.removeDisplay();
     }
@@ -67,12 +59,5 @@ export class Player extends Element {
         if (this.mCurState === val) return false;
         this.mCurState = val;
         return true;
-    }
-
-    private dragonBonesFrameComplete(e: Event) {
-        // todo  state change
-        // this.mElementManager.connection.send()
-        // 动作完成后发送协议给服务器告诉后端角色动作已经完成了，需要改变状态了
-        this.changeState(PlayerState.IDLE);
     }
 }

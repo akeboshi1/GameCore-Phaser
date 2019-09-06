@@ -40,6 +40,7 @@ export class Element implements IElement {
     protected mTw: Tweens.Tween;
     protected mRenderable: boolean = false;
     protected mToPos: Pos = new Pos();
+    protected nodeType: number = op_def.NodeType.ElementNodeType;
 
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         if (!id) {
@@ -141,7 +142,7 @@ export class Element implements IElement {
         if (this.mTw) this.mTw.stop();
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.nodeType = op_def.NodeType.ElementNodeType;
+        ct.nodeType = this.nodeType;
         ct.spritePositions = {
             id: this.id,
             point3f: {
