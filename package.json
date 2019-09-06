@@ -1,6 +1,6 @@
 {
   "name": "game-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "build": "webpack --mode production",

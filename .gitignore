@@ -234,3 +234,4 @@ jspm_packages/
 
 #  config
 XUP-PC.json
+!.idea/

@@ -3,9 +3,9 @@
 // 2. 做设备兼容
 import "phaser";
 import "dragonBones";
-import { version } from "./lib/version";
-import { World } from "./src/game/world";
-import { ServerAddress } from "./src/net/address";
+import {version} from "./lib/version";
+import {World} from "./src/game/world";
+import {ServerAddress} from "./src/net/address";
 
 export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
     readonly auth_token: string;
@@ -26,11 +26,11 @@ export class Launcher {
 
     constructor() {
         setInterval(() => {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', "./package.json", true);
-            xhr.addEventListener("load", function () {
-                let manifest = JSON.parse(xhr.response);
-                let newVersion = manifest.version;
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "./package.json", true);
+            xhr.addEventListener("load", () => {
+                const manifest = JSON.parse(xhr.response);
+                const newVersion = manifest.version;
                 // console.log(version + ":1," + newVersion);
                 if (version !== newVersion) {
                     // Yconsole.log(newVersion + "3");
@@ -63,7 +63,7 @@ export class Launcher {
             }
         });
 
-        import(/* webpackChunkName: "game" */ "./src/game/world").then(game => {
+        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
             this.world = new World(this.config);
         });
     }
@@ -109,5 +109,6 @@ export class Launcher {
 }
 
 window.onload = () => {
+    // tslint:disable-next-line:no-unused-expression
     new Launcher();
 };

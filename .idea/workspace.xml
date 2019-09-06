@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="Package.json">
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/dev.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/7MBP.local.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tslint.json" beforeDir="false" afterPath="$PROJECT_DIR$/tslint.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,8 +38,8 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/pixelpai_proto/protocols.d.ts" />
-    <property name="last_opened_file_path" value="$USER_HOME$/.ssh/id_rsa" />
+    <property name="add_unversioned_files" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -52,17 +54,18 @@
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Seven\git\game-core\config" />
-      <recent name="C:\Users\Seven\git\game-core\src\net" />
-      <recent name="C:\Users\Seven\git\game-core\net" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Seven\git\game-core\src\utils" />
       <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
       <recent name="C:\Users\Seven\git\game-core\src\game" />
       <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\src\net\worker" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/config" />
+      <recent name="C:\Users\Seven\git\game-core\config" />
+      <recent name="C:\Users\Seven\git\game-core\src\net" />
+      <recent name="C:\Users\Seven\git\game-core\net" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -77,19 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.dev-Cheome">
-    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2">
-        <option name="LaunchBrowser.Before.Run" browser="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" url="http://127.0.0.1:8081/" withDebugger="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="npm.dev">
     <list>
       <item itemvalue="JavaScript Debug.dev-Cheome" />
       <item itemvalue="npm.dev" />
@@ -152,7 +143,7 @@
       <workItem from="1567478675060" duration="262000" />
       <workItem from="1567478962416" duration="2515000" />
       <workItem from="1567562861757" duration="13274000" />
-      <workItem from="1567751255567" duration="2910000" />
+      <workItem from="1567751255567" duration="4221000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -182,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567671897799</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Package.json">
+      <created>1567754586414</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1567754586414</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

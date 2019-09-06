@@ -36,7 +36,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mMouseManager: MouseManager;
     private mGameConfigService: GameConfigService;
     private mSize: Size;
-
     private mClock: Clock;
 
     constructor(config: IGameConfigure) {
