@@ -10,6 +10,7 @@ export class Terrain extends Element {
     protected nodeType: number = op_def.NodeType.TerrainNodeType;
     constructor(id: number, pos, protected mElementManager: IElementManager) {
         super(id, pos, mElementManager);
+        this.setPosition45(pos);
     }
 
     public setPosition(p: Pos) {
@@ -18,15 +19,15 @@ export class Terrain extends Element {
             Console.error("room does not exist");
             return;
         }
-        const point = roomService.transformTo90(p);
-        if (!point) {
-            Console.error("transform error");
-            return;
-        }
+        // const point = roomService.transformTo90(p);
+        // if (!point) {
+        //     Console.error("transform error");
+        //     return;
+        // }
 
         this.mPos = p;
         if (this.mDisplay) {
-            this.mDisplay.setPosition(point.x, point.y, p.z);
+            this.mDisplay.setPosition(p.x, p.y, p.z);
             this.setDepth();
         }
     }
@@ -65,5 +66,13 @@ export class Terrain extends Element {
             const baseLoc = this.mDisplay.baseLoc;
             this.setPosition(new Pos(this.mPos.x, this.mPos.y));
         }
+    }
+    private setPosition45(pos: Pos) {
+        if (!this.roomService) {
+            Console.error("roomService does not exist");
+            return;
+        }
+        const point = this.roomService.transformTo90(pos);
+        this.setPosition(point);
     }
 }

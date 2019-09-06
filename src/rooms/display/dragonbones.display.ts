@@ -88,6 +88,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     private mloadingList: any[] = [];
     private mFrontEffSprite: Phaser.GameObjects.Sprite;
     private mBackEffSprite: Phaser.GameObjects.Sprite;
+    private  mBaseLoc = new Phaser.Geom.Point();
 
     /**
      * 龙骨显示对象包围框
@@ -867,7 +868,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     }
 
     get baseLoc(): Phaser.Geom.Point {
-        return new Phaser.Geom.Point();
+        return this.mBaseLoc;
     }
     get frontEffKey(): string | undefined {
         if (!this.frontEffDisplayInfo) {
