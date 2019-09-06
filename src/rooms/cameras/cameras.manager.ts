@@ -12,6 +12,8 @@ export interface ICameraService {
     resize(width: number, height: number): void;
 
     getViewPort(): Phaser.Geom.Rectangle | undefined;
+
+    setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void;
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
@@ -49,6 +51,14 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         if (this.mCamera) {
             this.mCamera.startFollow(target);
         }
+    }
+
+    public setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void {
+        if (!this.mCamera) {
+            Console.error("camera does not exist");
+            return;
+        }
+        this.mCamera.setBounds(x, y, width, height, centerOn);
     }
 
     private resetCameraSize(width: number, height: number) {

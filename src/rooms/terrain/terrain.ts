@@ -15,7 +15,7 @@ export class Terrain extends Element {
     public setPosition(p: Pos) {
         const roomService = this.mElementManager.roomService;
         if (!roomService) {
-            Console.error("room does not exits");
+            Console.error("room does not exist");
             return;
         }
         const point = roomService.transformTo90(p);

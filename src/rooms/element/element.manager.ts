@@ -95,11 +95,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
   private onAdd(packet: PBpacket) {
     if (!this.mRoom.layerManager) {
-      Console.error("layer manager does not exits");
+      Console.error("layer manager does not exist");
       return;
     }
     if (!this.mGameConfig) {
-      Console.error("gameConfig does not exits");
+      Console.error("gameConfig does not exist");
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;

@@ -26,7 +26,7 @@ export interface IAnimationData {
 }
 
 export class FramesModel implements IFramesModel {
-    discriminator: string = "FramesModel";
+    readonly discriminator: string = "FramesModel";
     public id: number;
     public type: string;
     public display: IDisplay | null;
@@ -34,6 +34,7 @@ export class FramesModel implements IFramesModel {
     public animationName: string;
 
     constructor(data: any) {
+        // TODO 定义IElement接口
         this.id = data.id;
         this.type = data.sn;
         const anis = data.animations;
@@ -54,7 +55,7 @@ export class FramesModel implements IFramesModel {
 
     private setDisplay(display: op_gameconfig.IDisplay) {
         if (!display) {
-            Console.error(`${this.type} display does not exits`);
+            Console.error(`${this.type} display does not exist`);
             return;
         }
         this.display = {
@@ -65,7 +66,7 @@ export class FramesModel implements IFramesModel {
 
     private setAnimationData(aniDatas: AnimationDataNode[]) {
         if (!aniDatas) {
-            Console.error(`${this.id} animationData does not exits`);
+            Console.error(`${this.id} animationData does not exist`);
             return;
         }
         this.animations = [];

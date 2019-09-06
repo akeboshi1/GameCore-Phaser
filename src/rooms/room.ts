@@ -104,7 +104,8 @@ export class Room implements IRoomService {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;
             // init block
             this.mBlocks.int(this.mSize);
-            // cameras.zoom = 2;
+            this.mCameraService.setBounds(-100, -100, this.mSize.sceneWidth + 200, this.mSize.sceneHeight + 200, true);
+            cameras.zoom = 2;
         }
 
         this.mWorld.game.scene.start(PlayScene.name, {

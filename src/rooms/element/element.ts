@@ -46,7 +46,7 @@ export class Element implements IElement {
         this.mId = id;
         this.setPosition(pos);
         if (!conf) {
-            Console.error("object does not exits");
+            Console.error("object does not exist");
             return;
         }
         if (conf.type === op_def.NodeType.CharacterNodeType) {
@@ -225,7 +225,8 @@ export class Element implements IElement {
 
     protected setDepth() {
         if (this.mDisplay) {
-            this.mDisplay.GameObject.setDepth(this.mDisplay.x + this.mDisplay.y);
+            const baseLoc = this.mDisplay.baseLoc;
+            this.mDisplay.GameObject.setDepth(this.mDisplay.x + Math.abs(baseLoc.x) + this.mDisplay.y + Math.abs(baseLoc.y));
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }
@@ -246,15 +247,15 @@ export class Element implements IElement {
     }
 
     get x(): number {
-        return this.mDisplay.x;
+        return this.mDisplay.x || this.mPos.x;
     }
 
     get y(): number {
-        return this.mDisplay.y;
+        return this.mDisplay.y || this.mPos.y;
     }
 
     get z(): number {
-        return this.mDisplay.z;
+        return this.mDisplay.z || this.mPos.z;
     }
 
     get dir(): number {
