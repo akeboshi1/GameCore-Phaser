@@ -5,6 +5,7 @@ import { SelectManager } from "../rooms/player/select.manager";
 import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
 import { GameConfigService } from "../config/gameconfig.service";
+import { IConfigObject } from "game-capsule/lib/configobjects/config_object";
 export interface WorldService {
     connection: ConnectionService;
     readonly game: Phaser.Game;
@@ -15,4 +16,5 @@ export interface WorldService {
     getSize(): Size;
     getServerTime(): number;
     changeRoom(room: IRoomService);
+    getConfigObject(id: number): IConfigObject;
 }

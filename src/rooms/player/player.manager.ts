@@ -8,6 +8,7 @@ import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel } from "../display/dragonbones.model";
 import { Actor } from "./Actor";
 import { Console } from "../../utils/log";
+import {Pos} from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player>;
@@ -49,12 +50,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             }
         };
         this.mActorID = obj.id;
-        const actor = new Actor(position, obj, this);
+        const actor = new Actor(this.mActorID, this);
+        actor.setPosition(new Pos(obj.x, obj.y, obj.z));
         this.mPlayerMap.set(obj.id, actor);
         const cameraService = this.mRoom.cameraService;
         if (cameraService) {
             const dis: ElementDisplay = actor.getDisplay();
-            if (dis) cameraService.startFollow(dis.GameObject);
+            // if (dis) cameraService.startFollow(dis.GameObject);
         }
         return actor;
     }
@@ -103,6 +105,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap) {
             this.mPlayerMap = new Map();
         }
+        // if (!this.mGameConfig) {
+        //     return;
+        // }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
         const positions = content.objectPositions;
         const type = content.nodeType;
@@ -111,7 +116,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         let player: Player;
         for (const position of positions) {
-            player = new Player(position, type, this);
+            player = new Player(position.id, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
     }

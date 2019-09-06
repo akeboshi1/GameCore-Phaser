@@ -3,6 +3,7 @@ import {ICameraService} from "./cameras.manager";
 import {IPosition45Obj} from "../../utils/position45";
 import {IElement} from "../element/element";
 import {Pos} from "../../utils/pos";
+import {Console} from "../../utils/log";
 
 export interface ViewblockService {
     update(time: number, delta: number): void;
@@ -10,6 +11,8 @@ export interface ViewblockService {
     int(size: IPosition45Obj): void;
 
     add(e: IElement): boolean;
+
+    remove(e: IElement): boolean;
 }
 
 export class ViewblockManager implements ViewblockService {
@@ -27,6 +30,18 @@ export class ViewblockManager implements ViewblockService {
             const ePos: Pos = e.getPosition();
             if (rect.contains(ePos.x, ePos.y)) {
                 block.add(e);
+                return;
+            }
+        }
+    }
+
+    public remove(e: IElement): boolean {
+        if (!e) return;
+        for (const block of this.mBlocks) {
+            const rect = block.rectangle;
+            const ePos = e.getPosition();
+            if (rect.contains(ePos.x, ePos.y)) {
+                block.remove(e);
                 return;
             }
         }

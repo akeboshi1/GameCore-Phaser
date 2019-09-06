@@ -122,16 +122,10 @@ export class MouseManager extends PacketHandler {
     private groundDown(pointer, gameObject) {
         this.mActivePointer = pointer;
         this.onUpdate(pointer);
-        if (gameObject) {
-            Console.log(gameObject.getData("id"));
-        }
     }
 
     private groundUp(pointer, gameObject) {
         this.mActivePointer = pointer;
         this.onUpdate(pointer);
-        if (gameObject) {
-            Console.log(gameObject.getData("id"));
-        }
     }
 }

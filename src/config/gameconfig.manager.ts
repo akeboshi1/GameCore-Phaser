@@ -1,9 +1,9 @@
 import { GameConfigService } from "./gameconfig.service";
 import { WorldService } from "../game/world.service";
-import { Console } from "../utils/log";
 import { ResUtils } from "../utils/resUtil";
 import { load } from "../utils/http";
 import { Lite } from "game-capsule";
+import { IConfigObject } from "game-capsule/lib/configobjects/config_object";
 
 export class GameConfigManager implements GameConfigService {
   private mWorld: WorldService;
@@ -14,26 +14,17 @@ export class GameConfigManager implements GameConfigService {
   }
 
   public load(paths: string[]): Promise<void> {
-    return new Promise((resolve, reject) => {
       return this.loadConfigs(paths)
-      .then((reqs: any[]) => {
-        return this.decodeConfigs(reqs);
-      })
-      .then(() => {
-        resolve();
-      })
-      .catch((err) => {
-        reject(err);
-      });
-    });
+        .then((reqs: any[]) => {
+          return this.decodeConfigs(reqs);
+        });
   }
 
-  public getObject(id: number) {
+  public getObject(id: number): IConfigObject | undefined {
     if (!this.mGameConfig) {
       return;
     }
-    const obj = this.mGameConfig.getObject(id);
-    return obj;
+    return this.mGameConfig.getObject(id);
   }
 
   private loadConfigs(paths: string[]): Promise<any> {
@@ -51,7 +42,7 @@ export class GameConfigManager implements GameConfigService {
         if (arraybuffer) {
           try {
             this.mGameConfig = new Lite();
-            this.mGameConfig.deserialize(new Uint8Array(req.response));
+            this.mGameConfig.deserialize(new Uint8Array(arraybuffer));
             resolve();
           } catch (error) {
             reject(error);

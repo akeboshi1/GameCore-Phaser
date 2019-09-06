@@ -1,7 +1,7 @@
 import { op_gameconfig } from "pixelpai_proto";
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
-import { IDragonbonesModel } from "./dragonbones.model";
+import {IAvatar, IDragonbonesModel} from "./dragonbones.model";
 import { Console } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
 
@@ -333,7 +333,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
 
     private getReplaceArr() {
         this.replaceArr.length = 0;
-        const avater: op_gameconfig.IAvatar = this.mDisplayInfo.avatar;
+        const avater: IAvatar = this.mDisplayInfo.avatar;
         if (avater.bodyBaseId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyBase,

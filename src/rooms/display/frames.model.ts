@@ -1,4 +1,6 @@
-import {op_gameconfig} from "pixelpai_proto";
+import {op_gameconfig, op_gameconfig_01} from "pixelpai_proto";
+import {Console} from "../../utils/log";
+import { AnimationDataNode } from "game-capsule/lib/configobjects";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -6,9 +8,22 @@ export interface IFramesModel {
     x: number;
     y: number;
     type?: string;
-    display?: op_gameconfig.IDisplay | null;
-    animations?: op_gameconfig.IAnimation[] | null;
+    display?: IDisplay | null;
+    animations?: IAnimationData[] | null;
     animationName: string;
+}
+
+export interface IDisplay {
+    texturePath: string;
+    dataPath?: string;
+}
+
+export interface IAnimationData {
+    name: string;
+    frameName: string[];
+    frameRate: number;
+    loop: boolean;
+    baseLoc: string;
 }
 
 export class FramesModel implements IFramesModel {
@@ -17,12 +32,20 @@ export class FramesModel implements IFramesModel {
     public x: number;
     public y: number;
     public type: string;
-    public display: op_gameconfig.IDisplay | null;
-    public animations: op_gameconfig.IAnimation[] | null;
+    public display: IDisplay | null;
+    public animations: IAnimationData[] | null;
     public animationName: string;
 
-    public avatarDir?: number;
-    public avatar?: op_gameconfig.IAvatar;
+    constructor(data: any) {
+        this.id = data.id;
+        this.type = data.sn;
+        const anis = data.animations;
+        if (anis) {
+            this.animationName = anis.defaultAnimationName;
+            this.setDisplay(anis.display);
+            this.setAnimationData(anis.animationData);
+        }
+    }
 
     public setInfo(val: any) {
         for (const key in val) {
@@ -30,5 +53,36 @@ export class FramesModel implements IFramesModel {
                 this[key] = val[key];
             }
         }
+    }
+
+    private setDisplay(display: op_gameconfig.IDisplay) {
+        if (!display) {
+            Console.error(`${this.type} display does not exits`);
+            return;
+        }
+        this.display = {
+            dataPath: display.dataPath,
+            texturePath: display.texturePath
+        };
+    }
+
+    private setAnimationData(aniDatas: AnimationDataNode[]) {
+        if (!aniDatas) {
+            Console.error(`${this.id} animationData does not exits`);
+            return;
+        }
+        this.animations = [];
+        let ani: IAnimationData;
+        for (const aniData of aniDatas) {
+            const baseLoc = aniData.baseLoc;
+            ani = {
+                name: aniData.name,
+                frameName: aniData.frameName,
+                frameRate: aniData.frameRate,
+                loop: aniData.loop,
+                baseLoc: `${baseLoc.x},${baseLoc.y}`
+            };
+        }
+        this.animations.push(ani);
     }
 }

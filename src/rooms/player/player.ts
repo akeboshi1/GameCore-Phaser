@@ -23,8 +23,8 @@ export enum PlayerState {
 export class Player extends Element {
     protected mCurState: string;
 
-    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        super(objectPosition, nodeType, mElementManager);
+    constructor(id: number, protected mElementManager: IElementManager) {
+        super(id, mElementManager);
     }
 
     public move(moveData: op_client.IMoveData) {

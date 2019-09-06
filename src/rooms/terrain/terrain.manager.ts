@@ -7,6 +7,8 @@ import { FramesModel } from "../display/frames.model";
 import { IElementManager } from "../element/element.manager";
 import { Console } from "../../utils/log";
 import { GameConfigService } from "../../config/gameconfig.service";
+import {Element} from "../element/element";
+import {Pos} from "../../utils/pos";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain>;
@@ -64,18 +66,42 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
-        const positions = content.objectPositions;
+        const objs: op_client.IObjectPosition[]|undefined = content.objectPositions;
+        if (!objs) return;
         const type = content.nodeType;
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        let terrian: Terrain;
-        for (const position of positions) {
-            const obj = this.mGameConfig.getObject(position.id);
-            Console.log(obj);
-            terrian = new Terrain(position, type, this);
-            this.mTerrains.set(terrian.id || 0, terrian);
-            this.mRoom.blocks.add(terrian);
+        let terrain: Terrain;
+        let point: op_def.IPBPoint3f;
+        for (const obj of objs) {
+            point = obj.point3f;
+            if (point) {
+                terrain = new Terrain(obj.id, this);
+                terrain.setPosition(new Pos(point.x, point.y, point.z));
+                this._add(terrain);
+            }
+        }
+    }
+
+    private _add(terrain: Terrain) {
+        if (!this.mTerrains) {
+            this.mTerrains = new Map();
+        }
+        if (!terrain) return;
+        this.mTerrains.set(terrain.id || 0, terrain);
+        if (this.roomService) {
+            this.roomService.blocks.add(terrain);
+        }
+    }
+
+    private _remove(terrain: Terrain) {
+        if (!terrain || this.mTerrains) return;
+        if (this.mTerrains.has(terrain.id)) {
+            this.mTerrains.delete(terrain.id);
+            if (this.roomService) {
+                this.roomService.blocks.remove(terrain);
+            }
         }
     }
 

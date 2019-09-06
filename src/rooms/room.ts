@@ -104,10 +104,9 @@ export class Room implements IRoomService {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;
             // init block
             this.mBlocks.int(this.mSize);
-            cameras.zoom = 2;
+            // cameras.zoom = 2;
         }
 
-        // TODO Layer manager 应该改为room，而不是roomMgr，并且不需要传递scene 变量作为入参！从mgr上拿scene！
         this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
             callBack: () => {

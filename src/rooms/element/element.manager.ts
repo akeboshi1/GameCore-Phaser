@@ -1,10 +1,12 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
-import { Element } from "./element";
+import {Element, IElement} from "./element";
 import { IRoomService } from "../room";
 import { Console } from "../../utils/log";
 import { GameConfigService } from "../../config/gameconfig.service";
+import {Pos} from "../../utils/pos";
+import IObjectPosition = op_client.IObjectPosition;
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -64,29 +66,46 @@ export class ElementManager extends PacketHandler implements IElementManager {
   }
 
   private onAdd(packet: PBpacket) {
-    if (!this.mElements) {
-      this.mElements = new Map();
-    }
     if (!this.mRoom.layerManager) {
-      Console.error("layer manager is undefined");
+      Console.error("layer manager does not exits");
       return;
     }
     if (!this.mGameConfig) {
-      Console.error("gameconfig is undefined");
+      Console.error("gameConfig does not exits");
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_OBJECT = packet.content;
-    const positions = content.objectPositions;
+    const objs: op_client.IObjectPosition[]|undefined = content.objectPositions;
+    if (!objs) return;
     const type = content.nodeType;
     if (type !== op_def.NodeType.ElementNodeType) {
       return;
     }
     let element: Element;
-    for (const position of positions) {
-      const obj = this.mGameConfig.getObject(position.id);
-      Console.log("Object: =====>", obj);
-      element = new Element(position, type, this);
-      this.mElements.set(element.id || 0, element);
+    let point: op_def.IPBPoint3f;
+    for (const obj of objs) {
+      point = obj.point3f;
+      if (point) {
+        element = new Element(obj.id, this);
+        element.setPosition(new Pos(point.x, point.y, point.z));
+        this._add(element);
+      }
+    }
+  }
+
+  private _add(ele: Element) {
+    if (!this.mElements) this.mElements = new Map();
+    if (ele) {
+      this.mElements.set(ele.id || 0, ele);
+      this.roomService.blocks.add(ele);
+    }
+  }
+
+  private _remove(ele: Element) {
+    if (!this.mElements) return;
+    if (this.mElements.has(ele.id)) {
+      this.mElements.delete(ele.id);
+      this.roomService.blocks.remove(ele);
     }
   }
 

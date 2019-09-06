@@ -8,14 +8,14 @@ import { Pos } from "../../utils/pos";
 export class Terrain extends Element {
     protected mDisplay: FramesDisplay | undefined;
 
-    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        super(objectPosition, nodeType, mElementManager);
+    constructor(id: number, protected mElementManager: IElementManager) {
+        super(id, mElementManager);
     }
 
     public setPosition(p: Pos) {
         const roomService = this.mElementManager.roomService;
         if (!roomService) {
-            Console.error("room is undefine");
+            Console.error("room does not exits");
             return;
         }
         const point = roomService.transformTo90(p);
@@ -26,7 +26,7 @@ export class Terrain extends Element {
 
         this.mPos = p;
         if (this.mDisplay) {
-            this.mDisplay.setPosition(p.x, p.y, p.z);
+            this.mDisplay.setPosition(point.x, point.y, p.z);
             this.setDepth();
         }
     }
@@ -63,7 +63,7 @@ export class Terrain extends Element {
     protected onDisplayReady() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            this.setPosition(new Pos(this.mDisplayInfo.x, this.mDisplayInfo.y));
+            this.setPosition(new Pos(this.mPos.x, this.mPos.y));
         }
     }
 }

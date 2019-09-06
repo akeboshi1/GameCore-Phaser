@@ -17,9 +17,11 @@ export class Viewblock {
 
     public add(element: IElement) {
         this.mElements.push(element);
+        const pos = element.getPosition();
+        element.setRenderable(this.rectangle.contains(pos.x, pos.y));
     }
 
-    public remove(ele: Element) {
+    public remove(ele: IElement) {
         const index = this.mElements.indexOf(ele);
         if (index !== -1) {
             this.mElements.splice(index, 1);

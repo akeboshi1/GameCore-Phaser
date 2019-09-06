@@ -1,15 +1,15 @@
-import { IElementManager } from "./element.manager";
-import { IFramesModel } from "../display/frames.model";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { FramesDisplay } from "../display/frames.display";
-import { IRoomService } from "../room";
-import { Viewblock } from "../cameras/viewblock";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def } from "pixelpai_proto";
-import { Tweens } from "phaser";
-import { Console } from "../../utils/log";
-import { Pos } from "../../utils/pos";
+import {IElementManager} from "./element.manager";
+import {FramesModel, IFramesModel} from "../display/frames.model";
+import {DragonbonesDisplay} from "../display/dragonbones.display";
+import {FramesDisplay} from "../display/frames.display";
+import {IRoomService} from "../room";
+import {Viewblock} from "../cameras/viewblock";
+import {ElementDisplay} from "../display/element.display";
+import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
+import {op_client, op_def} from "pixelpai_proto";
+import {Tweens} from "phaser";
+import {Console} from "../../utils/log";
+import {Pos} from "../../utils/pos";
 
 export interface IElement {
     readonly id: number;
@@ -33,20 +33,19 @@ export class Element implements IElement {
     private mToPos: Pos = new Pos();
     private mRenderable: boolean = false;
     private mElementID: number;
-    constructor(objectPosition: op_client.IObjectPosition, nodeType: number, protected mElementManager: IElementManager) {
-        if (!objectPosition || nodeType) {
-            Console.error("content data is undefiend");
+    constructor(id: number, protected mElementManager: IElementManager) {
+        const conf = this.mElementManager.roomService.world.gameConfigService.getObject(id);
+        // TODO init DisplayInfo
+        // this.mElementID = element.id;
+        if (!conf) {
+            Console.error("object does not exits");
             return;
         }
-
-        const point3f: op_def.IPBPoint3f = objectPosition.point3f;
-        if (!point3f) {
-            Console.error("point3f is undefiend");
-            return;
+        if (conf.type === op_def.NodeType.CharacterNodeType) {
+            this.mDisplayInfo = new DragonbonesModel(conf);
+        } else {
+            this.mDisplayInfo = new FramesModel(conf);
         }
-        const objPos: Pos = new Pos(point3f.x | 0, point3f.y | 0, point3f.z | 0);
-        this.mElementID = objectPosition.id;
-        this.setPosition(objPos);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -58,11 +57,13 @@ export class Element implements IElement {
     }
 
     public setRenderable(isRenderable: boolean): void {
-        this.mRenderable = isRenderable;
-        if (isRenderable) {
-            return this.addDisplay();
+        if (this.mRenderable !== isRenderable) {
+            this.mRenderable = isRenderable;
+            if (isRenderable) {
+                return this.addDisplay();
+            }
+            this.removeDisplay();
         }
-        this.removeDisplay();
     }
 
     public getRenderable(): boolean {
@@ -174,7 +175,7 @@ export class Element implements IElement {
     }
 
     protected addDisplay() {
-        if (!this.mDisplay || !this.createDisplay()) return;
+        this.createDisplay();
         const room = this.roomService;
         if (!room) {
             Console.error("roomService is undefined");
@@ -208,7 +209,8 @@ export class Element implements IElement {
     protected onDisplayReady() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            this.setPosition(new Pos(this.mDisplayInfo.x + baseLoc.x, this.mDisplayInfo.y + baseLoc.y));
+            const pos = this.getPosition();
+            this.setPosition(new Pos(pos.x + baseLoc.x, pos.y + baseLoc.y));
         }
     }
 
