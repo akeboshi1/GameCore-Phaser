@@ -11,6 +11,18 @@ const TICK_INTERVAL = 500; // (ms)
 const CHECK_INTERVAL = 100000; // (ms)
 
 export class Clock extends PacketHandler {
+
+    get sysUnixTime(): number {
+        return new Date().getTime();
+    }
+
+    set unixTime(t: number) {
+        this.mTimestamp = t;
+    }
+
+    get unixTime(): number {
+        return this.mTimestamp;
+    }
     private mTimestamp: number; // The timestamp in JavaScript is expressed in milliseconds.
     private mTickHandler: any;
     private mConn: ConnectionService;
@@ -26,22 +38,18 @@ export class Clock extends PacketHandler {
         this._check();
     }
 
-    get sysUnixTime(): number {
-        return new Date().getTime();
-    }
-
-    set unixTime(t: number) {
-        this.mTimestamp = t;
-    }
-
-    get unixTime(): number {
-        return this.mTimestamp;
+    public sync(): void {
+        if (!this.mConn) return;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
+        const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
+        ct.clientStartTs = this.sysUnixTime;
+        this.mConn.send(pkt);
     }
 
     protected _check(): void {
         const self = this;
         setInterval(() => {
-            self._sync();
+            self.sync();
         }, CHECK_INTERVAL);
     }
 
@@ -53,14 +61,6 @@ export class Clock extends PacketHandler {
             } else
                 self.mTimestamp += TICK_INTERVAL;
         }, TICK_INTERVAL);
-    }
-
-    private _sync(): void {
-        if (!this.mConn) return;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
-        const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
-        ct.clientStartTs = this.sysUnixTime;
-        this.mConn.send(pkt);
     }
 
     private proof(packet: PBpacket) {
