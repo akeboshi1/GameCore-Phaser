@@ -1,28 +1,28 @@
 import "phaser";
-import { WorldService } from "./world.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "phaser";
-import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_gateway, op_virtual_world, op_def } from "pixelpai_proto";
+import {WorldService} from "./world.service";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Game} from "phaser";
+import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_gateway, op_virtual_world, op_def} from "pixelpai_proto";
 import Connection from "../net/connection";
-import { LoadingScene } from "../scenes/loading";
-import { PlayScene } from "../scenes/play";
-import { RoomManager } from "../rooms/room.manager";
-import { ServerAddress } from "../net/address";
-import { IGameConfigure } from "../../launcher";
-import { KeyBoardManager } from "./keyboard.manager";
-import { MouseManager } from "./mouse.manager";
-import { SelectManager } from "../rooms/player/select.manager";
-import { Size } from "../utils/size";
-import { IRoomService } from "../rooms/room";
-import { MainUIScene } from "../scenes/main.ui";
-import { Clock } from "./clock";
+import {LoadingScene} from "../scenes/loading";
+import {PlayScene} from "../scenes/play";
+import {RoomManager} from "../rooms/room.manager";
+import {ServerAddress} from "../net/address";
+import {IGameConfigure} from "../../launcher";
+import {KeyBoardManager} from "./keyboard.manager";
+import {MouseManager} from "./mouse.manager";
+import {SelectManager} from "../rooms/player/select.manager";
+import {Size} from "../utils/size";
+import {IRoomService} from "../rooms/room";
+import {MainUIScene} from "../scenes/main.ui";
+import {Clock} from "./clock";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { Console } from "../utils/log";
-import { GameConfigService } from "../config/gameconfig.service";
-import { ResUtils } from "../utils/resUtil";
-import { GameConfigManager } from "../config/gameconfig.manager";
+import {Console} from "../utils/log";
+import {GameConfigService} from "../config/gameconfig.service";
+import {ResUtils} from "../utils/resUtil";
+import {GameConfigManager} from "../config/gameconfig.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -165,6 +165,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
+        if (this.mClock) this.mClock.sync(); // Manual sync remote time.
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
@@ -178,7 +179,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             .catch((err) => {
                 Console.log(err);
             });
-        // console.dir(content);
     }
 
     private createGame() {
