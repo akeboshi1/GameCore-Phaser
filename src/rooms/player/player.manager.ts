@@ -7,7 +7,7 @@ import { Room, IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel } from "../display/dragonbones.model";
 import { Actor } from "./Actor";
-import { Console } from "../../utils/log";
+import { Logger } from "../../utils/log";
 import {Pos} from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
@@ -49,7 +49,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public stopActorMove() {
         if (!this.mRoom.actor) {
-            Console.error("MainHero miss");
+            Logger.error("MainHero miss");
             return;
         }
         this.mRoom.actor.stopMove();
@@ -177,6 +177,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.connection;
         }
-        Console.error("room is undefined");
+        Logger.error("room is undefined");
     }
 }

@@ -1,5 +1,5 @@
 import {op_gameconfig, op_gameconfig_01} from "pixelpai_proto";
-import {Console} from "../../utils/log";
+import {Logger} from "../../utils/log";
 import { AnimationDataNode } from "game-capsule/lib/configobjects";
 
 export interface IFramesModel {
@@ -60,7 +60,7 @@ export class FramesModel implements IFramesModel {
 
     private setDisplay(display: op_gameconfig.IDisplay) {
         if (!display) {
-            Console.error(`${this.type} display does not exist`);
+            Logger.error(`${this.type} display does not exist`);
             return;
         }
         this.display = {
@@ -71,7 +71,7 @@ export class FramesModel implements IFramesModel {
 
     private setAnimationData(aniDatas: AnimationDataNode[]) {
         if (!aniDatas) {
-            Console.error(`${this.id} animationData does not exist`);
+            Logger.error(`${this.id} animationData does not exist`);
             return;
         }
         this.animations = [];

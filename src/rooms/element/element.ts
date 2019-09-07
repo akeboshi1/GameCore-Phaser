@@ -7,7 +7,7 @@ import {ElementDisplay} from "../display/element.display";
 import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
 import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
 import {Tweens} from "phaser";
-import {Console} from "../../utils/log";
+import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
 import {PBpacket} from "net-socket-packet";
 
@@ -58,7 +58,7 @@ export class Element implements IElement {
 
     get roomService(): IRoomService {
         if (!this.mElementManager) {
-            Console.error("element manager is undefined");
+            Logger.error("element manager is undefined");
             return;
         }
         return this.mElementManager.roomService;
@@ -81,7 +81,7 @@ export class Element implements IElement {
         // TODO init DisplayInfo
         this.mId = id;
         if (!conf) {
-            Console.error("object does not exist");
+            Logger.error("object does not exist");
             return;
         }
         if (conf.type === op_def.NodeType.CharacterNodeType) {
@@ -128,11 +128,12 @@ export class Element implements IElement {
 
     public move(moveData: op_client.IMoveData) {
         if (!this.mElementManager) {
-            return Console.error(`Element::move - Empty element-manager.`);
+            return Logger.error(`Element::move - Empty element-manager.`);
         }
         if (!this.mDisplay) {
-            return Console.error("display is undefined");
+            return Logger.error("display is undefined");
         }
+        // TODO baseLoc不要在element里显示添加，应该到display处理
         const baseLoc = this.mDisplay.baseLoc;
         this.mMoveData.arrivalTime = moveData.timestemp;
         this.mMoveData.destPos = new Pos(
@@ -164,14 +165,15 @@ export class Element implements IElement {
         this.mElementManager.connection.send(pkt);
         this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
         this.changeState();
-        Console.log("MoveStop");
+        Logger.log("MoveStop");
     }
 
     public setPosition(p: Pos) {
         if (this.mDisplay) {
-            this.mDisplay.x = p.x;
-            this.mDisplay.y = p.y;
-            this.mDisplay.z = p.z;
+            // this.mDisplay.x = p.x;
+            // this.mDisplay.y = p.y;
+            // this.mDisplay.z = p.z;
+            this.mDisplay.setPosition(p.x, p.y, p.z);
         }
         this.setDepth();
     }
@@ -185,7 +187,6 @@ export class Element implements IElement {
     }
 
     public getRootPosition(): Pos {
-        const baseLoc = this.mDisplay.baseLoc;
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
@@ -208,7 +209,7 @@ export class Element implements IElement {
                 y: {value: this.mMoveData.destPos.y},
             },
             onComplete: (tween, targets, element) => {
-                Console.log("complete move");
+                Logger.log("complete move");
                 element.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y));
                 this.stopMove();
             },
@@ -249,7 +250,7 @@ export class Element implements IElement {
         this.createDisplay();
         const room = this.roomService;
         if (!room) {
-            Console.error("roomService is undefined");
+            Logger.error("roomService is undefined");
             return;
         }
         room.addToSurface(this.mDisplay);
@@ -265,8 +266,8 @@ export class Element implements IElement {
 
     protected setDepth() {
         if (this.mDisplay) {
-            const baseLoc = this.mDisplay.baseLoc;
-            this.mDisplay.GameObject.setDepth(this.mDisplay.x + Math.abs(baseLoc.x) + this.mDisplay.y + Math.abs(baseLoc.y));
+            // const baseLoc = this.mDisplay.baseLoc;
+            this.mDisplay.GameObject.setDepth(this.mDisplay.x + this.mDisplay.y);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }

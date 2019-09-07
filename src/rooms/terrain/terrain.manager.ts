@@ -5,7 +5,7 @@ import { Terrain } from "./terrain";
 import { IRoomService } from "../room";
 import { FramesModel } from "../display/frames.model";
 import { IElementManager } from "../element/element.manager";
-import { Console } from "../../utils/log";
+import { Logger } from "../../utils/log";
 import { GameConfigService } from "../../config/gameconfig.service";
 import { Pos } from "../../utils/pos";
 
@@ -53,7 +53,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     private onAdd(packet: PBpacket) {
         if (!this.mGameConfig) {
-            Console.error("gameconfig is undefined");
+            Logger.error("gameconfig is undefined");
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
@@ -95,7 +95,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.connection;
         }
-        Console.error("room manager is undefined");
+        Logger.error("room manager is undefined");
     }
 
     get roomService(): IRoomService {

@@ -2,7 +2,7 @@ import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IRoomService} from "../room";
 import {ConnectionService} from "../../net/connection.service";
 import {op_virtual_world} from "pixelpai_proto";
-import {Console} from "../../utils/log";
+import {Logger} from "../../utils/log";
 
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
@@ -55,7 +55,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     public setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void {
         if (!this.mCamera) {
-            Console.error("camera does not exist");
+            Logger.error("camera does not exist");
             return;
         }
         this.mCamera.setBounds(x, y, width, height, centerOn);
@@ -63,7 +63,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     private resetCameraSize(width: number, height: number) {
         if (!this.connection) {
-            Console.error("connection is undefined");
+            Logger.error("connection is undefined");
             return;
         }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
@@ -76,7 +76,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     get connection(): ConnectionService {
         if (!this.mRoomService) {
-            Console.error("room service is undefined");
+            Logger.error("room service is undefined");
             return;
         }
         return this.mRoomService.connection;

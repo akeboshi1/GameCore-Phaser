@@ -1,6 +1,6 @@
 import {ServerAddress} from "./address";
 import {WSWrapper} from "./transport/websocket";
-import { Console } from "../utils/log";
+import { Logger } from "../utils/log";
 
 export interface IConnectListener {
     onConnected(connection?: SocketConnection): void;
@@ -33,16 +33,16 @@ export class SocketConnection {
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
             const listener: IConnectListener = this.mConnectListener;
             this.mTransport.on("open", () => {
-                Console.info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
+                Logger.info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this);
                 this.onConnected();
             });
             this.mTransport.on("close", () => {
-                Console.info(`SocketConnection close.`);
+                Logger.info(`SocketConnection close.`);
                 listener.onDisConnected(this);
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
-                Console.info(`SocketConnection error.`);
+                Logger.info(`SocketConnection error.`);
                 listener.onError(reason);
             });
         }
@@ -59,9 +59,9 @@ export class SocketConnection {
 
     send(data: any): void {
         if (!this.mTransport) {
-            return Console.error(`Empty transport.`);
+            return Logger.error(`Empty transport.`);
         }
-        Console.debug(`SocketConnection::send - state: ${this.mTransport._readyState}`);
+        Logger.debug(`SocketConnection::send - state: ${this.mTransport._readyState}`);
         this.mTransport.Send(data);
     }
 
@@ -74,7 +74,7 @@ export class SocketConnection {
 
     protected onConnected() {
         if (!this.mTransport) {
-            return Console.error(`Empty transport.`);
+            return Logger.error(`Empty transport.`);
         }
         this.mTransport.on("packet", this.onData);
     }
@@ -86,7 +86,7 @@ export class SocketConnection {
 
     private doConnect() {
         if (!this.mTransport) {
-            return Console.error(`Empty transport.`);
+            return Logger.error(`Empty transport.`);
         }
         this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);
     }

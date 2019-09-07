@@ -19,7 +19,7 @@ import {IRoomService} from "../rooms/room";
 import {MainUIScene} from "../scenes/main.ui";
 import {Clock} from "./clock";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import {Console} from "../utils/log";
+import {Logger} from "../utils/log";
 import {GameConfigService} from "../config/gameconfig.service";
 import {ResUtils} from "../utils/resUtil";
 import {GameConfigManager} from "../config/gameconfig.manager";
@@ -40,7 +40,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     constructor(config: IGameConfigure) {
         super();
-        Console.log(`World constructor......`);
+        Logger.log(`World constructor......`);
         // Log.dir(config);
         // TODO 检测config内的必要参数如确实抛异常.
         if (!config.game_id) {
@@ -78,7 +78,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onConnected(connection?: SocketConnection): void {
-        Console.info(`enterVirtualWorld`);
+        Logger.info(`enterVirtualWorld`);
         this.enterVirtualWorld();
 
         // Start clock
@@ -95,7 +95,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        Console.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        Logger.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     public getServerTime(): number {
@@ -154,7 +154,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mConfig && this.mConnection) {
             const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
             const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-            Console.log(`VW_id: ${this.mConfig.virtual_world_id}`);
+            Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
             content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
             content.gameId = this.mConfig.game_id;
             content.userToken = this.mConfig.auth_token;
@@ -170,14 +170,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
         if (!configUrls || configUrls.length <= 0) {
-            Console.error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
+            Logger.error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
         }
         this.mGameConfigService.load(content.configUrls)
             .then(() => {
                 this.createGame();
             })
             .catch((err) => {
-                Console.log(err);
+                Logger.log(err);
             });
     }
 
@@ -202,7 +202,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
         } else {
-            Console.error("connection is undefined");
+            Logger.error("connection is undefined");
         }
     }
 
@@ -213,7 +213,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             context.gameStatus = op_def.GameStatus.Focus;
             this.connection.send(pkt);
         } else {
-            Console.error("connection is undefined");
+            Logger.error("connection is undefined");
         }
     }
 
@@ -224,7 +224,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
         } else {
-            Console.error("connection is undefined");
+            Logger.error("connection is undefined");
         }
     }
 }

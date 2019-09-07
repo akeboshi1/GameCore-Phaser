@@ -12,6 +12,7 @@ export interface ElementDisplay {
     play(animationName: string);
     playFrontEff(animationName: string);
     playBackEff(animationName: string);
+    setPosition(x?: number, y?: number, z?: number);
 
     loadEff(data: IFramesModel);
 

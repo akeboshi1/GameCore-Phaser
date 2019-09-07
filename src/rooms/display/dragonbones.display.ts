@@ -2,7 +2,7 @@ import { op_gameconfig } from "pixelpai_proto";
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import {IDragonbonesModel, IAvatar} from "./dragonbones.model";
-import { Console } from "../../utils/log";
+import { Logger } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
 
 export enum AvatarSlotType {
@@ -150,7 +150,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
                     }
                     this.scene.load.start();
                 } else {
-                    Console.error("display is undefined");
+                    Logger.error("display is undefined");
                 }
             }
         }
@@ -308,7 +308,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {
             const slot: dragonBones.Slot = slotList[i];
-            Console.log(i + ":" + slot.display.frame.name);
+            Logger.log(i + ":" + slot.display.frame.name);
             slot.display.visible = false;
             // slot.replaceDisplay(null);
         }
@@ -333,7 +333,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
             const part: string = obj.slot.replace("$", obj.dir.toString());
-            Console.log(part);
+            Logger.log(part);
         }
         this.replaceArr.splice(0);
     }
@@ -808,7 +808,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
                 const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                 if (img.texture.key === name) {
                     slot.replaceDisplay(img);
-                    Console.log("success:" + resKey);
+                    Logger.log("success:" + resKey);
                 }
                 this.misloading = false;
                 this.startLoad();
@@ -816,13 +816,13 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (e: Event) => {
                 this.misloading = false;
                 this.startLoad();
-                Console.log("fail:" + nextLoad[1]);
+                Logger.log("fail:" + nextLoad[1]);
             }, this);
             this.scene.load.image(partName, partUrl);
             this.scene.load.start();
         } else {
             this.misloading = false;
-            Console.log("load complete");
+            Logger.log("load complete");
         }
     }
     private makeEffAnimations(name: string, isBack: boolean = false) {

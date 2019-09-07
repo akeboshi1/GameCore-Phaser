@@ -1,6 +1,6 @@
 import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
-import { Console } from "../utils/log";
+import { Logger } from "../utils/log";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
@@ -24,7 +24,7 @@ export class PlayScene extends Phaser.Scene {
       this.mCallBack();
       this.scene.launch(MainUIScene.name);
     }
-    Console.log("play created");
+    Logger.log("play created");
   }
 
   update(time: number, delta: number) {

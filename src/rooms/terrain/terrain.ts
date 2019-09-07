@@ -2,7 +2,7 @@ import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { FramesDisplay } from "../display/frames.display";
 import { op_client, op_def } from "pixelpai_proto";
-import { Console } from "../../utils/log";
+import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 
 export class Terrain extends Element {
@@ -16,7 +16,7 @@ export class Terrain extends Element {
     public setPosition(p: Pos) {
         const roomService = this.mElementManager.roomService;
         if (!roomService) {
-            Console.error("room does not exist");
+            Logger.error("room does not exist");
             return;
         }
         // const point = roomService.transformTo90(p);
@@ -34,12 +34,12 @@ export class Terrain extends Element {
     protected addDisplay() {
         this.createDisplay();
         if (!this.mElementManager) {
-            Console.error("element manager is undefined");
+            Logger.error("element manager is undefined");
             return;
         }
         const room = this.mElementManager.roomService;
         if (!room) {
-            Console.error("roomService is undefined");
+            Logger.error("roomService is undefined");
             return;
         }
         room.addToGround(this.mDisplay);
@@ -61,14 +61,11 @@ export class Terrain extends Element {
     }
 
     protected onDisplayReady() {
-        if (this.mDisplay) {
-            const baseLoc = this.mDisplay.baseLoc;
-            // this.setPosition(new Pos(this.mPos.x + baseLoc.x, this.mPos.y + baseLoc.y));
-        }
     }
+
     private setPosition45(pos: Pos) {
         if (!this.roomService) {
-            Console.error("roomService does not exist");
+            Logger.error("roomService does not exist");
             return;
         }
         const point = this.roomService.transformTo90(pos);

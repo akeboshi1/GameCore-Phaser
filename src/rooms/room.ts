@@ -12,7 +12,7 @@ import { PBpacket } from "net-socket-packet";
 import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
 import { ElementDisplay } from "./display/element.display";
-import { Console } from "../utils/log";
+import { Logger } from "../utils/log";
 import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
 import { Pos } from "../utils/pos";
 import IActor = op_client.IActor;
@@ -81,7 +81,7 @@ export class Room implements IRoomService {
 
     public enter(data: op_client.IScene): void {
         if (!data) {
-            Console.error("wrong room");
+            Logger.error("wrong room");
             return;
         }
         this.mID = data.id;
@@ -144,7 +144,7 @@ export class Room implements IRoomService {
 
     public transformTo90(p: Pos) {
         if (!this.mSize) {
-            Console.error("position object is undefined");
+            Logger.error("position object is undefined");
             return;
         }
         return Position45.transformTo90(p, this.mSize);
@@ -152,7 +152,7 @@ export class Room implements IRoomService {
 
     public transformTo45(p: Pos) {
         if (!this.mSize) {
-            Console.error("position object is undefined");
+            Logger.error("position object is undefined");
             return;
         }
         return Position45.transformTo45(p, this.mSize);

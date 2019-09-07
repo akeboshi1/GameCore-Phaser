@@ -3,7 +3,7 @@ import {op_client, op_def} from "pixelpai_proto";
 import {ConnectionService} from "../../net/connection.service";
 import {Element} from "./element";
 import {IRoomService} from "../room";
-import {Console} from "../../utils/log";
+import {Logger} from "../../utils/log";
 import {GameConfigService} from "../../config/gameconfig.service";
 import {Pos} from "../../utils/pos";
 
@@ -68,7 +68,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     if (this.mRoom) {
       return this.mRoom.connection;
     }
-    Console.log("roomManager is undefined");
+    Logger.log("roomManager is undefined");
     return;
   }
 
@@ -93,11 +93,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
   private onAdd(packet: PBpacket) {
     if (!this.mRoom.layerManager) {
-      Console.error("layer manager does not exist");
+      Logger.error("layer manager does not exist");
       return;
     }
     if (!this.mGameConfig) {
-      Console.error("gameConfig does not exist");
+      Logger.error("gameConfig does not exist");
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;

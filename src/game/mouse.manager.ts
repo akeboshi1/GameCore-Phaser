@@ -3,7 +3,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
-import { Console } from "../utils/log";
+import { Logger } from "../utils/log";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -47,7 +47,7 @@ export class MouseManager extends PacketHandler {
             room.scene.input.on("gameobjectup", this.groundUp, this);
             this.resume();
         }).catch((reason: any) => {
-            Console.error(reason);
+            Logger.error(reason);
         }).finally(() => {
         });
     }

@@ -3,7 +3,7 @@ import {ICameraService} from "./cameras.manager";
 import {IPosition45Obj} from "../../utils/position45";
 import {IElement} from "../element/element";
 import {Pos} from "../../utils/pos";
-import {Console} from "../../utils/log";
+import {Logger} from "../../utils/log";
 
 export interface ViewblockService {
     update(time: number, delta: number): void;

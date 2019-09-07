@@ -1,5 +1,5 @@
 /* tslint:disable */
-export namespace Console {
+export namespace Logger {
   export function log(message?: any, ...optionalParams: any[]) {
     console.log(message, optionalParams);
   }

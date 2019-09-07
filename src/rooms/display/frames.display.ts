@@ -1,7 +1,7 @@
 import {IAnimationData, IFramesModel} from "./frames.model";
 import { ElementDisplay } from "./element.display";
 import { op_gameconfig } from "pixelpai_proto";
-import { Console } from "../../utils/log";
+import { Logger } from "../../utils/log";
 
 /**
  * 序列帧显示对象
@@ -42,7 +42,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
                     this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
                     this.scene.load.start();
                 } else {
-                    Console.error("display is undefined");
+                    Logger.error("display is undefined");
                 }
             }
         }
@@ -78,7 +78,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
                     }
                     this.scene.load.start();
                 } else {
-                    Console.error("display is undefined");
+                    Logger.error("display is undefined");
                 }
             }
         }
@@ -106,7 +106,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public setPosition(x?: number, y?: number, z?: number): this {
-        super.setPosition(x, y, z);
+        super.setPosition(x + this.baseLoc.x, y + this.baseLoc.y, z);
         return this;
     }
 

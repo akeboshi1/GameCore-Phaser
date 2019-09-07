@@ -1,5 +1,5 @@
 import {Element, IElement} from "../element/element";
-import {Console} from "../../utils/log";
+import {Logger} from "../../utils/log";
 
 /**
  * 显示区域
