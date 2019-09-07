@@ -1,15 +1,15 @@
-import { IElementManager } from "./element.manager";
-import { FramesModel, IFramesModel } from "../display/frames.model";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { FramesDisplay } from "../display/frames.display";
-import { IRoomService } from "../room";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { Tweens } from "phaser";
-import { Console } from "../../utils/log";
-import { Pos } from "../../utils/pos";
-import { PBpacket } from "net-socket-packet";
+import {IElementManager} from "./element.manager";
+import {FramesModel, IFramesModel} from "../display/frames.model";
+import {DragonbonesDisplay} from "../display/dragonbones.display";
+import {FramesDisplay} from "../display/frames.display";
+import {IRoomService} from "../room";
+import {ElementDisplay} from "../display/element.display";
+import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {Tweens} from "phaser";
+import {Console} from "../../utils/log";
+import {Pos} from "../../utils/pos";
+import {PBpacket} from "net-socket-packet";
 
 export interface IElement {
     readonly id: number;
@@ -31,16 +31,51 @@ export interface IElement {
     getRenderable(): boolean;
 }
 
+export interface MoveData {
+    destPos?: Pos;
+    arrivalTime?: number;
+    tweenAnim?: Tweens.Tween;
+    tweenLastUpdate?: number;
+}
+
 export class Element implements IElement {
+
+    get x(): number {
+        return this.mDisplay.x;
+    }
+
+    get y(): number {
+        return this.mDisplay.y;
+    }
+
+    get z(): number {
+        return this.mDisplay.z;
+    }
+
+    get dir(): number {
+        return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
+    }
+
+    get roomService(): IRoomService {
+        if (!this.mElementManager) {
+            Console.error("element manager is undefined");
+            return;
+        }
+        return this.mElementManager.roomService;
+    }
+
+    get id(): number {
+        return this.mId; // this.mDisplayInfo.id || 0;
+    }
+
     protected mId: number;
-    protected mPos: Pos = new Pos();
+    // protected mPos: Pos = new Pos();
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
     protected nodeType: number = op_def.NodeType.ElementNodeType;
-    protected mTw: Tweens.Tween;
-    protected mToPos: Pos = new Pos();
     protected mRenderable: boolean = false;
-    private mStop: boolean = false;
+    protected mMoveData: MoveData = {};
+
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         const conf = this.mElementManager.roomService.world.gameConfigService.getObject(id);
         // TODO init DisplayInfo
@@ -59,7 +94,6 @@ export class Element implements IElement {
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
-        this.setPosition(this.mPos);
     }
 
     public setDirection(val: number) {
@@ -93,69 +127,27 @@ export class Element implements IElement {
 
     public move(moveData: op_client.IMoveData) {
         if (!this.mElementManager) {
-            Console.error(`Element::move - Empty element-manager.`);
+            return Console.error(`Element::move - Empty element-manager.`);
         }
         if (!this.mDisplay) {
-            Console.error("display is undefined");
+            return Console.error("display is undefined");
         }
-        const now = this.roomService.now()
-            , baseLoc = this.mDisplay.baseLoc
-            , time: number = moveData.timestemp - now;
-        const toPos: Pos = new Pos(
+        const baseLoc = this.mDisplay.baseLoc;
+        this.mMoveData.arrivalTime = moveData.timestemp;
+        this.mMoveData.destPos = new Pos(
             Math.floor(moveData.destinationPoint3f.x + baseLoc.x)
             , Math.floor(moveData.destinationPoint3f.y + baseLoc.y)
         );
-        if (this.mTw) {
-            if (this.mToPos.equal(toPos)) {
-                this.mStop = true;
-                Console.log("back");
-                // 兩次协议数据相同，不做处理
-                this.changeState("idle");
-                return;
-            }
-        }
-        if (time <= 0) {
-            Console.error("durTime is error");
-            return;
-        }
-        Console.log("start move");
-        this.mToPos = toPos;
-        Console.log(`${time}: ${toPos.toString}`);
-        this.mStop = false;
-        const tw = this.mElementManager.scene.tweens.add({
-            targets: this.mDisplay,
-            duration: time,
-            ease: "Linear",
-            props: {
-                x: { value: toPos.x },
-                y: { value: toPos.y },
-            },
-            onComplete: (tween, targets, play) => {
-                Console.log("complete move");
-                this.mTw = null;
-                // todo 通信服務端到達目的地
-                play.setPosition(toPos);
-                this.stopMove();
-                // this.changeState("idle");
-            },
-            onUpdate: (tween, targets, play) => {
-                if (this.mStop) {
-                    tw.stop();
-                    return;
-                }
-                // TODO Update this.mX,this.mY !!
-                // Console.log(this.mStop);
-                this.setDepth();
-            },
-            onCompleteParams: [this],
-        });
 
-        if (this.mTw) this.mTw.stop();
-        this.mTw = tw;
+        this._doMove();
     }
 
     public stopMove() {
-        if (this.mTw) this.mTw.stop();
+        if (this.mMoveData.tweenAnim) {
+            const tw: Tweens.Tween = this.mMoveData.tweenAnim;
+            tw.stop();
+            tw.remove();
+        }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
         ct.nodeType = this.nodeType;
@@ -171,20 +163,29 @@ export class Element implements IElement {
         this.mElementManager.connection.send(pkt);
         this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
         this.changeState();
-        this.mStop = true;
         Console.log("MoveStop");
     }
 
     public setPosition(p: Pos) {
-        this.mPos = p;
         if (this.mDisplay) {
-            this.mDisplay.GameObject.setPosition(p.x, p.y, p.z);
-            this.setDepth();
+            this.mDisplay.x = p.x;
+            this.mDisplay.y = p.y;
+            this.mDisplay.z = p.z;
         }
+        this.setDepth();
     }
 
     public getPosition(): Pos {
-        return this.mPos;
+        return new Pos(
+            this.mDisplay.x,
+            this.mDisplay.y,
+            this.mDisplay.z
+        );
+    }
+
+    public getRootPosition(): Pos {
+        const baseLoc = this.mDisplay.baseLoc;
+        return new Pos(this.mDisplay.x + baseLoc.x, this.mDisplay.y + baseLoc.y, 0);
     }
 
     public dispose() {
@@ -192,9 +193,37 @@ export class Element implements IElement {
             this.mDisplay.destroy();
             this.mDisplay = null;
         }
-        if (this.mTw) {
-            this.mTw.destroy();
-        }
+    }
+
+    protected _doMove() {
+        const tw: Tweens.Tween = this.mMoveData.tweenAnim;
+        const time: number = this.roomService.now() - this.mMoveData.arrivalTime;
+        this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
+            targets: this.mDisplay,
+            duration: time,
+            ease: "Linear",
+            props: {
+                x: {value: this.mMoveData.destPos.x},
+                y: {value: this.mMoveData.destPos.y},
+            },
+            onComplete: (tween, targets, element) => {
+                Console.log("complete move");
+                element.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y));
+                this.stopMove();
+            },
+            onUpdate: (tween, targets, element) => {
+                const now = this.roomService.now();
+                if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
+                    element.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y));
+                    this.setDepth();
+                    this.mMoveData.tweenLastUpdate = now;
+                }
+            },
+            onCompleteParams: [this],
+        });
+
+        // remove old one;
+        if (tw) tw.remove();
     }
 
     protected createDisplay(): ElementDisplay {
@@ -250,37 +279,7 @@ export class Element implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            const baseLoc = this.mDisplay.baseLoc;
-            this.setPosition(new Pos(this.mPos.x + baseLoc.x, this.mPos.y + baseLoc.y));
             this.mDisplay.play("idle");
         }
-    }
-
-    get x(): number {
-        return this.mDisplay.x || this.mPos.x;
-    }
-
-    get y(): number {
-        return this.mDisplay.y || this.mPos.y;
-    }
-
-    get z(): number {
-        return this.mDisplay.z || this.mPos.z;
-    }
-
-    get dir(): number {
-        return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
-    }
-
-    get roomService(): IRoomService {
-        if (!this.mElementManager) {
-            Console.error("element manager is undefined");
-            return;
-        }
-        return this.mElementManager.roomService;
-    }
-
-    get id(): number {
-        return this.mId; // this.mDisplayInfo.id || 0;
     }
 }
