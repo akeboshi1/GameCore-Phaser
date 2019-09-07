@@ -37,6 +37,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.mPlayerMap.has(id)) {
             this.mPlayerMap.delete(id);
         }
+        const player = this.mPlayerMap.get(id);
+        if (player) {
+            this.mPlayerMap.delete(id);
+            player.dispose();
+            if (this.roomService) {
+                this.roomService.blocks.remove(player);
+            }
+        }
     }
 
     public stopActorMove() {
@@ -103,10 +111,19 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
-        let player: Player;
+        let point: op_def.IPBPoint3f;
         for (const sprite of sprites) {
-            player = new Player(sprite.id, new Pos(sprite.point3f.x, sprite.point3f.y, sprite.point3f.z | 0), this);
+            point = sprite.point3f;
+            this._add(sprite.id, new Pos(point.x, point.y, point.z));
+        }
+    }
+
+    private _add(id: number, pos: Pos) {
+        if (!this.mPlayerMap) this.mPlayerMap = new Map();
+        if (!this.mPlayerMap.has(id)) {
+            const player = new Player(id, pos, this);
             this.mPlayerMap.set(player.id || 0, player);
+            this.roomService.blocks.add(player);
         }
     }
 
@@ -117,12 +134,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
-        let player: Player;
         for (const id of ids) {
-            player = this.get(id);
-            if (!player) continue;
-            this.removeFromMap(player.id);
-            player.dispose();
+            this.removeFromMap(id);
         }
     }
 

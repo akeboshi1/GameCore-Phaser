@@ -47,8 +47,13 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     public removeFromMap(id: number) {
         if (!this.mTerrains) return;
-        if (this.mTerrains.has(id)) {
+        const terrain = this.mTerrains.get(id);
+        if (terrain) {
             this.mTerrains.delete(id);
+            terrain.dispose();
+            if (this.roomService) {
+                this.roomService.blocks.remove(terrain);
+            }
         }
     }
 
@@ -70,35 +75,23 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        let terrain: Terrain;
         let point: op_def.IPBPoint3f;
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
-                terrain = new Terrain(sprite.id, new Pos(point.x, point.y, point.z), this);
-                this._add(terrain);
+                this._add(sprite.id, new Pos(point.x, point.y, point.z));
             }
         }
     }
 
-    private _add(terrain: Terrain) {
+    private _add(id: number, pos: Pos) {
         if (!this.mTerrains) {
             this.mTerrains = new Map();
         }
-        if (!terrain) return;
-        this.mTerrains.set(terrain.id || 0, terrain);
-        if (this.roomService) {
+        if (!this.mTerrains.has(id)) {
+            const terrain = new Terrain(id, pos, this);
+            this.mTerrains.set(terrain.id || 0, terrain);
             this.roomService.blocks.add(terrain);
-        }
-    }
-
-    private _remove(terrain: Terrain) {
-        if (!terrain || this.mTerrains) return;
-        if (this.mTerrains.has(terrain.id)) {
-            this.mTerrains.delete(terrain.id);
-            if (this.roomService) {
-                this.roomService.blocks.remove(terrain);
-            }
         }
     }
 
@@ -113,8 +106,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             terrian = this.get(id);
             if (!terrian) continue;
-            this.removeFromMap(terrian.id);
-            terrian.dispose();
+            this.removeFromMap(id);
         }
     }
 

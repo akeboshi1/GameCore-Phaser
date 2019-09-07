@@ -172,7 +172,7 @@ export class Element implements IElement {
         this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
         this.changeState();
         this.mStop = true;
-        Console.log("MoveStop");
+        Console.log("Mo0veStop");
     }
 
     public setPosition(p: Pos) {
@@ -194,6 +194,9 @@ export class Element implements IElement {
         }
         if (this.mTw) {
             this.mTw.destroy();
+        }
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.destroy();
         }
     }
 

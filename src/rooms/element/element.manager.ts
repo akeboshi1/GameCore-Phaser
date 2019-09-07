@@ -57,8 +57,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
   public removeFromMap(id: number) {
     if (!this.mElements) return;
-    if (this.mElements.has(id)) {
+    const element = this.mElements.get(id);
+    if (element) {
       this.mElements.delete(id);
+      element.dispose();
+      if (this.roomService) {
+        this.roomService.blocks.remove(element);
+      }
     }
   }
 
@@ -109,30 +114,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
     if (type !== op_def.NodeType.ElementNodeType) {
       return;
     }
-    let element: Element;
     let point: op_def.IPBPoint3f;
     for (const obj of objs) {
       point = obj.point3f;
       if (point) {
-        element = new Element(obj.id, new Pos(point.x, point.y, point.z), this);
-        this._add(element);
+        this._add(obj.id, new Pos(point.x, point.y, point.z));
       }
     }
   }
 
-  private _add(ele: Element) {
+  private _add(id: number, pos: Pos) {
     if (!this.mElements) this.mElements = new Map();
-    if (ele) {
+    if (!this.mElements.get(id)) {
+      const ele = new Element(id, pos, this);
       this.mElements.set(ele.id || 0, ele);
       this.roomService.blocks.add(ele);
-    }
-  }
-
-  private _remove(ele: Element) {
-    if (!this.mElements) return;
-    if (this.mElements.has(ele.id)) {
-      this.mElements.delete(ele.id);
-      this.roomService.blocks.remove(ele);
     }
   }
 
@@ -150,15 +146,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
     const type: number = content.nodeType;
     const ids: number[] = content.ids;
-    if (type !== op_def.NodeType.CharacterNodeType) {
+    if (type !== op_def.NodeType.ElementNodeType) {
       return;
     }
-    let element: Element;
     for (const id of ids) {
-      element = this.get(id);
-      if (!element) continue;
-      this.removeFromMap(element.id);
-      element.dispose();
+      this.removeFromMap(id);
     }
   }
 

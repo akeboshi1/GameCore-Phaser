@@ -64,7 +64,7 @@ export class Terrain extends Element {
     protected onDisplayReady() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            this.setPosition(new Pos(this.mPos.x, this.mPos.y));
+            this.setPosition(new Pos(this.mPos.x + baseLoc.x, this.mPos.y + baseLoc.y));
         }
     }
     private setPosition45(pos: Pos) {
