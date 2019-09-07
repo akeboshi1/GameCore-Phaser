@@ -6,6 +6,7 @@ export interface IDragonbonesModel {
     avatarDir?: number;
     avatar?: IAvatar;
     // TODO
+    destroy();
 }
 
 export interface IAvatar {
@@ -61,5 +62,8 @@ export class DragonbonesModel implements IDragonbonesModel {
                 this[key] = val[key];
             }
         }
+    }
+
+    public destroy() {
     }
 }

@@ -10,6 +10,8 @@ export interface IFramesModel {
     display?: IDisplay | null;
     animations?: IAnimationData[] | null;
     animationName: string;
+
+    destroy();
 }
 
 export interface IDisplay {
@@ -51,6 +53,9 @@ export class FramesModel implements IFramesModel {
                 this[key] = val[key];
             }
         }
+    }
+
+    public destroy() {
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {
