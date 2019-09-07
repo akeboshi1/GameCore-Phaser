@@ -1,4 +1,4 @@
-import { Console } from "../utils/log";
+import {Logger} from "../utils/log";
 
 export class MainUIScene extends Phaser.Scene {
   private bg: Phaser.GameObjects.Sprite;
@@ -45,6 +45,6 @@ export class MainUIScene extends Phaser.Scene {
   private dragStop(pointer) {
     this.btn.x = this.bg.x;
     this.btn.y = this.bg.y;
-    Console.log("dragEnd");
+    Logger.log("dragEnd");
   }
 }
