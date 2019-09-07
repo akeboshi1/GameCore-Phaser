@@ -25,7 +25,6 @@ export class Terrain extends Element {
         //     return;
         // }
 
-        this.mPos = p;
         if (this.mDisplay) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
             this.setDepth();
@@ -64,7 +63,7 @@ export class Terrain extends Element {
     protected onDisplayReady() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            this.setPosition(new Pos(this.mPos.x + baseLoc.x, this.mPos.y + baseLoc.y));
+            // this.setPosition(new Pos(this.mPos.x + baseLoc.x, this.mPos.y + baseLoc.y));
         }
     }
     private setPosition45(pos: Pos) {

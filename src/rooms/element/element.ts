@@ -80,7 +80,6 @@ export class Element implements IElement {
         const conf = this.mElementManager.roomService.world.gameConfigService.getObject(id);
         // TODO init DisplayInfo
         this.mId = id;
-        this.setPosition(pos);
         if (!conf) {
             Console.error("object does not exist");
             return;
@@ -90,6 +89,8 @@ export class Element implements IElement {
         } else {
             this.mDisplayInfo = new FramesModel(conf);
         }
+        this.createDisplay();
+        this.setPosition(pos);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -185,7 +186,7 @@ export class Element implements IElement {
 
     public getRootPosition(): Pos {
         const baseLoc = this.mDisplay.baseLoc;
-        return new Pos(this.mDisplay.x + baseLoc.x, this.mDisplay.y + baseLoc.y, 0);
+        return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
     public dispose() {

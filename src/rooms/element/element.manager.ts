@@ -18,7 +18,7 @@ export interface IElementManager {
 
 export class ElementManager extends PacketHandler implements IElementManager {
 
-  private mElements: Map<number, Element>;
+  private mElements: Map<number, Element> = new Map();
   private mGameConfig: GameConfigService;
 
   constructor(private mRoom: IRoomService) {
@@ -38,16 +38,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
   }
 
   public init() {
-    if (!this.mElements) {
-      this.mElements = new Map();
-    }
     this.mElements.clear();
   }
 
   public get(id: number): Element {
-    if (!this.mElements) {
-      return;
-    }
     const element: Element = this.mElements.get(id);
     if (!element) {
       return;
@@ -56,7 +50,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
   }
 
   public removeFromMap(id: number) {
-    if (!this.mElements) return;
     const element = this.mElements.get(id);
     if (element) {
       this.mElements.delete(id);
@@ -124,7 +117,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
   }
 
   private _add(id: number, pos: Pos) {
-    if (!this.mElements) this.mElements = new Map();
     if (!this.mElements.get(id)) {
       const ele = new Element(id, pos, this);
       this.mElements.set(ele.id || 0, ele);

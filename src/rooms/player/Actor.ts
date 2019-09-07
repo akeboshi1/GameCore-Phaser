@@ -9,12 +9,12 @@ import IActor = op_client.IActor;
 // ME 我自己
 export class Actor extends Player implements KeyboardListener {
     constructor(data: IActor, protected mElementManager: IElementManager) {
-        super(data.id, new Pos(data.x, data.y, data.z | 0), mElementManager);
+        super(data.id, null, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!
         this.mDisplayInfo = new DragonbonesModel(data);
         // this.load(dbModel);
         this.createDisplay();
-
+        this.setPosition(new Pos(data.x, data.y, data.z | 0));
         this.addDisplay();
 
         const camera: Phaser.Cameras.Scene2D.Camera | undefined = this.mElementManager.camera;

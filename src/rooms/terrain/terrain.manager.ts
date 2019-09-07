@@ -10,7 +10,7 @@ import { GameConfigService } from "../../config/gameconfig.service";
 import { Pos } from "../../utils/pos";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
-    private mTerrains: Map<number, Terrain>;
+    private mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
     private mGameConfig: GameConfigService;
 
     constructor(private mRoom: IRoomService) {
@@ -28,16 +28,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public init() {
-        if (!this.mTerrains) {
-            this.mTerrains = new Map();
-        }
         this.mTerrains.clear();
     }
 
     public get(id: number): Terrain {
-        if (!this.mTerrains) {
-            return;
-        }
         const terrain: Terrain = this.mTerrains.get(id);
         if (!terrain) {
             return;
@@ -58,13 +52,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     private onAdd(packet: PBpacket) {
-        if (!this.mTerrains) {
-            this.mTerrains = new Map();
-        }
-        if (!this.mRoom.layerManager) {
-            Console.error("layer manager is undefined");
-            return;
-        }
         if (!this.mGameConfig) {
             Console.error("gameconfig is undefined");
             return;
@@ -85,9 +72,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     private _add(id: number, pos: Pos) {
-        if (!this.mTerrains) {
-            this.mTerrains = new Map();
-        }
         if (!this.mTerrains.has(id)) {
             const terrain = new Terrain(id, pos, this);
             this.mTerrains.set(terrain.id || 0, terrain);
@@ -102,10 +86,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        let terrian: Terrain;
         for (const id of ids) {
-            terrian = this.get(id);
-            if (!terrian) continue;
             this.removeFromMap(id);
         }
     }
