@@ -53,7 +53,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     const element = this.mElements.get(id);
     if (element) {
       this.mElements.delete(id);
-      element.destory();
+      element.destroy();
       if (this.roomService) {
         this.roomService.blocks.remove(element);
       }
@@ -101,7 +101,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-    const objs: op_client.ISprite[] | undefined = content.spritePositions;
+    const objs: op_client.ISprite[] | undefined = content.sprites;
     if (!objs) return;
     const type = content.nodeType;
     if (type !== op_def.NodeType.ElementNodeType) {

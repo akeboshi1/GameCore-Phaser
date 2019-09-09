@@ -189,7 +189,7 @@ export class Element implements IElement {
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
-    public destory() {
+    public destroy() {
         if (this.mDisplay) {
             this.mDisplay.destroy();
             this.mDisplay = null;

@@ -44,7 +44,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const terrain = this.mTerrains.get(id);
         if (terrain) {
             this.mTerrains.delete(id);
-            terrain.destory();
+            terrain.destroy();
             if (this.roomService) {
                 this.roomService.blocks.remove(terrain);
             }
@@ -57,7 +57,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-        const sprites = content.spritePositions;
+        const sprites = content.sprites;
         const type = content.nodeType;
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
@@ -66,7 +66,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
-               this._add(sprite.id, new Pos(point.x, point.y, point.z));
+                this._add(sprite.id, new Pos(point.x, point.y, point.z));
             }
         }
     }

@@ -40,7 +40,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const player = this.mPlayerMap.get(id);
         if (player) {
             this.mPlayerMap.delete(id);
-            player.destory();
+            player.destroy();
             if (this.roomService) {
                 this.roomService.blocks.remove(player);
             }
@@ -55,10 +55,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mRoom.actor.stopMove();
     }
 
-    public destory() {
+    public destroy() {
         if (this.mPlayerMap) {
             this.mPlayerMap.forEach((player: Player) => {
-                player.destory();
+                player.destroy();
             });
             this.mPlayerMap = null;
         }
@@ -106,7 +106,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mPlayerMap = new Map();
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-        const sprites = content.spritePositions;
+        const sprites = content.sprites;
         const type = content.nodeType;
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;

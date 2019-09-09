@@ -112,7 +112,7 @@ export class LayerManager {
         }
     }
 
-    public destory() {
+    public destroy() {
         this._clearLayer();
     }
 

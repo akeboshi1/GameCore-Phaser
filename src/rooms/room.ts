@@ -252,14 +252,14 @@ export class Room implements IRoomService {
         }
     }
 
-    public destory() {
+    public destroy() {
         if (this.mScene) {
             this.mScene.scene.stop();
             this.mScene = null;
         }
         this.manager = null;
-        this.mPlayerManager.destory();
-        this.mLayManager.destory();
+        this.mPlayerManager.destroy();
+        this.mLayManager.destroy();
         this.mClock.destroy();
     }
 }

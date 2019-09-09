@@ -192,7 +192,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.mBackEffSprite.play(`${this.frontEffDisplayInfo.type}_${animationName}`);
     }
 
-    public destory() {
+    public destroy() {
         this.mDisplayInfo = null;
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.dispose(true);

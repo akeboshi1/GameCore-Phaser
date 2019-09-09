@@ -111,7 +111,7 @@ export class MouseManager extends PacketHandler {
         return false;
     }
 
-    public destory() {
+    public destroy() {
         this.mActivePointer = null;
         this.mScene = null;
         this.mConnect = null;
