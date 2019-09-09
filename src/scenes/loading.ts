@@ -18,4 +18,8 @@ export class LoadingScene extends Phaser.Scene {
       this.mCallBack();
     }
   }
+
+  getKey(): string {
+    return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
 }

@@ -44,7 +44,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const terrain = this.mTerrains.get(id);
         if (terrain) {
             this.mTerrains.delete(id);
-            terrain.dispose();
+            terrain.destory();
             if (this.roomService) {
                 this.roomService.blocks.remove(terrain);
             }
@@ -66,7 +66,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
-                this._add(sprite.id, new Pos(point.x, point.y, point.z));
+               this._add(sprite.id, new Pos(point.x, point.y, point.z));
             }
         }
     }

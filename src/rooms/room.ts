@@ -17,6 +17,7 @@ import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
 import {Pos} from "../utils/pos";
 import {Clock} from "./clock";
 import IActor = op_client.IActor;
+import { GameObjects } from "phaser";
 
 export interface IRoomService {
     readonly id: number;
@@ -38,6 +39,10 @@ export interface IRoomService {
 
     enter(room: op_client.IScene): void;
 
+    pause(): void;
+
+    resume(name: string | string[]): void;
+
     transformTo45(p: Pos): Pos;
 
     transformTo90(p: Pos): Pos;
@@ -45,6 +50,8 @@ export interface IRoomService {
     addToGround(element: ElementDisplay | ElementDisplay[]);
 
     addToSurface(element: ElementDisplay | ElementDisplay[]);
+
+    addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]);
 
     addMouseListen();
 
@@ -113,7 +120,7 @@ export class Room implements IRoomService {
             // init block
             this.mBlocks.int(this.mSize);
             this.mCameraService.setBounds(-100, -100, this.mSize.sceneWidth + 200, this.mSize.sceneHeight + 200, true);
-            cameras.zoom = 2;
+            // cameras.zoom = 2;
         }
 
         this.mWorld.game.scene.start(PlayScene.name, {
@@ -127,8 +134,19 @@ export class Room implements IRoomService {
         });
     }
 
+    public pause() {
+        this.mScene.scene.pause();
+        // todo launch
+    }
+
+    public resume(name: string) {
+        this.mScene.scene.resume(name);
+        this.mScene.scene.stop();
+    }
+
     public addActor(data: IActor): void {
         this.mActor = new Actor(data, this.mPlayerManager); // new Actor(data, this.mPlayerManager);
+        this.mWorld.joyStickManager.setActor(this.mActor);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {
@@ -137,6 +155,10 @@ export class Room implements IRoomService {
 
     public addToSurface(element: ElementDisplay | ElementDisplay[]) {
         this.layerManager.addToSurface(element);
+    }
+
+    public addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {
+        this.layerManager.addToUI(element);
     }
 
     public removeElement(element: ElementDisplay) {
@@ -230,14 +252,14 @@ export class Room implements IRoomService {
         }
     }
 
-    public dispose() {
+    public destory() {
         if (this.mScene) {
             this.mScene.scene.stop();
             this.mScene = null;
         }
         this.manager = null;
-        this.mPlayerManager.dispose();
-        this.mLayManager.dispose();
+        this.mPlayerManager.destory();
+        this.mLayManager.destory();
         this.mClock.destroy();
     }
 }

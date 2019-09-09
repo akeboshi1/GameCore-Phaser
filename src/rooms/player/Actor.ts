@@ -8,6 +8,7 @@ import IActor = op_client.IActor;
 
 // ME 我自己
 export class Actor extends Player implements KeyboardListener {
+    readonly GameObject: Phaser.GameObjects.GameObject;
     constructor(data: IActor, protected mElementManager: IElementManager) {
         super(data.id, null, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!

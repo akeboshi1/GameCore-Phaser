@@ -1,4 +1,4 @@
-import {IAnimationData, IFramesModel} from "./frames.model";
+import { IAnimationData, IFramesModel } from "./frames.model";
 import { ElementDisplay } from "./element.display";
 import { op_gameconfig } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
@@ -106,7 +106,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public setPosition(x?: number, y?: number, z?: number): this {
-        super.setPosition(x + this.baseLoc.x, y + this.baseLoc.y, z);
+        super.setPosition(x, y, z);
         return this;
     }
 
@@ -137,6 +137,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     private onLoadCompleteHandler() {
         if (!this.mSprite) {
             this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+            this.mSprite.x = this.baseLoc.x;
+            this.mSprite.y = this.baseLoc.y;
             this.addAt(this.mSprite, 1);
         } else {
             this.mSprite.setTexture(this.resKey);
@@ -151,6 +153,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     private onLoadFrontEffCompleteHandler() {
         if (!this.mFrontEffSprite) {
             this.mFrontEffSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+            this.mFrontEffSprite.x = this.baseLoc.x;
+            this.mFrontEffSprite.y = this.baseLoc.y;
             this.addAt(this.mFrontEffSprite, 2);
         } else {
             this.mFrontEffSprite.setTexture(this.frontEffKey);
@@ -162,6 +166,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     private onLoadBackEffCompleteHandler() {
         if (!this.mBackEffSprite) {
             this.mBackEffSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+            this.mBackEffSprite.x = this.baseLoc.x;
+            this.mBackEffSprite.y = this.baseLoc.y;
             this.addAt(this.mBackEffSprite, 0);
         } else {
             this.mBackEffSprite.setTexture(this.backEffKey);

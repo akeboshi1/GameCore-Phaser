@@ -1,15 +1,15 @@
-import {IElementManager} from "./element.manager";
-import {FramesModel, IFramesModel} from "../display/frames.model";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {FramesDisplay} from "../display/frames.display";
-import {IRoomService} from "../room";
-import {ElementDisplay} from "../display/element.display";
-import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {Tweens} from "phaser";
-import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
-import {PBpacket} from "net-socket-packet";
+import { IElementManager } from "./element.manager";
+import { FramesModel, IFramesModel } from "../display/frames.model";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { FramesDisplay } from "../display/frames.display";
+import { IRoomService } from "../room";
+import { ElementDisplay } from "../display/element.display";
+import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { Tweens } from "phaser";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { PBpacket } from "net-socket-packet";
 
 export interface IElement {
     readonly id: number;
@@ -133,12 +133,10 @@ export class Element implements IElement {
         if (!this.mDisplay) {
             return Logger.error("display is undefined");
         }
-        // TODO baseLoc不要在element里显示添加，应该到display处理
-        const baseLoc = this.mDisplay.baseLoc;
         this.mMoveData.arrivalTime = moveData.timestemp;
         this.mMoveData.destPos = new Pos(
-            Math.floor(moveData.destinationPoint3f.x + baseLoc.x)
-            , Math.floor(moveData.destinationPoint3f.y + baseLoc.y)
+            Math.floor(moveData.destinationPoint3f.x)
+            , Math.floor(moveData.destinationPoint3f.y)
         );
 
         this._doMove();
@@ -170,27 +168,28 @@ export class Element implements IElement {
 
     public setPosition(p: Pos) {
         if (this.mDisplay) {
-            // this.mDisplay.x = p.x;
-            // this.mDisplay.y = p.y;
-            // this.mDisplay.z = p.z;
             this.mDisplay.setPosition(p.x, p.y, p.z);
         }
         this.setDepth();
     }
 
     public getPosition(): Pos {
-        return new Pos(
-            this.mDisplay.x,
-            this.mDisplay.y,
-            this.mDisplay.z
-        );
+        let pos: Pos;
+        if (this.mDisplay) {
+            pos = new Pos(this.mDisplay.x,
+                this.mDisplay.y,
+                this.mDisplay.z);
+        } else {
+            pos = new Pos(0, 0, 0);
+        }
+        return pos;
     }
 
     public getRootPosition(): Pos {
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
-    public dispose() {
+    public destory() {
         if (this.mDisplay) {
             this.mDisplay.destroy();
             this.mDisplay = null;
@@ -205,8 +204,8 @@ export class Element implements IElement {
             duration: time,
             ease: "Linear",
             props: {
-                x: {value: this.mMoveData.destPos.x},
-                y: {value: this.mMoveData.destPos.y},
+                x: { value: this.mMoveData.destPos.x },
+                y: { value: this.mMoveData.destPos.y },
             },
             onComplete: (tween, targets, element) => {
                 Logger.log("complete move");

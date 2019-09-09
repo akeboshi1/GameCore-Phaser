@@ -40,7 +40,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const player = this.mPlayerMap.get(id);
         if (player) {
             this.mPlayerMap.delete(id);
-            player.dispose();
+            player.destory();
             if (this.roomService) {
                 this.roomService.blocks.remove(player);
             }
@@ -55,10 +55,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mRoom.actor.stopMove();
     }
 
-    public dispose() {
+    public destory() {
         if (this.mPlayerMap) {
             this.mPlayerMap.forEach((player: Player) => {
-                player.dispose();
+                player.destory();
             });
             this.mPlayerMap = null;
         }

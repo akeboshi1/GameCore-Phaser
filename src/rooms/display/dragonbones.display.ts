@@ -1,7 +1,7 @@
 import { op_gameconfig } from "pixelpai_proto";
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
-import {IDragonbonesModel, IAvatar} from "./dragonbones.model";
+import { IDragonbonesModel, IAvatar } from "./dragonbones.model";
 import { Logger } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
 
@@ -88,7 +88,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     private mloadingList: any[] = [];
     private mFrontEffSprite: Phaser.GameObjects.Sprite;
     private mBackEffSprite: Phaser.GameObjects.Sprite;
-    private  mBaseLoc = new Phaser.Geom.Point();
+    private mBaseLoc = new Phaser.Geom.Point();
 
     /**
      * 龙骨显示对象包围框
@@ -114,10 +114,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.mDisplayInfo = display;
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
-        // if (this.dragonBonesName) {
         if (this.scene.cache.obj.has(this.dragonBonesName)) { }
-        // }
-        // this.setInteractive({ pixelPerfect: true });
     }
 
     public loadEff(displayInfo: IFramesModel, isBack: boolean = false) {
@@ -251,6 +248,8 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.showReplaceArmatrue();
 
         // this.play("idle");
+        this.mArmatureDisplay.x = this.mBaseLoc.x;
+        this.mArmatureDisplay.y = this.mBaseLoc.y;
         this.add(this.mArmatureDisplay);
         const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
         if (!this.mClickGraphics) {

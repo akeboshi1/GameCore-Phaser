@@ -1,10 +1,10 @@
-import {WorldService} from "../game/world.service";
-import {ConnectionService} from "../net/connection.service";
-import {Room} from "./room";
-import {op_client, op_virtual_world} from "pixelpai_proto";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
+import { WorldService } from "../game/world.service";
+import { ConnectionService } from "../net/connection.service";
+import { Room } from "./room";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
 import { Logger } from "../utils/log";
 
 export interface IRoomManager {
@@ -34,9 +34,25 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return;
     }
 
+    public pasuseRoom(id: number) {
+        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
+        if (idx >= 0) {
+            const room: Room = this.mRooms[idx];
+            room.pause();
+        }
+    }
+
+    public resumeRoom(id: number) {
+        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
+        if (idx >= 0) {
+            const room: Room = this.mRooms[idx];
+            room.resume(room.scene.scene.key);
+        }
+    }
+
     public stop() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.dispose();
+            if (room) room.destory();
         });
     }
 

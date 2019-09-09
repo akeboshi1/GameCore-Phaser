@@ -1,11 +1,11 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def} from "pixelpai_proto";
-import {ConnectionService} from "../../net/connection.service";
-import {Element} from "./element";
-import {IRoomService} from "../room";
-import {Logger} from "../../utils/log";
-import {GameConfigService} from "../../config/gameconfig.service";
-import {Pos} from "../../utils/pos";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
+import { Element } from "./element";
+import { IRoomService } from "../room";
+import { Logger } from "../../utils/log";
+import { GameConfigService } from "../../config/gameconfig.service";
+import { Pos } from "../../utils/pos";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -53,7 +53,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     const element = this.mElements.get(id);
     if (element) {
       this.mElements.delete(id);
-      element.dispose();
+      element.destory();
       if (this.roomService) {
         this.roomService.blocks.remove(element);
       }
@@ -101,7 +101,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-    const objs: op_client.ISprite[]|undefined = content.spritePositions;
+    const objs: op_client.ISprite[] | undefined = content.spritePositions;
     if (!objs) return;
     const type = content.nodeType;
     if (type !== op_def.NodeType.ElementNodeType) {

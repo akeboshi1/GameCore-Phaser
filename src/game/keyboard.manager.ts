@@ -84,7 +84,7 @@ export class KeyBoardManager extends PacketHandler {
         return this.mScene !== undefined ? this.mScene.input.keyboard.enabled : false;
     }
 
-    public dispose() {
+    public destory() {
         this.removeKeyEvents();
         if (this.mKeyDownList) {
             this.mKeyDownList.length = 0;
