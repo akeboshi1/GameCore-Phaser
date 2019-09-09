@@ -77,18 +77,14 @@ export class Element implements IElement {
     protected mMoveData: MoveData = {};
 
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
-        const conf = this.mElementManager.roomService.world.gameConfigService.getObject(id);
+        const conf = this.mElementManager.roomService.world.elementStorage.getObject(id);
         // TODO init DisplayInfo
         this.mId = id;
         if (!conf) {
             Logger.error("object does not exist");
             return;
         }
-        if (conf.type === op_def.NodeType.CharacterNodeType) {
-            this.mDisplayInfo = new DragonbonesModel(conf);
-        } else {
-            this.mDisplayInfo = new FramesModel(conf);
-        }
+        this.mDisplayInfo = conf;
         this.createDisplay();
         this.setPosition(pos);
     }
@@ -228,7 +224,10 @@ export class Element implements IElement {
     }
 
     protected createDisplay(): ElementDisplay {
-        if (!this.mDisplayInfo) return;
+        if (!this.mDisplayInfo) {
+            Logger.error("displayinfo does not exist, Create display failed");
+            return;
+        }
         if (this.mDisplay) {
             return this.mDisplay;
         }

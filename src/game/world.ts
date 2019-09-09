@@ -1,28 +1,30 @@
 import "phaser";
 import "dragonBones";
-import { WorldService } from "./world.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "phaser";
-import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
+import {WorldService} from "./world.service";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Game} from "phaser";
+import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_def, op_gateway, op_virtual_world} from "pixelpai_proto";
 import Connection from "../net/connection";
-import { LoadingScene } from "../scenes/loading";
-import { PlayScene } from "../scenes/play";
-import { RoomManager } from "../rooms/room.manager";
-import { ServerAddress } from "../net/address";
-import { KeyBoardManager } from "./keyboard.manager";
-import { MouseManager } from "./mouse.manager";
-import { SelectManager } from "../rooms/player/select.manager";
-import { Size } from "../utils/size";
-import { IRoomService } from "../rooms/room";
-import { MainUIScene } from "../scenes/main.ui";
-import { Logger } from "../utils/log";
-import { GameConfigService } from "../config/gameconfig.service";
-import { GameConfigManager } from "../config/gameconfig.manager";
-import { JoyStickManager } from "./joystick.manager";
+import {LoadingScene} from "../scenes/loading";
+import {PlayScene} from "../scenes/play";
+import {RoomManager} from "../rooms/room.manager";
+import {ServerAddress} from "../net/address";
+import {KeyBoardManager} from "./keyboard.manager";
+import {MouseManager} from "./mouse.manager";
+import {SelectManager} from "../rooms/player/select.manager";
+import {Size} from "../utils/size";
+import {IRoomService} from "../rooms/room";
+import {MainUIScene} from "../scenes/main.ui";
+import {Logger} from "../utils/log";
+import {JoyStickManager} from "./joystick.manager";
+import {ILauncherConfig} from "../../launcher";
+import {ElementStorage, IElementStorage} from "./element.storage";
+import {load} from "../utils/http";
+import {ResUtils} from "../utils/resUtil";
+import {Lite} from "game-capsule";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { ILauncherConfig, GameWorld } from "../../launcher";
 
 export interface IGameConfig extends Phaser.Types.Core.GameConfig {
     auth_token: string;
@@ -35,13 +37,13 @@ export interface IGameConfig extends Phaser.Types.Core.GameConfig {
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
 // The World act as the global Phaser.World instance;
-export class World extends PacketHandler implements IConnectListener, WorldService, GameWorld {
+export class World extends PacketHandler implements IConnectListener, WorldService {
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
-    private mGameConfigService: GameConfigService;
+    private mElementStorage: IElementStorage;
     private mJoyStickManager: JoyStickManager;
     private mGameConfig: IGameConfig;
 
@@ -75,8 +77,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mSelectCharacterManager = new SelectManager(this);
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
-        this.mGameConfigService = new GameConfigManager(this);
         this.mJoyStickManager = new JoyStickManager(this);
+        this.mElementStorage = new ElementStorage();
 
         const gateway: ServerAddress = this.mGameConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
@@ -133,8 +135,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mRoomMamager;
     }
 
-    get gameConfigService(): GameConfigService | undefined {
-        return this.mGameConfigService;
+    get elementStorage(): IElementStorage | undefined {
+        return this.mElementStorage;
     }
 
     get selectCharacterManager(): SelectManager | undefined {
@@ -176,8 +178,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!configUrls || configUrls.length <= 0) {
             Logger.error(`configUrls error: , ${configUrls}, gameId: ${this.mGameConfig.game_id}`);
         }
-        this.mGameConfigService.load(content.configUrls)
-            .then(() => {
+        this.loadGameConfig(content.configUrls)
+            .then((gameConfig: Lite) => {
+                this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame();
             })
             .catch((err) => {
@@ -234,6 +237,37 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             Logger.error("connection is undefined");
         }
+    }
+
+    private loadGameConfig(paths: string[]): Promise<Lite> {
+        const promises = [];
+        for (const path of paths) {
+            promises.push(load(ResUtils.getGameConfig(path), "arraybuffer"));
+        }
+        // TODO Promise.all如果其中有一个下载失败，会返回error
+        return Promise.all(promises)
+        .then((reqs: any[]) => {
+            return this.decodeConfigs(reqs);
+        });
+    }
+
+    private decodeConfigs(reqs: any[]): Promise<Lite> {
+        return new Promise((resolve, reject) => {
+            for (const req of reqs) {
+                const arraybuffer = req.response;
+                if (arraybuffer) {
+                    try {
+                        const gameConfig = new Lite();
+                        gameConfig.deserialize(new Uint8Array(arraybuffer));
+                        resolve(gameConfig);
+                    } catch (error) {
+                        reject(error);
+                    }
+                } else {
+                    reject("error");
+                }
+            }
+        });
     }
 
     private onFocus() {

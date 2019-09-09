@@ -120,7 +120,7 @@ export class Room implements IRoomService {
             // init block
             this.mBlocks.int(this.mSize);
             this.mCameraService.setBounds(-100, -100, this.mSize.sceneWidth + 200, this.mSize.sceneHeight + 200, true);
-            // cameras.zoom = 2;
+            cameras.zoom = 2;
         }
 
         this.mWorld.game.scene.start(PlayScene.name, {
@@ -146,7 +146,6 @@ export class Room implements IRoomService {
 
     public addActor(data: IActor): void {
         this.mActor = new Actor(data, this.mPlayerManager); // new Actor(data, this.mPlayerManager);
-        this.mWorld.joyStickManager.setActor(this.mActor);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {
@@ -250,6 +249,12 @@ export class Room implements IRoomService {
         if (this.manager) {
             return this.manager.connection;
         }
+    }
+
+    public clear() {
+        this.mPlayerManager.destroy();
+        this.mElementManager.destroy();
+        this.mTerainManager.destroy();
     }
 
     public destroy() {

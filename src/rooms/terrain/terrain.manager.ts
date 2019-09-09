@@ -1,17 +1,16 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { ConnectionService } from "../../net/connection.service";
-import { op_client, op_def } from "pixelpai_proto";
-import { Terrain } from "./terrain";
-import { IRoomService } from "../room";
-import { FramesModel } from "../display/frames.model";
-import { IElementManager } from "../element/element.manager";
-import { Logger } from "../../utils/log";
-import { GameConfigService } from "../../config/gameconfig.service";
-import { Pos } from "../../utils/pos";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {ConnectionService} from "../../net/connection.service";
+import {op_client, op_def} from "pixelpai_proto";
+import {Terrain} from "./terrain";
+import {IRoomService} from "../room";
+import {IElementManager} from "../element/element.manager";
+import {Logger} from "../../utils/log";
+import {Pos} from "../../utils/pos";
+import {IElementStorage} from "../../game/element.storage";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
-    private mGameConfig: GameConfigService;
+    private mGameConfig: IElementStorage;
 
     constructor(private mRoom: IRoomService) {
         super();
@@ -23,11 +22,17 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         }
         if (this.mRoom && this.mRoom.world) {
-            this.mGameConfig = this.mRoom.world.gameConfigService;
+            this.mGameConfig = this.mRoom.world.elementStorage;
         }
     }
 
     public init() {
+        this.destroy();
+    }
+
+    public destroy() {
+        if (!this.mTerrains) return;
+        this.mTerrains.forEach((terrain) => this.removeFromMap(terrain.id));
         this.mTerrains.clear();
     }
 
@@ -106,10 +111,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.scene;
         }
-    }
-
-    get gameconfig(): GameConfigService {
-        return this.mGameConfig;
     }
 
     get camera(): Phaser.Cameras.Scene2D.Camera {

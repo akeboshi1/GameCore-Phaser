@@ -1,11 +1,11 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
-import { Element } from "./element";
-import { IRoomService } from "../room";
-import { Logger } from "../../utils/log";
-import { GameConfigService } from "../../config/gameconfig.service";
-import { Pos } from "../../utils/pos";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def} from "pixelpai_proto";
+import {ConnectionService} from "../../net/connection.service";
+import {Element} from "./element";
+import {IRoomService} from "../room";
+import {Logger} from "../../utils/log";
+import {Pos} from "../../utils/pos";
+import {IElementStorage} from "../../game/element.storage";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -14,12 +14,13 @@ export interface IElementManager {
   readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
 
   init(): void;
+  destroy();
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
 
   private mElements: Map<number, Element> = new Map();
-  private mGameConfig: GameConfigService;
+  private mGameConfig: IElementStorage;
 
   constructor(private mRoom: IRoomService) {
     super();
@@ -33,12 +34,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
       this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
     }
     if (this.mRoom && this.mRoom.world) {
-      this.mGameConfig = this.mRoom.world.gameConfigService;
+      this.mGameConfig = this.mRoom.world.elementStorage;
     }
   }
 
   public init() {
-    this.mElements.clear();
+    this.destroy();
   }
 
   public get(id: number): Element {
@@ -58,6 +59,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.roomService.blocks.remove(element);
       }
     }
+  }
+
+  public destroy() {
+    if (!this.mElements) return;
+    this.mElements.forEach((element) => this.removeFromMap(element.id));
+    this.mElements.clear();
   }
 
   get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
@@ -101,7 +108,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-    const objs: op_client.ISprite[] | undefined = content.sprites;
+    const objs: op_client.ISprite[]|undefined = content.sprites;
     if (!objs) return;
     const type = content.nodeType;
     if (type !== op_def.NodeType.ElementNodeType) {

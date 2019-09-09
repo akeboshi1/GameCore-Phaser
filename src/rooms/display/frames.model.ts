@@ -4,6 +4,7 @@ import { AnimationDataNode } from "game-capsule/lib/configobjects";
 
 export interface IFramesModel {
     readonly discriminator: string;
+    readonly key: string;
     id: number;
     avatarDir?: number;
     type?: string;
@@ -56,6 +57,13 @@ export class FramesModel implements IFramesModel {
     }
 
     public destroy() {
+    }
+
+    get key(): string {
+        if (!this.display) {
+            return "";
+        }
+        return this.display.texturePath + this.display.dataPath;
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {

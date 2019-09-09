@@ -68,7 +68,6 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
         const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
-        // TOOD move to cameras manager and not getting from document
         size.width = width;
         size.height = height;
         this.connection.send(packet);

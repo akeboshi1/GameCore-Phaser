@@ -11,7 +11,7 @@ import { Logger } from "../../utils/log";
 import {Pos} from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
-    private mPlayerMap: Map<number, Player>;
+    private mPlayerMap: Map<number, Player> = new Map();
     private mActorID: number;
     constructor(private mRoom: Room) {
         super();
@@ -21,22 +21,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public init() {
-        if (!this.mPlayerMap) {
-            this.mPlayerMap = new Map();
-        }
+        this.destroy();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
+    }
+
+    public destroy() {
+        if (!this.mPlayerMap) return;
+        this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
         this.mPlayerMap.clear();
     }
 
     public removeFromMap(id: number) {
-        if (!this.mPlayerMap) return;
-        if (this.mPlayerMap.has(id)) {
-            this.mPlayerMap.delete(id);
-        }
         const player = this.mPlayerMap.get(id);
         if (player) {
             this.mPlayerMap.delete(id);
@@ -53,15 +52,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         this.mRoom.actor.stopMove();
-    }
-
-    public destroy() {
-        if (this.mPlayerMap) {
-            this.mPlayerMap.forEach((player: Player) => {
-                player.destroy();
-            });
-            this.mPlayerMap = null;
-        }
     }
 
     public get(id: number): Player {

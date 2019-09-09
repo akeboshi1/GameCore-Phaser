@@ -4,16 +4,15 @@ import { RoomManager } from "../rooms/room.manager";
 import { SelectManager } from "../rooms/player/select.manager";
 import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
-import { GameConfigService } from "../config/gameconfig.service";
-import { IConfigObject } from "game-capsule/lib/configobjects/config_object";
 import { JoyStickManager } from "./joystick.manager";
+import {IElementStorage} from "./element.storage";
 export interface WorldService {
     connection: ConnectionService;
     readonly game: Phaser.Game;
     readonly roomManager: RoomManager;
     readonly selectCharacterManager: SelectManager;
     readonly joyStickManager: JoyStickManager;
-    readonly gameConfigService: GameConfigService;
+    readonly elementStorage: IElementStorage;
 
     getSize(): Size;
     changeRoom(room: IRoomService);

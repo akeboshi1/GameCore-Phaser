@@ -16,6 +16,7 @@ export interface IRoomManager {
 export class RoomManager extends PacketHandler implements IRoomManager {
     protected mWorld: WorldService;
     private mRooms: Room[] = [];
+    private mCurRoom: Room;
 
     constructor(world: WorldService) {
         super();
@@ -70,6 +71,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     private onEnterScene(packet: PBpacket) {
         const vw: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         let room: Room;
+        if (this.mCurRoom) {
+            this.mCurRoom.clear();
+        }
         if (this.hasRoom(vw.scene.id)) {
             room = this.getRoom(vw.scene.id);
         } else {
@@ -79,6 +83,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         room.enter(vw.scene);
         this.mWorld.changeRoom(room);
         room.addActor(vw.actor);
+        this.mCurRoom = room;
     }
 
     get world(): WorldService {
