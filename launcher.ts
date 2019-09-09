@@ -17,7 +17,7 @@ export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
 }
 
 export class Launcher {
-    get config(): IGameConfigure {
+    private get config(): IGameConfigure {
         // TODO 在这里整合app和phaser的配置文件
         // TODO 没有登陆处理
         return {
@@ -65,10 +65,11 @@ export class Launcher {
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
     private world: World;
+    private intervalId: any;
 
     constructor() {
-        setInterval(() => {
-            const xhr = new XMLHttpRequest();
+        this.intervalId = setInterval(() => {
+            const xhr = new XMLHttpRequest(); // TODO
             xhr.open("GET", "./package.json", true);
             xhr.addEventListener("load", () => {
                 const manifest = JSON.parse(xhr.response);
@@ -81,11 +82,12 @@ export class Launcher {
                 }
             });
             xhr.send(null);
-        }, 7200000);
+        }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
-            this.world = new World(this.config);
-        });
+        import(/* webpackChunkName: "game" */ "./src/game/world")
+            .then((game) => {
+                this.world = new World(this.config);
+            });
     }
 
     public onResize(width: number, height: number) {
@@ -96,5 +98,9 @@ export class Launcher {
         if (this.world) {
             this.world.resize(newWidth, newHeight);
         }
+    }
+
+    public destroy(): void {
+        if (this.intervalId) clearInterval(this.intervalId);
     }
 }

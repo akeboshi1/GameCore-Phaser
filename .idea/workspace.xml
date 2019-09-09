@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="fix clock sync">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/clock.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/clock.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -145,6 +142,11 @@
       <workItem from="1567766962609" duration="2806000" />
       <workItem from="1567825722564" duration="11022000" />
       <workItem from="1568001669375" duration="4984000" />
+      <workItem from="1568011754231" duration="1110000" />
+      <workItem from="1568014154330" duration="183000" />
+      <workItem from="1568014434021" duration="60000" />
+      <workItem from="1568014515647" duration="103000" />
+      <workItem from="1568014640474" duration="787000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
