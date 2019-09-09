@@ -1,4 +1,5 @@
 import "phaser";
+import "dragonBones";
 import {WorldService} from "./world.service";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {Game} from "phaser";
@@ -10,7 +11,7 @@ import {LoadingScene} from "../scenes/loading";
 import {PlayScene} from "../scenes/play";
 import {RoomManager} from "../rooms/room.manager";
 import {ServerAddress} from "../net/address";
-import {IGameConfigure} from "../../launcher";
+import {GameWorld, IGameConfigure} from "../../launcher";
 import {KeyBoardManager} from "./keyboard.manager";
 import {MouseManager} from "./mouse.manager";
 import {SelectManager} from "../rooms/player/select.manager";
@@ -26,7 +27,7 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
 // The World act as the global Phaser.World instance;
-export class World extends PacketHandler implements IConnectListener, WorldService {
+export class World extends PacketHandler implements IConnectListener, WorldService, GameWorld {
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mConfig: IGameConfigure | undefined;

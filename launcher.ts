@@ -1,10 +1,8 @@
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
-import "phaser";
-import "dragonBones";
+
 import {version} from "./lib/version";
-import {World} from "./src/game/world";
 import {ServerAddress} from "./src/net/address";
 
 export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
@@ -14,6 +12,10 @@ export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
     readonly server_addr: ServerAddress | undefined;
     readonly game_id: string;
     readonly virtual_world_id: string;
+}
+
+export interface GameWorld {
+    resize(newWidth, newHeight);
 }
 
 export class Launcher {
@@ -64,7 +66,7 @@ export class Launcher {
     readonly minHeight = 760;
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
-    private world: World;
+    private world: GameWorld;
     private intervalId: any;
 
     constructor() {
@@ -86,7 +88,7 @@ export class Launcher {
 
         import(/* webpackChunkName: "game" */ "./src/game/world")
             .then((game) => {
-                this.world = new World(this.config);
+                this.world = new game.World(this.config);
             });
     }
 
