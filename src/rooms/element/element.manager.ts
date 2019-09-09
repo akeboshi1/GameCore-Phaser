@@ -111,7 +111,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     for (const obj of objs) {
       point = obj.point3f;
       if (point) {
-        this._add(obj.id, new Pos(point.x, point.y, point.z));
+         this._add(obj.id, new Pos(point.x, point.y, point.z));
       }
     }
   }

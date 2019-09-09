@@ -64,6 +64,7 @@ export class LayerManager {
 
         // ==========UI层
         this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
+        this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
     public addToGround(ele: ElementDisplay | ElementDisplay[]) {
@@ -74,6 +75,10 @@ export class LayerManager {
     public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
         const tmp = [].concat(ele);
         this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
+    }
+
+    public addToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
+        this.mUILayer.add(child);
     }
 
     public addToAtmosphere(child: Phaser.GameObjects.GameObject) {

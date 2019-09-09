@@ -36,4 +36,8 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
+  getKey(): string {
+    return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
+
 }

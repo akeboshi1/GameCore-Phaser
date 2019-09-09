@@ -1,28 +1,29 @@
 import "phaser";
-import {WorldService} from "./world.service";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "phaser";
-import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_gateway, op_virtual_world, op_def} from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "phaser";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_gateway, op_virtual_world, op_def } from "pixelpai_proto";
 import Connection from "../net/connection";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
-import {RoomManager} from "../rooms/room.manager";
-import {ServerAddress} from "../net/address";
-import {IGameConfigure} from "../../launcher";
-import {KeyBoardManager} from "./keyboard.manager";
-import {MouseManager} from "./mouse.manager";
-import {SelectManager} from "../rooms/player/select.manager";
-import {Size} from "../utils/size";
-import {IRoomService} from "../rooms/room";
-import {MainUIScene} from "../scenes/main.ui";
-import {Clock} from "./clock";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
+import { RoomManager } from "../rooms/room.manager";
+import { ServerAddress } from "../net/address";
+import { IGameConfigure } from "../../launcher";
+import { KeyBoardManager } from "./keyboard.manager";
+import { MouseManager } from "./mouse.manager";
+import { SelectManager } from "../rooms/player/select.manager";
+import { Size } from "../utils/size";
+import { IRoomService } from "../rooms/room";
+import { MainUIScene } from "../scenes/main.ui";
+import { Clock } from "./clock";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import {Logger} from "../utils/log";
 import {GameConfigService} from "../config/gameconfig.service";
 import {ResUtils} from "../utils/resUtil";
 import {GameConfigManager} from "../config/gameconfig.manager";
+import { JoyStickManager } from "./joystick.manager";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -35,6 +36,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
     private mGameConfigService: GameConfigService;
+    private mJoyStickManager: JoyStickManager;
     private mSize: Size;
     private mClock: Clock;
 
@@ -71,6 +73,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mGameConfigService = new GameConfigManager(this);
+        this.mJoyStickManager = new JoyStickManager(this);
 
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
@@ -108,6 +111,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public changeRoom(room: IRoomService) {
         this.mKeyBoardManager.setRoom(room);
         this.mMouseManager.setRoom(room);
+        this.mJoyStickManager.setRoom(room);
     }
 
     public getSize(): Size {
@@ -139,6 +143,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get selectCharacterManager(): SelectManager | undefined {
         return this.selectCharacterManager;
+    }
+
+    get joyStickManager(): JoyStickManager | undefined {
+        return this.mJoyStickManager;
     }
 
     get connection(): ConnectionService {
@@ -179,6 +187,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             .catch((err) => {
                 Logger.log(err);
             });
+        // console.dir(content);
     }
 
     private createGame() {
