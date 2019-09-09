@@ -21,8 +21,18 @@
         "interface-name": false,
         "object-literal-key-quotes": false,
         "no-namespace": false,
-        "quotemark": [true, "double"],
-        "trailing-comma": [false, {"multiline": "always", "singleline": "never"}]
+        "quotemark": [
+            true,
+            "double"
+        ],
+        "trailing-comma": [
+            false,
+            {
+                "multiline": "always",
+                "singleline": "never"
+            }
+        ],
+        "only-arrow-functions": false
     },
     "rulesDirectory": [],
     "linterOptions": {

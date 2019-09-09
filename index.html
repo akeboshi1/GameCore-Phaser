@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>Tooqing-phaser3</title>
     <style>
         body {
@@ -22,19 +22,21 @@
 </head>
 
 <body>
-<div class="container">
-    <div id="game"></div>
-</div>
+    <div class="container">
+        <div id="game"></div>
+    </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        console.dir(Tooqing);
-        const launcher = Tooqing.launcher.Launcher;
-        const app = launcher.start();
-        window.addEventListener("resize", (e) => {
-            app.onResize(window.innerWidth, window.innerHeight);
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.dir(Tooqing);
+            const launcher = Tooqing.launcher.Launcher;
+            const app = launcher.start();
+            app.registerReload(window.reload);
+            window.addEventListener("resize", (e) => {
+                app.onResize(window.innerWidth, window.innerHeight);
+            });
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>

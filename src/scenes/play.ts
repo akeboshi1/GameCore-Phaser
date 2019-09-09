@@ -22,7 +22,7 @@ export class PlayScene extends Phaser.Scene {
   public create() {
     if (this.mCallBack) {
       this.mCallBack();
-      this.scene.launch(MainUIScene.name);
+      this.scene.launch(MainUIScene.name, { room: this.mRoom });
     }
     Logger.log("play created");
   }

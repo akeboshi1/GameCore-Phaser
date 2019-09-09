@@ -8,7 +8,6 @@ import { Logger } from "../utils/log";
 
 export class JoyStickManager extends PacketHandler {
     private mConnect: ConnectionService;
-    private mRoom: IRoomService;
     private mScene: Phaser.Scene;
     private mJoyStick: JoyStick;
     constructor(private worldService: WorldService) {
@@ -16,13 +15,11 @@ export class JoyStickManager extends PacketHandler {
         this.mConnect = this.worldService.connection;
     }
 
-    public setRoom(room: IRoomService) {
-        this.mRoom = room;
-        this.mScene = room.scene;
+    public setRoom(scene: Phaser.Scene) {
+        this.mScene = scene;
         if (!this.mScene) return;
-        // this.mJoyStick = new JoyStick(room);
-        // this.mJoyStick.x = 500;
-        // this.mJoyStick.y = 500;
+        const con: Phaser.GameObjects.Container = this.mScene.add.container(500, 500);
+        this.mJoyStick = new JoyStick(scene, con);
         // this.mRoom.addToUI(this.mJoyStick);
     }
 
@@ -31,14 +28,15 @@ export class JoyStickManager extends PacketHandler {
     }
 }
 
-export class JoyStick extends Phaser.GameObjects.Container {
+export class JoyStick {
     private bg: Phaser.GameObjects.Sprite;
     private btn: Phaser.GameObjects.Sprite;
     private bgRadius: number;
     private mScene: Phaser.Scene;
-    constructor(private room: IRoomService) {
-        super(room.scene);
-        this.mScene = room.scene;
+    private parentCon: Phaser.GameObjects.Container;
+    constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container) {
+        this.mScene = scene;
+        this.parentCon = parentCon;
         this.load();
     }
 
@@ -52,16 +50,12 @@ export class JoyStick extends Phaser.GameObjects.Container {
         this.bg = this.mScene.add.sprite(0, 0, "joystick", "1.png");
         this.bgRadius = this.bg.width >> 1;
         this.btn = this.mScene.add.sprite(this.bg.x, this.bg.y, "joystick", "2.png");
-        this.addAt(this.bg, 0);
-        this.addAt(this.btn, 1);
-        this.setInteractive(new Phaser.Geom.Circle(0, 0, this.bgRadius), Phaser.Geom.Circle.Contains);
+        this.parentCon.addAt(this.bg, 0);
+        this.parentCon.addAt(this.btn, 1);
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
-        this.btn.on("pointerdown", () => {
-            this.btn.setTint(0xff0000);
-        }, this);
-        this.mScene.input.on("drag", this.dragUpdate, this);
-        this.mScene.input.on("dragend", this.dragStop, this);
+        this.btn.on("drag", this.dragUpdate, this);
+        this.btn.on("dragend", this.dragStop, this);
     }
 
     private dragUpdate(pointer, dragX, dragY) {

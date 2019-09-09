@@ -2,10 +2,10 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import {version} from "./lib/version";
-import {ServerAddress} from "./src/net/address";
+import { version } from "./lib/version";
+import { ServerAddress } from "./src/net/address";
 
-export interface IGameConfigure extends Phaser.Types.Core.GameConfig {
+export interface ILauncherConfig {
     readonly auth_token: string;
     readonly token_expire: string | null;
     readonly token_fingerprint: string;
@@ -19,7 +19,7 @@ export interface GameWorld {
 }
 
 export class Launcher {
-    private get config(): IGameConfigure {
+    get config(): ILauncherConfig {
         // TODO 在这里整合app和phaser的配置文件
         // TODO 没有登陆处理
         return {
@@ -29,32 +29,6 @@ export class Launcher {
             server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
             game_id: CONFIG.game_id,
             virtual_world_id: CONFIG.virtual_world_id,
-            type: Phaser.AUTO,
-            zoom: 1,
-            width: document.documentElement.clientWidth,
-            height: document.documentElement.clientHeight,
-            parent: "game",
-            scene: [],
-            url: "",
-            disableContextMenu: true,
-            transparent: false,
-            backgroundColor: 0x0,
-            resolution: 1,
-            version: "",
-            seed: [],
-            plugins: {
-                scene: [
-                    {
-                        key: "DragonBones",
-                        plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-                        mapping: "dragonbone",
-                    }
-                ]
-            },
-            render: {
-                pixelArt: true,
-                roundPixels: true
-            }
         };
     }
 
@@ -68,6 +42,7 @@ export class Launcher {
     readonly maxHeight = 1080;
     private world: GameWorld;
     private intervalId: any;
+    private mReload: Function;
 
     constructor() {
         this.intervalId = setInterval(() => {
@@ -78,8 +53,9 @@ export class Launcher {
                 const newVersion = manifest.version;
                 if (version !== newVersion) {
                     const result = confirm("检测到新版本，是否刷新更新到最新版？");
-                    if (result) {
-                        window.location.reload();
+                    if (result && this.mReload) {
+                        this.mReload();
+                        // window.location.reload();
                     }
                 }
             });
@@ -90,6 +66,10 @@ export class Launcher {
             .then((game) => {
                 this.world = new game.World(this.config);
             });
+    }
+
+    public registerReload(func: Function) {
+        this.mReload = func;
     }
 
     public onResize(width: number, height: number) {
