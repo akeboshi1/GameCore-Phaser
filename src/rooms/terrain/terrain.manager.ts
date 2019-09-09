@@ -44,7 +44,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const terrain = this.mTerrains.get(id);
         if (terrain) {
             this.mTerrains.delete(id);
-            terrain.dispose();
+            terrain.destory();
             if (this.roomService) {
                 this.roomService.blocks.remove(terrain);
             }
