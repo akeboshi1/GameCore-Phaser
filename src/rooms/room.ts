@@ -1,20 +1,21 @@
-import { IRoomManager } from "./room.manager";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { Actor } from "./player/Actor";
-import { PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ElementDisplay } from "./display/element.display";
-import { Logger } from "../utils/log";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../utils/pos";
+import {IRoomManager} from "./room.manager";
+import {ElementManager} from "./element/element.manager";
+import {PlayerManager} from "./player/player.manager";
+import {LayerManager} from "./layer/layer.manager";
+import {TerrainManager} from "./terrain/terrain.manager";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_virtual_world} from "pixelpai_proto";
+import {IPosition45Obj, Position45} from "../utils/position45";
+import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
+import {Actor} from "./player/Actor";
+import {PBpacket} from "net-socket-packet";
+import {WorldService} from "../game/world.service";
+import {PlayScene} from "../scenes/play";
+import {ElementDisplay} from "./display/element.display";
+import {Logger} from "../utils/log";
+import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
+import {Pos} from "../utils/pos";
+import {Clock} from "./clock";
 import IActor = op_client.IActor;
 
 export interface IRoomService {
@@ -64,9 +65,11 @@ export class Room implements IRoomService {
     private mSize: IPosition45Obj;
     private mCameraService: ICameraService;
     private mBlocks: ViewblockService;
+    private mClock: Clock;
 
     constructor(private manager: IRoomManager) {
         this.mWorld = this.manager.world;
+        this.mClock = new Clock(this.mWorld.connection);
         this.mTerainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
@@ -75,8 +78,13 @@ export class Room implements IRoomService {
 
         if (this.mWorld) {
             const size = this.mWorld.getSize();
-            this.mCameraService.resize(size.width, size.height);
+            if (size) {
+                this.mCameraService.resize(size.width, size.height);
+            } else {
+                throw new Error(`World::getSize undefined!`);
+            }
         }
+        this.mClock.sync(3);
     }
 
     public enter(data: op_client.IScene): void {
@@ -163,14 +171,13 @@ export class Room implements IRoomService {
     }
 
     public update(time: number, delta: number) {
+        this.mClock.update(time, delta);
         this.mBlocks.update(time, delta);
-        if (this.layerManager) {
-            this.layerManager.update(time, delta);
-        }
+        if (this.layerManager) this.layerManager.update(time, delta);
     }
 
     public now(): number {
-        return this.mWorld.getServerTime();
+        return this.mClock.unixTime;
     }
 
     get scene(): Phaser.Scene | undefined {
@@ -231,5 +238,6 @@ export class Room implements IRoomService {
         this.manager = null;
         this.mPlayerManager.dispose();
         this.mLayManager.dispose();
+        this.mClock.destroy();
     }
 }

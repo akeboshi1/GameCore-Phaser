@@ -14,6 +14,5 @@ export interface WorldService {
     readonly gameConfigService: GameConfigService;
 
     getSize(): Size;
-    getServerTime(): number;
     changeRoom(room: IRoomService);
 }

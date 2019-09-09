@@ -4,7 +4,7 @@ import {PacketHandler, PBpacket} from "net-socket-packet";
 import {Game} from "phaser";
 import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
 import {ConnectionService} from "../net/connection.service";
-import {op_client, op_gateway, op_virtual_world, op_def} from "pixelpai_proto";
+import {op_client, op_def, op_gateway, op_virtual_world} from "pixelpai_proto";
 import Connection from "../net/connection";
 import {LoadingScene} from "../scenes/loading";
 import {PlayScene} from "../scenes/play";
@@ -17,12 +17,11 @@ import {SelectManager} from "../rooms/player/select.manager";
 import {Size} from "../utils/size";
 import {IRoomService} from "../rooms/room";
 import {MainUIScene} from "../scenes/main.ui";
-import {Clock} from "./clock";
-import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
+import {Clock} from "../rooms/clock";
 import {Logger} from "../utils/log";
 import {GameConfigService} from "../config/gameconfig.service";
-import {ResUtils} from "../utils/resUtil";
 import {GameConfigManager} from "../config/gameconfig.manager";
+import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -35,8 +34,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
     private mGameConfigService: GameConfigService;
-    private mSize: Size;
-    private mClock: Clock;
 
     constructor(config: IGameConfigure) {
         super();
@@ -55,16 +52,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
-        // ================todo opcode
-        // this.addHandlerFun(0, this.startSelectManager);
-        // this.addHandlerFun(1, this.startRoomManager);
-        // this.addHandlerFun(2, this.stopSelectManager);
-        // this.addHandlerFun(3, this.stopRoomManager);
-
-        this.mSize = new Size();
-        this.mSize.setSize(window.innerWidth, window.innerHeight);
-
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        // this.mSize = new Size(config.width, config.height);
 
         this.mRoomMamager = new RoomManager(this);
         // this.mSelectCharacterManager = new SelectManager(this);
@@ -72,6 +60,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mMouseManager = new MouseManager(this);
         this.mGameConfigService = new GameConfigManager(this);
 
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
@@ -80,9 +69,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     onConnected(connection?: SocketConnection): void {
         Logger.info(`enterVirtualWorld`);
         this.enterVirtualWorld();
-
-        // Start clock
-        this.mClock = new Clock(this.mConnection);
     }
 
     onDisConnected(connection?: SocketConnection): void {
@@ -98,10 +84,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Logger.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
-    public getServerTime(): number {
-        return this.mClock.unixTime;
-    }
-
     /**
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
@@ -110,12 +92,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mMouseManager.setRoom(room);
     }
 
-    public getSize(): Size {
-        return this.mSize;
+    public getSize(): Size | undefined {
+        if (!this.mGame) return;
+        return this.mGame.scale.gameSize;
     }
 
     public resize(width: number, height: number) {
-        this.mSize.setSize(width, height);
         if (this.mGame) {
             this.mGame.scale.resize(width, height);
         }
@@ -165,7 +147,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
-        if (this.mClock) this.mClock.sync(); // Manual sync remote time.
+        // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
@@ -193,7 +175,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        this.mSize.setSize(this.mGame.scale.width, this.mGame.scale.height);
         this.gameCreated();
     }
 

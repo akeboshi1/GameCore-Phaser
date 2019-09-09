@@ -1,18 +1,18 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {op_client, op_virtual_world} from "pixelpai_proto";
 import {ConnectionService} from "../net/connection.service";
+import {Algorithm} from "../utils/algorithm";
+import {Logger} from "../utils/log";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
-import {Algorithm} from "../utils/algorithm";
-import { Logger } from "../utils/log";
 
 const LATENCY_SAMPLES = 15; // Latency Array length
-const TICK_INTERVAL = 500; // (ms)
 const CHECK_INTERVAL = 100000; // (ms)
+const MAX_DELAY = 100;
 
 export class Clock extends PacketHandler {
 
-    get sysUnixTime(): number {
+    protected get sysUnixTime(): number {
         return new Date().getTime();
     }
 
@@ -23,44 +23,52 @@ export class Clock extends PacketHandler {
     get unixTime(): number {
         return this.mTimestamp;
     }
+
     private mTimestamp: number; // The timestamp in JavaScript is expressed in milliseconds.
-    private mTickHandler: any;
     private mConn: ConnectionService;
     private mLatency: number[] = [];
+    private mIntervalId: any;
 
     constructor(conn: ConnectionService) {
         super();
         this.mConn = conn;
         this.mConn.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
-
-        this._start();
         this._check();
     }
 
-    public sync(): void {
+    public sync(times: number = 1): void {
         if (!this.mConn) return;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
-        const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
-        ct.clientStartTs = this.sysUnixTime;
-        this.mConn.send(pkt);
+        for (let i = 0; i < times; ++i) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
+            const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
+            ct.clientStartTs = this.sysUnixTime;
+            this.mConn.send(pkt);
+        }
+    }
+
+    public update(time: number, delta: number) {
+        if (!this.mTimestamp) this.mTimestamp = time;
+        else
+            this.mTimestamp += delta;
+    }
+
+    public destroy(): void {
+        if (this.mConn) {
+            this.mConn.removePacketListener(this);
+            this.mConn = undefined;
+        }
+        if (this.mIntervalId) {
+            clearInterval(this.mIntervalId);
+        }
+        this.mLatency = undefined;
     }
 
     protected _check(): void {
         const self = this;
-        setInterval(() => {
+        this.mIntervalId = setInterval(() => {
             self.sync();
         }, CHECK_INTERVAL);
-    }
-
-    protected _start(): void {
-        const self = this;
-        this.mTickHandler = setInterval(() => {
-            if (!self.mTimestamp) {
-                self.mTimestamp = self.sysUnixTime;
-            } else
-                self.mTimestamp += TICK_INTERVAL;
-        }, TICK_INTERVAL);
     }
 
     private proof(packet: PBpacket) {
@@ -72,7 +80,7 @@ export class Clock extends PacketHandler {
             , server_run = remote_send - remote_receive
             , total_delay = (local_receive - local_send) - server_run
             , latency = Math.round(total_delay / 2);
-        let timeSychronDelta = 0;
+        let timeSychronDelta: number = 0;
         if (latency < 0) return;
 
         this.mLatency.push(latency);
@@ -82,12 +90,12 @@ export class Clock extends PacketHandler {
         const median_latency = Algorithm.median(this.mLatency);
         timeSychronDelta = median_latency + server_run;
 
-        const remote_time = remote_send - timeSychronDelta;
+        const remote_time = remote_send - timeSychronDelta; // the real remote-time.
         const mistake = Math.abs(remote_time - this.mTimestamp);
         // update timesychron
-        if (mistake > TICK_INTERVAL) {
+        if (mistake > MAX_DELAY) {
             this.mTimestamp = remote_time;
         }
-        Logger.log(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
+        Logger.debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
     }
 }
