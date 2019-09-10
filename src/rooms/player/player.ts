@@ -1,8 +1,9 @@
-import {Element} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {op_client, op_def} from "pixelpai_proto";
-import {ISprite} from "../element/sprite";
+import { Element } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { op_client, op_def } from "pixelpai_proto";
+import { ISprite } from "../element/sprite";
+import { Logger } from "../../utils/log";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -31,14 +32,13 @@ export class Player extends Element {
         if (this.getDirection() !== moveData.direction) {
             this.setDirection(moveData.direction);
         }
-        if (this.mCurState !== "walk") {
-            this.changeState("walk");
-        }
+        Logger.log("dir0:" + moveData.direction);
         super.move(moveData);
     }
 
     public setDirection(dir: number) {
         this.mDisplayInfo.avatarDir = dir;
+        Logger.log("dir1:" + dir);
     }
 
     public changeState(val?: string) {

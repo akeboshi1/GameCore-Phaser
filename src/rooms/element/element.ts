@@ -10,7 +10,7 @@ import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
-import {ISprite} from "./sprite";
+import { ISprite } from "./sprite";
 
 export interface IElement {
     readonly id: number;
@@ -110,7 +110,7 @@ export class Element implements IElement {
     }
 
     public setDirection(val: number) {
-        // if (this.mDisplayInfo && this.mDisplayInfo.avatarDir) this.mDisplayInfo.avatarDir = val;
+        if (this.mDisplayInfo && this.mDisplayInfo.avatarDir) this.mDisplayInfo.avatarDir = val;
     }
 
     public getDirection(): number {
@@ -151,7 +151,10 @@ export class Element implements IElement {
             Math.floor(moveData.destinationPoint3f.x)
             , Math.floor(moveData.destinationPoint3f.y)
         );
-
+        if (this.mCurState !== "walk") {
+            return;
+        }
+        Logger.log("walk has movedata");
         this._doMove();
     }
 
@@ -161,6 +164,8 @@ export class Element implements IElement {
     }
 
     public stopMove() {
+        this.changeState("idle");
+        Logger.log("=======================MoveStop");
         delete this.mMoveData.destPos;
         this.mMoveData.arrivalTime = 0;
         if (this.mMoveData.tweenAnim) {
@@ -180,9 +185,6 @@ export class Element implements IElement {
             direction: this.dir
         };
         this.mElementManager.connection.send(pkt);
-        // this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
-        this.changeState("idle");
-        Logger.log("=======================MoveStop");
     }
 
     public setPosition(p: Pos) {
@@ -217,9 +219,15 @@ export class Element implements IElement {
 
     protected _doMove() {
         if (!this.mMoveData.destPos || this.mCurState !== "walk") {
+            Logger.log("stopDoMove");
             return;
         }
         const tw: Tweens.Tween = this.mMoveData.tweenAnim;
+
+        if (tw) {
+            tw.stop();
+            tw.remove();
+        }
         const time: number = this.mMoveData.arrivalTime - this.roomService.now();
         this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
@@ -230,12 +238,18 @@ export class Element implements IElement {
                 y: { value: this.mMoveData.destPos.y },
             },
             onComplete: (tween, targets, element) => {
-                Logger.log("complete move");
-                // todo socket pos
+                Logger.log("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
+                if (this.mCurState !== "walk") {
+                    this.mMoveData.tweenAnim.stop();
+                    return;
+                }
                 this._doMove();
             },
             onUpdate: (tween, targets, element) => {
-                Logger.log(this.mDisplay.x + ":" + this.mDisplay.y);
+                if (this.mCurState !== "walk") {
+                    this.mMoveData.tweenAnim.stop();
+                    return;
+                }
                 const now = this.roomService.now();
                 if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
                     this.setDepth();
@@ -244,10 +258,6 @@ export class Element implements IElement {
             },
             onCompleteParams: [this],
         });
-
-        // remove old one;
-        if (tw) tw.remove();
-
     }
 
     protected createDisplay(): ElementDisplay {
