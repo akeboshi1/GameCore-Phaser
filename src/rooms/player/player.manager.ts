@@ -1,12 +1,12 @@
-import {IElementManager} from "../element/element.manager";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def} from "pixelpai_proto";
-import {ConnectionService} from "../../net/connection.service";
-import {Player} from "./player";
-import {IRoomService, Room} from "../room";
-import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
-import {ISprite, Sprite} from "../element/sprite";
+import { IElementManager } from "../element/element.manager";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
+import { Player } from "./player";
+import { IRoomService, Room } from "../room";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { ISprite, Sprite } from "../element/sprite";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
@@ -90,7 +90,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const position of positions) {
             player = this.mPlayerMap.get(position.id);
             if (!player) {
-                continue;
+                if (position.id === this.mRoom.actor.id) {
+                    player = this.mRoom.actor;
+                } else {
+                    continue;
+                }
             }
             point = position.point3f;
             player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
