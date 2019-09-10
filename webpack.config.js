@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const TSLintPlugin = require("tslint-webpack-plugin");
+const appVer = require('./version');
 
 module.exports = {
     entry: {
@@ -15,10 +16,10 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'dist/'),
         filename: "[name].js",
-        chunkFilename: "[hash].[name].js",
+        chunkFilename: `[name]_v${appVer}.js`,
         libraryTarget: 'umd',
         globalObject: "this",
-        library: ["Tooqing","[name]"]
+        library: ["Tooqing", "[name]"]
     },
     devtool: "source-map",
     module: {
@@ -52,7 +53,7 @@ module.exports = {
             template: path.join(__dirname, "./index.html")
         }),
         new TSLintPlugin({
-            config: path.resolve(__dirname,"./tslint.json"),
+            config: path.resolve(__dirname, "./tslint.json"),
             files: ["./src/**/*.ts"]
         })
     ],
