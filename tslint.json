@@ -32,7 +32,8 @@
                 "singleline": "never"
             }
         ],
-        "only-arrow-functions": false
+        "only-arrow-functions": false,
+        "ban-types": [true, ["Object", "Use {} instead."], ["String"]]
     },
     "rulesDirectory": [],
     "linterOptions": {
