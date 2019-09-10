@@ -84,6 +84,10 @@ export class KeyBoardManager extends PacketHandler {
         return this.mScene !== undefined ? this.mScene.input.keyboard.enabled : false;
     }
 
+    public get keyList(): Phaser.Input.Keyboard.Key[] {
+        return this.mKeyList;
+    }
+
     public destroy() {
         this.removeKeyEvents();
         if (this.mKeyDownList) {
@@ -135,11 +139,6 @@ export class KeyBoardManager extends PacketHandler {
         this.mKeyboardListeners.forEach((l: KeyboardListener) => {
             l.onKeyUp(keyArr);
         });
-
-        if (this.checkMoveKeyAllUp()) {
-            this.mRoom.playerManager.stopActorMove();
-        }
-
         // let len: number = this.mKeyDownList.length;
         // let key: Phaser.Input.Keyboard.Key;
         // let keyCode: number;
@@ -157,18 +156,6 @@ export class KeyBoardManager extends PacketHandler {
         //     }
         // }
 
-    }
-
-    private checkMoveKeyAllUp(): boolean {
-        let key: Phaser.Input.Keyboard.Key;
-        const len = this.mKeyList.length;
-        for (let i = 0; i < len; i++) {
-            key = this.mKeyList[i];
-            if (key && key.isDown) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private getKeyDowns(): number[] {

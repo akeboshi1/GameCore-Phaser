@@ -23,7 +23,6 @@ export enum PlayerState {
 }
 
 export class Player extends Element {
-    protected mCurState: string;
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         super(id, pos, mElementManager);

@@ -75,6 +75,7 @@ export class Element implements IElement {
     protected nodeType: number = op_def.NodeType.ElementNodeType;
     protected mRenderable: boolean = false;
     protected mMoveData: MoveData = {};
+    protected mCurState: string;
 
     constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
         const conf = this.mElementManager.roomService.world.elementStorage.getObject(id);
@@ -102,6 +103,7 @@ export class Element implements IElement {
     }
 
     public changeState(val?: string) {
+        this.mCurState = val;
     }
 
     public setRenderable(isRenderable: boolean): void {
@@ -138,11 +140,17 @@ export class Element implements IElement {
         this._doMove();
     }
 
+    public startMove() {
+        this.changeState("walk");
+        Logger.log("=======================MoveStart");
+    }
+
     public stopMove() {
+        delete this.mMoveData.destPos;
+        this.mMoveData.arrivalTime = 0;
         if (this.mMoveData.tweenAnim) {
-            const tw: Tweens.Tween = this.mMoveData.tweenAnim;
-            tw.stop();
-            tw.remove();
+            this.mMoveData.tweenAnim.stop();
+            this.mMoveData.tweenAnim.remove();
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -157,9 +165,9 @@ export class Element implements IElement {
             direction: this.dir
         };
         this.mElementManager.connection.send(pkt);
-        this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
-        this.changeState();
-        Logger.log("MoveStop");
+        // this.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z));
+        this.changeState("idle");
+        Logger.log("=======================MoveStop");
     }
 
     public setPosition(p: Pos) {
@@ -193,8 +201,11 @@ export class Element implements IElement {
     }
 
     protected _doMove() {
+        if (!this.mMoveData.destPos || this.mCurState !== "walk") {
+            return;
+        }
         const tw: Tweens.Tween = this.mMoveData.tweenAnim;
-        const time: number = this.roomService.now() - this.mMoveData.arrivalTime;
+        const time: number = this.mMoveData.arrivalTime - this.roomService.now();
         this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
             duration: time,
@@ -205,13 +216,13 @@ export class Element implements IElement {
             },
             onComplete: (tween, targets, element) => {
                 Logger.log("complete move");
-                element.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y));
-                this.stopMove();
+                // todo socket pos
+                this._doMove();
             },
             onUpdate: (tween, targets, element) => {
+                Logger.log(this.mDisplay.x + ":" + this.mDisplay.y);
                 const now = this.roomService.now();
                 if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
-                    element.setPosition(new Pos(this.mDisplay.x, this.mDisplay.y));
                     this.setDepth();
                     this.mMoveData.tweenLastUpdate = now;
                 }
@@ -221,6 +232,7 @@ export class Element implements IElement {
 
         // remove old one;
         if (tw) tw.remove();
+
     }
 
     protected createDisplay(): ElementDisplay {

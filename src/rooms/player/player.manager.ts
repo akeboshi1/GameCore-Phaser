@@ -8,7 +8,7 @@ import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel } from "../display/dragonbones.model";
 import { Actor } from "./Actor";
 import { Logger } from "../../utils/log";
-import {Pos} from "../../utils/pos";
+import { Pos } from "../../utils/pos";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
@@ -44,6 +44,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 this.roomService.blocks.remove(player);
             }
         }
+    }
+
+    public startActorMove() {
+        if (!this.mRoom.actor) {
+            Logger.error("MainHero miss");
+            return;
+        }
+        this.mRoom.actor.startMove();
     }
 
     public stopActorMove() {

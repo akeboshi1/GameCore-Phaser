@@ -62,7 +62,6 @@ export class Launcher {
                     const result = confirm("检测到新版本，是否刷新更新到最新版？");
                     if (result && this.mReload) {
                         this.mReload();
-                        // window.location.reload();
                     }
                 }
             });
