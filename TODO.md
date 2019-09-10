@@ -52,6 +52,7 @@ TODO List
 - [ ] resize `@404` 需和美术沟通 时间待定
 - [x] Character特效 `@gxm`周一 9月2号
 - [ ] loadingPlugin `@gxm`
+- [ ] /* WIP */ 人物、物件同步 `@404` 周四 9月12日
 
 ### UI `@404 @gxm`
   - 封装rex
@@ -71,10 +72,12 @@ TODO List
   - 公告面板
   - 排行榜和物件排行榜
   - 内购商城
-    - 内购确认框
+  - 确认框（Message Box）
   - Tooltips
+  - 角色头顶信息
   - 角色Menu
   - 角色详情
+  - VIP特效
   - 证物面板
   - 物件（storage）背包
   - 投票面板
