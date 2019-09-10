@@ -21,11 +21,13 @@ export class Viewblock {
         element.setRenderable(this.rectangle.contains(pos.x, pos.y));
     }
 
-    public remove(ele: IElement) {
+    public remove(ele: IElement): boolean {
         const index = this.mElements.indexOf(ele);
         if (index !== -1) {
             this.mElements.splice(index, 1);
+            return true;
         }
+        return false;
     }
 
     // tick running... powered by manager.

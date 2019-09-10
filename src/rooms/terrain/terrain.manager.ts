@@ -78,11 +78,11 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     private _add(sprite: ISprite) {
-        if (!this.mTerrains.has(sprite.id)) {
-            const terrain = new Terrain(sprite, this);
-            this.mTerrains.set(terrain.id || 0, terrain);
-            this.roomService.blocks.add(terrain);
-        }
+        // if (!this.mTerrains.has(sprite.id)) {
+        const terrain = new Terrain(sprite, this);
+        this.mTerrains.set(terrain.id || 0, terrain);
+        this.roomService.blocks.add(terrain);
+        // }
     }
 
     private onRemove(packet: PBpacket) {
@@ -95,6 +95,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             this.removeFromMap(id);
         }
+        Logger.log("remove terrain length: ", ids.length);
     }
 
     private onBindElement(packet: PBpacket) {

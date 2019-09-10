@@ -206,6 +206,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             this.mClickCon.destroy(true);
             this.mClickCon = null;
         }
+        super.destroy();
     }
 
     protected buildDragbones() {

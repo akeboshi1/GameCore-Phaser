@@ -38,10 +38,7 @@ export class ViewblockManager implements ViewblockService {
     public remove(e: IElement): boolean {
         if (!e) return;
         for (const block of this.mBlocks) {
-            const rect = block.rectangle;
-            const ePos = e.getPosition();
-            if (rect.contains(ePos.x, ePos.y)) {
-                block.remove(e);
+            if (block.remove(e)) {
                 return;
             }
         }

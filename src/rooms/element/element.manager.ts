@@ -126,11 +126,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     private _add(sprite: ISprite) {
-        if (!this.mElements.get(sprite.id)) {
-            const ele = new Element(sprite, this);
-            this.mElements.set(ele.id || 0, ele);
-            this.roomService.blocks.add(ele);
-        }
+        const ele = new Element(sprite, this);
+        this.mElements.set(ele.id || 0, ele);
+        this.roomService.blocks.add(ele);
     }
 
     get roomService(): IRoomService {

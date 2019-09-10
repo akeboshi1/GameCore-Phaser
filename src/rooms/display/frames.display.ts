@@ -135,6 +135,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             this.mBackEffSprite.destroy();
             this.mBackEffSprite = null;
         }
+        super.destroy();
     }
 
     private onLoadCompleteHandler() {

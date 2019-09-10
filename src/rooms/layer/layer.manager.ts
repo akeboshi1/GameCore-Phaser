@@ -2,6 +2,7 @@ import { IRoomManager } from "../room.manager";
 import { Geom } from "phaser";
 import { ElementDisplay } from "../display/element.display";
 import { Room } from "../room";
+import {Logger} from "../../utils/log";
 
 export class LayerManager {
 
@@ -70,6 +71,7 @@ export class LayerManager {
     public addToGround(ele: ElementDisplay | ElementDisplay[]) {
         const tmp = [].concat(ele);
         this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
+        Logger.log("terrain num: ", this.mGroundLayer.list.length);
     }
 
     public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
