@@ -81,14 +81,17 @@ export class Element implements IElement {
     protected mCurState: string;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.id);
-        // TODO init DisplayInfo
         this.mId = sprite.id;
-        if (!conf) {
-            Logger.error("object does not exist");
-            return;
+        if (sprite.avatar) {
+            this.mDisplayInfo = new DragonbonesModel(sprite);
+        } else {
+            const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.id);
+            if (!conf) {
+                Logger.error("object does not exist");
+                return;
+            }
+            this.mDisplayInfo = conf;
         }
-        this.mDisplayInfo = conf;
         this.createDisplay();
         this.setPosition(sprite.pos);
     }
