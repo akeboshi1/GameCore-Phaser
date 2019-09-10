@@ -5,7 +5,8 @@ import { SelectManager } from "../rooms/player/select.manager";
 import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
 import { JoyStickManager } from "./joystick.manager";
-import {IElementStorage} from "./element.storage";
+import { IElementStorage } from "./element.storage";
+import { KeyBoardManager } from "./keyboard.manager";
 export interface WorldService {
     connection: ConnectionService;
     readonly game: Phaser.Game;
@@ -13,6 +14,7 @@ export interface WorldService {
     readonly selectCharacterManager: SelectManager;
     readonly joyStickManager: JoyStickManager;
     readonly elementStorage: IElementStorage;
+    readonly keyboardManager: KeyBoardManager;
 
     getSize(): Size;
     changeRoom(room: IRoomService);

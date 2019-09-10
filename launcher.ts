@@ -2,8 +2,8 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import { version } from "./lib/version";
-import { ServerAddress } from "./src/net/address";
+import {version} from "./lib/version";
+import {ServerAddress} from "./src/net/address";
 
 export interface ILauncherConfig {
     readonly auth_token: string;
@@ -12,6 +12,8 @@ export interface ILauncherConfig {
     readonly server_addr: ServerAddress | undefined;
     readonly game_id: string;
     readonly virtual_world_id: string;
+    readonly width: number | string;
+    readonly height: number | string;
 }
 
 export interface GameWorld {
@@ -20,20 +22,11 @@ export interface GameWorld {
 
 export class Launcher {
     get config(): ILauncherConfig {
-        // TODO 在这里整合app和phaser的配置文件
-        // TODO 没有登陆处理
-        return {
-            auth_token: CONFIG.auth_token,
-            token_expire: CONFIG.token_expire,
-            token_fingerprint: CONFIG.token_fingerprint,
-            server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-            game_id: CONFIG.game_id,
-            virtual_world_id: CONFIG.virtual_world_id,
-        };
+        return this.mConfig;
     }
 
-    public static start(): Launcher {
-        return new this();
+    public static start(config?: ILauncherConfig): Launcher {
+        return new this(config);
     }
 
     readonly minWidth = 1366;
@@ -43,8 +36,22 @@ export class Launcher {
     private world: GameWorld;
     private intervalId: any;
     private mReload: Function;
+    private mConfig: ILauncherConfig = {
+        auth_token: CONFIG.auth_token,
+        token_expire: CONFIG.token_expire,
+        token_fingerprint: CONFIG.token_fingerprint,
+        server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
+        game_id: CONFIG.game_id,
+        virtual_world_id: CONFIG.virtual_world_id,
+        // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
+        width: 1280,
+        height: 720
+    };
 
-    constructor() {
+    constructor(config?: ILauncherConfig) {
+        if (config) {
+            Object.assign(this.mConfig, config);
+        }
         this.intervalId = setInterval(() => {
             const xhr = new XMLHttpRequest(); // TODO
             xhr.open("GET", "./package.json", true);
@@ -55,7 +62,6 @@ export class Launcher {
                     const result = confirm("检测到新版本，是否刷新更新到最新版？");
                     if (result && this.mReload) {
                         this.mReload();
-                        // window.location.reload();
                     }
                 }
             });

@@ -44,6 +44,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public startActorMove() {
+        if (!this.mRoom.actor) {
+            Logger.error("MainHero miss");
+            return;
+        }
+        this.mRoom.actor.startMove();
+    }
+
     public stopActorMove() {
         if (!this.mRoom.actor) {
             Logger.error("MainHero miss");

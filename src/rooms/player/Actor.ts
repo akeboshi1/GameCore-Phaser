@@ -16,6 +16,7 @@ export class Actor extends Player implements KeyboardListener {
         this.createDisplay();
         this.setPosition(sprite.pos);
         this.addDisplay();
+        this.mElementManager.roomService.world.keyboardManager.addListener(this);
 
         const camera: Phaser.Cameras.Scene2D.Camera | undefined = this.mElementManager.camera;
         if (this.mElementManager) {
@@ -33,10 +34,41 @@ export class Actor extends Player implements KeyboardListener {
     }
 
     onKeyDown(keys: number[]): void {
-        // TODO
+        if (this.checkMoveKeyDown()) {
+            this.mElementManager.roomService.playerManager.startActorMove();
+        }
     }
 
     onKeyUp(keys: number[]): void {
-        // TODO
+        if (this.checkMoveKeyAllUp()) {
+            this.mElementManager.roomService.playerManager.stopActorMove();
+        }
     }
+
+    private checkMoveKeyDown(): boolean {
+        let key: Phaser.Input.Keyboard.Key;
+        const keyList: Phaser.Input.Keyboard.Key[] = this.mElementManager.roomService.world.keyboardManager.keyList;
+        const len = keyList.length;
+        for (let i = 0; i < len; i++) {
+            key = keyList[i];
+            if (key && key.isDown) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private checkMoveKeyAllUp(): boolean {
+        let key: Phaser.Input.Keyboard.Key;
+        const keyList: Phaser.Input.Keyboard.Key[] = this.mElementManager.roomService.world.keyboardManager.keyList;
+        const len = keyList.length;
+        for (let i = 0; i < len; i++) {
+            key = keyList[i];
+            if (key && key.isDown) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
