@@ -1,14 +1,12 @@
-import { IElementManager } from "../element/element.manager";
-import { PBpacket, PacketHandler } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
-import { Player } from "./player";
-import { Room, IRoomService } from "../room";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel } from "../display/dragonbones.model";
-import { Actor } from "./Actor";
-import { Logger } from "../../utils/log";
+import {IElementManager} from "../element/element.manager";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def} from "pixelpai_proto";
+import {ConnectionService} from "../../net/connection.service";
+import {Player} from "./player";
+import {IRoomService, Room} from "../room";
+import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
+import {ISprite, Sprite} from "../element/sprite";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
@@ -104,14 +102,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         let point: op_def.IPBPoint3f;
         for (const sprite of sprites) {
             point = sprite.point3f;
-            this._add(sprite.id, new Pos(point.x, point.y, point.z));
+            this._add(new Sprite(sprite));
         }
     }
 
-    private _add(id: number, pos: Pos) {
+    private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
-        if (!this.mPlayerMap.has(id)) {
-            const player = new Player(id, pos, this);
+        if (!this.mPlayerMap.has(sprite.id)) {
+            const player = new Player(sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
             this.roomService.blocks.add(player);
         }

@@ -1,5 +1,3 @@
-import {op_gameconfig, op_client} from "pixelpai_proto";
-
 export interface IDragonbonesModel {
     readonly discriminator: string;
     id: number;
@@ -10,7 +8,7 @@ export interface IDragonbonesModel {
 }
 
 export interface IAvatar {
-    id: number;
+    id: string;
     dirable?: (number[]|null);
     headBaseId?: (string|null);
     headHairId?: (string|null);
@@ -52,7 +50,8 @@ export class DragonbonesModel implements IDragonbonesModel {
 
     constructor(data: any) {
         if (data) {
-            this.setInfo(data);
+            this.id = data.id;
+            this.avatar = data.avatar;
         }
     }
 

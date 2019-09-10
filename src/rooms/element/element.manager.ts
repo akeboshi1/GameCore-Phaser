@@ -6,6 +6,7 @@ import {IRoomService} from "../room";
 import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
 import {IElementStorage} from "../../game/element.storage";
+import {ISprite, Sprite} from "./sprite";
 
 export interface IElementManager {
   readonly connection: ConnectionService | undefined;
@@ -118,14 +119,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
     for (const obj of objs) {
       point = obj.point3f;
       if (point) {
-        this._add(obj.id, new Pos(point.x, point.y, point.z));
+        this._add(new Sprite(obj), new Pos(point.x, point.y, point.z));
       }
     }
   }
 
-  private _add(id: number, pos: Pos) {
-    if (!this.mElements.get(id)) {
-      const ele = new Element(id, pos, this);
+  private _add(sprite: ISprite, pos: Pos) {
+    if (!this.mElements.get(sprite.id)) {
+      const ele = new Element(sprite, this);
       this.mElements.set(ele.id || 0, ele);
       this.roomService.blocks.add(ele);
     }

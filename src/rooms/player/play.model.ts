@@ -1,155 +1,46 @@
-import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-import IActor = op_client.IActor;
-import { SlotInfo } from "./slot.info";
+import {ISprite} from "../element/sprite";
+import {op_client} from "pixelpai_proto";
+import {Pos} from "../../utils/pos";
+import {IAvatar} from "../display/dragonbones.model";
 
-// TODO 把这个类删掉， 管理Avatar 数据的功能移动到 ../display/dragonbones.model.ts;
-export class PlayerModel implements IActor {
-    /** Character id. */
-    public id: number;
-
-    /** Character name. */
-    public name: string;
-
-    public nickname: string;
-
-    /** Character maxNum. */
-    public maxNum: number;
-
-    /** Character camp. */
-    public camp: string;
-
-    public avatar?: (op_gameconfig.IAvatar | null);
-
-    /** Character attributes. */
-    public attributes: op_gameconfig.IAttribute[];
-
-    /** Character package. */
-    public package: op_gameconfig.IPackage[];
-
-    /** Character sceneId. */
-    public sceneId: number;
-
-    /** Character x. */
-    public x: number;
-
-    /** Character y. */
-    public y: number;
-
-    /** Character z. */
-    public z: number;
-
-    /** Character avatarDir. */
-    public avatarDir: number;
-
-    /** Character walkableArea. */
-    public walkableArea: string;
-
-    /** Character collisionArea. */
-    public collisionArea: string;
-
-    /** Character originPoint. */
-    public originPoint: number[];
-
-    /** Character walkOriginPoint. */
-    public walkOriginPoint: number[];
-
-    /** Actor slot */
-    public slot?: (op_gameconfig.ISlot[] | null);
-
-    public uuid = 0; // 玩家ID
-
-    public displayBadgeCards: op_def.IBadgeCard[];
-
-    protected mOriginWalkPoint: Phaser.Geom.Point;
-    protected mOriginCollisionPoint: Phaser.Geom.Point;
-    public constructor() {
+export class ActorModel implements ISprite {
+    private mID: number;
+    private mPos: Pos;
+    private mAvatar: IAvatar;
+    private mCurrentAnimationName: string;
+    private mDirection: number;
+    private mBindID: number;
+    constructor(actor: op_client.IActor) {
+        this.mID = actor.id;
+        this.mPos = new Pos(actor.x, actor.y, actor.z || 0);
+        if (actor.avatar) {
+            this.mAvatar = { id: actor.avatar.id };
+            this.mAvatar = Object.assign(this.mAvatar, actor.avatar);
+        }
+        this.mDirection = actor.avatarDir;
     }
 
-    public setInfo(obj: any): void {
-        let value: any;
-        for (const key in obj) {
-            value = obj[key];
-            if (value) {
-                this[key] = value;
-            }
-        }
+    get id(): number {
+        return this.mID;
     }
 
-    public getSlots(): SlotInfo[] {
-        if (this.slot === undefined) return null;
-        const len = this.slot.length;
-        let info: SlotInfo;
-        let attri: op_gameconfig.IAttribute;
-        const slots: SlotInfo[] = [];
-        for (let i = 0; i < len; i++) {
-            info = new SlotInfo();
-            attri = this.getAttriByKey(this.slot[i].bondAttrCurkey);
-            info.bondAttrCur = attri.intVal;
-            attri = this.getAttriByKey(this.slot[i].bondAttrMaxkey);
-            info.bondAttrMax = attri.intVal;
-            info.bondName = this.slot[i].bondName;
-            info.color = this.slot[i].color;
-            slots.push(info);
-        }
-        return slots;
+    get pos(): Pos {
+        return  this.mPos;
     }
 
-    public getSlotByName(name: string): SlotInfo {
-        if (this.slot === undefined) return null;
-        const len = this.slot.length;
-        let info: SlotInfo;
-        let attri: op_gameconfig.IAttribute;
-        for (let i = 0; i < len; i++) {
-            if (this.slot[i].bondName === name) {
-                info = new SlotInfo();
-                attri = this.getAttriByKey(this.slot[i].bondAttrCurkey);
-                info.bondAttrCur = attri.intVal;
-                attri = this.getAttriByKey(this.slot[i].bondAttrMaxkey);
-                info.bondAttrMax = attri.intVal;
-                info.bondName = this.slot[i].bondName;
-                info.color = this.slot[i].color;
-                return info;
-            }
-        }
-        return null;
+    get avatar(): IAvatar {
+        return this.mAvatar;
     }
 
-    public getAttriByKey(key: string): op_gameconfig.IAttribute {
-        if (this.attributes === undefined) return null;
-        const len = this.attributes.length;
-        for (let i = 0; i < len; i++) {
-            if (this.attributes[i].name === key) {
-                return this.attributes[i];
-            }
-        }
-        return null;
+    get currentAnimationName(): string {
+        return this.mCurrentAnimationName;
     }
 
-    public get originCollisionPoint(): Phaser.Geom.Point {
-        return this.mOriginCollisionPoint;
+    get direction(): number {
+        return this.mDirection;
     }
 
-    public get originWalkPoint(): Phaser.Geom.Point {
-        return this.mOriginWalkPoint;
-    }
-
-    public setOriginCollisionPoint(value: number[] | null): void {
-        if (this.mOriginCollisionPoint === undefined) {
-            this.mOriginCollisionPoint = new Phaser.Geom.Point();
-        }
-        if (value && value.length > 1) {
-            this.mOriginCollisionPoint.x = value[0];
-            this.mOriginCollisionPoint.y = value[1];
-        }
-    }
-
-    public setOriginWalkPoint(value: number[] | null): void {
-        if (this.mOriginWalkPoint === undefined) {
-            this.mOriginWalkPoint = new Phaser.Geom.Point();
-        }
-        if (value && value.length > 1) {
-            this.mOriginWalkPoint.x = value[0];
-            this.mOriginWalkPoint.y = value[1];
-        }
+    get bindID(): number {
+        return this.mBindID;
     }
 }

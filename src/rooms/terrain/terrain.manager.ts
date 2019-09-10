@@ -5,8 +5,8 @@ import {Terrain} from "./terrain";
 import {IRoomService} from "../room";
 import {IElementManager} from "../element/element.manager";
 import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
 import {IElementStorage} from "../../game/element.storage";
+import {ISprite, Sprite} from "../element/sprite";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
@@ -19,6 +19,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.connection.addPacketListener(this);
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_BIND_ID, this.onBindElement);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         }
         if (this.mRoom && this.mRoom.world) {
@@ -71,14 +72,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
-                this._add(sprite.id, new Pos(point.x, point.y, point.z));
+                this._add(new Sprite(sprite));
             }
         }
     }
 
-    private _add(id: number, pos: Pos) {
-        if (!this.mTerrains.has(id)) {
-            const terrain = new Terrain(id, pos, this);
+    private _add(sprite: ISprite) {
+        if (!this.mTerrains.has(sprite.id)) {
+            const terrain = new Terrain(sprite, this);
             this.mTerrains.set(terrain.id || 0, terrain);
             this.roomService.blocks.add(terrain);
         }
@@ -94,6 +95,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             this.removeFromMap(id);
         }
+    }
+
+    private onBindElement(packet: PBpacket) {
     }
 
     get connection(): ConnectionService | undefined {

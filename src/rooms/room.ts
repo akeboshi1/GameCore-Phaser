@@ -16,8 +16,8 @@ import {Logger} from "../utils/log";
 import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
 import {Pos} from "../utils/pos";
 import {Clock} from "./clock";
+import {ActorModel} from "./player/play.model";
 import IActor = op_client.IActor;
-import { GameObjects } from "phaser";
 
 export interface IRoomService {
     readonly id: number;
@@ -145,7 +145,7 @@ export class Room implements IRoomService {
     }
 
     public addActor(data: IActor): void {
-        this.mActor = new Actor(data, this.mPlayerManager); // new Actor(data, this.mPlayerManager);
+        this.mActor = new Actor(new ActorModel(data), this.mPlayerManager); // new Actor(data, this.mPlayerManager);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

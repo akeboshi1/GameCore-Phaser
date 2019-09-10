@@ -10,6 +10,7 @@ import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
+import {ISprite} from "./sprite";
 
 export interface IElement {
     readonly id: number;
@@ -17,6 +18,8 @@ export interface IElement {
     readonly y: number;
     readonly z: number;
     readonly dir: number;
+
+    play(animationName: string): void;
 
     setPosition(p: Pos): void;
 
@@ -69,28 +72,37 @@ export class Element implements IElement {
     }
 
     protected mId: number;
-    // protected mPos: Pos = new Pos();
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
     protected nodeType: number = op_def.NodeType.ElementNodeType;
     protected mRenderable: boolean = false;
+    protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
 
-    constructor(id: number, pos: Pos, protected mElementManager: IElementManager) {
-        const conf = this.mElementManager.roomService.world.elementStorage.getObject(id);
+    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
+        const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.id);
         // TODO init DisplayInfo
-        this.mId = id;
+        this.mId = sprite.id;
         if (!conf) {
             Logger.error("object does not exist");
             return;
         }
         this.mDisplayInfo = conf;
         this.createDisplay();
-        this.setPosition(pos);
+        this.setPosition(sprite.pos);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+    }
+
+    public play(animationName: string): void {
+        if (this.mAnimationName !== animationName) {
+            this.mAnimationName = animationName;
+            if (this.mDisplay) {
+                this.mDisplay.play(this.mAnimationName);
+            }
+        }
     }
 
     public setDirection(val: number) {
@@ -279,7 +291,7 @@ export class Element implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            this.mDisplay.play("idle");
+            this.mDisplay.play(this.mAnimationName);
         }
     }
 }

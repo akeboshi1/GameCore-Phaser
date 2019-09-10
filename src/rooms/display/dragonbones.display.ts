@@ -1,9 +1,8 @@
-import { op_gameconfig } from "pixelpai_proto";
-import { ResUtils } from "../../utils/resUtil";
-import { ElementDisplay } from "./element.display";
-import { IDragonbonesModel, IAvatar } from "./dragonbones.model";
-import { Logger } from "../../utils/log";
-import { IFramesModel } from "./frames.model";
+import {ResUtils} from "../../utils/resUtil";
+import {ElementDisplay} from "./element.display";
+import {IAvatar, IDragonbonesModel} from "./dragonbones.model";
+import {Logger} from "../../utils/log";
+import {IFramesModel} from "./frames.model";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",

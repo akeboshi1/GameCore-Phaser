@@ -4,13 +4,14 @@ import { FramesDisplay } from "../display/frames.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
+import {ISprite} from "../element/sprite";
 
 export class Terrain extends Element {
     protected mDisplay: FramesDisplay | undefined;
     protected nodeType: number = op_def.NodeType.TerrainNodeType;
-    constructor(id: number, pos, protected mElementManager: IElementManager) {
-        super(id, pos, mElementManager);
-        this.setPosition45(pos);
+    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
+        super(sprite, mElementManager);
+        this.setPosition45(sprite.pos);
     }
 
     public setPosition(p: Pos) {

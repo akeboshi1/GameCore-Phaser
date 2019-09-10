@@ -39,6 +39,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
                 const display = this.mDisplayInfo.display;
                 if (display) {
                     this.scene.load.atlas(this.resKey, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
+                    this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (key) => { }, this);
                     this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
                     this.scene.load.start();
                 } else {
@@ -86,7 +87,9 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     public play(animationName: string) {
         this.makeAnimations(animationName);
-        this.mSprite.play(`${this.mDisplayInfo.type}_${animationName}`);
+        if (this.mSprite) {
+            this.mSprite.play(`${this.mDisplayInfo.type}_${animationName}`);
+        }
     }
 
     public playFrontEff(animationName: string) {
