@@ -4,14 +4,13 @@ import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IConnectListener} from "./socket";
 import {Buffer} from "buffer/";
 import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
-import { Logger } from "../utils/log";
-
-const NetWorker = require("worker-loader?publicPath=/dist/&name=[hash].[name].js!./networker.ts");
+import {Logger} from "../utils/log";
 PBpacket.addProtocol(op_client);
 PBpacket.addProtocol(op_gateway);
 PBpacket.addProtocol(op_gameconfig);
 PBpacket.addProtocol(op_virtual_world);
 PBpacket.addProtocol(op_gameconfig_01);
+const NetWorker = require("worker-loader?publicPath=./&name=[hash].[name].js!./networker.ts");
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export default class Connection implements ConnectionService {
@@ -36,7 +35,8 @@ export default class Connection implements ConnectionService {
         }
     }
 
-    closeConnect(): void { }
+    closeConnect(): void {
+    }
 
     addPacketListener(listener: PacketHandler) {
         this.mPacketHandlers.push(listener);
