@@ -101,4 +101,6 @@ export class JoyStick {
         });
     }
 
+     // todo resize
+
 }

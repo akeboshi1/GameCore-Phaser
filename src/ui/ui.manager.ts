@@ -20,7 +20,7 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
-        this.mBaseFaceView = new BaseFace(scene, this.mRoom);
+        this.mBaseFaceView = new BaseFace(scene, this.worldService);
     }
 
 }
