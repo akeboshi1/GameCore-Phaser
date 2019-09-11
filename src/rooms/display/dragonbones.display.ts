@@ -1,8 +1,8 @@
-import {ResUtils} from "../../utils/resUtil";
-import {ElementDisplay} from "./element.display";
-import {IAvatar, IDragonbonesModel} from "./dragonbones.model";
-import {Logger} from "../../utils/log";
-import {IFramesModel} from "./frames.model";
+import { ResUtils } from "../../utils/resUtil";
+import { ElementDisplay } from "./element.display";
+import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
+import { Logger } from "../../utils/log";
+import { IFramesModel } from "./frames.model";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -294,22 +294,12 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     }
 
     private clearArmature() {
-        // const conList: Phaser.GameObjects.GameObject[] = this.mArmatureDisplay.getAll();
-        // const len1: number = conList.length;
-        // for (let j: number = 0; j < len1; j++) {
-        //     const obj: Phaser.GameObjects.GameObject = conList[j];
-        //     obj.setInteractive({ pixelPerfect: true });
-        //     obj.on("pointerdown", () => {
-        //         console.log("dragonBones" + j);
-        //     });
-        // }
         const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {
             const slot: dragonBones.Slot = slotList[i];
             Logger.log(i + ":" + slot.display.frame.name);
             slot.display.visible = false;
-            // slot.replaceDisplay(null);
         }
     }
 

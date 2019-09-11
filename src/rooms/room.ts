@@ -1,22 +1,22 @@
-import {IRoomManager} from "./room.manager";
-import {ElementManager} from "./element/element.manager";
-import {PlayerManager} from "./player/player.manager";
-import {LayerManager} from "./layer/layer.manager";
-import {TerrainManager} from "./terrain/terrain.manager";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_virtual_world} from "pixelpai_proto";
-import {IPosition45Obj, Position45} from "../utils/position45";
-import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
-import {Actor} from "./player/Actor";
-import {PBpacket} from "net-socket-packet";
-import {WorldService} from "../game/world.service";
-import {PlayScene} from "../scenes/play";
-import {ElementDisplay} from "./display/element.display";
-import {Logger} from "../utils/log";
-import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
-import {Pos} from "../utils/pos";
-import {Clock} from "./clock";
-import {ActorModel} from "./player/play.model";
+import { IRoomManager } from "./room.manager";
+import { ElementManager } from "./element/element.manager";
+import { PlayerManager } from "./player/player.manager";
+import { LayerManager } from "./layer/layer.manager";
+import { TerrainManager } from "./terrain/terrain.manager";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
+import { Actor } from "./player/Actor";
+import { PBpacket } from "net-socket-packet";
+import { WorldService } from "../game/world.service";
+import { PlayScene } from "../scenes/play";
+import { ElementDisplay } from "./display/element.display";
+import { Logger } from "../utils/log";
+import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
+import { Pos } from "../utils/pos";
+import { Clock } from "./clock";
+import { ActorModel } from "./player/play.model";
 import IActor = op_client.IActor;
 
 export interface IRoomService {
@@ -54,6 +54,8 @@ export interface IRoomService {
     addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]);
 
     addMouseListen();
+
+    requestActorMove(d: number, key: number[]);
 
     update(time: number, delta: number): void;
 }
@@ -142,6 +144,15 @@ export class Room implements IRoomService {
     public resume(name: string) {
         this.mScene.scene.resume(name);
         this.mScene.scene.stop();
+    }
+
+    public requestActorMove(dir: number, keyArr: number[]) {
+        this.mActor.setDirection(dir);
+        this.playerManager.startActorMove();
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+        const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+        content.keyCodes = keyArr;
+        this.world.connection.send(pkt);
     }
 
     public addActor(data: IActor): void {
