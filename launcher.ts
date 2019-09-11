@@ -16,8 +16,10 @@ export interface ILauncherConfig {
     readonly height: number | string;
 }
 
-export interface GameWorld {
+export interface GameMain {
     resize(newWidth, newHeight);
+
+    destroy(): void;
 }
 
 export class Launcher {
@@ -33,7 +35,7 @@ export class Launcher {
     readonly minHeight = 760;
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
-    private world: GameWorld;
+    private world: GameMain;
     private intervalId: any;
     private mReload: Function;
     private mConfig: ILauncherConfig = {
@@ -90,5 +92,6 @@ export class Launcher {
 
     public destroy(): void {
         if (this.intervalId) clearInterval(this.intervalId);
+        if (this.world) this.world.destroy();
     }
 }
