@@ -11,9 +11,10 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     public frontEffDisplayInfo: IFramesModel;
     public backEffDisplayInfo: IFramesModel;
     protected mBaseLoc: Phaser.Geom.Point;
-    private mSprite: Phaser.GameObjects.Sprite;
+    private mSprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
     private mFrontEffSprite: Phaser.GameObjects.Sprite;
     private mBackEffSprite: Phaser.GameObjects.Sprite;
+    private mAnimationMap = new Map<string, Phaser.Types.Animations.Animation>();
 
     constructor(protected scene: Phaser.Scene) {
         super(scene);
@@ -86,10 +87,10 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public play(animationName: string) {
-        this.makeAnimations(animationName);
-        if (this.mSprite) {
+        if (this.mSprite && this.mSprite instanceof Phaser.GameObjects.Sprite) {
             this.mSprite.play(`${this.mDisplayInfo.type}_${animationName}`);
         }
+        this.initBaseLoc(animationName);
     }
 
     public playFrontEff(animationName: string) {
@@ -110,6 +111,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     public setPosition(x?: number, y?: number, z?: number): this {
         super.setPosition(x, y, z);
+        this.setDepth(this.x + this.baseLoc.x + this.y + this.baseLoc.y);
         return this;
     }
 
@@ -139,19 +141,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     private onLoadCompleteHandler() {
-        if (!this.mSprite) {
-            this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
-            this.mSprite.x = this.baseLoc.x;
-            this.mSprite.y = this.baseLoc.y;
-            this.addAt(this.mSprite, 1);
-        } else {
-            this.mSprite.setTexture(this.resKey);
-        }
-        this.play(this.mDisplayInfo.animationName);
-        this.mSprite.setInteractive({ pixelPerfect: true });
-        this.mSprite.setData("id", this.mDisplayInfo.id);
-        // console.log(this.resKey);
-        this.emit("initialized");
+        this.makeAnimations();
+        this.createDisplay();
     }
 
     private onLoadFrontEffCompleteHandler() {
@@ -200,51 +191,89 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             animation.frameName.forEach((frame) => {
                 frames.push({ key: resKey, frame });
             });
+            const key = `${displayInfo.type}_${animation.name}`;
             const config: Phaser.Types.Animations.Animation = {
-                key: displayInfo.type + "_" + animation.name,
+                key,
                 frames,
                 frameRate: animation.frameRate,
                 repeat: -1,
             };
+            this.mAnimationMap.set(key, config);
             this.scene.anims.create(config);
             // }
         }
     }
 
-    private makeAnimations(name: string) {
+    private makeAnimations() {
+        if (!this.mDisplayInfo) return;
+        const animations = this.mDisplayInfo.animations;
+        for (const ani of animations) {
+            this.makeAnimation(ani);
+        }
+    }
+
+    private makeAnimation(animation: IAnimationData) {
         if (this.mDisplayInfo) {
-            const animations = this.mDisplayInfo.animations;
-            const resKey = this.resKey;
-            const animation = animations.find((ani) => {
-                return ani.name === name;
-            });
             if (!animation) {
                 return;
             }
-            this.initBaseLoc(animation);
             // for (const animation of animations) {
+            if (animation.frameName.length <= 1) return;
             // Didn't find a good way to create an animation with frame names without a pattern.
             const frames = [];
             animation.frameName.forEach((frame) => {
-                frames.push({ key: resKey, frame });
+                frames.push({ key: this.resKey, frame });
             });
+            const key = `${this.mDisplayInfo.type}_${animation.name}`;
             const config: Phaser.Types.Animations.Animation = {
-                key: this.mDisplayInfo.type + "_" + animation.name,
+                key,
                 frames,
                 frameRate: animation.frameRate,
                 repeat: -1,
             };
+            if (!this.mAnimationMap) this.mAnimationMap = new Map<string, Phaser.Types.Animations.Animation>();
+            this.mAnimationMap.set(key, config);
             this.scene.anims.create(config);
             // }
         }
     }
 
-    private initBaseLoc(ani: IAnimationData) {
+    private initBaseLoc(aniName: string) {
+        if (!this.mDisplayInfo) {
+            Logger.error("displayInfo does not exist");
+            return;
+        }
+        const animations = this.mDisplayInfo.animations;
+        const ani: IAnimationData = animations.find((aniData) => aniData.name === aniName);
         if (!ani || !ani.baseLoc) {
             return;
         }
         const tmp = ani.baseLoc.split(",");
         this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmp[0], 10), parseInt(tmp[1], 10));
+        if (this.mSprite) {
+            this.mSprite.x = this.baseLoc.x;
+            this.mSprite.y = this.baseLoc.y;
+        }
+    }
+
+    private createDisplay() {
+        if (!this.mSprite) {
+            if (this.mAnimationMap.size > 0) {
+                this.mSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+                // TODO play由外部调用
+            } else {
+                this.mSprite = this.scene.make.image(undefined, false);
+                this.mSprite.setTexture(this.resKey);
+            }
+            this.play(this.mDisplayInfo.animationName);
+            this.mSprite.x = this.baseLoc.x;
+            this.mSprite.y = this.baseLoc.y;
+            this.addAt(this.mSprite, 1);
+        }
+        this.mSprite.setInteractive({ pixelPerfect: true });
+        this.mSprite.setData("id", this.mDisplayInfo.id);
+        // console.log(this.resKey);
+        this.emit("initialized");
     }
 
     get resKey(): string | undefined {

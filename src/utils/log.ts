@@ -8,6 +8,10 @@ export namespace Logger {
     console.error(message, optionalParams);
   }
 
+  export function warn(message?: any, ...optionalParams: any[]) {
+    console.warn(message, optionalParams)
+  }
+
   export function debug(message?: any, ...optionalParams: any[]) {
     console.log(message, optionalParams);
   }
