@@ -31,6 +31,7 @@
     "buffer": "^5.2.1",
     "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
-    "phaser": "^3.18.1"
+    "phaser": "^3.18.1",
+    "simple-sha1": "^3.0.1"
   }
 }

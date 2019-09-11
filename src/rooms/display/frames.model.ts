@@ -1,10 +1,11 @@
 import {op_gameconfig, op_gameconfig_01} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
-import { AnimationDataNode } from "game-capsule/lib/configobjects";
+import {AnimationDataNode} from "game-capsule/lib/configobjects";
+import {sha1} from "simple-sha1";
 
 export interface IFramesModel {
     readonly discriminator: string;
-    readonly key: string;
+    readonly gene: string | undefined;
     id: number;
     avatarDir?: number;
     type?: string;
@@ -29,6 +30,7 @@ export interface IAnimationData {
 }
 
 export class FramesModel implements IFramesModel {
+    avatarDir?: number;
     readonly discriminator: string = "FramesModel";
     public id: number;
     public type: string;
@@ -59,11 +61,11 @@ export class FramesModel implements IFramesModel {
     public destroy() {
     }
 
-    get key(): string {
-        if (!this.display) {
-            return "";
+    get gene(): string | undefined {
+        if (this.display) {
+            return sha1(this.display.texturePath + this.display.dataPath);
         }
-        return this.display.texturePath + this.display.dataPath;
+        return;
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {
