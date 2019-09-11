@@ -11,7 +11,16 @@ import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
 import { ISprite } from "./sprite";
-
+export enum Direction {
+    north,
+    north_weat,
+    weat,
+    weat_south,
+    south,
+    south_east,
+    east,
+    east_north,
+}
 export interface IElement {
     readonly id: number;
     readonly x: number;
@@ -79,6 +88,7 @@ export class Element implements IElement {
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string;
+    protected mCurDir: number;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         this.mId = sprite.id;
