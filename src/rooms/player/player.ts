@@ -54,7 +54,7 @@ export class Player extends Element {
     }
 
     private mCheckStateHandle(val: string): boolean {
-        if (this.mCurState === val) return false;
+        // if (this.mCurState === val) return false;
         this.mCurState = val;
         return true;
     }

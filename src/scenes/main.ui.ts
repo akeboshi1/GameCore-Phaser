@@ -21,7 +21,7 @@ export class MainUIScene extends Phaser.Scene {
 
   public create() {
     this.fps = this.add.text(0, 0, "");
-    this.mRoom.world.joyStickManager.setRoom(this);
+    this.mRoom.world.joyStickManager.setScene(this);
   }
 
   public update() {

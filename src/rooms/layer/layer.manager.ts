@@ -71,7 +71,7 @@ export class LayerManager {
     public addToGround(ele: ElementDisplay | ElementDisplay[]) {
         const tmp = [].concat(ele);
         this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
-        Logger.log("terrain num: ", this.mGroundLayer.list.length);
+        // Logger.log("terrain num: ", this.mGroundLayer.list.length);
     }
 
     public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
