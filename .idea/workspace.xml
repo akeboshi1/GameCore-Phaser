@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="A version.js">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/version.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/net/connection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/net/connection.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/typings/global.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/typings/global.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -153,6 +149,8 @@
       <workItem from="1568014434021" duration="60000" />
       <workItem from="1568014515647" duration="103000" />
       <workItem from="1568014640474" duration="1593000" />
+      <workItem from="1568166572125" duration="420000" />
+      <workItem from="1568169900485" duration="1313000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -217,7 +215,21 @@
       <option name="project" value="LOCAL" />
       <updated>1568084467657</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="M webpack">
+      <created>1568113497554</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1568113497554</updated>
+    </task>
+    <task id="LOCAL-00011" summary="A version.js">
+      <created>1568113526140</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1568113526140</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,6 +283,8 @@
     <MESSAGE value="fix clock sync" />
     <MESSAGE value="M launcher" />
     <MESSAGE value="M gameconfig" />
-    <option name="LAST_COMMIT_MESSAGE" value="M gameconfig" />
+    <MESSAGE value="M webpack" />
+    <MESSAGE value="A version.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="A version.js" />
   </component>
 </project>
