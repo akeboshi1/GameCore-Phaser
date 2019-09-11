@@ -1,7 +1,7 @@
 import {op_gameconfig, op_gameconfig_01} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {AnimationDataNode} from "game-capsule/lib/configobjects";
-import {sha1} from "simple-sha1";
+import * as sha1 from "simple-sha1";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -37,6 +37,7 @@ export class FramesModel implements IFramesModel {
     public display: IDisplay | null;
     public animations: IAnimationData[] | null;
     public animationName: string;
+    protected mGen: string;
 
     constructor(data: any) {
         // TODO 定义IElement接口
@@ -62,10 +63,7 @@ export class FramesModel implements IFramesModel {
     }
 
     get gene(): string | undefined {
-        if (this.display) {
-            return sha1(this.display.texturePath + this.display.dataPath);
-        }
-        return;
+        return this.mGen;
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {
@@ -77,6 +75,7 @@ export class FramesModel implements IFramesModel {
             dataPath: display.dataPath,
             texturePath: display.texturePath
         };
+        this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }
 
     private setAnimationData(aniDatas: AnimationDataNode[]) {

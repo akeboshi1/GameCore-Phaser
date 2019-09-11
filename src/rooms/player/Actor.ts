@@ -19,7 +19,7 @@ export class Actor extends Player implements KeyboardListener {
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;
             if (roomService && roomService.cameraService) {
-                roomService.cameraService.startFollow(this.mDisplay.GameObject);
+                roomService.cameraService.startFollow(this.mDisplay);
             }
         }
     }

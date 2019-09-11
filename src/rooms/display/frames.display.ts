@@ -1,9 +1,10 @@
 import {IAnimationData, IFramesModel} from "./frames.model";
 import {ElementDisplay} from "./element.display";
 import {Logger} from "../../utils/log";
+import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 
 export enum DisplayField {
-    BACKEND,
+    BACKEND = 1,
     STAGE,
     FRONTEND
 }
@@ -15,7 +16,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     protected mBaseLoc: Phaser.Geom.Point;
     private mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     private mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
-    private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
+    private mHasAnimation: boolean = false;
+    // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
 
     public removeFromParent(): void {
         if (this.parentContainer) {
@@ -42,9 +44,9 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
                 Logger.error("display is undefined");
             }
             this.scene.load.atlas(data.gene, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
-            this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (key) => {
-                Logger.error(`Loading Error: key = ${key} >> ${display.texturePath}`);
-            }, this);
+            // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
+            //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
+            // }, this);
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 this.onLoadCompleted(field);
             }, this);
@@ -98,12 +100,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             repeat: -1,
         };
 
-        let map: Map<string, Phaser.Types.Animations.Animation> = this.mAnimations.get(field);
-        if (!map) {
-            map = new Map<string, Phaser.Types.Animations.Animation>();
-            this.mAnimations.set(field, map);
-        }
-        map.set(key, config);
+        this.mHasAnimation = true;
         this.scene.anims.create(config);
     }
 
@@ -124,15 +121,15 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         const data: IFramesModel = this.mDisplayDatas.get(field);
         if (!data || !data.gene) return;
         let sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
-        const map: Map<string, Phaser.Types.Animations.Animation> = this.mAnimations.get(field);
         // Create Sprite
         if (!sprite) {
-            if (map.size > 0) {
+            if (this.mHasAnimation) {
                 sprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
             } else {
                 sprite = this.scene.make.image(undefined, false);
                 sprite.setTexture(data.gene);
             }
+            this.mSprites.set(field, sprite);
             this.play(data.animationName, field);
             sprite.x = this.baseLoc.x;
             sprite.y = this.baseLoc.y;

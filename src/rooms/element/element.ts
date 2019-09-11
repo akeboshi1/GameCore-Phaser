@@ -285,7 +285,7 @@ export class Element implements IElement {
             } else {
                 this.mDisplay = new FramesDisplay(scene);
             }
-            this.mDisplay.GameObject.once("initialized", this.onDisplayReady, this);
+            this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;
@@ -312,7 +312,7 @@ export class Element implements IElement {
     protected setDepth() {
         if (this.mDisplay) {
             // const baseLoc = this.mDisplay.baseLoc;
-            this.mDisplay.GameObject.setDepth(this.mDisplay.x + this.mDisplay.y);
+            this.mDisplay.setDepth(this.mDisplay.x + this.mDisplay.y);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }

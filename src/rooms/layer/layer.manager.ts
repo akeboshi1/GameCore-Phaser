@@ -70,13 +70,15 @@ export class LayerManager {
 
     public addToGround(ele: ElementDisplay | ElementDisplay[]) {
         const tmp = [].concat(ele);
-        this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
+        this.mGroundLayer.add(tmp);
+        // this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
         // Logger.log("terrain num: ", this.mGroundLayer.list.length);
     }
 
     public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
         const tmp = [].concat(ele);
-        this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
+        this.mSurfaceLayer.add(tmp);
+        // this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
     }
 
     public addToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
