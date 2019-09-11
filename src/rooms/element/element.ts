@@ -23,9 +23,9 @@ export enum Direction {
 }
 export interface IElement {
     readonly id: number;
-    readonly x: number;
-    readonly y: number;
-    readonly z: number;
+    // readonly x: number;
+    // readonly y: number;
+    // readonly z: number;
     readonly dir: number;
 
     play(animationName: string): void;
@@ -52,17 +52,17 @@ export interface MoveData {
 
 export class Element implements IElement {
 
-    get x(): number {
-        return this.mDisplay.x;
-    }
-
-    get y(): number {
-        return this.mDisplay.y;
-    }
-
-    get z(): number {
-        return this.mDisplay.z;
-    }
+    // get x(): number {
+    //     return this.mDisplay.x;
+    // }
+    //
+    // get y(): number {
+    //     return this.mDisplay.y;
+    // }
+    //
+    // get z(): number {
+    //     return this.mDisplay.z;
+    // }
 
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
@@ -174,6 +174,10 @@ export class Element implements IElement {
     }
 
     public stopMove() {
+        if (!this.mDisplay) {
+            Logger.error(`can't stopMove, display does not exist`);
+            return;
+        }
         this.changeState("idle");
         Logger.log("=======================MoveStop");
         delete this.mMoveData.destPos;
@@ -185,12 +189,13 @@ export class Element implements IElement {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
         ct.nodeType = this.nodeType;
+        const pos = this.getPosition();
         ct.spritePositions = {
             id: this.id,
             point3f: {
-                x: this.x | 0,
-                y: this.y | 0,
-                z: this.z | 0,
+                x: pos.x,
+                y: pos.y,
+                z: pos.z,
             },
             direction: this.dir
         };

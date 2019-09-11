@@ -1,12 +1,12 @@
-import {FramesModel} from "../rooms/display/frames.model";
-import {DragonbonesModel} from "../rooms/display/dragonbones.model";
+import {FramesModel, IFramesModel} from "../rooms/display/frames.model";
+import {DragonbonesModel, IDragonbonesModel} from "../rooms/display/dragonbones.model";
 import {Lite} from "game-capsule/index";
 import {Logger} from "../utils/log";
 import {op_def} from "pixelpai_proto";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
-    getObject(id: number): FramesModel | DragonbonesModel;
+    getObject(id: number): IFramesModel | IDragonbonesModel;
 }
 
 interface IDisplayRef {

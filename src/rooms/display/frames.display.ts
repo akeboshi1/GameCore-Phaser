@@ -65,7 +65,10 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public destroy() {
-        // TODO
+        this.mSprites.forEach((sprite) => sprite.destroy());
+        this.mSprites.clear();
+
+        this.mDisplayDatas.clear();
         super.destroy();
     }
 
