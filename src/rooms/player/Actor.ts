@@ -2,19 +2,25 @@ import { Player } from "./player";
 import { IElementManager } from "../element/element.manager";
 import { KeyboardListener } from "../../game/keyboard.manager";
 import { ISprite } from "../element/sprite";
+import { JoyStickListener } from "../../game/joystick.manager";
+import { Direction } from "../element/element";
+import { IRoomService } from "../room";
 
 // ME 我自己
-export class Actor extends Player implements KeyboardListener {
+export class Actor extends Player implements KeyboardListener, JoyStickListener {
     readonly GameObject: Phaser.GameObjects.GameObject;
+    private mdownStr: string;
+    private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!
-        // this.mDisplayInfo = new DragonbonesModel(sprite);
-        // this.load(dbModel);
-        // this.createDisplay();
-        // this.setPosition(sprite.pos);
         this.addDisplay();
-        this.mElementManager.roomService.world.keyboardManager.addListener(this);
+        this.mRoom = this.mElementManager.roomService;
+        // if (PC/Phone) {
+        this.mRoom.world.keyboardManager.addListener(this);
+        // } else {
+        this.mRoom.world.joyStickManager.addListener(this);
+        // }
 
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;
@@ -40,6 +46,54 @@ export class Actor extends Player implements KeyboardListener {
         if (this.checkMoveKeyAllUp()) {
             this.mElementManager.roomService.playerManager.stopActorMove();
         }
+    }
+
+    dragUp(r: number) {
+        let dir: number;
+        let keyArr: number[] = [];
+        if (r <= 0 && r > (-Math.PI / 2)) {
+            dir = r !== 0 ? Direction.east_north : Direction.east;
+        } else if (r <= (-Math.PI / 2) && r > (-Math.PI)) {
+            dir = r !== (-Math.PI / 2) ? Direction.north_west : Direction.north;
+        } else if (r > (Math.PI / 2) && r <= Math.PI) {
+            dir = r !== Math.PI ? Direction.west_south : Direction.west;
+        } else if (r > 0 && r <= (Math.PI / 2)) {
+            dir = r !== Math.PI / 2 ? Direction.south_east : Direction.south;
+        }
+        switch (dir) {
+            case 0:
+                keyArr = [38];
+                break;
+            case 1:
+                keyArr = [37, 38];
+                break;
+            case 2:
+                keyArr = [37];
+                break;
+            case 3:
+                keyArr = [37, 40];
+                break;
+            case 4:
+                keyArr = [40];
+                break;
+            case 5:
+                keyArr = [39, 40];
+                break;
+            case 6:
+                keyArr = [39];
+                break;
+            case 7:
+                keyArr = [38, 39];
+                break;
+        }
+        if (this.mdownStr === keyArr.toString()) return;
+        this.mdownStr = keyArr.toString();
+        this.mRoom.requestActorMove(dir, keyArr);
+    }
+
+    dragStop() {
+        this.mdownStr = "";
+        this.mElementManager.roomService.playerManager.stopActorMove();
     }
 
     private checkMoveKeyDown(): boolean {

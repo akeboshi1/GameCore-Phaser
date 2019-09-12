@@ -13,9 +13,9 @@ import { PBpacket } from "net-socket-packet";
 import { ISprite } from "./sprite";
 export enum Direction {
     north,
-    north_weat,
-    weat,
-    weat_south,
+    north_west,
+    west,
+    west_south,
     south,
     south_east,
     east,
