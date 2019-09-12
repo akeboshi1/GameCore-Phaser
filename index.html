@@ -18,20 +18,35 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <div id="loading_img" class="loading"><img src="resources/LOGO_F.png" /></div>
         <div id="game"></div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             console.dir(Tooqing);
             const launcher = Tooqing.launcher.Launcher;
             const app = launcher.start();
             app.registerReload(window.reload);
+            app.registerComplete(() => {
+                const loadingImg = document.getElementById('loading_img');
+                if (loadingImg) loadingImg.remove();
+            })
             window.addEventListener("resize", (e) => {
                 app.onResize(window.innerWidth, window.innerHeight);
             });

@@ -40,9 +40,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mJoyStickManager: JoyStickManager;
     private mUiManager: UiManager;
     private mConfig: ILauncherConfig;
+    private mCallBack: Function;
 
-    constructor(config: ILauncherConfig) {
+    constructor(config: ILauncherConfig, callBack?: Function) {
         super();
+        this.mCallBack = callBack;
         this.mConfig = config;
         Logger.log(`World constructor......`);
         // TODO 检测config内的必要参数如确实抛异常.
@@ -179,6 +181,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame();
+                Logger.debug("promise");
             })
             .catch((err) => {
                 Logger.log(err);
@@ -227,6 +230,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.connection) {
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
+            if (this.mCallBack) {
+                this.mCallBack();
+            }
         } else {
             Logger.error("connection is undefined");
         }

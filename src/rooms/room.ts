@@ -18,6 +18,8 @@ import { Pos } from "../utils/pos";
 import { Clock } from "./clock";
 import { ActorModel } from "./player/play.model";
 import IActor = op_client.IActor;
+import { LoadingScene } from "../scenes/loading";
+import { MainUIScene } from "../scenes/main.ui";
 
 export interface IRoomService {
     readonly id: number;
@@ -65,6 +67,7 @@ export interface IRoomService {
 export class Room implements IRoomService {
     private mWorld: WorldService;
     private mActor: Actor;
+    private mActorData: IActor;
     private mID: number;
     private mTerainManager: TerrainManager;
     private mElementManager: ElementManager;
@@ -75,6 +78,7 @@ export class Room implements IRoomService {
     private mCameraService: ICameraService;
     private mBlocks: ViewblockService;
     private mClock: Clock;
+    private mInit: boolean = false;
 
     constructor(private manager: IRoomManager) {
         this.mWorld = this.manager.world;
@@ -125,13 +129,19 @@ export class Room implements IRoomService {
             // cameras.zoom = 2;
         }
 
-        this.mWorld.game.scene.start(PlayScene.name, {
+        this.mWorld.game.scene.start(LoadingScene.name, {
             room: this,
             callBack: () => {
-                // notify server, we are in.
-                if (this.connection) {
-                    this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-                }
+                this.mWorld.game.scene.start(PlayScene.name, {
+                    room: this,
+                    callBack: () => {
+                        // notify server, we are in.
+                        if (this.connection) {
+                            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+                        }
+                        this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
+                    },
+                });
             },
         });
     }
@@ -156,7 +166,7 @@ export class Room implements IRoomService {
     }
 
     public addActor(data: IActor): void {
-        this.mActor = new Actor(new ActorModel(data), this.mPlayerManager); // new Actor(data, this.mPlayerManager);
+        this.mActorData = data;
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {
@@ -206,6 +216,15 @@ export class Room implements IRoomService {
         this.mClock.update(time, delta);
         this.mBlocks.update(time, delta);
         if (this.layerManager) this.layerManager.update(time, delta);
+
+        // 需要知道什么时候程序已经把当前镜头下的元素全部渲染好了，再开始把loadingscene给sleep掉
+        if (time >= 10000 && !this.mInit) {
+            this.mInit = true;
+            this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
+            this.mWorld.game.scene.getScene(PlayScene.name).scene.launch(MainUIScene.name, {
+                room: this
+            });
+        }
     }
 
     public now(): number {

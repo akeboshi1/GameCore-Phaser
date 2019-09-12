@@ -2,8 +2,10 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import {version} from "./version";
-import {ServerAddress} from "./src/net/address";
+import { version } from "./version";
+import { ServerAddress } from "./src/net/address";
+import { promises } from "dns";
+import { Logger } from "./src/utils/log";
 
 export interface ILauncherConfig {
     readonly auth_token: string;
@@ -38,6 +40,7 @@ export class Launcher {
     private world: GameMain;
     private intervalId: any;
     private mReload: Function;
+    private mCompleteFunc: Function;
     private mConfig: ILauncherConfig = {
         auth_token: CONFIG.auth_token,
         token_expire: CONFIG.token_expire,
@@ -72,12 +75,16 @@ export class Launcher {
 
         import(/* webpackChunkName: "game" */ "./src/game/world")
             .then((game) => {
-                this.world = new game.World(this.config);
+                this.world = new game.World(this.config, this.mCompleteFunc);
             });
     }
 
     public registerReload(func: Function) {
         this.mReload = func;
+    }
+
+    public registerComplete(func: Function) {
+        this.mCompleteFunc = func;
     }
 
     public onResize(width: number, height: number) {
