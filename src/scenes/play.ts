@@ -1,6 +1,7 @@
 import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
+import { LoadingScene } from "./loading";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
@@ -21,9 +22,6 @@ export class PlayScene extends Phaser.Scene {
 
   public create() {
     if (this.mCallBack) {
-      this.scene.launch(MainUIScene.name, {
-        room: this.mRoom
-      });
       this.mCallBack();
     }
     Logger.log("play created");

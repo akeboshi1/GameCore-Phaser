@@ -2,8 +2,12 @@ import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
 import { WorldService } from "../game/world.service";
 import { Logger } from "../utils/log";
+import { IBaseView } from "./baseView";
 
-export class BaseFace {
+/**
+ * 下方按钮条
+ */
+export class Gongnenglan implements IBaseView {
     private mBtn: Phaser.GameObjects.Sprite;
 
     private mScene: Phaser.Scene;
@@ -17,7 +21,7 @@ export class BaseFace {
         this.createView();
     }
 
-    private createView() {
+    public createView() {
         if (!this.mScene.cache.obj.has("joystick")) {
             this.mScene.load.atlas("joystick", "resources/joystick.png", "resources/joystick.json");
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
@@ -25,6 +29,19 @@ export class BaseFace {
         } else {
             this.onLoadCompleteHandler();
         }
+    }
+
+    public show() {
+
+    }
+    public close() {
+
+    }
+    public resize() {
+
+    }
+    public destroy() {
+
     }
 
     private onLoadCompleteHandler() {

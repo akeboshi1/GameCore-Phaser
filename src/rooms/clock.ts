@@ -7,7 +7,7 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 
 const LATENCY_SAMPLES = 15; // Latency Array length
-const CHECK_INTERVAL = 100000; // (ms)
+const CHECK_INTERVAL = 10000; // (ms)
 const MAX_DELAY = 100;
 
 export class Clock extends PacketHandler {

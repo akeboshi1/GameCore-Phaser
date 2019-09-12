@@ -2,11 +2,12 @@ import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler } from "net-socket-packet";
 import { IRoomService } from "../rooms/room";
-import { BaseFace } from "./baseface";
+import { Gongnenglan } from "./gongnenglan";
+import { ChatView } from "./chatView";
 
 export class UiManager extends PacketHandler {
-    private mChatView;
-    private mBaseFaceView: BaseFace;
+    private mChatView: ChatView;
+    private mGongnenglan: Gongnenglan;
 
     private mConnect: ConnectionService;
     private mRoom: IRoomService;
@@ -20,7 +21,7 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
-        this.mBaseFaceView = new BaseFace(scene, this.worldService);
+        this.mGongnenglan = new Gongnenglan(scene, this.worldService);
     }
 
 }
