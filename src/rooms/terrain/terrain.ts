@@ -78,6 +78,18 @@ export class Terrain implements IElement {
         return this.mRenderable;
     }
 
+    public fadeIn(): void {
+        if (!this.mDisplay) return;
+        // this.mDisplay.fadeIn();
+        this.addDisplay();
+    }
+
+    public fadeOut(): void {
+        if (!this.mDisplay) return;
+        // this.mDisplay.fadeOut();
+        this.removeDisplay();
+    }
+
     public destroy() {
         if (this.mDisplay) {
             this.mDisplay.destroy();

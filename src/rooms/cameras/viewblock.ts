@@ -31,12 +31,23 @@ export class Viewblock {
     }
 
     // tick running... powered by manager.
-    public check(bound: Phaser.Geom.Rectangle) {
+    public check(bound: Phaser.Geom.Rectangle, miniViewPort: Phaser.Geom.Rectangle) {
         if (!bound) return;
         const newStat = Phaser.Geom.Intersects.RectangleToRectangle(bound, this.rectangle);
         if (this.mInCamera !== newStat) {
             for (const e of this.mElements) {
                 e.setRenderable(newStat);
+            }
+        }
+        if (!miniViewPort) return;
+        if (this.mInCamera) {
+            for (const ele of this.mElements) {
+                const pos = ele.getPosition();
+                if (!miniViewPort.contains(pos.x, pos.y)) {
+                    ele.fadeOut();
+                } else {
+                    ele.fadeIn();
+                }
             }
         }
         this.mInCamera = newStat;

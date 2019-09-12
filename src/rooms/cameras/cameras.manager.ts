@@ -3,6 +3,7 @@ import {IRoomService} from "../room";
 import {ConnectionService} from "../../net/connection.service";
 import {op_virtual_world} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
+import {IPosition45Obj} from "../../utils/position45";
 
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
@@ -13,12 +14,16 @@ export interface ICameraService {
 
     getViewPort(): Phaser.Geom.Rectangle | undefined;
 
+    getMiniViewPort(): Phaser.Geom.Rectangle | undefined;
+
     setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void;
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
     private mCamera: Phaser.Cameras.Scene2D.Camera;
+    private viewPort = new Phaser.Geom.Rectangle();
+    private miniViewPort = new Phaser.Geom.Rectangle();
 
     constructor(private mRoomService: IRoomService) {
         super();
@@ -32,11 +37,21 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         out.y -= out.height >> 1;
         out.width *= 2;
         out.height *= 2;
+        // this.viewPort.setPosition(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2);
         return out;
+    }
+
+    public getMiniViewPort(): Phaser.Geom.Rectangle {
+        if (!this.mCamera) return;
+        const worldView = this.mCamera.worldView;
+        this.miniViewPort.x = worldView.x + (worldView.width - this.miniViewPort.width >> 1);
+        this.miniViewPort.y = worldView.y + (worldView.height - this.miniViewPort.height >> 1);
+        return this.miniViewPort;
     }
 
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {
         this.mCamera = camera;
+        this.setViewPortSize();
     }
 
     public get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
@@ -71,6 +86,22 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         size.width = width;
         size.height = height;
         this.connection.send(packet);
+    }
+
+    private setViewPortSize() {
+        if (!this.mCamera) {
+            Logger.error("camera does not exist");
+            return;
+        }
+        const size = this.mRoomService.roomSize;
+        if (!size) {
+            Logger.error("room size does not exist");
+            return;
+        }
+        const colSize = 17;
+        const viewW = (colSize + colSize) * (size.tileWidth / 2);
+        const viewH = (colSize + colSize) * (size.tileHeight / 2);
+        this.miniViewPort.setSize(viewW, viewH);
     }
 
     get connection(): ConnectionService {

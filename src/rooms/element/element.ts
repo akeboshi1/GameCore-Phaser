@@ -21,6 +21,7 @@ export enum Direction {
     east,
     east_north,
 }
+
 export interface IElement {
     readonly id: number;
     // readonly x: number;
@@ -41,6 +42,10 @@ export interface IElement {
     setRenderable(isRenderable: boolean): void;
 
     getRenderable(): boolean;
+
+    fadeIn(): void;
+
+    fadeOut(): void;
 }
 
 export interface MoveData {
@@ -223,6 +228,18 @@ export class Element implements IElement {
 
     public getRootPosition(): Pos {
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
+    }
+
+    public fadeIn(): void {
+        if (!this.mDisplay) return;
+        this.addDisplay();
+        // this.mDisplay.fadeIn();
+    }
+
+    public fadeOut(): void {
+        if (!this.mDisplay) return;
+        this.removeDisplay();
+        // this.mDisplay.fadeOut();
     }
 
     public destroy() {

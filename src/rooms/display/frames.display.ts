@@ -9,6 +9,12 @@ export enum DisplayField {
     FRONTEND
 }
 
+enum FadeState {
+    HIDE,
+    SHOW,
+    Fading
+}
+
 /**
  * 序列帧显示对象
  */
@@ -17,12 +23,14 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     private mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     private mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     private mHasAnimation: boolean = false;
+    private mFadeState: FadeState = FadeState.HIDE;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
 
     public removeFromParent(): void {
         if (this.parentContainer) {
             this.parentContainer.remove(this);
         }
+        this.mFadeState = FadeState.HIDE;
     }
 
     public setPosition(x?: number, y?: number, z?: number): this {
@@ -62,6 +70,34 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             sprite.play(`${data.gene}_${animationName}`);
         }
         this.initBaseLoc(field, animationName);
+    }
+
+    public fadeIn() {
+        if (this.mFadeState === FadeState.Fading || this.mFadeState === FadeState.SHOW) return;
+        this.mFadeState = FadeState.Fading;
+        this.scene.tweens.add({
+            targets: this,
+            alpha: 1,
+            duration: 1000,
+            repeat: 1,
+            onComplete: () => {
+                this.mFadeState = FadeState.SHOW;
+            }
+        });
+    }
+
+    public fadeOut() {
+        if (this.mFadeState === FadeState.Fading || this.mFadeState === FadeState.HIDE) return;
+        this.mFadeState = FadeState.Fading;
+        this.scene.tweens.add({
+            targets: this,
+            alpha: 0,
+            duration: 1000,
+            repeat: 1,
+            onComplete: () => {
+                this.mFadeState = FadeState.HIDE;
+            }
+        });
     }
 
     public destroy() {

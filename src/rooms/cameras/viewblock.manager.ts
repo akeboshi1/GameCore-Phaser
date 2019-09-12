@@ -67,8 +67,9 @@ export class ViewblockManager implements ViewblockService {
     public update(time: number, delta: number): void {
         if (!this.mCameras) return;
         const bound: Phaser.Geom.Rectangle = this.mCameras.getViewPort();
+        const miniViewPort = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
-            block.check(bound);
+            block.check(bound, miniViewPort);
         }
     }
 }
