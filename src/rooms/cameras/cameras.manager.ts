@@ -4,6 +4,8 @@ import {ConnectionService} from "../../net/connection.service";
 import {op_virtual_world} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {IPosition45Obj} from "../../utils/position45";
+import {Rectangle45} from "../../utils/rectangle45";
+import {Pos} from "../../utils/pos";
 
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
@@ -14,7 +16,7 @@ export interface ICameraService {
 
     getViewPort(): Phaser.Geom.Rectangle | undefined;
 
-    getMiniViewPort(): Phaser.Geom.Rectangle | undefined;
+    getMiniViewPort(): Rectangle45 | undefined;
 
     setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void;
 }
@@ -41,12 +43,13 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         return out;
     }
 
-    public getMiniViewPort(): Phaser.Geom.Rectangle {
+    public getMiniViewPort(): Rectangle45 {
         if (!this.mCamera) return;
         const worldView = this.mCamera.worldView;
         this.miniViewPort.x = worldView.x + (worldView.width - this.miniViewPort.width >> 1);
         this.miniViewPort.y = worldView.y + (worldView.height - this.miniViewPort.height >> 1);
-        return this.miniViewPort;
+        const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x, this.miniViewPort.y));
+        return new Rectangle45(pos.x, pos.y, pos.x + 20, pos.y + 20);
     }
 
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {

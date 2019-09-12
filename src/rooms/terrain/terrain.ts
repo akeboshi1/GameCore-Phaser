@@ -64,6 +64,12 @@ export class Terrain implements IElement {
         return pos;
     }
 
+    public getPosition45(): Pos {
+        const pos = this.getPosition();
+        if (!pos) return;
+        return this.roomService.transformTo45(pos);
+    }
+
     public setRenderable(isRenderable: boolean): void {
         if (this.mRenderable !== isRenderable) {
             this.mRenderable = isRenderable;

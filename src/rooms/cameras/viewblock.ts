@@ -1,5 +1,6 @@
 import {Element, IElement} from "../element/element";
 import {Logger} from "../../utils/log";
+import {Rectangle45} from "../../utils/rectangle45";
 
 /**
  * 显示区域
@@ -31,7 +32,7 @@ export class Viewblock {
     }
 
     // tick running... powered by manager.
-    public check(bound: Phaser.Geom.Rectangle, miniViewPort: Phaser.Geom.Rectangle) {
+    public check(bound: Phaser.Geom.Rectangle, miniViewPort: Rectangle45) {
         if (!bound) return;
         const newStat = Phaser.Geom.Intersects.RectangleToRectangle(bound, this.rectangle);
         if (this.mInCamera !== newStat) {
@@ -42,7 +43,7 @@ export class Viewblock {
         if (!miniViewPort) return;
         if (this.mInCamera) {
             for (const ele of this.mElements) {
-                const pos = ele.getPosition();
+                const pos = ele.getPosition45();
                 if (!miniViewPort.contains(pos.x, pos.y)) {
                     ele.fadeOut();
                 } else {

@@ -35,6 +35,8 @@ export interface IElement {
 
     getPosition(): Pos;
 
+    getPosition45(): Pos;
+
     setDirection(val: number): void;
 
     getDirection(): number;
@@ -220,10 +222,14 @@ export class Element implements IElement {
             pos = new Pos(this.mDisplay.x,
                 this.mDisplay.y,
                 this.mDisplay.z);
-        } else {
-            pos = new Pos(0, 0, 0);
         }
         return pos;
+    }
+
+    public getPosition45(): Pos {
+        const pos = this.getPosition();
+        if (!pos) return;
+        return this.roomService.transformTo45(pos);
     }
 
     public getRootPosition(): Pos {
