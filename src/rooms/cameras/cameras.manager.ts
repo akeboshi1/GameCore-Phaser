@@ -48,8 +48,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const worldView = this.mCamera.worldView;
         this.miniViewPort.x = worldView.x + (worldView.width - this.miniViewPort.width >> 1);
         this.miniViewPort.y = worldView.y + (worldView.height - this.miniViewPort.height >> 1);
-        const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x, this.miniViewPort.y));
-        return new Rectangle45(pos.x, pos.y, pos.x + 20, pos.y + 20);
+        const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x + (this.miniViewPort.width >> 1) + 30, this.miniViewPort.y));
+        return new Rectangle45(pos.x, pos.y, pos.x + 21, pos.y + 21);
     }
 
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {
