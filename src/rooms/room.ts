@@ -1,25 +1,29 @@
-import { IRoomManager } from "./room.manager";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { Actor } from "./player/Actor";
-import { PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ElementDisplay } from "./display/element.display";
-import { Logger } from "../utils/log";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../utils/pos";
-import { Clock } from "./clock";
-import { ActorModel } from "./player/play.model";
+import {IRoomManager} from "./room.manager";
+import {ElementManager} from "./element/element.manager";
+import {PlayerManager} from "./player/player.manager";
+import {LayerManager} from "./layer/layer.manager";
+import {TerrainManager} from "./terrain/terrain.manager";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {IPosition45Obj, Position45} from "../utils/position45";
+import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
+import {Actor} from "./player/Actor";
+import {PBpacket} from "net-socket-packet";
+import {WorldService} from "../game/world.service";
+import {PlayScene} from "../scenes/play";
+import {ElementDisplay} from "./display/element.display";
+import {Logger} from "../utils/log";
+import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
+import {Pos} from "../utils/pos";
+import {Clock, ClockReadyListener} from "./clock";
+import {ActorModel} from "./player/play.model";
+import {LoadingScene} from "../scenes/loading";
+import {MainUIScene} from "../scenes/main.ui";
 import IActor = op_client.IActor;
-import { LoadingScene } from "../scenes/loading";
-import { MainUIScene } from "../scenes/main.ui";
+
+export interface SpriteAddCompletedListener {
+    onFullPacketReceived(sprite_t: op_def.NodeType): void;
+}
 
 export interface IRoomService {
     readonly id: number;
@@ -64,7 +68,7 @@ export interface IRoomService {
 
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
-export class Room implements IRoomService {
+export class Room implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     private mWorld: WorldService;
     private mActor: Actor;
     private mActorData: IActor;
@@ -83,7 +87,7 @@ export class Room implements IRoomService {
     constructor(private manager: IRoomManager) {
         this.mWorld = this.manager.world;
         this.mClock = new Clock(this.mWorld.connection);
-        this.mTerainManager = new TerrainManager(this);
+        this.mTerainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
         this.mCameraService = new CamerasManager(this);
@@ -97,7 +101,7 @@ export class Room implements IRoomService {
                 throw new Error(`World::getSize undefined!`);
             }
         }
-        this.mClock.sync(3);
+        this.mClock.sync();
     }
 
     public enter(data: op_client.IScene): void {
@@ -125,23 +129,41 @@ export class Room implements IRoomService {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;
             // init block
             this.mBlocks.int(this.mSize);
-            // this.mCameraService.setBounds(-100, -100, this.mSize.sceneWidth + 200, this.mSize.sceneHeight + 200, true);
-            // cameras.zoom = 2;
         }
 
-        this.mWorld.game.scene.start(LoadingScene.name, {
+        this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
+        // this.mWorld.game.scene.start(LoadingScene.name, {
+        //     room: this,
+        //     callBack: () => {
+        //         this.mWorld.game.scene.start(PlayScene.name, {
+        //             room: this,
+        //             callBack: () => {
+        //                 // notify server, we are in.
+        //                 if (this.connection) {
+        //                     this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        //                 }
+        //                 this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
+        //             },
+        //         });
+        //     },
+        // });
+        if (this.connection) {
+            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        }
+    }
+
+    public onFullPacketReceived(sprite_t: op_def.NodeType): void {
+        if (sprite_t !== op_def.NodeType.TerrainNodeType) {
+            return;
+        }
+        this.mClock.sync(3);
+    }
+
+    public onClockReady(): void {
+        this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
             callBack: () => {
-                this.mWorld.game.scene.start(PlayScene.name, {
-                    room: this,
-                    callBack: () => {
-                        // notify server, we are in.
-                        if (this.connection) {
-                            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-                        }
-                        this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
-                    },
-                });
+                // TODO
             },
         });
     }

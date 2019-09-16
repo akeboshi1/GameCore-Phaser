@@ -2,7 +2,7 @@ import {PacketHandler, PBpacket} from "net-socket-packet";
 import {ConnectionService} from "../../net/connection.service";
 import {op_client, op_def} from "pixelpai_proto";
 import {Terrain} from "./terrain";
-import {IRoomService} from "../room";
+import {IRoomService, SpriteAddCompletedListener} from "../room";
 import {IElementManager} from "../element/element.manager";
 import {Logger} from "../../utils/log";
 import {IElementStorage} from "../../game/element.storage";
@@ -11,15 +11,18 @@ import {ISprite, Sprite} from "../element/sprite";
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
     private mGameConfig: IElementStorage;
+    // add by 7 ----
+    private mPacketFrameCount: number = 0;
+    private mListener: SpriteAddCompletedListener;
+    // ---- by 7
 
-    constructor(private mRoom: IRoomService) {
+    constructor(private mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
-
+        this.mListener = listener;
         if (this.connection) {
             this.connection.addPacketListener(this);
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_BIND_ID, this.onBindElement);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         }
         if (this.mRoom && this.mRoom.world) {
@@ -58,6 +61,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     private onAdd(packet: PBpacket) {
+        this.mPacketFrameCount++;
         if (!this.mGameConfig) {
             Logger.error("gameconfig is undefined");
             return;
@@ -65,6 +69,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
         const sprites = content.sprites;
         const type = content.nodeType;
+        const pf: op_def.IPacket = content.packet;
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
@@ -75,14 +80,16 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 this._add(new Sprite(sprite));
             }
         }
+
+        if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
+            this.mListener.onFullPacketReceived(type);
+        }
     }
 
     private _add(sprite: ISprite) {
-        // if (!this.mTerrains.has(sprite.id)) {
         const terrain = new Terrain(sprite, this);
         this.mTerrains.set(terrain.id || 0, terrain);
         this.roomService.blocks.add(terrain);
-        // }
     }
 
     private onRemove(packet: PBpacket) {
@@ -96,9 +103,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.removeFromMap(id);
         }
         Logger.log("remove terrain length: ", ids.length);
-    }
-
-    private onBindElement(packet: PBpacket) {
     }
 
     get connection(): ConnectionService | undefined {

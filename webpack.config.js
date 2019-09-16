@@ -64,7 +64,7 @@ module.exports = {
         },
         contentBase: path.resolve(__dirname, './dist'),
         publicPath: '/dist',
-        host: '127.0.0.1',
+        host: '0.0.0.0',
         port: 8081,
         open: false
     }

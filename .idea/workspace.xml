@@ -3,10 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/element.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/element.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/clock.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/clock.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,6 +32,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="Git.Update.Project.Info.Tabs.Properties">
+    <option name="COLUMN_WIDTH">
+      <map>
+        <entry key="2" value="135" />
+        <entry key="3" value="207" />
+      </map>
+    </option>
+  </component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
@@ -42,7 +53,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="add_unversioned_files" value="true" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/pixelpai_proto/protocols.d.ts&#10;true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -153,7 +164,9 @@
       <workItem from="1568014515647" duration="103000" />
       <workItem from="1568014640474" duration="1593000" />
       <workItem from="1568166572125" duration="420000" />
-      <workItem from="1568169900485" duration="10916000" />
+      <workItem from="1568169900485" duration="13125000" />
+      <workItem from="1568191348183" duration="4894000" />
+      <workItem from="1568608042628" duration="12386000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -239,7 +252,21 @@
       <option name="project" value="LOCAL" />
       <updated>1568172062099</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="A element">
+      <created>1568183815090</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1568183815090</updated>
+    </task>
+    <task id="LOCAL-00014" summary="A TODO">
+      <created>1568191919273</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1568191919273</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,6 +323,8 @@
     <MESSAGE value="M webpack" />
     <MESSAGE value="A version.js" />
     <MESSAGE value="A GameMain" />
-    <option name="LAST_COMMIT_MESSAGE" value="A GameMain" />
+    <MESSAGE value="A element" />
+    <MESSAGE value="A TODO" />
+    <option name="LAST_COMMIT_MESSAGE" value="A TODO" />
   </component>
 </project>

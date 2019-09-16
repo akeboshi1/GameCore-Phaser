@@ -6,9 +6,14 @@ import {Logger} from "../utils/log";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 
-const LATENCY_SAMPLES = 15; // Latency Array length
+const LATENCY_SAMPLES = 7; // Latency Array length
+const MIN_READY_SAMPLES = 2;
 const CHECK_INTERVAL = 10000; // (ms)
 const MAX_DELAY = 100;
+
+export interface ClockReadyListener {
+    onClockReady(): void;
+}
 
 export class Clock extends PacketHandler {
 
@@ -28,12 +33,14 @@ export class Clock extends PacketHandler {
     private mConn: ConnectionService;
     private mLatency: number[] = [];
     private mIntervalId: any;
+    private mListener: ClockReadyListener;
 
-    constructor(conn: ConnectionService) {
+    constructor(conn: ConnectionService, listener?: ClockReadyListener) {
         super();
         this.mConn = conn;
         this.mConn.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
+        this.mListener = listener;
         this._check();
     }
 
@@ -96,6 +103,7 @@ export class Clock extends PacketHandler {
         if (mistake > MAX_DELAY) {
             this.mTimestamp = remote_time;
         }
+        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES) this.mListener.onClockReady();
         Logger.debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
     }
 }

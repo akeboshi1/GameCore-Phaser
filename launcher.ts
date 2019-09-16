@@ -93,7 +93,7 @@ export class Launcher {
         const newHeight = Math.min(height / scale, this.maxHeight);
 
         if (this.world) {
-            this.world.resize(newWidth, newHeight);
+            this.world.resize(width, height);
         }
     }
 
