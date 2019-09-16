@@ -26,6 +26,7 @@ import { ResUtils } from "../utils/resUtil";
 import { Lite } from "game-capsule";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { UiManager } from "../ui/ui.manager";
+import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -207,7 +208,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
-                    }
+                    },
+                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
                 ]
             },
             render: {

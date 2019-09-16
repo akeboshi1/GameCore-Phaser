@@ -98,6 +98,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             }
             point = position.point3f;
             player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
+            Logger.debug(`adjust,x:${point.x},y:${point.y}`);
         }
     }
 
