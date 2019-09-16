@@ -114,21 +114,25 @@ export class Terrain implements IElement {
         const scene = this.mElementManager.scene;
         if (scene) {
             this.mDisplay = new FramesDisplay(scene);
-            this.mDisplay.once("initialized", this.onDisplayReady, this);
-            this.mDisplay.load(this.mDisplayInfo);
+            // this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;
     }
 
     protected addDisplay() {
-        this.createDisplay();
+        // this.createDisplay();
+        if (!this.mDisplay) {
+            Logger.error("display does not exist");
+            return;
+        }
+        this.mDisplay.load(this.mDisplayInfo);
         if (!this.mElementManager) {
-            Logger.error("element manager is undefined");
+            Logger.error("element manager does not exist");
             return;
         }
         const room = this.mElementManager.roomService;
         if (!room) {
-            Logger.error("roomService is undefined");
+            Logger.error("roomService does not exist");
             return;
         }
         room.addToGround(this.mDisplay);
@@ -154,9 +158,6 @@ export class Terrain implements IElement {
             }
             layerManager.depthGroundDirty = true;
         }
-    }
-
-    protected onDisplayReady() {
     }
 
     private setPosition45(pos: Pos) {

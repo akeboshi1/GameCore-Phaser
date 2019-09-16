@@ -43,6 +43,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         field = !field ? DisplayField.STAGE : field;
         const data = displayInfo;
         if (!data || !data.gene) return;
+        if (this.mSprites.get(field)) return;
         this.mDisplayDatas.set(field, data);
         if (this.scene.cache.obj.has(data.gene)) {
             this.onLoadCompleted(field);
@@ -165,7 +166,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             if (this.mHasAnimation) {
                 sprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
             } else {
-                sprite = this.scene.make.image(undefined, false);
+                sprite = this.scene.make.image(undefined, false).setOrigin(0, 0);
                 sprite.setTexture(data.gene);
             }
             this.mSprites.set(field, sprite);
