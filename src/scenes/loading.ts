@@ -27,15 +27,6 @@ export class LoadingScene extends Phaser.Scene {
     }
   }
 
-  update(time: number, delta: number) {
-    // if (this.cameras.main) {
-    //   this.cameras.main.emit("renderer", this.cameras.main);
-    // }
-    if (this.mRoom) {
-      this.mRoom.update(time, delta);
-    }
-  }
-
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }

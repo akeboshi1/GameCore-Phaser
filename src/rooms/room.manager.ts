@@ -80,10 +80,10 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             room = new Room(this);
             this.mRooms.push(room);
         }
-        this.mWorld.changeRoom(room);
         room.addActor(vw.actor);
-        this.mCurRoom = room;
         room.enter(vw.scene);
+        this.mWorld.changeRoom(room);
+        this.mCurRoom = room;
     }
 
     get world(): WorldService {

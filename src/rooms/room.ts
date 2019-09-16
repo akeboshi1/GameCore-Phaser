@@ -123,7 +123,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
             sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2),
         };
 
-        this.mScene = this.mWorld.game.scene.getScene(LoadingScene.name);
+        this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         this.mLayManager = new LayerManager(this);
         if (this.scene) {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;
@@ -131,13 +131,13 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
             this.mBlocks.int(this.mSize);
         }
 
-        this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
         this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
             callBack: () => {
                 if (this.connection) {
                     this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
                 }
+                this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
             },
         });
     }
@@ -221,16 +221,9 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     }
 
     public update(time: number, delta: number) {
-        // if () {
         this.mClock.update(time, delta);
         this.mBlocks.update(time, delta);
         if (this.layerManager) this.layerManager.update(time, delta);
-        // }
-        // 需要知道什么时候程序已经把当前镜头下的元素全部渲染好了，再开始把loadingscene给sleep掉
-        // if (time >= 10000 && !this.mInit) {
-        //     this.mInit = true;
-        //     this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
-        // }
     }
 
     public now(): number {
