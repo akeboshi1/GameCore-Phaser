@@ -9,21 +9,30 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.image("loading", "resources/LOGO_F.png");
+    this.load.image("stars", "resources/stars.png");
   }
 
-  public init(data: any) {
-    this.scene.wake();
-    if (data) {
-      this.mRoom = data.room;
-      this.mCallBack = data.callBack;
+  // public init(data: any) {
+  //   this.scene.wake();
+  //   if (data) {
+  //     this.mRoom = data.room;
+  //     this.mCallBack = data.callBack;
+  //   }
+  // }
+
+  public create() {
+    const loadingView: LoadingView = new LoadingView(this);
+    if (this.mCallBack) {
+      this.mCallBack();
     }
   }
 
-  public create() {
-    const loadingView: LoadingView = new LoadingView(this, this.mRoom);
-    if (this.mCallBack) {
-      this.mCallBack();
+  update(time: number, delta: number) {
+    // if (this.cameras.main) {
+    //   this.cameras.main.emit("renderer", this.cameras.main);
+    // }
+    if (this.mRoom) {
+      this.mRoom.update(time, delta);
     }
   }
 

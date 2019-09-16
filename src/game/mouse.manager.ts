@@ -30,7 +30,7 @@ export class MouseManager extends PacketHandler {
         this.mConnect = this.worldService.connection;
     }
 
-    public setRoom(room: IRoomService) {
+    public changeRoom(room: IRoomService) {
         this.pause();
         this.mScene = room.scene;
         if (!this.mScene) return;

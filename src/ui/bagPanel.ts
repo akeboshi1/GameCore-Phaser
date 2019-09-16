@@ -2,12 +2,12 @@ import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
 import { WorldService } from "../game/world.service";
 import { Logger } from "../utils/log";
-import { IBaseView } from "./baseView";
+import { IAbstractPanel } from "./abstractPanel";
 
 /**
- * 下方按钮条
+ * 背包显示栏
  */
-export class Gongnenglan implements IBaseView {
+export class BagPanel implements IAbstractPanel {
     private mBtn: Phaser.GameObjects.Sprite;
 
     private mScene: Phaser.Scene;
@@ -18,10 +18,10 @@ export class Gongnenglan implements IBaseView {
         this.mWorld = world;
         const size: Size = this.mWorld.getSize();
         this.parentCon = this.mScene.add.container(size.width - 100, size.height - 100);
-        this.createView();
+        this.createPanel();
     }
 
-    public createView() {
+    public createPanel() {
         if (!this.mScene.cache.obj.has("joystick")) {
             this.mScene.load.atlas("joystick", "resources/joystick.png", "resources/joystick.json");
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);

@@ -24,6 +24,9 @@ export class PlayScene extends Phaser.Scene {
     if (this.mCallBack) {
       this.mCallBack();
     }
+    this.scene.launch(MainUIScene.name, {
+      room: this.mRoom
+    });
     Logger.log("play created");
   }
 

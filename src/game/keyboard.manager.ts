@@ -58,7 +58,7 @@ export class KeyBoardManager extends PacketHandler {
      * room由world去休眠/激活
      * @param room
      */
-    public setRoom(room: IRoomService) {
+    public changeRoom(room: IRoomService) {
         this.mRoom = room;
         this.mScene = room.scene;
         if (!this.mScene) return;

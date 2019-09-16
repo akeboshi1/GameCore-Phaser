@@ -19,7 +19,7 @@
             margin-right: auto;
         }
 
-        .loading {
+        .loadingImg {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -27,14 +27,26 @@
             -moz-transform: translate(-50%, -50%);
             -o-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
-            z-index: 9999;
+            z-index: 100;
+        }
+
+        .loadingGif {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            z-index: 101;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div id="loading_img" class="loading"><img src="resources/LOGO_F.png" /></div>
+        <div id="loading_img" class="loadingImg"><img src="resources/loading.png" /></div>
+        <div id="loading_gif" class="loadingGif"><img src="resources/loading.gif" /></div>
         <div id="game"></div>
     </div>
     <script>
@@ -46,6 +58,8 @@
             app.registerComplete(() => {
                 const loadingImg = document.getElementById('loading_img');
                 if (loadingImg) loadingImg.remove();
+                const loadingGif = document.getElementById('loading_gif');
+                if (loadingGif) loadingGif.remove();
             })
             window.addEventListener("resize", (e) => {
                 app.onResize(window.innerWidth, window.innerHeight);

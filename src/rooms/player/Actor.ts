@@ -5,6 +5,7 @@ import { ISprite } from "../element/sprite";
 import { JoyStickListener } from "../../game/joystick.manager";
 import { Direction } from "../element/element";
 import { IRoomService } from "../room";
+import { GameEnvironment } from "../../utils/gameEnvironment";
 
 // ME 我自己
 export class Actor extends Player implements KeyboardListener, JoyStickListener {
@@ -16,11 +17,16 @@ export class Actor extends Player implements KeyboardListener, JoyStickListener 
         this.mRenderable = true; // Actor is always renderable!!!
         this.addDisplay();
         this.mRoom = this.mElementManager.roomService;
-        // if (PC/Phone) {
-        this.mRoom.world.keyboardManager.addListener(this);
-        // } else {
-        this.mRoom.world.joyStickManager.addListener(this);
-        // }
+        const gameEnvironment: GameEnvironment = this.mRoom.world.gameEnvironment;
+        if (gameEnvironment.isWindow || gameEnvironment.isMac) {
+            if (this.mRoom.world.keyboardManager) {
+                this.mRoom.world.keyboardManager.addListener(this);
+            }
+        } else if (gameEnvironment.isAndroid || gameEnvironment.isIOSPhone) {
+            if (this.mRoom.world.joyStickManager) {
+                this.mRoom.world.joyStickManager.addListener(this);
+            }
+        }
 
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;

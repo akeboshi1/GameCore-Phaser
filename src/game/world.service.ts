@@ -8,6 +8,7 @@ import { JoyStickManager } from "./joystick.manager";
 import { IElementStorage } from "./element.storage";
 import { KeyBoardManager } from "./keyboard.manager";
 import { UiManager } from "../ui/ui.manager";
+import { GameEnvironment } from "../utils/gameEnvironment";
 export interface WorldService {
     connection: ConnectionService;
     readonly game: Phaser.Game;
@@ -17,6 +18,7 @@ export interface WorldService {
     readonly elementStorage: IElementStorage;
     readonly keyboardManager: KeyBoardManager;
     readonly uiManager: UiManager;
+    readonly gameEnvironment: GameEnvironment;
 
     getSize(): Size;
     changeRoom(room: IRoomService);

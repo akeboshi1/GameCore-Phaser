@@ -1,5 +1,5 @@
-export interface IBaseView {
-    createView();
+export interface IAbstractPanel {
+    createPanel();
     destroy();
     close();
     show();

@@ -1,10 +1,10 @@
-import { IBaseView } from "./baseView";
+import { IAbstractPanel } from "./abstractPanel";
 
-export class ChatView implements IBaseView {
+export class ChatPanel implements IAbstractPanel {
     constructor() {
 
     }
-    public createView() {
+    public createPanel() {
 
     }
     public show() {

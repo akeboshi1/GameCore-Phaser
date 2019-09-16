@@ -27,6 +27,7 @@ import { Lite } from "game-capsule";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { UiManager } from "../ui/ui.manager";
 import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
+import { GameEnvironment } from "../utils/gameEnvironment";
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
 // TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
@@ -40,6 +41,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mElementStorage: IElementStorage;
     private mJoyStickManager: JoyStickManager;
     private mUiManager: UiManager;
+    private mGameEnvironment: GameEnvironment;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
 
@@ -62,16 +64,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         this.mRoomMamager = new RoomManager(this);
         // this.mSelectCharacterManager = new SelectManager(this);
-        this.mKeyBoardManager = new KeyBoardManager(this);
         this.mMouseManager = new MouseManager(this);
-        this.mJoyStickManager = new JoyStickManager(this);
         this.mUiManager = new UiManager(this);
         this.mElementStorage = new ElementStorage();
+        this.mGameEnvironment = new GameEnvironment(this);
+
+        // this.mKeyBoardManager = new KeyBoardManager(this);
+        // this.mJoyStickManager = new JoyStickManager(this);
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
+    }
+
+    checkGameEnviron() {
+
     }
 
     destroy(): void {
@@ -100,8 +108,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
     public changeRoom(room: IRoomService) {
-        this.mKeyBoardManager.setRoom(room);
-        this.mMouseManager.setRoom(room);
+        this.mKeyBoardManager.changeRoom(room);
+        this.mMouseManager.changeRoom(room);
     }
 
     public getSize(): Size | undefined {
@@ -145,6 +153,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get uiManager(): UiManager | undefined {
         return this.mUiManager;
+    }
+
+    get gameEnvironment(): GameEnvironment | undefined {
+        return this.mGameEnvironment;
     }
 
     get connection(): ConnectionService {
@@ -198,6 +210,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             type: Phaser.AUTO,
             zoom: 1,
             parent: "game",
+            scene: [LoadingScene],
             disableContextMenu: true,
             transparent: false,
             backgroundColor: 0x0,
@@ -220,11 +233,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Object.assign(gameConfig, this.mConfig);
 
         this.mGame = new Game(gameConfig);
-        this.mGame.scene.add(LoadingScene.name, LoadingScene);
+        // this.mGame.scene.add(LoadingScene.name, LoadingScene);
         this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
+
+        if (this.mGameEnvironment.isWindow || this.mGameEnvironment.isMac) {
+            this.mKeyBoardManager = new KeyBoardManager(this);
+        } else if (this.mGameEnvironment.isIOSPhone || this.mGameEnvironment.isAndroid) {
+            this.mJoyStickManager = new JoyStickManager(this);
+        }
         this.gameCreated();
     }
 
