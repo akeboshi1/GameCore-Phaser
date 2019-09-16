@@ -21,10 +21,11 @@ export class MainUIScene extends Phaser.Scene {
 
   public create() {
     this.fps = this.add.text(0, 0, "");
-    if (this.mRoom.world.joyStickManager) {
-      this.mRoom.world.joyStickManager.setScene(this);
+    const world = this.mRoom.world;
+    if ((world.gameEnvironment.isAndroid || world.gameEnvironment.isIOSPhone) && world.joyStickManager) {
+      world.joyStickManager.setScene(this);
     }
-    this.mRoom.world.uiManager.setScene(this);
+    world.uiManager.setScene(this);
   }
 
   public update() {
