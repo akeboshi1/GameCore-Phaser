@@ -147,9 +147,14 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         //         });
         //     },
         // });
-        if (this.connection) {
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        }
+        this.mWorld.game.scene.start(PlayScene.name, {
+            room: this,
+            callBack: () => {
+                if (this.connection) {
+                    this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+                }
+            },
+        });
     }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {
@@ -160,12 +165,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     }
 
     public onClockReady(): void {
-        this.mWorld.game.scene.start(PlayScene.name, {
-            room: this,
-            callBack: () => {
-                // TODO
-            },
-        });
+        // TODO: Unload loading-scene
     }
 
     public pause() {
