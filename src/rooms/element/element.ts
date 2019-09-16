@@ -168,6 +168,7 @@ export class Element implements IElement {
             Math.floor(moveData.destinationPoint3f.x)
             , Math.floor(moveData.destinationPoint3f.y)
         );
+        Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
         if (this.mCurState !== "walk") {
             return;
         }
@@ -186,6 +187,7 @@ export class Element implements IElement {
             return;
         }
         this.changeState("idle");
+        Logger.debug(`stop,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
         Logger.log("=======================MoveStop");
         delete this.mMoveData.destPos;
         this.mMoveData.arrivalTime = 0;
@@ -267,6 +269,7 @@ export class Element implements IElement {
             tw.remove();
         }
         const time: number = this.mMoveData.arrivalTime - this.roomService.now();
+        Logger.debug(`time:${time},arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
         this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
             duration: time,
@@ -276,7 +279,7 @@ export class Element implements IElement {
                 y: { value: this.mMoveData.destPos.y },
             },
             onComplete: (tween, targets, element) => {
-                Logger.log("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
+                Logger.debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
                 if (this.mCurState !== "walk") {
                     this.mMoveData.tweenAnim.stop();
                     return;
