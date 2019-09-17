@@ -3,6 +3,7 @@ import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
+import { Logger } from "../utils/log";
 
 export interface KeyboardListener {
     onKeyUp(keys: number[]): void;
@@ -33,7 +34,7 @@ export class KeyBoardManager extends PacketHandler {
 
     constructor(private worldService: WorldService) {
         super();
-        this.mCodeList = [37, 38, 39, 40];
+        this.mCodeList = [37, 38, 39, 40, 65, 87, 68, 83];
         this.mKeyList = [];
         this.mKeyDownList = [];
         this.mTmpUpKeysStr = "";
@@ -167,7 +168,7 @@ export class KeyBoardManager extends PacketHandler {
         const len = this.mKeyList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyList[i];
-            if (key && key.isDown) {
+            if (key && key.isDown && this.mKeyDownList.indexOf(key) === -1) {
                 keyCodes.push(key.keyCode);
                 this.mKeyDownList.push(key);
             }
@@ -182,12 +183,17 @@ export class KeyBoardManager extends PacketHandler {
             return keyCodes;
         }
         let key: Phaser.Input.Keyboard.Key;
-        const len = this.mKeyDownList.length;
+        let len = this.mKeyDownList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyDownList[i];
-            if (key && key.isUp) {
+            if (key && key.isUp && keyCodes.indexOf(key.keyCode) === -1) {
                 keyCodes.push(key.keyCode);
+                this.mKeyDownList.splice(i, 1);
+                i--;
+                len--;
+                // Logger.debug("up0:" + key.keyCode);
             }
+            // Logger.debug("up1:" + key.keyCode);
         }
         return keyCodes;
     }

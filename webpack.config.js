@@ -15,8 +15,8 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist/'),
-        filename: "[name].js",
-        chunkFilename: `[name]_v${appVer}.js`,
+        filename: "js/[name].js",
+        chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: 'umd',
         globalObject: "this",
         library: ["Tooqing", "[name]"]

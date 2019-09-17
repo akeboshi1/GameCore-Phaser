@@ -10,7 +10,7 @@ PBpacket.addProtocol(op_gateway);
 PBpacket.addProtocol(op_gameconfig);
 PBpacket.addProtocol(op_virtual_world);
 PBpacket.addProtocol(op_gameconfig_01);
-const NetWorker = require("worker-loader?publicPath=./&name=[hash].[name].js!./networker.ts");
+const NetWorker = require("worker-loader?publicPath=./&name=js/[hash].[name].js!./networker.ts");
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export default class Connection implements ConnectionService {

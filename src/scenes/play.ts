@@ -28,6 +28,7 @@ export class PlayScene extends Phaser.Scene {
       room: this.mRoom
     });
     Logger.log("play created");
+    this.scene.sendToBack();
   }
 
   update(time: number, delta: number) {

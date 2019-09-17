@@ -1,25 +1,25 @@
-import { IRoomManager } from "./room.manager";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { Actor } from "./player/Actor";
-import { PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ElementDisplay } from "./display/element.display";
-import { Logger } from "../utils/log";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../utils/pos";
-import { ActorModel } from "./player/play.model";
-import { LoadingScene } from "../scenes/loading";
-import { MainUIScene } from "../scenes/main.ui";
+import {IRoomManager} from "./room.manager";
+import {ElementManager} from "./element/element.manager";
+import {PlayerManager} from "./player/player.manager";
+import {LayerManager} from "./layer/layer.manager";
+import {TerrainManager} from "./terrain/terrain.manager";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {IPosition45Obj, Position45} from "../utils/position45";
+import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
+import {Actor} from "./player/Actor";
+import {PBpacket} from "net-socket-packet";
+import {WorldService} from "../game/world.service";
+import {PlayScene} from "../scenes/play";
+import {ElementDisplay} from "./display/element.display";
+import {Logger} from "../utils/log";
+import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
+import {Pos} from "../utils/pos";
+import {ActorModel} from "./player/play.model";
+import {LoadingScene} from "../scenes/loading";
+import {MainUIScene} from "../scenes/main.ui";
 import IActor = op_client.IActor;
-import { Clock, ClockReadyListener } from "./clock";
+import {Clock, ClockReadyListener} from "./clock";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -86,7 +86,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     constructor(private manager: IRoomManager) {
         this.mWorld = this.manager.world;
-        this.mClock = new Clock(this.mWorld.connection);
+        this.mClock = new Clock(this.mWorld.connection, this);
         this.mTerainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
@@ -150,7 +150,8 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public onClockReady(): void {
         // TODO: Unload loading-scene
-        this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
+        Logger.debug("onClockReady");
+        this.mWorld.game.scene.stop(LoadingScene.name);
     }
 
     public pause() {
