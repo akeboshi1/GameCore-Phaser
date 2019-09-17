@@ -4,6 +4,10 @@
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/loading.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/loading.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/play.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/play.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -160,7 +164,7 @@
       <workItem from="1568169900485" duration="13125000" />
       <workItem from="1568191348183" duration="4894000" />
       <workItem from="1568608042628" duration="13357000" />
-      <workItem from="1568684263829" duration="753000" />
+      <workItem from="1568684263829" duration="9442000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -274,7 +278,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568630516720</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="去除页面滚动条，游戏大小自适应网页大小">
+      <created>1568685136986</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1568685136986</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -335,6 +346,7 @@
     <MESSAGE value="A TODO" />
     <MESSAGE value="调整地块和时钟同步顺序进行（原：并发执行）" />
     <MESSAGE value="调整地块和时钟同步顺序进行（原：并发执行） Fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="调整地块和时钟同步顺序进行（原：并发执行） Fixed" />
+    <MESSAGE value="去除页面滚动条，游戏大小自适应网页大小" />
+    <option name="LAST_COMMIT_MESSAGE" value="去除页面滚动条，游戏大小自适应网页大小" />
   </component>
 </project>
