@@ -7,7 +7,7 @@ import { BagPanel } from "./bagPanel";
 
 export class UiManager extends PacketHandler {
     private mChatView: ChatPanel;
-    private mGongnenglan: BagPanel;
+    private mBagPanel: BagPanel;
 
     private mConnect: ConnectionService;
     private mRoom: IRoomService;
@@ -21,7 +21,11 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
-        this.mGongnenglan = new BagPanel(scene, this.worldService);
+        if (this.worldService.gameEnvironment.isWindow || this.worldService.gameEnvironment.isMac) {
+            // this.mBagPanel = new BagPanel(scene, this.worldService);
+        } else if (this.worldService.gameEnvironment.isAndroid || this.worldService.gameEnvironment.isIOSPhone) {
+            this.mBagPanel = new BagPanel(scene, this.worldService);
+        }
     }
 
 }

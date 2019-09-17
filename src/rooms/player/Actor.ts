@@ -68,28 +68,28 @@ export class Actor extends Player implements KeyboardListener, JoyStickListener 
         }
         switch (dir) {
             case 0:
-                keyArr = [38];
+                keyArr = [38, 87];
                 break;
             case 1:
-                keyArr = [37, 38];
+                keyArr = [37, 38, 65, 87];
                 break;
             case 2:
-                keyArr = [37];
+                keyArr = [37, 65];
                 break;
             case 3:
-                keyArr = [37, 40];
+                keyArr = [37, 40, 65, 83];
                 break;
             case 4:
-                keyArr = [40];
+                keyArr = [40, 83];
                 break;
             case 5:
-                keyArr = [39, 40];
+                keyArr = [39, 40, 68, 87];
                 break;
             case 6:
-                keyArr = [39];
+                keyArr = [39, 68];
                 break;
             case 7:
-                keyArr = [38, 39];
+                keyArr = [38, 39, 87, 68];
                 break;
         }
         if (this.mdownStr === keyArr.toString()) return;
@@ -112,17 +112,22 @@ export class Actor extends Player implements KeyboardListener, JoyStickListener 
             key = keyList[i];
             keyCode = key.keyCode;
             if (key && key.isDown) {
+                // 65, 87, 68, 83
                 switch (keyCode) {
                     case 37:
+                    case 65:
                         outPut += -1;
                         break;
                     case 38:
+                    case 87:
                         outPut += -3;
                         break;
                     case 39:
+                    case 68:
                         outPut += 1;
                         break;
                     case 40:
+                    case 83:
                         outPut += 3;
                         break;
                 }
