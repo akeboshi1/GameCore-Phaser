@@ -182,11 +182,14 @@ export class KeyBoardManager extends PacketHandler {
             return keyCodes;
         }
         let key: Phaser.Input.Keyboard.Key;
-        const len = this.mKeyDownList.length;
+        let len = this.mKeyDownList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyDownList[i];
-            if (key && key.isUp) {
+            if (key && key.isUp && keyCodes.indexOf(key.keyCode) === -1) {
                 keyCodes.push(key.keyCode);
+                this.mKeyDownList.splice(i, 1);
+                i--;
+                len--;
             }
         }
         return keyCodes;
