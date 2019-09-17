@@ -33,7 +33,7 @@ export class KeyBoardManager extends PacketHandler {
 
     constructor(private worldService: WorldService) {
         super();
-        this.mCodeList = [37, 38, 39, 40];
+        this.mCodeList = [37, 38, 39, 40, 65, 87, 68, 83];
         this.mKeyList = [];
         this.mKeyDownList = [];
         this.mTmpUpKeysStr = "";
