@@ -3,6 +3,7 @@ import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
+import { Logger } from "../utils/log";
 
 export interface KeyboardListener {
     onKeyUp(keys: number[]): void;
@@ -167,7 +168,7 @@ export class KeyBoardManager extends PacketHandler {
         const len = this.mKeyList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyList[i];
-            if (key && key.isDown) {
+            if (key && key.isDown && this.mKeyDownList.indexOf(key) === -1) {
                 keyCodes.push(key.keyCode);
                 this.mKeyDownList.push(key);
             }
@@ -190,7 +191,9 @@ export class KeyBoardManager extends PacketHandler {
                 this.mKeyDownList.splice(i, 1);
                 i--;
                 len--;
+                // Logger.debug("up0:" + key.keyCode);
             }
+            // Logger.debug("up1:" + key.keyCode);
         }
         return keyCodes;
     }
