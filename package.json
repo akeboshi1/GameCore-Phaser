@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "build": "yarn ver && webpack --mode production",
+    "build:dev": "webpack --mode development",
     "ver": "genversion version.js"
   },
   "repository": "git@code.apowo.com:PixelPai/game-core.git",
