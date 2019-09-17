@@ -101,7 +101,6 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
                 throw new Error(`World::getSize undefined!`);
             }
         }
-        this.mClock.sync();
     }
 
     public enter(data: op_client.IScene): void {

@@ -23,6 +23,8 @@ export interface ICameraService {
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
+    readonly MINI_VIEW_SIZE = 22;
+    readonly VIEW_PORT_SIZE = 30;
     private mCamera: Phaser.Cameras.Scene2D.Camera;
     private viewPort = new Phaser.Geom.Rectangle();
     private miniViewPort = new Phaser.Geom.Rectangle();
@@ -34,13 +36,19 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     public getViewPort(): Phaser.Geom.Rectangle | undefined {
         if (!this.mCamera) return;
         const worldView = this.mCamera.worldView;
-        const out = new Phaser.Geom.Rectangle(worldView.x, worldView.y, worldView.width, worldView.height);
-        out.x -= out.width >> 1;
-        out.y -= out.height >> 1;
-        out.width *= 2;
-        out.height *= 2;
+        // const out = new Phaser.Geom.Rectangle(worldView.x, worldView.y, worldView.width, worldView.height);
+        // out.x -= out.width >> 1;
+        // out.y -= out.height >> 1;
+        // out.width *= 2;
+        // out.height *= 2;
+        // out.x -= 200;
+        // out.y -= 200;
+        // out.width += 400;
+        // out.height += 400;
         // this.viewPort.setPosition(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2);
-        return out;
+        this.viewPort.x = worldView.x + (worldView.width - this.viewPort.width >> 1);
+        this.viewPort.y = worldView.y + (worldView.height - this.viewPort.height >> 1);
+        return this.viewPort;
     }
 
     public getMiniViewPort(): Rectangle45 {
@@ -48,8 +56,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const worldView = this.mCamera.worldView;
         this.miniViewPort.x = worldView.x + (worldView.width - this.miniViewPort.width >> 1);
         this.miniViewPort.y = worldView.y + (worldView.height - this.miniViewPort.height >> 1);
-        const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x + (this.miniViewPort.width >> 1) + 30, this.miniViewPort.y));
-        return new Rectangle45(pos.x, pos.y, pos.x + 21, pos.y + 21);
+        const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
+        return new Rectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
     }
 
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {
@@ -101,10 +109,13 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             Logger.error("room size does not exist");
             return;
         }
-        const colSize = 17;
-        const viewW = (colSize + colSize) * (size.tileWidth / 2);
-        const viewH = (colSize + colSize) * (size.tileHeight / 2);
-        this.miniViewPort.setSize(viewW, viewH);
+        const viewW = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileWidth / 2);
+        const viewH = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileHeight / 2);
+        this.viewPort.setSize(viewW, viewH);
+
+        const miniViewW = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileWidth / 2);
+        const miniviewH = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileHeight / 2);
+        this.miniViewPort.setSize(miniViewW, miniviewH);
     }
 
     get connection(): ConnectionService {

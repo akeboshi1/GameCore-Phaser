@@ -10,6 +10,7 @@ export enum DisplayField {
 }
 
 enum FadeState {
+    NONE,
     HIDE,
     SHOW,
     Fading
@@ -23,14 +24,13 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     private mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     private mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     private mHasAnimation: boolean = false;
-    private mFadeState: FadeState = FadeState.HIDE;
+    private mFadeState: FadeState = FadeState.NONE;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
 
     public removeFromParent(): void {
         if (this.parentContainer) {
             this.parentContainer.remove(this);
         }
-        this.mFadeState = FadeState.HIDE;
     }
 
     public setPosition(x?: number, y?: number, z?: number): this {
@@ -76,12 +76,17 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     public fadeIn() {
         if (this.mFadeState === FadeState.Fading || this.mFadeState === FadeState.SHOW) return;
         this.mFadeState = FadeState.Fading;
+        const tmpY = this.y;
+        this.y += 100;
+        this.alpha = 0;
         this.scene.tweens.add({
             targets: this,
             alpha: 1,
-            duration: 1000,
+            y: tmpY,
+            duration: 300,
             repeat: 1,
             onComplete: () => {
+                // Logger.log("alpha: ", this.alpha);
                 this.mFadeState = FadeState.SHOW;
             }
         });
@@ -89,14 +94,18 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     public fadeOut() {
         if (this.mFadeState === FadeState.Fading || this.mFadeState === FadeState.HIDE) return;
+        this.alpha = 0;
         this.mFadeState = FadeState.Fading;
+        const tmpY = this.y + 100;
         this.scene.tweens.add({
             targets: this,
             alpha: 0,
-            duration: 1000,
+            // y: tmpY,
+            duration: 300,
             repeat: 1,
             onComplete: () => {
                 this.mFadeState = FadeState.HIDE;
+                // this.emit("fadeOut");
             }
         });
     }

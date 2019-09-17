@@ -9,17 +9,15 @@ export class Viewblock {
     private mElements: IElement[] = [];
     private mInCamera: boolean;
     private mIndex: number;
-    private mDebug: boolean;
 
-    constructor(private mRect: Phaser.Geom.Rectangle, index: number, debug?: boolean) {
+    constructor(private mRect: Phaser.Geom.Rectangle, index: number) {
         this.mIndex = index;
-        this.mDebug = debug;
     }
 
     public add(element: IElement) {
         this.mElements.push(element);
         const pos = element.getPosition();
-        element.setRenderable(this.rectangle.contains(pos.x, pos.y));
+        element.setRenderable(this.rectangle.contains(pos.x, pos.y) && this.mInCamera);
     }
 
     public remove(ele: IElement): boolean {
@@ -41,13 +39,41 @@ export class Viewblock {
             }
         }
         if (!miniViewPort) return;
+        // let inView: boolean = false;
         if (this.mInCamera) {
             for (const ele of this.mElements) {
                 const pos = ele.getPosition45();
-                if (!miniViewPort.contains(pos.x, pos.y)) {
-                    ele.fadeOut();
-                } else {
+                // inView = miniViewPort.contains(pos.x, pos.y);
+                // ele.setRenderable(inView);
+                if (miniViewPort.contains(pos.x, pos.y)) {
                     ele.fadeIn();
+                    // if (!miniViewPort.contains(pos.x, pos.y)) {
+                        // console.log(viewport.width);
+                        // const padding = (viewport.width - miniViewPort.height >> 1) + 1;
+                        // let dis: number = miniViewPort.y - pos.y;
+                        // if (dis > 0) {
+                        //     ele.fadeAlpha((padding - dis) * 0.1);
+                        // } else {
+                        //     ele.fadeAlpha(0);
+                        // }
+                        // dis = pos.y - (miniViewPort.y + miniViewPort.height);
+                        // if (dis > 0) {
+                        //     ele.fadeAlpha((padding - dis) * 0.1);
+                        // }
+                        // dis = miniViewPort.x - pos.x;
+                        // if (dis > 0) {
+                        //     ele.fadeAlpha((padding - dis) * 0.1);
+                        // }
+                        // dis = pos.x - (miniViewPort.x + miniViewPort.width);
+                        // if (dis > 0) {
+                        //     ele.fadeAlpha((padding - dis) * 0.1);
+                        // }
+                    //     ele.fadeOut();
+                    // } else {
+                    //     ele.fadeIn();
+                    // }
+                } else {
+                    ele.fadeOut();
                 }
             }
         }

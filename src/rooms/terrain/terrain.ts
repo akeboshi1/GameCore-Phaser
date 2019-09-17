@@ -86,14 +86,20 @@ export class Terrain implements IElement {
 
     public fadeIn(): void {
         if (!this.mDisplay) return;
-        // this.mDisplay.fadeIn();
-        this.addDisplay();
+        // this.addDisplay();
+        this.mDisplay.fadeIn();
     }
 
     public fadeOut(): void {
         if (!this.mDisplay) return;
-        // this.mDisplay.fadeOut();
-        this.removeDisplay();
+        this.mDisplay.fadeOut();
+        // this.removeDisplay();
+    }
+
+    public fadeAlpha(alpha: number): void {
+        if (this.mDisplay) {
+            this.mDisplay.alpha = alpha;
+        }
     }
 
     public destroy() {
@@ -114,6 +120,7 @@ export class Terrain implements IElement {
         const scene = this.mElementManager.scene;
         if (scene) {
             this.mDisplay = new FramesDisplay(scene);
+            this.mDisplay.on("fadeOut", this.onFadeOut, this);
             // this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;
@@ -167,6 +174,10 @@ export class Terrain implements IElement {
         }
         const point = this.roomService.transformTo90(pos);
         this.setPosition(point);
+    }
+
+    private onFadeOut() {
+        this.removeDisplay();
     }
 
     get id(): number {

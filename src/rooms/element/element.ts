@@ -48,6 +48,8 @@ export interface IElement {
     fadeIn(): void;
 
     fadeOut(): void;
+
+    fadeAlpha(alpha: number): void;
 }
 
 export interface MoveData {
@@ -240,14 +242,20 @@ export class Element implements IElement {
 
     public fadeIn(): void {
         if (!this.mDisplay) return;
-        this.addDisplay();
-        // this.mDisplay.fadeIn();
+        // this.addDisplay();
+        this.mDisplay.fadeIn();
     }
 
     public fadeOut(): void {
         if (!this.mDisplay) return;
-        this.removeDisplay();
+        // this.removeDisplay();
         // this.mDisplay.fadeOut();
+    }
+
+    public fadeAlpha(alpha: number): void {
+        if (this.mDisplay) {
+            this.mDisplay.alpha = alpha;
+        }
     }
 
     public destroy() {
