@@ -1,44 +1,41 @@
 import "phaser";
 import "dragonBones";
-import { WorldService } from "./world.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "phaser";
-import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
-import { ConnectionService } from "../net/connection.service";
-import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
+import {WorldService} from "./world.service";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Game} from "phaser";
+import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
+import {ConnectionService} from "../net/connection.service";
+import {op_client, op_def, op_gateway, op_virtual_world} from "pixelpai_proto";
 import Connection from "../net/connection";
-import { LoadingScene } from "../scenes/loading";
-import { PlayScene } from "../scenes/play";
-import { RoomManager } from "../rooms/room.manager";
-import { ServerAddress } from "../net/address";
-import { KeyBoardManager, InputManager } from "./keyboard.manager";
-import { MouseManager } from "./mouse.manager";
-import { SelectManager } from "../rooms/player/select.manager";
-import { Size } from "../utils/size";
-import { IRoomService } from "../rooms/room";
-import { MainUIScene } from "../scenes/main.ui";
-import { Logger } from "../utils/log";
-import { JoyStickManager } from "./joystick.manager";
-import { GameMain, ILauncherConfig } from "../../launcher";
-import { ElementStorage, IElementStorage } from "./element.storage";
-import { load } from "../utils/http";
-import { ResUtils } from "../utils/resUtil";
-import { Lite } from "game-capsule";
-import { UiManager } from "../ui/ui.manager";
+import {LoadingScene} from "../scenes/loading";
+import {PlayScene} from "../scenes/play";
+import {RoomManager} from "../rooms/room.manager";
+import {ServerAddress} from "../net/address";
+import {KeyBoardManager} from "./keyboard.manager";
+import {MouseManager} from "./mouse.manager";
+import {SelectManager} from "../rooms/player/select.manager";
+import {Size} from "../utils/size";
+import {IRoomService} from "../rooms/room";
+import {MainUIScene} from "../scenes/main.ui";
+import {Logger} from "../utils/log";
+import {JoyStickManager} from "./joystick.manager";
+import {GameMain, ILauncherConfig} from "../../launcher";
+import {ElementStorage, IElementStorage} from "./element.storage";
+import {load} from "../utils/http";
+import {ResUtils} from "../utils/resUtil";
+import {Lite} from "game-capsule";
+import {UiManager} from "../ui/ui.manager";
 import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
+import {InputManager} from "./input.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 
-// TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
-// TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
-    private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
     private mElementStorage: IElementStorage;
-    private mJoyStickManager: JoyStickManager;
     private mUiManager: UiManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
@@ -61,7 +58,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
         this.mRoomMamager = new RoomManager(this);
-        // this.mSelectCharacterManager = new SelectManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mUiManager = new UiManager(this);
         this.mElementStorage = new ElementStorage();
@@ -70,10 +66,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
-    }
-
-    checkGameEnviron() {
-
     }
 
     destroy(): void {
@@ -102,7 +94,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
     public changeRoom(room: IRoomService) {
-        this.mKeyBoardManager.changeRoom(room);
+        this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
     }
 
@@ -135,14 +127,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get selectCharacterManager(): SelectManager | undefined {
         return this.selectCharacterManager;
-    }
-
-    get joyStickManager(): JoyStickManager | undefined {
-        return this.mJoyStickManager;
-    }
-
-    get keyboardManager(): KeyBoardManager | undefined {
-        return this.mKeyBoardManager;
     }
 
     get uiManager(): UiManager | undefined {
@@ -215,7 +199,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
                     },
-                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
+                    {key: "rexUI", plugin: UIPlugin, mapping: "rexUI"}
                 ]
             },
             render: {
@@ -230,7 +214,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private createGame() {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
-        // this.mGame.scene.add(LoadingScene.name, LoadingScene);
         this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);

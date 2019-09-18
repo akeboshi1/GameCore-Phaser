@@ -17,9 +17,8 @@ import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
 import {Pos} from "../utils/pos";
 import {ActorModel} from "./player/play.model";
 import {LoadingScene} from "../scenes/loading";
-import {MainUIScene} from "../scenes/main.ui";
-import IActor = op_client.IActor;
 import {Clock, ClockReadyListener} from "./clock";
+import IActor = op_client.IActor;
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;

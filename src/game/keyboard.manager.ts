@@ -2,13 +2,9 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import { IRoomService } from "../rooms/room";
-import { ALPN_ENABLED } from "constants";
+import {IRoomService, Room} from "../rooms/room";
+import {InputManager} from "./input.service";
 
-export interface InputManager {
-    addListener(l);
-    removeListener(l);
-}
 export interface KeyboardListener {
     onKeyUp(keys: number[]): void;
 
@@ -46,6 +42,23 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
 
         this.mConnect = this.worldService.connection;
     }
+    /**
+     * world中当scene发生变化时，传入当前激活的scene
+     * room由world去休眠/激活
+     */
+    onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
+        this.mRoom = currentRoom;
+        this.mScene = currentRoom.scene;
+        if (!this.mScene) return;
+        const len = this.mCodeList.length;
+        let code: number;
+        let key: Phaser.Input.Keyboard.Key;
+        for (let i = 0; i < len; i++) {
+            code = this.mCodeList[i];
+            key = this.mScene.input.keyboard.addKey(code);
+            this.addKeyEvent(key);
+        }
+    }
 
     public addListener(l: KeyboardListener) {
         this.mKeyboardListeners.push(l);
@@ -55,25 +68,6 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         const idx: number = this.mKeyboardListeners.indexOf(l);
         if (idx >= 0) {
             this.mKeyboardListeners.splice(idx, 1);
-        }
-    }
-
-    /**
-     * world中当scene发生变化时，传入当前激活的scene
-     * room由world去休眠/激活
-     * @param room
-     */
-    public changeRoom(room: IRoomService) {
-        this.mRoom = room;
-        this.mScene = room.scene;
-        if (!this.mScene) return;
-        const len = this.mCodeList.length;
-        let code: number;
-        let key: Phaser.Input.Keyboard.Key;
-        for (let i = 0; i < len; i++) {
-            code = this.mCodeList[i];
-            key = this.mScene.input.keyboard.addKey(code);
-            this.addKeyEvent(key);
         }
     }
 
