@@ -2,8 +2,8 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import { IRoomService } from "../rooms/room";
-import { Logger } from "../utils/log";
+import {IRoomService, Room} from "../rooms/room";
+import {InputManager} from "./input.service";
 
 export interface KeyboardListener {
     onKeyUp(keys: number[]): void;
@@ -11,7 +11,7 @@ export interface KeyboardListener {
     onKeyDown(keys: number[]): void;
 }
 
-export class KeyBoardManager extends PacketHandler {
+export class KeyBoardManager extends PacketHandler implements InputManager {
     // 获取的需要监听的key值列表
     private mCodeList: number[];
     // 添加到scene中需要监听的key列表
@@ -42,6 +42,23 @@ export class KeyBoardManager extends PacketHandler {
 
         this.mConnect = this.worldService.connection;
     }
+    /**
+     * world中当scene发生变化时，传入当前激活的scene
+     * room由world去休眠/激活
+     */
+    onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
+        this.mRoom = currentRoom;
+        this.mScene = currentRoom.scene;
+        if (!this.mScene) return;
+        const len = this.mCodeList.length;
+        let code: number;
+        let key: Phaser.Input.Keyboard.Key;
+        for (let i = 0; i < len; i++) {
+            code = this.mCodeList[i];
+            key = this.mScene.input.keyboard.addKey(code);
+            this.addKeyEvent(key);
+        }
+    }
 
     public addListener(l: KeyboardListener) {
         this.mKeyboardListeners.push(l);
@@ -51,25 +68,6 @@ export class KeyBoardManager extends PacketHandler {
         const idx: number = this.mKeyboardListeners.indexOf(l);
         if (idx >= 0) {
             this.mKeyboardListeners.splice(idx, 1);
-        }
-    }
-
-    /**
-     * world中当scene发生变化时，传入当前激活的scene
-     * room由world去休眠/激活
-     * @param room
-     */
-    public changeRoom(room: IRoomService) {
-        this.mRoom = room;
-        this.mScene = room.scene;
-        if (!this.mScene) return;
-        const len = this.mCodeList.length;
-        let code: number;
-        let key: Phaser.Input.Keyboard.Key;
-        for (let i = 0; i < len; i++) {
-            code = this.mCodeList[i];
-            key = this.mScene.input.keyboard.addKey(code);
-            this.addKeyEvent(key);
         }
     }
 
@@ -168,7 +166,7 @@ export class KeyBoardManager extends PacketHandler {
         const len = this.mKeyList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyList[i];
-            if (key && key.isDown && this.mKeyDownList.indexOf(key) === -1) {
+            if (key && key.isDown) {
                 keyCodes.push(key.keyCode);
                 this.mKeyDownList.push(key);
             }
@@ -183,17 +181,12 @@ export class KeyBoardManager extends PacketHandler {
             return keyCodes;
         }
         let key: Phaser.Input.Keyboard.Key;
-        let len = this.mKeyDownList.length;
+        const len = this.mKeyDownList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyDownList[i];
-            if (key && key.isUp && keyCodes.indexOf(key.keyCode) === -1) {
+            if (key && key.isUp) {
                 keyCodes.push(key.keyCode);
-                this.mKeyDownList.splice(i, 1);
-                i--;
-                len--;
-                // Logger.debug("up0:" + key.keyCode);
             }
-            // Logger.debug("up1:" + key.keyCode);
         }
         return keyCodes;
     }

@@ -1,19 +1,27 @@
-
-import { WorldService } from "./world.service";
-import { Logger } from "../utils/log";
-import { Size } from "../utils/size";
+import {WorldService} from "./world.service";
+import {Logger} from "../utils/log";
+import {Size} from "../utils/size";
+import {InputManager} from "./input.service";
+import {IRoomService} from "../rooms/room";
 
 export interface JoyStickListener {
     dragUp(angle: number): void;
+
     dragStop(): void;
 }
 
-export class JoyStickManager {
+export class JoyStickManager implements InputManager {
+
     private mScene: Phaser.Scene;
     private mJoyStick: JoyStick;
     private mJoyListeners: JoyStickListener[];
+
     constructor(private worldService: WorldService) {
         this.mJoyListeners = [];
+    }
+
+    onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
+        // TODO
     }
 
     public setScene(scene: Phaser.Scene) {
@@ -51,6 +59,7 @@ export class JoyStick {
     private mScene: Phaser.Scene;
     private parentCon: Phaser.GameObjects.Container;
     private mJoyListeners: JoyStickListener[];
+
     constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, joyListeners: JoyStickListener[]) {
         this.mScene = scene;
         this.parentCon = parentCon;
@@ -84,7 +93,9 @@ export class JoyStick {
 
     private dragUpdate(pointer, dragX, dragY) {
         let d = Math.sqrt(dragX * dragX + dragY * dragY);
-        if (d > this.bgRadius) { d = this.bgRadius; }
+        if (d > this.bgRadius) {
+            d = this.bgRadius;
+        }
         const r = Math.atan2(dragY, dragX);
         this.btn.x = Math.cos(r) * d + this.bg.x;
         this.btn.y = Math.sin(r) * d + this.bg.y;

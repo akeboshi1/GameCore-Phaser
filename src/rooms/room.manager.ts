@@ -1,11 +1,9 @@
-import { WorldService } from "../game/world.service";
-import { ConnectionService } from "../net/connection.service";
-import { Room } from "./room";
-import { op_client, op_virtual_world } from "pixelpai_proto";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { LoadingScene } from "../scenes/loading";
-import { PlayScene } from "../scenes/play";
-import { Logger } from "../utils/log";
+import {WorldService} from "../game/world.service";
+import {ConnectionService} from "../net/connection.service";
+import {Room} from "./room";
+import {op_client} from "pixelpai_proto";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Logger} from "../utils/log";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;

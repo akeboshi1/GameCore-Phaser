@@ -26,24 +26,20 @@ import {ResUtils} from "../utils/resUtil";
 import {Lite} from "game-capsule";
 import {UiManager} from "../ui/ui.manager";
 import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
-import {GameEnvironment} from "../utils/gameEnvironment";
+import {InputManager} from "./input.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 
-// TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
-// TODO 让World成为一个以socket连接为基础的类，因为没有连接就不运行游戏
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
-    private mKeyBoardManager: KeyBoardManager;
     private mMouseManager: MouseManager;
     private mElementStorage: IElementStorage;
-    private mJoyStickManager: JoyStickManager;
     private mUiManager: UiManager;
-    private mGameEnvironment: GameEnvironment;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
+    private mInputManager: InputManager;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
@@ -62,20 +58,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
         this.mRoomMamager = new RoomManager(this);
-        // this.mSelectCharacterManager = new SelectManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mUiManager = new UiManager(this);
         this.mElementStorage = new ElementStorage();
-        this.mGameEnvironment = new GameEnvironment(this);
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
         }
-    }
-
-    checkGameEnviron() {
-
     }
 
     destroy(): void {
@@ -104,7 +94,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
     public changeRoom(room: IRoomService) {
-        this.mKeyBoardManager.changeRoom(room);
+        this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
     }
 
@@ -139,20 +129,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.selectCharacterManager;
     }
 
-    get joyStickManager(): JoyStickManager | undefined {
-        return this.mJoyStickManager;
-    }
-
-    get keyboardManager(): KeyBoardManager | undefined {
-        return this.mKeyBoardManager;
-    }
-
     get uiManager(): UiManager | undefined {
         return this.mUiManager;
     }
 
-    get gameEnvironment(): GameEnvironment | undefined {
-        return this.mGameEnvironment;
+    get inputManager(): InputManager | undefined {
+        return this.mInputManager;
     }
 
     get connection(): ConnectionService {
@@ -232,16 +214,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private createGame() {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
-        // this.mGame.scene.add(LoadingScene.name, LoadingScene);
         this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
 
-        if (this.mGameEnvironment.isWindow || this.mGameEnvironment.isMac) {
-            this.mKeyBoardManager = new KeyBoardManager(this);
-        } else if (this.mGameEnvironment.isIOSPhone || this.mGameEnvironment.isAndroid) {
-            this.mJoyStickManager = new JoyStickManager(this);
+        if (this.mGame.device.os.desktop) {
+            this.mInputManager = new KeyBoardManager(this);
+        } else {
+            this.mInputManager = new JoyStickManager(this);
         }
         this.gameCreated();
     }
