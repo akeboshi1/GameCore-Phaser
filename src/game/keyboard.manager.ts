@@ -3,15 +3,19 @@ import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
-import { Logger } from "../utils/log";
+import { ALPN_ENABLED } from "constants";
 
+export interface InputManager {
+    addListener(l);
+    removeListener(l);
+}
 export interface KeyboardListener {
     onKeyUp(keys: number[]): void;
 
     onKeyDown(keys: number[]): void;
 }
 
-export class KeyBoardManager extends PacketHandler {
+export class KeyBoardManager extends PacketHandler implements InputManager {
     // 获取的需要监听的key值列表
     private mCodeList: number[];
     // 添加到scene中需要监听的key列表
@@ -168,7 +172,7 @@ export class KeyBoardManager extends PacketHandler {
         const len = this.mKeyList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyList[i];
-            if (key && key.isDown && this.mKeyDownList.indexOf(key) === -1) {
+            if (key && key.isDown) {
                 keyCodes.push(key.keyCode);
                 this.mKeyDownList.push(key);
             }
@@ -183,17 +187,12 @@ export class KeyBoardManager extends PacketHandler {
             return keyCodes;
         }
         let key: Phaser.Input.Keyboard.Key;
-        let len = this.mKeyDownList.length;
+        const len = this.mKeyDownList.length;
         for (let i = 0; i < len; i++) {
             key = this.mKeyDownList[i];
-            if (key && key.isUp && keyCodes.indexOf(key.keyCode) === -1) {
+            if (key && key.isUp) {
                 keyCodes.push(key.keyCode);
-                this.mKeyDownList.splice(i, 1);
-                i--;
-                len--;
-                // Logger.debug("up0:" + key.keyCode);
             }
-            // Logger.debug("up1:" + key.keyCode);
         }
         return keyCodes;
     }

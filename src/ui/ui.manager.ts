@@ -21,9 +21,8 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
-        if (this.worldService.gameEnvironment.isWindow || this.worldService.gameEnvironment.isMac) {
-            // this.mBagPanel = new BagPanel(scene, this.worldService);
-        } else if (this.worldService.gameEnvironment.isAndroid || this.worldService.gameEnvironment.isIOSPhone) {
+        if (this.worldService.game.device.os.desktop) {
+        } else {
             this.mBagPanel = new BagPanel(scene, this.worldService);
         }
     }

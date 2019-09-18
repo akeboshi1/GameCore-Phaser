@@ -2,13 +2,14 @@
 import { WorldService } from "./world.service";
 import { Logger } from "../utils/log";
 import { Size } from "../utils/size";
+import { InputManager } from "./keyboard.manager";
 
 export interface JoyStickListener {
     dragUp(angle: number): void;
     dragStop(): void;
 }
 
-export class JoyStickManager {
+export class JoyStickManager implements InputManager {
     private mScene: Phaser.Scene;
     private mJoyStick: JoyStick;
     private mJoyListeners: JoyStickListener[];

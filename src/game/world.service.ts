@@ -6,9 +6,8 @@ import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
 import { JoyStickManager } from "./joystick.manager";
 import { IElementStorage } from "./element.storage";
-import { KeyBoardManager } from "./keyboard.manager";
 import { UiManager } from "../ui/ui.manager";
-import { GameEnvironment } from "../utils/gameEnvironment";
+import { InputManager, KeyBoardManager } from "./keyboard.manager";
 export interface WorldService {
     connection: ConnectionService;
     readonly game: Phaser.Game;
@@ -18,7 +17,7 @@ export interface WorldService {
     readonly elementStorage: IElementStorage;
     readonly keyboardManager: KeyBoardManager;
     readonly uiManager: UiManager;
-    readonly gameEnvironment: GameEnvironment;
+    readonly inputManager: InputManager;
 
     getSize(): Size;
     changeRoom(room: IRoomService);

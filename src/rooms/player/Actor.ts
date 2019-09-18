@@ -16,16 +16,8 @@ export class Actor extends Player implements KeyboardListener, JoyStickListener 
         this.mRenderable = true; // Actor is always renderable!!!
         this.addDisplay();
         this.mRoom = this.mElementManager.roomService;
-        // TODO
-        // if (gameEnvironment.isWindow || gameEnvironment.isMac) {
-        //     if (this.mRoom.world.keyboardManager) {
-        //         this.mRoom.world.keyboardManager.addListener(this);
-        //     }
-        // } else if (gameEnvironment.isAndroid || gameEnvironment.isIOSPhone) {
-        //     if (this.mRoom.world.joyStickManager) {
-        //         this.mRoom.world.joyStickManager.addListener(this);
-        //     }
-        // }
+
+        this.mRoom.world.inputManager.addListener(this);
 
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;
