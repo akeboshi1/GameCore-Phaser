@@ -2,14 +2,8 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../net/connection.service";
 import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import {IRoomService, Room} from "../rooms/room";
-import {InputManager} from "./input.service";
-
-export interface KeyboardListener {
-    onKeyUp(keys: number[]): void;
-
-    onKeyDown(keys: number[]): void;
-}
+import { IRoomService, Room } from "../rooms/room";
+import { InputManager, InputListener } from "./input.service";
 
 export class KeyBoardManager extends PacketHandler implements InputManager {
     // 获取的需要监听的key值列表
@@ -30,7 +24,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
     private mConnect: ConnectionService;
 
     // 所有需要监听key的监听事件
-    private mKeyboardListeners: KeyboardListener[] = [];
+    private mKeyboardListeners: InputListener[] = [];
 
     constructor(private worldService: WorldService) {
         super();
@@ -60,11 +54,11 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         }
     }
 
-    public addListener(l: KeyboardListener) {
+    public addListener(l: InputListener) {
         this.mKeyboardListeners.push(l);
     }
 
-    public removeListener(l: KeyboardListener) {
+    public removeListener(l: InputListener) {
         const idx: number = this.mKeyboardListeners.indexOf(l);
         if (idx >= 0) {
             this.mKeyboardListeners.splice(idx, 1);
@@ -104,6 +98,88 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         this.mInitilized = false;
     }
 
+    private checkMoveKeyDown(l: InputListener): boolean {
+        let key: Phaser.Input.Keyboard.Key;
+        const keyList: Phaser.Input.Keyboard.Key[] = this.mKeyList;
+        const len = keyList.length;
+        const keyCodeList: number[] = [];
+        let keyCode: number;
+        let outPut: number = 0;
+        for (let i = 0; i < len; i++) {
+            key = keyList[i];
+            keyCode = key.keyCode;
+            if (key && key.isDown) {
+                // 65, 87, 68, 83
+                switch (keyCode) {
+                    case 37:
+                    case 65:
+                        outPut += -1;
+                        break;
+                    case 38:
+                    case 87:
+                        outPut += -3;
+                        break;
+                    case 39:
+                    case 68:
+                        outPut += 1;
+                        break;
+                    case 40:
+                    case 83:
+                        outPut += 3;
+                        break;
+                }
+                keyCodeList.push(key.keyCode);
+            }
+        }
+        if (outPut === 0) {
+            return false;
+        }
+        const curDir: number = l.getDirection();
+        let newDir: number;
+        switch (outPut) {
+            case -1:
+                newDir = curDir <= 1 ? 1 : 3;
+                break;
+            case -2:
+                newDir = 7;
+                break;
+            case -3:
+                newDir = curDir <= 3 ? 1 : 7;
+                break;
+            case -4:
+                newDir = 1;
+                break;
+            case 1:
+                newDir = curDir <= 5 ? 5 : 7;
+                break;
+            case 2:
+                newDir = 3;
+                break;
+            case 3:
+                newDir = curDir <= 3 ? 3 : 5;
+                break;
+            case 4:
+                newDir = 5;
+                break;
+        }
+        l.setDirection(newDir);
+        l.downHandler(newDir, keyCodeList);
+        return true;
+    }
+
+    private checkMoveKeyAllUp(): boolean {
+        let key: Phaser.Input.Keyboard.Key;
+        const keyList: Phaser.Input.Keyboard.Key[] = this.mKeyList;
+        const len = keyList.length;
+        for (let i = 0; i < len; i++) {
+            key = keyList[i];
+            if (key && key.isDown) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private addKeyEvent(key: Phaser.Input.Keyboard.Key): void {
         key.on("down", this.keyDownHandle, this);
         key.on("up", this.keyUpHandle, this);
@@ -120,8 +196,8 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
         // then trigger listener
-        this.mKeyboardListeners.forEach((l: KeyboardListener) => {
-            l.onKeyDown(keyArr);
+        this.mKeyboardListeners.forEach((l: InputListener) => {
+            this.checkMoveKeyDown(l);
         });
     }
 
@@ -135,26 +211,11 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         content.keyCodes = keyArr;
         this.mConnect.send(pkt);
         // then trigger listener
-        this.mKeyboardListeners.forEach((l: KeyboardListener) => {
-            l.onKeyUp(keyArr);
+        this.mKeyboardListeners.forEach((l: InputListener) => {
+            if (this.checkMoveKeyAllUp()) {
+                l.upHandler();
+            }
         });
-        // let len: number = this.mKeyDownList.length;
-        // let key: Phaser.Input.Keyboard.Key;
-        // let keyCode: number;
-        // const keyCodeLen: number = keyArr.length;
-        // for (let j: number = 0; j < keyCodeLen; j++) {
-        //     keyCode = keyArr[j];
-        //     for (let i: number = 0; i < len; i++) {
-        //         key = this.mKeyDownList[i];
-        //         if (keyCode === key.keyCode) {
-        //             this.mKeyDownList.splice(i, 1);
-        //             i--;
-        //             len--;
-        //             break;
-        //         }
-        //     }
-        // }
-
     }
 
     private getKeyDowns(): number[] {

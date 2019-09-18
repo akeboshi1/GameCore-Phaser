@@ -4,16 +4,20 @@ import { Tweens } from "phaser";
 
 export class LoadingView implements IAbstractPanel {
     private mTween: Tweens.Tween;
+    private mBg: Phaser.GameObjects.Sprite;
     constructor(private mScene: Phaser.Scene) {
         this.createPanel();
     }
 
     public createPanel() {
         const size: Phaser.Structs.Size = this.mScene.game.scale.gameSize;
-        const bg: Phaser.GameObjects.Sprite = this.mScene.add.sprite(size.width >> 1, size.height >> 1, "stars");
-        bg.scaleX = bg.scaleY = 1.3;
+        this.mBg = this.mScene.add.sprite(size.width >> 1, size.height >> 1, "stars");
+        this.mBg.scaleX = this.mBg.scaleY = 1.3;
+
+    }
+    public show() {
         this.mTween = this.mScene.tweens.add({
-            targets: bg,
+            targets: this.mBg,
             duration: 2000000,
             ease: "Linear",
             props: {
@@ -21,14 +25,11 @@ export class LoadingView implements IAbstractPanel {
             }
         });
     }
-    public show() {
-
-    }
     public close() {
         if (this.mTween) {
             this.mTween.stop();
-            this.mTween.destroy();
-            this.mTween = null;
+            this.mTween.remove();
+            // this.mTween = null;
         }
     }
 
@@ -37,5 +38,8 @@ export class LoadingView implements IAbstractPanel {
 
     public destroy() {
         this.close();
+        if (this.mBg) {
+            this.mBg.destroy();
+        }
     }
 }

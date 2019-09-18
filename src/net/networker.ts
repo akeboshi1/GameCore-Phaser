@@ -4,8 +4,7 @@ import {
     SocketConnectionError,
 } from "./socket";
 import {ServerAddress} from "./address";
-import {PBpacket} from "net-socket-packet";
-import {Buffer} from "buffer/";
+import {PBpacket, Buffer} from "net-socket-packet";
 import { Logger } from "../utils/log";
 
 const ctx: Worker = self as any;

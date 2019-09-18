@@ -136,6 +136,9 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
                     this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
                 }
                 this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
+                const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+                loadingScene.sleep();
+                // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
             },
         });
     }

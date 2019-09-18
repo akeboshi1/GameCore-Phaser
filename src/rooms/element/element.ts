@@ -12,14 +12,14 @@ import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
 import { ISprite } from "./sprite";
 export enum Direction {
-    north,
-    north_west,
-    west,
-    west_south,
-    south,
-    south_east,
-    east,
-    east_north,
+    up,
+    up_left,
+    left,
+    left_down,
+    down,
+    down_right,
+    right,
+    right_up,
 }
 
 export interface IElement {

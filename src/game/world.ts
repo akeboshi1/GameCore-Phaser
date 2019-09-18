@@ -1,32 +1,32 @@
 import "phaser";
 import "dragonBones";
-import {WorldService} from "./world.service";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "phaser";
-import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_def, op_gateway, op_virtual_world} from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "phaser";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
-import {RoomManager} from "../rooms/room.manager";
-import {ServerAddress} from "../net/address";
-import {KeyBoardManager} from "./keyboard.manager";
-import {MouseManager} from "./mouse.manager";
-import {SelectManager} from "../rooms/player/select.manager";
-import {Size} from "../utils/size";
-import {IRoomService} from "../rooms/room";
-import {MainUIScene} from "../scenes/main.ui";
-import {Logger} from "../utils/log";
-import {JoyStickManager} from "./joystick.manager";
-import {GameMain, ILauncherConfig} from "../../launcher";
-import {ElementStorage, IElementStorage} from "./element.storage";
-import {load} from "../utils/http";
-import {ResUtils} from "../utils/resUtil";
-import {Lite} from "game-capsule";
-import {UiManager} from "../ui/ui.manager";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
+import { RoomManager } from "../rooms/room.manager";
+import { ServerAddress } from "../net/address";
+import { KeyBoardManager } from "./keyboard.manager";
+import { MouseManager } from "./mouse.manager";
+import { SelectManager } from "../rooms/player/select.manager";
+import { Size } from "../utils/size";
+import { IRoomService } from "../rooms/room";
+import { MainUIScene } from "../scenes/main.ui";
+import { Logger } from "../utils/log";
+import { JoyStickManager } from "./joystick.manager";
+import { GameMain, ILauncherConfig } from "../../launcher";
+import { ElementStorage, IElementStorage } from "./element.storage";
+import { load } from "../utils/http";
+import { ResUtils } from "../utils/resUtil";
+import { Lite } from "game-capsule";
+import { UiManager } from "../ui/ui.manager";
 import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
-import {InputManager} from "./input.service";
+import { InputManager } from "./input.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 
 // The World act as the global Phaser.World instance;
@@ -199,7 +199,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
                     },
-                    {key: "rexUI", plugin: UIPlugin, mapping: "rexUI"}
+                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
                 ]
             },
             render: {

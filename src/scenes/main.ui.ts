@@ -1,11 +1,7 @@
-import { Logger } from "../utils/log";
+
 import { Room } from "../rooms/room";
 
 export class MainUIScene extends Phaser.Scene {
-  private bg: Phaser.GameObjects.Sprite;
-  private btn: Phaser.GameObjects.Sprite;
-  private joyStickCon: Phaser.GameObjects.Container;
-  private bgRadius: number;
   private fps: Phaser.GameObjects.Text;
   private mRoom: Room;
   constructor() {
@@ -22,10 +18,10 @@ export class MainUIScene extends Phaser.Scene {
   public create() {
     this.fps = this.add.text(0, 0, "");
     const world = this.mRoom.world;
-    if (world.game.device.os.desktop) {
-    } else {
-      world.joyStickManager.setScene(this);
-    }
+    // if (world.game.device.os.desktop) {
+    // } else {
+    //   world.joyStickManager.setScene(this);
+    // }
     // if ((world.gameEnvironment.isAndroid || world.gameEnvironment.isIOSPhone) && world.joyStickManager) {
     //   world.joyStickManager.setScene(this);
     // }

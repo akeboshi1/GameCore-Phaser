@@ -1,11 +1,15 @@
-import {IRoomService} from "../rooms/room";
-import {KeyboardListener} from "./keyboard.manager";
-import {JoyStickListener} from "./joystick.manager";
-
+import { IRoomService } from "../rooms/room";
 export interface InputManager {
-    addListener(l: KeyboardListener | JoyStickListener);
+    addListener(l: InputListener);
 
-    removeListener(l: KeyboardListener | JoyStickListener);
+    removeListener(l: InputListener);
 
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void;
+}
+
+export interface InputListener {
+    downHandler(d: number, keyList: number[]);
+    upHandler();
+    getDirection(): number;
+    setDirection(val: number);
 }
