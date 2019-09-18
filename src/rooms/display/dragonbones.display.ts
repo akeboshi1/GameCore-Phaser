@@ -82,6 +82,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     protected mDragonbonesName: string = "";
     protected mActionName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
+    protected mFadeTween: Phaser.Tweens.Tween;
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
@@ -191,10 +192,29 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.mBackEffSprite.play(`${this.frontEffDisplayInfo.type}_${animationName}`);
     }
 
-    public fadeIn() {
+    public fadeIn(callback?: () => void) {
+        this.clearFadeTween();
+        this.alpha = 0;
+        this.mFadeTween = this.scene.tweens.add({
+            targets: this,
+            alpha: 1,
+            duration: 1200,
+            onComplete: () => {
+                if (callback) callback();
+            }
+        });
     }
 
-    public fadeOut() {
+    public fadeOut(callback?: () => void) {
+        this.clearFadeTween();
+        this.mFadeTween = this.scene.tweens.add({
+            targets: this,
+            alpha: 0,
+            duration: 1200,
+            onComplete: () => {
+                if (callback) callback();
+            }
+        });
     }
 
     public destroy() {
@@ -211,6 +231,11 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (this.mClickCon) {
             this.mClickCon.destroy(true);
             this.mClickCon = null;
+        }
+
+        if (this.mFadeTween) {
+            this.clearFadeTween();
+            this.mFadeTween = null;
         }
         super.destroy();
     }
@@ -848,6 +873,13 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             };
             this.scene.anims.create(config);
             // }
+        }
+    }
+
+    private clearFadeTween() {
+        if (this.mFadeTween) {
+            this.mFadeTween.stop();
+            this.mFadeTween.remove();
         }
     }
 
