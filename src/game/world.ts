@@ -26,7 +26,6 @@ import {ResUtils} from "../utils/resUtil";
 import {Lite} from "game-capsule";
 import {UiManager} from "../ui/ui.manager";
 import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
-import {GameEnvironment} from "../utils/gameEnvironment";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 
 // TODO 这里有个问题，需要先连socket获取游戏初始化的数据，所以World并不是Phaser.Game 而是驱动 Phaser.Game的驱动器
@@ -41,7 +40,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mElementStorage: IElementStorage;
     private mJoyStickManager: JoyStickManager;
     private mUiManager: UiManager;
-    private mGameEnvironment: GameEnvironment;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
 
@@ -66,7 +64,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mMouseManager = new MouseManager(this);
         this.mUiManager = new UiManager(this);
         this.mElementStorage = new ElementStorage();
-        this.mGameEnvironment = new GameEnvironment(this);
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
@@ -149,10 +146,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get uiManager(): UiManager | undefined {
         return this.mUiManager;
-    }
-
-    get gameEnvironment(): GameEnvironment | undefined {
-        return this.mGameEnvironment;
     }
 
     get connection(): ConnectionService {
@@ -238,11 +231,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
 
-        if (this.mGameEnvironment.isWindow || this.mGameEnvironment.isMac) {
-            this.mKeyBoardManager = new KeyBoardManager(this);
-        } else if (this.mGameEnvironment.isIOSPhone || this.mGameEnvironment.isAndroid) {
-            this.mJoyStickManager = new JoyStickManager(this);
+        Logger.debug(`OS: `);
+        console.dir(this.mGame.device.os);
+        if(this.mGame.device.os.desktop){
+            this.inputManager = new KeyBoardManager(this);
         }
+        else this.inputManager = new JoyStickManager(this);
+        // if (this.mGameEnvironment.isWindow || this.mGameEnvironment.isMac) {
+        //     this.mKeyBoardManager = new KeyBoardManager(this);
+        // } else if (this.mGameEnvironment.isIOSPhone || this.mGameEnvironment.isAndroid) {
+        //     this.mJoyStickManager = new JoyStickManager(this);
+        // }
         this.gameCreated();
     }
 
