@@ -17,8 +17,8 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
 
     removeFromParent(): void;
 
-    fadeIn();
-    fadeOut();
+    fadeIn(callback?: () => void);
+    fadeOut(callback?: () => void);
 
     destroy(): void;
 }

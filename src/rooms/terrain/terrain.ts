@@ -1,6 +1,5 @@
 import {IElement} from "../element/element";
 import {IElementManager} from "../element/element.manager";
-import {FramesDisplay} from "../display/frames.display";
 import {op_def} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
@@ -8,14 +7,16 @@ import {ISprite} from "../element/sprite";
 import {IFramesModel} from "../display/frames.model";
 import {ElementDisplay} from "../display/element.display";
 import {IRoomService} from "../room";
+import {TerrainDisplay} from "../display/terrain.display";
 
 export class Terrain implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
-    protected mDisplay: FramesDisplay | undefined;
+    protected mDisplay: TerrainDisplay | undefined;
     protected nodeType: number = op_def.NodeType.TerrainNodeType;
     protected mRenderable: boolean;
     protected mAnimationName: string;
+
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         this.mId = sprite.id;
         const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.id);
@@ -70,13 +71,26 @@ export class Terrain implements IElement {
         return this.roomService.transformTo45(pos);
     }
 
-    public setRenderable(isRenderable: boolean): void {
+    public setRenderable(isRenderable: boolean, delay?: number): void {
         if (this.mRenderable !== isRenderable) {
             this.mRenderable = isRenderable;
+            if (delay === undefined) delay = 0;
             if (isRenderable) {
-                return this.addDisplay();
+                this.addDisplay();
+                if (delay > 0) {
+                    this.fadeIn(() => {
+                        this.setDepth();
+                    });
+                }
+                return;
             }
-            this.removeDisplay();
+            if (delay > 0) {
+                this.fadeOut(() => {
+                    this.removeDisplay();
+                });
+            } else {
+                this.removeDisplay();
+            }
         }
     }
 
@@ -84,15 +98,15 @@ export class Terrain implements IElement {
         return this.mRenderable;
     }
 
-    public fadeIn(): void {
+    public fadeIn(callback?: () => void): void {
         if (!this.mDisplay) return;
         // this.addDisplay();
-        this.mDisplay.fadeIn();
+        this.mDisplay.fadeIn(callback);
     }
 
-    public fadeOut(): void {
+    public fadeOut(callback?: () => void): void {
         if (!this.mDisplay) return;
-        this.mDisplay.fadeOut();
+        this.mDisplay.fadeOut(callback);
         // this.removeDisplay();
     }
 
@@ -119,7 +133,7 @@ export class Terrain implements IElement {
         }
         const scene = this.mElementManager.scene;
         if (scene) {
-            this.mDisplay = new FramesDisplay(scene);
+            this.mDisplay = new TerrainDisplay(scene);
             this.mDisplay.on("fadeOut", this.onFadeOut, this);
             // this.mDisplay.load(this.mDisplayInfo);
         }

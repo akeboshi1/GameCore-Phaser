@@ -41,13 +41,13 @@ export interface IElement {
 
     getDirection(): number;
 
-    setRenderable(isRenderable: boolean): void;
+    setRenderable(isRenderable: boolean, delay?: number): void;
 
     getRenderable(): boolean;
 
-    fadeIn(): void;
+    fadeIn(callback?: () => void): void;
 
-    fadeOut(): void;
+    fadeOut(callback?: () => void): void;
 
     fadeAlpha(alpha: number): void;
 }
@@ -140,13 +140,24 @@ export class Element implements IElement {
         this.mCurState = val;
     }
 
-    public setRenderable(isRenderable: boolean): void {
+    public setRenderable(isRenderable: boolean, delay?: number): void {
         if (this.mRenderable !== isRenderable) {
+            if (delay === undefined) delay = 0;
             this.mRenderable = isRenderable;
             if (isRenderable) {
-                return this.addDisplay();
+                this.addDisplay();
+                if (delay > 0) {
+                    this.fadeIn();
+                }
+                return;
             }
-            this.removeDisplay();
+            if (delay > 0) {
+                this.fadeOut(() => {
+                    this.removeDisplay();
+                });
+            } else {
+                this.removeDisplay();
+            }
         }
     }
 
@@ -240,16 +251,16 @@ export class Element implements IElement {
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
-    public fadeIn(): void {
+    public fadeIn(callback?: () => void): void {
         if (!this.mDisplay) return;
         // this.addDisplay();
-        this.mDisplay.fadeIn();
+        this.mDisplay.fadeIn(callback);
     }
 
-    public fadeOut(): void {
+    public fadeOut(callback?: () => void): void {
         if (!this.mDisplay) return;
         // this.removeDisplay();
-        // this.mDisplay.fadeOut();
+        this.mDisplay.fadeOut(callback);
     }
 
     public fadeAlpha(alpha: number): void {

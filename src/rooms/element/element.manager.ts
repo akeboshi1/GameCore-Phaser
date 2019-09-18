@@ -126,7 +126,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     private _add(sprite: ISprite) {
-        const ele = new Element(sprite, this);
+        let ele = this.mElements.get(sprite.id);
+        if (!ele) ele = new Element(sprite, this);
+        // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         this.roomService.blocks.add(ele);
     }
