@@ -19,15 +19,14 @@ export class JoyStickManager implements InputManager {
     }
 
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
-        if (this.mJoyStick) {
-            return;
-        }
-        this.mRoom = currentRoom;
-        this.mScene = currentRoom.world.game.scene.getScene(MainUIScene.name);
+    }
+
+    public setScene(scene: Phaser.Scene) {
+        this.mScene = scene;
         if (!this.mScene) return;
         const size: Size = this.worldService.getSize();
         const con: Phaser.GameObjects.Container = this.mScene.add.container(250, size.height - 240);
-        this.mJoyStick = new JoyStick(this.mRoom, con, this.mJoyListeners);
+        this.mJoyStick = new JoyStick(this.mScene, con, this.mJoyListeners);
     }
 
     public addListener(l: InputListener) {
@@ -64,8 +63,8 @@ export class JoyStick {
     private mJoyListeners: InputListener[];
     private mdownStr: string;
 
-    constructor(room: IRoomService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[]) {
-        this.mScene = room.scene;
+    constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[]) {
+        this.mScene = scene;
         this.parentCon = parentCon;
         this.mJoyListeners = joyListeners;
         this.load();

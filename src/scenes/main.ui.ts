@@ -1,5 +1,6 @@
 
 import { Room } from "../rooms/room";
+import { JoyStickManager } from "../game/joystick.manager";
 
 export class MainUIScene extends Phaser.Scene {
   private fps: Phaser.GameObjects.Text;
@@ -18,10 +19,11 @@ export class MainUIScene extends Phaser.Scene {
   public create() {
     this.fps = this.add.text(0, 0, "");
     const world = this.mRoom.world;
-    // if (world.game.device.os.desktop) {
-    // } else {
-    //   world.joyStickManager.setScene(this);
-    // }
+    if (world.game.device.os.desktop) {
+    } else {
+      (world.inputManager as JoyStickManager).setScene(this);
+      // world.inputManager.onRoomChanged(this.mRoom);
+    }
     // if ((world.gameEnvironment.isAndroid || world.gameEnvironment.isIOSPhone) && world.joyStickManager) {
     //   world.joyStickManager.setScene(this);
     // }
