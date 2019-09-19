@@ -25,7 +25,7 @@ import { load } from "../utils/http";
 import { ResUtils } from "../utils/resUtil";
 import { Lite } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
-import * as UIPlugin from "../../lib/rexui/rexuiplugin.min.js";
+import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 

@@ -19,6 +19,7 @@
     "file-loader": "^4.2.0",
     "genversion": "^2.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "tern": "^0.24.1",
     "ts-loader": "^6.0.4",
     "tslint": "^5.19.0",
     "tslint-webpack-plugin": "^2.1.0",
@@ -33,6 +34,7 @@
     "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
     "phaser": "^3.18.1",
+    "phaser3-rex-plugins": "^1.0.0",
     "simple-sha1": "^3.0.1"
   }
 }
