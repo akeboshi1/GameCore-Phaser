@@ -5,7 +5,7 @@ import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import {Logger} from "../../utils/log";
 import {PBpacket} from "net-socket-packet";
-import {op_virtual_world} from "pixelpai_proto";
+import {op_virtual_world, op_client} from "pixelpai_proto";
 
 // ME 我自己
 export class Actor extends Player implements InputListener {
@@ -64,6 +64,14 @@ export class Actor extends Player implements InputListener {
             direction: this.dir
         };
         this.mElementManager.connection.send(pkt);
+    }
+
+    public move(moveData: op_client.IMoveData) {
+        // TODO 不能仅判断walk, 移动状态可能还有run
+        if (this.mCurState !== "walk") {
+            return;
+        }
+        super.move(moveData);
     }
 
     protected onMoveStart() {

@@ -32,10 +32,6 @@ export class Player extends Element {
         if (this.getDirection() !== moveData.direction) {
             this.setDirection(moveData.direction);
         }
-        // TODO 不能仅判断walk, 移动状态可能还有run
-        if (this.mCurState !== "walk") {
-            return;
-        }
         // Logger.log("dir0:" + moveData.direction);
         super.move(moveData);
     }

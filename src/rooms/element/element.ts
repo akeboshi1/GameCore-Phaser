@@ -207,7 +207,7 @@ export class Element implements IElement {
 
     public getPosition45(): Pos {
         const pos = this.getPosition();
-        if (!pos) return;
+        if (!pos) return new Pos();
         return this.roomService.transformTo45(pos);
     }
 
