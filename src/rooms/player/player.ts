@@ -37,11 +37,15 @@ export class Player extends Element {
     }
 
     public setDirection(dir: number) {
-        this.mDisplayInfo.avatarDir = dir;
+        if (dir !== this.mDisplayInfo.avatarDir) {
+            this.mDisplayInfo.avatarDir = dir;
+            this.mDisplay.play(this.mCurState);
+        }
         // Logger.log("dir1:" + dir);
     }
 
     public changeState(val?: string) {
+        if (this.mCurState === val) return;
         if (!val) val = "idle";
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
@@ -51,6 +55,10 @@ export class Player extends Element {
 
     public removeDisplay() {
         super.removeDisplay();
+    }
+
+    protected onMoveStart() {
+        this.changeState(PlayerState.WALK);
     }
 
     private mCheckStateHandle(val: string): boolean {
