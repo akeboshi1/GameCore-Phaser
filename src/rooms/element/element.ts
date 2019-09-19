@@ -104,7 +104,7 @@ export class Element implements IElement {
         if (sprite.avatar) {
             this.mDisplayInfo = new DragonbonesModel(sprite);
         } else {
-            const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.id);
+            const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
             if (!conf) {
                 Logger.error("object does not exist");
                 return;

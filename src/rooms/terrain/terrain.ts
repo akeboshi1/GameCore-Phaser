@@ -19,7 +19,7 @@ export class Terrain implements IElement {
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         this.mId = sprite.id;
-        const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.id);
+        const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
         if (!conf) {
             Logger.error("object does not exist");
             return;
