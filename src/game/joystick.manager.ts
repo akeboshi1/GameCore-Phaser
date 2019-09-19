@@ -1,12 +1,9 @@
-import { WorldService } from "./world.service";
-import { Logger } from "../utils/log";
-import { Size } from "../utils/size";
-import { InputManager, InputListener } from "./input.service";
-import { IRoomService } from "../rooms/room";
-import { PlayScene } from "../scenes/play";
-import { Direction } from "../rooms/element/element";
-import { number } from "../../yargs";
-import { MainUIScene } from "../scenes/main.ui";
+import {WorldService} from "./world.service";
+import {Logger} from "../utils/log";
+import {Size} from "../utils/size";
+import {InputListener, InputManager} from "./input.service";
+import {IRoomService} from "../rooms/room";
+import {Direction} from "../rooms/element/element";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;

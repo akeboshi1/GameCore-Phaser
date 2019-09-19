@@ -175,7 +175,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame();
-                Logger.debug("promise");
+                Logger.debug("created game suc");
             })
             .catch((err) => {
                 Logger.log(err);
@@ -195,6 +195,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             transparent: false,
             backgroundColor: 0x0,
             resolution: 1,
+            fps: {
+                target: 60
+            },
             plugins: {
                 scene: [
                     {

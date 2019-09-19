@@ -61,18 +61,6 @@ export interface MoveData {
 
 export class Element implements IElement {
 
-    // get x(): number {
-    //     return this.mDisplay.x;
-    // }
-    //
-    // get y(): number {
-    //     return this.mDisplay.y;
-    // }
-    //
-    // get z(): number {
-    //     return this.mDisplay.z;
-    // }
-
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
     }
@@ -182,9 +170,6 @@ export class Element implements IElement {
             , Math.floor(moveData.destinationPoint3f.y)
         );
         // Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
-        if (this.mCurState !== "walk") {
-            return;
-        }
         Logger.log("walk has movedata");
         this._doMove();
     }
@@ -201,27 +186,6 @@ export class Element implements IElement {
         }
         this.changeState("idle");
         // Logger.debug(`stop,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
-        Logger.log("=======================MoveStop");
-        delete this.mMoveData.destPos;
-        this.mMoveData.arrivalTime = 0;
-        if (this.mMoveData.tweenAnim) {
-            this.mMoveData.tweenAnim.stop();
-            this.mMoveData.tweenAnim.remove();
-        }
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.nodeType = this.nodeType;
-        const pos = this.getPosition();
-        ct.spritePositions = {
-            id: this.id,
-            point3f: {
-                x: pos.x,
-                y: pos.y,
-                z: pos.z,
-            },
-            direction: this.dir
-        };
-        this.mElementManager.connection.send(pkt);
     }
 
     public setPosition(p: Pos) {
@@ -277,7 +241,7 @@ export class Element implements IElement {
     }
 
     protected _doMove() {
-        if (!this.mMoveData.destPos || this.mCurState !== "walk") {
+        if (!this.mMoveData.destPos) {
             Logger.log("stopDoMove");
             return;
         }
@@ -297,24 +261,15 @@ export class Element implements IElement {
                 x: { value: this.mMoveData.destPos.x },
                 y: { value: this.mMoveData.destPos.y },
             },
+            onStart: () => {
+              this.onMoveStart();
+            },
             onComplete: (tween, targets, element) => {
                 // Logger.debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
-                if (this.mCurState !== "walk") {
-                    this.mMoveData.tweenAnim.stop();
-                    return;
-                }
-                this._doMove();
+                this.onMoveComplete();
             },
             onUpdate: (tween, targets, element) => {
-                if (this.mCurState !== "walk") {
-                    this.mMoveData.tweenAnim.stop();
-                    return;
-                }
-                const now = this.roomService.now();
-                if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
-                    this.setDepth();
-                    this.mMoveData.tweenLastUpdate = now;
-                }
+                this.onMoveing();
             },
             onCompleteParams: [this],
         });
@@ -377,6 +332,21 @@ export class Element implements IElement {
     protected onDisplayReady() {
         if (this.mDisplay) {
             this.mDisplay.play(this.mAnimationName);
+        }
+    }
+
+    protected onMoveStart() {
+    }
+
+    protected onMoveComplete() {
+        this.mMoveData.tweenAnim.stop();
+    }
+
+    protected onMoveing() {
+        const now = this.roomService.now();
+        if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
+            this.setDepth();
+            this.mMoveData.tweenLastUpdate = now;
         }
     }
 }

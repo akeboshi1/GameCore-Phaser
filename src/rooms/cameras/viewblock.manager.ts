@@ -28,6 +28,7 @@ export class ViewblockManager implements ViewblockService {
         for (const block of this.mBlocks) {
             const rect = block.rectangle;
             const ePos: Pos = e.getPosition();
+            if (!ePos) return;
             if (rect.contains(ePos.x, ePos.y)) {
                 block.add(e, miniView);
                 return;

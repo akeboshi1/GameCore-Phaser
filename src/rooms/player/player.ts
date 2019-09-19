@@ -32,13 +32,17 @@ export class Player extends Element {
         if (this.getDirection() !== moveData.direction) {
             this.setDirection(moveData.direction);
         }
-        Logger.log("dir0:" + moveData.direction);
+        // TODO 不能仅判断walk, 移动状态可能还有run
+        if (this.mCurState !== "walk") {
+            return;
+        }
+        // Logger.log("dir0:" + moveData.direction);
         super.move(moveData);
     }
 
     public setDirection(dir: number) {
         this.mDisplayInfo.avatarDir = dir;
-        Logger.log("dir1:" + dir);
+        // Logger.log("dir1:" + dir);
     }
 
     public changeState(val?: string) {
@@ -55,7 +59,6 @@ export class Player extends Element {
 
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
-        this.mCurState = val;
         return true;
     }
 }
