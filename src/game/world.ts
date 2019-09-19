@@ -170,6 +170,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!configUrls || configUrls.length <= 0) {
             Logger.error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
         }
+        Logger.log("start download gameConfig");
         this.loadGameConfig(content.configUrls)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
@@ -249,6 +250,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // TODO Promise.all如果其中有一个下载失败，会返回error
         return Promise.all(promises)
             .then((reqs: any[]) => {
+                Logger.log("start decodeConfig");
                 return this.decodeConfigs(reqs);
             });
     }

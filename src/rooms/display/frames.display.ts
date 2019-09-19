@@ -57,6 +57,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public play(animationName: string, field?: DisplayField) {
+        if (!animationName) return;
         field = !field ? DisplayField.STAGE : field;
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);

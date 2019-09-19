@@ -205,7 +205,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_UP);
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
         const keyArr: number[] = this.getKeyUps();
-        if (this.mTmpUpKeysStr === keyArr.toString()) return;
+        if (this.mTmpUpKeysStr === keyArr.toString() || keyArr.length < 1) return;
         this.mTmpDownKeyStr = "";
         this.mTmpUpKeysStr = keyArr.toString();
         content.keyCodes = keyArr;
@@ -219,20 +219,15 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
     }
 
     private getKeyDowns(): number[] {
-        const keyCodes: number[] = [];
+        // let keyCodes: number[] = [];
         if (!this.mInitilized) {
-            return keyCodes;
+            return [];
         }
-        let key: Phaser.Input.Keyboard.Key;
-        const len = this.mKeyList.length;
-        for (let i = 0; i < len; i++) {
-            key = this.mKeyList[i];
-            if (key && key.isDown) {
-                keyCodes.push(key.keyCode);
-                this.mKeyDownList.push(key);
-            }
+        if (!this.mKeyList) {
+            return [];
         }
-        return keyCodes;
+        this.mKeyDownList = this.mKeyList.filter((keyDown) => keyDown.isDown);
+        return this.mKeyDownList.map((key) => key.keyCode);
     }
 
     private getKeyUps(): number[] {
@@ -241,14 +236,19 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         if (!this.mInitilized) {
             return keyCodes;
         }
+        if (!this.mKeyDownList) {
+            return [];
+        }
         let key: Phaser.Input.Keyboard.Key;
-        const len = this.mKeyDownList.length;
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < this.mKeyDownList.length; i++) {
             key = this.mKeyDownList[i];
             if (key && key.isUp) {
+                this.mKeyDownList.splice(i, 1);
                 keyCodes.push(key.keyCode);
+                i--;
             }
         }
+        // this.mKeyDownList = this.mKeyDownList.filter((keyDown) => keyDown.isDown);
         return keyCodes;
     }
 
