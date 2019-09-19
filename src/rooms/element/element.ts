@@ -316,8 +316,8 @@ export class Element implements IElement {
 
     protected setDepth() {
         if (this.mDisplay) {
-            // const baseLoc = this.mDisplay.baseLoc;
-            this.mDisplay.setDepth(this.mDisplay.x + this.mDisplay.y);
+            const baseLoc = this.mDisplay.baseLoc;
+            this.mDisplay.setDepth(this.mDisplay.x + (baseLoc.x * -1) + this.mDisplay.y + (baseLoc.y * -1));
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }
@@ -332,6 +332,7 @@ export class Element implements IElement {
     protected onDisplayReady() {
         if (this.mDisplay) {
             this.mDisplay.play(this.mAnimationName);
+            this.setDepth();
         }
     }
 
@@ -344,7 +345,7 @@ export class Element implements IElement {
 
     protected onMoveing() {
         const now = this.roomService.now();
-        if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
+        if ((now - (this.mMoveData.tweenLastUpdate | 0)) >= 50) {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
         }

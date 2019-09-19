@@ -90,10 +90,6 @@ export class Actor extends Player implements InputListener {
             this.mMoveData.tweenAnim.stop();
             return;
         }
-        const now = this.roomService.now();
-        if ((now - this.mMoveData.tweenLastUpdate | 0) >= 50) {
-            this.setDepth();
-            this.mMoveData.tweenLastUpdate = now;
-        }
+        super.onMoveing();
     }
 }
