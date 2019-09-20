@@ -29,8 +29,7 @@
     let WEBGL_RENDERER = true;
     let CANVAS_RENDERER = true;
     document.addEventListener('DOMContentLoaded', (event) => {
-        console.dir(Tooqing);
-        const launcher = Tooqing.launcher.Launcher;
+        const launcher = Tooqing.Launcher;
         const app = launcher.start({width: window.innerWidth, height: window.innerHeight});
         app.registerReload(window.reload);
         app.registerComplete(() => {
