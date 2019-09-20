@@ -329,7 +329,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {
             const slot: dragonBones.Slot = slotList[i];
-            Logger.log(i + ":" + slot.display.frame.name);
+            // Logger.log(i + ":" + slot.display.frame.name);
             slot.display.visible = false;
         }
     }
@@ -353,7 +353,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
             const part: string = obj.slot.replace("$", obj.dir.toString());
-            Logger.log(part);
+            // Logger.log(part);
         }
         this.replaceArr.splice(0);
     }
@@ -828,7 +828,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
                 const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                 if (img.texture.key === name) {
                     slot.replaceDisplay(img);
-                    Logger.log("success:" + resKey);
+                   // Logger.log("success:" + resKey);
                 }
                 this.misloading = false;
                 this.startLoad();
@@ -836,13 +836,13 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (e: Event) => {
                 this.misloading = false;
                 this.startLoad();
-                Logger.log("fail:" + nextLoad[1]);
+                // Logger.log("fail:" + nextLoad[1]);
             }, this);
             this.scene.load.image(partName, partUrl);
             this.scene.load.start();
         } else {
             this.misloading = false;
-            Logger.log("load complete");
+           // Logger.log("load complete");
         }
     }
     private makeEffAnimations(name: string, isBack: boolean = false) {
