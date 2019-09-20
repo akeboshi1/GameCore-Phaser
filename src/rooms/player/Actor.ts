@@ -85,11 +85,11 @@ export class Actor extends Player implements InputListener {
         this._doMove();
     }
 
-    protected onMoveing() {
+    protected onMoving() {
         if (this.mCurState !== "walk") {
             this.mMoveData.tweenAnim.stop();
             return;
         }
-        super.onMoveing();
+        super.onMoving();
     }
 }
