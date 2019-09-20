@@ -61,7 +61,6 @@ export class SocketConnection {
         if (!this.mTransport) {
             return Logger.error(`Empty transport.`);
         }
-        Logger.debug(`SocketConnection::send - state: ${this.mTransport._readyState}`);
         this.mTransport.Send(data);
     }
 
