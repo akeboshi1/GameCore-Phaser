@@ -1,16 +1,17 @@
-import { IElementManager } from "./element.manager";
-import { FramesModel, IFramesModel } from "../display/frames.model";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { FramesDisplay } from "../display/frames.display";
-import { IRoomService } from "../room";
-import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { Tweens } from "phaser";
-import { Logger } from "../../utils/log";
-import { Pos } from "../../utils/pos";
-import { PBpacket } from "net-socket-packet";
-import { ISprite } from "./sprite";
+import {IElementManager} from "./element.manager";
+import {IFramesModel} from "../display/frames.model";
+import {DragonbonesDisplay} from "../display/dragonbones.display";
+import {FramesDisplay} from "../display/frames.display";
+import {IRoomService} from "../room";
+import {ElementDisplay} from "../display/element.display";
+import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
+import {op_client} from "pixelpai_proto";
+import {Tweens} from "phaser";
+import {Logger} from "../../utils/log";
+import {Pos} from "../../utils/pos";
+import {ISprite} from "./sprite";
+import {BlockObject} from "../cameras/block.object";
+
 export enum Direction {
     up,
     up_left,
@@ -59,7 +60,7 @@ export interface MoveData {
     tweenLastUpdate?: number;
 }
 
-export class Element implements IElement {
+export class Element extends BlockObject implements IElement {
 
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
@@ -80,14 +81,13 @@ export class Element implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
-    protected nodeType: number = op_def.NodeType.ElementNodeType;
-    protected mRenderable: boolean = false;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string;
     protected mCurDir: number;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
+        super();
         this.mId = sprite.id;
         if (sprite.avatar) {
             this.mDisplayInfo = new DragonbonesModel(sprite);
@@ -126,27 +126,6 @@ export class Element implements IElement {
 
     public changeState(val?: string) {
         this.mCurState = val;
-    }
-
-    public setRenderable(isRenderable: boolean, delay?: number): void {
-        if (this.mRenderable !== isRenderable) {
-            if (delay === undefined) delay = 0;
-            this.mRenderable = isRenderable;
-            if (isRenderable) {
-                this.addDisplay();
-                if (delay > 0) {
-                    this.fadeIn();
-                }
-                return;
-            }
-            if (delay > 0) {
-                this.fadeOut(() => {
-                    this.removeDisplay();
-                });
-            } else {
-                this.removeDisplay();
-            }
-        }
     }
 
     public getRenderable(): boolean {
@@ -215,31 +194,6 @@ export class Element implements IElement {
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
-    public fadeIn(callback?: () => void): void {
-        if (!this.mDisplay) return;
-        // this.addDisplay();
-        this.mDisplay.fadeIn(callback);
-    }
-
-    public fadeOut(callback?: () => void): void {
-        if (!this.mDisplay) return;
-        // this.removeDisplay();
-        this.mDisplay.fadeOut(callback);
-    }
-
-    public fadeAlpha(alpha: number): void {
-        if (this.mDisplay) {
-            this.mDisplay.alpha = alpha;
-        }
-    }
-
-    public destroy() {
-        if (this.mDisplay) {
-            this.mDisplay.destroy();
-            this.mDisplay = null;
-        }
-    }
-
     protected _doMove() {
         if (!this.mMoveData.destPos) {
             Logger.log("stopDoMove");
@@ -269,7 +223,7 @@ export class Element implements IElement {
                 this.onMoveComplete();
             },
             onUpdate: (tween, targets, element) => {
-                this.onMoveing();
+                this.onMoving();
             },
             onCompleteParams: [this],
         });
@@ -307,13 +261,6 @@ export class Element implements IElement {
         this.setDepth();
     }
 
-    protected removeDisplay() {
-        if (!this.mDisplay) {
-            return;
-        }
-        this.mDisplay.removeFromParent();
-    }
-
     protected setDepth() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
@@ -343,7 +290,7 @@ export class Element implements IElement {
         this.mMoveData.tweenAnim.stop();
     }
 
-    protected onMoveing() {
+    protected onMoving() {
         const now = this.roomService.now();
         if ((now - (this.mMoveData.tweenLastUpdate | 0)) >= 50) {
             this.setDepth();

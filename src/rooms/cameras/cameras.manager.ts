@@ -3,7 +3,6 @@ import {IRoomService} from "../room";
 import {ConnectionService} from "../../net/connection.service";
 import {op_virtual_world} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
-import {IPosition45Obj} from "../../utils/position45";
 import {Rectangle45} from "../../utils/rectangle45";
 import {Pos} from "../../utils/pos";
 
