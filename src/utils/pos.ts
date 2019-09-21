@@ -13,6 +13,13 @@ export class Pos {
         this.depth = depth | 0;
     }
 
+    public add(x: number, y: number, z?: number): Pos {
+        this.x += x;
+        this.x += y;
+        this.z += z ? z : 0;
+        return this;
+    }
+
     public equal(p: Pos): boolean {
         return p.x === this.x && p.y === this.y && p.z === this.z && p.depth === this.depth;
     }

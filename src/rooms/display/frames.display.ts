@@ -2,6 +2,7 @@ import {IAnimationData, IFramesModel} from "./frames.model";
 import {ElementDisplay} from "./element.display";
 import {Logger} from "../../utils/log";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
+import {SortRectangle} from "../../utils/sort.rectangle";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -18,6 +19,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mHasAnimation: boolean = false;
+    protected mSortRectangle: SortRectangle = new SortRectangle();
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
 
     public removeFromParent(): void {
@@ -63,6 +65,9 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         if (sprite && sprite instanceof Phaser.GameObjects.Sprite) {
             sprite.play(`${data.gene}_${animationName}`);
+        } else {
+            const anis = data.getAnimations(animationName);
+            sprite.setTexture(data.gene, anis.frameName[0]);
         }
         this.initBaseLoc(field, animationName);
     }
@@ -120,7 +125,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     private makeAnimations(field: DisplayField) {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         if (!data) return;
-        const animations = data.animations;
+        const animations = Array.from(data.animations.values());
         for (const ani of animations) {
             this.makeAnimation(field, ani);
         }
@@ -151,13 +156,14 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         if (!sprite || !data || !data.animations) return;
-        const animations = data.animations;
-        const ani: IAnimationData = animations.find((aniData) => aniData.name === aniName);
-        if (!ani || !ani.baseLoc) return;
-        const tmp = ani.baseLoc.split(",");
-        this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmp[0], 10), parseInt(tmp[1], 10));
+        const animations = data.getAnimations(aniName);
+        // const ani: IAnimationData = animations.find((aniData) => aniData.name === aniName);
+        // if (!ani || !ani.baseLoc) return;
+        // const tmp = ani.baseLoc.split(",");
+        this.mBaseLoc = animations.baseLoc;
         sprite.x = this.baseLoc.x;
         sprite.y = this.baseLoc.y;
+        this.mSortRectangle.setArea(animations.collisionArea);
     }
 
     private createDisplay(field: DisplayField) {
@@ -187,5 +193,19 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     get baseLoc(): Phaser.Geom.Point {
         return this.mBaseLoc || new Phaser.Geom.Point();
+    }
+
+    get sortRectangle(): SortRectangle {
+        return this.mSortRectangle;
+    }
+
+    get sortX(): number {
+        const _projectionAngle = Math.atan(0.5);
+        const transform = [Math.cos(_projectionAngle), Math.sin(_projectionAngle)];
+        return this.x;
+    }
+
+    get sortY(): number {
+        return this.y;
     }
 }

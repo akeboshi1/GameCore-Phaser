@@ -3,6 +3,7 @@ import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
 import { Logger } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
+import {SortRectangle} from "../../utils/sort.rectangle";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -83,6 +84,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
     protected mActionName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
+    protected mSortRectangle: SortRectangle = new SortRectangle();
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
@@ -855,9 +857,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (displayInfo) {
             const animations = displayInfo.animations;
             const resKey = isBack ? this.frontEffKey : this.backEffKey;
-            const animation = animations.find((ani) => {
-                return ani.name === name;
-            });
+            const animation = displayInfo.getAnimations(name);
             if (!animation) {
                 return;
             }
@@ -915,5 +915,17 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (display && display.texturePath && display.dataPath) {
             return display.texturePath + display.dataPath;
         }
+    }
+
+    get sortRectangle() {
+        return this.mSortRectangle;
+    }
+
+    get sortX(): number {
+        return  this.x;
+    }
+
+    get sortY(): number {
+        return this.y;
     }
 }

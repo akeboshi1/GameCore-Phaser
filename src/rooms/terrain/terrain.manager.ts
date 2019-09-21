@@ -80,7 +80,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 this._add(new Sprite(sprite));
             }
         }
-
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
             this.mListener.onFullPacketReceived(type);
         }

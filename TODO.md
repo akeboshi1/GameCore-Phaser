@@ -6,6 +6,7 @@ TODO List
 - [x] Webpack 动态加载代码块。
 - [x] 版本控制。根据版本列表加载主程序 `@gxm`
 - [x] 深度排序 `@404`
+- [ ] SmoothedKeyControl 镜头平滑研究
 
 ## 工程
 - [x] Phaser3 + isometric项目运行 `@404`

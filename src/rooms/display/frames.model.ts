@@ -1,4 +1,4 @@
-import {op_gameconfig, op_gameconfig_01} from "pixelpai_proto";
+import {op_gameconfig} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {AnimationDataNode} from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
@@ -10,9 +10,10 @@ export interface IFramesModel {
     avatarDir?: number;
     type?: string;
     display?: IDisplay | null;
-    animations?: IAnimationData[] | null;
+    animations?: Map<string, IAnimationData>;
     animationName: string;
 
+    getAnimations(name: string): IAnimationData;
     destroy();
 }
 
@@ -26,7 +27,9 @@ export interface IAnimationData {
     frameName: string[];
     frameRate: number;
     loop: boolean;
-    baseLoc: string;
+    baseLoc: Phaser.Geom.Point;
+    collisionArea?: number[][];
+    walkableArea?: number[][];
 }
 
 export class FramesModel implements IFramesModel {
@@ -35,7 +38,7 @@ export class FramesModel implements IFramesModel {
     public id: number;
     public type: string;
     public display: IDisplay | null;
-    public animations: IAnimationData[] | null;
+    public animations: Map<string, IAnimationData>;
     public animationName: string;
     protected mGen: string;
 
@@ -59,7 +62,17 @@ export class FramesModel implements IFramesModel {
         }
     }
 
+    public getAnimationData(): Map<string, IAnimationData> {
+        return this.animations;
+    }
+
+    public getAnimations(name: string): IAnimationData {
+        if (!this.animations) return;
+        return this.animations.get(name);
+    }
+
     public destroy() {
+        if (this.animations) this.animations.clear();
     }
 
     get gene(): string | undefined {
@@ -83,7 +96,7 @@ export class FramesModel implements IFramesModel {
             Logger.error(`${this.id} animationData does not exist`);
             return;
         }
-        this.animations = [];
+        this.animations = new Map();
         let ani: IAnimationData;
         for (const aniData of aniDatas) {
             const baseLoc = aniData.baseLoc;
@@ -92,9 +105,11 @@ export class FramesModel implements IFramesModel {
                 frameName: aniData.frameName,
                 frameRate: aniData.frameRate,
                 loop: aniData.loop,
-                baseLoc: `${baseLoc.x},${baseLoc.y}`
+                baseLoc: new Phaser.Geom.Point(baseLoc.x, baseLoc.y),
+                walkableArea: aniData.walkableArea || [],
+                collisionArea: aniData.collisionArea || []
             };
         }
-        this.animations.push(ani);
+        this.animations.set(ani.name, ani);
     }
 }

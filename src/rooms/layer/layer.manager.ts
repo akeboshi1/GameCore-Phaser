@@ -1,7 +1,6 @@
-import { IRoomManager } from "../room.manager";
-import { Geom } from "phaser";
-import { ElementDisplay } from "../display/element.display";
-import { Room } from "../room";
+import {Geom} from "phaser";
+import {ElementDisplay} from "../display/element.display";
+import {Room} from "../room";
 import {Logger} from "../../utils/log";
 
 export class LayerManager {
@@ -114,6 +113,23 @@ export class LayerManager {
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
             this.mSurfaceLayer.sort("depth");
+            this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
+                // Logger.debug(displayA, displayB);
+                const sortA = displayA.sortRectangle;
+                const sortB = displayB.sortRectangle;
+                Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
+                Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
+                if (displayA.sortX + displayA.sortY > displayB.sortX + displayB.sortY) {
+                    return 1;
+                }
+                // if (displayA.sortY > displayB.sortY) {
+                //     return 1;
+                // }
+                // if (displayB.y + sortB.top.y > displayA.y + sortA.left.y) {
+                //     return 1;
+                // }
+                return -1;
+            });
         }
     }
 

@@ -155,7 +155,6 @@ export class Element extends BlockObject implements IElement {
 
     public startMove() {
         this.changeState("walk");
-        Logger.log("=======================MoveStart");
     }
 
     public stopMove() {
@@ -264,7 +263,7 @@ export class Element extends BlockObject implements IElement {
     protected setDepth() {
         if (this.mDisplay) {
             const baseLoc = this.mDisplay.baseLoc;
-            this.mDisplay.setDepth(this.mDisplay.x + (baseLoc.x * -1) + this.mDisplay.y + (baseLoc.y * -1));
+            this.mDisplay.setDepth(this.mDisplay.x + this.mDisplay.y);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }
@@ -278,7 +277,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            this.mDisplay.play(this.mAnimationName);
+            this.mDisplay.play("idle");
             this.setDepth();
         }
     }
