@@ -1,16 +1,16 @@
-import {WorldService} from "./world.service";
-import {Logger} from "../utils/log";
-import {Size} from "../utils/size";
-import {InputListener, InputManager} from "./input.service";
-import {IRoomService} from "../rooms/room";
-import {Direction} from "../rooms/element/element";
+import { WorldService } from "./world.service";
+import { Logger } from "../utils/log";
+import { Size } from "../utils/size";
+import { InputListener, InputManager } from "./input.service";
+import { IRoomService } from "../rooms/room";
+import { Direction } from "../rooms/element/element";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
     private mScene: Phaser.Scene;
     private mJoyStick: JoyStick;
     private mJoyListeners: InputListener[];
-
+    private mParentcon: Phaser.GameObjects.Container;
     constructor(private worldService: WorldService) {
         this.mJoyListeners = [];
     }
@@ -22,8 +22,14 @@ export class JoyStickManager implements InputManager {
         this.mScene = scene;
         if (!this.mScene) return;
         const size: Size = this.worldService.getSize();
-        const con: Phaser.GameObjects.Container = this.mScene.add.container(250, size.height - 240);
-        this.mJoyStick = new JoyStick(this.mScene, con, this.mJoyListeners);
+        this.mParentcon = this.mScene.add.container(150, size.height - 150);
+        this.mJoyStick = new JoyStick(this.mScene, this.mParentcon, this.mJoyListeners);
+    }
+
+    public resize() {
+        const size: Size = this.worldService.getSize();
+        this.mParentcon.x =  150;
+        this.mParentcon.y = size.height - 150;
     }
 
     public addListener(l: InputListener) {

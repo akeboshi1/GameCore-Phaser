@@ -4,6 +4,7 @@ export interface InputManager {
 
     removeListener(l: InputListener);
 
+    resize(width: number, height: number);
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void;
 }
 

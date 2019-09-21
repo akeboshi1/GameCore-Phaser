@@ -25,6 +25,8 @@ import { load } from "../utils/http";
 import { ResUtils } from "../utils/resUtil";
 import { Lite } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
+import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
+import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
@@ -111,6 +113,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);
+        }
+        if (this.mUiManager) {
+            this.mUiManager.resize(width, height);
+        }
+        if (this.mInputManager) {
+            this.mInputManager.resize(width, height);
         }
         // TODO manager.resize
     }
@@ -199,6 +207,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 target: 60
             },
             plugins: {
+                global: [{
+                    key: "rexButton",
+                    plugin: ButtonPlugin,
+                    start: true
+                },
+                {
+                    key: "rexNinePatchPlugin",
+                    plugin: NinePatchPlugin,
+                    start: true
+                }],
                 scene: [
                     {
                         key: "DragonBones",

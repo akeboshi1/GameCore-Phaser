@@ -3,14 +3,21 @@ import {ServerAddress} from "./address";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IConnectListener} from "./socket";
 import {Buffer} from "buffer/";
-import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
 import {Logger} from "../utils/log";
-PBpacket.addProtocol(op_client);
-PBpacket.addProtocol(op_gateway);
-PBpacket.addProtocol(op_gameconfig);
-PBpacket.addProtocol(op_virtual_world);
-PBpacket.addProtocol(op_gameconfig_01);
-const NetWorker = require("worker-loader?publicPath=./&name=js/[hash].[name].js!./networker.ts");
+// import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
+// PBpacket.addProtocol(op_client);
+// PBpacket.addProtocol(op_gateway);
+// PBpacket.addProtocol(op_gameconfig);
+// PBpacket.addProtocol(op_virtual_world);
+// PBpacket.addProtocol(op_gameconfig_01);
+import NetWorker from "worker-loader?name=js/[hash].[name].js!./networker";
+
+import * as protos from "pixelpai_proto";
+
+for (const key in protos) {
+    PBpacket.addProtocol(protos[key]);
+}
+
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export default class Connection implements ConnectionService {

@@ -10,8 +10,7 @@ const appVer = require('./version');
 
 module.exports = {
     entry: {
-        launcher: path.join(__dirname, "./launcher.ts"),
-        worker: path.join(__dirname, 'src/net/networker.ts'),
+        tooqing: path.join(__dirname, "./launcher.ts")
     },
     output: {
         path: path.join(__dirname, 'dist/'),
@@ -19,7 +18,7 @@ module.exports = {
         chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: 'umd',
         globalObject: "this",
-        library: ["Tooqing", "[name]"]
+        library: "Tooqing"
     },
     devtool: "source-map",
     module: {
