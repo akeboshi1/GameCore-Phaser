@@ -8,14 +8,7 @@ export class LoadingView implements IAbstractPanel {
     constructor(private mScene: Phaser.Scene) {
         this.createPanel();
     }
-
-    public createPanel() {
-        const size: Phaser.Structs.Size = this.mScene.game.scale.gameSize;
-        this.mBg = this.mScene.add.sprite(size.width >> 1, size.height >> 1, "stars");
-        this.mBg.scaleX = this.mBg.scaleY = 1.3;
-
-    }
-    public show() {
+    public show(param: any) {
         this.mTween = this.mScene.tweens.add({
             targets: this.mBg,
             duration: 2000000,
@@ -24,6 +17,9 @@ export class LoadingView implements IAbstractPanel {
                 rotation: 360,
             }
         });
+    }
+    public update(param: any) {
+
     }
     public close() {
         if (this.mTween) {
@@ -41,5 +37,11 @@ export class LoadingView implements IAbstractPanel {
         if (this.mBg) {
             this.mBg.destroy();
         }
+    }
+    private createPanel() {
+        const size: Phaser.Structs.Size = this.mScene.game.scale.gameSize;
+        this.mBg = this.mScene.add.sprite(size.width >> 1, size.height >> 1, "stars");
+        this.mBg.scaleX = this.mBg.scaleY = 1.3;
+
     }
 }

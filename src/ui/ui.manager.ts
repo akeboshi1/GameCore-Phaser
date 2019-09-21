@@ -11,8 +11,10 @@ import { op_client } from "pixelpai_proto";
 import { UIModuleType } from "./ui.moduleType";
 import { IAbstractPanel } from "./abstractPanel";
 import { Logger } from "../utils/log";
+import { BagPanel } from "./bag/bagPanel";
 
 export class UiManager extends PacketHandler {
+    public bagPanel: BagPanel;
     private mChatPanel: ChatPanel;
     private mBagUI: IBag;
 
@@ -30,10 +32,12 @@ export class UiManager extends PacketHandler {
     public setScene(scene: Phaser.Scene) {
         const size: Size = this.worldService.getSize();
         if (this.worldService.game.device.os.desktop) {
-            this.mBagUI = new BagUIPC(scene, this.worldService, size.width >> 1, size.height - 50);
+            this.mBagUI = new BagUIPC(scene, this.worldService, (size.width >> 1) - 29, size.height - 50);
         } else {
             this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
         }
+        this.mBagUI.show(undefined);
+        this.bagPanel = new BagPanel(scene, this.worldService);
     }
 
     public resize(width: number, height: number) {
@@ -58,11 +62,12 @@ export class UiManager extends PacketHandler {
     }
 
     private showPanel(type: string, ...param: any[]) {
-        let showPanel: IAbstractPanel = this.mViewMap.get(type);
+        const showPanel: IAbstractPanel = this.mViewMap.get(type);
         if (!showPanel) {
             const className: string = type + ".panel";
-            const ns: any = require("src/ui/" + type + "/" + className + ".ts");
-            showPanel = new ns[className]();
+            // const ns: any = require("./src/ui/" + type + "/" + className + ".ts");
+            Logger.debug("====show====" + type);
+            // showPanel = new ns[className]();
             if (!showPanel) {
                 Logger.error("error type no panel can show!!!");
                 return;

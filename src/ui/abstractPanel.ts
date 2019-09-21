@@ -1,7 +1,7 @@
 export interface IAbstractPanel {
-    createPanel();
     destroy();
     close();
-    show();
+    show(param: any);
     resize();
+    update(param: any);
 }

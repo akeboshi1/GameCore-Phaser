@@ -4,10 +4,10 @@ export class ChatPanel implements IAbstractPanel {
     constructor() {
 
     }
-    public createPanel() {
+    public show(param: any) {
 
     }
-    public show() {
+    public update(param: any) {
 
     }
     public close() {
@@ -19,6 +19,9 @@ export class ChatPanel implements IAbstractPanel {
     }
 
     public destroy() {
+
+    }
+    private createPanel() {
 
     }
 }

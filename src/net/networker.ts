@@ -1,4 +1,4 @@
-import {IConnectListener, SocketConnection, SocketConnectionError,} from "./socket";
+import {IConnectListener, SocketConnection, SocketConnectionError} from "./socket";
 import {ServerAddress} from "./address";
 import {Buffer, PBpacket} from "net-socket-packet";
 import {Logger} from "../utils/log";
