@@ -76,7 +76,7 @@ export class BagUIMobile implements IBag {
                 scaleX: { value: .8 },
                 scaleY: { value: .8 },
             },
-            yoyo:true,
+            yoyo: true,
             repeat: 0,
         });
         this.mParentCon.scaleX = this.mParentCon.scaleY = 1;

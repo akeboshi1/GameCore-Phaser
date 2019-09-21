@@ -1,7 +1,7 @@
-import {Geom} from "phaser";
-import {ElementDisplay} from "../display/element.display";
-import {Room} from "../room";
-import {Logger} from "../../utils/log";
+import { Geom } from "phaser";
+import { ElementDisplay } from "../display/element.display";
+import { Room } from "../room";
+import { Logger } from "../../utils/log";
 
 export class LayerManager {
 
@@ -117,9 +117,10 @@ export class LayerManager {
                 // Logger.debug(displayA, displayB);
                 const sortA = displayA.sortRectangle;
                 const sortB = displayB.sortRectangle;
-                Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
-                Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
-                if (displayA.sortX + displayA.sortY > displayB.sortX + displayB.sortY) {
+                // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
+                // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
+                const angle: number = Math.atan2((displayA.sortY - displayB.sortY), (displayA.sortX- displayB.sortX));
+                if (angle * (180 * Math.PI) >= 60) {
                     return 1;
                 }
                 // if (displayA.sortY > displayB.sortY) {

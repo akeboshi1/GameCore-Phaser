@@ -1,8 +1,8 @@
-import {IAnimationData, IFramesModel} from "./frames.model";
-import {ElementDisplay} from "./element.display";
-import {Logger} from "../../utils/log";
+import { IAnimationData, IFramesModel } from "./frames.model";
+import { ElementDisplay } from "./element.display";
+import { Logger } from "../../utils/log";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
-import {SortRectangle} from "../../utils/sort.rectangle";
+import { SortRectangle } from "../../utils/sort.rectangle";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -138,7 +138,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         // Didn't find a good way to create an animation with frame names without a pattern.
         const frames = [];
         animation.frameName.forEach((frame) => {
-            frames.push({key: data.gene, frame});
+            frames.push({ key: data.gene, frame });
         });
         const key = `${data.gene}_${animation.name}`;
         const config: Phaser.Types.Animations.Animation = {
@@ -184,7 +184,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             sprite.y = this.baseLoc.y;
             this.addAt(sprite, field);
         }
-        sprite.setInteractive({pixelPerfect: true});
+        sprite.setInteractive({ pixelPerfect: true });
         sprite.setData("id", data.id);
 
         this.mSprites.set(field, sprite);
@@ -200,8 +200,6 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     get sortX(): number {
-        const _projectionAngle = Math.atan(0.5);
-        const transform = [Math.cos(_projectionAngle), Math.sin(_projectionAngle)];
         return this.x;
     }
 
