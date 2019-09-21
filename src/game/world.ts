@@ -117,6 +117,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mUiManager) {
             this.mUiManager.resize(width, height);
         }
+        if (this.mInputManager) {
+            this.mInputManager.resize(width, height);
+        }
         // TODO manager.resize
     }
 

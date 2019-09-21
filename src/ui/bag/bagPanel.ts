@@ -34,8 +34,9 @@ export class BagPanel implements IAbstractPanel {
 
     }
     public resize() {
-        // this.mNinePatch.setTexture
-        // this.mNinePatch.resize();
+        const size: Size = this.mWorld.getSize();
+        this.mParentCon.x = size.width >> 1;
+        this.mParentCon.y = size.height - 50;
     }
     public destroy() {
 

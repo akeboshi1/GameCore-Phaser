@@ -54,6 +54,10 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         }
     }
 
+    public resize(width: number, height: number) {
+
+    }
+
     public addListener(l: InputListener) {
         this.mKeyboardListeners.push(l);
     }

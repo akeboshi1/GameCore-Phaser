@@ -117,7 +117,7 @@ export class BagUIPC implements IBag {
         buttons.layout();
         const s = this;
         buttons.on("button.click", function(button, groupName, index, pointer) {
-            // s.mWorld.uiManager.bagPanel.show(undefined);
+            s.mWorld.uiManager.bagPanel.show(undefined);
             // =============index = 0 为背包按钮
             // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE.OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
             // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;

@@ -15,7 +15,7 @@ export class BagUIMobile implements IBag {
 
     private mScene: Phaser.Scene;
     private mWorld: WorldService;
-    private parentCon: Phaser.GameObjects.Container;
+    private mParentCon: Phaser.GameObjects.Container;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
@@ -23,8 +23,8 @@ export class BagUIMobile implements IBag {
         this.mScene = scene;
         this.mWorld = world;
         const size: Size = this.mWorld.getSize();
-        this.parentCon = this.mScene.add.container(x, y);
-        // this.createPanel();
+        this.mParentCon = this.mScene.add.container(x, y);
+        this.createPanel();
     }
 
     public show() {
@@ -37,7 +37,9 @@ export class BagUIMobile implements IBag {
 
     }
     public resize() {
-
+        const size: Size = this.mWorld.getSize();
+        this.mParentCon.x = size.width - 100;
+        this.mParentCon.y = size.height - 100;
     }
     public destroy() {
 
@@ -59,21 +61,24 @@ export class BagUIMobile implements IBag {
     private onLoadCompleteHandler() {
         const mFrame: string = "btn";
         this.bagBtn = this.mScene.add.sprite(0, 0, this.mResStr, mFrame);
-        this.parentCon.add(this.bagBtn);
-        this.parentCon.setSize(this.bagBtn.width, this.bagBtn.height);
-        this.parentCon.setInteractive();
-        this.parentCon.on("pointerdown", this.uiDown, this);
-        this.parentCon.on("pointerup", this.uiUp, this);
-    }
-
-    private uiDown(pointer, gameObject) {
-        this.parentCon.scaleX = this.parentCon.scaleY = .8;
-        Logger.log("btnClick");
+        this.mParentCon.add(this.bagBtn);
+        this.mParentCon.setSize(this.bagBtn.width, this.bagBtn.height);
+        this.mParentCon.setInteractive();
+        this.mParentCon.on("pointerup", this.uiUp, this);
     }
 
     private uiUp(pointer, gameObject) {
-        this.parentCon.scaleX = this.parentCon.scaleY = 1;
+        this.mScene.tweens.add({
+            targets: this.mParentCon,
+            duration: 50,
+            ease: "Linear",
+            props: {
+                scaleX: { value: .8 },
+                scaleY: { value: .8 },
+            },
+            yoyo:true,
+            repeat: 0,
+        });
+        this.mParentCon.scaleX = this.mParentCon.scaleY = 1;
     }
-
-    // todo resize
 }
