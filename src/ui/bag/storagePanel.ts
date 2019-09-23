@@ -1,6 +1,7 @@
 import { IAbstractPanel } from "../abstractPanel";
 
 export class StoragePanel implements IAbstractPanel {
+    public isShow: boolean = false;
     constructor() {
 
     }

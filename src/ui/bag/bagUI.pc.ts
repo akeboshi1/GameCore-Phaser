@@ -14,6 +14,7 @@ export class BagUIPC implements IBag {
     // bagBtn
     public bagBtn: Phaser.GameObjects.Sprite;
     public bagSlotList: ItemSlot[];
+    public isShow: boolean = false;
 
     private mBagBg: Phaser.GameObjects.Sprite;
     private mScene: Phaser.Scene;
@@ -32,6 +33,11 @@ export class BagUIPC implements IBag {
     }
 
     public show(param: any) {
+        if (this.isShow) {
+            this.close();
+            return;
+        }
+        this.isShow = true;
         this.createPanel();
         // refresh bagSlotList
     }
@@ -39,11 +45,11 @@ export class BagUIPC implements IBag {
         // update bagSlotList
     }
     public close() {
-
+        this.destroy();
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.mParentCon.x = size.width >> 1;
+        this.mParentCon.x = (size.width >> 1) - 29;
         this.mParentCon.y = size.height - 50;
     }
     public destroy() {
@@ -98,7 +104,7 @@ export class BagUIPC implements IBag {
             wid += 56 + 5;
         }
 
-        const buttons = (<any> this.mScene).rexUI.add.buttons({
+        const buttons = (<any>this.mScene).rexUI.add.buttons({
             x: 0,
             y: 0,
             width: 56,
@@ -116,7 +122,7 @@ export class BagUIPC implements IBag {
         });
         buttons.layout();
         const s = this;
-        buttons.on("button.click", function(button, groupName, index, pointer) {
+        buttons.on("button.click", function (button, groupName, index, pointer) {
             s.mWorld.uiManager.bagPanel.show(undefined);
             // =============index = 0 为背包按钮
             // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE.OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);

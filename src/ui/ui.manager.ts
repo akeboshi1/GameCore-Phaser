@@ -44,6 +44,9 @@ export class UiManager extends PacketHandler {
         if (this.mBagUI) {
             this.mBagUI.resize();
         }
+        if (this.bagPanel) {
+            this.bagPanel.resize();
+        }
     }
 
     private handleShowUI(packet: PBpacket): void {

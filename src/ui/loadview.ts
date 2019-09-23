@@ -3,6 +3,7 @@ import { IAbstractPanel } from "./abstractPanel";
 import { Tweens } from "phaser";
 
 export class LoadingView implements IAbstractPanel {
+    public isShow: boolean = false;
     private mTween: Tweens.Tween;
     private mBg: Phaser.GameObjects.Sprite;
     constructor(private mScene: Phaser.Scene) {
@@ -33,7 +34,6 @@ export class LoadingView implements IAbstractPanel {
     }
 
     public destroy() {
-        this.close();
         if (this.mBg) {
             this.mBg.destroy();
         }
