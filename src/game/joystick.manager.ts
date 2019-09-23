@@ -1,9 +1,9 @@
-import { WorldService } from "./world.service";
-import { Logger } from "../utils/log";
-import { Size } from "../utils/size";
-import { InputListener, InputManager } from "./input.service";
-import { IRoomService } from "../rooms/room";
-import { Direction } from "../rooms/element/element";
+import {WorldService} from "./world.service";
+import {Logger} from "../utils/log";
+import {Size} from "../utils/size";
+import {InputListener, InputManager} from "./input.service";
+import {IRoomService} from "../rooms/room";
+import {Direction} from "../rooms/element/element";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
@@ -11,6 +11,7 @@ export class JoyStickManager implements InputManager {
     private mJoyStick: JoyStick;
     private mJoyListeners: InputListener[];
     private mParentcon: Phaser.GameObjects.Container;
+
     constructor(private worldService: WorldService) {
         this.mJoyListeners = [];
     }
@@ -28,7 +29,7 @@ export class JoyStickManager implements InputManager {
 
     public resize() {
         const size: Size = this.worldService.getSize();
-        this.mParentcon.x =  150;
+        this.mParentcon.x = 150;
         this.mParentcon.y = size.height - 150;
     }
 
@@ -57,6 +58,7 @@ export class JoyStickManager implements InputManager {
     upHandler() {
     }
 }
+
 export class JoyStick {
     public btn: Phaser.GameObjects.Sprite;
     private bg: Phaser.GameObjects.Sprite;
@@ -74,7 +76,9 @@ export class JoyStick {
     }
 
     public load() {
-        this.mScene.load.atlas("joystick", "./resources/ui/joystick/joystick.png", "./resources/ui/joystick/joystick.json");
+        this.mScene.load.atlas("joystick",
+            "./resources/ui/joystick/joystick.png",
+            "./resources/ui/joystick/joystick.json");
         this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.mScene.load.start();
     }

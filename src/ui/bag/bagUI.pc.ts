@@ -1,11 +1,7 @@
-import { IAbstractPanel } from "../abstractPanel";
-import { IBag } from "./basebag";
-import { WorldService } from "../../game/world.service";
-import { Logger } from "../../utils/log";
-import { ItemSlot } from "./item.slot";
-import { Size } from "../../utils/size";
-import { PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
+import {IBag} from "./basebag";
+import {WorldService} from "../../game/world.service";
+import {ItemSlot} from "./item.slot";
+import {Size} from "../../utils/size";
 
 /**
  * 背包显示栏
