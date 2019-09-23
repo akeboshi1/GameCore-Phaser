@@ -42,8 +42,8 @@ export class BagPanel implements IAbstractPanel {
 
     private createPanel() {
         this.mResStr = "bagView";
-        this.mResPng = "resources/ui/bag/bagView.png";
-        this.mResJson = "resources/ui/bag/bagView.json";
+        this.mResPng = "./resources/ui/bag/bagView.png";
+        this.mResJson = "./resources/ui/bag/bagView.json";
         if (!this.mScene.cache.obj.has(this.mResStr)) {
             this.mScene.load.atlas(this.mResStr, this.mResPng, this.mResJson);
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);

@@ -246,7 +246,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.onLoadCompleteHandler();
         } else {
-            const res = "resources/dragonbones";
+            const res = "./resources/dragonbones";
             this.scene.load.dragonbone(
                 this.mDragonbonesName,
                 `${res}/${this.mDragonbonesName}_tex.png`,

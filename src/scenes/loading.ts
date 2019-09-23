@@ -6,7 +6,7 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.spritesheet("rabbit00.png", "../resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
+    this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
   }
 
   public create() {

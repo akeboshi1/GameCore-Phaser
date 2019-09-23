@@ -1,7 +1,7 @@
 {
-  "auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmVlNWNiOTg5Y2FiMGNmNzhiNjcyMyIsImlhdCI6MTU2ODYxMjkwMiwiZXhwIjoxNTY5MjE3NzAyfQ.JC6nOYniFr38TBaiWiLAW7gSq_0oY9xMtzmUWsP8h-s",
-  "token_expire": "1569217702",
-  "token_fingerprint": "071eb3ee88ce4bd64791780a477a54badf60df4c",
+  "auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmVlNWNiOTg5Y2FiMGNmNzhiNjcyMyIsImlhdCI6MTU2OTI0MDY1MSwiZXhwIjoxNTY5ODQ1NDUxfQ.C9K_PiKdlHI85zJGsUXbcUcH8w0kShPl8c_r2_lSX9Q",
+  "token_expire": "1569845451",
+  "token_fingerprint": "31c2c011a618d350a55f2cf77d8f2f7f28ad6acb",
   "game_id": "5d65e35fdb19b473d87c2023",
   "virtual_world_id": 0
 }

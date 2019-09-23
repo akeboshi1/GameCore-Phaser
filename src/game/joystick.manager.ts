@@ -74,7 +74,7 @@ export class JoyStick {
     }
 
     public load() {
-        this.mScene.load.atlas("joystick", "/resources/ui/joystick/joystick.png", "/resources/ui/joystick/joystick.json");
+        this.mScene.load.atlas("joystick", "./resources/ui/joystick/joystick.png", "./resources/ui/joystick/joystick.json");
         this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.mScene.load.start();
     }

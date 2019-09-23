@@ -47,8 +47,8 @@ export class BagUIMobile implements IBag {
 
     private createPanel() {
         this.mResStr = "joystick";
-        this.mResPng = "resources/ui/joystick/joystick.png";
-        this.mResJson = "resources/ui/joystick/joystick.json";
+        this.mResPng = "./resources/ui/joystick/joystick.png";
+        this.mResJson = "./resources/ui/joystick/joystick.json";
         if (!this.mScene.cache.obj.has(this.mResStr)) {
             this.mScene.load.atlas(this.mResStr, this.mResPng, this.mResJson);
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
