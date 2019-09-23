@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser');
 const phaser = path.join(pathToPhaser, 'dist/phaser.js');
 const ConfigWebpackPlugin = require("config-webpack");
@@ -54,7 +55,11 @@ module.exports = {
         new TSLintPlugin({
             config: path.resolve(__dirname, "./tslint.json"),
             files: ["./src/**/*.ts"]
-        })
+        }),
+        new webpack.DefinePlugin({
+            WEBGL_RENDERER: true, // I did this to make webpack work, but I'm not really sure it should always be true
+            CANVAS_RENDERER: true // I did this to make webpack work, but I'm not really sure it should always be true
+        }),
     ],
     devServer: {
         writeToDisk: true,
