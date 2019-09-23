@@ -109,7 +109,7 @@ export class FramesModel implements IFramesModel {
                 walkableArea: aniData.walkableArea || [],
                 collisionArea: aniData.collisionArea || []
             };
+            this.animations.set(ani.name, ani);
         }
-        this.animations.set(ani.name, ani);
     }
 }

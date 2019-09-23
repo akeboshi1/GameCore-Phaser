@@ -67,6 +67,10 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             sprite.play(`${data.gene}_${animationName}`);
         } else {
             const anis = data.getAnimations(animationName);
+            if (!anis) {
+                Logger.log(`error: ${animationName} not found`);
+                return;
+            }
             sprite.setTexture(data.gene, anis.frameName[0]);
         }
         this.initBaseLoc(field, animationName);
