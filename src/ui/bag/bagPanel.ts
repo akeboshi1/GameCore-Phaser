@@ -60,7 +60,7 @@ export class BagPanel implements IAbstractPanel {
         this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 200);
         const preBtnSprite = this.mScene.make.sprite(undefined, false);
         preBtnSprite.setTexture(this.mResStr, "bagView_tab");
-        preBtnSprite.x = -376;
+        preBtnSprite.x = -372;
         wid += preBtnSprite.width;
         // ===============背包界面左翻按钮
         // this.mPreBtn = (this.mScene.plugins.get("rexButton") as ButtonPlugin).add(preBtnSprite, {
@@ -97,7 +97,7 @@ export class BagPanel implements IAbstractPanel {
             if (i % 12 === 0) {
                 rowIndex++;
                 chilsList[rowIndex] = [];
-                hei += rowIndex * (52 + 5);
+                hei += -rowIndex * (52 + 5);
             }
             // tmpWid = i % 12 * 52 + 5;
             // tmpHei = Math.floor(i / 12) * 52;

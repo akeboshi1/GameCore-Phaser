@@ -54,8 +54,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             throw new Error(`Config.game_id is required.`);
         }
         this.mConfigType = Phaser.AUTO;
-        WEBGL_RENDERER = this.mConfigType === Phaser.WEBGL ? true : false;
-        CANVAS_RENDERER = this.mConfigType === Phaser.CANVAS ? false : true;
         this._newGame();
         this.mConnection = new Connection(this);
         this.mConnection.addPacketListener(this);
