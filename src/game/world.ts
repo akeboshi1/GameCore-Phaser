@@ -33,6 +33,7 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
+
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -42,6 +43,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private mInputManager: InputManager;
+    private mConfigType: number;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
@@ -51,6 +53,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
+        this.mConfigType = Phaser.AUTO;
+        WEBGL_RENDERER = this.mConfigType === Phaser.WEBGL ? true : false;
+        CANVAS_RENDERER = this.mConfigType === Phaser.CANVAS ? false : true;
         this._newGame();
         this.mConnection = new Connection(this);
         this.mConnection.addPacketListener(this);
@@ -195,7 +200,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return this.mGame;
         }
         const gameConfig: Phaser.Types.Core.GameConfig = {
-            type: Phaser.AUTO,
+            type: this.mConfigType,
             zoom: 1,
             parent: "game",
             scene: LoadingScene,
@@ -231,6 +236,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 roundPixels: true
             }
         };
+
         Object.assign(gameConfig, this.mConfig);
         return this.mGame = new Game(gameConfig);
     }

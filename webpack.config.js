@@ -4,7 +4,7 @@ const phaser = path.join(pathToPhaser, 'dist/phaser.js');
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TSLintPlugin = require("tslint-webpack-plugin");
 const appVer = require('./version');
 
@@ -23,9 +23,9 @@ module.exports = {
     devtool: "source-map",
     module: {
         rules: [
-            {test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/'},
-            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'},
-            {test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones'},
+            { test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/' },
+            { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
+            { test: /dragonBones\.js$/, loader: 'expose-loader?dragonBones' },
         ],
     },
     resolve: {
@@ -44,12 +44,12 @@ module.exports = {
         }),
         new ConfigWebpackPlugin(),
         new CopyWebpackPlugin([
-            {from: "**/*", to: "resources", force: true, context: 'resources'}
+            { from: "**/*", to: "resources", force: true, context: 'resources' }
         ]),
         new HtmlWebpackPlugin({
             inject: "head",
             title: "图轻播放器",
-            template: path.join(__dirname, "./index.html")
+            template: path.join(__dirname, "./index.html"),
         }),
         new TSLintPlugin({
             config: path.resolve(__dirname, "./tslint.json"),

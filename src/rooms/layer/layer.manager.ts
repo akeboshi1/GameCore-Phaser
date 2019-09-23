@@ -120,7 +120,7 @@ export class LayerManager {
                 // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
                 const angle: number = Math.atan2((displayA.sortY - displayB.sortY), (displayA.sortX- displayB.sortX));
-                if (angle * (180 * Math.PI) >= 60) {
+                if (angle * (180 * Math.PI) >= 70) {
                     return 1;
                 }
                 // if (displayA.sortY > displayB.sortY) {
