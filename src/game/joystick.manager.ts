@@ -94,7 +94,7 @@ export class JoyStick {
         this.parentCon.addAt(this.bg, 0);
         this.parentCon.addAt(this.btn, 1);
         this.parentCon.alpha = .5;
-        this.parentCon.scaleX = this.parentCon.scaleY = .5;
+        this.parentCon.scaleX = this.parentCon.scaleY = .2;
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
