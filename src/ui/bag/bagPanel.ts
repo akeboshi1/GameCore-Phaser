@@ -6,6 +6,7 @@ import { Logger } from "../../utils/log";
 import ButtonPlugin from "../../../lib/rexui/plugins/button-plugin.js";
 
 export class BagPanel implements IAbstractPanel {
+    public isShow: boolean = false;
     public bagSlotList: ItemSlot[];
     private mResStr: string;
     private mResPng: string;
@@ -22,6 +23,11 @@ export class BagPanel implements IAbstractPanel {
         this.bagSlotList = [];
     }
     public show(param: any) {
+        if (this.isShow) {
+            this.close();
+            return;
+        }
+        this.isShow = true;
         this.createPanel();
         // todo refresh bagData
     }
@@ -29,15 +35,16 @@ export class BagPanel implements IAbstractPanel {
 
     }
     public close() {
-
+        this.isShow = false;
+        this.destroy();
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.mParentCon.x = size.width >> 1;
-        this.mParentCon.y = size.height - 50;
+        this.mParentCon.y = size.height - 200;
     }
     public destroy() {
-
+        if (this.mParentCon) this.mParentCon.destroy();
     }
 
     private createPanel() {
@@ -55,12 +62,12 @@ export class BagPanel implements IAbstractPanel {
 
     private onLoadCompleteHandler() {
         let wid: number = 0;
-        let hei: number = 206;
+        const hei: number = 206;
         const size: Size = this.mWorld.getSize();
         this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 200);
         const preBtnSprite = this.mScene.make.sprite(undefined, false);
         preBtnSprite.setTexture(this.mResStr, "bagView_tab");
-        preBtnSprite.x = -372;
+        preBtnSprite.x = -380;
         wid += preBtnSprite.width;
         // ===============背包界面左翻按钮
         // this.mPreBtn = (this.mScene.plugins.get("rexButton") as ButtonPlugin).add(preBtnSprite, {
@@ -69,50 +76,37 @@ export class BagPanel implements IAbstractPanel {
         //     clickInterval: 100
         // });
         this.mParentCon.add(preBtnSprite);
-        // ================背包界面背景底
-        // const panelBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        // panelBg.setTexture("resources/ui/common/common_panelBg");
-        this.createTexture("bg");
-        // this.mScene.add.image(0, 0, "bg").setOrigin(0);
-        this.mNinePatch = (<any>this.mScene).add.rexNinePatch({
-            x: 0,
-            y: 0,
-            width: 730,
-            height: 206,
-            key: "bg",
-            // columns: [20, 10, 20],
-            // rows: [20, 10, 20],
-            columns: [8, 714, 8],
-            rows: [9, 188, 9],
-            stretchMode: 0
-        });
-        this.mParentCon.addAt(this.mNinePatch, 0);
+
         // ============背包格位
         let itemSlot: ItemSlot;
-        // let tmpWid: number = 0;
-        // let tmpHei: number = 0;
+        let tmpX: number = 0;
+        let tmpY: number = 0;
         const chilsList: any[] = [];
         let rowIndex: number = -1;
-        for (let i: number = 0; i < 12; i++) {
+        const slotCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
+        slotCon.x = 0;
+        slotCon.y = 0;
+        slotCon.setSize(11 * 52 + 10 * 8, 11 * 52 + 10 * 5);
+        this.mParentCon.add(slotCon);
+        for (let i: number = 0; i < 36; i++) {
             if (i % 12 === 0) {
                 rowIndex++;
                 chilsList[rowIndex] = [];
-                hei += -rowIndex * (52 + 5);
             }
-            // tmpWid = i % 12 * 52 + 5;
-            // tmpHei = Math.floor(i / 12) * 52;
-            itemSlot = new ItemSlot(this.mScene, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot");
+            tmpX = i % 12 * 52 + 20;
+            itemSlot = new ItemSlot(this.mScene, slotCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot");
             this.bagSlotList.push(itemSlot);
             chilsList[rowIndex].push(itemSlot.con);
-            if (i === 0) {
+            if (i <= 11) {
                 wid += 52 + 5;
             }
         }
 
         for (let i: number = 0; i <= rowIndex; i++) {
+            tmpY = i * (52 + 8) - 52;
             const buttons = (<any>this.mScene).rexUI.add.buttons({
                 x: 0,
-                y: 0,
+                y: tmpY,
                 width: 52,
                 height: 52,
                 orientation: 0,
@@ -123,7 +117,7 @@ export class BagPanel implements IAbstractPanel {
                     mode: "pointerup",
                     clickInterval: 100
                 },
-                space: 5,
+                space: 8,
                 name: "bag",
             });
             buttons.layout();
@@ -132,6 +126,25 @@ export class BagPanel implements IAbstractPanel {
                 Logger.debug(button);
             }, this);
         }
+        // ================背包界面背景底
+        // const panelBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
+        // panelBg.setTexture("resources/ui/common/common_panelBg");
+        // this.mScene.add.image(0, 0, "bg").setOrigin(0);
+        // this.mNinePatch = (<any>this.mScene).add.rexNinePatch({
+        //     x: 0,
+        //     y: 0,
+        //     width: 730,
+        //     height: 206,
+        //     key: "bg",
+        //     // columns: [20, 10, 20],
+        //     // rows: [20, 10, 20],
+        //     columns: [8, 714, 8],
+        //     rows: [9, 188, 9],
+        //     stretchMode: 0
+        // });
+        this.mParentCon.addAt(this.createTexture(), 0);
+
+
 
         // // ===============背包界面右翻按钮
         const nextBtnSprite = this.mScene.make.sprite(undefined, false);
@@ -145,6 +158,19 @@ export class BagPanel implements IAbstractPanel {
         //     clickInterval: 100
         // });
         wid += nextBtnSprite.width;
+        const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
+        titleCon.setTexture(this.mResStr, "bagView_titleBtn");
+        titleCon.x = (- wid >> 1) + 80;
+        titleCon.y = (-hei >> 1);
+        this.mParentCon.add(titleCon);
+        const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
+
+        titleTF.setFontFamily("Tahoma");
+        titleTF.setFontSize(20);
+        titleTF.setText("背包");
+        titleTF.x = titleCon.x + titleCon.width;
+        titleTF.y = titleCon.y - (titleTF.height >> 1);
+        this.mParentCon.add(titleTF);
         // this.mParentCon.setSize(wid, hei);
         // this.mParentCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
         this.mParentCon.add(nextBtnSprite);
@@ -158,23 +184,19 @@ export class BagPanel implements IAbstractPanel {
 
     }
 
-    private createTexture(key: string) {
-        const COLOR_PRIMARY = 0x9575cd;
-        const COLOR_LIGHT = 0xc7a4ff;
-        const COLOR_DARK = 0x65499c;
-        const width = 50;
-        const height = 50;
-        // columns: [8, 714, 8],
-        // rows: [9, 188, 9],
-        this.mScene.add.graphics()
-            .fillStyle(COLOR_LIGHT)
-            // .fillTriangle(0, 0, 0, 20, 20, 0)
-            // .fillTriangle(width, height, width, height - 20, width - 20, height)
-            .lineStyle(3, COLOR_DARK)
-            .strokeRect(1, 1, width - 10, height - 10)
-            .strokeRect(9, 9, width - 10, height - 10)
-            .generateTexture(key, width, height)
-            .destroy();
+    private createTexture(): Phaser.GameObjects.Graphics {
+        const COLOR_BG = 0x706B6B;
+        const COLOR_LINE = 0x000000;
+        const width = 730;
+        const height = 206;
+        const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.add.graphics();
+        bgGraphics.fillStyle(COLOR_BG, .8);
+        bgGraphics.fillRect((-width >> 1) + 3, (-height >> 1) + 1, width - 6, height - 6);
+        bgGraphics.lineStyle(3, COLOR_LINE, .8);
+        bgGraphics.strokeRect(-width >> 1, -height >> 1, width, height);
+        // .generateTexture(key, width, height)
+        // bgGraphics.destroy();
+        return bgGraphics;
     }
 
     private onClsLoadCompleteHandler() {

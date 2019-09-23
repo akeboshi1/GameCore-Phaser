@@ -12,6 +12,7 @@ export class BagUIMobile implements IBag {
     // bagBtn
     public bagBtn: Phaser.GameObjects.Sprite;
     public bagSlotList: ItemSlot[];
+    public isShow: boolean = false;
 
     private mScene: Phaser.Scene;
     private mWorld: WorldService;
@@ -24,17 +25,22 @@ export class BagUIMobile implements IBag {
         this.mWorld = world;
         const size: Size = this.mWorld.getSize();
         this.mParentCon = this.mScene.add.container(x, y);
-        this.createPanel();
+        // this.createPanel();
     }
 
     public show() {
-
+        if (this.isShow) {
+            this.close();
+            return;
+        }
+        this.isShow = true;
+        this.createPanel();
     }
     public update() {
 
     }
     public close() {
-
+        this.destroy();
     }
     public resize() {
         const size: Size = this.mWorld.getSize();

@@ -17,7 +17,9 @@ export class ItemSlot implements IItem {
     private mSubScriptRes: string;
     constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, subscriptRes?: string) {
         this.mScene = scene;
-        this.con = scene.add.container(x, y);
+        this.con = scene.make.container(undefined, false);
+        this.con.x = x;
+        this.con.y = y;
         parentCon.add(this.con);
         this.mResStr = resStr;
         this.mResPng = respng;
