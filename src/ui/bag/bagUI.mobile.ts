@@ -25,6 +25,7 @@ export class BagUIMobile implements IBag {
         this.mWorld = world;
         const size: Size = this.mWorld.getSize();
         this.mParentCon = this.mScene.add.container(x, y);
+        this.mParentCon.scaleX = this.mParentCon.scaleY = .3;
         // this.createPanel();
     }
 
@@ -44,8 +45,8 @@ export class BagUIMobile implements IBag {
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.mParentCon.x = size.width - 100;
-        this.mParentCon.y = size.height - 100;
+        this.mParentCon.x = size.width - 10;
+        this.mParentCon.y = size.height - 10;
     }
     public destroy() {
 
@@ -79,12 +80,12 @@ export class BagUIMobile implements IBag {
             duration: 50,
             ease: "Linear",
             props: {
-                scaleX: { value: .8 },
-                scaleY: { value: .8 },
+                scaleX: { value: .2 },
+                scaleY: { value: .2 },
             },
             yoyo: true,
             repeat: 0,
         });
-        this.mParentCon.scaleX = this.mParentCon.scaleY = 1;
+        this.mParentCon.scaleX = this.mParentCon.scaleY = .3;
     }
 }

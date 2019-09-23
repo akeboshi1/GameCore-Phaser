@@ -166,6 +166,7 @@ export class BagPanel implements IAbstractPanel {
         const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
 
         titleTF.setFontFamily("Tahoma");
+        titleTF.setFontStyle("bold");
         titleTF.setFontSize(20);
         titleTF.setText("背包");
         titleTF.x = titleCon.x + titleCon.width;
