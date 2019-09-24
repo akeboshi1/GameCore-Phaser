@@ -11,9 +11,11 @@ export class JoyStickManager implements InputManager {
     private mJoyStick: JoyStick;
     private mJoyListeners: InputListener[];
     private mParentcon: Phaser.GameObjects.Container;
+    private mScale: number;
 
     constructor(private worldService: WorldService) {
         this.mJoyListeners = [];
+        this.mScale = worldService.uiScale;
     }
 
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
@@ -24,7 +26,7 @@ export class JoyStickManager implements InputManager {
         if (!this.mScene) return;
         const size: Size = this.worldService.getSize();
         this.mParentcon = this.mScene.add.container(150, size.height - 150);
-        this.mJoyStick = new JoyStick(this.mScene, this.mParentcon, this.mJoyListeners);
+        this.mJoyStick = new JoyStick(this.mScene, this.mParentcon, this.mJoyListeners, this.mScale);
     }
 
     public resize() {
@@ -67,11 +69,13 @@ export class JoyStick {
     private parentCon: Phaser.GameObjects.Container;
     private mJoyListeners: InputListener[];
     private mdownStr: string;
+    private mScale: number;
 
-    constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[]) {
+    constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale?: number) {
         this.mScene = scene;
         this.parentCon = parentCon;
         this.mJoyListeners = joyListeners;
+        this.mScale = scale | 1;
         this.load();
     }
 
@@ -98,7 +102,7 @@ export class JoyStick {
         this.parentCon.addAt(this.bg, 0);
         this.parentCon.addAt(this.btn, 1);
         this.parentCon.alpha = .5;
-        this.parentCon.scaleX = this.parentCon.scaleY = .3;
+        this.parentCon.scaleX = this.parentCon.scaleY = this.mScale;
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
@@ -177,4 +181,7 @@ export class JoyStick {
         this.mdownStr = "";
         return true;
     }
+
+    // todo resize
+
 }
