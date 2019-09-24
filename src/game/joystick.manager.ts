@@ -138,7 +138,7 @@ export class JoyStick {
         this.parentCon.add(this.mbtnCon);
         this.mjoystickCon.scaleX =  this.mjoystickCon.scaleY = this.mScale;
         this.mbtnCon.scaleX =  this.mbtnCon.scaleY = this.mScale;
-        this.parentCon.setSize(this.mbtn0.width, this.mbtn0.height);
+        this.parentCon.setSize(size.width, size.height);
         this.mbtn0.on("pointerup", this.uiUp, this);
         this.resize();
     }

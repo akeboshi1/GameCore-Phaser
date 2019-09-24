@@ -105,7 +105,7 @@ export class BagPanel implements IAbstractPanel {
 
         for (let i: number = 0; i <= rowIndex; i++) {
             tmpY = i * (52 + 8) - 52;
-            const buttons = (<any>this.mScene).rexUI.add.buttons({
+            const buttons = (<any> this.mScene).rexUI.add.buttons({
                 x: 0,
                 y: tmpY,
                 width: 52,
@@ -123,7 +123,7 @@ export class BagPanel implements IAbstractPanel {
             });
             buttons.layout();
 
-            buttons.on("button.click", function (button, groupName, index, pointer) {
+            buttons.on("button.click", function(button, groupName, index, pointer) {
                 Logger.debug(button);
             }, this);
         }
