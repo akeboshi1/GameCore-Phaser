@@ -72,6 +72,8 @@ export class JoyStick {
     private mdownStr: string;
     private mScale: number;
     private mbtn0: Phaser.GameObjects.Sprite;
+    private mjoystickCon: Phaser.GameObjects.Container;
+    private mbtnCon: Phaser.GameObjects.Container;
 
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale?: number) {
         this.mScene = scene;
@@ -94,6 +96,18 @@ export class JoyStick {
         this.mJoyListeners = list;
     }
 
+    public resize() {
+        const size: Size = this.mWorld.getSize();
+        if (this.mbtnCon) {
+            this.mbtnCon.x = size.width - 100;
+            this.mbtnCon.y = size.height - 100;
+        }
+        if (this.mjoystickCon) {
+            this.mjoystickCon.x = 150;
+            this.mjoystickCon.y = size.height - 150;
+        }
+    }
+
     private onLoadCompleteHandler() {
         const size: Size = this.mWorld.getSize();
         this.bg = this.mScene.make.sprite(undefined, false);
@@ -101,26 +115,32 @@ export class JoyStick {
         this.bgRadius = this.bg.width - 70 >> 1;
         this.btn = this.mScene.make.sprite(undefined, false);
         this.btn.setTexture("joystick", "joystick_tab");
-        this.bg.x = 150;
-        this.bg.y = size.height - 150;
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
-        this.parentCon.addAt(this.bg, 0);
-        this.parentCon.addAt(this.btn, 1);
+        this.mjoystickCon = this.mScene.make.container(undefined, false);
+        this.mjoystickCon.x = 150;
+        this.mjoystickCon.y = size.height - 150;
+        this.mjoystickCon.addAt(this.bg, 0);
+        this.mjoystickCon.addAt(this.btn, 1);
+        this.parentCon.add(this.mjoystickCon);
         this.parentCon.alpha = .5;
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
         this.btn.on("dragend", this.dragStop, this);
 
+        this.mbtnCon = this.mScene.make.container(undefined, false);
+        this.mbtnCon.x = size.width - 100;
+        this.mbtnCon.y = size.height - 100;
         this.mbtn0 = this.mScene.add.sprite(0, 0, "joystick", "btn");
-        this.mbtn0.x = size.width - 100;
-        this.mbtn0.y = size.height - 100;
+        this.mbtnCon.add(this.mbtn0);
         this.mbtn0.setInteractive();
-        this.parentCon.add(this.mbtn0);
-        this.parentCon.scaleX = this.parentCon.scaleY = this.mScale;
+        this.parentCon.add(this.mbtnCon);
+        this.mjoystickCon.scaleX =  this.mjoystickCon.scaleY = this.mScale;
+        this.mbtnCon.scaleX =  this.mbtnCon.scaleY = this.mScale;
         this.parentCon.setSize(this.mbtn0.width, this.mbtn0.height);
         this.mbtn0.on("pointerup", this.uiUp, this);
+        this.resize();
     }
 
     private uiUp(pointer, gameObject) {
@@ -129,13 +149,13 @@ export class JoyStick {
             duration: 50,
             ease: "Linear",
             props: {
-                scaleX: { value: this.mScale * .2 },
-                scaleY: { value: this.mScale * .2 },
+                scaleX: { value: .5 },
+                scaleY: { value: .5 },
             },
             yoyo: true,
             repeat: 0,
         });
-        this.mbtn0.scaleX = this.mbtn0.scaleY = this.mScale;
+        this.mbtn0.scaleX = this.mbtn0.scaleY = 1;
     }
 
     private dragUpdate(pointer, dragX, dragY) {

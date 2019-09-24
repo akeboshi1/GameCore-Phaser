@@ -13,10 +13,9 @@ export class BagPanel implements IAbstractPanel {
     private mResJson: string;
     private mScene: Phaser.Scene;
     private mWorld: WorldService;
-    private mPreBtn;
-    private mNextBtn;
+    private mPreBtn: Phaser.GameObjects.Sprite;
+    private mNextBtn: Phaser.GameObjects.Sprite;
     private mParentCon: Phaser.GameObjects.Container;
-    private mNinePatch;
     constructor(scene: Phaser.Scene, world: WorldService) {
         this.mScene = scene;
         this.mWorld = world;
