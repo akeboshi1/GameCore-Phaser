@@ -99,12 +99,12 @@ export class JoyStick {
     public resize() {
         const size: Size = this.mWorld.getSize();
         if (this.mbtnCon) {
-            this.mbtnCon.x = size.width - 100;
-            this.mbtnCon.y = size.height - 100;
+            this.mbtnCon.x = size.width - this.mScale * 120;
+            this.mbtnCon.y = size.height - this.mScale * 120;
         }
         if (this.mjoystickCon) {
-            this.mjoystickCon.x = 150;
-            this.mjoystickCon.y = size.height - 150;
+            this.mjoystickCon.x = this.mScale * 260;
+            this.mjoystickCon.y = size.height - this.mScale * 260;
         }
     }
 
@@ -118,8 +118,8 @@ export class JoyStick {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         this.mjoystickCon = this.mScene.make.container(undefined, false);
-        this.mjoystickCon.x = 150;
-        this.mjoystickCon.y = size.height - 150;
+        // this.mjoystickCon.x = 150;
+        // this.mjoystickCon.y = size.height - 150;
         this.mjoystickCon.addAt(this.bg, 0);
         this.mjoystickCon.addAt(this.btn, 1);
         this.parentCon.add(this.mjoystickCon);
@@ -128,16 +128,13 @@ export class JoyStick {
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
         this.btn.on("dragend", this.dragStop, this);
-
         this.mbtnCon = this.mScene.make.container(undefined, false);
-        this.mbtnCon.x = size.width - 100;
-        this.mbtnCon.y = size.height - 100;
         this.mbtn0 = this.mScene.add.sprite(0, 0, "joystick", "btn");
         this.mbtnCon.add(this.mbtn0);
         this.mbtn0.setInteractive();
+        this.mjoystickCon.scaleX = this.mjoystickCon.scaleY = this.mScale;
+        this.mbtnCon.scaleX = this.mbtnCon.scaleY = this.mScale;
         this.parentCon.add(this.mbtnCon);
-        this.mjoystickCon.scaleX =  this.mjoystickCon.scaleY = this.mScale;
-        this.mbtnCon.scaleX =  this.mbtnCon.scaleY = this.mScale;
         this.parentCon.setSize(size.width, size.height);
         this.mbtn0.on("pointerup", this.uiUp, this);
         this.resize();

@@ -12,6 +12,7 @@ import { UIModuleType } from "./ui.moduleType";
 import { IAbstractPanel } from "./abstractPanel";
 import { Logger } from "../utils/log";
 import { BagPanel } from "./bag/bagPanel";
+import { IMediator } from "./baseMediator";
 
 export class UiManager extends PacketHandler {
     public bagPanel: BagPanel;
@@ -19,10 +20,10 @@ export class UiManager extends PacketHandler {
     private mBagUI: IBag;
 
     private mConnect: ConnectionService;
-    private mViewMap: Map<UIModuleType, IAbstractPanel>;
+    private mMedMap: Map<UIModuleType, IMediator>;
     constructor(private worldService: WorldService) {
         super();
-        this.mViewMap = new Map();
+        this.mMedMap = new Map();
         this.mConnect = worldService.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
@@ -67,36 +68,36 @@ export class UiManager extends PacketHandler {
     }
 
     private showMed(type: string, ...param: any[]) {
-        const showPanel: IAbstractPanel = this.mViewMap.get(type);
-        if (!showPanel) {
+        const mediator: IMediator = this.mMedMap.get(type);
+        if (!mediator) {
             const className: string = type + ".panel";
             // const ns: any = require("./src/ui/" + type + "/" + className + ".ts");
             Logger.debug("====show====" + type);
             // showPanel = new ns[className]();
-            if (!showPanel) {
+            if (!mediator) {
                 Logger.error("error type no panel can show!!!");
                 return;
             }
-            this.mViewMap.set(type, showPanel);
+            this.mMedMap.set(type, mediator);
         }
-        showPanel.showUI(param);
+        mediator.showUI(param);
     }
 
     private updateMed(type: string, ...param: any[]) {
-        const showPanel: IAbstractPanel = this.mViewMap.get(type);
-        if (!showPanel) {
+        const mediator: IMediator = this.mMedMap.get(type);
+        if (!mediator) {
             Logger.error("error type no panel can show!!!");
             return;
         }
-        showPanel.update(param);
+        mediator.update(param);
     }
 
     private hideMed(type: string) {
-        const showPanel: IAbstractPanel = this.mViewMap.get(type);
-        if (!showPanel) {
+        const mediator: IMediator = this.mMedMap.get(type);
+        if (!mediator) {
             Logger.error("error type no panel can show!!!");
             return;
         }
-        showPanel.hideUI();
+        mediator.hideUI();
     }
 }

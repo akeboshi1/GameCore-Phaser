@@ -9,6 +9,7 @@ import { IDropable } from "./idropable";
 import { op_gameconfig } from "pixelpai_proto";
 import { IBaseModel } from "../../service/baseModel";
 import { BagPanel } from "./bagPanel";
+import { World } from "../../game/world";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -21,18 +22,16 @@ export enum DropType {
 export class BagMediator implements IMediator {
     public world: WorldService;
     private mView: BagPanel;
-    constructor() {
+    constructor(mworld: WorldService) {
+        this.world = mworld;
         this.world.modelManager.on(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
+
     }
 
     public getView(): IAbstractPanel {
         return this.mView;
-    }
-
-    public setView(val: IAbstractPanel) {
-        (this.mView as IAbstractPanel) = val;
     }
 
     public showUI(param: any) {
@@ -44,7 +43,10 @@ export class BagMediator implements IMediator {
     }
 
     public hideUI() {
-
+        this.world.modelManager.off(MessageType.DRAG_TO_DROP, this.handleDrop);
+        this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
+        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
+        this.mView.hideUI();
     }
 
     protected handleDrop(value: any): void {
@@ -60,7 +62,7 @@ export class BagMediator implements IMediator {
         // if (packs == null || packs.length === 0) {
         //     return;
         // }
-        // this.view.m_Page.setMaxIndex(Math.ceil(packs[0].items.length / this.pageNum));
+        // this.mView.m_Page.setMaxIndex(Math.ceil(packs[0].items.length / this.pageNum));
         // this.renderList(packs[0].items);
     }
 
