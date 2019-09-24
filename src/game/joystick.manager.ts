@@ -181,7 +181,4 @@ export class JoyStick {
         this.mdownStr = "";
         return true;
     }
-
-    // todo resize
-
 }

@@ -7,6 +7,8 @@ import { Logger } from "../../utils/log";
 import { IDragable } from "./idragable";
 import { IDropable } from "./idropable";
 import { op_gameconfig } from "pixelpai_proto";
+import { IBaseModel } from "../../service/baseModel";
+import { BagPanel } from "./bagPanel";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -18,7 +20,7 @@ export enum DropType {
 }
 export class BagMediator implements IMediator {
     public world: WorldService;
-    private mView: IAbstractPanel;
+    private mView: BagPanel;
     constructor() {
         this.world.modelManager.on(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
@@ -30,7 +32,7 @@ export class BagMediator implements IMediator {
     }
 
     public setView(val: IAbstractPanel) {
-        this.mView = val;
+        (this.mView as IAbstractPanel) = val;
     }
 
     public showUI(param: any) {
