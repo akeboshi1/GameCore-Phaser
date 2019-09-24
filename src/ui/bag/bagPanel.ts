@@ -40,8 +40,10 @@ export class BagPanel implements IAbstractPanel {
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.mParentCon.x = size.width >> 1;
-        this.mParentCon.y = size.height - 200;
+        if (this.mParentCon) {
+            this.mParentCon.x = size.width >> 1;
+            this.mParentCon.y = size.height - 200;
+        }
     }
     public destroy() {
         if (this.mParentCon) this.mParentCon.destroy();
@@ -104,7 +106,7 @@ export class BagPanel implements IAbstractPanel {
 
         for (let i: number = 0; i <= rowIndex; i++) {
             tmpY = i * (52 + 8) - 52;
-            const buttons = (<any> this.mScene).rexUI.add.buttons({
+            const buttons = (<any>this.mScene).rexUI.add.buttons({
                 x: 0,
                 y: tmpY,
                 width: 52,
@@ -122,7 +124,7 @@ export class BagPanel implements IAbstractPanel {
             });
             buttons.layout();
 
-            buttons.on("button.click", function(button, groupName, index, pointer) {
+            buttons.on("button.click", function (button, groupName, index, pointer) {
                 Logger.debug(button);
             }, this);
         }

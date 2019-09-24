@@ -34,9 +34,11 @@ export class UiManager extends PacketHandler {
         if (this.worldService.game.device.os.desktop) {
             this.mBagUI = new BagUIPC(scene, this.worldService, (size.width >> 1) - 29, size.height - 50);
         } else {
-            this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
+            //  this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
         }
-        this.mBagUI.showUI(undefined);
+        if (this.mBagUI) {
+            this.mBagUI.showUI(undefined);
+        }
         this.bagPanel = new BagPanel(scene, this.worldService);
     }
 
