@@ -30,6 +30,7 @@ import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
+import { ModelManager } from "../service/modelManager";
 
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
@@ -44,6 +45,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mCallBack: Function;
     private mInputManager: InputManager;
     private mConfigType: number;
+    private mModelManager: ModelManager;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
@@ -154,6 +156,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConnection;
     }
 
+    get modelManager(): ModelManager | undefined {
+        return this.mModelManager;
+    }
+
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
@@ -246,7 +252,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-
+        this.mModelManager = new ModelManager(this);
         if (this.mGame.device.os.desktop) {
             this.mInputManager = new KeyBoardManager(this);
         } else {

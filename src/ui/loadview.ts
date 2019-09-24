@@ -9,7 +9,7 @@ export class LoadingView implements IAbstractPanel {
     constructor(private mScene: Phaser.Scene) {
         this.createPanel();
     }
-    public show(param: any) {
+    public showUI(param: any) {
         this.mTween = this.mScene.tweens.add({
             targets: this.mBg,
             duration: 2000000,
@@ -22,7 +22,7 @@ export class LoadingView implements IAbstractPanel {
     public update(param: any) {
 
     }
-    public close() {
+    public hideUI() {
         if (this.mTween) {
             this.mTween.stop();
             this.mTween.remove();

@@ -1,43 +1,73 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
 
-export class BagMediator extends PacketHandler {
+import { MessageType } from "../../const/MessageType";
+import { IMediator } from "../baseMediator";
+import { IAbstractPanel } from "../abstractPanel";
+import { WorldService } from "../../game/world.service";
+import { Logger } from "../../utils/log";
+import { IDragable } from "./idragable";
+import { IDropable } from "./idropable";
+import { op_gameconfig } from "pixelpai_proto";
+
+export enum DragType {
+    DRAG_TYPE_SHORTCUT = 1,
+    DRAG_TYPE_BAG = 2
+}
+export enum DropType {
+    DROP_TYPE_SHORTCUT = 1,
+    DROP_TYPE_BAG = 2
+}
+export class BagMediator implements IMediator {
+    public world: WorldService;
+    private mView: IAbstractPanel;
     constructor() {
-        super();
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM, this.handleAddItem);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM, this.handleRemoveItem);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EXCHANGE_ITEM_POS, this.handleExchangeItem);
+        this.world.modelManager.on(MessageType.DRAG_TO_DROP, this.handleDrop);
+        this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
+        this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
     }
 
-    private handleAddItem(packet: PBpacket): void {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM = packet.content;
-        if (content.nodetype === op_def.NodeType.ElementNodeType) {
-           // Globals.DataCenter.SceneData.mapInfo.addElementPackItems(content.id, content.item);
-        } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
-           // Globals.DataCenter.PlayerData.addCharacterPackItems(content.id, content.item);
+    public getView(): IAbstractPanel {
+        return this.mView;
+    }
+
+    public setView(val: IAbstractPanel) {
+        this.mView = val;
+    }
+
+    public showUI(param: any) {
+        this.mView.showUI(param);
+    }
+
+    public update(param: any) {
+        this.mView.update(param);
+    }
+
+    public hideUI() {
+
+    }
+
+    protected handleDrop(value: any): void {
+        const drag: IDragable = value[0];
+        const drop: IDropable = value[1];
+        if (drop.getDropType() === DropType.DROP_TYPE_BAG && drag.getDragType() === DragType.DRAG_TYPE_SHORTCUT) {
+            Logger.debug("背包拖到快捷栏了！！！");
         }
-       /// Globals.MessageCenter.emit(MessageType.PACKAGE_ITEM_ADD, content);
     }
 
-    private handleRemoveItem(packet: PBpacket): void {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM = packet.content;
-        const len = content.itemId.length;
-        for (let i = 0; i < len; i++) {
-            if (content.nodetype === op_def.NodeType.ElementNodeType) {
-              //  Globals.DataCenter.SceneData.mapInfo.removeElementPackItems(content.id, content.itemId[i]);
-            } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
-              //  Globals.DataC.enter.PlayerData.removeCharacterPackItems(content.id, content.itemId[i]);
-            }
-        }
-       // Globals.MessageCenter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
-      //  Globals.MessageCenter.emit(MessageType.PACKAGE_ITEM_REMOVE, content);
+    private refrehView(): void {
+        // let packs: op_gameconfig.IPackage[] = Globals.DataCenter.PlayerData.mainPlayerInfo.package;
+        // if (packs == null || packs.length === 0) {
+        //     return;
+        // }
+        // this.view.m_Page.setMaxIndex(Math.ceil(packs[0].items.length / this.pageNum));
+        // this.renderList(packs[0].items);
     }
 
-    private handleExchangeItem(packet: PBpacket): void {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EXCHANGE_ITEM_POS = packet.content;
-        // Globals.MessageCenter.emit(MessageType.PACKAGE_EXCHANGE_ITEM_POS, content);
+    private handleSynchroPackage(): void {
+        this.refrehView();
     }
 
-
+    private onUpdatePackageHandler() {
+        this.refrehView();
+    }
 
 }

@@ -5,13 +5,13 @@ export class ChatPanel implements IAbstractPanel {
     constructor() {
 
     }
-    public show(param: any) {
+    public showUI(param: any) {
 
     }
     public update(param: any) {
 
     }
-    public close() {
+    public hideUI() {
 
     }
 

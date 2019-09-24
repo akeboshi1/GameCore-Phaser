@@ -36,7 +36,7 @@ export class UiManager extends PacketHandler {
         } else {
             this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
         }
-        this.mBagUI.show(undefined);
+        this.mBagUI.showUI(undefined);
         this.bagPanel = new BagPanel(scene, this.worldService);
     }
 
@@ -51,20 +51,20 @@ export class UiManager extends PacketHandler {
 
     private handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
-        this.showPanel(ui.name, ui);
+        this.showMed(ui.name, ui);
     }
 
     private handleUpdateUI(packet: PBpacket) {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
-        this.updatePanel(ui.name, ui);
+        this.updateMed(ui.name, ui);
     }
 
     private handleCloseUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
-        this.hidePanel(ui.name);
+        this.hideMed(ui.name);
     }
 
-    private showPanel(type: string, ...param: any[]) {
+    private showMed(type: string, ...param: any[]) {
         const showPanel: IAbstractPanel = this.mViewMap.get(type);
         if (!showPanel) {
             const className: string = type + ".panel";
@@ -77,10 +77,10 @@ export class UiManager extends PacketHandler {
             }
             this.mViewMap.set(type, showPanel);
         }
-        showPanel.show(param);
+        showPanel.showUI(param);
     }
 
-    private updatePanel(type: string, ...param: any[]) {
+    private updateMed(type: string, ...param: any[]) {
         const showPanel: IAbstractPanel = this.mViewMap.get(type);
         if (!showPanel) {
             Logger.error("error type no panel can show!!!");
@@ -89,12 +89,12 @@ export class UiManager extends PacketHandler {
         showPanel.update(param);
     }
 
-    private hidePanel(type: string) {
+    private hideMed(type: string) {
         const showPanel: IAbstractPanel = this.mViewMap.get(type);
         if (!showPanel) {
             Logger.error("error type no panel can show!!!");
             return;
         }
-        showPanel.close();
+        showPanel.hideUI();
     }
 }

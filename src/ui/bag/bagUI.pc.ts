@@ -1,7 +1,7 @@
-import {IBag} from "./basebag";
-import {WorldService} from "../../game/world.service";
-import {ItemSlot} from "./item.slot";
-import {Size} from "../../utils/size";
+import { IBag } from "./basebag";
+import { WorldService } from "../../game/world.service";
+import { ItemSlot } from "./item.slot";
+import { Size } from "../../utils/size";
 
 /**
  * 背包显示栏
@@ -28,9 +28,9 @@ export class BagUIPC implements IBag {
         this.bagSlotList = [];
     }
 
-    public show(param: any) {
+    public showUI(param: any) {
         if (this.isShow) {
-            this.close();
+            this.hideUI();
             return;
         }
         this.isShow = true;
@@ -40,7 +40,7 @@ export class BagUIPC implements IBag {
     public update(param: any) {
         // update bagSlotList
     }
-    public close() {
+    public hideUI() {
         this.destroy();
     }
     public resize() {
@@ -100,7 +100,7 @@ export class BagUIPC implements IBag {
             wid += 56 + 5;
         }
 
-        const buttons = (<any>this.mScene).rexUI.add.buttons({
+        const buttons = (<any> this.mScene).rexUI.add.buttons({
             x: 0,
             y: 0,
             width: 56,
@@ -118,8 +118,10 @@ export class BagUIPC implements IBag {
         });
         buttons.layout();
         const s = this;
-        buttons.on("button.click", function (button, groupName, index, pointer) {
-            s.mWorld.uiManager.bagPanel.show(undefined);
+        buttons.on("button.click", function(button, groupName, index, pointer) {
+            if (index === 0) {
+                s.mWorld.uiManager.bagPanel.showUI(undefined);
+            }
             // =============index = 0 为背包按钮
             // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE.OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
             // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
