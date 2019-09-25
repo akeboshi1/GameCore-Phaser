@@ -2,7 +2,6 @@ import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IRoomService } from "../rooms/room";
-import { ChatPanel } from "./chatPanel";
 import { Size } from "../utils/size";
 import { IBag } from "./bag/basebag";
 import { BagUIPC } from "./bag/bagUI.pc";
@@ -12,7 +11,8 @@ import { UIModuleType } from "./ui.moduleType";
 import { IAbstractPanel } from "./abstractPanel";
 import { Logger } from "../utils/log";
 import { BagPanel } from "./bag/bagPanel";
-import { IMediator } from "./baseMediator";
+import {ChatPanel} from "./chat/chat.panel";
+import {IMediator} from "./baseMediator";
 
 export class UiManager extends PacketHandler {
     public bagPanel: BagPanel;
@@ -38,9 +38,13 @@ export class UiManager extends PacketHandler {
             //  this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
         }
         if (this.mBagUI) {
-            this.mBagUI.showUI(undefined);
+            this.mBagUI.show(undefined);
         }
         this.bagPanel = new BagPanel(scene, this.worldService);
+
+        // TOOD 通过统一的方法创建打开
+        const chat = new ChatPanel(scene, this.worldService);
+        chat.show();
     }
 
     public resize(width: number, height: number) {

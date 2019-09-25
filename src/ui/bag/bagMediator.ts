@@ -40,7 +40,7 @@ export class BagMediator implements IMediator {
         this.world.modelManager.on(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
-        this.mView.showUI(param);
+        this.mView.show(param);
     }
 
     public update(param: any) {
@@ -53,7 +53,7 @@ export class BagMediator implements IMediator {
         this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
         if (!this.mView) return;
-        this.mView.hideUI();
+        this.mView.close();
     }
 
     protected handleDrop(value: any): void {

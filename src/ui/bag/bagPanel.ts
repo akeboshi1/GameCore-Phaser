@@ -25,9 +25,10 @@ export class BagPanel implements IAbstractPanel {
         this.mWorld = world;
         this.bagSlotList = [];
     }
-    public showUI(param: any) {
+
+    public show(param: any) {
         if (this.isShow) {
-            this.hideUI();
+            this.close();
             return;
         }
         this.isShow = true;
@@ -37,10 +38,11 @@ export class BagPanel implements IAbstractPanel {
     public update(param: any) {
 
     }
-    public hideUI() {
+    public close() {
         this.isShow = false;
         this.destroy();
     }
+
     public resize() {
         const size: Size = this.mWorld.getSize();
         if (this.mParentCon) {

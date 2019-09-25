@@ -17,7 +17,7 @@ export class MainUIScene extends Phaser.Scene {
   }
 
   public create() {
-    this.fps = this.add.text(0, 0, "");
+    this.fps = this.add.text(10, 10, "");
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
     } else {

@@ -28,9 +28,9 @@ export class BagUIPC implements IBag {
         this.bagSlotList = [];
     }
 
-    public showUI(param: any) {
+    public show(param: any) {
         if (this.isShow) {
-            this.hideUI();
+            this.close();
             return;
         }
         this.isShow = true;
@@ -40,7 +40,7 @@ export class BagUIPC implements IBag {
     public update(param: any) {
         // update bagSlotList
     }
-    public hideUI() {
+    public close() {
         this.destroy();
     }
     public resize() {
@@ -119,7 +119,7 @@ export class BagUIPC implements IBag {
         const s = this;
         buttons.on("button.click", function(button, groupName, index, pointer) {
             if (index === 0) {
-                s.mWorld.uiManager.bagPanel.showUI(undefined);
+                s.mWorld.uiManager.bagPanel.show(undefined);
             }
             // =============index = 0 为背包按钮
             // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE.OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);

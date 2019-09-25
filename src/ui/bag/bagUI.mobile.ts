@@ -29,9 +29,9 @@ export class BagUIMobile implements IBag {
         // this.createPanel();
     }
 
-    public showUI() {
+    public show() {
         if (this.isShow) {
-            this.hideUI();
+            this.close();
             return;
         }
         this.isShow = true;
@@ -40,7 +40,7 @@ export class BagUIMobile implements IBag {
     public update() {
 
     }
-    public hideUI() {
+    public close() {
         this.destroy();
     }
     public resize() {
@@ -87,6 +87,6 @@ export class BagUIMobile implements IBag {
             repeat: 0,
         });
         this.mParentCon.scaleX = this.mParentCon.scaleY = .3;
-        this.mWorld.uiManager.bagPanel.showUI(undefined);
+        this.mWorld.uiManager.bagPanel.show(undefined);
     }
 }

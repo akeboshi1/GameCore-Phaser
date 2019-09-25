@@ -1,39 +1,42 @@
 import "phaser";
 import "dragonBones";
-import {WorldService} from "./world.service";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "phaser";
-import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_def, op_gateway, op_virtual_world} from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "phaser";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
-import {RoomManager} from "../rooms/room.manager";
-import {ServerAddress} from "../net/address";
-import {KeyBoardManager} from "./keyboard.manager";
-import {MouseManager} from "./mouse.manager";
-import {SelectManager} from "../rooms/player/select.manager";
-import {Size} from "../utils/size";
-import {IRoomService} from "../rooms/room";
-import {MainUIScene} from "../scenes/main.ui";
-import {Logger} from "../utils/log";
-import {JoyStickManager} from "./joystick.manager";
-import {GameMain, ILauncherConfig} from "../../launcher";
-import {ElementStorage, IElementStorage} from "./element.storage";
-import {load} from "../utils/http";
-import {ResUtils} from "../utils/resUtil";
-import {Lite} from "game-capsule";
-import {UiManager} from "../ui/ui.manager";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
+import { RoomManager } from "../rooms/room.manager";
+import { ServerAddress } from "../net/address";
+import { KeyBoardManager } from "./keyboard.manager";
+import { MouseManager } from "./mouse.manager";
+import { SelectManager } from "../rooms/player/select.manager";
+import { Size } from "../utils/size";
+import { IRoomService } from "../rooms/room";
+import { MainUIScene } from "../scenes/main.ui";
+import { Logger } from "../utils/log";
+import { JoyStickManager } from "./joystick.manager";
+import { GameMain, ILauncherConfig } from "../../launcher";
+import { ElementStorage, IElementStorage } from "./element.storage";
+import { load } from "../utils/http";
+import { ResUtils } from "../utils/resUtil";
+import { Lite } from "game-capsule";
+import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
+import InputTextPlugin from "../../lib/rexui/plugins/inputtext-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import {InputManager} from "./input.service";
 import {ModelManager} from "../service/modelManager";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
+import {PI_EXTENSION_REGEX} from "../const/constants";
 
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
+
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -218,17 +221,25 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             fps: {
                 target: 60
             },
+            dom: {
+                createContainer: true
+            },
             plugins: {
                 global: [{
                     key: "rexButton",
                     plugin: ButtonPlugin,
                     start: true
                 },
-                    {
-                        key: "rexNinePatchPlugin",
-                        plugin: NinePatchPlugin,
-                        start: true
-                    }],
+                {
+                    key: "rexNinePatchPlugin",
+                    plugin: NinePatchPlugin,
+                    start: true
+                },
+                {
+                   key: "rexInputText",
+                    plugin: InputTextPlugin,
+                    start: true
+                }],
                 scene: [
                     {
                         key: "DragonBones",
@@ -279,7 +290,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private loadGameConfig(paths: string[]): Promise<Lite> {
         const promises = [];
         for (const path of paths) {
-            promises.push(load(ResUtils.getGameConfig(path), "arraybuffer"));
+            if (PI_EXTENSION_REGEX.test(path)) {
+                promises.push(load(ResUtils.getGameConfig(path), "arraybuffer"));
+            }
         }
         // TODO Promise.all如果其中有一个下载失败，会返回error
         return Promise.all(promises)
