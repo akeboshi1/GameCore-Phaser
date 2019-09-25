@@ -16,6 +16,10 @@ export class BagPanel implements IAbstractPanel {
     private mPreBtn: Phaser.GameObjects.Sprite;
     private mNextBtn: Phaser.GameObjects.Sprite;
     private mParentCon: Phaser.GameObjects.Container;
+    private mPageNum: number = 0;
+    private mPageMaxCount: number = 36;
+    private mPageIndex: number = 0;
+    private mDataList: any[];
     constructor(scene: Phaser.Scene, world: WorldService) {
         this.mScene = scene;
         this.mWorld = world;
@@ -44,6 +48,13 @@ export class BagPanel implements IAbstractPanel {
             this.mParentCon.y = size.height - 200;
         }
     }
+
+    public setDataList(value: any[]) {
+        this.mPageNum = Math.ceil(value.length / this.mPageMaxCount);
+        this.mDataList = value;
+        this.refreshDataList();
+    }
+
     public destroy() {
         if (this.mParentCon) this.mParentCon.destroy();
     }
@@ -65,18 +76,13 @@ export class BagPanel implements IAbstractPanel {
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
-        this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 200);
-        const preBtnSprite = this.mScene.make.sprite(undefined, false);
-        preBtnSprite.setTexture(this.mResStr, "bagView_tab");
-        preBtnSprite.x = -380;
-        wid += preBtnSprite.width;
         // ===============背包界面左翻按钮
-        // this.mPreBtn = (this.mScene.plugins.get("rexButton") as ButtonPlugin).add(preBtnSprite, {
-        //     enable: true,
-        //     mode: 1,
-        //     clickInterval: 100
-        // });
-        this.mParentCon.add(preBtnSprite);
+        this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 200);
+        this.mPreBtn = this.mScene.make.sprite(undefined, false);
+        this.mPreBtn.setTexture(this.mResStr, "bagView_tab");
+        this.mPreBtn.x = -380;
+        wid += this.mPreBtn.width;
+        this.mParentCon.add(this.mPreBtn);
 
         // ============背包格位
         let itemSlot: ItemSlot;
@@ -128,35 +134,14 @@ export class BagPanel implements IAbstractPanel {
             }, this);
         }
         // ================背包界面背景底
-        // const panelBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        // panelBg.setTexture("resources/ui/common/common_panelBg");
-        // this.mScene.add.image(0, 0, "bg").setOrigin(0);
-        // this.mNinePatch = (<any>this.mScene).add.rexNinePatch({
-        //     x: 0,
-        //     y: 0,
-        //     width: 730,
-        //     height: 206,
-        //     key: "bg",
-        //     // columns: [20, 10, 20],
-        //     // rows: [20, 10, 20],
-        //     columns: [8, 714, 8],
-        //     rows: [9, 188, 9],
-        //     stretchMode: 0
-        // });
         this.mParentCon.addAt(this.createTexture(), 0);
 
         // // ===============背包界面右翻按钮
-        const nextBtnSprite = this.mScene.make.sprite(undefined, false);
-        nextBtnSprite.setTexture(this.mResStr, "bagView_tab");
-        nextBtnSprite.scaleX = -1;
-        nextBtnSprite.x = 380;
-
-        // this.mNextBtn = (this.mScene.plugins.get("rexButton") as ButtonPlugin).add(nextBtnSprite, {
-        //     enable: true,
-        //     mode: 1,
-        //     clickInterval: 100
-        // });
-        wid += nextBtnSprite.width;
+        this.mNextBtn = this.mScene.make.sprite(undefined, false);
+        this.mNextBtn.setTexture(this.mResStr, "bagView_tab");
+        this.mNextBtn.scaleX = -1;
+        this.mNextBtn.x = 380;
+        wid += this.mNextBtn.width;
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
         titleCon.setTexture(this.mResStr, "bagView_titleBtn");
         titleCon.x = (- wid >> 1) + 80;
@@ -168,20 +153,39 @@ export class BagPanel implements IAbstractPanel {
         titleTF.setFontStyle("bold");
         titleTF.setFontSize(20);
         titleTF.setText("背包");
-        titleTF.x = titleCon.x + titleCon.width;
+        titleTF.x = titleCon.x + titleCon.width - 10;
         titleTF.y = titleCon.y - (titleTF.height >> 1);
         this.mParentCon.add(titleTF);
-        // this.mParentCon.setSize(wid, hei);
-        // this.mParentCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
-        this.mParentCon.add(nextBtnSprite);
-        // if (!this.mScene.cache.obj.has("clsBtn")) {
-        //     this.mScene.load.atlas("clsBtn", "resources/ui/common/common_clsBtn.png", "resources/ui/common/common_clsBtn.json");
-        //     this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
-        //     this.mScene.load.start();
-        // } else {
-        //     this.onClsLoadCompleteHandler();
-        // }
+        this.mParentCon.add(this.mNextBtn);
+        this.mNextBtn.setInteractive();
+        this.mPreBtn.setInteractive();
+        this.mNextBtn.on("pointerup", this.nextHandler, this);
+        this.mPreBtn.on("pointerup", this.preHandler, this);
+    }
 
+    private nextHandler(pointer, gameObject) {
+        if (this.mPageIndex < this.mPageNum - 1) {
+            this.mPageIndex++;
+        }
+        this.refreshDataList();
+    }
+
+    private preHandler(pointer, gameObject) {
+        if (this.mPageIndex > 0) {
+            this.mPageIndex--;
+        }
+        this.refreshDataList();
+    }
+
+    private refreshDataList() {
+        const items = this.mDataList.slice((this.mPageIndex - 1) * this.mPageMaxCount, this.mPageIndex * this.mPageMaxCount);
+        const len = this.bagSlotList.length;
+        let item: ItemSlot;
+        for (let i = 0; i < len; i++) {
+            item = this.bagSlotList[i];
+            if (!item) continue;
+            item.dataChange(items[i]);
+        }
     }
 
     private createTexture(): Phaser.GameObjects.Graphics {

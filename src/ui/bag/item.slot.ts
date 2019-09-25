@@ -1,17 +1,21 @@
 import { IItem } from "./baseitem";
+import { IListItemComponent } from "./IListItemRender";
+import { op_gameconfig } from "pixelpai_proto";
+import { DragDropIcon } from "./dragDropIcon";
 
-export class ItemSlot implements IItem {
-    public url: string;
-    public id: number;
-    public count: number;
+export class ItemSlot implements IListItemComponent {
+    // public url: string;
+    // public id: number;
+    // public count: number;
     public con: Phaser.GameObjects.Container;
-
+    public index: number;
+    private mData: op_gameconfig.Item;
     private mScene: Phaser.Scene;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
     private mResSlot: string;
-    private mIcon: Phaser.GameObjects.Sprite;
+    private mIcon: DragDropIcon;
     private mAnimationCon: Phaser.GameObjects.Sprite;
     private mSubScriptSprite: Phaser.GameObjects.Sprite;
     private mSubScriptRes: string;
@@ -29,6 +33,20 @@ export class ItemSlot implements IItem {
         this.createUI();
     }
 
+    public getView(): any {
+        return this.con;
+    }
+
+    public dataChange(val: any) {
+        this.mData = val;
+        if (this.mIcon && this.mData && this.mData.display) {
+            this.mIcon.load(this.mData.display.texturePath, this);
+            const des = this.mData.des ? "\n" + this.mData.des : "";
+            //  this.setToolTipText(this.data.name + des);
+        }
+
+    }
+
     private createUI() {
         if (!this.mScene.cache.obj.has(this.mResStr)) {
             this.mScene.load.atlas(this.mResStr, this.mResPng, this.mResJson);
@@ -44,7 +62,10 @@ export class ItemSlot implements IItem {
         itemBG.setTexture(this.mResStr, this.mResSlot);
         this.con.addAt(itemBG, 0);
         this.con.setSize(itemBG.width, itemBG.height);
-        this.mIcon = this.mScene.make.sprite(undefined, false);
+        this.mIcon = new DragDropIcon(this.mScene, 0, 0);
+        // this.mIcon.icon.anchor.set(0.5, 0.5);
+        // this.mIcon.x = 26;
+        // this.mIcon.y = 26;
         this.con.addAt(this.mIcon, 1);
         if (this.mSubScriptRes) {
             this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);

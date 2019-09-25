@@ -120,12 +120,13 @@ export class JoyStick {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         this.mjoystickCon = this.mScene.make.container(undefined, false);
+        this.mjoystickCon.alpha = .5;
         // this.mjoystickCon.x = 150;
         // this.mjoystickCon.y = size.height - 150;
         this.mjoystickCon.addAt(this.bg, 0);
         this.mjoystickCon.addAt(this.btn, 1);
         this.parentCon.add(this.mjoystickCon);
-        this.parentCon.alpha = .5;
+        // this.parentCon.alpha = .5;
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);

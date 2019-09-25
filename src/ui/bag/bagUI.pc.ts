@@ -94,7 +94,6 @@ export class BagUIPC implements IBag {
                 subScriptRes = "bag_SubScript" + (i + 1);
             }
             itemSlot = new ItemSlot(this.mScene, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_slot", subScriptRes);
-            itemSlot.id = i;
             this.bagSlotList.push(itemSlot);
             childList.push(itemSlot.con);
             wid += 56 + 5;
