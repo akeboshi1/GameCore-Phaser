@@ -1,11 +1,11 @@
-import { PlayerInfo } from "./playerInfo";
-import { MainPlayerInfo } from "./mainPlayerInfo";
-import { op_client, op_gameconfig } from "pixelpai_proto";
-import { EventEmitter } from "events";
-import { MessageType } from "../../const/MessageType";
-import { IBaseModel } from "../baseModel";
-import { WorldService } from "../../game/world.service";
-import { PacketHandler } from "net-socket-packet";
+import {PlayerInfo} from "./playerInfo";
+import {MainPlayerInfo} from "./mainPlayerInfo";
+import {op_client, op_gameconfig} from "pixelpai_proto";
+import {EventEmitter} from "events";
+import {MessageType} from "../../const/MessageType";
+import {IBaseModel} from "../baseModel";
+import {WorldService} from "../../game/world.service";
+import {PacketHandler} from "net-socket-packet";
 
 export class PlayerDataModel extends PacketHandler implements IBaseModel {
     // private mCharactId: number;
@@ -14,6 +14,7 @@ export class PlayerDataModel extends PacketHandler implements IBaseModel {
     private mPlayerInfoList: PlayerInfo[] = [];
     private mMainPlayerInfo: MainPlayerInfo = new MainPlayerInfo();
     private mModelDispatch: EventEmitter;
+
     constructor(private mWorld: WorldService) {
         super();
         if (this.mWorld.modelManager) {
@@ -126,7 +127,9 @@ export class PlayerDataModel extends PacketHandler implements IBaseModel {
     }
 
     public getPlayer(uuid: number) {
-        const player = this.mPlayerInfoList.find(player => player.id === uuid);
+        const player = this.mPlayerInfoList.find((info: PlayerInfo) => {
+            return info.id === uuid;
+        });
         if (!!player === false) {
             if (uuid === this.mMainPlayerInfo.id) return this.mMainPlayerInfo;
         }

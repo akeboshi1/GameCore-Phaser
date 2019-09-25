@@ -29,12 +29,11 @@ import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import {InputManager} from "./input.service";
+import {ModelManager} from "../service/modelManager";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { ModelManager } from "../service/modelManager";
 
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
-
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -44,7 +43,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private mInputManager: InputManager;
-    private mConfigType: number;
     private mModelManager: ModelManager;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
@@ -55,7 +53,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
-        this.mConfigType = Phaser.AUTO;
         this._newGame();
         this.mConnection = new Connection(this);
         this.mConnection.addPacketListener(this);
@@ -130,7 +127,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get uiScale(): number {
         if (this.mConfig)
-            return this.mConfig.ui_scale | 1;
+            return this.mConfig.ui_scale;
         return 1;
     }
 
@@ -210,7 +207,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return this.mGame;
         }
         const gameConfig: Phaser.Types.Core.GameConfig = {
-            type: this.mConfigType,
+            type: Phaser.AUTO,
             zoom: 1,
             parent: "game",
             scene: LoadingScene,

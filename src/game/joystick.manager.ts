@@ -1,9 +1,9 @@
-import { WorldService } from "./world.service";
-import { Logger } from "../utils/log";
-import { Size } from "../utils/size";
-import { InputListener, InputManager } from "./input.service";
-import { IRoomService } from "../rooms/room";
-import { Direction } from "../rooms/element/element";
+import {WorldService} from "./world.service";
+import {Logger} from "../utils/log";
+import {Size} from "../utils/size";
+import {InputListener, InputManager} from "./input.service";
+import {IRoomService} from "../rooms/room";
+import {Direction} from "../rooms/element/element";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
@@ -16,6 +16,7 @@ export class JoyStickManager implements InputManager {
     constructor(private worldService: WorldService) {
         this.mJoyListeners = [];
         this.mScale = worldService.uiScale;
+        Logger.debug(`JoyStickManager ${worldService.uiScale}`);
     }
 
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
@@ -26,6 +27,7 @@ export class JoyStickManager implements InputManager {
         if (!this.mScene) return;
         const size: Size = this.worldService.getSize();
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
+        const scale = !this.mScale ? 1 : this.mScale;
         this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, this.mScale);
     }
 
@@ -75,12 +77,12 @@ export class JoyStick {
     private mjoystickCon: Phaser.GameObjects.Container;
     private mbtnCon: Phaser.GameObjects.Container;
 
-    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale?: number) {
+    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale: number) {
         this.mScene = scene;
         this.mWorld = world;
         this.parentCon = parentCon;
         this.mJoyListeners = joyListeners;
-        this.mScale = scale | 1;
+        this.mScale = scale;
         this.load();
     }
 
@@ -146,8 +148,8 @@ export class JoyStick {
             duration: 50,
             ease: "Linear",
             props: {
-                scaleX: { value: .5 },
-                scaleY: { value: .5 },
+                scaleX: {value: .5},
+                scaleY: {value: .5},
             },
             yoyo: true,
             repeat: 0,
