@@ -13,6 +13,7 @@ import { Logger } from "../utils/log";
 import { BagPanel } from "./bag/bagPanel";
 import {ChatPanel} from "./chat/chat.panel";
 import {IMediator} from "./baseMediator";
+import {ChatMediator} from "./chat/chat.mediator";
 
 export class UiManager extends PacketHandler {
     public bagPanel: BagPanel;
@@ -43,7 +44,7 @@ export class UiManager extends PacketHandler {
         this.bagPanel = new BagPanel(scene, this.worldService);
 
         // TOOD 通过统一的方法创建打开
-        const chat = new ChatPanel(scene, this.worldService);
+        const chat = new ChatMediator(scene, this.worldService);
         chat.show();
     }
 

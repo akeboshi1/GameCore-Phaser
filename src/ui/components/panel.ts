@@ -1,11 +1,12 @@
 import {IAbstractPanel} from "../abstractPanel";
 import {Logger} from "../../utils/log";
 
-export class Panel implements IAbstractPanel {
+export class Panel extends Phaser.Events.EventEmitter implements IAbstractPanel {
     public isShow: boolean;
     protected mInitialized: boolean;
     protected mScene: Phaser.Scene;
     constructor(scene: Phaser.Scene) {
+        super();
         this.mInitialized = false;
         this.mScene = scene;
     }

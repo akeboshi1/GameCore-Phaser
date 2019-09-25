@@ -6,15 +6,19 @@ import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import {Panel} from "../components/panel";
+import {Button} from "../components/button";
 
 export class ChatPanel extends Panel {
     private mParent: Phaser.GameObjects.Container;
     private mTextArea: TextArea;
+    private mInputText: InputText;
     constructor(scene: Phaser.Scene, private mWorldService: WorldService) {
         super(scene);
     }
 
     public appendChat(val: string) {
+        this.mTextArea.appendText(val + "\n");
+        this.mTextArea.scrollToBottom();
     }
 
     public setSize(w: number, h: number) {
@@ -37,6 +41,7 @@ export class ChatPanel extends Panel {
         if (!this.mScene) {
             return;
         }
+        this.mScene.load.image("button", "./resources/ui/common/button.png");
         super.preload();
     }
 
@@ -44,6 +49,8 @@ export class ChatPanel extends Panel {
         if (this.mInitialized) return;
         super.init();
         this.mParent = this.mScene.add.container(0, 0);
+
+        const size = this.mWorldService.getSize();
 
         const output = this.mScene.make.container(undefined, false);
         this.mParent.add(output);
@@ -62,7 +69,7 @@ export class ChatPanel extends Panel {
         output.add(thumb);
         this.mTextArea = new TextArea(this.mScene, {
             x: 228,
-            y: 820,
+            y: size.height - 150,
             width: 440,
             height: 200,
             textWidth: 420,
@@ -84,7 +91,7 @@ export class ChatPanel extends Panel {
         output.add(this.mTextArea);
 
         let s = "";
-        for (let i = 999; i < 100000; i++) {
+        for (let i = 999; i < 10000; i++) {
             s += i + "\n";
         }
 
@@ -98,19 +105,37 @@ export class ChatPanel extends Panel {
         const inputContainer = this.mScene.make.container(undefined, false);
         this.mParent.add(inputContainer);
 
-        const inputText = new InputText(this.mScene, 10, 930, 10, 10, {
+        this.mInputText = new InputText(this.mScene, 10, size.height - 40, 10, 10, {
             type: "input",
             text: "hello world",
             fontSize: "14px",
         })
-            .resize(100, 20)
+            .resize(370, 20)
             .setOrigin(0, 0);
 
-        this.mParent.add(inputText);
+        this.mParent.add(this.mInputText);
 
-        // const sendMsg = this.mScene.make.image();
+        const sendMsgBtn = new Button(this.mScene, 60, size.height - 30, {
+            width: 60,
+            height: 30,
+            key: "button",
+            columns: [4, 2, 4],
+            rows: [4, 2, 4]
+        }, "发送");
+        sendMsgBtn.x = 420;
+        sendMsgBtn.y = 940;
+        sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
+        inputContainer.add(sendMsgBtn);
 
         // this.setSize(464, 281);
         // this.setLocation(0, 0);
+    }
+
+    private onSendMsgHandler() {
+        const text = this.mInputText.text;
+        if (text.length > 0) {
+            this.emit("sendChat", text);
+            this.mInputText.setText("");
+        }
     }
 }
