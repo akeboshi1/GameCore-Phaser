@@ -10,7 +10,7 @@ export class Panel extends Phaser.Events.EventEmitter implements IAbstractPanel 
         this.mInitialized = false;
         this.mScene = scene;
     }
-    close() {
+    hide() {
         this.destroy();
     }
 

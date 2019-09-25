@@ -4,7 +4,6 @@ import {Logger} from "../../utils/log";
 import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import {Panel} from "../components/panel";
 import {Button} from "../components/button";
 

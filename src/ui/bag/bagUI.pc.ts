@@ -2,6 +2,13 @@ import { IBag } from "./basebag";
 import { WorldService } from "../../game/world.service";
 import { ItemSlot } from "./item.slot";
 import { Size } from "../../utils/size";
+import { BagMediator } from "./bagMediator";
+import { PBpacket } from "net-socket-packet";
+import { op_virtual_world } from "pixelpai_proto";
+import { Logger } from "../../utils/log";
+import { BagPanel } from "./bagPanel";
+import { PlayerDataModel } from "../../service/player/playerDataModel";
+import { UIMediatorType } from "../ui.mediatorType";
 
 /**
  * 背包显示栏
@@ -21,6 +28,8 @@ export class BagUIPC implements IBag {
     private mParentCon: Phaser.GameObjects.Container;
     private mSubScriptSprite: Phaser.GameObjects.Sprite;
     private mItemList: any[];
+    private mBagSelect: Phaser.GameObjects.Sprite;
+    private mBagBtnCon: Phaser.GameObjects.Container;
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
         this.mScene = scene;
         this.mWorld = world;
@@ -30,17 +39,16 @@ export class BagUIPC implements IBag {
 
     public show(param: any) {
         if (this.isShow) {
-            this.close();
+            // this.hide();
             return;
         }
         this.isShow = true;
         this.createPanel();
-        // refresh bagSlotList
     }
     public update(param: any) {
         // update bagSlotList
     }
-    public close() {
+    public hide() {
         this.destroy();
     }
     public resize() {
@@ -69,7 +77,7 @@ export class BagUIPC implements IBag {
         let wid: number = 0;
         const hei: number = 65;
         const childList: Phaser.GameObjects.GameObject[] = [];
-        const bagBtnCon: Phaser.GameObjects.Container = this.mScene.add.container(0, 0);
+        this.mBagBtnCon = this.mScene.add.container(0, 0);
         this.mBagBg = this.mScene.add.sprite(0, 0, this.mResStr, "bag_BtnBg");
         wid += this.mBagBg.width + 5;
         this.bagBtn = this.mScene.add.sprite(this.mBagBg.x, this.mBagBg.y, this.mResStr, "bag_Btn");
@@ -77,13 +85,15 @@ export class BagUIPC implements IBag {
         this.mSubScriptSprite.setTexture(this.mResStr, "bag_SubScripta");
         this.mSubScriptSprite.x = this.mSubScriptSprite.width - this.mBagBg.width >> 1;
         this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.mBagBg.height >> 1;
-        bagBtnCon.addAt(this.mBagBg, 0);
-        bagBtnCon.addAt(this.bagBtn, 1);
-        bagBtnCon.addAt(this.mSubScriptSprite, 2);
-        bagBtnCon.setSize(56, 56);
-        bagBtnCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBagBg.width, this.mBagBg.height), Phaser.Geom.Rectangle.Contains);
-        this.mParentCon.add(bagBtnCon);
-        childList.push(bagBtnCon);
+        this.mBagBtnCon.addAt(this.mBagBg, 0);
+        this.mBagBtnCon.addAt(this.bagBtn, 1);
+        this.mBagBtnCon.addAt(this.mSubScriptSprite, 2);
+        this.mBagBtnCon.setSize(56, 56);
+        this.mBagBtnCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBagBg.width, this.mBagBg.height), Phaser.Geom.Rectangle.Contains);
+        this.mBagBtnCon.on("pointerover", this.bagBtnOver, this);
+        this.mBagBtnCon.on("pointerout", this.bagBtnOut, this);
+        this.mParentCon.add(this.mBagBtnCon);
+        childList.push(this.mBagBtnCon);
         let itemSlot: ItemSlot;
         const subScriptList: string[] = ["0", "b", "c"];
         let subScriptRes: string;
@@ -93,7 +103,7 @@ export class BagUIPC implements IBag {
             } else {
                 subScriptRes = "bag_SubScript" + (i + 1);
             }
-            itemSlot = new ItemSlot(this.mScene, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_slot", subScriptRes);
+            itemSlot = new ItemSlot(this.mScene, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_slot", "", subScriptRes);
             this.bagSlotList.push(itemSlot);
             childList.push(itemSlot.con);
             wid += 56 + 5;
@@ -119,16 +129,31 @@ export class BagUIPC implements IBag {
         const s = this;
         buttons.on("button.click", function(button, groupName, index, pointer) {
             if (index === 0) {
-                s.mWorld.uiManager.bagPanel.show(undefined);
+                s.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).getView().show();
+                // =============index = 0 为背包按钮
+                const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
+                const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
+                const playerModel: PlayerDataModel = s.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
+                content.id = playerModel.mainPlayerInfo.package[0].id;
+                content.page = 1;
+                content.perPage = BagPanel.PageMaxCount;
+                s.mWorld.connection.send(pkt);
+                Logger.debug(button);
             }
-            // =============index = 0 为背包按钮
-            // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE.OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
-            // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
-            // content.id = button.id;
-            // s.mWorld.connection.send(pkt);
-            // Logger.debug(button);
         }, this);
 
         this.mParentCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
+    }
+
+    private bagBtnOver(pointer) {
+        this.mBagSelect = this.mScene.make.sprite(undefined, false);
+        this.mBagSelect.setTexture(this.mResStr, "bag_BtnSelect");
+        this.mBagBtnCon.add(this.mBagSelect);
+    }
+
+    private bagBtnOut(pointer) {
+        if (this.mBagSelect && this.mBagSelect.parentContainer) {
+            this.mBagSelect.parentContainer.remove(this.mBagSelect);
+        }
     }
 }

@@ -2,13 +2,12 @@ import * as url from "url";
 import * as path from "path";
 export class Url {
     static getRes(value: string): string {
-        // 资源地址根路径
-        const homeDir: string = "";
-        const isRemote: boolean = /^(http|https):/i.test(homeDir);
-        if (isRemote) {
-            return `${url.resolve(homeDir, value)}`;
+        // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
+        if (CONFIG.BUNDLE_RESOURCES_ROOT) {
+            return CONFIG.BUNDLE_RESOURCES_ROOT
+                + value;
         }
-        return `file:///${path.resolve(homeDir, value)}`;
+        return "./resources" + value;
     }
 }
 export class ResUtils {

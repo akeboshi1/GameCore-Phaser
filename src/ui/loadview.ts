@@ -22,7 +22,7 @@ export class LoadingView implements IAbstractPanel {
     public update(param: any) {
 
     }
-    public close() {
+    public hide() {
         if (this.mTween) {
             this.mTween.stop();
             this.mTween.remove();

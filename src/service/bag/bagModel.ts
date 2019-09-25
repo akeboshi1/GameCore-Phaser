@@ -1,23 +1,33 @@
 import { IBaseModel } from "../baseModel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import {op_client, op_def} from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
 import { EventEmitter } from "events";
 import { MessageType } from "../../const/MessageType";
 
 export class BagModel extends PacketHandler implements IBaseModel {
+    public static NAME: string = "BagModel";
     public initialize: boolean = false;
     private mModelDispatch: EventEmitter;
     constructor(private mWorld: WorldService) {
         super();
-        this.mModelDispatch = this.mWorld.modelManager;
+        if (this.mWorld.modelManager) {
+            this.mModelDispatch = this.mWorld.modelManager;
+        }
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM, this.handleAddItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM, this.handleRemoveItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EXCHANGE_ITEM_POS, this.handleExchangeItem);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE, this.handleQueryPackage);
     }
 
     public getInitialize(): boolean {
         return this.initialize;
+    }
+
+    private handleQueryPackage(packet: PBpacket) {
+        const notice: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE = packet.content;
+        this.initialize = true;
+        this.mModelDispatch.emit(MessageType.QUERY_PACKAGE, notice);
     }
 
     private handleAddItem(packet: PBpacket): void {

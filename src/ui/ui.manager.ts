@@ -1,30 +1,25 @@
 import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IRoomService } from "../rooms/room";
-import { Size } from "../utils/size";
 import { IBag } from "./bag/basebag";
-import { BagUIPC } from "./bag/bagUI.pc";
-import { BagUIMobile } from "./bag/bagUI.mobile";
 import { op_client } from "pixelpai_proto";
-import { UIModuleType } from "./ui.moduleType";
-import { IAbstractPanel } from "./abstractPanel";
 import { Logger } from "../utils/log";
-import { BagPanel } from "./bag/bagPanel";
-import {ChatPanel} from "./chat/chat.panel";
-import {IMediator} from "./baseMediator";
-import {ChatMediator} from "./chat/chat.mediator";
+import { ChatPanel } from "./chat/chat.panel";
+import { IMediator } from "./baseMediator";
+import { BagMediator } from "./bag/bagMediator";
+import { UIMediatorType } from "./ui.mediatorType";
+import { BagUIMediator } from "./bag/bagUIMediator";
+import { ChatMediator } from "./chat/chat.mediator";
 
 export class UiManager extends PacketHandler {
-    public bagPanel: BagPanel;
-    private mChatPanel: ChatPanel;
+    // public mBagMediator: BagMediator;
+    // public bagPanel: BagPanel;
     private mBagUI: IBag;
-
     private mConnect: ConnectionService;
-    private mMedMap: Map<UIModuleType, IMediator>;
+    private mMedMap: Map<UIMediatorType, IMediator>;
     constructor(private worldService: WorldService) {
         super();
-        this.mMedMap = new Map();
+
         this.mConnect = worldService.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
@@ -32,29 +27,36 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
-        const size: Size = this.worldService.getSize();
-        if (this.worldService.game.device.os.desktop) {
-            this.mBagUI = new BagUIPC(scene, this.worldService, (size.width >> 1) - 29, size.height - 50);
-        } else {
-            //  this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+            // ============场景中固定显示ui
+            this.mMedMap.set(UIMediatorType.BagHotKey, new BagUIMediator(this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
         }
-        if (this.mBagUI) {
-            this.mBagUI.show(undefined);
-        }
-        this.bagPanel = new BagPanel(scene, this.worldService);
 
         // TOOD 通过统一的方法创建打开
-        const chat = new ChatMediator(scene, this.worldService);
-        chat.show();
+        this.mMedMap.forEach((mediator: IMediator) => {
+            if (mediator.isSceneUI()) mediator.show();
+        });
+        // const chat = new ChatPanel(scene, this.worldService);
+        // chat.show();
+        // this.mBagMediator = new BagMediator(this.worldService, scene);
+        // this.bagPanel = new BagPanel(scene, this.worldService);
     }
 
     public resize(width: number, height: number) {
         if (this.mBagUI) {
             this.mBagUI.resize();
         }
-        if (this.bagPanel) {
-            this.bagPanel.resize();
-        }
+        this.mMedMap.forEach((mediator: IMediator) => {
+            if (mediator.isShow) mediator.resize();
+        });
+    }
+
+    public getMediator(type: string): IMediator | undefined {
+        const med: IMediator = this.mMedMap.get(type);
+        return med;
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -84,8 +86,9 @@ export class UiManager extends PacketHandler {
                 return;
             }
             this.mMedMap.set(type, mediator);
+            mediator.setName(type);
         }
-        mediator.showUI(param);
+        mediator.show(param);
     }
 
     private updateMed(type: string, ...param: any[]) {
@@ -103,6 +106,6 @@ export class UiManager extends PacketHandler {
             Logger.error("error type no panel can show!!!");
             return;
         }
-        mediator.hideUI();
+        mediator.hide();
     }
 }

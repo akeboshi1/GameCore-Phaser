@@ -3,8 +3,13 @@ import { WorldService } from "../game/world.service";
 
 export interface IMediator {
     readonly world: WorldService;
+    isSceneUI(): boolean;
+    isShow(): boolean;
+    setName(string);
+    getName(): string;
+    resize();
     getView(): IAbstractPanel;
-    showUI(param: any): void;
-    update(param: any): void;
-    hideUI(): void;
+    show(param?: any): void;
+    update(param?: any): void;
+    hide(): void;
 }

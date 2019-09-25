@@ -1,24 +1,25 @@
-import {IRoomManager} from "./room.manager";
-import {ElementManager} from "./element/element.manager";
-import {PlayerManager} from "./player/player.manager";
-import {LayerManager} from "./layer/layer.manager";
-import {TerrainManager} from "./terrain/terrain.manager";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {IPosition45Obj, Position45} from "../utils/position45";
-import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
-import {Actor} from "./player/Actor";
-import {PBpacket} from "net-socket-packet";
-import {WorldService} from "../game/world.service";
-import {PlayScene} from "../scenes/play";
-import {ElementDisplay} from "./display/element.display";
-import {Logger} from "../utils/log";
-import {ViewblockManager, ViewblockService} from "./cameras/viewblock.manager";
-import {Pos} from "../utils/pos";
-import {ActorModel} from "./player/play.model";
-import {LoadingScene} from "../scenes/loading";
-import {Clock, ClockReadyListener} from "./clock";
+import { IRoomManager } from "./room.manager";
+import { ElementManager } from "./element/element.manager";
+import { PlayerManager } from "./player/player.manager";
+import { LayerManager } from "./layer/layer.manager";
+import { TerrainManager } from "./terrain/terrain.manager";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
+import { Actor } from "./player/Actor";
+import { PBpacket } from "net-socket-packet";
+import { WorldService } from "../game/world.service";
+import { PlayScene } from "../scenes/play";
+import { ElementDisplay } from "./display/element.display";
+import { Logger } from "../utils/log";
+import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
+import { Pos } from "../utils/pos";
+import { ActorModel } from "./player/play.model";
+import { LoadingScene } from "../scenes/loading";
+import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
+import { PlayerDataModel } from "../service/player/playerDataModel";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -177,6 +178,8 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public addActor(data: IActor): void {
         this.mActorData = data;
+        const playerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
+        playerDataModel.setmainPlayerInfo(data);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

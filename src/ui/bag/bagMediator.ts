@@ -12,6 +12,7 @@ import { BagPanel } from "./bagPanel";
 import { World } from "../../game/world";
 import { PlayerDataModel } from "../../service/player/playerDataModel";
 import { ItemSlot } from "./item.slot";
+import { BagModel } from "../../service/bag/bagModel";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -24,22 +25,47 @@ export enum DropType {
 export class BagMediator implements IMediator {
     public world: WorldService;
     private mPageNum: number = 0;
+    private mName: string;
     private mView: BagPanel;
     private mPlayerModel: PlayerDataModel;
-    constructor(mworld: WorldService) {
+    private mBagModel: BagModel;
+    constructor(mworld: WorldService, scene: Phaser.Scene) {
         this.world = mworld;
         this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
+        this.mBagModel = this.world.modelManager.getModel(BagModel.NAME) as BagModel;
+        this.mView = new BagPanel(scene, mworld);
+    }
+
+    public isSceneUI(): boolean {
+        return false;
+    }
+
+    public isShow() {
+        if (this.mView) return this.mView.isShow;
+    }
+
+    public resize() {
+        if (this.mView) return this.mView.resize();
+    }
+
+    public setName(val: string) {
+        this.mName = val;
+    }
+
+    public getName(): string {
+        return this.mName;
     }
 
     public getView(): IAbstractPanel {
         return this.mView;
     }
 
-    public showUI(param: any) {
+    public show(param: any) {
         if (!this.mView) return;
         this.world.modelManager.on(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
+        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
         this.mView.show(param);
     }
 
@@ -48,12 +74,12 @@ export class BagMediator implements IMediator {
         this.mView.update(param);
     }
 
-    public hideUI() {
+    public hide() {
         this.world.modelManager.off(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
         if (!this.mView) return;
-        this.mView.close();
+        this.mView.hide();
     }
 
     protected handleDrop(value: any): void {
@@ -76,7 +102,7 @@ export class BagMediator implements IMediator {
         const pageNum: number = Math.ceil(value.length / this.mPageNum);
         this.mView.setDataList(value);
         // if (this.mView.m_List) this.onRemove();
-       // let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum);
+        // let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum);
         // const len = this.mView.update.length;
         // let item: ItemSlot;
         // for (let i = 0; i < len; i++) {

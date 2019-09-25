@@ -4,23 +4,27 @@ import { ItemSlot } from "./item.slot";
 import { Size } from "../../utils/size";
 import { Logger } from "../../utils/log";
 import ButtonPlugin from "../../../lib/rexui/plugins/button-plugin.js";
+import { Panel } from "../components/panel";
 
-export class BagPanel implements IAbstractPanel {
+export class BagPanel extends Panel {
+    public static PageMaxCount: number = 36;
     public isShow: boolean = false;
     public bagSlotList: ItemSlot[];
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
-    private mScene: Phaser.Scene;
     private mWorld: WorldService;
     private mPreBtn: Phaser.GameObjects.Sprite;
     private mNextBtn: Phaser.GameObjects.Sprite;
+    private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mParentCon: Phaser.GameObjects.Container;
     private mPageNum: number = 0;
-    private mPageMaxCount: number = 36;
     private mPageIndex: number = 0;
     private mDataList: any[];
+    private mWid: number = 0;
+    private mHei: number = 0;
     constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene);
         this.mScene = scene;
         this.mWorld = world;
         this.bagSlotList = [];
@@ -28,7 +32,7 @@ export class BagPanel implements IAbstractPanel {
 
     public show(param: any) {
         if (this.isShow) {
-            this.close();
+            // this.hide();
             return;
         }
         this.isShow = true;
@@ -38,7 +42,7 @@ export class BagPanel implements IAbstractPanel {
     public update(param: any) {
 
     }
-    public close() {
+    public hide() {
         this.isShow = false;
         this.destroy();
     }
@@ -52,7 +56,7 @@ export class BagPanel implements IAbstractPanel {
     }
 
     public setDataList(value: any[]) {
-        this.mPageNum = Math.ceil(value.length / this.mPageMaxCount);
+        this.mPageNum = Math.ceil(value.length / BagPanel.PageMaxCount);
         this.mDataList = value;
         this.refreshDataList();
     }
@@ -103,7 +107,7 @@ export class BagPanel implements IAbstractPanel {
                 chilsList[rowIndex] = [];
             }
             tmpX = i % 12 * 52 + 20;
-            itemSlot = new ItemSlot(this.mScene, slotCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot");
+            itemSlot = new ItemSlot(this.mScene, slotCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
             this.bagSlotList.push(itemSlot);
             chilsList[rowIndex].push(itemSlot.con);
             if (i <= 11) {
@@ -163,12 +167,22 @@ export class BagPanel implements IAbstractPanel {
         this.mPreBtn.setInteractive();
         this.mNextBtn.on("pointerup", this.nextHandler, this);
         this.mPreBtn.on("pointerup", this.preHandler, this);
+        this.mWid = wid;
+        this.mHei = hei;
+        if (!this.mScene.cache.obj.has("clsBtn")) {
+            this.mScene.load.spritesheet("clsBtn", "resources/ui/common/common_clsBtn.png", { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
+            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
+            this.mScene.load.start();
+        } else {
+            this.onClsLoadCompleteHandler();
+        }
     }
 
     private nextHandler(pointer, gameObject) {
         if (this.mPageIndex < this.mPageNum - 1) {
             this.mPageIndex++;
         }
+        this.preNextBtnScaleHandler(this.mNextBtn, -1);
         this.refreshDataList();
     }
 
@@ -176,7 +190,24 @@ export class BagPanel implements IAbstractPanel {
         if (this.mPageIndex > 0) {
             this.mPageIndex--;
         }
+        this.preNextBtnScaleHandler(this.mPreBtn);
         this.refreshDataList();
+    }
+
+    private preNextBtnScaleHandler(gameObject: Phaser.GameObjects.Sprite, scaleX: number = 1) {
+        this.mScene.tweens.add({
+            targets: gameObject,
+            duration: 50,
+            ease: "Linear",
+            props: {
+                scaleX: { value: .5 * scaleX },
+                scaleY: { value: .5 },
+            },
+            yoyo: true,
+            repeat: 0,
+        });
+        gameObject.scaleX = scaleX;
+        gameObject.scaleY = 1;
     }
 
     private refreshDataList() {
@@ -184,7 +215,7 @@ export class BagPanel implements IAbstractPanel {
             Logger.error("this.mDataList is undefiend");
             return;
         }
-        const items = this.mDataList.slice((this.mPageIndex - 1) * this.mPageMaxCount, this.mPageIndex * this.mPageMaxCount);
+        const items = this.mDataList.slice((this.mPageIndex - 1) * BagPanel.PageMaxCount, this.mPageIndex * BagPanel.PageMaxCount);
         const len = this.bagSlotList.length;
         let item: ItemSlot;
         for (let i = 0; i < len; i++) {
@@ -204,21 +235,28 @@ export class BagPanel implements IAbstractPanel {
         bgGraphics.fillRect((-width >> 1) + 3, (-height >> 1) + 1, width - 6, height - 6);
         bgGraphics.lineStyle(3, COLOR_LINE, .8);
         bgGraphics.strokeRect(-width >> 1, -height >> 1, width, height);
-        // .generateTexture(key, width, height)
-        // bgGraphics.destroy();
         return bgGraphics;
     }
 
     private onClsLoadCompleteHandler() {
-        const clsBtnSprite = this.mScene.make.sprite(undefined, false);
-        clsBtnSprite.setTexture("clsBtn", "btn_normal");
+        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
+        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
+        this.mClsBtnSprite.x = (this.mWid >> 1) - 65;
+        this.mClsBtnSprite.y = (-this.mHei >> 1);
 
         // ===============背包界面左翻按钮
-        const clsBtn = (this.mScene.plugins.get("rexButton") as ButtonPlugin).add(clsBtnSprite, {
-            enable: true,
-            mode: 1,
-            clickInterval: 100
-        });
-        this.mParentCon.add(clsBtn);
+        this.mClsBtnSprite.setInteractive();
+        this.mClsBtnSprite.on("pointerup", this.hide, this);
+        // this.mClsBtnSprite.on("pointerover", this.clsOver, this);
+        // this.mClsBtnSprite.on("pointerout", this.clsOut, this);
+        this.mParentCon.add(this.mClsBtnSprite);
+    }
+
+    private clsOver() {
+        // this.mClsBtnSprite.setTexture("clsBtn", "btn_over");
+    }
+
+    private clsOut() {
+        // this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
     }
 }

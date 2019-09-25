@@ -14,7 +14,7 @@ export class StoragePanel implements IAbstractPanel {
     public update(param: any) {
 
     }
-    public close() {
+    public hide() {
 
     }
     public destroy() {

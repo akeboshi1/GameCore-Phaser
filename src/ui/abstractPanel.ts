@@ -1,7 +1,7 @@
 export interface IAbstractPanel {
     isShow: boolean;
     destroy();
-    close();
+    hide();
     show(param?: any);
     resize();
     update(param: any);
