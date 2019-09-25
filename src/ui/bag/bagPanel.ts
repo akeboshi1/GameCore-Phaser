@@ -178,6 +178,10 @@ export class BagPanel implements IAbstractPanel {
     }
 
     private refreshDataList() {
+        if (!this.mDataList) {
+            Logger.error("this.mDataList is undefiend");
+            return;
+        }
         const items = this.mDataList.slice((this.mPageIndex - 1) * this.mPageMaxCount, this.mPageIndex * this.mPageMaxCount);
         const len = this.bagSlotList.length;
         let item: ItemSlot;
