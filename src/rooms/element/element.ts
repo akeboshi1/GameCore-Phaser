@@ -11,6 +11,7 @@ import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
 import {ISprite} from "./sprite";
 import {BlockObject} from "../cameras/block.object";
+import {BubbleContainer} from "../bubble/bubble.container";
 
 export enum Direction {
     up,
@@ -81,6 +82,7 @@ export class Element extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
+    protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string;
@@ -193,6 +195,27 @@ export class Element extends BlockObject implements IElement {
         return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
+    public showBubble(text: string, setting: op_client.IChat_Setting) {
+        const scene = this.mElementManager.scene;
+        if (!scene) {
+            return;
+        }
+        if (!this.mBubble) {
+            this.mBubble = new BubbleContainer(scene);
+        }
+        this.mBubble.addBubble(text, setting);
+        this.updateBubble();
+        this.roomService.addToSceneUI(this.mBubble);
+    }
+
+    public destroy() {
+        if (this.mBubble) {
+            this.mBubble.destroy();
+            this.mBubble = undefined;
+        }
+        super.destroy();
+    }
+
     protected _doMove() {
         if (!this.mMoveData.destPos) {
             Logger.log("stopDoMove");
@@ -262,7 +285,6 @@ export class Element extends BlockObject implements IElement {
 
     protected setDepth() {
         if (this.mDisplay) {
-            const baseLoc = this.mDisplay.baseLoc;
             this.mDisplay.setDepth(this.mDisplay.x + this.mDisplay.y);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
@@ -282,6 +304,18 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    protected updateBubble() {
+        if (!this.mBubble) {
+            return;
+        }
+        const position = this.getPosition();
+        if (!position) {
+            return;
+        }
+        this.mBubble.x = position.x;
+        this.mBubble.y = position.y - 130;
+    }
+
     protected onMoveStart() {
     }
 
@@ -294,6 +328,7 @@ export class Element extends BlockObject implements IElement {
         if ((now - (this.mMoveData.tweenLastUpdate | 0)) >= 50) {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
+            this.updateBubble();
         }
     }
 }

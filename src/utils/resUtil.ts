@@ -7,7 +7,14 @@ export class Url {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + value;
         }
-        return "./resources" + value;
+        return "./resources/" + value;
+    }
+
+    static getOsdRes(value: string): string {
+        if (CONFIG.osd) {
+            return CONFIG.osd + value;
+        }
+        return value;
     }
 }
 export class ResUtils {

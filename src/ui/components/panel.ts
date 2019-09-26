@@ -38,7 +38,17 @@ export class Panel extends Phaser.Events.EventEmitter implements IAbstractPanel 
             Logger.error("scene does not exise");
             return;
         }
-        this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.init, this);
+        this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
         this.mScene.load.start();
+    }
+
+    protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
+        if (totalComplete === 0) {
+            return;
+        }
+        if (this.mInitialized) {
+            return;
+        }
+        this.init();
     }
 }

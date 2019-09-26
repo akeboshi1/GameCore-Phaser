@@ -1,11 +1,10 @@
-import {IAbstractPanel} from "../abstractPanel";
 import {WorldService} from "../../game/world.service";
-import {Logger} from "../../utils/log";
 import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import {Panel} from "../components/panel";
 import {Button} from "../components/button";
+import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 
 export class ChatPanel extends Panel {
     private mParent: Phaser.GameObjects.Container;
@@ -41,6 +40,8 @@ export class ChatPanel extends Panel {
             return;
         }
         this.mScene.load.image("button", "./resources/ui/common/button.png");
+        this.mScene.load.image("chat_input_bg", "./resources/ui/chat/input_bg.png");
+        this.mScene.load.image("chat_border_bg", "./resources/ui/chat/bg.png");
         super.preload();
     }
 
@@ -50,9 +51,19 @@ export class ChatPanel extends Panel {
         this.mParent = this.mScene.add.container(0, 0);
 
         const size = this.mWorldService.getSize();
+        this.setSize(464, 281);
 
         const output = this.mScene.make.container(undefined, false);
         this.mParent.add(output);
+
+        const border = new NinePatch(this.mScene, 4, size.height - 260, {
+            width: 464,
+            height: 281,
+            key: "chat_border_bg",
+            columns: [4, 2, 4],
+            rows: [4, 2, 4]
+        }).setOrigin(0, 0);
+        this.mParent.add(border);
 
         const background = new RoundRectangle(this.mScene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         output.add(background);
@@ -60,21 +71,24 @@ export class ChatPanel extends Panel {
         const track = new RoundRectangle(this.mScene, 100, 10, 10, 10, 10, 0x260e04);
         output.add(track);
 
-        const text = this.mScene.make.text(undefined, false);
-        text.setSize(440, 200);
+        const text = this.mScene.make.text({
+            width: 440,
+            height: 200,
+            style: { font: "bold 14px YaHei" }
+        }, false);
         output.add(text);
 
         const thumb = new RoundRectangle(this.mScene, 0, 0, 10, 20, 10, 0xFFFF00);
         output.add(thumb);
         this.mTextArea = new TextArea(this.mScene, {
-            x: 228,
+            x: 230,
             y: size.height - 150,
             width: 440,
             height: 200,
             textWidth: 420,
             textHeight: 190,
 
-            background,
+            // background,
 
             text,
             // text: this.rexUI.add.BBCodeText(),
@@ -104,15 +118,26 @@ export class ChatPanel extends Panel {
         const inputContainer = this.mScene.make.container(undefined, false);
         this.mParent.add(inputContainer);
 
-        this.mInputText = new InputText(this.mScene, 10, size.height - 40, 10, 10, {
+        const inputBg = new NinePatch(this.mScene, 8, size.height - 46, {
+            width: 370,
+            height: 32,
+            key: "chat_input_bg",
+            columns: [4, 2, 4],
+            rows: [4, 2, 4]
+        }).setOrigin(0, 0);
+        inputContainer.add(inputBg);
+
+        this.mInputText = new InputText(this.mScene, 12, size.height - 40, 10, 10, {
             type: "input",
             text: "hello world",
             fontSize: "14px",
+            color: "#808080"
         })
             .resize(370, 20)
-            .setOrigin(0, 0);
+            .setOrigin(0, 0)
+            .setStyle({ font: "bold 16px YaHei" });
 
-        this.mParent.add(this.mInputText);
+        inputContainer.add(this.mInputText);
 
         const sendMsgBtn = new Button(this.mScene, 60, size.height - 30, {
             width: 60,
@@ -135,6 +160,7 @@ export class ChatPanel extends Panel {
         if (text.length > 0) {
             this.emit("sendChat", text);
             this.mInputText.setText("");
+            this.mInputText.setBlur();
         }
     }
 }

@@ -34,6 +34,10 @@ export class LayerManager {
     protected mAtmosphere: Phaser.GameObjects.Container;
 
     // ===============UI层
+    /**
+     * 场景中的ui，可能跟跟随物件或人物
+     */
+    protected mSceneUILayer: Phaser.GameObjects.Container;
 
     /**
      * ui层(该层不跟随相机移动)
@@ -63,6 +67,9 @@ export class LayerManager {
         this.mAtmosphere = this.mScene.add.container(0, 0);
 
         // ==========UI层
+
+        this.mSceneUILayer = this.mScene.add.container(0, 0);
+
         this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
         this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
@@ -79,6 +86,10 @@ export class LayerManager {
         this.mSurfaceLayer.add(tmp);
         // Logger.log("surface num: ", this.mSurfaceLayer.list.length);
         // this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
+    }
+
+    public addToSceneToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
+        this.mSceneUILayer.add(child);
     }
 
     public addToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {

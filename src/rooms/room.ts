@@ -57,6 +57,8 @@ export interface IRoomService {
 
     addToSurface(element: ElementDisplay | ElementDisplay[]);
 
+    addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
+
     addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]);
 
     addMouseListen();
@@ -188,6 +190,10 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public addToSurface(element: ElementDisplay | ElementDisplay[]) {
         this.layerManager.addToSurface(element);
+    }
+
+    public addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
+        this.layerManager.addToSceneToUI(element);
     }
 
     public addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {
