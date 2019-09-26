@@ -1,10 +1,11 @@
 {
   "name": "game-core",
   "version": "1.0.1",
+  "main": "release/js/tooqing.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
-    "build": "yarn ver && webpack --mode production",
-    "build:dev": "webpack --mode development",
+    "build": "yarn ver && webpack --mode=production --output-path=./release --progress",
+    "build:dev": "webpack --mode=development --output-path=./release --progress",
     "ver": "genversion version.js"
   },
   "repository": "git@code.apowo.com:PixelPai/game-core.git",
