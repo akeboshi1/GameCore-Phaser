@@ -46,7 +46,7 @@ export class LoginScene extends Phaser.Scene {
             fontSize: "14px",
             color: "#847C7C",
         })
-            .resize(370, 20)
+            .resize(200, 20)
             .setOrigin(0, 0);
         this.mPassWordInputTxt = new InputText(this, -140, 55, 190, 15, {
             type: "input",
@@ -54,9 +54,12 @@ export class LoginScene extends Phaser.Scene {
             fontSize: "14px",
             color: "#847C7C",
         })
-            .resize(370, 20)
+            .resize(200, 20)
             .setOrigin(0, 0);
-
+        const txt0 = this.add.text(-145, -45, "手机号登录");
+        const txt1 = this.add.text(-35, -45, "用户号登录");
+        const txt2 = this.add.text(90, -45, "快速游戏");
+        const txt3 = this.add.text(110, 35, "登录");
         panelCon.addAt(bg, 0);
         panelCon.addAt(tab0, 1);
         panelCon.addAt(tab1, 2);
@@ -66,6 +69,10 @@ export class LoginScene extends Phaser.Scene {
         panelCon.addAt(inputBg_long1, 5);
         panelCon.addAt(this.mNameInputTxt, 6);
         panelCon.addAt(this.mPassWordInputTxt, 7);
+        panelCon.add(txt0);
+        panelCon.add(txt1);
+        panelCon.add(txt2);
+        panelCon.add(txt3);
 
         tab0.setInteractive();
         tab1.setInteractive();
@@ -156,7 +163,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
+        httpRequest.onload = function () {
             login.mCallBack(httpRequest.responseText);
             // if (httpRequest.readyState === 4 && httpRequest.status === 200) {
             // }
