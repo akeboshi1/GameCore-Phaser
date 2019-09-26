@@ -49,9 +49,11 @@ export class UiManager extends PacketHandler {
         if (this.mBagUI) {
             this.mBagUI.resize();
         }
-        this.mMedMap.forEach((mediator: IMediator) => {
-            if (mediator.isShow) mediator.resize();
-        });
+        if (this.mMedMap) {
+            this.mMedMap.forEach((mediator: IMediator) => {
+                if (mediator.isShow) mediator.resize();
+            });
+        }
     }
 
     public getMediator(type: string): IMediator | undefined {

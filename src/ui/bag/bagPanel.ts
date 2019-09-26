@@ -247,16 +247,6 @@ export class BagPanel extends Panel {
         // ===============背包界面左翻按钮
         this.mClsBtnSprite.setInteractive();
         this.mClsBtnSprite.on("pointerup", this.hide, this);
-        // this.mClsBtnSprite.on("pointerover", this.clsOver, this);
-        // this.mClsBtnSprite.on("pointerout", this.clsOut, this);
         this.mParentCon.add(this.mClsBtnSprite);
-    }
-
-    private clsOver() {
-        // this.mClsBtnSprite.setTexture("clsBtn", "btn_over");
-    }
-
-    private clsOut() {
-        // this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
     }
 }

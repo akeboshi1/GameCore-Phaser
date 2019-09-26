@@ -29,10 +29,11 @@ import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
 import InputTextPlugin from "../../lib/rexui/plugins/inputtext-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
-import {InputManager} from "./input.service";
-import {ModelManager} from "../service/modelManager";
+import { InputManager } from "./input.service";
+import { ModelManager } from "../service/modelManager";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import {PI_EXTENSION_REGEX} from "../const/constants";
+import { PI_EXTENSION_REGEX } from "../const/constants";
+import { LoginScene } from "../scenes/login";
 
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
@@ -81,7 +82,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onConnected(connection?: SocketConnection): void {
         Logger.info(`enterVirtualWorld`);
-        this.enterVirtualWorld();
+        // this.enterVirtualWorld();
+        this.login();
     }
 
     onDisConnected(connection?: SocketConnection): void {
@@ -171,8 +173,27 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.connection.send(pkt);
     }
 
+    private login() {
+        this.mGame.scene.add(LoginScene.name, LoginScene);
+        const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
+        loadingScene.sleep();
+        this.mGame.scene.start(LoginScene.name, {
+            connect: this.mConnection,
+            callBack: () => {
+                this.enterVirtualWorld();
+                const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+                loginScene.remove();
+                loadingScene.awake();
+            },
+        });
+    }
+
     private enterVirtualWorld() {
         if (this.mConfig && this.mConnection) {
+            if (!this.mConfig.auth_token) {
+                this.login();
+                return;
+            }
             const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
             const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
             Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
@@ -236,7 +257,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     start: true
                 },
                 {
-                   key: "rexInputText",
+                    key: "rexInputText",
                     plugin: InputTextPlugin,
                     start: true
                 }],
@@ -246,7 +267,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
                     },
-                    {key: "rexUI", plugin: UIPlugin, mapping: "rexUI"}
+                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
                 ]
             },
             render: {

@@ -5,6 +5,8 @@ import { PlayerDataModel } from "../../service/player/playerDataModel";
 import { BagModel } from "../../service/bag/bagModel";
 import { BagUIPC } from "./bagUI.pc";
 import { Size } from "../../utils/size";
+import { MessageType } from "../../const/MessageType";
+import { op_client } from "pixelpai_proto";
 
 export class BagUIMediator implements IMediator {
     public world: WorldService;
@@ -16,7 +18,6 @@ export class BagUIMediator implements IMediator {
         this.world = mWorld;
         this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
         this.mBagModel = this.world.modelManager.getModel(BagModel.NAME) as BagModel;
-
         const size: Size = this.world.getSize();
         if (this.world.game.device.os.desktop) {
             this.mView = new BagUIPC(scene, this.world, (size.width >> 1) - 29, size.height - 50);
@@ -33,7 +34,9 @@ export class BagUIMediator implements IMediator {
     }
 
     public isShow(): boolean {
-        if (this.mView) return this.mView.isShow;
+        if (this.mView) {
+            return this.mView.isShow;
+        }
     }
 
     public resize() {
@@ -53,7 +56,10 @@ export class BagUIMediator implements IMediator {
     }
 
     public show(param?: any) {
-        if (this.mView) this.mView.show(param);
+        if (this.mView) {
+            this.mView.show(param);
+            this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge);
+        }
     }
 
     public update(param: any) {
@@ -61,6 +67,14 @@ export class BagUIMediator implements IMediator {
     }
 
     public hide() {
+        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge);
         if (this.mView) this.mView.hide();
+    }
+
+    private queryPackAge(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
+        const itemLen: number = data.items.length;
+        if (this.mView && this.world.game.device.os.desktop) {
+            (this.mView as BagUIPC).setDataList(data.items);
+        }
     }
 }
