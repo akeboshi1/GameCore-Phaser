@@ -1,18 +1,19 @@
 import { ConnectionService } from "../net/connection.service";
 import InputText from "../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import { Alert } from "../ui/alert/alert";
+import { WorldService } from "../game/world.service";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends Phaser.Scene {
     private mCallBack: Function;
     private mConnect: ConnectionService;
-    private mAccount: string;
-    private mPassWord: string;
     private mTabDic: Map<number, Phaser.GameObjects.Image>;
     private mCurTabIndex: number = 0;
     private mEnterBtn: Phaser.GameObjects.Image;
     private mQuickBtn: Phaser.GameObjects.Image;
     private mNameInputTxt: InputText;
     private mPassWordInputTxt: InputText;
+    private mWorld: WorldService;
     constructor() {
         super({ key: LoginScene.name });
     }
@@ -93,6 +94,7 @@ export class LoginScene extends Phaser.Scene {
     public init(data: any) {
         this.mConnect = data.connect;
         this.mCallBack = data.callBack;
+        this.mWorld = data.world;
     }
 
     public update() {
@@ -163,10 +165,13 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
-            login.mCallBack(httpRequest.responseText);
-            // if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-            // }
+        httpRequest.onload = function() {
+            if (httpRequest.status === 200) {
+                login.mCallBack(httpRequest.responseText);
+            } else {
+                const alert = new Alert(login.mWorld, login);
+                alert.show("账号密码错误");
+            }
         };
         httpRequest.open("POST", CONFIG.AccountUrl || "http://dev.tooqing.com:17170/account/signin");
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
