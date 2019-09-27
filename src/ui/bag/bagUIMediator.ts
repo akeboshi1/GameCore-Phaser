@@ -35,7 +35,7 @@ export class BagUIMediator implements IMediator {
 
     public isShow(): boolean {
         if (this.mView) {
-            return this.mView.isShow;
+            return this.mView.isShow();
         }
     }
 

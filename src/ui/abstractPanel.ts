@@ -1,5 +1,5 @@
 export interface IAbstractPanel {
-    isShow: boolean;
+    isShow(): boolean;
     destroy();
     hide();
     show(param?: any);

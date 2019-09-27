@@ -40,8 +40,8 @@ export class BagMediator implements IMediator {
         return false;
     }
 
-    public isShow() {
-        if (this.mView) return this.mView.isShow;
+    public isShow(): boolean {
+        if (this.mView) return this.mView.isShow();
     }
 
     public resize() {
