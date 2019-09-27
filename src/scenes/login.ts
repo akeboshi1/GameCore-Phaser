@@ -43,7 +43,7 @@ export class LoginScene extends Phaser.Scene {
         const inputBg_long1 = this.add.image(-50, 67, loginRes, "login_inputLong");
         this.mNameInputTxt = new InputText(this, -140, 5, 190, 15, {
             type: "input",
-            text: "用戶名",
+            placeholder: "用戶名",
             fontSize: "14px",
             color: "#847C7C",
         })
@@ -51,7 +51,7 @@ export class LoginScene extends Phaser.Scene {
             .setOrigin(0, 0);
         this.mPassWordInputTxt = new InputText(this, -140, 55, 190, 15, {
             type: "input",
-            text: "密碼",
+            placeholder: "密码",
             fontSize: "14px",
             color: "#847C7C",
         })
