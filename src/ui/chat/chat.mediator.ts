@@ -1,7 +1,7 @@
 import { ChatPanel } from "./chat.panel";
 import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
@@ -10,6 +10,9 @@ export class ChatMediator extends PacketHandler implements IMediator {
     public world: WorldService;
     private mChatPanel: ChatPanel;
     private mName: string;
+    private mGMEApi: WebGMEAPI;
+    private mInRoom: boolean = false;
+    private mQCLoudAuth: string;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
@@ -17,10 +20,36 @@ export class ChatMediator extends PacketHandler implements IMediator {
         if (this.world.connection) {
             this.world.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
 
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
+        this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
+        this.mChatPanel.on("selectedMic", this.onSelectedMicHandler, this);
         this.world = world;
+    }
+
+    public enterRoom() {
+        if (!this.room) return;
+        if (!this.room.actor) return;
+        if (!this.mGMEApi) return;
+        const playerID = this.room.actor.id;
+        const roomID = this.room.id;
+        this.mGMEApi.EnterRoom(roomID.toString(), 1, this.mQCLoudAuth);
+        this.mInRoom = true;
+        this.sendVoiceRoomStatus(op_def.ChatChannel.CurrentScene, roomID, op_def.VoiceRoomStatus.InVoiceRoom);
+    }
+
+    public exitRoom() {
+        if (!this.mGMEApi) return;
+        this.mGMEApi.EnableMic(false);
+        this.mGMEApi.ExitRoom();
+
+        this.mInRoom = false;
+        if (!this.room) {
+            return;
+        }
+        this.sendVoiceRoomStatus(op_def.ChatChannel.CurrentScene, this.room.id, op_def.VoiceRoomStatus.OutsideVoiceRoom);
     }
 
     public isSceneUI(): boolean {
@@ -58,6 +87,33 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mChatPanel.hide();
     }
 
+    private initGME() {
+        // TODO just for test, need get sdkAppId from settings
+        const sdkAppId = "1400209172";
+        if (!this.room.actor) return;
+        const playerID = this.room.actor.id;
+        this.mGMEApi = new WebGMEAPI();
+        this.mGMEApi.Init(document, sdkAppId, playerID.toString());
+        this.mGMEApi.SetTMGDelegate((event, result) => {
+            switch (event) {
+                case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
+                    Logger.log(`[GME]: EnterRoom: ${result}`);
+                    break;
+                case this.mGMEApi.event.ITMG_MAIN_EVNET_TYPE_USER_UPDATE:
+                    break;
+                case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_EXIT_ROOM:
+                    Logger.log(`[GME]: ExitRoom`);
+                    break;
+                case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_ROOM_DISCONNECT:
+                    Logger.log(`[GME]: Room Disconnect!!!`);
+                    break;
+                default:
+                    Logger.log("[GME]: Sth wrong...");
+                    break;
+            }
+        });
+    }
+
     private handleCharacterChat(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
         this.mChatPanel.appendChat(content.chatContext);
@@ -71,5 +127,54 @@ export class ChatMediator extends PacketHandler implements IMediator {
             content.chatContext = text;
             this.world.connection.send(pkt);
         }
+    }
+
+    private sendVoiceRoomStatus(voiceChannel: op_def.ChatChannel, voiceRoomId: number, voiceRoomStatus: op_def.VoiceRoomStatus) {
+        if (!this.room.connection) {
+            return;
+        }
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS);
+        const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS = pkt.content;
+        context.voiceChannel = voiceChannel;
+        context.voiceRoomId = voiceRoomId;
+        context.voiceRoomStatus = voiceRoomStatus;
+        this.room.connection.send(pkt);
+    }
+
+    private handleQCLoudGME(packet: PBpacket) {
+        const authBuffer: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER = packet.content;
+        this.mQCLoudAuth = authBuffer.signature;
+        this.initGME();
+    }
+
+    private onSelectedVoiceHandler(val: boolean) {
+        if (val) {
+            this.enterRoom();
+        } else {
+            this.exitRoom();
+        }
+    }
+
+    private onSelectedMicHandler(val: boolean) {
+        if (!this.mGMEApi) {
+            return;
+        }
+        if (this.mInRoom) {
+            this.mGMEApi.EnableMic(val);
+        }
+        if (this.world.connection) {
+            const pkt: PBpacket = new PBpacket((op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_VOICE_ROOM_STATUS));
+            this.world.connection.send(pkt);
+        }
+    }
+
+    get room() {
+        if (!this.world) {
+            return;
+        }
+        if (!this.world.roomManager) {
+            return;
+        }
+        return this.world.roomManager.currentRoom;
     }
 }

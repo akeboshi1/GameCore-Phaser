@@ -8,6 +8,8 @@ import {Logger} from "../utils/log";
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
+    readonly currentRoom: Room | undefined;
+
     readonly connection: ConnectionService | undefined;
 }
 
@@ -86,6 +88,10 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     get world(): WorldService {
         return this.mWorld;
+    }
+
+    get currentRoom(): Room {
+        return  this.mCurRoom;
     }
 
     get connection(): ConnectionService {

@@ -6,11 +6,15 @@ import {Panel} from "../components/panel";
 import {Button} from "../components/button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import {Logger} from "../../utils/log";
+import {Url} from "../../utils/resUtil";
+import {CheckButton} from "../components/check.button";
 
 export class ChatPanel extends Panel {
     private mParent: Phaser.GameObjects.Container;
     private mTextArea: TextArea;
     private mInputText: InputText;
+    private mVoiceBtn: CheckButton;
+    private mMicBtn: CheckButton;
     private mSendKey: Phaser.Input.Keyboard.Key;
     constructor(scene: Phaser.Scene, private mWorldService: WorldService) {
         super(scene);
@@ -44,6 +48,7 @@ export class ChatPanel extends Panel {
         this.mScene.load.image("button", "./resources/ui/common/button.png");
         this.mScene.load.image("chat_input_bg", "./resources/ui/chat/input_bg.png");
         this.mScene.load.image("chat_border_bg", "./resources/ui/chat/bg.png");
+        this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
         super.preload();
     }
 
@@ -105,12 +110,12 @@ export class ChatPanel extends Panel {
             .layout();
         output.add(this.mTextArea);
 
-        let s = "";
-        for (let i = 999; i < 10000; i++) {
-            s += i + "\n";
-        }
+        // let s = "";
+        // for (let i = 999; i < 10000; i++) {
+        //     s += i + "\n";
+        // }
 
-        this.mTextArea.setText(s);
+        // this.mTextArea.setText(s);
 
         const tracks = this.mTextArea.getElement("child");
         if (tracks) {
@@ -157,8 +162,31 @@ export class ChatPanel extends Panel {
 
         this.mSendKey = this.mScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
+        this.mVoiceBtn = new CheckButton(this.mScene, this.mParent.width - 60, size.height - this.mParent.height, "chat_atlas", "voice_normal.png", "voice_selected.png");
+        this.mParent.add(this.mVoiceBtn);
+
+        this.mMicBtn = new CheckButton(this.mScene, this.mParent.width - 20, size.height - this.mParent.height, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        this.mParent.add(this.mMicBtn);
         // this.setSize(464, 281);
         // this.setLocation(0, 0);
+
+        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+    }
+
+    private onSelectedVoiceHandler(val: boolean) {
+        if (val === false) {
+            this.mMicBtn.selected = false;
+        }
+        this.emit("selectedVoice", val);
+    }
+
+    private onSelectedMicHandler(val: boolean) {
+        if (this.mVoiceBtn.selected === false) {
+            this.mMicBtn.selected = false;
+            return;
+        }
+        this.emit("selectedMic", val);
     }
 
     private onSendMsgHandler() {
