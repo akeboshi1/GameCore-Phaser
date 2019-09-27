@@ -1,9 +1,9 @@
-import { IRoomService } from "../../rooms/room";
-import { Size } from "../../utils/size";
-import { WorldService } from "../../game/world.service";
-import { Logger } from "../../utils/log";
-import { IBag } from "./basebag";
-import { ItemSlot } from "./item.slot";
+import { IRoomService } from "../../../rooms/room";
+import { Size } from "../../../utils/size";
+import { WorldService } from "../../../game/world.service";
+import { Logger } from "../../../utils/log";
+import { IBag } from "../basebag";
+import { ItemSlot } from "../item.slot";
 
 /**
  * 背包显示栏

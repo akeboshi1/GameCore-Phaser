@@ -1,10 +1,8 @@
-import { IAbstractPanel } from "../abstractPanel";
-import { WorldService } from "../../game/world.service";
-import { ItemSlot } from "./item.slot";
-import { Size } from "../../utils/size";
-import { Logger } from "../../utils/log";
-import ButtonPlugin from "../../../lib/rexui/plugins/button-plugin.js";
-import { Panel } from "../components/panel";
+import { WorldService } from "../../../game/world.service";
+import { ItemSlot } from "../item.slot";
+import { Size } from "../../../utils/size";
+import { Logger } from "../../../utils/log";
+import { Panel } from "../../components/panel";
 
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;

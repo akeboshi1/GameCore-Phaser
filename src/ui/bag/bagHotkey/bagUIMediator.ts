@@ -1,11 +1,11 @@
-import { IMediator } from "../baseMediator";
-import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
-import { PlayerDataModel } from "../../service/player/playerDataModel";
-import { BagModel } from "../../service/bag/bagModel";
+import { IMediator } from "../../baseMediator";
+import { WorldService } from "../../../game/world.service";
+import { IAbstractPanel } from "../../abstractPanel";
+import { PlayerDataModel } from "../../../service/player/playerDataModel";
+import { BagModel } from "../../../service/bag/bagModel";
 import { BagUIPC } from "./bagUI.pc";
-import { Size } from "../../utils/size";
-import { MessageType } from "../../const/MessageType";
+import { Size } from "../../../utils/size";
+import { MessageType } from "../../../const/MessageType";
 import { op_client } from "pixelpai_proto";
 
 export class BagUIMediator implements IMediator {

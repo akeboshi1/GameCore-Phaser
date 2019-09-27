@@ -1,15 +1,15 @@
-import { IBag } from "./basebag";
-import { WorldService } from "../../game/world.service";
-import { ItemSlot } from "./item.slot";
-import { Size } from "../../utils/size";
-import { BagMediator } from "./bagMediator";
+import { IBag } from "../basebag";
+import { WorldService } from "../../../game/world.service";
+import { ItemSlot } from "../item.slot";
+import { Size } from "../../../utils/size";
+import { BagMediator } from "../bag/bagMediator";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_gameconfig } from "pixelpai_proto";
-import { Logger } from "../../utils/log";
-import { BagPanel } from "./bagPanel";
-import { PlayerDataModel } from "../../service/player/playerDataModel";
-import { UIMediatorType } from "../ui.mediatorType";
-import { PlayerInfo } from "../../service/player/playerInfo";
+import { Logger } from "../../../utils/log";
+import { BagPanel } from "../bag/bagPanel";
+import { PlayerDataModel } from "../../../service/player/playerDataModel";
+import { UIMediatorType } from "../../ui.mediatorType";
+import { PlayerInfo } from "../../../service/player/playerInfo";
 
 /**
  * 背包显示栏

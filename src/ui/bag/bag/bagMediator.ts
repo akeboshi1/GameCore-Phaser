@@ -1,18 +1,14 @@
-
-import { MessageType } from "../../const/MessageType";
-import { IMediator } from "../baseMediator";
-import { IAbstractPanel } from "../abstractPanel";
-import { WorldService } from "../../game/world.service";
-import { Logger } from "../../utils/log";
-import { IDragable } from "./idragable";
-import { IDropable } from "./idropable";
+import { MessageType } from "../../../const/MessageType";
+import { IMediator } from "../../baseMediator";
+import { IAbstractPanel } from "../../abstractPanel";
+import { WorldService } from "../../../game/world.service";
+import { Logger } from "../../../utils/log";
+import { IDragable } from "../idragable";
+import { IDropable } from "../idropable";
 import { op_gameconfig } from "pixelpai_proto";
-import { IBaseModel } from "../../service/baseModel";
 import { BagPanel } from "./bagPanel";
-import { World } from "../../game/world";
-import { PlayerDataModel } from "../../service/player/playerDataModel";
-import { ItemSlot } from "./item.slot";
-import { BagModel } from "../../service/bag/bagModel";
+import { PlayerDataModel } from "../../../service/player/playerDataModel";
+import { BagModel } from "../../../service/bag/bagModel";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,

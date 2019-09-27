@@ -6,9 +6,9 @@ import { op_client } from "pixelpai_proto";
 import { Logger } from "../utils/log";
 import { ChatPanel } from "./chat/chat.panel";
 import { IMediator } from "./baseMediator";
-import { BagMediator } from "./bag/bagMediator";
+import { BagMediator } from "./bag/bag/bagMediator";
 import { UIMediatorType } from "./ui.mediatorType";
-import { BagUIMediator } from "./bag/bagUIMediator";
+import { BagUIMediator } from "./bag/bagHotkey/bagUIMediator";
 import { ChatMediator } from "./chat/chat.mediator";
 
 export class UiManager extends PacketHandler {
