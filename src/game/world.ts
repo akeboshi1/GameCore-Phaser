@@ -34,6 +34,7 @@ import { ModelManager } from "../service/modelManager";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { PI_EXTENSION_REGEX } from "../const/constants";
 import { LoginScene } from "../scenes/login";
+import { Account } from "./account";
 
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
@@ -48,6 +49,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mCallBack: Function;
     private mInputManager: InputManager;
     private mModelManager: ModelManager;
+    private mAccount: Account;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
@@ -168,12 +170,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mModelManager;
     }
 
+    get account(): Account {
+        return this.mAccount;
+    }
+
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
     }
 
     private login() {
+        this.mAccount = new Account();
         this.mGame.scene.add(LoginScene.name, LoginScene);
         const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
         loadingScene.sleep();
@@ -200,9 +207,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
             content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
             content.gameId = this.mConfig.game_id;
-            content.userToken = this.mConfig.auth_token;
-            content.expire = this.mConfig.token_expire;
-            content.fingerprint = this.mConfig.token_fingerprint;
+           // const accountObj = JSON.parse();
+            content.userToken = this.mAccount.accountData.token; // auth_token;
+            content.expire = this.mAccount.accountData.expire + "";
+            content.fingerprint = this.mAccount.accountData.fingerprint;
             this.mConnection.send(pkt);
         }
     }

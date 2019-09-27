@@ -3,11 +3,14 @@ import { IAbstractPanel } from "./abstractPanel";
 import { Tweens } from "phaser";
 
 export class LoadingView implements IAbstractPanel {
-    public isShow: boolean = false;
+    private mShowing: boolean = false;
     private mTween: Tweens.Tween;
     private mBg: Phaser.GameObjects.Sprite;
     constructor(private mScene: Phaser.Scene) {
         this.createPanel();
+    }
+    public isShow(): boolean {
+        return this.mShowing;
     }
     public show(param: any) {
         this.mTween = this.mScene.tweens.add({

@@ -39,7 +39,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public isShow(): boolean {
-        return this.mChatPanel.isShow;
+        return this.mChatPanel.isShow();
     }
 
     public resize() {

@@ -3,13 +3,17 @@ import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 
 export class Alert implements IAbstractPanel {
-    public isShow: boolean;
+    private mShowing: boolean;
     private mWorld: WorldService;
     private mScene: Phaser.Scene;
     private mParentCon: Phaser.GameObjects.Container;
     constructor(world: WorldService, scene: Phaser.Scene) {
         this.mWorld = world;
         this.mScene = scene;
+    }
+
+    public isShow(): boolean {
+        return this.mShowing;
     }
 
     public show(param?: any) {

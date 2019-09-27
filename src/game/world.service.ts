@@ -8,6 +8,7 @@ import { IElementStorage } from "./element.storage";
 import { UiManager } from "../ui/ui.manager";
 import { InputManager } from "./input.service";
 import { ModelManager } from "../service/modelManager";
+import { Account } from "./account";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -19,6 +20,7 @@ export interface WorldService {
     readonly inputManager: InputManager;
     readonly modelManager: ModelManager;
     readonly uiScale: number;
+    readonly account: Account;
 
     getSize(): Size;
 

@@ -20,8 +20,8 @@ export class BagUIPC implements IBag {
     // bagBtn
     public bagBtn: Phaser.GameObjects.Sprite;
     public bagSlotList: ItemSlot[];
-    public isShow: boolean = false;
 
+    private mShowing: boolean = false;
     private mBagBg: Phaser.GameObjects.Sprite;
     private mScene: Phaser.Scene;
     private mWorld: WorldService;
@@ -30,7 +30,6 @@ export class BagUIPC implements IBag {
     private mResJson: string;
     private mParentCon: Phaser.GameObjects.Container;
     private mSubScriptSprite: Phaser.GameObjects.Sprite;
-    private mItemList: any[];
     private mBagSelect: Phaser.GameObjects.Sprite;
     private mBagBtnCon: Phaser.GameObjects.Container;
 
@@ -43,12 +42,16 @@ export class BagUIPC implements IBag {
         this.bagSlotList = [];
     }
 
+    public isShow(): boolean {
+        return this.mShowing;
+    }
+
     public show(param: any) {
-        if (this.isShow) {
+        if (this.mShowing) {
             // this.hide();
             return;
         }
-        this.isShow = true;
+        this.mShowing = true;
         this.createPanel();
     }
     public update(param: any) {
@@ -83,7 +86,7 @@ export class BagUIPC implements IBag {
             childList.push(itemSlot.con);
             this.mWid += 56 + 5;
         }
-        const buttons = (<any>this.mScene).rexUI.add.buttons({
+        const buttons = (<any> this.mScene).rexUI.add.buttons({
             x: 0,
             y: 0,
             width: 56,
@@ -101,7 +104,7 @@ export class BagUIPC implements IBag {
         });
         buttons.layout();
         const s = this;
-        buttons.on("button.click", function (button, groupName, index, pointer) {
+        buttons.on("button.click", function(button, groupName, index, pointer) {
             if (index === 0) {
             }
         }, this);

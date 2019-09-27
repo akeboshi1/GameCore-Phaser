@@ -8,7 +8,6 @@ import { Panel } from "../components/panel";
 
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;
-    public isShow: boolean = false;
     public bagSlotList: ItemSlot[];
     private mResStr: string;
     private mResPng: string;
@@ -35,7 +34,7 @@ export class BagPanel extends Panel {
             // this.hide();
             return;
         }
-        this.isShow = true;
+        this.mShowing = true;
         this.createPanel();
         // todo refresh bagData
     }
@@ -43,7 +42,7 @@ export class BagPanel extends Panel {
 
     }
     public hide() {
-        this.isShow = false;
+        this.mShowing = false;
         this.destroy();
     }
 
