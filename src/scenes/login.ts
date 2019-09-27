@@ -2,8 +2,6 @@ import { ConnectionService } from "../net/connection.service";
 import InputText from "../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Alert } from "../ui/alert/alert";
 import { WorldService } from "../game/world.service";
-import { count } from "../../yargs";
-import { Account } from "../game/account";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends Phaser.Scene {
@@ -184,8 +182,8 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt4.visible = accountData === undefined ? false : true;
 
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
-        this.mNameInputTxt.text = accountObj !== undefined ? accountObj.account : "";
-        this.mPassWordInputTxt.text = accountObj !== undefined ? accountObj.password : "";
+        this.mNameInputTxt.text = accountObj !== null ? accountObj.account : "";
+        this.mPassWordInputTxt.text = accountObj !== null ? accountObj.password : "";
 
         this.mParentCon.setSize(this.mBg.width, this.mBg.height);
     }
