@@ -1,5 +1,6 @@
 import { IRoomService } from "../rooms/room";
 export interface InputManager {
+    enable: boolean;
     addListener(l: InputListener);
 
     removeListener(l: InputListener);

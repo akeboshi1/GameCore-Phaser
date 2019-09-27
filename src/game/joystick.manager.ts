@@ -61,6 +61,13 @@ export class JoyStickManager implements InputManager {
 
     upHandler() {
     }
+
+    set enable(val: boolean) {
+    }
+
+    get enable(): boolean {
+        return true;
+    }
 }
 
 export class JoyStick {

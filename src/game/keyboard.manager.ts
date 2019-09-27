@@ -49,7 +49,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         let key: Phaser.Input.Keyboard.Key;
         for (let i = 0; i < len; i++) {
             code = this.mCodeList[i];
-            key = this.mScene.input.keyboard.addKey(code);
+            key = this.mScene.input.keyboard.addKey(code, false);
             this.addKeyEvent(key);
         }
     }
@@ -272,4 +272,5 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         this.mKeyList.length = 0;
         this.mKeyList = null;
     }
+
 }

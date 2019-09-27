@@ -5,11 +5,13 @@ import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputTex
 import {Panel} from "../components/panel";
 import {Button} from "../components/button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
+import {Logger} from "../../utils/log";
 
 export class ChatPanel extends Panel {
     private mParent: Phaser.GameObjects.Container;
     private mTextArea: TextArea;
     private mInputText: InputText;
+    private mSendKey: Phaser.Input.Keyboard.Key;
     constructor(scene: Phaser.Scene, private mWorldService: WorldService) {
         super(scene);
     }
@@ -135,7 +137,9 @@ export class ChatPanel extends Panel {
         })
             .resize(370, 20)
             .setOrigin(0, 0)
-            .setStyle({ font: "bold 16px YaHei" });
+            .setStyle({ font: "bold 16px YaHei" })
+            .on("focus", this.onFocusHandler, this)
+            .on("blur", this.onBlurHandler, this);
 
         inputContainer.add(this.mInputText);
 
@@ -151,6 +155,8 @@ export class ChatPanel extends Panel {
         sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
         inputContainer.add(sendMsgBtn);
 
+        this.mSendKey = this.mScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
         // this.setSize(464, 281);
         // this.setLocation(0, 0);
     }
@@ -162,5 +168,29 @@ export class ChatPanel extends Panel {
             this.mInputText.setText("");
             this.mInputText.setBlur();
         }
+    }
+
+    private onFocusHandler() {
+        if (!this.mWorldService || !this.mWorldService.inputManager) {
+            return;
+        }
+        this.mWorldService.inputManager.enable = false;
+        if (this.mSendKey) {
+            this.mSendKey.on("down", this.onDownEnter, this);
+        }
+    }
+
+    private onBlurHandler() {
+        if (!this.mWorldService || !this.mWorldService.inputManager) {
+            return;
+        }
+        this.mWorldService.inputManager.enable = true;
+        if (this.mSendKey) {
+            this.mSendKey.off("down", this.onDownEnter, this);
+        }
+    }
+
+    private onDownEnter() {
+        this.onSendMsgHandler();
     }
 }
