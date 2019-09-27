@@ -30,7 +30,7 @@ export class BagPanel extends Panel {
     }
 
     public show(param: any) {
-        if (this.isShow) {
+        if (this.isShow()) {
             // this.hide();
             return;
         }

@@ -239,7 +239,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
