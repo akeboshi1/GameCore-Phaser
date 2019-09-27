@@ -28,6 +28,10 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         }
     }
 
+    public changeAlpha(val?: number) {
+        this.alpha = val;
+    }
+
     public setPosition(x?: number, y?: number, z?: number): this {
         super.setPosition(x, y, z);
         this.setDepth(this.x + this.baseLoc.x + this.y + this.baseLoc.y);

@@ -1,7 +1,7 @@
-import {IFramesModel} from "./frames.model";
-import {IDragonbonesModel} from "./dragonbones.model";
-import {DisplayField} from "./frames.display";
-import {SortRectangle} from "../../utils/sort.rectangle";
+import { IFramesModel } from "./frames.model";
+import { IDragonbonesModel } from "./dragonbones.model";
+import { DisplayField } from "./frames.display";
+import { SortRectangle } from "../../utils/sort.rectangle";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
     readonly baseLoc: Phaser.Geom.Point;
@@ -13,7 +13,7 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
 
     sortX: number;
     sortY: number;
-
+    changeAlpha(val?: number);
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField);
 
     play(animationName: string, field?: DisplayField);

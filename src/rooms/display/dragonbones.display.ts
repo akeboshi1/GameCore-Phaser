@@ -106,6 +106,10 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         return this;
     }
 
+    public changeAlpha(val?: number) {
+        // this.alpha = val;
+    }
+
     public removeFromParent(): void {
         if (this.parentContainer) {
             this.parentContainer.remove(this);
