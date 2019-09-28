@@ -5,6 +5,7 @@ import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
+import {IMessage} from "./message";
 
 export class ChatMediator extends PacketHandler implements IMediator {
     public world: WorldService;
@@ -13,6 +14,8 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mGMEApi: WebGMEAPI;
     private mInRoom: boolean = false;
     private mQCLoudAuth: string;
+    private mAllMessage: IMessage[] = [];
+    private mMaxMessageNum = 50;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
@@ -63,7 +66,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
     public setName(val: string) {
         this.mName = val;
     }
-    public getView(): IAbstractPanel {
+    public getView(): ChatPanel {
         return this.mChatPanel;
     }
 
@@ -114,9 +117,38 @@ export class ChatMediator extends PacketHandler implements IMediator {
         });
     }
 
+    private appendMessage(messages: IMessage[], message: IMessage) {
+        messages.push(message);
+        if (messages.length > this.mMaxMessageNum) {
+            messages.shift();
+        }
+    }
+
+    private changeMessageChannel() {
+        const showMessages = this.mAllMessage.filter((msg: IMessage) => msg.channel === this.mChatPanel.outChannel || msg.channel === op_def.ChatChannel.System || this.mChatPanel.outChannel === null);
+        const len = showMessages.length;
+        let message: IMessage = null;
+        let wrapStr = "\n";
+        for (let i = 0; i < len; i++) {
+            message = showMessages[i];
+            if (i === len - 1) wrapStr = "";
+            this.mChatPanel.appendChat(message.chat + wrapStr);
+        }
+    }
+
     private handleCharacterChat(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        this.mChatPanel.appendChat(content.chatContext);
+        if (!this.room) {
+            return;
+        }
+
+        const playerManager = this.room.playerManager;
+        const player = playerManager.get(content.chatSenderid);
+        // const chatSendName = player ? player.name : "";
+        // this.mChatPanel.appendChat(content.chatContext);
+        const color = content.chatSetting.textColor ? content.chatSetting.textColor : "#FFFFFF";
+        this.appendMessage(this.mAllMessage, { chat: `[color=${color}]${content.chatContext}[/color]`, channel: content.chatChannel });
+        // this.mChatPanel.appendChat(`[color=${color}]${content.chatContext}[/color]`);
     }
 
     private onSendChatHandler(text: string) {

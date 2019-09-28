@@ -8,6 +8,7 @@ import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatc
 import {Logger} from "../../utils/log";
 import {Url} from "../../utils/resUtil";
 import {CheckButton} from "../components/check.button";
+import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 
 export class ChatPanel extends Panel {
     private mParent: Phaser.GameObjects.Container;
@@ -21,7 +22,7 @@ export class ChatPanel extends Panel {
     }
 
     public appendChat(val: string) {
-        this.mTextArea.appendText(val + "\n");
+        this.mTextArea.appendText(val);
         this.mTextArea.scrollToBottom();
     }
 
@@ -60,9 +61,6 @@ export class ChatPanel extends Panel {
         const size = this.mWorldService.getSize();
         this.setSize(464, 281);
 
-        const output = this.mScene.make.container(undefined, false);
-        this.mParent.add(output);
-
         const border = new NinePatch(this.mScene, 4, size.height - 260, {
             width: 464,
             height: 281,
@@ -72,17 +70,25 @@ export class ChatPanel extends Panel {
         }).setOrigin(0, 0);
         this.mParent.add(border);
 
+        const output = this.mScene.make.container(undefined, false);
+        this.mParent.add(output);
+
         const background = new RoundRectangle(this.mScene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         output.add(background);
 
         const track = new RoundRectangle(this.mScene, 100, 10, 10, 10, 10, 0x260e04);
         output.add(track);
 
-        const text = this.mScene.make.text({
+        // const text = this.mScene.make.text({
+        //     width: 440,
+        //     height: 200,
+        //     style: { font: "bold 14px YaHei" }
+        // }, false);
+        const text = new BBCodeText(this.mScene, 0, 0, "", {
             width: 440,
             height: 200,
-            style: { font: "bold 14px YaHei" }
-        }, false);
+            style: {font: "bold 14px YaHei"}
+        });
         output.add(text);
 
         const thumb = new RoundRectangle(this.mScene, 0, 0, 10, 20, 10, 0xFFFF00);
@@ -220,5 +226,9 @@ export class ChatPanel extends Panel {
 
     private onDownEnter() {
         this.onSendMsgHandler();
+    }
+
+    get outChannel(): number {
+        return 0;
     }
 }
