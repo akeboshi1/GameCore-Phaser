@@ -47,7 +47,7 @@ export class LoginScene extends Phaser.Scene {
         rect.fillRect(0, 0, width, height);
 
         const accountData: string = localStorage.getItem("account");
-        const logo: Phaser.GameObjects.Image = this.add.image((width >> 1) - 30, (height >> 1) - 150, loginRes, "login_logo");
+        const logo: Phaser.GameObjects.Image = this.add.image((width >> 1) - 30, (height >> 1) - 120, loginRes, "login_logo");
         this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100);
 
         this.mBg = this.make.image(undefined, false);
@@ -211,9 +211,9 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt4.visible = accountData === undefined ? false : true;
 
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
-        this.mNameInputTxt.text = accountObj !== null ? accountObj.account : "";
-        this.combobox.text = accountObj !== null ? [accountObj.account + ""] : [""];
-        this.mPassWordInputTxt.text = accountObj !== null ? accountObj.password : "";
+        this.mNameInputTxt.text = accountObj !== undefined ? accountObj.account : "";
+        this.combobox.text = accountObj !== undefined ? [accountObj.account + ""] : [""];
+        this.mPassWordInputTxt.text = accountObj !== undefined ? accountObj.password : "";
 
         this.mParentCon.setSize(this.mBg.width, this.mBg.height);
     }
@@ -267,7 +267,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));

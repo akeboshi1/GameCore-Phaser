@@ -42,12 +42,16 @@ export class ComboBox extends Phaser.GameObjects.Container {
     }
 
     public set text(value: string[]) {
-        if (!this.itemList) {
-            this.itemList = [];
+        if (this.itemList) {
+            const itemLen: number = this.itemList.length;
+            for (let i: number = 0; i < itemLen; i++) {
+                const item: ComboBoxItem = this.itemList[i];
+                if (!item) continue;
+                item.destroy();
+            }
+            this.itemList.length = 0;
         }
-        if (!this.itemList) {
-            this.itemList = [];
-        }
+        this.itemList = [];
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
             const item: ComboBoxItem = new ComboBoxItem(this.mScene, this, this.mConfig.wid, this.mConfig.hei);
