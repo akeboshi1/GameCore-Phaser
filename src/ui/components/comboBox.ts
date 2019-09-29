@@ -156,7 +156,7 @@ export class ComboBox extends Phaser.GameObjects.Container {
     }
 
     private createTexture(): Phaser.GameObjects.Graphics {
-        const COLOR = 0xffcc00;
+        const COLOR = 0x3D3838;
         const width = this.mBg.width;
         const height = this.mBashHei * this.itemList.length;
         const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.make.graphics(undefined, false);
@@ -178,7 +178,7 @@ export class ComboBoxItem extends Phaser.GameObjects.Container {
             y: -8,
             style: { fill: "#F7EDED", fontSize: 18 }
         }, false);
-        const COLOR = 0x00ffcc;
+        const COLOR = 0xffcc00;
         this.mSelectBG = scene.make.graphics(undefined, false);
         this.mSelectBG.fillStyle(COLOR, .8);
         this.mSelectBG.fillRect(-wid >> 1, -hei >> 1, wid, hei);
