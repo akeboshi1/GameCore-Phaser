@@ -2,6 +2,9 @@ import { ConnectionService } from "../net/connection.service";
 import InputText from "../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Alert } from "../ui/alert/alert";
 import { WorldService } from "../game/world.service";
+import { ComboBox, IComboboxRes, IComboboxItemData } from "../ui/components/comboBox";
+import { string } from "../../yargs";
+import { Logger } from "../utils/log";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends Phaser.Scene {
@@ -117,6 +120,33 @@ export class LoginScene extends Phaser.Scene {
         this.mParentCon.add(this.mtxt3);
         this.mParentCon.add(this.mtxt4);
 
+        // x: number;
+        // y: number;
+        // resKey: string;
+        // resPng: string;
+        // resJson: string;
+        // resBg: string;
+        // resArrow: string;
+        // fontStyle: { size: number, color: string, bold: boolean };
+        // up: boolean;
+        const config: IComboboxRes = {
+            x: 0,
+            y: 0,
+            wid: 111,
+            hei: 36,
+            resKey: "login",
+            resPng: "./resources/ui/login/login.png",
+            resJson: "./resources/ui/login/login.json",
+            resBg: "login_inputBg",
+            resArrow: "login_downArrow",
+            fontStyle: { size: 20, color: "#ffcc00", bold: false },
+            up: true,
+            clickCallBack: this.changeID,
+        }
+        const combobox: ComboBox = new ComboBox(this, 0, 10, config);
+        combobox.itemData = [{ text: "1" }, { text: "2" }, { text: "3" }];
+        this.mParentCon.add(combobox);
+
         this.mTab0.setInteractive();
         this.mTab1.setInteractive();
         this.mQuickBtn.setInteractive();
@@ -158,6 +188,10 @@ export class LoginScene extends Phaser.Scene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    private changeID(data: IComboboxItemData) {
+        Logger.debug("============combobox 123" + data.text);
     }
 
     private changeAccount() {
@@ -237,7 +271,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
+        httpRequest.onload = function () {
             if (httpRequest.status === 200) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));

@@ -1,6 +1,8 @@
 export interface IComboboxRes {
     x: number;
     y: number;
+    wid: number;
+    hei: number;
     resKey: string;
     resPng: string;
     resJson: string;
@@ -8,13 +10,23 @@ export interface IComboboxRes {
     resArrow: string;
     fontStyle: { size: number, color: string, bold: boolean };
     up: boolean;
+    clickCallBack: Function;
+}
+export interface IComboboxItemData {
+    index: number;
+    text: string;
+    data: any;
 }
 export class ComboBox extends Phaser.GameObjects.Container {
     protected itemList: ComboBoxItem[];
     private mScene: Phaser.Scene;
     private mConfig: IComboboxRes;
     private mBg: Phaser.GameObjects.Image;
-    private mIsopen: boolean = false;
+    private mIsopen: boolean = true;
+    private mBashHei: number = 0;
+    private mItemBG: Phaser.GameObjects.Graphics;
+    private mtxt: Phaser.GameObjects.Text;
+    private mArrow: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, x: number, y: number, config: IComboboxRes) {
         super(scene);
         this.mScene = scene;
@@ -22,19 +34,39 @@ export class ComboBox extends Phaser.GameObjects.Container {
         this.init();
     }
 
-    public set itemData(value: []) {
+    public set itemData(value: any) {
         if (!this.itemList) {
             this.itemList = [];
         }
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
-            const item: ComboBoxItem = new ComboBoxItem(this.mScene);
-            item.data = value[i];
+            const item: ComboBoxItem = new ComboBoxItem(this.mScene, this, this.mConfig.wid, this.mConfig.hei);
+            item.itemData = value[i];
             this.itemList.push(item);
+        }
+        // 默認顯示第0個
+        this.selectCall(this.itemList[0].itemData);
+    }
+
+    public selectCall(itemData: IComboboxItemData) {
+        this.mtxt.text = itemData.text;
+        this.showTween(false);
+        if (this.mConfig.clickCallBack) {
+            this.mConfig.clickCallBack.call(this, itemData);
         }
     }
 
     public destroy() {
+        if (this.itemList) {
+            const len: number = this.itemList.length;
+            for (let i: number = 0; i < len; i++) {
+                const item: ComboBoxItem = this.itemList[i];
+                if (!item) continue;
+                item.destroy();
+            }
+            this.itemList.length = 0;
+            this.itemList = null;
+        }
         super.destroy(true);
     }
 
@@ -57,88 +89,65 @@ export class ComboBox extends Phaser.GameObjects.Container {
         this.mBg.x = this.mConfig.x;
         this.mBg.y = this.mConfig.y;
         this.mBg.setTexture(resKey, this.mConfig.resBg);
+        this.mBashHei = this.mBg.height;
 
-        const txt: Phaser.GameObjects.Text = this.mScene.make.text({
-            x: this.mBg.x + 10,
-            y: this.mBg.y + 5,
-            style: { fontSize: this.mConfig.fontStyle.size, fill: this.mConfig.fontStyle.color }
+        this.mArrow = this.mScene.make.image(undefined, false);
+        this.mArrow.setTexture(resKey, this.mConfig.resArrow);
+        this.mArrow.scaleY = this.mConfig.up ? -1 : 1;
+        this.mArrow.x = this.mBg.width - 70;
+        this.mArrow.y = this.mBg.y;
+
+        this.mtxt = this.mScene.make.text({
+            x: -5, y: -8,
+            style: { fill: "#F7EDED", fontSize: 18 }
         }, false);
 
-        const arrow: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
-        arrow.setTexture(resKey, this.mConfig.resArrow);
-        arrow.scaleY = this.mConfig.up ? -1 : 1;
-        arrow.x = this.mBg.width - 20;
-        arrow.y = this.mBg.y + 5;
-
         this.add(this.mBg);
-        this.add(txt);
-        this.add(arrow);
+        this.add(this.mArrow);
+        this.add(this.mtxt);
+        this.mBg.setSize(this.mConfig.wid, this.mConfig.hei);
         this.mBg.setInteractive();
         this.mBg.on("pointerdown", this.openHandler, this);
     }
 
     private openHandler() {
         if (!this.itemList || this.itemList.length < 1) return;
-        let config: Phaser.Types.Tweens.TweenBuilderConfig;
-        const renderBG: Phaser.GameObjects.Graphics = this.createRenderBG();
-        renderBG.generateTexture("combobox", this.mBg.width, this.mBg.height);
-        const img: Phaser.GameObjects.Image = this.mScene.make.image({
-            key: "combobox"
-        }, false);
-        this.add(img);
-        // renderBG.displayOriginX = 0;
-        // renderBG.displayOriginY = 0;
-        if (this.mIsopen) {
-            config = {
-                targets: img,
-                duration: 1000,
-                ease: "Linear",
-                props: {
-                    height: { value: this.mBg.height + 100 },
-                    aplha: { value: 1 }
-                },
-                onComplete: (tween, targets, element) => {
-                    this.showItemTween(this.mIsopen);
-                    this.mIsopen = false;
-                },
-                onCompleteParams: [this],
-            };
-        } else {
-            config = {
-                targets: renderBG,
-                duration: 1000,
-                ease: "Linear",
-                props: {
-                    height: { value: this.mBg.height },
-                    aplha: { value: 0 }
-                },
-                onComplete: (tween, targets, element) => {
-                    this.showItemTween(this.mIsopen);
-                    this.mIsopen = true;
-                },
-                onCompleteParams: [this],
-            };
-        }
-        this.mScene.tweens.add({ config });
+        this.showTween(this.mIsopen);
+        this.mIsopen = !this.mIsopen;
     }
-
-    private showItemTween(isOpen: boolean) {
-        const itemList = this.itemList;
-        const len: number = itemList.length;
-        const totelHei: number = len * this.mBg.height;
+    private showTween(open: boolean) {
+        if (open) {
+            this.mItemBG = this.createTexture();
+            this.addAt(this.mItemBG, 0);
+        } else {
+            if (this.mItemBG) {
+                if (this.mItemBG.parentContainer) {
+                    this.mItemBG.parentContainer.remove(this.mItemBG);
+                }
+                this.mItemBG.destroy();
+            }
+        }
+        this.mArrow.scaleY = open ? 1 : -1;
+        this.showTweenItem(open);
+    }
+    private showTweenItem(open: boolean) {
+        const len: number = this.itemList.length;
         for (let i: number = 0; i < len; i++) {
-            const item = itemList[i];
-            if (!item) continue;
+            const item: ComboBoxItem = this.itemList[i];
+            if (!item) {
+                continue;
+            }
+            this.add(item);
             this.mScene.tweens.add({
                 targets: item,
-                duration: 1000,
-                ease: "Linear",
+                duration: 50 * i,
                 props: {
-                    y: { value: isOpen ? this.mBg.height * i : 0 },
+                    y: { value: open ? -this.mBashHei * (i + 1) : 0 },
+                    alpha: { value: open ? 1 : 0 }
                 },
                 onComplete: (tween, targets, element) => {
-                    if (!isOpen) {
-                        item.visible = false;
+                    if (!open) {
+                        this.remove(item);
                     }
                 },
                 onCompleteParams: [this],
@@ -146,39 +155,52 @@ export class ComboBox extends Phaser.GameObjects.Container {
         }
     }
 
-    private createRenderBG(): Phaser.GameObjects.Graphics {
-        const COLOR_BG = 0x706B6B;
+    private createTexture(): Phaser.GameObjects.Graphics {
+        const COLOR = 0xffcc00;
         const width = this.mBg.width;
-        const height = this.mBg.height;
+        const height = this.mBashHei * this.itemList.length;
         const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.make.graphics(undefined, false);
-        bgGraphics.fillStyle(COLOR_BG, .8);
-        bgGraphics.fillRect(0, 0, width, height);
+        bgGraphics.fillStyle(COLOR, .8);
+        bgGraphics.fillRect(-width >> 1, -height - this.mBashHei / 2, width, height);
         return bgGraphics;
     }
 }
 export class ComboBoxItem extends Phaser.GameObjects.Container {
     private mText: Phaser.GameObjects.Text;
-    private mBg: Phaser.GameObjects.Image;
-    private mData: any;
-    constructor(scene: Phaser.Scene) {
+    private mSelectBG: Phaser.GameObjects.Graphics;
+    private mData: IComboboxItemData;
+    private mCombobox: ComboBox;
+    constructor(scene: Phaser.Scene, combobox: ComboBox, wid: number, hei: number) {
         super(scene);
-
+        this.mCombobox = combobox;
         this.mText = this.scene.make.text({
-            x: 0,
-            y: 0,
-            style: { fill: "#FF0000", fontSize: 20 }
+            x: -5,
+            y: -8,
+            style: { fill: "#F7EDED", fontSize: 18 }
         }, false);
-        this.mText.setInteractive();
-        this.mText.on("pointerdown", this.selectHandler, this);
+        const COLOR = 0x00ffcc;
+        this.mSelectBG = scene.make.graphics(undefined, false);
+        this.mSelectBG.fillStyle(COLOR, .8);
+        this.mSelectBG.fillRect(-wid >> 1, -hei >> 1, wid, hei);
+        this.mSelectBG.visible = false;
+        this.addAt(this.mSelectBG, 0);
         this.add(this.mText);
+
+        this.setSize(wid, hei);
+
+        this.setInteractive();
+        this.on("pointerover", this.overHandler, this);
+        this.on("pointerout", this.outHandler, this);
+        this.on("pointerdown", this.selectHandler, this);
+
     }
 
-    public set data(val: any) {
+    public set itemData(val: IComboboxItemData) {
         this.mData = val;
         this.mText.text = this.mData.text;
     }
 
-    public get data(): any {
+    public get itemData(): IComboboxItemData {
         return this.mData;
     }
 
@@ -186,7 +208,19 @@ export class ComboBoxItem extends Phaser.GameObjects.Container {
         super.destroy(true);
     }
 
-    private selectHandler() {
+    public setSelected(val: boolean) {
+        this.mSelectBG.visible = val;
+    }
 
+    private overHandler() {
+        this.mSelectBG.visible = true;
+    }
+
+    private selectHandler() {
+        this.overHandler();
+        this.mCombobox.selectCall(this.itemData);
+    }
+    private outHandler() {
+        this.mSelectBG.visible = false;
     }
 }
