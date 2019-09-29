@@ -23,6 +23,7 @@ export class LoginScene extends Phaser.Scene {
     private mTab1: Phaser.GameObjects.Image;
     private mInputBg_long0: Phaser.GameObjects.Image;
     private mInputBg_long1: Phaser.GameObjects.Image;
+    private combobox: ComboBox;
     private mtxt0: Phaser.GameObjects.Text;
     private mtxt1: Phaser.GameObjects.Text;
     private mtxt2: Phaser.GameObjects.Text;
@@ -73,6 +74,7 @@ export class LoginScene extends Phaser.Scene {
         this.mInputBg_long0 = this.make.image(undefined, false);
         this.mInputBg_long0.setTexture(loginRes, "login_inputLong");
         this.mInputBg_long0.x = -50;
+        this.mInputBg_long0.y = 15;
 
         this.mInputBg_long1 = this.make.image(undefined, false);
         this.mInputBg_long1.setTexture(loginRes, "login_inputLong");
@@ -89,7 +91,6 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(200, 20)
             .setOrigin(0, 0);
-
         this.mPassWordInputTxt = new InputText(this, -140, 55, 190, 15, {
             type: "input",
             placeholder: "密码",
@@ -103,6 +104,23 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt2 = this.add.text(90, -45, "快速游戏");
         this.mtxt3 = this.add.text(110, 35, "登录");
         this.mtxt4 = this.add.text(-100, 38, "登录其他账号");
+
+        const config: IComboboxRes = {
+            wid: 220,
+            hei: 36,
+            resKey: "login",
+            resPng: "./resources/ui/login/login.png",
+            resJson: "./resources/ui/login/login.json",
+            resBg: "login_inputLong",
+            resArrow: "login_downArrow",
+            fontStyle: { size: 20, color: "#ffcc00", bold: false },
+            up: true,
+            clickCallBack: this.changeID,
+        };
+        this.combobox = new ComboBox(this, config);
+        this.combobox.x = -158;
+        this.combobox.y = -28;
+
         this.changePanelState(accountData);
 
         this.mParentCon.addAt(this.mBg, 0);
@@ -119,33 +137,7 @@ export class LoginScene extends Phaser.Scene {
         this.mParentCon.add(this.mtxt2);
         this.mParentCon.add(this.mtxt3);
         this.mParentCon.add(this.mtxt4);
-
-        // x: number;
-        // y: number;
-        // resKey: string;
-        // resPng: string;
-        // resJson: string;
-        // resBg: string;
-        // resArrow: string;
-        // fontStyle: { size: number, color: string, bold: boolean };
-        // up: boolean;
-        const config: IComboboxRes = {
-            x: 0,
-            y: 0,
-            wid: 111,
-            hei: 36,
-            resKey: "login",
-            resPng: "./resources/ui/login/login.png",
-            resJson: "./resources/ui/login/login.json",
-            resBg: "login_inputBg",
-            resArrow: "login_downArrow",
-            fontStyle: { size: 20, color: "#ffcc00", bold: false },
-            up: true,
-            clickCallBack: this.changeID,
-        }
-        const combobox: ComboBox = new ComboBox(this, 0, 10, config);
-        combobox.itemData = [{ text: "1" }, { text: "2" }, { text: "3" }];
-        this.mParentCon.add(combobox);
+        this.mParentCon.add(this.combobox);
 
         this.mTab0.setInteractive();
         this.mTab1.setInteractive();
@@ -202,9 +194,12 @@ export class LoginScene extends Phaser.Scene {
         const bgRes: string = accountData === undefined ? "login_loginBgBig" : "login_quickLoginBg";
         this.mBg.setTexture("login", bgRes);
         this.mEnterBtn.y = accountData === undefined ? 40 : 15;
-        this.mInputBg_long0.y = accountData === undefined ? 15 : -10;
+        this.mInputBg_long0.visible = accountData === undefined ? true : false;
+        // this.mInputBg_long0.y = accountData === undefined ? 15 : -10;
         this.mtxt3.y = accountData === undefined ? 35 : 8;
-        this.mNameInputTxt.y = accountData === undefined ? 5 : -20;
+        this.mNameInputTxt.visible = accountData === undefined ? true : false;
+        this.combobox.visible = accountData === undefined ? false : true;
+        // this.mNameInputTxt.y = accountData === undefined ? 5 : -20;
         this.mQuickBtn.visible = accountData === undefined ? true : false;
         this.mTab0.visible = accountData === undefined ? true : false;
         this.mTab1.visible = accountData === undefined ? true : false;
@@ -217,6 +212,7 @@ export class LoginScene extends Phaser.Scene {
 
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = accountObj !== null ? accountObj.account : "";
+        this.combobox.text = accountObj !== null ? [accountObj.account + ""] : [""];
         this.mPassWordInputTxt.text = accountObj !== null ? accountObj.password : "";
 
         this.mParentCon.setSize(this.mBg.width, this.mBg.height);

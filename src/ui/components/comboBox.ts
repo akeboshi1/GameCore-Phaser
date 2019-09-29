@@ -1,6 +1,4 @@
 export interface IComboboxRes {
-    x: number;
-    y: number;
     wid: number;
     hei: number;
     resKey: string;
@@ -22,38 +20,47 @@ export class ComboBox extends Phaser.GameObjects.Container {
     private mScene: Phaser.Scene;
     private mConfig: IComboboxRes;
     private mBg: Phaser.GameObjects.Image;
-    private mIsopen: boolean = true;
-    private mBashHei: number = 0;
+    private mIsopen: boolean = false;
     private mItemBG: Phaser.GameObjects.Graphics;
     private mtxt: Phaser.GameObjects.Text;
     private mArrow: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, x: number, y: number, config: IComboboxRes) {
+    constructor(scene: Phaser.Scene, config: IComboboxRes) {
         super(scene);
         this.mScene = scene;
         this.mConfig = config;
         this.init();
     }
 
-    public set itemData(value: any) {
+    public selectCall(itemData: IComboboxItemData) {
+        this.mtxt.text = itemData.text;
+        this.mtxt.x = this.mConfig.wid - this.mtxt.width >> 1;
+        this.mtxt.y = this.mConfig.hei - this.mtxt.height >> 1;
+        this.showTween(false);
+        if (this.mConfig.clickCallBack) {
+            this.mConfig.clickCallBack.call(this, itemData);
+        }
+    }
+
+    public set text(value: string[]) {
+        if (!this.itemList) {
+            this.itemList = [];
+        }
         if (!this.itemList) {
             this.itemList = [];
         }
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
             const item: ComboBoxItem = new ComboBoxItem(this.mScene, this, this.mConfig.wid, this.mConfig.hei);
-            item.itemData = value[i];
+            const str: string = value[i];
+            item.itemData = {
+                index: i,
+                text: str,
+                data: {},
+            };
             this.itemList.push(item);
         }
         // 默認顯示第0個
         this.selectCall(this.itemList[0].itemData);
-    }
-
-    public selectCall(itemData: IComboboxItemData) {
-        this.mtxt.text = itemData.text;
-        this.showTween(false);
-        if (this.mConfig.clickCallBack) {
-            this.mConfig.clickCallBack.call(this, itemData);
-        }
     }
 
     public destroy() {
@@ -86,26 +93,25 @@ export class ComboBox extends Phaser.GameObjects.Container {
     private onLoadCompleteHandler() {
         const resKey: string = this.mConfig.resKey;
         this.mBg = this.mScene.make.image(undefined, false);
-        this.mBg.x = this.mConfig.x;
-        this.mBg.y = this.mConfig.y;
         this.mBg.setTexture(resKey, this.mConfig.resBg);
-        this.mBashHei = this.mBg.height;
-
+        this.mBg.x = this.mConfig.wid / 2;
+        this.mBg.y = this.mConfig.hei / 2;
+        this.mBg.setSize(this.mConfig.wid, this.mConfig.hei);
         this.mArrow = this.mScene.make.image(undefined, false);
         this.mArrow.setTexture(resKey, this.mConfig.resArrow);
         this.mArrow.scaleY = this.mConfig.up ? -1 : 1;
-        this.mArrow.x = this.mBg.width - 70;
-        this.mArrow.y = this.mBg.y;
+        this.mArrow.x = this.mConfig.wid - this.mArrow.width;
+        this.mArrow.y = (this.mConfig.hei - this.mArrow.height >> 1) + 4;
 
         this.mtxt = this.mScene.make.text({
-            x: -5, y: -8,
+            x: 0, y: 0,
             style: { fill: "#F7EDED", fontSize: 18 }
         }, false);
 
         this.add(this.mBg);
         this.add(this.mArrow);
         this.add(this.mtxt);
-        this.mBg.setSize(this.mConfig.wid, this.mConfig.hei);
+
         this.mBg.setInteractive();
         this.mBg.on("pointerdown", this.openHandler, this);
     }
@@ -113,7 +119,6 @@ export class ComboBox extends Phaser.GameObjects.Container {
     private openHandler() {
         if (!this.itemList || this.itemList.length < 1) return;
         this.showTween(this.mIsopen);
-        this.mIsopen = !this.mIsopen;
     }
     private showTween(open: boolean) {
         if (open) {
@@ -129,6 +134,7 @@ export class ComboBox extends Phaser.GameObjects.Container {
         }
         this.mArrow.scaleY = open ? 1 : -1;
         this.showTweenItem(open);
+        this.mIsopen = !this.mIsopen;
     }
     private showTweenItem(open: boolean) {
         const len: number = this.itemList.length;
@@ -137,12 +143,13 @@ export class ComboBox extends Phaser.GameObjects.Container {
             if (!item) {
                 continue;
             }
+            item.x = this.mConfig.wid >> 1;
             this.add(item);
             this.mScene.tweens.add({
                 targets: item,
                 duration: 50 * i,
                 props: {
-                    y: { value: open ? -this.mBashHei * (i + 1) : 0 },
+                    y: { value: open ? -this.mConfig.hei * i - this.mConfig.hei / 2 : -this.mConfig.hei >> 1 },
                     alpha: { value: open ? 1 : 0 }
                 },
                 onComplete: (tween, targets, element) => {
@@ -157,11 +164,10 @@ export class ComboBox extends Phaser.GameObjects.Container {
 
     private createTexture(): Phaser.GameObjects.Graphics {
         const COLOR = 0x3D3838;
-        const width = this.mBg.width;
-        const height = this.mBashHei * this.itemList.length;
+        const height = this.mConfig.hei * this.itemList.length;
         const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.make.graphics(undefined, false);
         bgGraphics.fillStyle(COLOR, .8);
-        bgGraphics.fillRect(-width >> 1, -height - this.mBashHei / 2, width, height);
+        bgGraphics.fillRect(0, -height, this.mConfig.wid, height);
         return bgGraphics;
     }
 }
@@ -174,8 +180,7 @@ export class ComboBoxItem extends Phaser.GameObjects.Container {
         super(scene);
         this.mCombobox = combobox;
         this.mText = this.scene.make.text({
-            x: -5,
-            y: -8,
+            x: -wid >> 1, y: -hei >> 1,
             style: { fill: "#F7EDED", fontSize: 18 }
         }, false);
         const COLOR = 0xffcc00;
@@ -198,6 +203,8 @@ export class ComboBoxItem extends Phaser.GameObjects.Container {
     public set itemData(val: IComboboxItemData) {
         this.mData = val;
         this.mText.text = this.mData.text;
+        this.mText.x = -this.width / 2 + (this.width - this.mText.width >> 1);
+        this.mText.y = -this.height / 2 + (this.height - this.mText.height >> 1);
     }
 
     public get itemData(): IComboboxItemData {
