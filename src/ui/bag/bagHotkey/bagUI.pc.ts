@@ -153,7 +153,7 @@ export class BagUIPC implements IBag {
     }
 
     private bagHandler() {
-        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).getView().show();
+        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;

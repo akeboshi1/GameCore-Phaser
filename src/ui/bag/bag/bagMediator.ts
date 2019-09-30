@@ -63,6 +63,7 @@ export class BagMediator implements IMediator {
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
         this.mView.show(param);
+        this.refrehView();
     }
 
     public update(param: any) {
