@@ -208,7 +208,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
             content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
             content.gameId = this.mConfig.game_id;
-           // const accountObj = JSON.parse();
+            // const accountObj = JSON.parse();
             content.userToken = this.mAccount.accountData.token; // auth_token;
             content.expire = this.mAccount.accountData.expire + "";
             content.fingerprint = this.mAccount.accountData.fingerprint;
@@ -363,6 +363,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Focus;
             this.connection.send(pkt);
+            this.mRoomMamager.onFocus();
         } else {
             Logger.error("connection is undefined");
         }
@@ -374,6 +375,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
+            this.mRoomMamager.onBlur();
         } else {
             Logger.error("connection is undefined");
         }

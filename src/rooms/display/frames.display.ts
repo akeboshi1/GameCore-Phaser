@@ -165,6 +165,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         if (!sprite || !data || !data.animations) return;
         const animations = data.getAnimations(aniName);
+        if (!animations) return;
         // const ani: IAnimationData = animations.find((aniData) => aniData.name === aniName);
         // if (!ani || !ani.baseLoc) return;
         // const tmp = ani.baseLoc.split(",");

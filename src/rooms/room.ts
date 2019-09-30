@@ -166,7 +166,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public resume(name: string) {
         this.mScene.scene.resume(name);
-        this.mScene.scene.stop();
+        this.mClock.sync();
     }
 
     public requestActorMove(dir: number, keyArr: number[]) {

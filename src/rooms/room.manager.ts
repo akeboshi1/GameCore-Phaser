@@ -1,9 +1,9 @@
-import {WorldService} from "../game/world.service";
-import {ConnectionService} from "../net/connection.service";
-import {Room} from "./room";
-import {op_client} from "pixelpai_proto";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Logger} from "../utils/log";
+import { WorldService } from "../game/world.service";
+import { ConnectionService } from "../net/connection.service";
+import { Room } from "./room";
+import { op_client } from "pixelpai_proto";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Logger } from "../utils/log";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;
@@ -33,6 +33,20 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             return this.mRooms[idx];
         }
         return;
+    }
+
+    public onFocus() {
+        // todo start pausepanel
+        this.mRooms.forEach((room: Room) => {
+            if (room) room.resume(room.scene.scene.key);
+        });
+    }
+
+    public onBlur() {
+        // todo start pausepanel
+        this.mRooms.forEach((room: Room) => {
+            if (room) room.pause();
+        });
     }
 
     public pasuseRoom(id: number) {
@@ -91,7 +105,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     get currentRoom(): Room {
-        return  this.mCurRoom;
+        return this.mCurRoom;
     }
 
     get connection(): ConnectionService {
