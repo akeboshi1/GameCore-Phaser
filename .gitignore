@@ -246,3 +246,4 @@ webpack.config.js
 yargs.d.ts
 .gitignore
 webpack.config.js
+!/release/

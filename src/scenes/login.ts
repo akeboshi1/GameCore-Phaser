@@ -277,7 +277,7 @@ export class LoginScene extends Phaser.Scene {
             }
         };
         const accountUrl: string = CONFIG.api_root + "account/signin";
-        httpRequest.open("POST", accountUrl || "http://dev.tooqing.com:17170/account/signin");
+        httpRequest.open("POST", accountUrl );
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         httpRequest.send(JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
         // httpRequest.send("account=" + login.mNameInputTxt.text + "&password=" + login.mPassWordInputTxt.text);

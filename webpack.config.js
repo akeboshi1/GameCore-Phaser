@@ -19,7 +19,7 @@ const config = {
         chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: 'umd',
         globalObject: "this",
-        library: "Tooqing"
+        library: "TooqingCore"
     },
     module: {
         rules: [
