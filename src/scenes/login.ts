@@ -16,18 +16,22 @@ export class LoginScene extends Phaser.Scene {
     private mBg: Phaser.GameObjects.Image;
     private mEnterBtn: Phaser.GameObjects.Image;
     private mQuickBtn: Phaser.GameObjects.Image;
+    private mSendCodeBtn: Phaser.GameObjects.Image;
     private mNameInputTxt: InputText;
     private mPassWordInputTxt: InputText;
+    private mVerificationCodeTxt: InputText;
     private mTab0: Phaser.GameObjects.Image;
     private mTab1: Phaser.GameObjects.Image;
     private mInputBg_long0: Phaser.GameObjects.Image;
     private mInputBg_long1: Phaser.GameObjects.Image;
+    private mInputBg_small: Phaser.GameObjects.Image;
     private combobox: ComboBox;
     private mtxt0: Phaser.GameObjects.Text;
     private mtxt1: Phaser.GameObjects.Text;
     private mtxt2: Phaser.GameObjects.Text;
     private mtxt3: Phaser.GameObjects.Text;
     private mtxt4: Phaser.GameObjects.Text;
+    private mtxt5: Phaser.GameObjects.Text;
     private mParentCon: Phaser.GameObjects.Container;
     constructor() {
         super({ key: LoginScene.name });
@@ -46,7 +50,8 @@ export class LoginScene extends Phaser.Scene {
         rect.fillRect(0, 0, width, height);
 
         const accountData: string = localStorage.getItem("account");
-        const logo: Phaser.GameObjects.Image = this.add.image((width >> 1) - 30, (height >> 1) - 120, loginRes, "login_logo");
+        const logo: Phaser.GameObjects.Image = this.make.image(undefined, false);
+        logo.setTexture(loginRes, "login_logo");
         this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100);
 
         this.mBg = this.make.image(undefined, false);
@@ -59,6 +64,11 @@ export class LoginScene extends Phaser.Scene {
         this.mQuickBtn.setTexture(loginRes, "login_quickBtn");
         this.mQuickBtn.x = 123;
         this.mQuickBtn.y = -38;
+
+        this.mSendCodeBtn = this.make.image(undefined, false);
+        this.mSendCodeBtn.setTexture(loginRes, "login_sendBtn");
+        this.mSendCodeBtn.x = 10;
+        this.mSendCodeBtn.y = 67;
 
         this.mTab0 = this.make.image(undefined, false);
         this.mTab0.setTexture(loginRes, "login_tabSelect");
@@ -80,29 +90,46 @@ export class LoginScene extends Phaser.Scene {
         this.mInputBg_long1.x = -50;
         this.mInputBg_long1.y = 67;
 
+        this.mInputBg_small = this.make.image(undefined, false);
+        this.mInputBg_small.setTexture(loginRes, "login_inputBg");
+        this.mInputBg_small.x = -105;
+        this.mInputBg_small.y = 67;
+
         this.mTabDic = new Map();
 
-        this.mNameInputTxt = new InputText(this, -140, 5, 190, 15, {
+        this.mNameInputTxt = new InputText(this, -140, 4, 190, 15, {
             type: "input",
             placeholder: "用戶名",
+            fontFamily: "YaHei",
             fontSize: "14px",
             color: "#847C7C",
         })
             .resize(200, 20)
             .setOrigin(0, 0);
         this.mPassWordInputTxt = new InputText(this, -140, 55, 190, 15, {
-            type: "input",
+            type: "password",
             placeholder: "密码",
+            fontFamily: "YaHei",
             fontSize: "14px",
             color: "#847C7C",
         })
             .resize(200, 20)
             .setOrigin(0, 0);
-        this.mtxt0 = this.add.text(-145, -45, "手机号登录");
-        this.mtxt1 = this.add.text(-35, -45, "用户号登录");
-        this.mtxt2 = this.add.text(90, -45, "快速游戏");
-        this.mtxt3 = this.add.text(110, 35, "登录");
-        this.mtxt4 = this.add.text(-100, 38, "登录其他账号");
+        this.mVerificationCodeTxt = new InputText(this, -140, 55, 100, 15, {
+            type: "input",
+            placeholder: "验证码",
+            fontFamily: "YaHei",
+            fontSize: "14px",
+            color: "#847C7C",
+        })
+            .resize(100, 20)
+            .setOrigin(0, 0);
+        this.mtxt0 = this.add.text(-145, -46, "手机号登录", { fontFamily: "YaHei" });
+        this.mtxt1 = this.add.text(-35, -46, "用户号登录", { fontFamily: "YaHei" });
+        this.mtxt2 = this.add.text(90, -46, "快速游戏", { fontFamily: "YaHei" });
+        this.mtxt3 = this.add.text(108, 33, "登录", { fontFamily: "YaHei" });
+        this.mtxt4 = this.add.text(-97, 37, "登录其他账号", { fontFamily: "YaHei" });
+        this.mtxt5 = this.add.text(-6, 57, "发送", { fontFamily: "YaHei" });
 
         const config: IComboboxRes = {
             wid: 220,
@@ -122,26 +149,35 @@ export class LoginScene extends Phaser.Scene {
 
         this.changePanelState(accountData);
 
-        this.mParentCon.addAt(this.mBg, 0);
-        this.mParentCon.addAt(this.mTab0, 1);
-        this.mParentCon.addAt(this.mTab1, 2);
-        this.mParentCon.addAt(this.mQuickBtn, 3);
-        this.mParentCon.addAt(this.mEnterBtn, 4);
-        this.mParentCon.addAt(this.mInputBg_long0, 5);
-        this.mParentCon.addAt(this.mInputBg_long1, 5);
-        this.mParentCon.addAt(this.mNameInputTxt, 6);
-        this.mParentCon.addAt(this.mPassWordInputTxt, 7);
+        this.mParentCon.add(logo);
+        this.mParentCon.add(this.mBg);
+        this.mParentCon.add(this.mTab0);
+        this.mParentCon.add(this.mTab1);
+        this.mParentCon.add(this.mQuickBtn);
+        this.mParentCon.add(this.mEnterBtn);
+        this.mParentCon.add(this.mSendCodeBtn);
+        this.mParentCon.add(this.mInputBg_long0);
+        this.mParentCon.add(this.mInputBg_long1);
+        this.mParentCon.add(this.mInputBg_small);
+        this.mParentCon.add(this.mNameInputTxt);
+        this.mParentCon.add(this.mPassWordInputTxt);
+        this.mParentCon.add(this.mVerificationCodeTxt);
         this.mParentCon.add(this.mtxt0);
         this.mParentCon.add(this.mtxt1);
         this.mParentCon.add(this.mtxt2);
         this.mParentCon.add(this.mtxt3);
         this.mParentCon.add(this.mtxt4);
+        this.mParentCon.add(this.mtxt5);
         this.mParentCon.add(this.combobox);
+
+        logo.x = - 30;
+        logo.y = (-logo.height / 2) - 80;
 
         this.mTab0.setInteractive();
         this.mTab1.setInteractive();
         this.mQuickBtn.setInteractive();
         this.mEnterBtn.setInteractive();
+        this.mSendCodeBtn.setInteractive();
         this.mtxt4.setInteractive();
         this.mTab0.tabIndex = 0;
         this.mTab1.tabIndex = 1;
@@ -152,8 +188,10 @@ export class LoginScene extends Phaser.Scene {
         this.mTab1.on("pointerdown", this.tab1Handler, this);
         this.mQuickBtn.on("pointerdown", this.quickHandler, this);
         this.mEnterBtn.on("pointerdown", this.enterHandler, this);
+        this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
         this.mtxt4.on("pointerdown", this.changeAccount, this);
 
+        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
     }
 
     public init(data: any) {
@@ -190,6 +228,8 @@ export class LoginScene extends Phaser.Scene {
     }
 
     private changePanelState(accountData: string) {
+        const boo: boolean = !accountData;
+        this.verificaHandler(boo);
         const bgRes: string = accountData === undefined ? "login_loginBgBig" : "login_quickLoginBg";
         this.mBg.setTexture("login", bgRes);
         this.mEnterBtn.y = accountData === undefined ? 40 : 15;
@@ -202,8 +242,8 @@ export class LoginScene extends Phaser.Scene {
         this.mQuickBtn.visible = accountData === undefined ? true : false;
         this.mTab0.visible = accountData === undefined ? true : false;
         this.mTab1.visible = accountData === undefined ? true : false;
-        this.mInputBg_long1.visible = accountData === undefined ? true : false;
-        this.mPassWordInputTxt.visible = accountData === undefined ? true : false;
+        this.mInputBg_long1.visible = accountData === undefined && this.mCurTabIndex !== 0 ? true : false;
+        this.mPassWordInputTxt.visible = accountData === undefined && this.mCurTabIndex !== 0 ? true : false;
         this.mtxt0.visible = accountData === undefined ? true : false;
         this.mtxt1.visible = accountData === undefined ? true : false;
         this.mtxt2.visible = accountData === undefined ? true : false;
@@ -213,12 +253,26 @@ export class LoginScene extends Phaser.Scene {
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];
         this.mPassWordInputTxt.text = !accountObj ? "" : accountObj.password;
-
         this.mParentCon.setSize(this.mBg.width, this.mBg.height);
+    }
+
+    private verificaHandler(show: boolean) {
+        this.mVerificationCodeTxt.visible = show;
+        this.mtxt5.visible = show;
+        this.mInputBg_small.visible = show;
+        this.mSendCodeBtn.visible = show;
+        this.mInputBg_long1.visible = !show;
+        this.mPassWordInputTxt.visible = !show;
     }
 
     private quickHandler() {
         this.addTween(this.mQuickBtn);
+        // todo quick login
+    }
+
+    private sendCodeHandler() {
+        this.addTween(this.mSendCodeBtn);
+        // todo phone login
     }
 
     private enterHandler() {
@@ -254,13 +308,10 @@ export class LoginScene extends Phaser.Scene {
     private tabHandler() {
         this.mTabDic.forEach((image: Phaser.GameObjects.Image) => {
             let tabRes: string = "";
-            if (image.tabIndex === this.mCurTabIndex) {
-                tabRes = "login_tabSelect";
-            } else {
-                tabRes = "login_tabUnSelect";
-            }
+            tabRes = image.tabIndex === this.mCurTabIndex ? "login_tabSelect" : "login_tabUnSelect";
             image.setTexture("login", tabRes);
         });
+        this.verificaHandler(!this.mCurTabIndex);
     }
 
     private requestLogin() {
