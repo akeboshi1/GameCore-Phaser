@@ -266,7 +266,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
@@ -276,7 +276,8 @@ export class LoginScene extends Phaser.Scene {
                 alert.show("账号密码错误");
             }
         };
-        httpRequest.open("POST", CONFIG.AccountUrl || "http://dev.tooqing.com:17170/account/signin");
+        const accountUrl: string = CONFIG.api_root + "account/signin";
+        httpRequest.open("POST", accountUrl || "http://dev.tooqing.com:17170/account/signin");
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         httpRequest.send(JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
         // httpRequest.send("account=" + login.mNameInputTxt.text + "&password=" + login.mPassWordInputTxt.text);
