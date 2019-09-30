@@ -35,21 +35,13 @@ export class MouseManager extends PacketHandler {
         this.mScene = room.scene;
         if (!this.mScene) return;
         this.mActivePointer = this.mScene.input.activePointer;
-        new Promise((resolve, reject) => {
-            try {
-                room.addMouseListen();
-                resolve();
-            } catch (e) {
-                reject(e);
-            }
-        }).then(() => {
-            room.scene.input.on("gameobjectdown", this.groundDown, this);
-            room.scene.input.on("gameobjectup", this.groundUp, this);
-            this.resume();
-        }).catch((reason: any) => {
-            Logger.error(reason);
-        }).finally(() => {
-        });
+        try {
+            room.addMouseListen();
+        } catch (e) {
+        }
+        room.scene.input.on("gameobjectdown", this.groundDown, this);
+        room.scene.input.on("gameobjectup", this.groundUp, this);
+        this.resume();
     }
 
     public resize(width: number, height: number) {
@@ -64,7 +56,7 @@ export class MouseManager extends PacketHandler {
         this.running = true;
     }
 
-    public onUpdate(pointer: Phaser.Input.Pointer): void {
+    public onUpdate(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject): void {
         if (this.running === false || this.mActivePointer === undefined) {
             return;
         }
@@ -88,8 +80,13 @@ export class MouseManager extends PacketHandler {
             return;
         }
 
+        let id = 0;
+        if (gameobject.parentContainer) {
+            id = gameobject.parentContainer.getData("id");
+        }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
+        content.id = id;
         content.mouseEvent = events;
         content.point3f = { x: pointer.x, y: pointer.y };
         this.mConnect.send(pkt);
@@ -121,11 +118,11 @@ export class MouseManager extends PacketHandler {
 
     private groundDown(pointer, gameObject) {
         this.mActivePointer = pointer;
-        this.onUpdate(pointer);
+        this.onUpdate(pointer, gameObject);
     }
 
     private groundUp(pointer, gameObject) {
         this.mActivePointer = pointer;
-        this.onUpdate(pointer);
+        this.onUpdate(pointer, gameObject);
     }
 }

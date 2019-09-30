@@ -167,15 +167,14 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         if (this.mActionName !== val) {
             let dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
             dir = dir !== 0 ? dir : 3;
-            let trunDir: number;
+            let trunDir: string = "";
             if (dir === 3 || dir === 5) {
                 this.scaleX = -dir + 4;
-                trunDir = 3;
             } else if (dir === 1 || dir === 7) {
                 this.scaleX = -(1 / 3) * dir + (4 / 3);
-                trunDir = 1;
+                trunDir = "_back";
             }
-            this.mActionName = val + "_" + trunDir;
+            this.mActionName = val + trunDir;
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
@@ -303,7 +302,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             this.mClickCon.x = -rect.width >> 1;
             this.mClickCon.y = -rect.height;
         }
-        this.mClickCon.setData("id", this.mDisplayInfo.id);
+        this.setData("id", this.mDisplayInfo.id);
         this.add(this.mClickCon);
         this.emit("initialized");
     }

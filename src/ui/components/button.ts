@@ -4,7 +4,7 @@ export class Button extends Phaser.GameObjects.Container {
     protected mLabel: Phaser.GameObjects.Text;
     protected mNingBg: NinePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, config?: object, text?: string) {
-        super(scene);
+        super(scene, x, y);
         this.mNingBg = new NinePatch(this.scene, 0, 0, config);
         this.add(this.mNingBg);
 

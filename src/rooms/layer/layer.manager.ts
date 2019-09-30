@@ -56,23 +56,30 @@ export class LayerManager {
         this.mScene = room.scene;
         // ==========背景层
         this.mGroundClickLayer = this.mScene.add.container(0, 0);
+        this.mGroundClickLayer.name = "mGroundClickLayer";
         // this.totalLayerList.push(this.mGroundClickLayer);
 
         this.mUGroundLayer2 = this.mScene.add.container(0, 0);
+        this.mUGroundLayer2.name = "mUGroundLayer2";
 
         // ==========舞台层
         this.mGroundLayer = this.mScene.add.container(0, 0);
+        this.mGroundLayer.name = "mGroundLayer";
 
         this.mSurfaceLayer = this.mScene.add.container(0, 0);
+        this.mSurfaceLayer.name = "surfaceLayer";
 
         this.mAtmosphere = this.mScene.add.container(0, 0);
+        this.mAtmosphere.name = "atmosphere";
 
         // ==========UI层
 
         this.mSceneUILayer = this.mScene.add.container(0, 0);
+        this.mSceneUILayer.name = "sceneUILayer";
 
         this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
-        this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
+        this.mUILayer.name = "uiLayer";
+        // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
     public addToGround(ele: ElementDisplay | ElementDisplay[]) {
@@ -106,7 +113,7 @@ export class LayerManager {
     }
 
     public addMouseListen() {
-        this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
+        // this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
     public sortSurface() {
