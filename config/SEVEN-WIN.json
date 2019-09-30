@@ -1,7 +1,4 @@
 {
-  "auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMmVlNWNiOTg5Y2FiMGNmNzhiNjcyMyIsImlhdCI6MTU2OTI0MDY1MSwiZXhwIjoxNTY5ODQ1NDUxfQ.C9K_PiKdlHI85zJGsUXbcUcH8w0kShPl8c_r2_lSX9Q",
-  "token_expire": "1569845451",
-  "token_fingerprint": "31c2c011a618d350a55f2cf77d8f2f7f28ad6acb",
-  "game_id": "5d65e35fdb19b473d87c2023",
+  "game_id": "5d7201c785d8f75077fa0c71",
   "virtual_world_id": 0
 }
