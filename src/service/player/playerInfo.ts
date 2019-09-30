@@ -1,6 +1,6 @@
 import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-import { SlotInfo } from "./SlotInfo";
 import IActor = op_client.IActor;
+import { SlotInfo } from "../../rooms/player/slot.info";
 
 export class PlayerInfo implements IActor {
     /** Character id. */

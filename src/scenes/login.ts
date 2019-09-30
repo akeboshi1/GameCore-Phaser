@@ -3,7 +3,6 @@ import InputText from "../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Alert } from "../ui/alert/alert";
 import { WorldService } from "../game/world.service";
 import { ComboBox, IComboboxRes, IComboboxItemData } from "../ui/components/comboBox";
-import { string } from "../../yargs";
 import { Logger } from "../utils/log";
 
 // 编辑器用 Phaser.Scene
