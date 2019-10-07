@@ -1,6 +1,6 @@
-import {op_gameconfig} from "pixelpai_proto";
-import {Logger} from "../../utils/log";
-import {AnimationDataNode} from "game-capsule/lib/configobjects";
+import { op_gameconfig } from "pixelpai_proto";
+import { Logger } from "../../utils/log";
+import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
 
 export interface IFramesModel {
@@ -12,7 +12,8 @@ export interface IFramesModel {
     display?: IDisplay | null;
     animations?: Map<string, IAnimationData>;
     animationName: string;
-
+    package?: op_gameconfig.IPackage;
+    shops?: (op_gameconfig.IShop[] | null);
     getAnimations(name: string): IAnimationData;
     destroy();
 }
@@ -40,6 +41,8 @@ export class FramesModel implements IFramesModel {
     public display: IDisplay | null;
     public animations: Map<string, IAnimationData>;
     public animationName: string;
+    public package: op_gameconfig.IPackage;
+    public shops: op_gameconfig.IShop[];
     protected mGen: string;
 
     constructor(data: any) {

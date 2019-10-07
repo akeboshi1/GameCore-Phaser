@@ -44,7 +44,9 @@ export class ItemSlot implements IListItemComponent {
     public dataChange(val: any) {
         this.mData = val;
         if (this.mIcon && this.mData && this.mData.display) {
-            this.mIcon.load(this.mData.display.texturePath, this);
+            this.mIcon.load(this.mData.display.texturePath, this, () => {
+                this.mIcon.visible = true;
+            });
             const des = this.mData.des ? "\n" + this.mData.des : "";
             //  this.setToolTipText(this.data.name + des);
         }
@@ -67,6 +69,7 @@ export class ItemSlot implements IListItemComponent {
         this.con.addAt(this.itemBG, 0);
         this.con.setSize(this.itemBG.width, this.itemBG.height);
         this.mIcon = new DragDropIcon(this.mScene, 0, 0);
+        this.mIcon.visible = false;
         // this.mIcon.icon.anchor.set(0.5, 0.5);
         // this.mIcon.x = 26;
         // this.mIcon.y = 26;

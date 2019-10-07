@@ -62,6 +62,10 @@ export class BagPanel extends Panel {
         if (this.mParentCon) this.mParentCon.destroy();
     }
 
+    public getCurPageIndex(): number {
+        return this.mPageIndex;
+    }
+
     private createPanel() {
         this.mResStr = "bagView";
         this.mResPng = "./resources/ui/bag/bagView.png";
@@ -91,6 +95,7 @@ export class BagPanel extends Panel {
         let itemSlot: ItemSlot;
         let tmpX: number = 0;
         let tmpY: number = 0;
+        // 多排背包格位
         const chilsList: any[] = [];
         let rowIndex: number = -1;
         const slotCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);

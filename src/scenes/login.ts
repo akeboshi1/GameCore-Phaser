@@ -230,24 +230,24 @@ export class LoginScene extends Phaser.Scene {
     private changePanelState(accountData: string) {
         const boo: boolean = !accountData;
         this.verificaHandler(boo);
-        const bgRes: string = accountData === undefined ? "login_loginBgBig" : "login_quickLoginBg";
+        const bgRes: string = !accountData ? "login_loginBgBig" : "login_quickLoginBg";
         this.mBg.setTexture("login", bgRes);
-        this.mEnterBtn.y = accountData === undefined ? 40 : 15;
-        this.mInputBg_long0.visible = accountData === undefined ? true : false;
+        this.mEnterBtn.y = !accountData ? 40 : 15;
+        this.mInputBg_long0.visible = !accountData ? true : false;
         // this.mInputBg_long0.y = accountData === undefined ? 15 : -10;
-        this.mtxt3.y = accountData === undefined ? 35 : 8;
-        this.mNameInputTxt.visible = accountData === undefined ? true : false;
-        this.combobox.visible = accountData === undefined ? false : true;
+        this.mtxt3.y = !accountData ? 35 : 8;
+        this.mNameInputTxt.visible = !accountData ? true : false;
+        this.combobox.visible = !accountData ? false : true;
         // this.mNameInputTxt.y = accountData === undefined ? 5 : -20;
-        this.mQuickBtn.visible = accountData === undefined ? true : false;
-        this.mTab0.visible = accountData === undefined ? true : false;
-        this.mTab1.visible = accountData === undefined ? true : false;
-        this.mInputBg_long1.visible = accountData === undefined && this.mCurTabIndex !== 0 ? true : false;
-        this.mPassWordInputTxt.visible = accountData === undefined && this.mCurTabIndex !== 0 ? true : false;
-        this.mtxt0.visible = accountData === undefined ? true : false;
-        this.mtxt1.visible = accountData === undefined ? true : false;
-        this.mtxt2.visible = accountData === undefined ? true : false;
-        this.mtxt4.visible = accountData === undefined ? false : true;
+        this.mQuickBtn.visible = !accountData ? true : false;
+        this.mTab0.visible = !accountData ? true : false;
+        this.mTab1.visible = !accountData ? true : false;
+        this.mInputBg_long1.visible = !accountData && this.mCurTabIndex !== 0 ? true : false;
+        this.mPassWordInputTxt.visible = !accountData && this.mCurTabIndex !== 0 ? true : false;
+        this.mtxt0.visible = !accountData ? true : false;
+        this.mtxt1.visible = !accountData ? true : false;
+        this.mtxt2.visible = !accountData ? true : false;
+        this.mtxt4.visible = !accountData ? false : true;
 
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
@@ -268,6 +268,7 @@ export class LoginScene extends Phaser.Scene {
     private quickHandler() {
         this.addTween(this.mQuickBtn);
         // todo quick login
+
     }
 
     private sendCodeHandler() {
@@ -328,9 +329,62 @@ export class LoginScene extends Phaser.Scene {
             }
         };
         const accountUrl: string = CONFIG.api_root + "account/signin";
-        httpRequest.open("POST", accountUrl );
+        httpRequest.open("POST", accountUrl);
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         httpRequest.send(JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
-        // httpRequest.send("account=" + login.mNameInputTxt.text + "&password=" + login.mPassWordInputTxt.text);
+    }
+
+    private requestGetPhoneCode() {
+        const login = this;
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.onload = function() {
+            if (httpRequest.status === 200) {
+            } else {
+                const alert = new Alert(login.mWorld, login);
+                alert.show("验证码获取失败");
+            }
+        };
+        const phoneUrl: string = CONFIG.api_root + "account/sms_code";
+        httpRequest.open("POST", phoneUrl);
+        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        httpRequest.send();
+    }
+
+    private loginByPhoneCode() {
+        const login = this;
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.onload = function() {
+            if (httpRequest.status === 200) {
+                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text}));
+                login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
+                login.mCallBack(httpRequest.responseText);
+            } else {
+                const alert = new Alert(login.mWorld, login);
+                alert.show("登录失败");
+            }
+        };
+        const phoneAccountUrl: string = CONFIG.api_root + "account/phone_signin";
+        httpRequest.open("POST", phoneAccountUrl);
+        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        httpRequest.send();
+    }
+
+    private requestQuickLogin() {
+        const login = this;
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.onload = function() {
+            if (httpRequest.status === 200) {
+                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text}));
+                login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
+                login.mCallBack(httpRequest.responseText);
+            } else {
+                const alert = new Alert(login.mWorld, login);
+                alert.show("登录失败");
+            }
+        };
+        const phoneAccountUrl: string = CONFIG.api_root + "account/quick_signin";
+        httpRequest.open("POST", phoneAccountUrl);
+        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        httpRequest.send();
     }
 }

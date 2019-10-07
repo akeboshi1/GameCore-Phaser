@@ -20,6 +20,7 @@ import { LoadingScene } from "../scenes/loading";
 import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { PlayerDataModel } from "../service/player/playerDataModel";
+import { MapDataModel } from "../service/map/mapDataModel";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -125,6 +126,8 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         };
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
+        const mapDataModel = this.mWorld.modelManager.getModel(MapDataModel.NAME) as MapDataModel;
+        mapDataModel.setMapInfo(data);
         this.mLayManager = new LayerManager(this);
         if (this.scene) {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;

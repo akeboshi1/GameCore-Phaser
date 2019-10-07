@@ -1,13 +1,13 @@
-import {PlayerInfo} from "./playerInfo";
-import {MainPlayerInfo} from "./mainPlayerInfo";
-import {op_client, op_gameconfig} from "pixelpai_proto";
-import {EventEmitter} from "events";
-import {MessageType} from "../../const/MessageType";
-import {IBaseModel} from "../baseModel";
-import {WorldService} from "../../game/world.service";
-import {PacketHandler} from "net-socket-packet";
+import { PlayerInfo } from "./playerInfo";
+import { MainPlayerInfo } from "./mainPlayerInfo";
+import { op_client, op_gameconfig } from "pixelpai_proto";
+import { EventEmitter } from "events";
+import { MessageType } from "../../const/MessageType";
+import { IBaseModel } from "../baseModel";
+import { WorldService } from "../../game/world.service";
+import { PacketHandler } from "net-socket-packet";
 
-export class PlayerDataModel extends PacketHandler implements IBaseModel {
+export class PlayerDataModel implements IBaseModel {
     // private mCharactId: number;
     public static NAME: string = "PlayerDataModel";
     public initialize: boolean = false;
@@ -16,7 +16,6 @@ export class PlayerDataModel extends PacketHandler implements IBaseModel {
     private mModelDispatch: EventEmitter;
 
     constructor(private mWorld: WorldService) {
-        super();
         if (this.mWorld.modelManager) {
             this.mModelDispatch = this.mWorld.modelManager;
         }
@@ -98,7 +97,7 @@ export class PlayerDataModel extends PacketHandler implements IBaseModel {
         }
     }
 
-    public addCharacterPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
+    public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character = this.getPlayer(elementId);
         if (character) {
             if (!character.package) {
@@ -112,7 +111,7 @@ export class PlayerDataModel extends PacketHandler implements IBaseModel {
         }
     }
 
-    public removeCharacterPackItems(elementId: number, itemId: number): boolean {
+    public removePackItems(elementId: number, itemId: number): boolean {
         const character = this.getPlayer(elementId);
         if (character) {
             const len = character.package[0].items.length;

@@ -3,6 +3,7 @@ import { PlayerDataModel } from "./player/playerDataModel";
 import { EventEmitter } from "events";
 import { WorldService } from "../game/world.service";
 import { BagModel } from "./bag/bagModel";
+import { MapDataModel } from "./map/mapDataModel";
 
 export class ModelManager extends EventEmitter {
 
@@ -18,6 +19,7 @@ export class ModelManager extends EventEmitter {
         this.mModelDic = {};
         // =============定义好class 用于后面调用时new
         this.mModelClassDic[PlayerDataModel.NAME] = PlayerDataModel;
+        this.mModelClassDic[MapDataModel.NAME] = MapDataModel;
         this.mModelClassDic[BagModel.NAME] = BagModel;
     }
 

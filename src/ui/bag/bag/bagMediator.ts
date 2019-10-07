@@ -63,7 +63,9 @@ export class BagMediator implements IMediator {
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
         this.mView.show(param);
-        this.refrehView();
+
+        const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
+        this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex());
     }
 
     public update(param: any) {
@@ -75,6 +77,7 @@ export class BagMediator implements IMediator {
         this.world.modelManager.off(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
+        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
         if (!this.mView) return;
         this.mView.hide();
     }
@@ -96,7 +99,7 @@ export class BagMediator implements IMediator {
     }
 
     private setListData(value: any[]) {
-        const pageNum: number = Math.ceil(value.length / this.mPageNum);
+        const pageNum: number = Math.ceil(value.length / this.mPageNum) || 0;
         this.mView.setDataList(value);
         // if (this.mView.m_List) this.onRemove();
         // let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum);

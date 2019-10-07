@@ -6,7 +6,7 @@ import { BagModel } from "../../../service/bag/bagModel";
 import { BagUIPC } from "./bagUI.pc";
 import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_gameconfig } from "pixelpai_proto";
 
 export class BagUIMediator implements IMediator {
     public world: WorldService;
@@ -59,6 +59,7 @@ export class BagUIMediator implements IMediator {
         if (this.mView) {
             this.mView.show(param);
             this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge);
+            this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange);
         }
     }
 
@@ -68,7 +69,15 @@ export class BagUIMediator implements IMediator {
 
     public hide() {
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge);
+        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange);
         if (this.mView) this.mView.hide();
+    }
+
+    private heroItemChange() {
+        const itemList: op_gameconfig.IItem[] = (this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package[0].items;
+        if (this.mView && this.world.game.device.os.desktop) {
+            (this.mView as BagUIPC).setDataList(itemList);
+        }
     }
 
     private queryPackAge(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
