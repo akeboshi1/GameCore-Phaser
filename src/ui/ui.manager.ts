@@ -4,7 +4,6 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IBag } from "./bag/basebag";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../utils/log";
-import { ChatPanel } from "./chat/chat.panel";
 import { IMediator } from "./baseMediator";
 import { BagMediator } from "./bag/bag/bagMediator";
 import { UIMediatorType } from "./ui.mediatorType";
