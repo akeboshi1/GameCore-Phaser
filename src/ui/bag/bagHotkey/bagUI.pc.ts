@@ -62,53 +62,63 @@ export class BagUIPC implements IBag {
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.mParentCon.x = (size.width >> 1) - 29;
+        this.mParentCon.x = (size.width - this.mWid) / 2;
         this.mParentCon.y = size.height - 50;
     }
     public destroy() {
+        this.mWid = 0;
+        this.mHei = 0;
         if (this.mParentCon) this.mParentCon.destroy(true);
     }
 
     public setDataList(items: op_gameconfig.IItem[]) {
         const childList: Phaser.GameObjects.GameObject[] = [];
         const len: number = items.length > BagUIPC.SlotMaxCount ? BagUIPC.SlotMaxCount : items.length;
-        let itemSlot: ItemSlot;
         const subScriptList: string[] = ["0", "b", "c"];
         let subScriptRes: string;
+        let tempWid: number = this.mBagBg.width + 5;
         for (let i: number = 0; i < len; i++) {
             if (i >= 9) {
                 subScriptRes = "bag_SubScript" + subScriptList[i % 9];
             } else {
                 subScriptRes = "bag_SubScript" + (i + 1);
             }
-            itemSlot = new ItemSlot(this.mScene, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_slot", "", subScriptRes);
-            this.bagSlotList.push(itemSlot);
-            childList.push(itemSlot.con);
-            this.mWid += 56 + 5;
-        }
-        const buttons = (<any> this.mScene).rexUI.add.buttons({
-            x: 0,
-            y: 0,
-            width: 56,
-            height: 56,
-            orientation: 0,
-            buttons: childList,
-            groupName: "bagBtn",
-            align: "center",
-            click: {
-                mode: "pointerup",
-                clickInterval: 100
-            },
-            space: 5,
-            name: "bag",
-        });
-        buttons.layout();
-        const s = this;
-        buttons.on("button.click", function(button, groupName, index, pointer) {
-            if (index === 0) {
+            let itemSlot: ItemSlot = this.bagSlotList[i];
+            if (!itemSlot) {
+                itemSlot = new ItemSlot(this.mScene, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_slot", "", subScriptRes);
+                this.bagSlotList.push(itemSlot);
+                childList.push(itemSlot.con);
             }
-        }, this);
-        this.mParentCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mWid, this.mHei), Phaser.Geom.Rectangle.Contains);
+            itemSlot.dataChange(items[i]);
+            tempWid += 56 + 5;
+        }
+        if (this.mWid !== tempWid) {
+            this.mWid = tempWid;
+            const buttons = (<any> this.mScene).rexUI.add.buttons({
+                x: (tempWid + this.mBagBg.width) / 2,
+                y: 0,
+                width: 56,
+                height: 56,
+                orientation: 0,
+                buttons: childList,
+                groupName: "bagBtn",
+                align: "center",
+                click: {
+                    mode: "pointerup",
+                    clickInterval: 100
+                },
+                space: 5,
+                name: "bag",
+            });
+            buttons.layout();
+            const s = this;
+            buttons.on("button.click", function(button, groupName, index, pointer) {
+                if (index === 0) {
+                }
+            }, this);
+            this.mParentCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mWid, this.mHei), Phaser.Geom.Rectangle.Contains);
+            this.resize();
+        }
     }
 
     private createPanel() {

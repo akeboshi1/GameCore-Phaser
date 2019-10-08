@@ -16,15 +16,15 @@ export class BagPanel extends Panel {
     private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mParentCon: Phaser.GameObjects.Container;
     private mPageNum: number = 0;
-    private mPageIndex: number = 0;
+    private mPageIndex: number = 1;
     private mDataList: any[];
     private mWid: number = 0;
     private mHei: number = 0;
+    private mInitalize: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mScene = scene;
         this.mWorld = world;
-        this.bagSlotList = [];
     }
 
     public show(param: any) {
@@ -55,11 +55,31 @@ export class BagPanel extends Panel {
     public setDataList(value: any[]) {
         this.mPageNum = Math.ceil(value.length / BagPanel.PageMaxCount);
         this.mDataList = value;
+        if (!this.mInitalize) {
+            return;
+        }
         this.refreshDataList();
     }
 
+    public getPageNum(): number {
+        return this.mPageNum;
+    }
+
     public destroy() {
-        if (this.mParentCon) this.mParentCon.destroy();
+        if (this.bagSlotList) {
+            this.bagSlotList.forEach((slot: ItemSlot) => {
+                if (slot) slot.destory();
+            });
+            this.bagSlotList.length = 0;
+            this.bagSlotList = null;
+        }
+        if (this.mDataList) {
+            this.mDataList.length = 0;
+            this.mDataList = null;
+        }
+        if (this.mParentCon) {
+            this.mParentCon.destroy();
+        }
     }
 
     public getCurPageIndex(): number {
@@ -80,6 +100,7 @@ export class BagPanel extends Panel {
     }
 
     private onLoadCompleteHandler() {
+        this.mInitalize = true;
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
@@ -103,6 +124,7 @@ export class BagPanel extends Panel {
         slotCon.y = 0;
         slotCon.setSize(11 * 52 + 10 * 8, 11 * 52 + 10 * 5);
         this.mParentCon.add(slotCon);
+        this.bagSlotList = [];
         for (let i: number = 0; i < 36; i++) {
             if (i % 12 === 0) {
                 rowIndex++;
@@ -178,6 +200,9 @@ export class BagPanel extends Panel {
         } else {
             this.onClsLoadCompleteHandler();
         }
+        if (this.mDataList) {
+            this.refreshDataList();
+        }
     }
 
     private nextHandler(pointer, gameObject) {
@@ -217,8 +242,8 @@ export class BagPanel extends Panel {
             Logger.error("this.mDataList is undefiend");
             return;
         }
-        const items = this.mDataList.slice((this.mPageIndex - 1) * BagPanel.PageMaxCount, this.mPageIndex * BagPanel.PageMaxCount);
-        const len = this.bagSlotList.length;
+        const items = this.mDataList.slice(this.mPageIndex * BagPanel.PageMaxCount, (this.mPageIndex + 1) * BagPanel.PageMaxCount);
+        const len = BagPanel.PageMaxCount;
         let item: ItemSlot;
         for (let i = 0; i < len; i++) {
             item = this.bagSlotList[i];

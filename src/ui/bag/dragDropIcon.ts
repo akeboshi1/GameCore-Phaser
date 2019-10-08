@@ -7,6 +7,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     protected mDragType: number;
     private mIcon: Phaser.GameObjects.Image;
     private mUrl: string;
+    private mCallBack: Function;
     constructor(private mScene: Phaser.Scene, x: number, y: number, texture?: string) {
         super(mScene, x, y);
         this.mIcon = this.mScene.make.image(undefined, false);
@@ -17,12 +18,13 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
         this.mUrl = value;
         const key: string = this.resKey;
         if (!this.mScene.cache.obj.has(key)) {
-            this.mScene.load.image(key, Url.getRes(this.mUrl));
+            this.mScene.load.image(key, Url.getOsdRes(this.mUrl));
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
             this.mScene.load.start();
         } else {
             this.onLoadCompleteHandler();
         }
+        this.mCallBack = onLoadComplete;
     }
 
     public dragStart(): void {
@@ -58,7 +60,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
 
     public get resKey(): string {
         if (this.mUrl === undefined) return "";
-        const key: string = Url.getRes(this.mUrl); // Load.Image.getKey(this.mUrl);
+        const key: string = Url.getOsdRes((this.mUrl)); // Load.Image.getKey(this.mUrl);
         return key;
     }
 
@@ -87,6 +89,8 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     }
 
     private onLoadCompleteHandler() {
-
+        const key: string = this.resKey;
+        this.mIcon.setTexture(key);
+        if (this.mCallBack) this.mCallBack();
     }
 }

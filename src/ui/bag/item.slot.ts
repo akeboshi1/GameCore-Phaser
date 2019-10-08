@@ -2,6 +2,7 @@ import { IItem } from "./baseitem";
 import { IListItemComponent } from "./IListItemRender";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
+import { Url } from "../../utils/resUtil";
 
 export class ItemSlot implements IListItemComponent {
     // public url: string;
@@ -22,6 +23,8 @@ export class ItemSlot implements IListItemComponent {
     private itemBG: Phaser.GameObjects.Sprite;
     private mSelectSprite: Phaser.GameObjects.Sprite;
     private mSelectRes: string;
+
+    private minitialize: boolean = false;
     constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         this.mScene = scene;
         this.con = scene.make.container(undefined, false);
@@ -42,6 +45,7 @@ export class ItemSlot implements IListItemComponent {
     }
 
     public dataChange(val: any) {
+        if (!this.minitialize) return;
         this.mData = val;
         if (this.mIcon && this.mData && this.mData.display) {
             this.mIcon.load(this.mData.display.texturePath, this, () => {
@@ -53,14 +57,24 @@ export class ItemSlot implements IListItemComponent {
 
     }
 
-    private createUI() {
-        if (!this.mScene.cache.obj.has(this.mResStr)) {
-            this.mScene.load.atlas(this.mResStr, this.mResPng, this.mResJson);
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onLoadCompleteHandler();
+    public destory() {
+        if (this.con) {
+            this.con.destroy(true);
         }
+        if (this.mSubScriptSprite) {
+            this.mSubScriptSprite.destroy(true);
+        }
+        if (this.mSelectSprite) {
+            this.mSelectSprite.destroy(true);
+        }
+        if (this.mIcon) {
+            this.mIcon.destroy();
+        }
+        this.mData = null;
+    }
+
+    private createUI() {
+        this.onLoadCompleteHandler();
     }
 
     private onLoadCompleteHandler() {
@@ -84,6 +98,10 @@ export class ItemSlot implements IListItemComponent {
         this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.con.on("pointerover", this.overHandler, this);
         this.con.on("pointerout", this.outHandler, this);
+        this.minitialize = true;
+        if (this.mData) {
+            this.dataChange(this.mData);
+        }
     }
 
     private overHandler(pointr) {

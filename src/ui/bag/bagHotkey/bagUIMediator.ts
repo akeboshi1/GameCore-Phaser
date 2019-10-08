@@ -59,8 +59,8 @@ export class BagUIMediator implements IMediator {
     public show(param?: any) {
         if (this.mView) {
             this.mView.show(param);
-            this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge);
-            this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange);
+            this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+            this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         }
     }
 
@@ -69,8 +69,8 @@ export class BagUIMediator implements IMediator {
     }
 
     public hide() {
-        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge);
-        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange);
+        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
     }
 

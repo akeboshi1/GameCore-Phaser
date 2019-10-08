@@ -2,7 +2,6 @@ import { IBaseModel } from "../baseModel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
-import { EventEmitter } from "events";
 import { MessageType } from "../../const/MessageType";
 import { ConnectionService } from "../../net/connection.service";
 import { PlayerDataModel } from "../player/playerDataModel";
@@ -11,7 +10,7 @@ import { MapDataModel } from "../map/mapDataModel";
 export class BagModel extends PacketHandler implements IBaseModel {
     public static NAME: string = "BagModel";
     public initialize: boolean = false;
-    private mModelDispatch: EventEmitter;
+    private mModelDispatch: Phaser.Events.EventEmitter;
     private mConnect: ConnectionService;
     constructor(private mWorld: WorldService) {
         super();

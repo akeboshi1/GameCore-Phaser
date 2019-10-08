@@ -58,13 +58,13 @@ export class BagMediator implements IMediator {
 
     public show(param: any) {
         if (!this.mView) return;
-        this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
-        this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
-        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
+        this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
+        this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
+        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         this.mView.show(param);
 
         const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
-        this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex());
+        this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), this.mView.getPageNum());
     }
 
     public update(param: any) {
@@ -73,10 +73,10 @@ export class BagMediator implements IMediator {
     }
 
     public hide() {
-        this.world.modelManager.off(MessageType.DRAG_TO_DROP, this.handleDrop);
-        this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
-        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
-        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
+        this.world.modelManager.off(MessageType.DRAG_TO_DROP, this.handleDrop, this);
+        this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
+        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
+        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         if (!this.mView) return;
         this.mView.hide();
     }
@@ -98,19 +98,7 @@ export class BagMediator implements IMediator {
     }
 
     private setListData(value: any[]) {
-        const pageNum: number = Math.ceil(value.length / this.mPageNum) || 0;
         this.mView.setDataList(value);
-        // if (this.mView.m_List) this.onRemove();
-        // let items = value.slice((this.view.m_Page.curIndex - 1) * this.pageNum, this.view.m_Page.curIndex * this.pageNum);
-        // const len = this.mView.update.length;
-        // let item: ItemSlot;
-        // for (let i = 0; i < len; i++) {
-        //     item = new ItemSlot(this.mS);
-        //     item.setEnable(true);
-        //     item.data = items[i];
-        //     this.mView.m_List.addItem(item);
-        //     // Globals.DragManager.registerDrop(item.icon);
-        // }
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {

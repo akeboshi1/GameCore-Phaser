@@ -1,6 +1,5 @@
 import { IBaseModel } from "../baseModel";
 import { WorldService } from "../../game/world.service";
-import { EventEmitter } from "events";
 import { IFramesModel, FramesModel } from "../../rooms/display/frames.model";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { MapInfo } from "./mapInfo";
@@ -10,7 +9,7 @@ export class MapDataModel implements IBaseModel {
     public static NAME: string = "MapDataModel";
     public initialize: boolean;
     private mMapInfo: MapInfo;
-    private mModelDispatch: EventEmitter;
+    private mModelDispatch: Phaser.Events.EventEmitter;
 
     constructor(private mWorld: WorldService) {
         if (this.mWorld.modelManager) {

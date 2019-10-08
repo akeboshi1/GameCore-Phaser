@@ -5,7 +5,7 @@ import { WorldService } from "../game/world.service";
 import { BagModel } from "./bag/bagModel";
 import { MapDataModel } from "./map/mapDataModel";
 
-export class ModelManager extends EventEmitter {
+export class ModelManager extends Phaser.Events.EventEmitter {
 
     private mModelClassDic: {};
     private mModelDic: {};

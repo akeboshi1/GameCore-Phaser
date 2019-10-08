@@ -1,7 +1,6 @@
 import { PlayerInfo } from "./playerInfo";
 import { MainPlayerInfo } from "./mainPlayerInfo";
 import { op_client, op_gameconfig } from "pixelpai_proto";
-import { EventEmitter } from "events";
 import { MessageType } from "../../const/MessageType";
 import { IBaseModel } from "../baseModel";
 import { WorldService } from "../../game/world.service";
@@ -13,7 +12,7 @@ export class PlayerDataModel implements IBaseModel {
     public initialize: boolean = false;
     private mPlayerInfoList: PlayerInfo[] = [];
     private mMainPlayerInfo: MainPlayerInfo = new MainPlayerInfo();
-    private mModelDispatch: EventEmitter;
+    private mModelDispatch: Phaser.Events.EventEmitter;
 
     constructor(private mWorld: WorldService) {
         if (this.mWorld.modelManager) {
