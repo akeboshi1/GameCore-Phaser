@@ -7,6 +7,7 @@ import { BagUIPC } from "./bagUI.pc";
 import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
 import { op_client, op_gameconfig } from "pixelpai_proto";
+import { BagUIMobile } from "./bagUI.mobile";
 
 export class BagUIMediator implements IMediator {
     public world: WorldService;
@@ -22,7 +23,7 @@ export class BagUIMediator implements IMediator {
         if (this.world.game.device.os.desktop) {
             this.mView = new BagUIPC(scene, this.world, (size.width >> 1) - 29, size.height - 50);
         } else {
-            //  this.mBagUI = new BagUIMobile(scene, this.worldService, size.width - 100, size.height - 100);
+            this.mView = new BagUIMobile(scene, this.world);
         }
         if (this.mView) {
             this.mView.show(undefined);

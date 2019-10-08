@@ -1,12 +1,19 @@
+import { WorldService } from "../game/world.service";
+
 const LOGO_MARGIN = 25;
 
 export class LoadingScene extends Phaser.Scene {
+  private mWorld: WorldService;
   constructor() {
     super({ key: LoadingScene.name });
   }
 
   public preload() {
     this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
+  }
+
+  public init(data: any) {
+    this.mWorld = data.world;
   }
 
   public create() {
@@ -26,6 +33,7 @@ export class LoadingScene extends Phaser.Scene {
     const y: number = height - 150 - LOGO_MARGIN;
     const lo = this.add.sprite(x, y, "rabbit00.png");
     lo.anims.play("loading_rabbit00");
+    lo.scaleX = lo.scaleY = this.mWorld.uiScale;
   }
 
   public awake() {

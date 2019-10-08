@@ -5,7 +5,7 @@ import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
 import { IDragable } from "../idragable";
 import { IDropable } from "../idropable";
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_virtual_world, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { PlayerDataModel } from "../../../service/player/playerDataModel";
 import { BagModel } from "../../../service/bag/bagModel";
@@ -58,7 +58,6 @@ export class BagMediator implements IMediator {
 
     public show(param: any) {
         if (!this.mView) return;
-        this.world.modelManager.on(MessageType.DRAG_TO_DROP, this.handleDrop);
         this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage);
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler);
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage);
@@ -114,11 +113,11 @@ export class BagMediator implements IMediator {
         // }
     }
 
-    private handleSynchroPackage(): void {
+    private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
         this.refrehView();
     }
 
-    private onUpdatePackageHandler() {
+    private onUpdatePackageHandler(data) {
         this.refrehView();
     }
 

@@ -182,7 +182,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private login() {
         this.mAccount = new Account();
-        this.mGame.scene.add(LoginScene.name, LoginScene);
+        if (!this.mGame.scene.getScene(LoginScene.name)) {
+            this.mGame.scene.add(LoginScene.name, LoginScene);
+        }
         const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
         loadingScene.sleep();
         this.mGame.scene.start(LoginScene.name, {
