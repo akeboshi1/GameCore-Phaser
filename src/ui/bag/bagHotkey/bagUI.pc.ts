@@ -10,6 +10,7 @@ import { BagPanel } from "../bag/bagPanel";
 import { PlayerDataModel } from "../../../service/player/playerDataModel";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { PlayerInfo } from "../../../service/player/playerInfo";
+import { BagModel } from "../../../service/bag/bagModel";
 
 /**
  * 背包显示栏
@@ -165,13 +166,9 @@ export class BagUIPC implements IBag {
     private bagHandler() {
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
+        const bagModel: BagModel = this.mWorld.modelManager.getModel(BagModel.NAME) as BagModel;
         const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        content.id = playerModel.mainPlayerInfo.package[0].id;
-        content.page = 1;
-        content.perPage = BagPanel.PageMaxCount;
-        this.mWorld.connection.send(pkt);
+        bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package[0].id, 1, BagPanel.PageMaxCount);
         // Logger.debug(button);
     }
 

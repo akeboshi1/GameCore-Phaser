@@ -63,8 +63,8 @@ export class BagMediator implements IMediator {
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         this.mView.show(param);
 
-        const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
-        this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), this.mView.getPageNum());
+        // const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
+        // this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), BagPanel.PageMaxCount);
     }
 
     public update(param: any) {
