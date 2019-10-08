@@ -186,7 +186,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mGame.scene.add(LoginScene.name, LoginScene);
         }
         const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-        loadingScene.sleep();
+        if (!loadingScene) {
+            this.mGame.scene.add(LoadingScene.name, LoadingScene);
+        }
         this.mGame.scene.start(LoginScene.name, {
             connect: this.mConnection,
             world: this,
@@ -194,7 +196,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.enterVirtualWorld();
                 const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
                 loginScene.remove();
-                loadingScene.awake();
+                this.mGame.scene.start(LoadingScene.name, { world: this });
             },
         });
     }
@@ -246,7 +248,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             type: Phaser.AUTO,
             zoom: 1,
             parent: "game",
-            scene: LoadingScene,
+            scene: null,
             disableContextMenu: true,
             transparent: false,
             backgroundColor: 0x0,
