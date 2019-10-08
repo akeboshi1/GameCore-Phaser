@@ -7,12 +7,12 @@ import { Panel } from "../../components/panel";
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;
     public bagSlotList: ItemSlot[];
+    public mPreBtn: Phaser.GameObjects.Sprite;
+    public mNextBtn: Phaser.GameObjects.Sprite;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
     private mWorld: WorldService;
-    private mPreBtn: Phaser.GameObjects.Sprite;
-    private mNextBtn: Phaser.GameObjects.Sprite;
     private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mParentCon: Phaser.GameObjects.Container;
     private mPageNum: number = 0;
@@ -206,18 +206,20 @@ export class BagPanel extends Panel {
     }
 
     private nextHandler(pointer, gameObject) {
-        if (this.mPageIndex < this.mPageNum - 1) {
-            this.mPageIndex++;
-        }
         this.preNextBtnScaleHandler(this.mNextBtn, -1);
+        if (this.mPageIndex >= this.mPageNum) {
+            return;
+        }
+        this.mPageIndex++;
         this.refreshDataList();
     }
 
     private preHandler(pointer, gameObject) {
-        if (this.mPageIndex > 0) {
-            this.mPageIndex--;
-        }
         this.preNextBtnScaleHandler(this.mPreBtn);
+        if (this.mPageIndex <= 1) {
+            return;
+        }
+        this.mPageIndex--;
         this.refreshDataList();
     }
 
@@ -242,7 +244,7 @@ export class BagPanel extends Panel {
             Logger.error("this.mDataList is undefiend");
             return;
         }
-        const items = this.mDataList.slice(this.mPageIndex * BagPanel.PageMaxCount, (this.mPageIndex + 1) * BagPanel.PageMaxCount);
+        const items = this.mDataList.slice((this.mPageIndex - 1) * BagPanel.PageMaxCount, this.mPageIndex * BagPanel.PageMaxCount);
         const len = BagPanel.PageMaxCount;
         let item: ItemSlot;
         for (let i = 0; i < len; i++) {

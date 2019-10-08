@@ -89,12 +89,19 @@ export class BagMediator implements IMediator {
         }
     }
 
-    private refrehView(): void {
-        const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
-        if (packs == null || packs.length === 0) {
-            return;
+    private refrehView(mItems?: op_gameconfig.IItem[]): void {
+        let items: op_gameconfig.IItem[];
+        if (!mItems) {
+            const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
+            if (packs == null || packs.length === 0) {
+                return;
+            }
+            items = packs[0].items;
+        } else {
+            items = mItems;
         }
-        this.setListData(packs[0].items);
+
+        this.setListData(items);
     }
 
     private setListData(value: any[]) {
@@ -102,11 +109,11 @@ export class BagMediator implements IMediator {
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
-        this.refrehView();
+        this.refrehView(data.items);
     }
 
     private onUpdatePackageHandler(data) {
-        this.refrehView();
+        this.refrehView(data.items);
     }
 
 }

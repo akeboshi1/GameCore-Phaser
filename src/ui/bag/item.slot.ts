@@ -47,12 +47,21 @@ export class ItemSlot implements IListItemComponent {
     public dataChange(val: any) {
         if (!this.minitialize) return;
         this.mData = val;
-        if (this.mIcon && this.mData && this.mData.display) {
-            this.mIcon.load(this.mData.display.texturePath, this, () => {
-                this.mIcon.visible = true;
+        if (this.mIcon) {
+            let url: string;
+            if (this.mData && this.mData.display) {
+                url = this.mData.display.texturePath;
+                const des = this.mData.des ? "\n" + this.mData.des : "";
+                //  this.setToolTipText(this.data.name + des);
+            } else {
+                url = "";
+            }
+            this.mIcon.load(url, this, () => {
+                if (this.mData) {
+                    this.mIcon.visible = true;
+                }
             });
-            const des = this.mData.des ? "\n" + this.mData.des : "";
-            //  this.setToolTipText(this.data.name + des);
+
         }
 
     }
