@@ -101,7 +101,6 @@ export class BagPanel extends Panel {
     }
 
     private onLoadCompleteHandler() {
-        this.mInitalize = true;
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
@@ -132,7 +131,7 @@ export class BagPanel extends Panel {
                 chilsList[rowIndex] = [];
             }
             tmpX = i % 12 * 52 + 20;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, slotCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
             this.bagSlotList.push(itemSlot);
             chilsList[rowIndex].push(itemSlot.con);
             if (i <= 11) {
@@ -201,6 +200,7 @@ export class BagPanel extends Panel {
         } else {
             this.onClsLoadCompleteHandler();
         }
+        this.mInitalize = true;
         if (this.mDataList) {
             this.refreshDataList();
         }

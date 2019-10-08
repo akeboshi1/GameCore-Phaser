@@ -113,7 +113,6 @@ export class BagUIPC implements IBag {
                 name: "bag",
             });
             buttons.layout();
-            const s = this;
             buttons.on("button.click", function(button, groupName, index, pointer) {
                 if (index === 0) {
                 }

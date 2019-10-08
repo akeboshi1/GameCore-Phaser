@@ -110,10 +110,11 @@ export class ItemSlot implements IListItemComponent {
         this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.con.on("pointerover", this.overHandler, this);
         this.con.on("pointerout", this.outHandler, this);
-        this.con.on("pointerdown", this.downHandler, this);
+
         this.minitialize = true;
         if (this.mData) {
             this.dataChange(this.mData);
+            this.con.on("pointerdown", this.downHandler, this);
         }
     }
 
