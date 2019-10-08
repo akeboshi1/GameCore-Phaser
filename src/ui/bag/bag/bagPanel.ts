@@ -3,6 +3,7 @@ import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Panel } from "../../components/panel";
+import { Url } from "../../../utils/resUtil";
 
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;
@@ -88,10 +89,10 @@ export class BagPanel extends Panel {
 
     private createPanel() {
         this.mResStr = "bagView";
-        this.mResPng = "./resources/ui/bag/bagView.png";
-        this.mResJson = "./resources/ui/bag/bagView.json";
+        this.mResPng = "ui/bag/bagView.png";
+        this.mResJson = "ui/bag/bagView.json";
         if (!this.mScene.cache.obj.has(this.mResStr)) {
-            this.mScene.load.atlas(this.mResStr, this.mResPng, this.mResJson);
+            this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
             this.mScene.load.start();
         } else {

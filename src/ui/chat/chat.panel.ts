@@ -1,13 +1,13 @@
-import {WorldService} from "../../game/world.service";
+import { WorldService } from "../../game/world.service";
 import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
-import {Panel} from "../components/panel";
-import {Button} from "../components/button";
+import { Panel } from "../components/panel";
+import { Button } from "../components/button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
-import {Logger} from "../../utils/log";
-import {Url} from "../../utils/resUtil";
-import {CheckButton} from "../components/check.button";
+import { Logger } from "../../utils/log";
+import { Url } from "../../utils/resUtil";
+import { CheckButton } from "../components/check.button";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 
 export class ChatPanel extends Panel {
@@ -46,9 +46,9 @@ export class ChatPanel extends Panel {
         if (!this.mScene) {
             return;
         }
-        this.mScene.load.image("button", "./resources/ui/common/button.png");
-        this.mScene.load.image("chat_input_bg", "./resources/ui/chat/input_bg.png");
-        this.mScene.load.image("chat_border_bg", "./resources/ui/chat/bg.png");
+        this.mScene.load.image("button", Url.getRes("ui/common/button.png"));
+        this.mScene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
+        this.mScene.load.image("chat_border_bg", Url.getRes("ui/chat/bg.png"));
         this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
         super.preload();
     }
@@ -87,7 +87,7 @@ export class ChatPanel extends Panel {
         const text = new BBCodeText(this.mScene, 0, 0, "", {
             width: 440,
             height: 200,
-            style: {font: "bold 14px YaHei"}
+            style: { font: "bold 14px YaHei" }
         });
         output.add(text);
 

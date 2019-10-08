@@ -9,6 +9,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { PlayerDataModel } from "../../../service/player/playerDataModel";
 import { BagPanel } from "../bag/bagPanel";
+import { Url } from "../../../utils/resUtil";
 
 /**
  * 背包显示栏
@@ -62,10 +63,10 @@ export class BagUIMobile implements IBag {
 
     private createPanel() {
         this.mResStr = "bag";
-        this.mResPng = "./resources/ui/bag/bag.png";
-        this.mResJson = "./resources/ui/bag/bag.json";
+        this.mResPng = "ui/bag/bag.png";
+        this.mResJson = "ui/bag/bag.json";
         if (!this.mScene.cache.obj.has(this.mResStr)) {
-            this.mScene.load.atlas(this.mResStr, this.mResPng, this.mResJson);
+            this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
             this.mScene.load.start();
         } else {
