@@ -1,8 +1,9 @@
-import { IItem } from "./baseitem";
 import { IListItemComponent } from "./IListItemRender";
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
-import { Url } from "../../utils/resUtil";
+import { WorldService } from "../../game/world.service";
+import { PlayerDataModel } from "../../service/player/playerDataModel";
+import { PBpacket } from "net-socket-packet";
 
 export class ItemSlot implements IListItemComponent {
     // public url: string;
@@ -23,10 +24,12 @@ export class ItemSlot implements IListItemComponent {
     private itemBG: Phaser.GameObjects.Sprite;
     private mSelectSprite: Phaser.GameObjects.Sprite;
     private mSelectRes: string;
+    private mWorld: WorldService;
 
     private minitialize: boolean = false;
-    constructor(scene: Phaser.Scene, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
+    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         this.mScene = scene;
+        this.mWorld = world;
         this.con = scene.make.container(undefined, false);
         this.con.x = x;
         this.con.y = y;
@@ -107,10 +110,20 @@ export class ItemSlot implements IListItemComponent {
         this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.con.on("pointerover", this.overHandler, this);
         this.con.on("pointerout", this.outHandler, this);
+        this.con.on("pointerdown", this.downHandler, this);
         this.minitialize = true;
         if (this.mData) {
             this.dataChange(this.mData);
         }
+    }
+
+    private downHandler(pointer) {
+        const pack: op_gameconfig.IPackage = (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package[0];
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+        content.uiId = pack.id;
+        content.componentId = this.mData.id;
+        this.mWorld.connection.send(pkt);
     }
 
     private overHandler(pointr) {

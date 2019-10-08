@@ -131,7 +131,7 @@ export class BagPanel extends Panel {
                 chilsList[rowIndex] = [];
             }
             tmpX = i % 12 * 52 + 20;
-            itemSlot = new ItemSlot(this.mScene, slotCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, slotCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
             this.bagSlotList.push(itemSlot);
             chilsList[rowIndex].push(itemSlot.con);
             if (i <= 11) {
