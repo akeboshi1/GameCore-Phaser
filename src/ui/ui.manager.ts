@@ -90,7 +90,6 @@ export class UiManager extends PacketHandler {
                 return;
             }
             this.mMedMap.set(type, mediator);
-            mediator.setName(type);
         }
         mediator.show(param);
     }

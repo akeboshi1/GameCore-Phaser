@@ -10,8 +10,8 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BagUIMobile } from "./bagUI.mobile";
 
 export class BagUIMediator implements IMediator {
+    public static NAME: string = "BagUIMediator";
     public world: WorldService;
-    private mName: string;
     private mView: IAbstractPanel;
     private mPlayerModel: PlayerDataModel;
     private mBagModel: BagModel;
@@ -42,14 +42,6 @@ export class BagUIMediator implements IMediator {
 
     public resize() {
         if (this.mView) this.mView.resize();
-    }
-
-    public setName(val: string) {
-        this.mName = val;
-    }
-
-    public getName(): string {
-        return this.mName;
     }
 
     public getView(): IAbstractPanel {

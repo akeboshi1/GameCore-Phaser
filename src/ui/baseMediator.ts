@@ -5,8 +5,6 @@ export interface IMediator {
     readonly world: WorldService;
     isSceneUI(): boolean;
     isShow(): boolean;
-    setName(string);
-    getName(): string;
     resize();
     getView(): IAbstractPanel;
     show(param?: any): void;

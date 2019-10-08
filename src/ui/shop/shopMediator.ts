@@ -4,9 +4,9 @@ import { ShopPanel } from "./shop.panel";
 import { IAbstractPanel } from "../abstractPanel";
 
 export class ShopMediator implements IMediator {
+    public static NAME: string = "ShopMediator";
     public world: WorldService;
     private mView: ShopPanel;
-    private mName: string;
     constructor(world: WorldService, scene: Phaser.Scene) {
         this.world = world;
     }
@@ -17,14 +17,6 @@ export class ShopMediator implements IMediator {
 
     public resize() {
         if (this.mView) return this.mView.resize();
-    }
-
-    public setName(val: string) {
-        this.mName = val;
-    }
-
-    public getName(): string {
-        return this.mName;
     }
 
     public getView(): IAbstractPanel {

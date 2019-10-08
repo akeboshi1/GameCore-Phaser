@@ -19,9 +19,9 @@ export enum DropType {
     DROP_TYPE_BAG = 2
 }
 export class BagMediator implements IMediator {
+    public static NAME: string = "BagMediator";
     public world: WorldService;
     private mPageNum: number = 0;
-    private mName: string;
     private mView: BagPanel;
     private mPlayerModel: PlayerDataModel;
     private mBagModel: BagModel;
@@ -42,14 +42,6 @@ export class BagMediator implements IMediator {
 
     public resize() {
         if (this.mView) return this.mView.resize();
-    }
-
-    public setName(val: string) {
-        this.mName = val;
-    }
-
-    public getName(): string {
-        return this.mName;
     }
 
     public getView(): IAbstractPanel {
