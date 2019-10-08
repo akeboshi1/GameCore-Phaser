@@ -74,3 +74,31 @@ Tooqing图轻播放器 Phaser3 版本
 - 处理场景中的消息
 - `成员` 地块管理器
 - `成员` 物件管理器
+
+
+# H5使用方法
+Game Core 以umd方式打包，暴露的全局module 名为 ‘TooqingCore’。
+TooqingCore下有Launcher类提供游戏启动方法和外部依赖的注册。
+
+## Launcher.start(config)
+启动游戏 默认游戏会将canvas填充到 document.div<#game> 标签里。
+接受一个配置对象：
+```
+config = {
+  auth_token?: string; // 用户登陆数据不给则出现游戏内登陆界面
+  token_expire?: string | null; // 同上
+  token_fingerprint?: string; // 同上
+  game_id: string; // 必要
+  virtual_world_id?: string; // 默认 0 
+  width: number | string; // 游戏宽
+  height: number | string; // 游戏高
+  ui_scale?: number; // 游戏缩放比例默认 1
+}
+```
+
+## Launcher.registerReload(callback_Function)
+游戏内请求刷新页面的方法。
+游戏需要强制重载页面时调用 callback_Function()
+
+## Launcher.onResize(Width, Height);
+游戏缩放/改变尺寸时需要调用的方法
