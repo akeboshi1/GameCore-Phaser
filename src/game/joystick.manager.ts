@@ -1,9 +1,10 @@
-import {WorldService} from "./world.service";
-import {Logger} from "../utils/log";
-import {Size} from "../utils/size";
-import {InputListener, InputManager} from "./input.service";
-import {IRoomService} from "../rooms/room";
-import {Direction} from "../rooms/element/element";
+import { WorldService } from "./world.service";
+import { Logger } from "../utils/log";
+import { Size } from "../utils/size";
+import { InputListener, InputManager } from "./input.service";
+import { IRoomService } from "../rooms/room";
+import { Direction } from "../rooms/element/element";
+import { op_def } from "pixelpai_proto";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
@@ -12,10 +13,13 @@ export class JoyStickManager implements InputManager {
     private mJoyListeners: InputListener[];
     private mParentcon: Phaser.GameObjects.Container;
     private mScale: number;
-
-    constructor(private worldService: WorldService) {
+    private mKeyEvents: op_def.IKeyCodeEvent[];
+    private mKeyEventMap: Map<op_def.TQ_EVENT, op_def.IKeyCodeEvent>;
+    constructor(private worldService: WorldService, keyEvents: op_def.IKeyCodeEvent[]) {
         this.mJoyListeners = [];
         this.mScale = worldService.uiScale;
+        this.mKeyEvents = keyEvents;
+        this.mKeyEventMap = new Map();
         Logger.debug(`JoyStickManager ${worldService.uiScale}`);
     }
 
@@ -25,6 +29,21 @@ export class JoyStickManager implements InputManager {
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         if (!this.mScene) return;
+        const len = this.mKeyEvents.length;
+        let keyEvent: op_def.IKeyCodeEvent;
+        let codes: op_def.KeyCode[];
+        let eventName: op_def.TQ_EVENT;
+        for (let i = 0; i < len; i++) {
+            keyEvent = this.mKeyEvents[i];
+            codes = keyEvent.keyCodes;
+            eventName = keyEvent.tqEvent;
+            if (!this.mKeyEventMap.get(eventName)) {
+                this.mKeyEventMap.set(eventName, keyEvent);
+            }
+        }
+        this.mKeyEvents.length = 0;
+        this.mKeyEvents = null;
+
         const size: Size = this.worldService.getSize();
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
         const scale = !this.mScale ? 1 : this.mScale;
@@ -43,6 +62,17 @@ export class JoyStickManager implements InputManager {
         if (this.mJoyStick) {
             this.mJoyStick.changeListeners(this.mJoyListeners);
         }
+    }
+
+    public getKeyCodes(eventName: number): number[] {
+        if (!this.mKeyEventMap.has(eventName)) return undefined;
+        const len: number = this.mKeyEventMap.get(eventName).keyCodes.length;
+        const keyCodes: number[] = [];
+        for (let i: number = 0; i < len; i++) {
+            const keyCode: op_def.KeyCode = this.mKeyEventMap.get(eventName).keyCodes[i];
+            keyCodes.push(keyCode);
+        }
+        return keyCodes;
     }
 
     public removeListener(l: InputListener) {
@@ -83,13 +113,14 @@ export class JoyStick {
     private mbtn0: Phaser.GameObjects.Sprite;
     private mjoystickCon: Phaser.GameObjects.Container;
     private mbtnCon: Phaser.GameObjects.Container;
-
+    private mKeyCodes: any[];
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale: number) {
         this.mScene = scene;
         this.mWorld = world;
         this.parentCon = parentCon;
         this.mJoyListeners = joyListeners;
         this.mScale = scale;
+        this.mKeyCodes = [];
         this.load();
     }
 
@@ -156,8 +187,8 @@ export class JoyStick {
             duration: 50,
             ease: "Linear",
             props: {
-                scaleX: {value: .5},
-                scaleY: {value: .5},
+                scaleX: { value: .5 },
+                scaleY: { value: .5 },
             },
             yoyo: true,
             repeat: 0,
@@ -201,36 +232,50 @@ export class JoyStick {
         } else if (r > 0 && r <= (Math.PI / 2)) {
             dir = r !== Math.PI / 2 ? Direction.down_right : Direction.down;
         }
-        switch (dir) {
-            case 0:
-                keyArr = [38, 87];
-                break;
-            case 1:
-                keyArr = [37, 38, 65, 87];
-                break;
-            case 2:
-                keyArr = [37, 65];
-                break;
-            case 3:
-                keyArr = [37, 40, 65, 83];
-                break;
-            case 4:
-                keyArr = [40, 83];
-                break;
-            case 5:
-                keyArr = [39, 40, 68, 87];
-                break;
-            case 6:
-                keyArr = [39, 68];
-                break;
-            case 7:
-                keyArr = [38, 39, 87, 68];
-                break;
-        }
+        keyArr = this.getKeys(dir);
         if (this.mdownStr === keyArr.toString()) return false;
         this.mdownStr = keyArr.toString();
         l.downHandler(dir, keyArr);
         return true;
+    }
+
+    private getKeys(dir: number): number[] {
+        let keyArr: any[] = this.mKeyCodes[dir];
+        if (keyArr) {
+            return keyArr;
+        }
+        switch (dir) {
+            case 0:
+                keyArr = this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_UP);
+                break;
+            case 1:
+                keyArr = Array.prototype.concat.apply(this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_UP).concat,
+                    this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_LEFT));
+                break;
+            case 2:
+                keyArr = this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_LEFT);
+                break;
+            case 3:
+                keyArr = Array.prototype.concat.apply(this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_DOWN),
+                    this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_LEFT));
+                break;
+            case 4:
+                keyArr = this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_DOWN);
+                break;
+            case 5:
+                keyArr = Array.prototype.concat.apply(this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_DOWN),
+                    this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_RIGHT));
+                break;
+            case 6:
+                keyArr = this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_RIGHT);
+                break;
+            case 7:
+                keyArr = Array.prototype.concat.apply(this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_UP),
+                    this.mWorld.inputManager.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_RIGHT));
+                break;
+        }
+        this.mKeyCodes[dir] = keyArr;
+        return keyArr;
     }
 
     private checkdragUp(): boolean {

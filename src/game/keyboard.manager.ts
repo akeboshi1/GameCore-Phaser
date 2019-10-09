@@ -75,6 +75,11 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         });
     }
 
+    public getKeyCodes(eventName: number): op_def.KeyCode[] {
+        if (!this.mKeyEventMap.has(eventName)) return undefined;
+        return this.mKeyEventMap.get(eventName).keyCodes;
+    }
+
     public resize(width: number, height: number) {
     }
 
@@ -140,30 +145,35 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         const keyCodeList: number[] = [];
         let keyCode: number;
         let outPut: number = 0;
+        const keyLeftArr = this.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_LEFT);
+        const keyDownArr = this.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_DOWN);
+        const keyRightArr = this.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_RIGHT);
+        const keyUpArr = this.getKeyCodes(op_def.TQ_EVENT.TQ_MOVE_UP);
         for (let i = 0; i < len; i++) {
             key = keyList[i];
             keyCode = key.keyCode;
             if (key && key.isDown) {
-                // 65, 87, 68, 83
-                switch (keyCode) {
-                    case 37:
-                    case 65:
-                        outPut += -1;
-                        break;
-                    case 38:
-                    case 87:
-                        outPut += -3;
-                        break;
-                    case 39:
-                    case 68:
-                        outPut += 1;
-                        break;
-                    case 40:
-                    case 83:
-                        outPut += 3;
-                        break;
-                }
                 keyCodeList.push(key.keyCode);
+                const left: number = keyLeftArr.indexOf(keyCode);
+                if (left > -1) {
+                    outPut += -1;
+                    continue;
+                }
+                const right: number = keyRightArr.indexOf(keyCode);
+                if (right > -1) {
+                    outPut += 1;
+                    continue;
+                }
+                const down: number = keyDownArr.indexOf(keyCode);
+                if (down > -1) {
+                    outPut += 3;
+                    continue;
+                }
+                const up: number = keyUpArr.indexOf(keyCode);
+                if (up > -1) {
+                    outPut += -3;
+                    continue;
+                }
             }
         }
         if (outPut === 0) {

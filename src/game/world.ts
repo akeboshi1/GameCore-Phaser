@@ -310,7 +310,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame.device.os.desktop) {
             this.mInputManager = new KeyBoardManager(this, keyEvents);
         } else {
-            this.mInputManager = new JoyStickManager(this);
+            this.mInputManager = new JoyStickManager(this, keyEvents);
         }
         this.gameCreated();
     }
