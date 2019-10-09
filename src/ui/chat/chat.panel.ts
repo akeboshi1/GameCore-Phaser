@@ -1,17 +1,15 @@
-import { WorldService } from "../../game/world.service";
+import {WorldService} from "../../game/world.service";
 import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
-import { Panel } from "../components/panel";
-import { Button } from "../components/button";
+import {Panel} from "../components/panel";
+import {Button} from "../components/button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
-import { Logger } from "../../utils/log";
-import { Url } from "../../utils/resUtil";
-import { CheckButton } from "../components/check.button";
+import {Url} from "../../utils/resUtil";
+import {CheckButton} from "../components/check.button";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 
 export class ChatPanel extends Panel {
-    private mParent: Phaser.GameObjects.Container;
     private mTextArea: TextArea;
     private mInputText: InputText;
     private mVoiceBtn: CheckButton;
@@ -22,24 +20,18 @@ export class ChatPanel extends Panel {
     }
 
     public appendChat(val: string) {
-        this.mTextArea.appendText(val);
-        this.mTextArea.scrollToBottom();
-    }
-
-    public setSize(w: number, h: number) {
-        this.mParent.setSize(w, h);
+        if (this.mTextArea) {
+            this.mTextArea.appendText(val);
+            this.mTextArea.scrollToBottom();
+        }
     }
 
     public setLocation(x: number, y: number) {
-        if (!this.mParent) {
-            return;
-        }
-        return;
         // TODO 设置位置后，DefaultMask位置不会更新，所以暂时以0 0为准
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorldService.getSize();
-        this.mParent.x = 8;
-        this.mParent.y = size.height - this.mParent.height - 8;
+        this.x = 8;
+        this.y = size.height - this.height - 8;
     }
 
     protected preload() {
@@ -56,8 +48,6 @@ export class ChatPanel extends Panel {
     protected init() {
         if (this.mInitialized) return;
         super.init();
-        this.mParent = this.mScene.add.container(0, 0);
-
         const size = this.mWorldService.getSize();
         this.setSize(464, 281);
 
@@ -68,10 +58,10 @@ export class ChatPanel extends Panel {
             columns: [4, 2, 4],
             rows: [4, 2, 4]
         }).setOrigin(0, 0);
-        this.mParent.add(border);
+        this.add(border);
 
         const output = this.mScene.make.container(undefined, false);
-        this.mParent.add(output);
+        this.add(output);
 
         const background = new RoundRectangle(this.mScene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         output.add(background);
@@ -87,7 +77,7 @@ export class ChatPanel extends Panel {
         const text = new BBCodeText(this.mScene, 0, 0, "", {
             width: 440,
             height: 200,
-            style: { font: "bold 14px YaHei" }
+            style: {font: "bold 14px YaHei"}
         });
         output.add(text);
 
@@ -116,20 +106,13 @@ export class ChatPanel extends Panel {
             .layout();
         output.add(this.mTextArea);
 
-        // let s = "";
-        // for (let i = 999; i < 10000; i++) {
-        //     s += i + "\n";
-        // }
-
-        // this.mTextArea.setText(s);
-
         const tracks = this.mTextArea.getElement("child");
         if (tracks) {
             // tracks.x += 150;
         }
 
         const inputContainer = this.mScene.make.container(undefined, false);
-        this.mParent.add(inputContainer);
+        this.add(inputContainer);
 
         const inputBg = new NinePatch(this.mScene, 8, size.height - 46, {
             width: 370,
@@ -168,11 +151,11 @@ export class ChatPanel extends Panel {
 
         this.mSendKey = this.mScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
-        this.mVoiceBtn = new CheckButton(this.mScene, this.mParent.width - 60, size.height - this.mParent.height, "chat_atlas", "voice_normal.png", "voice_selected.png");
-        this.mParent.add(this.mVoiceBtn);
+        this.mVoiceBtn = new CheckButton(this.mScene, this.width - 60, size.height - this.height, "chat_atlas", "voice_normal.png", "voice_selected.png");
+        this.add(this.mVoiceBtn);
 
-        this.mMicBtn = new CheckButton(this.mScene, this.mParent.width - 20, size.height - this.mParent.height, "chat_atlas", "mic_normal.png", "mic_selected.png");
-        this.mParent.add(this.mMicBtn);
+        this.mMicBtn = new CheckButton(this.mScene, this.width - 20, size.height - this.height, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        this.add(this.mMicBtn);
         // this.setSize(464, 281);
         // this.setLocation(0, 0);
 

@@ -26,6 +26,7 @@ export class BagPanel extends Panel {
         super(scene);
         this.mScene = scene;
         this.mWorld = world;
+        this.bagSlotList = [];
     }
 
     public show(param: any) {

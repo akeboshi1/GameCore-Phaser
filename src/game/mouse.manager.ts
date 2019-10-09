@@ -61,19 +61,19 @@ export class MouseManager extends PacketHandler {
             return;
         }
         const events: number[] = [];
-        if (this.mActivePointer.leftButtonDown) {
+        if (this.mActivePointer.leftButtonDown()) {
             events.push(MouseEvent.LeftMouseDown);
-        } else if (this.mActivePointer.leftButtonReleased) {
+        } else if (this.mActivePointer.leftButtonReleased()) {
             events.push(MouseEvent.LeftMouseUp);
         }
-        if (this.mActivePointer.middleButtonDown) {
+        if (this.mActivePointer.middleButtonDown()) {
             events.push(MouseEvent.WheelDown);
-        } else if (this.mActivePointer.middleButtonReleased) {
+        } else if (this.mActivePointer.middleButtonReleased()) {
             events.push(MouseEvent.WheelUp);
         }
-        if (this.mActivePointer.rightButtonDown) {
+        if (this.mActivePointer.rightButtonDown()) {
             events.push(MouseEvent.RightMouseDown);
-        } else if (this.mActivePointer.rightButtonReleased) {
+        } else if (this.mActivePointer.rightButtonReleased()) {
             events.push(MouseEvent.RightMouseUp);
         }
         if (events.length === 0) {

@@ -1,14 +1,14 @@
 import { IAbstractPanel } from "../abstractPanel";
 import { Logger } from "../../utils/log";
 
-export class Panel extends Phaser.Events.EventEmitter implements IAbstractPanel {
+export class Panel extends Phaser.GameObjects.Container implements IAbstractPanel {
     protected mShowing: boolean;
     protected mInitialized: boolean;
     protected mScene: Phaser.Scene;
     constructor(scene: Phaser.Scene) {
-        super();
-        this.mInitialized = false;
+        super(scene);
         this.mScene = scene;
+        this.mInitialized = false;
     }
 
     isShow(): boolean {
@@ -19,6 +19,8 @@ export class Panel extends Phaser.Events.EventEmitter implements IAbstractPanel 
     }
 
     destroy() {
+        super.destroy();
+        this.mInitialized = false;
     }
 
     resize() {
@@ -38,12 +40,12 @@ export class Panel extends Phaser.Events.EventEmitter implements IAbstractPanel 
     }
 
     protected preload() {
-        if (!this.mScene) {
-            Logger.error("scene does not exise");
+        if (!this.scene) {
+            Logger.error("scene does not exist");
             return;
         }
-        this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
-        this.mScene.load.start();
+        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
+        this.scene.load.start();
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {

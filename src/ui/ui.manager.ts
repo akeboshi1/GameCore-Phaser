@@ -9,13 +9,14 @@ import { BagMediator } from "./bag/bag/bagMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { BagUIMediator } from "./bag/bagHotkey/bagUIMediator";
 import { ChatMediator } from "./chat/chat.mediator";
+import {ILayerManager, LayerManager} from "./layer.manager";
 
 export class UiManager extends PacketHandler {
-    // public mBagMediator: BagMediator;
-    // public bagPanel: BagPanel;
     private mBagUI: IBag;
+    private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     private mMedMap: Map<UIMediatorType, IMediator>;
+    private mUILayerManager: ILayerManager;
     constructor(private worldService: WorldService) {
         super();
 
@@ -26,15 +27,19 @@ export class UiManager extends PacketHandler {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         }
+
+        this.mUILayerManager = new LayerManager();
     }
 
     public setScene(scene: Phaser.Scene) {
+        this.mScene = scene;
+        this.mUILayerManager.setScene(scene);
         if (!this.mMedMap) {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
             this.mMedMap.set(UIMediatorType.BagHotKey, new BagUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.mUILayerManager, this.worldService, scene));
         }
 
         // TOOD 通过统一的方法创建打开
@@ -78,26 +83,34 @@ export class UiManager extends PacketHandler {
         this.hideMed(ui.name);
     }
 
-    private showMed(type: string, ...param: any[]) {
-        const mediator: IMediator = this.mMedMap.get(type);
+    private showMed(type: string, ...params: any[]) {
+        let mediator: IMediator = this.mMedMap.get(type);
         if (!mediator) {
-            const className: string = type + ".panel";
-            // const ns: any = require("./src/ui/" + type + "/" + className + ".ts");
-            Logger.debug("====show====" + type);
-            // showPanel = new ns[className]();
+            const className: string = type + "Mediator";
+            const path: string = `./${type}/${type}Mediator`;
+            // Logger.log(ns);
+            // import(/* ui */`./${type}/${className}`).then((ns) => {
+            //    mediator = new ns[className]();
+            //    this.mMedMap.set(type, mediator);
+            //    mediator.show(params);
+            //
+            // });
+            const ns: any = require(`./${type}/${className}`);
+            mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
             if (!mediator) {
-                Logger.error("error type no panel can show!!!");
+                Logger.error(`error ${type} no panel can show!!!`);
                 return;
             }
             this.mMedMap.set(type, mediator);
+            // mediator.setName(type);
         }
-        mediator.show(param);
+        mediator.show(params);
     }
 
     private updateMed(type: string, ...param: any[]) {
         const mediator: IMediator = this.mMedMap.get(type);
         if (!mediator) {
-            Logger.error("error type no panel can show!!!");
+            Logger.error(`error ${type} no panel can show!!!`);
             return;
         }
         mediator.update(param);
@@ -106,7 +119,7 @@ export class UiManager extends PacketHandler {
     private hideMed(type: string) {
         const mediator: IMediator = this.mMedMap.get(type);
         if (!mediator) {
-            Logger.error("error type no panel can show!!!");
+            Logger.error(`error ${type} no panel can show!!!`);
             return;
         }
         mediator.hide();

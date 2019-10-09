@@ -6,6 +6,7 @@ import { Logger } from "../../utils/log";
 import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
 import {IMessage} from "./message";
+import {ILayerManager} from "../layer.manager";
 
 export class ChatMediator extends PacketHandler implements IMediator {
     public world: WorldService;
@@ -16,10 +17,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mQCLoudAuth: string;
     private mAllMessage: IMessage[] = [];
     private mMaxMessageNum = 50;
-    constructor(world: WorldService, scene: Phaser.Scene) {
+    constructor(layerManager: ILayerManager, world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
         this.mChatPanel = new ChatPanel(scene, world);
+        layerManager.addToUILayer(this.mChatPanel);
         if (this.world.connection) {
             this.world.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);

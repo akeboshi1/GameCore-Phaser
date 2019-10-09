@@ -25,13 +25,6 @@ export class StoragePanel extends Panel {
 
     }
 
-    protected preload() {
-        if (!this.mScene) {
-            return;
-        }
-        super.preload();
-    }
-
     protected init() {
         if (this.mInitialized) return;
         super.init();

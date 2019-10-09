@@ -25,6 +25,7 @@ export class BagMediator implements IMediator {
     private mView: BagPanel;
     private mPlayerModel: PlayerDataModel;
     private mBagModel: BagModel;
+
     constructor(mworld: WorldService, scene: Phaser.Scene) {
         this.world = mworld;
         this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;

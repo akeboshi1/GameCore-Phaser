@@ -60,6 +60,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             }, this);
             this.scene.load.start();
         }
+
     }
 
     public play(animationName: string, field?: DisplayField) {
@@ -192,9 +193,11 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
             sprite.x = this.baseLoc.x;
             sprite.y = this.baseLoc.y;
             this.addAt(sprite, field);
+            // this.setInteractive(new Phaser.Geom.Rectangle(this.baseLoc.x, this.baseLoc.y, sprite.width, sprite.height), Phaser.Geom.Rectangle.Contains);
+            // this.setInteractive({ pixelPerfect: true });
         }
         sprite.setInteractive({ pixelPerfect: true });
-        sprite.setData("id", data.id);
+        this.setData("id", data.id);
 
         this.mSprites.set(field, sprite);
         this.emit("initialized");
