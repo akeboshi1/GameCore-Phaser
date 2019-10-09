@@ -110,15 +110,15 @@ export class ItemSlot implements IListItemComponent {
         this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.con.on("pointerover", this.overHandler, this);
         this.con.on("pointerout", this.outHandler, this);
-
+        this.con.on("pointerdown", this.downHandler, this);
         this.minitialize = true;
         if (this.mData) {
             this.dataChange(this.mData);
-            this.con.on("pointerdown", this.downHandler, this);
         }
     }
 
     private downHandler(pointer) {
+        if (!this.mData) return;
         const pack: op_gameconfig.IPackage = (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package[0];
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
