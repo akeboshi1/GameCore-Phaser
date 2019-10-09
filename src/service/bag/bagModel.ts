@@ -18,7 +18,6 @@ export class BagModel extends PacketHandler implements IBaseModel {
             this.mModelDispatch = this.mWorld.modelManager;
         }
         this.mConnect = this.mWorld.connection;
-        this.mConnect.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM, this.handleAddItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM, this.handleRemoveItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EXCHANGE_ITEM_POS, this.handleExchangeItem);
@@ -27,6 +26,14 @@ export class BagModel extends PacketHandler implements IBaseModel {
 
     public getInitialize(): boolean {
         return this.initialize;
+    }
+
+    public register() {
+        this.mConnect.addPacketListener(this);
+    }
+
+    public unRegister() {
+        this.mConnect.removePacketListener(this);
     }
 
     /**

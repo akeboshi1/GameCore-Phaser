@@ -23,7 +23,7 @@ export class PlayerInfo implements IActor {
     public attributes: op_gameconfig.IAttribute[];
 
     /** Character package. */
-    public package: op_gameconfig.IPackage[];
+    public package: op_gameconfig.IPackage;
 
     /** Character sceneId. */
     public sceneId: number;

@@ -94,7 +94,7 @@ export class BagUIMobile implements IBag {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
         const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        content.id = playerModel.mainPlayerInfo.package[0].id;
+        content.id = playerModel.mainPlayerInfo.package.id;
         content.page = 1;
         content.perPage = BagPanel.PageMaxCount;
         this.mWorld.connection.send(pkt);

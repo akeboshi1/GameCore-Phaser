@@ -1,13 +1,13 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../net/connection.service";
-import { op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService, Room } from "../rooms/room";
 import { InputManager, InputListener } from "./input.service";
 
 export class KeyBoardManager extends PacketHandler implements InputManager {
     // 获取的需要监听的key值列表
-    private mCodeList: number[];
+    // private mCodeList: number[];
     // 添加到scene中需要监听的key列表
     private mKeyList: Phaser.Input.Keyboard.Key[];
     // 所有按下的key列表
@@ -22,18 +22,21 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
     private mRoom: IRoomService;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
+    private mKeyEvents: op_def.IKeyCodeEvent[];
+    private mKeyEventMap: Map<op_def.TQ_EVENT, op_def.IKeyCodeEvent>;
 
     // 所有需要监听key的监听事件
     private mKeyboardListeners: InputListener[] = [];
 
-    constructor(private worldService: WorldService) {
+    constructor(private worldService: WorldService, keyEvents: op_def.IKeyCodeEvent[]) {
         super();
-        this.mCodeList = [37, 38, 39, 40, 65, 87, 68, 83];
+        // this.mCodeList = [37, 38, 39, 40, 65, 87, 68, 83];
         this.mKeyList = [];
         this.mKeyDownList = [];
+        this.mKeyEvents = keyEvents;
         this.mTmpUpKeysStr = "";
         this.mTmpDownKeyStr = "";
-
+        this.mKeyEventMap = new Map();
         this.mConnect = this.worldService.connection;
     }
     /**
@@ -44,18 +47,35 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         this.mRoom = currentRoom;
         this.mScene = currentRoom.scene;
         if (!this.mScene) return;
-        const len = this.mCodeList.length;
-        let code: number;
-        let key: Phaser.Input.Keyboard.Key;
+        const len = this.mKeyEvents.length;
+        let keyEvent: op_def.IKeyCodeEvent;
+        let codes: op_def.KeyCode[];
+        let eventName: op_def.TQ_EVENT;
         for (let i = 0; i < len; i++) {
-            code = this.mCodeList[i];
-            key = this.mScene.input.keyboard.addKey(code, false);
-            this.addKeyEvent(key);
+            keyEvent = this.mKeyEvents[i];
+            codes = keyEvent.keyCodes;
+            eventName = keyEvent.tqEvent;
+            if (!this.mKeyEventMap.get(eventName)) {
+                this.mKeyEventMap.set(eventName, keyEvent);
+            }
         }
+        this.mKeyEvents.length = 0;
+        this.mKeyEvents = null;
+        this.mKeyEventMap.forEach((keyCodeEvent: op_def.IKeyCodeEvent) => {
+            if (keyCodeEvent) {
+                const keyCodes = keyCodeEvent.keyCodes;
+                const codesLen: number = keyCodes.length;
+                let keyCode: number;
+                for (let i: number = 0; i < codesLen; i++) {
+                    keyCode = keyCodes[i];
+                    const key: Phaser.Input.Keyboard.Key = this.mScene.input.keyboard.addKey(keyCode, false);
+                    this.addKeyEvent(key, keyCodeEvent.tqEvent);
+                }
+            }
+        });
     }
 
     public resize(width: number, height: number) {
-
     }
 
     public addListener(l: InputListener) {
@@ -91,15 +111,26 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
             this.mKeyDownList.length = 0;
             this.mKeyDownList = null;
         }
-        if (this.mCodeList) {
-            this.mCodeList.length = 0;
-            this.mCodeList = null;
-        }
+        // if (this.mCodeList) {
+        //     this.mCodeList.length = 0;
+        //     this.mCodeList = null;
+        // }
         this.mTmpDownKeyStr = null;
         this.mTmpUpKeysStr = null;
         this.mScene = null;
         this.mConnect = null;
         this.mInitilized = false;
+    }
+
+    private concatArr(arr1, arr2): op_def.KeyCode[] {
+        let i: number;
+        const len: number = arr1.length > arr2.length ? arr2.length : arr1.length;
+        const parentList: op_def.KeyCode[] = arr1.length > arr2.length ? arr1 : arr2;
+        const sonList: op_def.KeyCode[] = arr1.length > arr2.length ? arr2 : arr1;
+        for (i = 0; i < len; i++) {
+            parentList.push(sonList[i]);
+        }
+        return parentList;
     }
 
     private checkMoveKeyDown(l: InputListener): boolean {
@@ -184,7 +215,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         return true;
     }
 
-    private addKeyEvent(key: Phaser.Input.Keyboard.Key): void {
+    private addKeyEvent(key: Phaser.Input.Keyboard.Key, eventName: number): void {
         key.on("down", this.keyDownHandle, this);
         key.on("up", this.keyUpHandle, this);
         this.mKeyList.push(key);

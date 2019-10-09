@@ -1,40 +1,40 @@
 import "phaser";
 import "dragonBones";
-import {WorldService} from "./world.service";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "phaser";
-import {IConnectListener, SocketConnection, SocketConnectionError} from "../net/socket";
-import {ConnectionService} from "../net/connection.service";
-import {op_client, op_def, op_gateway, op_virtual_world} from "pixelpai_proto";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "phaser";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
+import { ConnectionService } from "../net/connection.service";
+import { op_client, op_def, op_gateway, op_virtual_world, op_gameconfig } from "pixelpai_proto";
 import Connection from "../net/connection";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
-import {RoomManager} from "../rooms/room.manager";
-import {ServerAddress} from "../net/address";
-import {KeyBoardManager} from "./keyboard.manager";
-import {MouseManager} from "./mouse.manager";
-import {SelectManager} from "../rooms/player/select.manager";
-import {Size} from "../utils/size";
-import {IRoomService} from "../rooms/room";
-import {MainUIScene} from "../scenes/main.ui";
-import {Logger} from "../utils/log";
-import {JoyStickManager} from "./joystick.manager";
-import {GameMain, ILauncherConfig} from "../../launcher";
-import {ElementStorage, IElementStorage} from "./element.storage";
-import {load} from "../utils/http";
-import {ResUtils} from "../utils/resUtil";
-import {Lite} from "game-capsule";
-import {UiManager} from "../ui/ui.manager";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
+import { RoomManager } from "../rooms/room.manager";
+import { ServerAddress } from "../net/address";
+import { KeyBoardManager } from "./keyboard.manager";
+import { MouseManager } from "./mouse.manager";
+import { SelectManager } from "../rooms/player/select.manager";
+import { Size } from "../utils/size";
+import { IRoomService } from "../rooms/room";
+import { MainUIScene } from "../scenes/main.ui";
+import { Logger } from "../utils/log";
+import { JoyStickManager } from "./joystick.manager";
+import { GameMain, ILauncherConfig } from "../../launcher";
+import { ElementStorage, IElementStorage } from "./element.storage";
+import { load } from "../utils/http";
+import { ResUtils } from "../utils/resUtil";
+import { Lite } from "game-capsule";
+import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
 import InputTextPlugin from "../../lib/rexui/plugins/inputtext-plugin.js";
 import BBCodeTextPlugin from "../../lib/rexui/plugins/bbcodetext-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
-import {InputManager} from "./input.service";
-import {ModelManager} from "../service/modelManager";
-import {PI_EXTENSION_REGEX} from "../const/constants";
-import {LoginScene} from "../scenes/login";
-import {Account} from "./account";
+import { InputManager } from "./input.service";
+import { ModelManager } from "../service/modelManager";
+import { PI_EXTENSION_REGEX } from "../const/constants";
+import { LoginScene } from "../scenes/login";
+import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 
 // The World act as the global Phaser.World instance;
@@ -232,7 +232,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.loadGameConfig(content.configUrls)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                this.createGame();
+                this.createGame(content.keyEvents);
                 Logger.debug("created game suc");
             })
             .catch((err) => {
@@ -299,7 +299,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mGame = new Game(gameConfig);
     }
 
-    private createGame() {
+    private createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
         this.mGame.scene.add(PlayScene.name, PlayScene);
@@ -308,7 +308,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         this.mModelManager = new ModelManager(this);
         if (this.mGame.device.os.desktop) {
-            this.mInputManager = new KeyBoardManager(this);
+            this.mInputManager = new KeyBoardManager(this, keyEvents);
         } else {
             this.mInputManager = new JoyStickManager(this);
         }

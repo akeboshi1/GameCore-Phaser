@@ -4,17 +4,19 @@ import { IFramesModel, FramesModel } from "../../rooms/display/frames.model";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { MapInfo } from "./mapInfo";
 import { MessageType } from "../../const/MessageType";
+import { ConnectionService } from "../../net/connection.service";
 
 export class MapDataModel implements IBaseModel {
     public static NAME: string = "MapDataModel";
     public initialize: boolean;
     private mMapInfo: MapInfo;
     private mModelDispatch: Phaser.Events.EventEmitter;
-
+    private mConnect: ConnectionService;
     constructor(private mWorld: WorldService) {
         if (this.mWorld.modelManager) {
             this.mModelDispatch = this.mWorld.modelManager;
         }
+        this.mConnect = this.mWorld.connection;
         this.mMapInfo = new MapInfo();
     }
 
@@ -24,6 +26,12 @@ export class MapDataModel implements IBaseModel {
 
     public geMapInfo(): MapInfo {
         return this.mMapInfo;
+    }
+
+    public register() {
+    }
+
+    public unRegister() {
     }
 
     public setMapInfo(value: op_client.IScene): void {

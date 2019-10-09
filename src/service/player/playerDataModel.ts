@@ -24,6 +24,12 @@ export class PlayerDataModel implements IBaseModel {
         return this.initialize;
     }
 
+    public register() {
+    }
+
+    public unRegister() {
+    }
+
     // public setCharacterId(value: number): void {
     //     this.mCharactId = value;
     // }
@@ -100,10 +106,9 @@ export class PlayerDataModel implements IBaseModel {
         const character = this.getPlayer(elementId);
         if (character) {
             if (!character.package) {
-                character.package = [];
-                character.package[0] = op_gameconfig.Package.create();
+                character.package = op_gameconfig.Package.create();
             }
-            character.package[0].items = character.package[0].items.concat(items);
+            character.package.items = character.package.items.concat(items);
             if (character === this.mMainPlayerInfo) {
                 this.mModelDispatch.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
             }
@@ -113,10 +118,10 @@ export class PlayerDataModel implements IBaseModel {
     public removePackItems(elementId: number, itemId: number): boolean {
         const character = this.getPlayer(elementId);
         if (character) {
-            const len = character.package[0].items.length;
+            const len = character.package.items.length;
             for (let i = 0; i < len; i++) {
-                if (itemId === character.package[0].items[i].id) {
-                    character.package[0].items.splice(i, 1);
+                if (itemId === character.package.items[i].id) {
+                    character.package.items.splice(i, 1);
                     return true;
                 }
             }

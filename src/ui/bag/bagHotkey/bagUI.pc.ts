@@ -159,7 +159,7 @@ export class BagUIPC implements IBag {
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
 
         const playerInfo: PlayerInfo = (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo;
-        this.setDataList(playerInfo.package[0].items);
+        if (playerInfo.package && playerInfo.package.items) this.setDataList(playerInfo.package.items);
         // childList.push(this.mBagBtnCon);
     }
 
@@ -168,7 +168,7 @@ export class BagUIPC implements IBag {
         // =============index = 0 为背包按钮
         const bagModel: BagModel = this.mWorld.modelManager.getModel(BagModel.NAME) as BagModel;
         const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package[0].id, 1, BagPanel.PageMaxCount);
+        bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package.id, 1, BagPanel.PageMaxCount);
         // Logger.debug(button);
     }
 

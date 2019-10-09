@@ -54,6 +54,7 @@ export class BagUIMediator implements IMediator {
             this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
             this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         }
+        this.mBagModel.register();
     }
 
     public update(param: any) {
@@ -67,7 +68,7 @@ export class BagUIMediator implements IMediator {
     }
 
     private heroItemChange() {
-        const itemList: op_gameconfig.IItem[] = (this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package[0].items;
+        const itemList: op_gameconfig.IItem[] = (this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package.items;
         if (this.mView && this.world.game.device.os.desktop) {
             (this.mView as BagUIPC).setDataList(itemList);
         }

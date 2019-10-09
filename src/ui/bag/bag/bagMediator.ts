@@ -54,7 +54,7 @@ export class BagMediator implements IMediator {
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         this.mView.show(param);
-
+        this.mBagModel.register();
         // const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
         // this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), BagPanel.PageMaxCount);
     }
@@ -84,8 +84,8 @@ export class BagMediator implements IMediator {
     private refrehView(mItems?: op_gameconfig.IItem[]): void {
         let items: op_gameconfig.IItem[];
         if (!mItems) {
-            const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
-            if (packs == null || packs.length === 0) {
+            const packs: op_gameconfig.IPackage = this.mPlayerModel.mainPlayerInfo.package;
+            if (packs == null) {
                 return;
             }
             items = packs[0].items;
