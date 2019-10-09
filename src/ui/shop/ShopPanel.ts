@@ -14,11 +14,17 @@ export class ShopPanel extends Panel {
         return this.mShowing;
     }
 
+    public destroy() {
+        if (this.mParentCon) {
+            this.mParentCon.destroy(true);
+        }
+        this.mInitialized = false;
+    }
+
     protected preload() {
         if (!this.mScene) {
             return;
         }
-        this.mScene.load.image("shopBtn", Url.getRes("ui/shop/shop_btn.png"));
         this.mScene.load.atlas("shopView", Url.getRes("ui/shop/shopView.png"), Url.getRes("ui/shop/shopView.json"));
         super.preload();
     }
@@ -29,13 +35,13 @@ export class ShopPanel extends Panel {
         const size = this.mWorld.getSize();
         this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 200);
         const mBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        mBg.setTexture("shopView", "bagView_titleBtn");
+        mBg.setTexture("shopView", "shopView_bg");
         mBg.x = size.width >> 1;
         mBg.y = size.height - 200;
         this.mParentCon.add(mBg);
 
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        titleCon.setTexture("shopView", "bagView_titleBtn");
+        titleCon.setTexture("shopView", "shopView_titleIcon");
         // titleCon.x = (- wid >> 1) + 80;
         // titleCon.y = (-hei >> 1);
         this.mParentCon.add(titleCon);
@@ -48,5 +54,12 @@ export class ShopPanel extends Panel {
         titleTF.x = titleCon.x + titleCon.width - 10;
         titleTF.y = titleCon.y - (titleTF.height >> 1);
         this.mParentCon.add(titleTF);
+    }
+
+    protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
+        if (this.mInitialized) {
+            return;
+        }
+        this.init();
     }
 }

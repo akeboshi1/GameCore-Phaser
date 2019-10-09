@@ -1,29 +1,33 @@
 import { IDropable } from "./idropable";
 import { IDragable } from "./idragable";
 import { ResUtils, Url } from "../../utils/resUtil";
+import { DynamicImage } from "../components/dynamic.image";
 
 export class DragDropIcon extends Phaser.GameObjects.Container implements IDragable, IDropable {
     protected mDropType: number;
     protected mDragType: number;
-    private mIcon: Phaser.GameObjects.Image;
+    private mIcon: DynamicImage;
     private mUrl: string;
     private mCallBack: Function;
     constructor(private mScene: Phaser.Scene, x: number, y: number, texture?: string) {
         super(mScene, x, y);
-        this.mIcon = this.mScene.make.image(undefined, false);
+        this.mIcon = new DynamicImage(this.mScene, 0, 0); // this.mScene.make.image(undefined, false);
         this.add(this.mIcon);
     }
 
     public load(value: string, thisArg?: any, onLoadComplete?: Function) {
         this.mUrl = value;
         const key: string = this.resKey;
-        if (!this.mScene.cache.obj.has(key)) {
-            this.mScene.load.image(key, Url.getOsdRes(this.mUrl));
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onLoadCompleteHandler();
-        }
+        this.mIcon.load(Url.getOsdRes(this.mUrl), () => {
+            // if (this.mCallBack) this.mCallBack();
+        });
+        // if (!this.mScene.cache.obj.has(key)) {
+        //     this.mScene.load.image(key, Url.getOsdRes(this.mUrl));
+        //     this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        //     this.mScene.load.start();
+        // } else {
+        //     this.onLoadCompleteHandler();
+        // }
         this.mCallBack = onLoadComplete;
     }
 
@@ -88,9 +92,9 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
         return this.mDragType;
     }
 
-    private onLoadCompleteHandler() {
-        const key: string = this.resKey;
-        this.mIcon.setTexture(key);
-        if (this.mCallBack) this.mCallBack();
-    }
+    // private onLoadCompleteHandler() {
+    //     const key: string = this.resKey;
+    //     this.mIcon.setTexture(key);
+    //     if (this.mCallBack) this.mCallBack();
+    // }
 }

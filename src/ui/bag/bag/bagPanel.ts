@@ -21,7 +21,7 @@ export class BagPanel extends Panel {
     private mDataList: any[];
     private mWid: number = 0;
     private mHei: number = 0;
-    private mInitalize: boolean = false;
+    // private mInitalize: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mScene = scene;
@@ -29,15 +29,6 @@ export class BagPanel extends Panel {
         this.bagSlotList = [];
     }
 
-    public show(param: any) {
-        if (this.isShow()) {
-            // this.hide();
-            return;
-        }
-        this.mShowing = true;
-        this.createPanel();
-        // todo refresh bagData
-    }
     public update(param: any) {
 
     }
@@ -57,7 +48,7 @@ export class BagPanel extends Panel {
     public setDataList(value: any[]) {
         this.mPageNum = Math.ceil(value.length / BagPanel.PageMaxCount);
         this.mDataList = value;
-        if (!this.mInitalize) {
+        if (!this.mInitialized) {
             return;
         }
         this.refreshDataList();
@@ -82,26 +73,15 @@ export class BagPanel extends Panel {
         if (this.mParentCon) {
             this.mParentCon.destroy();
         }
+        this.mInitialized = false;
     }
 
     public getCurPageIndex(): number {
         return this.mPageIndex;
     }
 
-    private createPanel() {
-        this.mResStr = "bagView";
-        this.mResPng = "ui/bag/bagView.png";
-        this.mResJson = "ui/bag/bagView.json";
-        if (!this.mScene.cache.obj.has(this.mResStr)) {
-            this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onLoadCompleteHandler();
-        }
-    }
-
-    private onLoadCompleteHandler() {
+    protected init() {
+        if (this.mInitialized) return;
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
@@ -201,10 +181,28 @@ export class BagPanel extends Panel {
         } else {
             this.onClsLoadCompleteHandler();
         }
-        this.mInitalize = true;
+        this.mInitialized = true;
         if (this.mDataList) {
             this.refreshDataList();
         }
+    }
+
+    protected preload() {
+        if (!this.mScene) {
+            return;
+        }
+        this.mResStr = "bagView";
+        this.mResPng = "ui/bag/bagView.png";
+        this.mResJson = "ui/bag/bagView.json";
+        this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        super.preload();
+    }
+
+    protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
+        if (this.mInitialized) {
+            return;
+        }
+        this.init();
     }
 
     private nextHandler(pointer, gameObject) {

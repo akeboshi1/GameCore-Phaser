@@ -57,11 +57,12 @@ export class ItemSlot implements IListItemComponent {
                 const des = this.mData.des ? "\n" + this.mData.des : "";
                 //  this.setToolTipText(this.data.name + des);
             } else {
-                url = "";
+                // url = "";
             }
+            if (!url) return;
             this.mIcon.load(url, this, () => {
                 if (this.mData) {
-                    this.mIcon.visible = true;
+                    // this.mIcon.visible = true;
                 }
             });
 
@@ -95,7 +96,7 @@ export class ItemSlot implements IListItemComponent {
         this.con.addAt(this.itemBG, 0);
         this.con.setSize(this.itemBG.width, this.itemBG.height);
         this.mIcon = new DragDropIcon(this.mScene, 0, 0);
-        this.mIcon.visible = false;
+        // this.mIcon.visible = false;
         // this.mIcon.icon.anchor.set(0.5, 0.5);
         // this.mIcon.x = 26;
         // this.mIcon.y = 26;

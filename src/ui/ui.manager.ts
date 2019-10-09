@@ -88,13 +88,6 @@ export class UiManager extends PacketHandler {
         if (!mediator) {
             const className: string = type + "Mediator";
             const path: string = `./${type}/${type}Mediator`;
-            // Logger.log(ns);
-            // import(/* ui */`./${type}/${className}`).then((ns) => {
-            //    mediator = new ns[className]();
-            //    this.mMedMap.set(type, mediator);
-            //    mediator.show(params);
-            //
-            // });
             const ns: any = require(`./${type}/${className}`);
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
             if (!mediator) {
