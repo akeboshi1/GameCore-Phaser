@@ -10,6 +10,7 @@ export class ActorModel implements ISprite {
     private mCurrentAnimationName: string;
     private mDirection: number;
     private mBindID: number;
+    private mAlpha: number;
     constructor(actor: op_client.IActor) {
         this.mID = actor.id;
         this.mPos = new Pos(actor.x, actor.y, actor.z || 0);
@@ -18,6 +19,7 @@ export class ActorModel implements ISprite {
             this.mAvatar = Object.assign(this.mAvatar, actor.avatar);
         }
         this.mDirection = actor.avatarDir;
+        this.mAlpha = 1;
     }
 
     get id(): number {
@@ -42,5 +44,9 @@ export class ActorModel implements ISprite {
 
     get bindID(): number {
         return this.mBindID;
+    }
+
+    get alpha(): number {
+        return this.mAlpha;
     }
 }

@@ -20,6 +20,11 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mHasAnimation: boolean = false;
     protected mSortRectangle: SortRectangle = new SortRectangle();
+
+    /**
+     * 实际透明度，避免和tween混淆
+     */
+    protected mAlpha: number = 1;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
 
     public removeFromParent(): void {
@@ -30,6 +35,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
 
     public changeAlpha(val?: number) {
         this.alpha = val;
+        this.mAlpha = val;
     }
 
     public setPosition(x?: number, y?: number, z?: number): this {
@@ -82,11 +88,12 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public fadeIn(callback?: () => void) {
+        if (this.mAlpha === 0) { return; }
         this.alpha = 0;
         this.clearFadeTween();
         this.mFadeTween = this.scene.tweens.add({
             targets: this,
-            alpha: 1,
+            alpha: this.mAlpha,
             duration: 1200,
             onComplete: () => {
                 if (callback) callback();

@@ -21,6 +21,7 @@ import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { PlayerDataModel } from "../service/player/playerDataModel";
 import { MapDataModel } from "../service/map/mapDataModel";
+import {MainUIScene} from "../scenes/main.ui";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -298,16 +299,18 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         this.mPlayerManager.destroy();
         this.mElementManager.destroy();
         this.mTerainManager.destroy();
+        this.mBlocks.destroy();
     }
 
     public destroy() {
-        if (this.mScene) {
-            this.mScene.scene.stop();
-            this.mScene = null;
-        }
-        this.manager = null;
-        this.mPlayerManager.destroy();
+        this.clear();
         this.mLayManager.destroy();
         this.mClock.destroy();
+        if (this.mScene) {
+            // this.mScene.scene.stop();
+            // this.mWorld.game.scene.stop(PlayScene.name);
+            // this.mWorld.game.scene.stop(MainUIScene.name);
+            // this.mScene = null;
+        }
     }
 }

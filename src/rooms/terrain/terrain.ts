@@ -26,6 +26,7 @@ export class Terrain extends BlockObject implements IElement {
         this.mDisplayInfo = <IFramesModel> conf;
         this.createDisplay();
         this.setPosition45(sprite.pos);
+        this.mDisplay.changeAlpha(sprite.alpha);
     }
 
     public play(animationName: string): void {

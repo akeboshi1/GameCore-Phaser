@@ -44,7 +44,7 @@ export abstract class BlockObject {
 
     public fadeAlpha(alpha: number) {
         if (!this.mDisplay) return;
-        this.mDisplay.alpha = alpha;
+        // this.mDisplay.alpha = alpha;
     }
 
     public destroy() {

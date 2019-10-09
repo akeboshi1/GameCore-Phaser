@@ -141,11 +141,8 @@ export class LayerManager {
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
                 const angle: number = Math.atan2((displayA.sortY - displayB.sortY), (displayA.sortX - displayB.sortX));
                 if (angle * (180 * Math.PI) >= 70) {
-                    displayA.changeAlpha(.5);
                     return 1;
                 }
-                displayA.alpha = 1;
-                displayB.alpha = 1;
                 // if (displayA.sortY > displayB.sortY) {
                 //     return 1;
                 // }
@@ -177,7 +174,9 @@ export class LayerManager {
             let child: Phaser.GameObjects.GameObject;
             for (let i: number = 0; i < len; i++) {
                 child = list[i];
-                child.destroy(destroy);
+                if (child) {
+                    child.destroy(destroy);
+                }
             }
         }
         container.destroy(destroy);

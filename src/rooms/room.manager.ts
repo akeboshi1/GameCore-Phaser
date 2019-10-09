@@ -28,11 +28,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     public getRoom(id: number): Room | undefined {
-        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        if (idx >= 0) {
-            return this.mRooms[idx];
-        }
-        return;
+        // const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
+        // if (idx >= 0) {
+        //     return this.mRooms[idx];
+        // }
+        return this.mRooms.find((room: Room) => {
+            return room.id === id;
+        });
     }
 
     public onFocus() {
@@ -77,17 +79,22 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         });
     }
 
+    public destroy() {
+        for (const room of this.mRooms) {
+            room.destroy();
+        }
+        this.mRooms.length = 0;
+    }
+
     private hasRoom(id: number): boolean {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         return idx >= 0;
     }
 
     private onEnterScene(packet: PBpacket) {
+        this.destroy();
         const vw: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         let room: Room;
-        if (this.mCurRoom) {
-            this.mCurRoom.clear();
-        }
         if (this.hasRoom(vw.scene.id)) {
             room = this.getRoom(vw.scene.id);
         } else {

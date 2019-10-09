@@ -103,6 +103,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.createDisplay();
         this.setPosition(sprite.pos);
+        this.mDisplay.changeAlpha(sprite.alpha);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {

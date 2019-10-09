@@ -12,6 +12,8 @@ export interface ViewblockService {
     add(e: IElement): boolean;
 
     remove(e: IElement): boolean;
+
+    destroy(): void;
 }
 
 export class ViewblockManager implements ViewblockService {
@@ -72,5 +74,8 @@ export class ViewblockManager implements ViewblockService {
         for (const block of this.mBlocks) {
             block.check(bound, miniViewPort);
         }
+    }
+
+    public destroy(): void {
     }
 }

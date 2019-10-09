@@ -9,6 +9,7 @@ export interface ISprite {
     readonly currentAnimationName: string;
     readonly direction: number;
     readonly bindID: number;
+    readonly alpha: number;
 }
 
 export class Sprite implements ISprite {
@@ -18,6 +19,7 @@ export class Sprite implements ISprite {
     private mCurrentAnimationName: string;
     private mDirection: number;
     private mBindID: number;
+    private mAlpha: number;
 
     constructor(obj: op_client.ISprite) {
         this.mID = obj.id;
@@ -32,6 +34,7 @@ export class Sprite implements ISprite {
         this.mCurrentAnimationName = obj.currentAnimationName || "idle";
         this.mDirection = obj.direction;
         this.mBindID = obj.bindId;
+        this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
     }
 
     get id(): number {
@@ -56,5 +59,9 @@ export class Sprite implements ISprite {
 
     get bindID(): number {
         return this.mBindID;
+    }
+
+    get alpha(): number {
+        return this.mAlpha;
     }
 }
