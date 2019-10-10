@@ -62,6 +62,10 @@ export class BasicRankPanel extends Panel {
         }
     }
 
+    update(param: any) {
+        this.addItem(param);
+    }
+
     protected preload() {
         this.scene.load.image(Background.getName(), Background.getPNG());
         this.scene.load.image(Border.getName(), Border.getPNG());
@@ -80,7 +84,7 @@ export class BasicRankPanel extends Panel {
         this.mBackground = new NinePatch(this.scene, {
             x: 0,
             y: 0,
-            width: 327,
+            width: 328,
             height: 361,
             key: Background.getName(),
             columns: Background.getColumns(),

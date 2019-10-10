@@ -32,7 +32,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     isSceneUI(): boolean {
-        return true;
+        return false;
     }
 
     isShow(): boolean {

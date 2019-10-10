@@ -43,6 +43,9 @@ export class RankMediator implements IMediator {
     }
 
     update(param?: any): void {
+        if (param && param.length > 0) {
+            this.mRankPanel.update(param[0]);
+        }
     }
 
 }
