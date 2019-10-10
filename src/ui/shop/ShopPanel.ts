@@ -95,7 +95,7 @@ export class ShopPanel extends Panel {
         let itemSlot: ShopItemSlot;
         let tmpX: number;
         let tmpY: number;
-        for (let i: number = 0; i < 25; i++) {
+        for (let i: number = 0; i < 20; i++) {
             tmpX = (i % 5) * 100 - mBg.width / 2 + 75;
             tmpY = Math.floor(i / 5) * 90 - mBg.height / 2 + 80;
             itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", null, null);
