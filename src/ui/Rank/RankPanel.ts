@@ -8,11 +8,18 @@ export class RankPanel extends BasicRankPanel {
         super(scene, world);
     }
 
-    protected init() {
-        super.init();
+    public resize() {
+        if (!this.mWorld) {
+            return;
+        }
         const size = this.mWorld.getSize();
         this.x = size.width - 371 - 10;
         this.y = 21;
+    }
+
+    protected init() {
+        super.init();
+        this.resize();
         // this.mZoonInBtn = this.mScene.make.image()
     }
 }

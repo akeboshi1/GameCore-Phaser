@@ -10,6 +10,7 @@ import { UIMediatorType } from "./ui.mediatorType";
 import { BagUIMediator } from "./bag/bagHotkey/bagUIMediator";
 import { ChatMediator } from "./chat/chat.mediator";
 import {ILayerManager, LayerManager} from "./layer.manager";
+import {NoticeMediator} from "./Notice/NoticeMediator";
 
 export class UiManager extends PacketHandler {
     private mBagUI: IBag;
@@ -40,6 +41,7 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.BagHotKey, new BagUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.mUILayerManager, this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
         }
 
         // TOOD 通过统一的方法创建打开
@@ -64,8 +66,8 @@ export class UiManager extends PacketHandler {
     }
 
     public getMediator(type: string): IMediator | undefined {
-        const med: IMediator = this.mMedMap.get(type);
-        return med;
+        if (!this.mMedMap) return;
+        return this.mMedMap.get(type);
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -101,6 +103,9 @@ export class UiManager extends PacketHandler {
     }
 
     private updateMed(type: string, ...param: any[]) {
+        if (!this.mMedMap) {
+            return;
+        }
         const mediator: IMediator = this.mMedMap.get(type);
         if (!mediator) {
             Logger.error(`error ${type} no panel can show!!!`);
@@ -110,11 +115,15 @@ export class UiManager extends PacketHandler {
     }
 
     private hideMed(type: string) {
+        if (!this.mMedMap) {
+            return;
+        }
         const mediator: IMediator = this.mMedMap.get(type);
         if (!mediator) {
             Logger.error(`error ${type} no panel can show!!!`);
             return;
         }
         mediator.hide();
+        this.mMedMap.delete(type);
     }
 }

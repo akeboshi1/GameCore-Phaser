@@ -86,6 +86,14 @@ export class JoyStickManager implements InputManager {
         }
     }
 
+    getKeyDowns(): number[] {
+        return [];
+    }
+
+    getKeyUps(): number[] {
+        return [];
+    }
+
     downHandler() {
     }
 

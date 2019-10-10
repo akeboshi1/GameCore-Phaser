@@ -5,6 +5,10 @@ export interface ILayerManager {
     addToDialogLayer(obj: Phaser.GameObjects.GameObject);
     addToToolTipsLayer(obj: Phaser.GameObjects.GameObject);
 
+    removeToUILayer(obj: Phaser.GameObjects.GameObject);
+    removeToDialogLayer(obj: Phaser.GameObjects.GameObject);
+    removeToToolTipsLayer(obj: Phaser.GameObjects.GameObject);
+
     destroy();
 }
 
@@ -43,6 +47,18 @@ export class LayerManager implements ILayerManager {
             return;
         }
         this.mToolTipsLyaer.add(obj);
+    }
+
+    public removeToUILayer(obj: Phaser.GameObjects.GameObject) {
+        this.mUILayer.remove(obj);
+    }
+
+    public removeToDialogLayer(obj: Phaser.GameObjects.GameObject) {
+        this.mDialogLayer.remove(obj);
+    }
+
+    public removeToToolTipsLayer(obj: Phaser.GameObjects.GameObject) {
+        this.mToolTipsLyaer.remove(obj);
     }
 
     public destroy() {

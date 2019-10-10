@@ -110,6 +110,40 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         return this.mKeyList;
     }
 
+    public getKeyDowns(): number[] {
+        // let keyCodes: number[] = [];
+        if (!this.mInitilized) {
+            return [];
+        }
+        if (!this.mKeyList) {
+            return [];
+        }
+        this.mKeyDownList = this.mKeyList.filter((keyDown) => keyDown.isDown);
+        return this.mKeyDownList.map((key) => key.keyCode);
+    }
+
+    public getKeyUps(): number[] {
+        // 在keyDown列表里面查找是否有键抬起，其余没按的键不必监听
+        const keyCodes: number[] = [];
+        if (!this.mInitilized) {
+            return keyCodes;
+        }
+        if (!this.mKeyDownList) {
+            return [];
+        }
+        let key: Phaser.Input.Keyboard.Key;
+        for (let i = 0; i < this.mKeyDownList.length; i++) {
+            key = this.mKeyDownList[i];
+            if (key && key.isUp) {
+                this.mKeyDownList.splice(i, 1);
+                keyCodes.push(key.keyCode);
+                i--;
+            }
+        }
+        // this.mKeyDownList = this.mKeyDownList.filter((keyDown) => keyDown.isDown);
+        return keyCodes;
+    }
+
     public destroy() {
         this.removeKeyEvents();
         if (this.mKeyDownList) {
@@ -261,40 +295,6 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
                 l.upHandler();
             }
         });
-    }
-
-    private getKeyDowns(): number[] {
-        // let keyCodes: number[] = [];
-        if (!this.mInitilized) {
-            return [];
-        }
-        if (!this.mKeyList) {
-            return [];
-        }
-        this.mKeyDownList = this.mKeyList.filter((keyDown) => keyDown.isDown);
-        return this.mKeyDownList.map((key) => key.keyCode);
-    }
-
-    private getKeyUps(): number[] {
-        // 在keyDown列表里面查找是否有键抬起，其余没按的键不必监听
-        const keyCodes: number[] = [];
-        if (!this.mInitilized) {
-            return keyCodes;
-        }
-        if (!this.mKeyDownList) {
-            return [];
-        }
-        let key: Phaser.Input.Keyboard.Key;
-        for (let i = 0; i < this.mKeyDownList.length; i++) {
-            key = this.mKeyDownList[i];
-            if (key && key.isUp) {
-                this.mKeyDownList.splice(i, 1);
-                keyCodes.push(key.keyCode);
-                i--;
-            }
-        }
-        // this.mKeyDownList = this.mKeyDownList.filter((keyDown) => keyDown.isDown);
-        return keyCodes;
     }
 
     private removeKeyEvents(): void {

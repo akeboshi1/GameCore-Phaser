@@ -49,9 +49,6 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
-        if (totalComplete === 0) {
-            return;
-        }
         if (this.mInitialized) {
             return;
         }

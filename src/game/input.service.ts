@@ -9,6 +9,8 @@ export interface InputManager {
     resize(width: number, height: number);
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void;
     getKeyCodes(eventName: number): any[];
+    getKeyDowns(): number[];
+    getKeyUps(): number[];
 }
 
 export interface InputListener {

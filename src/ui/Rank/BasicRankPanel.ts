@@ -18,6 +18,7 @@ export class BasicRankPanel extends Panel {
     }
 
     public addItem(items: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
+        this.setData("data", items);
         if (!this.mInitialized) return;
         this.clearText();
         const texts = items.text;
@@ -27,16 +28,13 @@ export class BasicRankPanel extends Panel {
             this.mTitleLabel.setData("node", texts[0].node);
         }
 
-        this.mContentContainer = this.scene.make.container({}, false);
-        this.add(this.mContentContainer);
-
         const locX = [12, 60, 238];
         for (let i = 1; i < 4; i++) {
             const text = this.scene.make.text({
                 x: locX[i - 1],
                 y: 27,
                 text: texts[i].text,
-                style: { font: Font.YAHEI_14_BOLD }
+                style: { font: Font.YAHEI_16_BOLD }
             }, false );
             text.setData("node", texts[i].node);
             text.setStroke("#000000", 2);
@@ -73,7 +71,11 @@ export class BasicRankPanel extends Panel {
 
     protected init() {
         if (this.mInitialized) return;
-        super.init();
+
+        const img = this.scene.make.image({
+            key: Background.getName()
+        }, false).setOrigin(0, 0).setScale(5, 5);
+        // this.add(img);
 
         this.mBackground = new NinePatch(this.scene, {
             x: 0,
@@ -84,7 +86,21 @@ export class BasicRankPanel extends Panel {
             columns: Background.getColumns(),
             rows: Background.getRows()
         }).setOrigin(0, 0);
-        this.addAt(this.mBackground, 0);
+        this.add(this.mBackground);
+
+        this.mContentContainer = this.scene.make.container({}, false);
+        this.add(this.mContentContainer);
+
+        const border = new NinePatch(this.scene, {
+            x: 8,
+            y: 20,
+            width: 315,
+            height: 318,
+            key: Border.getName(),
+            columns: Border.getColumns(),
+            rows: Border.getRows()
+        }).setOrigin(0, 0);
+        this.mContentContainer.add(border);
 
         const titleIcon = this.scene.make.image({
             x: 20,
@@ -97,9 +113,14 @@ export class BasicRankPanel extends Panel {
         this.mTitleLabel = this.scene.make.text({
             x: 54,
             text: "排行榜",
-            style: { font: Font.YAHEI_16_BOLD }
+            style: { font: Font.YAHEI_20_BOLD }
         }).setOrigin(0, 0.5);
         this.add(this.mTitleLabel);
+        super.init();
+
+        const items = this.getData("data");
+        if (items) this.addItem(items);
+
     }
 
     protected clearText() {

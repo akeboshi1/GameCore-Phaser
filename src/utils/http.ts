@@ -1,3 +1,5 @@
+import {Logger} from "./log";
+
 export function load(path: string, responseType: XMLHttpRequestResponseType): Promise<any> {
   return new Promise((resolve, reject) => {
     const http = new XMLHttpRequest();
@@ -5,6 +7,7 @@ export function load(path: string, responseType: XMLHttpRequestResponseType): Pr
       resolve(response.currentTarget);
     };
     http.onerror = () => {
+      Logger.warn(`${path} load error`);
       reject(`${path} load error`);
     };
     http.open("GET", path);

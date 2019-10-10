@@ -34,6 +34,9 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     public changeAlpha(val?: number) {
+        if (this.mAlpha === val) {
+            return;
+        }
         this.alpha = val;
         this.mAlpha = val;
     }
