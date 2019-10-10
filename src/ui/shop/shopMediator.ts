@@ -40,6 +40,7 @@ export class ShopMediator implements IMediator {
 
     public show(param?: any) {
         if (this.mView) this.mView.show();
+        this.mParam = param;
         this.mShopModel.register();
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.modelManager.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
@@ -52,6 +53,7 @@ export class ShopMediator implements IMediator {
 
     public hide() {
         if (this.mView) this.mView.hide();
+        this.mParam = null;
         this.mShopModel.unRegister();
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.modelManager.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
@@ -74,7 +76,7 @@ export class ShopMediator implements IMediator {
     }
 
     private queryPackageHandler(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
-        if (data.items.length > 0) {
+        if (data.items.length > 0 && data.id === this.mParam[0].id) {
             this.mView.setDataList(data.items);
             //  this.mView.addItems(data.items);
         } else {
