@@ -88,6 +88,7 @@ export class BagUIPC implements IBag {
             let itemSlot: ItemSlot = this.bagSlotList[i];
             if (!itemSlot) {
                 itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+                itemSlot.createUI();
                 this.bagSlotList.push(itemSlot);
                 childList.push(itemSlot.con);
             }

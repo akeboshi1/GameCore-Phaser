@@ -89,7 +89,7 @@ export class BagMediator implements IMediator {
             if (packs == null) {
                 return;
             }
-            items = packs[0].items;
+            items = packs.items;
         } else {
             items = mItems;
         }
@@ -102,10 +102,12 @@ export class BagMediator implements IMediator {
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
+        if (data.id !== this.mPlayerModel.mainPlayerInfo.package.id) return;
         this.refrehView(data.items);
     }
 
     private onUpdatePackageHandler(data) {
+        if (data.id !== this.mPlayerModel.mainPlayerInfo.package.id) return;
         this.refrehView(data.items);
     }
 

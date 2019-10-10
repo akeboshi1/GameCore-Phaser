@@ -7,6 +7,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
+import { BagModel } from "../../service/bag/bagModel";
 
 export class ShopMediator implements IMediator {
     public static NAME: string = "ShopMediator";
@@ -17,6 +18,7 @@ export class ShopMediator implements IMediator {
     private _curPage: number;
     private fetching: boolean;
     private isEnd = false;
+    private mParam: any;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         this.world = world;
         this.mShopModel = this.world.modelManager.getModel(ShopModel.NAME) as ShopModel;
@@ -41,6 +43,7 @@ export class ShopMediator implements IMediator {
         this.mShopModel.register();
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.modelManager.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
+        (this.world.modelManager.getModel(BagModel.NAME) as BagModel).requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
     }
 
     public update(param?: any) {
@@ -59,12 +62,12 @@ export class ShopMediator implements IMediator {
     }
 
     private queryShopProps(page: number = 1, perPage: number = 50) {
-        // if (!!this.m_Param === false) return;
+        if (!!this.mParam === false) return;
         this.fetching = true;
 
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
-        // content.id = this.m_Param[0].id;
+        content.id = this.mParam[0].id;
         content.page = page;
         content.perPage = perPage;
         this.world.connection.send(pkt);
@@ -72,7 +75,8 @@ export class ShopMediator implements IMediator {
 
     private queryPackageHandler(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
         if (data.items.length > 0) {
-            // this.mView.addItems(data.items);
+            this.mView.setDataList(data.items);
+            //  this.mView.addItems(data.items);
         } else {
             this.isEnd = true;
         }
@@ -92,14 +96,15 @@ export class ShopMediator implements IMediator {
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
-        // content.uiId = this.m_Param[0].id;
+        content.uiId = this.mParam[0].id;
         content.componentId = item.id;
-
+        this.world.connection.send(pkt);
         // Globals.SocketManager.send(pkt);
     }
 
     private syncUserBalance() {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_USER_BALANCE);
+        this.world.connection.send(pkt);
         // Globals.SocketManager.send(pkt);
     }
 

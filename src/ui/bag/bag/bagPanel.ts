@@ -100,11 +100,11 @@ export class BagPanel extends Panel {
         // 多排背包格位
         const chilsList: any[] = [];
         let rowIndex: number = -1;
-        const slotCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
-        slotCon.x = 0;
-        slotCon.y = 0;
-        slotCon.setSize(11 * 52 + 10 * 8, 11 * 52 + 10 * 5);
-        this.mParentCon.add(slotCon);
+        // const slotCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
+        // slotCon.x = 0;
+        // slotCon.y = 0;
+        // slotCon.setSize(11 * 52 + 10 * 8, 11 * 52 + 10 * 5);
+        // this.mParentCon.add(slotCon);
         this.bagSlotList = [];
         for (let i: number = 0; i < 36; i++) {
             if (i % 12 === 0) {
@@ -113,6 +113,7 @@ export class BagPanel extends Panel {
             }
             tmpX = i % 12 * 52 + 20;
             itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
             chilsList[rowIndex].push(itemSlot.con);
             if (i <= 11) {
@@ -255,12 +256,12 @@ export class BagPanel extends Panel {
     }
 
     private createTexture(): Phaser.GameObjects.Graphics {
-        const COLOR_BG = 0x706B6B;
+        const COLOR_BG = 0xAAA9A9;
         const COLOR_LINE = 0x000000;
         const width = 730;
         const height = 206;
         const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.add.graphics();
-        bgGraphics.fillStyle(COLOR_BG, .8);
+        bgGraphics.fillStyle(COLOR_BG, .5);
         bgGraphics.fillRect((-width >> 1) + 3, (-height >> 1) + 1, width - 6, height - 6);
         bgGraphics.lineStyle(3, COLOR_LINE, .8);
         bgGraphics.strokeRect(-width >> 1, -height >> 1, width, height);

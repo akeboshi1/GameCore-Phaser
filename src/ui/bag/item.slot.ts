@@ -11,22 +11,24 @@ export class ItemSlot implements IListItemComponent {
     // public count: number;
     public con: Phaser.GameObjects.Container;
     public index: number;
-    private mData: op_gameconfig.Item;
-    private mScene: Phaser.Scene;
-    private mResStr: string;
-    private mResPng: string;
-    private mResJson: string;
-    private mResSlot: string;
-    private mIcon: DragDropIcon;
-    private mAnimationCon: Phaser.GameObjects.Sprite;
-    private mSubScriptSprite: Phaser.GameObjects.Sprite;
-    private mSubScriptRes: string;
-    private itemBG: Phaser.GameObjects.Sprite;
-    private mSelectSprite: Phaser.GameObjects.Sprite;
-    private mSelectRes: string;
-    private mWorld: WorldService;
+    protected mData: op_gameconfig.Item;
+    protected mScene: Phaser.Scene;
+    protected mResStr: string;
+    protected mResPng: string;
+    protected mResJson: string;
+    protected mResSlot: string;
+    protected mIcon: DragDropIcon;
+    protected mAnimationCon: Phaser.GameObjects.Sprite;
+    protected mSubScriptSprite: Phaser.GameObjects.Sprite;
+    protected mSubScriptRes: string;
+    protected itemBG: Phaser.GameObjects.Sprite;
+    protected mSelectSprite: Phaser.GameObjects.Image;
+    protected mSelectRes: string;
+    protected mWorld: WorldService;
 
-    private minitialize: boolean = false;
+    protected minitialize: boolean = false;
+    protected mWid: number = 0;
+    protected mHei: number = 0;
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         this.mScene = scene;
         this.mWorld = world;
@@ -40,7 +42,10 @@ export class ItemSlot implements IListItemComponent {
         this.mResSlot = resSlot;
         this.mSubScriptRes = subscriptRes;
         this.mSelectRes = selectRes;
-        this.createUI();
+    }
+
+    public createUI() {
+        this.onLoadCompleteHandler();
     }
 
     public getView(): any {
@@ -65,15 +70,10 @@ export class ItemSlot implements IListItemComponent {
                     // this.mIcon.visible = true;
                 }
             });
-
         }
-
     }
 
     public destory() {
-        if (this.con) {
-            this.con.destroy(true);
-        }
         if (this.mSubScriptSprite) {
             this.mSubScriptSprite.destroy(true);
         }
@@ -83,30 +83,24 @@ export class ItemSlot implements IListItemComponent {
         if (this.mIcon) {
             this.mIcon.destroy();
         }
+        this.mWid = 0;
+        this.mHei = 0;
         this.mData = null;
     }
 
-    private createUI() {
-        this.onLoadCompleteHandler();
-    }
-
-    private onLoadCompleteHandler() {
+    protected onLoadCompleteHandler() {
         this.itemBG = this.mScene.make.sprite(undefined, false);
         this.itemBG.setTexture(this.mResStr, this.mResSlot);
         this.con.addAt(this.itemBG, 0);
         this.con.setSize(this.itemBG.width, this.itemBG.height);
         this.mIcon = new DragDropIcon(this.mScene, 0, 0);
-        // this.mIcon.visible = false;
-        // this.mIcon.icon.anchor.set(0.5, 0.5);
-        // this.mIcon.x = 26;
-        // this.mIcon.y = 26;
         this.con.addAt(this.mIcon, 1);
         if (this.mSubScriptRes) {
             this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
             this.mSubScriptSprite.setTexture(this.mResStr, this.mSubScriptRes);
             this.mSubScriptSprite.x = this.mSubScriptSprite.width - this.itemBG.width >> 1;
             this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
-            this.con.addAt(this.mSubScriptSprite, 2);
+            // this.con.addAt(this.mSubScriptSprite, 2);
         }
         this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.con.on("pointerover", this.overHandler, this);
@@ -116,9 +110,11 @@ export class ItemSlot implements IListItemComponent {
         if (this.mData) {
             this.dataChange(this.mData);
         }
+        this.mWid += this.itemBG.width;
+        this.mHei += this.itemBG.height;
     }
 
-    private downHandler(pointer) {
+    protected downHandler(pointer) {
         if (!this.mData) return;
         const pack: op_gameconfig.IPackage = (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package;
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
@@ -128,21 +124,18 @@ export class ItemSlot implements IListItemComponent {
         this.mWorld.connection.send(pkt);
     }
 
-    private overHandler(pointr) {
+    protected overHandler(pointr) {
         if (this.mSelectRes && this.mSelectRes.length > 0) {
-            this.mSelectSprite = this.mScene.make.sprite(undefined, false);
+            this.mSelectSprite = this.mScene.make.image(undefined, false);
             this.mSelectSprite.setTexture(this.mResStr, this.mSelectRes);
             this.con.add(this.mSelectSprite);
         }
-        // this.itemBG.alpha = 0.5; // setTint(0xffcc00);
     }
 
-    private outHandler(pointr) {
+    protected outHandler(pointr) {
         if (this.mSelectSprite && this.mSelectSprite.parentContainer) {
             this.mSelectSprite.parentContainer.remove(this.mSelectSprite);
+            this.mSelectSprite.destroy(true);
         }
-        // this.itemBG.alpha = 1;
-        // this.itemBG.clearTint();
     }
-
 }
