@@ -1,10 +1,10 @@
 import { IBaseModel } from "./baseModel";
 import { PlayerDataModel } from "./player/playerDataModel";
-import { EventEmitter } from "events";
 import { WorldService } from "../game/world.service";
 import { BagModel } from "./bag/bagModel";
 import { MapDataModel } from "./map/mapDataModel";
 import { ShopModel } from "./shop/shopModel";
+import { StorageModel } from "./storage/storageModel";
 
 export class ModelManager extends Phaser.Events.EventEmitter {
 
@@ -23,6 +23,7 @@ export class ModelManager extends Phaser.Events.EventEmitter {
         this.mModelClassDic[MapDataModel.NAME] = MapDataModel;
         this.mModelClassDic[BagModel.NAME] = BagModel;
         this.mModelClassDic[ShopModel.NAME] = ShopModel;
+        this.mModelClassDic[StorageModel.NAME] = StorageModel;
     }
 
     public getModel(name: string): IBaseModel | undefined {

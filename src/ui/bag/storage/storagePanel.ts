@@ -12,6 +12,7 @@ export class StoragePanel extends Panel {
     private mWorld: WorldService;
     private mBagItemSlotList: ItemSlot[];
     private mBg: Phaser.GameObjects.Image;
+    private mClsBtnSprite: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mWorld = world;
@@ -43,6 +44,8 @@ export class StoragePanel extends Panel {
         this.mBg = this.mScene.make.image(undefined, false);
         this.mBg.setTexture(this.mResStr, "itemBagView_bg");
         this.addAt(this.mBg, 0);
+        this.mWidth = this.mBg.width;
+        this.mHeight = this.mBg.height;
         const titleIcon: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
         titleIcon.setTexture(this.mResStr, "itemBagView_title");
         titleIcon.x = (-this.mBg.width >> 1) + 80;
@@ -58,6 +61,26 @@ export class StoragePanel extends Panel {
         titleTF.y = titleIcon.y - (titleTF.height >> 1);
         this.add(titleTF);
 
+        let itemSlot: ItemSlot;
+        let tmpX: number = 0;
+        let tmpY: number = 0;
+        // 多排背包格位
+        this.mBagItemSlotList = [];
+        for (let i: number = 0; i < 9; i++) {
+            tmpX = i % 9 * 60 + 32 - 724 / 2;
+            tmpY = Math.floor(i / 9) * 60 - 55;
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot.createUI();
+            this.mBagItemSlotList.push(itemSlot);
+        }
+
+        if (!this.mScene.cache.obj.has("clsBtn")) {
+            this.mScene.load.spritesheet("clsBtn", "resources/ui/common/common_clsBtn.png", { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
+            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
+            this.mScene.load.start();
+        } else {
+            this.onClsLoadCompleteHandler();
+        }
     }
 
     protected preload() {
@@ -69,5 +92,17 @@ export class StoragePanel extends Panel {
         this.mResJson = "ui/bag/bagView.json";
         this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
         super.preload();
+    }
+
+    private onClsLoadCompleteHandler() {
+        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
+        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
+        this.mClsBtnSprite.x = (this.mWidth >> 1) - 65;
+        this.mClsBtnSprite.y = (-this.mHeight >> 1);
+
+        // ===============背包界面左翻按钮
+        this.mClsBtnSprite.setInteractive();
+        this.mClsBtnSprite.on("pointerup", this.hide, this);
+        this.add(this.mClsBtnSprite);
     }
 }
