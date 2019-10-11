@@ -19,11 +19,11 @@ export class ShopMediator implements IMediator {
     private fetching: boolean;
     private isEnd = false;
     private mParam: any;
+    private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         this.world = world;
+        this.mScene = scene;
         this.mShopModel = this.world.modelManager.getModel(ShopModel.NAME) as ShopModel;
-        this.mView = new ShopPanel(scene, world);
-        layerManager.addToUILayer(this.mView);
     }
 
     public isSceneUI(): boolean {
@@ -39,7 +39,12 @@ export class ShopMediator implements IMediator {
     }
 
     public show(param?: any) {
-        if (this.mView) this.mView.show();
+        if (this.mView && this.mView.isShow()) {
+            return;
+        }
+        this.mView = new ShopPanel(this.mScene, this.world);
+        this.mView.show(param);
+        // this.world.uiManager.getUILayerManager().addToUILayer(this.mView);
         this.mParam = param;
         this.mShopModel.register();
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
@@ -52,7 +57,10 @@ export class ShopMediator implements IMediator {
     }
 
     public hide() {
-        if (this.mView) this.mView.hide();
+        if (this.mView) {
+            this.mView.hide();
+            this.mView = null;
+        }
         this.mParam = null;
         this.mShopModel.unRegister();
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);

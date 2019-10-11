@@ -25,12 +25,12 @@ export class BagMediator implements IMediator {
     private mView: BagPanel;
     private mPlayerModel: PlayerDataModel;
     private mBagModel: BagModel;
-
+    private mScene: Phaser.Scene;
     constructor(mworld: WorldService, scene: Phaser.Scene) {
         this.world = mworld;
         this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
         this.mBagModel = this.world.modelManager.getModel(BagModel.NAME) as BagModel;
-        this.mView = new BagPanel(scene, mworld);
+        this.mScene = scene;
     }
 
     public isSceneUI(): boolean {
@@ -50,7 +50,10 @@ export class BagMediator implements IMediator {
     }
 
     public show(param: any) {
-        if (!this.mView) return;
+        if (this.mView && this.mView.isShow()) {
+            return;
+        }
+        this.mView = new BagPanel(this.mScene, this.world);
         this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
@@ -72,6 +75,7 @@ export class BagMediator implements IMediator {
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         if (!this.mView) return;
         this.mView.hide();
+        this.mView = null;
     }
 
     protected handleDrop(value: any): void {

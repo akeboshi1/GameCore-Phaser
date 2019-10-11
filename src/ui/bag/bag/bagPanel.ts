@@ -15,7 +15,6 @@ export class BagPanel extends Panel {
     private mResJson: string;
     private mWorld: WorldService;
     private mClsBtnSprite: Phaser.GameObjects.Sprite;
-    private mParentCon: Phaser.GameObjects.Container;
     private mPageNum: number = 0;
     private mPageIndex: number = 1;
     private mDataList: any[];
@@ -27,20 +26,10 @@ export class BagPanel extends Panel {
         this.bagSlotList = [];
     }
 
-    public update(param: any) {
-
-    }
-    public hide() {
-        this.mShowing = false;
-        this.destroy();
-    }
-
     public resize() {
         const size: Size = this.mWorld.getSize();
-        if (this.mParentCon) {
-            this.mParentCon.x = size.width >> 1;
-            this.mParentCon.y = size.height - 200;
-        }
+        this.x = size.width >> 1;
+        this.y = size.height - 200;
     }
 
     public setDataList(value: any[]) {
@@ -57,6 +46,7 @@ export class BagPanel extends Panel {
     }
 
     public destroy() {
+        super.destroy();
         if (this.bagSlotList) {
             this.bagSlotList.forEach((slot: ItemSlot) => {
                 if (slot) slot.destory();
@@ -68,9 +58,6 @@ export class BagPanel extends Panel {
             this.mDataList.length = 0;
             this.mDataList = null;
         }
-        if (this.mParentCon) {
-            this.mParentCon.destroy();
-        }
         this.mInitialized = false;
     }
 
@@ -80,16 +67,19 @@ export class BagPanel extends Panel {
 
     protected init() {
         if (this.mInitialized) return;
+        super.init();
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         // ===============背包界面左翻按钮
-        this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 200);
+        this.x = size.width >> 1;
+        this.y = size.height - 200;
         this.mPreBtn = this.mScene.make.sprite(undefined, false);
         this.mPreBtn.setTexture(this.mResStr, "bagView_tab");
         this.mPreBtn.x = -380;
         wid += this.mPreBtn.width;
-        this.mParentCon.add(this.mPreBtn);
+        this.add(this.mPreBtn);
 
         // ============背包格位
         let itemSlot: ItemSlot;
@@ -100,7 +90,7 @@ export class BagPanel extends Panel {
         for (let i: number = 0; i < 36; i++) {
             tmpX = i % 12 * 60 + 32 - 724 / 2;
             tmpY = Math.floor(i / 12) * 60 - 55;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
             itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
             if (i <= 11) {
@@ -108,7 +98,7 @@ export class BagPanel extends Panel {
             }
         }
         // ================背包界面背景底
-        this.mParentCon.addAt(this.createTexture(), 0);
+        this.addAt(this.createTexture(), 0);
 
         // // ===============背包界面右翻按钮
         this.mNextBtn = this.mScene.make.sprite(undefined, false);
@@ -120,7 +110,7 @@ export class BagPanel extends Panel {
         titleCon.setTexture(this.mResStr, "bagView_titleBtn");
         titleCon.x = (- wid >> 1) + 80;
         titleCon.y = (-hei >> 1);
-        this.mParentCon.add(titleCon);
+        this.add(titleCon);
         const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
 
         titleTF.setFontFamily("Tahoma");
@@ -129,8 +119,8 @@ export class BagPanel extends Panel {
         titleTF.setText("背包");
         titleTF.x = titleCon.x + titleCon.width - 10;
         titleTF.y = titleCon.y - (titleTF.height >> 1);
-        this.mParentCon.add(titleTF);
-        this.mParentCon.add(this.mNextBtn);
+        this.add(titleTF);
+        this.add(this.mNextBtn);
         this.mNextBtn.setInteractive();
         this.mPreBtn.setInteractive();
         this.mNextBtn.on("pointerup", this.nextHandler, this);
@@ -239,6 +229,6 @@ export class BagPanel extends Panel {
         // ===============背包界面左翻按钮
         this.mClsBtnSprite.setInteractive();
         this.mClsBtnSprite.on("pointerup", this.hide, this);
-        this.mParentCon.add(this.mClsBtnSprite);
+        this.add(this.mClsBtnSprite);
     }
 }

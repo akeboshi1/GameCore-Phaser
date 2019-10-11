@@ -17,9 +17,6 @@ export class StoragePanel extends Panel {
         super(scene);
         this.mWorld = world;
     }
-    public isShow(): boolean {
-        return this.mShowing;
-    }
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.x = size.width >> 1;

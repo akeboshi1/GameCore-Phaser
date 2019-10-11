@@ -5,12 +5,10 @@ import { ItemSlot } from "../bag/item.slot";
 import { ShopItemSlot } from "./shop.itemSlot";
 import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
-import { op_gameconfig } from "pixelpai_proto";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
     private mWorld: WorldService;
-    private mParentCon: Phaser.GameObjects.Container;
     private mShopItemSlotList: ShopItemSlot[];
     private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mDataList: any[];
@@ -19,16 +17,10 @@ export class ShopPanel extends Panel {
         this.mWorld = world;
     }
 
-    public isShow(): boolean {
-        return this.mShowing;
-    }
-
     public resize() {
         const size: Size = this.mWorld.getSize();
-        if (this.mParentCon) {
-            this.mParentCon.x = size.width >> 1;
-            this.mParentCon.y = size.height - 300;
-        }
+        this.x = size.width >> 1;
+        this.y = size.height - 300;
     }
 
     public setDataList(value: any[]) {
@@ -40,6 +32,7 @@ export class ShopPanel extends Panel {
     }
 
     public destroy() {
+        super.destroy();
         if (this.mShopItemSlotList) {
             this.mShopItemSlotList.forEach((slot: ShopItemSlot) => {
                 if (slot) slot.destory();
@@ -50,9 +43,6 @@ export class ShopPanel extends Panel {
         if (this.mDataList) {
             this.mDataList.length = 0;
             this.mDataList = null;
-        }
-        if (this.mParentCon) {
-            this.mParentCon.destroy(true);
         }
         this.mInitialized = false;
     }
@@ -69,19 +59,20 @@ export class ShopPanel extends Panel {
         if (this.mInitialized) return;
         super.init();
         const size: Size = this.mWorld.getSize();
-        this.mParentCon = this.mScene.add.container(size.width >> 1, size.height - 300);
+        this.x = size.width >> 1;
+        this.y = size.height - 300;
         const mBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
         mBg.setTexture("shopView", "shopView_bg");
         mBg.x = 0;
         mBg.y = 0;
-        this.mParentCon.setSize(mBg.width, mBg.height);
-        this.mParentCon.addAt(mBg, 0);
+        this.setSize(mBg.width, mBg.height);
+        this.addAt(mBg, 0);
 
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
         titleCon.setTexture("shopView", "shopView_titleIcon");
         titleCon.x = (-mBg.width >> 1) + 35;
         titleCon.y = -mBg.height >> 1;
-        this.mParentCon.add(titleCon);
+        this.add(titleCon);
         const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
 
         titleTF.setFontFamily("Tahoma");
@@ -90,7 +81,7 @@ export class ShopPanel extends Panel {
         titleTF.setText("内购商城");
         titleTF.x = titleCon.x + titleCon.width - 10;
         titleTF.y = titleCon.y - (titleTF.height >> 1);
-        this.mParentCon.add(titleTF);
+        this.add(titleTF);
         this.mShopItemSlotList = [];
         let itemSlot: ShopItemSlot;
         let tmpX: number;
@@ -98,7 +89,7 @@ export class ShopPanel extends Panel {
         for (let i: number = 0; i < 20; i++) {
             tmpX = (i % 5) * 100 - mBg.width / 2 + 75;
             tmpY = Math.floor(i / 5) * 90 - mBg.height / 2 + 80;
-            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", null, null);
+            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", null, null);
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
@@ -109,6 +100,7 @@ export class ShopPanel extends Panel {
         } else {
             this.onClsLoadCompleteHandler();
         }
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
@@ -121,11 +113,11 @@ export class ShopPanel extends Panel {
     private onClsLoadCompleteHandler() {
         this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
         this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mParentCon.width >> 1) - 65;
-        this.mClsBtnSprite.y = (- this.mParentCon.height >> 1);
+        this.mClsBtnSprite.x = (this.width >> 1) - 65;
+        this.mClsBtnSprite.y = (- this.height >> 1);
         this.mClsBtnSprite.setInteractive();
         this.mClsBtnSprite.on("pointerup", this.hide, this);
-        this.mParentCon.add(this.mClsBtnSprite);
+        this.add(this.mClsBtnSprite);
     }
 
     private refreshDataList() {

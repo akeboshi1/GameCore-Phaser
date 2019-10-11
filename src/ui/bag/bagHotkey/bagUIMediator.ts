@@ -15,19 +15,12 @@ export class BagUIMediator implements IMediator {
     private mView: IAbstractPanel;
     private mPlayerModel: PlayerDataModel;
     private mBagModel: BagModel;
+    private mScene: Phaser.Scene;
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
         this.world = mWorld;
+        this.mScene = scene;
         this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
         this.mBagModel = this.world.modelManager.getModel(BagModel.NAME) as BagModel;
-        const size: Size = this.world.getSize();
-        if (this.world.game.device.os.desktop) {
-            this.mView = new BagUIPC(scene, this.world, (size.width >> 1) - 29, size.height - 50);
-        } else {
-            this.mView = new BagUIMobile(scene, this.world);
-        }
-        if (this.mView) {
-            this.mView.show(undefined);
-        }
     }
 
     public isSceneUI(): boolean {
@@ -49,11 +42,18 @@ export class BagUIMediator implements IMediator {
     }
 
     public show(param?: any) {
-        if (this.mView) {
-            this.mView.show(param);
-            this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
-            this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        if (this.mView && this.mView.isShow()) {
+            return;
         }
+        const size: Size = this.world.getSize();
+        if (this.world.game.device.os.desktop) {
+            this.mView = new BagUIPC(this.mScene, this.world, (size.width >> 1) - 29, size.height - 50);
+        } else {
+            this.mView = new BagUIMobile(this.mScene, this.world);
+        }
+        this.mView.show(param);
+        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+        this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         this.mBagModel.register();
     }
 
@@ -65,6 +65,7 @@ export class BagUIMediator implements IMediator {
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
+        this.mView = null;
     }
 
     private heroItemChange() {

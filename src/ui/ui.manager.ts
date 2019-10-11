@@ -9,8 +9,8 @@ import { BagMediator } from "./bag/bag/bagMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { BagUIMediator } from "./bag/bagHotkey/bagUIMediator";
 import { ChatMediator } from "./chat/chat.mediator";
-import {ILayerManager, LayerManager} from "./layer.manager";
-import {NoticeMediator} from "./Notice/NoticeMediator";
+import { ILayerManager, LayerManager } from "./layer.manager";
+import { NoticeMediator } from "./Notice/NoticeMediator";
 
 export class UiManager extends PacketHandler {
     private mBagUI: IBag;
@@ -32,6 +32,10 @@ export class UiManager extends PacketHandler {
         this.mUILayerManager = new LayerManager();
     }
 
+    public getUILayerManager(): ILayerManager {
+        return this.mUILayerManager;
+    }
+
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
@@ -40,7 +44,7 @@ export class UiManager extends PacketHandler {
             // ============场景中固定显示ui
             this.mMedMap.set(UIMediatorType.BagHotKey, new BagUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.mUILayerManager, this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
         }
 

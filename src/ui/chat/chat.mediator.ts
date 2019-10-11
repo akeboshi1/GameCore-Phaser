@@ -5,8 +5,8 @@ import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
-import {IMessage} from "./message";
-import {ILayerManager} from "../layer.manager";
+import { IMessage } from "./message";
+import { ILayerManager } from "../layer.manager";
 
 export class ChatMediator extends PacketHandler implements IMediator {
     public world: WorldService;
@@ -17,21 +17,16 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mQCLoudAuth: string;
     private mAllMessage: IMessage[] = [];
     private mMaxMessageNum = 50;
-    constructor(layerManager: ILayerManager, world: WorldService, scene: Phaser.Scene) {
+    private mScene: Phaser.Scene;
+    constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
-        this.mChatPanel = new ChatPanel(scene, world);
-        layerManager.addToUILayer(this.mChatPanel);
+        this.mScene = scene;
         if (this.world.connection) {
             this.world.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
-
-        this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
-        this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
-        this.mChatPanel.on("selectedMic", this.onSelectedMicHandler, this);
-        this.world = world;
     }
 
     public enterRoom() {
@@ -81,6 +76,14 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public show(param: any) {
+        if (this.mChatPanel && this.mChatPanel.isShow()) {
+            return;
+        }
+        this.mChatPanel = new ChatPanel(this.mScene, this.world);
+        this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
+        this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
+        this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
+        this.mChatPanel.on("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.show();
     }
 
@@ -89,7 +92,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public hide() {
+        this.mChatPanel.off("sendChat", this.onSendChatHandler, this);
+        this.mChatPanel.off("selectedVoice", this.onSelectedVoiceHandler, this);
+        this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.hide();
+        this.mChatPanel = null;
     }
 
     private initGME() {

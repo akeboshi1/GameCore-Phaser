@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { DragDropIcon } from "../bag/dragDropIcon";
 import { op_def, op_gameconfig } from "pixelpai_proto";
 import { UI } from "../../const/res.const";
+import { Url } from "../../utils/resUtil";
 
 export class ShopItemSlot extends ItemSlot {
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
@@ -43,7 +44,7 @@ export class ShopItemSlot extends ItemSlot {
         moneyIcon.setTexture(key, png);
         const priceText = this.mScene.make.text(undefined, false);
         priceText.setFontFamily("Tahoma");
-        priceText.setFontStyle("bold");
+        // priceText.setFontStyle("bold");
         priceText.setFontSize(15);
         priceText.x = -this.mWid / 2 + moneyIcon.width + 20;
         priceText.y = y - 9;
@@ -83,6 +84,7 @@ export class ShopItemSlot extends ItemSlot {
         this.mSelectSprite.setTexture("selectBg");
         this.mSelectSprite.visible = false;
         this.con.addAt(this.mSelectSprite, 0);
+        this.con.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
     }
 
     protected overHandler(pointer) {

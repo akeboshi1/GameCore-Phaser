@@ -1,8 +1,8 @@
-import {Panel} from "../components/panel";
-import {Border} from "../../utils/resUtil";
+import { Panel } from "../components/panel";
+import { Border } from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client } from "pixelpai_proto";
-import {Font} from "../../utils/font";
+import { Font } from "../../utils/font";
 
 export class NoticePanel extends Panel {
     private mContentText: Phaser.GameObjects.Text;
@@ -15,6 +15,10 @@ export class NoticePanel extends Panel {
         super.show(param);
         this.setData("data", param);
         this.resize();
+    }
+
+    public destroy() {
+        super.destroy();
     }
 
     public resize() {

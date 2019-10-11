@@ -4,12 +4,14 @@ import { DragDropIcon } from "./dragDropIcon";
 import { WorldService } from "../../game/world.service";
 import { PlayerDataModel } from "../../service/player/playerDataModel";
 import { PBpacket } from "net-socket-packet";
+import { Url } from "../../utils/resUtil";
+import { ToolTipContainer } from "../tips/toolTip.Container";
 
 export class ItemSlot implements IListItemComponent {
     // public url: string;
     // public id: number;
     // public count: number;
-    public con: Phaser.GameObjects.Container;
+    public con: ToolTipContainer;
     public index: number;
     protected mData: op_gameconfig.Item;
     protected mScene: Phaser.Scene;
@@ -32,7 +34,7 @@ export class ItemSlot implements IListItemComponent {
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         this.mScene = scene;
         this.mWorld = world;
-        this.con = scene.make.container(undefined, false);
+        this.con = new ToolTipContainer(this.mScene, world);
         this.con.x = x;
         this.con.y = y;
         parentCon.add(this.con);
@@ -60,7 +62,7 @@ export class ItemSlot implements IListItemComponent {
             if (this.mData && this.mData.display) {
                 url = this.mData.display.texturePath;
                 const des = this.mData.des ? "\n" + this.mData.des : "";
-                //  this.setToolTipText(this.data.name + des);
+                this.setToolTipData(this.mData.name + this.mData.des);
             } else {
                 // url = "";
             }
@@ -83,9 +85,14 @@ export class ItemSlot implements IListItemComponent {
         if (this.mIcon) {
             this.mIcon.destroy();
         }
+        this.con.destroy(true);
         this.mWid = 0;
         this.mHei = 0;
         this.mData = null;
+    }
+
+    protected setToolTipData(text: string) {
+        this.con.setToolTipData(text);
     }
 
     protected onLoadCompleteHandler() {
@@ -112,6 +119,7 @@ export class ItemSlot implements IListItemComponent {
         }
         this.mWid += this.itemBG.width;
         this.mHei += this.itemBG.height;
+        this.con.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
     }
 
     protected downHandler(pointer) {

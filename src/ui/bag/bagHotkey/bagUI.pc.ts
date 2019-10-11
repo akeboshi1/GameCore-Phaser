@@ -40,7 +40,10 @@ export class BagUIPC implements IBag {
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
         this.mScene = scene;
         this.mWorld = world;
-        this.mParentCon = this.mScene.add.container(x, y);
+        this.mParentCon = this.mScene.make.container(undefined, false);
+        this.mParentCon.x = x;
+        this.mParentCon.y = y;
+        world.uiManager.getUILayerManager().addToToolTipsLayer(this.mParentCon);
         this.bagSlotList = [];
     }
 
