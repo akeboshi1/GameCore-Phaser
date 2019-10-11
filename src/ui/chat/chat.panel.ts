@@ -3,7 +3,7 @@ import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundre
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Panel } from "../components/panel";
-import { Button } from "../components/button";
+import { NinePatchButton } from "../components/ninepatch.button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { Url } from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
@@ -139,7 +139,7 @@ export class ChatPanel extends Panel {
 
         inputContainer.add(this.mInputText);
 
-        const sendMsgBtn = new Button(this.mScene, 60, size.height - 30, {
+        const sendMsgBtn = new NinePatchButton(this.mScene, 60, size.height - 30, {
             width: 60,
             height: 30,
             key: "button",

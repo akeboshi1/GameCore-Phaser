@@ -29,6 +29,24 @@ export class ResUtils {
     }
 }
 
+export class BlackButton {
+    static getName(): string {
+        return "black_button";
+    }
+
+    static getPNG(): string {
+        return Url.getRes("ui/common/button.png");
+    }
+
+    static getColumns(): number[] {
+        return [4, 2, 4];
+    }
+
+    static getCols(): number[] {
+        return [4, 2, 4];
+    }
+}
+
 export class CloseButton {
     static getName(): string {
         return "common_clsBtn";

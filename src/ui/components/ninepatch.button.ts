@@ -1,6 +1,6 @@
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 
-export class Button extends Phaser.GameObjects.Container {
+export class NinePatchButton extends Phaser.GameObjects.Container {
     protected mLabel: Phaser.GameObjects.Text;
     protected mNingBg: NinePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, config?: object, text?: string) {
