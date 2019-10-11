@@ -99,51 +99,16 @@ export class BagPanel extends Panel {
         let tmpY: number = 0;
         // 多排背包格位
         const chilsList: any[] = [];
-        let rowIndex: number = -1;
-        // const slotCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
-        // slotCon.x = 0;
-        // slotCon.y = 0;
-        // slotCon.setSize(11 * 52 + 10 * 8, 11 * 52 + 10 * 5);
-        // this.mParentCon.add(slotCon);
         this.bagSlotList = [];
         for (let i: number = 0; i < 36; i++) {
-            if (i % 12 === 0) {
-                rowIndex++;
-                chilsList[rowIndex] = [];
-            }
-            tmpX = i % 12 * 52 + 20;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            tmpX = i % 12 * 60 + 32 - 724 / 2;
+            tmpY = Math.floor(i / 12) * 60 - 55;
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
             itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
-            chilsList[rowIndex].push(itemSlot.con);
             if (i <= 11) {
                 wid += 52 + 5;
             }
-        }
-
-        for (let i: number = 0; i <= rowIndex; i++) {
-            tmpY = i * (52 + 8) - 52;
-            const buttons = (<any> this.mScene).rexUI.add.buttons({
-                x: 0,
-                y: tmpY,
-                width: 52,
-                height: 52,
-                orientation: 0,
-                buttons: chilsList[i],
-                groupName: "bagBtn",
-                align: "center",
-                click: {
-                    mode: "pointerup",
-                    clickInterval: 100
-                },
-                space: 8,
-                name: "bag",
-            });
-            buttons.layout();
-
-            buttons.on("button.click", function(button, groupName, index, pointer) {
-                Logger.debug(button);
-            }, this);
         }
         // ================背包界面背景底
         this.mParentCon.addAt(this.createTexture(), 0);
