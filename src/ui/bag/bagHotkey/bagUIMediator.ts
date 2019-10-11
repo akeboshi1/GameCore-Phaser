@@ -75,6 +75,7 @@ export class BagUIMediator implements IMediator {
     }
 
     private queryPackAge(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
+        if (data.id !== this.mPlayerModel.mainPlayerInfo.package.id) return;
         const itemLen: number = data.items.length;
         if (this.mView && this.world.game.device.os.desktop) {
             (this.mView as BagUIPC).setDataList(data.items);

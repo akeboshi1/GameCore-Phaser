@@ -1,12 +1,12 @@
-import {WorldService} from "../../game/world.service";
+import { WorldService } from "../../game/world.service";
 import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
-import {Panel} from "../components/panel";
-import {Button} from "../components/button";
+import { Panel } from "../components/panel";
+import { Button } from "../components/button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
-import {Url} from "../../utils/resUtil";
-import {CheckButton} from "../components/check.button";
+import { Url } from "../../utils/resUtil";
+import { CheckButton } from "../components/check.button";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 
 export class ChatPanel extends Panel {
@@ -49,11 +49,13 @@ export class ChatPanel extends Panel {
         if (this.mInitialized) return;
         super.init();
         const size = this.mWorldService.getSize();
-        this.setSize(464, 281);
+        this.mWidth = 464;
+        this.mHeight = 281;
+        this.setSize(this.mWidth, this.mHeight);
 
         const border = new NinePatch(this.mScene, 4, size.height - 260, {
-            width: 464,
-            height: 281,
+            width: this.mWidth,
+            height: this.mHeight,
             key: "chat_border_bg",
             columns: [4, 2, 4],
             rows: [4, 2, 4]
@@ -77,7 +79,7 @@ export class ChatPanel extends Panel {
         const text = new BBCodeText(this.mScene, 0, 0, "", {
             width: 440,
             height: 200,
-            style: {font: "bold 14px YaHei"}
+            style: { font: "bold 14px YaHei" }
         });
         output.add(text);
 
@@ -156,8 +158,6 @@ export class ChatPanel extends Panel {
 
         this.mMicBtn = new CheckButton(this.mScene, this.width - 20, size.height - this.height, "chat_atlas", "mic_normal.png", "mic_selected.png");
         this.add(this.mMicBtn);
-        // this.setSize(464, 281);
-        // this.setLocation(0, 0);
 
         this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
         this.mMicBtn.on("selected", this.onSelectedMicHandler, this);

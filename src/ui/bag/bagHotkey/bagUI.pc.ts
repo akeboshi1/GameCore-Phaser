@@ -88,6 +88,7 @@ export class BagUIPC implements IBag {
             let itemSlot: ItemSlot = this.bagSlotList[i];
             if (!itemSlot) {
                 itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+                itemSlot.createUI();
                 this.bagSlotList.push(itemSlot);
                 childList.push(itemSlot.con);
             }
@@ -149,7 +150,7 @@ export class BagUIPC implements IBag {
         this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.mBagBg.height >> 1;
         this.mBagBtnCon.addAt(this.mBagBg, 0);
         this.mBagBtnCon.addAt(this.bagBtn, 1);
-        this.mBagBtnCon.addAt(this.mSubScriptSprite, 2);
+        // this.mBagBtnCon.addAt(this.mSubScriptSprite, 2);
         this.mBagBtnCon.setSize(56, 56);
         this.mBagBtnCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBagBg.width, this.mBagBg.height), Phaser.Geom.Rectangle.Contains);
         this.mParentCon.add(this.mBagBtnCon);

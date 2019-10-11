@@ -25,6 +25,7 @@ export class Alert implements IAbstractPanel {
             text: param,
             style: { fill: "#FF0000", fontSize: 20 }
         });
+        this.mShowing = true;
         this.mParentCon.add(text);
         this.mParentCon.setSize(text.width, text.height);
         this.mParentCon.x = size.width - this.mParentCon.width >> 1;
@@ -53,6 +54,7 @@ export class Alert implements IAbstractPanel {
 
     public destroy() {
         if (this.mParentCon) this.mParentCon.destroy(true);
+        this.mShowing = false;
     }
 
     public update() {

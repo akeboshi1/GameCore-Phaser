@@ -19,8 +19,6 @@ export class BagPanel extends Panel {
     private mPageNum: number = 0;
     private mPageIndex: number = 1;
     private mDataList: any[];
-    private mWid: number = 0;
-    private mHei: number = 0;
     // private mInitalize: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
@@ -98,51 +96,16 @@ export class BagPanel extends Panel {
         let tmpX: number = 0;
         let tmpY: number = 0;
         // 多排背包格位
-        const chilsList: any[] = [];
-        let rowIndex: number = -1;
-        const slotCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
-        slotCon.x = 0;
-        slotCon.y = 0;
-        slotCon.setSize(11 * 52 + 10 * 8, 11 * 52 + 10 * 5);
-        this.mParentCon.add(slotCon);
         this.bagSlotList = [];
         for (let i: number = 0; i < 36; i++) {
-            if (i % 12 === 0) {
-                rowIndex++;
-                chilsList[rowIndex] = [];
-            }
-            tmpX = i % 12 * 52 + 20;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, 0, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            tmpX = i % 12 * 60 + 32 - 724 / 2;
+            tmpY = Math.floor(i / 12) * 60 - 55;
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
-            chilsList[rowIndex].push(itemSlot.con);
             if (i <= 11) {
                 wid += 52 + 5;
             }
-        }
-
-        for (let i: number = 0; i <= rowIndex; i++) {
-            tmpY = i * (52 + 8) - 52;
-            const buttons = (<any> this.mScene).rexUI.add.buttons({
-                x: 0,
-                y: tmpY,
-                width: 52,
-                height: 52,
-                orientation: 0,
-                buttons: chilsList[i],
-                groupName: "bagBtn",
-                align: "center",
-                click: {
-                    mode: "pointerup",
-                    clickInterval: 100
-                },
-                space: 8,
-                name: "bag",
-            });
-            buttons.layout();
-
-            buttons.on("button.click", function(button, groupName, index, pointer) {
-                Logger.debug(button);
-            }, this);
         }
         // ================背包界面背景底
         this.mParentCon.addAt(this.createTexture(), 0);
@@ -172,8 +135,8 @@ export class BagPanel extends Panel {
         this.mPreBtn.setInteractive();
         this.mNextBtn.on("pointerup", this.nextHandler, this);
         this.mPreBtn.on("pointerup", this.preHandler, this);
-        this.mWid = wid;
-        this.mHei = hei;
+        this.mWidth = wid;
+        this.mHeight = hei;
         if (!this.mScene.cache.obj.has("clsBtn")) {
             this.mScene.load.spritesheet("clsBtn", "resources/ui/common/common_clsBtn.png", { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
@@ -255,12 +218,12 @@ export class BagPanel extends Panel {
     }
 
     private createTexture(): Phaser.GameObjects.Graphics {
-        const COLOR_BG = 0x706B6B;
+        const COLOR_BG = 0xAAA9A9;
         const COLOR_LINE = 0x000000;
         const width = 730;
         const height = 206;
         const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.add.graphics();
-        bgGraphics.fillStyle(COLOR_BG, .8);
+        bgGraphics.fillStyle(COLOR_BG, .5);
         bgGraphics.fillRect((-width >> 1) + 3, (-height >> 1) + 1, width - 6, height - 6);
         bgGraphics.lineStyle(3, COLOR_LINE, .8);
         bgGraphics.strokeRect(-width >> 1, -height >> 1, width, height);
@@ -270,8 +233,8 @@ export class BagPanel extends Panel {
     private onClsLoadCompleteHandler() {
         this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
         this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mWid >> 1) - 65;
-        this.mClsBtnSprite.y = (-this.mHei >> 1);
+        this.mClsBtnSprite.x = (this.mWidth >> 1) - 65;
+        this.mClsBtnSprite.y = (-this.mHeight >> 1);
 
         // ===============背包界面左翻按钮
         this.mClsBtnSprite.setInteractive();
