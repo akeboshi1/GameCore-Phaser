@@ -86,6 +86,7 @@ export class UiManager extends PacketHandler {
     }
 
     private showMed(type: string, ...params: any[]) {
+        if (!this.mMedMap) return;
         let mediator: IMediator = this.mMedMap.get(type);
         if (!mediator) {
             const className: string = type + "Mediator";

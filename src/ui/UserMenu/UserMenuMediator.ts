@@ -1,21 +1,19 @@
 import {IMediator} from "../baseMediator";
-import {WorldService} from "../../game/world.service";
-import {UserMenuPanel} from "./usermemu.panel";
+import {IAbstractPanel} from "../abstractPanel";
+import { WorldService } from "../../game/world.service";
+import {UserMenuPanel} from "./UserMenuPanel";
+import {ILayerManager} from "../layer.manager";
 
 export class UserMenuMediator implements IMediator {
     readonly world: WorldService;
     private mUserMenuPanel: UserMenuPanel;
-    constructor(scene: Phaser.Scene, world: WorldService) {
-        this.world = world;
+    constructor(layerManager: ILayerManager, scene: Phaser.Scene) {
         this.mUserMenuPanel = new UserMenuPanel(scene);
+        layerManager.addToUILayer(this.mUserMenuPanel);
     }
 
-    getName(): string {
-        return "";
-    }
-
-    getView(): UserMenuPanel {
-        return this.mUserMenuPanel;
+    getView(): IAbstractPanel {
+        return undefined;
     }
 
     hide(): void {
@@ -32,13 +30,10 @@ export class UserMenuMediator implements IMediator {
     resize() {
     }
 
-    setName(string) {
-    }
-
     show(param?: any): void {
-        this.mUserMenuPanel.show();
     }
 
     update(param?: any): void {
     }
+
 }

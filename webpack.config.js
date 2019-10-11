@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const TSLintPlugin = require("tslint-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const appVer = require('./version');
 
 const config = {
@@ -34,6 +35,28 @@ const config = {
             phaser: phaser,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js")
         }
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    ecma: undefined,
+                    warnings: false,
+                    parse: {},
+                    compress: {},
+                    mangle: true, // Note `mangle.properties` is `false` by default.
+                    module: false,
+                    output: null,
+                    toplevel: false,
+                    nameCache: null,
+                    ie8: false,
+                    keep_classnames: true,
+                    keep_fnames: true,
+                    safari10: false,
+                },
+            }),
+        ],
     },
     plugins: [
         new CleanWebpackPlugin({
