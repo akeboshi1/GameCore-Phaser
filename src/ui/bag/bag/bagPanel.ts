@@ -19,8 +19,6 @@ export class BagPanel extends Panel {
     private mPageNum: number = 0;
     private mPageIndex: number = 1;
     private mDataList: any[];
-    private mWid: number = 0;
-    private mHei: number = 0;
     // private mInitalize: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
@@ -98,7 +96,6 @@ export class BagPanel extends Panel {
         let tmpX: number = 0;
         let tmpY: number = 0;
         // 多排背包格位
-        const chilsList: any[] = [];
         this.bagSlotList = [];
         for (let i: number = 0; i < 36; i++) {
             tmpX = i % 12 * 60 + 32 - 724 / 2;
@@ -138,8 +135,8 @@ export class BagPanel extends Panel {
         this.mPreBtn.setInteractive();
         this.mNextBtn.on("pointerup", this.nextHandler, this);
         this.mPreBtn.on("pointerup", this.preHandler, this);
-        this.mWid = wid;
-        this.mHei = hei;
+        this.mWidth = wid;
+        this.mHeight = hei;
         if (!this.mScene.cache.obj.has("clsBtn")) {
             this.mScene.load.spritesheet("clsBtn", "resources/ui/common/common_clsBtn.png", { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
@@ -236,8 +233,8 @@ export class BagPanel extends Panel {
     private onClsLoadCompleteHandler() {
         this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
         this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mWid >> 1) - 65;
-        this.mClsBtnSprite.y = (-this.mHei >> 1);
+        this.mClsBtnSprite.x = (this.mWidth >> 1) - 65;
+        this.mClsBtnSprite.y = (-this.mHeight >> 1);
 
         // ===============背包界面左翻按钮
         this.mClsBtnSprite.setInteractive();

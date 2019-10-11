@@ -5,6 +5,8 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     protected mShowing: boolean;
     protected mInitialized: boolean;
     protected mScene: Phaser.Scene;
+    protected mWidth: number = 0;
+    protected mHeight: number = 0;
     constructor(scene: Phaser.Scene) {
         super(scene);
         this.mScene = scene;
@@ -21,6 +23,8 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     destroy() {
         super.destroy();
         this.mInitialized = false;
+        this.mWidth = 0;
+        this.mHeight = 0;
     }
 
     resize() {
@@ -29,7 +33,9 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     show(param?: any) {
         if (!this.mInitialized) {
             this.preload();
+            return;
         }
+        this.init();
     }
 
     update(param: any) {
