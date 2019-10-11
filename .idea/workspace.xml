@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="隐藏NPC绑定的物件">
+      <change afterPath="$PROJECT_DIR$/src/ui/UserMenu/MenuItem.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/components/ninepatch.button.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/loading.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/loading.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/play.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/play.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UserMenu/UserMenuMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UserMenu/UserMenuMediator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UserMenu/UserMenuPanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UserMenu/UserMenuPanel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/chat/chat.panel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/chat/chat.panel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/components/button.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/resUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/resUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +46,7 @@
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectId" id="1ORojSuavQoq9JYUjCfGHzArLNU" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="false" id="Update" />
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -64,20 +69,21 @@
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="settings.javascript.linters.tslint" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="ts.rename.search.for.js.occurrences" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\PixelPai\game-core\src\ui" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms" />
+      <recent name="C:\Users\Seven\git\game-core\src\utils" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
+      <recent name="C:\Users\Seven\git\game-core\src\game" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/config" />
       <recent name="C:\Users\Seven\git\game-core\config" />
       <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\net" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Seven\git\game-core\src\rooms" />
-      <recent name="C:\Users\Seven\git\game-core\src\utils" />
-      <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
-      <recent name="C:\Users\Seven\git\game-core\src\game" />
-      <recent name="C:\Users\Seven\git\game-core\src\net" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -93,10 +99,26 @@
     </option>
   </component>
   <component name="RunManager" selected="npm.dev">
+    <configuration name="build:dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="JavaScript Debug.dev-Cheome" />
       <item itemvalue="npm.dev" />
+      <item itemvalue="npm.build:dev" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.build:dev" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="StructureViewFactory">
     <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
@@ -165,6 +187,8 @@
       <workItem from="1568191348183" duration="4894000" />
       <workItem from="1568608042628" duration="13357000" />
       <workItem from="1568684263829" duration="9442000" />
+      <workItem from="1569822411121" duration="24399000" />
+      <workItem from="1570523032170" duration="36283000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -285,7 +309,56 @@
       <option name="project" value="LOCAL" />
       <updated>1568685136986</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="使用bbcodetext替换text">
+      <created>1569673577409</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1569673577409</updated>
+    </task>
+    <task id="LOCAL-00019" summary="物件选择&#10;更新dragonbones">
+      <created>1569843811969</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1569843811969</updated>
+    </task>
+    <task id="LOCAL-00020" summary="ui 结构修改">
+      <created>1570612166637</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1570612166637</updated>
+    </task>
+    <task id="LOCAL-00021" summary="隐藏NPC绑定的物件">
+      <created>1570631723456</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1570631723456</updated>
+    </task>
+    <task id="LOCAL-00022" summary="notice and controlF">
+      <created>1570710779702</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1570710779702</updated>
+    </task>
+    <task id="LOCAL-00023" summary="排行榜优化">
+      <created>1570715427160</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1570715427160</updated>
+    </task>
+    <task id="LOCAL-00024" summary="add terser plugin keep classname">
+      <created>1570781542064</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1570781542064</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -347,6 +420,13 @@
     <MESSAGE value="调整地块和时钟同步顺序进行（原：并发执行）" />
     <MESSAGE value="调整地块和时钟同步顺序进行（原：并发执行） Fixed" />
     <MESSAGE value="去除页面滚动条，游戏大小自适应网页大小" />
-    <option name="LAST_COMMIT_MESSAGE" value="去除页面滚动条，游戏大小自适应网页大小" />
+    <MESSAGE value="使用bbcodetext替换text" />
+    <MESSAGE value="物件选择&#10;更新dragonbones" />
+    <MESSAGE value="ui 结构修改" />
+    <MESSAGE value="隐藏NPC绑定的物件" />
+    <MESSAGE value="notice and controlF" />
+    <MESSAGE value="排行榜优化" />
+    <MESSAGE value="add terser plugin keep classname" />
+    <option name="LAST_COMMIT_MESSAGE" value="add terser plugin keep classname" />
   </component>
 </project>
