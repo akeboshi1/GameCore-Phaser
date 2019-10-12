@@ -21,7 +21,6 @@ import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { PlayerDataModel } from "../service/player/playerDataModel";
 import { MapDataModel } from "../service/map/mapDataModel";
-import {MainUIScene} from "../scenes/main.ui";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -144,7 +143,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
                 }
                 this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
                 const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-                loadingScene.sleep();
+                if (loadingScene) loadingScene.sleep();
                 // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
             },
         });

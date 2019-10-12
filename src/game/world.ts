@@ -183,10 +183,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!this.mGame.scene.getScene(LoginScene.name)) {
             this.mGame.scene.add(LoginScene.name, LoginScene);
         }
-        const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-        if (!loadingScene) {
-            this.mGame.scene.add(LoadingScene.name, LoadingScene);
-        }
+        // const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
+        // if (!loadingScene) {
+        //     this.mGame.scene.add(LoadingScene.name, LoadingScene);
+        // }
         this.mGame.scene.start(LoginScene.name, {
             connect: this.mConnection,
             world: this,
@@ -202,14 +202,21 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private enterVirtualWorld() {
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
+            const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
+            if (!loadingScene) {
+                this.mGame.scene.add(LoadingScene.name, LoadingScene);
+            }
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
             } else {
+                this.mGame.scene.start(LoadingScene.name, { world: this });
                 this.mAccount.setAccount({
-                    token: this.mConfig.auth_token,
-                    expire: this.mConfig.token_expire,
-                    fingerprint: this.mConfig.token_fingerprint
+                    data: {
+                        token: this.mConfig.auth_token,
+                        expire: this.mConfig.token_expire,
+                        fingerprint: this.mConfig.token_fingerprint
+                    }
                 });
             }
             this.loginEnterWorld();
