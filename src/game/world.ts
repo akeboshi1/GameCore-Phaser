@@ -84,8 +84,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onConnected(connection?: SocketConnection): void {
         Logger.info(`enterVirtualWorld`);
-        // this.enterVirtualWorld();
-        this.login();
+        this.enterVirtualWorld();
+        // this.login();
     }
 
     onDisConnected(connection?: SocketConnection): void {
@@ -180,19 +180,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private login() {
-        this.mAccount = new Account();
         if (!this.mGame.scene.getScene(LoginScene.name)) {
             this.mGame.scene.add(LoginScene.name, LoginScene);
         }
-        const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-        if (!loadingScene) {
-            this.mGame.scene.add(LoadingScene.name, LoadingScene);
-        }
+        // const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
+        // if (!loadingScene) {
+        //     this.mGame.scene.add(LoadingScene.name, LoadingScene);
+        // }
         this.mGame.scene.start(LoginScene.name, {
             connect: this.mConnection,
             world: this,
             callBack: () => {
-                this.enterVirtualWorld();
+                this.loginEnterWorld();
                 const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
                 loginScene.remove();
                 this.mGame.scene.start(LoadingScene.name, { world: this });
@@ -202,21 +201,39 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private enterVirtualWorld() {
         if (this.mConfig && this.mConnection) {
+            this.mAccount = new Account();
+            const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
+            if (!loadingScene) {
+                this.mGame.scene.add(LoadingScene.name, LoadingScene);
+            }
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
+            } else {
+                this.mGame.scene.start(LoadingScene.name, { world: this });
+                this.mAccount.setAccount({
+                    data: {
+                        token: this.mConfig.auth_token,
+                        expire: this.mConfig.token_expire,
+                        fingerprint: this.mConfig.token_fingerprint
+                    }
+                });
             }
-            const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
-            const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-            Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
-            content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
-            content.gameId = this.mConfig.game_id;
-            // const accountObj = JSON.parse();
-            content.userToken = this.mAccount.accountData.token; // auth_token;
-            content.expire = this.mAccount.accountData.expire + "";
-            content.fingerprint = this.mAccount.accountData.fingerprint;
-            this.mConnection.send(pkt);
+            this.loginEnterWorld();
         }
+    }
+
+    private loginEnterWorld() {
+        const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
+        const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
+        Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
+        content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
+        content.gameId = this.mConfig.game_id;
+        // const accountObj = JSON.parse();
+        content.userToken = this.mAccount.accountData.token; // auth_token;
+        content.expire = this.mAccount.accountData.expire + "";
+        content.fingerprint = this.mAccount.accountData.fingerprint;
+        this.mConnection.send(pkt);
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
