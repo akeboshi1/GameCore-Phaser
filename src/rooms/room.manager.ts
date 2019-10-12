@@ -92,7 +92,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private onEnterScene(packet: PBpacket) {
-        this.destroy();
+        // this.destroy();
         const vw: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         let room: Room;
         if (this.hasRoom(vw.scene.id)) {

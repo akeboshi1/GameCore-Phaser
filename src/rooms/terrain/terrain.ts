@@ -88,7 +88,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     protected addDisplay() {
-        // this.createDisplay();
+        this.createDisplay();
         if (!this.mDisplay) {
             Logger.error("display does not exist");
             return;

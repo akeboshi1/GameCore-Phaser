@@ -41,7 +41,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public init() {
-        this.destroy();
+        // this.destroy();
     }
 
     public get(id: number): Element {

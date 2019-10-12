@@ -305,6 +305,9 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         this.clear();
         this.mLayManager.destroy();
         this.mClock.destroy();
+        this.mTerainManager.destroy();
+        this.mElementManager.destroy();
+        this.mPlayerManager.destroy();
         if (this.mScene) {
             // this.mScene.scene.stop();
             // this.mWorld.game.scene.stop(PlayScene.name);

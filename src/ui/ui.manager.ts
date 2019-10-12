@@ -74,6 +74,15 @@ export class UiManager extends PacketHandler {
         return this.mMedMap.get(type);
     }
 
+    public destroy() {
+        if (this.mMedMap) {
+            this.mMedMap.forEach((mediator: IMediator) => {
+                if (mediator.isShow) mediator.hide();
+            });
+            this.mMedMap.clear();
+        }
+    }
+
     private handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         this.showMed(ui.name, ui);

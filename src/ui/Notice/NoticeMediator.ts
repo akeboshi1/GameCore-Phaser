@@ -28,6 +28,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     hide(): void {
+        if (!this.mNoticePanel) return;
         this.mNoticePanel.hide();
         this.mNoticePanel = null;
     }
@@ -41,6 +42,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     resize() {
+        if (!this.mNoticePanel) return;
         this.mNoticePanel.resize();
     }
 

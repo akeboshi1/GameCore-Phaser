@@ -22,7 +22,6 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     }
 
     destroy() {
-        super.destroy();
         this.removeAll();
         this.removeAllListeners();
         if (this.parentContainer) {
@@ -42,6 +41,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         this.mInitialized = false;
         this.mWidth = 0;
         this.mHeight = 0;
+        super.destroy();
     }
 
     resize() {

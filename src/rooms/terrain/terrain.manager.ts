@@ -31,7 +31,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public init() {
-        this.destroy();
+        // this.destroy();
     }
 
     public destroy() {
