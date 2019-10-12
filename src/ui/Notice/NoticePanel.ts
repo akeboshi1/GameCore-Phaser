@@ -77,7 +77,8 @@ export class NoticePanel extends Panel {
         this.mContentText = this.scene.make.text({
             align: "center",
             style: { font: Font.YAHEI_20_BOLD, wordWrap: { width: 1180, useAdvancedWrap: true } }
-        }, false);
+        }, false)
+            .setStroke("#000000", 1);
         this.add(this.mContentText);
         super.init();
 

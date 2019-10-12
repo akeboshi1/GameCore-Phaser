@@ -37,11 +37,11 @@ export class UserMenuMediator implements IMediator {
     }
 
     show(param?: any): void {
-        this.mUserMenuPanel.show(param);
+        this.mUserMenuPanel.show(param[0]);
     }
 
     update(param?: any): void {
-        this.mUserMenuPanel.update(param);
+        this.mUserMenuPanel.update(param[0]);
     }
 
     private onClickMenuHandler(targetNode) {

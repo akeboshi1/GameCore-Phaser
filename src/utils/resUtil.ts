@@ -42,7 +42,7 @@ export class BlackButton {
         return [4, 2, 4];
     }
 
-    static getCols(): number[] {
+    static getRows(): number[] {
         return [4, 2, 4];
     }
 }
@@ -53,7 +53,11 @@ export class CloseButton {
     }
 
     static getPNG(): string {
-        return Url.getRes("ui/common_clsBtn.png");
+        return Url.getRes("ui/common/common_clsBtn.png");
+    }
+
+    static getJSON(): string {
+        return Url.getRes("ui/common/common_clsBtn.json");
     }
 
     static getFrameConfig(): Phaser.Types.Loader.FileTypes.ImageFrameConfig {

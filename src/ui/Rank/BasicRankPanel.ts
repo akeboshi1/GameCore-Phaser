@@ -75,6 +75,7 @@ export class BasicRankPanel extends Panel {
 
     protected init() {
         if (this.mInitialized) return;
+        this.setSize(328, 361);
 
         const img = this.scene.make.image({
             key: Background.getName()
@@ -118,7 +119,9 @@ export class BasicRankPanel extends Panel {
             x: 54,
             text: "排行榜",
             style: { font: Font.YAHEI_20_BOLD }
-        }).setOrigin(0, 0.5);
+        })
+            .setOrigin(0, 0.5)
+            .setStroke("#000000", 2);
         this.add(this.mTitleLabel);
         super.init();
 

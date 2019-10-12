@@ -6,10 +6,14 @@ import {ComponentRankPanel} from "./ComponentRankPanel";
 
 export class ComponentRankMediator implements IMediator  {
     readonly world: WorldService;
+    private mLayerManager: ILayerManager;
+    private mScene: Phaser.Scene;
     private mRank: ComponentRankPanel;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         this.mRank = new ComponentRankPanel(scene, worldService);
         layerManager.addToUILayer(this.mRank);
+        this.mLayerManager = layerManager;
+        this.mScene = scene;
     }
 
     getName(): string {
@@ -21,6 +25,7 @@ export class ComponentRankMediator implements IMediator  {
     }
 
     hide(): void {
+        this.mRank.hide();
     }
 
     isSceneUI(): boolean {
@@ -32,11 +37,24 @@ export class ComponentRankMediator implements IMediator  {
     }
 
     resize() {
+        this.mRank.resize();
     }
 
     show(param?: any): void {
+        if (this.mRank && this.mRank.isShow()) {
+            return;
+        }
+        this.mRank = new ComponentRankPanel(this.mScene, this.world);
+        this.mLayerManager.addToUILayer(this.mRank);
+        this.mRank.show();
+        if (param && param.length > 0) {
+            this.mRank.addItem(param[0]);
+        }
     }
 
     update(param?: any): void {
+        if (param && param.length > 0) {
+            this.mRank.addItem(param[0]);
+        }
     }
 }

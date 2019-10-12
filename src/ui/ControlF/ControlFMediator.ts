@@ -6,15 +6,20 @@ import {ControlFPanel} from "./ControlFPanel";
 import {PBpacket} from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import {Logger} from "../../utils/log";
+import {ComponentRankPanel} from "../ComponentRank/ComponentRankPanel";
 
 export class ControlFMediator implements IMediator {
     readonly world: WorldService;
     private mControlF: ControlFPanel;
+    private mScene: Phaser.Scene;
+    private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        this.mControlF = new ControlFPanel(scene);
-        this.mControlF.on("control", this.handControlF, this);
-        layerManager.addToUILayer(this.mControlF);
+        // this.mControlF = new ControlFPanel(scene);
+        // this.mControlF.on("control", this.handControlF, this);
+        // layerManager.addToUILayer(this.mControlF);
+        this.mLayerManager = layerManager;
         this.world = world;
+        this.mScene = scene;
     }
 
     getName(): string {
@@ -26,7 +31,11 @@ export class ControlFMediator implements IMediator {
     }
 
     hide(): void {
-        this.mControlF.hide();
+        if (this.mControlF) {
+            this.mControlF.off("control", this.handControlF, this);
+            this.mControlF.hide();
+            this.mControlF = null;
+        }
         // if (this.mControlF) {
         //     this.mControlF.off("control22", this.handControlF, this);
         // }
@@ -41,13 +50,22 @@ export class ControlFMediator implements IMediator {
     }
 
     resize() {
+        this.mControlF.resize();
     }
 
     show(param?: any): void {
-        this.mControlF.show(param);
+        // this.mControlF.show(param);
         // if (this.mControlF) {
         //     this.mControlF.on("control22", this.handControlF, this);
         // }
+
+        if (this.mControlF && this.mControlF.isShow()) {
+            return;
+        }
+        this.mControlF = new ControlFPanel(this.mScene);
+        this.mControlF.on("control", this.handControlF, this);
+        this.mLayerManager.addToUILayer(this.mControlF);
+        this.mControlF.show(param);
     }
 
     update(param?: any): void {

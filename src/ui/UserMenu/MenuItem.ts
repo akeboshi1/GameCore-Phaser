@@ -6,14 +6,15 @@ export class MenuItem extends NinePatchButton {
     protected mChild: Phaser.GameObjects.Container;
     protected mArrow: Phaser.GameObjects.Image;
     protected mBackground: NinePatch;
-    constructor(scene: Phaser.Scene, x: number, y: number) {
-        super(scene, x, y);
+    constructor(scene: Phaser.Scene, x: number, y: number, config: object, text: string) {
+        super(scene, x, y, config, text);
     }
 
     public appendItem(menu: MenuItem) {
         if (!this.mChild) {
             this.mMenus = [];
             this.mChild = this.scene.make.container(undefined, false);
+            this.mChild.x = 65;
         }
 
         this.mChild.add(menu);
@@ -22,6 +23,7 @@ export class MenuItem extends NinePatchButton {
 
     public show() {
         this.add(this.mChild);
+
     }
 
     public destroy(fromScene?: boolean): void {

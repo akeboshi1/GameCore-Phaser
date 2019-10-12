@@ -3,6 +3,7 @@ import {BlackButton, Border, Url} from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
+import {Logger} from "../../utils/log";
 
 export class UserMenuPanel extends Panel {
     private mBackground: NinePatch;
@@ -19,6 +20,11 @@ export class UserMenuPanel extends Panel {
         this.setData("data", param);
         this.x = this.scene.input.activePointer.x;
         this.y = this.scene.input.activePointer.y;
+        this.scene.input.on("gameobjectup", this.onClickMenu, this);
+    }
+
+    hide() {
+        this.scene.input.off("gameobjectup", this.onClickMenu, this);
     }
 
     public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
@@ -29,29 +35,37 @@ export class UserMenuPanel extends Panel {
             this.add(btn);
             this.mMenus.push(btn);
         }
-        this.resizeBackground(60, this.mMenus.length * 30);
+        // this.resizeBackground(60, this.mMenus.length * 30);
     }
 
     protected preload() {
-        this.mScene.load.image(BlackButton.getName(), BlackButton.getPNG());
+        this.scene.load.image(BlackButton.getName(), BlackButton.getPNG());
         this.scene.load.image(Border.getName(), Border.getPNG());
         super.preload();
     }
 
     protected init() {
         this.mBackground = new NinePatch(this.scene, {
-            width: 1,
-            height: 1,
+            width: 60,
+            height: 60,
             key: Border.getName(),
             columns: Border.getColumns(),
             rows: Border.getRows(),
         }, false);
         this.add(this.mBackground);
         super.init();
+
+        this.addItem(this.getData("data"));
     }
 
     private appendItem(menu: op_gameconfig_01.IMenuItem, x: number, y: number): MenuItem {
-        const item = new MenuItem(this.scene, x, y);
+        const item = new MenuItem(this.scene, x, y, {
+            width: 70,
+            height: 29,
+            key: BlackButton.getName(),
+            columns: BlackButton.getColumns(),
+            rows: BlackButton.getRows()
+        }, menu.text);
         item.setData("node", menu.node);
         item.setInteractive();
         item.on("pointerup", this.onClickMenu, this);
@@ -65,14 +79,13 @@ export class UserMenuPanel extends Panel {
         return item;
     }
 
-    private onClickMenu(pointer, target: MenuItem) {
-        if (!target) {
-            return;
-        }
-        if (target.menus.length > 0) {
-            target.show();
-        } else {
-            this.emit("menuClick", target.getData("node"));
+    private onClickMenu(pointer, gameobject) {
+        if (gameobject instanceof MenuItem) {
+            if (gameobject.menus.length > 0) {
+                gameobject.show();
+            } else {
+                this.emit("menuClick", gameobject.getData("node"));
+            }
         }
     }
 
@@ -85,7 +98,7 @@ export class UserMenuPanel extends Panel {
     private clear() {
         for (const menu of this.mMenus) {
             this.remove(menu);
-            menu.off("pointerup", this.onClickMenu, this);
+            menu.off("pointerup", this.onClickMenu);
             menu.destroy();
         }
         this.mMenus.length = 0;

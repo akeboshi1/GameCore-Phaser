@@ -129,6 +129,5 @@ export class UiManager extends PacketHandler {
             return;
         }
         mediator.hide();
-        this.mMedMap.delete(type);
     }
 }
