@@ -30,6 +30,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        if (this.connection) {
+            this.connection.removePacketListener(this);
+        }
         if (!this.mPlayerMap) return;
         this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
         this.mPlayerMap.clear();

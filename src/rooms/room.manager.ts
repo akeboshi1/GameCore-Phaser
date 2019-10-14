@@ -11,6 +11,9 @@ export interface IRoomManager {
     readonly currentRoom: Room | undefined;
 
     readonly connection: ConnectionService | undefined;
+
+    addPackListener();
+    removePackListener();
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
@@ -21,9 +24,18 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     constructor(world: WorldService) {
         super();
         this.mWorld = world;
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+    }
+
+    public addPackListener() {
         if (this.connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+        }
+    }
+
+    public removePackListener() {
+        if (this.connection) {
+            this.connection.removePacketListener(this);
         }
     }
 
@@ -80,8 +92,10 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     public destroy() {
-        for (const room of this.mRooms) {
+        this.removePackListener();
+        for (let room of this.mRooms) {
             room.destroy();
+            room = null;
         }
         this.mRooms.length = 0;
     }

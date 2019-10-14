@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { SelectCharacter } from "../../scenes/select.character";
-import {Logger} from "../../utils/log";
+import { Logger } from "../../utils/log";
 
 export class SelectManager extends PacketHandler {
   constructor(private mWorldService: WorldService) {
@@ -34,6 +34,13 @@ export class SelectManager extends PacketHandler {
         Logger.error("scene is undefined");
       }
     }
+  }
+
+  public destroy() {
+    if (this.connection) {
+      this.connection.removePacketListener(this);
+    }
+    this.stop();
   }
 
   private onSelectCharacter() {

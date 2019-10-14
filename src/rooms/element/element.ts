@@ -1,17 +1,17 @@
-import {IElementManager} from "./element.manager";
-import {IFramesModel} from "../display/frames.model";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {FramesDisplay} from "../display/frames.display";
-import {IRoomService} from "../room";
-import {ElementDisplay} from "../display/element.display";
-import {DragonbonesModel, IDragonbonesModel} from "../display/dragonbones.model";
-import {op_client} from "pixelpai_proto";
-import {Tweens} from "phaser";
-import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
-import {ISprite} from "./sprite";
-import {BlockObject} from "../cameras/block.object";
-import {BubbleContainer} from "../bubble/bubble.container";
+import { IElementManager } from "./element.manager";
+import { IFramesModel } from "../display/frames.model";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { FramesDisplay } from "../display/frames.display";
+import { IRoomService } from "../room";
+import { ElementDisplay } from "../display/element.display";
+import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
+import { op_client } from "pixelpai_proto";
+import { Tweens } from "phaser";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { ISprite } from "./sprite";
+import { BlockObject } from "../cameras/block.object";
+import { BubbleContainer } from "../bubble/bubble.container";
 
 export enum Direction {
     up,
@@ -210,6 +210,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     public destroy() {
+        if (this.mDisplay) {
+            this.mDisplay.destroy();
+            this.mDisplay = null;
+        }
         if (this.mBubble) {
             this.mBubble.destroy();
             this.mBubble = undefined;
@@ -239,7 +243,7 @@ export class Element extends BlockObject implements IElement {
                 y: { value: this.mMoveData.destPos.y },
             },
             onStart: () => {
-              this.onMoveStart();
+                this.onMoveStart();
             },
             onComplete: (tween, targets, element) => {
                 // Logger.debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);

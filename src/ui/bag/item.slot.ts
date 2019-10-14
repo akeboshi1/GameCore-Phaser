@@ -85,7 +85,10 @@ export class ItemSlot implements IListItemComponent {
         if (this.mIcon) {
             this.mIcon.destroy();
         }
+        this.con.removeAll();
+        this.con.removeAllListeners();
         this.con.destroy(true);
+        this.con = null;
         this.mWid = 0;
         this.mHei = 0;
         this.mData = null;

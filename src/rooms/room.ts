@@ -89,13 +89,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     constructor(private manager: IRoomManager) {
         this.mWorld = this.manager.world;
-        this.mClock = new Clock(this.mWorld.connection, this);
-        this.mTerainManager = new TerrainManager(this, this);
-        this.mElementManager = new ElementManager(this);
-        this.mPlayerManager = new PlayerManager(this);
         this.mCameraService = new CamerasManager(this);
-        this.mBlocks = new ViewblockManager(this.mCameraService);
-
         if (this.mWorld) {
             const size = this.mWorld.getSize();
             if (size) {
@@ -112,9 +106,6 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
             return;
         }
         this.mID = data.id;
-        this.mTerainManager.init();
-        this.mElementManager.init();
-        this.mPlayerManager.init();
 
         this.mSize = {
             cols: data.rows,
@@ -128,7 +119,15 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         const mapDataModel = this.mWorld.modelManager.getModel(MapDataModel.NAME) as MapDataModel;
         mapDataModel.setMapInfo(data);
+        this.mClock = new Clock(this.mWorld.connection, this);
+        this.mTerainManager = new TerrainManager(this, this);
+        this.mElementManager = new ElementManager(this);
+        this.mPlayerManager = new PlayerManager(this);
+        this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
+        this.mTerainManager.init();
+        this.mElementManager.init();
+        this.mPlayerManager.init();
         if (this.scene) {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;
             // init block
@@ -295,20 +294,26 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     }
 
     public clear() {
-        this.mPlayerManager.destroy();
-        this.mElementManager.destroy();
-        this.mTerainManager.destroy();
-        this.mBlocks.destroy();
-    }
-
-    public destroy() {
-        this.clear();
+        this.mActor.destroy();
         this.mLayManager.destroy();
         this.mClock.destroy();
         this.mTerainManager.destroy();
         this.mElementManager.destroy();
         this.mPlayerManager.destroy();
+        this.mBlocks.destroy();
+        if (this.mActorData) {
+            this.mActorData = null;
+        }
+    }
+
+    public destroy() {
+        this.clear();
+        if (this.mActor) {
+            this.mActor.destroy();
+        }
         if (this.mScene) {
+            this.mScene.scene.stop();
+            this.mScene = null;
             // this.mScene.scene.stop();
             // this.mWorld.game.scene.stop(PlayScene.name);
             // this.mWorld.game.scene.stop(MainUIScene.name);

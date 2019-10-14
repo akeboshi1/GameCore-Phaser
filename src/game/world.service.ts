@@ -23,6 +23,7 @@ export interface WorldService {
     readonly account: Account;
 
     getSize(): Size;
+    enterOtherGame();
 
     changeRoom(room: IRoomService);
 }

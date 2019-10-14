@@ -64,6 +64,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        if (this.connection) {
+            this.connection.removePacketListener(this);
+        }
         if (!this.mElements) return;
         this.mElements.forEach((element) => this.removeFromMap(element.id));
         this.mElements.clear();

@@ -1,9 +1,9 @@
-import {ConnectionService} from "./connection.service";
-import {ServerAddress} from "./address";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {IConnectListener} from "./socket";
-import {Buffer} from "buffer/";
-import {Logger} from "../utils/log";
+import { ConnectionService } from "./connection.service";
+import { ServerAddress } from "./address";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { IConnectListener } from "./socket";
+import { Buffer } from "buffer/";
+import { Logger } from "../utils/log";
 // import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
 // PBpacket.addProtocol(op_client);
 // PBpacket.addProtocol(op_gateway);
@@ -23,7 +23,7 @@ for (const key in protos) {
 export default class Connection implements ConnectionService {
     protected mPacketHandlers: PacketHandler[] = [];
     private mListener: IConnectListener;
-    private mWorker: any;
+    private mWorker: NetWorker;
     private mReConnectCount: number = 0;
     private mCachedServerAddress: ServerAddress | undefined;
     private mTimeout: any;
@@ -43,6 +43,11 @@ export default class Connection implements ConnectionService {
     }
 
     closeConnect(): void {
+        this.mWorker.terminate();
+        this.mCachedServerAddress = undefined;
+        this.mReConnectCount = 0;
+        this.mTimeout = null;
+        this.clearPacketListeners();
     }
 
     addPacketListener(listener: PacketHandler) {
@@ -64,6 +69,19 @@ export default class Connection implements ConnectionService {
         const idx: number = this.mPacketHandlers.indexOf(listener);
         if (idx !== -1) {
             this.mPacketHandlers.splice(idx, 1);
+        }
+    }
+
+    clearPacketListeners() {
+        if (!this.mPacketHandlers || this.mPacketHandlers.length < 1) {
+            return;
+        }
+        const len: number = this.mPacketHandlers.length;
+        for (let i: number = 0; i < len; i++) {
+            const listener: PacketHandler = this.mPacketHandlers[i];
+            if (!listener) continue;
+            this.removePacketListener(listener);
+            i--;
         }
     }
 

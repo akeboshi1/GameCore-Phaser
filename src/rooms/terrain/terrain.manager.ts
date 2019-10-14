@@ -1,12 +1,12 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {ConnectionService} from "../../net/connection.service";
-import {op_client, op_def} from "pixelpai_proto";
-import {Terrain} from "./terrain";
-import {IRoomService, SpriteAddCompletedListener} from "../room";
-import {IElementManager} from "../element/element.manager";
-import {Logger} from "../../utils/log";
-import {IElementStorage} from "../../game/element.storage";
-import {ISprite, Sprite} from "../element/sprite";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { ConnectionService } from "../../net/connection.service";
+import { op_client, op_def } from "pixelpai_proto";
+import { Terrain } from "./terrain";
+import { IRoomService, SpriteAddCompletedListener } from "../room";
+import { IElementManager } from "../element/element.manager";
+import { Logger } from "../../utils/log";
+import { IElementStorage } from "../../game/element.storage";
+import { ISprite, Sprite } from "../element/sprite";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     private mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
@@ -35,6 +35,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        if (this.connection) {
+            this.connection.removePacketListener(this);
+        }
         if (!this.mTerrains) return;
         this.mTerrains.forEach((terrain) => this.removeFromMap(terrain.id));
         this.mTerrains.clear();

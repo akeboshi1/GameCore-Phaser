@@ -5,12 +5,12 @@ import { IBag } from "./bag/basebag";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../utils/log";
 import { IMediator } from "./baseMediator";
-import { BagMediator } from "./bag/bag/bagMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { BagUIMediator } from "./bag/bagHotkey/bagUIMediator";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
+import { BagMediator } from "./bag/bagView/bagMediator";
 
 export class UiManager extends PacketHandler {
     private mBagUI: IBag;
@@ -22,14 +22,22 @@ export class UiManager extends PacketHandler {
         super();
 
         this.mConnect = worldService.connection;
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
+        this.mUILayerManager = new LayerManager();
+    }
+
+    public addPackListener() {
         if (this.mConnect) {
             this.mConnect.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         }
+    }
 
-        this.mUILayerManager = new LayerManager();
+    public removePackListener() {
+        if (this.mConnect) {
+            this.mConnect.removePacketListener(this);
+        }
     }
 
     public getUILayerManager(): ILayerManager {
@@ -75,12 +83,14 @@ export class UiManager extends PacketHandler {
     }
 
     public destroy() {
+        this.removePackListener();
         if (this.mMedMap) {
             this.mMedMap.forEach((mediator: IMediator) => {
                 if (mediator.isShow) mediator.hide();
             });
             this.mMedMap.clear();
         }
+        this.mMedMap = null;
     }
 
     private handleShowUI(packet: PBpacket): void {

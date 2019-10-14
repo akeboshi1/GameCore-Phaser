@@ -2,16 +2,14 @@ import { IBag } from "../basebag";
 import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
-import { BagMediator } from "../bag/bagMediator";
-import { PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_gameconfig } from "pixelpai_proto";
-import { Logger } from "../../../utils/log";
-import { BagPanel } from "../bag/bagPanel";
+import { op_gameconfig } from "pixelpai_proto";
 import { PlayerDataModel } from "../../../service/player/playerDataModel";
-import { UIMediatorType } from "../../ui.mediatorType";
 import { PlayerInfo } from "../../../service/player/playerInfo";
-import { BagModel } from "../../../service/bag/bagModel";
 import { Url } from "../../../utils/resUtil";
+import { UIMediatorType } from "../../ui.mediatorType";
+import { BagModel } from "../../../service/bag/bagModel";
+import { BagPanel } from "../bagView/bagPanel";
+import { Logger } from "../../../utils/log";
 
 /**
  * 背包显示栏
@@ -173,7 +171,6 @@ export class BagUIPC implements IBag {
         const bagModel: BagModel = this.mWorld.modelManager.getModel(BagModel.NAME) as BagModel;
         const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
         bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package.id, 1, BagPanel.PageMaxCount);
-        // Logger.debug(button);
     }
 
     private bagBtnOver(pointer) {

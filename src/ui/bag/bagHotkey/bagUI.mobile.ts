@@ -8,7 +8,7 @@ import { UIMediatorType } from "../../ui.mediatorType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { PlayerDataModel } from "../../../service/player/playerDataModel";
-import { BagPanel } from "../bag/bagPanel";
+import { BagPanel } from "../bagView/bagPanel";
 import { Url } from "../../../utils/resUtil";
 
 /**

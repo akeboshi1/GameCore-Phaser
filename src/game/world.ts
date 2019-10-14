@@ -68,9 +68,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
         this.mRoomMamager = new RoomManager(this);
-        this.mMouseManager = new MouseManager(this);
         this.mUiManager = new UiManager(this);
+        this.mMouseManager = new MouseManager(this);
         this.mElementStorage = new ElementStorage();
+
+        this.mRoomMamager.addPackListener();
+        this.mUiManager.addPackListener();
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
@@ -79,7 +82,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     destroy(): void {
-        // TODO
+        this.mConnection.closeConnect();
+        // todo
     }
 
     onConnected(connection?: SocketConnection): void {
@@ -130,6 +134,32 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mInputManager.resize(width, height);
         }
         // TODO manager.resize
+    }
+
+    public enterOtherGame() {
+        if (this.mGame) {
+            this.mGame.plugins.removeGlobalPlugin("rexButton");
+            this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+            this.mGame.plugins.removeGlobalPlugin("rexInputText");
+            this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+            this.mGame.plugins.removeScenePlugin("DragonBones");
+            this.mGame.plugins.removeScenePlugin("rexUI");
+            this.roomManager.destroy();
+            this.uiManager.destroy();
+            this.mGame.destroy(true);
+            this.mGame = null;
+        }
+        this._newGame();
+        this.mRoomMamager.addPackListener();
+        this.mUiManager.addPackListener();
+        this.mAccount.setAccount({
+            data: {
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWVkZWYwMGRkYmRjNTdmNjQzOGFkMyIsImlhdCI6MTU3MDc4NTI3MCwiZXhwIjoxNTcxMzkwMDcwfQ.149pIYXoBo-4w-AAHNFhBTogtfLzcOn8raBZ9sLQG5g",
+                expire: 1571390070,
+                fingerprint: "d0eb22c474606051895f1f15e2a42476ad0a0fc8"
+            }
+        });
+        this.loginEnterWorld();
     }
 
     get uiScale(): number {
@@ -183,10 +213,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!this.mGame.scene.getScene(LoginScene.name)) {
             this.mGame.scene.add(LoginScene.name, LoginScene);
         }
-        // const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-        // if (!loadingScene) {
-        //     this.mGame.scene.add(LoadingScene.name, LoadingScene);
-        // }
         this.mGame.scene.start(LoginScene.name, {
             connect: this.mConnection,
             world: this,
