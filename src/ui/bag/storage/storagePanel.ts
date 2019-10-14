@@ -32,6 +32,25 @@ export class StoragePanel extends Panel {
         super.hide();
     }
     public destroy() {
+        if (this.mBg) {
+            this.mBg.destroy(true);
+            this.mBg = null;
+        }
+        if (this.mClsBtnSprite) {
+            this.mClsBtnSprite.destroy(true);
+            this.mClsBtnSprite = null;
+        }
+        if (this.mBagItemSlotList) {
+            const len: number = this.mBagItemSlotList.length;
+            for (let i: number = 0; i < len; i++) {
+                let item: ItemSlot = this.mBagItemSlotList[i];
+                if (!item) continue;
+                item.destroy();
+                item = null;
+            }
+            this.mBagItemSlotList = null;
+        }
+        this.mWorld = null;
         super.destroy();
     }
 

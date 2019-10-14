@@ -1,10 +1,8 @@
-import {Panel} from "../components/panel";
-import {BlackButton, Border, Url} from "../../utils/resUtil";
+import { Panel } from "../components/panel";
+import { BlackButton, Border, Url } from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
-import {Logger} from "../../utils/log";
-
 export class UserMenuPanel extends Panel {
     private mBackground: NinePatch;
     private mMenus: MenuItem[] = [];
@@ -13,11 +11,12 @@ export class UserMenuPanel extends Panel {
     }
 
     show(param?: any) {
+         // 异步加载时无法确定UI是否加载完，所以把数据缓存
+        this.setData("data", param);
         super.show(param);
         if (!this.scene) {
             return;
         }
-        this.setData("data", param);
         this.addItem(param);
         this.x = this.scene.input.activePointer.x;
         this.y = this.scene.input.activePointer.y;
@@ -37,6 +36,23 @@ export class UserMenuPanel extends Panel {
         super.setSize(width, height);
         this.setInteractive();
         return this;
+    }
+
+    public destroy() {
+        if (this.mBackground) {
+            this.mBackground.destroy();
+        }
+        if (this.mMenus) {
+            const len: number = this.mMenus.length;
+            for (let i: number = 0; i < len; i++) {
+                let item: MenuItem = this.mMenus[i];
+                if (item) continue;
+                item.destroy(true);
+                item = null;
+            }
+            this.mMenus = [];
+        }
+        super.destroy();
     }
 
     public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {

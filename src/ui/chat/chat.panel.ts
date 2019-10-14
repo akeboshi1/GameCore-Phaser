@@ -34,6 +34,19 @@ export class ChatPanel extends Panel {
         this.y = size.height - this.height - 8;
     }
 
+    public destroy() {
+        if (this.mTextArea) this.mTextArea.destroy();
+        if (this.mInputText) this.mInputText.destroy();
+        if (this.mVoiceBtn) this.mVoiceBtn.destroy();
+        if (this.mMicBtn) this.mMicBtn.destroy();
+        this.mTextArea = null;
+        this.mInputText = null;
+        this.mVoiceBtn = null;
+        this.mMicBtn = null;
+        this.mSendKey = null;
+        super.destroy();
+    }
+
     protected preload() {
         if (!this.mScene) {
             return;

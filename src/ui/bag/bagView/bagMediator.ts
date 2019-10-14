@@ -75,7 +75,24 @@ export class BagMediator implements IMediator {
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         if (!this.mView) return;
         this.mView.hide();
-        this.mView = null;
+    }
+
+    public destroy() {
+        if (this.mView) {
+            this.mView.destroy();
+            this.mView = null;
+        }
+        if (this.mBagModel) {
+            this.mBagModel.destroy();
+            this.mBagModel = null;
+        }
+        if (this.mPlayerModel) {
+            this.mPlayerModel.destroy();
+            this.mPlayerModel = null;
+        }
+        this.mPageNum = 0;
+        this.mScene = null;
+        this.world = null;
     }
 
     protected handleDrop(value: any): void {

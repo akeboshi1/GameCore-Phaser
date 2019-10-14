@@ -3,4 +3,5 @@ export interface IBaseModel {
     getInitialize(): boolean;
     register();
     unRegister();
+    destroy();
 }

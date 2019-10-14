@@ -34,4 +34,11 @@ export class StorageMediator implements IMediator {
     public hide(): void {
         if (this.mView) this.mView.hide();
     }
+
+    public destroy() {
+        if (this.mView) {
+            this.mView.destroy();
+            this.mView = null;
+        }
+    }
 }

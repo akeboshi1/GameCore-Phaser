@@ -23,6 +23,7 @@ export class BagUIPC implements IBag {
 
     private mShowing: boolean = false;
     private mBagBg: Phaser.GameObjects.Sprite;
+    private baseBagBgWid: number;
     private mScene: Phaser.Scene;
     private mWorld: WorldService;
     private mResStr: string;
@@ -61,7 +62,7 @@ export class BagUIPC implements IBag {
         // update bagSlotList
     }
     public hide() {
-        this.destroy();
+        this.mShowing = false;
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
@@ -69,9 +70,46 @@ export class BagUIPC implements IBag {
         this.mParentCon.y = size.height - 50;
     }
     public destroy() {
+        if (this.bagBtn) {
+            this.bagBtn.destroy(true);
+            this.bagBtn = null;
+        }
+        if (this.mBagBg) {
+            this.mBagBg.destroy(true);
+            this.mBagBg = null;
+        }
+        if (this.bagSlotList) {
+            this.bagSlotList.forEach((slot: ItemSlot) => {
+                if (slot) slot.destroy();
+            });
+            this.bagSlotList.length = 0;
+            this.bagSlotList = null;
+        }
+        if (this.mSubScriptSprite) {
+            this.mSubScriptSprite.destroy(true);
+            this.mSubScriptSprite = null;
+        }
+        if (this.mBagSelect) {
+            this.mBagSelect.destroy(true);
+            this.mBagSelect = null;
+        }
+        if (this.mBagBtnCon) {
+            this.mBagBtnCon.destroy(true);
+            this.mBagBtnCon = null;
+        }
+        if (this.mParentCon) {
+            this.mParentCon.destroy(true);
+            this.mParentCon = null;
+        }
+        this.mShowing = false;
         this.mWid = 0;
         this.mHei = 0;
-        if (this.mParentCon) this.mParentCon.destroy(true);
+        this.baseBagBgWid = 0;
+        this.mResStr = null;
+        this.mResPng = null;
+        this.mResJson = null;
+        this.mScene = null;
+        this.mWorld = null;
     }
 
     public setDataList(items: op_gameconfig.IItem[]) {
@@ -79,7 +117,7 @@ export class BagUIPC implements IBag {
         const len: number = items.length > BagUIPC.SlotMaxCount ? BagUIPC.SlotMaxCount : items.length;
         const subScriptList: string[] = ["0", "b", "c"];
         let subScriptRes: string;
-        let tempWid: number = this.mBagBg.width + 5;
+        let tempWid: number = this.baseBagBgWid + 5;
         for (let i: number = 0; i < len; i++) {
             if (i >= 9) {
                 subScriptRes = "bag_SubScript" + subScriptList[i % 9];
@@ -143,6 +181,7 @@ export class BagUIPC implements IBag {
 
         this.mBagBtnCon = this.mScene.add.container(0, 0);
         this.mBagBg = this.mScene.add.sprite(0, 0, this.mResStr, "bag_BtnBg");
+        this.baseBagBgWid = this.mBagBg.width;
         this.mWid += this.mBagBg.width + 5;
         this.bagBtn = this.mScene.add.sprite(this.mBagBg.x, this.mBagBg.y, this.mResStr, "bag_Btn");
         this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
@@ -166,11 +205,12 @@ export class BagUIPC implements IBag {
     }
 
     private bagHandler() {
-        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
-        // =============index = 0 为背包按钮
-        const bagModel: BagModel = this.mWorld.modelManager.getModel(BagModel.NAME) as BagModel;
-        const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package.id, 1, BagPanel.PageMaxCount);
+        this.mWorld.enterOtherGame();
+        // this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+        // // =============index = 0 为背包按钮
+        // const bagModel: BagModel = this.mWorld.modelManager.getModel(BagModel.NAME) as BagModel;
+        // const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
+        // bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package.id, 1, BagPanel.PageMaxCount);
     }
 
     private bagBtnOver(pointer) {

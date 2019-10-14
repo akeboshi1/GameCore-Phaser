@@ -1,12 +1,12 @@
 import { Tool } from "../../utils/tool";
 
 export class ToolTip extends Phaser.GameObjects.Container {
-    public static getInstance(mscene, resStr, resJson, resUrl): ToolTip {
-        if (!!ToolTip.mInstance === false) {
-            ToolTip.mInstance = new ToolTip(mscene, resStr, resJson, resUrl);
-        }
-        return ToolTip.mInstance;
-    }
+    // public static getInstance(mscene, resStr, resJson, resUrl): ToolTip {
+    //     if (!!ToolTip.mInstance === false) {
+    //         ToolTip.mInstance = new ToolTip(mscene, resStr, resJson, resUrl);
+    //     }
+    //     return ToolTip.mInstance;
+    // }
 
     protected static mInstance: ToolTip;
     private static TOP: string = "tip_top.png";
@@ -33,14 +33,14 @@ export class ToolTip extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
-        this.mWidth = 0;
-        this.mHeight = 0;
-        this.removeAll();
-        this.removeAllListeners();
         if (this.topImage) this.topImage.destroy(true);
         if (this.midImage) this.midImage.destroy(true);
         if (this.botImage) this.botImage.destroy(true);
         if (this.mText) this.mText.destroy(true);
+        this.mWidth = 0;
+        this.mHeight = 0;
+        this.removeAllListeners();
+        this.removeAll();
         super.destroy(true);
     }
 

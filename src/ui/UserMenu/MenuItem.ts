@@ -1,4 +1,4 @@
-import {NinePatchButton} from "../components/ninepatch.button";
+import { NinePatchButton } from "../components/ninepatch.button";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 
 export class MenuItem extends NinePatchButton {
@@ -28,14 +28,26 @@ export class MenuItem extends NinePatchButton {
 
     public destroy(fromScene?: boolean): void {
         if (this.mMenus) {
-            for (const menu of this.mMenus) {
-                this.mChild.remove(menu);
-                menu.destroy();
+            const len: number = this.mMenus.length;
+            for (let i: number = 0; i < len; i++) {
+                let item: MenuItem = this.mMenus[i];
+                if (item) continue;
+                item.destroy(true);
+                item = null;
             }
+            this.mMenus = [];
+        }
+        if (this.mBackground) {
+            this.mBackground.destroy();
+            this.mBackground = null;
         }
         if (this.mChild) {
-            this.remove(this.mChild);
-            this.mChild.destroy();
+            this.mChild.destroy(true);
+            this.mChild = null;
+        }
+        if (this.mArrow) {
+            this.mArrow.destroy(true);
+            this.mArrow = null;
         }
         super.destroy(fromScene);
     }

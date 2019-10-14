@@ -1,8 +1,7 @@
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client } from "pixelpai_proto";
-import {DynamicNinepatch} from "../../ui/components/dynamic.ninepatch";
-import {Url} from "../../utils/resUtil";
-import {Logger} from "../../utils/log";
+import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
+import { Url } from "../../utils/resUtil";
 
 export class Bubble extends Phaser.GameObjects.Container {
     private mChatContent: Phaser.GameObjects.Text;
@@ -21,17 +20,17 @@ export class Bubble extends Phaser.GameObjects.Container {
 
     public show(text: string, bubble: op_client.IChat_Setting) {
         this.mChatContent = this.scene.make.text({
-                text,
-                style: {
-                    x: 0,
-                    y: 4,
-                    fontFamily: "YaHei",
-                    fontSize: 14,
-                    color: "#000000",
-                    origin: { x: 0, y: 0 },
-                    wordWrap: { width:  300, useAdvancedWrap: true }
-                }
-            }, false);
+            text,
+            style: {
+                x: 0,
+                y: 4,
+                fontFamily: "YaHei",
+                fontSize: 14,
+                color: "#000000",
+                origin: { x: 0, y: 0 },
+                wordWrap: { width: 300, useAdvancedWrap: true }
+            }
+        }, false);
         this.add(this.mChatContent);
 
         this.mMinHeight = this.mChatContent.height + 26;
@@ -45,7 +44,7 @@ export class Bubble extends Phaser.GameObjects.Container {
             width: this.mMinWidth,
             height: this.mMinHeight,
             key: res,
-            columns: [34, 2 , 32],
+            columns: [34, 2, 32],
             rows: [42, 2, 9]
         }, this.onComplete, this);
     }
@@ -81,6 +80,22 @@ export class Bubble extends Phaser.GameObjects.Container {
                 }
             }
         });
+    }
+
+    public destroy() {
+        if (this.mChatContent) {
+            this.mChatContent.destroy(true);
+        }
+        this.mChatContent = null;
+        this.mMinWidth = 0;
+        this.mMinHeight = 0;
+        this.mToY = 0;
+        this.mTweenCompleteCallback = null;
+        this.mTweenCallContext = null;
+        if (this.mRemoveDelay) {
+            clearTimeout(this.mRemoveDelay);
+        }
+        super.destroy(true);
     }
 
     private onComplete(img: NinePatch) {

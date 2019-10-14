@@ -1,6 +1,6 @@
-import {Panel} from "../components/panel";
-import {Url} from "../../utils/resUtil";
-import {Font} from "../../utils/font";
+import { Panel } from "../components/panel";
+import { Url } from "../../utils/resUtil";
+import { Font } from "../../utils/font";
 
 export class ControlFPanel extends Panel {
     private mControlText: Phaser.GameObjects.Text;
@@ -25,6 +25,11 @@ export class ControlFPanel extends Panel {
         const worldView = this.scene.cameras.main.worldView;
         this.x = worldView.x + (worldView.width >> 1);
         this.y = worldView.y + (worldView.height >> 1);
+    }
+
+    destroy() {
+        if (this.mControlText) this.mControlText.destroy(true);
+        super.destroy();
     }
 
     protected preload() {

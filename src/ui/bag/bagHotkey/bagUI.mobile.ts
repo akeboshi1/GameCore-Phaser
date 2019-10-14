@@ -50,7 +50,7 @@ export class BagUIMobile implements IBag {
 
     }
     public hide() {
-        this.destroy();
+        this.mShowing = false;
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
@@ -58,7 +58,10 @@ export class BagUIMobile implements IBag {
         this.mParentCon.y = this.mBagBg.height >> 1;
     }
     public destroy() {
-        this.mParentCon.destroy(true);
+        if (this.mParentCon) {
+            this.mParentCon.destroy(true);
+            this.mParentCon = null;
+        }
     }
 
     private createPanel() {

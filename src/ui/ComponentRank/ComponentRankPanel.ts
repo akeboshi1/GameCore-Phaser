@@ -1,6 +1,6 @@
-import {BasicRankPanel} from "../Rank/BasicRankPanel";
-import {WorldService} from "../../game/world.service";
-import {CloseButton} from "../../utils/resUtil";
+import { BasicRankPanel } from "../Rank/BasicRankPanel";
+import { WorldService } from "../../game/world.service";
+import { CloseButton } from "../../utils/resUtil";
 
 export class ComponentRankPanel extends BasicRankPanel {
     private mCloseBtn: Phaser.GameObjects.Image;
@@ -13,6 +13,14 @@ export class ComponentRankPanel extends BasicRankPanel {
         const view = this.scene.cameras.main.worldView;
         this.x = view.width - this.width >> 1;
         this.y = view.height - this.height >> 1;
+    }
+
+    destroy() {
+        if (this.mCloseBtn) {
+            this.mCloseBtn.destroy(true);
+            this.mCloseBtn = null;
+        }
+        super.destroy();
     }
 
     protected preload() {

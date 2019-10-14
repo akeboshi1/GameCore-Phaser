@@ -34,6 +34,13 @@ export class MapDataModel implements IBaseModel {
     public unRegister() {
     }
 
+    public destroy() {
+        this.initialize = false;
+        this.mConnect = null;
+        this.mMapInfo = null;
+        this.mModelDispatch = null;
+    }
+
     public setMapInfo(value: op_client.IScene): void {
         this.mMapInfo.mapId = value.id;
         this.mMapInfo.voiceChatRoomId = value.voiceChatRoomId;

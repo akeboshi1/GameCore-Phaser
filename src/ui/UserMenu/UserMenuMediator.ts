@@ -1,12 +1,11 @@
-import {IMediator} from "../baseMediator";
-import {IAbstractPanel} from "../abstractPanel";
+import { IMediator } from "../baseMediator";
+import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
-import {UserMenuPanel} from "./UserMenuPanel";
-import {ILayerManager} from "../layer.manager";
-import {PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world} from "pixelpai_proto";
-import {Logger} from "../../utils/log";
-import {MessageType} from "../../const/MessageType";
+import { UserMenuPanel } from "./UserMenuPanel";
+import { ILayerManager } from "../layer.manager";
+import { PBpacket } from "net-socket-packet";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { MessageType } from "../../const/MessageType";
 
 export class UserMenuMediator implements IMediator {
     readonly world: WorldService;
@@ -25,10 +24,11 @@ export class UserMenuMediator implements IMediator {
     }
 
     hide(): void {
-        this.mUserMenuPanel.off("menuClick", this.onClickMenuHandler, this);
-        // this.mScene.input.off("pointerdown", this.onClosePanel, this);
         this.world.modelManager.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
-        this.mUserMenuPanel.hide();
+        if (this.mUserMenuPanel) {
+            this.mUserMenuPanel.off("menuClick", this.onClickMenuHandler, this);
+            this.mUserMenuPanel.hide();
+        }
     }
 
     isSceneUI(): boolean {
@@ -53,6 +53,14 @@ export class UserMenuMediator implements IMediator {
 
     update(param?: any): void {
         this.mUserMenuPanel.update(param[0]);
+    }
+
+    destroy() {
+        if (this.mUserMenuPanel) {
+            this.mUserMenuPanel.destroy();
+            this.mUserMenuPanel = null;
+        }
+        this.mScene = null;
     }
 
     private onClickMenuHandler(targetNode) {

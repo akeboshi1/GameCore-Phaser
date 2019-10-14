@@ -6,7 +6,7 @@ import { MessageType } from "../../const/MessageType";
 import { ConnectionService } from "../../net/connection.service";
 
 export class ShopModel extends PacketHandler implements IBaseModel {
-    public static NAME: string;
+    public static NAME: string = "ShopModel";
     public initialize: boolean;
     private mConnect: ConnectionService;
     constructor(private mWorld: WorldService) {
@@ -26,6 +26,11 @@ export class ShopModel extends PacketHandler implements IBaseModel {
 
     public unRegister() {
         this.mConnect.removePacketListener(this);
+    }
+
+    public destroy() {
+        this.initialize = false;
+        this.mConnect = null;
     }
 
     private handlerQueryPackage(packet: PBpacket) {

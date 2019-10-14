@@ -1,9 +1,9 @@
-import {IMediator} from "../baseMediator";
-import {ILayerManager} from "../layer.manager";
-import {WorldService} from "../../game/world.service";
+import { IMediator } from "../baseMediator";
+import { ILayerManager } from "../layer.manager";
+import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
-import {UserInfoPanel} from "./UserInfoPanel";
-import {MessageType} from "../../const/MessageType";
+import { UserInfoPanel } from "./UserInfoPanel";
+import { MessageType } from "../../const/MessageType";
 
 export class UserInfoMediator implements IMediator {
     readonly world: WorldService;
@@ -41,6 +41,10 @@ export class UserInfoMediator implements IMediator {
         this.mUserInfo.show(param[0]);
         this.mLayerManager.addToUILayer(this.mUserInfo);
         this.world.modelManager.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+    }
+
+    destroy() {
+        if (this.mUserInfo) this.mUserInfo.destroy();
     }
 
     update(param?: any): void {

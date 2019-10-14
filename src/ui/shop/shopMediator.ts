@@ -59,12 +59,27 @@ export class ShopMediator implements IMediator {
     public hide() {
         if (this.mView) {
             this.mView.hide();
-            this.mView = null;
         }
-        this.mParam = null;
         this.mShopModel.unRegister();
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.modelManager.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
+    }
+
+    public destroy() {
+        if (this.mShopModel) {
+            this.mShopModel.destroy();
+            this.mShopModel = null;
+        }
+        this.world = null;
+        this.mScene = null;
+        this._curPage = 0;
+        this.fetching = false;
+        this.isEnd = false;
+        this.mParam = null;
+        if (this.mView) {
+            this.mView.destroy();
+            this.mView = null;
+        }
     }
 
     public isShow(): boolean {

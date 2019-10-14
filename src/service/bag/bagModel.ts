@@ -10,14 +10,8 @@ import { MapDataModel } from "../map/mapDataModel";
 export class BagModel extends PacketHandler implements IBaseModel {
     public static NAME: string = "BagModel";
     public initialize: boolean = false;
-    private mModelDispatch: Phaser.Events.EventEmitter;
-    private mConnect: ConnectionService;
     constructor(private mWorld: WorldService) {
         super();
-        if (this.mWorld.modelManager) {
-            this.mModelDispatch = this.mWorld.modelManager;
-        }
-        this.mConnect = this.mWorld.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM, this.handleAddItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM, this.handleRemoveItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EXCHANGE_ITEM_POS, this.handleExchangeItem);
@@ -29,11 +23,15 @@ export class BagModel extends PacketHandler implements IBaseModel {
     }
 
     public register() {
-        this.mConnect.addPacketListener(this);
+        this.mWorld.connection.addPacketListener(this);
     }
 
     public unRegister() {
-        this.mConnect.removePacketListener(this);
+        this.mWorld.connection.removePacketListener(this);
+    }
+
+    public destroy() {
+        this.initialize = false;
     }
 
     /**
@@ -48,13 +46,13 @@ export class BagModel extends PacketHandler implements IBaseModel {
         content.id = bagId;
         content.page = page;
         content.perPage = perPage;
-        this.mConnect.send(pkt);
+        this.mWorld.connection.send(pkt);
     }
 
     private handleQueryPackage(packet: PBpacket) {
         const notice: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE = packet.content;
         this.initialize = true;
-        this.mModelDispatch.emit(MessageType.QUERY_PACKAGE, notice);
+        this.mWorld.modelManager.emit(MessageType.QUERY_PACKAGE, notice);
     }
 
     private handleAddItem(packet: PBpacket): void {
@@ -64,7 +62,7 @@ export class BagModel extends PacketHandler implements IBaseModel {
         } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
             (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).addPackItems(content.id, content.item);
         }
-        this.mModelDispatch.emit(MessageType.PACKAGE_ITEM_ADD, content);
+        this.mWorld.modelManager.emit(MessageType.PACKAGE_ITEM_ADD, content);
     }
 
     private handleRemoveItem(packet: PBpacket): void {
@@ -79,12 +77,12 @@ export class BagModel extends PacketHandler implements IBaseModel {
         for (let i = 0; i < len; i++) {
             model.removePackItems(content.id, content.itemId[i]);
         }
-        this.mModelDispatch.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
-        this.mModelDispatch.emit(MessageType.PACKAGE_ITEM_REMOVE, content);
+        this.mWorld.modelManager.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+        this.mWorld.modelManager.emit(MessageType.PACKAGE_ITEM_REMOVE, content);
     }
 
     private handleExchangeItem(packet: PBpacket): void {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EXCHANGE_ITEM_POS = packet.content;
-        this.mModelDispatch.emit(MessageType.PACKAGE_EXCHANGE_ITEM_POS, content);
+        this.mWorld.modelManager.emit(MessageType.PACKAGE_EXCHANGE_ITEM_POS, content);
     }
 }

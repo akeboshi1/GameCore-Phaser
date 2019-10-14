@@ -1,12 +1,12 @@
-import {Panel} from "../components/panel";
+import { Panel } from "../components/panel";
 import { op_client } from "pixelpai_proto";
-import {Background, Border, Url} from "../../utils/resUtil";
-import {WorldService} from "../../game/world.service";
+import { Background, Border, Url } from "../../utils/resUtil";
+import { WorldService } from "../../game/world.service";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
-import {Font} from "../../utils/font";
+import { Font } from "../../utils/font";
 
 export class BasicRankPanel extends Panel {
-    protected readonly mWorld: WorldService;
+    protected mWorld: WorldService;
     protected mContentContainer: Phaser.GameObjects.Container;
     protected mTitleLabel: Phaser.GameObjects.Text;
     protected mTexts: Phaser.GameObjects.Text[] = [];
@@ -35,7 +35,7 @@ export class BasicRankPanel extends Panel {
                 y: 27,
                 text: texts[i].text,
                 style: { font: Font.YAHEI_16_BOLD }
-            }, false );
+            }, false);
             text.setData("node", texts[i].node);
             text.setStroke("#000000", 2);
             this.mContentContainer.add(text);
@@ -64,6 +64,26 @@ export class BasicRankPanel extends Panel {
 
     update(param: any) {
         this.addItem(param);
+    }
+
+    public destroy() {
+        if (this.mBackground) this.mBackground.destroy();
+        const len: number = this.mTexts.length;
+        for (let i: number = 0; i < len; i++) {
+            let text: Phaser.GameObjects.Text = this.mTexts[i];
+            if (!text) continue;
+            text.destroy(true);
+            text = null;
+        }
+        if (this.mTitleLabel) this.mTitleLabel.destroy(true);
+        if (this.mContentContainer) this.mContentContainer.destroy(true);
+        this.mContentContainer = null;
+        this.mTexts = [];
+        this.mData = null;
+        this.mBackground = null;
+        this.mTitleLabel = null;
+        this.mWorld = null;
+        super.destroy();
     }
 
     protected preload() {
