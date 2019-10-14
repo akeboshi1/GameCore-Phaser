@@ -9,6 +9,7 @@ import { UiManager } from "../ui/ui.manager";
 import { InputManager } from "./input.service";
 import { ModelManager } from "../service/modelManager";
 import { Account } from "./account";
+import {HttpService} from "../net/http.service";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -19,6 +20,7 @@ export interface WorldService {
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
     readonly modelManager: ModelManager;
+    readonly httpService: HttpService;
     readonly uiScale: number;
     readonly account: Account;
 

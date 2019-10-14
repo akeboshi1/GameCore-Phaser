@@ -54,37 +54,12 @@ export class MessageType {
     public static PACKAGE_ITEM_REMOVE = "package_item_remove";
     public static PACKAGE_EXCHANGE_ITEM_POS = "package_exchange_item_pos";
 
-    public static SEFL_TARGET_START_MOVE = "SEFL_TARGET_START_MOVE";
-    public static SEFL_TARGET_PAUSE_MOVE = "SEFL_TARGET_PAUSE_MOVE";
-
     public static SCENE_BACKGROUND_CLICK = "SCENE_BACKGROUND_CLICK";
-
-    public static ADD_SCENE_ELEMENT = "ADD_SCENE_ELEMENT";
-    public static REMOVE_SCENE_ELEMENT = "REMOVE_SCENE_ELEMENT";
 
     public static CHANGE_SELF_AVATAR = "CHANGE_SELF_AVATAR";
 
     public static DRAG_TO_DROP = "DRAG_TO_DROP";
     public static DRAG_OVER_DROP = "DRAG_OVER_DROP";
-
-    public static GAME_GLOBALS_TICK = "GAME_GLOBALS_TICK";
-    public static GAME_GLOBALS_FRAME = "GAME_GLOBALS_FRAME";
-
-    /**
-     * 模块视图添加到显示列表
-     */
-    public static MODULE_VIEW_ADD = "module_view_add";
-    /**
-     * 模块视图移除从显示列表
-     */
-    public static MODULE_VIEW_REM = "module_view_rem";
-
-    /**
-     * 跑马灯公告
-     */
-    public static SHOW_NOTICE = "show_notice";
-    public static USER_UPDATED_VOICE_PEER = "user_updated_voice_peer";
-    public static HIDE_VOICE = "hide_voice";
 
     public static QUERY_PACKAGE = "query_package";
     public static SYNC_USER_BALANCE = "syncUserBalance";

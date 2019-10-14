@@ -1,4 +1,7 @@
+import {Logger} from "../utils/log";
+
 export interface ILayerManager {
+    readonly interactive: Phaser.GameObjects.Container;
     setScene(scene: Phaser.Scene): void;
 
     addToUILayer(obj: Phaser.GameObjects.GameObject);
@@ -15,14 +18,23 @@ export interface ILayerManager {
 export class LayerManager implements ILayerManager {
     private mScene: Phaser.Scene;
 
+    private mInteractive: Phaser.GameObjects.Container;
     private mUILayer: Phaser.GameObjects.Container;
     private mDialogLayer: Phaser.GameObjects.Container;
     private mToolTipsLyaer: Phaser.GameObjects.Container;
 
     public setScene(scene: Phaser.Scene) {
+        if (!scene) return;
         this.destroy();
         this.mScene = scene;
 
+        // const view = scene.cameras.main;
+        // this.mInteractive = scene.add.container(view.width >> 1, view.height >> 1);
+        // this.mInteractive.setSize(view.width, view.height);
+        // const rect = scene.add.graphics();
+        // rect.lineStyle(1, 0, 1);
+        // rect.fillRect(0, 0, view.width, view.height);
+        // this.mInteractive.setInteractive();
         this.mUILayer = scene.add.container(0, 0);
         this.mDialogLayer = scene.add.container(0, 0);
         this.mToolTipsLyaer = scene.add.container(0, 0);
@@ -76,5 +88,9 @@ export class LayerManager implements ILayerManager {
             this.mToolTipsLyaer.destroy();
             this.mToolTipsLyaer = null;
         }
+    }
+
+    get interactive(): Phaser.GameObjects.Container {
+        return this.mInteractive;
     }
 }

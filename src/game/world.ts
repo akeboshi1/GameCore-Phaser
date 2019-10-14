@@ -36,6 +36,7 @@ import { PI_EXTENSION_REGEX } from "../const/constants";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
+import {HttpService} from "../net/http.service";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
 
@@ -49,6 +50,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mCallBack: Function;
     private mInputManager: InputManager;
     private mModelManager: ModelManager;
+    private mHttpService: HttpService;
     private mAccount: Account;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
@@ -71,6 +73,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mUiManager = new UiManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mElementStorage = new ElementStorage();
+        this.mHttpService = new HttpService(this);
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
@@ -198,6 +201,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get modelManager(): ModelManager | undefined {
         return this.mModelManager;
+    }
+
+    get httpService(): HttpService {
+        return this.mHttpService;
     }
 
     get account(): Account {

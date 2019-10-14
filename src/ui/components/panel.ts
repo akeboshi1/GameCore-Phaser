@@ -52,7 +52,6 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
             this.preload();
             return;
         }
-        this.init();
     }
 
     update(param: any) {

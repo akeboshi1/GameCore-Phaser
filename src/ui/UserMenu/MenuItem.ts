@@ -27,6 +27,16 @@ export class MenuItem extends NinePatchButton {
     }
 
     public destroy(fromScene?: boolean): void {
+        if (this.mMenus) {
+            for (const menu of this.mMenus) {
+                this.mChild.remove(menu);
+                menu.destroy();
+            }
+        }
+        if (this.mChild) {
+            this.remove(this.mChild);
+            this.mChild.destroy();
+        }
         super.destroy(fromScene);
     }
 

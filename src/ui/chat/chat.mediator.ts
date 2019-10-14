@@ -7,6 +7,7 @@ import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
 import { ILayerManager } from "../layer.manager";
+import {PlayerDataModel} from "../../service/player/playerDataModel";
 
 export class ChatMediator extends PacketHandler implements IMediator {
     public world: WorldService;
@@ -147,16 +148,16 @@ export class ChatMediator extends PacketHandler implements IMediator {
 
     private handleCharacterChat(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        if (!this.room) {
+        if (!this.world || !this.world.modelManager) {
             return;
         }
 
-        const playerManager = this.room.playerManager;
-        const player = playerManager.get(content.chatSenderid);
+        const playerManager = <PlayerDataModel> this.world.modelManager.getModel(PlayerDataModel.name);
+        const player = playerManager.getPlayer(content.chatSenderid);
         // const chatSendName = player ? player.name : "";
         // this.mChatPanel.appendChat(content.chatContext);
         const color = content.chatSetting.textColor ? content.chatSetting.textColor : "#FFFFFF";
-        this.appendMessage(this.mAllMessage, { chat: `[color=${color}]${content.chatContext}[/color]`, channel: content.chatChannel });
+        this.appendMessage(this.mAllMessage, { chat: `[color=${color}]${player.name}:${content.chatContext}[/color]`, channel: content.chatChannel });
         this.mChatPanel.appendChat(`[color=${color}]${content.chatContext}[/color]\n`);
     }
 

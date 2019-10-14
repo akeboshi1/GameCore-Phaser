@@ -15,3 +15,18 @@ export function load(path: string, responseType: XMLHttpRequestResponseType): Pr
     http.send();
   });
 }
+
+export function checkIsFriend(uids: number[]): Promise<Response> {
+  const data = {
+    body: JSON.stringify({ uids }),
+    method: "POST",
+    headers: {
+      "X-Pixelpai-TK": ""
+    }
+  };
+  return fetch(`${CONFIG.api_root}/user/check_followed`, data);
+}
+
+function get(input: RequestInfo, init?: RequestInit) {
+  return fetch(input, init);
+}

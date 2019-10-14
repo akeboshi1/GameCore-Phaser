@@ -4,6 +4,7 @@ import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
+import {MessageType} from "../const/MessageType";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -41,6 +42,7 @@ export class MouseManager extends PacketHandler {
         }
         room.scene.input.on("gameobjectdown", this.groundDown, this);
         room.scene.input.on("gameobjectup", this.groundUp, this);
+        room.scene.input.on("pointerdown", this.pointerDownHandler, this);
         this.resume();
     }
 
@@ -124,5 +126,11 @@ export class MouseManager extends PacketHandler {
     private groundUp(pointer, gameObject) {
         this.mActivePointer = pointer;
         this.onUpdate(pointer, gameObject);
+    }
+
+    private pointerDownHandler() {
+        if (this.worldService && this.worldService.modelManager) {
+            this.worldService.modelManager.emit(MessageType.SCENE_BACKGROUND_CLICK);
+        }
     }
 }

@@ -18,13 +18,25 @@ export class UserMenuPanel extends Panel {
             return;
         }
         this.setData("data", param);
+        this.addItem(param);
         this.x = this.scene.input.activePointer.x;
         this.y = this.scene.input.activePointer.y;
-        this.scene.input.on("gameobjectup", this.onClickMenu, this);
+        this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     }
 
     hide() {
-        this.scene.input.off("gameobjectup", this.onClickMenu, this);
+        this.scene.input.off("gameobjectdown", this.onClickMenu, this);
+        this.removeInteractive();
+        if (this.parentContainer) {
+            this.parentContainer.remove(this);
+        }
+        this.clear();
+    }
+
+    setSize(width: number, height: number): this {
+        super.setSize(width, height);
+        this.setInteractive();
+        return this;
     }
 
     public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
@@ -36,6 +48,8 @@ export class UserMenuPanel extends Panel {
             this.mMenus.push(btn);
         }
         // this.resizeBackground(60, this.mMenus.length * 30);
+        this.resizeBackground(60, this.mMenus.length * 30);
+        this.setSize(60, this.mMenus.length * 30);
     }
 
     protected preload() {
@@ -47,7 +61,7 @@ export class UserMenuPanel extends Panel {
     protected init() {
         this.mBackground = new NinePatch(this.scene, {
             width: 60,
-            height: 60,
+            height: 30,
             key: Border.getName(),
             columns: Border.getColumns(),
             rows: Border.getRows(),
@@ -68,7 +82,7 @@ export class UserMenuPanel extends Panel {
         }, menu.text);
         item.setData("node", menu.node);
         item.setInteractive();
-        item.on("pointerup", this.onClickMenu, this);
+        // item.on("pointerup", this.onClickMenu, this);
         if (menu.child.length > 0) {
             const menuChild = menu.child;
             for (const child of menuChild) {
