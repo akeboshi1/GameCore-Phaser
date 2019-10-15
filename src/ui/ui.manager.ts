@@ -86,7 +86,8 @@ export class UiManager extends PacketHandler {
         this.removePackListener();
         if (this.mMedMap) {
             this.mMedMap.forEach((mediator: IMediator) => {
-                if (mediator.isShow) mediator.hide();
+                mediator.destroy();
+                mediator = null;
             });
             this.mMedMap.clear();
         }
@@ -120,9 +121,10 @@ export class UiManager extends PacketHandler {
                 Logger.error(`error ${type} no panel can show!!!`);
                 return;
             }
-            this.mMedMap.set(type, mediator);
+            this.mMedMap.set(type + "Mediator", mediator);
             // mediator.setName(type);
         }
+        if (mediator.isShow()) return;
         mediator.show(params);
     }
 
@@ -147,6 +149,7 @@ export class UiManager extends PacketHandler {
             Logger.error(`error ${type} no panel can show!!!`);
             return;
         }
+        if (!mediator.isShow()) return;
         mediator.hide();
     }
 }

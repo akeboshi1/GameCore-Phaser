@@ -75,20 +75,43 @@ export class ItemSlot implements IListItemComponent {
         }
     }
 
-    public destory() {
+    public destroy() {
         if (this.mSubScriptSprite) {
             this.mSubScriptSprite.destroy(true);
+            this.mSubScriptSprite = null;
         }
         if (this.mSelectSprite) {
             this.mSelectSprite.destroy(true);
+            this.mSelectSprite = null;
         }
         if (this.mIcon) {
             this.mIcon.destroy();
         }
-        this.con.removeAll();
-        this.con.removeAllListeners();
-        this.con.destroy(true);
-        this.con = null;
+        if (this.con) {
+            this.con.destroy();
+            this.con = null;
+        }
+        if (this.mAnimationCon) {
+            this.mAnimationCon.destroy(true);
+            this.mAnimationCon = null;
+        }
+        if (this.itemBG) {
+            this.itemBG.destroy(true);
+            this.itemBG = null;
+        }
+
+        this.index = 0;
+        this.mData = null;
+        this.mScene = null;
+        this.mWorld = null;
+        this.mResStr = null;
+        this.mResPng = null;
+        this.mResSlot = null;
+        this.mResJson = null;
+        this.mSubScriptRes = null;
+        this.mSelectRes = null;
+        this.mWorld = null;
+        this.minitialize = false;
         this.mWid = 0;
         this.mHei = 0;
         this.mData = null;

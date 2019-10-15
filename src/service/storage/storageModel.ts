@@ -21,4 +21,9 @@ export class StorageModel extends PacketHandler implements IBaseModel {
     public unRegister() {
 
     }
+
+    public destroy() {
+        this.initialize = false;
+        this.mConnect = null;
+    }
 }

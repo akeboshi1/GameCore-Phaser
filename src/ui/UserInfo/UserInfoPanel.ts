@@ -1,6 +1,6 @@
 import {Panel} from "../components/panel";
 import {DynamicImage} from "../components/dynamic.image";
-import {Background, BlueButton, Border, ResUtils, Url} from "../../utils/resUtil";
+import {Background, Border} from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import {WorldService} from "../../game/world.service";
 import {Font} from "../../utils/font";
@@ -76,6 +76,38 @@ export class UserInfoPanel extends Panel {
         });
 
         this.updateFollower(actor.platformId);
+    }
+
+    destroy() {
+        if (this.mActor) {
+            this.mActor.destroy(true);
+            this.mActor = null;
+        }
+        if (this.mBadgeImages) {
+            this.mBadgeImages.forEach((image) => {
+                image.destroy(true);
+                image = null;
+            });
+            this.mBadgeImages = [];
+        }
+
+        if (this.mNickName) {
+            this.mNickName.destroy(true);
+            this.mNickName = null;
+        }
+
+        if (this.mLv) {
+            this.mLv.destroy(true);
+            this.mLv = null;
+        }
+
+        if (this.mFollwerBtn) {
+            this.mFollwerBtn.destroy(true);
+            this.mFollwerBtn = null;
+        }
+
+        this.mWorld = null;
+        super.destroy();
     }
 
     protected preload() {

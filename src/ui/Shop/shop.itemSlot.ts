@@ -4,13 +4,16 @@ import { DragDropIcon } from "../bag/dragDropIcon";
 import { op_def, op_gameconfig } from "pixelpai_proto";
 import { UI } from "../../const/res.const";
 import { Url } from "../../utils/resUtil";
+import { DynamicImage } from "../components/dynamic.image";
 
 export class ShopItemSlot extends ItemSlot {
+    private moneyIcon: DynamicImage;
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         super(scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes);
     }
 
     public dataChange(val: any) {
+        if (!val) return;
         super.dataChange(val);
         const prices = val.price;
         const priceLen: number = prices.length;
@@ -21,12 +24,16 @@ export class ShopItemSlot extends ItemSlot {
                 key = UI.TuDing18.getName();
                 png = UI.TuDing18.getPNG();
             }
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-                this.makeCoin(prices[i], i * 20 + 30);
-            });
-            this.mScene.load.image(key, png);
-            this.mScene.load.start();
+            this.makeCoin(prices[i], i * 20 + 30);
         }
+    }
+
+    public destroy() {
+        if (this.moneyIcon) {
+            this.moneyIcon.destroy(true);
+            this.moneyIcon = null;
+        }
+        super.destroy();
     }
 
     protected makeCoin(price: op_gameconfig.IPrice, y: number) {
@@ -37,16 +44,19 @@ export class ShopItemSlot extends ItemSlot {
             png = UI.TuDing18.getPNG();
         }
 
-        const moneyIcon = this.mScene.make.image(undefined, false);
-        moneyIcon.x = (-this.mWid >> 1) + 15;
-        moneyIcon.y = y;
-        this.con.add(moneyIcon);
-        moneyIcon.setTexture(key, png);
+        // const moneyIcon = this.mScene.make.image(undefined, false);
+        this.moneyIcon = new DynamicImage(this.mScene, 0, 0);
+        this.moneyIcon.x = (-this.mWid >> 1) + 15;
+        this.moneyIcon.y = y;
+        this.con.add(this.moneyIcon);
+
+        this.moneyIcon.load(png);
+
         const priceText = this.mScene.make.text(undefined, false);
         priceText.setFontFamily("Tahoma");
         // priceText.setFontStyle("bold");
         priceText.setFontSize(15);
-        priceText.x = -this.mWid / 2 + moneyIcon.width + 20;
+        priceText.x = -this.mWid / 2 + this.moneyIcon.width + 20;
         priceText.y = y - 9;
 
         this.con.add(priceText);

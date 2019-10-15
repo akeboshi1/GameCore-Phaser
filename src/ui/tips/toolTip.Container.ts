@@ -11,7 +11,9 @@ export class ToolTipContainer extends Phaser.GameObjects.Container {
     }
 
     public setToolTip(resStr: string, resJson: string, resUrl: string) {
-        this.mToolTip = ToolTip.getInstance(this.mScene, resStr, resJson, resUrl);
+        if (!this.mToolTip) {
+            this.mToolTip = new ToolTip(this.mScene, resStr, resJson, resUrl);
+        }
     }
 
     public setToolTipData(text: string) {
@@ -23,6 +25,17 @@ export class ToolTipContainer extends Phaser.GameObjects.Container {
             this.on("pointerdown", this.overHandler, this);
             this.on("pointerup", this.outHandler, this);
         }
+    }
+
+    public destroy() {
+        this.removeAll();
+        this.removeAllListeners();
+        if (this.mToolTip) {
+            this.mToolTip.destroy();
+            this.mToolTip = null;
+        }
+        this.mToolTipData = undefined;
+        super.destroy();
     }
 
     private overHandler(pointer, target) {
@@ -41,6 +54,10 @@ export class ToolTipContainer extends Phaser.GameObjects.Container {
     private outHandler() {
         if (this.mToolTip) {
             if (this.mToolTip.parentContainer) {
+                this.off("pointerdown", this.overHandler, this);
+                this.off("pointerup", this.outHandler, this);
+                this.off("pointerdown", this.overHandler, this);
+                this.off("pointerup", this.outHandler, this);
                 this.mToolTip.parentContainer.remove(this.mToolTip);
             }
         }

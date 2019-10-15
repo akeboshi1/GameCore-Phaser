@@ -43,6 +43,23 @@ export class UserMenuPanel extends Panel {
         return this;
     }
 
+    public destroy() {
+        if (this.mBackground) {
+            this.mBackground.destroy();
+        }
+        if (this.mMenus) {
+            const len: number = this.mMenus.length;
+            for (let i: number = 0; i < len; i++) {
+                let item: MenuItem = this.mMenus[i];
+                if (item) continue;
+                item.destroy(true);
+                item = null;
+            }
+            this.mMenus = [];
+        }
+        super.destroy();
+    }
+
     public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
         if (!this.mInitialized) return;
         this.clear();

@@ -7,12 +7,12 @@ import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
 import { ILayerManager } from "../layer.manager";
-import {PlayerDataModel} from "../../service/player/playerDataModel";
+import { PlayerDataModel } from "../../service/player/playerDataModel";
 
 export class ChatMediator extends PacketHandler implements IMediator {
+    public static NAME: string = "ChatMediator";
     public world: WorldService;
     private mChatPanel: ChatPanel;
-    private mName: string;
     private mGMEApi: WebGMEAPI;
     private mInRoom: boolean = false;
     private mQCLoudAuth: string;
@@ -24,7 +24,6 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.world = world;
         this.mScene = scene;
         if (this.world.connection) {
-            this.world.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
@@ -57,13 +56,6 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return true;
     }
 
-    public getName(): string {
-        return this.mName;
-    }
-
-    public setName(val: string) {
-        this.mName = val;
-    }
     public getView(): ChatPanel {
         return this.mChatPanel;
     }
@@ -80,6 +72,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         if (this.mChatPanel && this.mChatPanel.isShow()) {
             return;
         }
+        this.world.connection.addPacketListener(this);
         this.mChatPanel = new ChatPanel(this.mScene, this.world);
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
@@ -93,11 +86,29 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public hide() {
+        this.world.connection.removePacketListener(this);
         this.mChatPanel.off("sendChat", this.onSendChatHandler, this);
         this.mChatPanel.off("selectedVoice", this.onSelectedVoiceHandler, this);
         this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.hide();
-        this.mChatPanel = null;
+    }
+
+    public destroy() {
+        if (this.mChatPanel) {
+            this.mChatPanel.destroy();
+            this.mChatPanel = null;
+        }
+        if (this.mGMEApi) {
+            this.mGMEApi = null;
+        }
+        this.mScene = null;
+        this.world = null;
+        this.mInRoom = false;
+        this.mQCLoudAuth = null;
+        this.mAllMessage.forEach((message) => {
+            if (message) message = null;
+        });
+        this.mAllMessage = null;
     }
 
     private initGME() {
@@ -135,6 +146,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     private changeMessageChannel() {
+        if (!this.mChatPanel) return;
         const showMessages = this.mAllMessage.filter((msg: IMessage) => msg.channel === this.mChatPanel.outChannel || msg.channel === op_def.ChatChannel.System || this.mChatPanel.outChannel === null);
         const len = showMessages.length;
         let message: IMessage = null;
@@ -148,12 +160,13 @@ export class ChatMediator extends PacketHandler implements IMediator {
 
     private handleCharacterChat(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        if (!this.world || !this.world.modelManager) {
+        if (!this.world || !this.world.modelManager || !this.room || !this.mChatPanel) {
             return;
         }
 
         const playerManager = <PlayerDataModel> this.world.modelManager.getModel(PlayerDataModel.name);
         const player = playerManager.getPlayer(content.chatSenderid);
+        if (!player) return;
         // const chatSendName = player ? player.name : "";
         // this.mChatPanel.appendChat(content.chatContext);
         const nickname = player ? `${player.nickname}:` : "";

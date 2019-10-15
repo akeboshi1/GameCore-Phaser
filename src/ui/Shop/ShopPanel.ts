@@ -22,6 +22,10 @@ export class ShopPanel extends Panel {
         this.x = size.width >> 1;
         this.y = size.height - 300;
     }
+    public hide() {
+        super.hide();
+        this.destroy();
+    }
 
     public setDataList(value: any[]) {
         this.mDataList = value;
@@ -32,10 +36,9 @@ export class ShopPanel extends Panel {
     }
 
     public destroy() {
-        super.destroy();
         if (this.mShopItemSlotList) {
             this.mShopItemSlotList.forEach((slot: ShopItemSlot) => {
-                if (slot) slot.destory();
+                if (slot) slot.destroy();
             });
             this.mShopItemSlotList.length = 0;
             this.mShopItemSlotList = null;
@@ -45,6 +48,7 @@ export class ShopPanel extends Panel {
             this.mDataList = null;
         }
         this.mInitialized = false;
+        super.destroy();
     }
 
     protected preload() {
@@ -101,6 +105,11 @@ export class ShopPanel extends Panel {
             this.onClsLoadCompleteHandler();
         }
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+
+        // 异步加载过程中会导致数据过来，面板仍然没有加载完毕，所以缓存数据等ui加载完毕再做显示
+        if (this.mDataList) {
+            this.refreshDataList();
+        }
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {

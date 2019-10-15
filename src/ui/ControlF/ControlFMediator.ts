@@ -1,12 +1,12 @@
-import {IMediator} from "../baseMediator";
+import { IMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
-import {WorldService} from "../../game/world.service";
-import {ILayerManager} from "../layer.manager";
-import {ControlFPanel} from "./ControlFPanel";
-import {PBpacket} from "net-socket-packet";
+import { WorldService } from "../../game/world.service";
+import { ILayerManager } from "../layer.manager";
+import { ControlFPanel } from "./ControlFPanel";
+import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
-import {Logger} from "../../utils/log";
-import {ComponentRankPanel} from "../ComponentRank/ComponentRankPanel";
+import { Logger } from "../../utils/log";
+import { ComponentRankPanel } from "../ComponentRank/ComponentRankPanel";
 
 export class ControlFMediator implements IMediator {
     readonly world: WorldService;
@@ -69,6 +69,15 @@ export class ControlFMediator implements IMediator {
     }
 
     update(param?: any): void {
+    }
+
+    destroy() {
+        if (this.mControlF) {
+            this.mControlF.destroy();
+            this.mControlF = null;
+        }
+        this.mScene = null;
+        this.mLayerManager = null;
     }
 
     private handControlF() {

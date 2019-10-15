@@ -69,7 +69,8 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     }
 
     public destroy() {
-        super.destroy();
+        this.mCallBack = null;
+        super.destroy(true);
     }
 
     public get icon(): Phaser.GameObjects.Image {

@@ -18,6 +18,15 @@ export class NoticePanel extends Panel {
     }
 
     public destroy() {
+        if (this.mContentText) {
+            this.mContentText.destroy();
+            this.mContentText = null;
+        }
+        if (this.mTween) {
+            this.mTween.stop();
+            this.mTween.remove();
+            this.mTween = null;
+        }
         super.destroy();
     }
 

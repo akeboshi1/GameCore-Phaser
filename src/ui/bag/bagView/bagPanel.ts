@@ -41,24 +41,43 @@ export class BagPanel extends Panel {
         this.refreshDataList();
     }
 
+    public hide() {
+        super.hide();
+        this.destroy();
+    }
+
     public getPageNum(): number {
         return this.mPageNum;
     }
 
     public destroy() {
-        super.destroy();
         if (this.bagSlotList) {
             this.bagSlotList.forEach((slot: ItemSlot) => {
-                if (slot) slot.destory();
+                if (slot) slot.destroy();
             });
             this.bagSlotList.length = 0;
             this.bagSlotList = null;
+        }
+        if (this.mClsBtnSprite) {
+            this.mClsBtnSprite.destroy(true);
+            this.mClsBtnSprite = null;
+        }
+        if (this.mPreBtn) {
+            this.mPreBtn.destroy(true);
+            this.mPreBtn = null;
+        }
+        if (this.mNextBtn) {
+            this.mNextBtn.destroy(true);
+            this.mNextBtn = null;
         }
         if (this.mDataList) {
             this.mDataList.length = 0;
             this.mDataList = null;
         }
-        this.mInitialized = false;
+        this.mWorld = null;
+        this.mPageNum = 0;
+        this.mPageIndex = 1;
+        super.destroy();
     }
 
     public getCurPageIndex(): number {

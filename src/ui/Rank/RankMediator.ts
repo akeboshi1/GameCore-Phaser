@@ -25,7 +25,6 @@ export class RankMediator implements IMediator {
 
     hide(): void {
         this.mRankPanel.hide();
-        this.mRankPanel = null;
     }
 
     isSceneUI(): boolean {
@@ -55,6 +54,17 @@ export class RankMediator implements IMediator {
         if (param && param.length > 0) {
             this.mRankPanel.update(param[0]);
         }
+    }
+
+    destroy() {
+        if (this.mRankPanel) {
+            if (this.mRankPanel.parentContainer) {
+                this.mRankPanel.parentContainer.remove(this.mRankPanel);
+            }
+            this.mRankPanel.destroy();
+            this.mRankPanel = null;
+        }
+        this.mScene = null;
     }
 
 }

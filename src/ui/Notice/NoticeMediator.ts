@@ -30,7 +30,14 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     hide(): void {
         if (!this.mNoticePanel) return;
         this.mNoticePanel.hide();
-        this.mNoticePanel = null;
+    }
+
+    destroy() {
+        if (this.mNoticePanel) {
+            this.mNoticePanel.destroy();
+            this.mNoticePanel = null;
+        }
+        this.mScene = null;
     }
 
     isSceneUI(): boolean {
@@ -38,7 +45,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     isShow(): boolean {
-        return false;
+        return this.mNoticePanel.isShow();
     }
 
     resize() {

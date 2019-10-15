@@ -1,10 +1,10 @@
-import {IMediator} from "../baseMediator";
-import {WorldService} from "../../game/world.service";
+import { IMediator } from "../baseMediator";
+import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
-import {ILayerManager} from "../layer.manager";
-import {ComponentRankPanel} from "./ComponentRankPanel";
+import { ILayerManager } from "../layer.manager";
+import { ComponentRankPanel } from "./ComponentRankPanel";
 
-export class ComponentRankMediator implements IMediator  {
+export class ComponentRankMediator implements IMediator {
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
@@ -50,6 +50,17 @@ export class ComponentRankMediator implements IMediator  {
         if (param && param.length > 0) {
             this.mRank.addItem(param[0]);
         }
+    }
+
+    destroy() {
+        if (this.mRank) {
+            if (this.mRank.parentContainer) {
+                this.mRank.parentContainer.remove(this.mRank);
+            }
+            this.mRank.destroy();
+            this.mRank = null;
+        }
+        this.mScene = null;
     }
 
     update(param?: any): void {

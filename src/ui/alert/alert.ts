@@ -45,16 +45,24 @@ export class Alert implements IAbstractPanel {
     }
 
     public hide() {
-
+        this.mShowing = false;
     }
 
     public resize() {
-
+        if (this.mParentCon) {
+            const size: Size = this.mWorld.getSize();
+            this.mParentCon.x = size.width - this.mParentCon.width >> 1;
+        }
     }
 
     public destroy() {
-        if (this.mParentCon) this.mParentCon.destroy(true);
+        if (this.mParentCon) {
+            this.mParentCon.destroy(true);
+            this.mParentCon = null;
+        }
         this.mShowing = false;
+        this.mScene = null;
+        this.mWorld = null;
     }
 
     public update() {

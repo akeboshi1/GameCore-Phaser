@@ -4,7 +4,6 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
 import { IBaseModel } from "../baseModel";
 import { WorldService } from "../../game/world.service";
-import { PacketHandler } from "net-socket-packet";
 
 export class PlayerDataModel implements IBaseModel {
     // private mCharactId: number;
@@ -28,6 +27,21 @@ export class PlayerDataModel implements IBaseModel {
     }
 
     public unRegister() {
+    }
+
+    public destroy() {
+        this.initialize = false;
+        if (this.mPlayerInfoList) {
+            const len: number = this.mPlayerInfoList.length;
+            for (let i: number = 0; i < len; i++) {
+                let playerInfo: PlayerInfo = this.mPlayerInfoList[i];
+                if (!playerInfo) continue;
+                playerInfo = null;
+            }
+        }
+        this.mPlayerInfoList = null;
+        this.mMainPlayerInfo = null;
+        this.mModelDispatch = null;
     }
 
     // public setCharacterId(value: number): void {

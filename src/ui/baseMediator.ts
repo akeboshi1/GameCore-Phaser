@@ -10,6 +10,7 @@ export interface IMediator {
     show(param?: any): void;
     update(param?: any): void;
     hide(): void;
+    destroy();
 }
 
 export class BaseMediator implements IMediator {
@@ -51,4 +52,6 @@ export class BaseMediator implements IMediator {
         if (view) view.update(param);
     }
 
+    destroy() {
+    }
 }

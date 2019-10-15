@@ -65,7 +65,19 @@ export class BagUIMediator implements IMediator {
         this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
-        this.mView = null;
+    }
+
+    public destroy() {
+        if (this.mView) {
+            this.mView.destroy();
+            this.mView = null;
+        }
+        if (this.mPlayerModel) {
+            this.mPlayerModel.destroy();
+            this.mPlayerModel = null;
+        }
+        this.mScene = null;
+        this.world = null;
     }
 
     private heroItemChange() {

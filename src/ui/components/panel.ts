@@ -18,7 +18,6 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     }
     hide() {
         this.mShowing = false;
-        this.destroy();
     }
 
     destroy() {
@@ -27,20 +26,11 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         if (this.parentContainer) {
             this.parentContainer.remove(this);
         }
-        // if (this.list && this.list.length > 0) {
-        //     const len: number = this.list.length;
-        //     for (let i: number = 0; i < len; i++) {
-        //         const child: Phaser.GameObjects.GameObject = this.list[i];
-        //         if (!child) continue;
-        //         if (child.parentContainer) {
-        //             child.parentContainer.remove(child);
-        //         }
-        //         child.destroy(true);
-        //     }
-        // }
         this.mInitialized = false;
+        this.mShowing = false;
         this.mWidth = 0;
         this.mHeight = 0;
+        this.mScene = null;
         super.destroy();
     }
 
