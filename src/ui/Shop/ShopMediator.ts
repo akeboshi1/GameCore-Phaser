@@ -24,6 +24,8 @@ export class ShopMediator implements IMediator {
         this.world = world;
         this.mScene = scene;
         this.mShopModel = this.world.modelManager.getModel(ShopModel.NAME) as ShopModel;
+        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.modelManager.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
     }
 
     public isSceneUI(): boolean {
@@ -39,7 +41,7 @@ export class ShopMediator implements IMediator {
     }
 
     public show(param?: any) {
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView) {
             return;
         }
         this.mView = new ShopPanel(this.mScene, this.world);
@@ -47,8 +49,6 @@ export class ShopMediator implements IMediator {
         // this.world.uiManager.getUILayerManager().addToUILayer(this.mView);
         this.mParam = param;
         this.mShopModel.register();
-        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
-        this.world.modelManager.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         (this.world.modelManager.getModel(BagModel.NAME) as BagModel).requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
     }
 
@@ -58,14 +58,14 @@ export class ShopMediator implements IMediator {
 
     public hide() {
         if (this.mView) {
-            this.mView.hide();
+            this.mView = null;
         }
         this.mShopModel.unRegister();
-        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
-        this.world.modelManager.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
     }
 
     public destroy() {
+        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.modelManager.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         if (this.mShopModel) {
             this.mShopModel.destroy();
             this.mShopModel = null;

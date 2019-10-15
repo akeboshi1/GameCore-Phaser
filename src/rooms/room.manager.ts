@@ -50,14 +50,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     public onFocus() {
-        // todo start pausepanel
         this.mRooms.forEach((room: Room) => {
             if (room) room.resume(room.scene.scene.key);
         });
     }
 
     public onBlur() {
-        // todo start pausepanel
         this.mRooms.forEach((room: Room) => {
             if (room) room.pause();
         });

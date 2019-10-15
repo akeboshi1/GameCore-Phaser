@@ -5,12 +5,13 @@ import { ItemSlot } from "../bag/item.slot";
 import { ShopItemSlot } from "./shop.itemSlot";
 import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
+import { ShopMediator } from "./ShopMediator";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
+    public mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mWorld: WorldService;
     private mShopItemSlotList: ShopItemSlot[];
-    private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mDataList: any[];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
@@ -23,6 +24,7 @@ export class ShopPanel extends Panel {
         this.y = size.height - 300;
     }
     public hide() {
+        (this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator).hide();
         super.hide();
         this.destroy();
     }
@@ -60,8 +62,6 @@ export class ShopPanel extends Panel {
     }
 
     protected init() {
-        if (this.mInitialized) return;
-        super.init();
         const size: Size = this.mWorld.getSize();
         this.x = size.width >> 1;
         this.y = size.height - 300;
@@ -110,6 +110,7 @@ export class ShopPanel extends Panel {
         if (this.mDataList) {
             this.refreshDataList();
         }
+        super.init();
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {

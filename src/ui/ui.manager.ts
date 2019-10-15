@@ -111,9 +111,9 @@ export class UiManager extends PacketHandler {
 
     private showMed(type: string, ...params: any[]) {
         if (!this.mMedMap) return;
-        let mediator: IMediator = this.mMedMap.get(type);
+        const className: string = type + "Mediator";
+        let mediator: IMediator = this.mMedMap.get(className);
         if (!mediator) {
-            const className: string = type + "Mediator";
             const path: string = `./${type}/${type}Mediator`;
             const ns: any = require(`./${type}/${className}`);
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);

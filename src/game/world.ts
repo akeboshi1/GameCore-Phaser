@@ -36,7 +36,8 @@ import { PI_EXTENSION_REGEX } from "../const/constants";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import {HttpService} from "../net/http.service";
+import { HttpService } from "../net/http.service";
+import { GamePauseScene } from "../scenes/gamepause";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
 
@@ -421,6 +422,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             context.gameStatus = op_def.GameStatus.Focus;
             this.connection.send(pkt);
             this.mRoomMamager.onFocus();
+            const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
+            if (pauseScene) {
+                this.mGame.scene.stop(GamePauseScene.name);
+            }
         } else {
             Logger.error("connection is undefined");
         }
@@ -433,6 +438,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
             this.mRoomMamager.onBlur();
+            if (!this.mGame.scene.getScene(GamePauseScene.name)) {
+                this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
+            }
+            this.mGame.scene.start(GamePauseScene.name, { world: this });
         } else {
             Logger.error("connection is undefined");
         }

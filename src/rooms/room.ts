@@ -133,7 +133,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
             // init block
             this.mBlocks.int(this.mSize);
         }
-
+        // this.mWorld.game.scene.stop(LoadingScene.name);
         this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
             callBack: () => {
@@ -158,7 +158,6 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     public onClockReady(): void {
         // TODO: Unload loading-scene
         Logger.debug("onClockReady");
-        this.mWorld.game.scene.stop(LoadingScene.name);
     }
 
     public pause() {
@@ -168,7 +167,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public resume(name: string) {
         this.mScene.scene.resume(name);
-        this.mClock.sync();
+        this.mClock.sync(3);
     }
 
     public requestActorMove(dir: number, keyArr: number[]) {
