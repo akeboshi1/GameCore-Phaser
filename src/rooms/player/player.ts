@@ -24,8 +24,11 @@ export enum PlayerState {
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
+    protected mFlagContainer: Phaser.GameObjects.Container;
+    protected mNickName: Phaser.GameObjects.Text;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
+        this.showNickName(sprite.nickname);
     }
 
     public move(moveData: op_client.IMoveData) {
@@ -61,8 +64,26 @@ export class Player extends Element {
         this.changeState(PlayerState.WALK);
     }
 
+    protected showNickName(value: string) {
+        if (!this.mNickName) {
+            this.mNickName = this.mElementManager.scene.make.text(undefined, false).setOrigin(0, 0);
+            if (this.flagContainer) this.flagContainer.add(this.mNickName);
+        }
+        this.mNickName.setText(value);
+    }
+
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
+    }
+
+    protected get flagContainer(): Phaser.GameObjects.Container {
+        if (this.mFlagContainer) return this.mFlagContainer;
+        if (!this.mDisplay) {
+            return;
+        }
+        this.mFlagContainer = this.mElementManager.scene.make.container(undefined, false);
+        this.mFlagContainer.y = -80;
+        this.mDisplay.add(this.mFlagContainer);
     }
 }

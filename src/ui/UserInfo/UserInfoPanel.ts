@@ -1,6 +1,6 @@
 import {Panel} from "../components/panel";
 import {DynamicImage} from "../components/dynamic.image";
-import {Background, Border} from "../../utils/resUtil";
+import {Background, BlueButton, Border, Url} from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import {WorldService} from "../../game/world.service";
 import {Font} from "../../utils/font";

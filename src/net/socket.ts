@@ -87,6 +87,7 @@ export class SocketConnection {
         if (!this.mTransport) {
             return Logger.error(`Empty transport.`);
         }
+        if (this.mServerAddr.secure !== undefined) this.mTransport.secure = this.mServerAddr.secure;
         this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);
     }
 }
