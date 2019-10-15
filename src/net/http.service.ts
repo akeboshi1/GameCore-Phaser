@@ -8,7 +8,7 @@ export class HttpService {
      * @param uids
      */
     follow(fuid: string[]): Promise<Response> {
-        return this.post("user/follow", JSON.stringify({ fuid}));
+        return this.post("user/follow", { fuid});
     }
 
     /**
@@ -16,15 +16,15 @@ export class HttpService {
      * @param fuid
      */
     unfollow(fuid: string): Promise<Response> {
-        return this.post("user/unfollow", JSON.stringify({ fuid }));
+        return this.post("user/unfollow", { fuid });
     }
 
     /**
      * 检查用户列表是否有关注的用户
      * @param uids
      */
-    checkFollowed(uids: number[]): Promise<Response> {
-        return this.post(`user/check_followed`, JSON.stringify({ uids }));
+    checkFollowed(uids: string[]): Promise<Response> {
+        return this.post(`user/check_followed`, { "uids": uids });
     }
 
     /**
@@ -43,7 +43,7 @@ export class HttpService {
         return this.get(`userpackage/${uid}/badgecards`);
     }
 
-    private post(uri: string, body: string): Promise<Response> {
+    private post(uri: string, body: any): Promise<Response> {
         const account = this.mWorld.account;
         if (!account) {
             return Promise.reject("account does not exist");
@@ -52,13 +52,14 @@ export class HttpService {
             return Promise.reject("token does not exist");
         }
         const data = {
-            body,
+            body: JSON.stringify(body),
             method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch(`${CONFIG.api_root}/${uri}`, data);
+        return fetch(`${CONFIG.api_root}${uri}`, data).then((response) => response.json());
     }
 
     private get(uri: string) {
@@ -75,6 +76,6 @@ export class HttpService {
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch(`${CONFIG.api_root}/`, data);
+        return fetch(`${CONFIG.api_root}${uri}`, data).then((response) => response.json());
     }
 }

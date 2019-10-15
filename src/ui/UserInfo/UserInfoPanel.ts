@@ -1,11 +1,12 @@
 import {Panel} from "../components/panel";
 import {DynamicImage} from "../components/dynamic.image";
-import {Background, Border} from "../../utils/resUtil";
+import {Background, BlueButton, Border, ResUtils, Url} from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import {WorldService} from "../../game/world.service";
 import {Font} from "../../utils/font";
 import {NinePatchButton} from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
+import {PlayerDataModel} from "../../service/player/playerDataModel";
 
 export class UserInfoPanel extends Panel {
     private mWorld: WorldService;
@@ -41,22 +42,46 @@ export class UserInfoPanel extends Panel {
 
     setInfo(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
         if (!this.mInitialized || !data) return;
-        const texts = data.text;
-        if (!texts || texts.length < 0) {
+        // const texts = data.text;
+        // if (!texts || texts.length < 1) {
+        //     return;
+        // }
+        // this.mNickName.setText(texts[1].text);
+        // this.mLv.setText(texts[3].text);
+        //
+        // const display = data.images;
+        // if (display && display.length > 0) {
+        //     this.mActor.load(display[0].texturePath);
+        // }
+        //
+        if (data.actors.length === 0) {
             return;
         }
-        this.mNickName.setText(texts[1].text);
-        this.mLv.setText(texts[3].text);
+        const actor = data.actors[0];
+        this.mWorld.httpService.userDetail(actor.platformId).then((response) => {
+            if (response.code === 200) {
+                const resData = response.data;
+                if (resData) {
+                    this.mActor.load(Url.getOsdRes(`show/${resData.username}.png`), this, undefined, this.loadDefaultAvatar);
+                    this.mNickName.setText(resData.nickname);
+                    this.mLv.setText(resData.level);
+                }
+            }
+        });
 
-        const display = data.images;
-        if (display && display.length > 0) {
-            this.mActor.load(display[0].texturePath);
-        }
+        this.mWorld.httpService.badgecards(actor.platformId).then((response) => {
+            if (response.code === 200) {
+                this.createBadge(response.data);
+            }
+        });
+
+        this.updateFollower(actor.platformId);
     }
 
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image(Background.getName(), Background.getPNG());
+        this.scene.load.image(BlueButton.getName(), BlueButton.getPNG());
         super.preload();
     }
 
@@ -87,8 +112,7 @@ export class UserInfoPanel extends Panel {
             text: "昵称：",
             stroke: "#000000",
             strokeThickness: 2,
-            color: "#b4b4b4",
-            style: { font: Font.YAHEI_18_BOLD }
+            style: { color: "#b4b4b4", font: Font.YAHEI_18_BOLD }
         }, false);
         this.add(nickNameLabel);
 
@@ -99,7 +123,7 @@ export class UserInfoPanel extends Panel {
             stroke: "#000000",
             strokeThickness: 2,
             color: "#b4b4b4",
-            style: { font: Font.YAHEI_18_BOLD }
+            style: { color: "#b4b4b4", font: Font.YAHEI_18_BOLD }
         }, false);
         this.add(lvLabel);
         super.init();
@@ -124,11 +148,16 @@ export class UserInfoPanel extends Panel {
         });
         this.add(this.mLv);
 
-        // this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, {
-        //     width: 80,
-        //     height: 34,
-        //     key:
-        // })
+        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, {
+            width: 80,
+            height: 34,
+            text: "关注",
+            key: BlueButton.getName(),
+            columns: BlueButton.getColumns(),
+            rows: BlueButton.getRows()
+        });
+        this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD, stroke: "#000000", strokeThickness: 5 });
+        this.add(this.mFollwerBtn);
 
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
         this.mActor.scale = 2;
@@ -136,6 +165,46 @@ export class UserInfoPanel extends Panel {
         this.resize();
 
         this.setInfo(this.getData("data"));
+    }
+
+    private updateFollower(platformId) {
+        const playerManager = (<PlayerDataModel> this.mWorld.modelManager.getModel(PlayerDataModel.name));
+        if (!playerManager) return;
+        const mainPlayer = playerManager.mainPlayerInfo;
+        if (!mainPlayer) return;
+        if (platformId === mainPlayer.platformId) {
+            this.remove(this.mFollwerBtn);
+            this.mFollwerBtn.visible = false;
+            return;
+        }
+        this.mFollwerBtn.visible = true;
+
+        this.mWorld.httpService.checkFollowed([platformId])
+            .then((response: any) => {
+                if (response.code === 200) {
+                    const resData = response.data;
+                    if (resData.length > 0) {
+                        this.mFollwerBtn.setText("取消关注");
+                    } else {
+                        this.mFollwerBtn.setText("关注");
+                    }
+                    this.mFollwerBtn.setData("node", { text: this.mFollwerBtn.getText(), platformId });
+                }
+            });
+    }
+
+    private createBadge(badges) {
+        if (!badges) return;
+        for (let i = 0; i < badges.length; i++) {
+            const badge = new DynamicImage(this.scene, i * 70 + 60, 100);
+            badge.load(Url.getOsdRes(badges[i].target_entity.thumbnail));
+            this.add(badge);
+            this.mBadgeImages.push(badge);
+        }
+    }
+
+    private loadDefaultAvatar() {
+        this.mActor.load(Url.getOsdRes("show/avatar_default.png"));
     }
 
     private clearBadge() {

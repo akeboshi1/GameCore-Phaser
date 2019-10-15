@@ -23,7 +23,6 @@ export class MenuItem extends NinePatchButton {
 
     public show() {
         this.add(this.mChild);
-
     }
 
     public destroy(fromScene?: boolean): void {

@@ -17,7 +17,7 @@ export class MainUIScene extends Phaser.Scene {
   }
 
   public create() {
-    this.fps = this.add.text(10, 10, "");
+    this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17" } });
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
     } else {

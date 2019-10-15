@@ -59,6 +59,8 @@ export class PlayerInfo implements IActor {
 
     public displayBadgeCards: op_def.IBadgeCard[];
 
+    public platformId: string;
+
     protected _originWalkPoint: Phaser.Geom.Point;
 
     protected _originCollisionPoint: Phaser.Geom.Point;

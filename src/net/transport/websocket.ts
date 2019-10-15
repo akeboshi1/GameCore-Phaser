@@ -12,7 +12,7 @@ enum ReadyState {
 }
 
 export class WSWrapper extends EventEmitter {
-    public secure = false;
+    public secure = true;
     _host: string;
     _port: number;
     _connection: any = undefined;

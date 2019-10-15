@@ -4,12 +4,16 @@ import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatc
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
 import {Logger} from "../../utils/log";
+import {WorldService} from "../../game/world.service";
+import {PlayerDataModel} from "../../service/player/playerDataModel";
 
 export class UserMenuPanel extends Panel {
     private mBackground: NinePatch;
     private mMenus: MenuItem[] = [];
-    constructor(scene: Phaser.Scene) {
+    private mWorld: WorldService;
+    constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
+        this.mWorld = world;
     }
 
     show(param?: any) {
@@ -40,6 +44,7 @@ export class UserMenuPanel extends Panel {
     }
 
     public addItem(params: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
+        if (!this.mInitialized) return;
         this.clear();
         const menu: op_gameconfig_01.IMenuItem[] = params.menuItem;
         for (let i = 0; i < menu.length; i++) {
@@ -50,6 +55,31 @@ export class UserMenuPanel extends Panel {
         // this.resizeBackground(60, this.mMenus.length * 30);
         this.resizeBackground(60, this.mMenus.length * 30);
         this.setSize(60, this.mMenus.length * 30);
+
+        const playerManager = (<PlayerDataModel> this.mWorld.modelManager.getModel(PlayerDataModel.name));
+        if (!playerManager) return;
+        const mainPlayer = playerManager.mainPlayerInfo;
+        if (!mainPlayer) return;
+        const actor = params.actors[0];
+        if (!actor) return;
+        if (mainPlayer.platformId !== actor.platformId) {
+            const fn = { text: "关注", platformid: actor.platformId };
+            const follow = this.appendItem({ text: "关注", node: undefined }, 0, this.mMenus.length * 32);
+            follow.setData("node", fn);
+            this.add(follow);
+            this.mMenus.push(follow);
+            this.mWorld.httpService.checkFollowed([actor.platformId])
+                .then((response: any) => {
+                    if (response.code === 200) {
+                        const data = response.data;
+                        if (data.length > 0) {
+                            follow.setText("取消关注");
+                        }
+                        fn.text = follow.getText();
+                        follow.setData("node", fn);
+                    }
+                });
+        }
     }
 
     protected preload() {
@@ -83,7 +113,7 @@ export class UserMenuPanel extends Panel {
         item.setData("node", menu.node);
         item.setInteractive();
         // item.on("pointerup", this.onClickMenu, this);
-        if (menu.child.length > 0) {
+        if (menu.child && menu.child.length > 0) {
             const menuChild = menu.child;
             for (const child of menuChild) {
                 const btn = this.appendItem(child, 0, item.menus.length * 32);

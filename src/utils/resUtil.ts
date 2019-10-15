@@ -47,6 +47,24 @@ export class BlackButton {
     }
 }
 
+export class BlueButton {
+    static getName(): string {
+        return "button_blue";
+    }
+
+    static getPNG(): string {
+        return Url.getRes("ui/common/button_blue.png");
+    }
+
+    static getColumns(): number[] {
+        return [7, 1, 7];
+    }
+
+    static getRows(): number[] {
+        return [7, 1, 7];
+    }
+}
+
 export class CloseButton {
     static getName(): string {
         return "common_clsBtn";

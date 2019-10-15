@@ -22,6 +22,14 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
         this.on("pointerout", this.changeNormal, this);
     }
 
+    public setText(text: string) {
+        this.mLabel.setText(text);
+    }
+
+    public getText(): string {
+        return this.mLabel.text;
+    }
+
     public setTextStyle(style: object) {
         this.mLabel.setStyle(style);
     }
