@@ -210,6 +210,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     public destroy() {
+        if (this.mMoveData.tweenAnim) {
+            this.mMoveData.tweenAnim.stop();
+            this.mMoveData.tweenAnim.remove();
+            this.mMoveData.tweenAnim = null;
+        }
         if (this.mDisplay) {
             this.mDisplay.destroy();
             this.mDisplay = null;
