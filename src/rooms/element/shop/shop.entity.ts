@@ -1,10 +1,10 @@
-import { IEntity } from "../entity";
-import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
-import { MessageType } from "../../const/MessageType";
-import { ConnectionService } from "../../net/connection.service";
+import { IEntity } from "../../entity";
+import { ConnectionService } from "../../../net/connection.service";
 import { ShopModel } from "./shop.model";
+import { WorldService } from "../../../game/world.service";
+import { op_client } from "pixelpai_proto";
+import { MessageType } from "../../../const/MessageType";
 
 export class ShopEntity extends PacketHandler implements IEntity {
     public static NAME: string = "ShopModel";

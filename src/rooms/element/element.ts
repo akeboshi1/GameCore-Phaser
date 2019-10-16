@@ -12,8 +12,7 @@ import { Pos } from "../../utils/pos";
 import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
-import { ShopEntity } from "../shop/shop.entity";
-
+import { ShopEntity } from "./shop/shop.entity";
 export enum Direction {
     up,
     up_left,
