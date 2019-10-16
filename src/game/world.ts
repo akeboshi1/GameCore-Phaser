@@ -31,7 +31,6 @@ import BBCodeTextPlugin from "../../lib/rexui/plugins/bbcodetext-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
-import { ModelManager } from "../service/modelManager";
 import { PI_EXTENSION_REGEX } from "../const/constants";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
@@ -50,7 +49,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private mInputManager: InputManager;
-    private mModelManager: ModelManager;
+    private mGameEmitter: Phaser.Events.EventEmitter;
     private mHttpService: HttpService;
     private mAccount: Account;
 
@@ -70,6 +69,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
 
+        this.mGameEmitter = new Phaser.Events.EventEmitter();
         this.mRoomMamager = new RoomManager(this);
         this.mUiManager = new UiManager(this);
         this.mMouseManager = new MouseManager(this);
@@ -148,7 +148,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
             this.mGame.plugins.removeScenePlugin("DragonBones");
             this.mGame.plugins.removeScenePlugin("rexUI");
-            this.mModelManager.destroy();
+            this.mGameEmitter.destroy();
             this.roomManager.destroy();
             this.uiManager.destroy();
             this.mGame.destroy(true);
@@ -201,8 +201,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConnection;
     }
 
-    get modelManager(): ModelManager | undefined {
-        return this.mModelManager;
+    get emitter(): Phaser.Events.EventEmitter {
+        return this.mGameEmitter;
     }
 
     get httpService(): HttpService {
@@ -357,7 +357,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        this.mModelManager = new ModelManager(this);
         if (this.mGame.device.os.desktop) {
             this.mInputManager = new KeyBoardManager(this, keyEvents);
         } else {

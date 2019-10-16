@@ -2,14 +2,12 @@ import { IBag } from "../basebag";
 import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
-import { op_gameconfig } from "pixelpai_proto";
-import { PlayerDataModel } from "../../../service/player/playerDataModel";
-import { PlayerInfo } from "../../../service/player/playerInfo";
+import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
+import { PlayerModel } from "../../../rooms/player/player.model";
 import { UIMediatorType } from "../../ui.mediatorType";
-import { BagModel } from "../../../service/bag/bagModel";
+import { PBpacket } from "net-socket-packet";
 import { BagPanel } from "../bagView/bagPanel";
-import { Logger } from "../../../utils/log";
 
 /**
  * 背包显示栏
@@ -199,18 +197,25 @@ export class BagUIPC implements IBag {
         this.bagBtn.on("pointerover", this.bagBtnOver, this);
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
 
-        const playerInfo: PlayerInfo = (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo;
-        if (playerInfo.package && playerInfo.package.items) this.setDataList(playerInfo.package.items);
+        const playerModel: PlayerModel = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
+        if (playerModel.package && playerModel.package.items) this.setDataList(playerModel.package.items);
         // childList.push(this.mBagBtnCon);
     }
 
     private bagHandler() {
-        this.mWorld.enterOtherGame();
-        // this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
-        // // =============index = 0 为背包按钮
-        // const bagModel: BagModel = this.mWorld.modelManager.getModel(BagModel.NAME) as BagModel;
-        // const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        // bagModel.requestVirtualWorldQueryPackage(playerModel.mainPlayerInfo.package.id, 1, BagPanel.PageMaxCount);
+        // this.mWorld.enterOtherGame();
+        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+        // =============index = 0 为背包按钮
+        this.requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id, 1, BagPanel.PageMaxCount);
+    }
+
+    private requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
+        content.id = bagId;
+        content.page = page;
+        content.perPage = perPage;
+        this.mWorld.connection.send(pkt);
     }
 
     private bagBtnOver(pointer) {

@@ -3,12 +3,8 @@ import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
-import { IAbstractPanel } from "../abstractPanel";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
-import { ILayerManager } from "../layer.manager";
-import { PlayerDataModel } from "../../service/player/playerDataModel";
-
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
@@ -160,12 +156,12 @@ export class ChatMediator extends PacketHandler implements IMediator {
 
     private handleCharacterChat(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        if (!this.world || !this.world.modelManager || !this.room || !this.mChatPanel) {
+        if (!this.world || !this.world.emitter || !this.room || !this.mChatPanel) {
             return;
         }
 
-        const playerManager = <PlayerDataModel> this.world.modelManager.getModel(PlayerDataModel.name);
-        const player = playerManager.getPlayer(content.chatSenderid);
+        const playerManager = this.world.roomManager.currentRoom.playerManager;
+        const player = playerManager.get(content.chatSenderid).getPlayerModel();
         if (!player) return;
         // const chatSendName = player ? player.name : "";
         // this.mChatPanel.appendChat(content.chatContext);

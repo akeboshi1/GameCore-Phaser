@@ -19,7 +19,7 @@ export class UserInfoMediator implements IMediator {
 
     hide(): void {
         this.mUserInfo.hide();
-        this.world.modelManager.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+        this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
     }
 
     isSceneUI(): boolean {
@@ -40,7 +40,7 @@ export class UserInfoMediator implements IMediator {
         }
         this.mUserInfo.show(param[0]);
         this.mLayerManager.addToUILayer(this.mUserInfo);
-        this.world.modelManager.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+        this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
     }
 
     destroy() {

@@ -4,7 +4,7 @@ import { op_virtual_world } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
-import {MessageType} from "../const/MessageType";
+import { MessageType } from "../const/MessageType";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -129,8 +129,8 @@ export class MouseManager extends PacketHandler {
     }
 
     private pointerDownHandler() {
-        if (this.worldService && this.worldService.modelManager) {
-            this.worldService.modelManager.emit(MessageType.SCENE_BACKGROUND_CLICK);
+        if (this.worldService && this.worldService.emitter) {
+            this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK);
         }
     }
 }

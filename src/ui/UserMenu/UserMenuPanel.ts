@@ -1,11 +1,9 @@
-import {Panel} from "../components/panel";
-import {BlackButton, Border, Url} from "../../utils/resUtil";
+import { Panel } from "../components/panel";
+import { BlackButton, Border, Url } from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
-import {Logger} from "../../utils/log";
-import {WorldService} from "../../game/world.service";
-import {PlayerDataModel} from "../../service/player/playerDataModel";
+import { WorldService } from "../../game/world.service";
 
 export class UserMenuPanel extends Panel {
     private mBackground: NinePatch;
@@ -73,9 +71,7 @@ export class UserMenuPanel extends Panel {
         this.resizeBackground(60, this.mMenus.length * 30);
         this.setSize(60, this.mMenus.length * 30);
 
-        const playerManager = (<PlayerDataModel> this.mWorld.modelManager.getModel(PlayerDataModel.name));
-        if (!playerManager) return;
-        const mainPlayer = playerManager.mainPlayerInfo;
+        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
         if (!mainPlayer) return;
         const actor = params.actors[0];
         if (!actor) return;

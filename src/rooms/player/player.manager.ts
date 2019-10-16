@@ -1,16 +1,17 @@
 import { IElementManager } from "../element/element.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
-import { Player } from "./player";
 import { IRoomService, Room } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { ISprite, Sprite } from "../element/sprite";
+import { MessageType } from "../../const/MessageType";
+import { PlayerEntity } from "./player.entity";
+import { PlayerModel } from "./player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
-    private mPlayerMap: Map<number, Player> = new Map();
-    private mActorID: number;
+    private mPlayerMap: Map<number, PlayerEntity> = new Map();
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -19,7 +20,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public init() {
-        // this.destroy();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
@@ -65,7 +65,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mRoom.actor.stopMove();
     }
 
-    public get(id: number): Player {
+    public get(id: number): PlayerEntity {
         if (!this.mPlayerMap) {
             return;
         }
@@ -83,6 +83,48 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return this.mRoom.cameraService.camera;
     }
 
+    // public addPlayer(obj: op_client.IActor): void {
+    //     const playerInfo: PlayerInfo = new PlayerInfo();
+    //     playerInfo.setInfo(obj);
+    //     if (obj.walkOriginPoint) {
+    //         playerInfo.setOriginWalkPoint(obj.walkOriginPoint);
+    //     }
+    //     if (obj.originPoint) {
+    //         playerInfo.setOriginCollisionPoint(obj.originPoint);
+    //     }
+    //     this.mPlayerInfoList.push(playerInfo);
+    //     this.mModelDispatch.emit(MessageType.SCENE_ADD_PLAYER, playerInfo);
+    // }
+
+    public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
+        const character: PlayerEntity = this.mPlayerMap.get(elementId);
+        if (character) {
+            const playerModel: PlayerModel = character.getPlayerModel();
+            if (!playerModel.package) {
+                playerModel.package = op_gameconfig.Package.create();
+            }
+            playerModel.package.items = playerModel.package.items.concat(items);
+            if (character === this.mRoom.getHeroEntity()) {
+                this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+            }
+        }
+    }
+
+    public removePackItems(elementId: number, itemId: number): boolean {
+        const character: PlayerEntity = this.mPlayerMap.get(elementId);
+        if (character) {
+            const playerModel: PlayerModel = character.getPlayerModel();
+            const len = playerModel.package.items.length;
+            for (let i = 0; i < len; i++) {
+                if (itemId === playerModel.package.items[i].id) {
+                    playerModel.package.items.splice(i, 1);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private onAdjust(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
         const positions = content.spritePositions;
@@ -90,7 +132,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
-        let player: Player;
+        let player: PlayerEntity;
         let point: op_def.IPBPoint3f;
         for (const position of positions) {
             player = this.mPlayerMap.get(position.id);
@@ -117,9 +159,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
-        let point: op_def.IPBPoint3f;
         for (const sprite of sprites) {
-            point = sprite.point3f;
             this._add(new Sprite(sprite));
         }
     }
@@ -127,7 +167,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
         if (!this.mPlayerMap.has(sprite.id)) {
-            const player = new Player(sprite, this);
+            const player = new PlayerEntity(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
             this.roomService.blocks.add(player);
         }
@@ -152,7 +192,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const len: number = moveDataList.length;
             let moveData: op_client.IMoveData;
             let playID: number;
-            let player: Player;
+            let player: PlayerEntity;
             for (let i: number = 0; i < len; i++) {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;

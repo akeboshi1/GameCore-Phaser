@@ -2,7 +2,6 @@ import { IListItemComponent } from "./IListItemRender";
 import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
 import { WorldService } from "../../game/world.service";
-import { PlayerDataModel } from "../../service/player/playerDataModel";
 import { PBpacket } from "net-socket-packet";
 import { Url } from "../../utils/resUtil";
 import { ToolTipContainer } from "../tips/toolTip.Container";
@@ -150,7 +149,7 @@ export class ItemSlot implements IListItemComponent {
 
     protected downHandler(pointer) {
         if (!this.mData) return;
-        const pack: op_gameconfig.IPackage = (this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package;
+        const pack: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel().package;
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
         content.uiId = pack.id;

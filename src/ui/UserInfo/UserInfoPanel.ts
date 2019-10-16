@@ -1,12 +1,11 @@
-import {Panel} from "../components/panel";
-import {DynamicImage} from "../components/dynamic.image";
-import {Background, Border, Url, BlueButton} from "../../utils/resUtil";
+import { Panel } from "../components/panel";
+import { DynamicImage } from "../components/dynamic.image";
+import { Background, Border, Url, BlueButton } from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
-import {WorldService} from "../../game/world.service";
-import {Font} from "../../utils/font";
-import {NinePatchButton} from "../components/ninepatch.button";
+import { WorldService } from "../../game/world.service";
+import { Font } from "../../utils/font";
+import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
-import {PlayerDataModel} from "../../service/player/playerDataModel";
 
 export class UserInfoPanel extends Panel {
     private mWorld: WorldService;
@@ -200,9 +199,7 @@ export class UserInfoPanel extends Panel {
     }
 
     private updateFollower(platformId) {
-        const playerManager = (<PlayerDataModel> this.mWorld.modelManager.getModel(PlayerDataModel.name));
-        if (!playerManager) return;
-        const mainPlayer = playerManager.mainPlayerInfo;
+        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
         if (!mainPlayer) return;
         if (platformId === mainPlayer.platformId) {
             this.remove(this.mFollwerBtn);

@@ -7,9 +7,10 @@ import { ItemSlot } from "../item.slot";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
-import { PlayerDataModel } from "../../../service/player/playerDataModel";
 import { BagPanel } from "../bagView/bagPanel";
 import { Url } from "../../../utils/resUtil";
+import { PlayerManager } from "../../../rooms/player/player.manager";
+import { PlayerModel } from "../../../rooms/player/player.model";
 
 /**
  * 背包显示栏
@@ -96,8 +97,8 @@ export class BagUIMobile implements IBag {
         // =============index = 0 为背包按钮
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
-        const playerModel: PlayerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        content.id = playerModel.mainPlayerInfo.package.id;
+        const playerModel: PlayerModel = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
+        content.id = playerModel.package.id;
         content.page = 1;
         content.perPage = BagPanel.PageMaxCount;
         this.mWorld.connection.send(pkt);

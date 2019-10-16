@@ -1,8 +1,6 @@
 import { IMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
 import { IAbstractPanel } from "../../abstractPanel";
-import { PlayerDataModel } from "../../../service/player/playerDataModel";
-import { BagModel } from "../../../service/bag/bagModel";
 import { BagUIPC } from "./bagUI.pc";
 import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
@@ -13,14 +11,11 @@ export class BagUIMediator implements IMediator {
     public static NAME: string = "BagUIMediator";
     public world: WorldService;
     private mView: IAbstractPanel;
-    private mPlayerModel: PlayerDataModel;
-    private mBagModel: BagModel;
+
     private mScene: Phaser.Scene;
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
         this.world = mWorld;
         this.mScene = scene;
-        this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        this.mBagModel = this.world.modelManager.getModel(BagModel.NAME) as BagModel;
     }
 
     public isSceneUI(): boolean {
@@ -52,9 +47,8 @@ export class BagUIMediator implements IMediator {
             this.mView = new BagUIMobile(this.mScene, this.world);
         }
         this.mView.show(param);
-        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
-        this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
-        this.mBagModel.register();
+        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+        this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
     }
 
     public update(param: any) {
@@ -62,8 +56,8 @@ export class BagUIMediator implements IMediator {
     }
 
     public hide() {
-        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
-        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+        this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
     }
 
@@ -72,23 +66,19 @@ export class BagUIMediator implements IMediator {
             this.mView.destroy();
             this.mView = null;
         }
-        if (this.mPlayerModel) {
-            this.mPlayerModel.destroy();
-            this.mPlayerModel = null;
-        }
         this.mScene = null;
         this.world = null;
     }
 
     private heroItemChange() {
-        const itemList: op_gameconfig.IItem[] = (this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel).mainPlayerInfo.package.items;
+        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.items;
         if (this.mView && this.world.game.device.os.desktop) {
             (this.mView as BagUIPC).setDataList(itemList);
         }
     }
 
     private queryPackAge(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
-        if (data.id !== this.mPlayerModel.mainPlayerInfo.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id) return;
         const itemLen: number = data.items.length;
         if (this.mView && this.world.game.device.os.desktop) {
             (this.mView as BagUIPC).setDataList(data.items);

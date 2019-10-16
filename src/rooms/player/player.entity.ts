@@ -2,8 +2,10 @@ import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
-import { ISprite } from "../element/sprite";
-import { Logger } from "../../utils/log";
+import { Sprite } from "../element/sprite";
+import { PlayerModel } from "./player.model";
+import { BagEntity } from "./bag/bag.entity";
+import { WorldService } from "../../game/world.service";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -22,13 +24,28 @@ export enum PlayerState {
     EMOTION01 = "emotion01",
 }
 
-export class Player extends Element {
+export class PlayerEntity extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mFlagContainer: Phaser.GameObjects.Container;
     protected mNickName: Phaser.GameObjects.Text;
-    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
+    protected mBagEntity: BagEntity;
+    private mPlayerModel: PlayerModel;
+    constructor(sprite: Sprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
-        this.showNickName(sprite.nickname);
+        this.mPlayerModel = sprite;
+        if (this.mPlayerModel && this.mPlayerModel.package) {
+            this.mBagEntity = new BagEntity(mElementManager.roomService.world);
+            this.mBagEntity.register();
+        }
+        this.showNickName(this.mPlayerModel.nickname);
+    }
+
+    public getPlayerModel(): PlayerModel {
+        return this.mPlayerModel;
+    }
+
+    public getBagEntity(): BagEntity {
+        return this.mBagEntity;
     }
 
     public move(moveData: op_client.IMoveData) {
@@ -58,6 +75,14 @@ export class Player extends Element {
 
     public removeDisplay() {
         super.removeDisplay();
+    }
+
+    public destroy() {
+        if (this.mBagEntity) {
+            this.mBagEntity.destroy();
+            this.mBagEntity = null;
+        }
+        super.destroy();
     }
 
     protected onMoveStart() {

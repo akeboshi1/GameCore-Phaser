@@ -12,6 +12,7 @@ export interface ISprite {
     readonly nickname: string;
     readonly bindID: number;
     readonly alpha: number;
+    readonly displayBadgeCards: op_def.IBadgeCard[];
 
     readonly walkableArea: string;
     readonly collisionArea: string;
@@ -21,11 +22,9 @@ export interface ISprite {
     readonly maxNum: number;
     readonly camp: string;
     readonly attributes: op_gameconfig.IAttribute[];
-    readonly package: op_gameconfig.IPackage;
-    readonly sceneId: number;
-    readonly uuid: number;
-    readonly displayBadgeCards: op_def.IBadgeCard[];
     readonly platformId: string;
+    readonly sceneId: number;
+    package: op_gameconfig.IPackage;
 }
 
 export class Sprite implements ISprite {
@@ -37,6 +36,7 @@ export class Sprite implements ISprite {
     protected mBindID: number;
     protected mAlpha: number;
     protected mNickname: string;
+    protected mDisplayBadgeCards: op_def.IBadgeCard[];
 
     protected mWalkableArea: string;
     protected mCollisionArea: string;
@@ -49,7 +49,6 @@ export class Sprite implements ISprite {
     protected mPackage: op_gameconfig.IPackage;
     protected mSceneId: number;
     protected mUuid: number;
-    protected mDisplayBadgeCards: op_def.IBadgeCard[];
     protected mPlatformId: string;
 
     protected _originWalkPoint: Phaser.Geom.Point;
@@ -140,6 +139,10 @@ export class Sprite implements ISprite {
 
     get package(): op_gameconfig.IPackage {
         return this.mPackage;
+    }
+
+    set package(value: op_gameconfig.IPackage) {
+        this.mPackage = value;
     }
 
     get sceneId(): number {

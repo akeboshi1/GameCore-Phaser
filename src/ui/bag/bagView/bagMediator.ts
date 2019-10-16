@@ -7,8 +7,6 @@ import { IDragable } from "../idragable";
 import { IDropable } from "../idropable";
 import { op_gameconfig, op_virtual_world, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
-import { PlayerDataModel } from "../../../service/player/playerDataModel";
-import { BagModel } from "../../../service/bag/bagModel";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -23,13 +21,9 @@ export class BagMediator implements IMediator {
     public world: WorldService;
     private mPageNum: number = 0;
     private mView: BagPanel;
-    private mPlayerModel: PlayerDataModel;
-    private mBagModel: BagModel;
     private mScene: Phaser.Scene;
     constructor(mworld: WorldService, scene: Phaser.Scene) {
         this.world = mworld;
-        this.mPlayerModel = this.world.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        this.mBagModel = this.world.modelManager.getModel(BagModel.NAME) as BagModel;
         this.mScene = scene;
     }
 
@@ -54,11 +48,10 @@ export class BagMediator implements IMediator {
             return;
         }
         this.mView = new BagPanel(this.mScene, this.world);
-        this.world.modelManager.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
-        this.world.modelManager.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
-        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        this.world.emitter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
+        this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
+        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         this.mView.show(param);
-        this.mBagModel.register();
         // const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
         // this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), BagPanel.PageMaxCount);
     }
@@ -69,10 +62,10 @@ export class BagMediator implements IMediator {
     }
 
     public hide() {
-        this.world.modelManager.off(MessageType.DRAG_TO_DROP, this.handleDrop, this);
-        this.world.modelManager.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
-        this.world.modelManager.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
-        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        this.world.emitter.off(MessageType.DRAG_TO_DROP, this.handleDrop, this);
+        this.world.emitter.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
+        this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         if (!this.mView) return;
         this.mView.hide();
     }
@@ -81,14 +74,6 @@ export class BagMediator implements IMediator {
         if (this.mView) {
             this.mView.destroy();
             this.mView = null;
-        }
-        if (this.mBagModel) {
-            this.mBagModel.destroy();
-            this.mBagModel = null;
-        }
-        if (this.mPlayerModel) {
-            this.mPlayerModel.destroy();
-            this.mPlayerModel = null;
         }
         this.mPageNum = 0;
         this.mScene = null;
@@ -106,7 +91,7 @@ export class BagMediator implements IMediator {
     private refrehView(mItems?: op_gameconfig.IItem[]): void {
         let items: op_gameconfig.IItem[];
         if (!mItems) {
-            const packs: op_gameconfig.IPackage = this.mPlayerModel.mainPlayerInfo.package;
+            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package;
             if (packs == null) {
                 return;
             }
@@ -123,12 +108,12 @@ export class BagMediator implements IMediator {
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
-        if (data.id !== this.mPlayerModel.mainPlayerInfo.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id) return;
         this.refrehView(data.items);
     }
 
     private onUpdatePackageHandler(data) {
-        if (data.id !== this.mPlayerModel.mainPlayerInfo.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id) return;
         this.refrehView(data.items);
     }
 

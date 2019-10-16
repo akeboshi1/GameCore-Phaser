@@ -12,6 +12,7 @@ import { Pos } from "../../utils/pos";
 import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
+import { ShopEntity } from "../shop/shop.entity";
 
 export enum Direction {
     up,
@@ -87,6 +88,7 @@ export class Element extends BlockObject implements IElement {
     protected mMoveData: MoveData = {};
     protected mCurState: string;
     protected mCurDir: number;
+    protected mShopEntity: ShopEntity;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
@@ -94,12 +96,16 @@ export class Element extends BlockObject implements IElement {
         if (sprite.avatar) {
             this.mDisplayInfo = new DragonbonesModel(sprite);
         } else {
-            const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
+            const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
             if (!conf) {
                 Logger.error("object does not exist");
                 return;
             }
             this.mDisplayInfo = conf;
+            if (conf.shops) {
+                this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
+                this.mShopEntity.register();
+            }
         }
         this.createDisplay();
         this.setPosition(sprite.pos);
@@ -223,6 +229,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mBubble) {
             this.mBubble.destroy();
             this.mBubble = undefined;
+        }
+        if (this.mShopEntity) {
+            this.mShopEntity.destroy();
+            this.mShopEntity = null;
         }
         super.destroy();
     }

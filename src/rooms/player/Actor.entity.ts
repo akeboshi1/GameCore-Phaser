@@ -1,17 +1,18 @@
-import { Player } from "./player";
 import { IElementManager } from "../element/element.manager";
-import { ISprite } from "../element/sprite";
+import { ISprite, Sprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
-import {PBpacket} from "net-socket-packet";
-import {op_virtual_world, op_client} from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+import { op_virtual_world, op_client } from "pixelpai_proto";
+import { PlayerEntity } from "./player.entity";
+import { WorldService } from "../../game/world.service";
 
-export class Actor extends Player implements InputListener {
+export class ActorEntity extends PlayerEntity implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(sprite, mElementManager);
+        super(sprite as Sprite, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!
         this.addDisplay();
         this.mRoom = this.mElementManager.roomService;

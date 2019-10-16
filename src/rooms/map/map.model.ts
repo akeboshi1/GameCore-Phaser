@@ -1,7 +1,7 @@
-import { IFramesModel, FramesModel } from "../../rooms/display/frames.model";
+import { IFramesModel, FramesModel } from "../display/frames.model";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 
-export class MapInfo {
+export class MapModel {
     public mapId = 1;
     public zStart = 0; // TODO:
     public zEnd = 0; // TODO:

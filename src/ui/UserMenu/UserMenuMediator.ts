@@ -24,7 +24,7 @@ export class UserMenuMediator implements IMediator {
     }
 
     hide(): void {
-        this.world.modelManager.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+        this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         if (this.mUserMenuPanel) {
             this.mUserMenuPanel.off("menuClick", this.onClickMenuHandler, this);
             this.mUserMenuPanel.hide();
@@ -46,7 +46,7 @@ export class UserMenuMediator implements IMediator {
     show(param?: any): void {
         this.mUserMenuPanel.show(param[0]);
         this.mLayerManager.addToUILayer(this.mUserMenuPanel);
-        this.world.modelManager.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+        this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         this.mUserMenuPanel.on("menuClick", this.onClickMenuHandler, this);
         // this.mScene.input.on("pointerdown", this.onClosePanel, this);
     }

@@ -7,7 +7,6 @@ import { ConnectionService } from "../net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { Actor } from "./player/Actor";
 import { PBpacket } from "net-socket-packet";
 import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
@@ -15,12 +14,12 @@ import { ElementDisplay } from "./display/element.display";
 import { Logger } from "../utils/log";
 import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
 import { Pos } from "../utils/pos";
-import { ActorModel } from "./player/play.model";
 import { LoadingScene } from "../scenes/loading";
 import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
-import { PlayerDataModel } from "../service/player/playerDataModel";
-import { MapDataModel } from "../service/map/mapDataModel";
+import { MapEntity } from "./map/map.entity";
+import { ActorEntity } from "./player/Actor.entity";
+import { PlayerModel } from "./player/player.model";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -35,7 +34,7 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
     readonly blocks: ViewblockService;
-    readonly actor: Actor;
+    readonly actor: ActorEntity;
     readonly world: WorldService;
 
     readonly scene: Phaser.Scene | undefined;
@@ -78,8 +77,11 @@ export interface IRoomService {
 export class Room implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     public clockSyncComplete: boolean = false;
     private mWorld: WorldService;
-    private mActor: Actor;
+    private mActor: ActorEntity;
     private mActorData: IActor;
+
+    private mMapEntity: MapEntity;
+
     private mID: number;
     private mTerainManager: TerrainManager;
     private mElementManager: ElementManager;
@@ -90,7 +92,6 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     private mCameraService: ICameraService;
     private mBlocks: ViewblockService;
     private mClock: Clock;
-    private mInit: boolean = false;
 
     constructor(private manager: IRoomManager) {
         this.mWorld = this.manager.world;
@@ -122,8 +123,8 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         };
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
-        const mapDataModel = this.mWorld.modelManager.getModel(MapDataModel.NAME) as MapDataModel;
-        mapDataModel.setMapInfo(data);
+        this.mMapEntity = new MapEntity(this.mWorld);
+        this.mMapEntity.setMapInfo(data);
         this.mClock = new Clock(this.mWorld.connection, this);
         this.mTerainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
@@ -152,7 +153,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
                         if (this.connection) {
                             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
                         }
-                        this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
+                        this.mActor = new ActorEntity(new PlayerModel(this.mActorData), this.mPlayerManager);
                         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
                         if (loadingScene) loadingScene.sleep();
                         // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
@@ -186,6 +187,14 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         this.mClock.sync(-1);
     }
 
+    public getHeroEntity(): ActorEntity {
+        return this.mActor;
+    }
+
+    public getMapEntity(): MapEntity {
+        return this.mMapEntity;
+    }
+
     public requestActorMove(dir: number, keyArr: number[]) {
         this.mActor.setDirection(dir);
         this.playerManager.startActorMove();
@@ -197,8 +206,8 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public addActor(data: IActor): void {
         this.mActorData = data;
-        const playerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        playerDataModel.setmainPlayerInfo(data);
+        // const playerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
+        // playerDataModel.setmainPlayerInfo(data);
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {
@@ -298,7 +307,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         return this.mBlocks;
     }
 
-    get actor(): Actor | undefined {
+    get actor(): ActorEntity | undefined {
         return this.mActor;
     }
 

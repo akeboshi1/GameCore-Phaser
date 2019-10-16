@@ -1,19 +1,16 @@
 import { IMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
-import { ShopModel } from "../../service/shop/shopModel";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
-import { BagModel } from "../../service/bag/bagModel";
 
 export class ShopMediator implements IMediator {
     public static NAME: string = "ShopMediator";
     public world: WorldService;
     private mView: ShopPanel;
-    private mShopModel: ShopModel;
     private readonly _perPage = 50;
     private _curPage: number;
     private fetching: boolean;
@@ -23,9 +20,8 @@ export class ShopMediator implements IMediator {
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         this.world = world;
         this.mScene = scene;
-        this.mShopModel = this.world.modelManager.getModel(ShopModel.NAME) as ShopModel;
-        this.world.modelManager.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
-        this.world.modelManager.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
+        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
     }
 
     public isSceneUI(): boolean {
@@ -48,8 +44,7 @@ export class ShopMediator implements IMediator {
         this.mView.show(param);
         // this.world.uiManager.getUILayerManager().addToUILayer(this.mView);
         this.mParam = param;
-        this.mShopModel.register();
-        (this.world.modelManager.getModel(BagModel.NAME) as BagModel).requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
+        this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
     }
 
     public update(param?: any) {
@@ -60,16 +55,11 @@ export class ShopMediator implements IMediator {
         if (this.mView) {
             this.mView = null;
         }
-        this.mShopModel.unRegister();
     }
 
     public destroy() {
-        this.world.modelManager.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
-        this.world.modelManager.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
-        if (this.mShopModel) {
-            this.mShopModel.destroy();
-            this.mShopModel = null;
-        }
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.world = null;
         this.mScene = null;
         this._curPage = 0;
@@ -84,6 +74,15 @@ export class ShopMediator implements IMediator {
 
     public isShow(): boolean {
         return this.mView ? this.mView.isShow() : false;
+    }
+
+    private requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
+        content.id = bagId;
+        content.page = page;
+        content.perPage = perPage;
+        this.world.connection.send(pkt);
     }
 
     private queryShopProps(page: number = 1, perPage: number = 50) {
