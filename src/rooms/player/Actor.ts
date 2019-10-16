@@ -3,12 +3,11 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
-import {Logger} from "../../utils/log";
 import {PBpacket} from "net-socket-packet";
 import {op_virtual_world, op_client} from "pixelpai_proto";
 
-// ME 我自己
 export class Actor extends Player implements InputListener {
+    // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
