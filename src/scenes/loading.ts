@@ -1,9 +1,12 @@
 import { WorldService } from "../game/world.service";
-
+import { IRoomService } from "../rooms/room";
 const LOGO_MARGIN = 25;
 
 export class LoadingScene extends Phaser.Scene {
   private mWorld: WorldService;
+  private mRoom: IRoomService;
+  private mCallBack: Function;
+  private mStartBack: Function;
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -14,9 +17,13 @@ export class LoadingScene extends Phaser.Scene {
 
   public init(data: any) {
     this.mWorld = data.world;
+    this.mRoom = data.room;
+    this.mStartBack = data.startBack;
+    this.mCallBack = data.callBack;
   }
 
   public create() {
+    if (this.mStartBack) this.mStartBack();
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
     const rect = this.add.graphics();
@@ -34,6 +41,16 @@ export class LoadingScene extends Phaser.Scene {
     const lo = this.add.sprite(x, y, "rabbit00.png");
     lo.anims.play("loading_rabbit00");
     lo.scaleX = lo.scaleY = this.mWorld.uiScale;
+  }
+
+  update(time: number, delta: number) {
+    // if (this.cameras.main) {
+    //   this.cameras.main.emit("renderer", this.cameras.main);
+    // }
+    if (this.mRoom) {
+      if (this.mRoom.clockSyncComplete && this.mCallBack) this.mCallBack();
+      this.mRoom.updateClock(time, delta);
+    }
   }
 
   public awake() {

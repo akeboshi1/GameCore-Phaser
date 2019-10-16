@@ -42,7 +42,11 @@ export interface IRoomService {
 
     readonly connection: ConnectionService | undefined;
 
+    clockSyncComplete: boolean;
+
     now(): number;
+
+    updateClock(time: number, delta: number): void;
 
     enter(room: op_client.IScene): void;
 
@@ -72,6 +76,7 @@ export interface IRoomService {
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 export class Room implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
+    public clockSyncComplete: boolean = false;
     private mWorld: WorldService;
     private mActor: Actor;
     private mActorData: IActor;
@@ -133,17 +138,26 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
             // init block
             this.mBlocks.int(this.mSize);
         }
-        // this.mWorld.game.scene.stop(LoadingScene.name);
-        this.mWorld.game.scene.start(PlayScene.name, {
+        if (!this.mWorld.game.scene.getScene(LoadingScene.name)) this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
+        this.mWorld.game.scene.start(LoadingScene.name, {
+            world: this.world,
             room: this,
+            startBack: () => {
+                this.mClock.sync(-1);
+            },
             callBack: () => {
-                if (this.connection) {
-                    this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-                }
-                this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
-                const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-                if (loadingScene) loadingScene.sleep();
-                // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
+                this.mWorld.game.scene.start(PlayScene.name, {
+                    room: this,
+                    callBack: () => {
+                        if (this.connection) {
+                            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+                        }
+                        this.mActor = new Actor(new ActorModel(this.mActorData), this.mPlayerManager);
+                        const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+                        if (loadingScene) loadingScene.sleep();
+                        // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
+                    },
+                });
             },
         });
     }
@@ -152,22 +166,24 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         if (sprite_t !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        this.mClock.sync(3);
+        // this.mClock.sync(3);
     }
 
     public onClockReady(): void {
         // TODO: Unload loading-scene
         Logger.debug("onClockReady");
+        this.clockSyncComplete = true;
     }
 
     public pause() {
         this.mScene.scene.pause();
+        this.clockSyncComplete = false;
         // todo launch
     }
 
     public resume(name: string) {
         this.mScene.scene.resume(name);
-        this.mClock.sync(3);
+        this.mClock.sync(-1);
     }
 
     public requestActorMove(dir: number, keyArr: number[]) {
@@ -233,9 +249,13 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     }
 
     public update(time: number, delta: number) {
-        this.mClock.update(time, delta);
+        this.updateClock(time, delta);
         this.mBlocks.update(time, delta);
         if (this.layerManager) this.layerManager.update(time, delta);
+    }
+
+    public updateClock(time: number, delta: number) {
+        if (this.mClock) this.mClock.update(time, delta);
     }
 
     public now(): number {

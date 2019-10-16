@@ -16,6 +16,7 @@ export interface ClockReadyListener {
 }
 
 export class Clock extends PacketHandler {
+    private mAutoSync: boolean = false;
     protected get sysUnixTime(): number {
         return new Date().getTime();
     }
@@ -45,6 +46,10 @@ export class Clock extends PacketHandler {
 
     public sync(times: number = 1): void {
         if (!this.mConn) return;
+        if (times < 0) {
+            this.mAutoSync = true;
+            times = 1;
+        }
         for (let i = 0; i < times; ++i) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
             const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
@@ -101,8 +106,12 @@ export class Clock extends PacketHandler {
         // update timesychron
         if (mistake > MAX_DELAY) {
             this.mTimestamp = remote_time;
+            if (this.mAutoSync) {
+                this.sync(-1);
+                return;
+            }
         }
-        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES) this.mListener.onClockReady();
+        if (this.mListener && (this.mLatency.length >= MIN_READY_SAMPLES || this.mAutoSync)) this.mListener.onClockReady();
         Logger.debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
 
     }
