@@ -58,12 +58,12 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     public setDisplayBadges(cards: op_def.IBadgeCard[]) {
-        if (this.mBadges) this.mBadges = [];
+        if (!this.mBadges) this.mBadges = [];
         else this.clearBadges();
         for (const card of cards) {
             const badge = new DynamicImage(this.scene, 0, 0);
-            badge.load(card.thumbnail, this, this.layouFlag);
-            this.mFlagContainer.add(badge);
+            badge.load(Url.getOsdRes(card.thumbnail), this, this.layouFlag);
+            this.flagContainer.add(badge);
             this.mBadges.push(badge);
         }
     }
@@ -78,6 +78,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             target = new DynamicSprite(this.scene, 0, 0);
         }
         target.load(textureURL, atlasURL);
+        target.y = -20;
         if (isBack) {
             this.addAt(target, DisplayField.BACKEND);
         } else {
@@ -92,11 +93,12 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected layouFlag(offset: number = 4) {
         if (!this.mFlagContainer) return;
         this.mFlagContainer.y = -96;
+        this.bringToTop(this.mNickname);
         const children = this.mFlagContainer.list;
-        // let _x = 0;
+        let _x = 0;
         for (const child of children) {
-            // child["x"] = _x;
-            // if (child["width"])
+            child["x"] = _x;
+            if (child["width"]) _x = child["width"];
         }
     }
 

@@ -23,7 +23,6 @@ export class UserInfoPanel extends Panel {
         super.show(param);
         this.setData("data", param);
         this.setInfo(param);
-        // this.mWorld.httpService.checkFollowed()
     }
 
     hide() {
@@ -41,18 +40,6 @@ export class UserInfoPanel extends Panel {
 
     setInfo(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
         if (!this.mInitialized || !data) return;
-        // const texts = data.text;
-        // if (!texts || texts.length < 1) {
-        //     return;
-        // }
-        // this.mNickName.setText(texts[1].text);
-        // this.mLv.setText(texts[3].text);
-        //
-        // const display = data.images;
-        // if (display && display.length > 0) {
-        //     this.mActor.load(display[0].texturePath);
-        // }
-        //
         if (data.actors.length === 0) {
             return;
         }

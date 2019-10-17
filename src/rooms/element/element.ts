@@ -55,6 +55,8 @@ export interface IElement {
     fadeOut(callback?: () => void): void;
 
     fadeAlpha(alpha: number): void;
+
+    showEffected();
 }
 
 export interface MoveData {
@@ -221,6 +223,10 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.addBubble(text, setting);
         this.updateBubble();
         this.roomService.addToSceneUI(this.mBubble);
+    }
+
+    public showEffected() {
+        if (this.mDisplay) this.mDisplay.showEffect();
     }
 
     public destroy() {
