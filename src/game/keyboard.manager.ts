@@ -47,20 +47,22 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         this.mRoom = currentRoom;
         this.mScene = currentRoom.scene;
         if (!this.mScene) return;
-        const len = this.mKeyEvents.length;
-        let keyEvent: op_def.IKeyCodeEvent;
-        let codes: op_def.KeyCode[];
-        let eventName: op_def.TQ_EVENT;
-        for (let i = 0; i < len; i++) {
-            keyEvent = this.mKeyEvents[i];
-            codes = keyEvent.keyCodes;
-            eventName = keyEvent.tqEvent;
-            if (!this.mKeyEventMap.get(eventName)) {
-                this.mKeyEventMap.set(eventName, keyEvent);
+        if (this.mKeyEvents) {
+            const len = this.mKeyEvents.length;
+            let keyEvent: op_def.IKeyCodeEvent;
+            let codes: op_def.KeyCode[];
+            let eventName: op_def.TQ_EVENT;
+            for (let i = 0; i < len; i++) {
+                keyEvent = this.mKeyEvents[i];
+                codes = keyEvent.keyCodes;
+                eventName = keyEvent.tqEvent;
+                if (!this.mKeyEventMap.get(eventName)) {
+                    this.mKeyEventMap.set(eventName, keyEvent);
+                }
             }
+            this.mKeyEvents.length = 0;
+            this.mKeyEvents = null;
         }
-        this.mKeyEvents.length = 0;
-        this.mKeyEvents = null;
         this.mKeyEventMap.forEach((keyCodeEvent: op_def.IKeyCodeEvent) => {
             if (keyCodeEvent) {
                 const keyCodes = keyCodeEvent.keyCodes;

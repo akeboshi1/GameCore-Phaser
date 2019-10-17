@@ -135,20 +135,22 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
-        let player: PlayerEntity;
-        let point: op_def.IPBPoint3f;
-        for (const position of positions) {
-            player = this.mPlayerMap.get(position.id);
-            if (!player) {
-                if (position.id === this.mRoom.actor.id) {
-                    player = this.mRoom.actor;
-                } else {
-                    continue;
+        if (this.mRoom.actor) {
+            let player: PlayerEntity;
+            let point: op_def.IPBPoint3f;
+            for (const position of positions) {
+                player = this.mPlayerMap.get(position.id);
+                if (!player) {
+                    if (position.id === this.mRoom.actor.id) {
+                        player = this.mRoom.actor;
+                    } else {
+                        continue;
+                    }
                 }
+                point = position.point3f;
+                player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
+                Logger.debug(`adjust,x:${point.x},y:${point.y}`);
             }
-            point = position.point3f;
-            player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
-            Logger.debug(`adjust,x:${point.x},y:${point.y}`);
         }
     }
 
