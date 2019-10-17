@@ -3944,7 +3944,11 @@ phaser3-rex-plugins@^1.0.0:
     firebase "^5.0.4"
     phaser "^3.11.0"
 
+<<<<<<< Updated upstream
 phaser@3.19.0, phaser@^3.11.0:
+=======
+phaser@^3.11.0:
+>>>>>>> Stashed changes
   version "3.19.0"
   resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.19.0.tgz#1d50c90abb2c461205fe6c8c184ded2d040aa367"
   integrity sha512-dEohGFXik3bDCpNqk/b8yxpyMbP99jaP2Aoa1V4UcagLpHOYsNDYt4R+swJv9bCl6qaxvPGPstx7qJALtgDJOg==
@@ -3957,6 +3961,16 @@ phaser@3.19.0, phaser@^3.11.0:
     path "^0.12.7"
     remove-files-webpack-plugin "^1.1.3"
     typescript "^3.4.5"
+
+phaser@^3.18.1:
+  version "3.20.1"
+  resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.20.1.tgz#7c9211e59dee58a0a8a6df1fd079cb709646eab7"
+  integrity sha512-P4x7zfMHdLKu8aPaADg+zTPNvFRYNHqmNqWZEUGw4WnbXZ/ACK+VR8k/11OzYxckEKBnWsqASDMKG9rzEC1rqg==
+  dependencies:
+    eventemitter3 "^3.1.0"
+    exports-loader "^0.7.0"
+    imports-loader "^0.8.0"
+    path "^0.12.7"
 
 picomatch@^2.0.5:
   version "2.0.7"

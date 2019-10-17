@@ -41,6 +41,7 @@ export class LoadingScene extends Phaser.Scene {
     const lo = this.add.sprite(x, y, "rabbit00.png");
     lo.anims.play("loading_rabbit00");
     lo.scaleX = lo.scaleY = this.mWorld.uiScale;
+    this.scale.lockOrientation("landscape");
   }
 
   update(time: number, delta: number) {

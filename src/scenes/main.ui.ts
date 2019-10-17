@@ -28,6 +28,7 @@ export class MainUIScene extends Phaser.Scene {
     //   world.joyStickManager.setScene(this);
     // }
     world.uiManager.setScene(this);
+    this.scale.lockOrientation("landscape");
   }
 
   public update() {

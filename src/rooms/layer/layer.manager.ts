@@ -176,6 +176,7 @@ export class LayerManager {
                 child = list[i];
                 if (child) {
                     child.destroy(destroy);
+                    child = null;
                 }
             }
         }
