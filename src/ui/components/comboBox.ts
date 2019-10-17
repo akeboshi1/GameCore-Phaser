@@ -10,13 +10,16 @@ export interface IComboboxRes {
     up: boolean;
     clickCallBack: Function;
 }
-export interface IComboboxItemData {
+export interface ISelectCallItemData {
     index: number;
     text: string;
     data: any;
 }
-export class ComboBox extends Phaser.GameObjects.Container {
-    protected itemList: ComboBoxItem[];
+export interface ISelectCallUI {
+    selectCall(data: ISelectCallItemData);
+}
+export class ComboBox extends Phaser.GameObjects.Container implements ISelectCallUI {
+    protected itemList: SelectCallItem[];
     private mScene: Phaser.Scene;
     private mConfig: IComboboxRes;
     private mBg: Phaser.GameObjects.Image;
@@ -31,7 +34,7 @@ export class ComboBox extends Phaser.GameObjects.Container {
         this.init();
     }
 
-    public selectCall(itemData: IComboboxItemData) {
+    public selectCall(itemData: ISelectCallItemData) {
         this.mtxt.text = itemData.text;
         this.mtxt.x = this.mConfig.wid - this.mtxt.width >> 1;
         this.mtxt.y = this.mConfig.hei - this.mtxt.height >> 1;
@@ -45,16 +48,17 @@ export class ComboBox extends Phaser.GameObjects.Container {
         if (this.itemList) {
             const itemLen: number = this.itemList.length;
             for (let i: number = 0; i < itemLen; i++) {
-                const item: ComboBoxItem = this.itemList[i];
+                let item: SelectCallItem = this.itemList[i];
                 if (!item) continue;
                 item.destroy();
+                item = null;
             }
             this.itemList.length = 0;
         }
         this.itemList = [];
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
-            const item: ComboBoxItem = new ComboBoxItem(this.mScene, this, this.mConfig.wid, this.mConfig.hei);
+            const item: SelectCallItem = new SelectCallItem(this.mScene, this, this.mConfig.wid, this.mConfig.hei);
             const str: string = value[i];
             item.itemData = {
                 index: i,
@@ -71,7 +75,7 @@ export class ComboBox extends Phaser.GameObjects.Container {
         if (this.itemList) {
             const len: number = this.itemList.length;
             for (let i: number = 0; i < len; i++) {
-                const item: ComboBoxItem = this.itemList[i];
+                const item: SelectCallItem = this.itemList[i];
                 if (!item) continue;
                 item.destroy();
             }
@@ -143,7 +147,7 @@ export class ComboBox extends Phaser.GameObjects.Container {
     private showTweenItem(open: boolean) {
         const len: number = this.itemList.length;
         for (let i: number = 0; i < len; i++) {
-            const item: ComboBoxItem = this.itemList[i];
+            const item: SelectCallItem = this.itemList[i];
             if (!item) {
                 continue;
             }
@@ -175,14 +179,14 @@ export class ComboBox extends Phaser.GameObjects.Container {
         return bgGraphics;
     }
 }
-export class ComboBoxItem extends Phaser.GameObjects.Container {
-    private mText: Phaser.GameObjects.Text;
-    private mSelectBG: Phaser.GameObjects.Graphics;
-    private mData: IComboboxItemData;
-    private mCombobox: ComboBox;
-    constructor(scene: Phaser.Scene, combobox: ComboBox, wid: number, hei: number) {
+export class SelectCallItem extends Phaser.GameObjects.Container {
+    protected mText: Phaser.GameObjects.Text;
+    protected mSelectBG: Phaser.GameObjects.Graphics;
+    protected mData: ISelectCallItemData;
+    protected mCombobox: ISelectCallUI;
+    constructor(scene: Phaser.Scene, selectCallUI: ISelectCallUI, wid: number, hei: number) {
         super(scene);
-        this.mCombobox = combobox;
+        this.mCombobox = selectCallUI;
         this.mText = this.scene.make.text({
             x: -wid >> 1, y: -hei >> 1,
             style: { fill: "#F7EDED", fontSize: 18 }
@@ -204,14 +208,14 @@ export class ComboBoxItem extends Phaser.GameObjects.Container {
 
     }
 
-    public set itemData(val: IComboboxItemData) {
+    public set itemData(val: ISelectCallItemData) {
         this.mData = val;
         this.mText.text = this.mData.text;
         this.mText.x = -this.width / 2 + (this.width - this.mText.width >> 1);
         this.mText.y = -this.height / 2 + (this.height - this.mText.height >> 1);
     }
 
-    public get itemData(): IComboboxItemData {
+    public get itemData(): ISelectCallItemData {
         return this.mData;
     }
 
@@ -223,15 +227,15 @@ export class ComboBoxItem extends Phaser.GameObjects.Container {
         this.mSelectBG.visible = val;
     }
 
-    private overHandler() {
+    protected overHandler() {
         this.mSelectBG.visible = true;
     }
 
-    private selectHandler() {
+    protected selectHandler() {
         this.overHandler();
         this.mCombobox.selectCall(this.itemData);
     }
-    private outHandler() {
+    protected outHandler() {
         this.mSelectBG.visible = false;
     }
 }

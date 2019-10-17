@@ -2,7 +2,7 @@ import { ConnectionService } from "../net/connection.service";
 import InputText from "../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Alert } from "../ui/alert/alert";
 import { WorldService } from "../game/world.service";
-import { ComboBox, IComboboxRes, IComboboxItemData } from "../ui/components/comboBox";
+import { ComboBox, IComboboxRes, ISelectCallUI, ISelectCallItemData } from "../ui/components/comboBox";
 import { Logger } from "../utils/log";
 
 // 编辑器用 Phaser.Scene
@@ -219,7 +219,7 @@ export class LoginScene extends Phaser.Scene {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
     }
 
-    private changeID(data: IComboboxItemData) {
+    private changeID(data: ISelectCallItemData) {
         Logger.debug("============combobox 123" + data.text);
     }
 
@@ -355,7 +355,7 @@ export class LoginScene extends Phaser.Scene {
         const httpRequest = new XMLHttpRequest();
         httpRequest.onload = function() {
             if (httpRequest.status === 200) {
-                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text}));
+                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
                 login.mCallBack(httpRequest.responseText);
             } else {
@@ -374,7 +374,7 @@ export class LoginScene extends Phaser.Scene {
         const httpRequest = new XMLHttpRequest();
         httpRequest.onload = function() {
             if (httpRequest.status === 200) {
-                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text}));
+                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
                 login.mCallBack(httpRequest.responseText);
             } else {
