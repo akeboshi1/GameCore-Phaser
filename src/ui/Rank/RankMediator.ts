@@ -20,7 +20,7 @@ export class RankMediator implements IMediator {
     }
 
     getView(): IAbstractPanel {
-        return undefined;
+        return this.mRankPanel;
     }
 
     hide(): void {
@@ -36,6 +36,7 @@ export class RankMediator implements IMediator {
     }
 
     resize() {
+        this.mRankPanel.resize();
     }
 
     show(param?: any): void {
