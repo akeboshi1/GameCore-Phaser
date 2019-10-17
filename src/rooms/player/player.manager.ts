@@ -12,6 +12,7 @@ import { PlayerModel } from "./player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, PlayerEntity> = new Map();
+    private mActorID: number;
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -99,7 +100,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: PlayerEntity = this.mPlayerMap.get(elementId);
         if (character) {
-            const playerModel: PlayerModel = character.getPlayerModel();
+            const playerModel: ISprite = character.model;
             if (!playerModel.package) {
                 playerModel.package = op_gameconfig.Package.create();
             }
@@ -113,7 +114,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public removePackItems(elementId: number, itemId: number): boolean {
         const character: PlayerEntity = this.mPlayerMap.get(elementId);
         if (character) {
-            const playerModel: PlayerModel = character.getPlayerModel();
+            const playerModel: ISprite = character.model;
             const len = playerModel.package.items.length;
             for (let i = 0; i < len; i++) {
                 if (itemId === playerModel.package.items[i].id) {

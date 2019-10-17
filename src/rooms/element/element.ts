@@ -13,6 +13,7 @@ import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
+
 export enum Direction {
     up,
     up_left,
@@ -30,6 +31,8 @@ export interface IElement {
     // readonly y: number;
     // readonly z: number;
     readonly dir: number;
+
+    readonly model: ISprite;
 
     play(animationName: string): void;
 
@@ -79,6 +82,10 @@ export class Element extends BlockObject implements IElement {
         return this.mId; // this.mDisplayInfo.id || 0;
     }
 
+    get model(): ISprite {
+        return this.mModel;
+    }
+
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
@@ -87,11 +94,13 @@ export class Element extends BlockObject implements IElement {
     protected mMoveData: MoveData = {};
     protected mCurState: string;
     protected mCurDir: number;
+    protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
         this.mId = sprite.id;
+        this.mModel = sprite;
         if (sprite.avatar) {
             this.mDisplayInfo = new DragonbonesModel(sprite);
         } else {

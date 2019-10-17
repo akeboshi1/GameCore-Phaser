@@ -15,7 +15,6 @@ export interface ILauncherConfig {
     readonly width: number | string;
     readonly height: number | string;
     readonly ui_scale?: number;
-    readonly secure?: boolean;
 }
 
 export interface GameMain {

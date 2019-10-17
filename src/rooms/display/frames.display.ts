@@ -3,6 +3,7 @@ import { ElementDisplay } from "./element.display";
 import { Logger } from "../../utils/log";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import { SortRectangle } from "../../utils/sort.rectangle";
+import {DisplayObject} from "./display.object";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -13,13 +14,13 @@ export enum DisplayField {
 /**
  * 序列帧显示对象
  */
-export class FramesDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
+export class FramesDisplay extends DisplayObject implements ElementDisplay {
     protected mBaseLoc: Phaser.Geom.Point;
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mHasAnimation: boolean = false;
-    protected mSortRectangle: SortRectangle = new SortRectangle();
+    // protected mSortRectangle: SortRectangle = new SortRectangle();
 
     /**
      * 实际透明度，避免和tween混淆
@@ -183,7 +184,7 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
         this.mBaseLoc = animations.baseLoc;
         sprite.x = this.baseLoc.x;
         sprite.y = this.baseLoc.y;
-        this.mSortRectangle.setArea(animations.collisionArea);
+        // this.mSortRectangle.setArea(animations.collisionArea);
     }
 
     private createDisplay(field: DisplayField) {
@@ -218,7 +219,8 @@ export class FramesDisplay extends Phaser.GameObjects.Container implements Eleme
     }
 
     get sortRectangle(): SortRectangle {
-        return this.mSortRectangle;
+        // return this.mSortRectangle;
+        return undefined;
     }
 
     get sortX(): number {

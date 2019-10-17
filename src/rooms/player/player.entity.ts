@@ -2,10 +2,8 @@ import { Element } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
-import { Sprite } from "../element/sprite";
-import { PlayerModel } from "./player.model";
+import { ISprite } from "../element/sprite";
 import { BagEntity } from "./bag/bag.entity";
-import { WorldService } from "../../game/world.service";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -26,22 +24,19 @@ export enum PlayerState {
 
 export class PlayerEntity extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
-    protected mFlagContainer: Phaser.GameObjects.Container;
-    protected mNickName: Phaser.GameObjects.Text;
     protected mBagEntity: BagEntity;
-    private mPlayerModel: PlayerModel;
-    constructor(sprite: Sprite, protected mElementManager: IElementManager) {
+    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
-        this.mPlayerModel = sprite;
-        if (this.mPlayerModel && this.mPlayerModel.package) {
+        if (this.mDisplay) {
+            this.mDisplay.showNickname(sprite.nickname);
+            if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
+            this.mDisplay.showEffect();
+        }
+
+        if (this.model && this.model.package) {
             this.mBagEntity = new BagEntity(mElementManager.roomService.world);
             this.mBagEntity.register();
         }
-        this.showNickName(this.mPlayerModel.nickname);
-    }
-
-    public getPlayerModel(): PlayerModel {
-        return this.mPlayerModel;
     }
 
     public getBagEntity(): BagEntity {
@@ -89,26 +84,8 @@ export class PlayerEntity extends Element {
         this.changeState(PlayerState.WALK);
     }
 
-    protected showNickName(value: string) {
-        if (!this.mNickName) {
-            this.mNickName = this.mElementManager.scene.make.text(undefined, false).setOrigin(0, 0);
-            if (this.flagContainer) this.flagContainer.add(this.mNickName);
-        }
-        this.mNickName.setText(value);
-    }
-
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
-    }
-
-    protected get flagContainer(): Phaser.GameObjects.Container {
-        if (this.mFlagContainer) return this.mFlagContainer;
-        if (!this.mDisplay) {
-            return;
-        }
-        this.mFlagContainer = this.mElementManager.scene.make.container(undefined, false);
-        this.mFlagContainer.y = -80;
-        this.mDisplay.add(this.mFlagContainer);
     }
 }

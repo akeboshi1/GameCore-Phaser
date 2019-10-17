@@ -93,6 +93,11 @@ config = {
   width: number | string; // 游戏宽
   height: number | string; // 游戏高
   ui_scale?: number; // 游戏缩放比例默认 1
+  gateway: {
+    host: string;
+    port: number;
+    secure?: boolean;
+  }
 }
 ```
 

@@ -10,7 +10,7 @@
 //     private _renderHandler: Phaser.Events.EventEmitter;
 //     // 单元格鼠标事件处理器
 //     private _mouseHandler: Phaser.Events.EventEmitter;
-//     // 改变List的选择项时执行的处理器 
+//     // 改变List的选择项时执行的处理器
 //     private _selectHandler: Phaser.Events.EventEmitter;
 //     // 是否已经渲染过单元格
 //     private _hadRender: boolean = false;

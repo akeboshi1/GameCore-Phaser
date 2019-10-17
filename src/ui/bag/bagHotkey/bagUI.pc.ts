@@ -4,10 +4,10 @@ import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
 import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
-import { PlayerModel } from "../../../rooms/player/player.model";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { PBpacket } from "net-socket-packet";
 import { BagPanel } from "../bagView/bagPanel";
+import {ISprite} from "../../../rooms/element/sprite";
 
 /**
  * 背包显示栏
@@ -197,7 +197,7 @@ export class BagUIPC implements IBag {
         this.bagBtn.on("pointerover", this.bagBtnOver, this);
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
 
-        const playerModel: PlayerModel = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
+        const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
         if (playerModel.package && playerModel.package.items) this.setDataList(playerModel.package.items);
         // childList.push(this.mBagBtnCon);
     }
@@ -206,7 +206,7 @@ export class BagUIPC implements IBag {
         // this.mWorld.enterOtherGame();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
-        this.requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id, 1, BagPanel.PageMaxCount);
+        this.requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().model.package.id, 1, BagPanel.PageMaxCount);
     }
 
     private requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {

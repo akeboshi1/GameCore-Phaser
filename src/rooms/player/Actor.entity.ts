@@ -12,7 +12,7 @@ export class ActorEntity extends PlayerEntity implements InputListener {
     readonly GameObject: Phaser.GameObjects.GameObject;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(sprite as Sprite, mElementManager);
+        super(sprite, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!
         this.addDisplay();
         this.mRoom = this.mElementManager.roomService;

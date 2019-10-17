@@ -145,4 +145,8 @@ export class Terrain extends BlockObject implements IElement {
         }
         return this.mElementManager.roomService;
     }
+
+    get model() {
+        return undefined;
+    }
 }

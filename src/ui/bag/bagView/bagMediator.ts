@@ -91,7 +91,7 @@ export class BagMediator implements IMediator {
     private refrehView(mItems?: op_gameconfig.IItem[]): void {
         let items: op_gameconfig.IItem[];
         if (!mItems) {
-            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package;
+            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHeroEntity().model.package;
             if (packs == null) {
                 return;
             }
@@ -108,12 +108,12 @@ export class BagMediator implements IMediator {
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
-        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().model.package.id) return;
         this.refrehView(data.items);
     }
 
     private onUpdatePackageHandler(data) {
-        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().getPlayerModel().package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().model.package.id) return;
         this.refrehView(data.items);
     }
 

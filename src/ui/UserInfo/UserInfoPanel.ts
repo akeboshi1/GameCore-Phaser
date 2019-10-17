@@ -199,7 +199,7 @@ export class UserInfoPanel extends Panel {
     }
 
     private updateFollower(platformId) {
-        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
+        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
         if (!mainPlayer) return;
         if (platformId === mainPlayer.platformId) {
             this.remove(this.mFollwerBtn);

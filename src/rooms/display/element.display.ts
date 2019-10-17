@@ -2,14 +2,11 @@ import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { DisplayField } from "./frames.display";
 import { SortRectangle } from "../../utils/sort.rectangle";
+import {op_def} from "pixelpai_proto";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
     readonly baseLoc: Phaser.Geom.Point;
     readonly sortRectangle: SortRectangle;
-
-    x: number;
-    y: number;
-    z: number;
 
     sortX: number;
     sortY: number;
@@ -24,6 +21,10 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
 
     fadeIn(callback?: () => void);
     fadeOut(callback?: () => void);
+
+    showNickname(val: string);
+    setDisplayBadges(cards: op_def.IBadgeCard[]);
+    showEffect();
 
     destroy(): void;
 }

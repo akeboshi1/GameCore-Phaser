@@ -4,6 +4,7 @@ import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
 import { Logger } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
 import {SortRectangle} from "../../utils/sort.rectangle";
+import {DisplayObject} from "./display.object";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -74,7 +75,7 @@ export enum AvatarPartType {
 /**
  * 龙骨显示对象
  */
-export class DragonbonesDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
+export class DragonbonesDisplay extends DisplayObject implements ElementDisplay {
 
     public mDisplayInfo: IDragonbonesModel | undefined;
     public frontEffDisplayInfo: IFramesModel;
@@ -102,7 +103,7 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         super(scene);
     }
 
-    get GameObject(): Phaser.GameObjects.Container {
+    get GameObject(): DisplayObject {
         return this;
     }
 
@@ -169,9 +170,9 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
             dir = dir !== 0 ? dir : 3;
             let trunDir: string = "";
             if (dir === 3 || dir === 5) {
-                this.scaleX = -dir + 4;
+                this.setScaleStageX(-dir + 4);
             } else if (dir === 1 || dir === 7) {
-                this.scaleX = -(1 / 3) * dir + (4 / 3);
+                this.setScaleStageX(-(1 / 3) * dir + (4 / 3));
                 trunDir = "_back";
             }
             this.mActionName = val + trunDir;
@@ -305,6 +306,16 @@ export class DragonbonesDisplay extends Phaser.GameObjects.Container implements 
         this.setData("id", this.mDisplayInfo.id);
         this.add(this.mClickCon);
         this.emit("initialized");
+    }
+
+    protected setScaleStage(val: number) {
+        if (this.mArmatureDisplay) {
+            this.mArmatureDisplay.scale = val;
+        }
+      }
+
+    protected setScaleStageX(val: number) {
+        if (this.mArmatureDisplay) this.mArmatureDisplay.scaleX = val;
     }
 
     private onLoadFrontEffCompleteHandler() {

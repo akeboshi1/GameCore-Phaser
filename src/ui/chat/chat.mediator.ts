@@ -161,7 +161,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         }
 
         const playerManager = this.world.roomManager.currentRoom.playerManager;
-        const player = playerManager.get(content.chatSenderid).getPlayerModel();
+        const player = playerManager.get(content.chatSenderid).model;
         if (!player) return;
         // const chatSendName = player ? player.name : "";
         // this.mChatPanel.appendChat(content.chatContext);

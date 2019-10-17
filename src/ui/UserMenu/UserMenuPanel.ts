@@ -71,7 +71,7 @@ export class UserMenuPanel extends Panel {
         this.resizeBackground(60, this.mMenus.length * 30);
         this.setSize(60, this.mMenus.length * 30);
 
-        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().getPlayerModel();
+        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
         if (!mainPlayer) return;
         const actor = params.actors[0];
         if (!actor) return;
