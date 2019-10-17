@@ -3,8 +3,8 @@ import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
 import { Logger } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
-import {SortRectangle} from "../../utils/sort.rectangle";
-import {DisplayObject} from "./display.object";
+import { SortRectangle } from "../../utils/sort.rectangle";
+import { DisplayObject } from "./display.object";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -86,6 +86,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mSortRectangle: SortRectangle = new SortRectangle();
+    private mPreDirection: number;
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
@@ -165,9 +166,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     public play(val: string) {
-        if (this.mActionName !== val) {
-            let dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
-            dir = dir !== 0 ? dir : 3;
+        let dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
+        dir = dir !== 0 ? dir : 3;
+        if (this.mActionName !== val || this.mPreDirection !== dir) {
             let trunDir: string = "";
             if (dir === 3 || dir === 5) {
                 this.setScaleStageX(-dir + 4);
@@ -179,6 +180,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
+            Logger.debug("play:" + dir);
+            this.mPreDirection = dir;
         }
     }
 
@@ -312,7 +315,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.scale = val;
         }
-      }
+    }
 
     protected setScaleStageX(val: number) {
         if (this.mArmatureDisplay) this.mArmatureDisplay.scaleX = val;
@@ -844,7 +847,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                 if (img.texture.key === name) {
                     slot.replaceDisplay(img);
-                   // Logger.log("success:" + resKey);
+                    // Logger.log("success:" + resKey);
                 }
                 this.misloading = false;
                 this.startLoad();
@@ -858,7 +861,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.scene.load.start();
         } else {
             this.misloading = false;
-           // Logger.log("load complete");
+            // Logger.log("load complete");
         }
     }
     private makeEffAnimations(name: string, isBack: boolean = false) {
@@ -936,7 +939,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     get sortX(): number {
-        return  this.x;
+        return this.x;
     }
 
     get sortY(): number {

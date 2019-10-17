@@ -244,6 +244,7 @@ export class JoyStick {
         if (this.mdownStr === keyArr.toString()) return false;
         this.mdownStr = keyArr.toString();
         l.downHandler(dir, keyArr);
+        this.mWorld.roomManager.currentRoom.actor.setDirection(dir);
         return true;
     }
 

@@ -243,6 +243,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         }
         l.setDirection(newDir);
         l.downHandler(newDir, keyCodeList);
+        if (this.mRoom && this.mRoom.actor) this.mRoom.actor.setDirection(newDir);
         return true;
     }
 
@@ -293,7 +294,9 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         this.mKeyboardListeners.forEach((l: InputListener) => {
             if (this.checkMoveKeyAllUp()) {
                 l.upHandler();
+                return;
             }
+            this.checkMoveKeyDown(l);
         });
     }
 

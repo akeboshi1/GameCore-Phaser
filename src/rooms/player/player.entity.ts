@@ -4,6 +4,7 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { BagEntity } from "./bag/bag.entity";
+import { Logger } from "../../utils/log";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -44,10 +45,10 @@ export class PlayerEntity extends Element {
     }
 
     public move(moveData: op_client.IMoveData) {
-        if (this.getDirection() !== moveData.direction) {
+        if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
             this.setDirection(moveData.direction);
         }
-        // Logger.log("dir0:" + moveData.direction);
+        Logger.log("dir0:" + moveData.direction);
         super.move(moveData);
     }
 
