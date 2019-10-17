@@ -29,6 +29,7 @@ export class UserInfoPanel extends Panel {
         if (this.parentContainer) {
             this.parentContainer.remove(this);
         }
+        this.mShowing = false;
         this.clearBadge();
     }
 
@@ -144,7 +145,6 @@ export class UserInfoPanel extends Panel {
             style: { color: "#b4b4b4", font: Font.YAHEI_18_BOLD }
         }, false);
         this.add(lvLabel);
-        super.init();
 
         this.mNickName = this.scene.make.text({
             x: nickNameLabel.x + 50,
@@ -174,13 +174,14 @@ export class UserInfoPanel extends Panel {
             columns: BlueButton.getColumns(),
             rows: BlueButton.getRows()
         });
-        this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD, stroke: "#000000", strokeThickness: 5 });
+        this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });
         this.add(this.mFollwerBtn);
 
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
         this.mActor.scale = 2;
         this.add(this.mActor);
         this.resize();
+        super.init();
 
         this.setInfo(this.getData("data"));
     }
@@ -189,7 +190,6 @@ export class UserInfoPanel extends Panel {
         const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
         if (!mainPlayer) return;
         if (platformId === mainPlayer.platformId) {
-            this.remove(this.mFollwerBtn);
             this.mFollwerBtn.visible = false;
             return;
         }

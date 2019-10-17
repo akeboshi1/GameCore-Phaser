@@ -18,6 +18,7 @@ export class UiManager extends PacketHandler {
     private mConnect: ConnectionService;
     private mMedMap: Map<UIMediatorType, IMediator>;
     private mUILayerManager: ILayerManager;
+    private mCache: any[] = [];
     constructor(private worldService: WorldService) {
         super();
 
@@ -54,6 +55,12 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
+
+            for (const tmp of this.mCache) {
+                const ui = tmp[0];
+                this.showMed(ui.name, ui);
+            }
+            this.mCache.length = 0;
         }
 
         // TOOD 通过统一的方法创建打开
@@ -110,7 +117,10 @@ export class UiManager extends PacketHandler {
     }
 
     private showMed(type: string, ...params: any[]) {
-        if (!this.mMedMap) return;
+        if (!this.mMedMap) {
+            this.mCache.push(params);
+            return;
+        }
         const className: string = type + "Mediator";
         let mediator: IMediator = this.mMedMap.get(className);
         if (!mediator) {

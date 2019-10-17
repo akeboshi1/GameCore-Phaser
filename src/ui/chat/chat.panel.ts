@@ -85,14 +85,27 @@ export class ChatPanel extends Panel {
         output.add(track);
 
         // const text = this.mScene.make.text({
-        //     width: 440,
+        //     width: 410,
         //     height: 200,
-        //     style: { font: "bold 14px YaHei" }
+        //     style: { font: "bold 14px YaHei", wordWrap: { width: 410, useAdvancedWrap: true }}
         // }, false);
+        // const text = new BBCodeText(this.mScene, 0, 0, "", {
+        //     width: 410,
+        //     height: 200,
+        //     style: {
+        //         fontSize: "14px",
+        //         wrap: {
+        //             mode: "char",
+        //             width: 100
+        //         }
+        //     },
+        // });
         const text = new BBCodeText(this.mScene, 0, 0, "", {
-            width: 440,
-            height: 200,
-            style: { font: "bold 14px YaHei" }
+            fontSize: "14px",
+            wrap: {
+                mode: "char",
+                width: 400
+            },
         });
         output.add(text);
 
@@ -103,8 +116,6 @@ export class ChatPanel extends Panel {
             y: size.height - 150,
             width: 440,
             height: 200,
-            textWidth: 420,
-            textHeight: 190,
 
             // background,
 
@@ -140,11 +151,10 @@ export class ChatPanel extends Panel {
 
         this.mInputText = new InputText(this.mScene, 12, size.height - 40, 10, 10, {
             type: "input",
-            text: "hello world",
             fontSize: "14px",
             color: "#808080"
         })
-            .resize(370, 20)
+            .resize(360, 20)
             .setOrigin(0, 0)
             .setStyle({ font: "bold 16px YaHei" })
             .on("focus", this.onFocusHandler, this)
