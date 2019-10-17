@@ -29,6 +29,7 @@ export class PlayScene extends Phaser.Scene {
     });
     Logger.log("play created");
     this.scene.sendToBack();
+    this.scale.lockOrientation("landscape");
   }
 
   update(time: number, delta: number) {

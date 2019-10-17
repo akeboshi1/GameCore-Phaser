@@ -192,6 +192,7 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt4.on("pointerdown", this.changeAccount, this);
 
         this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        this.scale.lockOrientation("landscape");
     }
 
     public init(data: any) {

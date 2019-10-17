@@ -23,6 +23,7 @@ export class GamePauseScene extends Phaser.Scene {
         const pauseImg: Phaser.GameObjects.Image = this.add.image(width >> 1, height >> 1, "gamepause.png");
         pauseImg.scaleX = pauseImg.scaleY = this.mWorld.uiScale;
         const tipTF: Phaser.GameObjects.Text = this.add.text(width - 240 >> 1, height - 50, "点击任意位置开始游戏", { font: "30px Tahoma" });
+        this.scale.lockOrientation("landscape");
         // tipTF.setFontFamily("Tahoma");
         // tipTF.setFontSize(15);
     }
