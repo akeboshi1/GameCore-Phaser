@@ -161,14 +161,13 @@ export class ChatMediator extends PacketHandler implements IMediator {
         }
 
         const playerManager = this.world.roomManager.currentRoom.playerManager;
-        const player = playerManager.get(content.chatSenderid).model;
-        if (!player) return;
+        const player = playerManager.get(content.chatSenderid);
         // const chatSendName = player ? player.name : "";
         // this.mChatPanel.appendChat(content.chatContext);
-        const nickname = player ? `${player.nickname}:` : "";
+        const nickname = player ? `${player.model.nickname}:` : "";
         const color = content.chatSetting.textColor ? content.chatSetting.textColor : "#FFFFFF";
         this.appendMessage(this.mAllMessage, { chat: `[color=${color}]${nickname}:${content.chatContext}[/color]`, channel: content.chatChannel });
-        this.mChatPanel.appendChat(`[color=${color}]${nickname}${content.chatContext}[/color]\n`);
+        this.mChatPanel.appendChat(`[b][color=${color}]${nickname}${content.chatContext}[/color][/b]\n`);
     }
 
     private onSendChatHandler(text: string) {
