@@ -5,6 +5,7 @@ export class DynamicSprite extends Phaser.GameObjects.Sprite {
     private mUrl: string;
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, undefined);
+        scene.sys.updateList.add(this);
     }
 
     load(textureURL: string, atlasURL: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function) {
@@ -21,6 +22,11 @@ export class DynamicSprite extends Phaser.GameObjects.Sprite {
             this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
             this.scene.load.start();
         }
+    }
+
+    destroy(fromScene?: boolean): void {
+        this.scene.sys.updateList.remove(this);
+        super.destroy(fromScene);
     }
 
     private onLoadComplete() {

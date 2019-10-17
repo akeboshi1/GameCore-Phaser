@@ -26,6 +26,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.onShowEffect);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
 
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
     }
@@ -215,6 +217,18 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const player = this.get(content.chatSenderid);
         if (player) {
             player.showBubble(content.chatContext, content.chatSetting);
+        }
+    }
+
+    private onShowEffect(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT = packet.content;
+        const ids = content.id;
+        let player: PlayerEntity;
+        for (const id of ids) {
+            player = this.get(id);
+            if (player) {
+                player.showEffected();
+            }
         }
     }
 

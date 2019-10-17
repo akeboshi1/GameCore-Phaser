@@ -29,9 +29,8 @@ export class PlayerEntity extends Element {
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         if (this.mDisplay) {
-            this.mDisplay.showNickname(sprite.nickname);
             if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
-            this.mDisplay.showEffect();
+            this.mDisplay.showNickname(sprite.nickname);
         }
 
         if (this.model && this.model.package) {

@@ -33,7 +33,8 @@
             }
         ],
         "only-arrow-functions": false,
-        "ban-types": [true, ["Object", "Use {} instead."], ["String"]]
+        "ban-types": [true, ["Object", "Use {} instead."], ["String"]],
+        "no-string-literal": false
     },
     "rulesDirectory": [],
     "linterOptions": {

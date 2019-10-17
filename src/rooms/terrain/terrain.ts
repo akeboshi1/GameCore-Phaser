@@ -71,6 +71,9 @@ export class Terrain extends BlockObject implements IElement {
         return this.roomService.transformTo45(pos);
     }
 
+    public showEffected() {
+    }
+
     protected createDisplay(): ElementDisplay {
         if (!this.mDisplayInfo) {
             Logger.error("displayinfo does not exist, Create display failed");
