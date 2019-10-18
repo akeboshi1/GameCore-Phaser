@@ -52,8 +52,9 @@ export class JoyStickManager implements InputManager {
 
     public resize() {
         const size: Size = this.worldService.getSize();
-        this.mParentcon.x = 150;
-        this.mParentcon.y = size.height - 150;
+        // this.mParentcon.x = 150;
+        // this.mParentcon.y = size.height - 150;
+        this.mJoyStick.resize();
     }
 
     public addListener(l: InputListener) {
@@ -147,12 +148,12 @@ export class JoyStick {
     public resize() {
         const size: Size = this.mWorld.getSize();
         if (this.mbtnCon) {
-            this.mbtnCon.x = size.width - this.mScale * 120;
-            this.mbtnCon.y = size.height - this.mScale * 120;
+            this.mbtnCon.x = size.width - this.mbtn0.width * this.mScale;
+            this.mbtnCon.y = size.height - this.mbtn0.height * this.mScale;
         }
         if (this.mjoystickCon) {
-            this.mjoystickCon.x = this.mScale * 260;
-            this.mjoystickCon.y = size.height - this.mScale * 260;
+            this.mjoystickCon.x = this.bg.width * this.mScale >> 1;
+            this.mjoystickCon.y = size.height - this.bg.height / 2 * this.mScale;
         }
     }
 

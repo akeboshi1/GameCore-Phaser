@@ -31,7 +31,7 @@ export class ChatPanel extends Panel {
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorldService.getSize();
         if (this.mWorldService.game.device.os.desktop) {
-            this.x = 8;
+            this.x = 100;
         } else {
             this.x = size.width - this.width / 2 >> 1;
         }

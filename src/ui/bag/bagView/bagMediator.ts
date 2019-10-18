@@ -35,10 +35,6 @@ export class BagMediator extends BaseMediator {
         if (this.mView) return this.mView.isShow();
     }
 
-    public resize() {
-        if (this.mView) return this.mView.resize();
-    }
-
     public getView(): IAbstractPanel {
         return this.mView;
     }
