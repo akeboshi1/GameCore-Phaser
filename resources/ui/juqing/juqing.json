@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"juqing.bg.png": {
+		"juqing_bg.png": {
 			"frame": {
 				"x": 0,
 				"y": 0,
@@ -20,7 +20,7 @@
 				"h": 221
 			}
 		},
-		"juqing.name.png": {
+		"juqing_name.png": {
 			"frame": {
 				"x": 0,
 				"y": 221,
@@ -40,7 +40,7 @@
 				"h": 41
 			}
 		},
-		"radio.arrow.png": {
+		"radio_arrow.png": {
 			"frame": {
 				"x": 198,
 				"y": 221,
@@ -60,7 +60,7 @@
 				"h": 14
 			}
 		},
-		"radio.bg.png": {
+		"radio_bg.png": {
 			"frame": {
 				"x": 208,
 				"y": 221,

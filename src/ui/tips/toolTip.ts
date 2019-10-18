@@ -1,14 +1,8 @@
 import { Tool } from "../../utils/tool";
+import { IToolTip } from "./itoolTip";
 
-export class ToolTip extends Phaser.GameObjects.Container {
-    // public static getInstance(mscene, resStr, resJson, resUrl): ToolTip {
-    //     if (!!ToolTip.mInstance === false) {
-    //         ToolTip.mInstance = new ToolTip(mscene, resStr, resJson, resUrl);
-    //     }
-    //     return ToolTip.mInstance;
-    // }
+export class ToolTip extends Phaser.GameObjects.Container implements IToolTip {
 
-    protected static mInstance: ToolTip;
     private static TOP: string = "tip_top.png";
     private static MID: string = "tip_mid.png";
     private static BOT: string = "tip_bot.png";
@@ -25,7 +19,7 @@ export class ToolTip extends Phaser.GameObjects.Container {
         this.preLoad();
     }
 
-    public setText(value: string) {
+    public setToolTipData(value: string) {
         if (!this.mText) return;
         const str = Tool.formatChineseString(value, this.mText.style.fontSize, this.mWidth - 20);
         this.mText.setText(str);
@@ -64,7 +58,7 @@ export class ToolTip extends Phaser.GameObjects.Container {
         this.botImage.setTexture(this.resStr, ToolTip.BOT);
 
         this.mText = this.scene.make.text(undefined, false);
-        this.mText.setFontFamily("Tahoma");
+        this.mText.setFontFamily("YaHei");
         this.mText.setFontStyle("bold");
         this.mText.setFontSize(14);
         this.mText.style.align = "center";
