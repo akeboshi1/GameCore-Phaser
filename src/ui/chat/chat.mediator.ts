@@ -79,6 +79,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
         this.mChatPanel.on("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.show();
+        this.setUiScale(this.world.uiScale);
     }
 
     public update(param?: any) {

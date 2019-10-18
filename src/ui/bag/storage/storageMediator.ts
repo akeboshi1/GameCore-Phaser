@@ -19,7 +19,10 @@ export class StorageMediator extends BaseMediator {
     }
 
     public show(param?: any): void {
-        if (this.mView) this.mView.show(param);
+        if (this.mView) {
+            this.mView.show(param);
+            super.show(param);
+        }
     }
 
     public update(param?: any): void {

@@ -45,6 +45,7 @@ export class ShopMediator extends BaseMediator {
         // this.world.uiManager.getUILayerManager().addToUILayer(this.mView);
         this.mParam = param;
         this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
+        super.show(param);
     }
 
     public update(param?: any) {

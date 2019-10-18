@@ -31,7 +31,7 @@ export class ItemDetailMediator extends BaseMediator {
     }
 
     public show(param?: any): void {
-
+        super.show(param);
     }
     public update(param?: any): void {
 

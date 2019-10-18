@@ -52,6 +52,7 @@ export class BagMediator extends BaseMediator {
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         this.mView.show(param);
+        super.show(param);
         // const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
         // this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), BagPanel.PageMaxCount);
     }

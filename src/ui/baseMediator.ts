@@ -50,11 +50,7 @@ export class BaseMediator implements IMediator {
     }
 
     show(param?: any): void {
-        const view = this.getView();
-        if (view) {
-            view.show(param);
-            this.setUiScale(this.world.uiScale);
-        }
+        this.setUiScale(this.world.uiScale);
     }
 
     update(param?: any): void {

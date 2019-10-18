@@ -48,6 +48,7 @@ export class UserMenuMediator extends BaseMediator {
         this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         this.mView.on("menuClick", this.onClickMenuHandler, this);
+        super.show(param);
         // this.mScene.input.on("pointerdown", this.onClosePanel, this);
     }
 

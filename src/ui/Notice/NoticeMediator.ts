@@ -65,6 +65,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
         this.mNoticePanel.show(param);
         this.mNoticePanel.showNotice(param);
         this.mLayerManager.addToDialogLayer(this.mNoticePanel);
+        this.setUiScale(this.world.uiScale);
     }
 
     update(param?: any): void {

@@ -53,6 +53,7 @@ export class BagUIMediator extends BaseMediator {
         this.mView.show(param);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        super.show(param);
     }
 
     public update(param: any) {

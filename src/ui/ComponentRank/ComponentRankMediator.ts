@@ -50,6 +50,7 @@ export class ComponentRankMediator extends BaseMediator {
         if (param && param.length > 0) {
             (this.mView as ComponentRankPanel).addItem(param[0]);
         }
+        super.show(param);
     }
 
     destroy() {

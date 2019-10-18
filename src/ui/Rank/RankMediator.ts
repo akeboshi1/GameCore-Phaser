@@ -49,6 +49,7 @@ export class RankMediator extends BaseMediator {
         if (param && param.length > 0) {
             (this.mView as RankPanel).addItem(param[0]);
         }
+        super.show(param);
     }
 
     update(param?: any): void {

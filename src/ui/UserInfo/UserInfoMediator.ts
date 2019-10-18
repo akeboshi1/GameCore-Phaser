@@ -41,6 +41,7 @@ export class UserInfoMediator extends BaseMediator {
         this.mView.show(param[0]);
         this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+        super.show(param);
     }
 
     destroy() {
