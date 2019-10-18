@@ -7,22 +7,21 @@ import { Url } from "../../../utils/resUtil";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { PBpacket } from "net-socket-packet";
 import { BagPanel } from "../bagView/bagPanel";
-import {ISprite} from "../../../rooms/element/sprite";
+import { ISprite } from "../../../rooms/element/sprite";
+import { Panel } from "../../components/panel";
 
 /**
  * 背包显示栏
  */
-export class BagUIPC implements IBag {
+export class BagUIPC extends Panel implements IBag {
 
     public static SlotMaxCount: number = 12;
     // bagBtn
     public bagBtn: Phaser.GameObjects.Sprite;
     public bagSlotList: ItemSlot[];
 
-    private mShowing: boolean = false;
     private mBagBg: Phaser.GameObjects.Sprite;
     private baseBagBgWid: number;
-    private mScene: Phaser.Scene;
     private mWorld: WorldService;
     private mResStr: string;
     private mResPng: string;
@@ -35,6 +34,7 @@ export class BagUIPC implements IBag {
     private mWid: number = 0;
     private mHei: number = 0;
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
+        super(scene);
         this.mScene = scene;
         this.mWorld = world;
         this.mParentCon = this.mScene.make.container(undefined, false);
@@ -127,7 +127,7 @@ export class BagUIPC implements IBag {
                 itemSlot = new ItemSlot(this.mScene, this.mWorld, this.mParentCon, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
                 itemSlot.createUI();
                 this.bagSlotList.push(itemSlot);
-                childList.push(itemSlot.con);
+                childList.push(itemSlot.toolTipCon);
             }
             itemSlot.dataChange(items[i]);
             tempWid += 56 + 5;

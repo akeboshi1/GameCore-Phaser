@@ -1,24 +1,24 @@
-import { IMediator } from "../baseMediator";
+import { IMediator, BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { UserInfoPanel } from "./UserInfoPanel";
 import { MessageType } from "../../const/MessageType";
 
-export class UserInfoMediator implements IMediator {
+export class UserInfoMediator extends BaseMediator {
     readonly world: WorldService;
-    private mUserInfo: UserInfoPanel;
     constructor(private mLayerManager: ILayerManager, private mScene: Phaser.Scene, world: WorldService) {
+        super(world);
         this.world = world;
-        this.mUserInfo = new UserInfoPanel(this.mScene, world);
+        this.mView = new UserInfoPanel(this.mScene, world);
     }
 
     getView(): IAbstractPanel {
-        return this.mUserInfo;
+        return this.mView;
     }
 
     hide(): void {
-        this.mUserInfo.hide();
+        this.mView.hide();
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
     }
 
@@ -27,24 +27,24 @@ export class UserInfoMediator implements IMediator {
     }
 
     isShow(): boolean {
-        return this.mUserInfo.isShow();
+        return this.mView.isShow();
     }
 
     resize() {
-        this.mUserInfo.resize();
+        this.mView.resize();
     }
 
     show(param?: any): void {
         if (!param || param.length === 0) {
             return;
         }
-        this.mUserInfo.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mUserInfo);
+        this.mView.show(param[0]);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
     }
 
     destroy() {
-        if (this.mUserInfo) this.mUserInfo.destroy();
+        if (this.mView) this.mView.destroy();
     }
 
     update(param?: any): void {

@@ -1,4 +1,4 @@
-import { IMediator } from "../baseMediator";
+import { IMediator, BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { MessageType } from "../../const/MessageType";
@@ -7,10 +7,9 @@ import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_pro
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
 
-export class ShopMediator implements IMediator {
+export class ShopMediator extends BaseMediator {
     public static NAME: string = "ShopMediator";
     public world: WorldService;
-    private mView: ShopPanel;
     private readonly _perPage = 50;
     private _curPage: number;
     private fetching: boolean;
@@ -18,6 +17,7 @@ export class ShopMediator implements IMediator {
     private mParam: any;
     private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
+        super(world);
         this.world = world;
         this.mScene = scene;
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
@@ -99,7 +99,7 @@ export class ShopMediator implements IMediator {
 
     private queryPackageHandler(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
         if (data.items.length > 0 && data.id === this.mParam[0].id) {
-            this.mView.setDataList(data.items);
+            (this.mView as ShopPanel).setDataList(data.items);
             //  this.mView.addItems(data.items);
         } else {
             this.isEnd = true;

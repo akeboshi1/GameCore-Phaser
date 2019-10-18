@@ -10,7 +10,7 @@ export class ItemSlot implements IListItemComponent {
     // public url: string;
     // public id: number;
     // public count: number;
-    public con: ToolTipContainer;
+    public toolTipCon: ToolTipContainer;
     public index: number;
     protected mData: op_gameconfig.Item;
     protected mScene: Phaser.Scene;
@@ -33,10 +33,10 @@ export class ItemSlot implements IListItemComponent {
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         this.mScene = scene;
         this.mWorld = world;
-        this.con = new ToolTipContainer(this.mScene, world);
-        this.con.x = x;
-        this.con.y = y;
-        parentCon.add(this.con);
+        this.toolTipCon = new ToolTipContainer(this.mScene, world);
+        this.toolTipCon.x = x;
+        this.toolTipCon.y = y;
+        parentCon.add(this.toolTipCon);
         this.mResStr = resStr;
         this.mResPng = respng;
         this.mResJson = resjson;
@@ -50,7 +50,7 @@ export class ItemSlot implements IListItemComponent {
     }
 
     public getView(): any {
-        return this.con;
+        return this.toolTipCon;
     }
 
     public dataChange(val: any) {
@@ -86,9 +86,9 @@ export class ItemSlot implements IListItemComponent {
         if (this.mIcon) {
             this.mIcon.destroy();
         }
-        if (this.con) {
-            this.con.destroy();
-            this.con = null;
+        if (this.toolTipCon) {
+            this.toolTipCon.destroy();
+            this.toolTipCon = null;
         }
         if (this.mAnimationCon) {
             this.mAnimationCon.destroy(true);
@@ -117,16 +117,16 @@ export class ItemSlot implements IListItemComponent {
     }
 
     protected setToolTipData(text: string) {
-        this.con.setToolTipData(text);
+        this.toolTipCon.setToolTipData(text);
     }
 
     protected onLoadCompleteHandler() {
         this.itemBG = this.mScene.make.sprite(undefined, false);
         this.itemBG.setTexture(this.mResStr, this.mResSlot);
-        this.con.addAt(this.itemBG, 0);
-        this.con.setSize(this.itemBG.width, this.itemBG.height);
+        this.toolTipCon.addAt(this.itemBG, 0);
+        this.toolTipCon.setSize(this.itemBG.width, this.itemBG.height);
         this.mIcon = new DragDropIcon(this.mScene, 0, 0);
-        this.con.addAt(this.mIcon, 1);
+        this.toolTipCon.addAt(this.mIcon, 1);
         if (this.mSubScriptRes) {
             this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
             this.mSubScriptSprite.setTexture(this.mResStr, this.mSubScriptRes);
@@ -134,17 +134,17 @@ export class ItemSlot implements IListItemComponent {
             this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
-        this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
-        this.con.on("pointerover", this.overHandler, this);
-        this.con.on("pointerout", this.outHandler, this);
-        this.con.on("pointerdown", this.downHandler, this);
+        this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
+        this.toolTipCon.on("pointerover", this.overHandler, this);
+        this.toolTipCon.on("pointerout", this.outHandler, this);
+        this.toolTipCon.on("pointerdown", this.downHandler, this);
         this.minitialize = true;
         if (this.mData) {
             this.dataChange(this.mData);
         }
         this.mWid += this.itemBG.width;
         this.mHei += this.itemBG.height;
-        this.con.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
+        this.toolTipCon.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
     }
 
     protected downHandler(pointer) {
@@ -161,7 +161,7 @@ export class ItemSlot implements IListItemComponent {
         if (this.mSelectRes && this.mSelectRes.length > 0) {
             this.mSelectSprite = this.mScene.make.image(undefined, false);
             this.mSelectSprite.setTexture(this.mResStr, this.mSelectRes);
-            this.con.add(this.mSelectSprite);
+            this.toolTipCon.add(this.mSelectSprite);
         }
     }
 

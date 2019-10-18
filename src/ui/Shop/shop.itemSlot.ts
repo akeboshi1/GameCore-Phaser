@@ -48,7 +48,7 @@ export class ShopItemSlot extends ItemSlot {
         this.moneyIcon = new DynamicImage(this.mScene, 0, 0);
         this.moneyIcon.x = (-this.mWid >> 1) + 15;
         this.moneyIcon.y = y;
-        this.con.add(this.moneyIcon);
+        this.toolTipCon.add(this.moneyIcon);
 
         this.moneyIcon.load(png);
 
@@ -59,7 +59,7 @@ export class ShopItemSlot extends ItemSlot {
         priceText.x = -this.mWid / 2 + this.moneyIcon.width + 20;
         priceText.y = y - 9;
 
-        this.con.add(priceText);
+        this.toolTipCon.add(priceText);
         priceText.setText(price.price.toString());
     }
 
@@ -69,10 +69,10 @@ export class ShopItemSlot extends ItemSlot {
         this.itemBG = this.mScene.make.sprite(undefined, false);
         this.itemBG.setTexture(this.mResStr, this.mResSlot);
         this.itemBG.y = -10;
-        this.con.setSize(this.mWid, this.mHei);
-        this.con.addAt(this.itemBG, 0);
+        this.toolTipCon.setSize(this.mWid, this.mHei);
+        this.toolTipCon.addAt(this.itemBG, 0);
         this.mIcon = new DragDropIcon(this.mScene, 0, -10);
-        this.con.addAt(this.mIcon, 1);
+        this.toolTipCon.addAt(this.mIcon, 1);
         if (this.mSubScriptRes) {
             this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
             this.mSubScriptSprite.setTexture(this.mResStr, this.mSubScriptRes);
@@ -80,10 +80,10 @@ export class ShopItemSlot extends ItemSlot {
             this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
-        this.con.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
-        this.con.on("pointerover", this.overHandler, this);
-        this.con.on("pointerout", this.outHandler, this);
-        this.con.on("pointerdown", this.downHandler, this);
+        this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
+        this.toolTipCon.on("pointerover", this.overHandler, this);
+        this.toolTipCon.on("pointerout", this.outHandler, this);
+        this.toolTipCon.on("pointerdown", this.downHandler, this);
         this.minitialize = true;
         if (this.mData) {
             this.dataChange(this.mData);
@@ -93,8 +93,8 @@ export class ShopItemSlot extends ItemSlot {
         this.createTexture(this.mWid, this.mHei);
         this.mSelectSprite.setTexture("selectBg");
         this.mSelectSprite.visible = false;
-        this.con.addAt(this.mSelectSprite, 0);
-        this.con.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
+        this.toolTipCon.addAt(this.mSelectSprite, 0);
+        this.toolTipCon.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
     }
 
     protected overHandler(pointer) {

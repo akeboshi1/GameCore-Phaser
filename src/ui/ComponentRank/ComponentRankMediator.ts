@@ -1,17 +1,17 @@
-import { IMediator } from "../baseMediator";
+import { IMediator, BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { ComponentRankPanel } from "./ComponentRankPanel";
 
-export class ComponentRankMediator implements IMediator {
+export class ComponentRankMediator extends BaseMediator {
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
-    private mRank: ComponentRankPanel;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
-        this.mRank = new ComponentRankPanel(scene, worldService);
-        layerManager.addToUILayer(this.mRank);
+        super(worldService);
+        this.mView = new ComponentRankPanel(scene, worldService);
+        layerManager.addToUILayer(this.mView);
         this.mLayerManager = layerManager;
         this.mScene = scene;
     }
@@ -21,11 +21,11 @@ export class ComponentRankMediator implements IMediator {
     }
 
     getView(): IAbstractPanel {
-        return this.mRank;
+        return this.mView;
     }
 
     hide(): void {
-        this.mRank.hide();
+        this.mView.hide();
     }
 
     isSceneUI(): boolean {
@@ -37,35 +37,35 @@ export class ComponentRankMediator implements IMediator {
     }
 
     resize() {
-        this.mRank.resize();
+        this.mView.resize();
     }
 
     show(param?: any): void {
-        if (this.mRank && this.mRank.isShow()) {
+        if (this.mView && this.mView.isShow()) {
             return;
         }
-        this.mRank = new ComponentRankPanel(this.mScene, this.world);
-        this.mLayerManager.addToUILayer(this.mRank);
-        this.mRank.show();
+        this.mView = new ComponentRankPanel(this.mScene, this.world);
+        this.mLayerManager.addToUILayer(this.mView);
+        this.mView.show();
         if (param && param.length > 0) {
-            this.mRank.addItem(param[0]);
+            (this.mView as ComponentRankPanel).addItem(param[0]);
         }
     }
 
     destroy() {
-        if (this.mRank) {
-            if (this.mRank.parentContainer) {
-                this.mRank.parentContainer.remove(this.mRank);
+        if (this.mView) {
+            if (this.mView.parentContainer) {
+                this.mView.parentContainer.remove(this.mView);
             }
-            this.mRank.destroy();
-            this.mRank = null;
+            this.mView.destroy();
+            this.mView = null;
         }
         this.mScene = null;
     }
 
     update(param?: any): void {
         if (param && param.length > 0) {
-            this.mRank.addItem(param[0]);
+            (this.mView as ComponentRankPanel).addItem(param[0]);
         }
     }
 }

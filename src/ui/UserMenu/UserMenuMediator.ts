@@ -1,4 +1,4 @@
-import { IMediator } from "../baseMediator";
+import { IMediator, BaseMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { UserMenuPanel } from "./UserMenuPanel";
@@ -7,16 +7,16 @@ import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
 
-export class UserMenuMediator implements IMediator {
+export class UserMenuMediator extends BaseMediator {
     readonly world: WorldService;
     private mScene: Phaser.Scene;
-    private mUserMenuPanel: UserMenuPanel;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
+        super(worldService);
         this.world = worldService;
         this.mLayerManager = layerManager;
         this.mScene = scene;
-        this.mUserMenuPanel = new UserMenuPanel(scene, this.world);
+        this.mView = new UserMenuPanel(scene, this.world);
     }
 
     getView(): IAbstractPanel {
@@ -25,9 +25,9 @@ export class UserMenuMediator implements IMediator {
 
     hide(): void {
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
-        if (this.mUserMenuPanel) {
-            this.mUserMenuPanel.off("menuClick", this.onClickMenuHandler, this);
-            this.mUserMenuPanel.hide();
+        if (this.mView) {
+            this.mView.off("menuClick", this.onClickMenuHandler, this);
+            this.mView.hide();
         }
     }
 
@@ -40,31 +40,31 @@ export class UserMenuMediator implements IMediator {
     }
 
     resize() {
-        this.mUserMenuPanel.resize();
+        this.mView.resize();
     }
 
     show(param?: any): void {
-        this.mUserMenuPanel.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mUserMenuPanel);
+        this.mView.show(param[0]);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
-        this.mUserMenuPanel.on("menuClick", this.onClickMenuHandler, this);
+        this.mView.on("menuClick", this.onClickMenuHandler, this);
         // this.mScene.input.on("pointerdown", this.onClosePanel, this);
     }
 
     update(param?: any): void {
-        this.mUserMenuPanel.update(param[0]);
+        this.mView.update(param[0]);
     }
 
     destroy() {
-        if (this.mUserMenuPanel) {
-            this.mUserMenuPanel.destroy();
-            this.mUserMenuPanel = null;
+        if (this.mView) {
+            this.mView.destroy();
+            this.mView = null;
         }
         this.mScene = null;
     }
 
     private onClickMenuHandler(targetNode) {
-        const uiNode: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mUserMenuPanel.getData("data");
+        const uiNode: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mView.getData("data");
         if (!targetNode || !uiNode || !this.world || !this.world.connection) return;
         this.hide();
         if (targetNode.platformid) {

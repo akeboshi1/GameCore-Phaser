@@ -9,19 +9,16 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { BagPanel } from "../bagView/bagPanel";
 import { Url } from "../../../utils/resUtil";
-import { PlayerManager } from "../../../rooms/player/player.manager";
-import { PlayerModel } from "../../../rooms/player/player.model";
 import {ISprite} from "../../../rooms/element/sprite";
+import { Panel } from "../../components/panel";
 
 /**
  * 背包显示栏
  */
-export class BagUIMobile implements IBag {
+export class BagUIMobile extends Panel implements IBag {
     // bagBtn
     public bagBtn: Phaser.GameObjects.Sprite;
     public bagSlotList: ItemSlot[];
-    private mShowing: boolean;
-    private mScene: Phaser.Scene;
     private mWorld: WorldService;
     private mParentCon: Phaser.GameObjects.Container;
     private mBagBtnCon: Phaser.GameObjects.Container;
@@ -30,6 +27,7 @@ export class BagUIMobile implements IBag {
     private mResPng: string;
     private mResJson: string;
     constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene);
         this.mScene = scene;
         this.mWorld = world;
         const size: Size = this.mWorld.getSize();

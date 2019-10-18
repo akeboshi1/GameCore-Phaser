@@ -1,4 +1,4 @@
-import { IMediator } from "../baseMediator";
+import { IMediator, BaseMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
@@ -8,15 +8,15 @@ import { op_virtual_world } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { ComponentRankPanel } from "../ComponentRank/ComponentRankPanel";
 
-export class ControlFMediator implements IMediator {
+export class ControlFMediator extends BaseMediator {
     readonly world: WorldService;
-    private mControlF: ControlFPanel;
     private mScene: Phaser.Scene;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        // this.mControlF = new ControlFPanel(scene);
-        // this.mControlF.on("control", this.handControlF, this);
-        // layerManager.addToUILayer(this.mControlF);
+        super(world);
+        // this.mView = new ControlFPanel(scene);
+        // this.mView.on("control", this.handControlF, this);
+        // layerManager.addToUILayer(this.mView);
         this.mLayerManager = layerManager;
         this.world = world;
         this.mScene = scene;
@@ -31,13 +31,13 @@ export class ControlFMediator implements IMediator {
     }
 
     hide(): void {
-        if (this.mControlF) {
-            this.mControlF.off("control", this.handControlF, this);
-            this.mControlF.hide();
-            this.mControlF = null;
+        if (this.mView) {
+            this.mView.off("control", this.handControlF, this);
+            this.mView.hide();
+            this.mView = null;
         }
-        // if (this.mControlF) {
-        //     this.mControlF.off("control22", this.handControlF, this);
+        // if (this.mView) {
+        //     this.mView.off("control22", this.handControlF, this);
         // }
     }
 
@@ -50,31 +50,31 @@ export class ControlFMediator implements IMediator {
     }
 
     resize() {
-        this.mControlF.resize();
+        this.mView.resize();
     }
 
     show(param?: any): void {
-        // this.mControlF.show(param);
-        // if (this.mControlF) {
-        //     this.mControlF.on("control22", this.handControlF, this);
+        // this.mView.show(param);
+        // if (this.mView) {
+        //     this.mView.on("control22", this.handControlF, this);
         // }
 
-        if (this.mControlF && this.mControlF.isShow()) {
+        if (this.mView && this.mView.isShow()) {
             return;
         }
-        this.mControlF = new ControlFPanel(this.mScene);
-        this.mControlF.on("control", this.handControlF, this);
-        this.mLayerManager.addToUILayer(this.mControlF);
-        this.mControlF.show(param);
+        this.mView = new ControlFPanel(this.mScene);
+        this.mView.on("control", this.handControlF, this);
+        this.mLayerManager.addToUILayer(this.mView);
+        this.mView.show(param);
     }
 
     update(param?: any): void {
     }
 
     destroy() {
-        if (this.mControlF) {
-            this.mControlF.destroy();
-            this.mControlF = null;
+        if (this.mView) {
+            this.mView.destroy();
+            this.mView = null;
         }
         this.mScene = null;
         this.mLayerManager = null;
