@@ -20,6 +20,9 @@ export interface ILauncherConfig {
 export interface GameMain {
     resize(newWidth, newHeight);
 
+    startFullscreen(): void;
+    stopFullscreen(): void;
+
     destroy(): void;
 }
 
@@ -77,6 +80,20 @@ export class Launcher {
             .then((game) => {
                 this.world = new game.World(this.config, this.mCompleteFunc);
             });
+    }
+
+    public startFullscreen() {
+        if (!this.world) {
+            return;
+        }
+        this.world.startFullscreen();
+    }
+
+    public stopFullscreen() {
+        if (!this.world) {
+            return;
+        }
+        this.world.stopFullscreen();
     }
 
     public registerReload(func: Function) {
