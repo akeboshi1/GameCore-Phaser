@@ -1,5 +1,5 @@
 import { MessageType } from "../../../const/MessageType";
-import { IMediator } from "../../baseMediator";
+import { IMediator, BaseMediator } from "../../baseMediator";
 import { IAbstractPanel } from "../../abstractPanel";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
@@ -16,13 +16,13 @@ export enum DropType {
     DROP_TYPE_SHORTCUT = 1,
     DROP_TYPE_BAG = 2
 }
-export class BagMediator implements IMediator {
+export class BagMediator extends BaseMediator {
     public static NAME: string = "BagMediator";
     public world: WorldService;
     private mPageNum: number = 0;
-    private mView: BagPanel;
     private mScene: Phaser.Scene;
     constructor(mworld: WorldService, scene: Phaser.Scene) {
+        super(mworld);
         this.world = mworld;
         this.mScene = scene;
     }
@@ -104,7 +104,7 @@ export class BagMediator implements IMediator {
     }
 
     private setListData(value: any[]) {
-        this.mView.setDataList(value);
+        (this.mView as BagPanel).setDataList(value);
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {

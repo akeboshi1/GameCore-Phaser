@@ -23,6 +23,10 @@ export class NoticeMediator extends PacketHandler implements IMediator {
 
     }
 
+    public setUiScale(value: number) {
+        this.mNoticePanel.scaleX = this.mNoticePanel.scaleY = value;
+    }
+
     getView(): IAbstractPanel {
         return this.mNoticePanel;
     }

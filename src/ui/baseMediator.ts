@@ -1,8 +1,10 @@
 import { IAbstractPanel } from "./abstractPanel";
 import { WorldService } from "../game/world.service";
+import { Panel } from "./components/panel";
 
 export interface IMediator {
     readonly world: WorldService;
+    setUiScale(val: number);
     isSceneUI(): boolean;
     isShow(): boolean;
     resize();
@@ -15,9 +17,14 @@ export interface IMediator {
 
 export class BaseMediator implements IMediator {
     readonly world: WorldService;
+    protected mView: Panel;
 
     constructor(world?: WorldService) {
         this.world = world;
+    }
+
+    setUiScale(value: number) {
+        this.mView.scaleX = this.mView.scaleY = value;
     }
 
     getView(): IAbstractPanel {
@@ -44,7 +51,10 @@ export class BaseMediator implements IMediator {
 
     show(param?: any): void {
         const view = this.getView();
-        if (view) view.show(param);
+        if (view) {
+            view.show(param);
+            this.setUiScale(this.world.uiScale);
+        }
     }
 
     update(param?: any): void {

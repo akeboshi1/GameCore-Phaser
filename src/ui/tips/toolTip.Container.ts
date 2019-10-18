@@ -7,7 +7,10 @@ export class ToolTipContainer extends Phaser.GameObjects.Container {
     protected mToolTip: ToolTip;
     constructor(private mScene: Phaser.Scene, private world: WorldService) {
         super(mScene);
+    }
 
+    public setUiScale(value: number) {
+        this.scaleX = this.scaleY = value;
     }
 
     public setToolTip(resStr: string, resJson: string, resUrl: string) {

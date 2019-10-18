@@ -1,17 +1,12 @@
-import { IMediator } from "../../baseMediator";
+import { IMediator, BaseMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
 import { IAbstractPanel } from "../../abstractPanel";
 import { StoragePanel } from "./storagePanel";
 
-export class StorageMediator implements IMediator {
+export class StorageMediator extends BaseMediator {
     public world: WorldService;
-    private mView: StoragePanel;
-    constructor() {
-
-    }
-
-    public isSceneUI(): boolean {
-        return false;
+    constructor(world: WorldService) {
+        super(world);
     }
     public isShow(): boolean {
         return this.mView.isShow();

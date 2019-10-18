@@ -25,6 +25,10 @@ export class ChatMediator extends PacketHandler implements IMediator {
         }
     }
 
+    public setUiScale(value: number) {
+        this.mChatPanel.scaleX = this.mChatPanel.scaleY = value;
+    }
+
     public enterRoom() {
         if (!this.room) return;
         if (!this.room.actor) return;

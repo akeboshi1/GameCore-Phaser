@@ -1,4 +1,4 @@
-import { IMediator } from "../../baseMediator";
+import { BaseMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
 import { IAbstractPanel } from "../../abstractPanel";
 import { BagUIPC } from "./bagUI.pc";
@@ -6,16 +6,20 @@ import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BagUIMobile } from "./bagUI.mobile";
+import { Panel } from "../../components/panel";
 
-export class BagUIMediator implements IMediator {
+export class BagUIMediator extends BaseMediator {
     public static NAME: string = "BagUIMediator";
     public world: WorldService;
-    private mView: IAbstractPanel;
-
     private mScene: Phaser.Scene;
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
+        super(mWorld);
         this.world = mWorld;
         this.mScene = scene;
+    }
+
+    public setUiScale(value: number) {
+        this.mView.scaleX = this.mView.scaleY = value;
     }
 
     public isSceneUI(): boolean {

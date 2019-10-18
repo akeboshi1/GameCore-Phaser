@@ -1,15 +1,15 @@
-import { IMediator } from "../baseMediator";
+import { IMediator, BaseMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { RankPanel } from "./RankPanel";
 import { ILayerManager } from "../layer.manager";
 
-export class RankMediator implements IMediator {
+export class RankMediator extends BaseMediator {
     readonly world: WorldService;
-    private mRankPanel: RankPanel;
     private mScene: Phaser.Scene;
     private mlayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
+        super(world);
         this.world = world;
         this.mScene = scene;
         this.mlayerManager = layerManager;
@@ -20,11 +20,11 @@ export class RankMediator implements IMediator {
     }
 
     getView(): IAbstractPanel {
-        return this.mRankPanel;
+        return this.mView;
     }
 
     hide(): void {
-        this.mRankPanel.hide();
+        this.mView.hide();
     }
 
     isSceneUI(): boolean {
@@ -36,34 +36,34 @@ export class RankMediator implements IMediator {
     }
 
     resize() {
-        this.mRankPanel.resize();
+        this.mView.resize();
     }
 
     show(param?: any): void {
-        if (this.mRankPanel && this.mRankPanel.isShow()) {
+        if (this.mView && this.mView.isShow()) {
             return;
         }
-        this.mRankPanel = new RankPanel(this.mScene, this.world);
-        this.mlayerManager.addToUILayer(this.mRankPanel);
-        this.mRankPanel.show();
+        this.mView = new RankPanel(this.mScene, this.world);
+        this.mlayerManager.addToUILayer(this.mView);
+        this.mView.show();
         if (param && param.length > 0) {
-            this.mRankPanel.addItem(param[0]);
+            (this.mView as RankPanel).addItem(param[0]);
         }
     }
 
     update(param?: any): void {
         if (param && param.length > 0) {
-            this.mRankPanel.update(param[0]);
+            this.mView.update(param[0]);
         }
     }
 
     destroy() {
-        if (this.mRankPanel) {
-            if (this.mRankPanel.parentContainer) {
-                this.mRankPanel.parentContainer.remove(this.mRankPanel);
+        if (this.mView) {
+            if (this.mView.parentContainer) {
+                this.mView.parentContainer.remove(this.mView);
             }
-            this.mRankPanel.destroy();
-            this.mRankPanel = null;
+            this.mView.destroy();
+            this.mView = null;
         }
         this.mScene = null;
     }
