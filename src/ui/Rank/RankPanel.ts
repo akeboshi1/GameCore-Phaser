@@ -14,7 +14,7 @@ export class RankPanel extends BasicRankPanel {
             return;
         }
         const size = this.mWorld.getSize();
-        this.x = size.width - this.width - 10;
+        this.x = size.width - this.width * this.mWorld.uiScale - 10;
         this.y = 21;
     }
 
@@ -58,6 +58,8 @@ export class RankPanel extends BasicRankPanel {
             this.mZoonInBtn.angle = 0;
             this.remove(this.mContentContainer);
         }
+        this.mBackground.x = this.mBackground.width >> 1;
+        this.mBackground.y = this.mBackground.height >> 1;
         this.mZoonInBtn.y = h - 13;
     }
 }

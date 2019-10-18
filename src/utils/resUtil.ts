@@ -99,6 +99,15 @@ export class Background {
     static getRows(): number[] {
         return [14, 13, 14];
     }
+
+    static getConfig() {
+        return {
+            left: 10,
+            top: 15,
+            right: 10,
+            bottom: 15,
+        };
+    }
 }
 
 export class Border {
@@ -116,5 +125,14 @@ export class Border {
 
     static getRows(): number[] {
         return [4, 2, 4];
+    }
+
+    static getConfig() {
+        return {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        };
     }
 }

@@ -392,7 +392,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             if (this.mCallBack) {
                 this.mCallBack();
             }
-            // this.startFullscreen();
         } else {
             Logger.error("connection is undefined");
         }

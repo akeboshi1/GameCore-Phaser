@@ -2,8 +2,8 @@ import { Panel } from "../components/panel";
 import { op_client } from "pixelpai_proto";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { Font } from "../../utils/font";
+import {NinePatch} from "../components/nine.patch";
 
 export class BasicRankPanel extends Panel {
     protected mWorld: WorldService;
@@ -97,35 +97,40 @@ export class BasicRankPanel extends Panel {
         if (this.mInitialized) return;
         this.setSize(328, 361);
 
-        const img = this.scene.make.image({
-            key: Background.getName()
-        }, false).setOrigin(0, 0).setScale(5, 5);
-        // this.add(img);
+        // this.mBackground = new NinePatch(this.scene, {
+        //     x: 0,
+        //     y: 0,
+        //     width: 328,
+        //     height: 361,
+        //     key: Background.getName(),
+        //     columns: Background.getColumns(),
+        //     rows: Background.getRows()
+        // }).setOrigin(0, 0);
+        // this.add(this.mBackground);
 
-        this.mBackground = new NinePatch(this.scene, {
-            x: 0,
-            y: 0,
-            width: 328,
-            height: 361,
-            key: Background.getName(),
-            columns: Background.getColumns(),
-            rows: Background.getRows()
-        }).setOrigin(0, 0);
+        this.mBackground = new NinePatch(this.scene, 0, 180, 328, 361, Background.getName(), null, Background.getConfig());
+        this.mBackground.x = this.mBackground.width >> 1;
+        this.mBackground.y = this.mBackground.height >> 1;
         this.add(this.mBackground);
 
         this.mContentContainer = this.scene.make.container({}, false);
         this.add(this.mContentContainer);
 
-        const border = new NinePatch(this.scene, {
-            x: 8,
-            y: 20,
-            width: 315,
-            height: 318,
-            key: Border.getName(),
-            columns: Border.getColumns(),
-            rows: Border.getRows()
-        }).setOrigin(0, 0);
+        const border = new NinePatch(this.scene, 8, 20, 315, 318, Border.getName(), null, Border.getConfig());
+        border.x =  8 + (border.width >> 1);
+        border.y = 20 + (border.height >> 1);
         this.mContentContainer.add(border);
+
+        // const border = new NinePatch(this.scene, {
+        //     x: 8,
+        //     y: 20,
+        //     width: 315,
+        //     height: 318,
+        //     key: Border.getName(),
+        //     columns: Border.getColumns(),
+        //     rows: Border.getRows()
+        // }).setOrigin(0, 0);
+        // this.mContentContainer.add(border);
 
         const titleIcon = this.scene.make.image({
             x: 20,
