@@ -27,4 +27,7 @@ export interface WorldService {
     enterOtherGame();
 
     changeRoom(room: IRoomService);
+
+    startFullscreen();
+    stopFullscreen();
 }

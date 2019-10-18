@@ -140,6 +140,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // TODO manager.resize
     }
 
+    public startFullscreen() {
+        if (!this.mGame) {
+            return;
+        }
+        const scenes = this.mGame.scene.getScenes();
+        for (const scene of scenes) {
+            scene.scale.startFullscreen();
+        }
+    }
+
+    public stopFullscreen() {
+        if (!this.mGame) {
+            return;
+        }
+        const scenes = this.mGame.scene.getScenes();
+        for (const scene of scenes) {
+            scene.scale.stopFullscreen();
+        }
+    }
+
     public enterOtherGame() {
         if (this.mGame) {
             this.mGame.plugins.removeGlobalPlugin("rexButton");
