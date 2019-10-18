@@ -65,7 +65,9 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public resize() {
-        if (this.mChatPanel) this.mChatPanel.resize();
+        if (this.mChatPanel) {
+            this.mChatPanel.setLocation();
+        }
     }
 
     public show(param: any) {

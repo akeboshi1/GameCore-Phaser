@@ -26,11 +26,15 @@ export class ChatPanel extends Panel {
         }
     }
 
-    public setLocation(x: number, y: number) {
+    public setLocation(x?: number, y?: number) {
         // TODO 设置位置后，DefaultMask位置不会更新，所以暂时以0 0为准
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorldService.getSize();
-        this.x = 8;
+        if (this.mWorldService.game.device.os.desktop) {
+            this.x = 8;
+        } else {
+            this.x = size.width - this.width / 2 >> 1;
+        }
         this.y = size.height - this.height - 8;
     }
 
@@ -43,8 +47,7 @@ export class ChatPanel extends Panel {
         this.mInputText = null;
         this.mVoiceBtn = null;
         this.mMicBtn = null;
-        this.mSendKey = null;
-        super.destroy();
+        this.mSendKey = null; super.destroy();
     }
 
     protected preload() {
@@ -184,6 +187,7 @@ export class ChatPanel extends Panel {
 
         this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
         this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+        this.setLocation();
     }
 
     private onSelectedVoiceHandler(val: boolean) {
