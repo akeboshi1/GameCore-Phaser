@@ -31,10 +31,6 @@ export class MessageBox extends Phaser.GameObjects.Container {
         this.init();
     }
 
-    public show(data: IButtonData[]) {
-
-    }
-
     public selectCall(itemData: IButtonData) {
         this.mtxt.text = itemData.text;
         this.mtxt.x = this.mConfig.wid - this.mtxt.width >> 1;
