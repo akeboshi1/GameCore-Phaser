@@ -169,6 +169,13 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
+        this.mText.destroy(true);
+        this.mSelectBG.destroy(true);
+        this.mArrow.destroy(true);
+        this.mText = null;
+        this.mData = null;
+        this.mSelectCallUI = null;
+        this.mArrow = null;
         super.destroy(true);
     }
 

@@ -153,7 +153,7 @@ export class ItemSlot implements IListItemComponent {
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
         if (this.isTipBoo) {
-            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
+            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
         }
 
         this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
@@ -180,7 +180,7 @@ export class ItemSlot implements IListItemComponent {
             content.componentId = this.mData.id;
             this.mWorld.connection.send(pkt);
         } else {
-            this.overHandler(pointer);
+            // this.overHandler(pointer);
         }
     }
 
@@ -207,6 +207,7 @@ export class ItemSlot implements IListItemComponent {
         if (this.mSelectSprite && this.mSelectSprite.parentContainer) {
             this.mSelectSprite.parentContainer.remove(this.mSelectSprite);
             this.mSelectSprite.destroy(true);
+            this.mSelectSprite = null;
         }
     }
 }

@@ -220,6 +220,12 @@ export class SelectCallItem extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
+        this.mText.destroy(true);
+        this.mSelectBG.destroy(true);
+        this.mData = null;
+        this.mText = null;
+        this.mSelectBG = null;
+        this.mSelectCallUI = null;
         super.destroy(true);
     }
 

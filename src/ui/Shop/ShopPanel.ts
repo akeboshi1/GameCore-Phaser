@@ -24,7 +24,6 @@ export class ShopPanel extends Panel {
         this.y = size.height - 300;
     }
     public hide() {
-        (this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator).hide();
         super.hide();
         this.destroy();
     }

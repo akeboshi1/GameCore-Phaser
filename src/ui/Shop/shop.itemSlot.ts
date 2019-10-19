@@ -82,7 +82,7 @@ export class ShopItemSlot extends ItemSlot {
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
         if (this.isTipBoo) {
-            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
+            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
         }
         this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.toolTipCon.on("pointerover", this.overHandler, this);
@@ -100,10 +100,10 @@ export class ShopItemSlot extends ItemSlot {
 
     protected overHandler(pointer) {
         super.overHandler(pointer);
-        if (this.mSelectSprite) {
-            this.mSelectSprite.setTexture("selectBg");
-            this.toolTipCon.addAt(this.mSelectSprite, 0);
-        }
+        this.mSelectSprite = this.mScene.make.sprite(undefined, false);
+        this.mSelectSprite.setTexture("selectBg");
+        this.toolTipCon.addAt(this.mSelectSprite, 0);
+
     }
 
     protected outHandler(pointer) {

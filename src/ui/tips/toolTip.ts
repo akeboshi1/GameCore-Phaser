@@ -14,7 +14,7 @@ export class ToolTip extends Phaser.GameObjects.Container implements IToolTip {
     private midImage: Phaser.GameObjects.Image;
     private botImage: Phaser.GameObjects.Image;
     private mText: Phaser.GameObjects.Text;
-    constructor(private mScene: Phaser.Scene, private resStr: string, private resJson: string, private resUrl: string) {
+    constructor(private mScene: Phaser.Scene, private resStr: string, private resJson: string, private resUrl: string, private uiScale: number) {
         super(mScene);
         this.preLoad();
     }
