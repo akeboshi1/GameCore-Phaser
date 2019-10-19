@@ -144,20 +144,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!this.mGame) {
             return;
         }
-        const scenes = this.mGame.scene.getScenes();
-        for (const scene of scenes) {
-            scene.scale.startFullscreen();
-        }
+        // const scenes = this.mGame.scene.getScenes();
+        this.mGame.scale.startFullscreen();
+        // for (const scene of scenes) {
+        //     scene.scale.startFullscreen();
+        // }
     }
 
     public stopFullscreen() {
         if (!this.mGame) {
             return;
         }
-        const scenes = this.mGame.scene.getScenes();
-        for (const scene of scenes) {
-            scene.scale.stopFullscreen();
-        }
+        this.mGame.scale.stopFullscreen();
+        // const scenes = this.mGame.scene.getScenes();
+        // for (const scene of scenes) {
+        //     scene.scale.stopFullscreen();
+        // }
     }
 
     public enterOtherGame() {
