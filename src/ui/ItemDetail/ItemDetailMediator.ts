@@ -1,7 +1,6 @@
-import { IMediator, BaseMediator } from "../baseMediator";
+import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { ItemDetailView } from "./ItemDetailView";
-import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 
 export class ItemDetailMediator extends BaseMediator {
@@ -15,7 +14,6 @@ export class ItemDetailMediator extends BaseMediator {
         this.world = world;
         this.mScene = scene;
         this.mLayerManager = layerManager;
-
     }
 
     public isSceneUI(): boolean {
