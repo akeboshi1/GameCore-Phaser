@@ -192,7 +192,7 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt4.on("pointerdown", this.changeAccount, this);
 
         this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
-        this.scale.lockOrientation("landscape");
+        this.scale.on("orientationchange", this.checkOriention, this);
     }
 
     public init(data: any) {
@@ -218,6 +218,14 @@ export class LoginScene extends Phaser.Scene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    private checkOriention(orientation) {
+        if (orientation === Phaser.Scale.PORTRAIT) {
+
+        } else if (orientation === Phaser.Scale.LANDSCAPE) {
+
+        }
     }
 
     private changeID(data: ISelectCallItemData) {

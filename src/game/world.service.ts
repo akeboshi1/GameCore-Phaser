@@ -24,7 +24,6 @@ export interface WorldService {
     readonly emitter: Phaser.Events.EventEmitter;
 
     getSize(): Size;
-    enterOtherGame();
 
     changeRoom(room: IRoomService);
 

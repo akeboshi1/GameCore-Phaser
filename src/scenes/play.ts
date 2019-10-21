@@ -29,7 +29,7 @@ export class PlayScene extends Phaser.Scene {
     });
     Logger.log("play created");
     this.scene.sendToBack();
-    this.scale.lockOrientation("landscape");
+    this.scale.on("orientationchange", this.checkOriention, this);
   }
 
   update(time: number, delta: number) {
@@ -43,6 +43,14 @@ export class PlayScene extends Phaser.Scene {
 
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
+
+  private checkOriention(orientation) {
+    if (orientation === Phaser.Scale.PORTRAIT) {
+
+    } else if (orientation === Phaser.Scale.LANDSCAPE) {
+
+    }
   }
 
 }

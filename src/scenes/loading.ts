@@ -41,7 +41,7 @@ export class LoadingScene extends Phaser.Scene {
     const lo = this.add.sprite(x, y, "rabbit00.png");
     lo.anims.play("loading_rabbit00");
     lo.scaleX = lo.scaleY = this.mWorld.uiScale;
-    this.scale.lockOrientation("landscape");
+    this.scale.on("orientationchange", this.checkOriention, this);
   }
 
   update(time: number, delta: number) {
@@ -65,4 +65,13 @@ export class LoadingScene extends Phaser.Scene {
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
+
+  private checkOriention(orientation) {
+    if (orientation === Phaser.Scale.PORTRAIT) {
+
+    } else if (orientation === Phaser.Scale.LANDSCAPE) {
+
+    }
+  }
+
 }

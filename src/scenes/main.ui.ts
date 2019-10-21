@@ -28,7 +28,7 @@ export class MainUIScene extends Phaser.Scene {
     //   world.joyStickManager.setScene(this);
     // }
     world.uiManager.setScene(this);
-    this.scale.lockOrientation("landscape");
+    this.scale.on("orientationchange", this.checkOriention, this);
   }
 
   public update() {
@@ -37,5 +37,13 @@ export class MainUIScene extends Phaser.Scene {
 
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
+
+  private checkOriention(orientation) {
+    if (orientation === Phaser.Scale.PORTRAIT) {
+
+    } else if (orientation === Phaser.Scale.LANDSCAPE) {
+
+    }
   }
 }
