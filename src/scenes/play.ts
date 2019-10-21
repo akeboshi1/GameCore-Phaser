@@ -2,6 +2,7 @@ import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
 import { LoadingScene } from "./loading";
+import { Size } from "../utils/size";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
@@ -30,6 +31,7 @@ export class PlayScene extends Phaser.Scene {
     Logger.log("play created");
     this.scene.sendToBack();
     this.scale.on("orientationchange", this.checkOriention, this);
+    this.scale.on("resize", this.checkSize, this);
   }
 
   update(time: number, delta: number) {
@@ -51,6 +53,11 @@ export class PlayScene extends Phaser.Scene {
     } else if (orientation === Phaser.Scale.LANDSCAPE) {
 
     }
+  }
+
+  private checkSize(size: Size) {
+    const width: number = size.width;
+    const height: number = size.height;
   }
 
 }
