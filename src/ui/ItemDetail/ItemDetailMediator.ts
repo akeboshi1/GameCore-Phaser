@@ -8,39 +8,31 @@ export class ItemDetailMediator extends BaseMediator {
     public static NAME: string = "ItemDetailMediator";
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
+    private mScene: Phaser.Scene;
+    private mParam: any;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
         this.world = world;
+        this.mScene = scene;
         this.mLayerManager = layerManager;
-        this.mView = new ItemDetailView(scene, world);
+
     }
 
     public isSceneUI(): boolean {
         return false;
     }
 
-    public isShow(): boolean {
-        return this.mView.isShow();
-    }
-    public resize() {
-        this.mView.resize();
-    }
-
-    public getView(): IAbstractPanel {
-        return this.mView;
-    }
-
     public show(param?: any): void {
+        if (this.mView) {
+            return;
+        }
+        this.mView = new ItemDetailView(this.mScene, this.world);
+        this.mView.show(param);
+        this.mParam = param;
+        this.mLayerManager.addToUILayer(this.mView);
         super.show(param);
     }
     public update(param?: any): void {
-
+        super.update(param);
     }
-    public hide(): void {
-
-    }
-    public destroy() {
-
-    }
-
 }

@@ -9,6 +9,8 @@ import { PBpacket } from "net-socket-packet";
 import { BagPanel } from "../bagView/bagPanel";
 import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
+import { Radio } from "../../components/radio";
+import { Logger } from "../../../utils/log";
 
 /**
  * 背包显示栏
@@ -30,6 +32,7 @@ export class BagUIPC extends Panel implements IBag {
     private mSubScriptSprite: Phaser.GameObjects.Sprite;
     private mBagSelect: Phaser.GameObjects.Sprite;
     private mBagBtnCon: Phaser.GameObjects.Container;
+    private radio: Radio;
 
     private mWid: number = 0;
     private mHei: number = 0;
@@ -209,6 +212,42 @@ export class BagUIPC extends Panel implements IBag {
         this.requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().model.package.id, 1, BagPanel.PageMaxCount);
     }
 
+    private tmpLoad() {
+        if (!this.radio) {
+            this.radio = new Radio(this.mScene, {
+                wid: 328,
+                hei: 142,
+                resKey: "juqingRadio",
+                resPng: "./resources/ui/juqing/juqing.png",
+                resJson: "./resources/ui/juqing/juqing.json",
+                resBg: "radio_bg.png",
+                resArrow: "radio_arrow.png",
+                fontStyle: { size: 20, color: "#ffcc00", bold: false },
+                completeBack: () => {
+                    this.radioComplete();
+                },
+                clickCallBack: () => {
+                    if (this.radio && this.radio.parentContainer) {
+                        this.radio.clearRadioData();
+                        this.radio.parentContainer.remove(this.radio);
+                    }
+                }
+            });
+            return;
+        }
+        if (this.radio.isShow) {
+            return;
+        }
+        this.radioComplete();
+    }
+
+    private radioComplete() {
+        this.radio.setRadioData(["1111111111", "2222222222", "333333333333", "444444444444"]);
+        this.radio.x = this.bagBtn.x;
+        this.radio.y = this.bagBtn.y - 142;
+        this.mParentCon.add(this.radio);
+    }
+
     private requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
@@ -222,6 +261,7 @@ export class BagUIPC extends Panel implements IBag {
         this.mBagSelect = this.mScene.make.sprite(undefined, false);
         this.mBagSelect.setTexture(this.mResStr, "bag_BtnSelect");
         this.mBagBtnCon.add(this.mBagSelect);
+        // this.tmpLoad();
     }
 
     private bagBtnOut(pointer) {

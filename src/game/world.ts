@@ -68,6 +68,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
 
         this.mGameEmitter = new Phaser.Events.EventEmitter();
         this.mRoomMamager = new RoomManager(this);
@@ -144,23 +145,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!this.mGame) {
             return;
         }
-        const scenes = this.mGame.scene.getScenes();
-        for (const scene of scenes) {
-            scene.scale.startFullscreen();
-        }
+        // const scenes = this.mGame.scene.getScenes();
+        this.mGame.scale.startFullscreen();
+        // for (const scene of scenes) {
+        //     scene.scale.startFullscreen();
+        // }
     }
 
     public stopFullscreen() {
         if (!this.mGame) {
             return;
         }
-        const scenes = this.mGame.scene.getScenes();
-        for (const scene of scenes) {
-            scene.scale.stopFullscreen();
-        }
+        this.mGame.scale.stopFullscreen();
+        // const scenes = this.mGame.scene.getScenes();
+        // for (const scene of scenes) {
+        //     scene.scale.stopFullscreen();
+        // }
     }
 
-    public enterOtherGame() {
+    public onGotoAnotherGame(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
         if (this.mGame) {
             this.mGame.plugins.removeGlobalPlugin("rexButton");
             this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
@@ -174,16 +178,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mGame.destroy(true);
             this.mGame = null;
         }
+        this.mConfig.game_id = content.gameId;
+        this.mConfig.virtual_world_id = content.virtualWorldId;
         this._newGame();
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
-        this.mAccount.setAccount({
-            data: {
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWVkZWYwMGRkYmRjNTdmNjQzOGFkMyIsImlhdCI6MTU3MDc4NTI3MCwiZXhwIjoxNTcxMzkwMDcwfQ.149pIYXoBo-4w-AAHNFhBTogtfLzcOn8raBZ9sLQG5g",
-                expire: 1571390070,
-                fingerprint: "d0eb22c474606051895f1f15e2a42476ad0a0fc8"
-            }
-        });
+        // this.mAccount.setAccount({
+        //     data: {
+        //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWVkZWYwMGRkYmRjNTdmNjQzOGFkMyIsImlhdCI6MTU3MDc4NTI3MCwiZXhwIjoxNTcxMzkwMDcwfQ.149pIYXoBo-4w-AAHNFhBTogtfLzcOn8raBZ9sLQG5g",
+        //         expire: 1571390070,
+        //         fingerprint: "d0eb22c474606051895f1f15e2a42476ad0a0fc8"
+        //     }
+        // });
         this.loginEnterWorld();
     }
 

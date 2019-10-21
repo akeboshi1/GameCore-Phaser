@@ -4,15 +4,23 @@ import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 
 export class ItemDetailView extends Panel {
+    private mResStr: string;
+    private mResPng: string;
+    private mResJson: string;
+    private mPreBtn: Phaser.GameObjects.Sprite;
+    private mNextBtn: Phaser.GameObjects.Sprite;
     constructor(scene: Phaser.Scene, private mWorld: WorldService) {
         super(scene);
     }
 
     protected preload() {
+        this.mResStr = "itemDetail";
+        this.mResPng = "ui/bag/bagView.png";
+        this.mResJson = "ui/bag/bagView.json";
         if (!this.mScene) {
             return;
         }
-        this.mScene.load.atlas("itemDetail", Url.getRes("ui/shop/shopView.png"), Url.getRes("ui/shop/shopView.json"));
+        this.mScene.load.atlas("itemDetail", Url.getRes("ui/bag/bagView.png"), Url.getRes("ui/bag/bagView.json"));
         super.preload();
     }
 
@@ -24,10 +32,18 @@ export class ItemDetailView extends Panel {
         const rect = this.mScene.add.graphics();
         rect.fillStyle(0, .2);
         rect.fillRect(0, 0, width, height);
-        const preBtn: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        const nextBtn: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        this.add(preBtn);
-        this.add(nextBtn);
+
+        this.mPreBtn = this.mScene.make.sprite(undefined, false);
+        this.mPreBtn.setTexture(this.mResStr, "bagView_tab");
+        this.mPreBtn.x = -380;
+
+        this.mNextBtn = this.mScene.make.sprite(undefined, false);
+        this.mNextBtn.setTexture(this.mResStr, "bagView_tab");
+        this.mNextBtn.scaleX = -1;
+        this.mNextBtn.x = 380;
+
+        this.add(this.mPreBtn);
+        this.add(this.mNextBtn);
 
         const iconBG: Phaser.GameObjects.Graphics = this.mScene.make.graphics(undefined, false);
         iconBG.fillStyle(0xEF9F5D, .5);
@@ -43,7 +59,6 @@ export class ItemDetailView extends Panel {
         nameTF.setFontFamily("Tahoma");
         nameTF.setFontStyle("bold");
         nameTF.setFontSize(20);
-        nameTF.setText("内购商城");
         nameTF.x = size.width / 2 - 10;
         nameTF.y = size.height / 2 - 10;
         this.add(nameTF);

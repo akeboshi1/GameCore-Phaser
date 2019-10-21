@@ -183,10 +183,10 @@ export class SelectCallItem extends Phaser.GameObjects.Container {
     protected mText: Phaser.GameObjects.Text;
     protected mSelectBG: Phaser.GameObjects.Graphics;
     protected mData: ISelectCallItemData;
-    protected mCombobox: ISelectCallUI;
+    protected mSelectCallUI: ISelectCallUI;
     constructor(scene: Phaser.Scene, selectCallUI: ISelectCallUI, wid: number, hei: number) {
         super(scene);
-        this.mCombobox = selectCallUI;
+        this.mSelectCallUI = selectCallUI;
         this.mText = this.scene.make.text({
             x: -wid >> 1, y: -hei >> 1,
             style: { fill: "#F7EDED", fontSize: 18 }
@@ -220,6 +220,12 @@ export class SelectCallItem extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
+        this.mText.destroy(true);
+        this.mSelectBG.destroy(true);
+        this.mData = null;
+        this.mText = null;
+        this.mSelectBG = null;
+        this.mSelectCallUI = null;
         super.destroy(true);
     }
 
@@ -233,7 +239,7 @@ export class SelectCallItem extends Phaser.GameObjects.Container {
 
     protected selectHandler() {
         this.overHandler();
-        this.mCombobox.selectCall(this.itemData);
+        this.mSelectCallUI.selectCall(this.itemData);
     }
     protected outHandler() {
         this.mSelectBG.visible = false;

@@ -18,7 +18,6 @@ export interface IMediator {
 export class BaseMediator implements IMediator {
     readonly world: WorldService;
     protected mView: Panel;
-
     constructor(world?: WorldService) {
         this.world = world;
     }
@@ -59,5 +58,10 @@ export class BaseMediator implements IMediator {
     }
 
     destroy() {
+        let view = this.getView();
+        if (view) {
+            view.destroy();
+            view = null;
+        }
     }
 }

@@ -5,6 +5,7 @@ import { op_def, op_gameconfig } from "pixelpai_proto";
 import { UI } from "../../const/res.const";
 import { Url } from "../../utils/resUtil";
 import { DynamicImage } from "../components/dynamic.image";
+import { ToolTip } from "../tips/toolTip";
 
 export class ShopItemSlot extends ItemSlot {
     private moneyIcon: DynamicImage;
@@ -80,10 +81,14 @@ export class ShopItemSlot extends ItemSlot {
             this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
+        if (this.isTipBoo) {
+            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
+        }
         this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.toolTipCon.on("pointerover", this.overHandler, this);
         this.toolTipCon.on("pointerout", this.outHandler, this);
         this.toolTipCon.on("pointerdown", this.downHandler, this);
+        this.toolTipCon.on("pointerup", this.outHandler, this);
         this.minitialize = true;
         if (this.mData) {
             this.dataChange(this.mData);
@@ -91,18 +96,18 @@ export class ShopItemSlot extends ItemSlot {
 
         this.mSelectSprite = this.mScene.make.sprite(undefined, false);
         this.createTexture(this.mWid, this.mHei);
-        this.mSelectSprite.setTexture("selectBg");
-        this.mSelectSprite.visible = false;
-        this.toolTipCon.addAt(this.mSelectSprite, 0);
-        this.toolTipCon.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
     }
 
     protected overHandler(pointer) {
-        this.mSelectSprite.visible = true;
+        super.overHandler(pointer);
+        this.mSelectSprite = this.mScene.make.sprite(undefined, false);
+        this.mSelectSprite.setTexture("selectBg");
+        this.toolTipCon.addAt(this.mSelectSprite, 0);
+
     }
 
     protected outHandler(pointer) {
-        this.mSelectSprite.visible = false;
+        super.outHandler(pointer);
     }
 
     private createTexture(wid: number, hei: number) {

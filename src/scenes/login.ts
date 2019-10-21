@@ -4,6 +4,7 @@ import { Alert } from "../ui/alert/alert";
 import { WorldService } from "../game/world.service";
 import { ComboBox, IComboboxRes, ISelectCallUI, ISelectCallItemData } from "../ui/components/comboBox";
 import { Logger } from "../utils/log";
+import { Size } from "../utils/size";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends Phaser.Scene {
@@ -97,7 +98,7 @@ export class LoginScene extends Phaser.Scene {
 
         this.mTabDic = new Map();
 
-        this.mNameInputTxt = new InputText(this, -140, 4, 190, 15, {
+        this.mNameInputTxt = new InputText(this, - 140, 4, 190, 15, {
             type: "input",
             placeholder: "用戶名",
             fontFamily: "YaHei",
@@ -192,7 +193,8 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt4.on("pointerdown", this.changeAccount, this);
 
         this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
-        this.scale.lockOrientation("landscape");
+        this.scale.on("orientationchange", this.checkOriention, this);
+        this.scale.on("resize", this.checkSize, this);
     }
 
     public init(data: any) {
@@ -218,6 +220,27 @@ export class LoginScene extends Phaser.Scene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    private checkOriention(orientation) {
+        let width: number = 0;
+        let height: number = 0;
+        if (orientation === Phaser.Scale.PORTRAIT) {
+            width = this.scale.gameSize.width;
+            height = this.scale.gameSize.height;
+        } else if (orientation === Phaser.Scale.LANDSCAPE) {
+            width = this.scale.gameSize.width;
+            height = this.scale.gameSize.height;
+        }
+        this.mParentCon.x = width >> 1;
+        this.mParentCon.y = (height >> 1) + 100;
+    }
+
+    private checkSize(size: Size) {
+        const width: number = size.width;
+        const height: number = size.height;
+        this.mParentCon.x = width >> 1;
+        this.mParentCon.y = (height >> 1) + 100;
     }
 
     private changeID(data: ISelectCallItemData) {

@@ -13,7 +13,7 @@ export class SelectCharacter extends Phaser.Scene {
   }
 
   public create() {
-    this.scale.lockOrientation("landscape");
+
   }
 
   get key(): string {
