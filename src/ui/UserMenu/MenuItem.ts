@@ -26,8 +26,6 @@ export class MenuItem extends NinePatchButton {
 
             this.mBackground = new NinePatch(this.scene, 0, 0, 0, 0, Border.getName(), null, Border.getConfig());
             this.mChild.add(this.mBackground);
-
-
         }
 
         this.mChild.add(menu);

@@ -19,7 +19,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
         height: number,
         key: string, frame: string | number,
         config?: IPatchesConfig) {
-        super(scene);
+        super(scene, x, y);
         this.config = config || this.scene.cache.custom.ninePatch.get(frame ? `${frame}` : key);
         normalizePatchesConfig(this.config);
         this.setSize(width, height);

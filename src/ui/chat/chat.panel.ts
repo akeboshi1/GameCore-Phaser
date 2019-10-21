@@ -4,10 +4,10 @@ import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Panel } from "../components/panel";
 import { NinePatchButton } from "../components/ninepatch.button";
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
-import { Url } from "../../utils/resUtil";
+import {Border, Url} from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
+import {NinePatch} from "../components/nine.patch";
 
 export class ChatPanel extends Panel {
     private mTextArea: TextArea;
@@ -31,11 +31,11 @@ export class ChatPanel extends Panel {
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorldService.getSize();
         if (this.mWorldService.game.device.os.desktop) {
-            this.x = 100;
+            // this.x = 100;
         } else {
             this.x = size.width - this.width / 2 >> 1;
+            this.y = size.height - this.height - 8;
         }
-        this.y = size.height - this.height - 8;
     }
 
     public destroy() {
@@ -56,7 +56,8 @@ export class ChatPanel extends Panel {
         }
         this.mScene.load.image("button", Url.getRes("ui/common/button.png"));
         this.mScene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
-        this.mScene.load.image("chat_border_bg", Url.getRes("ui/chat/bg.png"));
+        // this.mScene.load.image("chat_border_bg", Url.getRes("ui/chat/bg.png"));
+        this.mScene.load.image(Border.getName(), Border.getPNG());
         this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
         super.preload();
     }
@@ -69,13 +70,17 @@ export class ChatPanel extends Panel {
         this.mHeight = 281;
         this.setSize(this.mWidth, this.mHeight);
 
-        const border = new NinePatch(this.mScene, 4, size.height - 260, {
-            width: this.mWidth,
-            height: this.mHeight,
-            key: "chat_border_bg",
-            columns: [4, 2, 4],
-            rows: [4, 2, 4]
-        }).setOrigin(0, 0);
+        // const border = new NinePatch(this.mScene, 4, size.height - 260, {
+        //     width: this.mWidth,
+        //     height: this.mHeight,
+        //     key: "chat_border_bg",
+        //     columns: [4, 2, 4],
+        //     rows: [4, 2, 4]
+        // }).setOrigin(0, 0);
+        // this.add(border);
+        const border = new NinePatch(this.scene, 4, size.height - 260, this.width, this.height, Border.getName(), null, Border.getConfig());
+        border.x += border.width * border.originX;
+        border.y += border.height * border.originY;
         this.add(border);
 
         const output = this.mScene.make.container(undefined, false);
@@ -143,13 +148,16 @@ export class ChatPanel extends Panel {
         const inputContainer = this.mScene.make.container(undefined, false);
         this.add(inputContainer);
 
-        const inputBg = new NinePatch(this.mScene, 8, size.height - 46, {
-            width: 370,
-            height: 32,
-            key: "chat_input_bg",
-            columns: [4, 2, 4],
-            rows: [4, 2, 4]
-        }).setOrigin(0, 0);
+        // const inputBg = new NinePatch(this.mScene, 8, size.height - 46, {
+        //     width: 370,
+        //     height: 32,
+        //     key: "chat_input_bg",
+        //     columns: [4, 2, 4],
+        //     rows: [4, 2, 4]
+        // }).setOrigin(0, 0);
+        const inputBg = new NinePatch(this.scene, 8, size.height - 46, 370, 32, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
+        inputBg.x += inputBg.width * inputBg.originX;
+        inputBg.y += inputBg.height * inputBg.originY;
         inputContainer.add(inputBg);
 
         this.mInputText = new InputText(this.mScene, 12, size.height - 40, 10, 10, {

@@ -143,6 +143,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public startFullscreen() {
         if (!this.mGame) {
+            Logger.warn("game does not exist!");
             return;
         }
         // const scenes = this.mGame.scene.getScenes();
@@ -154,6 +155,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public stopFullscreen() {
         if (!this.mGame) {
+            Logger.warn("game does not exist!");
             return;
         }
         this.mGame.scale.stopFullscreen();

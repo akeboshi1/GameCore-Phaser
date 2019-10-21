@@ -60,7 +60,7 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
 
     protected changeOver() {
         // this.setTexture()
-        this.setFrame(`${this.mKey}_down`);
+        this.setFrame(`${this.mKey}_over`);
     }
 
     protected changeDown() {
