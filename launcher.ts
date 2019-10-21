@@ -2,19 +2,20 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import { version } from "./version";
-import { ServerAddress } from "./src/net/address";
+import {version} from "./version";
+import {ServerAddress} from "./src/net/address";
 
 export interface ILauncherConfig {
-    auth_token: string;
-    token_expire: string | null;
-    token_fingerprint: string;
-    server_addr: ServerAddress | undefined;
-    game_id: string;
-    virtual_world_id: string;
-    width: number | string;
-    height: number | string;
-    ui_scale?: number;
+    readonly auth_token: string;
+    readonly token_expire: string | null;
+    readonly token_fingerprint: string;
+    readonly server_addr: ServerAddress | undefined;
+    readonly game_id: string;
+    readonly virtual_world_id: string;
+    readonly width: number | string;
+    readonly height: number | string;
+    readonly ui_scale?: number;
+    readonly game_created?: Function;
 }
 
 export interface GameMain {

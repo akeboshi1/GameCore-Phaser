@@ -398,6 +398,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             if (this.mCallBack) {
                 this.mCallBack();
             }
+            if (this.mConfig.game_created) {
+                this.mConfig.game_created();
+            }
         } else {
             Logger.error("connection is undefined");
         }

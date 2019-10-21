@@ -1,6 +1,6 @@
 import { Panel } from "../components/panel";
 import { op_client } from "pixelpai_proto";
-import { Background, Border, Url } from "../../utils/resUtil";
+import {Background, BlueButton, Border, Url} from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import {NinePatch} from "../components/nine.patch";
@@ -148,7 +148,6 @@ export class BasicRankPanel extends Panel {
             .setOrigin(0, 0.5)
             .setStroke("#000000", 2);
         this.add(this.mTitleLabel);
-        super.init();
 
         const items = this.getData("data");
         if (items) this.addItem(items);

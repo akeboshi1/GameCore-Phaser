@@ -165,13 +165,12 @@ export class ChatPanel extends Panel {
 
         inputContainer.add(this.mInputText);
 
-        const sendMsgBtn = new NinePatchButton(this.mScene, 60, size.height - 30, {
-            width: 60,
-            height: 30,
-            key: "button",
-            columns: [4, 2, 4],
-            rows: [4, 2, 4]
-        }, "发送");
+        const sendMsgBtn = new NinePatchButton(this.mScene, 60, size.height - 30, 60, 30, "button", "发送", {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        });
         sendMsgBtn.x = 420;
         sendMsgBtn.y = 940;
         sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);

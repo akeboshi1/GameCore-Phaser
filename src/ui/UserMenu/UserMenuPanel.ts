@@ -1,9 +1,9 @@
 import { Panel } from "../components/panel";
-import { BlackButton, Border, Url } from "../../utils/resUtil";
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
+import {BlackButton, Border, TransparentButton, Url} from "../../utils/resUtil";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
 import { WorldService } from "../../game/world.service";
+import {NinePatch} from "../components/nine.patch";
 
 export class UserMenuPanel extends Panel {
     private mBackground: NinePatch;
@@ -38,6 +38,11 @@ export class UserMenuPanel extends Panel {
     setSize(width: number, height: number): this {
         super.setSize(width, height);
         this.setInteractive();
+        if (this.mBackground) {
+            this.mBackground.resize(width, height);
+            this.mBackground.x = this.mBackground.width * this.originX;
+            this.mBackground.y = this.mBackground.height * this.originY;
+        }
         return this;
     }
 
@@ -68,8 +73,8 @@ export class UserMenuPanel extends Panel {
             this.mMenus.push(btn);
         }
         // this.resizeBackground(60, this.mMenus.length * 30);
-        this.resizeBackground(60, this.mMenus.length * 30);
-        this.setSize(60, this.mMenus.length * 30);
+        // this.resizeBackground(60, this.mMenus.length * 32);
+        this.setSize(70, this.mMenus.length * 30);
 
         const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
         if (!mainPlayer) return;
@@ -98,34 +103,26 @@ export class UserMenuPanel extends Panel {
     protected preload() {
         this.scene.load.image(BlackButton.getName(), BlackButton.getPNG());
         this.scene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.image("usermenu_arrow", Url.getRes("ui/usermenu/arrow.png"));
+        this.scene.load.atlas(TransparentButton.getName(), TransparentButton.getPNG(), TransparentButton.getJSON());
         super.preload();
     }
 
     protected init() {
-        this.mBackground = new NinePatch(this.scene, {
-            width: 60,
-            height: 30,
-            key: Border.getName(),
-            columns: Border.getColumns(),
-            rows: Border.getRows(),
-        }, false);
+        this.mBackground = new NinePatch(this.scene, 0, 0, 70, 30, Border.getName(), null, Border.getConfig());
         this.add(this.mBackground);
+        this.mBackground.x = this.mBackground.width * this.mBackground.originX;
+        this.mBackground.y = this.mBackground.height * this.mBackground.originY;
         super.init();
 
         this.addItem(this.getData("data"));
     }
 
     private appendItem(menu: op_gameconfig_01.IMenuItem, x: number, y: number): MenuItem {
-        const item = new MenuItem(this.scene, x, y, {
-            width: 70,
-            height: 29,
-            key: BlackButton.getName(),
-            columns: BlackButton.getColumns(),
-            rows: BlackButton.getRows()
-        }, menu.text);
+        const item = new MenuItem(this.scene, x, y, 59, 29, TransparentButton.getName(), menu.text, TransparentButton.getConfig());
+        item.x = x + (item.width >> 1);
+        item.y = y + (item.height >> 1);
         item.setData("node", menu.node);
-        item.setInteractive();
-        // item.on("pointerup", this.onClickMenu, this);
         if (menu.child && menu.child.length > 0) {
             const menuChild = menu.child;
             for (const child of menuChild) {

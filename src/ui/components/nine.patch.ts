@@ -109,28 +109,6 @@ export class NinePatch extends Phaser.GameObjects.Container {
         }
     }
 
-    private drawPatches(): void {
-        const tintFill = this.tintFill;
-        this.removeAll(true);
-        let patchIndex = 0;
-        for (let yi = 0; yi < 3; yi++) {
-            for (let xi = 0; xi < 3; xi++) {
-                const patch: Phaser.Textures.Frame = this.originTexture.frames[this.getPatchNameByIndex(patchIndex)];
-                const patchImg = new Phaser.GameObjects.Image(this.scene, 0, 0, patch.texture.key, patch.name);
-                patchImg.setOrigin(0);
-                patchImg.setPosition(this.finalXs[xi] - this.width * this.originX, this.finalYs[yi] - this.height * this.originY);
-                patchImg.setScale(
-                    (this.finalXs[xi + 1] - this.finalXs[xi]) / patch.width,
-                    (this.finalYs[yi + 1] - this.finalYs[yi]) / patch.height
-                );
-                this.add(patchImg);
-                patchImg.setTint(this.internalTint);
-                patchImg.tintFill = tintFill;
-                ++patchIndex;
-            }
-        }
-    }
-
     // private drawPatches(): void {
     //     const tintFill = this.tintFill;
     //     this.removeAll(true);
@@ -152,6 +130,28 @@ export class NinePatch extends Phaser.GameObjects.Container {
     //         }
     //     }
     // }
+
+    private drawPatches(): void {
+        const tintFill = this.tintFill;
+        this.removeAll(true);
+        let patchIndex = 0;
+        for (let yi = 0; yi < 3; yi++) {
+            for (let xi = 0; xi < 3; xi++) {
+                const patch: Phaser.Textures.Frame = this.originTexture.frames[this.getPatchNameByIndex(patchIndex)];
+                const patchImg = new Phaser.GameObjects.Image(this.scene, 0, 0, patch.texture.key, patch.name);
+                patchImg.setOrigin(0);
+                patchImg.setPosition(this.finalXs[xi] - this.width * this.originX, this.finalYs[yi] - this.height * this.originY);
+                patchImg.setScale(
+                    (this.finalXs[xi + 1] - this.finalXs[xi]) / patch.width,
+                    (this.finalYs[yi + 1] - this.finalYs[yi]) / patch.height
+                );
+                this.add(patchImg);
+                patchImg.setTint(this.internalTint);
+                patchImg.tintFill = tintFill;
+                ++patchIndex;
+            }
+        }
+    }
 
     private createPatchFrame(patch: string, x: number, y: number, width: number, height: number) {
         if (this.originTexture.frames.hasOwnProperty(patch)) {

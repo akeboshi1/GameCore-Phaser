@@ -62,7 +62,7 @@ export class UserInfoPanel extends Panel {
             }
         });
 
-        this.updateFollower(actor.platformId);
+        this.updateFollwer(actor.platformId);
     }
 
     destroy() {
@@ -100,7 +100,7 @@ export class UserInfoPanel extends Panel {
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image(Background.getName(), Background.getPNG());
-        this.scene.load.image(BlueButton.getName(), BlueButton.getPNG());
+        this.scene.load.atlas(BlueButton.getName(), BlueButton.getPNG(), BlueButton.getJSON());
         super.preload();
     }
 
@@ -166,14 +166,9 @@ export class UserInfoPanel extends Panel {
         });
         this.add(this.mLv);
 
-        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, {
-            width: 80,
-            height: 34,
-            text: "关注",
-            key: BlueButton.getName(),
-            columns: BlueButton.getColumns(),
-            rows: BlueButton.getRows()
-        });
+        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "关注", BlueButton.getConfig());
+        this.mFollwerBtn.x = 258 + (this.mFollwerBtn.width >> 1);
+        this.mFollwerBtn.y = 145 + (this.mFollwerBtn.height >> 1);
         this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });
         this.add(this.mFollwerBtn);
 
@@ -186,14 +181,14 @@ export class UserInfoPanel extends Panel {
         this.setInfo(this.getData("data"));
     }
 
-    private updateFollower(platformId) {
+    private updateFollwer(platformId) {
         const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
         if (!mainPlayer) return;
         if (platformId === mainPlayer.platformId) {
-            this.mFollwerBtn.visible = false;
+            // this.mFollwerBtn.visible = false;
             return;
         }
-        this.mFollwerBtn.visible = true;
+        // this.mFollwerBtn.visible = true;
 
         this.mWorld.httpService.checkFollowed([platformId])
             .then((response: any) => {

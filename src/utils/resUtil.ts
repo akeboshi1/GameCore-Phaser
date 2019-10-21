@@ -45,6 +45,15 @@ export class BlackButton {
     static getRows(): number[] {
         return [4, 2, 4];
     }
+
+    static getConfig() {
+        return {
+            top: 4,
+            left: 4,
+            right: 4,
+            bottom: 4
+        };
+    }
 }
 
 export class BlueButton {
@@ -56,12 +65,25 @@ export class BlueButton {
         return Url.getRes("ui/common/button_blue.png");
     }
 
+    static getJSON(): string {
+        return Url.getRes("ui/common/button_blue.json");
+    }
+
     static getColumns(): number[] {
         return [7, 1, 7];
     }
 
     static getRows(): number[] {
         return [7, 1, 7];
+    }
+
+    static getConfig() {
+        return {
+            left: 7,
+            top: 7,
+            right: 7,
+            bottom: 7
+        };
     }
 }
 
@@ -125,6 +147,29 @@ export class Border {
 
     static getRows(): number[] {
         return [4, 2, 4];
+    }
+
+    static getConfig() {
+        return {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        };
+    }
+}
+
+export class TransparentButton {
+    static getName() {
+        return "button_transparent";
+    }
+
+    static getPNG(): string {
+        return Url.getRes("ui/common/button_transparent.png");
+    }
+
+    static getJSON(): string {
+        return Url.getRes("ui/common/button_transparent.json");
     }
 
     static getConfig() {

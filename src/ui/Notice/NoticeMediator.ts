@@ -13,6 +13,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
+        this.world = worldService;
         this.mLayerManager = layerManager;
         this.mScene = scene;
         const connect = worldService.connection;
