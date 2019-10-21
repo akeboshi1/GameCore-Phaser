@@ -178,7 +178,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mGame.destroy(true);
             this.mGame = null;
         }
-        Object.assign(this.mConfig, content);
+        this.mConfig.game_id = content.gameId;
+        this.mConfig.virtual_world_id = content.virtualWorldId;
         this._newGame();
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
