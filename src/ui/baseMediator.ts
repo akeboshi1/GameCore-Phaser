@@ -27,7 +27,7 @@ export class BaseMediator implements IMediator {
     }
 
     getView(): IAbstractPanel {
-        return undefined;
+        return this.mView;
     }
 
     hide(): void {

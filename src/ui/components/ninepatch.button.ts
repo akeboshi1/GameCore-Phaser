@@ -1,17 +1,21 @@
 import { NinePatch } from "./nine.patch";
-import {BlueButton} from "../../utils/resUtil";
-import {IPatchesConfig} from "./patches.config";
+import { BlueButton } from "../../utils/resUtil";
+import { IPatchesConfig } from "./patches.config";
 
 export class NinePatchButton extends Phaser.GameObjects.Container {
     protected mLabel: Phaser.GameObjects.Text;
     protected mNingBg: NinePatch;
     protected mKey: string;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text?: string, config?: IPatchesConfig) {
+    protected btnData: any;
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text?: string, config?: IPatchesConfig, data?: any) {
         super(scene, x, y);
         this.mKey = key;
         this.setSize(width, height);
         this.mNingBg = new NinePatch(this.scene, x, y, width, height, key, key + "_normal", config);
         this.add(this.mNingBg);
+        if (data) {
+            this.btnData = data;
+        }
 
         this.mLabel = this.scene.make.text(undefined, false)
             .setOrigin(0.45, 0.5)
@@ -26,6 +30,10 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
         this.on("pointerup", this.changeNormal, this);
         this.on("pointerout", this.changeNormal, this);
         this.on("pointerover", this.changeOver, this);
+    }
+
+    public getBtnData(): any {
+        return this.btnData;
     }
 
     public setText(text: string) {
