@@ -29,6 +29,7 @@ export class GamePauseScene extends Phaser.Scene {
         this.tipTF = this.add.text(width - 240 >> 1, height - 50, "点击任意位置开始游戏", { font: "30px Tahoma" });
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
+        this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
         // tipTF.setFontFamily("Tahoma");
         // tipTF.setFontSize(15);
     }
@@ -51,6 +52,7 @@ export class GamePauseScene extends Phaser.Scene {
         } else if (orientation === Phaser.Scale.LANDSCAPE) {
 
         }
+        this.checkSize(this.mWorld.getSize());
     }
 
     private checkSize(size: Size) {
@@ -63,6 +65,8 @@ export class GamePauseScene extends Phaser.Scene {
         this.pauseImg.y = height >> 1;
         this.tipTF.x = width - 240 >> 1;
         this.tipTF.y = height - 50;
+        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale;
+        this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
     }
 
 }

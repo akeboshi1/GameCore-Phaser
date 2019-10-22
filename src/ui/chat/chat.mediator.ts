@@ -5,6 +5,7 @@ import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
+import { World } from "../../game/world";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
@@ -23,6 +24,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
+        this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
     }
 
     public setUiScale(value: number) {
@@ -112,6 +114,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
             if (message) message = null;
         });
         this.mAllMessage = null;
+        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
+    }
+
+    private scaleChange() {
+        this.setUiScale(this.world.uiScale);
     }
 
     private initGME() {

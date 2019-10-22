@@ -6,7 +6,6 @@ import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BagUIMobile } from "./bagUI.mobile";
-import { Panel } from "../../components/panel";
 
 export class BagUIMediator extends BaseMediator {
     public static NAME: string = "BagUIMediator";

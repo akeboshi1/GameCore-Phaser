@@ -1,6 +1,7 @@
 import { WorldService } from "../game/world.service";
 import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
+import { World } from "../game/world";
 const LOGO_MARGIN = 25;
 
 export class LoadingScene extends Phaser.Scene {
@@ -46,6 +47,7 @@ export class LoadingScene extends Phaser.Scene {
     this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
     this.scale.on("orientationchange", this.checkOriention, this);
     this.scale.on("resize", this.checkSize, this);
+    this.mWorld.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
   }
 
   update(time: number, delta: number) {
@@ -70,12 +72,17 @@ export class LoadingScene extends Phaser.Scene {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
 
+  private scaleChange() {
+    this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
+  }
+
   private checkOriention(orientation) {
     if (orientation === Phaser.Scale.PORTRAIT) {
 
     } else if (orientation === Phaser.Scale.LANDSCAPE) {
 
     }
+    this.checkSize(this.mWorld.getSize());
   }
 
   private checkSize(size: Size) {
@@ -86,6 +93,7 @@ export class LoadingScene extends Phaser.Scene {
     this.bg.fillRect(0, 0, width, height);
     this.lo.x = width - 150 - LOGO_MARGIN;
     this.lo.y = height - 150 - LOGO_MARGIN;
+    this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
   }
 
 }

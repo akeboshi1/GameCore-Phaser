@@ -50,11 +50,11 @@ export class ItemDetail extends Panel {
             this.mBtnList = [];
             let btn: NinePatchButton;
             const len: number = data.button.length;
-            let preY: number = 15;
+            let preY: number = 20;
             const preX: number = this.mWid + 35;
             for (let i: number = 0; i < len; i++) {
                 const btnData: op_gameconfig_01.IButton = data.button[i];
-                btn = new NinePatchButton(this.mScene, 0, 0, 70, 30, "button_blue", btnData.text, {
+                btn = new NinePatchButton(this.mScene, 0, 0, 100, 40, "button_blue", btnData.text, {
                     left: 4,
                     top: 4,
                     right: 4,
@@ -63,7 +63,7 @@ export class ItemDetail extends Panel {
                 this.mBtnList.push(btn);
                 btn.x = preX;
                 btn.y = preY;
-                preY += btn.height + 30;
+                preY += btn.height + 40;
                 this.add(btn);
             }
         }
@@ -133,28 +133,36 @@ export class ItemDetail extends Panel {
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.mWid = 200;
+        this.mWid = 250;
         this.mHei = 0;
 
         this.mIcon = new DragDropIcon(this.mScene, 30, 25);
         this.add(this.mIcon);
 
-        this.mNameTF = this.mScene.make.text(undefined, false);
-        this.mNameTF.setFontFamily("YaHei");
+        this.mNameTF = this.scene.make.text({
+            style: {
+                fontFamily: "YaHei",
+                fontSize: 20,
+                origin: { x: 0, y: 0 },
+                wordWrap: { width: 250, useAdvancedWrap: true }
+            }
+        }, false);
         this.mNameTF.setFontStyle("bold");
-        this.mNameTF.setFontSize(20);
         this.mNameTF.setAlign("left");
-        this.mNameTF.setWordWrapWidth(this.mWid);
         this.mNameTF.x = this.mIcon.x + this.mIcon.width;
         this.mNameTF.y = this.mIcon.y;
         this.add(this.mNameTF);
 
-        this.mDescTF = this.mScene.make.text(undefined, false);
-        this.mDescTF.setFontFamily("YaHei");
+        this.mDescTF = this.scene.make.text({
+            style: {
+                fontFamily: "YaHei",
+                fontSize: 25,
+                origin: { x: 0, y: 0 },
+                wordWrap: { width: 250, useAdvancedWrap: true }
+            }
+        }, false);
         this.mDescTF.setFontStyle("bold");
-        this.mDescTF.setFontSize(25);
         this.mDescTF.setAlign("left");
-        this.mDescTF.setWordWrapWidth(this.mWid);
         this.mDescTF.x = this.mIcon.x - this.mIcon.width / 2;
         this.mDescTF.y = this.mIcon.y + this.mIcon.height + 20;
         this.add(this.mDescTF);
