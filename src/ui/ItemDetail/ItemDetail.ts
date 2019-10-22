@@ -38,8 +38,8 @@ export class ItemDetail extends Panel {
         }
         this.mShowing = true;
         const data = this.mData[0];
-        if (data.display.length > 0) {
-            this.loadIcon(data.display[0]);
+        if (data.uiDisplay.length > 0) {
+            this.loadIcon(data.uiDisplay[0]);
         }
 
         if (data.text.length > 0) {
@@ -133,10 +133,10 @@ export class ItemDetail extends Panel {
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.mWid = 450;
+        this.mWid = 200;
         this.mHei = 0;
 
-        this.mIcon = new DragDropIcon(this.mScene, 10, 10);
+        this.mIcon = new DragDropIcon(this.mScene, 30, 25);
         this.add(this.mIcon);
 
         this.mNameTF = this.mScene.make.text(undefined, false);
@@ -144,8 +144,8 @@ export class ItemDetail extends Panel {
         this.mNameTF.setFontStyle("bold");
         this.mNameTF.setFontSize(20);
         this.mNameTF.setAlign("left");
-        this.mNameTF.width = 100;
-        this.mNameTF.x = this.mIcon.x + this.mIcon.width + 10;
+        this.mNameTF.setWordWrapWidth(this.mWid);
+        this.mNameTF.x = this.mIcon.x + this.mIcon.width;
         this.mNameTF.y = this.mIcon.y;
         this.add(this.mNameTF);
 
@@ -154,9 +154,9 @@ export class ItemDetail extends Panel {
         this.mDescTF.setFontStyle("bold");
         this.mDescTF.setFontSize(25);
         this.mDescTF.setAlign("left");
-        this.mDescTF.x = this.mIcon.x;
-        this.mDescTF.y = this.mIcon.y + this.mIcon.height + 10;
-        this.mDescTF.width = this.mWid;
+        this.mDescTF.setWordWrapWidth(this.mWid);
+        this.mDescTF.x = this.mIcon.x - this.mIcon.width / 2;
+        this.mDescTF.y = this.mIcon.y + this.mIcon.height + 20;
         this.add(this.mDescTF);
 
         this.mInitialized = true;
