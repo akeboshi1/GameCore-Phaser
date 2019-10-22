@@ -269,9 +269,9 @@
   integrity sha512-Uy0PN4R5vgBUXFoJrKryf5aTk3kJ8Rv3PdlHjl6UaX+Cqp1QE0yPQ68MPXGrZOfG7gZVNDIJZYyot0B9ubXUrQ==
 
 "@types/node@^10.1.0":
-  version "10.14.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.21.tgz#4a9db7ef1d1671c0015e632c5fa3d46c86c58c1e"
-  integrity sha512-nuFlRdBiqbF+PJIEVxm2jLFcQWN7q7iWEJGsBV4n7v1dbI9qXB8im2pMMKMCUZe092sQb5SQft2DHfuQGK5hqQ==
+  version "10.14.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.22.tgz#34bcdf6b6cb5fc0db33d24816ad9d3ece22feea4"
+  integrity sha512-9taxKC944BqoTVjE+UT3pQH0nHZlTvITwfsOZqyc+R3sfJuxaTtxWjfn1K2UlxyPcKHf0rnaXcVFrS9F9vf0bw==
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -2191,8 +2191,8 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git":
-  version "1.2.3"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#e60c5bb41254e41630890099abe933b993f478db"
+  version "1.2.7"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#ebe2dd85681412fde77490c080f45cb97b1fd210"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
@@ -3944,11 +3944,7 @@ phaser3-rex-plugins@^1.0.0:
     firebase "^5.0.4"
     phaser "^3.11.0"
 
-<<<<<<< Updated upstream
 phaser@3.19.0, phaser@^3.11.0:
-=======
-phaser@^3.11.0:
->>>>>>> Stashed changes
   version "3.19.0"
   resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.19.0.tgz#1d50c90abb2c461205fe6c8c184ded2d040aa367"
   integrity sha512-dEohGFXik3bDCpNqk/b8yxpyMbP99jaP2Aoa1V4UcagLpHOYsNDYt4R+swJv9bCl6qaxvPGPstx7qJALtgDJOg==
@@ -3961,16 +3957,6 @@ phaser@^3.11.0:
     path "^0.12.7"
     remove-files-webpack-plugin "^1.1.3"
     typescript "^3.4.5"
-
-phaser@^3.18.1:
-  version "3.20.1"
-  resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.20.1.tgz#7c9211e59dee58a0a8a6df1fd079cb709646eab7"
-  integrity sha512-P4x7zfMHdLKu8aPaADg+zTPNvFRYNHqmNqWZEUGw4WnbXZ/ACK+VR8k/11OzYxckEKBnWsqASDMKG9rzEC1rqg==
-  dependencies:
-    eventemitter3 "^3.1.0"
-    exports-loader "^0.7.0"
-    imports-loader "^0.8.0"
-    path "^0.12.7"
 
 picomatch@^2.0.5:
   version "2.0.7"
