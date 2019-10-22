@@ -61,12 +61,12 @@ export class GamePauseScene extends Phaser.Scene {
         this.bg.clear();
         this.bg.fillStyle(0, .8);
         this.bg.fillRect(0, 0, width, height);
+        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale;
         this.pauseImg.x = width >> 1;
         this.pauseImg.y = height >> 1;
+        this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
         this.tipTF.x = width - 240 >> 1;
         this.tipTF.y = height - 50;
-        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale;
-        this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
     }
 
 }

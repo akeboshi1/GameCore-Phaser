@@ -238,9 +238,9 @@ export class LoginScene extends Phaser.Scene {
             width = this.scale.gameSize.width;
             height = this.scale.gameSize.height;
         }
+        this.scaleChange();
         this.mParentCon.x = width >> 1;
         this.mParentCon.y = (height >> 1) + 100;
-        this.scaleChange();
     }
 
     private checkSize(size: Size) {

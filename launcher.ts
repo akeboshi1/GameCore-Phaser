@@ -109,7 +109,7 @@ export class Launcher {
     public onResize(width: number, height: number, ui_scale?: number) {
         if (!this.world)
             return;
-        this.mConfig.ui_scale = ui_scale;
+        if (ui_scale) this.mConfig.ui_scale = ui_scale;
         this.world.resize(width, height);
     }
 
