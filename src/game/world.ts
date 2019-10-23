@@ -126,12 +126,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public scaleChange(scale: number) {
-        this.emitter.emit("scaleChange");
+        this.emitter.emit(World.SCALE_CHANGE);
     }
 
     public resize(width: number, height: number) {
         if (this.mGame) {
             this.mGame.scale.resize(width, height);
+        }
+        if (width < height) {
+            this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+        } else if (width > height) {
+            this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
         }
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);

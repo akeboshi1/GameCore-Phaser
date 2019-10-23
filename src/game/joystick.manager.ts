@@ -52,9 +52,6 @@ export class JoyStickManager implements InputManager {
     }
 
     public resize() {
-        // const size: Size = this.worldService.getSize();
-        // this.mParentcon.x = 150;
-        // this.mParentcon.y = size.height - 150;
         if (this.mJoyStick) {
             this.mJoyStick.resize();
         }
