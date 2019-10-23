@@ -1,8 +1,6 @@
-import { Geom } from "phaser";
 import { ElementDisplay } from "../display/element.display";
-import { Room } from "../room";
-import { Logger } from "../../utils/log";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
+import {IRoomService, Room} from "../room";
+import {GridLayer} from "./grid.layer";
 
 export class LayerManager {
 
@@ -23,6 +21,12 @@ export class LayerManager {
      * 舞台地皮层（地块）
      */
     protected mGroundLayer: Phaser.GameObjects.Container;
+
+    /**
+     * 网格层
+     * 介于地皮和地表中间
+     */
+    protected mTileLayer: GridLayer;
 
     /**
      * 舞台地表层（包括角色，物件 ，特效等）
@@ -56,29 +60,25 @@ export class LayerManager {
         this.mScene = room.scene;
         // ==========背景层
         this.mGroundClickLayer = this.mScene.add.container(0, 0);
-        this.mGroundClickLayer.name = "mGroundClickLayer";
         // this.totalLayerList.push(this.mGroundClickLayer);
 
         this.mUGroundLayer2 = this.mScene.add.container(0, 0);
-        this.mUGroundLayer2.name = "mUGroundLayer2";
 
         // ==========舞台层
         this.mGroundLayer = this.mScene.add.container(0, 0);
-        this.mGroundLayer.name = "mGroundLayer";
+
+        this.mTileLayer = new GridLayer(this.mScene);
+        this.mScene.sys.displayList.add(this.mTileLayer);
 
         this.mSurfaceLayer = this.mScene.add.container(0, 0);
-        this.mSurfaceLayer.name = "surfaceLayer";
 
         this.mAtmosphere = this.mScene.add.container(0, 0);
-        this.mAtmosphere.name = "atmosphere";
 
         // ==========UI层
 
         this.mSceneUILayer = this.mScene.add.container(0, 0);
-        this.mSceneUILayer.name = "sceneUILayer";
 
         this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
-        this.mUILayer.name = "uiLayer";
         // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
@@ -124,6 +124,18 @@ export class LayerManager {
         this._clearLayer();
     }
 
+    public drawGrid(room: IRoomService) {
+        if (this.mTileLayer) {
+            this.mTileLayer.draw(room);
+        }
+    }
+
+    public setGridVisible(visible: boolean) {
+        if (this.mTileLayer) {
+            this.mTileLayer.setVisible(visible);
+        }
+    }
+
     public update(time: number, delta: number) {
         if (this.mDepthGround) {
             this.mGroundLayer.sort("depth");
@@ -165,6 +177,7 @@ export class LayerManager {
         this.clearLayer(this.mUGroundLayer2);
         this.clearLayer(this.mUILayer);
         this.clearLayer(this.mAtmosphere);
+        this.mTileLayer.destroy(true);
     }
 
     private clearLayer(container: Phaser.GameObjects.Container, destroy: boolean = false) {

@@ -7,7 +7,7 @@ import { ConnectionService } from "../net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { PBpacket } from "net-socket-packet";
+import {PacketHandler, PBpacket} from "net-socket-packet";
 import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
 import { ElementDisplay } from "./display/element.display";
@@ -74,26 +74,27 @@ export interface IRoomService {
 
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
-export class Room implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
+export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     public clockSyncComplete: boolean = false;
-    private mWorld: WorldService;
-    private mActor: ActorEntity;
-    private mActorData: IActor;
+    protected mWorld: WorldService;
+    protected mActor: ActorEntity;
+    protected mActorData: IActor;
 
-    private mMapEntity: MapEntity;
+    protected mMapEntity: MapEntity;
 
-    private mID: number;
-    private mTerainManager: TerrainManager;
-    private mElementManager: ElementManager;
-    private mPlayerManager: PlayerManager;
-    private mLayManager: LayerManager;
-    private mScene: Phaser.Scene | undefined;
-    private mSize: IPosition45Obj;
-    private mCameraService: ICameraService;
-    private mBlocks: ViewblockService;
-    private mClock: Clock;
+    protected mID: number;
+    protected mTerainManager: TerrainManager;
+    protected mElementManager: ElementManager;
+    protected mPlayerManager: PlayerManager;
+    protected mLayManager: LayerManager;
+    protected mScene: Phaser.Scene | undefined;
+    protected mSize: IPosition45Obj;
+    protected mCameraService: ICameraService;
+    protected mBlocks: ViewblockService;
+    protected mClock: Clock;
 
-    constructor(private manager: IRoomManager) {
+    constructor(protected manager: IRoomManager) {
+        super();
         this.mWorld = this.manager.world;
         this.mCameraService = new CamerasManager(this);
         if (this.mWorld) {
@@ -131,9 +132,6 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         this.mPlayerManager = new PlayerManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
-        this.mTerainManager.init();
-        this.mElementManager.init();
-        this.mPlayerManager.init();
         if (this.scene) {
             const cameras = this.mCameraService.camera = this.scene.cameras.main;
             // init block

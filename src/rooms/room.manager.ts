@@ -4,6 +4,7 @@ import { Room } from "./room";
 import { op_client } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
+import {EditorRoom} from "./editor.room";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;
@@ -116,6 +117,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         room.addActor(vw.actor);
         room.enter(vw.scene);
         this.mWorld.changeRoom(room);
+        this.mCurRoom = room;
+    }
+
+    private onEnterEditor(packet: PBpacket) {
+        const content = packet.content;
+        const room = new EditorRoom(this);
+        room.enter(undefined);
         this.mCurRoom = room;
     }
 

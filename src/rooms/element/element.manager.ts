@@ -14,8 +14,6 @@ export interface IElementManager {
     readonly scene: Phaser.Scene | undefined;
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
 
-    init(): void;
-
     destroy();
 }
 
