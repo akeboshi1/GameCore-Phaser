@@ -208,16 +208,16 @@ export class BagUIPC extends Panel implements IBag {
     }
 
     private bagHandler() {
-        if (this.full) {
-            this.mWorld.startFullscreen();
-        } else {
-            this.mWorld.stopFullscreen();
-        }
-        this.full = !this.full;
+        // if (this.full) {
+        //     this.mWorld.startFullscreen();
+        // } else {
+        //     this.mWorld.stopFullscreen();
+        // }
+        // this.full = !this.full;
         // this.mWorld.enterOtherGame();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
-        this.requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().model.package.id, 1, BagPanel.PageMaxCount);
+        this.mWorld.roomManager.currentRoom.getHeroEntity().getBagEntity().requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().model.package.id, 1, BagPanel.PageMaxCount);
     }
 
     private tmpLoad() {
@@ -254,15 +254,6 @@ export class BagUIPC extends Panel implements IBag {
         this.radio.x = this.bagBtn.x;
         this.radio.y = this.bagBtn.y - 142;
         this.mParentCon.add(this.radio);
-    }
-
-    private requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
-        content.id = bagId;
-        content.page = page;
-        content.perPage = perPage;
-        this.mWorld.connection.send(pkt);
     }
 
     private bagBtnOver(pointer) {

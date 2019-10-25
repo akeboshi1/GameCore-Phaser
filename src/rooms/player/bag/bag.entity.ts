@@ -31,6 +31,15 @@ export class BagEntity extends PacketHandler implements IEntity {
         this.mWorld.connection.removePacketListener(this);
     }
 
+    public requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
+        content.id = bagId;
+        content.page = page;
+        content.perPage = perPage;
+        this.mWorld.connection.send(pkt);
+    }
+
     private handleQueryPackage(packet: PBpacket) {
         const notice: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE = packet.content;
         this.mInitialize = true;
