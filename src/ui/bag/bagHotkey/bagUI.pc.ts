@@ -217,7 +217,6 @@ export class BagUIPC extends Panel implements IBag {
         // this.mWorld.enterOtherGame();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
-        this.mWorld.roomManager.currentRoom.getHeroEntity().getBagEntity().requestVirtualWorldQueryPackage(this.mWorld.roomManager.currentRoom.getHeroEntity().model.package.id, 1, BagPanel.PageMaxCount);
     }
 
     private tmpLoad() {

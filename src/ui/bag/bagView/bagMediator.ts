@@ -47,10 +47,13 @@ export class BagMediator extends BaseMediator {
         this.world.emitter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        if (param) {
+            this.world.roomManager.currentRoom.getHeroEntity().getBagEntity().requestVirtualWorldQueryPackage(param[0].id, 1, BagPanel.PageMaxCount);
+        } else {
+            this.world.roomManager.currentRoom.getHeroEntity().getBagEntity().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.getHeroEntity().model.package.id, 1, BagPanel.PageMaxCount);
+        }
         this.mView.show(param);
         super.show(param);
-        // const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
-        // this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), BagPanel.PageMaxCount);
     }
 
     public update(param: any) {
