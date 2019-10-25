@@ -36,6 +36,8 @@ export class BagUIPC extends Panel implements IBag {
 
     private mWid: number = 0;
     private mHei: number = 0;
+
+    private full: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
         super(scene);
         this.mScene = scene;
@@ -206,6 +208,12 @@ export class BagUIPC extends Panel implements IBag {
     }
 
     private bagHandler() {
+        if (this.full) {
+            this.mWorld.startFullscreen();
+        } else {
+            this.mWorld.stopFullscreen();
+        }
+        this.full = !this.full;
         // this.mWorld.enterOtherGame();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮

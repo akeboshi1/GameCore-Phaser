@@ -52,7 +52,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mGameEmitter: Phaser.Events.EventEmitter;
     private mHttpService: HttpService;
     private mAccount: Account;
-
+    private mBaseWidth: number = 0;
+    private mBaseHeight: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -61,6 +62,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
+        this.mBaseWidth = this.mConfig.width;
+        this.mBaseHeight = this.mConfig.height;
         this._newGame();
         this.mConnection = new Connection(this);
         this.mConnection.addPacketListener(this);
@@ -131,13 +134,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public resize(width: number, height: number) {
         if (this.mGame) {
+            if (width < height) {
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+                // width = this.mBaseWidth > this.mBaseHeight ? this.mBaseHeight : this.mBaseWidth;
+                // height = this.mBaseWidth > this.mBaseHeight ? this.mBaseWidth : this.mBaseHeight;
+                Logger.debug("portrait:", width, height);
+            } else if (width > height) {
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+                // width =  this.mBaseWidth > this.mBaseHeight ? this.mBaseWidth : this.mBaseHeight;
+                // height =  this.mBaseWidth > this.mBaseHeight ? this.mBaseHeight : this.mBaseWidth;
+                Logger.debug("landscape:", width, height);
+            }
             this.mGame.scale.resize(width, height);
         }
-        if (width < height) {
-            this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-        } else if (width > height) {
-            this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-        }
+
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);
         }
@@ -155,11 +165,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             Logger.warn("game does not exist!");
             return;
         }
-        // const scenes = this.mGame.scene.getScenes();
         this.mGame.scale.startFullscreen();
-        // for (const scene of scenes) {
-        //     scene.scale.startFullscreen();
-        // }
     }
 
     public stopFullscreen() {
@@ -168,10 +174,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.mGame.scale.stopFullscreen();
-        // const scenes = this.mGame.scene.getScenes();
-        // for (const scene of scenes) {
-        //     scene.scale.stopFullscreen();
-        // }
     }
 
     public onGotoAnotherGame(packet: PBpacket) {
@@ -194,13 +196,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
-        // this.mAccount.setAccount({
-        //     data: {
-        //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWVkZWYwMGRkYmRjNTdmNjQzOGFkMyIsImlhdCI6MTU3MDc4NTI3MCwiZXhwIjoxNTcxMzkwMDcwfQ.149pIYXoBo-4w-AAHNFhBTogtfLzcOn8raBZ9sLQG5g",
-        //         expire: 1571390070,
-        //         fingerprint: "d0eb22c474606051895f1f15e2a42476ad0a0fc8"
-        //     }
-        // });
         this.loginEnterWorld();
     }
 
@@ -382,7 +377,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 roundPixels: true
             }
         };
-
         Object.assign(gameConfig, this.mConfig);
         return this.mGame = new Game(gameConfig);
     }

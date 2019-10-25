@@ -35,6 +35,7 @@ export class LoginScene extends Phaser.Scene {
     private mtxt4: Phaser.GameObjects.Text;
     private mtxt5: Phaser.GameObjects.Text;
     private mParentCon: Phaser.GameObjects.Container;
+    private mSizeTF: Phaser.GameObjects.Text;
     constructor() {
         super({ key: LoginScene.name });
     }
@@ -99,7 +100,7 @@ export class LoginScene extends Phaser.Scene {
 
         this.mTabDic = new Map();
 
-        this.mNameInputTxt = new InputText(this, - 140, 4, 190, 15, {
+        this.mNameInputTxt = new InputText(this, 0, 0, 190, 15, {
             type: "input",
             placeholder: "用戶名",
             fontFamily: "YaHei",
@@ -108,7 +109,7 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(200, 20)
             .setOrigin(0, 0);
-        this.mPassWordInputTxt = new InputText(this, -140, 55, 190, 15, {
+        this.mPassWordInputTxt = new InputText(this, 0, 0, 190, 15, {
             type: "password",
             placeholder: "密码",
             fontFamily: "YaHei",
@@ -117,7 +118,7 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(200, 20)
             .setOrigin(0, 0);
-        this.mVerificationCodeTxt = new InputText(this, -140, 55, 100, 15, {
+        this.mVerificationCodeTxt = new InputText(this, 0, 0, 100, 15, {
             type: "input",
             placeholder: "验证码",
             fontFamily: "YaHei",
@@ -126,12 +127,48 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(100, 20)
             .setOrigin(0, 0);
-        this.mtxt0 = this.add.text(-145, -46, "手机号登录", { fontFamily: "YaHei" });
-        this.mtxt1 = this.add.text(-35, -46, "用户号登录", { fontFamily: "YaHei" });
-        this.mtxt2 = this.add.text(90, -46, "快速游戏", { fontFamily: "YaHei" });
-        this.mtxt3 = this.add.text(108, 33, "登录", { fontFamily: "YaHei" });
-        this.mtxt4 = this.add.text(-97, 37, "登录其他账号", { fontFamily: "YaHei" });
-        this.mtxt5 = this.add.text(-6, 57, "发送", { fontFamily: "YaHei" });
+        this.mNameInputTxt.x = -140;
+        this.mNameInputTxt.y = 4;
+        this.mPassWordInputTxt.x = -140;
+        this.mPassWordInputTxt.y = 55;
+        this.mVerificationCodeTxt.x = -140;
+        this.mVerificationCodeTxt.y = 55;
+        // this.mtxt0 = this.add.text(-145, -46, "手机号登录", { fontFamily: "YaHei" });
+        // this.mtxt1 = this.add.text(-35, -46, "用户号登录", { fontFamily: "YaHei" });
+        // this.mtxt2 = this.add.text(90, -46, "快速游戏", { fontFamily: "YaHei" });
+        // this.mtxt3 = this.add.text(108, 33, "登录", { fontFamily: "YaHei" });
+        // this.mtxt4 = this.add.text(-97, 37, "登录其他账号", { fontFamily: "YaHei" });
+        // this.mtxt5 = this.add.text(-6, 57, "发送", { fontFamily: "YaHei" });
+        this.mtxt0 = this.make.text(undefined, false);
+        this.mtxt1 = this.make.text(undefined, false);
+        this.mtxt2 = this.make.text(undefined, false);
+        this.mtxt3 = this.make.text(undefined, false);
+        this.mtxt4 = this.make.text(undefined, false);
+        this.mtxt5 = this.make.text(undefined, false);
+        this.mtxt0.x = -145;
+        this.mtxt0.y = -46;
+        this.mtxt1.x = -35;
+        this.mtxt1.y = -46;
+        this.mtxt2.x = 90;
+        this.mtxt2.y = -46;
+        this.mtxt3.x = 108;
+        this.mtxt3.y = 33;
+        this.mtxt4.x = -97;
+        this.mtxt4.y = 37;
+        this.mtxt5.x = -6;
+        this.mtxt5.y = 57;
+        this.mtxt0.setFontFamily("YaHei");
+        this.mtxt0.setText("手机号登录");
+        this.mtxt1.setFontFamily("YaHei");
+        this.mtxt1.setText("用户号登录");
+        this.mtxt2.setFontFamily("YaHei");
+        this.mtxt2.setText("快速游戏");
+        this.mtxt3.setFontFamily("YaHei");
+        this.mtxt3.setText("登录");
+        this.mtxt4.setFontFamily("YaHei");
+        this.mtxt4.setText("登录其他账号");
+        this.mtxt5.setFontFamily("YaHei");
+        this.mtxt5.setText("发送");
 
         const config: IComboboxRes = {
             wid: 220,
@@ -193,7 +230,7 @@ export class LoginScene extends Phaser.Scene {
         this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
         this.mtxt4.on("pointerdown", this.changeAccount, this);
 
-        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        // this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
     }
@@ -205,6 +242,8 @@ export class LoginScene extends Phaser.Scene {
     }
 
     public update() {
+        const orientation: string = this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
+        this.mSizeTF.text = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation;
     }
 
     public awake() {
@@ -248,6 +287,11 @@ export class LoginScene extends Phaser.Scene {
         const height: number = size.height;
         this.mParentCon.x = width >> 1;
         this.mParentCon.y = (height >> 1) + 100;
+        if (width > height) {
+            this.mWorld.game.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+        } else if (width < height) {
+            this.mWorld.game.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+        }
     }
 
     private changeID(data: ISelectCallItemData) {
@@ -279,7 +323,8 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt1.visible = !accountData ? true : false;
         this.mtxt2.visible = !accountData ? true : false;
         this.mtxt4.visible = !accountData ? false : true;
-
+        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000"}, wordWrap: { width: 800, useAdvancedWrap: true } });
+        this.mSizeTF.setFontSize(50);
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];
@@ -349,7 +394,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
+        httpRequest.onload = function () {
             if (httpRequest.status === 200) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
@@ -368,7 +413,7 @@ export class LoginScene extends Phaser.Scene {
     private requestGetPhoneCode() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
+        httpRequest.onload = function () {
             if (httpRequest.status === 200) {
             } else {
                 const alert = new Alert(login.mWorld, login);
@@ -384,7 +429,7 @@ export class LoginScene extends Phaser.Scene {
     private loginByPhoneCode() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
+        httpRequest.onload = function () {
             if (httpRequest.status === 200) {
                 localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
@@ -403,7 +448,7 @@ export class LoginScene extends Phaser.Scene {
     private requestQuickLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
+        httpRequest.onload = function () {
             if (httpRequest.status === 200) {
                 localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));

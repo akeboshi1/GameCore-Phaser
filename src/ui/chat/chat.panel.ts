@@ -36,8 +36,8 @@ export class ChatPanel extends Panel {
             this.x = 0;
             this.y = size.height - this.mPreHei;
         } else {
-            this.x = size.width - this.width * this.mWorldService.uiScale / 2 >> 1;
-            this.y = size.height - this.height * this.mWorldService.uiScale - 8;
+            this.x = size.width - this.width / 2 >> 1;
+            this.y = size.height - this.height * 1.8;
         }
     }
 

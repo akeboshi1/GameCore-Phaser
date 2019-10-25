@@ -9,7 +9,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { BagPanel } from "../bagView/bagPanel";
 import { Url } from "../../../utils/resUtil";
-import {ISprite} from "../../../rooms/element/sprite";
+import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
 
 /**
@@ -26,6 +26,7 @@ export class BagUIMobile extends Panel implements IBag {
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
+    private full: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mScene = scene;
@@ -92,6 +93,12 @@ export class BagUIMobile extends Panel implements IBag {
     }
 
     private bagHandler(pointer) {
+        if (this.full) {
+            this.mWorld.startFullscreen();
+        } else {
+            this.mWorld.stopFullscreen();
+        }
+        this.full = !this.full;
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);

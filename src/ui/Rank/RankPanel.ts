@@ -14,7 +14,7 @@ export class RankPanel extends BasicRankPanel {
             return;
         }
         const size = this.mWorld.getSize();
-        this.x = size.width - this.width * this.mWorld.uiScale - 10;
+        this.x = size.width - this.width - 150;
         this.y = 21;
     }
 
