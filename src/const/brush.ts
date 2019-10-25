@@ -1,11 +1,19 @@
 export enum BrushEnum {
-    Draw,
-    Fill,
-    Select,
-    Move,
+    MOVE = "move",
+    BRUSH = "brush",
+    SELECT = "select",
+    ERASER = "eraser",
+    FILL = "FILL",
 }
 
 export class Brush {
-    mode: string;
+    private mMode: BrushEnum = BrushEnum.BRUSH;
 
+    set mode(mode: BrushEnum) {
+        this.mMode = mode;
+    }
+
+    get mode(): BrushEnum {
+        return this.mMode;
+    }
 }

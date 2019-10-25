@@ -62,7 +62,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             throw new Error(`Config.game_id is required.`);
         }
         this._newGame();
-        this.mConnection = new Connection(this);
+        this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
@@ -83,6 +83,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) { // connect to game server.
             this.mConnection.startConnect(gateway);
+        }
+
+        if (config.isEditor) {
+            this.createGame();
         }
     }
 
@@ -403,7 +407,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             if (this.mConfig.game_created) {
                 this.mConfig.game_created();
             }
-            this.startFullscreen();
         } else {
             Logger.error("connection is undefined");
         }

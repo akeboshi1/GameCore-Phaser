@@ -1,18 +1,17 @@
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import {op_client} from "pixelpai_proto";
 import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
-import {BrushEnum} from "../const/brush";
+import {Brush, BrushEnum} from "../const/brush";
 import {TerrainManager} from "./terrain/terrain.manager";
-import {PlayerManager} from "./player/player.manager";
-import { Room } from "./room";
-import { LayerManager } from "./layer/layer.manager";
+import {Room} from "./room";
+import {LayerManager} from "./layer/layer.manager";
 import {PlayScene} from "../scenes/play";
 
 export class EditorRoom extends Room {
     clockSyncComplete: boolean;
-    private mBrush: BrushEnum;
+    private mBrush: Brush = new Brush();
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
@@ -42,13 +41,19 @@ export class EditorRoom extends Room {
 
         this.mTerainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
-        this.mPlayerManager = new PlayerManager(this);
-        this.mLayManager = new LayerManager(this);
+        // this.mPlayerManager = new PlayerManager(this);
+
+        Logger.log("size: ", this.mSize);
 
         this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
-            callback: () => {
+            callBack: () => {
+                this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
+                this.mLayManager = new LayerManager(this);
                 this.mLayManager.drawGrid(this);
+                this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+                this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+                this.mScene.cameras.main.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
             }
         });
     }
@@ -60,9 +65,18 @@ export class EditorRoom extends Room {
         super.destroy();
     }
 
+    public update(time: number, delta: number) {
+    }
+
+    private moveCameras(pointer) {
+        const camera = this.mScene.cameras.main;
+        camera.scrollX += pointer.prevPosition.x - pointer.position.x;
+        camera.scrollY += pointer.prevPosition.y - pointer.position.y;
+    }
+
     private onSetEditorModeHandler(packet: PBpacket) {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
-        // this.mBrush = mode.mode;
+        this.mBrush.mode = <BrushEnum> mode.mode;
     }
 
     private onAlignGridHandler(packet: PBpacket) {
@@ -74,7 +88,27 @@ export class EditorRoom extends Room {
         this.layerManager.setGridVisible(content.visible);
     }
 
-    get brush(): BrushEnum {
+    private onPointerDownHandler() {
+        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+    }
+
+    private onPointerUpHandler() {
+        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+    }
+
+    private onPointerMoveHandler(pointer) {
+        if (!this.mScene.cameras) {
+            return;
+        }
+        switch (this.mBrush.mode) {
+            case BrushEnum.MOVE:
+                this.moveCameras(pointer);
+                break;
+        }
+        Logger.log("pointer: ", pointer);
+    }
+
+    get brush(): Brush {
         return this.mBrush;
     }
 }

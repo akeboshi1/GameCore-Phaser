@@ -6,8 +6,8 @@ import { Size } from "../utils/size";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends Phaser.Scene {
-  private mCallBack: () => void;
-  private mRoom: IRoomService;
+  protected mCallBack: () => void;
+  protected mRoom: IRoomService;
   constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
     super(config || { key: PlayScene.name });
   }
@@ -32,6 +32,7 @@ export class PlayScene extends Phaser.Scene {
     this.scene.sendToBack();
     this.scale.on("orientationchange", this.checkOriention, this);
     this.scale.on("resize", this.checkSize, this);
+
   }
 
   update(time: number, delta: number) {

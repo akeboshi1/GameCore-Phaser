@@ -4,6 +4,7 @@
 
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
+import {ConnectionService} from "./src/net/connection.service";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -16,6 +17,8 @@ export interface ILauncherConfig {
     readonly height: number | string;
     readonly ui_scale?: number;
     readonly game_created?: Function;
+    readonly connection?: ConnectionService;
+    readonly isEditor?: boolean;
 }
 
 export interface GameMain {
