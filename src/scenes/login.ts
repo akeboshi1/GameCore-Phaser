@@ -243,7 +243,8 @@ export class LoginScene extends Phaser.Scene {
 
     public update() {
         const orientation: string = this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-        this.mSizeTF.text = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation;
+        this.mSizeTF.text = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation
+            + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
     }
 
     public awake() {
@@ -323,7 +324,7 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt1.visible = !accountData ? true : false;
         this.mtxt2.visible = !accountData ? true : false;
         this.mtxt4.visible = !accountData ? false : true;
-        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000"}, wordWrap: { width: 800, useAdvancedWrap: true } });
+        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000" }, wordWrap: { width: 800, useAdvancedWrap: true } });
         this.mSizeTF.setFontSize(50);
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
@@ -394,7 +395,7 @@ export class LoginScene extends Phaser.Scene {
     private requestLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
@@ -413,7 +414,7 @@ export class LoginScene extends Phaser.Scene {
     private requestGetPhoneCode() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
             } else {
                 const alert = new Alert(login.mWorld, login);
@@ -429,7 +430,7 @@ export class LoginScene extends Phaser.Scene {
     private loginByPhoneCode() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
                 localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
@@ -448,7 +449,7 @@ export class LoginScene extends Phaser.Scene {
     private requestQuickLogin() {
         const login = this;
         const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function () {
+        httpRequest.onload = function() {
             if (httpRequest.status === 200) {
                 localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(JSON.parse(httpRequest.response));

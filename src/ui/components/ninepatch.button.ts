@@ -1,5 +1,4 @@
 import { NinePatch } from "./nine.patch";
-import { BlueButton } from "../../utils/resUtil";
 import { IPatchesConfig } from "./patches.config";
 
 export class NinePatchButton extends Phaser.GameObjects.Container {

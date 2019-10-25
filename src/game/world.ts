@@ -52,8 +52,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mGameEmitter: Phaser.Events.EventEmitter;
     private mHttpService: HttpService;
     private mAccount: Account;
-    private mBaseWidth: number = 0;
-    private mBaseHeight: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -62,8 +60,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
-        this.mBaseWidth = this.mConfig.width;
-        this.mBaseHeight = this.mConfig.height;
         this._newGame();
         this.mConnection = new Connection(this);
         this.mConnection.addPacketListener(this);
@@ -136,13 +132,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             if (width < height) {
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-                // width = this.mBaseWidth > this.mBaseHeight ? this.mBaseHeight : this.mBaseWidth;
-                // height = this.mBaseWidth > this.mBaseHeight ? this.mBaseWidth : this.mBaseHeight;
                 Logger.debug("portrait:", width, height);
             } else if (width > height) {
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-                // width =  this.mBaseWidth > this.mBaseHeight ? this.mBaseWidth : this.mBaseHeight;
-                // height =  this.mBaseWidth > this.mBaseHeight ? this.mBaseHeight : this.mBaseWidth;
                 Logger.debug("landscape:", width, height);
             }
             this.mGame.scale.resize(width, height);

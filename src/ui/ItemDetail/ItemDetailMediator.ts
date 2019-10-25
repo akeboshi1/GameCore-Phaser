@@ -5,7 +5,6 @@ import { ILayerManager } from "../layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { NinePatchButton } from "../components/ninepatch.button";
-import { IAbstractPanel } from "../abstractPanel";
 
 export class ItemDetailMediator extends BaseMediator {
     public static NAME: string = "ItemDetailMediator";

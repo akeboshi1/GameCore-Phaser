@@ -37,7 +37,7 @@ export class ShopMediator extends BaseMediator {
     }
 
     public show(param?: any) {
-        if (this.mView) {
+        if (this.mView && this.mView.isShow()) {
             return;
         }
         this.mView = new ShopPanel(this.mScene, this.world);
