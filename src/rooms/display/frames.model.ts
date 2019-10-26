@@ -2,6 +2,7 @@ import { op_gameconfig } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
+import { IAnimationData } from "./animation";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -23,16 +24,6 @@ export interface IDisplay {
     dataPath?: string;
 }
 
-export interface IAnimationData {
-    name: string;
-    frameName: string[];
-    frameRate: number;
-    loop: boolean;
-    baseLoc: Phaser.Geom.Point;
-    collisionArea?: number[][];
-    walkableArea?: number[][];
-}
-
 export class FramesModel implements IFramesModel {
     avatarDir?: number;
     readonly discriminator: string = "FramesModel";
@@ -47,8 +38,8 @@ export class FramesModel implements IFramesModel {
 
     constructor(data: any) {
         // TODO 定义IElement接口
-        this.id = data.id;
-        this.type = data.sn;
+        this.id = data.id || 0;
+        this.type = data.sn || "";
         const anis = data.animations;
         if (anis) {
             this.animationName = anis.defaultAnimationName;

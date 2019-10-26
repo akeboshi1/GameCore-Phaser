@@ -8,6 +8,7 @@ import {TerrainManager} from "./terrain/terrain.manager";
 import {Room} from "./room";
 import {LayerManager} from "./layer/layer.manager";
 import {PlayScene} from "../scenes/play";
+import {ViewblockManager} from "./cameras/viewblock.manager";
 
 export class EditorRoom extends Room {
     clockSyncComplete: boolean;
@@ -41,6 +42,7 @@ export class EditorRoom extends Room {
 
         this.mTerainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
+        this.mBlocks = new ViewblockManager(this.mCameraService);
         // this.mPlayerManager = new PlayerManager(this);
 
         Logger.log("size: ", this.mSize);
@@ -53,7 +55,8 @@ export class EditorRoom extends Room {
                 this.mLayManager.drawGrid(this);
                 this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
                 this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
-                this.mScene.cameras.main.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+                const mainCameras = this.mScene.cameras.main;
+                mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
             }
         });
     }

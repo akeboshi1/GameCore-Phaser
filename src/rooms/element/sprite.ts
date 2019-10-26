@@ -1,7 +1,9 @@
 import { Pos } from "../../utils/pos";
-import { IAvatar } from "../display/dragonbones.model";
+import {DragonbonesModel, IAvatar, IDragonbonesModel} from "../display/dragonbones.model";
 import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import { SlotInfo } from "../player/slot.info";
+import {FramesModel, IFramesModel} from "../display/frames.model";
+import {Animation} from "../display/animation";
 
 export interface ISprite {
     readonly id: number;
@@ -24,6 +26,7 @@ export interface ISprite {
     readonly attributes: op_gameconfig.IAttribute[];
     readonly platformId: string;
     readonly sceneId: number;
+    readonly displayInfo: IFramesModel | IDragonbonesModel;
     package: op_gameconfig.IPackage;
 }
 
@@ -50,6 +53,7 @@ export class Sprite implements ISprite {
     protected mSceneId: number;
     protected mUuid: number;
     protected mPlatformId: string;
+    protected mDisplayInfo: IFramesModel | IDragonbonesModel;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -64,6 +68,16 @@ export class Sprite implements ISprite {
         if (obj.avatar) {
             this.mAvatar = { id: obj.avatar.id };
             this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
+            this.mDisplayInfo = new DragonbonesModel(this);
+        }
+        if (obj.display) {
+            this.mDisplayInfo = new FramesModel({
+                animations: {
+                    defaultAnimationName: obj.currentAnimationName,
+                    display: obj.display,
+                    animationData: new Animation(obj.animation)
+                }
+            });
         }
         this.mCurrentAnimationName = obj.currentAnimationName || "idle";
         this.mDirection = obj.direction;
@@ -71,6 +85,7 @@ export class Sprite implements ISprite {
         this.mBindID = obj.bindId;
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.mDisplayBadgeCards = obj.displayBadgeCards;
+
     }
 
     get id(): number {
@@ -159,6 +174,10 @@ export class Sprite implements ISprite {
 
     get platformId(): string {
         return this.mPlatformId;
+    }
+
+    get displayInfo(): IFramesModel | IDragonbonesModel {
+        return this.mDisplayInfo;
     }
 
     public getSlots(): SlotInfo[] {

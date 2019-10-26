@@ -52,6 +52,8 @@ export class DragonbonesModel implements IDragonbonesModel {
     avatar?: IAvatar;
 
     constructor(data: any) {
+        // this.id = id;
+        // this.avatar = avatar;
         if (data) {
             this.id = data.id;
             this.avatar = data.avatar;
