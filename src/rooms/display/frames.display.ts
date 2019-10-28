@@ -1,9 +1,10 @@
-import { IAnimationData, IFramesModel } from "./frames.model";
+import { IFramesModel } from "./frames.model";
 import { ElementDisplay } from "./element.display";
 import { Logger } from "../../utils/log";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import { SortRectangle } from "../../utils/sort.rectangle";
 import {DisplayObject} from "./display.object";
+import { IAnimationData } from "./animation";
 
 export enum DisplayField {
     BACKEND = 1,

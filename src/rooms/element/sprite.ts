@@ -71,11 +71,16 @@ export class Sprite implements ISprite {
             this.mDisplayInfo = new DragonbonesModel(this);
         }
         if (obj.display) {
+            const anis = [];
+            const objAnis = obj.animations;
+            for (const ani of objAnis) {
+                anis.push(new Animation(ani));
+            }
             this.mDisplayInfo = new FramesModel({
                 animations: {
                     defaultAnimationName: obj.currentAnimationName,
                     display: obj.display,
-                    animationData: new Animation(obj.animation)
+                    animationData: anis
                 }
             });
         }

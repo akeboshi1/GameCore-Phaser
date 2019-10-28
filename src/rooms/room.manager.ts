@@ -123,7 +123,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private onEnterEditor(packet: PBpacket) {
         const content: op_client.IOP_REQ_CLIENT_CHANGE_TO_EDITOR_MODE = packet.content;
-        Logger.log(content);
         const room = new EditorRoom(this);
         room.enter(content.scene);
         this.mCurRoom = room;

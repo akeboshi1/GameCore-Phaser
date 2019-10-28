@@ -37,6 +37,7 @@ import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
+import {EditScene} from "../scenes/edit";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
 
@@ -387,6 +388,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
+        this.mGame.scene.add(EditScene.name, EditScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (this.mGame.device.os.desktop) {

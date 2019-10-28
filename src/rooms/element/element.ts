@@ -106,7 +106,13 @@ export class Element extends BlockObject implements IElement {
         if (sprite.avatar) {
             this.mDisplayInfo = new DragonbonesModel(sprite);
         } else {
-            const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
+            // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
+            let conf = null;
+            if (sprite.displayInfo) {
+                conf = sprite.displayInfo;
+            } else {
+                conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
+            }
             if (!conf) {
                 Logger.error("object does not exist");
                 return;
@@ -120,6 +126,7 @@ export class Element extends BlockObject implements IElement {
         this.createDisplay();
         this.setPosition(sprite.pos);
         this.mDisplay.changeAlpha(sprite.alpha);
+        this.setRenderable(true);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
