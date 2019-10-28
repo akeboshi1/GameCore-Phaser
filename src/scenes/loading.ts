@@ -45,7 +45,6 @@ export class LoadingScene extends Phaser.Scene {
     this.lo = this.add.sprite(x, y, "rabbit00.png");
     this.lo.anims.play("loading_rabbit00");
     this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
-    this.scale.on("orientationchange", this.checkOriention, this);
     this.scale.on("resize", this.checkSize, this);
     this.mWorld.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
   }
@@ -74,15 +73,6 @@ export class LoadingScene extends Phaser.Scene {
 
   private scaleChange() {
     this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
-  }
-
-  private checkOriention(orientation) {
-    if (orientation === Phaser.Scale.PORTRAIT) {
-
-    } else if (orientation === Phaser.Scale.LANDSCAPE) {
-
-    }
-    this.checkSize(this.mWorld.getSize());
   }
 
   private checkSize(size: Size) {

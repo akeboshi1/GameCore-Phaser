@@ -1,6 +1,6 @@
 export class UIMediatorType {
 
-    public static BagHotKey: string = "BagHotKey"; // 场景背包快捷键
+    public static MainUIMediator: string = "MainUIMediator"; // 场景快捷键
     public static BagMediator: string = "BagMediator"; // 角色背包
     public static ChatMediator: string = "ChatMediator"; // 场景聊天框
     public static NOTICE: string = "Notice";

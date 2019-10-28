@@ -27,7 +27,7 @@ export class GamePauseScene extends Phaser.Scene {
         this.pauseImg = this.add.image(width >> 1, height >> 1, "gamepause.png");
         this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale;
         this.tipTF = this.add.text(width - 240 >> 1, height - 50, "点击任意位置开始游戏", { font: "30px Tahoma" });
-        this.scale.on("orientationchange", this.checkOriention, this);
+        // this.mWorld.game.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
         this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
         // tipTF.setFontFamily("Tahoma");
@@ -44,15 +44,6 @@ export class GamePauseScene extends Phaser.Scene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
-    }
-
-    private checkOriention(orientation) {
-        if (orientation === Phaser.Scale.PORTRAIT) {
-
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-
-        }
-        this.checkSize(this.mWorld.getSize());
     }
 
     private checkSize(size: Size) {

@@ -64,6 +64,14 @@ export class ItemSlot implements IListItemComponent {
         return this.toolTipCon;
     }
 
+    public getBg(): Phaser.GameObjects.Sprite {
+        return this.itemBG;
+    }
+
+    public getIcon(): DragDropIcon {
+        return this.mIcon;
+    }
+
     public dataChange(val: any) {
         if (!this.minitialize) return;
         this.mData = val;

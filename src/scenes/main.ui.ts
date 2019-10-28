@@ -26,14 +26,10 @@ export class MainUIScene extends Phaser.Scene {
     if (world.game.device.os.desktop) {
     } else {
       (world.inputManager as JoyStickManager).setScene(this);
-      // world.inputManager.onRoomChanged(this.mRoom);
     }
-    // if ((world.gameEnvironment.isAndroid || world.gameEnvironment.isIOSPhone) && world.joyStickManager) {
-    //   world.joyStickManager.setScene(this);
-    // }
     world.uiManager.setScene(this);
-    this.scale.on("orientationchange", this.checkOriention, this);
-    this.scale.on("resize", this.checkSize, this);
+    // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
+    this.mRoom.world.game.scale.on("resize", this.checkSize, this);
   }
 
   public update() {
@@ -46,17 +42,13 @@ export class MainUIScene extends Phaser.Scene {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
 
-  private checkOriention(orientation) {
-    if (orientation === Phaser.Scale.PORTRAIT) {
-
-    } else if (orientation === Phaser.Scale.LANDSCAPE) {
-
-    }
-  }
+  // private checkOriention(orientation) {
+  //   this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation + "\n" + "orientationChange:" + orientation;
+  // }
 
   private checkSize(size: Size) {
     const width: number = size.width;
     const height: number = size.height;
-   //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
+    //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
   }
 }

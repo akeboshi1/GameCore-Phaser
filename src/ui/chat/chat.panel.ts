@@ -41,6 +41,11 @@ export class ChatPanel extends Panel {
         }
     }
 
+    public hide() {
+        super.hide();
+        this.destroy();
+    }
+
     public destroy() {
         if (this.mTextArea) this.mTextArea.destroy();
         if (this.mInputText) this.mInputText.destroy();
@@ -50,7 +55,8 @@ export class ChatPanel extends Panel {
         this.mInputText = null;
         this.mVoiceBtn = null;
         this.mMicBtn = null;
-        this.mSendKey = null; super.destroy();
+        this.mSendKey = null;
+        super.destroy();
     }
 
     protected preload() {

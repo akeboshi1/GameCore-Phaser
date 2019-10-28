@@ -58,7 +58,6 @@ export class JoyStickManager implements InputManager {
     }
 
     public addListener(l: InputListener) {
-        // this.mJoyStick.addListener(l);
         this.mJoyListeners.push(l);
         if (this.mJoyStick) {
             this.mJoyStick.changeListeners(this.mJoyListeners);
@@ -119,9 +118,7 @@ export class JoyStick {
     private mJoyListeners: InputListener[];
     private mdownStr: string;
     private mScale: number;
-    private mbtn0: Phaser.GameObjects.Sprite;
     private mjoystickCon: Phaser.GameObjects.Container;
-    private mbtnCon: Phaser.GameObjects.Container;
     private mKeyCodes: any[];
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale: number) {
         this.mScene = scene;
@@ -147,10 +144,6 @@ export class JoyStick {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        if (this.mbtnCon) {
-            this.mbtnCon.x = size.width - this.mbtn0.width * this.mScale;
-            this.mbtnCon.y = size.height - this.mbtn0.height * this.mScale;
-        }
         if (this.mjoystickCon) {
             this.mjoystickCon.x = this.bg.width * this.mScale >> 1;
             this.mjoystickCon.y = size.height - this.bg.height / 2 * this.mScale;
@@ -160,54 +153,23 @@ export class JoyStick {
     private onLoadCompleteHandler() {
         const size: Size = this.mWorld.getSize();
         this.bg = this.mScene.make.sprite(undefined, false);
-        this.bg.setTexture("joystick", "joystick_bg");
-        this.bgRadius = this.bg.width - 70 >> 1;
+        this.bg.setTexture("joystick", "joystick_bg.png");
+        this.bgRadius = this.bg.width + 40 >> 1;
         this.btn = this.mScene.make.sprite(undefined, false);
-        this.btn.setTexture("joystick", "joystick_tab");
+        this.btn.setTexture("joystick", "joystick_tab.png");
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         this.mjoystickCon = this.mScene.make.container(undefined, false);
         this.mjoystickCon.alpha = .5;
-        // this.mjoystickCon.x = 150;
-        // this.mjoystickCon.y = size.height - 150;
         this.mjoystickCon.addAt(this.bg, 0);
         this.mjoystickCon.addAt(this.btn, 1);
         this.parentCon.add(this.mjoystickCon);
-        // this.parentCon.alpha = .5;
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
         this.btn.on("dragend", this.dragStop, this);
-        this.mbtnCon = this.mScene.make.container(undefined, false);
-        this.mbtn0 = this.mScene.add.sprite(0, 0, "joystick", "btn");
-        this.mbtnCon.add(this.mbtn0);
-        this.mbtn0.setInteractive();
-        this.mjoystickCon.scaleX = this.mjoystickCon.scaleY = this.mScale;
-        this.mbtnCon.scaleX = this.mbtnCon.scaleY = this.mScale;
-        this.parentCon.add(this.mbtnCon);
         this.parentCon.setSize(size.width, size.height);
-        this.mbtn0.on("pointerup", this.uiUp, this);
         this.resize();
-    }
-
-    private uiUp(pointer, gameObject) {
-        this.mScene.tweens.add({
-            targets: this.mbtn0,
-            duration: 50,
-            ease: "Linear",
-            props: {
-                scaleX: { value: .5 },
-                scaleY: { value: .5 },
-            },
-            yoyo: true,
-            repeat: 0,
-        });
-        this.mbtn0.scaleX = this.mbtn0.scaleY = 1;
-        // f键值为70，点击该按钮交互
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
-        const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-        content.keyCodes = [70];
-        this.mWorld.connection.send(pkt);
     }
 
     private dragUpdate(pointer, dragX, dragY) {

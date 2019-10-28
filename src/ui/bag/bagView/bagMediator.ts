@@ -1,11 +1,11 @@
 import { MessageType } from "../../../const/MessageType";
-import { IMediator, BaseMediator } from "../../baseMediator";
+import { BaseMediator } from "../../baseMediator";
 import { IAbstractPanel } from "../../abstractPanel";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
 import { IDragable } from "../idragable";
 import { IDropable } from "../idropable";
-import { op_gameconfig, op_virtual_world, op_client } from "pixelpai_proto";
+import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 
 export enum DragType {

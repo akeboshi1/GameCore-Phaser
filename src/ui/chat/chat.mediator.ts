@@ -63,6 +63,9 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public isShow(): boolean {
+        if (!this.mChatPanel) {
+            return false;
+        }
         return this.mChatPanel.isShow();
     }
 
@@ -72,7 +75,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         }
     }
 
-    public show(param: any) {
+    public show(param?: any) {
         if (this.mChatPanel && this.mChatPanel.isShow()) {
             return;
         }
@@ -106,6 +109,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         if (this.mGMEApi) {
             this.mGMEApi = null;
         }
+        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         this.mScene = null;
         this.world = null;
         this.mInRoom = false;
@@ -114,7 +118,6 @@ export class ChatMediator extends PacketHandler implements IMediator {
             if (message) message = null;
         });
         this.mAllMessage = null;
-        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
     }
 
     private scaleChange() {
