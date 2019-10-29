@@ -67,10 +67,6 @@ export class UiManager extends PacketHandler {
         this.mMedMap.forEach((mediator: IMediator) => {
             if (mediator.isSceneUI()) mediator.show();
         });
-        // const chat = new ChatPanel(scene, this.worldService);
-        // chat.show();
-        // this.mBagMediator = new BagMediator(this.worldService, scene);
-        // this.bagPanel = new BagPanel(scene, this.worldService);
     }
 
     public resize(width: number, height: number) {
@@ -154,7 +150,7 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const mediator: IMediator = this.mMedMap.get(type);
+        const mediator: IMediator = this.mMedMap.get(type + "Mediator");
         if (!mediator) {
             Logger.error(`error ${type} no panel can show!!!`);
             return;

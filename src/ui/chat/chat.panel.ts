@@ -4,10 +4,10 @@ import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Panel } from "../components/panel";
 import { NinePatchButton } from "../components/ninepatch.button";
-import {Border, Url} from "../../utils/resUtil";
+import { Border, Url } from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
-import {NinePatch} from "../components/nine.patch";
+import { NinePatch } from "../components/nine.patch";
 
 export class ChatPanel extends Panel {
     private mTextArea: TextArea;
@@ -15,6 +15,8 @@ export class ChatPanel extends Panel {
     private mVoiceBtn: CheckButton;
     private mMicBtn: CheckButton;
     private mSendKey: Phaser.Input.Keyboard.Key;
+    private mPreHei: number = 0;
+    private mPreWid: number = 0;
     constructor(scene: Phaser.Scene, private mWorldService: WorldService) {
         super(scene);
     }
@@ -31,10 +33,11 @@ export class ChatPanel extends Panel {
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorldService.getSize();
         if (this.mWorldService.game.device.os.desktop) {
-            // this.x = 100;
+            this.x = 0;
+            this.y = size.height - this.mPreHei;
         } else {
-            this.x = size.width - this.width / 2 >> 1;
-            this.y = size.height - this.height - 8;
+            this.x = size.width - this.width * this.mWorldService.uiScale / 2 >> 1;
+            this.y = size.height - this.height * this.mWorldService.uiScale - 8;
         }
     }
 
@@ -68,6 +71,8 @@ export class ChatPanel extends Panel {
         const size = this.mWorldService.getSize();
         this.mWidth = 464;
         this.mHeight = 281;
+        this.mPreHei = size.height;
+        this.mPreWid = size.width;
         this.setSize(this.mWidth, this.mHeight);
 
         // const border = new NinePatch(this.mScene, 4, size.height - 260, {

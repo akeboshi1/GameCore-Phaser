@@ -5,6 +5,7 @@ import { WorldService } from "../game/world.service";
 import { ComboBox, IComboboxRes, ISelectCallUI, ISelectCallItemData } from "../ui/components/comboBox";
 import { Logger } from "../utils/log";
 import { Size } from "../utils/size";
+import { World } from "../game/world";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends Phaser.Scene {
@@ -222,6 +223,11 @@ export class LoginScene extends Phaser.Scene {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
     }
 
+    private scaleChange() {
+        this.mParentCon.scaleX = this.mWorld.uiScale;
+        this.mParentCon.scaleY = this.mWorld.uiScale;
+    }
+
     private checkOriention(orientation) {
         let width: number = 0;
         let height: number = 0;
@@ -232,6 +238,7 @@ export class LoginScene extends Phaser.Scene {
             width = this.scale.gameSize.width;
             height = this.scale.gameSize.height;
         }
+        this.scaleChange();
         this.mParentCon.x = width >> 1;
         this.mParentCon.y = (height >> 1) + 100;
     }

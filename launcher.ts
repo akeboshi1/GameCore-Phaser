@@ -13,9 +13,9 @@ export interface ILauncherConfig {
     server_addr: ServerAddress | undefined;
     game_id: string;
     virtual_world_id: string;
+    ui_scale?: number;
     readonly width: number | string;
     readonly height: number | string;
-    readonly ui_scale?: number;
     readonly game_created?: Function;
     readonly connection?: ConnectionService;
     readonly isEditor?: boolean;
@@ -23,6 +23,7 @@ export interface ILauncherConfig {
 
 export interface GameMain {
     resize(newWidth, newHeight);
+    scaleChange(scale: number);
 
     startFullscreen(): void;
     stopFullscreen(): void;
@@ -108,10 +109,10 @@ export class Launcher {
         this.mCompleteFunc = func;
     }
 
-    public onResize(width: number, height: number) {
+    public onResize(width: number, height: number, ui_scale?: number) {
         if (!this.world)
             return;
-
+        if (ui_scale) this.mConfig.ui_scale = ui_scale;
         this.world.resize(width, height);
     }
 

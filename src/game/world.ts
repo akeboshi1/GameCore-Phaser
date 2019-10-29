@@ -40,7 +40,7 @@ import { GamePauseScene } from "../scenes/gamepause";
 import {EditScene} from "../scenes/edit";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
-
+    public static SCALE_CHANGE: string = "scale_change";
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -130,9 +130,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mGame.scale.gameSize;
     }
 
+    public scaleChange(scale: number) {
+        this.emitter.emit(World.SCALE_CHANGE);
+    }
+
     public resize(width: number, height: number) {
         if (this.mGame) {
             this.mGame.scale.resize(width, height);
+        }
+        if (width < height) {
+            this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+        } else if (width > height) {
+            this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
         }
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);

@@ -1,7 +1,11 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { ItemDetailView } from "./ItemDetailView";
+import { ItemDetail } from "./ItemDetail";
 import { ILayerManager } from "../layer.manager";
+import { op_virtual_world, op_client } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+import { NinePatchButton } from "../components/ninepatch.button";
+import { IAbstractPanel } from "../abstractPanel";
 
 export class ItemDetailMediator extends BaseMediator {
     public static NAME: string = "ItemDetailMediator";
@@ -20,17 +24,34 @@ export class ItemDetailMediator extends BaseMediator {
         return false;
     }
 
+    public isShow(): boolean {
+        return this.mView ? this.mView.isShow() : false;
+    }
+
     public show(param?: any): void {
-        if (this.mView) {
+        if (this.mView && this.isShow()) {
             return;
         }
-        this.mView = new ItemDetailView(this.mScene, this.world);
+        this.mView = new ItemDetail(this.mScene, this.world);
         this.mView.show(param);
         this.mParam = param;
         this.mLayerManager.addToUILayer(this.mView);
         super.show(param);
+        this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
     }
     public update(param?: any): void {
         super.update(param);
+    }
+
+    private onBtnHandler(pointer, gameobject) {
+        if (!gameobject) return;
+        if (gameobject instanceof NinePatchButton) {
+            const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam[0];
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+            content.uiId = param.id;
+            content.componentId = (gameobject as NinePatchButton).getBtnData().node.id;
+            this.world.connection.send(pkt);
+        }
     }
 }

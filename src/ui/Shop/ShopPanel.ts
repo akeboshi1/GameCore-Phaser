@@ -5,7 +5,6 @@ import { ItemSlot } from "../bag/item.slot";
 import { ShopItemSlot } from "./shop.itemSlot";
 import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
-import { ShopMediator } from "./ShopMediator";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
@@ -110,13 +109,6 @@ export class ShopPanel extends Panel {
             this.refreshDataList();
         }
         super.init();
-    }
-
-    protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
-        if (this.mInitialized) {
-            return;
-        }
-        this.init();
     }
 
     private onClsLoadCompleteHandler() {

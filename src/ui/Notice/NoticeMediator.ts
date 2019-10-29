@@ -5,6 +5,7 @@ import { NoticePanel } from "./NoticePanel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { IMediator } from "../baseMediator";
+import { World } from "../../game/world";
 
 export class NoticeMediator extends PacketHandler implements IMediator {
     readonly world: WorldService;
@@ -21,7 +22,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
             connect.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_NOTICE, this.noticeHandler);
         }
-
+        this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
     }
 
     public setUiScale(value: number) {
@@ -38,6 +39,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     destroy() {
+        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         if (this.mNoticePanel) {
             this.mNoticePanel.destroy();
             this.mNoticePanel = null;
@@ -70,6 +72,10 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     update(param?: any): void {
+    }
+
+    private scaleChange() {
+        this.setUiScale(this.world.uiScale);
     }
 
     private noticeHandler(packet: PBpacket) {

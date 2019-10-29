@@ -4,7 +4,8 @@ import { Size } from "../utils/size";
 import { InputListener, InputManager } from "./input.service";
 import { IRoomService } from "../rooms/room";
 import { Direction } from "../rooms/element/element";
-import { op_def } from "pixelpai_proto";
+import { op_def, op_virtual_world } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
@@ -51,9 +52,6 @@ export class JoyStickManager implements InputManager {
     }
 
     public resize() {
-        // const size: Size = this.worldService.getSize();
-        // this.mParentcon.x = 150;
-        // this.mParentcon.y = size.height - 150;
         if (this.mJoyStick) {
             this.mJoyStick.resize();
         }
@@ -205,6 +203,11 @@ export class JoyStick {
             repeat: 0,
         });
         this.mbtn0.scaleX = this.mbtn0.scaleY = 1;
+        // f键值为70，点击该按钮交互
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+        const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+        content.keyCodes = [70];
+        this.mWorld.connection.send(pkt);
     }
 
     private dragUpdate(pointer, dragX, dragY) {
