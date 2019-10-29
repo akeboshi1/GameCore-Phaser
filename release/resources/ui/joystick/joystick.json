@@ -1,75 +1,55 @@
 {
-    "meta": {
-        "app": "Adobe Flash CS6",
-        "version": "12.0.0.481",
-        "image": "joystick.png",
-        "format": "RGBA8888",
-        "size": {
-            "w": 474,
-            "h": 668
-        },
-        "scale": "1"
-    },
-    "frames": {
-        "joystick_tab": {
-            "frame": {
-                "x": 194,
-                "y": 474,
-                "w": 152,
-                "h": 152
-            },
-            "rotated": false,
-            "trimmed": false,
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 152,
-                "h": 152
-            },
-            "sourceSize": {
-                "w": 152,
-                "h": 152
-            }
-        },
-        "btn": {
-            "frame": {
-                "x": 0,
-                "y": 474,
-                "w": 192,
-                "h": 192
-            },
-            "rotated": false,
-            "trimmed": false,
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 192,
-                "h": 192
-            },
-            "sourceSize": {
-                "w": 192,
-                "h": 192
-            }
-        },
-        "joystick_bg": {
-            "frame": {
-                "x": 0,
-                "y": 0,
-                "w": 472,
-                "h": 472
-            },
-            "rotated": false,
-            "trimmed": false,
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 472,
-                "h": 472
-            },
-            "sourceSize": {
-                "w": 472,
-                "h": 472
-            }
-        }
-    }
+	"frames": {
+		"joystick_bg.png": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 152,
+				"h": 152
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 152,
+				"h": 152
+			},
+			"sourceSize": {
+				"w": 152,
+				"h": 152
+			}
+		},
+		"joystick_tab.png": {
+			"frame": {
+				"x": 152,
+				"y": 0,
+				"w": 75,
+				"h": 75
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 75,
+				"h": 75
+			},
+			"sourceSize": {
+				"w": 75,
+				"h": 75
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 227,
+			"h": 152
+		},
+		"scale": "1"
+	}
 }
