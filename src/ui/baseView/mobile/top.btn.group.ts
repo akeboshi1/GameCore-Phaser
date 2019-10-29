@@ -18,13 +18,14 @@ export class TopBtnGroup extends Panel {
         this.mWorld = world;
     }
 
-    public changeOrientation(type: Phaser.Scale.Orientation) {
-        this.mOrientation = type;
+    public show(param?: any) {
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        super.show(param);
     }
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width - this.width / 2 - 20;
+        this.x = size.width - this.width / 2 - 30;
         this.y = this.height >> 1;
     }
 
@@ -77,7 +78,7 @@ export class TopBtnGroup extends Panel {
         });
         hei += this.mTurnBtn.height / 2 + 20;
         this.setSize(this.mTurnBtn.width, hei);
-        this.x = size.width - this.width / 2 - 20;
+        this.x = size.width - this.width / 2 - 30;
         this.y = this.height >> 1;
         super.init();
     }

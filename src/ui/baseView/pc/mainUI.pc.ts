@@ -167,19 +167,6 @@ export class MainUIPC extends Panel {
         super.preload();
     }
 
-    // private createPanel() {
-    //     this.mResStr = "bag";
-    //     this.mResPng = "ui/bag/bag.png";
-    //     this.mResJson = "ui/bag/bag.json";
-    //     if (!this.mScene.cache.obj.has(this.mResStr)) {
-    //         this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
-    //         this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-    //         this.mScene.load.start();
-    //     } else {
-    //         this.onLoadCompleteHandler();
-    //     }
-    // }
-
     protected init() {
         this.mWid = 0;
         this.mHei = 65;

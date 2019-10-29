@@ -23,6 +23,11 @@ export class BottomBtnGroup extends Panel {
         this.mWorld = world;
     }
 
+    public show(param?: any) {
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        super.show(param);
+    }
+
     // public changeOrientation(type: Phaser.Scale.Orientation) {
     // this.mOrientation = type;
     // }
@@ -34,7 +39,7 @@ export class BottomBtnGroup extends Panel {
                 this.x = size.width >> 1;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                this.x = size.width - this.width / 2 - 20;
+                this.x = size.width - this.width / 2 - 50;
                 break;
         }
         this.y = size.height - this.height / 2;

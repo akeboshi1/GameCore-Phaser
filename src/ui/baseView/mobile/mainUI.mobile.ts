@@ -55,10 +55,4 @@ export class MainUIMobile extends Panel {
         this.mBottomBtnGroup = null;
         super.destroy();
     }
-
-    // public changeOrientation(type: Phaser.Scale.Orientation) {
-    //     if (this.mTopBtnGroup) this.mTopBtnGroup.changeOrientation(type);
-    //     if (this.mRightBtnGroup) this.mRightBtnGroup.changeOrientation(type);
-    //     if (this.mBottomBtnGroup) this.mBottomBtnGroup.changeOrientation(type);
-    // }
 }

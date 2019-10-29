@@ -45,15 +45,16 @@ export class JoyStickManager implements InputManager {
         this.mKeyEvents.length = 0;
         this.mKeyEvents = null;
 
-        const size: Size = this.worldService.getSize();
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
         const scale = !this.mScale ? 1 : this.mScale;
         this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, this.mScale);
     }
 
     public resize() {
-        if (this.mJoyStick) {
-            this.mJoyStick.resize();
+        const size: Size = this.worldService.getSize();
+        if (this.mParentcon) {
+            this.mParentcon.x = this.mParentcon.width + 50;
+            this.mParentcon.y = size.height - this.mParentcon.height / 2 - 150;
         }
     }
 
@@ -142,14 +143,6 @@ export class JoyStick {
         this.mJoyListeners = list;
     }
 
-    public resize() {
-        const size: Size = this.mWorld.getSize();
-        if (this.mjoystickCon) {
-            this.mjoystickCon.x = this.bg.width * this.mScale >> 1;
-            this.mjoystickCon.y = size.height - this.bg.height / 2 * this.mScale;
-        }
-    }
-
     private onLoadCompleteHandler() {
         const size: Size = this.mWorld.getSize();
         this.bg = this.mScene.make.sprite(undefined, false);
@@ -168,8 +161,12 @@ export class JoyStick {
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
         this.btn.on("dragend", this.dragStop, this);
-        this.parentCon.setSize(size.width, size.height);
-        this.resize();
+        this.parentCon.setSize(this.bg.width, this.bg.height);
+
+        if (this.parentCon) {
+            this.parentCon.x = this.parentCon.width + 50;
+            this.parentCon.y = size.height - this.parentCon.height / 2 - 150;
+        }
     }
 
     private dragUpdate(pointer, dragX, dragY) {
