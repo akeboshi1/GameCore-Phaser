@@ -30,7 +30,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const launcher = TooqingCore.Launcher;
-            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, ui_scale:1 });
+            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, ui_scale: 1 });
             app.registerReload(window.reload);
             app.registerComplete(() => {
                 const loadingImg = document.getElementById('loading_img');

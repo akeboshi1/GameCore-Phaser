@@ -25,8 +25,8 @@ export class TopBtnGroup extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width - this.width / 2 - 30;
-        this.y = this.height >> 1;
+        this.x = size.width - this.width / 2 - 30 * this.mWorld.uiScale;
+        this.y = this.height / 2 + 10;
     }
 
     public hide() {
@@ -69,7 +69,7 @@ export class TopBtnGroup extends Panel {
         this.mBtnList = [];
         this.mBtnX = 0;
         const bgResKey: string = "btnGroup_bg.png";
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_top_expand.png");
+        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_top_expand.png", 1);
         this.mTurnBtn.x = this.mBtnX;
         this.add(this.mTurnBtn);
         this.mBtnX += -this.mTurnBtn.width >> 1;
@@ -78,8 +78,7 @@ export class TopBtnGroup extends Panel {
         });
         hei += this.mTurnBtn.height / 2 + 20;
         this.setSize(this.mTurnBtn.width, hei);
-        this.x = size.width - this.width / 2 - 30;
-        this.y = this.height >> 1;
+        this.resize();
         super.init();
     }
 

@@ -25,20 +25,20 @@ export class RightBtnGroup extends Panel {
     }
 
     public show(param?: any) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
         super.show(param);
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public resize() {
         const size: Size = this.mWorld.getSize();
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                this.y = size.height - this.height / 2 - 100;
-                this.x = size.width - 80;
+                this.y = size.height - this.height / 2 - 100 * this.mWorld.uiScale;
+                this.x = size.width - 70 * this.mWorld.uiScale;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                this.y = size.height / 2 + 100;
-                this.x = size.width - this.width / 2 - 50;
+                this.y = size.height / 2 + 100 * this.mWorld.uiScale;
+                this.x = size.width - this.width / 2 - 50 * this.mWorld.uiScale;
                 break;
         }
         this.refreshSlot();

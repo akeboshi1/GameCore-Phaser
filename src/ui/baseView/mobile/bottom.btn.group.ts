@@ -80,15 +80,15 @@ export class BottomBtnGroup extends Panel {
         this.add(this.mChatContainer);
         mWid += this.mChatContainer.width;
         mHei += this.mChatContainer.height;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], "btnGroup_bottom_expand.png");
+        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], "btnGroup_bottom_expand.png", 1);
         this.mTurnBtn.x = (mWid >> 1) + 30;
         this.mTurnBtn.y = mHei - this.mTurnBtn.height >> 1;
         this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
         this.add(this.mTurnBtn);
 
-        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_bag_icon.png");
+        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_bag_icon.png", 1);
         this.mBagBtn.x = this.mTurnBtn.x;
-        this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2;
+        this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
         this.mBagBtn.setPos(this.mBagBtn.x, this.mBagBtn.y);
         mWid += this.mBagBtn.width + 30;
         this.add(this.mBagBtn);
@@ -129,7 +129,7 @@ export class BottomBtnGroup extends Panel {
         for (let i: number = 0; i < len; i++) {
             const btn: IconBtn = this.mBtnList[i];
             const angle: number = (90 * (i + 2) / -180) * Math.PI;
-            const toX: number = this.mExpandBoo ? btn.getPos().x : this.mChatContainer.width / 2 - Math.abs(btn.getPos().y);
+            const toX: number = this.mExpandBoo ? btn.getPos().x : this.mChatContainer.width / 2 - Math.abs(btn.getPos().y) - 20;
             const toY: number = this.mExpandBoo ? btn.getPos().y : this.mTurnBtn.y;
             this.mScene.tweens.add({
                 targets: btn,

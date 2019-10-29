@@ -26,8 +26,8 @@ export class ItemDetail extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width >> 1;
-        this.y = size.height >> 1;
+        this.x = size.width - this.width >> 1;
+        this.y = size.height - this.height >> 1;
     }
 
     public show(param?: any) {
@@ -51,7 +51,7 @@ export class ItemDetail extends Panel {
             let btn: NinePatchButton;
             const len: number = data.button.length;
             let preY: number = 20;
-            const preX: number = this.mWid + 35;
+            const preX: number = this.mWid + 50;
             for (let i: number = 0; i < len; i++) {
                 const btnData: op_gameconfig_01.IButton = data.button[i];
                 btn = new NinePatchButton(this.mScene, 0, 0, 100, 40, "button_blue", btnData.text, {

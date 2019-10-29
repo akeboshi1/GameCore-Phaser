@@ -53,8 +53,9 @@ export class JoyStickManager implements InputManager {
     public resize() {
         const size: Size = this.worldService.getSize();
         if (this.mParentcon) {
-            this.mParentcon.x = this.mParentcon.width + 50;
-            this.mParentcon.y = size.height - this.mParentcon.height / 2 - 150;
+            this.mParentcon.x = this.mParentcon.width - 20 * this.mScale;
+            this.mParentcon.y = size.height - this.mParentcon.height / 2 - 55 * this.mScale;
+            this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         }
     }
 
@@ -164,8 +165,9 @@ export class JoyStick {
         this.parentCon.setSize(this.bg.width, this.bg.height);
 
         if (this.parentCon) {
-            this.parentCon.x = this.parentCon.width + 50;
-            this.parentCon.y = size.height - this.parentCon.height / 2 - 150;
+            this.parentCon.x = this.parentCon.width - 20 * this.mScale;
+            this.parentCon.y = size.height - this.parentCon.height / 2 - 55 * this.mScale;
+            this.parentCon.scaleX = this.parentCon.scaleY = this.mScale;
         }
     }
 
