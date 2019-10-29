@@ -1,4 +1,5 @@
 import {ElementDisplay} from "../display/element.display";
+import {Logger} from "../../utils/log";
 
 export abstract class BlockObject {
     protected mDisplay?: ElementDisplay;

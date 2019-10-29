@@ -19,6 +19,7 @@ export interface ILauncherConfig {
     readonly game_created?: Function;
     readonly connection?: ConnectionService;
     readonly isEditor?: boolean;
+    readonly osd?: string;
 }
 
 export interface GameMain {

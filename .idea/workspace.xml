@@ -2,39 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="显示场景中的物件">
-      <change afterPath="$PROJECT_DIR$/src/ui/ItemDetail/ItemDetail.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/dialogue/dialogueMediator.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/dialogue/dialogueView.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/c3829033e4f9f57213ca.networker.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/c3829033e4f9f57213ca.networker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/c3829033e4f9f57213ca.networker.js.LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/c3829033e4f9f57213ca.networker.js.LICENSE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js.LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/tooqing.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/tooqing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js.LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/resources/button.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/resources/button.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/button.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/button.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/joystick.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/joystick.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/world.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/world.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/gamepause.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/gamepause.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/loading.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/loading.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/login.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ItemDetail/ItemDetailMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ItemDetail/ItemDetailMediator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ItemDetail/ItemDetailView.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/Notice/NoticeMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Notice/NoticeMediator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/Shop/ShopPanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Shop/ShopPanel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/bag/bagHotkey/bagUIMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/bag/bagHotkey/bagUIMediator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/baseMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/baseMediator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/chat/chat.mediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/chat/chat.mediator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/chat/chat.panel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/chat/chat.panel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/components/ninepatch.button.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/components/ninepatch.button.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ui.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ui.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/const/brush.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/const/brush.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/block.object.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/block.object.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/animation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/animation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -466,15 +444,5 @@
     <MESSAGE value="显示、隐藏网格&#10;笔触设定&#10;镜头拖动" />
     <MESSAGE value="解析animation" />
     <option name="LAST_COMMIT_MESSAGE" value="解析animation" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/rooms/display/frames.display.ts</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

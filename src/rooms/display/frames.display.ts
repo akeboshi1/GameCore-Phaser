@@ -61,7 +61,9 @@ export class FramesDisplay extends DisplayObject implements ElementDisplay {
             const display = data.display;
             if (!display) {
                 Logger.error("display is undefined");
+                return;
             }
+            Logger.log("load atlas: ", CONFIG.osd + display.texturePath, ":", CONFIG.osd + display.dataPath);
             this.scene.load.atlas(data.gene, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
             // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
             //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);

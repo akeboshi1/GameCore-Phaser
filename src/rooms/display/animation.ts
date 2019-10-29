@@ -31,7 +31,7 @@ export class Animation implements IAnimationData {
         this.mName = ani.name;
         this.mFrameName = ani.frameName;
         this.mLoop = ani.loop;
-        this.mBaseLoc = new Phaser.Geom.Point(tmpBaseLoc[0], tmpBaseLoc[1]);
+        this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         if (typeof ani.collisionArea === "string") {
 
         } else {

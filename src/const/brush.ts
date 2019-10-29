@@ -1,3 +1,7 @@
+import {op_client} from "pixelpai_proto";
+import {FramesModel, IFramesModel} from "../rooms/display/frames.model";
+import {Animation} from "../rooms/display/animation";
+
 export enum BrushEnum {
     MOVE = "move",
     BRUSH = "brush",
@@ -8,6 +12,20 @@ export enum BrushEnum {
 
 export class Brush {
     private mMode: BrushEnum = BrushEnum.BRUSH;
+    private mFrameModel: IFramesModel;
+
+    setMouseFollow(content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW) {
+        const anis = content.animation;
+        this.mFrameModel = new FramesModel({ animations: {
+            defaultAnimationName: anis.name,
+            display: content.display,
+            animationData: [new Animation(content.animation)]
+        } });
+    }
+
+    get frameModel(): IFramesModel {
+        return this.mFrameModel;
+    }
 
     set mode(mode: BrushEnum) {
         this.mMode = mode;
