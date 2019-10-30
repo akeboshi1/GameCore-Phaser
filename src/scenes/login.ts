@@ -98,6 +98,9 @@ export class LoginScene extends Phaser.Scene {
         this.mInputBg_small.x = -105;
         this.mInputBg_small.y = 67;
 
+        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000" }, wordWrap: { width: 800, useAdvancedWrap: true } });
+        this.mSizeTF.setFontSize(20);
+
         this.mTabDic = new Map();
 
         this.mNameInputTxt = new InputText(this, 0, 0, 190, 15, {
@@ -230,6 +233,7 @@ export class LoginScene extends Phaser.Scene {
         this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
         this.mtxt4.on("pointerdown", this.changeAccount, this);
         this.scale.on("resize", this.checkSize, this);
+        this.checkSize(new Size(width, height));
     }
 
     public init(data: any) {
@@ -264,8 +268,20 @@ export class LoginScene extends Phaser.Scene {
         const width: number = size.width;
         const height: number = size.height;
         this.mParentCon.x = width >> 1;
-        this.mParentCon.y = (height >> 1) + 100 * this.mWorld.uiScale;
-        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        if (!this.mWorld.game.device.os.desktop) {
+            // this.mSizeTF.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt0.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt1.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt2.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt3.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt4.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt5.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mNameInputTxt.setStyle("fontSize", 14 * this.mWorld.uiScale);
+            // this.mPassWordInputTxt.setStyle("fontSize", 14 * this.mWorld.uiScale);
+            // this.mVerificationCodeTxt.setStyle("fontSize", 14 * this.mWorld.uiScale);
+            this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        }
+        this.mParentCon.y = this.mWorld.game.device.os.desktop === true ? (height >> 1) + 100 : (height >> 1) + 100 * this.mWorld.uiScale;
     }
 
     private changeID(data: ISelectCallItemData) {
@@ -297,8 +313,6 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt1.visible = !accountData ? true : false;
         this.mtxt2.visible = !accountData ? true : false;
         this.mtxt4.visible = !accountData ? false : true;
-        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000" }, wordWrap: { width: 800, useAdvancedWrap: true } });
-        this.mSizeTF.setFontSize(20);
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];

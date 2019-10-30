@@ -44,6 +44,7 @@ export class BottomBtnGroup extends Panel {
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.mChatText.setStyle({ "fontSize": Math.floor(30 * this.mWorld.uiScale) });
     }
 
     protected preload() {
@@ -70,7 +71,7 @@ export class BottomBtnGroup extends Panel {
         this.mChatText = this.mScene.make.text({
             width: chatBgWidth,
             height: chatBgHeight,
-            style: { font: "bold 18px YaHei", wordWrap: { width: 430, useAdvancedWrap: true } }
+            style: { font: "bold YaHei", fontSize: Math.floor(30 * this.mWorld.uiScale), wordWrap: { width: 430, useAdvancedWrap: true } }
         }, false);
         this.mChatText.setText("测试测试测试测试测试测试测试测试测试123123哈哈哈哈哈哈");
         this.mChatContainer.addAt(this.mChatText, 1);
