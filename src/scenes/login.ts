@@ -55,7 +55,7 @@ export class LoginScene extends Phaser.Scene {
         const accountData: string = localStorage.getItem("account");
         const logo: Phaser.GameObjects.Image = this.make.image(undefined, false);
         logo.setTexture(loginRes, "login_logo");
-        this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100);
+        this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100 * this.mWorld.uiScale);
 
         this.mBg = this.make.image(undefined, false);
 
@@ -208,9 +208,9 @@ export class LoginScene extends Phaser.Scene {
         this.mParentCon.add(this.mtxt4);
         this.mParentCon.add(this.mtxt5);
         this.mParentCon.add(this.combobox);
-
-        logo.x = - 30;
-        logo.y = (-logo.height / 2) - 80;
+        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        logo.x = - 30 * this.mWorld.uiScale;
+        logo.y = (-logo.height / 2) - 80 * this.mWorld.uiScale;
 
         this.mTab0.setInteractive();
         this.mTab1.setInteractive();
@@ -229,9 +229,6 @@ export class LoginScene extends Phaser.Scene {
         this.mEnterBtn.on("pointerdown", this.enterHandler, this);
         this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
         this.mtxt4.on("pointerdown", this.changeAccount, this);
-
-        // this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
-        this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
     }
 
@@ -263,40 +260,16 @@ export class LoginScene extends Phaser.Scene {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
     }
 
-    private scaleChange() {
-        this.mParentCon.scaleX = this.mWorld.uiScale;
-        this.mParentCon.scaleY = this.mWorld.uiScale;
-    }
-
-    private checkOriention(orientation) {
-        let width: number = 0;
-        let height: number = 0;
-        if (orientation === Phaser.Scale.PORTRAIT) {
-            width = this.scale.gameSize.width;
-            height = this.scale.gameSize.height;
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-            width = this.scale.gameSize.width;
-            height = this.scale.gameSize.height;
-        }
-        this.scaleChange();
-        this.mParentCon.x = width >> 1;
-        this.mParentCon.y = (height >> 1) + 100;
-    }
-
     private checkSize(size: Size) {
         const width: number = size.width;
         const height: number = size.height;
         this.mParentCon.x = width >> 1;
-        this.mParentCon.y = (height >> 1) + 100;
-        if (width > height) {
-            this.mWorld.game.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-        } else if (width < height) {
-            this.mWorld.game.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-        }
+        this.mParentCon.y = (height >> 1) + 100 * this.mWorld.uiScale;
+        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
     }
 
     private changeID(data: ISelectCallItemData) {
-        Logger.debug("============combobox 123" + data.text);
+        // Logger.debug("============combobox 123" + data.text);
     }
 
     private changeAccount() {
@@ -325,7 +298,7 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt2.visible = !accountData ? true : false;
         this.mtxt4.visible = !accountData ? false : true;
         this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000" }, wordWrap: { width: 800, useAdvancedWrap: true } });
-        this.mSizeTF.setFontSize(50);
+        this.mSizeTF.setFontSize(20);
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];

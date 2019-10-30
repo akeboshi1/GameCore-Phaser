@@ -53,8 +53,13 @@ export class JoyStickManager implements InputManager {
     public resize() {
         const size: Size = this.worldService.getSize();
         if (this.mParentcon) {
-            this.mParentcon.x = this.mParentcon.width - 20 * this.mScale;
-            this.mParentcon.y = size.height - this.mParentcon.height / 2 - 55 * this.mScale;
+            if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.mParentcon.x = 100 * this.mScale;
+                this.mParentcon.y = size.height - 100 * this.mScale;
+            } else {
+                this.mParentcon.x = 100 * this.mScale;
+                this.mParentcon.y = size.height - 300 * this.mScale;
+            }
             this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         }
     }
@@ -162,13 +167,8 @@ export class JoyStick {
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
         this.btn.on("dragend", this.dragStop, this);
-        this.parentCon.setSize(this.bg.width, this.bg.height);
-
-        if (this.parentCon) {
-            this.parentCon.x = this.parentCon.width - 20 * this.mScale;
-            this.parentCon.y = size.height - this.parentCon.height / 2 - 55 * this.mScale;
-            this.parentCon.scaleX = this.parentCon.scaleY = this.mScale;
-        }
+        this.parentCon.setSize(this.bg.width * this.mScale, this.bg.height * this.mScale);
+        (this.mWorld.inputManager as JoyStickManager).resize();
     }
 
     private dragUpdate(pointer, dragX, dragY) {

@@ -25,8 +25,9 @@ export class TopBtnGroup extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width - this.width / 2 - 30 * this.mWorld.uiScale;
-        this.y = this.height / 2 + 10;
+        this.x = size.width - 50 * this.mWorld.uiScale;
+        this.y = this.height / 2 + 10 * this.mWorld.uiScale;
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public hide() {

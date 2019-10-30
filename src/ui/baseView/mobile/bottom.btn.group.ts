@@ -39,10 +39,11 @@ export class BottomBtnGroup extends Panel {
                 this.x = size.width >> 1;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                this.x = size.width - this.width / 2 - 50;
+                this.x = size.width - (this.width / 2 + 40) * this.mWorld.uiScale;
                 break;
         }
-        this.y = size.height - this.height / 2;
+        this.y = size.height - 120 * this.mWorld.uiScale;
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     protected preload() {
@@ -67,13 +68,13 @@ export class BottomBtnGroup extends Panel {
         this.mChatBg.setTexture(this.mResKey, "btnGroup_chatBg.png");
         this.mChatContainer.addAt(this.mChatBg, 0);
         this.mChatText = this.mScene.make.text({
-            width: 430,
-            height: 230,
+            width: chatBgWidth,
+            height: chatBgHeight,
             style: { font: "bold 18px YaHei", wordWrap: { width: 430, useAdvancedWrap: true } }
         }, false);
         this.mChatText.setText("测试测试测试测试测试测试测试测试测试123123哈哈哈哈哈哈");
         this.mChatContainer.addAt(this.mChatText, 1);
-        this.mChatContainer.setSize(430, 230);
+        this.mChatContainer.setSize(chatBgWidth, chatBgHeight);
         this.mChatText.x = -this.mChatContainer.width >> 1;
         this.mChatText.y = -this.mChatContainer.height >> 1;
         this.mChatContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, chatBgWidth, chatBgHeight), Phaser.Geom.Rectangle.Contains);

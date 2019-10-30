@@ -42,6 +42,7 @@ export class RightBtnGroup extends Panel {
                 break;
         }
         this.refreshSlot();
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public hide() {

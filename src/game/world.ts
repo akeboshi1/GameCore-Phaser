@@ -85,6 +85,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    getConfig(): ILauncherConfig {
+        return this.mConfig;
+    }
+
     destroy(): void {
         this.mConnection.closeConnect();
         // todo
@@ -130,12 +134,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public resize(width: number, height: number) {
         if (this.mGame) {
-            if (width < height) {
-                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-                Logger.debug("portrait:", width, height);
-            } else if (width > height) {
-                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-                Logger.debug("landscape:", width, height);
+            if (!this.mGame.device.os.desktop) {
+                if (width < height) {
+                    this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
+                    this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+                    Logger.debug("portrait:", width, height);
+                } else if (width > height) {
+                    this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
+                    this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+                    Logger.debug("landscape:", width, height);
+                }
             }
             this.mGame.scale.resize(width, height);
         }
@@ -149,7 +157,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mInputManager) {
             this.mInputManager.resize(width, height);
         }
-        // TODO manager.resize
     }
 
     public startFullscreen() {
@@ -240,6 +247,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
+    }
+
+    private initUiScale() {
+        const width: number = this.mConfig.width;
+        const height: number = this.mConfig.height;
+        const baseWidth: number = this.mConfig.baseWidth;
+        const baseHeight: number = this.mConfig.baseHeight;
+        if (!this.mGame.device.os.desktop) {
+            if (width < height) {
+                this.mConfig.ui_scale = width / baseHeight * 2;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+            } else if (width > height) {
+                this.mConfig.ui_scale = width / baseWidth * 2;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+            }
+        }
     }
 
     private login() {
@@ -370,7 +393,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         };
         Object.assign(gameConfig, this.mConfig);
-        return this.mGame = new Game(gameConfig);
+        this.mGame = new Game(gameConfig);
+        this.initUiScale();
+        return this.mGame;
     }
 
     private createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
@@ -380,11 +405,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (this.mGame.device.os.desktop) {
-            this.mInputManager = new KeyBoardManager(this, keyEvents);
-        } else {
-            this.mInputManager = new JoyStickManager(this, keyEvents);
-        }
+        // if (this.mGame.device.os.desktop) {
+        //     this.mInputManager = new KeyBoardManager(this, keyEvents);
+        // } else {
+        this.mInputManager = new JoyStickManager(this, keyEvents);
+        // }
+        this.resize(this.mConfig.width, this.mConfig.height);
         this.gameCreated();
     }
 

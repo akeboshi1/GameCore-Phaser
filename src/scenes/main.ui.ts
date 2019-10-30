@@ -21,7 +21,7 @@ export class MainUIScene extends Phaser.Scene {
   public create() {
     this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17" } });
     this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
-    this.sizeTF.setFontSize(50);
+    this.sizeTF.setFontSize(20);
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
     } else {
@@ -35,7 +35,7 @@ export class MainUIScene extends Phaser.Scene {
   public update() {
     this.fps.setText(this.game.loop.actualFps.toFixed());
     const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-    this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation;
+    this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
   }
 
   getKey(): string {

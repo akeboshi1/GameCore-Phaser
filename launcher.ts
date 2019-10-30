@@ -15,6 +15,8 @@ export interface ILauncherConfig {
     ui_scale?: number;
     readonly width: number;
     readonly height: number;
+    readonly baseWidth: number;
+    readonly baseHeight: number;
     readonly game_created?: Function;
 }
 
@@ -55,6 +57,8 @@ export class Launcher {
         // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
         width: this.minWidth,
         height: this.minHeight,
+        baseWidth: this.maxWidth,
+        baseHeight: this.maxHeight,
         ui_scale: 1
     };
 

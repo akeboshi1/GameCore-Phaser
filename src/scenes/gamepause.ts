@@ -25,13 +25,9 @@ export class GamePauseScene extends Phaser.Scene {
         this.bg.fillStyle(0, .8);
         this.bg.fillRect(0, 0, width, height);
         this.pauseImg = this.add.image(width >> 1, height >> 1, "gamepause.png");
-        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale;
         this.tipTF = this.add.text(width - 240 >> 1, height - 50, "点击任意位置开始游戏", { font: "30px Tahoma" });
-        // this.mWorld.game.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
-        this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
-        // tipTF.setFontFamily("Tahoma");
-        // tipTF.setFontSize(15);
+        this.checkSize(new Size(width, height));
     }
 
     public awake() {
@@ -52,12 +48,12 @@ export class GamePauseScene extends Phaser.Scene {
         this.bg.clear();
         this.bg.fillStyle(0, .8);
         this.bg.fillRect(0, 0, width, height);
-        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale;
+        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mWorld.uiScale * .7;
         this.pauseImg.x = width >> 1;
         this.pauseImg.y = height >> 1;
         this.tipTF.scaleX = this.tipTF.scaleY = this.mWorld.uiScale;
-        this.tipTF.x = width - 240 >> 1;
-        this.tipTF.y = height - 50;
+        this.tipTF.x = width - 280 * this.mWorld.uiScale >> 1;
+        this.tipTF.y = height - 50 * this.mWorld.uiScale;
     }
 
 }

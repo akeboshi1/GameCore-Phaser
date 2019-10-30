@@ -9,6 +9,7 @@ import { UiManager } from "../ui/ui.manager";
 import { InputManager } from "./input.service";
 import { Account } from "./account";
 import { HttpService } from "../net/http.service";
+import { ILauncherConfig } from "../../launcher";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -24,6 +25,7 @@ export interface WorldService {
     readonly emitter: Phaser.Events.EventEmitter;
 
     getSize(): Size;
+    getConfig(): ILauncherConfig;
 
     changeRoom(room: IRoomService);
 
