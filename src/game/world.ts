@@ -405,11 +405,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        // if (this.mGame.device.os.desktop) {
-        //     this.mInputManager = new KeyBoardManager(this, keyEvents);
-        // } else {
-        this.mInputManager = new JoyStickManager(this, keyEvents);
-        // }
+        if (this.mGame.device.os.desktop) {
+            this.mInputManager = new KeyBoardManager(this, keyEvents);
+        } else {
+            this.mInputManager = new JoyStickManager(this, keyEvents);
+        }
         this.resize(this.mConfig.width, this.mConfig.height);
         this.gameCreated();
     }
