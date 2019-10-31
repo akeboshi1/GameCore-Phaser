@@ -77,6 +77,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return player;
     }
 
+    public remove(id: number): void {
+        const element = this.mPlayerMap.get(id);
+        if (element) {
+            this.mPlayerMap.delete(id);
+            element.destroy();
+            if (this.roomService) {
+                this.roomService.blocks.remove(element);
+            }
+        }
+    }
+
     get camera(): Phaser.Cameras.Scene2D.Camera {
         return this.mRoom.cameraService.camera;
     }

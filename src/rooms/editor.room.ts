@@ -7,20 +7,19 @@ import {Brush, BrushEnum} from "../const/brush";
 import {TerrainManager} from "./terrain/terrain.manager";
 import {Room} from "./room";
 import {LayerManager} from "./layer/layer.manager";
-import {PlayScene} from "../scenes/play";
 import {ViewblockManager} from "./cameras/viewblock.manager";
 import {EditScene} from "../scenes/edit";
 import {MouseFollow} from "./editor/mouse.follow";
 import {FramesDisplay} from "./display/frames.display";
-import {DragonbonesModel} from "./display/dragonbones.model";
 import {TerrainDisplay} from "./display/terrain.display";
 import {SelectedElement} from "./editor/selected.element";
+import {DisplayObject} from "./display/display.object";
 
 export class EditorRoom extends Room {
-    clockSyncComplete: boolean;
     private mBrush: Brush = new Brush();
     private mMouseFollow: MouseFollow;
-    private mSelectedElement: SelectedElement;
+    private mSelectedElementEffect: SelectedElement;
+    private mSelectedObject: DisplayObject;
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
@@ -91,7 +90,11 @@ export class EditorRoom extends Room {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
         this.mBrush.mode = <BrushEnum> mode.mode;
         if (this.mMouseFollow) this.mMouseFollow.destroy();
-        if (this.mSelectedElement) this.mSelectedElement.remove();
+        if (this.mSelectedElementEffect) this.mSelectedElementEffect.remove();
+        if (this.mSelectedObject) {
+            this.mSelectedObject.hideRefernceArea();
+            this.mSelectedObject = undefined;
+        }
     }
 
     private onAlignGridHandler(packet: PBpacket) {
@@ -107,9 +110,8 @@ export class EditorRoom extends Room {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW = packet.content;
         this.brush.setMouseFollow(content);
         if (this.mScene) {
-            if (!this.mMouseFollow) this.mMouseFollow = new MouseFollow(this.mScene);
+            if (!this.mMouseFollow) this.mMouseFollow = new MouseFollow(this.mScene, this);
             this.mMouseFollow.setDisplay(this.brush.frameModel);
-            this.layerManager.addToSceneToUI(this.mMouseFollow.display);
         }
     }
 
@@ -126,14 +128,29 @@ export class EditorRoom extends Room {
         if (!com) {
             return;
         }
-        if (com instanceof FramesDisplay || com instanceof DragonbonesModel) {
-            if (com instanceof TerrainDisplay) return;
-            if (!this.mSelectedElement) {
-                this.mSelectedElement = new SelectedElement(this.mScene, this.mLayManager);
-            }
-            Logger.log("selected element: ", this.mSelectedElement);
-            this.mSelectedElement.setElement(<FramesDisplay> com);
+        switch (this.mBrush.mode) {
+            case BrushEnum.SELECT:
+                this.selectedElement(<DisplayObject> com);
+                break;
+            case BrushEnum.ERASER:
+
+                break;
         }
+    }
+
+    private selectedElement(com: DisplayObject) {
+        if (!(com instanceof DisplayObject)) {
+            return;
+        }
+        if (com instanceof TerrainDisplay) {
+            return;
+        }
+        if (!this.mSelectedElementEffect) {
+            this.mSelectedElementEffect = new SelectedElement(this.mScene, this.layerManager);
+        }
+        this.mSelectedObject = com;
+        com.showRefernceArea();
+        this.mSelectedElementEffect.setElement(<FramesDisplay> com);
     }
 
     private onPointerMoveHandler(pointer) {
@@ -143,6 +160,16 @@ export class EditorRoom extends Room {
         switch (this.mBrush.mode) {
             case BrushEnum.MOVE:
                 this.moveCameras(pointer);
+                break;
+            case BrushEnum.SELECT:
+                if (!this.mSelectedObject) {
+                    return;
+                }
+                if (this.mSelectedElementEffect) {
+                    this.mSelectedElementEffect.setPosition();
+                }
+                this.mSelectedObject.x = pointer.x;
+                this.mSelectedObject.y = pointer.y;
                 break;
         }
     }

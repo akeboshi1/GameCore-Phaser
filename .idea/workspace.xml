@@ -2,17 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="显示场景中的物件">
-      <change afterPath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rooms/editor/reference.area.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rooms/editor/reference.effect.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/1757c9fe8a9c47fc605f.networker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/1757c9fe8a9c47fc605f.networker.js.LICENSE" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/const/brush.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/const/brush.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/block.object.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/block.object.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/display/animation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/animation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/display.object.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/display.object.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/element.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/element.display.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/pos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/pos.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -81,6 +81,11 @@ export class Terrain extends BlockObject implements IElement {
     public showEffected() {
     }
 
+    public removeMe(): void {
+        if (!this.mElementManager) return;
+        this.mElementManager.remove(this.id);
+    }
+
     protected createDisplay(): ElementDisplay {
         if (!this.mDisplayInfo) {
             Logger.error("displayinfo does not exist, Create display failed");
@@ -91,7 +96,7 @@ export class Terrain extends BlockObject implements IElement {
         }
         const scene = this.mElementManager.scene;
         if (scene) {
-            this.mDisplay = new TerrainDisplay(scene);
+            this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService);
             // this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;

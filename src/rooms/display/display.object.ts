@@ -4,6 +4,12 @@ import {DynamicSprite} from "../../ui/components/dynamic.sprite";
 import {DynamicImage} from "../../ui/components/dynamic.image";
 import { op_def } from "pixelpai_proto";
 import {Url} from "../../utils/resUtil";
+import {ReferenceArea} from "../editor/reference.area";
+import {IRoomService} from "../room";
+import {Pos} from "../../utils/pos";
+import {ElementDisplay} from "./element.display";
+import {IFramesModel} from "./frames.model";
+import {IDragonbonesModel} from "./dragonbones.model";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -12,39 +18,80 @@ export enum DisplayField {
     FLAG
 }
 
-export class DisplayObject extends Phaser.GameObjects.Container {
+export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
+    /**
+     * 实际透明度，避免和tween混淆
+     */
+    protected mAlpha: number = 1;
+
+    protected mBaseLoc: Phaser.Geom.Point;
+    protected mCollisionArea: number[][];
+    protected mOriginPoint: Phaser.Geom.Point;
+    protected mRoomService: IRoomService;
     protected mFlagContainer: Phaser.GameObjects.Container;
     protected mNickname: Phaser.GameObjects.Text;
     protected mBadges: DynamicImage[];
     protected mBackEffect: DynamicSprite;
     protected mFrontEffect: DynamicSprite;
-    constructor(scene: Phaser.Scene) {
+    protected mReferenceArea: ReferenceArea;
+    constructor(scene: Phaser.Scene, roomService: IRoomService) {
         super(scene);
+        this.mRoomService = roomService;
+    }
+
+    public changeAlpha(val?: number) {
+        if (this.mAlpha === val) {
+            return;
+        }
+        this.alpha = val;
+        this.mAlpha = val;
+    }
+
+    public removeFromParent(): void {
+        if (this.parentContainer) {
+            this.parentContainer.remove(this);
+        }
+    }
+
+    fadeIn(callback?: () => void) {
+    }
+
+    fadeOut(callback?: () => void) {
+    }
+
+    load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
+    }
+
+    play(animationName: string, field?: DisplayField) {
     }
 
     public destroy(fromScene?: boolean): void {
         if (this.mFlagContainer) {
-
             if (this.mNickname) {
                 this.mNickname.destroy();
-                this.mNickname = null;
+                this.mNickname = undefined;
             }
 
             if (this.mBackEffect) {
                 this.mBackEffect.destroy();
-                this.mBackEffect = null;
+                this.mBackEffect = undefined;
             }
 
             if (this.mFrontEffect) {
                 this.mFrontEffect.destroy();
-                this.mFrontEffect = null;
+                this.mFrontEffect = undefined;
             }
 
             this.clearBadges();
 
             this.mFlagContainer.destroy();
-            this.mFlagContainer = null;
+            this.mFlagContainer = undefined;
         }
+        if (this.mReferenceArea) {
+            this.mReferenceArea.destroy();
+            this.mReferenceArea = undefined;
+        }
+        // this.removeAll(true);
         super.destroy(fromScene);
     }
 
@@ -65,6 +112,22 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             badge.load(Url.getOsdRes(card.thumbnail), this, this.layouFlag);
             this.flagContainer.add(badge);
             this.mBadges.push(badge);
+        }
+    }
+
+    public showRefernceArea() {
+        if (!this.mReferenceArea) {
+            this.mReferenceArea = new ReferenceArea(this.scene, this.mRoomService);
+        }
+        if (!this.mCollisionArea || this.mCollisionArea.length <= 0) return;
+        this.mReferenceArea.draw(this.mCollisionArea, this.mOriginPoint);
+        this.addAt(this.mReferenceArea, 0);
+    }
+
+    public hideRefernceArea() {
+        if (this.mReferenceArea) {
+            this.mReferenceArea.destroy();
+            this.mReferenceArea = undefined;
         }
     }
 
@@ -117,4 +180,15 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         return this.mFlagContainer;
     }
 
+    get baseLoc(): Phaser.Geom.Point {
+        return this.mBaseLoc || new Phaser.Geom.Point();
+    }
+
+    get sortX(): number {
+        return this.x;
+    }
+
+    get sortY(): number {
+        return this.y;
+    }
 }

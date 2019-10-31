@@ -15,33 +15,12 @@ export enum DisplayField {
 /**
  * 序列帧显示对象
  */
-export class FramesDisplay extends DisplayObject implements ElementDisplay {
-    protected mBaseLoc: Phaser.Geom.Point;
+export class FramesDisplay extends DisplayObject {
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mHasAnimation: boolean = false;
-    // protected mSortRectangle: SortRectangle = new SortRectangle();
-
-    /**
-     * 实际透明度，避免和tween混淆
-     */
-    protected mAlpha: number = 1;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
-
-    public removeFromParent(): void {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
-    }
-
-    public changeAlpha(val?: number) {
-        if (this.mAlpha === val) {
-            return;
-        }
-        this.alpha = val;
-        this.mAlpha = val;
-    }
 
     public setPosition(x?: number, y?: number, z?: number): this {
         super.setPosition(x, y, z);
@@ -63,7 +42,6 @@ export class FramesDisplay extends DisplayObject implements ElementDisplay {
                 Logger.error("display is undefined");
                 return;
             }
-            Logger.log("load atlas: ", CONFIG.osd + display.texturePath, ":", CONFIG.osd + display.dataPath);
             this.scene.load.atlas(data.gene, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
             // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
             //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
@@ -181,13 +159,12 @@ export class FramesDisplay extends DisplayObject implements ElementDisplay {
         if (!sprite || !data || !data.animations) return;
         const animations = data.getAnimations(aniName);
         if (!animations) return;
-        // const ani: IAnimationData = animations.find((aniData) => aniData.name === aniName);
-        // if (!ani || !ani.baseLoc) return;
-        // const tmp = ani.baseLoc.split(",");
         this.mBaseLoc = animations.baseLoc;
+        this.mCollisionArea = animations.collisionArea;
+        this.mOriginPoint = animations.originPoint;
+
         sprite.x = this.baseLoc.x;
         sprite.y = this.baseLoc.y;
-        // this.mSortRectangle.setArea(animations.collisionArea);
     }
 
     private createDisplay(field: DisplayField) {
@@ -215,22 +192,5 @@ export class FramesDisplay extends DisplayObject implements ElementDisplay {
 
         this.mSprites.set(field, sprite);
         this.emit("initialized");
-    }
-
-    get baseLoc(): Phaser.Geom.Point {
-        return this.mBaseLoc || new Phaser.Geom.Point();
-    }
-
-    get sortRectangle(): SortRectangle {
-        // return this.mSortRectangle;
-        return undefined;
-    }
-
-    get sortX(): number {
-        return this.x;
-    }
-
-    get sortY(): number {
-        return this.y;
     }
 }

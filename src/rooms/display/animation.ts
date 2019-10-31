@@ -1,5 +1,6 @@
 import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
 import { op_gameconfig } from "pixelpai_proto";
+import {Logger} from "../../utils/log";
 
 export interface IAnimationData {
     name: string;
@@ -9,6 +10,7 @@ export interface IAnimationData {
     baseLoc: Phaser.Geom.Point;
     collisionArea?: number[][];
     walkableArea?: number[][];
+    originPoint: Phaser.Geom.Point;
 }
 
 export class Animation implements IAnimationData {
@@ -19,6 +21,7 @@ export class Animation implements IAnimationData {
     protected mName: string;
     protected mCollisionArea: number[][];
     protected mWalkableArea: number[][];
+    protected mOriginPoint: Phaser.Geom.Point;
 
     constructor(ani: AnimationDataNode | op_gameconfig.IAnimation) {
         let tmpBaseLoc = null;
@@ -32,8 +35,12 @@ export class Animation implements IAnimationData {
         this.mFrameName = ani.frameName;
         this.mLoop = ani.loop;
         this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
+        const origin = ani.originPoint;
+        if (Array.isArray(origin)) {
+            this.mOriginPoint = new Phaser.Geom.Point(ani.originPoint[0], ani.originPoint[1]);
+        }
         if (typeof ani.collisionArea === "string") {
-
+            this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&");
         } else {
             this.mCollisionArea = ani.collisionArea;
         }
@@ -43,6 +50,16 @@ export class Animation implements IAnimationData {
         } else {
             this.mWalkableArea = ani.walkableArea;
         }
+    }
+
+    private stringToArray(string: string, fristJoin: string, lastJoin: string) {
+        const tmp = string.split(lastJoin);
+        const result = [];
+        for (const ary of tmp) {
+            const tmpAry = ary.split(fristJoin);
+            result.push(tmpAry.map((value) => parseInt(value, 10)));
+        }
+        return result;
     }
 
     get baseLoc(): Phaser.Geom.Point {
@@ -63,5 +80,13 @@ export class Animation implements IAnimationData {
 
     get name(): string {
         return this.mName;
+    }
+
+    get collisionArea(): number[][] {
+        return this.mCollisionArea;
+    }
+
+    get originPoint(): Phaser.Geom.Point {
+        return this.mOriginPoint;
     }
 }

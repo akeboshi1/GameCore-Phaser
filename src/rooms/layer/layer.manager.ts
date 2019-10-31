@@ -146,8 +146,8 @@ export class LayerManager {
             this.mSurfaceLayer.sort("depth");
             this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
                 // Logger.debug(displayA, displayB);
-                const sortA = displayA.sortRectangle;
-                const sortB = displayB.sortRectangle;
+                // const sortA = displayA.sortRectangle;
+                // const sortB = displayB.sortRectangle;
 
                 // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);

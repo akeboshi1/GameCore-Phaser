@@ -2,7 +2,7 @@ import { op_gameconfig } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
-import { IAnimationData } from "./animation";
+import {Animation, IAnimationData} from "./animation";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -85,7 +85,7 @@ export class FramesModel implements IFramesModel {
         this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }
 
-    private setAnimationData(aniDatas: AnimationDataNode[]) {
+    private setAnimationData(aniDatas: Animation[]) {
         if (!aniDatas) {
             Logger.error(`${this.id} animationData does not exist`);
             return;
@@ -100,8 +100,9 @@ export class FramesModel implements IFramesModel {
                 frameRate: aniData.frameRate,
                 loop: aniData.loop,
                 baseLoc: new Phaser.Geom.Point(baseLoc.x, baseLoc.y),
-                walkableArea: aniData.walkableArea || [],
-                collisionArea: aniData.collisionArea || []
+                // walkableArea: aniData.walkableArea || [],
+                collisionArea: aniData.collisionArea || [],
+                originPoint: aniData.originPoint
             };
             this.animations.set(ani.name, ani);
         }

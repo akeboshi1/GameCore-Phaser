@@ -5,6 +5,7 @@ import { Logger } from "../../utils/log";
 import { IFramesModel } from "./frames.model";
 import { SortRectangle } from "../../utils/sort.rectangle";
 import { DisplayObject } from "./display.object";
+import {IRoomService} from "../room";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -78,21 +79,15 @@ export enum AvatarPartType {
 export class DragonbonesDisplay extends DisplayObject implements ElementDisplay {
 
     public mDisplayInfo: IDragonbonesModel | undefined;
-    public frontEffDisplayInfo: IFramesModel;
-    public backEffDisplayInfo: IFramesModel;
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
     protected mActionName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
-    protected mSortRectangle: SortRectangle = new SortRectangle();
     private mPreDirection: number;
     private replaceArr = [];
     private misloading: boolean = false;
     private mloadingList: any[] = [];
-    private mFrontEffSprite: Phaser.GameObjects.Sprite;
-    private mBackEffSprite: Phaser.GameObjects.Sprite;
-    private mBaseLoc = new Phaser.Geom.Point();
 
     /**
      * 龙骨显示对象包围框
@@ -100,8 +95,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private mClickCon: Phaser.GameObjects.Container;
     private mClickGraphics: Phaser.GameObjects.Graphics;
 
-    constructor(protected scene: Phaser.Scene) {
-        super(scene);
+    constructor(protected scene: Phaser.Scene, roomService: IRoomService) {
+        super(scene, roomService);
     }
 
     get GameObject(): DisplayObject {
@@ -112,53 +107,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // this.alpha = val;
     }
 
-    public removeFromParent(): void {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
-    }
-
     public load(display: IDragonbonesModel) {
         this.mDisplayInfo = display;
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
         if (this.scene.cache.obj.has(this.dragonBonesName)) { }
-    }
-
-    public loadEff(displayInfo: IFramesModel, isBack: boolean = false) {
-        let loadDisplayInfo: IFramesModel;
-        let effKey: string;
-        loadDisplayInfo = displayInfo;
-        if (!loadDisplayInfo) return;
-        if (!isBack) {
-            this.frontEffDisplayInfo = loadDisplayInfo;
-            effKey = this.frontEffKey;
-        } else {
-            this.backEffDisplayInfo = loadDisplayInfo;
-            effKey = this.backEffKey;
-        }
-        if (effKey) {
-            if (this.scene.cache.obj.has(effKey)) {
-                if (!isBack) {
-                    this.onLoadFrontEffCompleteHandler();
-                } else {
-                    this.onLoadBackEffCompleteHandler();
-                }
-            } else {
-                const display = loadDisplayInfo.display;
-                if (display) {
-                    this.scene.load.atlas(effKey, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
-                    if (!isBack) {
-                        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadFrontEffCompleteHandler, this);
-                    } else {
-                        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadBackEffCompleteHandler, this);
-                    }
-                    this.scene.load.start();
-                } else {
-                    Logger.error("display is undefined");
-                }
-            }
-        }
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -183,22 +136,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             Logger.debug("play:" + dir);
             this.mPreDirection = dir;
         }
-    }
-
-    public playFrontEff(animationName: string) {
-        this.makeEffAnimations(animationName, false);
-        this.mFrontEffSprite.on("animationcomplete", () => {
-            this.mFrontEffSprite.destroy();
-        });
-        this.mFrontEffSprite.play(`${this.frontEffDisplayInfo.type}_${animationName}`);
-    }
-
-    public playBackEff(animationName: string) {
-        this.makeEffAnimations(animationName, true);
-        this.mBackEffSprite.on("animationcomplete", () => {
-            this.mBackEffSprite.destroy();
-        });
-        this.mBackEffSprite.play(`${this.frontEffDisplayInfo.type}_${animationName}`);
     }
 
     public fadeIn(callback?: () => void) {
@@ -319,28 +256,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     protected setScaleStageX(val: number) {
         if (this.mArmatureDisplay) this.mArmatureDisplay.scaleX = val;
-    }
-
-    private onLoadFrontEffCompleteHandler() {
-        if (!this.mFrontEffSprite) {
-            this.mFrontEffSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
-            this.addAt(this.mFrontEffSprite, 2);
-        } else {
-            this.mFrontEffSprite.setTexture(this.frontEffKey);
-        }
-        this.playFrontEff(this.frontEffDisplayInfo.animationName);
-        this.emit("frontEffinitialized");
-    }
-
-    private onLoadBackEffCompleteHandler() {
-        if (!this.mBackEffSprite) {
-            this.mBackEffSprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
-            this.addAt(this.mBackEffSprite, 0);
-        } else {
-            this.mBackEffSprite.setTexture(this.backEffKey);
-        }
-        this.playBackEff(this.backEffDisplayInfo.animationName);
-        this.emit("backEffinitialized");
     }
 
     private clearArmature() {
@@ -847,7 +762,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                 if (img.texture.key === name) {
                     slot.replaceDisplay(img);
-                    // Logger.log("success:" + resKey);
                 }
                 this.misloading = false;
                 this.startLoad();
@@ -855,41 +769,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (e: Event) => {
                 this.misloading = false;
                 this.startLoad();
-                // Logger.log("fail:" + nextLoad[1]);
             }, this);
             this.scene.load.image(partName, partUrl);
             this.scene.load.start();
         } else {
             this.misloading = false;
-            // Logger.log("load complete");
-        }
-    }
-    private makeEffAnimations(name: string, isBack: boolean = false) {
-        let displayInfo: IFramesModel;
-        if (isBack) {
-            displayInfo = this.frontEffDisplayInfo;
-        } else {
-            displayInfo = this.backEffDisplayInfo;
-        }
-        if (displayInfo) {
-            const animations = displayInfo.animations;
-            const resKey = isBack ? this.frontEffKey : this.backEffKey;
-            const animation = displayInfo.getAnimations(name);
-            if (!animation) {
-                return;
-            }
-            const frames = [];
-            animation.frameName.forEach((frame) => {
-                frames.push({ key: resKey, frame });
-            });
-            const config: Phaser.Types.Animations.Animation = {
-                key: displayInfo.type + "_" + animation.name,
-                frames,
-                frameRate: animation.frameRate,
-                repeat: -1,
-            };
-            this.scene.anims.create(config);
-            // }
         }
     }
 
@@ -909,40 +793,5 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     get dragonBonesName(): string {
         return this.mDragonbonesName;
-    }
-
-    get baseLoc(): Phaser.Geom.Point {
-        return this.mBaseLoc;
-    }
-    get frontEffKey(): string | undefined {
-        if (!this.frontEffDisplayInfo) {
-            return;
-        }
-        const display = this.frontEffDisplayInfo.display;
-        if (display && display.texturePath && display.dataPath) {
-            return display.texturePath + display.dataPath;
-        }
-    }
-
-    get backEffKey(): string | undefined {
-        if (!this.backEffDisplayInfo) {
-            return;
-        }
-        const display = this.backEffDisplayInfo.display;
-        if (display && display.texturePath && display.dataPath) {
-            return display.texturePath + display.dataPath;
-        }
-    }
-
-    get sortRectangle() {
-        return this.mSortRectangle;
-    }
-
-    get sortX(): number {
-        return this.x;
-    }
-
-    get sortY(): number {
-        return this.y;
     }
 }

@@ -13,7 +13,7 @@ export interface IElementManager {
     readonly roomService: IRoomService;
     readonly scene: Phaser.Scene | undefined;
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
-
+    remove(id: number): void;
     destroy();
 }
 
@@ -50,7 +50,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return element;
     }
 
-    public removeFromMap(id: number) {
+    public remove(id: number) {
         const element = this.mElements.get(id);
         if (element) {
             this.mElements.delete(id);
@@ -66,7 +66,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.connection.removePacketListener(this);
         }
         if (!this.mElements) return;
-        this.mElements.forEach((element) => this.removeFromMap(element.id));
+        this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
     }
 
@@ -152,7 +152,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const id of ids) {
-            this.removeFromMap(id);
+            this.remove(id);
         }
     }
 

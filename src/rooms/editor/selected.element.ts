@@ -26,6 +26,7 @@ export class SelectedElement {
         if (this.mEffecte.parentContainer) {
             this.mEffecte.parentContainer.remove(this.mEffecte);
         }
+        this.mDisplay = null;
     }
 
     setPosition() {
@@ -35,8 +36,6 @@ export class SelectedElement {
         const baseLoc = this.mDisplay.baseLoc;
         this.mEffecte.x = this.mDisplay.x + baseLoc.x;
         this.mEffecte.y = this.mDisplay.y + baseLoc.y;
-        Logger.log("xy: ", this.mDisplay.x, baseLoc.x, this.mDisplay.y, baseLoc.y);
-        Logger.log("ki", this.mEffecte.x, this.mEffecte.y);
     }
 
     destroy() {

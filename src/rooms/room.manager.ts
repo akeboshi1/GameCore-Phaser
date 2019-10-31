@@ -26,7 +26,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         super();
         this.mWorld = world;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
-        this.addHandlerFun(op_client.OPCODE._OP_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
     }
 
     public addPackListener() {
@@ -122,7 +122,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private onEnterEditor(packet: PBpacket) {
-        const content: op_client.IOP_REQ_CLIENT_CHANGE_TO_EDITOR_MODE = packet.content;
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE = packet.content;
         const room = new EditorRoom(this);
         room.enter(content.scene);
         this.mCurRoom = room;

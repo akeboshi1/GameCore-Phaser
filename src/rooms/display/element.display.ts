@@ -6,7 +6,6 @@ import {op_def} from "pixelpai_proto";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
     readonly baseLoc: Phaser.Geom.Point;
-    readonly sortRectangle: SortRectangle;
 
     sortX: number;
     sortY: number;
@@ -15,8 +14,6 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
 
     play(animationName: string, field?: DisplayField);
 
-    setPosition(x?: number, y?: number, z?: number);
-
     removeFromParent(): void;
 
     fadeIn(callback?: () => void);
@@ -24,6 +21,7 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
 
     showNickname(val: string);
     setDisplayBadges(cards: op_def.IBadgeCard[]);
+    showRefernceArea();
     showEffect();
 
     destroy(): void;

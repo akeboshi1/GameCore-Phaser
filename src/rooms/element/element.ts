@@ -57,6 +57,8 @@ export interface IElement {
     fadeAlpha(alpha: number): void;
 
     showEffected();
+
+    removeMe(): void;
 }
 
 export interface MoveData {
@@ -236,6 +238,11 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) this.mDisplay.showEffect();
     }
 
+    public removeMe(): void {
+        if (!this.mElementManager) return;
+        this.mElementManager.remove(this.id);
+    }
+
     public destroy() {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();
@@ -304,9 +311,9 @@ export class Element extends BlockObject implements IElement {
         const scene = this.mElementManager.scene;
         if (scene) {
             if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
-                this.mDisplay = new DragonbonesDisplay(scene);
+                this.mDisplay = new DragonbonesDisplay(scene, this.mElementManager.roomService);
             } else {
-                this.mDisplay = new FramesDisplay(scene);
+                this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService);
             }
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);

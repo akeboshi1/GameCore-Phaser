@@ -20,6 +20,7 @@ import IActor = op_client.IActor;
 import { MapEntity } from "./map/map.entity";
 import { ActorEntity } from "./player/Actor.entity";
 import { PlayerModel } from "./player/player.model";
+import {Element, IElement} from "./element/element";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -222,12 +223,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {
         this.layerManager.addToUI(element);
-    }
-
-    public removeElement(element: ElementDisplay) {
-        if (element) {
-            element.removeFromParent();
-        }
     }
 
     public resize(width: number, height: number) {

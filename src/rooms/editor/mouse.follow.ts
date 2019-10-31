@@ -1,9 +1,13 @@
 import {IFramesModel} from "../display/frames.model";
 import {FramesDisplay} from "../display/frames.display";
+import {LayerManager} from "../layer/layer.manager";
+import {IRoomService} from "../room";
+import {Logger} from "../../utils/log";
 
 export class MouseFollow {
     private mDisplay: FramesDisplay;
-    constructor(private mScene: Phaser.Scene) { }
+    private mLayerManager: LayerManager;
+    constructor(private mScene: Phaser.Scene, private mRoomService: IRoomService) { }
 
     setDisplay(frame: IFramesModel) {
         if (!this.mScene) return;
@@ -11,9 +15,12 @@ export class MouseFollow {
             this.mDisplay.destroy();
             this.mDisplay = null;
         }
-        this.mDisplay = new FramesDisplay(this.mScene);
+        this.mLayerManager = this.mRoomService.layerManager;
+        this.mDisplay = new FramesDisplay(this.mScene, this.mRoomService);
         this.mDisplay.load(frame);
         this.mDisplay.changeAlpha(0.8);
+        this.mDisplay.once("initialized", this.onInitializedHandler, this);
+        this.mLayerManager.addToSceneToUI(this.mDisplay);
 
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
     }
@@ -32,6 +39,13 @@ export class MouseFollow {
         }
         this.mDisplay.x = pointer.x;
         this.mDisplay.y = pointer.y;
+    }
+
+    private onInitializedHandler() {
+        if (!this.mDisplay) {
+            return;
+        }
+        this.mDisplay.showRefernceArea();
     }
 
     get display() {

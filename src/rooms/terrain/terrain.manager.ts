@@ -39,7 +39,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.connection.removePacketListener(this);
         }
         if (!this.mTerrains) return;
-        this.mTerrains.forEach((terrain) => this.removeFromMap(terrain.id));
+        this.mTerrains.forEach((terrain) => this.remove(terrain.id));
         this.mTerrains.clear();
     }
 
@@ -51,7 +51,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         return terrain;
     }
 
-    public removeFromMap(id: number) {
+    public remove(id: number): void {
         if (!this.mTerrains) return;
         const terrain = this.mTerrains.get(id);
         if (terrain) {
@@ -106,7 +106,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const id of ids) {
-            this.removeFromMap(id);
+            this.remove(id);
         }
         Logger.log("remove terrain length: ", ids.length);
     }
