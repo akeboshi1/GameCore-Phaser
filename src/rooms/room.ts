@@ -20,6 +20,7 @@ import IActor = op_client.IActor;
 import { MapEntity } from "./map/map.entity";
 import { ActorEntity } from "./player/Actor.entity";
 import { PlayerModel } from "./player/player.model";
+import { Size } from "../utils/size";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -107,12 +108,22 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     }
 
     public enter(data: op_client.IScene): void {
+        const size: Size = this.mWorld.getSize();
         if (!data) {
             Logger.error("wrong room");
             return;
         }
         this.mID = data.id;
-
+        // let sWidth: number = 0;
+        // let sHeight: number = 0;
+        // let dataSceneWidth: number = 0;
+        // let dataSceneHeight: number = 0;
+        // if (!this.mWorld.game.device.os.desktop) {
+        //     sWidth = size.width;
+        //     sHeight = size.height;
+        //     dataSceneWidth = sWidth < (data.rows + data.cols) * (data.tileWidth / 2) ? Math.ceil(sWidth * 2 / data.tileWidth) * (data.tileWidth / 2) : (data.rows + data.cols) * (data.tileWidth / 2);
+        //     dataSceneHeight = sHeight < (data.rows + data.cols) * (data.tileHeight / 2) ? Math.ceil(sHeight * 2 / data.tileHeight) * (data.tileHeight / 2) : (data.rows + data.cols) * (data.tileHeight / 2);
+        // }
         this.mSize = {
             cols: data.rows,
             rows: data.cols,

@@ -51,6 +51,8 @@ export class LayerManager {
 
     private mDepthGround: boolean;
 
+    private mDelta: number = 0;
+
     constructor(private room: Room) {
 
         this.mScene = room.scene;
@@ -125,6 +127,10 @@ export class LayerManager {
     }
 
     public update(time: number, delta: number) {
+        if (time - this.mDelta < 3000) {
+            return;
+        }
+        this.mDelta = time;
         if (this.mDepthGround) {
             this.mGroundLayer.sort("depth");
             this.mDepthGround = false;
@@ -155,6 +161,7 @@ export class LayerManager {
     }
 
     public destroy() {
+        this.mDelta = 0;
         this._clearLayer();
     }
 
