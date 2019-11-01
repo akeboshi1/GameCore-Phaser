@@ -27,9 +27,6 @@ export enum Direction {
 
 export interface IElement {
     readonly id: number;
-    // readonly x: number;
-    // readonly y: number;
-    // readonly z: number;
     readonly dir: number;
 
     readonly model: ISprite;
@@ -311,9 +308,9 @@ export class Element extends BlockObject implements IElement {
         const scene = this.mElementManager.scene;
         if (scene) {
             if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
-                this.mDisplay = new DragonbonesDisplay(scene, this.mElementManager.roomService);
+                this.mDisplay = new DragonbonesDisplay(scene, this.mElementManager.roomService, this);
             } else {
-                this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService);
+                this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
             }
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);

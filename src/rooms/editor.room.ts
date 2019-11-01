@@ -1,6 +1,6 @@
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world} from "pixelpai_proto";
+import {op_client, op_virtual_world, op_editor} from "pixelpai_proto";
 import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
@@ -38,7 +38,6 @@ export class EditorRoom extends Room {
         }
         this.mID = data.id;
 
-        // TODO 拆分enter, 通用的不用重写一遍
         this.mSize = {
             cols: data.rows,
             rows: data.cols,
@@ -51,7 +50,6 @@ export class EditorRoom extends Room {
         this.mTerainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
-        // this.mPlayerManager = new PlayerManager(this);
 
         this.mWorld.game.scene.start(EditScene.name, {
             room: this,
@@ -84,6 +82,8 @@ export class EditorRoom extends Room {
         const camera = this.mScene.cameras.main;
         camera.scrollX += pointer.prevPosition.x - pointer.position.x;
         camera.scrollY += pointer.prevPosition.y - pointer.position.y;
+
+        this.syncCameras();
     }
 
     private onSetEditorModeHandler(packet: PBpacket) {
@@ -123,6 +123,19 @@ export class EditorRoom extends Room {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
     }
 
+    private syncCameras() {
+        if (!this.connection) return;
+        if (!this.mScene || this.mScene.cameras) return;
+        const cameraView = this.mScene.cameras.main.worldView;
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        content.x = cameraView.x;
+        content.y = cameraView.y;
+        content.width = cameraView.width;
+        content.height = cameraView.height;
+        this.connection.send(pkt);
+    }
+
     private onGameobjectUpHandler(pointer, gameobject) {
         const com = gameobject.parentContainer;
         if (!com) {
@@ -130,10 +143,10 @@ export class EditorRoom extends Room {
         }
         switch (this.mBrush.mode) {
             case BrushEnum.SELECT:
-                this.selectedElement(<DisplayObject> com);
+                this.selectedElement(com);
                 break;
             case BrushEnum.ERASER:
-
+                this.removeElement(com);
                 break;
         }
     }
@@ -151,6 +164,24 @@ export class EditorRoom extends Room {
         this.mSelectedObject = com;
         com.showRefernceArea();
         this.mSelectedElementEffect.setElement(<FramesDisplay> com);
+    }
+
+    private removeElement(com: DisplayObject) {
+        if (!(com instanceof DisplayObject)) {
+            return;
+        }
+        if (!this.connection) {
+            return;
+        }
+        const element = com.element;
+        if (!element) {
+            return;
+        }
+        element.removeMe();
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
+        content.ids = [element.id];
+        this.connection.send(pkt);
     }
 
     private onPointerMoveHandler(pointer) {

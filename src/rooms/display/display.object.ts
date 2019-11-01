@@ -10,6 +10,7 @@ import {Pos} from "../../utils/pos";
 import {ElementDisplay} from "./element.display";
 import {IFramesModel} from "./frames.model";
 import {IDragonbonesModel} from "./dragonbones.model";
+import {IElement} from "../element/element";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -34,8 +35,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mBackEffect: DynamicSprite;
     protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
-    constructor(scene: Phaser.Scene, roomService: IRoomService) {
+    protected mElement: IElement;
+    constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement) {
         super(scene);
+        this.mElement = element;
         this.mRoomService = roomService;
     }
 
@@ -190,5 +193,9 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
 
     get sortY(): number {
         return this.y;
+    }
+
+    get element(): IElement {
+        return this.mElement;
     }
 }

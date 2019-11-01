@@ -95,10 +95,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private mClickCon: Phaser.GameObjects.Container;
     private mClickGraphics: Phaser.GameObjects.Graphics;
 
-    constructor(protected scene: Phaser.Scene, roomService: IRoomService) {
-        super(scene, roomService);
-    }
-
     get GameObject(): DisplayObject {
         return this;
     }
@@ -225,8 +221,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.showReplaceArmatrue();
 
         // this.play("idle");
-        this.mArmatureDisplay.x = this.mBaseLoc.x;
-        this.mArmatureDisplay.y = this.mBaseLoc.y;
+        this.mArmatureDisplay.x = this.baseLoc.x;
+        this.mArmatureDisplay.y = this.baseLoc.y;
         this.add(this.mArmatureDisplay);
         const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
         if (!this.mClickGraphics) {
