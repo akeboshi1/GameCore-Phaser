@@ -5,7 +5,7 @@ import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client } from "pixelpai_proto";
+import {op_client, op_def} from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
@@ -56,6 +56,8 @@ export interface IElement {
     showEffected();
 
     removeMe(): void;
+
+    toSprite(): op_client.ISprite;
 }
 
 export interface MoveData {
@@ -238,6 +240,18 @@ export class Element extends BlockObject implements IElement {
     public removeMe(): void {
         if (!this.mElementManager) return;
         this.mElementManager.remove(this.id);
+    }
+
+    public toSprite(): op_client.ISprite {
+        const sprite = op_client.Sprite.create();
+        sprite.id = this.id;
+        if (this.mDisplay) {
+            sprite.point3f = op_def.PBPoint3f.create();
+            sprite.point3f.x = this.mDisplay.x;
+            sprite.point3f.y = this.mDisplay.y;
+            sprite.point3f.z = this.mDisplay.z;
+        }
+        return sprite;
     }
 
     public destroy() {

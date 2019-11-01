@@ -1,6 +1,6 @@
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world, op_editor} from "pixelpai_proto";
+import {op_client, op_virtual_world, op_editor, op_def} from "pixelpai_proto";
 import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
@@ -184,6 +184,16 @@ export class EditorRoom extends Room {
         this.connection.send(pkt);
     }
 
+    private syncSprite(object: DisplayObject) {
+        if (!object) return;
+        const ele = object.element;
+        if (!ele) return;
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_SYNC_SPRITE);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
+        content.sprites = [ele.toSprite()];
+        this.connection.send(pkt);
+    }
+
     private onPointerMoveHandler(pointer) {
         if (!this.mScene.cameras) {
             return;
@@ -201,6 +211,7 @@ export class EditorRoom extends Room {
                 }
                 this.mSelectedObject.x = pointer.x;
                 this.mSelectedObject.y = pointer.y;
+                this.syncSprite(this.mSelectedObject);
                 break;
         }
     }

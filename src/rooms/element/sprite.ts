@@ -90,7 +90,6 @@ export class Sprite implements ISprite {
         this.mBindID = obj.bindId;
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.mDisplayBadgeCards = obj.displayBadgeCards;
-
     }
 
     get id(): number {

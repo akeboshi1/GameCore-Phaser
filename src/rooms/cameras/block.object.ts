@@ -1,5 +1,7 @@
 import {ElementDisplay} from "../display/element.display";
 import {Logger} from "../../utils/log";
+import { op_client, op_def } from "pixelpai_proto";
+import {ISprite} from "../element/sprite";
 
 export abstract class BlockObject {
     protected mDisplay?: ElementDisplay;

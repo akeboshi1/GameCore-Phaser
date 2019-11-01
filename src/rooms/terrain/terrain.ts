@@ -8,6 +8,7 @@ import {ElementDisplay} from "../display/element.display";
 import {IRoomService} from "../room";
 import {TerrainDisplay} from "../display/terrain.display";
 import {BlockObject} from "../cameras/block.object";
+import { op_client } from "pixelpai_proto";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
@@ -84,6 +85,17 @@ export class Terrain extends BlockObject implements IElement {
     public removeMe(): void {
         if (!this.mElementManager) return;
         this.mElementManager.remove(this.id);
+    }
+
+    toSprite(): op_client.ISprite {
+        const sprite = op_client.Sprite.create();
+        sprite.id = this.id;
+        if (this.mDisplay) {
+            const pos45 = this.getPosition45();
+            this.mDisplay.x = pos45.x;
+            this.mDisplay.y = pos45.y;
+        }
+        return sprite;
     }
 
     protected createDisplay(): ElementDisplay {
