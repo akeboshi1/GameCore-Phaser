@@ -6,6 +6,7 @@ import {op_def} from "pixelpai_proto";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
+    add(obj: IFramesModel | IDragonbonesModel): void;
     getObject(id: number): IFramesModel | IDragonbonesModel;
 }
 
@@ -16,7 +17,7 @@ interface IDisplayRef {
 }
 
 export class ElementStorage implements IElementStorage {
-    private mModels = new Map<string, FramesModel | DragonbonesModel>();
+    private mModels = new Map<number, FramesModel | DragonbonesModel>();
     private mElementRef = new Map<number, IDisplayRef>();
 
     public setGameConfig(config: Lite) {
@@ -26,10 +27,10 @@ export class ElementStorage implements IElementStorage {
         // TODO Lite deserialize可能会有个别Display link失败
         for (const obj of objs) {
             if (obj.type === op_def.NodeType.TerrainNodeType || obj.type === op_def.NodeType.ElementNodeType) {
-                displayModel = this.mModels.get(obj.sn);
+                displayModel = this.mModels.get(obj.id);
                 if (!displayModel) {
                     displayModel = new FramesModel(obj);
-                    this.mModels.set(obj.sn, displayModel);
+                    this.mModels.set(obj.id, displayModel);
                 }
                 const ele: IDisplayRef = {
                     id: obj.id,
@@ -38,6 +39,10 @@ export class ElementStorage implements IElementStorage {
                 this.mElementRef.set(obj.id, ele);
             }
         }
+    }
+
+    public add(obj: FramesModel | DragonbonesModel) {
+        this.mModels.set(obj.id, obj);
     }
 
     public getObject(id: number): FramesModel | DragonbonesModel {

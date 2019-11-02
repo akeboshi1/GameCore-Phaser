@@ -1,6 +1,6 @@
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_virtual_world, op_editor, op_def} from "pixelpai_proto";
+import {op_client, op_editor, op_virtual_world} from "pixelpai_proto";
 import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
@@ -86,6 +86,16 @@ export class EditorRoom extends Room {
         this.syncCameras();
     }
 
+    private createElement() {
+        if (!this.brush.frameModel) {
+            return;
+        }
+
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
+        this.connection.send(pkt);
+    }
+
     private onSetEditorModeHandler(packet: PBpacket) {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
         this.mBrush.mode = <BrushEnum> mode.mode;
@@ -99,6 +109,7 @@ export class EditorRoom extends Room {
 
     private onAlignGridHandler(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ALIGN_GRID = packet.content;
+        this.brush.alignGrid = content.align;
     }
 
     private onVisibleGridHandler(packet: PBpacket) {
@@ -117,10 +128,17 @@ export class EditorRoom extends Room {
 
     private onPointerDownHandler() {
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
     }
 
     private onPointerUpHandler() {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
+        switch (this.brush.mode) {
+            case BrushEnum.BRUSH:
+                this.createElement();
+                break;
+        }
     }
 
     private syncCameras() {
@@ -145,6 +163,18 @@ export class EditorRoom extends Room {
             case BrushEnum.SELECT:
                 this.selectedElement(com);
                 break;
+            case BrushEnum.ERASER:
+                this.removeElement(com);
+                break;
+        }
+    }
+
+    private onGameobjectOverHandler(pointer, gameobject) {
+        const com = gameobject.parentContainer;
+        if (!com) {
+            return;
+        }
+        switch (this.mBrush.mode) {
             case BrushEnum.ERASER:
                 this.removeElement(com);
                 break;

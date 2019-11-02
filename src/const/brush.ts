@@ -12,6 +12,7 @@ export enum BrushEnum {
 
 export class Brush {
     private mMode: BrushEnum = BrushEnum.BRUSH;
+    private mAlignGrid: boolean = false;
     private mFrameModel: IFramesModel;
 
     setMouseFollow(content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW) {
@@ -33,5 +34,13 @@ export class Brush {
 
     get mode(): BrushEnum {
         return this.mMode;
+    }
+
+    set alignGrid(val: boolean) {
+        this.mAlignGrid = val;
+    }
+
+    get alignGrid(): boolean {
+        return this.mAlignGrid;
     }
 }
