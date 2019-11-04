@@ -39,6 +39,9 @@ export class LeftBtnGroup extends Panel {
     }
 
     protected preload() {
+        if (!this.mScene) {
+            return;
+        }
         this.mResKey = "baseView";
         this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
         super.preload();
