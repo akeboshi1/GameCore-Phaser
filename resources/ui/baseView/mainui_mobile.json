@@ -140,10 +140,30 @@
 				"h": 230
 			}
 		},
-		"btnGroup_exhibit_icon.png": {
+		"btnGroup_collapse.png": {
 			"frame": {
 				"x": 356,
 				"y": 0,
+				"w": 58,
+				"h": 58
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 58,
+				"h": 58
+			},
+			"sourceSize": {
+				"w": 58,
+				"h": 58
+			}
+		},
+		"btnGroup_exhibit_icon.png": {
+			"frame": {
+				"x": 0,
+				"y": 316,
 				"w": 48,
 				"h": 48
 			},
@@ -160,9 +180,29 @@
 				"h": 48
 			}
 		},
+		"btnGroup_expand.png": {
+			"frame": {
+				"x": 48,
+				"y": 316,
+				"w": 58,
+				"h": 58
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 58,
+				"h": 58
+			},
+			"sourceSize": {
+				"w": 58,
+				"h": 58
+			}
+		},
 		"btnGroup_hand.png": {
 			"frame": {
-				"x": 0,
+				"x": 106,
 				"y": 316,
 				"w": 70,
 				"h": 70
@@ -182,7 +222,7 @@
 		},
 		"btnGroup_rank_icon.png": {
 			"frame": {
-				"x": 70,
+				"x": 176,
 				"y": 316,
 				"w": 48,
 				"h": 48
@@ -202,7 +242,7 @@
 		},
 		"btnGroup_red_light.png": {
 			"frame": {
-				"x": 118,
+				"x": 224,
 				"y": 316,
 				"w": 58,
 				"h": 58
@@ -222,7 +262,7 @@
 		},
 		"btnGroup_red_normal.png": {
 			"frame": {
-				"x": 176,
+				"x": 282,
 				"y": 316,
 				"w": 58,
 				"h": 58
@@ -242,7 +282,7 @@
 		},
 		"btnGroup_red_select.png": {
 			"frame": {
-				"x": 234,
+				"x": 340,
 				"y": 316,
 				"w": 58,
 				"h": 58
@@ -262,8 +302,8 @@
 		},
 		"btnGroup_shop_icon.png": {
 			"frame": {
-				"x": 292,
-				"y": 316,
+				"x": 414,
+				"y": 0,
 				"w": 48,
 				"h": 48
 			},
@@ -282,8 +322,8 @@
 		},
 		"btnGroup_top_expand.png": {
 			"frame": {
-				"x": 340,
-				"y": 316,
+				"x": 430,
+				"y": 48,
 				"w": 48,
 				"h": 48
 			},
@@ -302,8 +342,8 @@
 		},
 		"btnGroup_white_light.png": {
 			"frame": {
-				"x": 404,
-				"y": 0,
+				"x": 398,
+				"y": 316,
 				"w": 58,
 				"h": 58
 			},
@@ -322,8 +362,8 @@
 		},
 		"btnGroup_white_normal.png": {
 			"frame": {
-				"x": 430,
-				"y": 58,
+				"x": 0,
+				"y": 374,
 				"w": 58,
 				"h": 58
 			},
@@ -342,8 +382,8 @@
 		},
 		"btnGroup_white_select.png": {
 			"frame": {
-				"x": 430,
-				"y": 116,
+				"x": 176,
+				"y": 374,
 				"w": 58,
 				"h": 58
 			},
@@ -362,8 +402,8 @@
 		},
 		"btnGroup_yellow_light.png": {
 			"frame": {
-				"x": 430,
-				"y": 174,
+				"x": 234,
+				"y": 374,
 				"w": 58,
 				"h": 58
 			},
@@ -382,8 +422,8 @@
 		},
 		"btnGroup_yellow_normal.png": {
 			"frame": {
-				"x": 430,
-				"y": 232,
+				"x": 292,
+				"y": 374,
 				"w": 58,
 				"h": 58
 			},
@@ -402,8 +442,8 @@
 		},
 		"btnGroup_yellow_select.png": {
 			"frame": {
-				"x": 430,
-				"y": 290,
+				"x": 350,
+				"y": 374,
 				"w": 58,
 				"h": 58
 			},
@@ -427,8 +467,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 488,
-			"h": 386
+			"w": 478,
+			"h": 432
 		},
 		"scale": "1"
 	}

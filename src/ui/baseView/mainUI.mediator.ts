@@ -61,7 +61,7 @@ export class MainUIMediator extends BaseMediator {
     }
 
     public hide() {
-       // this.world.game.scale.off("orientationchange", this.orientationChange, this);
+        // this.world.game.scale.off("orientationchange", this.orientationChange, this);
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
