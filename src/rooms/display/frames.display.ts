@@ -59,7 +59,7 @@ export class FramesDisplay extends DisplayObject implements ElementDisplay {
         } else {
             const display = data.display;
             if (!display) {
-                Logger.error("display is undefined");
+                Logger.getInstance().error("display is undefined");
             }
             this.scene.load.atlas(data.gene, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
             // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
@@ -83,7 +83,7 @@ export class FramesDisplay extends DisplayObject implements ElementDisplay {
         } else {
             const anis = data.getAnimations(animationName);
             if (!anis) {
-                Logger.log(`error: ${animationName} not found`);
+                Logger.getInstance().log(`error: ${animationName} not found`);
                 return;
             }
             sprite.setTexture(data.gene, anis.frameName[0]);

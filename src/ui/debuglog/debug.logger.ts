@@ -3,6 +3,7 @@ import { Background } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
+import { Logger } from "../../utils/log";
 
 export class DebugLogger extends Panel {
     private mWorld: WorldService;
@@ -116,5 +117,14 @@ export class DebugLogger extends Panel {
     private showDescTxT() {
         const orientation: string = this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
         this.mDescTxt = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
+        const errList: string[] = Logger.getInstance().getErrorList();
+        if (!errList) {
+            return;
+        }
+        let errStr: string = "";
+        errList.forEach((str) => {
+            errStr += "\n" + str;
+        });
+        this.mDescTxt += "\n" + errStr;
     }
 }

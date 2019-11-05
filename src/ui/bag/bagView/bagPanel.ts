@@ -213,7 +213,7 @@ export class BagPanel extends Panel {
 
     private refreshDataList() {
         if (!this.mDataList) {
-            Logger.error("this.mDataList is undefiend");
+            Logger.getInstance().error("this.mDataList is undefiend");
             return;
         }
         const items = this.mDataList.slice((this.mPageIndex - 1) * BagPanel.PageMaxCount, this.mPageIndex * BagPanel.PageMaxCount);

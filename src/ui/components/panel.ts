@@ -57,7 +57,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
 
     protected preload() {
         if (!this.scene) {
-            Logger.error("scene does not exist");
+            Logger.getInstance().error("scene does not exist");
             return;
         }
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);

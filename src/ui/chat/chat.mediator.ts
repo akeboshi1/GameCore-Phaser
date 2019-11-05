@@ -134,18 +134,18 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mGMEApi.SetTMGDelegate((event, result) => {
             switch (event) {
                 case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
-                    Logger.log(`[GME]: EnterRoom: ${result}`);
+                    Logger.getInstance().log(`[GME]: EnterRoom: ${result}`);
                     break;
                 case this.mGMEApi.event.ITMG_MAIN_EVNET_TYPE_USER_UPDATE:
                     break;
                 case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_EXIT_ROOM:
-                    Logger.log(`[GME]: ExitRoom`);
+                    Logger.getInstance().log(`[GME]: ExitRoom`);
                     break;
                 case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_ROOM_DISCONNECT:
-                    Logger.log(`[GME]: Room Disconnect!!!`);
+                    Logger.getInstance().log(`[GME]: Room Disconnect!!!`);
                     break;
                 default:
-                    Logger.log("[GME]: Sth wrong...");
+                    Logger.getInstance().log("[GME]: Sth wrong...");
                     break;
             }
         });

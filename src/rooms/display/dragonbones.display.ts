@@ -155,7 +155,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     }
                     this.scene.load.start();
                 } else {
-                    Logger.error("display is undefined");
+                    Logger.getInstance().error("display is undefined");
                 }
             }
         }
@@ -180,7 +180,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
-            Logger.debug("play:" + dir);
+            Logger.getInstance().debug("play:" + dir);
             this.mPreDirection = dir;
         }
     }

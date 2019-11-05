@@ -110,7 +110,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
     public enter(data: op_client.IScene): void {
         const size: Size = this.mWorld.getSize();
         if (!data) {
-            Logger.error("wrong room");
+            Logger.getInstance().error("wrong room");
             return;
         }
         this.mID = data.id;
@@ -183,7 +183,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public onClockReady(): void {
         // TODO: Unload loading-scene
-        Logger.debug("onClockReady");
+        Logger.getInstance().debug("onClockReady");
         this.clockSyncComplete = true;
     }
 
@@ -250,7 +250,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public transformTo90(p: Pos) {
         if (!this.mSize) {
-            Logger.error("position object is undefined");
+            Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo90(p, this.mSize);
@@ -258,7 +258,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     public transformTo45(p: Pos) {
         if (!this.mSize) {
-            Logger.error("position object is undefined");
+            Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo45(p, this.mSize);

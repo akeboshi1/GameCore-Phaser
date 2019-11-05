@@ -14,14 +14,14 @@ class ConnListener implements IConnectListener {
         ctx.postMessage({
             method: "onConnected",
         });
-        Logger.info(`NetWorker[已连接]`);
+        Logger.getInstance().info(`NetWorker[已连接]`);
     }
 
     onDisConnected(connection: SocketConnection): void {
         ctx.postMessage({
             method: "onDisConnected",
         });
-        Logger.info(`NetWorker[已断开]`);
+        Logger.getInstance().info(`NetWorker[已断开]`);
     }
 
     onError(reason: SocketConnectionError | undefined): void {
@@ -30,9 +30,9 @@ class ConnListener implements IConnectListener {
                 method: "onConnectError",
                 error: reason.message,
             });
-            Logger.error(`NetWorker[错误]:${reason.message}`);
+            Logger.getInstance().error(`NetWorker[错误]:${reason.message}`);
         } else {
-            Logger.error(`NetWorker[错误]:${reason}`);
+            Logger.getInstance().error(`NetWorker[错误]:${reason}`);
         }
     }
 }
@@ -45,14 +45,14 @@ class WorkerClient extends SocketConnection {
         protobuf_packet.Deserialization(new Buffer(data));
         protobuf_packet.header.uuid = this.mUuid || 0;
         super.send(protobuf_packet.Serialization());
-        Logger.info(`NetWorker[发送] >>> ${protobuf_packet.toString()}`);
+        Logger.getInstance().info(`NetWorker[发送] >>> ${protobuf_packet.toString()}`);
     }
 
     protected onData(data: any) {
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         this.mUuid = protobuf_packet.header.uuid;
-        Logger.info(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
+        Logger.getInstance().info(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
         // Send the packet to parent thread
         ctx.postMessage({
             method: "onData",

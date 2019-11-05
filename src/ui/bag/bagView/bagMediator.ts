@@ -84,7 +84,7 @@ export class BagMediator extends BaseMediator {
         const drag: IDragable = value[0];
         const drop: IDropable = value[1];
         if (drop.getDropType() === DropType.DROP_TYPE_BAG && drag.getDragType() === DragType.DRAG_TYPE_SHORTCUT) {
-            Logger.debug("背包拖到快捷栏了！！！");
+            Logger.getInstance().debug("背包拖到快捷栏了！！！");
         }
     }
 

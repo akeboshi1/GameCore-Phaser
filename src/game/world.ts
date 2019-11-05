@@ -95,7 +95,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onConnected(connection?: SocketConnection): void {
-        Logger.info(`enterVirtualWorld`);
+        Logger.getInstance().info(`enterVirtualWorld`);
         this.enterVirtualWorld();
         // this.login();
     }
@@ -110,7 +110,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        Logger.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
@@ -138,11 +138,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 if (width < height) {
                     this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
                     this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-                    Logger.debug("portrait:", width, height);
+                    Logger.getInstance().debug("portrait:", width, height);
                 } else if (width > height) {
                     this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
                     this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-                    Logger.debug("landscape:", width, height);
+                    Logger.getInstance().debug("landscape:", width, height);
                 }
             }
             this.mGame.scale.resize(width, height);
@@ -161,7 +161,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public startFullscreen() {
         if (!this.mGame) {
-            Logger.warn("game does not exist!");
+            Logger.getInstance().warn("game does not exist!");
             return;
         }
         this.mGame.scale.startFullscreen();
@@ -169,7 +169,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public stopFullscreen() {
         if (!this.mGame) {
-            Logger.warn("game does not exist!");
+            Logger.getInstance().warn("game does not exist!");
             return;
         }
         this.mGame.scale.stopFullscreen();
@@ -308,7 +308,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private loginEnterWorld() {
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-        Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
+        Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
         content.gameId = this.mConfig.game_id;
         // const accountObj = JSON.parse();
@@ -324,17 +324,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
         if (!configUrls || configUrls.length <= 0) {
-            Logger.error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
+            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
         }
         // Logger.log("start download gameConfig");
         this.loadGameConfig(content.configUrls)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame(content.keyEvents);
-                Logger.debug("created game suc");
+                Logger.getInstance().debug("created game suc");
             })
             .catch((err) => {
-                Logger.log(err);
+                Logger.getInstance().log(err);
             });
     }
 
@@ -425,7 +425,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mConfig.game_created();
             }
         } else {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
         }
     }
 
@@ -435,14 +435,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         for (const path of paths) {
             if (PI_EXTENSION_REGEX.test(path)) {
                 configPath = ResUtils.getGameConfig(path);
-                Logger.log(`start download config: ${configPath}`);
+                Logger.getInstance().log(`start download config: ${configPath}`);
                 promises.push(load(configPath, "arraybuffer"));
             }
         }
         // TODO Promise.all如果其中有一个下载失败，会返回error
         return Promise.all(promises)
             .then((reqs: any[]) => {
-                Logger.log("start decodeConfig");
+                Logger.getInstance().log("start decodeConfig");
                 return this.decodeConfigs(reqs);
             });
     }
@@ -478,7 +478,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.scene.stop(GamePauseScene.name);
             }
         } else {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
         }
     }
 
@@ -494,7 +494,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
             this.mGame.scene.start(GamePauseScene.name, { world: this });
         } else {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
         }
     }
 }

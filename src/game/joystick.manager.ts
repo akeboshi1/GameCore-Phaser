@@ -21,7 +21,7 @@ export class JoyStickManager implements InputManager {
         this.mScale = worldService.uiScale;
         this.mKeyEvents = keyEvents;
         this.mKeyEventMap = new Map();
-        Logger.debug(`JoyStickManager ${worldService.uiScale}`);
+        Logger.getInstance().debug(`JoyStickManager ${worldService.uiScale}`);
     }
 
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
@@ -187,7 +187,7 @@ export class JoyStick {
     private dragStop(pointer) {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
-        Logger.log("dragEnd");
+        Logger.getInstance().log("dragEnd");
         this.mJoyListeners.forEach((l: InputListener) => {
             if (this.checkdragUp()) {
                 l.upHandler();

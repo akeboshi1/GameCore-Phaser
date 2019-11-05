@@ -20,7 +20,7 @@ export class Terrain extends BlockObject implements IElement {
         this.mId = sprite.id;
         const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
         if (!conf) {
-            Logger.error("object does not exist");
+            Logger.getInstance().error("object does not exist");
             return;
         }
         this.mDisplayInfo = <IFramesModel> conf;
@@ -76,7 +76,7 @@ export class Terrain extends BlockObject implements IElement {
 
     protected createDisplay(): ElementDisplay {
         if (!this.mDisplayInfo) {
-            Logger.error("displayinfo does not exist, Create display failed");
+            Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
         if (this.mDisplay) {
@@ -93,17 +93,17 @@ export class Terrain extends BlockObject implements IElement {
     protected addDisplay() {
         this.createDisplay();
         if (!this.mDisplay) {
-            Logger.error("display does not exist");
+            Logger.getInstance().error("display does not exist");
             return;
         }
         this.mDisplay.load(this.mDisplayInfo);
         if (!this.mElementManager) {
-            Logger.error("element manager does not exist");
+            Logger.getInstance().error("element manager does not exist");
             return;
         }
         const room = this.mElementManager.roomService;
         if (!room) {
-            Logger.error("roomService does not exist");
+            Logger.getInstance().error("roomService does not exist");
             return;
         }
         room.addToGround(this.mDisplay);
@@ -126,7 +126,7 @@ export class Terrain extends BlockObject implements IElement {
 
     private setPosition45(pos: Pos) {
         if (!this.roomService) {
-            Logger.error("roomService does not exist");
+            Logger.getInstance().error("roomService does not exist");
             return;
         }
         const point = this.roomService.transformTo90(pos);
@@ -143,7 +143,7 @@ export class Terrain extends BlockObject implements IElement {
 
     get roomService(): IRoomService {
         if (!this.mElementManager) {
-            Logger.error("element manager is undefined");
+            Logger.getInstance().error("element manager is undefined");
             return;
         }
         return this.mElementManager.roomService;

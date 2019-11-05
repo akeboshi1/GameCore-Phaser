@@ -123,7 +123,7 @@ export class ShopPanel extends Panel {
 
     private refreshDataList() {
         if (!this.mDataList) {
-            Logger.error("this.mDataList is undefiend");
+            Logger.getInstance().error("this.mDataList is undefiend");
             return;
         }
         const len = ShopPanel.ShopSlotCount;

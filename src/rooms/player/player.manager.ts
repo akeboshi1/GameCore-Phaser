@@ -54,7 +54,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public startActorMove() {
         if (!this.mRoom.actor) {
-            Logger.error("MainHero miss");
+            Logger.getInstance().error("MainHero miss");
             return;
         }
         this.mRoom.actor.startMove();
@@ -62,7 +62,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public stopActorMove() {
         if (!this.mRoom.actor) {
-            Logger.error("MainHero miss");
+            Logger.getInstance().error("MainHero miss");
             return;
         }
         this.mRoom.actor.stopMove();
@@ -149,7 +149,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 }
                 point = position.point3f;
                 player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
-                Logger.debug(`adjust,x:${point.x},y:${point.y}`);
+                Logger.getInstance().debug(`adjust,x:${point.x},y:${point.y}`);
             }
         }
     }
@@ -248,6 +248,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.connection;
         }
-        Logger.error("room is undefined");
+        Logger.getInstance().error("room is undefined");
     }
 }

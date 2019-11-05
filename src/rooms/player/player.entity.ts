@@ -47,7 +47,7 @@ export class PlayerEntity extends Element {
         if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
             this.setDirection(moveData.direction);
         }
-        Logger.log("dir0:" + moveData.direction);
+        Logger.getInstance().log("dir0:" + moveData.direction);
         super.move(moveData);
     }
 

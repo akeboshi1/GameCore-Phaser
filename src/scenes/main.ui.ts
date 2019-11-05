@@ -2,7 +2,6 @@
 import { Room } from "../rooms/room";
 import { JoyStickManager } from "../game/joystick.manager";
 import { Size } from "../utils/size";
-import { DebugLogger } from "../ui/debuglog/debug.logger";
 import { DebugLoggerMediator } from "../ui/debuglog/debug.logger.mediator";
 
 export class MainUIScene extends Phaser.Scene {

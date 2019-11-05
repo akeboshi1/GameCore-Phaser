@@ -80,7 +80,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.connection;
         }
-        Logger.log("roomManager is undefined");
+        Logger.getInstance().log("roomManager is undefined");
         return;
     }
 
@@ -105,11 +105,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     private onAdd(packet: PBpacket) {
         if (!this.mRoom.layerManager) {
-            Logger.error("layer manager does not exist");
+            Logger.getInstance().error("layer manager does not exist");
             return;
         }
         if (!this.mGameConfig) {
-            Logger.error("gameConfig does not exist");
+            Logger.getInstance().error("gameConfig does not exist");
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
