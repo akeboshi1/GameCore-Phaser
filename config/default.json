@@ -1,6 +1,6 @@
 {
   "api_root": "https://api.tooqing.com/",
-  "osd": "https://osd.tooqing.com/",
+  "osd": "https://osd-dev.tooqing.com/",
   "gateway": {
     "host": "gdev.tooqing.com",
     "port": 11100

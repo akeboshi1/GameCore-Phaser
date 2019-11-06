@@ -1,15 +1,16 @@
 import {IFramesModel} from "../display/frames.model";
 import {FramesDisplay} from "../display/frames.display";
 import {LayerManager} from "../layer/layer.manager";
-import {IRoomService} from "../room";
-import {Logger} from "../../utils/log";
+import {EditorRoomService} from "../editor.room";
 
 export class MouseFollow {
     private mDisplay: FramesDisplay;
     private mLayerManager: LayerManager;
-    constructor(private mScene: Phaser.Scene, private mRoomService: IRoomService) { }
+    private mIsAlignGrid: boolean;
+    constructor(private mScene: Phaser.Scene, private mRoomService: EditorRoomService) { }
 
-    setDisplay(frame: IFramesModel) {
+    setDisplay(frame: IFramesModel, isAlignGrid?: boolean) {
+        this.mIsAlignGrid = isAlignGrid;
         if (!this.mScene) return;
         if (this.mDisplay) {
             this.mDisplay.destroy();
@@ -37,8 +38,12 @@ export class MouseFollow {
         if (!this.mDisplay) {
             return;
         }
-        this.mDisplay.x = pointer.x;
-        this.mDisplay.y = pointer.y;
+        const pos = this.mRoomService.brush.transitionGrid(pointer.x, pointer.y);
+        if (!pos) {
+            return;
+        }
+        this.mDisplay.x = pos.x;
+        this.mDisplay.y = pos.y;
     }
 
     private onInitializedHandler() {

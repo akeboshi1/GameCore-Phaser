@@ -1,3 +1,14 @@
+import {IPosition45Obj, Position45} from "../utils/position45";
+
+export interface EditorRoomService extends IRoomService {
+    readonly brush: Brush;
+    readonly miniSize: IPosition45Obj;
+
+    transformToMini45(p: Pos): Pos;
+
+    transformToMini90(p: Pos): Pos;
+}
+
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
 import {op_client, op_editor, op_virtual_world} from "pixelpai_proto";
@@ -5,7 +16,7 @@ import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
 import {TerrainManager} from "./terrain/terrain.manager";
-import {Room} from "./room";
+import {IRoomService, Room} from "./room";
 import {LayerManager} from "./layer/layer.manager";
 import {ViewblockManager} from "./cameras/viewblock.manager";
 import {EditScene} from "../scenes/edit";
@@ -14,12 +25,14 @@ import {FramesDisplay} from "./display/frames.display";
 import {TerrainDisplay} from "./display/terrain.display";
 import {SelectedElement} from "./editor/selected.element";
 import {DisplayObject} from "./display/display.object";
+import {Pos} from "../utils/pos";
 
-export class EditorRoom extends Room {
-    private mBrush: Brush = new Brush();
+export class EditorRoom extends Room implements EditorRoomService {
+    private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
     private mSelectedObject: DisplayObject;
+    private mNimiSize: IPosition45Obj;
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
@@ -38,13 +51,27 @@ export class EditorRoom extends Room {
         }
         this.mID = data.id;
 
+        let { rows, cols, tileWidth, tileHeight } = data;
         this.mSize = {
-            cols: data.rows,
-            rows: data.cols,
-            tileHeight: data.tileHeight,
-            tileWidth: data.tileWidth,
-            sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),
-            sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2),
+            cols,
+            rows,
+            tileHeight,
+            tileWidth,
+            sceneWidth: (rows + cols) * (tileWidth / 2),
+            sceneHeight: (rows + cols) * (tileHeight / 2),
+        };
+
+        rows *= 2;
+        cols *= 2;
+        tileWidth /= 2;
+        tileHeight /= 2;
+        this.mNimiSize = {
+            cols,
+            rows,
+            tileHeight,
+            tileWidth,
+            sceneWidth: (rows + cols) * (tileWidth / 2),
+            sceneHeight: (rows + cols) * (tileHeight / 2),
         };
 
         this.mTerainManager = new TerrainManager(this);
@@ -76,6 +103,22 @@ export class EditorRoom extends Room {
     }
 
     public update(time: number, delta: number) {
+    }
+
+    transformToMini90(p: Pos): undefined | Pos {
+        if (!this.mNimiSize) {
+            Logger.error("position object is undefined");
+            return;
+        }
+        return Position45.transformTo90(p, this.mNimiSize);
+    }
+
+    transformToMini45(p: Pos): undefined | Pos {
+        if (!this.mNimiSize) {
+            Logger.error("position object is undefined");
+            return;
+        }
+        return Position45.transformTo45(p, this.mNimiSize);
     }
 
     private moveCameras(pointer) {
@@ -122,7 +165,7 @@ export class EditorRoom extends Room {
         this.brush.setMouseFollow(content);
         if (this.mScene) {
             if (!this.mMouseFollow) this.mMouseFollow = new MouseFollow(this.mScene, this);
-            this.mMouseFollow.setDisplay(this.brush.frameModel);
+            this.mMouseFollow.setDisplay(this.brush.frameModel, this.brush.alignGrid);
         }
     }
 
@@ -239,14 +282,21 @@ export class EditorRoom extends Room {
                 if (this.mSelectedElementEffect) {
                     this.mSelectedElementEffect.setPosition();
                 }
-                this.mSelectedObject.x = pointer.x;
-                this.mSelectedObject.y = pointer.y;
-                this.syncSprite(this.mSelectedObject);
+                const pos = this.brush.transitionGrid(pointer.x, pointer.y);
+                if (pos) {
+                    this.mSelectedObject.x = pos.x;
+                    this.mSelectedObject.y = pos.y;
+                    this.syncSprite(this.mSelectedObject);
+                }
                 break;
         }
     }
 
     get brush(): Brush {
         return this.mBrush;
+    }
+
+    get miniSize(): IPosition45Obj {
+        return this.mNimiSize;
     }
 }
