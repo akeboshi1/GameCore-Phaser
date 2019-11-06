@@ -41,7 +41,7 @@ export class ChatPanel extends Panel {
             this.y = size.height - this.height * 1.8;
         }
         if (this.mTextArea) {
-            this.mTextArea.childrenMap.child.textMask.setPosition(undefined, size.height - this.height + 5).resize();
+            this.mTextArea.childrenMap.child.textMask.setPosition(undefined, size.height - this.height + 30).resize();
         }
     }
 
@@ -68,6 +68,8 @@ export class ChatPanel extends Panel {
             return;
         }
         this.mScene.load.image("button", Url.getRes("ui/common/button.png"));
+        this.mScene.load.image("thumbTexture", Url.getRes("ui/common/common_thumb_texture.png"));
+        this.mScene.load.image("track", Url.getRes("ui/common/common_track.png"));
         this.mScene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
         // this.mScene.load.image("chat_border_bg", Url.getRes("ui/chat/bg.png"));
         this.mScene.load.image(Border.getName(), Border.getPNG());
@@ -96,8 +98,14 @@ export class ChatPanel extends Panel {
         const background = new RoundRectangle(this.mScene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         this.outPut.add(background);
 
-        const track = new RoundRectangle(this.mScene, 0, 0, 10, 10, 10, 0x260e04);
-        track.setPosition(100 * this.mWorldService.uiScale, 10 * this.mWorldService.uiScale);
+        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", {
+            left: 0,
+            top: 4,
+            right: 0,
+            bottom: 4
+        });
+        track.x = 100 * this.mWorldService.uiScale;
+        track.y = 10 * this.mWorldService.uiScale;
         this.outPut.add(track);
 
         const text = new BBCodeText(this.mScene, 0, 0, "", {
@@ -109,8 +117,20 @@ export class ChatPanel extends Panel {
         });
         this.outPut.add(text);
 
-        const thumb = new RoundRectangle(this.mScene, 0, 0, 10, 20, 10, 0xFFFF00);
+        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        });
+        // const indicator = new NinePatchButton(this.mScene, 0, 0, 8, 10, "thumbTexture", "", {
+        //     left: 0,
+        //     top: 0,
+        //     right: 0,
+        //     bottom: 0
+        // });
         this.outPut.add(thumb);
+        // this.outPut.add(indicator);
         this.mTextArea = new TextArea(this.mScene, {
             x: 230 * this.mWorldService.uiScale,
             y: size.height - 150 * this.mWorldService.uiScale,
@@ -119,6 +139,7 @@ export class ChatPanel extends Panel {
             text,
             slider: {
                 track,
+                // indicator,
                 thumb,
             },
 

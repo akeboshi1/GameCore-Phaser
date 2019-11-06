@@ -6,8 +6,10 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
     protected mNingBg: NinePatch;
     protected mKey: string;
     protected btnData: any;
+    private mScene: Phaser.Scene;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text?: string, config?: IPatchesConfig, data?: any) {
         super(scene, x, y);
+        this.mScene = scene;
         this.mKey = key;
         this.setSize(width, height);
         this.mNingBg = new NinePatch(this.scene, x, y, width, height, key, key + "_normal", config);
@@ -73,9 +75,25 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
     protected changeDown() {
         // this.scale = 0.9;
         this.setFrame(`${this.mKey}_down`);
+        this.scaleHandler();
     }
 
     get label(): Phaser.GameObjects.Text {
         return this.mLabel;
+    }
+
+    private scaleHandler() {
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 50,
+            ease: "Linear",
+            props: {
+                scaleX: { value: .5 },
+                scaleY: { value: .5 },
+            },
+            yoyo: true,
+            repeat: 0,
+        });
+        this.scaleX = this.scaleY = 1;
     }
 }

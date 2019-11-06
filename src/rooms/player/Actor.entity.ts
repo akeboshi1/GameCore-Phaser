@@ -44,6 +44,9 @@ export class ActorEntity extends PlayerEntity implements InputListener {
 
     public stopMove() {
         super.stopMove();
+        if (!this.mMoveData) {
+            return;
+        }
         delete this.mMoveData.destPos;
         this.mMoveData.arrivalTime = 0;
         if (this.mMoveData.tweenAnim) {
