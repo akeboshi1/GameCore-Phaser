@@ -17,8 +17,8 @@ import { Pos } from "../utils/pos";
 import { LoadingScene } from "../scenes/loading";
 import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
-import { MapEntity } from "./map/map.entity";
-import { ActorEntity } from "./player/Actor.entity";
+import { Map } from "./map/map";
+import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { Size } from "../utils/size";
 
@@ -35,7 +35,7 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
     readonly blocks: ViewblockService;
-    readonly actor: ActorEntity;
+    readonly actor: Actor;
     readonly world: WorldService;
 
     readonly scene: Phaser.Scene | undefined;
@@ -78,10 +78,10 @@ export interface IRoomService {
 export class Room implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     public clockSyncComplete: boolean = false;
     private mWorld: WorldService;
-    private mActor: ActorEntity;
+    private mActor: Actor;
     private mActorData: IActor;
 
-    private mMapEntity: MapEntity;
+    private mMap: Map;
 
     private mID: number;
     private mTerainManager: TerrainManager;
@@ -134,8 +134,8 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         };
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
-        this.mMapEntity = new MapEntity(this.mWorld);
-        this.mMapEntity.setMapInfo(data);
+        this.mMap = new Map(this.mWorld);
+        this.mMap.setMapInfo(data);
         this.mClock = new Clock(this.mWorld.connection, this);
         this.mTerainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
@@ -164,7 +164,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
                         if (this.connection) {
                             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
                         }
-                        this.mActor = new ActorEntity(new PlayerModel(this.mActorData), this.mPlayerManager);
+                        this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
                         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
                         if (loadingScene) loadingScene.sleep();
                         // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
@@ -198,12 +198,12 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         this.mClock.sync(-1);
     }
 
-    public getHeroEntity(): ActorEntity {
+    public getHero(): Actor {
         return this.mActor;
     }
 
-    public getMapEntity(): MapEntity {
-        return this.mMapEntity;
+    public getMap(): Map {
+        return this.mMap;
     }
 
     public requestActorMove(dir: number, keyArr: number[]) {
@@ -318,7 +318,7 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         return this.mBlocks;
     }
 
-    get actor(): ActorEntity | undefined {
+    get actor(): Actor | undefined {
         return this.mActor;
     }
 

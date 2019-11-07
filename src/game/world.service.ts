@@ -26,6 +26,7 @@ export interface WorldService {
 
     getSize(): Size;
     getConfig(): ILauncherConfig;
+    getGameConfig(): Phaser.Types.Core.GameConfig;
 
     changeRoom(room: IRoomService);
 

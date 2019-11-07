@@ -17,7 +17,7 @@ export class SrollerView {
     private mScrollablePanel: ScrollablePanel;
     private mShowLen: number;
     private mItemList: any[];
-    constructor(scene: Phaser.Scene, world: WorldService, posX: number, posY: number, wid: number, hei: number, mode: DirectionType, item: any, itemSize: number, space: number = 0) {
+    constructor(scene: Phaser.Scene, world: WorldService, posX: number, posY: number, wid: number, hei: number, mode: DirectionType, item: any, itemsSize: number, space: number = 0) {
         this.mScene = scene;
         this.mWorld = world;
         this.mConfig = {
@@ -38,9 +38,9 @@ export class SrollerView {
                 footer: space,
             },
             itemClass: item,
-            itemSize: itemSize
+            itemSize: itemsSize
         };
-        this.mShowLen = mode === 0 ? Math.ceil(wid / itemSize) : Math.ceil(hei / itemSize);
+        this.mShowLen = mode === 0 ? Math.ceil(wid / itemsSize) : Math.ceil(hei / itemsSize);
         this.init(scene, posX, posY, wid, hei, mode, item, space);
     }
 

@@ -3,7 +3,6 @@ import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
-import { BagEntity } from "./bag/bag.entity";
 import { Logger } from "../../utils/log";
 
 export enum PlayerState {
@@ -23,26 +22,15 @@ export enum PlayerState {
     EMOTION01 = "emotion01",
 }
 
-export class PlayerEntity extends Element {
+export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
-    protected mBagEntity: BagEntity;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         if (this.mDisplay) {
             if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
             this.mDisplay.showNickname(sprite.nickname);
         }
-
-        if (this.model && this.model.package) {
-            this.mBagEntity = new BagEntity(mElementManager.roomService.world);
-            this.mBagEntity.register();
-        }
     }
-
-    public getBagEntity(): BagEntity {
-        return this.mBagEntity;
-    }
-
     public move(moveData: op_client.IMoveData) {
         if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
             this.setDirection(moveData.direction);
@@ -73,10 +61,6 @@ export class PlayerEntity extends Element {
     }
 
     public destroy() {
-        if (this.mBagEntity) {
-            this.mBagEntity.destroy();
-            this.mBagEntity = null;
-        }
         super.destroy();
     }
 

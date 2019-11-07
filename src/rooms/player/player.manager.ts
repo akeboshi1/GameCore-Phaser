@@ -7,11 +7,10 @@ import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { ISprite, Sprite } from "../element/sprite";
 import { MessageType } from "../../const/MessageType";
-import { PlayerEntity } from "./player.entity";
-import { PlayerModel } from "./player.model";
+import { Player } from "./player";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
-    private mPlayerMap: Map<number, PlayerEntity> = new Map();
+    private mPlayerMap: Map<number, Player> = new Map();
     private mActorID: number;
     constructor(private mRoom: Room) {
         super();
@@ -68,7 +67,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mRoom.actor.stopMove();
     }
 
-    public get(id: number): PlayerEntity {
+    public get(id: number): Player {
         if (!this.mPlayerMap) {
             return;
         }
@@ -100,21 +99,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     // }
 
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
-        const character: PlayerEntity = this.mPlayerMap.get(elementId);
+        const character: Player = this.mPlayerMap.get(elementId);
         if (character) {
             const playerModel: ISprite = character.model;
             if (!playerModel.package) {
                 playerModel.package = op_gameconfig.Package.create();
             }
             playerModel.package.items = playerModel.package.items.concat(items);
-            if (character === this.mRoom.getHeroEntity()) {
+            if (character === this.mRoom.getHero()) {
                 this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
             }
         }
     }
 
     public removePackItems(elementId: number, itemId: number): boolean {
-        const character: PlayerEntity = this.mPlayerMap.get(elementId);
+        const character: Player = this.mPlayerMap.get(elementId);
         if (character) {
             const playerModel: ISprite = character.model;
             const len = playerModel.package.items.length;
@@ -136,7 +135,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         if (this.mRoom.actor) {
-            let player: PlayerEntity;
+            let player: Player;
             let point: op_def.IPBPoint3f;
             for (const position of positions) {
                 player = this.mPlayerMap.get(position.id);
@@ -172,7 +171,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
         if (!this.mPlayerMap.has(sprite.id)) {
-            const player = new PlayerEntity(sprite as Sprite, this);
+            const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
             this.roomService.blocks.add(player);
         }
@@ -197,7 +196,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const len: number = moveDataList.length;
             let moveData: op_client.IMoveData;
             let playID: number;
-            let player: PlayerEntity;
+            let player: Player;
             for (let i: number = 0; i < len; i++) {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;
@@ -225,7 +224,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onShowEffect(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT = packet.content;
         const ids = content.id;
-        let player: PlayerEntity;
+        let player: Player;
         for (const id of ids) {
             player = this.get(id);
             if (player) {

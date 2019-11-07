@@ -127,7 +127,7 @@ export class RightBtnGroup extends Panel {
 
     private initBagSlotData() {
         // =============获取角色背包前几位物品
-        const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
+        const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
         if (playerModel.package && playerModel.package.items) {
             const items: op_gameconfig.IItem[] = playerModel.package.items;
             const len: number = items.length > MainUIMobile.SlotMaxCount ? MainUIMobile.SlotMaxCount : items.length;

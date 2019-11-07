@@ -34,7 +34,7 @@ export class DebugLogger extends Panel {
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.showDescTxT();
-        this.x = (this.width >> 1) * this.mWorld.uiScale;
+        this.x = ((this.width >> 1) + 60) * this.mWorld.uiScale;
         this.y = (this.height >> 1) * this.mWorld.uiScale;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
@@ -116,7 +116,13 @@ export class DebugLogger extends Panel {
 
     private showDescTxT() {
         const orientation: string = this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-        this.mDescTxt = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
+        let renderType: string = "WEBGL";
+        if (this.mWorld.game.config.renderType === Phaser.CANVAS) {
+            renderType = "CANVAS";
+        } else if (this.mWorld.game.config.renderType === Phaser.HEADLESS) {
+            renderType = "HEADLESS";
+        }
+        this.mDescTxt = "rendertype:" + renderType + "\n" + " width: " + this.mWorld.getSize().width + "\n" + "height: " + this.mWorld.getSize().height + "\n" + "orientation: " + orientation + "\n" + "devicePixelRatio: " + window.devicePixelRatio;
         const errList: string[] = Logger.getInstance().getErrorList();
         if (!errList) {
             return;

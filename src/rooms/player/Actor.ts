@@ -4,12 +4,13 @@ import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
-import { PlayerEntity } from "./player.entity";
-import { WorldService } from "../../game/world.service";
+import { Player } from "./player";
+import { Bag } from "./bag/bag";
 
-export class ActorEntity extends PlayerEntity implements InputListener {
+export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
+    protected mBag: Bag;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
@@ -25,12 +26,29 @@ export class ActorEntity extends PlayerEntity implements InputListener {
                 roomService.cameraService.startFollow(this.mDisplay);
             }
         }
+
+        if (this.model && this.model.package) {
+            this.mBag = new Bag(mElementManager.roomService.world);
+            this.mBag.register();
+        }
+    }
+
+    public getBag(): Bag {
+        return this.mBag;
     }
 
     // override super's method.
     public setRenderable(isRenderable: boolean): void {
         // do nothing!
         // Actor is always renderable!!!
+    }
+
+    public destroy() {
+        if (this.mBag) {
+            this.mBag.destroy();
+            this.mBag = null;
+        }
+        super.destroy();
     }
 
     downHandler(d: number, keyList: number[]) {

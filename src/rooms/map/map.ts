@@ -5,8 +5,8 @@ import { MessageType } from "../../const/MessageType";
 import { PacketHandler } from "net-socket-packet";
 import { IEntity } from "../entity";
 
-export class MapEntity extends PacketHandler implements IEntity {
-    public static NAME: string = "MapEntity";
+export class Map extends PacketHandler implements IEntity {
+    public static NAME: string = "Map";
     private mInitialize: boolean;
     private mMapModel: MapModel;
     private emitter: Phaser.Events.EventEmitter;

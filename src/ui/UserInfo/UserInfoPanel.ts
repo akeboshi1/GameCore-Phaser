@@ -182,7 +182,7 @@ export class UserInfoPanel extends Panel {
     }
 
     private updateFollwer(platformId) {
-        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
+        const mainPlayer = this.mWorld.roomManager.currentRoom.getHero().model;
         if (!mainPlayer) return;
         if (platformId === mainPlayer.platformId) {
             // this.mFollwerBtn.visible = false;

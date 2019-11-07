@@ -52,6 +52,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mGameEmitter: Phaser.Events.EventEmitter;
     private mHttpService: HttpService;
     private mAccount: Account;
+    private gameConfig: Phaser.Types.Core.GameConfig;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -244,6 +245,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mAccount;
     }
 
+    public getGameConfig(): Phaser.Types.Core.GameConfig {
+        return this.gameConfig;
+    }
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
@@ -342,7 +346,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             return this.mGame;
         }
-        const gameConfig: Phaser.Types.Core.GameConfig = {
+        this.gameConfig = {
             type: Phaser.AUTO,
             zoom: 1,
             parent: "game",
@@ -392,8 +396,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 roundPixels: true
             }
         };
-        Object.assign(gameConfig, this.mConfig);
-        this.mGame = new Game(gameConfig);
+        Object.assign(this.gameConfig, this.mConfig);
+        this.mGame = new Game(this.gameConfig);
         this.initUiScale();
         return this.mGame;
     }
