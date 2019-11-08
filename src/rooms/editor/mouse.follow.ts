@@ -70,7 +70,6 @@ export class MouseFollow {
      */
     checkBound(pos: Pos, source?: Pos) {
         const bound = new Pos(pos.x, pos.y);
-        Logger.log(bound.x, bound.y);
         const size = this.mRoomService.miniSize;
         if (pos.x < 0) {
             bound.x = 0;
@@ -86,7 +85,6 @@ export class MouseFollow {
         if (bound.equal(pos) && source) {
             return source;
         }
-        Logger.log("bound: ", bound.x, bound.y);
         return this.mRoomService.transformToMini90(bound);
     }
 

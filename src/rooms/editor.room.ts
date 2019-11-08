@@ -105,6 +105,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     public update(time: number, delta: number) {
+        if (this.layerManager) this.layerManager.update(time, delta);
     }
 
     transformToMini90(p: Pos): undefined | Pos {
