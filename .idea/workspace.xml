@@ -1,33 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="显示场景中的物件">
-      <change afterPath="$PROJECT_DIR$/src/rooms/editor/reference.area.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rooms/editor/reference.effect.ts" afterDir="false" />
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="#63 #64">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/1757c9fe8a9c47fc605f.networker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/1757c9fe8a9c47fc605f.networker.js.LICENSE" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/animation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/animation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/display.object.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/display.object.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/element.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/element.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/pos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/pos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -204,6 +180,7 @@
       <workItem from="1568684263829" duration="9442000" />
       <workItem from="1569822411121" duration="24399000" />
       <workItem from="1570523032170" duration="36283000" />
+      <workItem from="1572837842157" duration="95105000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -387,7 +364,56 @@
       <option name="project" value="LOCAL" />
       <updated>1572089227356</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="remove element">
+      <created>1572580595566</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1572580595566</updated>
+    </task>
+    <task id="LOCAL-00028" summary="sync sprite">
+      <created>1572593189160</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1572593189160</updated>
+    </task>
+    <task id="LOCAL-00029" summary="按下移动删除地块">
+      <created>1572685417354</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1572685417370</updated>
+    </task>
+    <task id="LOCAL-00030" summary="add release">
+      <created>1572945659146</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1572945659146</updated>
+    </task>
+    <task id="LOCAL-00031" summary="#63 #64">
+      <created>1573045125770</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1573045125770</updated>
+    </task>
+    <task id="LOCAL-00032" summary="铺设地块">
+      <created>1573206162029</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1573206162029</updated>
+    </task>
+    <task id="LOCAL-00033" summary="排序">
+      <created>1573206656401</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1573206656401</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,12 +460,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
-    <MESSAGE value="修改 room 里的结构，和display里结构" />
-    <MESSAGE value="M room" />
-    <MESSAGE value="Package.json" />
-    <MESSAGE value="fix clock sync" />
-    <MESSAGE value="M launcher" />
     <MESSAGE value="M gameconfig" />
     <MESSAGE value="M webpack" />
     <MESSAGE value="A version.js" />
@@ -458,6 +478,13 @@
     <MESSAGE value="add terser plugin keep classname" />
     <MESSAGE value="显示、隐藏网格&#10;笔触设定&#10;镜头拖动" />
     <MESSAGE value="解析animation" />
-    <option name="LAST_COMMIT_MESSAGE" value="解析animation" />
+    <MESSAGE value="remove element" />
+    <MESSAGE value="sync sprite" />
+    <MESSAGE value="按下移动删除地块" />
+    <MESSAGE value="add release" />
+    <MESSAGE value="#63 #64" />
+    <MESSAGE value="铺设地块" />
+    <MESSAGE value="排序" />
+    <option name="LAST_COMMIT_MESSAGE" value="排序" />
   </component>
 </project>
