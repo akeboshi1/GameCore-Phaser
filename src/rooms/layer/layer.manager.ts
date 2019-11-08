@@ -203,4 +203,8 @@ export class LayerManager {
     set depthGroundDirty(val: boolean) {
         this.mDepthGround = val;
     }
+
+    get layer(): Phaser.GameObjects.Container {
+        return this.mGroundLayer;
+    }
 }

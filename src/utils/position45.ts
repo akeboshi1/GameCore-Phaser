@@ -21,7 +21,7 @@ export class Position45 {
   }
 
   public static transformTo45(point3: Pos, position: IPosition45Obj): Pos {
-    const offsetX = position.sceneWidth / 2 - position.tileWidth / 2;
+    const offsetX = position.sceneWidth / 2; // - position.tileWidth / 2;
     return new Pos(
       Math.floor((point3.y + point3.z) / position.tileHeight + (point3.x - offsetX) / position.tileWidth),
       Math.floor((point3.y + point3.z) / position.tileHeight - (point3.x - offsetX) / position.tileWidth),

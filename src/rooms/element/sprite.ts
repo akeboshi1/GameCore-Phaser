@@ -4,15 +4,14 @@ import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import { SlotInfo } from "../player/slot.info";
 import {FramesModel, IFramesModel} from "../display/frames.model";
 import {Animation} from "../display/animation";
+import Helpers from "../../utils/helpers";
 
 export interface ISprite {
     readonly id: number;
-    readonly pos: Pos;
     readonly avatar: IAvatar;
     readonly currentAnimationName: string;
     readonly direction: number;
     readonly nickname: string;
-    readonly bindID: number;
     readonly alpha: number;
     readonly displayBadgeCards: op_def.IBadgeCard[];
 
@@ -27,7 +26,11 @@ export interface ISprite {
     readonly platformId: string;
     readonly sceneId: number;
     readonly displayInfo: IFramesModel | IDragonbonesModel;
+    pos: Pos;
+    bindID: number;
     package: op_gameconfig.IPackage;
+
+    newID();
 }
 
 export class Sprite implements ISprite {
@@ -92,12 +95,20 @@ export class Sprite implements ISprite {
         this.mDisplayBadgeCards = obj.displayBadgeCards;
     }
 
+    public newID() {
+        this.mID = Helpers.genId();
+    }
+
     get id(): number {
         return this.mID;
     }
 
     get pos(): Pos {
         return this.mPos;
+    }
+
+    set pos(pos: Pos) {
+        this.mPos = pos;
     }
 
     get avatar(): IAvatar {
@@ -118,6 +129,10 @@ export class Sprite implements ISprite {
 
     get bindID(): number {
         return this.mBindID;
+    }
+
+    set bindID(id: number) {
+        this.mBindID = id;
     }
 
     get alpha(): number {

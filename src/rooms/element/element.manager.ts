@@ -13,13 +13,14 @@ export interface IElementManager {
     readonly roomService: IRoomService;
     readonly scene: Phaser.Scene | undefined;
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
+    add(sprite: ISprite);
     remove(id: number): void;
     destroy();
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
 
-    private mElements: Map<number, Element> = new Map();
+    protected mElements: Map<number, Element> = new Map();
     private mGameConfig: IElementStorage;
 
     constructor(private mRoom: IRoomService) {
@@ -61,6 +62,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public add(sprite: ISprite|ISprite[]) {
+    }
+
     public destroy() {
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -82,7 +86,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return;
     }
 
-    private onAdjust(packet: PBpacket) {
+    protected onAdjust(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
         const sprites = content.spritePositions;
         const type = content.nodeType;
@@ -101,7 +105,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onAdd(packet: PBpacket) {
+    protected onAdd(packet: PBpacket) {
         if (!this.mRoom.layerManager) {
             Logger.error("layer manager does not exist");
             return;
@@ -126,7 +130,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private _add(sprite: ISprite) {
+    protected _add(sprite: ISprite) {
         let ele = this.mElements.get(sprite.id);
         if (!ele) ele = new Element(sprite, this);
         // TODO udpate element
@@ -144,7 +148,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onRemove(packet: PBpacket) {
+    protected onRemove(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
@@ -156,9 +160,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onMove(packet: PBpacket) {
+    protected onMove(packet: PBpacket) {
     }
 
-    private onSetPosition(packet: PBpacket) {
+    protected onSetPosition(packet: PBpacket) {
     }
 }

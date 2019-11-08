@@ -109,6 +109,7 @@ export class Element extends BlockObject implements IElement {
         } else {
             // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
             let conf = null;
+            Logger.log("sprite: ", sprite, sprite.displayInfo);
             if (sprite.displayInfo) {
                 conf = sprite.displayInfo;
             } else {

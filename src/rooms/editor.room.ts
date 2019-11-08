@@ -1,17 +1,7 @@
 import {IPosition45Obj, Position45} from "../utils/position45";
-
-export interface EditorRoomService extends IRoomService {
-    readonly brush: Brush;
-    readonly miniSize: IPosition45Obj;
-
-    transformToMini45(p: Pos): Pos;
-
-    transformToMini90(p: Pos): Pos;
-}
-
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_editor, op_virtual_world} from "pixelpai_proto";
+import {op_client, op_editor, op_virtual_world, op_def} from "pixelpai_proto";
 import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
@@ -26,6 +16,17 @@ import {TerrainDisplay} from "./display/terrain.display";
 import {SelectedElement} from "./editor/selected.element";
 import {DisplayObject} from "./display/display.object";
 import {Pos} from "../utils/pos";
+import {EditorElementManager} from "./element/editor.element.manager";
+import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
+
+export interface EditorRoomService extends IRoomService {
+    readonly brush: Brush;
+    readonly miniSize: IPosition45Obj;
+
+    transformToMini45(p: Pos): Pos;
+
+    transformToMini90(p: Pos): Pos;
+}
 
 export class EditorRoom extends Room implements EditorRoomService {
     private mBrush: Brush = new Brush(this);
@@ -41,6 +42,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ALIGN_GRID, this.onAlignGridHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_VISIBLE_GRID, this.onVisibleGridHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.onMouseFollowHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE, this.onMouseFollowHandler);
         }
     }
 
@@ -74,8 +76,8 @@ export class EditorRoom extends Room implements EditorRoomService {
             sceneHeight: (rows + cols) * (tileHeight / 2),
         };
 
-        this.mTerainManager = new TerrainManager(this);
-        this.mElementManager = new ElementManager(this);
+        this.mTerainManager = new EditorTerrainManager(this);
+        this.mElementManager = new EditorElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
 
         this.mWorld.game.scene.start(EditScene.name, {
@@ -122,6 +124,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private moveCameras(pointer) {
+        // TODO 在Cameras里面处理镜头移动
         const camera = this.mScene.cameras.main;
         camera.scrollX += pointer.prevPosition.x - pointer.position.x;
         camera.scrollY += pointer.prevPosition.y - pointer.position.y;
@@ -130,13 +133,17 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private createElement() {
-        if (!this.brush.frameModel) {
+        if (!this.mMouseFollow.sprite) {
             return;
         }
-
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
-        const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
-        this.connection.send(pkt);
+        Logger.log("create element");
+        const elementManager = this.mMouseFollow.elementManager;
+        if (elementManager) {
+            const sprite = this.mMouseFollow.getSprite();
+            if (sprite) {
+                elementManager.add(sprite);
+            }
+        }
     }
 
     private onSetEditorModeHandler(packet: PBpacket) {
@@ -152,7 +159,7 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private onAlignGridHandler(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ALIGN_GRID = packet.content;
-        this.brush.alignGrid = content.align;
+        this.mouseFollow.alignGrid = content.align;
     }
 
     private onVisibleGridHandler(packet: PBpacket) {
@@ -161,11 +168,9 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private onMouseFollowHandler(packet: PBpacket) {
-        const content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW = packet.content;
-        this.brush.setMouseFollow(content);
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE = packet.content;
         if (this.mScene) {
-            if (!this.mMouseFollow) this.mMouseFollow = new MouseFollow(this.mScene, this);
-            this.mMouseFollow.setDisplay(this.brush.frameModel, this.brush.alignGrid);
+            this.mouseFollow.setDisplay(content);
         }
     }
 
@@ -174,7 +179,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
     }
 
-    private onPointerUpHandler() {
+    private onPointerUpHandler(pointer) {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         switch (this.brush.mode) {
@@ -251,10 +256,6 @@ export class EditorRoom extends Room implements EditorRoomService {
             return;
         }
         element.removeMe();
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
-        content.ids = [element.id];
-        this.connection.send(pkt);
     }
 
     private syncSprite(object: DisplayObject) {
@@ -272,6 +273,11 @@ export class EditorRoom extends Room implements EditorRoomService {
             return;
         }
         switch (this.mBrush.mode) {
+            case BrushEnum.BRUSH:
+                if (this.mMouseFollow.nodeType === op_def.NodeType.TerrainNodeType) {
+                    this.createElement();
+                }
+                break;
             case BrushEnum.MOVE:
                 this.moveCameras(pointer);
                 break;
@@ -282,7 +288,10 @@ export class EditorRoom extends Room implements EditorRoomService {
                 if (this.mSelectedElementEffect) {
                     this.mSelectedElementEffect.setPosition();
                 }
-                const pos = this.brush.transitionGrid(pointer.x, pointer.y);
+                if (!this.mouseFollow) {
+                    return;
+                }
+                const pos = this.mMouseFollow.transitionGrid(pointer.worldX, pointer.worldY);
                 if (pos) {
                     this.mSelectedObject.x = pos.x;
                     this.mSelectedObject.y = pos.y;
@@ -298,5 +307,12 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     get miniSize(): IPosition45Obj {
         return this.mNimiSize;
+    }
+
+    private get mouseFollow(): MouseFollow {
+        if (!this.mMouseFollow) {
+            this.mMouseFollow = new MouseFollow(this.mScene, this);
+        }
+        return this.mMouseFollow;
     }
 }

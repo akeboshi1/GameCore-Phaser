@@ -9,11 +9,11 @@ import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "../element/sprite";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
-    private mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
-    private mGameConfig: IElementStorage;
+    protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
+    protected mGameConfig: IElementStorage;
     // add by 7 ----
-    private mPacketFrameCount: number = 0;
-    private mListener: SpriteAddCompletedListener;
+    protected mPacketFrameCount: number = 0;
+    protected mListener: SpriteAddCompletedListener;
     // ---- by 7
 
     constructor(private mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
@@ -51,6 +51,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         return terrain;
     }
 
+    public add(sprite: ISprite) {
+    }
+
     public remove(id: number): void {
         if (!this.mTerrains) return;
         const terrain = this.mTerrains.get(id);
@@ -63,7 +66,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onAdd(packet: PBpacket) {
+    protected onAdd(packet: PBpacket) {
         this.mPacketFrameCount++;
         if (!this.mGameConfig) {
             Logger.error("gameconfig is undefined");
@@ -88,7 +91,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private _add(sprite: ISprite) {
+    protected _add(sprite: ISprite) {
         let terrain = this.mTerrains.get(sprite.id);
         if (!terrain) {
             terrain = new Terrain(sprite, this);
@@ -98,7 +101,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         this.roomService.blocks.add(terrain);
     }
 
-    private onRemove(packet: PBpacket) {
+    protected onRemove(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;

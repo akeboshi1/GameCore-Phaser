@@ -12,6 +12,7 @@
   "author": "Seven <seven@apowo.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/chance": "^1.0.7",
     "clean-webpack-plugin": "^3.0.0",
     "config": "^3.2.2",
     "config-webpack": "^1.0.4",
@@ -33,6 +34,7 @@
   },
   "dependencies": {
     "buffer": "^5.2.1",
+    "chance": "^1.1.3",
     "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
     "phaser": "3.19.0",

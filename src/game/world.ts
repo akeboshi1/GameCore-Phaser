@@ -93,7 +93,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     destroy(): void {
         this.mConnection.closeConnect();
-        // todo
+        this.clearGame();
     }
 
     onConnected(connection?: SocketConnection): void {
@@ -181,19 +181,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        if (this.mGame) {
-            this.mGame.plugins.removeGlobalPlugin("rexButton");
-            this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-            this.mGame.plugins.removeGlobalPlugin("rexInputText");
-            this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-            this.mGame.plugins.removeScenePlugin("DragonBones");
-            this.mGame.plugins.removeScenePlugin("rexUI");
-            this.mGameEmitter.destroy();
-            this.roomManager.destroy();
-            this.uiManager.destroy();
-            this.mGame.destroy(true);
-            this.mGame = null;
-        }
+        this.clearGame();
         this.mConfig.game_id = content.gameId;
         this.mConfig.virtual_world_id = content.virtualWorldId;
         this._newGame();
@@ -207,6 +195,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         //     }
         // });
         this.loginEnterWorld();
+    }
+
+    private clearGame() {
+        if (this.mGame) {
+            this.mGame.plugins.removeGlobalPlugin("rexButton");
+            this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+            this.mGame.plugins.removeGlobalPlugin("rexInputText");
+            this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+            this.mGame.plugins.removeScenePlugin("DragonBones");
+            this.mGame.plugins.removeScenePlugin("rexUI");
+            this.mGameEmitter.destroy();
+            this.roomManager.destroy();
+            this.uiManager.destroy();
+            this.mGame.destroy(true);
+            this.mGame = null;
+        }
     }
 
     get uiScale(): number {
