@@ -1,15 +1,16 @@
-import { WorldService } from "../../game/world.service";
-import RoundRectangle from "../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
-import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
-import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
-import { Panel } from "../components/panel";
-import { NinePatchButton } from "../components/ninepatch.button";
-import { Border, Url } from "../../utils/resUtil";
-import { CheckButton } from "../components/check.button";
-import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
-import { NinePatch } from "../components/nine.patch";
+import { WorldService } from "../../../game/world.service";
+import RoundRectangle from "../../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
+import TextArea from "../../../../lib/rexui/templates/ui/textarea/TextArea";
+import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import { Panel } from "../../components/panel";
+import { NinePatchButton } from "../../components/ninepatch.button";
+import { Border, Url } from "../../../utils/resUtil";
+import { CheckButton } from "../../components/check.button";
+import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
+import { NinePatch } from "../../components/nine.patch";
+import { BaseChatPanel } from "../base.chat.panel";
 
-export class ChatPanel extends Panel {
+export class ChatPanelPC extends BaseChatPanel {
     private mTextArea: TextArea;
     private mInputText: InputText;
     private mVoiceBtn: CheckButton;
@@ -18,7 +19,7 @@ export class ChatPanel extends Panel {
     private mPreHei: number = 0;
     private mPreWid: number = 0;
     private outPut: Phaser.GameObjects.Container;
-    constructor(scene: Phaser.Scene, private mWorldService: WorldService) {
+    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
         super(scene);
     }
 
@@ -30,17 +31,12 @@ export class ChatPanel extends Panel {
     }
 
     public setLocation(x?: number, y?: number) {
-        // TODO 设置位置后，DefaultMask位置不会更新，所以暂时以0 0为准
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
-        const size = this.mWorldService.getSize();
-        if (this.mWorldService.game.device.os.desktop) {
-            this.x = 0;
-            this.y = size.height - this.mPreHei;
-        } else {
-            this.x = size.width - this.width / 2 >> 1;
-            this.y = size.height - this.height * 1.8;
-        }
+        const size = this.mWorld.getSize();
+        this.x = 0;
+        this.y = size.height - this.mPreHei;
         if (this.mTextArea) {
+            // 每次resize更新textBlock中的textMask的位置
             this.mTextArea.childrenMap.child.textMask.setPosition(undefined, size.height - this.height + 30).resize();
         }
     }
@@ -80,7 +76,7 @@ export class ChatPanel extends Panel {
     protected init() {
         if (this.mInitialized) return;
         super.init();
-        const size = this.mWorldService.getSize();
+        const size = this.mWorld.getSize();
         this.mWidth = 464;
         this.mHeight = 281;
         this.mPreHei = size.height;
@@ -88,8 +84,8 @@ export class ChatPanel extends Panel {
         this.setSize(this.mWidth, this.mHeight);
 
         const border = new NinePatch(this.scene, 0, 0, this.width, this.height, Border.getName(), null, Border.getConfig());
-        border.x = 4 * this.mWorldService.uiScale + border.width * border.originX;
-        border.y = size.height - 260 * this.mWorldService.uiScale + border.height * border.originY;
+        border.x = 4 * this.mWorld.uiScale + border.width * border.originX;
+        border.y = size.height - 260 * this.mWorld.uiScale + border.height * border.originY;
         this.add(border);
 
         this.outPut = this.mScene.make.container(undefined, false);
@@ -104,15 +100,15 @@ export class ChatPanel extends Panel {
             right: 0,
             bottom: 4
         });
-        track.x = 100 * this.mWorldService.uiScale;
-        track.y = 10 * this.mWorldService.uiScale;
+        track.x = 100 * this.mWorld.uiScale;
+        track.y = 10 * this.mWorld.uiScale;
         this.outPut.add(track);
 
         const text = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: "14px",
             wrap: {
                 mode: "char",
-                width: 400 * this.mWorldService.uiScale
+                width: 400 * this.mWorld.uiScale
             },
         });
         this.outPut.add(text);
@@ -132,8 +128,8 @@ export class ChatPanel extends Panel {
         this.outPut.add(thumb);
         // this.outPut.add(indicator);
         this.mTextArea = new TextArea(this.mScene, {
-            x: 230 * this.mWorldService.uiScale,
-            y: size.height - 150 * this.mWorldService.uiScale,
+            x: 230 * this.mWorld.uiScale,
+            y: size.height - 150 * this.mWorld.uiScale,
             textWidth: 430,
             textHeight: 200,
             text,
@@ -155,8 +151,8 @@ export class ChatPanel extends Panel {
         const inputContainer = this.mScene.make.container(undefined, false);
         this.add(inputContainer);
         const inputBg = new NinePatch(this.scene, 0, 0, 370, 32, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
-        inputBg.x = 8 * this.mWorldService.uiScale + inputBg.width * inputBg.originX;
-        inputBg.y = size.height - 46 * this.mWorldService.uiScale + inputBg.height * inputBg.originY;
+        inputBg.x = 8 * this.mWorld.uiScale + inputBg.width * inputBg.originX;
+        inputBg.y = size.height - 46 * this.mWorld.uiScale + inputBg.height * inputBg.originY;
         inputContainer.add(inputBg);
 
         this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
@@ -169,8 +165,8 @@ export class ChatPanel extends Panel {
             .setStyle({ font: "bold 16px YaHei" })
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
-        this.mInputText.x = 12 * this.mWorldService.uiScale;
-        this.mInputText.y = size.height - 40 * this.mWorldService.uiScale;
+        this.mInputText.x = 12 * this.mWorld.uiScale;
+        this.mInputText.y = size.height - 40 * this.mWorld.uiScale;
         inputContainer.add(this.mInputText);
 
         const sendMsgBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, "button", "发送", {
@@ -179,7 +175,7 @@ export class ChatPanel extends Panel {
             right: 4,
             bottom: 4
         });
-        sendMsgBtn.x = this.width - sendMsgBtn.width + 10 * this.mWorldService.uiScale;
+        sendMsgBtn.x = this.width - sendMsgBtn.width + 10 * this.mWorld.uiScale;
         sendMsgBtn.y = size.height - sendMsgBtn.height;
         sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
         this.add(sendMsgBtn);
@@ -187,12 +183,12 @@ export class ChatPanel extends Panel {
         this.mSendKey = this.mScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
         this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
-        this.mVoiceBtn.x = this.width - 60 * this.mWorldService.uiScale;
+        this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
         this.mVoiceBtn.y = size.height - this.height;
         this.add(this.mVoiceBtn);
 
         this.mMicBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
-        this.mMicBtn.x = this.width - 20 * this.mWorldService.uiScale;
+        this.mMicBtn.x = this.width - 20 * this.mWorld.uiScale;
         this.mMicBtn.y = size.height - this.height;
         this.add(this.mMicBtn);
 
@@ -226,20 +222,20 @@ export class ChatPanel extends Panel {
     }
 
     private onFocusHandler() {
-        if (!this.mWorldService || !this.mWorldService.inputManager) {
+        if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorldService.inputManager.enable = false;
+        this.mWorld.inputManager.enable = false;
         if (this.mSendKey) {
             this.mSendKey.on("down", this.onDownEnter, this);
         }
     }
 
     private onBlurHandler() {
-        if (!this.mWorldService || !this.mWorldService.inputManager) {
+        if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorldService.inputManager.enable = true;
+        this.mWorld.inputManager.enable = true;
         if (this.mSendKey) {
             this.mSendKey.off("down", this.onDownEnter, this);
         }

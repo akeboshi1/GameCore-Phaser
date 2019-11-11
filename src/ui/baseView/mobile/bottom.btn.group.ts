@@ -5,6 +5,7 @@ import { IconBtn } from "./icon.btn";
 import { Size } from "../../../utils/size";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { ChatMediator } from "../../chat/chat.mediator";
+import { MainUIMediator } from "../mainUI.mediator";
 
 export class BottomBtnGroup extends Panel {
     private mResKey: string;
@@ -45,6 +46,22 @@ export class BottomBtnGroup extends Panel {
         this.y = size.height - 120 * this.mWorld.uiScale;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         this.mChatText.setStyle({ "fontSize": Math.floor(30 * this.mWorld.uiScale) });
+    }
+
+    public tweenView(show: boolean) {
+        const size: Size = this.mWorld.getSize();
+        const baseY: number = size.height - 120 * this.mWorld.uiScale;
+        const toY: number = show === true ? baseY : baseY + 50;
+        const toAlpha: number = show === true ? 1 : 0;
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Linear",
+            props: {
+                y: { value: toY },
+                alpha: { value: toAlpha },
+            },
+        });
     }
 
     protected preload() {
@@ -152,15 +169,22 @@ export class BottomBtnGroup extends Panel {
     }
 
     private chatHandler() {
+        // ======================show chatView
         let chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
         if (chatMed === undefined) {
             chatMed = new ChatMediator(this.mWorld, this.mScene);
             this.mWorld.uiManager.setMediator(ChatMediator.NAME, chatMed);
         }
-        if (chatMed.isShow()) {
-            chatMed.hide();
+        const showBoo = chatMed.isShow();
+        if (showBoo) {
+           // chatMed.hide();
         } else {
             chatMed.show();
+        }
+        // =====================tween out/in baseView
+        const baseViewMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        if (baseViewMed) {
+            baseViewMed.tweenView(false);
         }
     }
 

@@ -67,6 +67,30 @@ export class RightBtnGroup extends Panel {
         super.destroy();
     }
 
+    public tweenView(show: boolean) {
+        const size: Size = this.mWorld.getSize();
+        let baseX: number;
+        switch (this.mWorld.game.scale.orientation) {
+            case Phaser.Scale.Orientation.LANDSCAPE:
+                baseX = size.width - 70 * this.mWorld.uiScale;
+                break;
+            case Phaser.Scale.Orientation.PORTRAIT:
+                baseX = size.width - this.width / 2 - 50 * this.mWorld.uiScale;
+                break;
+        }
+        const toX: number = show === true ? baseX : baseX + 50;
+        const toAlpha: number = show === true ? 1 : 0;
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Linear",
+            props: {
+                x: { value: toX },
+                alpha: { value: toAlpha },
+            },
+        });
+    }
+
     protected preload() {
         this.mResKey = "baseView";
         this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));

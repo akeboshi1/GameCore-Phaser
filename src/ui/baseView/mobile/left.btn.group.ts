@@ -38,6 +38,21 @@ export class LeftBtnGroup extends Panel {
         super.destroy();
     }
 
+    public tweenView(show: boolean) {
+        const baseX = this.mExpandBtn !== undefined ? this.mExpandBtn.width >> 1 : 10 * this.mWorld.uiScale;
+        const toX: number = show === true ? baseX : baseX - 50;
+        const toAlpha: number = show === true ? 1 : 0;
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Linear",
+            props: {
+                x: { value: toX },
+                alpha: { value: toAlpha },
+            },
+        });
+    }
+
     protected preload() {
         if (!this.mScene) {
             return;

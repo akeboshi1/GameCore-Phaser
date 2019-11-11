@@ -1,4 +1,3 @@
-import { ChatPanel } from "./chat.panel";
 import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
@@ -6,10 +5,14 @@ import { Logger } from "../../utils/log";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
 import { World } from "../../game/world";
+import { ChatPanelPC } from "./pc/chatPanel.pc";
+import { Panel } from "../components/panel";
+import { BaseChatPanel } from "./base.chat.panel";
+import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
-    private mChatPanel: ChatPanel;
+    private mChatPanel: BaseChatPanel;
     private mGMEApi: WebGMEAPI;
     private mInRoom: boolean = false;
     private mQCLoudAuth: string;
@@ -58,7 +61,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return true;
     }
 
-    public getView(): ChatPanel {
+    public getView(): Panel {
         return this.mChatPanel;
     }
 
@@ -80,7 +83,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
             return;
         }
         this.world.connection.addPacketListener(this);
-        this.mChatPanel = new ChatPanel(this.mScene, this.world);
+        if (this.world.game.device.os.desktop) {
+            this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+        } else {
+            this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+        }
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
         this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);

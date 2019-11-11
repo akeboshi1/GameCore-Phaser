@@ -108,7 +108,6 @@ export default class Connection implements ConnectionService {
                 this.mListener.onConnected();
                 break;
             case "onDisConnected":
-
                 if (!this.mTimeout) {
                     if (this.mReConnectCount < 10)
                         this.mReConnectCount++;
@@ -122,6 +121,7 @@ export default class Connection implements ConnectionService {
                 }
                 break;
             case "onConnectError":
+                Logger.getInstance().error("error" + data.error);
                 // TODO
                 break;
             case "onData":

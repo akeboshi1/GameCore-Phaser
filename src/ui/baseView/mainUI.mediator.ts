@@ -76,6 +76,11 @@ export class MainUIMediator extends BaseMediator {
         this.world = null;
     }
 
+    public tweenView(show: boolean) {
+        if (this.world.game.device.os.desktop) return;
+        (this.mView as MainUIMobile).tweenView(show);
+    }
+
     // private orientationChange() {
     //     if (this.world.game.device.os.desktop) return;
     //     (this.mView as MainUIMobile).changeOrientation(this.world.game.scale.orientation);

@@ -63,4 +63,10 @@ export class MainUIMobile extends Panel {
         this.mBottomBtnGroup = null;
         super.destroy();
     }
+    public tweenView(show: boolean) {
+        if (this.mTopBtnGroup) this.mTopBtnGroup.tweenView(show);
+        if (this.mRightBtnGroup) this.mRightBtnGroup.tweenView(show);
+        if (this.mBottomBtnGroup) this.mBottomBtnGroup.tweenView(show);
+        if (this.mLeftBtnGroup) this.mLeftBtnGroup.tweenView(show);
+    }
 }

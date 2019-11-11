@@ -87,6 +87,37 @@ export class BlueButton {
     }
 }
 
+export class WhiteButton {
+    static getName(): string {
+        return "button_white";
+    }
+
+    static getPNG(): string {
+        return Url.getRes("ui/common/button_white.png");
+    }
+
+    static getJSON(): string {
+        return Url.getRes("ui/common/button_white.json");
+    }
+
+    static getColumns(): number[] {
+        return [7, 1, 7];
+    }
+
+    static getRows(): number[] {
+        return [7, 1, 7];
+    }
+
+    static getConfig() {
+        return {
+            left: 7,
+            top: 7,
+            right: 7,
+            bottom: 7
+        };
+    }
+}
+
 export class CloseButton {
     static getName(): string {
         return "common_clsBtn";

@@ -41,6 +41,7 @@ export class DebugLogger extends Panel {
     public update(param: any) {
         const now: number = this.mWorld.roomManager.currentRoom.now();
         if (this.mDelay - now < 3000) {
+            this.showDescTxT();
             this.mTimeTF.setText("FPS:" + param);
             this.mDescTF.setText(this.mDescTxt);
             this.mDelay = now;
@@ -123,6 +124,10 @@ export class DebugLogger extends Panel {
             renderType = "HEADLESS";
         }
         this.mDescTxt = "rendertype:" + renderType + "\n" + " width: " + this.mWorld.getSize().width + "\n" + "height: " + this.mWorld.getSize().height + "\n" + "orientation: " + orientation + "\n" + "devicePixelRatio: " + window.devicePixelRatio;
+        this.showErrTxt();
+    }
+
+    private showErrTxt() {
         const errList: string[] = Logger.getInstance().getErrorList();
         if (!errList) {
             return;
@@ -131,6 +136,6 @@ export class DebugLogger extends Panel {
         errList.forEach((str) => {
             errStr += "\n" + str;
         });
-        this.mDescTxt += "\n" + errStr;
+        this.mDescTxt += errStr;
     }
 }
