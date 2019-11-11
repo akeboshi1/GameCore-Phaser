@@ -77,7 +77,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return player;
     }
 
-    add(sprite: ISprite) {
+    add(sprite: ISprite[]) {
     }
 
     public remove(id: number): void {

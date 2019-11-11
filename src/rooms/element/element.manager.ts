@@ -13,7 +13,7 @@ export interface IElementManager {
     readonly roomService: IRoomService;
     readonly scene: Phaser.Scene | undefined;
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
-    add(sprite: ISprite);
+    add(sprite: ISprite[]);
     remove(id: number): void;
     destroy();
 }
@@ -62,7 +62,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public add(sprite: ISprite|ISprite[]) {
+    public add(sprite: ISprite[]) {
     }
 
     public destroy() {

@@ -5,16 +5,18 @@ import {op_def, op_editor} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 
 export class EditorTerrainManager extends TerrainManager {
-    add(sprite: ISprite) {
-        if (!this.canPut(sprite)) {
-            return;
+    add(sprites: ISprite[]) {
+        for (const sprite of sprites) {
+            if (!this.canPut(sprite)) {
+                return;
+            }
+            this._add(sprite);
         }
-        this._add(sprite);
 
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
         const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
         content.nodeType = op_def.NodeType.TerrainNodeType;
-        content.sprites = [sprite];
+        content.sprites = sprites;
         this.connection.send(pkt);
     }
 

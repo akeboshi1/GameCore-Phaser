@@ -191,6 +191,6 @@ export class FramesDisplay extends DisplayObject {
         this.setData("id", data.id);
 
         this.mSprites.set(field, sprite);
-        this.emit("initialized");
+        this.emit("initialized", this);
     }
 }

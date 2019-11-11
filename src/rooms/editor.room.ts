@@ -2,10 +2,8 @@ import {IPosition45Obj, Position45} from "../utils/position45";
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
 import {op_client, op_editor, op_virtual_world, op_def} from "pixelpai_proto";
-import {ElementManager} from "./element/element.manager";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
-import {TerrainManager} from "./terrain/terrain.manager";
 import {IRoomService, Room} from "./room";
 import {LayerManager} from "./layer/layer.manager";
 import {ViewblockManager} from "./cameras/viewblock.manager";
@@ -140,9 +138,9 @@ export class EditorRoom extends Room implements EditorRoomService {
         Logger.log("create element");
         const elementManager = this.mMouseFollow.elementManager;
         if (elementManager) {
-            const sprite = this.mMouseFollow.getSprite();
-            if (sprite) {
-                elementManager.add(sprite);
+            const sprites = this.mMouseFollow.createSprites();
+            if (sprites) {
+                elementManager.add(sprites);
             }
         }
     }
