@@ -45,8 +45,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.setSize(this.mWidth, this.mHeight);
                 this.x = 0;
                 this.y = 0;
-                this.mTextArea.resize(this.mWidth / this.mWorld.uiScale, size.height);
-                this.mTextArea.childrenMap.child.textMask.setPosition(-70, size.height - this.mHeight).resize();
+                this.mTextArea.setMinSize(this.mWidth, size.height);
                 this.clickContainer.x = this.mWidth / this.mWorld.uiScale + this.clickContainer.width / 2;
                 this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
                 this.clickContainer.rotation = Math.PI * .5;
@@ -58,8 +57,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.setSize(this.mWidth, this.mHeight);
                 this.x = 0;
                 this.y = this.mHeight + 20 * this.mWorld.uiScale;
-                this.mTextArea.resize(this.mWidth / this.mWorld.uiScale, size.height / this.mWorld.uiScale * 2);
-                this.mTextArea.childrenMap.child.textMask.setPosition(-70, size.height - this.mHeight).resize();
+                this.mTextArea.setMinSize(this.mWidth, size.height);
                 this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
                 this.clickContainer.y = -this.clickContainer.height >> 1;
                 this.clickContainer.rotation = Math.PI;
@@ -69,7 +67,8 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
-        this.mTextArea.x = this.mBorder.width >> 1;
+        this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
+        this.mTextArea.childrenMap.child.textMask.setPosition(-10, size.height - this.height).resize();
         this.mInputBg.x = this.mInputBg.width >> 1;
         this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
@@ -152,7 +151,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             fontSize: "20px",
             wrap: {
                 mode: "char",
-                width: 420
+                width: this.mWidth >> 1
             },
         });
 
@@ -162,8 +161,8 @@ export class ChatPanelMobile extends BaseChatPanel {
             right: 0,
             bottom: 4
         });
-        track.x = 92 * this.mWorld.uiScale;
-        track.y = 10 * this.mWorld.uiScale;
+        track.x = this.mWidth / 2;
+        track.y = 8 * this.mWorld.uiScale;
         const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", {
             left: 4,
             top: 4,
@@ -174,9 +173,9 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.add(track);
         this.add(thumb);
         this.mTextArea = new TextArea(this.mScene, {
-            x: this.mWidth >> 1,
+            x: this.mWidth + 20 * this.mWorld.uiScale >> 1,
             y: this.mHeight + 178 * this.mWorld.uiScale >> 1,
-            textWidth: this.mWidth + 100 * this.mWorld.uiScale,
+            textWidth: this.mWidth,
             textHeight: this.mHeight + 150 * this.mWorld.uiScale,
             text,
             slider: {
@@ -195,7 +194,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             fontSize: "20px",
             color: "#808080"
         })
-            .resize(310, 26)
+            .resize(328, 26)
             .setOrigin(0, 0)
             .setStyle({ font: "bold 20px YaHei" })
             .on("focus", this.onFocusHandler, this)
