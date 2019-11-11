@@ -20,7 +20,7 @@ export class ViewblockManager implements ViewblockService {
 
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];
-    private mDelta: number = 0;
+    private mDelay: number = 0;
 
     constructor(cameras: ICameraService) {
         this.mCameras = cameras;
@@ -70,10 +70,10 @@ export class ViewblockManager implements ViewblockService {
 
     public update(time: number, delta: number): void {
         if (!this.mCameras) return;
-        if (time - this.mDelta < 3000) {
+        if (time - this.mDelay < 3000) {
             return;
         }
-        this.mDelta = time;
+        this.mDelay = time;
         const bound: Phaser.Geom.Rectangle = this.mCameras.getViewPort();
         const miniViewPort = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
@@ -82,6 +82,6 @@ export class ViewblockManager implements ViewblockService {
     }
 
     public destroy(): void {
-        this.mDelta = 0;
+        this.mDelay = 0;
     }
 }

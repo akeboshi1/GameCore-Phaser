@@ -64,6 +64,34 @@ export class JoyStickManager implements InputManager {
         }
     }
 
+    public tweenView(show: boolean) {
+        const toAlpha: number = show === true ? 1 : 0;
+        const size: Size = this.worldService.getSize();
+        let baseX: number;
+        let baseY: number;
+        if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            baseX = 100 * this.mScale;
+            baseY = size.height - 100 * this.mScale;
+        } else {
+            baseX = 100 * this.mScale;
+            baseY = size.height - 300 * this.mScale;
+        }
+
+        const toX: number = show === true ? baseX : baseX - this.mParentcon.width;
+        const toY: number = baseY;
+        this.mScene.tweens.add({
+            targets: this.mParentcon,
+            duration: 200,
+            ease: "Linear",
+            props: {
+                x: { value: toX },
+                y: { value: toY },
+                alpha: { value: toAlpha },
+            },
+        });
+
+    }
+
     public addListener(l: InputListener) {
         this.mJoyListeners.push(l);
         if (this.mJoyStick) {

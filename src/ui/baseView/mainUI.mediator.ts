@@ -6,6 +6,7 @@ import { MessageType } from "../../const/MessageType";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { MainUIMobile } from "./mobile/mainUI.mobile";
 import { MainUIPC } from "./pc/mainUI.pc";
+import { JoyStickManager } from "../../game/joystick.manager";
 
 export class MainUIMediator extends BaseMediator {
     public static NAME: string = "MainUIMediator";
@@ -79,6 +80,7 @@ export class MainUIMediator extends BaseMediator {
     public tweenView(show: boolean) {
         if (this.world.game.device.os.desktop) return;
         (this.mView as MainUIMobile).tweenView(show);
+        (this.world.inputManager as JoyStickManager).tweenView(show);
     }
 
     // private orientationChange() {

@@ -32,6 +32,7 @@ export class ChatPanelMobile extends BaseChatPanel {
     }
 
     public setLocation(x?: number, y?: number) {
+        if (!this.mShowing) return;
         if (this.mBorder) {
             this.mBorder.destroy(true);
             this.mBorder = null;
