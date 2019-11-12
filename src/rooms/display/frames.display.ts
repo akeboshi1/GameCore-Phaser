@@ -184,6 +184,13 @@ export class FramesDisplay extends DisplayObject {
             sprite.x = this.baseLoc.x;
             sprite.y = this.baseLoc.y;
             this.addAt(sprite, field);
+
+            // const graphics = this.scene.make.graphics(undefined, false);
+            // graphics.lineStyle(5, 0xFF00FF, 1.0);
+            // graphics.fillStyle(0xFFFFFF, 1.0);
+            // graphics.fillRect(0, 0, 30, 30);
+            // graphics.strokeRect(0, 0, 30, 30);
+            // this.add(graphics);
             // this.setInteractive(new Phaser.Geom.Rectangle(this.baseLoc.x, this.baseLoc.y, sprite.width, sprite.height), Phaser.Geom.Rectangle.Contains);
             // this.setInteractive({ pixelPerfect: true });
         }

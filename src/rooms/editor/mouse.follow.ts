@@ -13,7 +13,7 @@ import {IPosition45Obj, Position45} from "../../utils/position45";
 
 export class MouseFollow {
     private mNodeType: NodeType;
-    private mDisplay: MouseDisplay;
+    private mDisplay: MouseDisplayContainer;
     private mLayerManager: LayerManager;
     private mElementManager: IElementManager;
     private mSprite: ISprite;
@@ -22,7 +22,7 @@ export class MouseFollow {
     /**
      * 笔触大小
      */
-    private mSize: number = 4;
+    private mSize: number = 1;
     constructor(private mScene: Phaser.Scene, private mRoomService: EditorRoomService) { }
 
     setDisplay(content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE) {
@@ -33,11 +33,7 @@ export class MouseFollow {
         }
         this.mSprite = new Sprite(content.sprite);
         this.mLayerManager = this.mRoomService.layerManager;
-        // this.mDisplay = new FramesDisplay(this.mScene, this.mRoomService);
-        // this.mDisplay.load(<IFramesModel> this.mSprite.displayInfo);
-        // this.mDisplay.changeAlpha(0.8);
-        // this.mDisplay.once("initialized", this.onInitializedHandler, this);
-        this.mDisplay = new MouseDisplay(this.mScene, this.mRoomService);
+        this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
         this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, this.mSize);
         this.mLayerManager.addToSceneToUI(this.mDisplay);
 
@@ -49,6 +45,8 @@ export class MouseFollow {
         }
 
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        // this.mDisplay.x = 0;
+        // this.mDisplay.y = 0;
     }
 
     createSprites(): ISprite[] {
@@ -58,13 +56,22 @@ export class MouseFollow {
         const resule = [];
         const count = this.mSize * this.mSize;
         let sprite: ISprite = null;
-        for (let i = 0; i < count; i++) {
+        const displays = this.mDisplay.displays;
+        for (const display of displays) {
             sprite = Object.assign(Object.create(Object.getPrototypeOf(this.mSprite)), this.mSprite);
             sprite.newID();
-            sprite.pos = this.getPosition();
+            sprite.pos = this.getPosition(display.x, display.y);
             sprite.bindID = this.mSprite.id;
-            resule[i] = sprite;
+            resule.push(sprite);
         }
+        // for (let i = 0; i < count; i++) {
+        //     sprite = Object.assign(Object.create(Object.getPrototypeOf(this.mSprite)), this.mSprite);
+        //     sprite.newID();
+        //     sprite.pos = this.getPosition();
+        //     sprite.bindID = this.mSprite.id;
+        //     resule[i] = sprite;
+        // }
+        Logger.log(resule);
         return resule;
     }
 
@@ -120,19 +127,19 @@ export class MouseFollow {
         if (!pos) {
             return;
         }
-        this.mDisplay.x = pos.x;
-        this.mDisplay.y = pos.y;
+        this.mDisplay.x = pos.x - (this.mDisplay.tileWidth >> 1);
+        this.mDisplay.y = pos.y - (this.mDisplay.tileHeight >> 1);
     }
 
     private getPosition(rows: number = 0, cols: number = 0) {
         if (this.mNodeType === op_def.NodeType.TerrainNodeType) {
-            const pos = this.mRoomService.transformTo45(new Pos(this.mDisplay.x, this.mDisplay.y));
-            pos.x += rows;
-            pos.y += cols;
-            return pos;
+            return  this.mRoomService.transformTo45(new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols));
+            // pos.x += rows;
+            // pos.y += cols;
+            // return pos;
         }
         // TODO 多个物件仅支持地块
-        return new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+        return new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
     }
 
     set alignGrid(val: boolean) {
@@ -167,8 +174,9 @@ export class MouseFollow {
     }
 }
 
-class MouseDisplay extends Phaser.GameObjects.Container {
+class MouseDisplayContainer extends Phaser.GameObjects.Container {
     private mDisplay: FramesDisplay[];
+    private mTileSize: IPosition45Obj;
     constructor(scene: Phaser.Scene, private mRoomService: IRoomService) {
         super(scene);
     }
@@ -177,14 +185,14 @@ class MouseDisplay extends Phaser.GameObjects.Container {
         this.clear();
         this.mDisplay = [];
         let frameDisplay: FramesDisplay;
-        const roomSize = this.mRoomService.roomSize;
-        const size45: IPosition45Obj = {
-            tileWidth: roomSize.tileWidth,
-            tileHeight: roomSize.tileHeight,
+        const { tileWidth, tileHeight } = this.mRoomService.roomSize;
+        this.mTileSize = {
+            tileWidth,
+            tileHeight,
             rows: size,
             cols: size,
-            sceneWidth: 0,
-            sceneHeight: 0,
+            sceneWidth: (size + size) * (tileWidth / 2),
+            sceneHeight: (size + size) * (tileHeight / 2)
         };
 
         for (let i = 0; i < size; i++) {
@@ -193,12 +201,14 @@ class MouseDisplay extends Phaser.GameObjects.Container {
                 frameDisplay.setAlpha(0.8);
                 frameDisplay.load(frame);
                 frameDisplay.once("initialized", this.onInitializedHandler, this);
-                const pos = Position45.transformTo90(new Pos(i, j), size45);
+                const pos = Position45.transformTo90(new Pos(i, j), this.mTileSize);
                 frameDisplay.x = pos.x;
                 frameDisplay.y = pos.y;
                 this.add(frameDisplay);
+                this.mDisplay.push(frameDisplay);
             }
         }
+        Logger.log(this.mDisplay);
     }
 
     clear() {
@@ -209,6 +219,25 @@ class MouseDisplay extends Phaser.GameObjects.Container {
     destroy(fromScene?: boolean): void {
         this.clear();
         super.destroy(fromScene);
+    }
+
+    getPosition() {
+        if (!this.parentContainer) {
+            return;
+        }
+        const pos = new Pos(this.parentContainer.x, this.parentContainer.y);
+    }
+
+    get tileWidth(): number {
+        return this.mTileSize.sceneWidth;
+    }
+
+    get tileHeight(): number {
+        return this.mTileSize.sceneHeight;
+    }
+
+    get displays() {
+        return this.mDisplay;
     }
 
     private onInitializedHandler(obj: FramesDisplay) {

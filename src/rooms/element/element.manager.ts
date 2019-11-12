@@ -23,7 +23,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected mElements: Map<number, Element> = new Map();
     private mGameConfig: IElementStorage;
 
-    constructor(private mRoom: IRoomService) {
+    constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);

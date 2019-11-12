@@ -16,7 +16,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected mListener: SpriteAddCompletedListener;
     // ---- by 7
 
-    constructor(private mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
+    constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
         this.mListener = listener;
         if (this.connection) {
