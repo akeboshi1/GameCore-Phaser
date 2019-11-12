@@ -45,6 +45,7 @@ export class MouseFollow {
         }
 
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.on("wheel", this.onWheelHandler, this);
         // this.mDisplay.x = 0;
         // this.mDisplay.y = 0;
     }
@@ -103,7 +104,10 @@ export class MouseFollow {
     }
 
     destroy() {
-        if (this.mScene) this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        if (this.mScene) {
+            this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+            this.mScene.input.off("wheel", this.onWheelHandler, this);
+        }
         if (this.mDisplay) {
             this.mDisplay.destroy();
             this.mDisplay = null;
@@ -136,6 +140,14 @@ export class MouseFollow {
         return pos;
     }
 
+    private onWheelHandler(pointer, currentOver, dx, dy) {
+        if (pointer.deltaY < 0) {
+            this.size--;
+        } else {
+            this.size++;
+        }
+    }
+
     set alignGrid(val: boolean) {
         this.mAlignGrid = val;
     }
@@ -164,7 +176,11 @@ export class MouseFollow {
         if (val < 1) {
             val = 1;
         }
+        if (val > 10) {
+            val = 10;
+        }
         this.mSize = val;
+        this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, this.mSize);
     }
 }
 
