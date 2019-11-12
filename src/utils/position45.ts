@@ -15,8 +15,8 @@ export class Position45 {
   public static transformTo90(point: Pos, position: IPosition45Obj): Pos {
     const offsetX = position.sceneWidth / 2; // + position.tileWidth / 2;
     return new Pos(
-      (point.x - point.y) * (position.tileWidth >> 1) + offsetX,
-      ((point.x + point.y)) * (position.tileHeight >> 1)
+      (point.x - point.y) * (position.tileWidth / 2) + offsetX,
+      ((point.x + point.y)) * (position.tileHeight / 2)
     );
   }
 

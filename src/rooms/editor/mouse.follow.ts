@@ -64,14 +64,6 @@ export class MouseFollow {
             sprite.bindID = this.mSprite.id;
             resule.push(sprite);
         }
-        // for (let i = 0; i < count; i++) {
-        //     sprite = Object.assign(Object.create(Object.getPrototypeOf(this.mSprite)), this.mSprite);
-        //     sprite.newID();
-        //     sprite.pos = this.getPosition();
-        //     sprite.bindID = this.mSprite.id;
-        //     resule[i] = sprite;
-        // }
-        Logger.log(resule);
         return resule;
     }
 
@@ -139,7 +131,9 @@ export class MouseFollow {
             // return pos;
         }
         // TODO 多个物件仅支持地块
-        return new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
+        const pos = new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
+        pos.y += this.mRoomService.miniSize.tileHeight >> 1;
+        return pos;
     }
 
     set alignGrid(val: boolean) {
@@ -208,7 +202,6 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
                 this.mDisplay.push(frameDisplay);
             }
         }
-        Logger.log(this.mDisplay);
     }
 
     clear() {

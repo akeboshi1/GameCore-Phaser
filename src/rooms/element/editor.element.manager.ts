@@ -3,6 +3,7 @@ import { ISprite } from "./sprite";
 import {PBpacket} from "net-socket-packet";
 import {op_editor, op_def, op_client} from "pixelpai_proto";
 import {IRoomService} from "../room";
+import {Logger} from "../../utils/log";
 
 export class EditorElementManager extends ElementManager {
     constructor(room: IRoomService) {
@@ -48,6 +49,7 @@ export class EditorElementManager extends ElementManager {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
+        Logger.log("======", ids, this.mElements);
         if (type !== op_def.NodeType.ElementNodeType) {
             return;
         }
