@@ -18,17 +18,19 @@ export class EditorTerrainManager extends TerrainManager {
     }
 
     add(sprites: ISprite[]) {
+        const clientSprites = [];
         for (const sprite of sprites) {
             if (!this.canPut(sprite)) {
                 continue;
             }
             this._add(sprite);
+            clientSprites.push(sprite.toSprite());
         }
 
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
         const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
         content.nodeType = op_def.NodeType.TerrainNodeType;
-        content.sprites = sprites;
+        content.sprites = clientSprites;
         this.connection.send(pkt);
     }
 

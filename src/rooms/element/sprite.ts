@@ -31,6 +31,7 @@ export interface ISprite {
     package: op_gameconfig.IPackage;
 
     newID();
+    toSprite(): op_client.ISprite;
 }
 
 export class Sprite implements ISprite {
@@ -93,6 +94,24 @@ export class Sprite implements ISprite {
         this.mBindID = obj.bindId;
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.mDisplayBadgeCards = obj.displayBadgeCards;
+    }
+
+    public toSprite(): op_client.ISprite {
+        const sprite = op_client.Sprite.create();
+        sprite.id = this.id;
+        if (this.mDisplayInfo instanceof FramesModel) {
+            sprite.display = this.mDisplayInfo.display;
+            sprite.currentAnimationName = this.currentAnimationName;
+            const point3f = op_def.PBPoint3f.create();
+            point3f.x = this.pos.x;
+            point3f.y = this.pos.y;
+            point3f.z = this.pos.z;
+            sprite.point3f = point3f;
+            sprite.animations = (<FramesModel> this.displayInfo).toClient();
+        }
+        sprite.direction = this.direction;
+        sprite.bindId = this.bindID;
+        return sprite;
     }
 
     public newID() {

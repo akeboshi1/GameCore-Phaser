@@ -20,11 +20,13 @@ export class EditorElementManager extends ElementManager {
         for (const sprite of sprites) {
             this._add(sprite);
         }
+
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
         const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
         content.nodeType = op_def.NodeType.ElementNodeType;
-        content.sprites = sprites;
+        content.sprites = sprites.map((sprite) => sprite.toSprite());
         this.connection.send(pkt);
+        Logger.log("add sprites: ", content);
     }
 
     remove(id: number) {

@@ -11,9 +11,12 @@ export interface IAnimationData {
     collisionArea?: number[][];
     walkableArea?: number[][];
     originPoint: Phaser.Geom.Point;
+
+    toClient(): op_gameconfig.IAnimation;
 }
 
 export class Animation implements IAnimationData {
+    protected mID: number;
     protected mBaseLoc: Phaser.Geom.Point;
     protected mFrameName: string[];
     protected mFrameRate: number;
@@ -30,6 +33,7 @@ export class Animation implements IAnimationData {
         } else {
             tmpBaseLoc = ani.baseLoc;
         }
+        this.mID = ani.id;
         this.mBaseLoc = tmpBaseLoc;
         this.mName = ani.name;
         this.mFrameName = ani.frameName;
@@ -46,13 +50,30 @@ export class Animation implements IAnimationData {
         }
 
         if (typeof ani.walkableArea === "string") {
-
         } else {
             this.mWalkableArea = ani.walkableArea;
         }
     }
 
+    toClient(): op_gameconfig.IAnimation {
+        const ani = op_gameconfig.Animation.create();
+        ani.id = this.id;
+        ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
+        ani.name = this.name;
+        ani.loop = this.loop;
+        ani.frameRate = this.frameRate;
+        ani.frameName = this.frameName;
+        ani.originPoint = [this.originPoint.x, this.originPoint.y];
+        ani.walkOriginPoint = [this.originPoint.x, this.originPoint.y];
+        ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
+        ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
+        return ani;
+    }
+
     private stringToArray(string: string, fristJoin: string, lastJoin: string) {
+        if (!string) {
+            return;
+        }
         const tmp = string.split(lastJoin);
         const result = [];
         for (const ary of tmp) {
@@ -62,8 +83,21 @@ export class Animation implements IAnimationData {
         return result;
     }
 
+    private arrayToString<T>(array: T[][], fristJoin: string, lastJoin: string): string {
+        if (!array) return "";
+        const tmp = [];
+        for (const ary of array) {
+            tmp.push(ary.join(fristJoin));
+        }
+        return tmp.join(lastJoin);
+    }
+
     get baseLoc(): Phaser.Geom.Point {
         return this.mBaseLoc;
+    }
+
+    get id(): number {
+        return this.mID;
     }
 
     get frameName(): string[] {

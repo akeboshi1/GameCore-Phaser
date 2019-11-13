@@ -73,6 +73,14 @@ export class FramesModel implements IFramesModel {
         return this.mGen;
     }
 
+    public toClient(): op_gameconfig.IAnimation[] {
+        const anis: op_gameconfig.IAnimation[] = [];
+        this.animations.forEach((ani: IAnimationData) => {
+            anis.push(ani.toClient());
+        }, this);
+        return anis;
+    }
+
     private setDisplay(display: op_gameconfig.IDisplay) {
         if (!display) {
             Logger.error(`${this.type} display does not exist`);
@@ -91,20 +99,20 @@ export class FramesModel implements IFramesModel {
             return;
         }
         this.animations = new Map();
-        let ani: IAnimationData;
+        // let ani: IAnimationData;
         for (const aniData of aniDatas) {
-            const baseLoc = aniData.baseLoc;
-            ani = {
-                name: aniData.name,
-                frameName: aniData.frameName,
-                frameRate: aniData.frameRate,
-                loop: aniData.loop,
-                baseLoc: new Phaser.Geom.Point(baseLoc.x, baseLoc.y),
-                // walkableArea: aniData.walkableArea || [],
-                collisionArea: aniData.collisionArea || [],
-                originPoint: aniData.originPoint
-            };
-            this.animations.set(ani.name, ani);
+            // const baseLoc = aniData.baseLoc;
+            // ani = {
+            //     name: aniData.name,
+            //     frameName: aniData.frameName,
+            //     frameRate: aniData.frameRate,
+            //     loop: aniData.loop,
+            //     baseLoc: new Phaser.Geom.Point(baseLoc.x, baseLoc.y),
+            //     // walkableArea: aniData.walkableArea || [],
+            //     collisionArea: aniData.collisionArea || [],
+            //     originPoint: aniData.originPoint
+            // };
+            this.animations.set(aniData.name, aniData);
         }
     }
 }

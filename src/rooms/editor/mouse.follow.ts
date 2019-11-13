@@ -55,7 +55,6 @@ export class MouseFollow {
             return;
         }
         const resule = [];
-        const count = this.mSize * this.mSize;
         let sprite: ISprite = null;
         const displays = this.mDisplay.displays;
         for (const display of displays) {
