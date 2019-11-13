@@ -96,9 +96,9 @@ export class ChatPanelPC extends BaseChatPanel {
 
         const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", {
             left: 0,
-            top: 4,
+            top: 2,
             right: 0,
-            bottom: 4
+            bottom: 2
         });
         track.x = 100 * this.mWorld.uiScale;
         track.y = 10 * this.mWorld.uiScale;
