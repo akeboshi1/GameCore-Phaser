@@ -2,14 +2,17 @@ import {TerrainManager} from "./terrain.manager";
 import {ISprite} from "../element/sprite";
 import {PBpacket} from "net-socket-packet";
 import {op_client, op_def, op_editor} from "pixelpai_proto";
-import {Logger} from "../../utils/log";
 import {IRoomService, SpriteAddCompletedListener} from "../room";
 import {Terrain} from "./terrain";
+import {Pos} from "../../utils/pos";
+import {Logger} from "../../utils/log";
 
 export class EditorTerrainManager extends TerrainManager {
     constructor(room: IRoomService, listener?: SpriteAddCompletedListener) {
-        super(room);
+        super(room, listener);
         if (this.connection) {
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE , this.onRemove);
         }
     }
@@ -48,6 +51,29 @@ export class EditorTerrainManager extends TerrainManager {
         }
         for (const id of ids) {
             this.tryRemove(id);
+        }
+    }
+
+    protected onSync(packet: PBpacket) {
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.TerrainNodeType) {
+            return;
+        }
+        const sprites = content.sprites;
+        for (const  sprite of sprites) {
+            this.trySync(sprite);
+        }
+    }
+
+    protected trySync(sprite: op_client.ISprite) {
+        const terrain = this.mTerrains.get(sprite.id);
+        if (!terrain) {
+            Logger.log("can't find terrain", sprite);
+            return;
+        }
+        const point = sprite.point3f;
+        if (point) {
+            terrain.setPosition(new Pos(point.x, point.y, point.z));
         }
     }
 
