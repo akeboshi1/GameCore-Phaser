@@ -17,7 +17,7 @@ export class EditorTerrainManager extends TerrainManager {
     add(sprites: ISprite[]) {
         for (const sprite of sprites) {
             if (!this.canPut(sprite)) {
-                return;
+                continue;
             }
             this._add(sprite);
         }
@@ -64,6 +64,12 @@ export class EditorTerrainManager extends TerrainManager {
     }
 
     private canPut(sprite: ISprite) {
+        const pos = sprite.pos;
+        const roomSize = this.roomService.roomSize;
+        if (!roomSize) return false;
+        if (pos.x < 0 || pos.y < 0 || pos.x > roomSize.rows || pos.y > roomSize.cols) {
+            return false;
+        }
         const terrains = Array.from(this.mTerrains.values());
         for (const ter of terrains) {
             const pos45 = ter.getPosition45();
