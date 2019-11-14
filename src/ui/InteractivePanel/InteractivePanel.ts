@@ -52,7 +52,6 @@ export class InteractivePanel extends Panel {
                 this.scene.load.start();
             }
         }
-
         if (data.text) {
             if (data.text.length > 0) {
                 const descData: op_gameconfig_01.IText = data.text[0];
@@ -93,7 +92,7 @@ export class InteractivePanel extends Panel {
                     med.componentClick(itemData.data);
                 }
             });
-            this.add(this.mRadio);
+            this.radioComplete();
             this.mRadio.setRadioData(data.button);
         }
     }
@@ -112,8 +111,8 @@ export class InteractivePanel extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width / 2;
-        this.y = size.height - this.height >> 1;
+        this.x = size.width >> 1;
+        this.y = size.height / 2 - 250;
     }
     public hide() {
         super.hide();
@@ -217,12 +216,12 @@ export class InteractivePanel extends Panel {
         this.mDescCon.setInteractive();
         this.mNameCon.setInteractive();
 
-        this.add(this.mLeftFaceIcon);
-        this.add(this.mMidFaceIcon);
-        this.add(this.mRightFaceIcon);
+        // this.add(this.mLeftFaceIcon);
+        // this.add(this.mMidFaceIcon);
+        // this.add(this.mRightFaceIcon);
         this.add(this.mNameCon);
         this.add(this.mDescCon);
-
+        this.resize();
         super.init();
     }
 
@@ -230,42 +229,44 @@ export class InteractivePanel extends Panel {
         const size: Size = this.mWorld.getSize();
         const data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mData[0];
         const uiDisplay: op_gameconfig_01.IDisplay = data.display[0];
-        const url: string = uiDisplay.texturePath;
+        const url: string = Url.getOsdRes(uiDisplay.texturePath);
+        const imgY: number = 120;
+        const imgX: number = 0;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         switch (uiDisplay.horizontal) {
             case op_def.HorizontalAlignment.HORIZONTAL_LEFT:
                 this.mLeftFaceIcon.setTexture(url);
                 this.mLeftFaceIcon.setData("nodeID", uiDisplay.node.id);
-                this.mLeftFaceIcon.x = size.width / 2 - this.mLeftFaceIcon.width;
-                this.mLeftFaceIcon.y = -100;
+                this.mLeftFaceIcon.x = imgX - 300;
+                this.mLeftFaceIcon.y = imgY;
                 this.mLeftFaceIcon.setInteractive();
+                this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.on("pointerdown", () => {
                     if (!med) return;
                     med.componentClick(this.mLeftFaceIcon.getData("nodeID"));
                 });
-                this.add(this.mLeftFaceIcon);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
                 this.mMidFaceIcon.setData("nodeID", uiDisplay.node.id);
-                this.mMidFaceIcon.x = this.mWorld.getSize().width >> 1;
-                this.mMidFaceIcon.y = -100;
+                this.mMidFaceIcon.x = imgX;
+                this.mMidFaceIcon.y = imgY;
+                this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.on("pointerdown", () => {
                     if (!med) return;
                     med.componentClick(this.mMidFaceIcon.getData("nodeID"));
                 });
-                this.add(this.mMidFaceIcon);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
                 this.mRightFaceIcon.setData("nodeID", uiDisplay.node.id);
-                this.mRightFaceIcon.x = (this.mWorld.getSize().width >> 1) + 200;
-                this.mRightFaceIcon.y = -100;
+                this.mRightFaceIcon.x = imgX + 300;
+                this.mRightFaceIcon.y = imgY;
+                this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.on("pointerdown", () => {
                     if (!med) return;
                     med.componentClick(this.mRightFaceIcon.getData("nodeID"));
                 });
-                this.add(this.mRightFaceIcon);
                 break;
         }
     }
@@ -275,8 +276,9 @@ export class InteractivePanel extends Panel {
 
     private radioComplete() {
         const size: Size = this.mWorld.getSize();
-        this.mRadio.x = size.width - this.mRadio.width - 10;
-        this.mRadio.y = size.height - this.mRadio.height;
+        if (!this.mRadio) return;
+        this.mRadio.x = 220;
+        this.mRadio.y = this.mDescCon.height + 250;
         this.add(this.mRadio);
     }
 

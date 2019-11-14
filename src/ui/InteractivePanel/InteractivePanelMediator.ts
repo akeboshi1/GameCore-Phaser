@@ -15,6 +15,11 @@ export class InteractivePanelMediator extends BaseMediator {
         this.mScene = scene;
     }
 
+    public isShow(): boolean {
+        if (!this.mView) return false;
+        return this.mView.isShow();
+    }
+
     public isSceneUI(): boolean {
         return false;
     }
