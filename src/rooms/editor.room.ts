@@ -178,12 +178,17 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
     }
 
-    private onPointerUpHandler(pointer) {
+    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         switch (this.brush.mode) {
             case BrushEnum.BRUSH:
                 this.createElement();
+                break;
+            case BrushEnum.SELECT:
+                if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+                    this.syncSprite(this.mSelectedObject);
+                }
                 break;
         }
     }
@@ -265,6 +270,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
         content.sprites = [ele.toSprite()];
         this.connection.send(pkt);
+        Logger.log("syncSprite", content);
     }
 
     private onPointerMoveHandler(pointer) {
@@ -294,7 +300,6 @@ export class EditorRoom extends Room implements EditorRoomService {
                 if (pos) {
                     this.mSelectedObject.x = pos.x;
                     this.mSelectedObject.y = pos.y;
-                    this.syncSprite(this.mSelectedObject);
                 }
                 break;
         }
