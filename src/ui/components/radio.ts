@@ -19,6 +19,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     private mConfig: IRadioResConfig;
     private mBg: Phaser.GameObjects.Image;
     private mIsShow: boolean = false;
+    private mInit: boolean = false;
     // private mArrow: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, config: IRadioResConfig) {
         super(scene);
@@ -108,12 +109,13 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     }
 
     private onLoadCompleteHandler() {
+        this.mInit = true;
         const resKey: string = this.mConfig.resKey;
         this.mBg = this.mScene.make.image(undefined, false);
         this.mBg.setTexture(resKey, this.mConfig.resBg);
         this.mBg.x = this.mConfig.wid / 2;
         this.mBg.y = this.mConfig.hei / 2;
-        this.add(this.mBg);
+        this.addAt(this.mBg, 0);
         this.setSize(this.mConfig.wid, this.mConfig.hei);
         if (this.mConfig.completeBack) {
             this.mConfig.completeBack();

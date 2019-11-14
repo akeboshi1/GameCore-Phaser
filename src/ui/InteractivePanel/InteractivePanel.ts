@@ -112,7 +112,7 @@ export class InteractivePanel extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width >> 1;
+        this.x = size.width / 2;
         this.y = size.height - this.height >> 1;
     }
     public hide() {
@@ -176,7 +176,7 @@ export class InteractivePanel extends Panel {
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
         const backGround: NinePatch = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
-        const border = new NinePatch(this.scene, 0, 0, 1000, 280, Border.getName(), null, Border.getConfig());
+        const border = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
         this.mMidFaceIcon = this.mScene.make.image(undefined, false);
@@ -192,7 +192,6 @@ export class InteractivePanel extends Panel {
 
         const nameBg = this.mScene.make.image(undefined, false);
         nameBg.setTexture("juqing", "juqing_name.png");
-        this.mNameTF.x = -100;
         this.mNameCon.add(nameBg);
         this.mNameCon.add(this.mNameTF);
 
@@ -203,14 +202,18 @@ export class InteractivePanel extends Panel {
                 width: 420 * this.mWorld.uiScale
             },
         });
-
+        this.mNameTF.x = -65;
+        this.mNameTF.y = -8;
+        this.mDescTF.x = -border.width / 2;
+        this.mDescTF.y = -border.height / 2;
+        this.mDescCon.setSize(backGround.width, backGround.height);
+        this.mNameCon.setSize(nameBg.width, nameBg.height);
         this.mDescCon.add(backGround);
         this.mDescCon.add(border);
         this.mDescCon.add(this.mDescTF);
-        this.mNameCon.x = size.width / 2 - 100;
         this.mDescCon.y = size.height / 2 + 80;
-        this.mDescCon.setSize(backGround.width, backGround.height);
-        this.mNameCon.setSize(nameBg.width, nameBg.height);
+        this.mNameCon.x = 150 - this.mDescCon.width / 2;
+        this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
         this.mDescCon.setInteractive();
         this.mNameCon.setInteractive();
 
@@ -233,7 +236,8 @@ export class InteractivePanel extends Panel {
             case op_def.HorizontalAlignment.HORIZONTAL_LEFT:
                 this.mLeftFaceIcon.setTexture(url);
                 this.mLeftFaceIcon.setData("nodeID", uiDisplay.node.id);
-                this.x = size.width / 2 - this.mLeftFaceIcon.width;
+                this.mLeftFaceIcon.x = size.width / 2 - this.mLeftFaceIcon.width;
+                this.mLeftFaceIcon.y = -100;
                 this.mLeftFaceIcon.setInteractive();
                 this.mLeftFaceIcon.on("pointerdown", () => {
                     if (!med) return;
@@ -244,7 +248,8 @@ export class InteractivePanel extends Panel {
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
                 this.mMidFaceIcon.setData("nodeID", uiDisplay.node.id);
-                this.x = this.mWorld.getSize().width >> 1;
+                this.mMidFaceIcon.x = this.mWorld.getSize().width >> 1;
+                this.mMidFaceIcon.y = -100;
                 this.mMidFaceIcon.on("pointerdown", () => {
                     if (!med) return;
                     med.componentClick(this.mMidFaceIcon.getData("nodeID"));
@@ -254,7 +259,8 @@ export class InteractivePanel extends Panel {
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
                 this.mRightFaceIcon.setData("nodeID", uiDisplay.node.id);
-                this.x = (this.mWorld.getSize().width >> 1) + 200;
+                this.mRightFaceIcon.x = (this.mWorld.getSize().width >> 1) + 200;
+                this.mRightFaceIcon.y = -100;
                 this.mRightFaceIcon.on("pointerdown", () => {
                     if (!med) return;
                     med.componentClick(this.mRightFaceIcon.getData("nodeID"));
