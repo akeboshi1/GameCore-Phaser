@@ -138,7 +138,8 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const mediator: IMediator = this.mMedMap.get(type);
+        const name: string = `${type}Mediator`;
+        const mediator: IMediator = this.mMedMap.get(name);
         if (!mediator) {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
@@ -150,7 +151,8 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const mediator: IMediator = this.mMedMap.get(type + "Mediator");
+        const name: string = `${type}Mediator`;
+        const mediator: IMediator = this.mMedMap.get(name);
         if (!mediator) {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
