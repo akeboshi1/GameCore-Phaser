@@ -37,6 +37,7 @@ export interface IRoomService {
     readonly blocks: ViewblockService;
     readonly actor: Actor;
     readonly world: WorldService;
+    readonly map: Map;
 
     readonly scene: Phaser.Scene | undefined;
 
@@ -202,10 +203,6 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
         return this.mActor;
     }
 
-    public getMap(): Map {
-        return this.mMap;
-    }
-
     public requestActorMove(dir: number, keyArr: number[]) {
         this.mActor.setDirection(dir);
         this.playerManager.startActorMove();
@@ -296,6 +293,10 @@ export class Room implements IRoomService, SpriteAddCompletedListener, ClockRead
 
     get playerManager(): PlayerManager {
         return this.mPlayerManager || undefined;
+    }
+
+    get map(): Map {
+        return this.mMap;
     }
 
     get layerManager(): LayerManager {

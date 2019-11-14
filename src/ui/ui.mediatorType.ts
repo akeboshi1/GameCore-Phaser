@@ -4,6 +4,7 @@ export class UIMediatorType {
     public static BagMediator: string = "BagMediator"; // 角色背包
     public static ChatMediator: string = "ChatMediator"; // 场景聊天框
     public static NOTICE: string = "Notice";
+    public static DIALOGO: string = "DIALOGO";
 
     public static ControlF = "ControlF"; // 展示框
     public static Storage = "Storage"; // 物件背包

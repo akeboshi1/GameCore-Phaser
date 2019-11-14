@@ -6,11 +6,13 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { Player } from "./player";
 import { Bag } from "./bag/bag";
+import { Interactive } from "./interactive/interactive";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
     protected mBag: Bag;
+    protected mInteractive: Interactive;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
@@ -27,14 +29,22 @@ export class Actor extends Player implements InputListener {
             }
         }
 
-        if (this.model && this.model.package) {
-            this.mBag = new Bag(mElementManager.roomService.world);
-            this.mBag.register();
+        if (this.model) {
+            if (this.model.package) {
+                this.mBag = new Bag(mElementManager.roomService.world);
+                this.mBag.register();
+            }
         }
+        this.mInteractive = new Interactive(mElementManager.roomService.world);
+        this.mInteractive.register();
     }
 
     public getBag(): Bag {
         return this.mBag;
+    }
+
+    public getInteractive(): Interactive {
+        return this.mInteractive;
     }
 
     // override super's method.

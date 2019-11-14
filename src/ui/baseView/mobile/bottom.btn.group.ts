@@ -177,7 +177,7 @@ export class BottomBtnGroup extends Panel {
         }
         const showBoo = chatMed.isShow();
         if (showBoo) {
-           // chatMed.hide();
+            // chatMed.hide();
         } else {
             chatMed.show();
         }

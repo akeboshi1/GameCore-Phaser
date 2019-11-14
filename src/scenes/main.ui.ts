@@ -35,12 +35,12 @@ export class MainUIScene extends Phaser.Scene {
   }
 
   public update() {
-    if (!this.mDebugLoger) {
-      this.mDebugLoger = this.mRoom.world.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
-    }
-    if (this.mDebugLoger && this.mDebugLoger.isShow()) {
-      this.mDebugLoger.update(this.game.loop.actualFps.toFixed());
-    }
+    // if (!this.mDebugLoger) {
+    //   this.mDebugLoger = this.mRoom.world.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
+    // }
+    // if (this.mDebugLoger && this.mDebugLoger.isShow()) {
+    //   this.mDebugLoger.update(this.game.loop.actualFps.toFixed());
+    // }
     // this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
     // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation + "\n" + "devicePixelRatio:" + window.devicePixelRatio;

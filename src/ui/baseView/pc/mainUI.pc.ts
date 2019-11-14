@@ -4,13 +4,10 @@ import { ItemSlot } from "../../bag/item.slot";
 import { Size } from "../../../utils/size";
 import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
-import { UIMediatorType } from "../../ui.mediatorType";
-import { PBpacket } from "net-socket-packet";
-import { BagPanel } from "../../bag/bagView/bagPanel";
 import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
 import { Radio } from "../../components/radio";
-import { Logger } from "../../../utils/log";
+import { UIMediatorType } from "../../ui.mediatorType";
 
 /**
  * 主界面ui pc版本

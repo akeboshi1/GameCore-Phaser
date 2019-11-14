@@ -27,17 +27,17 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
         this.init();
     }
 
-    public setRadioData(value: string[]) {
+    public setRadioData(value: any[]) {
         this.clearRadioData();
         this.itemList = [];
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
             const item: RadioItemRender = new RadioItemRender(this.mScene, this, this.mConfig.wid, 20, this.mConfig.resKey, this.mConfig.resArrow);
-            const str: string = value[i];
+            const itemData: any = value[i];
             item.itemData = {
                 index: i,
-                text: str,
-                data: {},
+                text: itemData.text,
+                data: itemData.node.id
             };
             item.x = this.mConfig.wid / 2 + 30;
             item.y = i * 33 + 23;
