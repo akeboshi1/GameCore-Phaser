@@ -30,10 +30,6 @@ export class TopBtnGroup extends Panel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
-    public hide() {
-        super.hide();
-    }
-
     public destroy() {
         this.mBtnX = 0;
         if (this.mTurnBtn) {

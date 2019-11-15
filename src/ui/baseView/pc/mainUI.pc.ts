@@ -54,10 +54,6 @@ export class MainUIPC extends Panel {
         }
         super.show(param);
     }
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.x = (size.width - this.mWid) / 2;

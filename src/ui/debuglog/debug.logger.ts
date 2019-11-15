@@ -27,10 +27,6 @@ export class DebugLogger extends Panel {
         this.mShowing = true;
         this.showDescTxT();
     }
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.showDescTxT();

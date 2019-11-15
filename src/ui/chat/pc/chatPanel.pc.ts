@@ -41,11 +41,6 @@ export class ChatPanelPC extends BaseChatPanel {
         }
     }
 
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
-
     public destroy() {
         if (this.mTextArea) this.mTextArea.destroy();
         if (this.mInputText) this.mInputText.destroy();

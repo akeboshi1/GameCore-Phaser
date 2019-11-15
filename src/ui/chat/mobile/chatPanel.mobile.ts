@@ -80,11 +80,6 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
-
     public destroy() {
         if (this.mSendBtn) this.mSendBtn.destroy(true);
         if (this.mInputBg) this.mInputBg.destroy(true);

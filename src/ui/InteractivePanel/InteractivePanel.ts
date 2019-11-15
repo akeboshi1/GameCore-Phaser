@@ -51,7 +51,12 @@ export class InteractivePanel extends Panel {
                 this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
                 this.scene.load.start();
             }
+        } else {
+            if (this.mLeftFaceIcon) this.mLeftFaceIcon.visible = false;
+            if (this.mRightFaceIcon) this.mRightFaceIcon.visible = false;
+            if (this.mMidFaceIcon) this.mMidFaceIcon.visible = false;
         }
+
         if (data.text) {
             if (data.text.length > 0) {
                 const descData: op_gameconfig_01.IText = data.text[0];
@@ -71,34 +76,45 @@ export class InteractivePanel extends Panel {
                     });
                 }
             }
-
+        } else {
+            this.mDescTF.text = "";
+            this.mNameTF.text = "";
         }
 
         if (data.button && data.button.length > 0) {
-            this.mRadio = new Radio(this.mScene, {
-                wid: 328,
-                hei: 142,
-                resKey: "juqing",
-                resPng: "./resources/ui/juqing/juqing.png",
-                resJson: "./resources/ui/juqing/juqing.json",
-                resBg: "radio_bg.png",
-                resArrow: "radio_arrow.png",
-                fontStyle: { size: 20, color: "#ffcc00", bold: false },
-                completeBack: () => {
-                    this.radioComplete();
-                },
-                clickCallBack: (itemData: ISelectCallItemData) => {
-                    if (!itemData || !med) return;
-                    med.componentClick(itemData.data);
-                }
-            });
-            this.radioComplete();
+            if (!this.mRadio) {
+                this.mRadio = new Radio(this.mScene, {
+                    wid: 328,
+                    hei: 142,
+                    resKey: "juqing",
+                    resPng: "./resources/ui/juqing/juqing.png",
+                    resJson: "./resources/ui/juqing/juqing.json",
+                    resBg: "radio_bg.png",
+                    resArrow: "radio_arrow.png",
+                    fontStyle: { size: 20, color: "#ffcc00", bold: false },
+                    completeBack: () => {
+                        this.radioComplete();
+                    },
+                    clickCallBack: (itemData: ISelectCallItemData) => {
+                        if (!itemData || !med) return;
+                        med.componentClick(itemData.data);
+                    }
+                });
+                this.radioComplete();
+            }
             this.mRadio.setRadioData(data.button);
+            this.mRadio.visible = true;
+        } else {
+            if (this.mRadio) this.mRadio.visible = false;
         }
+        if (this.mShowing) {
+            return;
+        }
+        super.show(param);
     }
 
-    public update(param?: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI) {
-
+    public update(param?: any) {
+        this.show(param);
     }
 
     public getRadio(): Radio {
@@ -113,10 +129,6 @@ export class InteractivePanel extends Panel {
         const size: Size = this.mWorld.getSize();
         this.x = size.width >> 1;
         this.y = size.height / 2 - 250;
-    }
-    public hide() {
-        super.hide();
-        this.destroy();
     }
 
     public destroy() {
@@ -178,6 +190,7 @@ export class InteractivePanel extends Panel {
         const border = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
+        this.mLeftFaceIcon.scaleX = -1;
         this.mMidFaceIcon = this.mScene.make.image(undefined, false);
         this.mRightFaceIcon = this.mScene.make.image(undefined, false);
 

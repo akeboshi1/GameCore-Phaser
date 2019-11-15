@@ -43,7 +43,9 @@ export class BagMediator extends BaseMediator {
         if (this.mView && this.mView.isShow()) {
             return;
         }
-        this.mView = new BagPanel(this.mScene, this.world);
+        if (!this.mView) {
+            this.mView = new BagPanel(this.mScene, this.world);
+        }
         this.world.emitter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);

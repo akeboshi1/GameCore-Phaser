@@ -29,10 +29,8 @@ export class UserMenuPanel extends Panel {
     hide() {
         this.scene.input.off("gameobjectdown", this.onClickMenu, this);
         this.removeInteractive();
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
         this.clear();
+        super.hide();
     }
 
     setSize(width: number, height: number): this {

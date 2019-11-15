@@ -26,11 +26,8 @@ export class UserInfoPanel extends Panel {
     }
 
     hide() {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
-        this.mShowing = false;
         this.clearBadge();
+        super.hide();
     }
 
     resize() {

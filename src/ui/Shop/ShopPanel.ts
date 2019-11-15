@@ -22,10 +22,6 @@ export class ShopPanel extends Panel {
         this.x = size.width >> 1;
         this.y = size.height - 300;
     }
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
 
     public setDataList(value: any[]) {
         this.mDataList = value;

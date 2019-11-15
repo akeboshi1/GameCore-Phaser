@@ -94,7 +94,6 @@ export class ItemDetail extends Panel {
     public hide() {
         this.removeInteractive();
         super.hide();
-        this.destroy();
     }
 
     public destroy() {

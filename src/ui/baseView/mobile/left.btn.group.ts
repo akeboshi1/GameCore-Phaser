@@ -23,10 +23,6 @@ export class LeftBtnGroup extends Panel {
         this.y = this.mExpandBtn !== undefined ? this.mExpandBtn.height >> 1 : 10 * this.mWorld.uiScale;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
 
     public destroy() {
         if (this.mExpandBtn) {
