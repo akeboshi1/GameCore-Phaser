@@ -1,111 +1,469 @@
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
+/*!*****************************************************!*\
+  !*** ./node_modules/@protobufjs/aspromise/index.js ***!
+  \*****************************************************/
 
-/**
- * @license
- * Lodash <https://lodash.com/>
- * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
+/*! no static exports found */
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!**************************************************!*\
+  !*** ./node_modules/@protobufjs/base64/index.js ***!
+  \**************************************************/
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!********************************************************!*\
+  !*** ./node_modules/@protobufjs/eventemitter/index.js ***!
+  \********************************************************/
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!*************************************************!*\
+  !*** ./node_modules/@protobufjs/float/index.js ***!
+  \*************************************************/
 
-/**
- * @author       Florian Vazelle
- * @author       Geoffrey Glaive
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!***************************************************!*\
+  !*** ./node_modules/@protobufjs/inquire/index.js ***!
+  \***************************************************/
 
-/**
- * @author       Niklas von Hertzen (https://github.com/niklasvh/base64-arraybuffer)
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!************************************************!*\
+  !*** ./node_modules/@protobufjs/pool/index.js ***!
+  \************************************************/
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Igor Ognichenko <ognichenko.igor@gmail.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!************************************************!*\
+  !*** ./node_modules/@protobufjs/utf8/index.js ***!
+  \************************************************/
 
-/**
- * @author       Vladimir Agafonkin
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!*****************************************!*\
+  !*** ./node_modules/base64-js/index.js ***!
+  \*****************************************/
 
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2019 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
-*/
+/*!***************************************!*\
+  !*** ./node_modules/chance/chance.js ***!
+  \***************************************/
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       samme <samme.npm@gmail.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!***************************************!*\
+  !*** ./node_modules/crypto-js/aes.js ***!
+  \***************************************/
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Florian Mertens
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!***********************************************!*\
+  !*** ./node_modules/crypto-js/cipher-core.js ***!
+  \***********************************************/
 
-/**
- * @author       Stefan Hedman <schteppe@gmail.com> (http://steffe.se)
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/core.js ***!
+  \****************************************/
 
-/**
- * @author       Joachim Grill <joachim@codeandweb.com>
- * @copyright    2018 CodeAndWeb GmbH
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*!**********************************************!*\
+  !*** ./node_modules/crypto-js/enc-base64.js ***!
+  \**********************************************/
 
-/** @preserve
-	(c) 2012 by Cédric Mesnil. All rights reserved.
+/*!*********************************************!*\
+  !*** ./node_modules/crypto-js/enc-utf16.js ***!
+  \*********************************************/
 
-	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/evpkdf.js ***!
+  \******************************************/
 
-	    - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-	    - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+/*!**********************************************!*\
+  !*** ./node_modules/crypto-js/format-hex.js ***!
+  \**********************************************/
 
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-	*/
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/hmac.js ***!
+  \****************************************/
 
-/** @preserve
-	 * Counter block mode compatible with  Dr Brian Gladman fileenc.c
-	 * derived from CryptoJS.mode.CTR
-	 * Jan Hruby jhruby.web@gmail.com
-	 */
+/*!*****************************************!*\
+  !*** ./node_modules/crypto-js/index.js ***!
+  \*****************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/crypto-js/lib-typedarrays.js ***!
+  \***************************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/crypto-js/md5.js ***!
+  \***************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-cfb.js ***!
+  \********************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/crypto-js/mode-ctr-gladman.js ***!
+  \****************************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-ctr.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-ecb.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-ofb.js ***!
+  \********************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/crypto-js/pad-ansix923.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/crypto-js/pad-iso10126.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/crypto-js/pad-iso97971.js ***!
+  \************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/crypto-js/pad-nopadding.js ***!
+  \*************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/crypto-js/pad-zeropadding.js ***!
+  \***************************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/pbkdf2.js ***!
+  \******************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/crypto-js/rabbit-legacy.js ***!
+  \*************************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/rabbit.js ***!
+  \******************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/crypto-js/rc4.js ***!
+  \***************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/crypto-js/ripemd160.js ***!
+  \*********************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/sha1.js ***!
+  \****************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha224.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha256.js ***!
+  \******************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/sha3.js ***!
+  \****************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha384.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha512.js ***!
+  \******************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/crypto-js/tripledes.js ***!
+  \*********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/x64-core.js ***!
+  \********************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/game-capsule/dist/index.js ***!
+  \*************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/capsule.js ***!
+  \*******************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/children_index.js ***!
+  \**************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/config_object_factory.js ***!
+  \*********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/access.js ***!
+  \********************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/animations.js ***!
+  \************************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/attribute.js ***!
+  \***********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/avatar.js ***!
+  \********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/character.js ***!
+  \***********************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/config_object.js ***!
+  \***************************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/display.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/element.js ***!
+  \*********************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/event.js ***!
+  \*******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/fork.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/func.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/game.js ***!
+  \******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/index.js ***!
+  \*******************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/location.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/metadata.js ***!
+  \**********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/movable.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/package.js ***!
+  \*********************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/scene.js ***!
+  \*******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/shop.js ***!
+  \******************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/spawnpoint.js ***!
+  \************************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/terrain.js ***!
+  \*********************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/timer.js ***!
+  \*******************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/ui.js ***!
+  \****************************************************************/
+
+/*!*********************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/constants.js ***!
+  \*********************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/helpers.js ***!
+  \*******************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/lite.js ***!
+  \****************************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/ieee754/index.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/isarray/index.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/lodash/lodash.js ***!
+  \***************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/index.js ***!
+  \******************************************************/
+
+/*!***********************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/src/Packet.js ***!
+  \***********************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/src/PacketHandler.js ***!
+  \******************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/node-libs-browser/node_modules/buffer/index.js ***!
+  \*********************************************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/phaser/dist/phaser.js ***!
+  \********************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/phaser/dist/phaser.js-exposed ***!
+  \****************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/pixelpai_proto/protocols.js ***!
+  \**************************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/protobufjs/minimal.js ***!
+  \********************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/index-minimal.js ***!
+  \******************************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/protobufjs/src/reader.js ***!
+  \***********************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/reader_buffer.js ***!
+  \******************************************************/
+
+/*!**********************************************!*\
+  !*** ./node_modules/protobufjs/src/roots.js ***!
+  \**********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/protobufjs/src/rpc.js ***!
+  \********************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/protobufjs/src/rpc/service.js ***!
+  \****************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/util/longbits.js ***!
+  \******************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/protobufjs/src/util/minimal.js ***!
+  \*****************************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/protobufjs/src/writer.js ***!
+  \***********************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/writer_buffer.js ***!
+  \******************************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/rusha/dist/rusha.js ***!
+  \******************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/simple-sha1/browser.js ***!
+  \*********************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/simple-sha1/rusha-worker-sha1.js ***!
+  \*******************************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/treeify/treeify.js ***!
+  \*****************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/BSTree.js ***!
+  \****************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/BSTreeKV.js ***!
+  \******************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Bag.js ***!
+  \*************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Dictionary.js ***!
+  \********************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/FactoryDictionary.js ***!
+  \***************************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Heap.js ***!
+  \**************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/LinkedDictionary.js ***!
+  \**************************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/LinkedList.js ***!
+  \********************************************************************/
+
+/*!*************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/MultiDictionary.js ***!
+  \*************************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/MultiRootTree.js ***!
+  \***********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/PriorityQueue.js ***!
+  \***********************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Queue.js ***!
+  \***************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Set.js ***!
+  \*************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Stack.js ***!
+  \***************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/arrays.js ***!
+  \****************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/index.js ***!
+  \***************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/util.js ***!
+  \**************************************************************/
+
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
