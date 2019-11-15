@@ -1,7 +1,7 @@
 import {IPosition45Obj, Position45} from "../utils/position45";
 import {IRoomManager} from "./room.manager";
 import {PBpacket} from "net-socket-packet";
-import {op_client, op_editor, op_virtual_world, op_def} from "pixelpai_proto";
+import {op_client, op_def, op_editor, op_virtual_world} from "pixelpai_proto";
 import {Logger} from "../utils/log";
 import {Brush, BrushEnum} from "../const/brush";
 import {IRoomService, Room} from "./room";
@@ -16,6 +16,7 @@ import {DisplayObject} from "./display/display.object";
 import {Pos} from "../utils/pos";
 import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
+import {Element} from "./element/element";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -154,6 +155,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.mSelectedObject.hideRefernceArea();
             this.mSelectedObject = undefined;
         }
+        this.layerManager.setSurfaceInteractive(this.mBrush.mode !== BrushEnum.ERASER);
     }
 
     private onAlignGridHandler(packet: PBpacket) {
@@ -207,6 +209,8 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private onGameobjectUpHandler(pointer, gameobject) {
+        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         const com = gameobject.parentContainer;
         if (!com) {
             return;
@@ -257,6 +261,9 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
         const element = com.element;
         if (!element) {
+            return;
+        }
+        if (element instanceof Element) {
             return;
         }
         element.removeMe();

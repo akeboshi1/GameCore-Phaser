@@ -83,5 +83,8 @@ export class EditorElementManager extends ElementManager {
         if (point) {
             element.setPosition(new Pos(point.x, point.y, point.z));
         }
+        if (sprite.direction) {
+            element.setDirection(sprite.direction);
+        }
     }
 }

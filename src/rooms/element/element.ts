@@ -109,7 +109,6 @@ export class Element extends BlockObject implements IElement {
         } else {
             // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
             let conf = null;
-            Logger.log("sprite: ", sprite, sprite.displayInfo);
             if (sprite.displayInfo) {
                 conf = sprite.displayInfo;
             } else {
@@ -145,7 +144,16 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setDirection(val: number) {
-        if (this.mDisplayInfo && this.mDisplayInfo.avatarDir) this.mDisplayInfo.avatarDir = val;
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.avatarDir = val;
+        }
+        if (this.mDisplay) {
+            if (val === 3) {
+                this.mDisplay.scaleX = 1;
+            } else {
+                this.mDisplay.scaleX = -1;
+            }
+        }
     }
 
     public getDirection(): number {

@@ -1,6 +1,7 @@
 import { ElementDisplay } from "../display/element.display";
 import {IRoomService, Room} from "../room";
 import {GridLayer} from "./grid.layer";
+import {Logger} from "../../utils/log";
 
 export class LayerManager {
 
@@ -32,6 +33,7 @@ export class LayerManager {
      * 舞台地表层（包括角色，物件 ，特效等）
      */
     protected mSurfaceLayer: Phaser.GameObjects.Container;
+    protected mSurfaceInteractived: boolean = true;
 
     /**
      * 舞台大气层
@@ -163,6 +165,25 @@ export class LayerManager {
                 // }
                 return -1;
             });
+        }
+    }
+
+    public setSurfaceInteractive(val: boolean) {
+        if (this.mSurfaceInteractived === val) {
+            return;
+        }
+        const list = this.mSurfaceLayer.list;
+        if (val) {
+            // this.mSurfaceLayer.setInteractive();
+            list.forEach((obj) => {
+                obj.setInteractive();
+            });
+        } else {
+            list.forEach((obj) => {
+                Logger.log("=====", obj);
+                obj.disableInteractive();
+            });
+            // this.mSurfaceLayer.disableInteractive();
         }
     }
 
