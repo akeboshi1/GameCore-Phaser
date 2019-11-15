@@ -127,18 +127,23 @@ export class InteractivePanel extends Panel {
     public destroy() {
         this.mInitialized = false;
         if (this.mNameCon) {
+            this.mNameCon.off("pointerdown", this.nameConClick, this);
             this.mNameCon.destroy(true);
         }
         if (this.mDescCon) {
+            this.mDescCon.off("pointerdown", this.descConClick, this);
             this.mDescCon.destroy(true);
         }
         if (this.mLeftFaceIcon) {
+            this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
             this.mLeftFaceIcon.destroy(true);
         }
         if (this.mMidFaceIcon) {
+            this.mMidFaceIcon.off("pointerdown", this.midFaceClick, this);
             this.mMidFaceIcon.destroy(true);
         }
         if (this.mRightFaceIcon) {
+            this.mRightFaceIcon.off("pointerdown", this.midFaceClick, this);
             this.mRightFaceIcon.destroy(true);
         }
         if (this.mNameTF) {
