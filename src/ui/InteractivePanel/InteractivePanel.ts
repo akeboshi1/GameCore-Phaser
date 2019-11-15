@@ -63,19 +63,15 @@ export class InteractivePanel extends Panel {
                 const descData: op_gameconfig_01.IText = data.text[0];
                 this.mDescCon.setData("nodeID", descData.node.id);
                 this.mDescTF.text = descData.text;
-                this.mDescCon.on("pointerdown", () => {
-                    if (!this.mDescCon.getData("nodeID") || !med) return;
-                    med.componentClick(this.mDescCon.getData("nodeID"));
-                });
+                this.mDescCon.off("pointerdown", this.descConClick, this);
+                this.mDescCon.on("pointerdown", this.descConClick, this);
                 if (data.text[1]) {
                     const nameData: op_gameconfig_01.IText = data.text[1];
                     this.mNameCon.setData("nodeID", nameData.node.id);
                     this.mNameTF.text = nameData.text;
                     this.mNameTF.x = - this.mNameTF.width >> 1;
-                    this.mNameCon.on("pointerdown", () => {
-                        if (!this.mNameCon.getData("nodeID") || !med) return;
-                        med.componentClick(this.mNameCon.getData("nodeID"));
-                    });
+                    this.mNameCon.off("pointerdown", this.nameConClick, this);
+                    this.mNameCon.on("pointerdown", this.nameConClick, this);
                 }
             }
         }
@@ -254,10 +250,8 @@ export class InteractivePanel extends Panel {
                 this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
-                this.mLeftFaceIcon.on("pointerdown", () => {
-                    if (!med) return;
-                    med.componentClick(this.mLeftFaceIcon.getData("nodeID"));
-                });
+                this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
+                this.mLeftFaceIcon.on("pointerdown", this.leftFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
@@ -268,10 +262,8 @@ export class InteractivePanel extends Panel {
                 this.mMidFaceIcon.scaleY = scaleY;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
-                this.mMidFaceIcon.on("pointerdown", () => {
-                    if (!med) return;
-                    med.componentClick(this.mMidFaceIcon.getData("nodeID"));
-                });
+                this.mLeftFaceIcon.off("pointerdown", this.midFaceClick, this);
+                this.mMidFaceIcon.on("pointerdown", this.midFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
@@ -282,12 +274,40 @@ export class InteractivePanel extends Panel {
                 this.mRightFaceIcon.scaleY = scaleY;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
-                this.mRightFaceIcon.on("pointerdown", () => {
-                    if (!med) return;
-                    med.componentClick(this.mRightFaceIcon.getData("nodeID"));
-                });
+                this.mRightFaceIcon.off("pointerdown", this.rightFaceClick, this);
+                this.mRightFaceIcon.on("pointerdown", this.rightFaceClick, this);
                 break;
         }
+    }
+
+    private rightFaceClick() {
+        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        if (!med) return;
+        med.componentClick(this.mRightFaceIcon.getData("nodeID"));
+    }
+
+    private midFaceClick() {
+        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        if (!med) return;
+        med.componentClick(this.mMidFaceIcon.getData("nodeID"));
+    }
+
+    private leftFaceClick() {
+        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        if (!med) return;
+        med.componentClick(this.mLeftFaceIcon.getData("nodeID"));
+    }
+
+    private descConClick() {
+        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        if (!this.mDescCon.getData("nodeID") || !med) return;
+        med.componentClick(this.mDescCon.getData("nodeID"));
+    }
+
+    private nameConClick() {
+        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        if (!this.mNameCon.getData("nodeID") || !med) return;
+        med.componentClick(this.mNameCon.getData("nodeID"));
     }
 
     private onLoadError(file: Phaser.Loader.File) {
