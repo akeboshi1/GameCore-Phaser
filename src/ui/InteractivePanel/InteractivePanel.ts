@@ -190,7 +190,6 @@ export class InteractivePanel extends Panel {
         const border = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
-        this.mLeftFaceIcon.scaleX = -1;
         this.mMidFaceIcon = this.mScene.make.image(undefined, false);
         this.mRightFaceIcon = this.mScene.make.image(undefined, false);
 
@@ -211,7 +210,7 @@ export class InteractivePanel extends Panel {
             fontSize: "20px",
             wrap: {
                 mode: "char",
-                width: 420 * this.mWorld.uiScale
+                width: border.width
             },
         });
         this.mNameTF.x = -65;
@@ -245,6 +244,8 @@ export class InteractivePanel extends Panel {
         const url: string = Url.getOsdRes(uiDisplay.texturePath);
         const imgY: number = 120;
         const imgX: number = 0;
+        const scaleX: number = uiDisplay.scaleX;
+        const scaleY: number = uiDisplay.scaleY;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         switch (uiDisplay.horizontal) {
             case op_def.HorizontalAlignment.HORIZONTAL_LEFT:
@@ -252,6 +253,8 @@ export class InteractivePanel extends Panel {
                 this.mLeftFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mLeftFaceIcon.x = imgX - 300;
                 this.mLeftFaceIcon.y = imgY;
+                this.mLeftFaceIcon.scaleX = scaleX;
+                this.mLeftFaceIcon.scaleY = scaleY;
                 this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.on("pointerdown", () => {
@@ -264,6 +267,8 @@ export class InteractivePanel extends Panel {
                 this.mMidFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mMidFaceIcon.x = imgX;
                 this.mMidFaceIcon.y = imgY;
+                this.mMidFaceIcon.scaleX = scaleX;
+                this.mMidFaceIcon.scaleY = scaleY;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.on("pointerdown", () => {
                     if (!med) return;
@@ -275,6 +280,8 @@ export class InteractivePanel extends Panel {
                 this.mRightFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mRightFaceIcon.x = imgX + 300;
                 this.mRightFaceIcon.y = imgY;
+                this.mRightFaceIcon.scaleX = scaleX;
+                this.mRightFaceIcon.scaleY = scaleY;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.on("pointerdown", () => {
                     if (!med) return;
@@ -282,6 +289,9 @@ export class InteractivePanel extends Panel {
                 });
                 break;
         }
+        if (this.mLeftFaceIcon) this.mLeftFaceIcon.visible = true;
+        if (this.mRightFaceIcon) this.mRightFaceIcon.visible = true;
+        if (this.mMidFaceIcon) this.mMidFaceIcon.visible = true;
     }
 
     private onLoadError(file: Phaser.Loader.File) {
