@@ -180,7 +180,6 @@ export class LayerManager {
             });
         } else {
             list.forEach((obj) => {
-                Logger.log("=====", obj);
                 obj.disableInteractive();
             });
             // this.mSurfaceLayer.disableInteractive();

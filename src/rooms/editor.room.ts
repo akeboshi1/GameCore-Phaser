@@ -42,6 +42,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_VISIBLE_GRID, this.onVisibleGridHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.onMouseFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE, this.onMouseFollowHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FETCH_SPRITE, this.onFetchSpriteHandler);
         }
     }
 
@@ -175,6 +176,14 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
+    private onFetchSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_FETCH_SPRITE = packet.content;
+        const ids = content.ids;
+        if (ids.length > 0) {
+
+        }
+    }
+
     private onPointerDownHandler() {
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
@@ -250,6 +259,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mSelectedObject = com;
         com.showRefernceArea();
         this.mSelectedElementEffect.setElement(<FramesDisplay> com);
+
+        const pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_SPRITE);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_FETCH_SPRITE = pkt.content;
+        content.ids = [this.mSelectedObject.element.id];
+        content.nodeType = op_def.NodeType.ElementNodeType;
+        this.connection.send(pkt);
     }
 
     private removeElement(com: DisplayObject) {

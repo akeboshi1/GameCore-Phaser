@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="#63 #64">
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="橡皮擦">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,7 +49,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/pixelpai_proto/protocols.d.ts&#10;true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../game-editor-v2" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -180,7 +182,11 @@
       <workItem from="1568684263829" duration="9442000" />
       <workItem from="1569822411121" duration="24399000" />
       <workItem from="1570523032170" duration="36283000" />
-      <workItem from="1572837842157" duration="95105000" />
+      <workItem from="1572837842157" duration="158004000" />
+      <workItem from="1573565297283" duration="2280000" />
+      <workItem from="1573606738221" duration="39369000" />
+      <workItem from="1573823097555" duration="5074000" />
+      <workItem from="1574039467681" duration="5802000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -413,7 +419,84 @@
       <option name="project" value="LOCAL" />
       <updated>1573206656401</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="绘制地块设置大小">
+      <created>1573480356310</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1573480356310</updated>
+    </task>
+    <task id="LOCAL-00035" summary="编辑器删除对象">
+      <created>1573552690411</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1573552690411</updated>
+    </task>
+    <task id="LOCAL-00036" summary="修复物件吸附位置Bug">
+      <created>1573565850423</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1573565850423</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fixed bug">
+      <created>1573611556267</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1573611556267</updated>
+    </task>
+    <task id="LOCAL-00038" summary="sync sprite">
+      <created>1573623762295</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1573623762295</updated>
+    </task>
+    <task id="LOCAL-00039" summary="id生成规则">
+      <created>1573625116083</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1573625116083</updated>
+    </task>
+    <task id="LOCAL-00040" summary="sprite to client.sprite">
+      <created>1573632438584</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1573632438584</updated>
+    </task>
+    <task id="LOCAL-00041" summary="v1.0.7">
+      <created>1573637977890</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1573637977890</updated>
+    </task>
+    <task id="LOCAL-00042" summary="移动对象，移动同步改成鼠标松开同步">
+      <created>1573699922136</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1573699922136</updated>
+    </task>
+    <task id="LOCAL-00043" summary="v1.0.8">
+      <created>1573700881769</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1573700881769</updated>
+    </task>
+    <task id="LOCAL-00044" summary="橡皮擦工具禁用surface Interactive，不擦除该层对象">
+      <created>1573827754657</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1573827754657</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -460,16 +543,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="M gameconfig" />
-    <MESSAGE value="M webpack" />
-    <MESSAGE value="A version.js" />
-    <MESSAGE value="A GameMain" />
-    <MESSAGE value="A element" />
-    <MESSAGE value="A TODO" />
-    <MESSAGE value="调整地块和时钟同步顺序进行（原：并发执行）" />
-    <MESSAGE value="调整地块和时钟同步顺序进行（原：并发执行） Fixed" />
-    <MESSAGE value="去除页面滚动条，游戏大小自适应网页大小" />
-    <MESSAGE value="使用bbcodetext替换text" />
     <MESSAGE value="物件选择&#10;更新dragonbones" />
     <MESSAGE value="ui 结构修改" />
     <MESSAGE value="隐藏NPC绑定的物件" />
@@ -479,12 +552,22 @@
     <MESSAGE value="显示、隐藏网格&#10;笔触设定&#10;镜头拖动" />
     <MESSAGE value="解析animation" />
     <MESSAGE value="remove element" />
-    <MESSAGE value="sync sprite" />
     <MESSAGE value="按下移动删除地块" />
     <MESSAGE value="add release" />
     <MESSAGE value="#63 #64" />
     <MESSAGE value="铺设地块" />
     <MESSAGE value="排序" />
-    <option name="LAST_COMMIT_MESSAGE" value="排序" />
+    <MESSAGE value="绘制地块设置大小" />
+    <MESSAGE value="编辑器删除对象" />
+    <MESSAGE value="修复物件吸附位置Bug" />
+    <MESSAGE value="fixed bug" />
+    <MESSAGE value="sync sprite" />
+    <MESSAGE value="id生成规则" />
+    <MESSAGE value="sprite to client.sprite" />
+    <MESSAGE value="v1.0.7" />
+    <MESSAGE value="移动对象，移动同步改成鼠标松开同步" />
+    <MESSAGE value="v1.0.8" />
+    <MESSAGE value="橡皮擦工具禁用surface Interactive，不擦除该层对象" />
+    <option name="LAST_COMMIT_MESSAGE" value="橡皮擦工具禁用surface Interactive，不擦除该层对象" />
   </component>
 </project>
