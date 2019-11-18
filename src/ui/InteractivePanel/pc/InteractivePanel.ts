@@ -1,13 +1,13 @@
-import { Panel } from "../components/panel";
-import { WorldService } from "../../game/world.service";
-import { Size } from "../../utils/size";
-import { Url, Background, Border } from "../../utils/resUtil";
-import { NinePatch } from "../components/nine.patch";
-import { Radio } from "../components/radio";
+import { Panel } from "../../components/panel";
+import { WorldService } from "../../../game/world.service";
+import { Size } from "../../../utils/size";
+import { Url, Background, Border } from "../../../utils/resUtil";
+import { NinePatch } from "../../components/nine.patch";
+import { Radio } from "../../components/radio";
 import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
-import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
-import { ISelectCallItemData } from "../components/comboBox";
-import { InteractivePanelMediator } from "./InteractivePanelMediator";
+import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
+import { ISelectCallItemData } from "../../components/comboBox";
+import { InteractivePanelMediator } from "../InteractivePanelMediator";
 export class InteractivePanel extends Panel {
     private mWorld: WorldService;
     private mNameCon: Phaser.GameObjects.Container;

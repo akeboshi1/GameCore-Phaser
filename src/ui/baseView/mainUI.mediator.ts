@@ -53,6 +53,7 @@ export class MainUIMediator extends BaseMediator {
         this.mView.show(param);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.on(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
         // this.world.game.scale.on("orientationchange", this.orientationChange, this);
         super.show(param);
     }
@@ -65,6 +66,7 @@ export class MainUIMediator extends BaseMediator {
         // this.world.game.scale.off("orientationchange", this.orientationChange, this);
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
     }
 

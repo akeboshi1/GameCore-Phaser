@@ -3,7 +3,7 @@ import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
-import { InteractivePanel } from "./InteractivePanel";
+import { InteractivePanel } from "./pc/InteractivePanel";
 
 export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";
@@ -37,7 +37,11 @@ export class InteractivePanelMediator extends BaseMediator {
             return;
         }
         this.mParam = param;
-        this.mView = new InteractivePanel(this.mScene, this.world);
+        if (this.world.game.device.os.desktop) {
+            this.mView = new InteractivePanel(this.mScene, this.world);
+        } else {
+
+        }
         (this.mView as InteractivePanel).show(param);
         super.show(param);
     }

@@ -105,7 +105,7 @@ export class ShopMediator extends BaseMediator {
         this.fetching = false;
     }
 
-    private onBuyItemHandler(item: op_gameconfig.IItem) {
+    private onShowItemHandler(item: op_gameconfig.IItem) {
         const prices = item.price;
         for (const price of prices) {
             if (price.coinType === op_def.CoinType.TU_DING_COIN) {

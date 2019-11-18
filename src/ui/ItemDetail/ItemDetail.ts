@@ -38,8 +38,8 @@ export class ItemDetail extends Panel {
         }
         this.mShowing = true;
         const data = this.mData[0];
-        if (data.uiDisplay.length > 0) {
-            this.loadIcon(data.uiDisplay[0]);
+        if (data.display.length > 0) {
+            this.loadIcon(data.display[0]);
         }
 
         if (data.text.length > 0) {

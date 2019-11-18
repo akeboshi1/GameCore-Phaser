@@ -32,6 +32,8 @@ export class MainUIPC extends Panel {
     private mWid: number = 0;
     private mHei: number = 0;
 
+    private buttons;
+
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
         super(scene);
         this.mScene = scene;
@@ -123,7 +125,11 @@ export class MainUIPC extends Panel {
         }
         if (this.mWid !== tempWid) {
             this.mWid = tempWid;
-            const buttons = (<any> this.mScene).rexUI.add.buttons({
+            if (this.buttons) {
+                this.buttons.destroy(true);
+                this.buttons = null;
+            }
+            this.buttons = (<any> this.mScene).rexUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,
@@ -139,11 +145,11 @@ export class MainUIPC extends Panel {
                 space: 5,
                 name: "bag",
             });
-            buttons.layout();
-            buttons.on("button.click", function(button, groupName, index, pointer) {
-                if (index === 0) {
-                }
-            }, this);
+            this.buttons.layout();
+            // this.buttons.on("button.click", function (button, groupName, index, pointer) {
+            //     if (index === 0) {
+            //     }
+            // }, this);
             this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mWid, this.mHei), Phaser.Geom.Rectangle.Contains);
             this.resize();
         }

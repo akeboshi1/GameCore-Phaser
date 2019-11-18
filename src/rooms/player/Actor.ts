@@ -35,6 +35,7 @@ export class Actor extends Player implements InputListener {
                 this.mBag.register();
             }
         }
+        this.mRoom.playerManager.set(this.id, this);
         this.mInteractive = new Interactive(mElementManager.roomService.world);
         this.mInteractive.register();
     }

@@ -81,6 +81,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return player;
     }
 
+    public set(id: number, player: Player) {
+        if (!this.mPlayerMap) {
+            this.mPlayerMap = new Map();
+        }
+        this.mPlayerMap.set(id, player);
+    }
+
     get camera(): Phaser.Cameras.Scene2D.Camera {
         return this.mRoom.cameraService.camera;
     }

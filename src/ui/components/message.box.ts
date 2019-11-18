@@ -1,4 +1,4 @@
-export interface IMessageBox {
+export interface IMessageBoxUI {
     wid: number;
     hei: number;
     resKey: string;
@@ -17,14 +17,14 @@ export interface IButtonData {
     text: string;
     data: any;
 }
-export class MessageBox extends Phaser.GameObjects.Container {
+export class MessageBoxUI extends Phaser.GameObjects.Container {
     private mScene: Phaser.Scene;
-    private mConfig: IMessageBox;
+    private mConfig: IMessageBoxUI;
 
     private mBg: Phaser.GameObjects.Image;
     private mtxt: Phaser.GameObjects.Text;
     private mBtnList: MessageBtn[];
-    constructor(scene: Phaser.Scene, config: IMessageBox) {
+    constructor(scene: Phaser.Scene, config: IMessageBoxUI) {
         super(scene);
         this.mScene = scene;
         this.mConfig = config;
@@ -82,13 +82,13 @@ export class MessageBox extends Phaser.GameObjects.Container {
 }
 
 export class MessageBtn extends Phaser.GameObjects.Container {
-    private messageBox: MessageBox;
+    private messageBoxUI: MessageBoxUI;
     private mText: Phaser.GameObjects.Text;
     private mData: IButtonData;
     private mBtn: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, messageBox: MessageBox, resKey: string, resBtn: string, wid: number, hei: number) {
+    constructor(scene: Phaser.Scene, messageBoxUI: MessageBoxUI, resKey: string, resBtn: string, wid: number, hei: number) {
         super(scene);
-        this.messageBox = messageBox;
+        this.messageBoxUI = messageBoxUI;
         this.mBtn = scene.make.image(undefined, false);
         this.mBtn.setTexture(resKey, resBtn);
         this.mText = this.scene.make.text({
@@ -122,7 +122,7 @@ export class MessageBtn extends Phaser.GameObjects.Container {
 
     protected selectHandler() {
         this.addTween(this.mBtn);
-        this.messageBox.selectCall(this.itemData);
+        this.messageBoxUI.selectCall(this.itemData);
     }
 
     private addTween(img: Phaser.GameObjects.Image) {
