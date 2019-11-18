@@ -1,11 +1,11 @@
 import { MessageType } from "../../../const/MessageType";
-import { IMediator, BaseMediator } from "../../baseMediator";
+import { BaseMediator } from "../../baseMediator";
 import { IAbstractPanel } from "../../abstractPanel";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
 import { IDragable } from "../idragable";
 import { IDropable } from "../idropable";
-import { op_gameconfig, op_virtual_world, op_client } from "pixelpai_proto";
+import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 
 export enum DragType {
@@ -43,14 +43,19 @@ export class BagMediator extends BaseMediator {
         if (this.mView && this.mView.isShow()) {
             return;
         }
-        this.mView = new BagPanel(this.mScene, this.world);
+        if (!this.mView) {
+            this.mView = new BagPanel(this.mScene, this.world);
+        }
         this.world.emitter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        if (param) {
+            this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(param[0].id, 1, BagPanel.PageMaxCount);
+        } else {
+            this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.getHero().model.package.id, 1, BagPanel.PageMaxCount);
+        }
         this.mView.show(param);
         super.show(param);
-        // const packs: op_gameconfig.IPackage[] = this.mPlayerModel.mainPlayerInfo.package;
-        // this.mBagModel.requestVirtualWorldQueryPackage(packs[0].id, this.mView.getCurPageIndex(), BagPanel.PageMaxCount);
     }
 
     public update(param: any) {
@@ -81,14 +86,14 @@ export class BagMediator extends BaseMediator {
         const drag: IDragable = value[0];
         const drop: IDropable = value[1];
         if (drop.getDropType() === DropType.DROP_TYPE_BAG && drag.getDragType() === DragType.DRAG_TYPE_SHORTCUT) {
-            Logger.debug("背包拖到快捷栏了！！！");
+            Logger.getInstance().debug("背包拖到快捷栏了！！！");
         }
     }
 
     private refrehView(mItems?: op_gameconfig.IItem[]): void {
         let items: op_gameconfig.IItem[];
         if (!mItems) {
-            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHeroEntity().model.package;
+            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHero().model.package;
             if (packs == null) {
                 return;
             }
@@ -105,12 +110,12 @@ export class BagMediator extends BaseMediator {
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
-        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().model.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHero().model.package.id) return;
         this.refrehView(data.items);
     }
 
     private onUpdatePackageHandler(data) {
-        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().model.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHero().model.package.id) return;
         this.refrehView(data.items);
     }
 

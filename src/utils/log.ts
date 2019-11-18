@@ -1,22 +1,54 @@
 /* tslint:disable */
-export namespace Logger {
-  export function log(message?: any, ...optionalParams: any[]) {
+export class Logger {
+  private static _instance: Logger;
+
+  private mErrorList: string[];
+  private mWarnList: string[];
+
+  constructor() {
+    this.mErrorList = [];
+    this.mWarnList = [];
+  }
+
+  public static getInstance(): Logger {
+    if (!Logger._instance) Logger._instance = new Logger();
+    return Logger._instance;
+  }
+  log(message?: any, ...optionalParams: any[]) {
     console.log(message, ...optionalParams);
   }
 
-  export function error(message?: any, ...optionalParams: any[]) {
+  error(message?: any, ...optionalParams: any[]) {
     console.error(message, ...optionalParams);
+    this.mErrorList.push(message);
   }
 
-  export function warn(message?: any, ...optionalParams: any[]) {
-    console.warn(message, ...optionalParams)
+  warn(message?: any, ...optionalParams: any[]) {
+    console.warn(message, ...optionalParams);
+    this.mWarnList.push(message);
   }
 
-  export function debug(message?: any, ...optionalParams: any[]) {
+  debug(message?: any, ...optionalParams: any[]) {
     console.log(message, ...optionalParams);
   }
 
-  export function info(message?: any, ...optionalParams: any[]) {
+  info(message?: any, ...optionalParams: any[]) {
     console.info(message, ...optionalParams);
   }
+
+  getErrorList(): string[] {
+    return this.mErrorList;
+  }
+
+  getWarnList(): string[] {
+    return this.mWarnList;
+  }
+}
+
+export function log(message, ...optionalParams) {
+  console.log(message, ...optionalParams);
+}
+
+export function error(message, ...optionalParams) {
+  console.error(message, ...optionalParams);
 }

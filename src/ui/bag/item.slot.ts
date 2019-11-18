@@ -64,6 +64,14 @@ export class ItemSlot implements IListItemComponent {
         return this.toolTipCon;
     }
 
+    public getBg(): Phaser.GameObjects.Sprite {
+        return this.itemBG;
+    }
+
+    public getIcon(): DragDropIcon {
+        return this.mIcon;
+    }
+
     public dataChange(val: any) {
         if (!this.minitialize) return;
         this.mData = val;
@@ -172,16 +180,16 @@ export class ItemSlot implements IListItemComponent {
 
     protected downHandler(pointer) {
         if (!this.mData) return;
-        if (this.mWorld.game.device.os.desktop) {
-            const pack: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHeroEntity().model.package;
-            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
-            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
-            content.uiId = pack.id;
-            content.componentId = this.mData.id;
-            this.mWorld.connection.send(pkt);
-        } else {
-            // this.overHandler(pointer);
-        }
+        // if (this.mWorld.game.device.os.desktop) {
+        const pack: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().model.package;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+        content.uiId = pack.id;
+        content.componentId = this.mData.id;
+        this.mWorld.connection.send(pkt);
+        // } else {
+        //     // this.overHandler(pointer);
+        // }
     }
 
     protected overHandler(pointer) {

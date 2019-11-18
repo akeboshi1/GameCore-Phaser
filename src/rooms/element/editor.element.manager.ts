@@ -26,7 +26,7 @@ export class EditorElementManager extends ElementManager {
         content.nodeType = op_def.NodeType.ElementNodeType;
         content.sprites = sprites.map((sprite) => sprite.toSprite());
         this.connection.send(pkt);
-        Logger.log("add sprites: ", content);
+        Logger.getInstance().log("add sprites: ", content);
     }
 
     remove(id: number) {
@@ -76,7 +76,7 @@ export class EditorElementManager extends ElementManager {
     protected trySync(sprite: op_client.ISprite) {
         const element = this.mElements.get(sprite.id);
         if (!element) {
-            Logger.log("can't find element", sprite);
+            Logger.getInstance().log("can't find element", sprite);
             return;
         }
         const point = sprite.point3f;

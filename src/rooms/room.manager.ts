@@ -140,6 +140,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (this.mWorld) {
             return this.mWorld.connection;
         }
-        Logger.error("world manager is undefined");
+        Logger.getInstance().error("world manager is undefined");
     }
 }

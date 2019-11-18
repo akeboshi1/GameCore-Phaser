@@ -1,4 +1,4 @@
-import {IPatchesConfig, normalizePatchesConfig} from "./patches.config";
+import { IPatchesConfig, normalizePatchesConfig } from "./patches.config";
 
 export class NinePatch extends Phaser.GameObjects.Container {
     private static readonly __BASE: string = "__BASE";

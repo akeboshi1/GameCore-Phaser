@@ -1,14 +1,15 @@
-import { BaseMediator } from "../../baseMediator";
-import { WorldService } from "../../../game/world.service";
-import { IAbstractPanel } from "../../abstractPanel";
-import { BagUIPC } from "./bagUI.pc";
-import { Size } from "../../../utils/size";
-import { MessageType } from "../../../const/MessageType";
+import { BaseMediator } from "../baseMediator";
+import { WorldService } from "../../game/world.service";
+import { IAbstractPanel } from "../abstractPanel";
+import { Size } from "../../utils/size";
+import { MessageType } from "../../const/MessageType";
 import { op_client, op_gameconfig } from "pixelpai_proto";
-import { BagUIMobile } from "./bagUI.mobile";
+import { MainUIMobile } from "./mobile/mainUI.mobile";
+import { MainUIPC } from "./pc/mainUI.pc";
+import { JoyStickManager } from "../../game/joystick.manager";
 
-export class BagUIMediator extends BaseMediator {
-    public static NAME: string = "BagUIMediator";
+export class MainUIMediator extends BaseMediator {
+    public static NAME: string = "MainUIMediator";
     public world: WorldService;
     private mScene: Phaser.Scene;
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
@@ -45,13 +46,15 @@ export class BagUIMediator extends BaseMediator {
         }
         const size: Size = this.world.getSize();
         if (this.world.game.device.os.desktop) {
-            this.mView = new BagUIPC(this.mScene, this.world, (size.width >> 1) - 29, size.height - 50);
+            this.mView = new MainUIPC(this.mScene, this.world, (size.width >> 1) - 29, size.height - 50);
         } else {
-            this.mView = new BagUIMobile(this.mScene, this.world);
+            this.mView = new MainUIMobile(this.mScene, this.world);
         }
         this.mView.show(param);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.on(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
+        // this.world.game.scale.on("orientationchange", this.orientationChange, this);
         super.show(param);
     }
 
@@ -60,8 +63,10 @@ export class BagUIMediator extends BaseMediator {
     }
 
     public hide() {
+        // this.world.game.scale.off("orientationchange", this.orientationChange, this);
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
         if (this.mView) this.mView.hide();
     }
 
@@ -74,18 +79,29 @@ export class BagUIMediator extends BaseMediator {
         this.world = null;
     }
 
+    public tweenView(show: boolean) {
+        if (this.world.game.device.os.desktop) return;
+        (this.mView as MainUIMobile).tweenView(show);
+        (this.world.inputManager as JoyStickManager).tweenView(show);
+    }
+
+    // private orientationChange() {
+    //     if (this.world.game.device.os.desktop) return;
+    //     (this.mView as MainUIMobile).changeOrientation(this.world.game.scale.orientation);
+    // }
+
     private heroItemChange() {
-        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHeroEntity().model.package.items;
+        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHero().model.package.items;
         if (this.mView && this.world.game.device.os.desktop) {
-            (this.mView as BagUIPC).setDataList(itemList);
+            (this.mView as MainUIPC).setDataList(itemList);
         }
     }
 
     private queryPackAge(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
-        if (data.id !== this.world.roomManager.currentRoom.getHeroEntity().model.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHero().model.package.id) return;
         const itemLen: number = data.items.length;
         if (this.mView && this.world.game.device.os.desktop) {
-            (this.mView as BagUIPC).setDataList(data.items);
+            (this.mView as MainUIPC).setDataList(data.items);
         }
     }
 }

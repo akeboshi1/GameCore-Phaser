@@ -70,7 +70,7 @@ export class EditorTerrainManager extends TerrainManager {
     protected trySync(sprite: op_client.ISprite) {
         const terrain = this.mTerrains.get(sprite.id);
         if (!terrain) {
-            Logger.log("can't find terrain", sprite);
+            Logger.getInstance().log("can't find terrain", sprite);
             return;
         }
         const point = sprite.point3f;

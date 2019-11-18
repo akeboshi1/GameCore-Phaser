@@ -14,8 +14,10 @@ export interface ILauncherConfig {
     game_id: string;
     virtual_world_id: string;
     ui_scale?: number;
-    readonly width: number | string;
-    readonly height: number | string;
+    readonly width: number;
+    readonly height: number;
+    readonly baseWidth: number;
+    readonly baseHeight: number;
     readonly game_created?: Function;
     readonly connection?: ConnectionService;
     readonly isEditor?: boolean;
@@ -41,8 +43,8 @@ export class Launcher {
         return new this(config);
     }
 
-    readonly minWidth = 1366;
-    readonly minHeight = 760;
+    readonly minWidth = 1280;
+    readonly minHeight = 720;
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
     private world: GameMain;
@@ -57,8 +59,10 @@ export class Launcher {
         game_id: CONFIG.game_id,
         virtual_world_id: CONFIG.virtual_world_id,
         // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
-        width: 1280,
-        height: 720,
+        width: this.minWidth,
+        height: this.minHeight,
+        baseWidth: this.maxWidth,
+        baseHeight: this.maxHeight,
         ui_scale: 1
     };
 

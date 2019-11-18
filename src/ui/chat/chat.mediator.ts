@@ -1,4 +1,3 @@
-import { ChatPanel } from "./chat.panel";
 import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
@@ -6,10 +5,14 @@ import { Logger } from "../../utils/log";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
 import { World } from "../../game/world";
+import { ChatPanelPC } from "./pc/chatPanel.pc";
+import { Panel } from "../components/panel";
+import { BaseChatPanel } from "./base.chat.panel";
+import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
-    private mChatPanel: ChatPanel;
+    private mChatPanel: BaseChatPanel;
     private mGMEApi: WebGMEAPI;
     private mInRoom: boolean = false;
     private mQCLoudAuth: string;
@@ -58,11 +61,14 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return true;
     }
 
-    public getView(): ChatPanel {
+    public getView(): Panel {
         return this.mChatPanel;
     }
 
     public isShow(): boolean {
+        if (!this.mChatPanel) {
+            return false;
+        }
         return this.mChatPanel.isShow();
     }
 
@@ -72,12 +78,16 @@ export class ChatMediator extends PacketHandler implements IMediator {
         }
     }
 
-    public show(param: any) {
+    public show(param?: any) {
         if (this.mChatPanel && this.mChatPanel.isShow()) {
             return;
         }
         this.world.connection.addPacketListener(this);
-        this.mChatPanel = new ChatPanel(this.mScene, this.world);
+        if (this.world.game.device.os.desktop) {
+            this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
+        } else {
+            this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+        }
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
         this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
@@ -106,6 +116,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         if (this.mGMEApi) {
             this.mGMEApi = null;
         }
+        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         this.mScene = null;
         this.world = null;
         this.mInRoom = false;
@@ -114,7 +125,6 @@ export class ChatMediator extends PacketHandler implements IMediator {
             if (message) message = null;
         });
         this.mAllMessage = null;
-        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
     }
 
     private scaleChange() {
@@ -131,18 +141,18 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mGMEApi.SetTMGDelegate((event, result) => {
             switch (event) {
                 case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_ENTER_ROOM:
-                    Logger.log(`[GME]: EnterRoom: ${result}`);
+                    Logger.getInstance().log(`[GME]: EnterRoom: ${result}`);
                     break;
                 case this.mGMEApi.event.ITMG_MAIN_EVNET_TYPE_USER_UPDATE:
                     break;
                 case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_EXIT_ROOM:
-                    Logger.log(`[GME]: ExitRoom`);
+                    Logger.getInstance().log(`[GME]: ExitRoom`);
                     break;
                 case this.mGMEApi.event.ITMG_MAIN_EVENT_TYPE_ROOM_DISCONNECT:
-                    Logger.log(`[GME]: Room Disconnect!!!`);
+                    Logger.getInstance().log(`[GME]: Room Disconnect!!!`);
                     break;
                 default:
-                    Logger.log("[GME]: Sth wrong...");
+                    Logger.getInstance().log("[GME]: Sth wrong...");
                     break;
             }
         });

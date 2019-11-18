@@ -17,6 +17,7 @@ import {Pos} from "../utils/pos";
 import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
 import {Element} from "./element/element";
+import {ElementDisplay} from "./display/element.display";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -31,7 +32,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
-    private mSelectedObject: DisplayObject;
+    private mSelectedObject: ElementDisplay;
     private mNimiSize: IPosition45Obj;
     constructor(manager: IRoomManager) {
         super(manager);
@@ -48,7 +49,7 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     public enter(data: op_client.IScene) {
         if (!data) {
-            Logger.error("wrong room");
+            Logger.getInstance().error("wrong room");
             return;
         }
         this.mID = data.id;
@@ -110,7 +111,7 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     transformToMini90(p: Pos): undefined | Pos {
         if (!this.mNimiSize) {
-            Logger.error("position object is undefined");
+            Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo90(p, this.mNimiSize);
@@ -118,7 +119,7 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     transformToMini45(p: Pos): undefined | Pos {
         if (!this.mNimiSize) {
-            Logger.error("position object is undefined");
+            Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo45(p, this.mNimiSize);
@@ -137,7 +138,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mMouseFollow.sprite) {
             return;
         }
-        Logger.log("create element");
+        Logger.getInstance().log("create element");
         const elementManager = this.mMouseFollow.elementManager;
         if (elementManager) {
             const sprites = this.mMouseFollow.createSprites();
@@ -180,7 +181,10 @@ export class EditorRoom extends Room implements EditorRoomService {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_FETCH_SPRITE = packet.content;
         const ids = content.ids;
         if (ids.length > 0) {
-
+            const ele = this.elementManager.get(ids[0]);
+            if (ele) {
+                this.selectedElement(ele.getDisplay());
+            }
         }
     }
 
@@ -217,6 +221,15 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.connection.send(pkt);
     }
 
+    private sendFetch(ids: number[], nodetype: op_def.NodeType) {
+        const pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_SPRITE);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_FETCH_SPRITE = pkt.content;
+        content.ids = [this.mSelectedObject.element.id];
+        content.nodeType = op_def.NodeType.ElementNodeType;
+        this.connection.send(pkt);
+        Logger.getInstance().log("fetch sprite", content);
+    }
+
     private onGameobjectUpHandler(pointer, gameobject) {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
@@ -226,7 +239,10 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
         switch (this.mBrush.mode) {
             case BrushEnum.SELECT:
-                this.selectedElement(com);
+                const selected = this.selectedElement(com);
+                if (selected) {
+                    this.sendFetch([selected.element.id], op_def.NodeType.ElementNodeType);
+                }
                 break;
             case BrushEnum.ERASER:
                 this.removeElement(com);
@@ -246,7 +262,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
-    private selectedElement(com: DisplayObject) {
+    private selectedElement(com: ElementDisplay): DisplayObject {
         if (!(com instanceof DisplayObject)) {
             return;
         }
@@ -259,12 +275,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mSelectedObject = com;
         com.showRefernceArea();
         this.mSelectedElementEffect.setElement(<FramesDisplay> com);
-
-        const pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_SPRITE);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_FETCH_SPRITE = pkt.content;
-        content.ids = [this.mSelectedObject.element.id];
-        content.nodeType = op_def.NodeType.ElementNodeType;
-        this.connection.send(pkt);
+        return com;
     }
 
     private removeElement(com: DisplayObject) {
@@ -284,7 +295,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         element.removeMe();
     }
 
-    private syncSprite(object: DisplayObject) {
+    private syncSprite(object: ElementDisplay) {
         if (!object) return;
         const ele = object.element;
         if (!ele) return;
@@ -292,7 +303,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
         content.sprites = [ele.toSprite()];
         this.connection.send(pkt);
-        Logger.log("syncSprite", content);
+        Logger.getInstance().log("syncSprite", content);
     }
 
     private onPointerMoveHandler(pointer) {

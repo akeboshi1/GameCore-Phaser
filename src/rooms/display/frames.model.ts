@@ -83,7 +83,7 @@ export class FramesModel implements IFramesModel {
 
     private setDisplay(display: op_gameconfig.IDisplay) {
         if (!display) {
-            Logger.error(`${this.type} display does not exist`);
+            Logger.getInstance().error(`${this.type} display does not exist`);
             return;
         }
         this.display = {
@@ -95,7 +95,7 @@ export class FramesModel implements IFramesModel {
 
     private setAnimationData(aniDatas: Animation[]) {
         if (!aniDatas) {
-            Logger.error(`${this.id} animationData does not exist`);
+            Logger.getInstance().error(`${this.id} animationData does not exist`);
             return;
         }
         this.animations = new Map();

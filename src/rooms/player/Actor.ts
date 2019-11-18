@@ -4,12 +4,15 @@ import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
-import { PlayerEntity } from "./player.entity";
-import { WorldService } from "../../game/world.service";
+import { Player } from "./player";
+import { Bag } from "./bag/bag";
+import { Interactive } from "./interactive/interactive";
 
-export class ActorEntity extends PlayerEntity implements InputListener {
+export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
+    protected mBag: Bag;
+    protected mInteractive: Interactive;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
@@ -25,12 +28,38 @@ export class ActorEntity extends PlayerEntity implements InputListener {
                 roomService.cameraService.startFollow(this.mDisplay);
             }
         }
+
+        if (this.model) {
+            if (this.model.package) {
+                this.mBag = new Bag(mElementManager.roomService.world);
+                this.mBag.register();
+            }
+        }
+        this.mRoom.playerManager.set(this.id, this);
+        this.mInteractive = new Interactive(mElementManager.roomService.world);
+        this.mInteractive.register();
+    }
+
+    public getBag(): Bag {
+        return this.mBag;
+    }
+
+    public getInteractive(): Interactive {
+        return this.mInteractive;
     }
 
     // override super's method.
     public setRenderable(isRenderable: boolean): void {
         // do nothing!
         // Actor is always renderable!!!
+    }
+
+    public destroy() {
+        if (this.mBag) {
+            this.mBag.destroy();
+            this.mBag = null;
+        }
+        super.destroy();
     }
 
     downHandler(d: number, keyList: number[]) {
@@ -44,6 +73,9 @@ export class ActorEntity extends PlayerEntity implements InputListener {
 
     public stopMove() {
         super.stopMove();
+        if (!this.mMoveData) {
+            return;
+        }
         delete this.mMoveData.destPos;
         this.mMoveData.arrivalTime = 0;
         if (this.mMoveData.tweenAnim) {

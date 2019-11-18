@@ -8,7 +8,7 @@ export class ScrollerContainer extends Scroller {
     constructor(scene: Phaser.Scene, rect: Phaser.Geom.Rectangle, target: GameObjects.Container | GameObjects.Text | GameObjects.Sprite) {
         super(scene);
         if (!target) {
-            Logger.error("scroller target does not exise");
+            Logger.getInstance().error("scroller target does not exise");
             return;
         }
         // this.mMask = this.scene.make.graphics(undefined, false)

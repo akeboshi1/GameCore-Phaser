@@ -4,7 +4,7 @@ import { IEntity } from "../../entity";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { MessageType } from "../../../const/MessageType";
 
-export class BagEntity extends PacketHandler implements IEntity {
+export class Bag extends PacketHandler implements IEntity {
     private mInitialize: boolean;
     constructor(private mWorld: WorldService) {
         super();
@@ -31,6 +31,15 @@ export class BagEntity extends PacketHandler implements IEntity {
         this.mWorld.connection.removePacketListener(this);
     }
 
+    public requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_QUERY_PACKAGE = pkt.content;
+        content.id = bagId;
+        content.page = page;
+        content.perPage = perPage;
+        this.mWorld.connection.send(pkt);
+    }
+
     private handleQueryPackage(packet: PBpacket) {
         const notice: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE = packet.content;
         this.mInitialize = true;
@@ -40,7 +49,7 @@ export class BagEntity extends PacketHandler implements IEntity {
     private handleAddItem(packet: PBpacket): void {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM = packet.content;
         if (content.nodetype === op_def.NodeType.ElementNodeType) {
-            this.mWorld.roomManager.currentRoom.getMapEntity().addPackItems(content.id, content.item);
+            this.mWorld.roomManager.currentRoom.map.addPackItems(content.id, content.item);
         } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
             this.mWorld.roomManager.currentRoom.playerManager.addPackItems(content.id, content.item);
         }

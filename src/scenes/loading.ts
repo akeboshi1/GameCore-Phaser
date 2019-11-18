@@ -44,10 +44,8 @@ export class LoadingScene extends Phaser.Scene {
     const y: number = height - 150 - LOGO_MARGIN;
     this.lo = this.add.sprite(x, y, "rabbit00.png");
     this.lo.anims.play("loading_rabbit00");
-    this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
-    this.scale.on("orientationchange", this.checkOriention, this);
     this.scale.on("resize", this.checkSize, this);
-    this.mWorld.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+    this.checkSize(new Size(width, height));
   }
 
   update(time: number, delta: number) {
@@ -72,27 +70,14 @@ export class LoadingScene extends Phaser.Scene {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
 
-  private scaleChange() {
-    this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
-  }
-
-  private checkOriention(orientation) {
-    if (orientation === Phaser.Scale.PORTRAIT) {
-
-    } else if (orientation === Phaser.Scale.LANDSCAPE) {
-
-    }
-    this.checkSize(this.mWorld.getSize());
-  }
-
   private checkSize(size: Size) {
     const width: number = size.width;
     const height: number = size.height;
     this.bg.clear();
     this.bg.fillStyle(0x616161);
     this.bg.fillRect(0, 0, width, height);
-    this.lo.x = width - 150 - LOGO_MARGIN;
-    this.lo.y = height - 150 - LOGO_MARGIN;
+    this.lo.x = width - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
+    this.lo.y = height - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
     this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
   }
 

@@ -26,11 +26,8 @@ export class UserInfoPanel extends Panel {
     }
 
     hide() {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
-        this.mShowing = false;
         this.clearBadge();
+        super.hide();
     }
 
     resize() {
@@ -182,7 +179,7 @@ export class UserInfoPanel extends Panel {
     }
 
     private updateFollwer(platformId) {
-        const mainPlayer = this.mWorld.roomManager.currentRoom.getHeroEntity().model;
+        const mainPlayer = this.mWorld.roomManager.currentRoom.getHero().model;
         if (!mainPlayer) return;
         if (platformId === mainPlayer.platformId) {
             // this.mFollwerBtn.visible = false;

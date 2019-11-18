@@ -35,6 +35,7 @@ export class LoginScene extends Phaser.Scene {
     private mtxt4: Phaser.GameObjects.Text;
     private mtxt5: Phaser.GameObjects.Text;
     private mParentCon: Phaser.GameObjects.Container;
+    private mSizeTF: Phaser.GameObjects.Text;
     constructor() {
         super({ key: LoginScene.name });
     }
@@ -54,7 +55,7 @@ export class LoginScene extends Phaser.Scene {
         const accountData: string = localStorage.getItem("account");
         const logo: Phaser.GameObjects.Image = this.make.image(undefined, false);
         logo.setTexture(loginRes, "login_logo");
-        this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100);
+        this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100 * this.mWorld.uiScale);
 
         this.mBg = this.make.image(undefined, false);
 
@@ -97,9 +98,12 @@ export class LoginScene extends Phaser.Scene {
         this.mInputBg_small.x = -105;
         this.mInputBg_small.y = 67;
 
+        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000" }, wordWrap: { width: 800, useAdvancedWrap: true } });
+        this.mSizeTF.setFontSize(20);
+
         this.mTabDic = new Map();
 
-        this.mNameInputTxt = new InputText(this, - 140, 4, 190, 15, {
+        this.mNameInputTxt = new InputText(this, 0, 0, 190, 15, {
             type: "input",
             placeholder: "用戶名",
             fontFamily: "YaHei",
@@ -108,7 +112,7 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(200, 20)
             .setOrigin(0, 0);
-        this.mPassWordInputTxt = new InputText(this, -140, 55, 190, 15, {
+        this.mPassWordInputTxt = new InputText(this, 0, 0, 190, 15, {
             type: "password",
             placeholder: "密码",
             fontFamily: "YaHei",
@@ -117,7 +121,7 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(200, 20)
             .setOrigin(0, 0);
-        this.mVerificationCodeTxt = new InputText(this, -140, 55, 100, 15, {
+        this.mVerificationCodeTxt = new InputText(this, 0, 0, 100, 15, {
             type: "input",
             placeholder: "验证码",
             fontFamily: "YaHei",
@@ -126,12 +130,48 @@ export class LoginScene extends Phaser.Scene {
         })
             .resize(100, 20)
             .setOrigin(0, 0);
-        this.mtxt0 = this.add.text(-145, -46, "手机号登录", { fontFamily: "YaHei" });
-        this.mtxt1 = this.add.text(-35, -46, "用户号登录", { fontFamily: "YaHei" });
-        this.mtxt2 = this.add.text(90, -46, "快速游戏", { fontFamily: "YaHei" });
-        this.mtxt3 = this.add.text(108, 33, "登录", { fontFamily: "YaHei" });
-        this.mtxt4 = this.add.text(-97, 37, "登录其他账号", { fontFamily: "YaHei" });
-        this.mtxt5 = this.add.text(-6, 57, "发送", { fontFamily: "YaHei" });
+        this.mNameInputTxt.x = -140;
+        this.mNameInputTxt.y = 4;
+        this.mPassWordInputTxt.x = -140;
+        this.mPassWordInputTxt.y = 55;
+        this.mVerificationCodeTxt.x = -140;
+        this.mVerificationCodeTxt.y = 55;
+        // this.mtxt0 = this.add.text(-145, -46, "手机号登录", { fontFamily: "YaHei" });
+        // this.mtxt1 = this.add.text(-35, -46, "用户号登录", { fontFamily: "YaHei" });
+        // this.mtxt2 = this.add.text(90, -46, "快速游戏", { fontFamily: "YaHei" });
+        // this.mtxt3 = this.add.text(108, 33, "登录", { fontFamily: "YaHei" });
+        // this.mtxt4 = this.add.text(-97, 37, "登录其他账号", { fontFamily: "YaHei" });
+        // this.mtxt5 = this.add.text(-6, 57, "发送", { fontFamily: "YaHei" });
+        this.mtxt0 = this.make.text(undefined, false);
+        this.mtxt1 = this.make.text(undefined, false);
+        this.mtxt2 = this.make.text(undefined, false);
+        this.mtxt3 = this.make.text(undefined, false);
+        this.mtxt4 = this.make.text(undefined, false);
+        this.mtxt5 = this.make.text(undefined, false);
+        this.mtxt0.x = -145;
+        this.mtxt0.y = -46;
+        this.mtxt1.x = -35;
+        this.mtxt1.y = -46;
+        this.mtxt2.x = 90;
+        this.mtxt2.y = -46;
+        this.mtxt3.x = 108;
+        this.mtxt3.y = 33;
+        this.mtxt4.x = -97;
+        this.mtxt4.y = 37;
+        this.mtxt5.x = -6;
+        this.mtxt5.y = 57;
+        this.mtxt0.setFontFamily("YaHei");
+        this.mtxt0.setText("手机号登录");
+        this.mtxt1.setFontFamily("YaHei");
+        this.mtxt1.setText("用户号登录");
+        this.mtxt2.setFontFamily("YaHei");
+        this.mtxt2.setText("快速游戏");
+        this.mtxt3.setFontFamily("YaHei");
+        this.mtxt3.setText("登录");
+        this.mtxt4.setFontFamily("YaHei");
+        this.mtxt4.setText("登录其他账号");
+        this.mtxt5.setFontFamily("YaHei");
+        this.mtxt5.setText("发送");
 
         const config: IComboboxRes = {
             wid: 220,
@@ -171,9 +211,9 @@ export class LoginScene extends Phaser.Scene {
         this.mParentCon.add(this.mtxt4);
         this.mParentCon.add(this.mtxt5);
         this.mParentCon.add(this.combobox);
-
-        logo.x = - 30;
-        logo.y = (-logo.height / 2) - 80;
+        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        logo.x = - 30 * this.mWorld.uiScale;
+        logo.y = (-logo.height / 2) - 80 * this.mWorld.uiScale;
 
         this.mTab0.setInteractive();
         this.mTab1.setInteractive();
@@ -192,10 +232,8 @@ export class LoginScene extends Phaser.Scene {
         this.mEnterBtn.on("pointerdown", this.enterHandler, this);
         this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
         this.mtxt4.on("pointerdown", this.changeAccount, this);
-
-        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
-        this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
+        this.checkSize(new Size(width, height));
     }
 
     public init(data: any) {
@@ -205,6 +243,9 @@ export class LoginScene extends Phaser.Scene {
     }
 
     public update() {
+        const orientation: string = this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
+        this.mSizeTF.text = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation
+            + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
     }
 
     public awake() {
@@ -223,35 +264,28 @@ export class LoginScene extends Phaser.Scene {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
     }
 
-    private scaleChange() {
-        this.mParentCon.scaleX = this.mWorld.uiScale;
-        this.mParentCon.scaleY = this.mWorld.uiScale;
-    }
-
-    private checkOriention(orientation) {
-        let width: number = 0;
-        let height: number = 0;
-        if (orientation === Phaser.Scale.PORTRAIT) {
-            width = this.scale.gameSize.width;
-            height = this.scale.gameSize.height;
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-            width = this.scale.gameSize.width;
-            height = this.scale.gameSize.height;
-        }
-        this.scaleChange();
-        this.mParentCon.x = width >> 1;
-        this.mParentCon.y = (height >> 1) + 100;
-    }
-
     private checkSize(size: Size) {
         const width: number = size.width;
         const height: number = size.height;
         this.mParentCon.x = width >> 1;
-        this.mParentCon.y = (height >> 1) + 100;
+        if (!this.mWorld.game.device.os.desktop) {
+            // this.mSizeTF.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt0.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt1.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt2.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt3.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt4.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mtxt5.setStyle({ "fontSize": 20 * this.mWorld.uiScale });
+            // this.mNameInputTxt.setStyle("fontSize", 14 * this.mWorld.uiScale);
+            // this.mPassWordInputTxt.setStyle("fontSize", 14 * this.mWorld.uiScale);
+            // this.mVerificationCodeTxt.setStyle("fontSize", 14 * this.mWorld.uiScale);
+            this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        }
+        this.mParentCon.y = this.mWorld.game.device.os.desktop === true ? (height >> 1) + 100 : (height >> 1) + 100 * this.mWorld.uiScale;
     }
 
     private changeID(data: ISelectCallItemData) {
-        Logger.debug("============combobox 123" + data.text);
+        // Logger.debug("============combobox 123" + data.text);
     }
 
     private changeAccount() {
@@ -279,7 +313,6 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt1.visible = !accountData ? true : false;
         this.mtxt2.visible = !accountData ? true : false;
         this.mtxt4.visible = !accountData ? false : true;
-
         const accountObj = accountData !== undefined ? JSON.parse(accountData) : undefined;
         this.mNameInputTxt.text = !accountObj ? "" : accountObj.account;
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];

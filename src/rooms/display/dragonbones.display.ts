@@ -129,7 +129,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
-            Logger.debug("play:" + dir);
+            Logger.getInstance().debug("play:" + dir);
             this.mPreDirection = dir;
         }
     }

@@ -28,9 +28,6 @@ export class StoragePanel extends Panel {
     public update(param: any) {
         super.update(param);
     }
-    public hide() {
-        super.hide();
-    }
     public destroy() {
         if (this.mBg) {
             this.mBg.destroy(true);

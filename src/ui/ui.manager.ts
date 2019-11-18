@@ -1,19 +1,18 @@
 import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IBag } from "./bag/basebag";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../utils/log";
-import { IMediator } from "./baseMediator";
+import { IMediator, BaseMediator } from "./baseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
-import { BagUIMediator } from "./bag/bagHotkey/bagUIMediator";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
+import { MainUIMediator } from "./baseView/mainUI.mediator";
+import { DebugLoggerMediator } from "./debuglog/debug.logger.mediator";
 
 export class UiManager extends PacketHandler {
-    private mBagUI: IBag;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     private mMedMap: Map<UIMediatorType, IMediator>;
@@ -51,11 +50,11 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
-            this.mMedMap.set(UIMediatorType.BagHotKey, new BagUIMediator(this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
+            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
-
+            // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             for (const tmp of this.mCache) {
                 const ui = tmp[0];
                 this.showMed(ui.name, ui);
@@ -70,14 +69,15 @@ export class UiManager extends PacketHandler {
     }
 
     public resize(width: number, height: number) {
-        if (this.mBagUI) {
-            this.mBagUI.resize();
-        }
         if (this.mMedMap) {
             this.mMedMap.forEach((mediator: IMediator) => {
                 if (mediator.isShow) mediator.resize();
             });
         }
+    }
+
+    public setMediator(value: string, mediator: IMediator) {
+        this.mMedMap.set(value, mediator);
     }
 
     public getMediator(type: string): IMediator | undefined {
@@ -124,7 +124,7 @@ export class UiManager extends PacketHandler {
             const ns: any = require(`./${type}/${className}`);
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
             if (!mediator) {
-                Logger.error(`error ${type} no panel can show!!!`);
+                Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }
             this.mMedMap.set(type + "Mediator", mediator);
@@ -138,9 +138,10 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const mediator: IMediator = this.mMedMap.get(type);
+        const name: string = `${type}Mediator`;
+        const mediator: IMediator = this.mMedMap.get(name);
         if (!mediator) {
-            Logger.error(`error ${type} no panel can show!!!`);
+            Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
         mediator.update(param);
@@ -150,9 +151,10 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const mediator: IMediator = this.mMedMap.get(type + "Mediator");
+        const name: string = `${type}Mediator`;
+        const mediator: IMediator = this.mMedMap.get(name);
         if (!mediator) {
-            Logger.error(`error ${type} no panel can show!!!`);
+            Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
         if (!mediator.isShow()) return;

@@ -22,10 +22,6 @@ export class ShopPanel extends Panel {
         this.x = size.width >> 1;
         this.y = size.height - 300;
     }
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
 
     public setDataList(value: any[]) {
         this.mDataList = value;
@@ -123,7 +119,7 @@ export class ShopPanel extends Panel {
 
     private refreshDataList() {
         if (!this.mDataList) {
-            Logger.error("this.mDataList is undefiend");
+            Logger.getInstance().error("this.mDataList is undefiend");
             return;
         }
         const len = ShopPanel.ShopSlotCount;

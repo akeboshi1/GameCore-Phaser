@@ -20,7 +20,7 @@ export class SelectManager extends PacketHandler {
       if (scene) {
         scene.start(SelectCharacter.name);
       } else {
-        Logger.error("scene is undefined");
+        Logger.getInstance().error("scene is undefined");
       }
     }
   }
@@ -31,7 +31,7 @@ export class SelectManager extends PacketHandler {
       if (scene) {
         scene.stop(SelectCharacter.name);
       } else {
-        Logger.error("scene is undefined");
+        Logger.getInstance().error("scene is undefined");
       }
     }
   }
@@ -54,7 +54,7 @@ export class SelectManager extends PacketHandler {
       if (scene) {
         return scene.getScene(SelectCharacter.name);
       }
-      Logger.error("scene is undefined");
+      Logger.getInstance().error("scene is undefined");
     }
     return;
   }
@@ -63,6 +63,6 @@ export class SelectManager extends PacketHandler {
     if (this.mWorldService) {
       return this.mWorldService.connection;
     }
-    Logger.log("world manager is undefined");
+    Logger.getInstance().log("world manager is undefined");
   }
 }

@@ -1,4 +1,4 @@
-import {Logger} from "./log";
+import { Logger } from "./log";
 
 export function load(path: string, responseType: XMLHttpRequestResponseType): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -7,7 +7,7 @@ export function load(path: string, responseType: XMLHttpRequestResponseType): Pr
       resolve(response.currentTarget);
     };
     http.onerror = () => {
-      Logger.warn(`${path} load error`);
+      Logger.getInstance().warn(`${path} load error`);
       reject(`${path} load error`);
     };
     http.open("GET", path);

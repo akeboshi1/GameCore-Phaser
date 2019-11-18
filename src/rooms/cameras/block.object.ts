@@ -1,4 +1,5 @@
-import {ElementDisplay} from "../display/element.display";
+import { ElementDisplay } from "../display/element.display";
+import { FramesDisplay } from "../display/frames.display";
 
 export abstract class BlockObject {
     protected mDisplay?: ElementDisplay;

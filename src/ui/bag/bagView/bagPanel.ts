@@ -41,11 +41,6 @@ export class BagPanel extends Panel {
         this.refreshDataList();
     }
 
-    public hide() {
-        super.hide();
-        this.destroy();
-    }
-
     public getPageNum(): number {
         return this.mPageNum;
     }
@@ -86,7 +81,6 @@ export class BagPanel extends Panel {
 
     protected init() {
         if (this.mInitialized) return;
-        super.init();
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
@@ -157,6 +151,7 @@ export class BagPanel extends Panel {
         if (this.mDataList) {
             this.refreshDataList();
         }
+        super.init();
     }
 
     protected preload() {
@@ -213,7 +208,7 @@ export class BagPanel extends Panel {
 
     private refreshDataList() {
         if (!this.mDataList) {
-            Logger.error("this.mDataList is undefiend");
+            Logger.getInstance().error("this.mDataList is undefiend");
             return;
         }
         const items = this.mDataList.slice((this.mPageIndex - 1) * BagPanel.PageMaxCount, this.mPageIndex * BagPanel.PageMaxCount);

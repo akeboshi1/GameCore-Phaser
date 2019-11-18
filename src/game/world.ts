@@ -53,7 +53,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mGameEmitter: Phaser.Events.EventEmitter;
     private mHttpService: HttpService;
     private mAccount: Account;
-
+    private gameConfig: Phaser.Types.Core.GameConfig;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -92,13 +92,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    getConfig(): ILauncherConfig {
+        return this.mConfig;
+    }
+
     destroy(): void {
         this.mConnection.closeConnect();
         this.clearGame();
     }
 
     onConnected(connection?: SocketConnection): void {
-        Logger.info(`enterVirtualWorld`);
+        Logger.getInstance().info(`enterVirtualWorld`);
         this.enterVirtualWorld();
         // this.login();
     }
@@ -113,7 +117,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        Logger.error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
@@ -137,13 +141,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public resize(width: number, height: number) {
         if (this.mGame) {
+            if (!this.mGame.device.os.desktop) {
+                if (width < height) {
+                    this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
+                    this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+                    Logger.getInstance().debug("portrait:", width, height);
+                } else if (width > height) {
+                    this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
+                    this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+                    Logger.getInstance().debug("landscape:", width, height);
+                }
+            }
             this.mGame.scale.resize(width, height);
         }
-        if (width < height) {
-            this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-        } else if (width > height) {
-            this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-        }
+
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);
         }
@@ -153,31 +164,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mInputManager) {
             this.mInputManager.resize(width, height);
         }
-        // TODO manager.resize
     }
 
     public startFullscreen() {
         if (!this.mGame) {
-            Logger.warn("game does not exist!");
+            Logger.getInstance().warn("game does not exist!");
             return;
         }
-        // const scenes = this.mGame.scene.getScenes();
         this.mGame.scale.startFullscreen();
-        // for (const scene of scenes) {
-        //     scene.scale.startFullscreen();
-        // }
     }
 
     public stopFullscreen() {
         if (!this.mGame) {
-            Logger.warn("game does not exist!");
+            Logger.getInstance().warn("game does not exist!");
             return;
         }
         this.mGame.scale.stopFullscreen();
-        // const scenes = this.mGame.scene.getScenes();
-        // for (const scene of scenes) {
-        //     scene.scale.stopFullscreen();
-        // }
     }
 
     public onGotoAnotherGame(packet: PBpacket) {
@@ -188,30 +190,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
-        // this.mAccount.setAccount({
-        //     data: {
-        //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWVkZWYwMGRkYmRjNTdmNjQzOGFkMyIsImlhdCI6MTU3MDc4NTI3MCwiZXhwIjoxNTcxMzkwMDcwfQ.149pIYXoBo-4w-AAHNFhBTogtfLzcOn8raBZ9sLQG5g",
-        //         expire: 1571390070,
-        //         fingerprint: "d0eb22c474606051895f1f15e2a42476ad0a0fc8"
-        //     }
-        // });
         this.loginEnterWorld();
-    }
-
-    private clearGame() {
-        if (this.mGame) {
-            this.mGame.plugins.removeGlobalPlugin("rexButton");
-            this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-            this.mGame.plugins.removeGlobalPlugin("rexInputText");
-            this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-            this.mGame.plugins.removeScenePlugin("DragonBones");
-            this.mGame.plugins.removeScenePlugin("rexUI");
-            this.mGameEmitter.destroy();
-            this.roomManager.destroy();
-            this.uiManager.destroy();
-            this.mGame.destroy(true);
-            this.mGame = null;
-        }
     }
 
     get uiScale(): number {
@@ -260,9 +239,44 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mAccount;
     }
 
+    public getGameConfig(): Phaser.Types.Core.GameConfig {
+        return this.gameConfig;
+    }
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
+    }
+
+    private clearGame() {
+        if (this.mGame) {
+            this.mGame.plugins.removeGlobalPlugin("rexButton");
+            this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+            this.mGame.plugins.removeGlobalPlugin("rexInputText");
+            this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+            this.mGame.plugins.removeScenePlugin("DragonBones");
+            this.mGame.plugins.removeScenePlugin("rexUI");
+            this.mGameEmitter.destroy();
+            this.roomManager.destroy();
+            this.uiManager.destroy();
+            this.mGame.destroy(true);
+            this.mGame = null;
+        }
+    }
+
+    private initUiScale() {
+        const width: number = this.mConfig.width;
+        const height: number = this.mConfig.height;
+        const baseWidth: number = this.mConfig.baseWidth;
+        const baseHeight: number = this.mConfig.baseHeight;
+        if (!this.mGame.device.os.desktop) {
+            if (width < height) {
+                this.mConfig.ui_scale = width / baseHeight * 2;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+            } else if (width > height) {
+                this.mConfig.ui_scale = width / baseWidth * 2;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+            }
+        }
     }
 
     private login() {
@@ -308,7 +322,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private loginEnterWorld() {
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-        Logger.log(`VW_id: ${this.mConfig.virtual_world_id}`);
+        Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
         content.gameId = this.mConfig.game_id;
         // const accountObj = JSON.parse();
@@ -324,17 +338,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
         if (!configUrls || configUrls.length <= 0) {
-            Logger.error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
+            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
         }
         // Logger.log("start download gameConfig");
         this.loadGameConfig(content.configUrls)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame(content.keyEvents);
-                Logger.debug("created game suc");
+                Logger.getInstance().debug("created game suc");
             })
             .catch((err) => {
-                Logger.log(err);
+                Logger.getInstance().log(err);
             });
     }
 
@@ -342,7 +356,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             return this.mGame;
         }
-        const gameConfig: Phaser.Types.Core.GameConfig = {
+        this.gameConfig = {
             type: Phaser.AUTO,
             zoom: 1,
             parent: "game",
@@ -392,9 +406,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 roundPixels: true
             }
         };
-
-        Object.assign(gameConfig, this.mConfig);
-        return this.mGame = new Game(gameConfig);
+        Object.assign(this.gameConfig, this.mConfig);
+        this.mGame = new Game(this.gameConfig);
+        this.initUiScale();
+        return this.mGame;
     }
 
     private createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
@@ -410,6 +425,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             this.mInputManager = new JoyStickManager(this, keyEvents);
         }
+        this.resize(this.mConfig.width, this.mConfig.height);
         this.gameCreated();
     }
 
@@ -424,7 +440,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mConfig.game_created();
             }
         } else {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
         }
     }
 
@@ -434,14 +450,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         for (const path of paths) {
             if (PI_EXTENSION_REGEX.test(path)) {
                 configPath = ResUtils.getGameConfig(path);
-                Logger.log(`start download config: ${configPath}`);
+                Logger.getInstance().log(`start download config: ${configPath}`);
                 promises.push(load(configPath, "arraybuffer"));
             }
         }
         // TODO Promise.all如果其中有一个下载失败，会返回error
         return Promise.all(promises)
             .then((reqs: any[]) => {
-                Logger.log("start decodeConfig");
+                Logger.getInstance().log("start decodeConfig");
                 return this.decodeConfigs(reqs);
             });
     }
@@ -477,7 +493,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.scene.stop(GamePauseScene.name);
             }
         } else {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
         }
     }
 
@@ -493,7 +509,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
             this.mGame.scene.start(GamePauseScene.name, { world: this });
         } else {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
         }
     }
 }

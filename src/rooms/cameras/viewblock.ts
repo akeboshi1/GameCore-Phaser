@@ -1,6 +1,6 @@
-import {Element, IElement} from "../element/element";
-import {Logger} from "../../utils/log";
-import {Rectangle45} from "../../utils/rectangle45";
+import { Element, IElement } from "../element/element";
+import { Logger } from "../../utils/log";
+import { Rectangle45 } from "../../utils/rectangle45";
 
 /**
  * 显示区域

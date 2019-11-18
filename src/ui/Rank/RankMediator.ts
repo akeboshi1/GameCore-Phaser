@@ -24,7 +24,7 @@ export class RankMediator extends BaseMediator {
     }
 
     hide(): void {
-        this.mView.hide();
+        if (this.mView) this.mView.hide();
     }
 
     isSceneUI(): boolean {
@@ -36,10 +36,11 @@ export class RankMediator extends BaseMediator {
     }
 
     resize() {
-        this.mView.resize();
+        if (this.mView) this.mView.resize();
     }
 
     show(param?: any): void {
+        return;
         if (this.mView && this.mView.isShow()) {
             return;
         }
@@ -53,6 +54,7 @@ export class RankMediator extends BaseMediator {
     }
 
     update(param?: any): void {
+        if (!this.mView) return;
         if (param && param.length > 0) {
             this.mView.update(param[0]);
         }

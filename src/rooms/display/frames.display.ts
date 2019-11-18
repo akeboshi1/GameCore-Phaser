@@ -1,10 +1,7 @@
 import { IFramesModel } from "./frames.model";
-import { ElementDisplay } from "./element.display";
 import { Logger } from "../../utils/log";
-import ImageFile = Phaser.Loader.FileTypes.ImageFile;
-import { SortRectangle } from "../../utils/sort.rectangle";
 import {DisplayObject} from "./display.object";
-import { IAnimationData } from "./animation";
+import {IAnimationData} from "./animation";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -39,8 +36,7 @@ export class FramesDisplay extends DisplayObject {
         } else {
             const display = data.display;
             if (!display) {
-                Logger.error("display is undefined");
-                return;
+                Logger.getInstance().error("display is undefined");
             }
             this.scene.load.atlas(data.gene, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
             // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
@@ -64,7 +60,7 @@ export class FramesDisplay extends DisplayObject {
         } else {
             const anis = data.getAnimations(animationName);
             if (!anis) {
-                Logger.log(`error: ${animationName} not found`);
+                Logger.getInstance().log(`error: ${animationName} not found`);
                 return;
             }
             sprite.setTexture(data.gene, anis.frameName[0]);
@@ -110,7 +106,7 @@ export class FramesDisplay extends DisplayObject {
         super.disableInteractive();
         this.mSprites.forEach((sprite) => {
             sprite.disableInteractive();
-        })
+        });
         return this;
     }
 

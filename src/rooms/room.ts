@@ -17,10 +17,11 @@ import { Pos } from "../utils/pos";
 import { LoadingScene } from "../scenes/loading";
 import { Clock, ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
-import { MapEntity } from "./map/map.entity";
-import { ActorEntity } from "./player/Actor.entity";
+import { Map } from "./map/map";
+import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import {Element, IElement} from "./element/element";
+import { Size } from "../utils/size";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -35,8 +36,9 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
     readonly blocks: ViewblockService;
-    readonly actor: ActorEntity;
+    readonly actor: Actor;
     readonly world: WorldService;
+    readonly map: Map;
 
     readonly scene: Phaser.Scene | undefined;
 
@@ -78,10 +80,7 @@ export interface IRoomService {
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     public clockSyncComplete: boolean = false;
     protected mWorld: WorldService;
-    protected mActor: ActorEntity;
-    protected mActorData: IActor;
-
-    protected mMapEntity: MapEntity;
+    protected mMap: Map;
 
     protected mID: number;
     protected mTerainManager: TerrainManager;
@@ -93,6 +92,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mCameraService: ICameraService;
     protected mBlocks: ViewblockService;
     protected mClock: Clock;
+
+    private mActor: Actor;
+    private mActorData: IActor;
 
     constructor(protected manager: IRoomManager) {
         super();
@@ -109,8 +111,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public enter(data: op_client.IScene): void {
+        const size: Size = this.mWorld.getSize();
         if (!data) {
-            Logger.error("wrong room");
+            Logger.getInstance().error("wrong room");
             return;
         }
         this.mID = data.id;
@@ -125,8 +128,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         };
 
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
-        this.mMapEntity = new MapEntity(this.mWorld);
-        this.mMapEntity.setMapInfo(data);
+        this.mMap = new Map(this.mWorld);
+        this.mMap.setMapInfo(data);
         this.mClock = new Clock(this.mWorld.connection, this);
         this.mTerainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
@@ -152,7 +155,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                         if (this.connection) {
                             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
                         }
-                        this.mActor = new ActorEntity(new PlayerModel(this.mActorData), this.mPlayerManager);
+                        this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
                         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
                         if (loadingScene) loadingScene.sleep();
                         // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
@@ -171,7 +174,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public onClockReady(): void {
         // TODO: Unload loading-scene
-        Logger.debug("onClockReady");
+        Logger.getInstance().debug("onClockReady");
         this.clockSyncComplete = true;
     }
 
@@ -186,12 +189,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mClock.sync(-1);
     }
 
-    public getHeroEntity(): ActorEntity {
+    public getHero(): Actor {
         return this.mActor;
-    }
-
-    public getMapEntity(): MapEntity {
-        return this.mMapEntity;
     }
 
     public requestActorMove(dir: number, keyArr: number[]) {
@@ -232,7 +231,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public transformTo90(p: Pos) {
         if (!this.mSize) {
-            Logger.error("position object is undefined");
+            Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo90(p, this.mSize);
@@ -240,7 +239,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public transformTo45(p: Pos) {
         if (!this.mSize) {
-            Logger.error("position object is undefined");
+            Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo45(p, this.mSize);
@@ -280,6 +279,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mPlayerManager || undefined;
     }
 
+    get map(): Map {
+        return this.mMap;
+    }
+
     get layerManager(): LayerManager {
         return this.mLayManager || undefined;
     }
@@ -300,7 +303,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mBlocks;
     }
 
-    get actor(): ActorEntity | undefined {
+    get actor(): Actor | undefined {
         return this.mActor;
     }
 

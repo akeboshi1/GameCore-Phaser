@@ -1,24 +1,26 @@
 import { BaseMediator } from "../baseMediator";
-import { IAbstractPanel } from "../abstractPanel";
-import { DialogueView } from "./dialogueView";
-import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
+import { IAbstractPanel } from "../abstractPanel";
+import { DebugLogger } from "./debug.logger";
 
-export class DialogueMediator extends BaseMediator {
-    public static NAME: string = "DialogueMediator";
-    public world: WorldService;
+export class DebugLoggerMediator extends BaseMediator {
+    public static NAME: string = "DebugLoggerMediator";
     private mScene: Phaser.Scene;
-    private mParam: any;
-    constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
+    constructor(scene: Phaser.Scene, world: WorldService) {
         super(world);
+        this.mScene = scene;
     }
 
     public isSceneUI(): boolean {
-        return false;
+        return true;
     }
 
     public resize() {
         if (this.mView) return this.mView.resize();
+    }
+
+    public isShow(): boolean {
+        return this.mView !== undefined ? this.mView.isShow() : false;
     }
 
     public getView(): IAbstractPanel {
@@ -26,12 +28,11 @@ export class DialogueMediator extends BaseMediator {
     }
 
     public show(param?: any) {
-        if (this.mView) {
+        if (this.mView && this.isShow()) {
             return;
         }
-        this.mView = new DialogueView(this.mScene, this.world);
+        this.mView = new DebugLogger(this.mScene, this.world);
         this.mView.show(param);
-        this.mParam = param;
         super.show(param);
     }
 
@@ -43,10 +44,7 @@ export class DialogueMediator extends BaseMediator {
     }
 
     public destroy() {
-        this.world = null;
         this.mScene = null;
-        this.mParam = null;
         super.destroy();
     }
-
 }

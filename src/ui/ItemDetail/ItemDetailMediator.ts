@@ -5,7 +5,6 @@ import { ILayerManager } from "../layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { NinePatchButton } from "../components/ninepatch.button";
-import { IAbstractPanel } from "../abstractPanel";
 
 export class ItemDetailMediator extends BaseMediator {
     public static NAME: string = "ItemDetailMediator";
@@ -36,11 +35,21 @@ export class ItemDetailMediator extends BaseMediator {
         this.mView.show(param);
         this.mParam = param;
         this.mLayerManager.addToUILayer(this.mView);
-        super.show(param);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
+        super.show(param);
     }
     public update(param?: any): void {
         super.update(param);
+    }
+
+    public hide() {
+        this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
+        super.hide();
+    }
+
+    public destroy() {
+        this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
+        super.destroy();
     }
 
     private onBtnHandler(pointer, gameobject) {

@@ -33,16 +33,16 @@ export class SocketConnection {
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
             const listener: IConnectListener = this.mConnectListener;
             this.mTransport.on("open", () => {
-                Logger.info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
+                Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this);
                 this.onConnected();
             });
             this.mTransport.on("close", () => {
-                Logger.info(`SocketConnection close.`);
+                Logger.getInstance().info(`SocketConnection close.`);
                 listener.onDisConnected(this);
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
-                Logger.info(`SocketConnection error.`);
+                Logger.getInstance().info(`SocketConnection error.`);
                 listener.onError(reason);
             });
         }
@@ -59,7 +59,7 @@ export class SocketConnection {
 
     send(data: any): void {
         if (!this.mTransport) {
-            return Logger.error(`Empty transport.`);
+            return  Logger.getInstance().error(`Empty transport.`);
         }
         this.mTransport.Send(data);
     }
@@ -73,7 +73,7 @@ export class SocketConnection {
 
     protected onConnected() {
         if (!this.mTransport) {
-            return Logger.error(`Empty transport.`);
+            return  Logger.getInstance().error(`Empty transport.`);
         }
         this.mTransport.on("packet", this.onData);
     }
@@ -85,7 +85,7 @@ export class SocketConnection {
 
     private doConnect() {
         if (!this.mTransport) {
-            return Logger.error(`Empty transport.`);
+            return  Logger.getInstance().error(`Empty transport.`);
         }
         if (this.mServerAddr.secure !== undefined) this.mTransport.secure = this.mServerAddr.secure;
         this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);

@@ -22,8 +22,8 @@ export interface ICameraService {
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
-    readonly MINI_VIEW_SIZE = 38;
-    readonly VIEW_PORT_SIZE = 40;
+    readonly MINI_VIEW_SIZE = 18;
+    readonly VIEW_PORT_SIZE = 20;
     private mCamera: Phaser.Cameras.Scene2D.Camera;
     private viewPort = new Phaser.Geom.Rectangle();
     private miniViewPort = new Phaser.Geom.Rectangle();
@@ -80,7 +80,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     public setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void {
         if (!this.mCamera) {
-            Logger.error("camera does not exist");
+            Logger.getInstance().error("camera does not exist");
             return;
         }
         this.mCamera.setBounds(x, y, width, height, centerOn);
@@ -88,7 +88,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     private resetCameraSize(width: number, height: number) {
         if (!this.connection) {
-            Logger.error("connection is undefined");
+            Logger.getInstance().error("connection is undefined");
             return;
         }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
@@ -100,12 +100,12 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     private setViewPortSize() {
         if (!this.mCamera) {
-            Logger.error("camera does not exist");
+            Logger.getInstance().error("camera does not exist");
             return;
         }
         const size = this.mRoomService.roomSize;
         if (!size) {
-            Logger.error("room size does not exist");
+            Logger.getInstance().error("room size does not exist");
             return;
         }
         const viewW = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileWidth / 2);
@@ -119,7 +119,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     get connection(): ConnectionService {
         if (!this.mRoomService) {
-            Logger.error("room service is undefined");
+            Logger.getInstance().error("room service is undefined");
             return;
         }
         return this.mRoomService.connection;

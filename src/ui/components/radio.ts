@@ -19,6 +19,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     private mConfig: IRadioResConfig;
     private mBg: Phaser.GameObjects.Image;
     private mIsShow: boolean = false;
+    private mInit: boolean = false;
     // private mArrow: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, config: IRadioResConfig) {
         super(scene);
@@ -27,19 +28,19 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
         this.init();
     }
 
-    public setRadioData(value: string[]) {
+    public setRadioData(value: any[]) {
         this.clearRadioData();
         this.itemList = [];
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
-            const item: RadioItemRender = new RadioItemRender(this.mScene, this, this.mConfig.wid, 20, this.mConfig.resKey, this.mConfig.resArrow);
-            const str: string = value[i];
+            const item: RadioItemRender = new RadioItemRender(this.mScene, this, this.mConfig.wid + 10, 20, this.mConfig.resKey, this.mConfig.resArrow);
+            const itemData: any = value[i];
             item.itemData = {
                 index: i,
-                text: str,
-                data: {},
+                text: itemData.text,
+                data: itemData.node.id
             };
-            item.x = this.mConfig.wid / 2 + 30;
+            item.x = this.mConfig.wid / 2 + 25;
             item.y = i * 33 + 23;
             this.add(item);
             this.itemList.push(item);
@@ -108,12 +109,14 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     }
 
     private onLoadCompleteHandler() {
+        this.mInit = true;
         const resKey: string = this.mConfig.resKey;
         this.mBg = this.mScene.make.image(undefined, false);
         this.mBg.setTexture(resKey, this.mConfig.resBg);
-        this.mBg.x = this.mConfig.wid / 2;
+        this.mBg.width += 20;
+        this.mBg.x = this.mConfig.wid / 2 - 2;
         this.mBg.y = this.mConfig.hei / 2;
-        this.add(this.mBg);
+        this.addAt(this.mBg, 0);
         this.setSize(this.mConfig.wid, this.mConfig.hei);
         if (this.mConfig.completeBack) {
             this.mConfig.completeBack();

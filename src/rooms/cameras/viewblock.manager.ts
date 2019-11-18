@@ -1,8 +1,8 @@
-import {Viewblock} from "./viewblock";
-import {ICameraService} from "./cameras.manager";
-import {IPosition45Obj} from "../../utils/position45";
-import {IElement} from "../element/element";
-import {Pos} from "../../utils/pos";
+import { Viewblock } from "./viewblock";
+import { ICameraService } from "./cameras.manager";
+import { IPosition45Obj } from "../../utils/position45";
+import { IElement } from "../element/element";
+import { Pos } from "../../utils/pos";
 
 export interface ViewblockService {
     update(time: number, delta: number): void;
@@ -20,6 +20,7 @@ export class ViewblockManager implements ViewblockService {
 
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];
+    private mDelay: number = 0;
 
     constructor(cameras: ICameraService) {
         this.mCameras = cameras;
@@ -52,7 +53,7 @@ export class ViewblockManager implements ViewblockService {
             return;
         }
         this.mBlocks = [];
-        const colSize = 20;
+        const colSize = 10;
         const viewW = (colSize + colSize) * (size.tileWidth / 2);
         const viewH = (colSize + colSize) * (size.tileHeight / 2);
         const blockW = size.sceneWidth / viewW;
@@ -69,6 +70,10 @@ export class ViewblockManager implements ViewblockService {
 
     public update(time: number, delta: number): void {
         if (!this.mCameras) return;
+        if (time - this.mDelay < 3000) {
+            return;
+        }
+        this.mDelay = time;
         const bound: Phaser.Geom.Rectangle = this.mCameras.getViewPort();
         const miniViewPort = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
@@ -77,5 +82,6 @@ export class ViewblockManager implements ViewblockService {
     }
 
     public destroy(): void {
+        this.mDelay = 0;
     }
 }
