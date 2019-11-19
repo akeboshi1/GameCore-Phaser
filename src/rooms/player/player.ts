@@ -28,7 +28,7 @@ export class Player extends Element {
         super(sprite, mElementManager);
         if (this.mDisplay) {
             if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
-            this.mDisplay.showNickname(sprite.nickname);
+            // this.mDisplay.showNickname(sprite.nickname);
         }
     }
     public move(moveData: op_client.IMoveData) {
