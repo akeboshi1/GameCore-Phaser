@@ -1,12 +1,12 @@
 import { BaseMediator } from "../baseMediator";
-import { WorldService } from "../../game/world.service";
-import { ItemDetail } from "./ItemDetail";
 import { ILayerManager } from "../layer.manager";
-import { op_virtual_world, op_client } from "pixelpai_proto";
-import { PBpacket } from "net-socket-packet";
+import { WorldService } from "../../game/world.service";
+import { MessageBoxView } from "./MessageBoxView";
 import { NinePatchButton } from "../components/ninepatch.button";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
 
-export class ItemDetailMediator extends BaseMediator {
+export class MessageBoxMediator extends BaseMediator {
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
@@ -30,13 +30,14 @@ export class ItemDetailMediator extends BaseMediator {
         if (this.mView && this.isShow()) {
             return;
         }
-        this.mView = new ItemDetail(this.mScene, this.world);
+        this.mView = new MessageBoxView(this.mScene, this.world);
         this.mView.show(param);
         this.mParam = param;
         this.mLayerManager.addToUILayer(this.mView);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         super.show(param);
     }
+
     public update(param?: any): void {
         super.update(param);
     }

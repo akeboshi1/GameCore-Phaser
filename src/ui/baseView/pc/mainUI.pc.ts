@@ -118,8 +118,8 @@ export class MainUIPC extends Panel {
                 itemSlot = new ItemSlot(this.mScene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
                 itemSlot.createUI();
                 this.bagSlotList.push(itemSlot);
-                childList.push(itemSlot.toolTipCon);
             }
+            childList.push(itemSlot.toolTipCon);
             itemSlot.dataChange(items[i]);
             tempWid += 56 + 5;
         }
