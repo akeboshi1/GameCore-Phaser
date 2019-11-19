@@ -1,17 +1,17 @@
 import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
-import { ItemSlot } from "../bag/item.slot";
 import { ShopItemSlot } from "./shop.itemSlot";
 import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
+import { op_client } from "pixelpai_proto";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
     public mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mWorld: WorldService;
     private mShopItemSlotList: ShopItemSlot[];
-    private mDataList: any[];
+    private mShopData: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mWorld = world;
@@ -23,8 +23,8 @@ export class ShopPanel extends Panel {
         this.y = size.height - 300;
     }
 
-    public setDataList(value: any[]) {
-        this.mDataList = value;
+    public setDataList(value: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
+        this.mShopData = value;
         if (!this.mInitialized) {
             return;
         }
@@ -39,10 +39,7 @@ export class ShopPanel extends Panel {
             this.mShopItemSlotList.length = 0;
             this.mShopItemSlotList = null;
         }
-        if (this.mDataList) {
-            this.mDataList.length = 0;
-            this.mDataList = null;
-        }
+        this.mShopData = null;
         this.mInitialized = false;
         super.destroy();
     }
@@ -101,7 +98,7 @@ export class ShopPanel extends Panel {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
 
         // 异步加载过程中会导致数据过来，面板仍然没有加载完毕，所以缓存数据等ui加载完毕再做显示
-        if (this.mDataList) {
+        if (this.mShopData) {
             this.refreshDataList();
         }
         super.init();
@@ -118,16 +115,16 @@ export class ShopPanel extends Panel {
     }
 
     private refreshDataList() {
-        if (!this.mDataList) {
+        if (!this.mShopData) {
             Logger.getInstance().error("this.mDataList is undefiend");
             return;
         }
         const len = ShopPanel.ShopSlotCount;
-        let item: ItemSlot;
+        let item: ShopItemSlot;
         for (let i = 0; i < len; i++) {
             item = this.mShopItemSlotList[i];
             if (!item) continue;
-            item.dataChange(this.mDataList[i]);
+            item.shopDataChange(this.mShopData.items[i], this.mShopData.id);
         }
     }
 }

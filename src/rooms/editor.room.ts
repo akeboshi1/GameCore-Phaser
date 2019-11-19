@@ -1,23 +1,23 @@
-import {IPosition45Obj, Position45} from "../utils/position45";
-import {IRoomManager} from "./room.manager";
-import {PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_editor, op_virtual_world} from "pixelpai_proto";
-import {Logger} from "../utils/log";
-import {Brush, BrushEnum} from "../const/brush";
-import {IRoomService, Room} from "./room";
-import {LayerManager} from "./layer/layer.manager";
-import {ViewblockManager} from "./cameras/viewblock.manager";
-import {EditScene} from "../scenes/edit";
-import {MouseFollow} from "./editor/mouse.follow";
-import {FramesDisplay} from "./display/frames.display";
-import {TerrainDisplay} from "./display/terrain.display";
-import {SelectedElement} from "./editor/selected.element";
-import {DisplayObject} from "./display/display.object";
-import {Pos} from "../utils/pos";
-import {EditorElementManager} from "./element/editor.element.manager";
-import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
-import {Element} from "./element/element";
-import {ElementDisplay} from "./display/element.display";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { IRoomManager } from "./room.manager";
+import { PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_editor, op_virtual_world } from "pixelpai_proto";
+import { Logger } from "../utils/log";
+import { Brush, BrushEnum } from "../const/brush";
+import { IRoomService, Room } from "./room";
+import { LayerManager } from "./layer/layer.manager";
+import { ViewblockManager } from "./cameras/viewblock.manager";
+import { EditScene } from "../scenes/edit";
+import { MouseFollow } from "./editor/mouse.follow";
+import { FramesDisplay } from "./display/frames.display";
+import { TerrainDisplay } from "./display/terrain.display";
+import { SelectedElement } from "./editor/selected.element";
+import { DisplayObject } from "./display/display.object";
+import { Pos } from "../utils/pos";
+import { EditorElementManager } from "./element/editor.element.manager";
+import { EditorTerrainManager } from "./terrain/editor.terrain.manager";
+import { Element } from "./element/element";
+import { ElementDisplay } from "./display/element.display";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -83,19 +83,20 @@ export class EditorRoom extends Room implements EditorRoomService {
 
         this.mWorld.game.scene.start(EditScene.name, {
             room: this,
-            callBack: () => {
-                this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
-                this.mLayManager = new LayerManager(this);
-                this.mLayManager.drawGrid(this);
-                this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
-                this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
-                this.mScene.input.on("gameobjectup", this.onGameobjectUpHandler, this);
-                const mainCameras = this.mScene.cameras.main;
-                mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
-
-                this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-            }
         });
+    }
+
+    public startPlay() {
+        this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
+        this.mLayManager = new LayerManager(this);
+        this.mLayManager.drawGrid(this);
+        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.on("gameobjectup", this.onGameobjectUpHandler, this);
+        const mainCameras = this.mScene.cameras.main;
+        mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
     }
 
     public destroy() {

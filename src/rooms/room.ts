@@ -7,7 +7,7 @@ import { ConnectionService } from "../net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import {PacketHandler, PBpacket} from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
 import { ElementDisplay } from "./display/element.display";
@@ -20,7 +20,7 @@ import IActor = op_client.IActor;
 import { Map } from "./map/map";
 import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
-import {Element, IElement} from "./element/element";
+import { Element, IElement } from "./element/element";
 import { Size } from "../utils/size";
 
 export interface SpriteAddCompletedListener {
@@ -47,6 +47,12 @@ export interface IRoomService {
     clockSyncComplete: boolean;
 
     now(): number;
+
+    startLoad();
+
+    completeLoad();
+
+    startPlay();
 
     updateClock(time: number, delta: number): void;
 
@@ -145,23 +151,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mWorld.game.scene.start(LoadingScene.name, {
             world: this.world,
             room: this,
-            startBack: () => {
-                this.mClock.sync(-1);
-            },
-            callBack: () => {
-                this.mWorld.game.scene.start(PlayScene.name, {
-                    room: this,
-                    callBack: () => {
-                        if (this.connection) {
-                            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-                        }
-                        this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
-                        const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-                        if (loadingScene) loadingScene.sleep();
-                        // this.mWorld.game.scene.getScene(LoadingScene.name).scene.sleep();
-                    },
-                });
-            },
         });
     }
 
@@ -176,6 +165,30 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // TODO: Unload loading-scene
         Logger.getInstance().debug("onClockReady");
         this.clockSyncComplete = true;
+    }
+
+    public startLoad() {
+        this.mClock.sync(-1);
+    }
+
+    public completeLoad() {
+        if (this.mScene.scene.isActive()) {
+            this.mScene.scene.stop();
+            this.mScene.scene.restart({ room: this});
+            return;
+        }
+        this.mWorld.game.scene.start(PlayScene.name, {
+            room: this,
+        });
+    }
+
+    public startPlay() {
+        if (this.connection) {
+            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        }
+        this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
+        const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+        if (loadingScene) loadingScene.sleep();
     }
 
     public pause() {

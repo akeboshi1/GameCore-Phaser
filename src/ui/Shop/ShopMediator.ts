@@ -16,12 +16,12 @@ export class ShopMediator extends BaseMediator {
     private isEnd = false;
     private mParam: any;
     private mScene: Phaser.Scene;
+    private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
         this.world = world;
         this.mScene = scene;
-        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
-        this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
+        this.mLayerManager = layerManager;
     }
 
     public isSceneUI(): boolean {
@@ -37,13 +37,16 @@ export class ShopMediator extends BaseMediator {
     }
 
     public show(param?: any) {
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView && this.mView.isShow() || this.isShowing) {
             return;
         }
         this.mView = new ShopPanel(this.mScene, this.world);
         this.mView.show(param);
         this.mParam = param;
+        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
+        this.mLayerManager.addToUILayer(this.mView);
         super.show(param);
     }
 
@@ -52,6 +55,8 @@ export class ShopMediator extends BaseMediator {
     }
 
     public hide() {
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         if (this.mView) {
             this.mView.hide();
             this.mView = null;
@@ -59,8 +64,6 @@ export class ShopMediator extends BaseMediator {
     }
 
     public destroy() {
-        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
-        this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.world = null;
         this.mScene = null;
         this._curPage = 0;
@@ -97,7 +100,7 @@ export class ShopMediator extends BaseMediator {
 
     private queryPackageHandler(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
         if (data.items.length > 0 && data.id === this.mParam[0].id) {
-            (this.mView as ShopPanel).setDataList(data.items);
+            (this.mView as ShopPanel).setDataList(data);
             //  this.mView.addItems(data.items);
         } else {
             this.isEnd = true;

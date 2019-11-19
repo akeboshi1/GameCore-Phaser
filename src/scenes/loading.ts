@@ -7,8 +7,6 @@ const LOGO_MARGIN = 25;
 export class LoadingScene extends Phaser.Scene {
   private mWorld: WorldService;
   private mRoom: IRoomService;
-  private mCallBack: Function;
-  private mStartBack: Function;
   private lo: Phaser.GameObjects.Sprite;
   private bg: Phaser.GameObjects.Graphics;
   constructor() {
@@ -22,12 +20,10 @@ export class LoadingScene extends Phaser.Scene {
   public init(data: any) {
     this.mWorld = data.world;
     this.mRoom = data.room;
-    this.mStartBack = data.startBack;
-    this.mCallBack = data.callBack;
   }
 
   public create() {
-    if (this.mStartBack) this.mStartBack();
+    if (this.mRoom) this.mRoom.startLoad();
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
     this.bg = this.add.graphics();
@@ -53,7 +49,7 @@ export class LoadingScene extends Phaser.Scene {
     //   this.cameras.main.emit("renderer", this.cameras.main);
     // }
     if (this.mRoom) {
-      if (this.mRoom.clockSyncComplete && this.mCallBack) this.mCallBack();
+      if (this.mRoom.clockSyncComplete) this.mRoom.completeLoad();
       this.mRoom.updateClock(time, delta);
     }
   }

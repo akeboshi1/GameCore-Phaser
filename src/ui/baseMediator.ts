@@ -19,6 +19,7 @@ export interface IMediator {
 export class BaseMediator implements IMediator {
     readonly world: WorldService;
     protected mView: Panel;
+    protected isShowing: boolean = false;
     constructor(world?: WorldService) {
         this.world = world;
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
@@ -33,6 +34,7 @@ export class BaseMediator implements IMediator {
     }
 
     hide(): void {
+        this.isShowing = false;
         const view = this.getView();
         if (view) view.hide();
     }
@@ -60,6 +62,7 @@ export class BaseMediator implements IMediator {
     }
 
     destroy() {
+        this.isShowing = false;
         this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         let view = this.getView();
         if (view) {
