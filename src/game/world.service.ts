@@ -15,7 +15,6 @@ export interface WorldService {
     connection: ConnectionService;
     readonly game: Phaser.Game;
     readonly roomManager: RoomManager;
-    readonly selectCharacterManager: SelectManager;
     readonly elementStorage: IElementStorage;
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
