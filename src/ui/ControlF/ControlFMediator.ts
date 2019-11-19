@@ -58,7 +58,7 @@ export class ControlFMediator extends BaseMediator {
         //     this.mView.on("control22", this.handControlF, this);
         // }
 
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView && this.mView.isShow() || this.isShowing) {
             return;
         }
         this.mView = new ControlFPanel(this.mScene);
