@@ -5,7 +5,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "phaser";
 import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
 import { ConnectionService } from "../net/connection.service";
-import { op_client, op_def, op_gateway, op_virtual_world, op_gameconfig } from "pixelpai_proto";
+import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
 import { PlayScene } from "../scenes/play";
@@ -13,7 +13,6 @@ import { RoomManager } from "../rooms/room.manager";
 import { ServerAddress } from "../net/address";
 import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
-import { SelectManager } from "../rooms/player/select.manager";
 import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
 import { MainUIScene } from "../scenes/main.ui";
@@ -209,10 +208,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get elementStorage(): IElementStorage | undefined {
         return this.mElementStorage;
-    }
-
-    get selectCharacterManager(): SelectManager | undefined {
-        return this.selectCharacterManager;
     }
 
     get uiManager(): UiManager | undefined {
@@ -487,11 +482,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Focus;
             this.connection.send(pkt);
-            this.mRoomMamager.onFocus();
-            const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
-            if (pauseScene) {
-                this.mGame.scene.stop(GamePauseScene.name);
-            }
+            this.pauseScene();
         } else {
             Logger.getInstance().error("connection is undefined");
         }
@@ -503,13 +494,31 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
-            this.mRoomMamager.onBlur();
-            if (!this.mGame.scene.getScene(GamePauseScene.name)) {
-                this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
-            }
-            this.mGame.scene.start(GamePauseScene.name, { world: this });
+            this.resumeScene();
         } else {
             Logger.getInstance().error("connection is undefined");
         }
+    }
+
+    private resumeScene() {
+        if (this.mConfig.isEditor) {
+            return;
+        }
+        this.mRoomMamager.onFocus();
+        const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
+        if (pauseScene) {
+            this.mGame.scene.stop(GamePauseScene.name);
+        }
+    }
+
+    private pauseScene() {
+        if (this.mConfig.isEditor) {
+            return;
+        }
+        this.mRoomMamager.onBlur();
+        if (!this.mGame.scene.getScene(GamePauseScene.name)) {
+            this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
+        }
+        this.mGame.scene.start(GamePauseScene.name, { world: this });
     }
 }
