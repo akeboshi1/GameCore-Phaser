@@ -32,7 +32,6 @@ export class EditorRoom extends Room implements EditorRoomService {
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
-    private mSelectedObject: ElementDisplay;
     private mNimiSize: IPosition45Obj;
     constructor(manager: IRoomManager) {
         super(manager);
@@ -94,6 +93,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                 mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
 
                 this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+                this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
             }
         });
     }
@@ -107,6 +107,9 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     public update(time: number, delta: number) {
         if (this.layerManager) this.layerManager.update(time, delta);
+        if (this.mSelectedElementEffect) {
+            this.mSelectedElementEffect.update();
+        }
     }
 
     transformToMini90(p: Pos): undefined | Pos {
@@ -152,10 +155,11 @@ export class EditorRoom extends Room implements EditorRoomService {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
         this.mBrush.mode = <BrushEnum> mode.mode;
         if (this.mMouseFollow) this.mMouseFollow.destroy();
-        if (this.mSelectedElementEffect) this.mSelectedElementEffect.remove();
-        if (this.mSelectedObject) {
-            this.mSelectedObject.hideRefernceArea();
-            this.mSelectedObject = undefined;
+        if (this.mBrush.mode !== BrushEnum.SELECT) {
+            if (this.mSelectedElementEffect) {
+                this.mSelectedElementEffect.destroy();
+                this.mSelectedElementEffect = null;
+            }
         }
         this.layerManager.setSurfaceInteractive(this.mBrush.mode !== BrushEnum.ERASER);
     }
@@ -202,7 +206,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                 break;
             case BrushEnum.SELECT:
                 if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
-                    this.syncSprite(this.mSelectedObject);
+                    if (this.mSelectedElementEffect) this.syncSprite(this.mSelectedElementEffect.display);
                 }
                 break;
         }
@@ -222,10 +226,13 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private sendFetch(ids: number[], nodetype: op_def.NodeType) {
+        if (!this.mSelectedElementEffect || !this.mSelectedElementEffect.display) {
+            return;
+        }
         const pkt: PBpacket = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_FETCH_SPRITE);
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_FETCH_SPRITE = pkt.content;
-        content.ids = [this.mSelectedObject.element.id];
-        content.nodeType = op_def.NodeType.ElementNodeType;
+        content.ids = ids;
+        content.nodeType = nodetype;
         this.connection.send(pkt);
         Logger.getInstance().log("fetch sprite", content);
     }
@@ -272,8 +279,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mSelectedElementEffect) {
             this.mSelectedElementEffect = new SelectedElement(this.mScene, this.layerManager);
         }
-        this.mSelectedObject = com;
-        com.showRefernceArea();
         this.mSelectedElementEffect.setElement(<FramesDisplay> com);
         return com;
     }
@@ -303,7 +308,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
         content.sprites = [ele.toSprite()];
         this.connection.send(pkt);
-        Logger.getInstance().log("syncSprite", content);
     }
 
     private onPointerMoveHandler(pointer) {
@@ -320,20 +324,40 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.moveCameras(pointer);
                 break;
             case BrushEnum.SELECT:
-                if (!this.mSelectedObject) {
+                if (!this.mSelectedElementEffect) {
                     return;
-                }
-                if (this.mSelectedElementEffect) {
-                    this.mSelectedElementEffect.setPosition();
                 }
                 if (!this.mouseFollow) {
                     return;
                 }
                 const pos = this.mMouseFollow.transitionGrid(pointer.worldX, pointer.worldY);
                 if (pos) {
-                    this.mSelectedObject.x = pos.x;
-                    this.mSelectedObject.y = pos.y;
+                    this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
                 }
+                break;
+        }
+    }
+
+    private onKeyDownHandler(event) {
+        if (!this.mSelectedElementEffect) {
+            return;
+        }
+        const display = this.mSelectedElementEffect.display;
+        if (!display) {
+            return;
+        }
+        switch (event.keyCode) {
+            case 37:
+                display.x--;
+                break;
+            case 38:
+                display.y--;
+                break;
+            case 39:
+                display.x++;
+                break;
+            case 40:
+                display.y++;
                 break;
         }
     }

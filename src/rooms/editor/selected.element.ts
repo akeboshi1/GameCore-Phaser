@@ -9,14 +9,16 @@ export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mEffecte: DynamicImage;
     constructor(private mScene: Phaser.Scene, private mLayerManager: LayerManager) {
+        Logger.getInstance().log("scene: ", this.mScene, this);
         this.mEffecte = new DynamicImage(this.mScene, 0, 0);
         this.mEffecte.load(Url.getRes("ui/editor/selectFlag.png"));
     }
 
     setElement(display: FramesDisplay | DragonbonesDisplay) {
         this.mDisplay = display;
+        display.showRefernceArea();
         this.mLayerManager.addToSceneToUI(this.mEffecte);
-        this.setPosition();
+        this.update();
     }
 
     remove() {
@@ -26,10 +28,11 @@ export class SelectedElement {
         if (this.mEffecte.parentContainer) {
             this.mEffecte.parentContainer.remove(this.mEffecte);
         }
+        this.mDisplay.hideRefernceArea();
         this.mDisplay = null;
     }
 
-    setPosition() {
+    update() {
         if (!this.mDisplay) {
             return;
         }
@@ -38,10 +41,24 @@ export class SelectedElement {
         this.mEffecte.y = this.mDisplay.y + baseLoc.y;
     }
 
+    setDisplayPos(x: number, y: number) {
+        if (!this.mDisplay) {
+            return;
+        }
+        this.mDisplay.x = x;
+        this.mDisplay.y = y;
+    }
+
     destroy() {
         if (!this.mEffecte) {
             return;
         }
+        Logger.getInstance().log("destroy");
+        this.remove();
         this.mEffecte.destroy();
+    }
+
+    get display(): FramesDisplay | DragonbonesDisplay {
+        return this.mDisplay;
     }
 }
