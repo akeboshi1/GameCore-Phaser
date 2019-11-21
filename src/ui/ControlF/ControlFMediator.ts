@@ -3,11 +3,10 @@ import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { ControlFPanel } from "./ControlFPanel";
-import { PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { ComponentRankPanel } from "../ComponentRank/ComponentRankPanel";
-
+import { PBpacket } from "net-socket-packet";
+import { op_virtual_world } from "pixelpai_proto";
 export class ControlFMediator extends BaseMediator {
     readonly world: WorldService;
     private mScene: Phaser.Scene;
@@ -59,7 +58,7 @@ export class ControlFMediator extends BaseMediator {
         //     this.mView.on("control22", this.handControlF, this);
         // }
 
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView && this.mView.isShow() || this.isShowing) {
             return;
         }
         this.mView = new ControlFPanel(this.mScene);

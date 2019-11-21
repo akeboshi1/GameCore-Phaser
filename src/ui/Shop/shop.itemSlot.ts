@@ -1,20 +1,23 @@
 import { ItemSlot } from "../bag/item.slot";
 import { WorldService } from "../../game/world.service";
 import { DragDropIcon } from "../bag/dragDropIcon";
-import { op_def, op_gameconfig } from "pixelpai_proto";
+import { op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { UI } from "../../const/res.const";
 import { Url } from "../../utils/resUtil";
 import { DynamicImage } from "../components/dynamic.image";
 import { ToolTip } from "../tips/toolTip";
+import { PBpacket } from "net-socket-packet";
 
 export class ShopItemSlot extends ItemSlot {
     private moneyIcon: DynamicImage;
+    private mPackageID: number;
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
         super(scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes);
     }
 
-    public dataChange(val: any) {
+    public shopDataChange(val: any, packID: number) {
         if (!val) return;
+        this.mPackageID = packID;
         super.dataChange(val);
         const prices = val.price;
         const priceLen: number = prices.length;
@@ -104,6 +107,15 @@ export class ShopItemSlot extends ItemSlot {
         this.mSelectSprite.setTexture("selectBg");
         this.toolTipCon.addAt(this.mSelectSprite, 0);
 
+    }
+
+    protected downHandler(pointer) {
+        if (!this.mData) return;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+        content.uiId = this.mPackageID;
+        content.componentId = this.mData.id;
+        this.mWorld.connection.send(pkt);
     }
 
     protected outHandler(pointer) {

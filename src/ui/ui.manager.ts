@@ -54,7 +54,7 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.worldService, scene));
             if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
-            // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
+            this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             for (const tmp of this.mCache) {
                 const ui = tmp[0];
                 this.showMed(ui.name, ui);

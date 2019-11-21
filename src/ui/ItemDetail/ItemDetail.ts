@@ -125,14 +125,14 @@ export class ItemDetail extends Panel {
         if (!this.mScene) {
             return;
         }
-        this.scene.load.atlas(BlueButton.getName(), BlueButton.getPNG(), BlueButton.getJSON());
+        this.mScene.load.atlas(BlueButton.getName(), BlueButton.getPNG(), BlueButton.getJSON());
         this.mScene.load.atlas("itemDetail", Url.getRes("ui/bag/bagView.png"), Url.getRes("ui/bag/bagView.json"));
         super.preload();
     }
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.mWid = 250;
+        this.mWid = 290;
         this.mHei = 0;
 
         this.mIcon = new DragDropIcon(this.mScene, 30, 25);

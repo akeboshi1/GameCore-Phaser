@@ -80,22 +80,21 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mElementManager = new EditorElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
 
-        this.mWorld.game.scene.start(EditScene.name, {
-            room: this,
-            callBack: () => {
-                this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
-                this.mLayManager = new LayerManager(this);
-                this.mLayManager.drawGrid(this);
-                this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
-                this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
-                this.mScene.input.on("gameobjectup", this.onGameobjectUpHandler, this);
-                const mainCameras = this.mScene.cameras.main;
-                mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        this.mWorld.game.scene.start(EditScene.name, { room: this });
+    }
 
-                this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-                this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
-            }
-        });
+    public startPlay() {
+        this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
+        this.mLayManager = new LayerManager(this);
+        this.mLayManager.drawGrid(this);
+        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.on("gameobjectup", this.onGameobjectUpHandler, this);
+        const mainCameras = this.mScene.cameras.main;
+        mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
     }
 
     public destroy() {

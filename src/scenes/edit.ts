@@ -7,9 +7,7 @@ export class EditScene extends PlayScene {
   }
 
   create() {
-    if (this.mCallBack) {
-      this.mCallBack();
-    }
+    this.mRoom.startPlay();
     this.scene.sendToBack();
   }
 }

@@ -482,7 +482,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Focus;
             this.connection.send(pkt);
-            this.pauseScene();
+            this.resumeScene();
         } else {
             Logger.getInstance().error("connection is undefined");
         }
@@ -494,7 +494,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
-            this.resumeScene();
+            this.pauseScene();
         } else {
             Logger.getInstance().error("connection is undefined");
         }
