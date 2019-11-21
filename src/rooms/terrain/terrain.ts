@@ -15,10 +15,12 @@ export class Terrain extends BlockObject implements IElement {
     protected mDisplayInfo: IFramesModel;
     protected mDisplay: TerrainDisplay | undefined;
     protected mAnimationName: string;
+    protected mModel: ISprite;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
         this.mId = sprite.id;
+        this.mModel = sprite;
         // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
         let conf = null;
         if (sprite.displayInfo) {
@@ -34,7 +36,6 @@ export class Terrain extends BlockObject implements IElement {
         this.createDisplay();
         this.setPosition45(sprite.pos);
         this.mDisplay.changeAlpha(sprite.alpha);
-        this.setRenderable(true);
     }
 
     public play(animationName: string): void {
@@ -173,7 +174,7 @@ export class Terrain extends BlockObject implements IElement {
         return this.mElementManager.roomService;
     }
 
-    get model() {
-        return undefined;
+    get model(): ISprite {
+        return this.mModel;
     }
 }

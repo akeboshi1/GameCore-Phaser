@@ -151,7 +151,7 @@ export class LayerManager {
         }
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
-            this.mSurfaceLayer.sort("depth");
+            // this.mSurfaceLayer.sort("depth");
             this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
                 // Logger.debug(displayA, displayB);
                 // const sortA = displayA.sortRectangle;

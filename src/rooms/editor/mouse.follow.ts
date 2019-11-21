@@ -40,7 +40,7 @@ export class MouseFollow {
         this.mNodeType = content.nodeType;
         if (this.mNodeType === NodeType.TerrainNodeType) {
             this.mElementManager = this.mRoomService.terrainManager;
-        } else if (this.mNodeType === NodeType.ElementNodeType) {
+        } else if (this.mNodeType === NodeType.ElementNodeType || this.mNodeType === NodeType.SpawnPointType) {
             this.mElementManager = this.mRoomService.elementManager;
         }
 
@@ -54,7 +54,7 @@ export class MouseFollow {
         if (!this.mSprite) {
             return;
         }
-        const resule = [];
+        const result = [];
         let sprite: ISprite = null;
         const displays = this.mDisplay.displays;
         for (const display of displays) {
@@ -62,9 +62,9 @@ export class MouseFollow {
             sprite.newID();
             sprite.pos = this.getPosition(display.x, display.y);
             sprite.bindID = this.mSprite.id;
-            resule.push(sprite);
+            result.push(sprite);
         }
-        return resule;
+        return result;
     }
 
     transitionGrid(x: number, y: number, ) {

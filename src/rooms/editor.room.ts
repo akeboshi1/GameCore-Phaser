@@ -140,7 +140,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mMouseFollow.sprite) {
             return;
         }
-        Logger.getInstance().log("create element");
         const elementManager = this.mMouseFollow.elementManager;
         if (elementManager) {
             const sprites = this.mMouseFollow.createSprites();
@@ -332,6 +331,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                 const pos = this.mMouseFollow.transitionGrid(pointer.worldX, pointer.worldY);
                 if (pos) {
                     this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
+                    this.mLayManager.depthSurfaceDirty = true;
                 }
                 break;
         }
@@ -345,20 +345,24 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!display) {
             return;
         }
+        const pos = new Pos(display.x, display.y, display.z);
         switch (event.keyCode) {
             case 37:
-                display.x--;
+                pos.x--;
                 break;
             case 38:
-                display.y--;
+                pos.y--;
                 break;
             case 39:
-                display.x++;
+                pos.x++;
                 break;
             case 40:
-                display.y++;
+                pos.y++;
                 break;
         }
+        display.setPosition(pos.x, pos.y, pos.z);
+        // TOOD 通过统一接口设置depth
+        this.layerManager.depthSurfaceDirty = true;
     }
 
     get brush(): Brush {

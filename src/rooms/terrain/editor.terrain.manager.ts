@@ -26,6 +26,7 @@ export class EditorTerrainManager extends TerrainManager {
             this._add(sprite);
             clientSprites.push(sprite.toSprite());
         }
+        if (clientSprites.length === 0) return;
 
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
         const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
@@ -102,6 +103,10 @@ export class EditorTerrainManager extends TerrainManager {
         for (const ter of terrains) {
             const pos45 = ter.getPosition45();
             if (sprite.pos.equal(pos45)) {
+                if (sprite.bindID !== ter.model.bindID) {
+                    this.remove(ter.id);
+                    return true;
+                }
                 return false;
             }
         }

@@ -15,6 +15,9 @@ export class SelectedElement {
     }
 
     setElement(display: FramesDisplay | DragonbonesDisplay) {
+        if (this.mDisplay) {
+            this.mDisplay.hideRefernceArea();
+        }
         this.mDisplay = display;
         display.showRefernceArea();
         this.mLayerManager.addToSceneToUI(this.mEffecte);

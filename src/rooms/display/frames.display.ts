@@ -174,7 +174,6 @@ export class FramesDisplay extends DisplayObject {
         this.mBaseLoc = animations.baseLoc;
         this.mCollisionArea = animations.collisionArea;
         this.mOriginPoint = animations.originPoint;
-
         sprite.x = this.baseLoc.x;
         sprite.y = this.baseLoc.y;
     }
