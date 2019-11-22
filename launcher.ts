@@ -4,7 +4,7 @@
 
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
-import {ConnectionService} from "./src/net/connection.service";
+import { ConnectionService } from "./src/net/connection.service";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -90,6 +90,10 @@ export class Launcher {
             .then((game) => {
                 this.world = new game.World(this.config, this.mCompleteFunc);
             });
+    }
+
+    public destory() {
+        this.world.destroy();
     }
 
     public startFullscreen() {
