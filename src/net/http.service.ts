@@ -1,14 +1,20 @@
-import {WorldService} from "../game/world.service";
+import { WorldService } from "../game/world.service";
 
 export class HttpService {
     constructor(private mWorld: WorldService) { }
 
     /**
+     * 获取用户好友列表
+     */
+    firend() {
+        return this.get("user/friends");
+    }
+    /**
      * 用户关注其他用户
      * @param uids
      */
     follow(fuid: string[]): Promise<Response> {
-        return this.post("user/follow", { fuid});
+        return this.post("user/follow", { fuid });
     }
 
     /**
