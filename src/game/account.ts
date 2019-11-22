@@ -18,7 +18,7 @@ export class Account {
             expire: 0,
             fingerprint: "",
         };
-        Object.assign(this.mCurAccountData, val.data);
+        Object.assign(this.mCurAccountData, val);
     }
     public get accountData(): IAccountData | undefined {
         return this.mCurAccountData;
