@@ -331,18 +331,21 @@ export class LoginScene extends Phaser.Scene {
 
     private quickHandler() {
         this.addTween(this.mQuickBtn);
-        // todo quick login
-
+        this.requestQuickLogin();
     }
 
     private sendCodeHandler() {
         this.addTween(this.mSendCodeBtn);
-        // todo phone login
+        this.requestGetPhoneCode();
     }
 
     private enterHandler() {
         this.addTween(this.mEnterBtn);
-        this.requestLogin();
+        if (!this.mSendCodeBtn.visible) {
+            this.requestLogin();
+        } else {
+            this.loginByPhoneCode();
+        }
     }
 
     private addTween(img: Phaser.GameObjects.Image) {
@@ -403,6 +406,7 @@ export class LoginScene extends Phaser.Scene {
         const httpRequest = new XMLHttpRequest();
         httpRequest.onload = function() {
             if (httpRequest.status === 200) {
+                login.mVerificationCodeTxt.setText(httpRequest.responseText);
             } else {
                 const alert = new Alert(login.mWorld, login);
                 alert.show("验证码获取失败");
@@ -411,7 +415,7 @@ export class LoginScene extends Phaser.Scene {
         const phoneUrl: string = CONFIG.api_root + "account/sms_code";
         httpRequest.open("POST", phoneUrl);
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.send();
+        httpRequest.send(JSON.stringify({ "phone": login.mNameInputTxt.text }));
     }
 
     private loginByPhoneCode() {
@@ -430,7 +434,7 @@ export class LoginScene extends Phaser.Scene {
         const phoneAccountUrl: string = CONFIG.api_root + "account/phone_signin";
         httpRequest.open("POST", phoneAccountUrl);
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.send();
+        httpRequest.send(JSON.stringify({ "phone": login.mNameInputTxt.text, "code": login.mVerificationCodeTxt.text }));
     }
 
     private requestQuickLogin() {

@@ -1,14 +1,12 @@
-import {IConnectListener, SocketConnection, SocketConnectionError} from "./socket";
-import {ServerAddress} from "./address";
-import {Buffer, PBpacket} from "net-socket-packet";
-import {Logger} from "../utils/log";
+import { IConnectListener, SocketConnection, SocketConnectionError } from "./socket";
+import { ServerAddress } from "./address";
+import { Buffer, PBpacket } from "net-socket-packet";
+import { Logger } from "../utils/log";
 import * as protos from "pixelpai_proto";
-
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
 const ctx: Worker = self as any;
-
 class ConnListener implements IConnectListener {
     onConnected(connection: SocketConnection): void {
         ctx.postMessage({
@@ -65,7 +63,6 @@ class WorkerClient extends SocketConnection {
 const socket: SocketConnection = new WorkerClient(new ConnListener());
 ctx.onmessage = (ev) => {
     const data: any = ev.data;
-
     switch (data.method) {
         case "connect":
             const addr: ServerAddress = data.address;
