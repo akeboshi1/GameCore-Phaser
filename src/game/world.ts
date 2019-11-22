@@ -36,7 +36,7 @@ import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
-import {EditScene} from "../scenes/edit";
+import { EditScene } from "../scenes/edit";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
     public static SCALE_CHANGE: string = "scale_change";
@@ -64,6 +64,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
+
+        // this.mWorker = new HeartWorker(this);
 
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
@@ -303,11 +305,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             } else {
                 this.mGame.scene.start(LoadingScene.name, { world: this });
                 this.mAccount.setAccount({
-                    data: {
-                        token: this.mConfig.auth_token,
-                        expire: this.mConfig.token_expire,
-                        fingerprint: this.mConfig.token_fingerprint
-                    }
+                    token: this.mConfig.auth_token,
+                    expire: this.mConfig.token_expire,
+                    fingerprint: this.mConfig.token_fingerprint
                 });
             }
             this.loginEnterWorld();
@@ -402,6 +402,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         };
         Object.assign(this.gameConfig, this.mConfig);
+        this.gameConfig.type = Phaser.CANVAS;
         this.mGame = new Game(this.gameConfig);
         this.initUiScale();
         return this.mGame;
