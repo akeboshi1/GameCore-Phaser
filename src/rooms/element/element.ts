@@ -128,6 +128,7 @@ export class Element extends BlockObject implements IElement {
         this.setPosition(sprite.pos);
         this.mDisplay.changeAlpha(sprite.alpha);
         this.mDisplay.showNickname(sprite.nickname);
+        this.setDirection(sprite.direction);
         this.setRenderable(true);
     }
 
