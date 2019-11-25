@@ -33,7 +33,7 @@ export class InteractivePanelMediator extends BaseMediator {
     }
 
     public show(param?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
-        if (this.mView && this.mView.isShow) {
+        if (this.mView && this.isShow()) {
             return;
         }
         this.mParam = param;

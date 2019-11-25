@@ -6,6 +6,8 @@ export interface ConnectionService {
 
     closeConnect(): void;
 
+    clearHeartBeat();
+
     addPacketListener(listener: PacketHandler): void;
     removePacketListener(listener: PacketHandler): void;
     clearPacketListeners(): void;

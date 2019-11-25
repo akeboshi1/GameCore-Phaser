@@ -11,19 +11,19 @@ import { Logger } from "../utils/log";
 // PBpacket.addProtocol(op_virtual_world);
 // PBpacket.addProtocol(op_gameconfig_01);
 import NetWorker from "worker-loader?name=js/[hash].[name].js!./networker";
-
+import HeartBeatWorker from "worker-loader?name=js/[hash].[name].js!./heartbeatworker";
 import * as protos from "pixelpai_proto";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
-
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export default class Connection implements ConnectionService {
     protected mPacketHandlers: PacketHandler[] = [];
     private mListener: IConnectListener;
     private mWorker: NetWorker;
+    private mHeartBeatWorker: HeartBeatWorker;
     private mReConnectCount: number = 0;
     private mCachedServerAddress: ServerAddress | undefined;
     private mTimeout: any;
@@ -35,6 +35,7 @@ export default class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         try {
+            this.mHeartBeatWorker = new HeartBeatWorker();
             this.mWorker = new NetWorker();
             this._doConnect();
         } catch (e) {
@@ -44,10 +45,17 @@ export default class Connection implements ConnectionService {
 
     closeConnect(): void {
         this.mWorker.terminate();
+        this.mHeartBeatWorker.terminate();
         this.mCachedServerAddress = undefined;
         this.mReConnectCount = 0;
         this.mTimeout = null;
         this.clearPacketListeners();
+    }
+
+    clearHeartBeat() {
+        if (this.mHeartBeatWorker) {
+            this.mHeartBeatWorker.postMessage({ method: "clearBeat" });
+        }
     }
 
     addPacketListener(listener: PacketHandler) {
@@ -63,6 +71,10 @@ export default class Connection implements ConnectionService {
             "method": "send",
             "buffer": packet.Serialization(),
         });
+    }
+
+    clearReconnectCount() {
+        this.mHeartBeatWorker.postMessage("clearBeat");
     }
 
     removePacketListener(listener: PacketHandler) {
@@ -92,6 +104,11 @@ export default class Connection implements ConnectionService {
             this.mWorker.onmessage = (event: any) => {
                 self.onWorkerMessage(event.data);
             };
+            if (this.mHeartBeatWorker) {
+                this.mHeartBeatWorker.onmessage = (event: any) => {
+                    self.onWorkerMessage(event.data);
+                };
+            }
             this.mWorker.postMessage({
                 "method": "connect",
                 "address": self.mCachedServerAddress,
@@ -106,6 +123,9 @@ export default class Connection implements ConnectionService {
             case "onConnected":
                 this.mReConnectCount = 0;
                 this.mListener.onConnected();
+                if (this.mHeartBeatWorker) {
+                    this.mHeartBeatWorker.postMessage({ method: "startBeat" });
+                }
                 break;
             case "onDisConnected":
                 if (!this.mTimeout) {
@@ -113,7 +133,6 @@ export default class Connection implements ConnectionService {
                         this.mReConnectCount++;
                     const delay = this.mReConnectCount ** 2;
                     Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
-
                     this.mTimeout = setTimeout(() => {
                         self.mTimeout = undefined;
                         self._doConnect();
@@ -121,8 +140,18 @@ export default class Connection implements ConnectionService {
                 }
                 break;
             case "onConnectError":
-                Logger.getInstance().error("error" + data.error);
+                // Logger.getInstance().error("error" + data.error);
                 // TODO
+                this.reConnect();
+                break;
+            case "heartBeat":
+                this.worldStartHeartBeat();
+                break;
+            case "endBeat":
+                this.endHeartBeat();
+                break;
+            case "reConnect":
+                this.reConnect();
                 break;
             case "onData":
                 const buf = data.buffer;
@@ -142,5 +171,22 @@ export default class Connection implements ConnectionService {
         handlers.forEach((handler: PacketHandler) => {
             handler.onPacketArrived(protobufPacket);
         });
+    }
+
+    private reConnect() {
+        this.mHeartBeatWorker.postMessage({ method: "endHeartBeat" });
+        const world: any = this.mPacketHandlers[0];
+        world.reconnect();
+    }
+
+    private worldStartHeartBeat() {
+        const world: any = this.mPacketHandlers[0];
+        world.startHeartBeat();
+    }
+
+    private endHeartBeat() {
+        if (this.mHeartBeatWorker) {
+            this.mHeartBeatWorker.terminate();
+        }
     }
 }

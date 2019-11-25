@@ -22,6 +22,7 @@ export interface ILauncherConfig {
     readonly connection?: ConnectionService;
     readonly isEditor?: boolean;
     readonly osd?: string;
+    readonly closeGame: Function;
 }
 
 export interface GameMain {
@@ -63,7 +64,8 @@ export class Launcher {
         height: this.minHeight,
         baseWidth: this.maxWidth,
         baseHeight: this.maxHeight,
-        ui_scale: 1
+        ui_scale: 1,
+        closeGame: null,
     };
 
     constructor(config?: ILauncherConfig) {

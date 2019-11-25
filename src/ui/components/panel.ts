@@ -10,6 +10,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     protected mHeight: number = 0;
     protected mData: any;
     protected mPanelTween: Phaser.Tweens.Tween;
+    private mTweenBoo: boolean = true;
     constructor(scene: Phaser.Scene) {
         super(scene);
         this.mScene = scene;
@@ -20,7 +21,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         return this.mShowing;
     }
     hide() {
-        if (!this.mTweening) {
+        if (!this.mTweening && this.mTweenBoo) {
             this.showTween(false);
         } else {
             this.destroy();
@@ -56,9 +57,15 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
             this.preload();
             return;
         }
-        if (!this.mTweening) {
+        if (!this.mTweening && this.mTweenBoo) {
             this.showTween(true);
+        } else {
+            this.mShowing = true;
         }
+    }
+
+    setTween(boo: boolean) {
+        this.mTweenBoo = boo;
     }
 
     update(param: any) {

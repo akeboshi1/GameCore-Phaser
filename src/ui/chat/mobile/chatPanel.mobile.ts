@@ -17,6 +17,7 @@ export class ChatPanelMobile extends BaseChatPanel {
     private arrow;
     constructor(scene: Phaser.Scene, private mWorld: WorldService) {
         super(scene);
+        this.setTween(false);
     }
 
     public appendChat(val: string) {
