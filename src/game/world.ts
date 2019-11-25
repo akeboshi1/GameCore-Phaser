@@ -215,6 +215,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public reconnect() {
+        const gameID: string = this.mConfig.game_id;
+        const worldID: string = this.mConfig.virtual_world_id;
+        this.clearGame();
+        this.mConfig.game_id = gameID;
+        this.mConfig.virtual_world_id = worldID;
+        this._newGame();
+        this.mRoomMamager.addPackListener();
+        this.mUiManager.addPackListener();
         this.loginEnterWorld();
     }
 
