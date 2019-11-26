@@ -90,10 +90,15 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("gameobjectup", this.onGameobjectUpHandler, this);
+        this.mCameraService.camera = this.scene.cameras.main;
         const mainCameras = this.mScene.cameras.main;
         mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        this.mCameraService.centerCameas();
+        // setTimeout(() => {
+        //     this.mCameraService.syncToEditor();
+        // }, 10);
         this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
     }
 
@@ -129,11 +134,7 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private moveCameras(pointer) {
         // TODO 在Cameras里面处理镜头移动
-        const camera = this.mScene.cameras.main;
-        camera.scrollX += pointer.prevPosition.x - pointer.position.x;
-        camera.scrollY += pointer.prevPosition.y - pointer.position.y;
-
-        this.syncCameras();
+        this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
     }
 
     private createElement() {
@@ -208,19 +209,6 @@ export class EditorRoom extends Room implements EditorRoomService {
                 }
                 break;
         }
-    }
-
-    private syncCameras() {
-        if (!this.connection) return;
-        if (!this.mScene || this.mScene.cameras) return;
-        const cameraView = this.mScene.cameras.main.worldView;
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
-        content.x = cameraView.x;
-        content.y = cameraView.y;
-        content.width = cameraView.width;
-        content.height = cameraView.height;
-        this.connection.send(pkt);
     }
 
     private sendFetch(ids: number[], nodetype: op_def.NodeType) {

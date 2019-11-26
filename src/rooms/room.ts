@@ -143,7 +143,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
         if (this.scene) {
-            const cameras = this.mCameraService.camera = this.scene.cameras.main;
+            this.mCameraService.camera = this.scene.cameras.main;
             // init block
             this.mBlocks.int(this.mSize);
         }
