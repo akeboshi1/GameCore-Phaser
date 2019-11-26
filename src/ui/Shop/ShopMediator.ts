@@ -58,12 +58,15 @@ export class ShopMediator extends BaseMediator {
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         if (this.mView) {
-            this.mView.hide();
+            this.mView.destroy();
             this.mView = null;
         }
+        super.hide();
     }
 
     public destroy() {
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
+        this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.world = null;
         this.mScene = null;
         this._curPage = 0;

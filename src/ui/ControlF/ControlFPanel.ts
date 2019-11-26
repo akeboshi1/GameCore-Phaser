@@ -6,6 +6,7 @@ export class ControlFPanel extends Panel {
     private mControlText: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene) {
         super(scene);
+        this.setTween(false);
     }
 
     show(param?: any) {
@@ -22,7 +23,7 @@ export class ControlFPanel extends Panel {
 
     resize() {
         if (!this.mScene) return;
-        const worldView = this.scene.cameras.main.worldView;
+        const worldView = this.mScene.cameras.main.worldView;
         this.x = worldView.x + (worldView.width >> 1);
         this.y = worldView.y + (worldView.height >> 1);
     }
@@ -33,18 +34,19 @@ export class ControlFPanel extends Panel {
     }
 
     protected preload() {
-        this.scene.load.image("controlF_background", Url.getRes("ui/controlf/background.png"));
+        this.mScene.load.image("controlF_background", Url.getRes("ui/controlf/background.png"));
         super.preload();
     }
 
     protected init() {
-        const image = this.scene.make.image({
+        if (!this.mScene) return;
+        const image = this.mScene.make.image({
             key: "controlF_background"
         }, false);
         this.add(image);
 
         // TODO 不一定是F
-        this.mControlText = this.scene.make.text({
+        this.mControlText = this.mScene.make.text({
             align: "center",
             text: "F",
             style: { font: Font.YAHEI_20_BOLD }

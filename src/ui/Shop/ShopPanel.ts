@@ -5,6 +5,7 @@ import { ShopItemSlot } from "./shop.itemSlot";
 import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
+import { ShopMediator } from "./ShopMediator";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
@@ -21,6 +22,7 @@ export class ShopPanel extends Panel {
         const size: Size = this.mWorld.getSize();
         this.x = size.width >> 1;
         this.y = size.height - 300;
+        this.scale = this.mWorld.uiScale;
     }
 
     public setDataList(value: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
@@ -110,7 +112,7 @@ export class ShopPanel extends Panel {
         this.mClsBtnSprite.x = (this.width >> 1) - 65;
         this.mClsBtnSprite.y = (- this.height >> 1);
         this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.hide, this);
+        this.mClsBtnSprite.on("pointerup", this.shopMedClose, this);
         this.add(this.mClsBtnSprite);
     }
 
@@ -126,5 +128,14 @@ export class ShopPanel extends Panel {
             if (!item) continue;
             item.shopDataChange(this.mShopData.items[i], this.mShopData.id);
         }
+    }
+
+    private shopMedClose() {
+        const med = this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator;
+        if (med) {
+            med.hide();
+            return;
+        }
+        this.hide();
     }
 }

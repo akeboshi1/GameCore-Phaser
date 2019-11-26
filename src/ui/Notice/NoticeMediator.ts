@@ -55,6 +55,10 @@ export class NoticeMediator extends PacketHandler implements IMediator {
         return this.mNoticePanel.isShow();
     }
 
+    showing(): boolean {
+        return false;
+    }
+
     resize() {
         if (!this.mNoticePanel) return;
         this.mNoticePanel.resize();

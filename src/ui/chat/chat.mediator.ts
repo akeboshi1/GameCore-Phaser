@@ -72,6 +72,10 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return this.mChatPanel.isShow();
     }
 
+    public showing(): boolean {
+        return true;
+    }
+
     public resize() {
         if (this.mChatPanel) {
             this.mChatPanel.setLocation();
@@ -86,7 +90,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         if (this.world.game.device.os.desktop) {
             this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
         } else {
-        this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+            this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
         }
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
