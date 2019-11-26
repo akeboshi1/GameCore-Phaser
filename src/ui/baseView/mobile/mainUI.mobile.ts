@@ -69,4 +69,20 @@ export class MainUIMobile extends Panel {
         if (this.mBottomBtnGroup) this.mBottomBtnGroup.tweenView(show);
         if (this.mLeftBtnGroup) this.mLeftBtnGroup.tweenView(show);
     }
+
+    public getBottomView(): BottomBtnGroup {
+        return this.mBottomBtnGroup;
+    }
+
+    public getLeftView(): LeftBtnGroup {
+        return this.mLeftBtnGroup;
+    }
+
+    public getRightView(): RightBtnGroup {
+        return this.mRightBtnGroup;
+    }
+
+    public getTopView(): TopBtnGroup {
+        return this.mTopBtnGroup;
+    }
 }

@@ -8,6 +8,7 @@ import { ISprite } from "../../../rooms/element/sprite";
 import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { MainUIMobile } from "./mainUI.mobile";
 import { PBpacket } from "net-socket-packet";
+import { MainUIMediator } from "../mainUI.mediator";
 
 export class RightBtnGroup extends Panel {
     private mWorld: WorldService;
@@ -26,19 +27,20 @@ export class RightBtnGroup extends Panel {
 
     public show(param?: any) {
         super.show(param);
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public resize() {
         const size: Size = this.mWorld.getSize();
+        const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const padHei: number = !mainUIMed ? this.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                this.y = size.height - this.height / 2 - 100 * this.mWorld.uiScale;
-                this.x = size.width - 70 * this.mWorld.uiScale;
+                this.y = size.height - this.height / 5;
+                this.x = size.width - this.width / 2 - 20 * this.mWorld.uiScale;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                this.y = size.height / 2 + 100 * this.mWorld.uiScale;
-                this.x = size.width - this.width / 2 - 50 * this.mWorld.uiScale;
+                this.y = size.height - padHei;
+                this.x = size.width - this.width / 2;
                 break;
         }
         this.refreshSlot();
@@ -72,13 +74,13 @@ export class RightBtnGroup extends Panel {
         let baseX: number;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                baseX = size.width - 70 * this.mWorld.uiScale;
+                baseX = size.width - this.width / 2 - 20 * this.mWorld.uiScale;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                baseX = size.width - this.width / 2 - 50 * this.mWorld.uiScale;
+                baseX = size.width - this.width / 2;
                 break;
         }
-        const toX: number = show === true ? baseX : baseX + 50;
+        const toX: number = show === true ? baseX : baseX + this.width;
         const toAlpha: number = show === true ? 1 : 0;
         this.mScene.tweens.add({
             targets: this,
@@ -89,6 +91,11 @@ export class RightBtnGroup extends Panel {
                 alpha: { value: toAlpha },
             },
         });
+    }
+
+    protected tweenComplete(show: boolean) {
+        this.resize();
+        super.tweenComplete(show);
     }
 
     protected preload() {
@@ -113,6 +120,8 @@ export class RightBtnGroup extends Panel {
         });
         this.add(this.handBtn);
         this.mBagSlotList = [];
+        this.mWid = this.handBtn.width;
+        this.mHei = this.handBtn.height;
         this.initBagSlotData();
         super.init();
     }
@@ -150,6 +159,8 @@ export class RightBtnGroup extends Panel {
     }
 
     private initBagSlotData() {
+        const size: Size = this.mWorld.getSize();
+        this.mHei = this.handBtn.height;
         // =============获取角色背包前几位物品
         const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
         if (playerModel.package && playerModel.package.items) {
@@ -165,6 +176,7 @@ export class RightBtnGroup extends Panel {
                 itemSlot.getIcon().scaleX = itemSlot.getIcon().scaleY = 1.2;
                 this.mBagSlotList.push(itemSlot);
                 this.add(itemSlot.toolTipCon);
+                this.mHei += itemSlot.getView().height;
             }
         }
         this.setSize(this.mWid, this.mHei);

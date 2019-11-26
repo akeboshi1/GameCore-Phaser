@@ -6,6 +6,10 @@ import { IRoomService } from "../rooms/room";
 import { Direction } from "../rooms/element/element";
 import { op_def, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { MainUIMediator } from "../ui/baseView/mainUI.mediator";
+import { MainUIPC } from "../ui/baseView/pc/mainUI.pc";
+import { MainUIMobile } from "../ui/baseView/mobile/mainUI.mobile";
+import { BottomBtnGroup } from "../ui/baseView/mobile/bottom.btn.group";
 
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
@@ -51,14 +55,17 @@ export class JoyStickManager implements InputManager {
     }
 
     public resize() {
+        if (!this.mParentcon) return;
         const size: Size = this.worldService.getSize();
+        const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.mParentcon) {
             if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.mParentcon.x = 100 * this.mScale;
-                this.mParentcon.y = size.height - 100 * this.mScale;
+                this.mParentcon.x = this.mParentcon.width;
+                this.mParentcon.y = size.height - this.mParentcon.height;
             } else {
                 this.mParentcon.x = 100 * this.mScale;
-                this.mParentcon.y = size.height - 300 * this.mScale;
+                this.mParentcon.y = size.height - padHei;
             }
             this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         }
@@ -69,12 +76,14 @@ export class JoyStickManager implements InputManager {
         const size: Size = this.worldService.getSize();
         let baseX: number;
         let baseY: number;
+        const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const padHei: number = !mainUIMed ?  this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            baseX = 100 * this.mScale;
-            baseY = size.height - 100 * this.mScale;
+            baseX = this.mParentcon.width;
+            baseY = size.height - this.mParentcon.height;
         } else {
-            baseX = 100 * this.mScale;
-            baseY = size.height - 300 * this.mScale;
+            baseX = this.mParentcon.width;
+            baseY = size.height - padHei;
         }
 
         const toX: number = show === true ? baseX : baseX - this.mParentcon.width;

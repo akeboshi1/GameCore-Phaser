@@ -112,6 +112,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 if (!show) this.hide();
             },
         });
+        this.setLocation();
     }
 
     protected preload() {
@@ -133,7 +134,6 @@ export class ChatPanelMobile extends BaseChatPanel {
 
     protected init() {
         if (this.mInitialized) return;
-        super.init();
         const size = this.mWorld.getSize();
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.mWidth = size.width >> 1;
@@ -213,6 +213,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.clickContainer.on("pointerdown", this.clickHandler, this);
         this.add(this.clickContainer);
         this.setLocation();
+        super.init();
     }
 
     private clickHandler() {

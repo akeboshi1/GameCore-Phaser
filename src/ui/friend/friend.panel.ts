@@ -4,6 +4,8 @@ import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
 import { IListItemComponent } from "../bag/IListItemRender";
+import { Font } from "../../utils/font";
+import { DynamicImage } from "../components/dynamic.image";
 
 export class FriendPanel extends Panel {
     public static count: number = 5;
@@ -39,11 +41,11 @@ export class FriendPanel extends Panel {
             }
         }
 
-        this.mBg = new NinePatch(this.scene, 0, 0, 1080, size.height / 2, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 880, size.height / 2, Background.getName(), null, Background.getConfig());
         this.setSize(this.mBg.width, this.mBg.height);
-        this.add(this.mUpBtn);
-        this.add(this.mDownBtn);
         this.addAt(this.mBg, 0);
+        this.mUpBtn.y = (this.mUpBtn.height / 2 - this.mBg.height) / 2;
+        this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
     }
 
     public show(param?: any) {
@@ -93,7 +95,7 @@ export class FriendPanel extends Panel {
         const wid: number = size.width;
         const hei: number = size.height;
 
-        this.mBg = new NinePatch(this.scene, 0, 0, 1080, size.height / 2, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 880, size.height / 2, Background.getName(), null, Background.getConfig());
         this.setSize(this.mBg.width, this.mBg.height);
 
         this.mTitleTxt = this.mScene.make.text(undefined, false);
@@ -167,9 +169,16 @@ export class FriendPanel extends Panel {
         this.mFriendList = [];
         const len: number = data.length;
         for (let i: number = 0; i < len; i++) {
-            const item: FriendItem = new FriendItem(this, "", ["", ""]);
+            const item: FriendItem = new FriendItem(this.mWorld, this.mScene, this, "", ["", ""]);
+            const dat = data[i];
+            dat.index = i;
+            item.dataChange(dat);
+            item.y = -this.mBg.height / 2 + i * (item.height + 10) + (item.height / 2 + 10);
+            this.add(item);
             this.mFriendList.push(item);
         }
+        this.add(this.mUpBtn);
+        this.add(this.mDownBtn);
     }
 
     private onClsLoadCompleteHandler() {
@@ -185,20 +194,72 @@ export class FriendPanel extends Panel {
     }
 }
 
-export class FriendItem implements IListItemComponent {
+export class FriendItem extends Phaser.GameObjects.Container implements IListItemComponent {
     public index: number;
-    constructor(panel: FriendPanel, bgRes: string, iconResList: string[]) {
+    public nameTF: Phaser.GameObjects.Text;
+    public statusTF: Phaser.GameObjects.Text;
+    public mRoleIcon: DynamicImage;
+
+    private mPanel: FriendPanel;
+    private mWorld: WorldService;
+    constructor(world: WorldService, scene: Phaser.Scene, panel: FriendPanel, bgRes: string, iconResList: string[]) {
+        super(scene);
+        this.mPanel = panel;
+        this.mWorld = world;
+        const size: Size = this.mWorld.getSize();
+        const mBg = new NinePatch(scene, 0, 0, 850, 120, Background.getName(), null, Background.getConfig());
+        this.addAt(mBg, 0);
+        this.setSize(mBg.width, mBg.height);
+
+        this.mRoleIcon = new DynamicImage(scene, -mBg.width / 2, 0);
+        this.mRoleIcon.scaleX = this.mRoleIcon.scaleY = .15;
+        this.add(this.mRoleIcon);
+
+        this.nameTF = scene.make.text({
+            align: "left",
+            style: { font: Font.YAHEI_20_BOLD }
+        }, false);
+        this.statusTF = scene.make.text({
+            align: "left",
+            style: { font: "14px YaHei" }
+        }, false);
+        this.nameTF.y = 10 - mBg.height / 2;
+        this.add(this.nameTF);
+        this.statusTF.x = this.nameTF.x;
+        this.add(this.statusTF);
     }
 
     public getView(): any {
-
+        return this;
     }
 
     public dataChange(data: any) {
-
+        const lv: number = data.level;
+        const id: string = data.id;
+        const name: string = data.nickname;
+        this.nameTF.setText(name);
+        this.mRoleIcon.load(Url.getOsdRes(data.avatar));
+        this.mRoleIcon.x = -this.width / 2 + 64;
+        this.nameTF.x = this.mRoleIcon.x + 54;
+        this.index = data.index;
     }
 
     public destory() {
+        this.index = 0;
+        if (this.nameTF) {
+            this.nameTF.destroy(true);
+        }
+        if (this.statusTF) {
+            this.statusTF.destroy(true);
+        }
 
+        if (this.mRoleIcon) {
+            this.mRoleIcon.destroy(true);
+        }
+        this.nameTF = null;
+        this.statusTF = null;
+        this.mPanel = null;
+        this.mWorld = null;
+        super.destroy(true);
     }
 }

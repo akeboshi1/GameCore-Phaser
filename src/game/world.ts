@@ -360,7 +360,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
-        if (!this.mConfig.game_id || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
+        if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
             Logger.getInstance().debug("缺少必要参数，无法登录游戏");
             return;
         }
