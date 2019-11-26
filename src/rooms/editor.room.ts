@@ -191,14 +191,24 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
-    private onPointerDownHandler() {
+    private addPointerMoveHandler() {
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
+        this.mScene.input.on("gameout", this.onGameOutHandler, this);
+    }
+
+    private removePointerMoveHandler() {
+        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
+        this.mScene.input.off("gameout", this.onGameOutHandler, this);
+    }
+
+    private onPointerDownHandler() {
+        this.addPointerMoveHandler();
     }
 
     private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
+        this.removePointerMoveHandler();
         switch (this.brush.mode) {
             case BrushEnum.BRUSH:
                 this.createElement();
@@ -253,6 +263,10 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.removeElement(com);
                 break;
         }
+    }
+
+    private onGameOutHandler() {
+        this.removePointerMoveHandler();
     }
 
     private selectedElement(com: ElementDisplay): DisplayObject {

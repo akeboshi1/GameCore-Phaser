@@ -2,8 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta charset="UTF-8"/>
     <title>Tooqing-phaser3</title>
     <style>
         body {
@@ -11,11 +10,9 @@
             padding: 0;
             overflow: hidden;
         }
-
         body div.container {
             text-align: center;
         }
-
         body div.container div#game {
             display: block;
             margin-left: auto;
@@ -25,25 +22,25 @@
 <script type="text/javascript" src="js/tooqing.js"></script></head>
 
 <body>
-    <div class="container">
-        <div id="game"></div>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const launcher = TooqingCore.Launcher;
-            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, ui_scale: 1 });
-            app.registerReload(window.reload);
-            app.registerComplete(() => {
-                const loadingImg = document.getElementById('loading_img');
-                if (loadingImg) loadingImg.remove();
-                const loadingGif = document.getElementById('loading_gif');
-                if (loadingGif) loadingGif.remove();
-            })
-            window.addEventListener("resize", (e) => {
-                app.onResize(window.innerWidth, window.innerHeight);
-            });
+<div class="container">
+    <div id="game"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const launcher = TooqingCore.Launcher;
+        const app = launcher.start({width: window.innerWidth, height: window.innerHeight});
+        app.registerReload(window.reload);
+        app.registerComplete(() => {
+            const loadingImg = document.getElementById('loading_img');
+            if (loadingImg) loadingImg.remove();
+            const loadingGif = document.getElementById('loading_gif');
+            if (loadingGif) loadingGif.remove();
+        })
+        window.addEventListener("resize", (e) => {
+            app.onResize(window.innerWidth, window.innerHeight);
         });
-    </script>
+    });
+</script>
 </body>
 
 </html>
