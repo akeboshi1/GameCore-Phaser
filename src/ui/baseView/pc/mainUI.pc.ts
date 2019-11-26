@@ -8,6 +8,7 @@ import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
 import { Radio } from "../../components/radio";
 import { UIMediatorType } from "../../ui.mediatorType";
+import { FriendMediator } from "../../friend/friend.mediator";
 
 /**
  * 主界面ui pc版本
@@ -197,7 +198,8 @@ export class MainUIPC extends Panel {
     }
 
     private bagHandler() {
-        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+        this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
+        // this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
     }
 

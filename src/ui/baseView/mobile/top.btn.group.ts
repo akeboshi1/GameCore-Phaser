@@ -86,7 +86,8 @@ export class TopBtnGroup extends Panel {
         this.add(this.mTurnBtn);
         this.mBtnX += -this.mTurnBtn.width >> 1;
         this.mTurnBtn.setClick(() => {
-            this.turnHandler();
+            this.mWorld.closeGame();
+            // this.turnHandler();
         });
         hei += this.mTurnBtn.height / 2 + 20;
         this.setSize(this.mTurnBtn.width, hei);

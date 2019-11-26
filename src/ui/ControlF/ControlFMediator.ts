@@ -73,6 +73,7 @@ export class ControlFMediator extends BaseMediator {
 
     destroy() {
         if (this.mView) {
+            this.mView.off("control", this.handControlF, this);
             this.mView.destroy();
             this.mView = null;
         }

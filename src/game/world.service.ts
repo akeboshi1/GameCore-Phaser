@@ -23,6 +23,9 @@ export interface WorldService {
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
 
+    reconnect();
+    startHeartBeat();
+    changeScene();
     getSize(): Size;
     getConfig(): ILauncherConfig;
     getGameConfig(): Phaser.Types.Core.GameConfig;
@@ -31,4 +34,6 @@ export interface WorldService {
 
     startFullscreen();
     stopFullscreen();
+
+    closeGame();
 }

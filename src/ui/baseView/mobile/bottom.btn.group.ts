@@ -6,6 +6,8 @@ import { Size } from "../../../utils/size";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { ChatMediator } from "../../chat/chat.mediator";
 import { MainUIMediator } from "../mainUI.mediator";
+import { JoyStickManager } from "../../../game/joystick.manager";
+import { MainUIMobile } from "./mainUI.mobile";
 
 export class BottomBtnGroup extends Panel {
     private mResKey: string;
@@ -18,6 +20,8 @@ export class BottomBtnGroup extends Panel {
     private mBtnList: IconBtn[];
     private mWorld: WorldService;
     private mExpandBoo: boolean = false;
+    private mWid: number = 0;
+    private mHei: number = 0;
     // private mOrientation: Phaser.Scale.Orientation;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
@@ -25,13 +29,8 @@ export class BottomBtnGroup extends Panel {
     }
 
     public show(param?: any) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
         super.show(param);
     }
-
-    // public changeOrientation(type: Phaser.Scale.Orientation) {
-    // this.mOrientation = type;
-    // }
 
     public resize() {
         const size: Size = this.mWorld.getSize();
@@ -45,6 +44,17 @@ export class BottomBtnGroup extends Panel {
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
+
+        const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const joyStick = this.mWorld.inputManager as JoyStickManager;
+        let rightBtnGroup;
+        if (mainUIMed) {
+            rightBtnGroup = (mainUIMed.getView() as MainUIMobile).getRightView();
+        }
+        if (mainUIMed) {
+            joyStick.resize();
+            if (rightBtnGroup) rightBtnGroup.resize();
+        }
         this.mChatText.setStyle({ "fontSize": Math.floor(30 * this.mWorld.uiScale) });
     }
 
@@ -76,8 +86,6 @@ export class BottomBtnGroup extends Panel {
     protected init() {
         this.mBtnList = [];
         const size: Size = this.mWorld.getSize();
-        let mWid: number = 0;
-        let mHei: number = 0;
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         const chatBgWidth: number = 430;
         const chatBgHeight: number = 230;
@@ -97,11 +105,11 @@ export class BottomBtnGroup extends Panel {
         this.mChatText.y = -this.mChatContainer.height >> 1;
         this.mChatContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, chatBgWidth, chatBgHeight), Phaser.Geom.Rectangle.Contains);
         this.add(this.mChatContainer);
-        mWid += this.mChatContainer.width;
-        mHei += this.mChatContainer.height;
+        this.mWid += this.mChatContainer.width;
+        this.mHei += this.mChatContainer.height;
         this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], "btnGroup_bottom_expand.png", 1);
-        this.mTurnBtn.x = (mWid >> 1) + 30;
-        this.mTurnBtn.y = mHei - this.mTurnBtn.height >> 1;
+        this.mTurnBtn.x = (this.mWid >> 1) + 30;
+        this.mTurnBtn.y = this.mHei - this.mTurnBtn.height >> 1;
         this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
         this.add(this.mTurnBtn);
 
@@ -109,9 +117,9 @@ export class BottomBtnGroup extends Panel {
         this.mBagBtn.x = this.mTurnBtn.x;
         this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
         this.mBagBtn.setPos(this.mBagBtn.x, this.mBagBtn.y);
-        mWid += this.mBagBtn.width + 30;
+        this.mWid += this.mBagBtn.width + 30;
         this.add(this.mBagBtn);
-        this.setSize(mWid, mHei);
+        this.setSize(this.mWid, this.mHei);
         this.mBtnList.push(this.mBagBtn);
         this.mTurnBtn.setClick(() => {
             this.turnHandler();
@@ -120,9 +128,14 @@ export class BottomBtnGroup extends Panel {
         this.mBagBtn.setClick(() => {
             this.bagHandler();
         });
-        this.resize();
         this.mChatContainer.on("pointerdown", this.chatHandler, this);
+        this.resize();
         super.init();
+    }
+
+    protected tweenComplete(show: boolean) {
+        this.resize();
+        super.tweenComplete(show);
     }
 
     private turnHandler() {
@@ -145,6 +158,13 @@ export class BottomBtnGroup extends Panel {
             return;
         }
         const len: number = this.mBtnList.length;
+        const size: Size = this.mWorld.getSize();
+        const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const joyStick = this.mWorld.inputManager as JoyStickManager;
+        let rightBtnGroup;
+        if (mainUIMed) {
+            rightBtnGroup = (mainUIMed.getView() as MainUIMobile).getRightView();
+        }
         for (let i: number = 0; i < len; i++) {
             const btn: IconBtn = this.mBtnList[i];
             const angle: number = (90 * (i + 2) / -180) * Math.PI;
@@ -161,6 +181,15 @@ export class BottomBtnGroup extends Panel {
                 onComplete: (tween, targets, ship) => {
                     if (i === len - 1) {
                         this.mExpandBoo = !this.mExpandBoo;
+                        if (!this.mExpandBoo) {
+                            this.setSize(this.mWid, this.mHei);
+                        } else {
+                            this.setSize(this.mWid, btn.height * 2);
+                        }
+                        if (mainUIMed) {
+                            joyStick.resize();
+                            if (rightBtnGroup) rightBtnGroup.resize();
+                        }
                     }
                 },
                 onCompleteParams: [this]

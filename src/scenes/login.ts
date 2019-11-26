@@ -384,75 +384,55 @@ export class LoginScene extends Phaser.Scene {
 
     private requestLogin() {
         const login = this;
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
-            if (httpRequest.status === 200) {
+        this.mWorld.httpService.login(login.mNameInputTxt.text, login.mPassWordInputTxt.text).then((response: any) => {
+            if (response.code === 200 || response.code === 201) {
                 localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
-                login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
-                login.mCallBack(httpRequest.responseText);
+                login.mWorld.account.setAccount(response.data);
+                login.mCallBack(response.data);
             } else {
                 const alert = new Alert(login.mWorld, login);
                 alert.show("账号密码错误");
             }
-        };
-        const accountUrl: string = CONFIG.api_root + "account/signin";
-        httpRequest.open("POST", accountUrl);
-        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.send(JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
+        });
     }
 
     private requestGetPhoneCode() {
         const login = this;
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
-            if (httpRequest.status === 200) {
-                login.mVerificationCodeTxt.setText(httpRequest.responseText);
+        this.mWorld.httpService.requestPhoneCode(login.mNameInputTxt.text).then((response: any) => {
+            if (response.code === 200) {
+                login.mVerificationCodeTxt.setText(response.data);
             } else {
                 const alert = new Alert(login.mWorld, login);
                 alert.show("验证码获取失败");
             }
-        };
-        const phoneUrl: string = CONFIG.api_root + "account/sms_code";
-        httpRequest.open("POST", phoneUrl);
-        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.send(JSON.stringify({ "phone": login.mNameInputTxt.text }));
+        });
     }
 
     private loginByPhoneCode() {
         const login = this;
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
-            if (httpRequest.status === 200) {
+        this.mWorld.httpService.loginByPhoneCode(login.mNameInputTxt.text, login.mVerificationCodeTxt.text).then((response: any) => {
+            if (response.code === 200 || response.code === 201) {
                 localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
-                login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
-                login.mCallBack(httpRequest.responseText);
+                login.mWorld.account.setAccount(response.data);
+                login.mCallBack(response.data);
             } else {
                 const alert = new Alert(login.mWorld, login);
                 alert.show("登录失败");
             }
-        };
-        const phoneAccountUrl: string = CONFIG.api_root + "account/phone_signin";
-        httpRequest.open("POST", phoneAccountUrl);
-        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.send(JSON.stringify({ "phone": login.mNameInputTxt.text, "code": login.mVerificationCodeTxt.text }));
+        });
     }
 
     private requestQuickLogin() {
         const login = this;
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.onload = function() {
-            if (httpRequest.status === 200) {
+        this.mWorld.httpService.quickLogin().then((response: any) => {
+            if (response.code === 200 || response.code === 201) {
                 localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
-                login.mWorld.account.setAccount(JSON.parse(httpRequest.response));
-                login.mCallBack(httpRequest.responseText);
+                login.mWorld.account.setAccount(response.data);
+                login.mCallBack(response.data);
             } else {
                 const alert = new Alert(login.mWorld, login);
                 alert.show("登录失败");
             }
-        };
-        const phoneAccountUrl: string = CONFIG.api_root + "account/quick_signin";
-        httpRequest.open("POST", phoneAccountUrl);
-        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.send();
+        });
     }
 }

@@ -36,7 +36,7 @@ import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
-import {EditScene} from "../scenes/edit";
+import { EditScene } from "../scenes/edit";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
     public static SCALE_CHANGE: string = "scale_change";
@@ -65,11 +65,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
 
+        // this.mWorker = new HeartWorker(this);
+
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
+        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
 
         this.mGameEmitter = new Phaser.Events.EventEmitter();
         this.mRoomMamager = new RoomManager(this);
@@ -138,6 +141,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.emitter.emit(World.SCALE_CHANGE);
     }
 
+    public closeGame() {
+        if (this.mConfig.closeGame) {
+            this.destroy();
+            this.mConfig.closeGame();
+        }
+    }
+
     public resize(width: number, height: number) {
         if (this.mGame) {
             if (!this.mGame.device.os.desktop) {
@@ -190,6 +200,35 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
         this.loginEnterWorld();
+    }
+
+    public changeScene() {
+        const gameID: string = this.mConfig.game_id;
+        const worldID: string = this.mConfig.virtual_world_id;
+        this.clearGame();
+        this.mConfig.game_id = gameID;
+        this.mConfig.virtual_world_id = worldID;
+        this._newGame();
+        this.mRoomMamager.addPackListener();
+        this.mUiManager.addPackListener();
+        this.loginEnterWorld();
+    }
+
+    public reconnect() {
+        const gameID: string = this.mConfig.game_id;
+        const worldID: string = this.mConfig.virtual_world_id;
+        this.clearGame();
+        this.mConfig.game_id = gameID;
+        this.mConfig.virtual_world_id = worldID;
+        this._newGame();
+        this.mRoomMamager.addPackListener();
+        this.mUiManager.addPackListener();
+        this.loginEnterWorld();
+    }
+
+    public startHeartBeat() {
+        const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
+        this.mConnection.send(pkt);
     }
 
     get uiScale(): number {
@@ -258,6 +297,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    private heartBeatCallBack() {
+        this.mConnection.clearHeartBeat();
+    }
+
     private initUiScale() {
         const width: number = this.mConfig.width;
         const height: number = this.mConfig.height;
@@ -303,11 +346,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             } else {
                 this.mGame.scene.start(LoadingScene.name, { world: this });
                 this.mAccount.setAccount({
-                    data: {
-                        token: this.mConfig.auth_token,
-                        expire: this.mConfig.token_expire,
-                        fingerprint: this.mConfig.token_fingerprint
-                    }
+                    token: this.mConfig.auth_token,
+                    expire: this.mConfig.token_expire,
+                    fingerprint: this.mConfig.token_fingerprint
                 });
             }
             this.loginEnterWorld();
@@ -319,6 +360,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
+        if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
+            Logger.getInstance().debug("缺少必要参数，无法登录游戏");
+            return;
+        }
         content.gameId = this.mConfig.game_id;
         // const accountObj = JSON.parse();
         content.userToken = this.mAccount.accountData.token; // auth_token;
@@ -402,6 +447,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         };
         Object.assign(this.gameConfig, this.mConfig);
+        this.gameConfig.type = Phaser.CANVAS;
         this.mGame = new Game(this.gameConfig);
         this.initUiScale();
         return this.mGame;

@@ -1,5 +1,5 @@
-import {EventEmitter} from "events";
-import {Buffer} from "buffer/";
+import { EventEmitter } from "events";
+import { Buffer } from "buffer/";
 
 // @ts-ignore
 const Socket: any = WebSocket || MozWebSocket;
@@ -158,11 +158,10 @@ export class WSWrapper extends EventEmitter {
             }).then(() => {
                 // send ok
                 this.emit(`sent`, [++this._sent_count, packet]);
-            }).catch((reason: any) => {
-                this.emit(`error`, reason);
-            }).finally(() => {
                 this._writable = true;
                 this.write();
+            }).catch((reason: any) => {
+                this.emit(`error`, reason);
             });
         }
     }

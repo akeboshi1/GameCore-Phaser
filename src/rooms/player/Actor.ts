@@ -7,11 +7,13 @@ import { op_virtual_world, op_client } from "pixelpai_proto";
 import { Player } from "./player";
 import { Bag } from "./bag/bag";
 import { Interactive } from "./interactive/interactive";
+import { Friend } from "./friend/friend";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
     protected mBag: Bag;
+    protected mFriend: Friend;
     protected mInteractive: Interactive;
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
@@ -35,6 +37,8 @@ export class Actor extends Player implements InputListener {
                 this.mBag.register();
             }
         }
+
+        this.mFriend = new Friend(this.mRoom.world);
         this.mRoom.playerManager.set(this.id, this);
         this.mInteractive = new Interactive(mElementManager.roomService.world);
         this.mInteractive.register();
@@ -42,6 +46,10 @@ export class Actor extends Player implements InputListener {
 
     public getBag(): Bag {
         return this.mBag;
+    }
+
+    public getFriend(): Friend {
+        return this.mFriend;
     }
 
     public getInteractive(): Interactive {

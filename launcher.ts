@@ -4,7 +4,7 @@
 
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
-import {ConnectionService} from "./src/net/connection.service";
+import { ConnectionService } from "./src/net/connection.service";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -22,6 +22,7 @@ export interface ILauncherConfig {
     readonly connection?: ConnectionService;
     readonly isEditor?: boolean;
     readonly osd?: string;
+    readonly closeGame: Function;
 }
 
 export interface GameMain {
@@ -63,7 +64,8 @@ export class Launcher {
         height: this.minHeight,
         baseWidth: this.maxWidth,
         baseHeight: this.maxHeight,
-        ui_scale: 1
+        ui_scale: 1,
+        closeGame: null,
     };
 
     constructor(config?: ILauncherConfig) {
@@ -90,6 +92,10 @@ export class Launcher {
             .then((game) => {
                 this.world = new game.World(this.config, this.mCompleteFunc);
             });
+    }
+
+    public destory() {
+        this.world.destroy();
     }
 
     public startFullscreen() {
