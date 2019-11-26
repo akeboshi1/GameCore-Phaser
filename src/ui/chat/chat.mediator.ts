@@ -83,11 +83,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
             return;
         }
         this.world.connection.addPacketListener(this);
-        // if (this.world.game.device.os.desktop) {
-        //     this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
-        // } else {
+        if (this.world.game.device.os.desktop) {
+            this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
+        } else {
         this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
-        // }
+        }
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
         this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
