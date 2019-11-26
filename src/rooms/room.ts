@@ -22,8 +22,6 @@ import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { Element, IElement } from "./element/element";
 import { Size } from "../utils/size";
-import BlockCheckWorker from "worker-loader?name=js/[hash].[name].js!../game/blockcheckworker";
-
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -45,7 +43,7 @@ export interface IRoomService {
 
     readonly connection: ConnectionService | undefined;
 
-    blockCheckWorker: BlockCheckWorker;
+    // blockCheckWorker: BlockCheckWorker;
     clockSyncComplete: boolean;
 
     now(): number;
@@ -89,7 +87,7 @@ export interface IRoomService {
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     public clockSyncComplete: boolean = false;
-    public blockCheckWorker: BlockCheckWorker;
+    // public blockCheckWorker: BlockCheckWorker;
     protected mWorld: WorldService;
     protected mMap: Map;
     protected mID: number;
@@ -137,7 +135,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),
             sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2),
         };
-        this.blockCheckWorker = new BlockCheckWorker();
+        // this.blockCheckWorker = new BlockCheckWorker();
         this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
         this.mMap = new Map(this.mWorld);
         this.mMap.setMapInfo(data);
@@ -359,7 +357,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mElementManager.destroy();
         this.mPlayerManager.destroy();
         this.mBlocks.destroy();
-        if (this.mCheckBlock && this.blockCheckWorker) this.blockCheckWorker.postMessage({ method: "endCheckBlock" });
+        //  if (this.mCheckBlock && this.blockCheckWorker) this.blockCheckWorker.postMessage({ method: "endCheckBlock" });
         if (this.mActorData) {
             this.mActorData = null;
         }

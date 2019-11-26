@@ -65,8 +65,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
 
-        // this.mWorker = new HeartWorker(this);
-
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
