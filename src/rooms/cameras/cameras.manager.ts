@@ -1,7 +1,7 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IRoomService} from "../room";
 import {ConnectionService} from "../../net/connection.service";
-import {op_virtual_world} from "pixelpai_proto";
+import {op_editor, op_virtual_world} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {Rectangle45} from "../../utils/rectangle45";
 import {Pos} from "../../utils/pos";
@@ -18,6 +18,10 @@ export interface ICameraService {
     getMiniViewPort(): Rectangle45 | undefined;
 
     setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void;
+
+    offsetScroll(x: number, y: number): void;
+    syncToEditor(): void;
+    centerCameas(): void;
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
@@ -72,6 +76,23 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.resetCameraSize(width, height);
     }
 
+    public offsetScroll(x: number, y: number) {
+        if (!this.mCamera) {
+            return;
+        }
+        this.mCamera.scrollX += x;
+        this.mCamera.scrollY += y;
+        // this.mCamera.setScroll(x, y);
+
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        content.x = this.mCamera.scrollX;
+        content.y = this.mCamera.scrollY;
+        content.width = 0;
+        content.height = 0;
+        this.connection.send(pkt);
+    }
+
     public startFollow(target: Phaser.GameObjects.GameObject) {
         if (this.mCamera) {
             this.mCamera.startFollow(target);
@@ -84,6 +105,36 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             return;
         }
         this.mCamera.setBounds(x, y, width, height, centerOn);
+    }
+
+    public syncToEditor() {
+        if (!this.mCamera) {
+            return;
+        }
+        const cameraView = this.mCamera.worldView;
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        content.x = cameraView.x;
+        content.y = cameraView.y;
+        content.width = cameraView.width;
+        content.height = cameraView.height;
+        this.connection.send(pkt);
+    }
+
+    public centerCameas() {
+        if (!this.mCamera || !this.mRoomService) {
+            return;
+        }
+        const roomSize = this.mRoomService.roomSize;
+        this.mCamera.setScroll((roomSize.sceneWidth - this.mCamera.width >> 1), (roomSize.sceneHeight - this.mCamera.height >> 1));
+        const cameraView = this.mCamera.worldView;
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        content.x = this.mCamera.scrollX;
+        content.y = this.mCamera.scrollY;
+        content.width = this.mCamera.width;
+        content.height = this.mCamera.height;
+        this.connection.send(pkt);
     }
 
     private resetCameraSize(width: number, height: number) {

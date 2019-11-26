@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="橡皮擦">
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/default.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/layer.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/edit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/edit.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -65,18 +68,18 @@
     <property name="ts.rename.search.for.js.occurrences" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/config" />
+      <recent name="C:\Users\Seven\git\game-core\config" />
+      <recent name="C:\Users\Seven\git\game-core\src\net" />
+      <recent name="C:\Users\Seven\git\game-core\net" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\PixelPai\game-core\src\ui" />
       <recent name="C:\Users\Seven\git\game-core\src\rooms" />
       <recent name="C:\Users\Seven\git\game-core\src\utils" />
       <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
       <recent name="C:\Users\Seven\git\game-core\src\game" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/config" />
-      <recent name="C:\Users\Seven\git\game-core\config" />
-      <recent name="C:\Users\Seven\git\game-core\src\net" />
-      <recent name="C:\Users\Seven\git\game-core\net" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -496,7 +499,28 @@
       <option name="project" value="LOCAL" />
       <updated>1573827754657</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="merge">
+      <created>1574317284510</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1574317284510</updated>
+    </task>
+    <task id="LOCAL-00046" summary="fix bug">
+      <created>1574342269552</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1574342269552</updated>
+    </task>
+    <task id="LOCAL-00047" summary="修复rows cols不一致的情况下地图地块位置问题">
+      <created>1574406653420</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1574406653420</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -543,9 +567,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="物件选择&#10;更新dragonbones" />
-    <MESSAGE value="ui 结构修改" />
-    <MESSAGE value="隐藏NPC绑定的物件" />
     <MESSAGE value="notice and controlF" />
     <MESSAGE value="排行榜优化" />
     <MESSAGE value="add terser plugin keep classname" />
@@ -568,6 +589,9 @@
     <MESSAGE value="移动对象，移动同步改成鼠标松开同步" />
     <MESSAGE value="v1.0.8" />
     <MESSAGE value="橡皮擦工具禁用surface Interactive，不擦除该层对象" />
-    <option name="LAST_COMMIT_MESSAGE" value="橡皮擦工具禁用surface Interactive，不擦除该层对象" />
+    <MESSAGE value="merge" />
+    <MESSAGE value="fix bug" />
+    <MESSAGE value="修复rows cols不一致的情况下地图地块位置问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复rows cols不一致的情况下地图地块位置问题" />
   </component>
 </project>
