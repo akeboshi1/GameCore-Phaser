@@ -13,12 +13,9 @@ export class ControlFMediator extends BaseMediator {
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
-        // this.mView = new ControlFPanel(scene);
-        // this.mView.on("control", this.handControlF, this);
-        // layerManager.addToUILayer(this.mView);
+        this.mScene = scene;
         this.mLayerManager = layerManager;
         this.world = world;
-        this.mScene = scene;
     }
 
     getName(): string {
@@ -32,12 +29,10 @@ export class ControlFMediator extends BaseMediator {
     hide(): void {
         if (this.mView) {
             this.mView.off("control", this.handControlF, this);
-            this.mView.hide();
+            this.mView.destroy();
             this.mView = null;
         }
-        // if (this.mView) {
-        //     this.mView.off("control22", this.handControlF, this);
-        // }
+        super.hide();
     }
 
     isSceneUI(): boolean {
@@ -45,7 +40,8 @@ export class ControlFMediator extends BaseMediator {
     }
 
     isShow(): boolean {
-        return false;
+        if (!this.mView) return false;
+        return this.mView.isShow();
     }
 
     resize() {
@@ -53,11 +49,6 @@ export class ControlFMediator extends BaseMediator {
     }
 
     show(param?: any): void {
-        // this.mView.show(param);
-        // if (this.mView) {
-        //     this.mView.on("control22", this.handControlF, this);
-        // }
-
         if (this.mView && this.mView.isShow() || this.isShowing) {
             return;
         }
@@ -79,6 +70,7 @@ export class ControlFMediator extends BaseMediator {
         }
         this.mScene = null;
         this.mLayerManager = null;
+        super.destroy();
     }
 
     private handControlF() {

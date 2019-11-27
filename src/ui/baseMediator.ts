@@ -8,6 +8,7 @@ export interface IMediator {
     setUiScale(val: number);
     isSceneUI(): boolean;
     isShow(): boolean;
+    showing(): boolean;
     resize();
     getView(): IAbstractPanel;
     show(param?: any): void;
@@ -47,12 +48,17 @@ export class BaseMediator implements IMediator {
         return false;
     }
 
+    showing(): boolean {
+        return this.isShowing;
+    }
+
     resize() {
         const view = this.getView();
         if (view && view.isShow()) view.resize();
     }
 
     show(param?: any): void {
+        this.isShowing = true;
         this.setUiScale(this.world.uiScale);
     }
 

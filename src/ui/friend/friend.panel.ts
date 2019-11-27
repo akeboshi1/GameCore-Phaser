@@ -8,7 +8,7 @@ import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 
 export class FriendPanel extends Panel {
-    public static count: number = 5;
+    public static count: number = 4;
     private mWorld: WorldService;
     private mBg;
     private mUpBtn: Phaser.GameObjects.Sprite;
@@ -16,6 +16,7 @@ export class FriendPanel extends Panel {
     private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mTitleTxt: Phaser.GameObjects.Text;
     private mFriendList: FriendItem[];
+    private mFriendDataList: any[];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mWorld = world;
@@ -24,10 +25,6 @@ export class FriendPanel extends Panel {
     public resize() {
         const size: Size = this.mWorld.getSize();
         if (!this.mShowing) return;
-        if (this.mBg) {
-            this.mBg.destroy(true);
-            this.mBg = null;
-        }
         if (this.mWorld.game.device.os.desktop) {
             this.x = size.width / 2;
             this.y = size.height / 2;
@@ -41,11 +38,8 @@ export class FriendPanel extends Panel {
             }
         }
 
-        this.mBg = new NinePatch(this.scene, 0, 0, 880, size.height / 2, Background.getName(), null, Background.getConfig());
-        this.setSize(this.mBg.width, this.mBg.height);
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
         this.addAt(this.mBg, 0);
-        this.mUpBtn.y = (this.mUpBtn.height / 2 - this.mBg.height) / 2;
-        this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
     }
 
     public show(param?: any) {
@@ -95,10 +89,18 @@ export class FriendPanel extends Panel {
         const wid: number = size.width;
         const hei: number = size.height;
 
-        this.mBg = new NinePatch(this.scene, 0, 0, 880, size.height / 2, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 600 / this.mWorld.uiScale, size.height * .5 * this.mWorld.uiScale, Background.getName(), null, Background.getConfig());
         this.setSize(this.mBg.width, this.mBg.height);
 
         this.mTitleTxt = this.mScene.make.text(undefined, false);
+        this.mTitleTxt.setFontFamily("YaHei");
+        this.mTitleTxt.setFontStyle("bold");
+        this.mTitleTxt.setFontSize(14);
+        this.mTitleTxt.style.align = "left";
+        this.mTitleTxt.setText("好友列表");
+        this.mTitleTxt.x = -this.mBg.width / 2 + 15;
+        this.mTitleTxt.y = -this.mBg.height / 2 + 8;
+        this.add(this.mTitleTxt);
 
         this.mUpBtn = this.mScene.make.sprite(undefined, false);
         this.mUpBtn.setTexture("bagView", "bagView_tab");
@@ -167,13 +169,15 @@ export class FriendPanel extends Panel {
             });
         }
         this.mFriendList = [];
-        const len: number = data.length;
-        for (let i: number = 0; i < len; i++) {
+        this.mFriendDataList = data;
+        const len: number = data.length > FriendPanel.count ? FriendPanel.count : data.length;
+        for (let i: number = 0; i < len + 2; i++) {
             const item: FriendItem = new FriendItem(this.mWorld, this.mScene, this, "", ["", ""]);
-            const dat = data[i];
+            let dat = data[i];
+            if (!dat) dat = {};
             dat.index = i;
             item.dataChange(dat);
-            item.y = -this.mBg.height / 2 + i * (item.height + 10) + (item.height / 2 + 10);
+            item.y = -this.mBg.height / 2 + this.mTitleTxt.height + i * (item.height + 10) + (item.height / 2 + 10);
             this.add(item);
             this.mFriendList.push(item);
         }
@@ -207,7 +211,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
         this.mPanel = panel;
         this.mWorld = world;
         const size: Size = this.mWorld.getSize();
-        const mBg = new NinePatch(scene, 0, 0, 850, 120, Background.getName(), null, Background.getConfig());
+        const mBg = new NinePatch(scene, 0, 0, 570, 100, Background.getName(), null, Background.getConfig());
         this.addAt(mBg, 0);
         this.setSize(mBg.width, mBg.height);
 
@@ -234,11 +238,11 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
     }
 
     public dataChange(data: any) {
-        const lv: number = data.level;
-        const id: string = data.id;
-        const name: string = data.nickname;
+        const lv: number = data.level || 0;
+        const id: string = data.id || "1";
+        const name: string = data.nickname || "test";
         this.nameTF.setText(name);
-        this.mRoleIcon.load(Url.getOsdRes(data.avatar));
+        this.mRoleIcon.load(Url.getOsdRes(data.avatar || "1"));
         this.mRoleIcon.x = -this.width / 2 + 64;
         this.nameTF.x = this.mRoleIcon.x + 54;
         this.index = data.index;
