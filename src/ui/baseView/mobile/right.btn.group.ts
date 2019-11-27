@@ -9,6 +9,7 @@ import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { MainUIMobile } from "./mainUI.mobile";
 import { PBpacket } from "net-socket-packet";
 import { MainUIMediator } from "../mainUI.mediator";
+import { FriendMediator } from "../../friend/friend.mediator";
 
 export class RightBtnGroup extends Panel {
     private mWorld: WorldService;
@@ -31,20 +32,20 @@ export class RightBtnGroup extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
+        this.refreshSlot();
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        const padHei: number = !mainUIMed ? this.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
+        const padHei: number = !mainUIMed ? this.height / 2 : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                this.y = size.height - this.height / 5;
-                this.x = size.width - this.width / 2 - 20 * this.mWorld.uiScale;
+                this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
+                this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
                 this.y = size.height - padHei;
-                this.x = size.width - this.width / 2;
+                this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
                 break;
         }
-        this.refreshSlot();
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public hide() {
@@ -74,10 +75,10 @@ export class RightBtnGroup extends Panel {
         let baseX: number;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                baseX = size.width - this.width / 2 - 20 * this.mWorld.uiScale;
+                baseX = size.width - (this.width / 4) * this.mWorld.uiScale;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                baseX = size.width - this.width / 2;
+                baseX = size.width - (this.width / 2) * this.mWorld.uiScale;
                 break;
         }
         const toX: number = show === true ? baseX : baseX + this.width;
@@ -117,6 +118,11 @@ export class RightBtnGroup extends Panel {
             const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
             content.keyCodes = [70];
             this.mWorld.connection.send(pkt);
+
+            // ========临时调试用
+            const mainUIMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+            mainUIMed.tweenView(false);
+            this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
         });
         this.add(this.handBtn);
         this.mBagSlotList = [];
@@ -155,6 +161,7 @@ export class RightBtnGroup extends Panel {
                 itemSlot.toolTipCon.x = posX;
                 itemSlot.toolTipCon.y = posY;
             }
+            this.setSize(this.mWid, this.mHei);
         }
     }
 

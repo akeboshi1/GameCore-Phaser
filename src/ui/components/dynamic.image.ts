@@ -24,13 +24,13 @@ export class DynamicImage extends Phaser.GameObjects.Image {
     }
 
     private onLoadComplete() {
+        this.setTexture(this.mUrl);
         if (this.mLoadCompleteCallbak) {
             const cb: Function = this.mLoadCompleteCallbak;
             this.mLoadCompleteCallbak = null;
             cb.call(this.mLoadContext);
             this.mLoadContext = null;
         }
-        this.setTexture(this.mUrl);
     }
 
     private onLoadError(file: Phaser.Loader.File) {
