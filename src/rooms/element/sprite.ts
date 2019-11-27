@@ -99,6 +99,7 @@ export class Sprite implements ISprite {
     public toSprite(): op_client.ISprite {
         const sprite = op_client.Sprite.create();
         sprite.id = this.id;
+        sprite.nickname = this.mNickname;
         if (this.mDisplayInfo instanceof FramesModel) {
             sprite.display = this.mDisplayInfo.display;
             sprite.currentAnimationName = this.currentAnimationName;
