@@ -208,8 +208,8 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
             for (let j = 0; j < size; j++) {
                 frameDisplay = new FramesDisplay(this.scene, this.mRoomService);
                 frameDisplay.setAlpha(0.8);
-                frameDisplay.load(frame);
                 frameDisplay.once("initialized", this.onInitializedHandler, this);
+                frameDisplay.load(frame);
                 const pos = Position45.transformTo90(new Pos(i, j), this.mTileSize);
                 frameDisplay.x = pos.x;
                 frameDisplay.y = pos.y;

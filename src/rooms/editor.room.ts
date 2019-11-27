@@ -133,7 +133,6 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private moveCameras(pointer) {
-        // TODO 在Cameras里面处理镜头移动
         this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
     }
 
