@@ -71,7 +71,7 @@ export class FriendPanel extends Panel {
             this.preload();
             return;
         }
-        super.show();
+        super.show(param);
     }
 
     public destroy() {

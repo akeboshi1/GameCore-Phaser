@@ -1,13 +1,13 @@
-import { Panel } from "../../components/panel";
-import { WorldService } from "../../../game/world.service";
-import { Size } from "../../../utils/size";
-import { Url, Background, Border } from "../../../utils/resUtil";
-import { NinePatch } from "../../components/nine.patch";
-import { Radio } from "../../components/radio";
+import { Panel } from "../components/panel";
+import { WorldService } from "../../game/world.service";
+import { Size } from "../../utils/size";
+import { Url, Background, Border } from "../../utils/resUtil";
+import { NinePatch } from "../components/nine.patch";
+import { Radio } from "../components/radio";
 import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
-import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
-import { ISelectCallItemData } from "../../components/comboBox";
-import { InteractivePanelMediator } from "../InteractivePanelMediator";
+import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
+import { ISelectCallItemData } from "../components/comboBox";
+import { InteractivePanelMediator } from "./InteractivePanelMediator";
 export class InteractivePanel extends Panel {
     private mWorld: WorldService;
     private mNameCon: Phaser.GameObjects.Container;
@@ -21,6 +21,12 @@ export class InteractivePanel extends Panel {
      * 多项选择界面
      */
     private mRadio: Radio;
+
+    private mBg: NinePatch;
+    private mBorder: NinePatch;
+    private mNameBg: Phaser.GameObjects.Image;
+    private mRadioCom: boolean = false;
+    private mFaceIcon: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mWorld = world;
@@ -100,6 +106,7 @@ export class InteractivePanel extends Panel {
             this.mRadio.setRadioData(data.button);
             this.mRadio.visible = true;
         }
+        this.resize();
         if (this.mShowing) {
             return;
         }
@@ -122,6 +129,28 @@ export class InteractivePanel extends Panel {
         const size: Size = this.mWorld.getSize();
         this.x = size.width >> 1;
         this.y = size.height / 2 - 250;
+        this.refreshUIPos();
+        this.mNameCon.add(this.mNameBg);
+        this.mNameCon.add(this.mNameTF);
+        this.mDescCon.add(this.mBg);
+        this.mDescCon.add(this.mBorder);
+        this.mDescCon.add(this.mDescTF);
+        this.add(this.mNameCon);
+        this.add(this.mDescCon);
+        if (this.mRadio) {
+            this.add(this.mRadio);
+        }
+        if (this.mWorld.game.device.os.desktop) {
+            return;
+        }
+        if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            this.mBg.resize(size.width - 100, size.height / 4);
+            this.mBorder.resize(size.width - 120, size.height / 4 - 20);
+        } else {
+            this.mBg.resize(size.width - 20, size.height / 2);
+            this.mBorder.resize(size.width - 40, size.height / 2 - 20);
+        }
+
     }
 
     public destroy() {
@@ -178,14 +207,11 @@ export class InteractivePanel extends Panel {
 
     protected init() {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
-        const size: Size = this.mWorld.getSize();
-        const wid: number = size.width;
-        const hei: number = size.height;
 
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
-        const backGround: NinePatch = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
-        const border = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
         this.mMidFaceIcon = this.mScene.make.image(undefined, false);
@@ -195,47 +221,59 @@ export class InteractivePanel extends Panel {
             fontSize: "20px",
             wrap: {
                 mode: "char",
-                width: border.width
+                width: this.mBorder.width
             },
         });
 
-        const nameBg = this.mScene.make.image(undefined, false);
-        nameBg.setTexture("juqing", "juqing_name.png");
-        this.mNameCon.add(nameBg);
-        this.mNameCon.add(this.mNameTF);
+        this.mNameBg = this.mScene.make.image(undefined, false);
+        this.mNameBg.setTexture("juqing", "juqing_name.png");
 
         this.mDescTF = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: "20px",
             wrap: {
                 mode: "char",
-                width: border.width
+                width: this.mBorder.width
             },
         });
-        this.mNameTF.y = -8;
-        this.mDescTF.x = -border.width / 2;
-        this.mDescTF.y = -border.height / 2;
-        this.mDescCon.setSize(backGround.width, backGround.height);
-        this.mNameCon.setSize(nameBg.width, nameBg.height);
-        this.mDescCon.add(backGround);
-        this.mDescCon.add(border);
-        this.mDescCon.add(this.mDescTF);
-        this.mDescCon.y = size.height / 2 + 80;
-        this.mNameCon.x = 150 - this.mDescCon.width / 2;
-        this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
+        this.mDescCon.setSize(this.mBg.width, this.mBg.height);
+        this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
+
         this.mDescCon.setInteractive();
         this.mNameCon.setInteractive();
 
-        // this.add(this.mLeftFaceIcon);
-        // this.add(this.mMidFaceIcon);
-        // this.add(this.mRightFaceIcon);
-        this.add(this.mNameCon);
-        this.add(this.mDescCon);
-        this.resize();
         super.init();
     }
 
-    private onLoadComplete() {
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) this.resize();
+    }
+
+    private refreshUIPos() {
         const size: Size = this.mWorld.getSize();
+
+        this.mNameTF.y = -8;
+        this.mDescTF.x = -this.mBorder.width / 2;
+        this.mDescTF.y = -this.mBorder.height / 2;
+
+        this.mDescCon.y = size.height / 2 + 80;
+        this.mNameCon.x = 150 - this.mDescCon.width / 2;
+        this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
+        // this.mNameTF.wrap.width = this.mBorder.width;
+        // this.mDescTF.wrap.width = this.mBorder.width;
+
+        this.mNameTF.x = - this.mNameTF.width >> 1;
+
+        this.mDescCon.setSize(this.mBg.width, this.mBg.height);
+        this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
+
+        if (this.mRadioCom) {
+            this.mRadio.x = 220;
+            this.mRadio.y = this.mDescCon.height + 250;
+        }
+    }
+
+    private onLoadComplete() {
         const data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mData[0];
         const uiDisplay: op_gameconfig_01.IDisplay = data.display[0];
         const url: string = Url.getOsdRes(uiDisplay.texturePath);
@@ -319,11 +357,11 @@ export class InteractivePanel extends Panel {
     }
 
     private radioComplete() {
+        this.mRadioCom = true;
         const size: Size = this.mWorld.getSize();
         if (!this.mRadio) return;
         this.mRadio.x = 220;
         this.mRadio.y = this.mDescCon.height + 250;
-        this.add(this.mRadio);
     }
 
 }
