@@ -41,7 +41,7 @@ export class Animation implements IAnimationData {
         this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;
         if (Array.isArray(origin)) {
-            this.mOriginPoint = new Phaser.Geom.Point(ani.originPoint[0], ani.originPoint[1]);
+            this.mOriginPoint = new Phaser.Geom.Point(origin[0], origin[1]);
         }
         if (typeof ani.collisionArea === "string") {
             this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&");

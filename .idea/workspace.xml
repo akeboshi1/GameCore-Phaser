@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/default.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/cameras/cameras.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/edit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/edit.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -190,6 +184,7 @@
       <workItem from="1573606738221" duration="39369000" />
       <workItem from="1573823097555" duration="5074000" />
       <workItem from="1574039467681" duration="5802000" />
+      <workItem from="1574826545576" duration="6370000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -520,7 +515,21 @@
       <option name="project" value="LOCAL" />
       <updated>1574406653420</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="fixed bug">
+      <created>1574836945579</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1574836945580</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fixed bug game-editor#362">
+      <created>1574844592915</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1574844592915</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -567,7 +576,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="notice and controlF" />
     <MESSAGE value="排行榜优化" />
     <MESSAGE value="add terser plugin keep classname" />
     <MESSAGE value="显示、隐藏网格&#10;笔触设定&#10;镜头拖动" />
@@ -581,7 +589,6 @@
     <MESSAGE value="绘制地块设置大小" />
     <MESSAGE value="编辑器删除对象" />
     <MESSAGE value="修复物件吸附位置Bug" />
-    <MESSAGE value="fixed bug" />
     <MESSAGE value="sync sprite" />
     <MESSAGE value="id生成规则" />
     <MESSAGE value="sprite to client.sprite" />
@@ -592,6 +599,8 @@
     <MESSAGE value="merge" />
     <MESSAGE value="fix bug" />
     <MESSAGE value="修复rows cols不一致的情况下地图地块位置问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复rows cols不一致的情况下地图地块位置问题" />
+    <MESSAGE value="fixed bug" />
+    <MESSAGE value="fixed bug game-editor#362" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug game-editor#362" />
   </component>
 </project>
