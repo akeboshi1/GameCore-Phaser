@@ -3,8 +3,6 @@ import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { ControlFPanel } from "./ControlFPanel";
-import { Logger } from "../../utils/log";
-import { ComponentRankPanel } from "../ComponentRank/ComponentRankPanel";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 export class ControlFMediator extends BaseMediator {
@@ -45,6 +43,7 @@ export class ControlFMediator extends BaseMediator {
     }
 
     resize() {
+        if (!this.mView) return;
         this.mView.resize();
     }
 

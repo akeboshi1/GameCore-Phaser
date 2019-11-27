@@ -51,7 +51,7 @@ export class JoyStickManager implements InputManager {
 
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
         const scale = !this.mScale ? 1 : this.mScale;
-        this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, this.mScale);
+        this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, scale);
     }
 
     public resize() {
@@ -60,14 +60,14 @@ export class JoyStickManager implements InputManager {
         const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.mParentcon) {
+            this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
             if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.mParentcon.x = this.mParentcon.width;
                 this.mParentcon.y = size.height - this.mParentcon.height;
             } else {
                 this.mParentcon.x = 100 * this.mScale;
-                this.mParentcon.y = size.height - padHei;
+                this.mParentcon.y = (mainUIMed.getView() as MainUIMobile).getBottomView().y - padHei / 2 - this.mParentcon.height / 2;
             }
-            this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         }
     }
 
@@ -77,7 +77,7 @@ export class JoyStickManager implements InputManager {
         let baseX: number;
         let baseY: number;
         const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        const padHei: number = !mainUIMed ?  this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
+        const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             baseX = this.mParentcon.width;
             baseY = size.height - this.mParentcon.height;

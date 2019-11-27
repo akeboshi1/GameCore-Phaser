@@ -34,6 +34,7 @@ export class BottomBtnGroup extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
                 this.x = size.width >> 1;
@@ -43,7 +44,6 @@ export class BottomBtnGroup extends Panel {
                 break;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
 
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const joyStick = this.mWorld.inputManager as JoyStickManager;

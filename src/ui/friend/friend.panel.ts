@@ -1,5 +1,5 @@
 import { Panel } from "../components/panel";
-import { Background, Border, Url } from "../../utils/resUtil";
+import { Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
@@ -7,6 +7,7 @@ import { IListItemComponent } from "../bag/IListItemRender";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { Geom } from "phaser";
+import { MainUIMediator } from "../baseView/mainUI.mediator";
 export interface IFriendIcon {
     res: string;
     name: string;
@@ -35,15 +36,30 @@ export class FriendPanel extends Panel {
             this.y = size.height / 2;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = (this.width - size.width) / 2;
-                this.y = 0;
+                this.mBg.resize((size.width * .5 - 20) / this.mWorld.uiScale, (size.height - 20) / this.mWorld.uiScale);
+                // new NinePatch(this.scene, 0, 0, size.width * .6 / this.mWorld.uiScale - 30, size.height / this.mWorld.uiScale - 30, Border.getName(), null, Border.getConfig());
+                this.setSize(this.mBg.width, this.mBg.height);
+                this.x = (this.width / 2 + 10) * this.mWorld.uiScale;
+                this.y = (this.height / 2 + 10) * this.mWorld.uiScale;
             } else {
-                this.x = 0;
-                this.y = (this.height - size.height) / 2;
+                this.mBg.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
+                // = new NinePatch(this.scene, 0, 0, size.width / this.mWorld.uiScale - 30, size.height / this.mWorld.uiScale - 30, Border.getName(), null, Border.getConfig());
+                this.setSize(this.mBg.width, this.mBg.height);
+                this.x = (this.width / 2 + 15) * this.mWorld.uiScale;
+                this.y = size.height - this.mBg.height * .5 * this.mWorld.uiScale - 10;
             }
         }
 
         this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.mUpBtn.y = (this.mUpBtn.height / 2 - this.mBg.height) / 2;
+        this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
+        this.mTitleTxt.x = (-this.mBg.width / 2 + 15);
+        this.mTitleTxt.y = (-this.mBg.height / 2 + 8);
+        if (this.mClsBtnSprite) {
+            this.mClsBtnSprite.x = (this.mBg.width >> 1) - 65;
+            this.mClsBtnSprite.y = (-this.mBg.height >> 1);
+        }
+        this.initFriendItem();
         this.addAt(this.mBg, 0);
         this.add(this.mTitleTxt);
     }
@@ -104,15 +120,21 @@ export class FriendPanel extends Panel {
         gameObject.scaleY = 1;
     }
 
+    public hide() {
+        const mainUIMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        mainUIMed.tweenView(true);
+        super.hide();
+    }
+
     protected preload() {
         if (!this.mScene) {
             return;
         }
-        this.scene.load.image(Background.getName(), Background.getPNG());
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image("friendChat", Url.getRes("ui/friend/friend_chat.png"));
         this.scene.load.image("friendGo", Url.getRes("ui/friend/friend_go.png"));
         this.mScene.load.atlas("bagView", Url.getRes("ui/bag/bagView.png"), Url.getRes("ui/bag/bagView.json"));
+        this.mScene.load.spritesheet("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
         super.preload();
     }
 
@@ -129,32 +151,22 @@ export class FriendPanel extends Panel {
         this.mTitleTxt.setFontSize(14);
         this.mTitleTxt.style.align = "left";
         this.mTitleTxt.setText("好友列表");
-        this.mTitleTxt.x = -this.mBg.width / 2 + 15;
-        this.mTitleTxt.y = -this.mBg.height / 2 + 8;
         // this.add(this.mTitleTxt);
 
         this.mUpBtn = this.mScene.make.sprite(undefined, false);
         this.mUpBtn.setTexture("bagView", "bagView_tab");
         this.mUpBtn.rotation = Math.PI / 2;
-        this.mUpBtn.y = (this.mUpBtn.height / 2 - this.mBg.height) / 2;
 
         this.mDownBtn = this.mScene.make.sprite(undefined, false);
         this.mDownBtn.setTexture("bagView", "bagView_tab");
         this.mDownBtn.rotation = -Math.PI / 2;
-        this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
 
         this.mDownBtn.setInteractive();
         this.mUpBtn.setInteractive();
         this.mDownBtn.on("pointerup", this.downHandler, this);
         this.mUpBtn.on("pointerup", this.upHandler, this);
 
-        if (!this.mScene.cache.obj.has("clsBtn")) {
-            this.mScene.load.spritesheet("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onClsLoadCompleteHandler();
-        }
+        this.onClsLoadCompleteHandler();
         this.initFriendItem();
         super.init();
     }
@@ -184,12 +196,13 @@ export class FriendPanel extends Panel {
     private setDataList(data: any[]) {
         this.mFriendDataList = data;
         const len: number = data.length > FriendPanel.count ? FriendPanel.count : data.length;
-        for (let i: number = 0; i < len; i++) {
+        for (let i: number = 0; i < 4; i++) {
             const item: FriendItem = this.mFriendList[i];
             const dat = data[this.mIndex * FriendPanel.count + i];
             if (!dat) {
                 item.visible = false;
-                return;
+                // this.add(item);
+                continue;
             }
             item.visible = true;
             dat.index = i;
@@ -213,30 +226,35 @@ export class FriendPanel extends Panel {
     }
 
     private initFriendItem() {
-        this.mFriendList = [];
-        const len: number = FriendPanel.count;
-        const resList: any[] = [{
-            res: "friendChat",
-            name: "聊天"
-        }, {
-            res: "friendGo",
-            name: "跟随"
-        }];
-        for (let i: number = 0; i < len; i++) {
-            const item: FriendItem = new FriendItem(this.mWorld, this.mScene, this, resList);
-            item.y = -this.mBg.height / 2 + this.mTitleTxt.height + i * (item.height + 10) + (item.height / 2 + 10);
-            // this.add(item);
-            this.mFriendList.push(item);
+        const len: number = this.mFriendList ? this.mFriendList.length : FriendPanel.count;
+        if (this.mFriendList && this.mFriendList.length > 0) {
+            for (let i: number = 0; i < len; i++) {
+                const item: FriendItem = this.mFriendList[i];
+                item.resize();
+                item.y = this.mWorld.game.device.os.desktop ? (-this.mBg.height / 2 + this.mTitleTxt.height + i * (item.height + 10) + (item.height / 2 + 10)) * this.mWorld.uiScale :
+                    (i - 1.5) * (item.height + 10);
+            }
+        } else {
+            this.mFriendList = [];
+            const resList: any[] = [{
+                res: "friendChat",
+                name: "聊天"
+            }, {
+                res: "friendGo",
+                name: "跟随"
+            }];
+            for (let i: number = 0; i < len; i++) {
+                const item: FriendItem = new FriendItem(this.mWorld, this.mScene, this, resList);
+                item.y = this.mWorld.game.device.os.desktop ? (-this.mBg.height / 2 + this.mTitleTxt.height + i * (item.height + 10) + (item.height / 2 + 10)) * this.mWorld.uiScale :
+                    (i - 1.5) * (item.height + 10);
+                this.mFriendList.push(item);
+            }
         }
-        // this.add(this.mUpBtn);
-        // this.add(this.mDownBtn);
     }
 
     private onClsLoadCompleteHandler() {
         this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
         this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mBg.width >> 1) - 65;
-        this.mClsBtnSprite.y = (-this.mBg.height >> 1);
         this.mClsBtnSprite.setInteractive();
         this.mClsBtnSprite.on("pointerup", this.hide, this);
         this.add(this.mClsBtnSprite);
@@ -251,36 +269,72 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
 
     private mPanel: FriendPanel;
     private mWorld: WorldService;
-    private iconResList: IFriendIcon[];
+    private iconResList: Phaser.GameObjects.Container[] = [];
     private mScene: Phaser.Scene;
+    private mBg: NinePatch;
     constructor(world: WorldService, scene: Phaser.Scene, panel: FriendPanel, iconResList: IFriendIcon[]) {
         super(scene);
         this.mPanel = panel;
         this.mWorld = world;
         this.mScene = scene;
+
         const size: Size = this.mWorld.getSize();
-        const mBg = new NinePatch(scene, 0, 0, 570, 100, Border.getName(), null, Border.getConfig());
-        this.addAt(mBg, 0);
-        this.setSize(mBg.width, mBg.height);
+        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.width, 90, Border.getName(), null, Border.getConfig());
+        this.addAt(this.mBg, 0);
+        this.setSize(this.mBg.width, this.mBg.height);
 
-        this.mRoleIcon = new DynamicImage(scene, -mBg.width / 2, 0);
-        this.mRoleIcon.scaleX = this.mRoleIcon.scaleY = .15;
-        this.add(this.mRoleIcon);
+        this.mRoleIcon = new DynamicImage(this.mScene, -this.mBg.width / 2, 0);
 
-        this.nameTF = scene.make.text({
+        this.nameTF = this.mScene.make.text({
             align: "left",
             style: { font: Font.YAHEI_20_BOLD, fill: "#FFCC00" }
         }, false);
-        this.statusTF = scene.make.text({
+        this.statusTF = this.mScene.make.text({
             align: "left",
             style: { font: "14px YaHei" }
         }, false);
-        this.nameTF.y = 10 - mBg.height / 2;
+
+        if (iconResList) {
+            const len: number = iconResList.length;
+            for (let i: number = 0; i < len; i++) {
+                const icon: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
+                const iconCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
+                const bg = new NinePatch(this.mScene, 0, 0, 60, 60, Border.getName(), null, Border.getConfig());
+                const txt = this.mScene.make.text(undefined, false);
+                const friendIconData: IFriendIcon = iconResList[i];
+                txt.setText(friendIconData.name);
+                icon.setTexture(friendIconData.res);
+                icon.scaleX = icon.scaleY = .8;
+                iconCon.add(icon);
+                iconCon.add(txt);
+                iconCon.addAt(bg, 0);
+                iconCon.setSize(60, 60);
+                iconCon.setInteractive(new Geom.Rectangle(0, 0, 60, 60), Phaser.Geom.Rectangle.Contains);
+                iconCon.on("pointerdown", () => {
+                    this.mPanel.btnScaleHandler(iconCon);
+                }, this);
+                icon.y = -bg.height / 2 + icon.height / 2;
+                txt.x = -txt.width >> 1;
+                txt.y = iconCon.height / 2 - txt.height - 4;
+                // iconCon.x = this.width / 2 - (i + 1) * 70 - 20;
+                this.add(iconCon);
+                this.iconResList.push(iconCon);
+            }
+        }
+        this.add(this.mRoleIcon);
         this.add(this.nameTF);
-        this.statusTF.x = this.nameTF.x;
         this.add(this.statusTF);
 
-        this.iconResList = iconResList;
+        this.refreshUIPos();
+
+    }
+
+    public resize() {
+        if (this.mWorld.game.device.os.desktop) return;
+        this.mBg.resize(this.mPanel.width * .95, 90);
+        this.setSize(this.mBg.width, this.mBg.height);
+        this.addAt(this.mBg, 0);
+        this.refreshUIPos();
     }
 
     public getView(): any {
@@ -292,36 +346,15 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
         const id: string = data.id || "1";
         const name: string = data.nickname || "test";
         this.nameTF.setText(name);
-        this.mRoleIcon.load(Url.getOsdRes(data.avatar || "1"));
+        this.mRoleIcon.load(Url.getOsdRes(data.avatar || "1"), this, () => {
+            this.mRoleIcon.scaleX = this.height / this.mRoleIcon.width;
+            this.mRoleIcon.scaleY = this.height / this.mRoleIcon.height;
+        }, () => {
+            this.mRoleIcon.scaleX = this.mRoleIcon.scaleY = 1;
+        });
         this.mRoleIcon.x = -this.width / 2 + 64;
         this.nameTF.x = this.mRoleIcon.x + 54;
         this.index = data.index;
-        if (this.iconResList) {
-            const len: number = this.iconResList.length;
-            for (let i: number = 0; i < len; i++) {
-                const icon: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
-                const iconCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
-                const bg = new NinePatch(this.mScene, 0, 0, 60, 60, Border.getName(), null, Border.getConfig());
-                const txt = this.mScene.make.text(undefined, false);
-                const friendIconData: IFriendIcon = this.iconResList[i];
-                txt.setText(friendIconData.name);
-                icon.setTexture(friendIconData.res);
-                icon.scaleX = icon.scaleY = .8;
-                icon.y = -bg.height / 2 + icon.height / 2;
-                iconCon.add(icon);
-                iconCon.add(txt);
-                iconCon.addAt(bg, 0);
-                txt.x = -txt.width >> 1;
-                txt.y = iconCon.height + txt.height / 2;
-                iconCon.x = this.width / 2 - (i + 1) * 70;
-                iconCon.setSize(60, 60);
-                iconCon.setInteractive(new Geom.Rectangle(0, 0, 60, 60), Phaser.Geom.Rectangle.Contains);
-                iconCon.on("pointerdown", () => {
-                    this.mPanel.btnScaleHandler(iconCon);
-                }, this);
-                this.add(iconCon);
-            }
-        }
     }
 
     public destory() {
@@ -341,5 +374,22 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
         this.mPanel = null;
         this.mWorld = null;
         super.destroy(true);
+    }
+
+    private refreshUIPos() {
+        this.mRoleIcon.x = -this.width / 2 + 64;
+        this.nameTF.x = this.mRoleIcon.x + 54;
+        this.mRoleIcon.y = 0;
+        this.nameTF.y = 10 - this.mBg.height / 2;
+        this.statusTF.x = this.nameTF.x;
+
+        if (this.iconResList) {
+            const len: number = this.iconResList.length;
+            for (let i: number = 0; i < len; i++) {
+                const iconCon: Phaser.GameObjects.Container = this.iconResList[i];
+                iconCon.x = this.width / 2 - (i + 1) * 70 + 20;
+            }
+        }
+
     }
 }
