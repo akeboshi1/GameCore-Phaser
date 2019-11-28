@@ -89,6 +89,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
             this.mListener.onFullPacketReceived(type);
         }
+        Logger.getInstance().log("terrain number: ", this.mTerrains.size);
     }
 
     protected _add(sprite: ISprite) {
