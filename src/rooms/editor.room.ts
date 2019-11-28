@@ -149,6 +149,15 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
+    private eraserElement() {
+        const terrainManager = <EditorTerrainManager> this.mTerainManager;
+        if (terrainManager) {
+            const positions = this.mMouseFollow.getEaserPosition();
+            terrainManager.removeFormPositions(positions);
+            // Logger.getInstance().log("positions: ", positions);
+        }
+    }
+
     private onSetEditorModeHandler(packet: PBpacket) {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
         this.mBrush.mode = <BrushEnum> mode.mode;
@@ -158,6 +167,12 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.mSelectedElementEffect.destroy();
                 this.mSelectedElementEffect = null;
             }
+        }
+        if (this.mBrush.mode === BrushEnum.ERASER) {
+            if (!this.mMouseFollow) {
+                this.mMouseFollow = new MouseFollow(this.mScene, this);
+            }
+            this.mMouseFollow.showEraserArea();
         }
         this.layerManager.setSurfaceInteractive(this.mBrush.mode !== BrushEnum.ERASER);
     }
@@ -192,13 +207,13 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private addPointerMoveHandler() {
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
+        // this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
         this.mScene.input.on("gameout", this.onGameOutHandler, this);
     }
 
     private removePointerMoveHandler() {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
+        // this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
     }
 
@@ -217,6 +232,9 @@ export class EditorRoom extends Room implements EditorRoomService {
                     if (this.mSelectedElementEffect) this.syncSprite(this.mSelectedElementEffect.display);
                 }
                 break;
+            case BrushEnum.ERASER:
+                this.eraserElement();
+                break;
         }
     }
 
@@ -233,8 +251,9 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private onGameobjectUpHandler(pointer, gameobject) {
-        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
+        this.removePointerMoveHandler();
+        // this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        // this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         const com = gameobject.parentContainer;
         if (!com) {
             return;
@@ -246,9 +265,9 @@ export class EditorRoom extends Room implements EditorRoomService {
                     this.sendFetch([selected.element.id], op_def.NodeType.ElementNodeType);
                 }
                 break;
-            case BrushEnum.ERASER:
-                this.removeElement(com);
-                break;
+            // case BrushEnum.ERASER:
+            //     this.removeElement(com);
+            //     break;
         }
     }
 
@@ -334,6 +353,9 @@ export class EditorRoom extends Room implements EditorRoomService {
                     this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
                     this.mLayManager.depthSurfaceDirty = true;
                 }
+                break;
+            case BrushEnum.ERASER:
+                this.eraserElement();
                 break;
         }
     }

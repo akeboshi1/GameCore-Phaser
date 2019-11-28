@@ -45,6 +45,19 @@ export class EditorTerrainManager extends TerrainManager {
         }
     }
 
+    removeFormPositions(locations: Pos[]) {
+        const terrains = Array.from(this.mTerrains.values());
+        let terrain: Terrain = null;
+        for (const pos of locations) {
+            terrain = terrains.find((ter) => {
+                return pos.equal(ter.getPosition45());
+            });
+            if (terrain) {
+                this.remove(terrain.id);
+            }
+        }
+    }
+
     protected onRemove(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;

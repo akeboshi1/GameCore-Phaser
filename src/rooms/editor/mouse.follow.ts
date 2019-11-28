@@ -23,7 +23,9 @@ export class MouseFollow {
      * 笔触大小
      */
     private mSize: number = 1;
-    constructor(private mScene: Phaser.Scene, private mRoomService: EditorRoomService) { }
+    constructor(private mScene: Phaser.Scene, private mRoomService: EditorRoomService) {
+        this.mLayerManager = this.mRoomService.layerManager;
+    }
 
     setDisplay(content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE) {
         if (!this.mScene) return;
@@ -32,7 +34,6 @@ export class MouseFollow {
             this.mDisplay = null;
         }
         this.mSprite = new Sprite(content.sprite);
-        this.mLayerManager = this.mRoomService.layerManager;
         this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
         this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, this.mSize);
         this.mLayerManager.addToSceneToUI(this.mDisplay);
@@ -46,8 +47,20 @@ export class MouseFollow {
 
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.on("wheel", this.onWheelHandler, this);
-        // this.mDisplay.x = 0;
-        // this.mDisplay.y = 0;
+    }
+
+    showEraserArea() {
+        if (!this.mScene) return;
+        if (this.mDisplay) {
+            this.mDisplay.destroy();
+        }
+        this.mDisplay = new EraserArea(this.mScene, this.mRoomService);
+        this.mDisplay.setDisplay(null, this.mSize);
+        this.mNodeType = NodeType.TerrainNodeType;
+        this.mLayerManager.addToSceneToUI(this.mDisplay);
+
+        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.on("wheel", this.onWheelHandler, this);
     }
 
     createSprites(): ISprite[] {
@@ -64,6 +77,20 @@ export class MouseFollow {
             sprite.bindID = this.mSprite.id;
             result.push(sprite);
         }
+        return result;
+    }
+
+    getEaserPosition(): Pos[] {
+        const result: Pos[] = [];
+        let pos: Pos = null;
+        for (let i = 0; i < this.mSize; i++) {
+            for (let j = 0; j < this.mSize; j++) {
+                pos = this.display.transformTo90(i, j);
+                result.push(this.getPosition(pos.x, pos.y));
+                // result.push(this.mRoomService.transformTo45(new Pos(i, j)));
+            }
+        }
+        // result.push(this.getPosition());
         return result;
     }
 
@@ -179,14 +206,18 @@ export class MouseFollow {
             val = 10;
         }
         this.mSize = val;
-        this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, this.mSize);
+        let displayInfo = null;
+        if (this.mSprite) {
+            displayInfo = this.mSprite.displayInfo;
+        }
+        this.mDisplay.setDisplay(displayInfo, this.mSize);
     }
 }
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
+    protected mTileSize: IPosition45Obj;
     private mDisplay: FramesDisplay[];
-    private mTileSize: IPosition45Obj;
-    constructor(scene: Phaser.Scene, private mRoomService: IRoomService) {
+    constructor(scene: Phaser.Scene, protected mRoomService: IRoomService) {
         super(scene);
     }
 
@@ -219,6 +250,10 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    transformTo90(row: number, col: number) {
+        return Position45.transformTo90(new Pos(row, col), this.mTileSize);
+    }
+
     clear() {
         this.removeAll(true);
         this.mDisplay = undefined;
@@ -227,13 +262,6 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     destroy(fromScene?: boolean): void {
         this.clear();
         super.destroy(fromScene);
-    }
-
-    getPosition() {
-        if (!this.parentContainer) {
-            return;
-        }
-        const pos = new Pos(this.parentContainer.x, this.parentContainer.y);
     }
 
     get tileWidth(): number {
@@ -252,5 +280,46 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         if (obj) {
             obj.showRefernceArea();
         }
+    }
+}
+
+class EraserArea extends MouseDisplayContainer {
+    private area: Phaser.GameObjects.Graphics;
+    constructor(scene: Phaser.Scene, roomService: IRoomService) {
+        super(scene, roomService);
+    }
+
+    setDisplay(frame: IFramesModel, size: number) {
+        if (this.area) {
+            this.area.clear();
+        }
+        const { tileWidth, tileHeight } = this.mRoomService.roomSize;
+        this.mTileSize = {
+            tileWidth,
+            tileHeight,
+            rows: size,
+            cols: size,
+            sceneWidth: (size + size) * (tileWidth / 2),
+            sceneHeight: (size + size) * (tileHeight / 2)
+        };
+        let p1: Pos;
+        let p2: Pos;
+        let p3: Pos;
+        let p4: Pos;
+        this.area = this.scene.make.graphics(undefined, false);
+        for (let y = 0; y < size; y++) {
+            for (let x = 0; x < size; x++) {
+                this.area.lineStyle(2, 0);
+                p1 = Position45.transformTo90(new Pos(x, y), this.mTileSize);
+                p2 = Position45.transformTo90(new Pos(x + 1, y), this.mTileSize);
+                p3 = Position45.transformTo90(new Pos(x + 1, y + 1), this.mTileSize);
+                p4 = Position45.transformTo90(new Pos(x, y + 1), this.mTileSize);
+                this.area.beginPath();
+                this.area.fillStyle(0, 0.5);
+                this.area.strokePoints([p1.toPoint(), p2.toPoint(), p3.toPoint(), p4.toPoint()], true, true);
+                this.area.fillPath();
+            }
+        }
+        this.add(this.area);
     }
 }
