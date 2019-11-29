@@ -41,6 +41,7 @@ export class EditorTerrainManager extends TerrainManager {
             const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
             const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
             content.ids = [id];
+            content.nodeType = op_def.NodeType.TerrainNodeType;
             this.connection.send(pkt);
         }
     }
@@ -109,7 +110,7 @@ export class EditorTerrainManager extends TerrainManager {
         const pos = sprite.pos;
         const roomSize = this.roomService.roomSize;
         if (!roomSize) return false;
-        if (pos.x < 0 || pos.y < 0 || pos.x > roomSize.rows || pos.y > roomSize.cols) {
+        if (pos.x < 0 || pos.y < 0 || pos.x >= roomSize.rows || pos.y >= roomSize.cols) {
             return false;
         }
         const terrains = Array.from(this.mTerrains.values());

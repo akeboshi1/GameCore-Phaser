@@ -382,6 +382,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             case 40:
                 pos.y++;
                 break;
+            case 46:
+                this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
+                break;
         }
         display.setPosition(pos.x, pos.y, pos.z);
         // TOOD 通过统一接口设置depth
