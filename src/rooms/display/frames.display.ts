@@ -123,6 +123,9 @@ export class FramesDisplay extends DisplayObject {
         super.destroy();
     }
 
+    public changeDirection(val: number) {
+    }
+
     protected clearFadeTween() {
         if (this.mFadeTween) {
             this.mFadeTween.stop();

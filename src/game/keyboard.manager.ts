@@ -243,9 +243,11 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
                 newDir = 5;
                 break;
         }
-        l.setDirection(newDir);
-        l.downHandler(newDir, keyCodeList);
-        if (this.mRoom && this.mRoom.actor) this.mRoom.actor.setDirection(newDir);
+        if (this.enable) {
+            l.setDirection(newDir);
+            l.downHandler(newDir, keyCodeList);
+            if (this.mRoom && this.mRoom.actor) this.mRoom.actor.setDirection(newDir);
+        }
         return true;
     }
 
@@ -269,6 +271,9 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
     }
 
     private keyDownHandle(e: KeyboardEvent) {
+        if (!this.enable) {
+            return;
+        }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
         const keyArr: number[] = this.getKeyDowns();
@@ -284,6 +289,9 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
     }
 
     private keyUpHandle(e: KeyboardEvent) {
+        if (!this.enable) {
+            return;
+        }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_UP);
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_UP = pkt.content;
         const keyArr: number[] = this.getKeyUps();

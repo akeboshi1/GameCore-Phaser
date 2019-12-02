@@ -9,7 +9,7 @@ import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_
 const LATENCY_SAMPLES = 7; // Latency Array length
 const MIN_READY_SAMPLES = 2;
 const CHECK_INTERVAL = 120000; // (ms)
-const MAX_DELAY = 100;
+const MAX_DELAY = 500; // (ms)
 
 export interface ClockReadyListener {
     onClockReady(): void;
@@ -47,7 +47,6 @@ export class Clock extends PacketHandler {
     public sync(times: number = 1): void {
         if (!this.mConn) return;
         if (times < 0) {
-            this.mAutoSync = true;
             times = 1;
         }
         for (let i = 0; i < times; ++i) {
@@ -106,12 +105,15 @@ export class Clock extends PacketHandler {
         // update timesychron
         if (mistake > MAX_DELAY) {
             this.mTimestamp = remote_time;
-            if (this.mAutoSync) {
-                this.sync(-1);
-                return;
-            }
+            this.mAutoSync = true;
+            Logger.getInstance().debug("正在同步clock");
+            // if (this.mAutoSync) {
+            this.sync(-1);
+            return;
+            //  }
         }
-        if (this.mListener && (this.mLatency.length >= MIN_READY_SAMPLES || this.mAutoSync)) this.mListener.onClockReady();
+        this.mAutoSync = false;
+        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) this.mListener.onClockReady();
         Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
 
     }

@@ -9,6 +9,7 @@ export class LoadingScene extends Phaser.Scene {
   private mRoom: IRoomService;
   private lo: Phaser.GameObjects.Sprite;
   private bg: Phaser.GameObjects.Graphics;
+  private mRequestCom: boolean = false;
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -49,7 +50,10 @@ export class LoadingScene extends Phaser.Scene {
     //   this.cameras.main.emit("renderer", this.cameras.main);
     // }
     if (this.mRoom) {
-      if (this.mRoom.clockSyncComplete) this.mRoom.completeLoad();
+      if (this.mRoom.clockSyncComplete && !this.mRequestCom) {
+        this.mRequestCom = true;
+        this.mRoom.completeLoad();
+      }
       this.mRoom.updateClock(time, delta);
     }
   }

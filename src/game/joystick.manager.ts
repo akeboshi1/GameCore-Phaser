@@ -20,6 +20,7 @@ export class JoyStickManager implements InputManager {
     private mScale: number;
     private mKeyEvents: op_def.IKeyCodeEvent[];
     private mKeyEventMap: Map<op_def.TQ_EVENT, op_def.IKeyCodeEvent>;
+    private mEnabled: boolean = false;
     constructor(private worldService: WorldService, keyEvents: op_def.IKeyCodeEvent[]) {
         this.mJoyListeners = [];
         this.mScale = worldService.uiScale;
@@ -145,10 +146,11 @@ export class JoyStickManager implements InputManager {
     }
 
     set enable(val: boolean) {
+        this.mEnabled = val;
     }
 
     get enable(): boolean {
-        return true;
+        return this.mEnabled;
     }
 }
 
@@ -216,6 +218,9 @@ export class JoyStick {
         const r = Math.atan2(dragY, dragX);
         this.btn.x = Math.cos(r) * d + this.bg.x;
         this.btn.y = Math.sin(r) * d + this.bg.y;
+        if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+            return;
+        }
         this.mJoyListeners.forEach((l: InputListener) => {
             this.checkdragDown(l, r);
         });
@@ -225,6 +230,9 @@ export class JoyStick {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         Logger.getInstance().log("dragEnd");
+        if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+            return;
+        }
         this.mJoyListeners.forEach((l: InputListener) => {
             if (this.checkdragUp()) {
                 l.upHandler();
@@ -248,6 +256,9 @@ export class JoyStick {
         if (this.mdownStr === keyArr.toString()) return false;
         this.mdownStr = keyArr.toString();
         l.downHandler(dir, keyArr);
+        // if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+        //     return false;
+        // }
         this.mWorld.roomManager.currentRoom.actor.setDirection(dir);
         return true;
     }

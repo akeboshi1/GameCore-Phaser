@@ -11,7 +11,8 @@ export class PlayScene extends Phaser.Scene {
     super(config || { key: PlayScene.name });
   }
 
-  public preload() { }
+  public preload() {
+  }
 
   public init(data: any) {
     if (data) {

@@ -1,13 +1,13 @@
-import {IElement} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
-import {ISprite} from "../element/sprite";
-import {IFramesModel} from "../display/frames.model";
-import {ElementDisplay} from "../display/element.display";
-import {IRoomService} from "../room";
-import {TerrainDisplay} from "../display/terrain.display";
-import {BlockObject} from "../cameras/block.object";
+import { IElement } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { ISprite } from "../element/sprite";
+import { IFramesModel } from "../display/frames.model";
+import { ElementDisplay } from "../display/element.display";
+import { IRoomService } from "../room";
+import { TerrainDisplay } from "../display/terrain.display";
+import { BlockObject } from "../cameras/block.object";
 import { op_client } from "pixelpai_proto";
 
 export class Terrain extends BlockObject implements IElement {

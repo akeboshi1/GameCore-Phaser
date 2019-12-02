@@ -175,13 +175,26 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public completeLoad() {
-        if (this.mScene.scene.isActive()) {
-            this.mWorld.changeScene();
-            return;
+        const dragonboneName: string = "bones_human01";
+
+        if (!this.mScene.cache.obj.has(dragonboneName)) {
+            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                this.enterRoom();
+            }, this);
+            const res = "./resources/dragonbones";
+            this.mScene.load.dragonbone(
+                dragonboneName,
+                `${res}/${dragonboneName}_tex.png`,
+                `${res}/${dragonboneName}_tex.json`,
+                `${res}/${dragonboneName}_ske.dbbin`,
+                null,
+                null,
+                { responseType: "arraybuffer" },
+            );
+            this.mScene.load.start();
+        } else {
+            this.enterRoom();
         }
-        this.mWorld.game.scene.start(PlayScene.name, {
-            room: this,
-        });
     }
 
     public startPlay() {
@@ -191,16 +204,20 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
+
+        // this.mWorld.inputManager.enable = true;
     }
 
     public pause() {
         this.mScene.scene.pause();
+        this.mWorld.inputManager.enable = false;
         this.clockSyncComplete = false;
         // todo launch
     }
 
     public resume(name: string) {
         this.mScene.scene.resume(name);
+        this.mWorld.inputManager.enable = true;
         this.mClock.sync(-1);
     }
 
@@ -265,6 +282,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
+
+        if (this.mWorld.inputManager.enable === false && this.world.game.loop.actualFps >= 20 && this.clockSyncComplete) {
+            this.mWorld.inputManager.enable = true;
+        }
         this.updateClock(time, delta);
         this.mBlocks.update(time, delta);
         // this.startCheckBlock();
@@ -376,5 +397,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // this.mWorld.game.scene.stop(MainUIScene.name);
             // this.mScene = null;
         }
+    }
+
+    private enterRoom() {
+        if (this.mScene.scene.isActive()) {
+            this.mWorld.changeScene();
+            return;
+        }
+        this.mWorld.game.scene.start(PlayScene.name, {
+            room: this,
+        });
     }
 }

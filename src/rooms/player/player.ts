@@ -42,6 +42,7 @@ export class Player extends Element {
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
+            this.mDisplay.changeDirection(dir);
             this.mDisplay.play(this.mCurState);
         }
         // Logger.log("dir1:" + dir);

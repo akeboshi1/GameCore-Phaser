@@ -1,16 +1,16 @@
-import {Font} from "../../utils/font";
-import {Logger} from "../../utils/log";
-import {DynamicSprite} from "../../ui/components/dynamic.sprite";
-import {DynamicImage} from "../../ui/components/dynamic.image";
+import { Font } from "../../utils/font";
+import { Logger } from "../../utils/log";
+import { DynamicSprite } from "../../ui/components/dynamic.sprite";
+import { DynamicImage } from "../../ui/components/dynamic.image";
 import { op_def } from "pixelpai_proto";
-import {Url} from "../../utils/resUtil";
-import {ReferenceArea} from "../editor/reference.area";
-import {IRoomService} from "../room";
-import {Pos} from "../../utils/pos";
-import {ElementDisplay} from "./element.display";
-import {IFramesModel} from "./frames.model";
-import {IDragonbonesModel} from "./dragonbones.model";
-import {IElement} from "../element/element";
+import { Url } from "../../utils/resUtil";
+import { ReferenceArea } from "../editor/reference.area";
+import { IRoomService } from "../room";
+import { Pos } from "../../utils/pos";
+import { ElementDisplay } from "./element.display";
+import { IFramesModel } from "./frames.model";
+import { IDragonbonesModel } from "./dragonbones.model";
+import { IElement } from "../element/element";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -48,6 +48,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         }
         this.alpha = val;
         this.mAlpha = val;
+    }
+
+    public changeDirection(val: number) {
+
     }
 
     public removeFromParent(): void {

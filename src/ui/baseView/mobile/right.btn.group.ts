@@ -116,13 +116,13 @@ export class RightBtnGroup extends Panel {
             // f键值为70，点击该按钮交互
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
             const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-            content.keyCodes = [70];
+            content.keyCodes = [66];
             this.mWorld.connection.send(pkt);
 
             // ========临时调试用
             const mainUIMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
             mainUIMed.tweenView(false);
-            this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
+            // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
         });
         this.add(this.handBtn);
         this.mBagSlotList = [];

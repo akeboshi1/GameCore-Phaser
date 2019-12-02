@@ -395,7 +395,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return this.mGame;
         }
         this.gameConfig = {
-            type: Phaser.AUTO,
+            type: Phaser.WEBGL,
             zoom: 1,
             parent: "game",
             scene: null,
@@ -404,7 +404,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             backgroundColor: 0x0,
             resolution: 1,
             fps: {
-                target: 60
+                target: 30
             },
             dom: {
                 createContainer: true
@@ -445,7 +445,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         };
         Object.assign(this.gameConfig, this.mConfig);
-        this.gameConfig.type = Phaser.CANVAS;
+       // this.gameConfig.type = !this.game.device.os.desktop ? Phaser.AUTO : Phaser.CANVAS;
         this.mGame = new Game(this.gameConfig);
         this.initUiScale();
         return this.mGame;
@@ -464,6 +464,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             this.mInputManager = new JoyStickManager(this, keyEvents);
         }
+        this.mInputManager.enable = false;
         this.resize(this.mConfig.width, this.mConfig.height);
         this.gameCreated();
     }

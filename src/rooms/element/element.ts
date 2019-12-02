@@ -5,7 +5,7 @@ import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
-import {op_client, op_def} from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
@@ -96,7 +96,7 @@ export class Element extends BlockObject implements IElement {
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string;
-    protected mCurDir: number;
+    protected mCurDir: number = 1;
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
 
@@ -124,6 +124,7 @@ export class Element extends BlockObject implements IElement {
                 this.mShopEntity.register();
             }
         }
+        this.mCurDir = sprite.direction;
         this.createDisplay();
         this.setPosition(sprite.pos);
         this.mDisplay.changeAlpha(sprite.alpha);
@@ -176,10 +177,10 @@ export class Element extends BlockObject implements IElement {
 
     public move(moveData: op_client.IMoveData) {
         if (!this.mElementManager) {
-            return  Logger.getInstance().error(`Element::move - Empty element-manager.`);
+            return Logger.getInstance().error(`Element::move - Empty element-manager.`);
         }
         if (!this.mDisplay) {
-            return  Logger.getInstance().error("display is undefined");
+            return Logger.getInstance().error("display is undefined");
         }
         this.mMoveData.arrivalTime = moveData.timestemp;
         this.mMoveData.destPos = new Pos(
@@ -299,7 +300,7 @@ export class Element extends BlockObject implements IElement {
             tw.remove();
         }
         const time: number = this.mMoveData.arrivalTime - this.roomService.now();
-        // Logger.debug(`time:${time},arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
+        Logger.getInstance().debug(`time:${time},posX:${this.mMoveData.destPos.x},posY:${this.mMoveData.destPos.y}`); // ,arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
         this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
             duration: time,
@@ -312,10 +313,11 @@ export class Element extends BlockObject implements IElement {
                 this.onMoveStart();
             },
             onComplete: (tween, targets, element) => {
-                // Logger.debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
+                Logger.getInstance().debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
                 this.onMoveComplete();
             },
             onUpdate: (tween, targets, element) => {
+                Logger.getInstance().debug("moveing:" + this.mDisplay.x + "-" + this.mDisplay.y);
                 this.onMoving();
             },
             onCompleteParams: [this],

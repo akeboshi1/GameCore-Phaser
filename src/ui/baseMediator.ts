@@ -69,7 +69,7 @@ export class BaseMediator implements IMediator {
 
     destroy() {
         this.isShowing = false;
-        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
+        if (this.world && this.world.emitter) this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         let view = this.getView();
         if (view) {
             view.destroy();
