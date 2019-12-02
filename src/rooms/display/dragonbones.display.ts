@@ -7,7 +7,6 @@ import { SortRectangle } from "../../utils/sort.rectangle";
 import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
-import { string } from "../../../yargs";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",

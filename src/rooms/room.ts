@@ -128,8 +128,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mID = data.id;
 
         this.mSize = {
-            cols: data.rows,
-            rows: data.cols,
+            cols: data.cols,
+            rows: data.rows,
             tileHeight: data.tileHeight,
             tileWidth: data.tileWidth,
             sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),

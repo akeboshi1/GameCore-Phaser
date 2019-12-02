@@ -29,7 +29,7 @@ export interface IElement {
     readonly id: number;
     readonly dir: number;
 
-    readonly model: ISprite;
+    model: ISprite;
 
     play(animationName: string): void;
 
@@ -89,6 +89,28 @@ export class Element extends BlockObject implements IElement {
         return this.mModel;
     }
 
+    set model(val: ISprite) {
+        this.mModel = val;
+        if (!val) {
+            return;
+        }
+        this.mDisplayInfo = this.mModel.displayInfo;
+        this.createDisplay();
+        if (!this.mDisplay) {
+            return;
+        }
+        this.setPosition(this.mModel.pos);
+        this.mDisplay.changeAlpha(this.mModel.alpha);
+        this.mDisplay.showNickname(this.mModel.nickname);
+        this.setDirection(this.mModel.direction);
+        this.setRenderable(true);
+        const frameModel = <IFramesModel> this.mDisplayInfo;
+        if (frameModel.shops) {
+            this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
+            this.mShopEntity.register();
+        }
+    }
+
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
@@ -103,34 +125,33 @@ export class Element extends BlockObject implements IElement {
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
         this.mId = sprite.id;
-        this.mModel = sprite;
-        if (sprite.avatar) {
-            this.mDisplayInfo = new DragonbonesModel(sprite);
-        } else {
+        this.model = sprite;
+        // if (sprite.avatar) {
+        //     this.mDisplayInfo = new DragonbonesModel(sprite);
+        // } else {
             // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-            let conf = null;
-            if (sprite.displayInfo) {
-                conf = sprite.displayInfo;
-            } else {
-                conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-            }
-            if (!conf) {
-                Logger.getInstance().error("object does not exist");
-                return;
-            }
-            this.mDisplayInfo = conf;
-            if (conf.shops) {
-                this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
-                this.mShopEntity.register();
-            }
-        }
-        this.mCurDir = sprite.direction;
-        this.createDisplay();
-        this.setPosition(sprite.pos);
-        this.mDisplay.changeAlpha(sprite.alpha);
-        this.mDisplay.showNickname(sprite.nickname);
-        this.setDirection(sprite.direction);
-        this.setRenderable(true);
+            // let conf = null;
+            // if (sprite.displayInfo) {
+            //     conf = sprite.displayInfo;
+            // } else {
+            //     conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
+            // }
+            // if (!conf) {
+            //     Logger.getInstance().error("object does not exist");
+            //     return;
+            // }
+            // this.mDisplayInfo = conf;
+            // if (conf.shops) {
+            //     this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
+            //     this.mShopEntity.register();
+            // }
+        // }
+        // this.createDisplay();
+        // this.setPosition(sprite.pos);
+        // this.mDisplay.changeAlpha(sprite.alpha);
+        // this.mDisplay.showNickname(sprite.nickname);
+        // this.setDirection(sprite.direction);
+        // this.setRenderable(true);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {

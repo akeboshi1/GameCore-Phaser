@@ -1,5 +1,5 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def} from "pixelpai_proto";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
 import {ConnectionService} from "../../net/connection.service";
 import {Element} from "./element";
 import {IRoomService} from "../room";
@@ -33,6 +33,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -122,10 +123,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         let point: op_def.IPBPoint3f;
+        let sprite: ISprite = null;
         for (const obj of objs) {
             point = obj.point3f;
             if (point) {
-                this._add(new Sprite(obj));
+                sprite = new Sprite(obj);
+                if (!sprite.displayInfo) {
+                    this.checkDisplay(sprite);
+                }
+                this._add(sprite);
             }
         }
     }
@@ -136,6 +142,24 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         this.roomService.blocks.add(ele);
+    }
+
+    protected checkDisplay(sprite: ISprite) {
+        if (!sprite.displayInfo) {
+            const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
+            if (displayInfo) {
+                sprite.displayInfo = displayInfo;
+            } else {
+                this.fetchDisplay([sprite.id]);
+            }
+        }
+    }
+
+    protected fetchDisplay(ids: number[]) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
+        const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
+        content.ids = ids;
+        this.connection.send(packet);
     }
 
     get roomService(): IRoomService {
@@ -157,6 +181,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         for (const id of ids) {
             this.remove(id);
+        }
+    }
+
+    protected onSync(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        let element: Element = null;
+        const sprites = content.sprites;
+        for (const sprite of sprites) {
+            element = this.get(sprite.id);
+            if (element) {
+                element.model = new Sprite(sprite);
+            }
         }
     }
 

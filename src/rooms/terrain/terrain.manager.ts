@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { IElementManager } from "../element/element.manager";
@@ -24,6 +24,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -83,7 +84,11 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
-                this._add(new Sprite(sprite));
+                const s = new Sprite(sprite);
+                if (!s.displayInfo) {
+                    this.checkDisplay(s);
+                }
+                this._add(s);
             }
         }
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
@@ -116,6 +121,39 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.remove(id);
         }
         Logger.getInstance().log("remove terrain length: ", ids.length);
+    }
+
+    protected onSyncSprite(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.TerrainNodeType) {
+            return;
+        }
+        let terrain: Terrain = null;
+        const sprites = content.sprites;
+        for (const sprite of sprites) {
+            terrain = this.get(sprite.id);
+            if (terrain) {
+                terrain.model = new Sprite(sprite);
+            }
+        }
+    }
+
+    protected checkDisplay(sprite: ISprite) {
+        if (!sprite.displayInfo) {
+            const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
+            if (displayInfo) {
+                sprite.displayInfo = displayInfo;
+            } else {
+                this.fetchDisplay([sprite.id]);
+            }
+        }
+    }
+
+    protected fetchDisplay(ids: number[]) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
+        const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
+        content.ids = ids;
+        this.connection.send(packet);
     }
 
     get connection(): ConnectionService | undefined {

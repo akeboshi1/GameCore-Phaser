@@ -21,21 +21,7 @@ export class Terrain extends BlockObject implements IElement {
         super();
         this.mId = sprite.id;
         this.mModel = sprite;
-        // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
-        let conf = null;
-        if (sprite.displayInfo) {
-            conf = sprite.displayInfo;
-        } else {
-            conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
-        }
-        if (!conf) {
-            Logger.getInstance().error("object does not exist");
-            return;
-        }
-        this.mDisplayInfo = <IFramesModel> conf;
-        this.createDisplay();
-        this.setPosition45(sprite.pos);
-        this.mDisplay.changeAlpha(sprite.alpha);
+        this.model = sprite;
     }
 
     public play(animationName: string): void {
@@ -176,5 +162,16 @@ export class Terrain extends BlockObject implements IElement {
 
     get model(): ISprite {
         return this.mModel;
+    }
+
+    set model(val: ISprite) {
+        this.mModel = val;
+        if (!val) {
+            return;
+        }
+        this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
+        this.createDisplay();
+        this.setPosition45(this.mModel.pos);
+        this.mDisplay.changeAlpha(this.mModel.alpha);
     }
 }

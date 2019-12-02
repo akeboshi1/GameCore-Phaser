@@ -364,12 +364,26 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mSelectedElementEffect) {
             return;
         }
+        switch (event.keyCode) {
+            case 37:
+            case 38:
+            case 39:
+            case 40:
+                this.moveElement(event.keyCode);
+                break;
+            case 46:
+                this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
+                break;
+        }
+    }
+
+    private moveElement(keyCode: number) {
         const display = this.mSelectedElementEffect.display;
         if (!display) {
             return;
         }
         const pos = new Pos(display.x, display.y, display.z);
-        switch (event.keyCode) {
+        switch (keyCode) {
             case 37:
                 pos.x--;
                 break;
@@ -381,9 +395,6 @@ export class EditorRoom extends Room implements EditorRoomService {
                 break;
             case 40:
                 pos.y++;
-                break;
-            case 46:
-                this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
                 break;
         }
         display.setPosition(pos.x, pos.y, pos.z);

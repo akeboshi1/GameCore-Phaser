@@ -141,9 +141,9 @@ export class LayerManager {
     }
 
     public update(time: number, delta: number) {
-        if (time - this.mDelta < 3000) {
-            return;
-        }
+        // if (time - this.mDelta < 3000) {
+        //     return;
+        // }
         this.mDelta = time;
         if (this.mDepthGround) {
             this.mGroundLayer.sort("depth");

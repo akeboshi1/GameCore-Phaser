@@ -192,7 +192,7 @@ export class MainUIPC extends Panel {
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
 
         const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
-        if (playerModel.package && playerModel.package.items) this.setDataList(playerModel.package.items);
+        if (playerModel && playerModel.package && playerModel.package.items) this.setDataList(playerModel.package.items);
         // childList.push(this.mBagBtnCon);
         super.init();
     }

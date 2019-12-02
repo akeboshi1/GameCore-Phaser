@@ -19,24 +19,24 @@ export class Actor extends Player implements InputListener {
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!
-        this.addDisplay();
+        // this.addDisplay();
         this.mRoom = this.mElementManager.roomService;
 
         this.mRoom.world.inputManager.addListener(this);
 
-        if (this.mElementManager) {
-            const roomService = this.mElementManager.roomService;
-            if (roomService && roomService.cameraService) {
-                roomService.cameraService.startFollow(this.mDisplay);
-            }
-        }
+        // if (this.mElementManager) {
+        //     const roomService = this.mElementManager.roomService;
+        //     if (roomService && roomService.cameraService) {
+        //         roomService.cameraService.startFollow(this.mDisplay);
+        //     }
+        // }
 
-        if (this.model) {
-            if (this.model.package) {
-                this.mBag = new Bag(mElementManager.roomService.world);
-                this.mBag.register();
-            }
-        }
+        // if (this.model) {
+        //     if (this.model.package) {
+        //         this.mBag = new Bag(mElementManager.roomService.world);
+        //         this.mBag.register();
+        //     }
+        // }
 
         this.mFriend = new Friend(this.mRoom.world);
         this.mRoom.playerManager.set(this.id, this);
@@ -131,5 +131,26 @@ export class Actor extends Player implements InputListener {
             return;
         }
         super.onMoving();
+    }
+
+    set model(val: ISprite) {
+        this.mModel = val;
+        if (!val) {
+            return;
+        }
+        this.mDisplayInfo = this.mModel.displayInfo;
+        this.createDisplay();
+        this.setPosition(this.mModel.pos);
+        this.mDisplay.changeAlpha(this.mModel.alpha);
+        this.mDisplay.showNickname(this.mModel.nickname);
+        this.setDirection(this.mModel.direction);
+        this.addDisplay();
+
+        if (this.mElementManager) {
+            const roomService = this.mElementManager.roomService;
+            if (roomService && roomService.cameraService) {
+                roomService.cameraService.startFollow(this.mDisplay);
+            }
+        }
     }
 }

@@ -342,6 +342,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.login();
                 return;
             } else {
+                Logger.getInstance().log("=====>>>>", this.mConfig);
                 this.mGame.scene.start(LoadingScene.name, { world: this });
                 this.mAccount.setAccount({
                     token: this.mConfig.auth_token,
@@ -358,6 +359,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
+        Logger.getInstance().log("====>>>", this.mConfig.game_id);
         if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
             Logger.getInstance().debug("缺少必要参数，无法登录游戏");
             return;
@@ -377,6 +379,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const configUrls = content.configUrls;
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
+            this.createGame();
+            return;
         }
         // Logger.log("start download gameConfig");
         this.loadGameConfig(content.configUrls)

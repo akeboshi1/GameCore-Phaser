@@ -25,7 +25,7 @@ export interface ISprite {
     readonly attributes: op_gameconfig.IAttribute[];
     readonly platformId: string;
     readonly sceneId: number;
-    readonly displayInfo: IFramesModel | IDragonbonesModel;
+    displayInfo: IFramesModel | IDragonbonesModel;
     pos: Pos;
     bindID: number;
     package: op_gameconfig.IPackage;
@@ -217,6 +217,10 @@ export class Sprite implements ISprite {
 
     get displayInfo(): IFramesModel | IDragonbonesModel {
         return this.mDisplayInfo;
+    }
+
+    set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
+        this.mDisplayInfo = displayInfo;
     }
 
     public getSlots(): SlotInfo[] {
