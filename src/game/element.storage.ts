@@ -50,7 +50,7 @@ export class ElementStorage implements IElementStorage {
         if (ele) {
             return ele.displayModel;
         }
-        Logger.getInstance().error(`can't find element ${id}`);
+        // Logger.getInstance().error(`can't find element ${id}`);
         return;
     }
 

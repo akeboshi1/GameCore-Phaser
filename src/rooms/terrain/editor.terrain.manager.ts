@@ -59,6 +59,21 @@ export class EditorTerrainManager extends TerrainManager {
         }
     }
 
+    protected _add(sprite: ISprite) {
+        let terrain = this.mTerrains.get(sprite.id);
+        if (!terrain) {
+            terrain = new Terrain(sprite, this);
+            terrain.setBlockable(false);
+            terrain.setRenderable(true);
+        } else {
+            return;
+        }
+        // TODO update terrain
+        this.mTerrains.set(terrain.id || 0, terrain);
+        // this.roomService.blocks.add(terrain);
+        return terrain;
+    }
+
     protected onRemove(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;

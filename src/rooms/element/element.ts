@@ -58,6 +58,8 @@ export interface IElement {
     removeMe(): void;
 
     toSprite(): op_client.ISprite;
+
+    setBlockable(val: boolean): this;
 }
 
 export interface MoveData {
@@ -121,6 +123,7 @@ export class Element extends BlockObject implements IElement {
     protected mCurDir: number = 1;
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
+    protected mBlockable: boolean = true;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
@@ -287,6 +290,20 @@ export class Element extends BlockObject implements IElement {
         return sprite;
     }
 
+    public setBlockable(val: boolean): this {
+        if (this.mBlockable !== val) {
+            this.mBlockable = val;
+            if (this.mDisplay && this.roomService) {
+                if (val) {
+                    this.roomService.addBlockObject(this);
+                } else {
+                    this.roomService.removeBlockObject(this);
+                }
+            }
+        }
+        return this;
+    }
+
     public destroy() {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();
@@ -295,6 +312,9 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData = null;
         }
         if (this.mDisplay) {
+            if (this.mBlockable) {
+                this.roomService.removeBlockObject(this);
+            }
             this.mDisplay.destroy();
             this.mDisplay = null;
         }
@@ -306,6 +326,7 @@ export class Element extends BlockObject implements IElement {
             this.mShopEntity.destroy();
             this.mShopEntity = null;
         }
+
         super.destroy();
     }
 
@@ -362,6 +383,11 @@ export class Element extends BlockObject implements IElement {
             }
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);
+            if (this.mBlockable) {
+                this.roomService.addBlockObject(this);
+            } else {
+                this.addDisplay();
+            }
         }
         return this.mDisplay;
     }

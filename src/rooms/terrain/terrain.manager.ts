@@ -24,7 +24,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -61,9 +61,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (terrain) {
             this.mTerrains.delete(id);
             terrain.destroy();
-            if (this.roomService) {
-                this.roomService.blocks.remove(terrain);
-            }
         }
     }
 
@@ -97,17 +94,18 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         Logger.getInstance().log("terrain number: ", this.mTerrains.size);
     }
 
-    protected _add(sprite: ISprite) {
+    protected _add(sprite: ISprite): Terrain {
         let terrain = this.mTerrains.get(sprite.id);
         if (!terrain) {
             terrain = new Terrain(sprite, this);
-            terrain.setRenderable(true);
+            // terrain.setRenderable(true);
         } else {
             return;
         }
         // TODO update terrain
         this.mTerrains.set(terrain.id || 0, terrain);
-        this.roomService.blocks.add(terrain);
+        // this.roomService.blocks.add(terrain);
+        return terrain;
     }
 
     protected onRemove(packet: PBpacket) {
@@ -134,6 +132,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain = this.get(sprite.id);
             if (terrain) {
                 terrain.model = new Sprite(sprite);
+                terrain.setRenderable(true);
             }
         }
     }

@@ -5,6 +5,7 @@ import { SlotInfo } from "../player/slot.info";
 import {FramesModel, IFramesModel} from "../display/frames.model";
 import {Animation} from "../display/animation";
 import Helpers from "../../utils/helpers";
+import NodeType = op_def.NodeType;
 
 export interface ISprite {
     readonly id: number;
@@ -25,6 +26,7 @@ export interface ISprite {
     readonly attributes: op_gameconfig.IAttribute[];
     readonly platformId: string;
     readonly sceneId: number;
+    readonly nodeType: op_def.NodeType;
     displayInfo: IFramesModel | IDragonbonesModel;
     pos: Pos;
     bindID: number;
@@ -58,12 +60,13 @@ export class Sprite implements ISprite {
     protected mUuid: number;
     protected mPlatformId: string;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+    protected mNodeType: NodeType;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
     protected _originCollisionPoint: Phaser.Geom.Point;
 
-    constructor(obj: op_client.ISprite) {
+    constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         this.mID = obj.id;
         if (obj.point3f) {
             const point = obj.point3f;
@@ -94,6 +97,7 @@ export class Sprite implements ISprite {
         this.mBindID = obj.bindId;
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.mDisplayBadgeCards = obj.displayBadgeCards;
+        this.mNodeType = nodeType;
     }
 
     public toSprite(): op_client.ISprite {
@@ -221,6 +225,10 @@ export class Sprite implements ISprite {
 
     set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+    }
+
+    get nodeType(): NodeType {
+        return this.mNodeType;
     }
 
     public getSlots(): SlotInfo[] {

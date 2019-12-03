@@ -1,10 +1,12 @@
 import {ElementManager} from "./element.manager";
-import { ISprite } from "./sprite";
+import { ISprite, Sprite } from "./sprite";
 import {PBpacket} from "net-socket-packet";
 import {op_editor, op_def, op_client} from "pixelpai_proto";
 import {IRoomService} from "../room";
 import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
+import { Element } from "./element";
+import NodeType = op_def.NodeType;
 
 export class EditorElementManager extends ElementManager {
     constructor(room: IRoomService) {
@@ -17,13 +19,16 @@ export class EditorElementManager extends ElementManager {
     }
 
     add(sprites: ISprite[]) {
+        if (!sprites && sprites.length === 0) {
+            return;
+        }
         for (const sprite of sprites) {
             this._add(sprite);
         }
 
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
         const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
-        content.nodeType = op_def.NodeType.ElementNodeType;
+        content.nodeType = sprites[0].nodeType;
         content.sprites = sprites.map((sprite) => sprite.toSprite());
         this.connection.send(pkt);
         Logger.getInstance().log("add sprites: ", content);
@@ -36,6 +41,37 @@ export class EditorElementManager extends ElementManager {
             content.ids = [id];
             this.connection.send(pkt);
         }
+    }
+
+    protected onAdd(packet: PBpacket) {
+        if (!this.mRoom.layerManager) {
+            Logger.getInstance().error("layer manager does not exist");
+            return;
+        }
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
+        const objs: op_client.ISprite[] | undefined = content.sprites;
+        if (!objs) return;
+        const type = content.nodeType;
+        if (type !== NodeType.ElementNodeType && type !== NodeType.SpawnPointType) {
+            return;
+        }
+        let point: op_def.IPBPoint3f;
+        for (const obj of objs) {
+            point = obj.point3f;
+            if (point) {
+                this._add(new Sprite(obj));
+            }
+        }
+    }
+
+    protected _add(sprite: ISprite): Element {
+        let ele = this.mElements.get(sprite.id);
+        if (!ele) ele = new Element(sprite, this);
+        ele.setBlockable(false);
+        ele.setRenderable(true);
+        // TODO udpate element
+        this.mElements.set(ele.id || 0, ele);
+        return ele;
     }
 
     protected tryRemove(id) {
@@ -54,7 +90,7 @@ export class EditorElementManager extends ElementManager {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
-        if (type !== op_def.NodeType.ElementNodeType) {
+        if (type !== NodeType.ElementNodeType && type !== NodeType.SpawnPointType) {
             return;
         }
         for (const id of ids) {

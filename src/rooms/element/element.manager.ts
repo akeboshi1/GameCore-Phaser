@@ -33,7 +33,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -57,9 +57,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (element) {
             this.mElements.delete(id);
             element.destroy();
-            if (this.roomService) {
-                this.roomService.blocks.remove(element);
-            }
         }
     }
 
@@ -136,12 +133,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected _add(sprite: ISprite) {
+    protected _add(sprite: ISprite): Element {
         let ele = this.mElements.get(sprite.id);
         if (!ele) ele = new Element(sprite, this);
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
-        this.roomService.blocks.add(ele);
+        return ele;
     }
 
     protected checkDisplay(sprite: ISprite) {

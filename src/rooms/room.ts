@@ -20,7 +20,7 @@ import IActor = op_client.IActor;
 import { Map } from "./map/map";
 import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
-import { Element, IElement } from "./element/element";
+import { IElement } from "./element/element";
 import { Size } from "../utils/size";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -67,6 +67,10 @@ export interface IRoomService {
     transformTo45(p: Pos): Pos;
 
     transformTo90(p: Pos): Pos;
+
+    addBlockObject(object: IElement);
+
+    removeBlockObject(object: IElement);
 
     addToGround(element: ElementDisplay | ElementDisplay[]);
 
@@ -238,6 +242,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mActorData = data;
         // const playerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
         // playerDataModel.setmainPlayerInfo(data);
+    }
+
+    public addBlockObject(object: IElement) {
+        if (this.blocks) {
+            this.blocks.add(object);
+        }
+    }
+
+    public removeBlockObject(object: IElement) {
+        if (this.blocks) {
+            this.blocks.remove(object);
+        }
     }
 
     public addToGround(element: ElementDisplay | ElementDisplay[]) {

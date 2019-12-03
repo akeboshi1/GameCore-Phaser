@@ -16,6 +16,7 @@ export class Terrain extends BlockObject implements IElement {
     protected mDisplay: TerrainDisplay | undefined;
     protected mAnimationName: string;
     protected mModel: ISprite;
+    protected mBlockable: boolean = true;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
@@ -74,7 +75,7 @@ export class Terrain extends BlockObject implements IElement {
         this.mElementManager.remove(this.id);
     }
 
-    toSprite(): op_client.ISprite {
+    public toSprite(): op_client.ISprite {
         const sprite = op_client.Sprite.create();
         sprite.id = this.id;
         if (this.mDisplay) {
@@ -85,9 +86,30 @@ export class Terrain extends BlockObject implements IElement {
         return sprite;
     }
 
+    public setBlockable(val: boolean): this {
+        if (this.mBlockable !== val) {
+            this.mBlockable = val;
+            if (this.mDisplay && this.roomService) {
+                if (val) {
+                    this.roomService.addBlockObject(this);
+                } else {
+                    this.roomService.removeBlockObject(this);
+                }
+            }
+        }
+        return this;
+    }
+
+    public destroy() {
+        if (this.mBlockable && this.mDisplay) {
+            this.roomService.removeBlockObject(this);
+        }
+        super.destroy();
+    }
+
     protected createDisplay(): ElementDisplay {
         if (!this.mDisplayInfo) {
-            Logger.getInstance().error("displayinfo does not exist, Create display failed");
+            // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
         if (this.mDisplay) {
@@ -96,6 +118,11 @@ export class Terrain extends BlockObject implements IElement {
         const scene = this.mElementManager.scene;
         if (scene) {
             this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
+            if (this.mBlockable) {
+                this.roomService.addBlockObject(this);
+            } else {
+                this.addDisplay();
+            }
             // this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;
@@ -104,7 +131,7 @@ export class Terrain extends BlockObject implements IElement {
     protected addDisplay() {
         this.createDisplay();
         if (!this.mDisplay) {
-            Logger.getInstance().error("display does not exist");
+            // Logger.getInstance().error("display does not exist");
             return;
         }
         this.mDisplay.load(this.mDisplayInfo);
@@ -117,6 +144,7 @@ export class Terrain extends BlockObject implements IElement {
             Logger.getInstance().error("roomService does not exist");
             return;
         }
+
         room.addToGround(this.mDisplay);
         this.setDepth();
     }
@@ -171,7 +199,11 @@ export class Terrain extends BlockObject implements IElement {
         }
         this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         this.createDisplay();
+        if (!this.mDisplay) {
+            return;
+        }
         this.setPosition45(this.mModel.pos);
-        this.mDisplay.changeAlpha(this.mModel.alpha);
+        this.addDisplay();
+        // this.mDisplay.changeAlpha(this.mModel.alpha);
     }
 }

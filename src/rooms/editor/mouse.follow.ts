@@ -33,7 +33,7 @@ export class MouseFollow {
             this.mDisplay.destroy();
             this.mDisplay = null;
         }
-        this.mSprite = new Sprite(content.sprite);
+        this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
         this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, this.mSize);
         this.mLayerManager.addToSceneToUI(this.mDisplay);
@@ -71,10 +71,12 @@ export class MouseFollow {
         let sprite: ISprite = null;
         const displays = this.mDisplay.displays;
         for (const display of displays) {
+            // deep clone
             sprite = Object.assign(Object.create(Object.getPrototypeOf(this.mSprite)), this.mSprite);
             sprite.newID();
             sprite.pos = this.getPosition(display.x, display.y);
             sprite.bindID = this.mSprite.id;
+            // sprite.nodeType = this.mSprite.node
             result.push(sprite);
         }
         return result;

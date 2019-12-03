@@ -43,8 +43,8 @@ export class Viewblock {
         if (this.mInCamera) {
             for (const ele of this.mElements) {
                 const pos = ele.getPosition45();
-                ele.setRenderable(true, 0);
-               // ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1200);
+                // ele.setRenderable(true, 0);
+                ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1200);
             }
         }
         this.mInCamera = newStat;
