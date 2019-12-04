@@ -33,12 +33,13 @@ export class MouseFollow {
             this.mDisplay.destroy();
             this.mDisplay = null;
         }
+        this.mNodeType = content.nodeType;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
-        this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, this.mSize);
+        const size = this.mNodeType === NodeType.TerrainNodeType ? this.mSize : 1;
+        this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, size);
         this.mLayerManager.addToSceneToUI(this.mDisplay);
 
-        this.mNodeType = content.nodeType;
         if (this.mNodeType === NodeType.TerrainNodeType) {
             this.mElementManager = this.mRoomService.terrainManager;
         } else if (this.mNodeType === NodeType.ElementNodeType || this.mNodeType === NodeType.SpawnPointType) {
@@ -144,15 +145,7 @@ export class MouseFollow {
     }
 
     private onPointerMoveHandler(pointer) {
-        if (!this.mDisplay) {
-            return;
-        }
-        const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
-        if (!pos) {
-            return;
-        }
-        this.mDisplay.x = pos.x - (this.mDisplay.tileWidth >> 1);
-        this.mDisplay.y = pos.y - (this.mDisplay.tileHeight >> 1);
+        this.updatePos(pointer.worldX, pointer.worldY);
     }
 
     private getPosition(rows: number = 0, cols: number = 0) {
@@ -168,12 +161,28 @@ export class MouseFollow {
         return pos;
     }
 
-    private onWheelHandler(pointer, currentOver, dx, dy) {
+    private onWheelHandler(pointer) {
+        if (this.mNodeType !== NodeType.TerrainNodeType) {
+            return;
+        }
         if (pointer.deltaY < 0) {
             this.size--;
         } else {
             this.size++;
         }
+        this.updatePos(pointer.worldX, pointer.worldY);
+    }
+
+    private updatePos(worldX: number, worldY: number) {
+        if (!this.mDisplay) {
+            return;
+        }
+        const pos = this.transitionGrid(worldX, worldY);
+        if (!pos) {
+            return;
+        }
+        this.mDisplay.x = pos.x - (this.mDisplay.tileWidth >> 1);
+        this.mDisplay.y = pos.y - (this.mDisplay.tileHeight >> 1);
     }
 
     set alignGrid(val: boolean) {
