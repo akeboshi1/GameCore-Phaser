@@ -46,7 +46,7 @@ export class SelectedElement {
             return;
         }
         const baseLoc = this.mDisplay.baseLoc;
-        this.mEffecte.x = this.mDisplay.x + baseLoc.x;
+        this.mEffecte.x = this.mDisplay.x + baseLoc.x + (this.mDisplay.spriteWidth >> 1);
         this.mEffecte.y = this.mDisplay.y + baseLoc.y;
     }
 

@@ -146,29 +146,43 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         }
     }
 
-    public fadeIn(callback?: () => void) {
-        this.clearFadeTween();
-        this.alpha = 0;
-        this.mFadeTween = this.scene.tweens.add({
-            targets: this,
-            alpha: 1,
-            duration: 1200,
-            onComplete: () => {
-                if (callback) callback();
-            }
-        });
+    // public fadeIn(callback?: () => void) {
+    //     this.clearFadeTween();
+    //     this.alpha = 0;
+    //     this.mFadeTween = this.scene.tweens.add({
+    //         targets: this,
+    //         alpha: 1,
+    //         duration: 1200,
+    //         onComplete: () => {
+    //             if (callback) callback();
+    //         }
+    //     });
+    // }
+
+    // public fadeOut(callback?: () => void) {
+    //     this.clearFadeTween();
+    //     this.mFadeTween = this.scene.tweens.add({
+    //         targets: this,
+    //         alpha: 0,
+    //         duration: 1200,
+    //         onComplete: () => {
+    //             if (callback) callback();
+    //         }
+    //     });
+    // }
+
+    get spriteWidth(): number {
+        if (this.mArmatureDisplay) {
+            return this.mArmatureDisplay.width;
+        }
+        return 0;
     }
 
-    public fadeOut(callback?: () => void) {
-        this.clearFadeTween();
-        this.mFadeTween = this.scene.tweens.add({
-            targets: this,
-            alpha: 0,
-            duration: 1200,
-            onComplete: () => {
-                if (callback) callback();
-            }
-        });
+    get spriteHeight(): number {
+        if (this.mArmatureDisplay) {
+            return this.mArmatureDisplay.height;
+        }
+        return 0;
     }
 
     public destroy() {

@@ -205,4 +205,20 @@ export class FramesDisplay extends DisplayObject {
         this.mSprites.set(field, sprite);
         this.emit("initialized", this);
     }
+
+    get spriteWidth(): number {
+        const sprite = this.mSprites.get(DisplayField.STAGE);
+        if (sprite) {
+            return sprite.width;
+        }
+        return 0;
+    }
+
+    get spriteHeight(): number {
+        const sprite = this.mSprites.get(DisplayField.STAGE);
+        if (sprite) {
+            return sprite.height;
+        }
+        return 0;
+    }
 }
