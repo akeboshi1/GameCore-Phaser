@@ -70,9 +70,9 @@ export class ViewblockManager implements ViewblockService {
 
     public update(time: number, delta: number): void {
         if (!this.mCameras) return;
-        if (time - this.mDelay < 3000) {
-            return;
-        }
+        // if (time - this.mDelay < 3000) {
+        //     return;
+        // }
         this.mDelay = time;
         const bound: Phaser.Geom.Rectangle = this.mCameras.getViewPort();
         const miniViewPort = this.mCameras.getMiniViewPort();

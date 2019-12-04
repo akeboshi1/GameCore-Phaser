@@ -172,7 +172,7 @@ export class Element extends BlockObject implements IElement {
         this.mDisplay.changeAlpha(this.mModel.alpha);
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
-        this.setRenderable(true);
+        // this.setRenderable(true);
         const frameModel = <IFramesModel> this.mDisplayInfo;
         if (frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);

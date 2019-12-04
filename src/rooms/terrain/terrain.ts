@@ -36,7 +36,7 @@ export class Terrain extends BlockObject implements IElement {
             return;
         }
         this.setPosition45(this.mModel.pos);
-        this.addDisplay();
+        // this.addDisplay();
     }
 
     public play(animationName: string): void {
