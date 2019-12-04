@@ -50,10 +50,6 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         this.mAlpha = val;
     }
 
-    public changeDirection(val: number) {
-
-    }
-
     public removeFromParent(): void {
         if (this.parentContainer) {
             this.parentContainer.remove(this);

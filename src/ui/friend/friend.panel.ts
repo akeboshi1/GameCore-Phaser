@@ -8,6 +8,7 @@ import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { Geom } from "phaser";
 import { MainUIMediator } from "../baseView/mainUI.mediator";
+import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 export interface IFriendIcon {
     res: string;
     name: string;
@@ -165,7 +166,9 @@ export class FriendPanel extends Panel {
         this.mUpBtn.setInteractive();
         this.mDownBtn.on("pointerup", this.downHandler, this);
         this.mUpBtn.on("pointerup", this.upHandler, this);
-
+        const image = this.scene.make.image(undefined, false);
+        image.setTexture((this.mWorld.roomManager.currentRoom.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
+        this.add(image);
         this.onClsLoadCompleteHandler();
         this.initFriendItem();
         super.init();
@@ -206,23 +209,23 @@ export class FriendPanel extends Panel {
             }
             item.visible = true;
             dat.index = i;
-            item.dataChange(dat);
-            this.add(item);
+            // item.dataChange(dat);
+            // this.add(item);
         }
         this.add(this.mUpBtn);
         this.add(this.mDownBtn);
     }
 
     private refreshDataList() {
-        if (!this.mFriendDataList || !this.mFriendList) return;
-        const len: number = this.mFriendDataList.length > FriendPanel.count ? FriendPanel.count : this.mFriendDataList.length;
-        for (let i: number = 0; i < len; i++) {
-            const item: FriendItem = this.mFriendList[i];
-            let dat = this.mFriendDataList[this.mIndex * FriendPanel.count + i];
-            if (!dat) dat = {};
-            dat.index = i;
-            item.dataChange(dat);
-        }
+        // if (!this.mFriendDataList || !this.mFriendList) return;
+        // const len: number = this.mFriendDataList.length > FriendPanel.count ? FriendPanel.count : this.mFriendDataList.length;
+        // for (let i: number = 0; i < len; i++) {
+        //     const item: FriendItem = this.mFriendList[i];
+        //     let dat = this.mFriendDataList[this.mIndex * FriendPanel.count + i];
+        //     if (!dat) dat = {};
+        //     dat.index = i;
+        //     item.dataChange(dat);
+        // }
     }
 
     private initFriendItem() {

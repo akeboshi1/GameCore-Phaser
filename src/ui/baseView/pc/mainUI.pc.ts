@@ -198,8 +198,8 @@ export class MainUIPC extends Panel {
     }
 
     private bagHandler() {
-        this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
-        // this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+       // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
+        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
     }
 

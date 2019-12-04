@@ -1,26 +1,9 @@
-import { Element } from "../element/element";
+import { Element, PlayerState } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Logger } from "../../utils/log";
-
-export enum PlayerState {
-    IDLE = "idle",
-    WALK = "walk",
-    RUN = "run",
-    ATTACK = "attack",
-    JUMP = "jump",
-    INJURED = "injured",
-    FAILED = "failed",
-    DANCE01 = "dance01",
-    DANCE02 = "dance02",
-    FISHING = "fishing",
-    GREET01 = "greet01",
-    SIT = "sit",
-    LIE = "lit",
-    EMOTION01 = "emotion01",
-}
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -47,7 +30,6 @@ export class Player extends Element {
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
-            this.mDisplay.changeDirection(dir);
             this.mDisplay.play(this.mCurState);
         }
         // Logger.log("dir1:" + dir);

@@ -22,6 +22,8 @@ import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { IElement } from "./element/element";
 import { Size } from "../utils/size";
+import { number } from "../../yargs";
+import { ResUtils, Url } from "../utils/resUtil";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -179,8 +181,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public completeLoad() {
-        const dragonboneName: string = "bones_human01";
-
+        const dragonboneName = "bones_human01";
         if (!this.mScene.cache.obj.has(dragonboneName)) {
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 this.enterRoom();

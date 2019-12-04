@@ -14,6 +14,23 @@ import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
 
+export enum PlayerState {
+    IDLE = "idle",
+    WALK = "walk",
+    RUN = "run",
+    ATTACK = "attack",
+    JUMP = "jump",
+    INJURED = "injured",
+    FAILED = "failed",
+    DANCE01 = "dance01",
+    DANCE02 = "dance02",
+    FISHING = "fishing",
+    GREET01 = "greet01",
+    SIT = "sit",
+    LIE = "lit",
+    EMOTION01 = "emotion01",
+}
+
 export enum Direction {
     up,
     up_left,
@@ -99,7 +116,7 @@ export class Element extends BlockObject implements IElement {
     protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
-    protected mCurState: string;
+    protected mCurState: string = PlayerState.IDLE;
     protected mCurDir: number = 1;
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;

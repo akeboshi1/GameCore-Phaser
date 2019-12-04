@@ -12,7 +12,6 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
     sortX: number;
     sortY: number;
     changeAlpha(val?: number);
-    changeDirection(val: number);
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField);
 
     play(animationName: string, field?: DisplayField);
