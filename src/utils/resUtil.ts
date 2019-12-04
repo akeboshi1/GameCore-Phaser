@@ -1,5 +1,6 @@
 import * as url from "url";
 import * as path from "path";
+import { HTTP_REGEX } from "../const/constants";
 export class Url {
     static getRes(value: string): string {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
@@ -25,6 +26,9 @@ export class ResUtils {
         return CONFIG.osd + "avatar/part/" + value + ".png";
     }
     static getGameConfig(value: string): string {
+        if (HTTP_REGEX.test(value)) {
+            return value;
+        }
         return CONFIG.osd + value;
     }
 }

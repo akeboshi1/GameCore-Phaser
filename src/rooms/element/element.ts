@@ -412,6 +412,8 @@ export class Element extends BlockObject implements IElement {
             } else {
                 this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
             }
+            const pos = this.mModel.pos;
+            this.mDisplay.setPosition(pos.x, pos.y, pos.z);
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);
             if (this.mBlockable) {

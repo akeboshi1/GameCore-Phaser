@@ -22,8 +22,6 @@ import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { IElement } from "./element/element";
 import { Size } from "../utils/size";
-import { number } from "../../yargs";
-import { ResUtils, Url } from "../utils/resUtil";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }

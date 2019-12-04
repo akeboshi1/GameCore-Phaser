@@ -135,6 +135,7 @@ export class Terrain extends BlockObject implements IElement {
         const scene = this.mElementManager.scene;
         if (scene) {
             this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
+            this.setPosition45(this.model.pos);
             if (this.mBlockable) {
                 this.roomService.addBlockObject(this);
             } else {
