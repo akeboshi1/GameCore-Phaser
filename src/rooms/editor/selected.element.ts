@@ -36,8 +36,10 @@ export class SelectedElement {
         if (this.mEffecte.parentContainer) {
             this.mEffecte.parentContainer.remove(this.mEffecte);
         }
-        this.mDisplay.hideRefernceArea();
-        this.mDisplay.showNickname("");
+        if (this.mDisplay.parentContainer) {
+            this.mDisplay.hideRefernceArea();
+            this.mDisplay.showNickname("");
+        }
         this.mDisplay = null;
     }
 
@@ -64,6 +66,7 @@ export class SelectedElement {
         }
         this.remove();
         this.mEffecte.destroy();
+        this.mEffecte = null;
     }
 
     get display(): FramesDisplay | DragonbonesDisplay {

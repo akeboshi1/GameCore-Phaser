@@ -35,12 +35,14 @@ export class EditorElementManager extends ElementManager {
     }
 
     remove(id: number) {
-        if (this.tryRemove(id)) {
+        const ele = this.tryRemove(id);
+        if (ele) {
             const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
             const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
             content.ids = [id];
             this.connection.send(pkt);
         }
+        return ele;
     }
 
     protected onAdd(packet: PBpacket) {

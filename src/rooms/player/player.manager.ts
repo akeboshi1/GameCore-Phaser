@@ -8,6 +8,7 @@ import { Pos } from "../../utils/pos";
 import { ISprite, Sprite } from "../element/sprite";
 import { MessageType } from "../../const/MessageType";
 import { Player } from "./player";
+import { IElement } from "../element/element";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
@@ -78,15 +79,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     add(sprite: ISprite[]) {
     }
 
-    public remove(id: number): void {
+    public remove(id: number): IElement {
         const element = this.mPlayerMap.get(id);
         if (element) {
             this.mPlayerMap.delete(id);
             element.destroy();
-            if (this.roomService) {
-                this.roomService.blocks.remove(element);
-            }
         }
+        return element;
     }
 
     public set(id: number, player: Player) {

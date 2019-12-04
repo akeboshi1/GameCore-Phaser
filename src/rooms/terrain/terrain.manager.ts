@@ -7,6 +7,7 @@ import { IElementManager } from "../element/element.manager";
 import { Logger } from "../../utils/log";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "../element/sprite";
+import { IElement } from "../element/element";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
@@ -55,13 +56,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     public add(sprite: ISprite[]) {
     }
 
-    public remove(id: number): void {
+    public remove(id: number): IElement {
         if (!this.mTerrains) return;
         const terrain = this.mTerrains.get(id);
         if (terrain) {
             this.mTerrains.delete(id);
             terrain.destroy();
         }
+        return terrain;
     }
 
     protected onAdd(packet: PBpacket) {

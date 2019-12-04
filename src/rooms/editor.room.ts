@@ -372,7 +372,17 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.moveElement(event.keyCode);
                 break;
             case 46:
-                this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
+                if (!this.mSelectedElementEffect.display) {
+                    return;
+                }
+                if (!this.mSelectedElementEffect.display.element) {
+                    return;
+                }
+                const ele = this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
+                Logger.getInstance().log("element: ", ele);
+                if (ele) {
+                    this.mSelectedElementEffect.remove();
+                }
                 break;
         }
     }

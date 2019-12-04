@@ -6,6 +6,7 @@ import {IRoomService, SpriteAddCompletedListener} from "../room";
 import {Terrain} from "./terrain";
 import {Pos} from "../../utils/pos";
 import {Logger} from "../../utils/log";
+import { IElement } from "../element/element";
 
 export class EditorTerrainManager extends TerrainManager {
     constructor(room: IRoomService, listener?: SpriteAddCompletedListener) {
@@ -35,15 +36,17 @@ export class EditorTerrainManager extends TerrainManager {
         this.connection.send(pkt);
     }
 
-    remove(id: number): void {
+    remove(id: number): IElement {
         if (!this.mTerrains) return;
-        if (this.tryRemove(id)) {
+        const element = this.tryRemove(id);
+        if (element) {
             const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
             const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
             content.ids = [id];
             content.nodeType = op_def.NodeType.TerrainNodeType;
             this.connection.send(pkt);
         }
+        return element;
     }
 
     removeFormPositions(locations: Pos[]) {

@@ -1,7 +1,7 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
 import {ConnectionService} from "../../net/connection.service";
-import {Element} from "./element";
+import {Element, IElement} from "./element";
 import {IRoomService} from "../room";
 import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
@@ -14,7 +14,7 @@ export interface IElementManager {
     readonly scene: Phaser.Scene | undefined;
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
     add(sprite: ISprite[]);
-    remove(id: number): void;
+    remove(id: number): IElement;
     destroy();
 }
 
@@ -52,12 +52,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return element;
     }
 
-    public remove(id: number) {
+    public remove(id: number): IElement {
         const element = this.mElements.get(id);
         if (element) {
             this.mElements.delete(id);
             element.destroy();
         }
+        return element;
     }
 
     public add(sprite: ISprite[]) {
