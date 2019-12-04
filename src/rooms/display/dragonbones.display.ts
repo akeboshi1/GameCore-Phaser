@@ -2,8 +2,6 @@ import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
 import { Logger } from "../../utils/log";
-import { IFramesModel } from "./frames.model";
-import { SortRectangle } from "../../utils/sort.rectangle";
 import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
@@ -96,10 +94,26 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
      * 龙骨显示对象包围框
      */
     private mClickCon: Phaser.GameObjects.Container;
-    private mClickGraphics: Phaser.GameObjects.Graphics;
+    // private mClickGraphics: Phaser.GameObjects.Graphics;
+
+    private mDragonBonesRenderTexture: Phaser.GameObjects.RenderTexture;
 
     public constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement) {
         super(scene, roomService, element);
+    }
+
+    get spriteWidth(): number {
+        if (this.mArmatureDisplay) {
+            return this.mArmatureDisplay.width;
+        }
+        return 0;
+    }
+
+    get spriteHeight(): number {
+        if (this.mArmatureDisplay) {
+            return this.mArmatureDisplay.height;
+        }
+        return 0;
     }
 
     get GameObject(): DisplayObject {
@@ -108,11 +122,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     public changeAlpha(val?: number) {
         // this.alpha = val;
-    }
-
-    public changeDirection(dir: number) {
-        this.getReplaceArr();
-        this.showReplaceArmatrue();
     }
 
     public load(display: IDragonbonesModel) {
@@ -127,7 +136,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     public play(val: string) {
-        let dir: number = this.mDisplayInfo !== undefined ? this.mDisplayInfo.avatarDir : 3;
+        let dir: number = this.mDisplayInfo !== undefined && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
         dir = dir !== 0 ? dir : 3;
         if (this.mActionName !== val || this.mPreDirection !== dir) {
             let trunDir: string = "";
@@ -146,43 +155,29 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         }
     }
 
-    // public fadeIn(callback?: () => void) {
-    //     this.clearFadeTween();
-    //     this.alpha = 0;
-    //     this.mFadeTween = this.scene.tweens.add({
-    //         targets: this,
-    //         alpha: 1,
-    //         duration: 1200,
-    //         onComplete: () => {
-    //             if (callback) callback();
-    //         }
-    //     });
-    // }
-
-    // public fadeOut(callback?: () => void) {
-    //     this.clearFadeTween();
-    //     this.mFadeTween = this.scene.tweens.add({
-    //         targets: this,
-    //         alpha: 0,
-    //         duration: 1200,
-    //         onComplete: () => {
-    //             if (callback) callback();
-    //         }
-    //     });
-    // }
-
-    get spriteWidth(): number {
-        if (this.mArmatureDisplay) {
-            return this.mArmatureDisplay.width;
-        }
-        return 0;
+    public fadeIn(callback?: () => void) {
+        this.clearFadeTween();
+        this.alpha = 0;
+        this.mFadeTween = this.scene.tweens.add({
+            targets: this,
+            alpha: 1,
+            duration: 1200,
+            onComplete: () => {
+                if (callback) callback();
+            }
+        });
     }
 
-    get spriteHeight(): number {
-        if (this.mArmatureDisplay) {
-            return this.mArmatureDisplay.height;
-        }
-        return 0;
+    public fadeOut(callback?: () => void) {
+        this.clearFadeTween();
+        this.mFadeTween = this.scene.tweens.add({
+            targets: this,
+            alpha: 0,
+            duration: 1200,
+            onComplete: () => {
+                if (callback) callback();
+            }
+        });
     }
 
     public destroy() {
@@ -191,11 +186,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mArmatureDisplay.dispose(true);
             this.mArmatureDisplay = null;
         }
-        if (this.mClickGraphics) {
-            this.mClickGraphics.clear();
-            this.mClickGraphics.destroy(true);
-            this.mClickGraphics = null;
-        }
+        // if (this.mClickGraphics) {
+        //     this.mClickGraphics.clear();
+        //     this.mClickGraphics.destroy(true);
+        //     this.mClickGraphics = null;
+        // }
         if (this.mClickCon) {
             this.mClickCon.destroy(true);
             this.mClickCon = null;
@@ -229,7 +224,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.dragonBonesName,
         );
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
-        this.clearArmature();
+        this.clearArmatureSlot();
 
         // ==========替换相应格位的display，服务端通信后可调用
         this.getReplaceArr();
@@ -239,16 +234,15 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.mArmatureDisplay.x = this.baseLoc.x;
         this.mArmatureDisplay.y = this.baseLoc.y;
         const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
-        if (!this.mClickGraphics) {
-
-            this.mClickGraphics = this.scene.add.graphics();
-            this.mClickGraphics.fillStyle(0xff0000);
-            this.mClickGraphics.fillRectShape(rect);
-            this.mClickGraphics.visible = false;
-            this.add(this.mClickGraphics);
-        }
+        // if (!this.mClickGraphics) {
+        //     this.mClickGraphics = this.scene.add.graphics();
+        //     this.mClickGraphics.fillStyle(0xff0000, 1);
+        //     this.mClickGraphics.fillRectShape(rect);
+        //     this.mClickGraphics.visible = false;
+        //     this.add(this.mClickGraphics);
+        // }
         if (!this.mClickCon) {
-            this.mClickCon = this.scene.add.container(0, 0, this.mClickGraphics);
+            this.mClickCon = this.scene.make.container(undefined, false);
             this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
             this.mClickCon.x = -rect.width >> 1;
             this.mClickCon.y = -rect.height;
@@ -286,7 +280,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.scene.load.start();
     }
 
-    private clearArmature() {
+    private clearArmatureSlot() {
         const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
         const len: number = slotList.length;
         for (let i: number = 0; i < len; i++) {
@@ -324,13 +318,17 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private getReplaceArr() {
         this.replaceArr.length = 0;
         const avater: IAvatar = this.mDisplayInfo.avatar;
-        let dir: number = this.mDisplayInfo && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
-        dir = dir === 5 || dir === 3 ? 3 : 1;
         if (avater.bodyBaseId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyBase,
                 part: AvatarPartType.BodyBase,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.bodyBaseId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BodyBase,
+                part: AvatarPartType.BodyBase,
+                dir: 1,
                 skin: avater.bodyBaseId,
             });
         }
@@ -339,7 +337,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BodySpec,
                 part: AvatarPartType.BodySpec,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.bodySpecId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BodySpec,
+                part: AvatarPartType.BodySpec,
+                dir: 1,
                 skin: avater.bodySpecId,
             });
         }
@@ -348,7 +352,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyWing,
                 part: AvatarPartType.BodyWing,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.bodyWingId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BodyWing,
+                part: AvatarPartType.BodyWing,
+                dir: 1,
                 skin: avater.bodyWingId,
             });
         }
@@ -357,7 +367,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyTail,
                 part: AvatarPartType.BodyTail,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.bodyTailId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BodyTail,
+                part: AvatarPartType.BodyTail,
+                dir: 1,
                 skin: avater.bodyTailId,
             });
         }
@@ -366,13 +382,25 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyCost,
                 part: AvatarPartType.BodyCost,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.bodyCostId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BodyCost,
+                part: AvatarPartType.BodyCost,
+                dir: 1,
                 skin: avater.bodyCostId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyCostDres,
                 part: AvatarPartType.BodyCostDres,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.bodyCostId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BodyCostDres,
+                part: AvatarPartType.BodyCostDres,
+                dir: 1,
                 skin: avater.bodyCostId,
             });
         }
@@ -381,7 +409,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.FarmBase,
                 part: AvatarPartType.FarmBase,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmBaseId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.FarmBase,
+                part: AvatarPartType.FarmBase,
+                dir: 1,
                 skin: avater.farmBaseId,
             });
         }
@@ -390,7 +424,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.FarmSpec,
                 part: AvatarPartType.FarmSpec,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmSpecId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.FarmSpec,
+                part: AvatarPartType.FarmSpec,
+                dir: 1,
                 skin: avater.farmSpecId,
             });
         }
@@ -399,7 +439,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.FarmCost,
                 part: AvatarPartType.FarmCost,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmCostId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.FarmCost,
+                part: AvatarPartType.FarmCost,
+                dir: 1,
                 skin: avater.farmCostId,
             });
         }
@@ -408,7 +454,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BarmBase,
                 part: AvatarPartType.BarmBase,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.barmBaseId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BarmBase,
+                part: AvatarPartType.BarmBase,
+                dir: 1,
                 skin: avater.barmBaseId,
             });
         }
@@ -417,7 +469,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BarmSpec,
                 part: AvatarPartType.BarmSpec,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.barmSpecId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BarmSpec,
+                part: AvatarPartType.BarmSpec,
+                dir: 1,
                 skin: avater.barmSpecId,
             });
         }
@@ -426,7 +484,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BarmCost,
                 part: AvatarPartType.BarmCost,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.barmCostId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BarmCost,
+                part: AvatarPartType.BarmCost,
+                dir: 1,
                 skin: avater.barmCostId,
             });
         }
@@ -435,7 +499,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BlegBase,
                 part: AvatarPartType.BlegBase,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.blegBaseId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BlegBase,
+                part: AvatarPartType.BlegBase,
+                dir: 1,
                 skin: avater.blegBaseId,
             });
         }
@@ -444,7 +514,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BlegSpec,
                 part: AvatarPartType.BlegSpec,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.blegSpecId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BlegSpec,
+                part: AvatarPartType.BlegSpec,
+                dir: 1,
                 skin: avater.blegSpecId,
             });
         }
@@ -453,7 +529,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.BlegCost,
                 part: AvatarPartType.BlegCost,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.blegCostId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.BlegCost,
+                part: AvatarPartType.BlegCost,
+                dir: 1,
                 skin: avater.blegCostId,
             });
         }
@@ -462,7 +544,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.FlegBase,
                 part: AvatarPartType.FlegBase,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.flegBaseId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.FlegBase,
+                part: AvatarPartType.FlegBase,
+                dir: 1,
                 skin: avater.flegBaseId,
             });
         }
@@ -471,7 +559,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.FlegSpec,
                 part: AvatarPartType.FlegSpec,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.flegSpecId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.FlegSpec,
+                part: AvatarPartType.FlegSpec,
+                dir: 1,
                 skin: avater.flegSpecId,
             });
         }
@@ -480,7 +574,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.FlegCost,
                 part: AvatarPartType.FlegCost,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.flegCostId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.FlegCost,
+                part: AvatarPartType.FlegCost,
+                dir: 1,
                 skin: avater.flegCostId,
             });
         }
@@ -489,7 +589,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadBase,
                 part: AvatarPartType.HeadBase,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.headBaseId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadBase,
+                part: AvatarPartType.HeadBase,
+                dir: 1,
                 skin: avater.headBaseId,
             });
         }
@@ -497,7 +603,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.WeapBarm,
                 part: AvatarPartType.WeapBarm,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.barmWeapId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.WeapBarm,
+                part: AvatarPartType.WeapBarm,
+                dir: 1,
                 skin: avater.barmWeapId,
             });
         }
@@ -506,13 +618,25 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHair,
                 part: AvatarPartType.HeadHair,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.headHairId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadHair,
+                part: AvatarPartType.HeadHair,
+                dir: 1,
                 skin: avater.headHairId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHairBack,
                 part: AvatarPartType.HeadHairBack,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.headHairId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadHairBack,
+                part: AvatarPartType.HeadHairBack,
+                dir: 1,
                 skin: avater.headHairId,
             });
         }
@@ -521,7 +645,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHats,
                 part: AvatarPartType.HeadHats,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.headHatsId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadHats,
+                part: AvatarPartType.HeadHats,
+                dir: 1,
                 skin: avater.headHatsId,
             });
         }
@@ -530,7 +660,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadSpec,
                 part: AvatarPartType.HeadSpec,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.headSpecId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadSpec,
+                part: AvatarPartType.HeadSpec,
+                dir: 1,
                 skin: avater.headSpecId,
             });
         }
@@ -566,13 +702,25 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldFarm,
                 part: AvatarPartType.ShldFarm,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmShldId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.ShldFarm,
+                part: AvatarPartType.ShldFarm,
+                dir: 1,
                 skin: avater.farmShldId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldBarm,
                 part: AvatarPartType.ShldBarm,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmShldId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.ShldBarm,
+                part: AvatarPartType.ShldBarm,
+                dir: 1,
                 skin: avater.farmShldId,
             });
         }
@@ -581,13 +729,25 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.replaceArr.push({
                 slot: AvatarSlotType.WeapFarm,
                 part: AvatarPartType.WeapFarm,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmWeapId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.WeapFarm,
+                part: AvatarPartType.WeapFarm,
+                dir: 1,
                 skin: avater.farmWeapId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.WeapBarm,
                 part: AvatarPartType.WeapBarm,
-                dir: `${dir}`,
+                dir: 3,
+                skin: avater.farmWeapId,
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.WeapBarm,
+                part: AvatarPartType.WeapBarm,
+                dir: 1,
                 skin: avater.farmWeapId,
             });
         }
@@ -597,17 +757,27 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         const part: string = soltName.replace("$", soltDir.toString());
         const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
         const key = soltPart.replace("#", skin.toString()).replace("$", soltDir.toString());
+        const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
         if (this.scene.cache.custom.dragonbone.get(this.dragonBonesName)) {
             const partName: string = ResUtils.getPartName(key);
+            const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
-            if (!this.scene.game.textures.exists(partName) && !this.mErrorLoadMap.get(partName)) {
+            if (!this.scene.game.textures.exists(partName) && !dragonBonesTexture.frames[frameName]) {
                 // ==============新资源需从外部加载，之后要重新打图集
-                this.mLoadMap.set(partName, [slot.name, key]);
+                this.mLoadMap.set(slot.name, [slot.name, key]);
             } else {
-                // ==============贴图集上的资源
-                const resKey: string = ResUtils.getPartName(key);
-                const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, resKey);
+                // ==============贴图集上的资源 / 单个替换资源
+                let img: dragonBones.phaser.display.SlotImage;
+                if (dragonBonesTexture.frames[frameName]) {
+                    img = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, this.mDragonbonesName, frameName);
+                } else {
+                    img = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, partName);
+                    if (img.texture.key === partName) {
+                        return;
+                    }
+                }
                 slot.replaceDisplay(img);
+                Logger.getInstance().debug("slot.name:" + slot.name + ";" + "name:" + name);
             }
         }
     }
@@ -617,45 +787,48 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, totalComplete: integer, totalFailed: integer) => {
             if (!configList) return;
-            let textureWid: number = 0;
-            let textureHei: number = 0;
-            const dragonboneTexture = this.scene.textures.get(this.mDragonbonesName);
-            const changeTexture = this.scene.make.renderTexture(undefined, false);
-            if (!dragonboneTexture) {
-                textureWid = 0;
-                textureHei = 0;
-            } else {
-                const frames: any[] = dragonboneTexture.getFrameNames();
-                for (let i = 0, len = frames.length; i < len; i++) {
-                    const x = textureWid;
-                    const y = textureHei;
-                    const name: string = frames[i];
-                    const texture = dragonboneTexture.get(name);
-                    changeTexture.drawFrame(this.mDragonbonesName, name, x, y);
-                    textureWid += texture.width;
-                    textureHei += texture.height;
-                }
-                changeTexture.setSize(textureWid, textureHei);
-
-                // =============动态替换龙骨资源
-                // const res = "./resources/dragonbones";
-                // const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
-                // const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
-                // const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
-                // this.loadDragonBones(res, pngUrl, jsonUrl, dbbinUrl);
-                this.add(changeTexture);
-            }
+            const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
+            if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.add.renderTexture(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+            const frames = dragonBonesTexture.getFrameNames();
+            // ==============有队列加载说明此处有新资源加载，在队列加载完成后，重新画一张龙骨的贴图并存入缓存中，下次渲染从缓存中获取贴图
             this.mLoadMap.forEach((load) => {
+                // ==========load[0]slot名  load[1]part名
+                const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(load[0]);
                 const name: string = ResUtils.getPartName(load[1]);
                 if (this.scene.game.textures.exists(name) && !this.mErrorLoadMap.get(name)) {
-                    const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(load[0]);
                     const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, 0, 0, name);
                     if (img.texture.key === name) {
                         slot.replaceDisplay(img);
+                        Logger.getInstance().debug("slot.name:" + slot.name + ";" + "name:" + name);
                     }
                 }
             });
+            for (let i: number = 0, len = frames.length; i < len; i++) {
+                // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
+                const name = frames[i];
+                // =============龙骨part资源key 带图片资源名及方向
+                const key = name.split("/")[1].split("_");
+                const slotKey = key[0] + "_" + key[1] + "_" + key[3];
+                const dat = dragonBonesTexture.get(name);
+                const loadArr = this.mLoadMap.get(slotKey);
+                if (!loadArr) {
+                    this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                } else {
+                    const drawTexture = this.scene.game.textures.get(loadArr[1] + "_png");
+                    const drawFrame = drawTexture.frames[drawTexture.firstFrame];
+                    drawFrame.centerX = dat.centerX;
+                    drawFrame.centerY = dat.centerY;
+                    drawFrame.cutWidth = dat.cutWidth;
+                    drawFrame.cutHeight = dat.cutHeight;
+                    drawFrame.cutX = dat.cutX;
+                    drawFrame.cutY = dat.cutY;
+                    drawFrame.data = (dat as any).data;
+                    this.mDragonBonesRenderTexture.draw(loadArr[1] + "_png", dat.cutX, dat.cutY);
+                }
+            }
+            this.mDragonBonesRenderTexture.saveTexture(this.mDisplayInfo.id + "");
             this.add(this.mArmatureDisplay);
+            this.mLoadMap.clear();
         }, this);
 
         this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (e: any) => {
