@@ -31,6 +31,8 @@ export interface IElement {
 
     model: ISprite;
 
+    setModel(model: ISprite);
+
     play(animationName: string): void;
 
     setPosition(p: Pos): void;
@@ -47,13 +49,9 @@ export interface IElement {
 
     getRenderable(): boolean;
 
-    fadeIn(callback?: () => void): void;
-
-    fadeOut(callback?: () => void): void;
-
-    fadeAlpha(alpha: number): void;
-
     showEffected();
+
+    showNickname();
 
     removeMe(): void;
 
@@ -92,25 +90,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     set model(val: ISprite) {
-        this.mModel = val;
-        if (!val) {
-            return;
-        }
-        this.mDisplayInfo = this.mModel.displayInfo;
-        this.createDisplay();
-        if (!this.mDisplay) {
-            return;
-        }
-        this.setPosition(this.mModel.pos);
-        this.mDisplay.changeAlpha(this.mModel.alpha);
-        this.mDisplay.showNickname(this.mModel.nickname);
-        this.setDirection(this.mModel.direction);
-        this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
-        if (frameModel.shops) {
-            this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
-            this.mShopEntity.register();
-        }
+        this.setModel(val);
     }
 
     protected mId: number;
@@ -159,6 +139,28 @@ export class Element extends BlockObject implements IElement {
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+    }
+
+    public setModel(model: ISprite) {
+        this.mModel = model;
+        if (!model) {
+            return;
+        }
+        this.mDisplayInfo = this.mModel.displayInfo;
+        this.createDisplay();
+        if (!this.mDisplay) {
+            return;
+        }
+        this.setPosition(this.mModel.pos);
+        this.mDisplay.changeAlpha(this.mModel.alpha);
+        // this.mDisplay.showNickname(this.mModel.nickname);
+        this.setDirection(this.mModel.direction);
+        this.setRenderable(true);
+        const frameModel = <IFramesModel> this.mDisplayInfo;
+        if (frameModel.shops) {
+            this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
+            this.mShopEntity.register();
+        }
     }
 
     public play(animationName: string): void {
@@ -269,8 +271,20 @@ export class Element extends BlockObject implements IElement {
         this.roomService.addToSceneUI(this.mBubble);
     }
 
+    public showNickName() {
+        if (this.mDisplay && this.model) {
+            this.mDisplay.showNickname(this.model.nickname);
+        }
+    }
+
     public showEffected() {
         if (this.mDisplay) this.mDisplay.showEffect();
+    }
+
+    public showNickname() {
+        if (this.model && this.mDisplay) {
+            this.mDisplay.showNickname(this.model.nickname);
+        }
     }
 
     public removeMe(): void {

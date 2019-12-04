@@ -42,9 +42,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (player) {
             this.mPlayerMap.delete(id);
             player.destroy();
-            if (this.roomService) {
-                this.roomService.blocks.remove(player);
-            }
         }
     }
 

@@ -25,6 +25,20 @@ export class Terrain extends BlockObject implements IElement {
         this.model = sprite;
     }
 
+    setModel(val: ISprite) {
+        this.mModel = val;
+        if (!val) {
+            return;
+        }
+        this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
+        this.createDisplay();
+        if (!this.mDisplay) {
+            return;
+        }
+        this.setPosition45(this.mModel.pos);
+        this.addDisplay();
+    }
+
     public play(animationName: string): void {
         if (this.mAnimationName !== animationName) {
             this.mAnimationName = animationName;
@@ -65,6 +79,9 @@ export class Terrain extends BlockObject implements IElement {
         const pos = this.getPosition();
         if (!pos) return;
         return this.roomService.transformTo45(pos);
+    }
+
+    public showNickname() {
     }
 
     public showEffected() {
@@ -193,17 +210,6 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     set model(val: ISprite) {
-        this.mModel = val;
-        if (!val) {
-            return;
-        }
-        this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
-        this.createDisplay();
-        if (!this.mDisplay) {
-            return;
-        }
-        this.setPosition45(this.mModel.pos);
-        this.addDisplay();
-        // this.mDisplay.changeAlpha(this.mModel.alpha);
+        this.setModel(val);
     }
 }

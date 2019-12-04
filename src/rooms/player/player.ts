@@ -28,9 +28,14 @@ export class Player extends Element {
         super(sprite, mElementManager);
         if (this.mDisplay) {
             if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
-            // this.mDisplay.showNickname(sprite.nickname);
         }
     }
+
+    setModel(val: ISprite) {
+        super.setModel(val);
+        this.showNickName();
+    }
+
     public move(moveData: op_client.IMoveData) {
         if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
             this.setDirection(moveData.direction);

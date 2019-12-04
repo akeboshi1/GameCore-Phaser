@@ -17,9 +17,14 @@ export class SelectedElement {
     setElement(display: FramesDisplay | DragonbonesDisplay) {
         if (this.mDisplay) {
             this.mDisplay.hideRefernceArea();
+            this.mDisplay.showNickname("");
         }
         this.mDisplay = display;
         display.showRefernceArea();
+        const ele = display.element;
+        if (ele) {
+            ele.showNickname();
+        }
         this.mLayerManager.addToSceneToUI(this.mEffecte);
         this.update();
     }
@@ -32,6 +37,7 @@ export class SelectedElement {
             this.mEffecte.parentContainer.remove(this.mEffecte);
         }
         this.mDisplay.hideRefernceArea();
+        this.mDisplay.showNickname("");
         this.mDisplay = null;
     }
 
@@ -56,7 +62,6 @@ export class SelectedElement {
         if (!this.mEffecte) {
             return;
         }
-        Logger.getInstance().log("destroy");
         this.remove();
         this.mEffecte.destroy();
     }
