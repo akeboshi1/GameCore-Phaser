@@ -89,7 +89,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mLayManager.drawGrid(this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
-        this.mScene.input.on("gameobjectup", this.onGameobjectUpHandler, this);
+        this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
         this.mCameraService.camera = this.scene.cameras.main;
         const mainCameras = this.mScene.cameras.main;
         mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
