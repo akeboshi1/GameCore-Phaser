@@ -21,7 +21,7 @@ import { JoyStickManager } from "./joystick.manager";
 import { GameMain, ILauncherConfig } from "../../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";
 import { load } from "../utils/http";
-import { ResUtils } from "../utils/resUtil";
+import { ResUtils, Url } from "../utils/resUtil";
 import { Lite } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
@@ -61,6 +61,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
+        Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
@@ -399,7 +400,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.gameConfig = {
             type: Phaser.WEBGL,
             zoom: 1,
-            parent: "game",
+            parent: this.mConfig.parent || "game",
             scene: null,
             disableContextMenu: true,
             transparent: false,

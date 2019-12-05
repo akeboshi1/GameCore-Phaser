@@ -23,6 +23,7 @@ export interface ILauncherConfig {
     readonly isEditor?: boolean;
     readonly osd?: string;
     readonly closeGame: Function;
+    readonly parent?: string;
 }
 
 export interface GameMain {

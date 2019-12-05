@@ -2,6 +2,7 @@ import { IFramesModel } from "./frames.model";
 import { Logger } from "../../utils/log";
 import {DisplayObject} from "./display.object";
 import {IAnimationData} from "./animation";
+import { Url } from "../../utils/resUtil";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -38,7 +39,7 @@ export class FramesDisplay extends DisplayObject {
             if (!display) {
                 Logger.getInstance().error("display is undefined");
             }
-            this.scene.load.atlas(data.gene, CONFIG.osd + display.texturePath, CONFIG.osd + display.dataPath);
+            this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
             // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
             //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
             // }, this);

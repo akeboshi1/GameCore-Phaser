@@ -1,7 +1,9 @@
 import * as url from "url";
 import * as path from "path";
 import { HTTP_REGEX } from "../const/constants";
+
 export class Url {
+    static OSD_PATH = "";
     static getRes(value: string): string {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
         if (CONFIG.BUNDLE_RESOURCES_ROOT) {
@@ -12,8 +14,8 @@ export class Url {
     }
 
     static getOsdRes(value: string): string {
-        if (CONFIG.osd) {
-            return CONFIG.osd + value;
+        if (Url.OSD_PATH) {
+            return Url.OSD_PATH + value;
         }
         return value;
     }
@@ -23,13 +25,13 @@ export class ResUtils {
         return value + "_png";
     }
     static getPartUrl(value: string): string {
-        return CONFIG.osd + "avatar/part/" + value + ".png";
+        return Url.OSD_PATH + "avatar/part/" + value + ".png";
     }
     static getGameConfig(value: string): string {
         if (HTTP_REGEX.test(value)) {
             return value;
         }
-        return CONFIG.osd + value;
+        return Url.OSD_PATH + value;
     }
 }
 
