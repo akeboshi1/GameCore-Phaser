@@ -1,6 +1,6 @@
 import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
-import { Room } from "./room";
+import { Room, IRoomService } from "./room";
 import { op_client } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
@@ -112,6 +112,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (this.hasRoom(vw.scene.id)) {
             room = this.getRoom(vw.scene.id);
         } else {
+            if (this.mCurRoom) {
+                this.leaveScene(this.mCurRoom);
+            }
             room = new Room(this);
             this.mRooms.push(room);
         }
@@ -126,6 +129,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const room = new EditorRoom(this);
         room.enter(content.scene);
         this.mCurRoom = room;
+    }
+
+    private leaveScene(room: IRoomService) {
+        if (!room) return;
+        this.mRooms = this.mRooms.filter((r) => r.id !== room.id);
+        room.destroy();
     }
 
     get world(): WorldService {

@@ -85,6 +85,8 @@ export interface IRoomService {
     requestActorMove(d: number, key: number[]);
 
     update(time: number, delta: number): void;
+
+    destroy();
 }
 
 // 这一层管理数据和Phaser之间的逻辑衔接
@@ -390,13 +392,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public clear() {
-        this.mActor.destroy();
-        this.mLayManager.destroy();
-        this.mClock.destroy();
-        this.mTerainManager.destroy();
-        this.mElementManager.destroy();
-        this.mPlayerManager.destroy();
-        this.mBlocks.destroy();
+        if (this.mActor) this.mActor.destroy();
+        if (this.mLayManager) this.mLayManager.destroy();
+        if (this.mClock) this.mClock.destroy();
+        if (this.mTerainManager) this.mTerainManager.destroy();
+        if (this.mElementManager) this.mElementManager.destroy();
+        if (this.mPlayerManager) this.mPlayerManager.destroy();
+        if (this.mBlocks) this.mBlocks.destroy();
         //  if (this.mCheckBlock && this.blockCheckWorker) this.blockCheckWorker.postMessage({ method: "endCheckBlock" });
         if (this.mActorData) {
             this.mActorData = null;
