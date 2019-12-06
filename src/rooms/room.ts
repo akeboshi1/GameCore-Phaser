@@ -180,7 +180,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public completeLoad() {
         const dragonboneName = "bones_human01";
-        if (!this.mScene.cache.obj.has(dragonboneName)) {
+        if (!this.mScene.textures.exists(dragonboneName)) {
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 this.enterRoom();
             }, this);
@@ -204,6 +204,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) {
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
+        if (this.mLayManager) {
+            this.layerManager.destroy();
+        }
+        this.mLayManager = new LayerManager(this);
         this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
@@ -415,10 +419,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private enterRoom() {
-        if (this.mScene.scene.isActive()) {
-            this.mWorld.changeScene();
-            return;
-        }
+        // if (this.mScene.scene.isActive()) {
+        //     this.mWorld.changeScene();
+        //     return;
+        // }
         this.mWorld.game.scene.start(PlayScene.name, {
             room: this,
         });

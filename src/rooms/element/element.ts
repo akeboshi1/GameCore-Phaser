@@ -386,11 +386,11 @@ export class Element extends BlockObject implements IElement {
                 this.onMoveStart();
             },
             onComplete: (tween, targets, element) => {
-                Logger.getInstance().debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
+                // Logger.getInstance().debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
                 this.onMoveComplete();
             },
             onUpdate: (tween, targets, element) => {
-                Logger.getInstance().debug("moveing:" + this.mDisplay.x + "-" + this.mDisplay.y);
+                // Logger.getInstance().debug("moveing:" + this.mDisplay.x + "-" + this.mDisplay.y);
                 this.onMoving();
             },
             onCompleteParams: [this],

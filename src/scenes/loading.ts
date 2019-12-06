@@ -21,6 +21,7 @@ export class LoadingScene extends Phaser.Scene {
   public init(data: any) {
     this.mWorld = data.world;
     this.mRoom = data.room;
+    this.mRequestCom = false;
   }
 
   public create() {
