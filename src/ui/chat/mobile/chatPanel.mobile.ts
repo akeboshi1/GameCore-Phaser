@@ -34,12 +34,40 @@ export class ChatPanelMobile extends BaseChatPanel {
 
     public setLocation(x?: number, y?: number) {
         if (!this.mShowing) return;
-        if (this.mBorder) {
-            this.mBorder.destroy(true);
-            this.mBorder = null;
-        }
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorld.getSize();
+        let track;
+        let thumb;
+        let text;
+        if (this.mTextArea) {
+            this.mTextArea.destroy();
+            this.mTextArea = null;
+            text = new BBCodeText(this.mScene, 0, 0, "", {
+                fontSize: "20px",
+                wrap: {
+                    mode: "char",
+                    width: this.mWidth >> 1
+                },
+            });
+
+            track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", {
+                left: 0,
+                top: 2,
+                right: 0,
+                bottom: 2
+            });
+            // track.x = this.mWidth / 2;
+            // track.y = 8 * this.mWorld.uiScale;
+            thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", {
+                left: 4,
+                top: 4,
+                right: 4,
+                bottom: 4
+            });
+            this.add(text);
+            this.add(track);
+            this.add(thumb);
+        }
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
                 this.mWidth = size.width >> 1;
@@ -47,11 +75,21 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.setSize(this.mWidth, this.mHeight);
                 this.x = 0;
                 this.y = 0;
-                this.mTextArea.setMinSize(this.mWidth, size.height);
                 this.clickContainer.x = this.mWidth / this.mWorld.uiScale + this.clickContainer.width / 2;
                 this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
                 this.clickContainer.rotation = Math.PI * .5;
                 this.arrow.rotation = Math.PI * .5;
+                this.mTextArea = new TextArea(this.mScene, {
+                    x: this.mWidth >> 1,
+                    y: this.mHeight / 2 - 14,
+                    textWidth: size.width / 2 - 80,
+                    textHeight: size.height - this.mSendBtn.height * 1.5,
+                    text,
+                    slider: {
+                        track,
+                        thumb,
+                    },
+                });
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
                 this.mWidth = size.width;
@@ -59,25 +97,37 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.setSize(this.mWidth, this.mHeight);
                 this.x = 0;
                 this.y = this.mHeight + 20 * this.mWorld.uiScale;
-                this.mTextArea.setMinSize(this.mWidth, size.height);
+                this.mTextArea = new TextArea(this.mScene, {
+                    x: this.mWidth / 2,
+                    y: this.mHeight / 2,
+                    textWidth: this.mWidth,
+                    textHeight: size.height / 2 - this.mSendBtn.height * 1.5,
+                    text,
+                    slider: {
+                        track,
+                        thumb,
+                    },
+                });
                 this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
                 this.clickContainer.y = -this.clickContainer.height >> 1;
                 this.clickContainer.rotation = Math.PI;
                 this.arrow.rotation = Math.PI * 1.5;
                 break;
         }
-        this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        this.mTextArea.layout();
+        this.add(this.mTextArea);
+        this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height);
+        this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
+        // this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
-        this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
-        this.mTextArea.childrenMap.child.textMask.setPosition(-10, size.height - this.height).resize();
+        // this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
         this.mInputBg.x = this.mInputBg.width >> 1;
         this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
         this.mSendBtn.y = this.mInputBg.y;
         this.mInputText.x = 2;
         this.mInputText.y = this.mInputBg.y - 12;
-        this.addAt(this.mBorder, 0);
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
@@ -144,6 +194,11 @@ export class ChatPanelMobile extends BaseChatPanel {
         }
         this.setSize(this.mWidth, this.mHeight);
 
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        this.mBorder.x = this.mBorder.width / 2;
+        this.mBorder.y = this.mBorder.height / 2;
+        this.addAt(this.mBorder, 0);
+
         const text = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: "20px",
             wrap: {
@@ -170,7 +225,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.add(track);
         this.add(thumb);
         this.mTextArea = new TextArea(this.mScene, {
-            x: this.mWidth + 20 * this.mWorld.uiScale >> 1,
+            x: this.mWidth >> 1,
             y: this.mHeight + 178 * this.mWorld.uiScale >> 1,
             textWidth: this.mWidth,
             textHeight: this.mHeight + 150 * this.mWorld.uiScale,

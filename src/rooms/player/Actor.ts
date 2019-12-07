@@ -31,12 +31,12 @@ export class Actor extends Player implements InputListener {
         //     }
         // }
 
-        // if (this.model) {
-        //     if (this.model.package) {
-        //         this.mBag = new Bag(mElementManager.roomService.world);
-        //         this.mBag.register();
-        //     }
-        // }
+        if (this.model) {
+            if (this.model.package) {
+                this.mBag = new Bag(mElementManager.roomService.world);
+                this.mBag.register();
+            }
+        }
 
         this.mFriend = new Friend(this.mRoom.world);
         this.mRoom.playerManager.set(this.id, this);
@@ -158,5 +158,9 @@ export class Actor extends Player implements InputListener {
                 roomService.cameraService.startFollow(this.mDisplay);
             }
         }
+    }
+
+    get model(): ISprite {
+        return this.mModel;
     }
 }

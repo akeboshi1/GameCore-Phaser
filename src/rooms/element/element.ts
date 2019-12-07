@@ -129,22 +129,22 @@ export class Element extends BlockObject implements IElement {
         // if (sprite.avatar) {
         //     this.mDisplayInfo = new DragonbonesModel(sprite);
         // } else {
-            // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-            // let conf = null;
-            // if (sprite.displayInfo) {
-            //     conf = sprite.displayInfo;
-            // } else {
-            //     conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-            // }
-            // if (!conf) {
-            //     Logger.getInstance().error("object does not exist");
-            //     return;
-            // }
-            // this.mDisplayInfo = conf;
-            // if (conf.shops) {
-            //     this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
-            //     this.mShopEntity.register();
-            // }
+        // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
+        // let conf = null;
+        // if (sprite.displayInfo) {
+        //     conf = sprite.displayInfo;
+        // } else {
+        //     conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
+        // }
+        // if (!conf) {
+        //     Logger.getInstance().error("object does not exist");
+        //     return;
+        // }
+        // this.mDisplayInfo = conf;
+        // if (conf.shops) {
+        //     this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
+        //     this.mShopEntity.register();
+        // }
         // }
         // this.createDisplay();
         // this.setPosition(sprite.pos);
@@ -173,7 +173,7 @@ export class Element extends BlockObject implements IElement {
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
@@ -373,7 +373,7 @@ export class Element extends BlockObject implements IElement {
             tw.remove();
         }
         const time: number = this.mMoveData.arrivalTime - this.roomService.now();
-        Logger.getInstance().debug(`time:${time},posX:${this.mMoveData.destPos.x},posY:${this.mMoveData.destPos.y}`); // ,arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
+        // Logger.getInstance().debug(`time:${time},posX:${this.mMoveData.destPos.x},posY:${this.mMoveData.destPos.y}`); // ,arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
         this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
             targets: this.mDisplay,
             duration: time,

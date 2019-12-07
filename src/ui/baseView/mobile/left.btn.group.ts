@@ -19,8 +19,8 @@ export class LeftBtnGroup extends Panel {
     }
 
     public resize() {
-        this.x = this.mExpandBtn !== undefined ? this.mExpandBtn.width >> 1 : 10 * this.mWorld.uiScale;
-        this.y = this.mExpandBtn !== undefined ? this.mExpandBtn.height >> 1 : 10 * this.mWorld.uiScale;
+        this.x = this.width + 5 * this.mWorld.uiScale;
+        this.y = this.height / 2 + 10 * this.mWorld.uiScale;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
@@ -35,7 +35,7 @@ export class LeftBtnGroup extends Panel {
     }
 
     public tweenView(show: boolean) {
-        const baseX = this.mExpandBtn !== undefined ? this.mExpandBtn.width >> 1 : 10 * this.mWorld.uiScale;
+        const baseX = this.width + 5 * this.mWorld.uiScale;
         const toX: number = show === true ? baseX : baseX - 50;
         const toAlpha: number = show === true ? 1 : 0;
         this.mScene.tweens.add({
@@ -60,6 +60,7 @@ export class LeftBtnGroup extends Panel {
 
     protected init() {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        let hei: number = 0;
         // const btnResList: string[] = this.mCollapse === false ? ["btnGroup_expand.png", "btnGroup_expand.png", "btnGroup_collapse.png", "btnGroup_collapse.png"] : ["btnGroup_collapse.png", "btnGroup_collapse.png", "btnGroup_expand.png", "btnGroup_expand.png"];
         this.mExpandBtn = new IconSelectBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_expand.png", "btnGroup_collapse.png"], 1);
         this.add(this.mExpandBtn);
@@ -72,6 +73,8 @@ export class LeftBtnGroup extends Panel {
             this.mExpandBtn.setBgRes(Number(!this.mCollapse));
             this.mCollapse = !this.mCollapse;
         });
+        hei += this.mExpandBtn.height / 2 + 20;
+        this.setSize(this.mExpandBtn.width, hei);
         this.resize();
         super.init();
     }

@@ -61,14 +61,14 @@ export class JoyStickManager implements InputManager {
         const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.mParentcon) {
-            this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
             if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.mParentcon.x = this.mParentcon.width;
                 this.mParentcon.y = size.height - this.mParentcon.height;
             } else {
-                this.mParentcon.x = 100 * this.mScale;
-                this.mParentcon.y = (mainUIMed.getView() as MainUIMobile).getBottomView().y - padHei / 2 - this.mParentcon.height / 2;
+                this.mParentcon.x = this.mParentcon.width;
+                this.mParentcon.y = (mainUIMed.getView() as MainUIMobile).getBottomView().y - padHei - this.mParentcon.height;
             }
+            this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         }
     }
 
@@ -84,7 +84,7 @@ export class JoyStickManager implements InputManager {
             baseY = size.height - this.mParentcon.height;
         } else {
             baseX = this.mParentcon.width;
-            baseY = size.height - padHei;
+            baseY = (mainUIMed.getView() as MainUIMobile).getBottomView().y - padHei - this.mParentcon.height;
         }
 
         const toX: number = show === true ? baseX : baseX - this.mParentcon.width;
@@ -206,7 +206,7 @@ export class JoyStick {
         this.mScene.input.setDraggable(this.btn);
         this.btn.on("drag", this.dragUpdate, this);
         this.btn.on("dragend", this.dragStop, this);
-        this.parentCon.setSize(this.bg.width * this.mScale, this.bg.height * this.mScale);
+        this.parentCon.setSize(this.bg.width, this.bg.height);
         (this.mWorld.inputManager as JoyStickManager).resize();
     }
 
