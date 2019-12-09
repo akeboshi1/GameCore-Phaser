@@ -51,6 +51,7 @@ export class TopBtnGroup extends Panel {
     }
 
     public tweenView(show: boolean) {
+        if (!this.mScene) return;
         const baseY: number = this.height / 2 + 10 * this.mWorld.uiScale;
         const toY: number = show === true ? baseY : baseY - 50;
         const toAlpha: number = show === true ? 1 : 0;

@@ -34,7 +34,7 @@ export class JoyStickManager implements InputManager {
 
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
-        if (!this.mScene) return;
+        if (!this.mScene || !this.mKeyEvents) return;
         const len = this.mKeyEvents.length;
         let keyEvent: op_def.IKeyCodeEvent;
         let codes: op_def.KeyCode[];

@@ -361,6 +361,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
         if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
             Logger.getInstance().debug("缺少必要参数，无法登录游戏");
+            this.mGame.destroy(true);
             return;
         }
         content.gameId = this.mConfig.game_id;
@@ -448,7 +449,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         };
         Object.assign(this.gameConfig, this.mConfig);
-       // this.gameConfig.type = !this.game.device.os.desktop ? Phaser.AUTO : Phaser.CANVAS;
+        // this.gameConfig.type = !this.game.device.os.desktop ? Phaser.AUTO : Phaser.CANVAS;
         this.mGame = new Game(this.gameConfig);
         this.initUiScale();
         return this.mGame;
