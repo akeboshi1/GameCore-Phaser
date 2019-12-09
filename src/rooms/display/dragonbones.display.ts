@@ -753,27 +753,28 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 // ==============新资源需从外部加载，之后要重新打图集
                 this.mLoadMap.set(slot.name, [slot.name, key]);
             } else {
-                slot.display.visible = true;
                 //     // ==============贴图集上的资源 / 单个替换资源
-                //     let img: dragonBones.phaser.display.SlotImage;
-                //     if (dragonBonesTexture.frames[frameName] && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
-                //         img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y);
-                //         const texture = this.scene.game.textures.get(this.mDisplayInfo.id + "");
-                //         img.setFrame(texture.firstFrame);
-                //         // 新建的slotImage的texture的槽位名如果不是当前槽位则跳过
-                //         if (img.frame.name.split("/")[1] !== key) {
-                //             slot.display.visible = false;
-                //             return;
-                //         }
-                //         // 当前格位上的贴图如果是图集上的贴图只要让display显示即可
-                //         if (slot.display.frame.name === img.frame.name) {
-                //             slot.display.visible = true;
-                //             return;
-                //         }
-                //     } else {
-                //         img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
-                //     }
-                //     slot.replaceDisplay(img);
+                let img: dragonBones.phaser.display.SlotImage;
+                if (dragonBonesTexture.frames[frameName]) {// && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
+                    slot.display.visible = true;
+                    return;
+                    // img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y);
+                    // const texture = this.scene.game.textures.get(this.mDisplayInfo.id + "");
+                    // img.setFrame(texture.firstFrame);
+                    // // 新建的slotImage的texture的槽位名如果不是当前槽位则跳过
+                    // if (img.frame.name.split("/")[1] !== key) {
+                    //     slot.display.visible = false;
+                    //     return;
+                    // }
+                    // // 当前格位上的贴图如果是图集上的贴图只要让display显示即可
+                    // if (slot.display.frame.name === img.frame.name) {
+                    //     slot.display.visible = true;
+                    //     return;
+                    // }
+                } else {
+                    img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
+                }
+                slot.replaceDisplay(img);
                 //     Logger.getInstance().debug("slot.name:" + slot.name + ";" + "name:" + name);
             }
         }
@@ -783,9 +784,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         const configList: Phaser.Types.Loader.FileTypes.ImageFileConfig[] = [];
         // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, totalComplete: integer, totalFailed: integer) => {
-            if (!configList) return;
+            if (!configList || !this.scene) return;
             const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
-           // if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.add.renderTexture(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+            // if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.add.renderTexture(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
             const frames = dragonBonesTexture.getFrameNames();
             // ==============有队列加载说明此处有新资源加载，在队列加载完成后，重新画一张龙骨的贴图并存入缓存中，下次渲染从缓存中获取贴图
             this.mLoadMap.forEach((load) => {
