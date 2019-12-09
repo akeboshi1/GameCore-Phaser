@@ -146,16 +146,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mMap = new Map(this.mWorld);
         this.mMap.setMapInfo(data);
         this.mClock = new Clock(this.mWorld.connection, this);
-        this.mTerainManager = new TerrainManager(this, this);
-        this.mElementManager = new ElementManager(this);
-        this.mPlayerManager = new PlayerManager(this);
-        this.mBlocks = new ViewblockManager(this.mCameraService);
-        this.mLayManager = new LayerManager(this);
-        if (this.scene) {
-            this.mCameraService.camera = this.scene.cameras.main;
-            // init block
-            this.mBlocks.int(this.mSize);
-        }
+        // this.mTerainManager = new TerrainManager(this, this);
+        // this.mElementManager = new ElementManager(this);
+        // this.mPlayerManager = new PlayerManager(this);
+        // this.mBlocks = new ViewblockManager(this.mCameraService);
+        // this.mLayManager = new LayerManager(this);
+        // if (this.scene) {
+        //     this.mCameraService.camera = this.scene.cameras.main;
+        //     // init block
+        //     this.mBlocks.int(this.mSize);
+        // }
         if (!this.mWorld.game.scene.getScene(LoadingScene.name)) this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
         this.mWorld.game.scene.start(LoadingScene.name, {
             world: this.world,
@@ -208,6 +208,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         if (this.mLayManager) {
             this.layerManager.destroy();
+        }
+        this.mTerainManager = new TerrainManager(this, this);
+        this.mElementManager = new ElementManager(this);
+        this.mPlayerManager = new PlayerManager(this);
+        this.mBlocks = new ViewblockManager(this.mCameraService);
+        if (this.scene) {
+            this.mCameraService.camera = this.scene.cameras.main;
+            // init block
+            this.mBlocks.int(this.mSize);
         }
         this.mLayManager = new LayerManager(this);
         this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);

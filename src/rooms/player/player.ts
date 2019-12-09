@@ -44,14 +44,6 @@ export class Player extends Element {
         }
     }
 
-    public removeDisplay() {
-        super.removeDisplay();
-    }
-
-    public destroy() {
-        super.destroy();
-    }
-
     protected onMoveStart() {
         this.changeState(PlayerState.WALK);
     }
