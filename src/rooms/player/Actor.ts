@@ -67,6 +67,7 @@ export class Actor extends Player implements InputListener {
             this.mBag.destroy();
             this.mBag = null;
         }
+        this.mRoom.world.inputManager.removeListener(this);
         super.destroy();
     }
 
