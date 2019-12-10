@@ -82,13 +82,14 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.mTextArea = new TextArea(this.mScene, {
                     x: this.mWidth >> 1,
                     y: this.mHeight / 2 - 14,
-                    textWidth: size.width / 2 - 80,
+                    textWidth: this.mWidth - 80,
                     textHeight: size.height - this.mSendBtn.height * 1.5,
                     text,
                     slider: {
                         track,
                         thumb,
                     },
+                    clamplChildOY: true,
                 });
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
@@ -98,25 +99,34 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.x = 0;
                 this.y = this.mHeight + 20 * this.mWorld.uiScale;
                 this.mTextArea = new TextArea(this.mScene, {
-                    x: this.mWidth / 2,
-                    y: this.mHeight / 2,
-                    textWidth: this.mWidth,
-                    textHeight: size.height / 2 - this.mSendBtn.height * 1.5,
+                    x: (this.mWidth - 60) / this.mWorld.uiScale >> 1,
+                    y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
+                    textWidth: (this.mWidth - 60) / this.mWorld.uiScale,
+                    textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
                     text,
                     slider: {
                         track,
                         thumb,
                     },
+                    scroller:{
+                        bounds: [0, this.mHeight >> 1],
+                    },
+                    clamplChildOY: true,
+                    backDeceleration: true,
                 });
+                // this.mTextArea.x = this.mTextArea.childrenMap.child.minWidth >> 1;
+                // this.mTextArea.y = this.mTextArea.childrenMap.child.minHeight >> 1;
                 this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
                 this.clickContainer.y = -this.clickContainer.height >> 1;
+                const silder = this.mTextArea.getElement("slider");
+                silder.y = this.mHeight >> 1;
                 this.clickContainer.rotation = Math.PI;
                 this.arrow.rotation = Math.PI * 1.5;
                 break;
         }
         this.mTextArea.layout();
         this.add(this.mTextArea);
-        this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height);
+        this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
         this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
         // this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
