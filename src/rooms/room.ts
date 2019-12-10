@@ -142,11 +142,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
       sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2)
     };
     // this.blockCheckWorker = new BlockCheckWorker();
-    this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
+    // this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
     this.mMap = new Map(this.mWorld);
     this.mMap.setMapInfo(data);
     this.mClock = new Clock(this.mWorld.connection, this);
-    this.mWorld.game.scene.sleep(PlayScene.name);
+    // if (this.mScene.scene.isActive()) {
+    //   this.mWorld.game.scene.sleep(PlayScene.name);
+    // }
     if (!this.mWorld.game.scene.getScene(LoadingScene.name))
       this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
     this.mWorld.game.scene.start(LoadingScene.name, {
@@ -173,29 +175,32 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   public completeLoad() {
-    const dragonboneName = "bones_human01";
-    if (!this.mScene.textures.exists(dragonboneName)) {
-      this.mScene.load.once(
-        Phaser.Loader.Events.COMPLETE,
-        () => {
-          this.enterRoom();
-        },
-        this
-      );
-      const res = "./resources/dragonbones";
-      this.mScene.load.dragonbone(
-        dragonboneName,
-        `${res}/${dragonboneName}_tex.png`,
-        `${res}/${dragonboneName}_tex.json`,
-        `${res}/${dragonboneName}_ske.dbbin`,
-        null,
-        null,
-        { responseType: "arraybuffer" }
-      );
-      this.mScene.load.start();
-    } else {
-      this.enterRoom();
-    }
+    // const dragonboneName = "bones_human01";
+    // if (!this.mScene.textures.exists(dragonboneName)) {
+    //   this.mScene.load.once(
+    //     Phaser.Loader.Events.COMPLETE,
+    //     () => {
+    //       this.enterRoom();
+    //     },
+    //     this
+    //   );
+    //   const res = "./resources/dragonbones";
+    //   this.mScene.load.dragonbone(
+    //     dragonboneName,
+    //     `${res}/${dragonboneName}_tex.png`,
+    //     `${res}/${dragonboneName}_tex.json`,
+    //     `${res}/${dragonboneName}_ske.dbbin`,
+    //     null,
+    //     null,
+    //     { responseType: "arraybuffer" }
+    //   );
+    //   this.mScene.load.start();
+    // } else {
+    //   this.enterRoom();
+    // }
+    this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
+      room: this
+    });
   }
 
   public startPlay() {
@@ -205,6 +210,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     if (this.mLayManager) {
       this.layerManager.destroy();
     }
+    this.mScene = this.world.game.scene.getScene(PlayScene.name);
     this.mTerainManager = new TerrainManager(this, this);
     this.mElementManager = new ElementManager(this);
     this.mPlayerManager = new PlayerManager(this);
@@ -218,6 +224,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
     const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
     if (loadingScene) loadingScene.sleep();
+    this.world.changeRoom(this);
 
     // this.mWorld.inputManager.enable = true;
   }
@@ -414,6 +421,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     if (this.mActor) {
       this.mActor.destroy();
     }
+    this.mWorld.game.scene.remove(PlayScene.name);
     if (this.mScene) {
       // this.mScene.scene.stop();
       this.mScene = null;
@@ -429,7 +437,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     this.mWorld.changeScene();
     //     return;
     // }
-    this.mWorld.game.scene.start(PlayScene.name, {
+    // if (this.mScene.scene.isActive() || this.mScene.scene.isSleeping()) {
+    //   this.mWorld.game.scene.wake(PlayScene.name, {
+    //     room: this
+    //   });
+    //   return;
+      // this.startPlay();
+    // }
+    this.mWorld.game.scene.run(PlayScene.name, {
       room: this
     });
   }
