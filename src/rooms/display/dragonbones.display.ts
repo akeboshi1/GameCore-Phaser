@@ -757,7 +757,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 let img: dragonBones.phaser.display.SlotImage;
                 if (dragonBonesTexture.frames[frameName]) {// && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
                     slot.display.visible = true;
-                    return;
+                    const name = frameName.split("/")[1] + "_png";
+                    if (name === partName) {
+                        return;
+                    }
+                    img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
                     // img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y);
                     // const texture = this.scene.game.textures.get(this.mDisplayInfo.id + "");
                     // img.setFrame(texture.firstFrame);
