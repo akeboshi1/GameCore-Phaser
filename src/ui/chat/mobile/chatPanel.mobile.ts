@@ -108,7 +108,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                         track,
                         thumb,
                     },
-                    scroller:{
+                    scroller: {
                         bounds: [0, this.mHeight >> 1],
                     },
                     clamplChildOY: true,
@@ -173,6 +173,10 @@ export class ChatPanelMobile extends BaseChatPanel {
             },
         });
         this.setLocation();
+    }
+
+    public hide() {
+        super.hide();
     }
 
     protected preload() {

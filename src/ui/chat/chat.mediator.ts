@@ -86,6 +86,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         if (this.mChatPanel && this.mChatPanel.isShow()) {
             return;
         }
+        this.world.connection.removePacketListener(this);
         this.world.connection.addPacketListener(this);
         if (this.world.game.device.os.desktop) {
             this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
