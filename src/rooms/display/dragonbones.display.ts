@@ -295,7 +295,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private showReplaceArmatrue() {
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
-            const part: string = obj.slot.replace("$", obj.dir.toString());
+            // const part: string = obj.slot.replace("$", obj.dir.toString());
             // Logger.log(part);
         }
         if (this.mLoadMap && this.mLoadMap.size > 0) this.startLoad();

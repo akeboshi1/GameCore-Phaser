@@ -22,9 +22,12 @@ export class PlayScene extends Phaser.Scene {
 
   public create() {
     if (this.mRoom) this.mRoom.startPlay();
-    this.scene.launch(MainUIScene.name, {
-      room: this.mRoom
-    });
+    const scene = this.game.scene.getScene(MainUIScene.name);
+    if (!scene.scene.isActive()) {
+      this.scene.launch(MainUIScene.name, {
+        room: this.mRoom
+      });
+    }
     Logger.getInstance().log("play created");
     this.scene.sendToBack();
     this.scale.on("orientationchange", this.checkOriention, this);

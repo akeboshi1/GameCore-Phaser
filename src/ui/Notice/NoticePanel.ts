@@ -1,8 +1,8 @@
 import { Panel } from "../components/panel";
 import { Border } from "../../utils/resUtil";
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client } from "pixelpai_proto";
 import { Font } from "../../utils/font";
+import { NinePatch } from "../components/nine.patch";
 
 export class NoticePanel extends Panel {
     private mContentText: Phaser.GameObjects.Text;
@@ -74,13 +74,14 @@ export class NoticePanel extends Panel {
     }
 
     protected init() {
-        const background = new NinePatch(this.scene, {
-            width: 1200,
-            height: 120,
-            key: Border.getName(),
-            columns: Border.getColumns(),
-            rows: Border.getRows()
-        });
+        // const background = new NinePatch(this.scene, {
+        //     width: 1200,
+        //     height: 120,
+        //     key: Border.getName(),
+        //     columns: Border.getColumns(),
+        //     rows: Border.getRows()
+        // });
+        const background = new NinePatch(this.scene, 0, 0, 1200, 120, Border.getName(), null, Border.getConfig());
         this.add(background);
 
         this.mContentText = this.scene.make.text({
