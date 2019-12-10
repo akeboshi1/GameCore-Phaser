@@ -159,7 +159,7 @@ export class FramesDisplay extends DisplayObject {
             key,
             frames,
             frameRate: animation.frameRate,
-            repeat: -1,
+            repeat: animation.loop ? -1 : 1,
         };
 
         this.mHasAnimation = true;

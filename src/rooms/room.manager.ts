@@ -120,7 +120,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         room.addActor(vw.actor);
         room.enter(vw.scene);
-        this.mWorld.changeRoom(room);
+        // this.mWorld.changeRoom(room);
         this.mCurRoom = room;
     }
 
