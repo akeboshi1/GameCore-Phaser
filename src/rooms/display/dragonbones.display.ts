@@ -198,15 +198,15 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     protected buildDragbones() {
-        // if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
-        //     this.onLoadCompleteHandler();
-        // } else {
-        const res = "./resources/dragonbones";
-        const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
-        const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
-        const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
-        this.loadDragonBones(res, pngUrl, jsonUrl, dbbinUrl);
-        // }
+        if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
+            this.onLoadCompleteHandler();
+        } else {
+            const res = "./resources/dragonbones";
+            const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
+            const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
+            const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
+            this.loadDragonBones(res, pngUrl, jsonUrl, dbbinUrl);
+        }
     }
 
     protected onLoadCompleteHandler(loader?: any, totalComplete?: number, totalFailed?: number) {
@@ -749,16 +749,15 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             const partName: string = ResUtils.getPartName(key);
             const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
-            if (!this.scene.game.textures.exists(partName) && !dragonBonesTexture.frames[frameName]) {
+            if (!this.scene.textures.exists(partName) && !dragonBonesTexture.frames[frameName]) {
                 // ==============新资源需从外部加载，之后要重新打图集
                 this.mLoadMap.set(slot.name, [slot.name, key]);
             } else {
                 //     // ==============贴图集上的资源 / 单个替换资源
                 let img: dragonBones.phaser.display.SlotImage;
                 if (dragonBonesTexture.frames[frameName]) {// && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
-                    slot.display.visible = true;
-                    const name = frameName.split("/")[1] + "_png";
-                    if (name === partName) {
+                    if (!this.scene.textures.exists(partName)) {
+                        this.mLoadMap.set(slot.name, [slot.name, key]);
                         return;
                     }
                     img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
@@ -798,9 +797,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(load[0]);
                 // slot.display.visible = true;
                 const name: string = ResUtils.getPartName(load[1]);
-                if (this.scene.game.textures.exists(name) && !this.mErrorLoadMap.get(name)) {
-                    const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, name);
-                    slot.replaceDisplay(img);
+                if (this.scene.textures.exists(name) && !this.mErrorLoadMap.get(name)) {
+                    const baseX = slot.display ? slot.display.x : 0;
+                    const baseY = slot.display ? slot.display.y : 0;
+                    const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, baseX, baseY, name);
+                    if (img.texture.key === name) {
+                        slot.replaceDisplay(img);
+                    }
                 }
             });
 
