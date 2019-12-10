@@ -10,6 +10,7 @@ import { MainUIMobile } from "./mainUI.mobile";
 import { PBpacket } from "net-socket-packet";
 import { MainUIMediator } from "../mainUI.mediator";
 import { FriendMediator } from "../../friend/friend.mediator";
+import { BagMediator } from "../../bag/bagView/bagMediator";
 
 export class RightBtnGroup extends Panel {
     private mWorld: WorldService;
@@ -122,7 +123,7 @@ export class RightBtnGroup extends Panel {
             // ========临时调试用
             // const mainUIMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
             // mainUIMed.tweenView(false);
-            // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
+            // this.mWorld.uiManager.getMediator(BagMediator.NAME).show();
         });
         this.add(this.handBtn);
         this.mBagSlotList = [];

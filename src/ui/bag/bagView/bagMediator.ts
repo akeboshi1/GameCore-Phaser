@@ -7,6 +7,7 @@ import { IDragable } from "../idragable";
 import { IDropable } from "../idropable";
 import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
+import { ILayerManager } from "../../layer.manager";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -21,8 +22,10 @@ export class BagMediator extends BaseMediator {
     public world: WorldService;
     private mPageNum: number = 0;
     private mScene: Phaser.Scene;
-    constructor(mworld: WorldService, scene: Phaser.Scene) {
+    private mLayerManager;
+    constructor(layerManager: ILayerManager, mworld: WorldService, scene: Phaser.Scene) {
         super(mworld);
+        this.mLayerManager = layerManager;
         this.world = mworld;
         this.mScene = scene;
     }
@@ -55,6 +58,7 @@ export class BagMediator extends BaseMediator {
             this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.getHero().model.package.id, 1, BagPanel.PageMaxCount);
         }
         this.mView.show(param);
+        this.mLayerManager.addToUILayer(this.mView);
         super.show(param);
     }
 

@@ -4,6 +4,7 @@ import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Panel } from "../../components/panel";
 import { Url } from "../../../utils/resUtil";
+import { NinePatch } from "../../components/nine.patch";
 
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;
@@ -28,8 +29,13 @@ export class BagPanel extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width >> 1;
-        this.y = size.height - 200;
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = size.width >> 1;
+            this.y = size.height - 200;
+        } else {
+            this.x = size.width >> 1;
+            this.y = size.height - this.height >> 1;
+        }
     }
 
     public setDataList(value: any[]) {
@@ -84,10 +90,10 @@ export class BagPanel extends Panel {
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        // this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         // ===============背包界面左翻按钮
-        this.x = size.width >> 1;
-        this.y = size.height - 200;
+        // this.x = size.width >> 1;
+        // this.y = size.height - 200;
         this.mPreBtn = this.mScene.make.sprite(undefined, false);
         this.mPreBtn.setTexture(this.mResStr, "bagView_tab");
         this.mPreBtn.x = -380;
@@ -151,6 +157,7 @@ export class BagPanel extends Panel {
         if (this.mDataList) {
             this.refreshDataList();
         }
+        this.resize();
         super.init();
     }
 
@@ -229,8 +236,9 @@ export class BagPanel extends Panel {
         const bgGraphics: Phaser.GameObjects.Graphics = this.mScene.add.graphics();
         bgGraphics.fillStyle(COLOR_BG, .5);
         bgGraphics.fillRect((-width >> 1) + 3, (-height >> 1) + 1, width - 6, height - 6);
-        bgGraphics.lineStyle(3, COLOR_LINE, .8);
+        bgGraphics.lineStyle(3, COLOR_LINE, .6);
         bgGraphics.strokeRect(-width >> 1, -height >> 1, width, height);
+        this.setSize(width, height);
         return bgGraphics;
     }
 
