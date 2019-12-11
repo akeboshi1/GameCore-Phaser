@@ -230,14 +230,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   public pause() {
-    this.mScene.scene.pause();
+    if (this.mScene) this.mScene.scene.pause();
     this.mWorld.inputManager.enable = false;
     this.clockSyncComplete = false;
     // todo launch
   }
 
   public resume(name: string) {
-    this.mScene.scene.resume(name);
+    if (this.mScene) this.mScene.scene.resume(name);
     this.mWorld.inputManager.enable = true;
     this.mClock.sync(-1);
   }
@@ -442,7 +442,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     room: this
     //   });
     //   return;
-      // this.startPlay();
+    // this.startPlay();
     // }
     this.mWorld.game.scene.run(PlayScene.name, {
       room: this
