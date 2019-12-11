@@ -46,6 +46,8 @@ export interface IRoomService {
   // blockCheckWorker: BlockCheckWorker;
   clockSyncComplete: boolean;
 
+  enter(room: op_client.IScene): void;
+
   now(): number;
 
   startLoad();
@@ -57,8 +59,6 @@ export interface IRoomService {
   // startCheckBlock();
 
   updateClock(time: number, delta: number): void;
-
-  enter(room: op_client.IScene): void;
 
   pause(): void;
 

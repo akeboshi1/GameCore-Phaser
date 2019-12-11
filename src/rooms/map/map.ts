@@ -55,4 +55,5 @@ export class Map extends PacketHandler implements IEntity {
     public removePackItems(elementId: number, itemId: number) {
         this.mMapModel.removePackItems(elementId, itemId);
     }
+
 }

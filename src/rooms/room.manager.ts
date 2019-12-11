@@ -5,11 +5,12 @@ import { op_client } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
 import {EditorRoom} from "./editor.room";
+import {DecorateRoom} from "./decorate.room";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
-    readonly currentRoom: Room | undefined;
+    readonly currentRoom: IRoomService | undefined;
 
     readonly connection: ConnectionService | undefined;
 
@@ -20,7 +21,7 @@ export interface IRoomManager {
 export class RoomManager extends PacketHandler implements IRoomManager {
     protected mWorld: WorldService;
     private mRooms: Room[] = [];
-    private mCurRoom: Room;
+    private mCurRoom: IRoomService;
 
     constructor(world: WorldService) {
         super();
@@ -124,6 +125,16 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mCurRoom = room;
     }
 
+    private onEnterDecorate(packet: PBpacket) {
+        if (this.mCurRoom) {
+            this.leaveScene(this.mCurRoom);
+        }
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
+        const room: DecorateRoom = new DecorateRoom(this);
+        room.enter((content.scene));
+        this.mCurRoom = room;
+    }
+
     private onEnterEditor(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE = packet.content;
         const room = new EditorRoom(this);
@@ -141,7 +152,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return this.mWorld;
     }
 
-    get currentRoom(): Room {
+    get currentRoom(): IRoomService {
         return this.mCurRoom;
     }
 

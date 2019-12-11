@@ -3,6 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/tooqing.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/tooqing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/resources/dragonbones/bones_human01_ske.dbbin" beforeDir="false" afterPath="$PROJECT_DIR$/release/resources/dragonbones/bones_human01_ske.dbbin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/resources/dragonbones/bones_human01_tex.json" beforeDir="false" afterPath="$PROJECT_DIR$/release/resources/dragonbones/bones_human01_tex.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/resources/dragonbones/bones_human01_tex.png" beforeDir="false" afterPath="$PROJECT_DIR$/release/resources/dragonbones/bones_human01_tex.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/map/map.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/map/map.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/ui.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ui.manager.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,23 +67,23 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.tslint" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="ts.rename.search.for.js.occurrences" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\PixelPai\game-core\src\rooms" />
+      <recent name="E:\PixelPai\game-core\src\ui" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms" />
+      <recent name="C:\Users\Seven\git\game-core\src\utils" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/config" />
       <recent name="C:\Users\Seven\git\game-core\config" />
       <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\net" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\PixelPai\game-core\src\ui" />
-      <recent name="C:\Users\Seven\git\game-core\src\rooms" />
-      <recent name="C:\Users\Seven\git\game-core\src\utils" />
-      <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
-      <recent name="C:\Users\Seven\git\game-core\src\game" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -185,6 +195,7 @@
       <workItem from="1573823097555" duration="5074000" />
       <workItem from="1574039467681" duration="5802000" />
       <workItem from="1574826545576" duration="6370000" />
+      <workItem from="1576051405429" duration="11451000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
