@@ -43,7 +43,7 @@ export class RightBtnGroup extends Panel {
                 this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
-                this.y = size.height - padHei * this.mWorld.uiScale - this.height;
+                this.y = size.height - (padHei + this.height / 2) * this.mWorld.uiScale;
                 this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
                 break;
         }

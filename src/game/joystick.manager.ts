@@ -62,11 +62,11 @@ export class JoyStickManager implements InputManager {
         const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.mParentcon) {
             if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.mParentcon.x = this.mParentcon.width;
-                this.mParentcon.y = size.height - this.mParentcon.height;
+                this.mParentcon.x = this.mParentcon.width * this.worldService.uiScale;
+                this.mParentcon.y = size.height - this.mParentcon.height * this.worldService.uiScale;
             } else {
-                this.mParentcon.x = this.mParentcon.width;
-                this.mParentcon.y = (mainUIMed.getView() as MainUIMobile).getBottomView().y - padHei - this.mParentcon.height;
+                this.mParentcon.x = this.mParentcon.width * this.worldService.uiScale;
+                this.mParentcon.y = size.height - (padHei + this.mParentcon.height) * this.worldService.uiScale;
             }
             this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         }
@@ -80,11 +80,11 @@ export class JoyStickManager implements InputManager {
         const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            baseX = this.mParentcon.width;
-            baseY = size.height - this.mParentcon.height;
+            baseX = this.mParentcon.width * this.worldService.uiScale;
+            baseY = size.height - this.mParentcon.height * this.worldService.uiScale;
         } else {
-            baseX = this.mParentcon.width;
-            baseY = (mainUIMed.getView() as MainUIMobile).getBottomView().y - padHei - this.mParentcon.height;
+            baseX = this.mParentcon.width * this.worldService.uiScale;
+            baseY = size.height - (padHei + this.mParentcon.height) * this.worldService.uiScale;
         }
 
         const toX: number = show === true ? baseX : baseX - this.mParentcon.width;

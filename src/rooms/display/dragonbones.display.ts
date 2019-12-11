@@ -298,7 +298,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             // const part: string = obj.slot.replace("$", obj.dir.toString());
             // Logger.log(part);
         }
-        if (this.mLoadMap && this.mLoadMap.size > 0) this.startLoad();
+        if (this.mLoadMap && this.mLoadMap.size > 0) {
+            this.startLoad();
+        } else {
+            this.add(this.mArmatureDisplay);
+        }
         this.replaceArr.splice(0);
     }
 

@@ -4,7 +4,6 @@ import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Panel } from "../../components/panel";
 import { Url } from "../../../utils/resUtil";
-import { NinePatch } from "../../components/nine.patch";
 
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;
@@ -34,8 +33,9 @@ export class BagPanel extends Panel {
             this.y = size.height - 200;
         } else {
             this.x = size.width >> 1;
-            this.y = size.height - this.height >> 1;
+            this.y = size.height - (this.height) * this.mWorld.uiScale >> 1;
         }
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public setDataList(value: any[]) {
@@ -83,6 +83,11 @@ export class BagPanel extends Panel {
 
     public getCurPageIndex(): number {
         return this.mPageIndex;
+    }
+
+    public show(param?: any) {
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        super.show(param);
     }
 
     protected init() {
