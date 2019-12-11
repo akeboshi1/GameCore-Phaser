@@ -218,12 +218,14 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mAnimationName,
             this.dragonBonesName,
         );
+        this.add(this.mArmatureDisplay);
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
         this.clearArmatureSlot();
 
         // ==========替换相应格位的display，服务端通信后可调用
         this.getReplaceArr();
         this.showReplaceArmatrue();
+        this.mArmatureDisplay.visible = false;
 
         // this.play("idle");
         this.mArmatureDisplay.x = this.baseLoc.x;
@@ -301,7 +303,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (this.mLoadMap && this.mLoadMap.size > 0) {
             this.startLoad();
         } else {
-            this.add(this.mArmatureDisplay);
+            this.mArmatureDisplay.visible = true;
         }
         this.replaceArr.splice(0);
     }
@@ -853,7 +855,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             // });
             // this.mArmatureDisplay.armature.replacedTexture = this.mDragonBonesRenderTexture;
             // this.mArmatureDisplay.armature.invalidUpdate(null, true);
-            this.add(this.mArmatureDisplay);
+            this.mArmatureDisplay.visible = true;
             this.mLoadMap.clear();
         }, this);
 
