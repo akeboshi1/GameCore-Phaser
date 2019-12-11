@@ -9,9 +9,6 @@ import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { MainUIMobile } from "./mainUI.mobile";
 import { PBpacket } from "net-socket-packet";
 import { MainUIMediator } from "../mainUI.mediator";
-import { FriendMediator } from "../../friend/friend.mediator";
-import { BagMediator } from "../../bag/bagView/bagMediator";
-
 export class RightBtnGroup extends Panel {
     private mWorld: WorldService;
     private mBtnY: number = 0;
@@ -39,8 +36,15 @@ export class RightBtnGroup extends Panel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
-                this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
+                const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
+
+                if (playerModel.package && playerModel.package.items) {
+                    this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
+                    this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
+                } else {
+                    this.y = size.height - (this.height) * this.mWorld.uiScale;
+                    this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
+                }
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
                 this.y = size.height - (padHei + this.height / 2) * this.mWorld.uiScale;
@@ -188,6 +192,7 @@ export class RightBtnGroup extends Panel {
             }
         }
         this.setSize(this.mWid, this.mHei);
+
         this.resize();
     }
 }

@@ -68,6 +68,20 @@ export class ChatPanelMobile extends BaseChatPanel {
             this.add(track);
             this.add(thumb);
         }
+        if (this.mInputText) {
+            this.mInputText.destroy();
+            this.mInputText = null;
+            this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
+                type: "input",
+                fontSize: "20px",
+                color: "#808080"
+            })
+                .resize(328, 26)
+                .setOrigin(0, 0)
+                .setStyle({ font: "bold 20px YaHei" })
+                .on("focus", this.onFocusHandler, this)
+                .on("blur", this.onBlurHandler, this);
+        }
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
                 this.mWidth = size.width >> 1;
@@ -79,8 +93,9 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
                 this.clickContainer.rotation = Math.PI * .5;
                 this.arrow.rotation = Math.PI * .5;
+                this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
                 this.mTextArea = new TextArea(this.mScene, {
-                    x: this.mWidth / 2,
+                    x: this.mWidth * .5 / this.mWorld.uiScale,
                     y: this.mHeight / 2,
                     textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
                     textHeight: this.mHeight,
@@ -98,8 +113,9 @@ export class ChatPanelMobile extends BaseChatPanel {
                 this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
                 this.x = 0;
                 this.y = this.mHeight + 20 * this.mWorld.uiScale;
+                this.mInputBg.y = this.mBorder.height - this.mInputBg.height;
                 this.mTextArea = new TextArea(this.mScene, {
-                    x: (this.mWidth - 20) / this.mWorld.uiScale >> 1,
+                    x: (this.mWidth - 15) / this.mWorld.uiScale >> 1,
                     y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
                     textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
                     textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
@@ -133,12 +149,13 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.setSize(this.mWidth, this.mHeight);
         // this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
         this.mInputBg.x = this.mInputBg.width >> 1;
-        this.mInputBg.y = this.mBorder.height * this.mWorld.uiScale;
+        
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
         this.mSendBtn.y = this.mInputBg.y;
-        this.mInputText.x = 2;
-        this.mInputText.y = this.mInputBg.y - 12 * this.mWorld.uiScale;
+        this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
+        this.mInputText.setText("123123");
         this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.add(this.mInputText);
     }
 
     public destroy() {
@@ -265,7 +282,6 @@ export class ChatPanelMobile extends BaseChatPanel {
             .setStyle({ font: "bold 20px YaHei" })
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
-        this.add(this.mInputText);
 
         this.mSendBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, WhiteButton.getName(), "发送", WhiteButton.getConfig());
         this.mSendBtn.on("pointerdown", this.onSendMsgHandler, this);
@@ -281,6 +297,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.clickContainer.setInteractive();
         this.clickContainer.on("pointerdown", this.clickHandler, this);
         this.add(this.clickContainer);
+        this.add(this.mInputText);
         this.setLocation();
         super.init();
     }
