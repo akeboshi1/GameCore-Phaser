@@ -29,10 +29,10 @@ export class ItemDetail extends Panel {
     public resize() {
         const size: Size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width - (this.width + this.mBtnWid) * this.mWorld.uiScale >> 1;
+            this.x = size.width - (this.width + this.mBtnWid) / 2 * this.mWorld.uiScale >> 1;
             this.y = size.height - this.height * this.mWorld.uiScale >> 1;
         } else {
-            this.x = size.width - (this.width + this.mBtnWid) * this.mWorld.uiScale >> 1;
+            this.x = size.width - (this.width + this.mBtnWid) / 2 * this.mWorld.uiScale >> 1;
             this.y = size.height - this.height * this.mWorld.uiScale >> 1;
         }
         this.scaleX = this.scaleY = this.mWorld.uiScale;

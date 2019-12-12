@@ -37,8 +37,9 @@ export class RightBtnGroup extends Panel {
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
                 const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
-
-                if (playerModel.package && playerModel.package.items) {
+                this.y = size.height - (this.height) * this.mWorld.uiScale;
+                this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
+                if (playerModel.package && playerModel.package.items && playerModel.package.items.length > 0) {
                     this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
                     this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
                 } else {

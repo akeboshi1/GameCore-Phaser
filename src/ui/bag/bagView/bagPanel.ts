@@ -32,8 +32,13 @@ export class BagPanel extends Panel {
             this.x = size.width >> 1;
             this.y = size.height - 200;
         } else {
-            this.x = size.width >> 1;
-            this.y = size.height - (this.height) * this.mWorld.uiScale >> 1;
+            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.x = size.width >> 1;
+                this.y = size.height - (this.height) * this.mWorld.uiScale >> 1;
+            } else {
+                this.x = size.width >> 1;
+                this.y = size.height - (this.height / 2) * this.mWorld.uiScale >> 1;
+            }
         }
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
@@ -182,6 +187,11 @@ export class BagPanel extends Panel {
             return;
         }
         this.init();
+    }
+
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) this.resize();
     }
 
     private nextHandler(pointer, gameObject) {

@@ -4,7 +4,7 @@ import { Room, IRoomService } from "./room";
 import { op_client } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
-import {EditorRoom} from "./editor.room";
+import { EditorRoom } from "./editor.room";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;
@@ -53,13 +53,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public onFocus() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.resume(room.scene.scene.key);
+            if (room && room.scene) room.resume(room.scene.scene.key);
         });
     }
 
     public onBlur() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.pause();
+            if (room && room.scene) room.pause();
         });
     }
 
@@ -75,13 +75,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         if (idx >= 0) {
             const room: Room = this.mRooms[idx];
-            room.resume(room.scene.scene.key);
+            if (room && room.scene) room.resume(room.scene.scene.key);
         }
     }
 
     public stop() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.destroy();
+            if (room && room.scene) room.destroy();
         });
     }
 

@@ -149,11 +149,9 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.setSize(this.mWidth, this.mHeight);
         // this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
         this.mInputBg.x = this.mInputBg.width >> 1;
-        
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
         this.mSendBtn.y = this.mInputBg.y;
         this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
-        this.mInputText.setText("123123");
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         this.add(this.mInputText);
     }
