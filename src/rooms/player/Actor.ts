@@ -18,7 +18,8 @@ export class Actor extends Player implements InputListener {
     private mRoom: IRoomService;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
-        this.mRenderable = true; // Actor is always renderable!!!
+        this.mBlockable = false;
+        // this.mRenderable = true; // Actor is always renderable!!!
         // this.addDisplay();
         this.mRoom = this.mElementManager.roomService;
 
@@ -140,6 +141,10 @@ export class Actor extends Player implements InputListener {
         super.onMoving();
     }
 
+    protected addToBlock() {
+        this.addDisplay();
+    }
+
     set model(val: ISprite) {
         this.mModel = val;
         if (!val) {
@@ -151,7 +156,6 @@ export class Actor extends Player implements InputListener {
         this.mDisplay.changeAlpha(this.mModel.alpha);
         this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
-        this.addDisplay();
 
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;

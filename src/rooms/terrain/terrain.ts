@@ -136,11 +136,7 @@ export class Terrain extends BlockObject implements IElement {
         if (scene) {
             this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
             this.setPosition45(this.model.pos);
-            if (this.mBlockable) {
-                this.roomService.addBlockObject(this);
-            } else {
-                this.addDisplay();
-            }
+            this.addToBlock();
             // this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;
@@ -165,6 +161,14 @@ export class Terrain extends BlockObject implements IElement {
 
         room.addToGround(this.mDisplay);
         this.setDepth();
+    }
+
+    protected addToBlock() {
+        if (this.mBlockable) {
+            this.roomService.addBlockObject(this);
+        } else {
+            this.addDisplay();
+        }
     }
 
     protected setDepth() {

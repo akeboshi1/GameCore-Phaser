@@ -72,6 +72,8 @@ export interface IRoomService {
 
   removeBlockObject(object: IElement);
 
+  updateBlockObject(object: IElement);
+
   addToGround(element: ElementDisplay | ElementDisplay[]);
 
   addToSurface(element: ElementDisplay | ElementDisplay[]);
@@ -270,6 +272,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public removeBlockObject(object: IElement) {
     if (this.blocks) {
       this.blocks.remove(object);
+    }
+  }
+
+  public updateBlockObject(object: IElement) {
+    if (this.blocks) {
+      this.blocks.check(object);
     }
   }
 

@@ -23,7 +23,6 @@ export class Player extends Element {
         if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
             this.setDirection(moveData.direction);
         }
-        Logger.getInstance().log("dir0:" + moveData.direction);
         super.move(moveData);
     }
 
@@ -32,7 +31,6 @@ export class Player extends Element {
             this.mDisplayInfo.avatarDir = dir;
             if (this.mDisplay) this.mDisplay.play(this.mCurState);
         }
-        // Logger.log("dir1:" + dir);
     }
 
     public changeState(val?: string) {

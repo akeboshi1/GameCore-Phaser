@@ -253,6 +253,7 @@ export class Element extends BlockObject implements IElement {
             this.mDisplay.setPosition(p.x, p.y, p.z);
         }
         this.setDepth();
+        this.updateBlock();
     }
 
     public getPosition(): Pos {
@@ -416,11 +417,7 @@ export class Element extends BlockObject implements IElement {
             this.mDisplay.setPosition(pos.x, pos.y, pos.z);
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);
-            if (this.mBlockable) {
-                this.roomService.addBlockObject(this);
-            } else {
-                this.addDisplay();
-            }
+            this.addToBlock();
         }
         return this.mDisplay;
     }
@@ -434,6 +431,20 @@ export class Element extends BlockObject implements IElement {
         }
         room.addToSurface(this.mDisplay);
         this.setDepth();
+    }
+
+    protected addToBlock() {
+        if (this.mBlockable) {
+            this.roomService.addBlockObject(this);
+        } else {
+            this.addDisplay();
+        }
+    }
+
+    protected updateBlock() {
+        if (this.mBlockable) {
+            this.roomService.updateBlockObject(this);
+        }
     }
 
     protected setDepth() {
@@ -482,6 +493,10 @@ export class Element extends BlockObject implements IElement {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
+            if (this.mBlockable) {
+                this.roomService.updateBlockObject(this);
+                // this.roomService.addBlockObject()
+            }
         }
     }
 }

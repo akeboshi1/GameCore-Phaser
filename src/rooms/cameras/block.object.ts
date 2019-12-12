@@ -1,5 +1,4 @@
 import { ElementDisplay } from "../display/element.display";
-import { FramesDisplay } from "../display/frames.display";
 
 export abstract class BlockObject {
     protected mDisplay?: ElementDisplay;
@@ -64,4 +63,11 @@ export abstract class BlockObject {
         }
         this.mDisplay.removeFromParent();
     }
+
+    protected addToBlock() {
+    }
+
+    protected updateBlock() {
+    }
+
 }
