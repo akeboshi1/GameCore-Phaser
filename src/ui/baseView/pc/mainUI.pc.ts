@@ -130,7 +130,7 @@ export class MainUIPC extends Panel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any>this.mScene).rexUI.add.buttons({
+            this.buttons = (<any> this.mScene).rexUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,
