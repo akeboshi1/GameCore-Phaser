@@ -34,6 +34,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
+
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -201,5 +203,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onSetPosition(packet: PBpacket) {
+    }
+
+    private onShowBubble(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
+        const element = this.get(content.chatSenderid);
+        if (element) {
+            element.showBubble(content.chatContext, content.chatSetting);
+        }
     }
 }

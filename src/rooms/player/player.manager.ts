@@ -8,7 +8,7 @@ import { Pos } from "../../utils/pos";
 import { ISprite, Sprite } from "../element/sprite";
 import { MessageType } from "../../const/MessageType";
 import { Player } from "./player";
-import { IElement } from "../element/element";
+import {Element, IElement} from "../element/element";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
@@ -24,6 +24,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.onShowEffect);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
         }
@@ -141,6 +142,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return false;
     }
 
+    private onSync(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
+            return;
+        }
+        let player: Player = null;
+        const sprites = content.sprites;
+        for (const sprite of sprites) {
+            player = this.get(sprite.id);
+            if (player) {
+                player.model = new Sprite(sprite);
+            }
+        }
+    }
+
     private onAdjust(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
         const positions = content.spritePositions;
@@ -187,7 +203,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap.has(sprite.id)) {
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
-            this.roomService.blocks.add(player);
         }
     }
 
