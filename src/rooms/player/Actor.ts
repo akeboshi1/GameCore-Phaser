@@ -3,19 +3,22 @@ import { ISprite, Sprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import { PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_client } from "pixelpai_proto";
+import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
 import { Player } from "./player";
 import { Bag } from "./bag/bag";
 import { Interactive } from "./interactive/interactive";
 import { Friend } from "./friend/friend";
+import { PlayerModel } from "./player.model";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
     protected mBag: Bag;
+    // package: op_gameconfig.IPackage;
     protected mFriend: Friend;
     protected mInteractive: Interactive;
     private mRoom: IRoomService;
+    private mPackage: op_gameconfig.IPackage;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.mRenderable = true; // Actor is always renderable!!!
@@ -30,13 +33,6 @@ export class Actor extends Player implements InputListener {
         //         roomService.cameraService.startFollow(this.mDisplay);
         //     }
         // }
-
-        if (this.model) {
-            if (this.model.package) {
-                this.mBag = new Bag(mElementManager.roomService.world);
-                this.mBag.register();
-            }
-        }
 
         this.mFriend = new Friend(this.mRoom.world);
         this.mRoom.playerManager.set(this.id, this);
@@ -145,6 +141,11 @@ export class Actor extends Player implements InputListener {
         if (!val) {
             return;
         }
+        if ((val as PlayerModel).package) {
+            this.mPackage = (val as PlayerModel).package;
+            this.mBag = new Bag(this.mElementManager.roomService.world);
+            this.mBag.register();
+        }
         this.mDisplayInfo = this.mModel.displayInfo;
         this.createDisplay();
         this.setPosition(this.mModel.pos);
@@ -163,5 +164,13 @@ export class Actor extends Player implements InputListener {
 
     get model(): ISprite {
         return this.mModel;
+    }
+
+    get package(): op_gameconfig.IPackage {
+        return this.mPackage;
+    }
+
+    set package(value: op_gameconfig.IPackage) {
+        this.mPackage = value;
     }
 }

@@ -55,7 +55,7 @@ export class BagMediator extends BaseMediator {
         if (param) {
             this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(param[0].id, 1, BagPanel.PageMaxCount);
         } else {
-            this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.getHero().model.package.id, 1, BagPanel.PageMaxCount);
+            this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.getHero().package.id, 1, BagPanel.PageMaxCount);
         }
         this.mView.show(param);
         this.mLayerManager.addToUILayer(this.mView);
@@ -97,7 +97,7 @@ export class BagMediator extends BaseMediator {
     private refrehView(mItems?: op_gameconfig.IItem[]): void {
         let items: op_gameconfig.IItem[];
         if (!mItems) {
-            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHero().model.package;
+            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHero().package;
             if (packs == null) {
                 return;
             }
@@ -114,12 +114,12 @@ export class BagMediator extends BaseMediator {
     }
 
     private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
-        if (data.id !== this.world.roomManager.currentRoom.getHero().model.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHero().package.id) return;
         this.refrehView(data.items);
     }
 
     private onUpdatePackageHandler(data) {
-        if (data.id !== this.world.roomManager.currentRoom.getHero().model.package.id) return;
+        if (data.id !== this.world.roomManager.currentRoom.getHero().package.id) return;
         this.refrehView(data.items);
     }
 

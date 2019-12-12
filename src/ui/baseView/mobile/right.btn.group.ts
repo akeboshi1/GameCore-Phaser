@@ -9,6 +9,7 @@ import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { MainUIMobile } from "./mainUI.mobile";
 import { PBpacket } from "net-socket-packet";
 import { MainUIMediator } from "../mainUI.mediator";
+import { PlayerModel } from "../../../rooms/player/player.model";
 export class RightBtnGroup extends Panel {
     private mWorld: WorldService;
     private mBtnY: number = 0;
@@ -36,10 +37,10 @@ export class RightBtnGroup extends Panel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
+                const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
                 this.y = size.height - (this.height) * this.mWorld.uiScale;
                 this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
-                if (playerModel.package && playerModel.package.items && playerModel.package.items.length > 0) {
+                if (mPackage && mPackage.items && mPackage.items.length > 0) {
                     this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
                     this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
                 } else {
@@ -175,9 +176,9 @@ export class RightBtnGroup extends Panel {
         const size: Size = this.mWorld.getSize();
         this.mHei = this.handBtn.height;
         // =============获取角色背包前几位物品
-        const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
-        if (playerModel.package && playerModel.package.items) {
-            const items: op_gameconfig.IItem[] = playerModel.package.items;
+        const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+        if (mPackage && mPackage.items) {
+            const items: op_gameconfig.IItem[] = mPackage.items;
             const len: number = items.length > MainUIMobile.SlotMaxCount ? MainUIMobile.SlotMaxCount : items.length;
             const posX: number = 0;
             const posY: number = 0;

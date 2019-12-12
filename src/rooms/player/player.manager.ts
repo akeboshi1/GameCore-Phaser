@@ -8,7 +8,8 @@ import { Pos } from "../../utils/pos";
 import { ISprite, Sprite } from "../element/sprite";
 import { MessageType } from "../../const/MessageType";
 import { Player } from "./player";
-import {Element, IElement} from "../element/element";
+import { Element, IElement } from "../element/element";
+import { Actor } from "./Actor";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
@@ -115,26 +116,23 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
-        if (character) {
-            const playerModel: ISprite = character.model;
-            if (!playerModel.package) {
-                playerModel.package = op_gameconfig.Package.create();
+        if (character && character.id === this.mRoom.actor.id) {
+            if (!(character as Actor).package) {
+                (character as Actor).package = op_gameconfig.Package.create();
             }
-            playerModel.package.items = playerModel.package.items.concat(items);
-            if (character === this.mRoom.getHero()) {
-                this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
-            }
+            (character as Actor).package.items = (character as Actor).package.items.concat(items);
+            this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
         }
     }
 
     public removePackItems(elementId: number, itemId: number): boolean {
         const character: Player = this.mPlayerMap.get(elementId);
-        if (character) {
-            const playerModel: ISprite = character.model;
-            const len = playerModel.package.items.length;
+        if (character && this.mRoom.actor.id) {
+            const itemList: any[] = (character as Actor).package.items;
+            const len = itemList.length;
             for (let i = 0; i < len; i++) {
-                if (itemId === playerModel.package.items[i].id) {
-                    playerModel.package.items.splice(i, 1);
+                if (itemId === itemList[i].id) {
+                    itemList.splice(i, 1);
                     return true;
                 }
             }

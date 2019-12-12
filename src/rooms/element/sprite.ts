@@ -30,7 +30,6 @@ export interface ISprite {
     displayInfo: IFramesModel | IDragonbonesModel;
     pos: Pos;
     bindID: number;
-    package: op_gameconfig.IPackage;
 
     newID();
     toSprite(): op_client.ISprite;

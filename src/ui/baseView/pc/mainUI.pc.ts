@@ -130,7 +130,7 @@ export class MainUIPC extends Panel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any> this.mScene).rexUI.add.buttons({
+            this.buttons = (<any>this.mScene).rexUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,
@@ -191,14 +191,14 @@ export class MainUIPC extends Panel {
         this.bagBtn.on("pointerover", this.bagBtnOver, this);
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
 
-        const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
-        if (playerModel && playerModel.package && playerModel.package.items) this.setDataList(playerModel.package.items);
+        const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+        if (mPackage && mPackage.items) this.setDataList(mPackage.items);
         // childList.push(this.mBagBtnCon);
         super.init();
     }
 
     private bagHandler() {
-       // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
+        // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
     }
