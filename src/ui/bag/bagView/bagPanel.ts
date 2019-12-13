@@ -13,14 +13,13 @@ export class BagPanel extends Panel {
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
-    private mWorld: WorldService;
     private mClsBtnSprite: Phaser.GameObjects.Sprite;
     private mPageNum: number = 0;
     private mPageIndex: number = 1;
     private mDataList: any[];
     // private mInitalize: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mScene = scene;
         this.mWorld = world;
         this.bagSlotList = [];
@@ -100,10 +99,18 @@ export class BagPanel extends Panel {
         let wid: number = 0;
         const hei: number = 206;
         const size: Size = this.mWorld.getSize();
-        // this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
-        // ===============背包界面左翻按钮
-        // this.x = size.width >> 1;
-        // this.y = size.height - 200;
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = size.width >> 1;
+            this.y = size.height - 200;
+        } else {
+            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.x = size.width >> 1;
+                this.y = size.height - (this.height) * this.mWorld.uiScale >> 1;
+            } else {
+                this.x = size.width >> 1;
+                this.y = size.height - (this.height / 2) * this.mWorld.uiScale >> 1;
+            }
+        }
         this.mPreBtn = this.mScene.make.sprite(undefined, false);
         this.mPreBtn.setTexture(this.mResStr, "bagView_tab");
         this.mPreBtn.x = -380;

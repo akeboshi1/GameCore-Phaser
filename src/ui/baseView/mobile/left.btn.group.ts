@@ -5,13 +5,11 @@ import { Url } from "../../../utils/resUtil";
 import { IconSelectBtn } from "./icon.select.btn";
 
 export class LeftBtnGroup extends Panel {
-    private mWorld: WorldService;
     private mExpandBtn: IconSelectBtn;
     private mCollapse: boolean = false;
     private mResKey: string;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
-        this.mWorld = world;
+        super(scene, world);
     }
     public show(param?: any) {
         this.scaleX = this.scaleY = this.mWorld.uiScale;

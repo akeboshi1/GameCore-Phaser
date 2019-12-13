@@ -11,7 +11,6 @@ import { PBpacket } from "net-socket-packet";
 import { MainUIMediator } from "../mainUI.mediator";
 import { PlayerModel } from "../../../rooms/player/player.model";
 export class RightBtnGroup extends Panel {
-    private mWorld: WorldService;
     private mBtnY: number = 0;
     private mWid: number = 0;
     private mHei: number = 0;
@@ -21,7 +20,7 @@ export class RightBtnGroup extends Panel {
     private mResKey: string;
     private mOrientation: number;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mWorld = world;
     }
 

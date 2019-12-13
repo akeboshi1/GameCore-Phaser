@@ -5,7 +5,6 @@ import { Url } from "../../../utils/resUtil";
 import { IconBtn } from "./icon.btn";
 
 export class TopBtnGroup extends Panel {
-    private mWorld: WorldService;
     // private mWid: number = 0;
     private mBtnX: number = 0;
     private mBtnList: IconBtn[];
@@ -14,8 +13,7 @@ export class TopBtnGroup extends Panel {
     private mExpandBoo: boolean = false;
     private mOrientation: number = Phaser.Scale.Orientation.LANDSCAPE;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
-        this.mWorld = world;
+        super(scene, world);
     }
 
     public show(param?: any) {

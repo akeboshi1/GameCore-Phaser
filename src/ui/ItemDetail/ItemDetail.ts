@@ -5,6 +5,7 @@ import { Size } from "../../utils/size";
 import { DragDropIcon } from "../bag/dragDropIcon";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { op_gameconfig_01 } from "pixelpai_proto";
+import { World } from "../../game/world";
 
 export class ItemDetail extends Panel {
     private mBtnList: NinePatchButton[];
@@ -18,8 +19,8 @@ export class ItemDetail extends Panel {
     private mIcon: DragDropIcon;
     private mWid: number = 0;
     private mHei: number = 0;
-    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
     }
 
     public getBtnList(): NinePatchButton[] {

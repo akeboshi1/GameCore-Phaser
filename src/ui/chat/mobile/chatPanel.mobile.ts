@@ -15,8 +15,8 @@ export class ChatPanelMobile extends BaseChatPanel {
     private mInputBg;
     private clickContainer: Phaser.GameObjects.Container;
     private arrow;
-    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
         this.setTween(false);
     }
 

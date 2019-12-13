@@ -10,13 +10,12 @@ import { LeftBtnGroup } from "./left.btn.group";
  */
 export class MainUIMobile extends Panel {
     public static SlotMaxCount: number = 4;
-    private mWorld: WorldService;
     private mTopBtnGroup: TopBtnGroup;
     private mRightBtnGroup: RightBtnGroup;
     private mBottomBtnGroup: BottomBtnGroup;
     private mLeftBtnGroup: LeftBtnGroup;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mScene = scene;
         this.mWorld = world;
         this.mTopBtnGroup = new TopBtnGroup(scene, world);

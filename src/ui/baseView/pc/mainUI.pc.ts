@@ -21,7 +21,6 @@ export class MainUIPC extends Panel {
     public bagSlotList: ItemSlot[];
     private mBagBg: Phaser.GameObjects.Sprite;
     private baseBagBgWid: number;
-    private mWorld: WorldService;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
@@ -36,9 +35,8 @@ export class MainUIPC extends Panel {
     private buttons;
 
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
-        super(scene);
+        super(scene, world);
         this.mScene = scene;
-        this.mWorld = world;
         // this.mParentCon = this.mScene.make.container(undefined, false);
         this.x = x;
         this.y = y;

@@ -9,13 +9,11 @@ export class StoragePanel extends Panel {
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
-    private mWorld: WorldService;
     private mBagItemSlotList: ItemSlot[];
     private mBg: Phaser.GameObjects.Image;
     private mClsBtnSprite: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
-        this.mWorld = world;
+        super(scene, world);
     }
     public resize() {
         const size: Size = this.mWorld.getSize();

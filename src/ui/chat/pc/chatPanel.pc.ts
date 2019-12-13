@@ -9,6 +9,7 @@ import { CheckButton } from "../../components/check.button";
 import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 import { NinePatch } from "../../components/nine.patch";
 import { BaseChatPanel } from "../base.chat.panel";
+import { World } from "../../../game/world";
 
 export class ChatPanelPC extends BaseChatPanel {
     private mTextArea: TextArea;
@@ -19,8 +20,8 @@ export class ChatPanelPC extends BaseChatPanel {
     private mPreHei: number = 0;
     private mPreWid: number = 0;
     private outPut: Phaser.GameObjects.Container;
-    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
     }
 
     public appendChat(val: string) {

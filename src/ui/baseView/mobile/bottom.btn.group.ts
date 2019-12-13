@@ -18,13 +18,12 @@ export class BottomBtnGroup extends Panel {
     private mBagBtn: IconBtn;
     private mShopBtn: IconBtn;
     private mBtnList: IconBtn[];
-    private mWorld: WorldService;
     private mExpandBoo: boolean = false;
     private mWid: number = 0;
     private mHei: number = 0;
     // private mOrientation: Phaser.Scale.Orientation;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mWorld = world;
     }
 

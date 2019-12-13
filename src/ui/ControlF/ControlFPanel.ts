@@ -1,11 +1,12 @@
 import { Panel } from "../components/panel";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
+import { WorldService } from "../../game/world.service";
 
 export class ControlFPanel extends Panel {
     private mControlText: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
         this.setTween(false);
     }
 

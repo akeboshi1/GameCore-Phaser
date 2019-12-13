@@ -9,7 +9,6 @@ import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/B
 import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
 export class InteractivePanel extends Panel {
-    private mWorld: WorldService;
     private mNameCon: Phaser.GameObjects.Container;
     private mDescCon: Phaser.GameObjects.Container;
     private mLeftFaceIcon: Phaser.GameObjects.Image;
@@ -34,8 +33,7 @@ export class InteractivePanel extends Panel {
     private mRightBaseScaleY: number = 1;
 
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
-        this.mWorld = world;
+        super(scene, world);
     }
     /**
      * 通過參數進行ui佈局
@@ -292,7 +290,7 @@ export class InteractivePanel extends Panel {
             this.mLeftFaceIcon.scaleX = this.mLeftBaseScaleX * leftScale * .7;
             this.mLeftFaceIcon.scaleY = this.mLeftBaseScaleY * leftScale * .7;
             this.mLeftFaceIcon.x = imgX + 200;
-            this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
+            this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height;
 
             let midScale: number = 1;
             const midIconWid: number = this.mMidFaceIcon.width * this.mWorld.uiScale;
@@ -317,13 +315,13 @@ export class InteractivePanel extends Panel {
             }
             this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale;
             this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale;
-            this.mRightFaceIcon.x = imgX - 200;
+            this.mRightFaceIcon.x = 200;
             this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 2;
         }
 
         if (this.mRadioCom) {
             this.mRadio.x = 220;
-            this.mRadio.y = this.mDescCon.height + 250;
+            this.mRadio.y = this.mDescCon.height + 200;
         }
     }
 
@@ -354,7 +352,7 @@ export class InteractivePanel extends Panel {
                 this.mLeftFaceIcon.scaleX = scaleX * scale;
                 this.mLeftFaceIcon.scaleY = scaleY * scale;
                 this.mLeftFaceIcon.x = imgX + 200;
-                this.mLeftFaceIcon.y = imgY;
+                this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
                 this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
@@ -376,7 +374,7 @@ export class InteractivePanel extends Panel {
                 this.mMidFaceIcon.scaleX = scaleX * scale;
                 this.mMidFaceIcon.scaleY = scaleY * scale;
                 this.mMidFaceIcon.x = 0;
-                this.mMidFaceIcon.y = imgY;
+                this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
                 this.mLeftFaceIcon.off("pointerdown", this.midFaceClick, this);
@@ -396,8 +394,8 @@ export class InteractivePanel extends Panel {
                 }
                 this.mRightFaceIcon.scaleX = scaleX * scale;
                 this.mRightFaceIcon.scaleY = scaleY * scale;
-                this.mRightFaceIcon.x = imgX - 200;
-                this.mRightFaceIcon.y = imgY;
+                this.mRightFaceIcon.x = 200;
+                this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
                 this.mRightFaceIcon.off("pointerdown", this.rightFaceClick, this);
@@ -445,7 +443,7 @@ export class InteractivePanel extends Panel {
         const size: Size = this.mWorld.getSize();
         if (!this.mRadio) return;
         this.mRadio.x = 220;
-        this.mRadio.y = this.mDescCon.height + 250;
+        this.mRadio.y = this.mDescCon.height + 200;
         this.resize();
     }
 }

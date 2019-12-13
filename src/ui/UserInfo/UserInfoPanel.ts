@@ -8,14 +8,13 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
 
 export class UserInfoPanel extends Panel {
-    private mWorld: WorldService;
     private mActor: DynamicImage;
     private mBadgeImages: DynamicImage[] = [];
     private mNickName: Phaser.GameObjects.Text;
     private mLv: Phaser.GameObjects.Text;
     private mFollwerBtn: NinePatchButton;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
-        super(scene);
+        super(scene, worldService);
         this.mWorld = worldService;
     }
 

@@ -117,7 +117,6 @@ export class Element extends BlockObject implements IElement {
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
-    protected mCurDir: number = 1;
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
     protected mBlockable: boolean = true;
@@ -249,7 +248,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setPosition(p: Pos) {
-        if (this.mDisplay) {
+        if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
         }
         this.setDepth();
@@ -414,7 +413,7 @@ export class Element extends BlockObject implements IElement {
                 this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
             }
             const pos = this.mModel.pos;
-            this.mDisplay.setPosition(pos.x, pos.y, pos.z);
+            if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);
             this.addToBlock();
