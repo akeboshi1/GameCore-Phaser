@@ -152,8 +152,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return this.mWorld;
     }
 
-    get currentRoom(): IRoomService {
-        return this.mCurRoom;
+    get currentRoom(): Room {
+        return <Room> this.mCurRoom;
     }
 
     get connection(): ConnectionService {
