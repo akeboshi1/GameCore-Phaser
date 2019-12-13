@@ -8,12 +8,12 @@ import { Pos } from "../../utils/pos";
 import { ISprite, Sprite } from "../element/sprite";
 import { MessageType } from "../../const/MessageType";
 import { Player } from "./player";
-import { Element, IElement } from "../element/element";
+import { IElement } from "../element/element";
 import { Actor } from "./Actor";
+import NodeType = op_def.NodeType;
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
-    private mActorID: number;
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -26,6 +26,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.onShowEffect);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
         }
@@ -256,6 +257,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(id);
             if (player) {
                 player.showEffected();
+            }
+        }
+    }
+
+    private onChangeAnimation(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
+        if (content.nodeType !== NodeType.CharacterNodeType) {
+            return;
+        }
+        const anis = content.changeAnimation;
+        let player: Player = null;
+        for (const ani of anis) {
+            player = this.get((ani.id));
+            if (player) {
+                player.play(ani.animationName);
             }
         }
     }

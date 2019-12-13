@@ -224,6 +224,7 @@ export class Sprite implements ISprite {
 
     set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+        this.mDisplayInfo.animationName = this.currentAnimationName;
     }
 
     get nodeType(): NodeType {
