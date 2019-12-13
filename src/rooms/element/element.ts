@@ -288,6 +288,14 @@ export class Element extends BlockObject implements IElement {
         this.roomService.addToSceneUI(this.mBubble);
     }
 
+    public clearBubble() {
+        if (!this.mBubble) {
+            return;
+        }
+        this.mBubble.destroy();
+        this.mBubble = null;
+    }
+
     public showNickName() {
         if (this.mDisplay && this.model) {
             this.mDisplay.showNickname(this.model.nickname);
