@@ -206,10 +206,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     private onShowBubble(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        const element = this.get(content.chatSenderid);
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
+        const element = this.get(content.receiverid);
         if (element) {
-            element.showBubble(content.chatContext, content.chatSetting);
+            element.showBubble(content.context, content.chatsetting);
         }
     }
 }

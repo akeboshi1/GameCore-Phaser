@@ -96,7 +96,7 @@ export class BottomBtnGroup extends Panel {
         this.mChatText = this.mScene.make.text({
             width: chatBgWidth,
             height: chatBgHeight,
-            style: { font: "bold YaHei", color:"#666666", fontSize: Math.floor(30 * this.mWorld.uiScale), wordWrap: { width: 430, useAdvancedWrap: true } }
+            style: { font: "bold YaHei", color: "#666666", fontSize: Math.floor(30 * this.mWorld.uiScale), wordWrap: { width: 430, useAdvancedWrap: true } }
         }, false);
         this.mChatText.setText("点击窗口进入聊天界面");
         this.mChatContainer.addAt(this.mChatText, 1);
