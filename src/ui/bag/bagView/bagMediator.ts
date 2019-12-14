@@ -59,6 +59,7 @@ export class BagMediator extends BaseMediator {
         }
         this.mView.show(param);
         this.mLayerManager.addToUILayer(this.mView);
+        this.refrehView();
         super.show(param);
     }
 
@@ -105,7 +106,6 @@ export class BagMediator extends BaseMediator {
         } else {
             items = mItems;
         }
-
         this.setListData(items);
     }
 
@@ -113,14 +113,14 @@ export class BagMediator extends BaseMediator {
         (this.mView as BagPanel).setDataList(value);
     }
 
-    private handleSynchroPackage(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE): void {
-        if (data.id !== this.world.roomManager.currentRoom.getHero().package.id) return;
-        this.refrehView(data.items);
+    private handleSynchroPackage(): void {
+        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHero().package.items;
+        this.refrehView(itemList);
     }
 
-    private onUpdatePackageHandler(data) {
-        if (data.id !== this.world.roomManager.currentRoom.getHero().package.id) return;
-        this.refrehView(data.items);
+    private onUpdatePackageHandler() {
+        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHero().package.items;
+        this.refrehView(itemList);
     }
 
 }

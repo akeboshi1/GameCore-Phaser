@@ -101,23 +101,17 @@ export class MainUIPC extends Panel {
     }
 
     public setDataList(items: op_gameconfig.IItem[]) {
+        if (this.bagSlotList) {
+            this.bagSlotList.forEach((itemslot: ItemSlot) => {
+                if (itemslot) itemslot.getView().visible = false;
+            });
+        }
         const childList: Phaser.GameObjects.GameObject[] = [];
         const len: number = items.length > MainUIPC.SlotMaxCount ? MainUIPC.SlotMaxCount : items.length;
-        const subScriptList: string[] = ["0", "b", "c"];
-        let subScriptRes: string;
         let tempWid: number = this.baseBagBgWid + 5;
         for (let i: number = 0; i < len; i++) {
-            if (i >= 9) {
-                subScriptRes = "bag_SubScript" + subScriptList[i % 9];
-            } else {
-                subScriptRes = "bag_SubScript" + (i + 1);
-            }
             let itemSlot: ItemSlot = this.bagSlotList[i];
-            if (!itemSlot) {
-                itemSlot = new ItemSlot(this.mScene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
-                itemSlot.createUI();
-                this.bagSlotList.push(itemSlot);
-            }
+            itemSlot.getView().visible = true;
             childList.push(itemSlot.toolTipCon);
             itemSlot.dataChange(items[i]);
             tempWid += 56 + 5;
@@ -128,7 +122,7 @@ export class MainUIPC extends Panel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any> this.mScene).rexUI.add.buttons({
+            this.buttons = (<any>this.mScene).rexUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,
@@ -136,7 +130,7 @@ export class MainUIPC extends Panel {
                 orientation: 0,
                 buttons: childList,
                 groupName: "bagBtn",
-                align: "center",
+                align: "right",
                 click: {
                     mode: "pointerup",
                     clickInterval: 100
@@ -188,11 +182,27 @@ export class MainUIPC extends Panel {
         this.bagBtn.on("pointerdown", this.bagHandler, this);
         this.bagBtn.on("pointerover", this.bagBtnOver, this);
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
-
+        this.initBagSlot();
         const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
         if (mPackage && mPackage.items) this.setDataList(mPackage.items);
         // childList.push(this.mBagBtnCon);
         super.init();
+    }
+
+    private initBagSlot() {
+        const subScriptList: string[] = ["0", "b", "c"];
+        let subScriptRes: string;
+        for (let i: number = 0; i < MainUIPC.SlotMaxCount; i++) {
+            if (i >= 9) {
+                subScriptRes = "bag_SubScript" + subScriptList[i % 9];
+            } else {
+                subScriptRes = "bag_SubScript" + (i + 1);
+            }
+            const itemSlot = new ItemSlot(this.mScene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+            itemSlot.createUI();
+            itemSlot.getView().visible = false;
+            this.bagSlotList.push(itemSlot);
+        }
     }
 
     private bagHandler() {

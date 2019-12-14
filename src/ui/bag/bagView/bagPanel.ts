@@ -4,6 +4,7 @@ import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Panel } from "../../components/panel";
 import { Url } from "../../../utils/resUtil";
+import { BagMediator } from "./bagMediator";
 
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 36;
@@ -272,7 +273,12 @@ export class BagPanel extends Panel {
 
         // ===============背包界面左翻按钮
         this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.hide, this);
+        this.mClsBtnSprite.on("pointerup", this.closeHandler, this);
         this.add(this.mClsBtnSprite);
+    }
+
+    private closeHandler() {
+        const med: BagMediator = this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator;
+        med.hide();
     }
 }

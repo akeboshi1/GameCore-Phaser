@@ -52,7 +52,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     public getDragImage(): Phaser.GameObjects.Image {
         return this.mIcon;
     }
-
+    
     public getVisualDisplay(): Phaser.GameObjects.Image {
         return undefined;
     }

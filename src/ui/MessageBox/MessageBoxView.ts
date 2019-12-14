@@ -16,8 +16,8 @@ export class MessageBoxView extends Panel {
     public resize() {
         const size: Size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width - this.mWidth >> 1;
-            this.y = size.height - this.mHeight >> 1;
+            this.x = size.width >> 1;
+            this.y = size.height >> 1;
         } else {
             this.x = size.width >> 1;
             this.y = size.height >> 1;

@@ -82,14 +82,16 @@ export class ItemSlot implements IListItemComponent {
                 const des = this.mData.des ? "\n" + this.mData.des : "";
                 this.setToolTipData(this.mData.name + this.mData.des);
             } else {
-                // url = "";
+                this.mIcon.icon.visible = false;
             }
             if (!url) return;
             this.mIcon.load(url, this, () => {
                 if (this.mData) {
-                    // this.mIcon.visible = true;
+                    this.mIcon.icon.visible = true;
                 }
             });
+        } else {
+            this.mIcon.icon.visible = false;
         }
     }
 
