@@ -2,7 +2,7 @@
 import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../../bag/item.slot";
 import { Size } from "../../../utils/size";
-import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
+import { op_gameconfig } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
 import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
@@ -189,6 +189,11 @@ export class MainUIPC extends Panel {
         if (mPackage && mPackage.items) this.setDataList(mPackage.items);
         // childList.push(this.mBagBtnCon);
         super.init();
+    }
+
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) this.resize();
     }
 
     private initBagSlot() {

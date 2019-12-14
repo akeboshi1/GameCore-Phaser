@@ -92,8 +92,12 @@ export class MainUIMediator extends BaseMediator {
 
     private heroItemChange() {
         const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHero().package.items;
-        if (this.mView && this.world.game.device.os.desktop) {
-            (this.mView as MainUIPC).setDataList(itemList);
+        if (this.mView) {
+            if (this.world.game.device.os.desktop) {
+                (this.mView as MainUIPC).setDataList(itemList);
+            } else {
+                (this.mView as MainUIMobile).setDataList(itemList);
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import { TopBtnGroup } from "./top.btn.group";
 import { RightBtnGroup } from "./right.btn.group";
 import { BottomBtnGroup } from "./bottom.btn.group";
 import { LeftBtnGroup } from "./left.btn.group";
+import { op_gameconfig } from "pixelpai_proto";
 
 /**
  * 主界面UI mobile版本
@@ -83,5 +84,9 @@ export class MainUIMobile extends Panel {
 
     public getTopView(): TopBtnGroup {
         return this.mTopBtnGroup;
+    }
+
+    public setDataList(items: op_gameconfig.IItem[]) {
+      if(this.mRightBtnGroup)this.mRightBtnGroup.refreshSlot();
     }
 }

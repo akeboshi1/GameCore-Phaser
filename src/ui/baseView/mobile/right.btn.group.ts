@@ -100,6 +100,52 @@ export class RightBtnGroup extends Panel {
         });
     }
 
+    public refreshSlot() {
+        this.mHei = this.handBtn.height;
+        if (this.mBagSlotList) {
+            this.mBagSlotList.forEach((itemslot: ItemSlot) => {
+                if (itemslot) {
+                    itemslot.getView().visible = false;
+                }
+            });
+            // =============获取角色背包前几位物品
+            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+            if (mPackage && mPackage.items) {
+                const items: op_gameconfig.IItem[] = mPackage.items;
+                const len: number = items.length > MainUIMobile.SlotMaxCount ? MainUIMobile.SlotMaxCount : items.length;
+                let posX: number = 0;
+                let posY: number = 0;
+                const radio: number = 110;
+                const slotSize: number = 56;
+                const baseAngle: number = 38;
+                for (let i: number = 0; i < len; i++) {
+                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                        const angle: number = (baseAngle * (i + 2) / -180) * Math.PI;
+                        posX = radio * Math.cos(angle);
+                        posY = this.handBtn.y + radio * Math.sin(angle);
+                        if (i === len - 1) {
+                            this.mWid = radio + this.handBtn.width + 30 + slotSize / 2;
+                            this.mHei = radio + this.handBtn.height + 30 + slotSize / 2;
+                        }
+                    } else {
+                        posX = 0;
+                        posY = -slotSize * (i + 1) - 20 * i;
+                        if (i === len - 1) {
+                            this.mWid = this.handBtn.width;
+                            this.mHei = slotSize * (len - 1) + 5 * (len - 2) + this.handBtn.height + 5;
+                        }
+                    }
+                    const itemSlot: ItemSlot = this.mBagSlotList[i];
+                    itemSlot.getView().visible = true;
+                    itemSlot.toolTipCon.x = posX;
+                    itemSlot.toolTipCon.y = posY;
+                    itemSlot.dataChange(items[i]);
+                }
+            }
+        }
+        this.setSize(this.mWid, this.mHei);
+    }
+
     protected tweenComplete(show: boolean) {
         this.resize();
         super.tweenComplete(show);
@@ -131,69 +177,27 @@ export class RightBtnGroup extends Panel {
             // this.mWorld.uiManager.getMediator(BagMediator.NAME).show();
         });
         this.add(this.handBtn);
-        this.mBagSlotList = [];
         this.mWid = this.handBtn.width;
         this.mHei = this.handBtn.height;
         this.initBagSlotData();
         super.init();
     }
 
-    private refreshSlot() {
-        if (this.mBagSlotList && this.mBagSlotList.length > 1) {
-            const len: number = this.mBagSlotList.length;
-            let posX: number = 0;
-            let posY: number = 0;
-            const radio: number = 110;
-            const slotSize: number = 56;
-            const baseAngle: number = 38;
-            for (let i: number = 0; i < len; i++) {
-                if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                    const angle: number = (baseAngle * (i + 2) / -180) * Math.PI;
-                    posX = radio * Math.cos(angle);
-                    posY = this.handBtn.y + radio * Math.sin(angle);
-                    if (i === len - 1) {
-                        this.mWid = radio + this.handBtn.width + 30 + slotSize / 2;
-                        this.mHei = radio + this.handBtn.height + 30 + slotSize / 2;
-                    }
-                } else {
-                    posX = 0;
-                    posY = -slotSize * (i + 1) - 20 * i;
-                    if (i === len - 1) {
-                        this.mWid = this.handBtn.width;
-                        this.mHei = slotSize * (len - 1) + 5 * (len - 2) + this.handBtn.height + 5;
-                    }
-                }
-                const itemSlot: ItemSlot = this.mBagSlotList[i];
-                itemSlot.toolTipCon.x = posX;
-                itemSlot.toolTipCon.y = posY;
-            }
-            this.setSize(this.mWid, this.mHei);
-        }
-    }
-
     private initBagSlotData() {
+        this.mBagSlotList = [];
         const size: Size = this.mWorld.getSize();
-        this.mHei = this.handBtn.height;
-        // =============获取角色背包前几位物品
-        const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
-        if (mPackage && mPackage.items) {
-            const items: op_gameconfig.IItem[] = mPackage.items;
-            const len: number = items.length > MainUIMobile.SlotMaxCount ? MainUIMobile.SlotMaxCount : items.length;
-            const posX: number = 0;
-            const posY: number = 0;
-            for (let i: number = 0; i < len; i++) {
-                const itemSlot: ItemSlot = new ItemSlot(this.mScene, this.mWorld, this, posX, posY, this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"), "btnGroup_bg.png");
-                itemSlot.createUI();
-                itemSlot.dataChange(items[i]);
-                itemSlot.getBg().scaleX = itemSlot.getBg().scaleY = 0.8;
-                itemSlot.getIcon().scaleX = itemSlot.getIcon().scaleY = 1.2;
-                this.mBagSlotList.push(itemSlot);
-                this.add(itemSlot.toolTipCon);
-                this.mHei += itemSlot.getView().height;
-            }
+        const len: number = MainUIMobile.SlotMaxCount;
+        const posX: number = 0;
+        const posY: number = 0;
+        for (let i: number = 0; i < len; i++) {
+            const itemSlot: ItemSlot = new ItemSlot(this.mScene, this.mWorld, this, posX, posY, this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"), "btnGroup_bg.png");
+            itemSlot.createUI();
+            itemSlot.getBg().scaleX = itemSlot.getBg().scaleY = 0.8;
+            itemSlot.getIcon().scaleX = itemSlot.getIcon().scaleY = 1.2;
+            this.mBagSlotList.push(itemSlot);
+            this.add(itemSlot.toolTipCon);
+            itemSlot.getView().visible = false;
         }
-        this.setSize(this.mWid, this.mHei);
-
         this.resize();
     }
 }
