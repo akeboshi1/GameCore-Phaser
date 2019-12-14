@@ -9,6 +9,7 @@ import { Panel } from "../../components/panel";
 import { Radio } from "../../components/radio";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { FriendMediator } from "../../friend/friend.mediator";
+import { ChatMediator } from "../../chat/chat.mediator";
 
 /**
  * 主界面ui pc版本
@@ -57,7 +58,8 @@ export class MainUIPC extends Panel {
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = (size.width - this.mWid) / 2;
+        const chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
+        this.x = (size.width - this.mWid) / 2 < chatMed.getView().width ? chatMed.getView().width + this.width / 2 : (size.width - this.mWid) / 2;
         this.y = size.height - 50;
     }
     public destroy() {
