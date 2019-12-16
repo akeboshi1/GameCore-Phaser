@@ -129,6 +129,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const room = new EditorRoom(this);
         room.enter(content.scene);
         this.mCurRoom = room;
+        this.mRooms.push(room);
     }
 
     private leaveScene(room: IRoomService) {

@@ -18,6 +18,7 @@ import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
 import {Element} from "./element/element";
 import {ElementDisplay} from "./display/element.display";
+import { DragonbonesDisplay } from "./display/dragonbones.display";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -26,6 +27,8 @@ export interface EditorRoomService extends IRoomService {
     transformToMini45(p: Pos): Pos;
 
     transformToMini90(p: Pos): Pos;
+
+    removeSelected(): void;
 }
 
 export class EditorRoom extends Room implements EditorRoomService {
@@ -36,6 +39,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
+            Logger.getInstance().log("this: ===>", this);
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.onSetEditorModeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ALIGN_GRID, this.onAlignGridHandler);
@@ -132,6 +136,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         return Position45.transformTo45(p, this.mNimiSize);
     }
 
+    removeSelected() {
+        if (this.mSelectedElementEffect) {
+            this.mSelectedElementEffect.remove();
+        }
+    }
+
     private moveCameras(pointer) {
         this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
     }
@@ -144,6 +154,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (elementManager) {
             const sprites = this.mMouseFollow.createSprites();
             if (sprites) {
+                Logger.getInstance().log("room: ==============>");
                 elementManager.add(sprites);
             }
         }
@@ -372,17 +383,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.moveElement(event.keyCode);
                 break;
             case 46:
-                if (!this.mSelectedElementEffect.display) {
-                    return;
-                }
-                if (!this.mSelectedElementEffect.display.element) {
-                    return;
-                }
-                const ele = this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
-                Logger.getInstance().log("element: ", ele);
-                if (ele) {
-                    this.mSelectedElementEffect.remove();
-                }
+                this.removeDisplay(this.mSelectedElementEffect.display);
                 break;
         }
     }
@@ -425,5 +426,18 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.mMouseFollow = new MouseFollow(this.mScene, this);
         }
         return this.mMouseFollow;
+    }
+
+    private removeDisplay(display: FramesDisplay | DragonbonesDisplay) {
+        if (!display) {
+            return;
+        }
+        if (!display.element) {
+            return;
+        }
+        const ele = this.mElementManager.remove(display.element.id);
+        if (ele) {
+            this.removeSelected();
+        }
     }
 }

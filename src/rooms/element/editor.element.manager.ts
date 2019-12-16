@@ -7,10 +7,11 @@ import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
 import { Element } from "./element";
 import NodeType = op_def.NodeType;
+import { EditorRoomService } from "../editor.room";
 
 export class EditorElementManager extends ElementManager {
-    constructor(room: IRoomService) {
-        super(room);
+    constructor(protected mRoom: EditorRoomService) {
+        super(mRoom);
         if (this.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
@@ -98,6 +99,7 @@ export class EditorElementManager extends ElementManager {
         for (const id of ids) {
             this.tryRemove(id);
         }
+        this.roomService.removeSelected();
     }
 
     protected onSync(packet: PBpacket) {
@@ -124,5 +126,9 @@ export class EditorElementManager extends ElementManager {
         if (sprite.direction) {
             element.setDirection(sprite.direction);
         }
+    }
+
+    get roomService(): EditorRoomService {
+        return this.mRoom;
     }
 }
