@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
-      <change afterPath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStorageMediator.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStoragePanel.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/room.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/room.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStorageMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStorageMediator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStoragePanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStoragePanel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/ui.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ui.manager.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

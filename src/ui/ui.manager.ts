@@ -12,6 +12,8 @@ import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
 import { DebugLoggerMediator } from "./debuglog/debug.logger.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
+import {ElementStoragePanel} from "./ElementStorage/ElementStoragePanel";
+import {ElementStorageMediator} from "./ElementStorage/ElementStorageMediator";
 
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;
@@ -56,7 +58,8 @@ export class UiManager extends PacketHandler {
             if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
-            this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
+            // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
+            this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
             for (const tmp of this.mCache) {
                 const ui = tmp[0];
                 this.showMed(ui.name, ui);
