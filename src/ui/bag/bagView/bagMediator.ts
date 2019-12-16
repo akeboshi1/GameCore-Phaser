@@ -8,6 +8,7 @@ import { IDropable } from "../idropable";
 import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
+import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -52,6 +53,7 @@ export class BagMediator extends BaseMediator {
         this.world.emitter.on(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         if (param) {
             this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(param[0].id, 1, BagPanel.PageMaxCount);
         } else {
@@ -73,11 +75,17 @@ export class BagMediator extends BaseMediator {
         this.world.emitter.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
         if (!this.mView) return;
         this.mView.hide();
     }
 
     public destroy() {
+        this.world.emitter.off(MessageType.DRAG_TO_DROP, this.handleDrop, this);
+        this.world.emitter.off(MessageType.SCENE_SYNCHRO_PACKAGE, this.handleSynchroPackage, this);
+        this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.onUpdatePackageHandler, this);
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
+        this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
         if (this.mView) {
             this.mView.destroy();
             this.mView = null;
@@ -109,8 +117,13 @@ export class BagMediator extends BaseMediator {
         this.setListData(items);
     }
 
+    private onBtnHandler(pointer, gameobject) {
+        if (gameobject instanceof InputText) return;
+        if (this.mView) (this.mView as BagPanel).setBlur();
+    }
+
     private setListData(value: any[]) {
-        (this.mView as BagPanel).setDataList(value);
+        (this.mView as BagPanel).setDataList();
     }
 
     private handleSynchroPackage(): void {

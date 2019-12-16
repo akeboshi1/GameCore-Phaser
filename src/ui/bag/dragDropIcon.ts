@@ -19,7 +19,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
         this.mUrl = value;
         const key: string = this.resKey;
         this.mIcon.load(Url.getOsdRes(this.mUrl), () => {
-            // if (this.mCallBack) this.mCallBack();
+            if (this.mCallBack) this.mCallBack();
         });
         // if (!this.mScene.cache.obj.has(key)) {
         //     this.mScene.load.image(key, Url.getOsdRes(this.mUrl));
@@ -52,7 +52,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     public getDragImage(): Phaser.GameObjects.Image {
         return this.mIcon;
     }
-    
+
     public getVisualDisplay(): Phaser.GameObjects.Image {
         return undefined;
     }

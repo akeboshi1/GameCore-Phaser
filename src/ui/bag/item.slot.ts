@@ -85,11 +85,18 @@ export class ItemSlot implements IListItemComponent {
                 this.mIcon.icon.visible = false;
             }
             if (!url) return;
-            this.mIcon.load(url, this, () => {
+            if (this.mScene.textures.exists(Url.getOsdRes(url))) {
                 if (this.mData) {
+                    this.mIcon.icon.setTexture(Url.getOsdRes(url));
                     this.mIcon.icon.visible = true;
                 }
-            });
+            } else {
+                this.mIcon.load(url, this, () => {
+                    if (this.mData) {
+                        this.mIcon.icon.visible = true;
+                    }
+                });
+            }
         } else {
             this.mIcon.icon.visible = false;
         }

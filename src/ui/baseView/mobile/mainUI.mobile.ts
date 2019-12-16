@@ -22,7 +22,8 @@ export class MainUIMobile extends Panel {
         this.mTopBtnGroup = new TopBtnGroup(scene, world);
         this.mRightBtnGroup = new RightBtnGroup(scene, world);
         this.mBottomBtnGroup = new BottomBtnGroup(scene, world);
-        this.mLeftBtnGroup = new LeftBtnGroup(scene, world);
+        // app环境下没有全屏按钮
+        if (world.getConfig().closeGame) this.mLeftBtnGroup = new LeftBtnGroup(scene, world);
     }
     public isShow(): boolean {
         return this.mShowing;
@@ -31,10 +32,10 @@ export class MainUIMobile extends Panel {
         if (this.mShowing) {
             return;
         }
-        this.mTopBtnGroup.show(param);
-        this.mRightBtnGroup.show(param);
-        this.mBottomBtnGroup.show(param);
-        this.mLeftBtnGroup.show(param);
+        if (this.mTopBtnGroup) this.mTopBtnGroup.show(param);
+        if (this.mRightBtnGroup) this.mRightBtnGroup.show(param);
+        if (this.mBottomBtnGroup) this.mBottomBtnGroup.show(param);
+        if (this.mLeftBtnGroup) this.mLeftBtnGroup.show(param);
         super.show(param);
     }
 
@@ -87,6 +88,6 @@ export class MainUIMobile extends Panel {
     }
 
     public setDataList(items: op_gameconfig.IItem[]) {
-      if(this.mRightBtnGroup)this.mRightBtnGroup.refreshSlot();
+        if (this.mRightBtnGroup) this.mRightBtnGroup.refreshSlot();
     }
 }

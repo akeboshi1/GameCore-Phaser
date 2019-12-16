@@ -112,7 +112,7 @@ export class MainUIPC extends Panel {
         const len: number = items.length > MainUIPC.SlotMaxCount ? MainUIPC.SlotMaxCount : items.length;
         let tempWid: number = this.baseBagBgWid + 5;
         for (let i: number = 0; i < len; i++) {
-            let itemSlot: ItemSlot = this.bagSlotList[i];
+            const itemSlot: ItemSlot = this.bagSlotList[i];
             itemSlot.getView().visible = true;
             childList.push(itemSlot.toolTipCon);
             itemSlot.dataChange(items[i]);
@@ -124,7 +124,7 @@ export class MainUIPC extends Panel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any>this.mScene).rexUI.add.buttons({
+            this.buttons = (<any> this.mScene).rexUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,
