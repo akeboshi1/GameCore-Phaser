@@ -135,8 +135,14 @@ export class FramesDisplay extends DisplayObject {
     }
 
     private onLoadCompleted(field: DisplayField) {
-        this.makeAnimations(field);
-        this.createDisplay(field);
+        const data = this.mDisplayDatas.get(field);
+        if (!data) {
+            return;
+        }
+        if (this.scene.textures.exists(data.gene)) {
+            this.makeAnimations(field);
+            this.createDisplay(field);
+        }
     }
 
     private makeAnimations(field: DisplayField) {
