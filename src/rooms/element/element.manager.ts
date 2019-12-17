@@ -7,6 +7,7 @@ import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
 import {IElementStorage} from "../../game/element.storage";
 import {ISprite, Sprite} from "./sprite";
+import NodeType = op_def.NodeType;
 
 export interface IElementManager {
     readonly connection: ConnectionService | undefined;
@@ -34,6 +35,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -89,7 +94,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
         const sprites = content.spritePositions;
         const type = content.nodeType;
-        if (type !== op_def.NodeType.ElementNodeType) {
+        if (type !== NodeType.ElementNodeType) {
             return;
         }
         let ele: Element;
@@ -117,7 +122,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const objs: op_client.ISprite[] | undefined = content.sprites;
         if (!objs) return;
         const type = content.nodeType;
-        if (type !== op_def.NodeType.ElementNodeType) {
+        if (type !== NodeType.ElementNodeType) {
             return;
         }
         let point: op_def.IPBPoint3f;
@@ -174,7 +179,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
-        if (type !== op_def.NodeType.ElementNodeType) {
+        if (type !== NodeType.ElementNodeType) {
             return;
         }
         for (const id of ids) {
@@ -184,7 +189,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected onSync(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
-        if (content.nodeType !== op_def.NodeType.ElementNodeType) {
+        if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
         let element: Element = null;
@@ -201,5 +206,36 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onSetPosition(packet: PBpacket) {
+    }
+
+    private onShowBubble(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
+        const element = this.get(content.receiverid);
+        if (element) {
+            element.showBubble(content.context, content.chatsetting);
+        }
+    }
+
+    private onClearBubbleHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
+        const element = this.get(content.receiverid);
+        if (element) {
+            element.clearBubble();
+        }
+    }
+
+    private onChangeAnimation(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
+        if (content.nodeType !== NodeType.ElementNodeType) {
+            return;
+        }
+        const anis = content.changeAnimation;
+        let ele = null;
+        for (const ani of anis) {
+            ele = this.get((ani.id));
+            if (ele) {
+                ele.play(ani.animationName);
+            }
+        }
     }
 }

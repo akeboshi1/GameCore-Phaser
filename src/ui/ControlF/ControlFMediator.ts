@@ -51,7 +51,7 @@ export class ControlFMediator extends BaseMediator {
         if (this.mView && this.mView.isShow() || this.isShowing) {
             return;
         }
-        this.mView = new ControlFPanel(this.mScene);
+        this.mView = new ControlFPanel(this.mScene, this.world);
         this.mView.on("control", this.handControlF, this);
         this.mLayerManager.addToUILayer(this.mView);
         this.mView.show(param);

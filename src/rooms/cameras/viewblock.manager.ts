@@ -13,6 +13,8 @@ export interface ViewblockService {
 
     remove(e: IElement): boolean;
 
+    check(e: IElement): void;
+
     destroy(): void;
 }
 
@@ -44,6 +46,23 @@ export class ViewblockManager implements ViewblockService {
         for (const block of this.mBlocks) {
             if (block.remove(e)) {
                 return;
+            }
+        }
+    }
+
+    public check(e: IElement): void {
+        if (!e) return;
+        for (const block of this.mBlocks) {
+            if (block.inCamera) {
+                const rect = block.rectangle;
+                const pos = e.getPosition();
+                if (rect.contains(pos.x, pos.y)) {
+                    if (!block.getElement(e.id)) {
+                        this.remove(e);
+                        block.add(e);
+                    }
+                    return;
+                }
             }
         }
     }

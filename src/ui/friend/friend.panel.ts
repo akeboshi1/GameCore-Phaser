@@ -15,7 +15,6 @@ export interface IFriendIcon {
 }
 export class FriendPanel extends Panel {
     public static count: number = 4;
-    private mWorld: WorldService;
     private mBg;
     private mUpBtn: Phaser.GameObjects.Sprite;
     private mDownBtn: Phaser.GameObjects.Sprite;
@@ -25,8 +24,7 @@ export class FriendPanel extends Panel {
     private mFriendDataList: any[];
     private mIndex: number = 0;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
-        this.mWorld = world;
+        super(scene, world);
     }
 
     public resize() {

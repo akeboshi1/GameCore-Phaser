@@ -5,9 +5,12 @@ import { Size } from "../../utils/size";
 import { DragDropIcon } from "../bag/dragDropIcon";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { op_gameconfig_01 } from "pixelpai_proto";
+import { World } from "../../game/world";
 
 export class ItemDetail extends Panel {
     private mBtnList: NinePatchButton[];
+    private mBtnWid: number = 100;
+    private mBtnHei: number = 40;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
@@ -16,8 +19,8 @@ export class ItemDetail extends Panel {
     private mIcon: DragDropIcon;
     private mWid: number = 0;
     private mHei: number = 0;
-    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
     }
 
     public getBtnList(): NinePatchButton[] {
@@ -26,8 +29,14 @@ export class ItemDetail extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width - this.width >> 1;
-        this.y = size.height - this.height >> 1;
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = size.width - (this.width + this.mBtnWid) / 2 * this.mWorld.uiScale >> 1;
+            this.y = size.height - this.height * this.mWorld.uiScale >> 1;
+        } else {
+            this.x = size.width - (this.width + this.mBtnWid) / 2 * this.mWorld.uiScale >> 1;
+            this.y = size.height - this.height * this.mWorld.uiScale >> 1;
+        }
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public show(param?: any) {
@@ -54,12 +63,7 @@ export class ItemDetail extends Panel {
             const preX: number = this.mWid + 50;
             for (let i: number = 0; i < len; i++) {
                 const btnData: op_gameconfig_01.IButton = data.button[i];
-                btn = new NinePatchButton(this.mScene, 0, 0, 100, 40, "button_blue", btnData.text, {
-                    left: 4,
-                    top: 4,
-                    right: 4,
-                    bottom: 4
-                }, btnData);
+                btn = new NinePatchButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, BlueButton.getName(), btnData.text, BlueButton.getConfig(), btnData);
                 this.mBtnList.push(btn);
                 btn.x = preX;
                 btn.y = preY;
@@ -68,7 +72,7 @@ export class ItemDetail extends Panel {
             }
         }
         const bg = this.mScene.add.graphics();
-        bg.fillStyle(0, .8);
+        bg.fillStyle(0, .6);
         bg.fillRoundedRect(0, 0, this.mWid, this.mHei, 6);
         this.addAt(bg, 0);
 

@@ -18,13 +18,12 @@ export class BottomBtnGroup extends Panel {
     private mBagBtn: IconBtn;
     private mShopBtn: IconBtn;
     private mBtnList: IconBtn[];
-    private mWorld: WorldService;
     private mExpandBoo: boolean = false;
     private mWid: number = 0;
     private mHei: number = 0;
     // private mOrientation: Phaser.Scale.Orientation;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mWorld = world;
     }
 
@@ -96,9 +95,9 @@ export class BottomBtnGroup extends Panel {
         this.mChatText = this.mScene.make.text({
             width: chatBgWidth,
             height: chatBgHeight,
-            style: { font: "bold YaHei", fontSize: Math.floor(30 * this.mWorld.uiScale), wordWrap: { width: 430, useAdvancedWrap: true } }
+            style: { font: "bold YaHei", color: "#666666", fontSize: Math.floor(30 * this.mWorld.uiScale), wordWrap: { width: 430, useAdvancedWrap: true } }
         }, false);
-        this.mChatText.setText("测试测试测试测试测试测试测试测试测试123123哈哈哈哈哈哈");
+        this.mChatText.setText("点击窗口进入聊天界面");
         this.mChatContainer.addAt(this.mChatText, 1);
         this.mChatContainer.setSize(chatBgWidth, chatBgHeight);
         this.mChatText.x = -this.mChatContainer.width >> 1;

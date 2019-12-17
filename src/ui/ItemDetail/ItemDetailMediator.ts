@@ -35,7 +35,7 @@ export class ItemDetailMediator extends BaseMediator {
         this.mParam = param;
         this.mLayerManager.addToUILayer(this.mView);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
-        super.show(param);
+        this.isShowing = true;
     }
     public update(param?: any): void {
         super.update(param);

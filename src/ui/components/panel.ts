@@ -1,19 +1,22 @@
 import { IAbstractPanel } from "../abstractPanel";
 import { Logger } from "../../utils/log";
+import { WorldService } from "../../game/world.service";
 
 export class Panel extends Phaser.GameObjects.Container implements IAbstractPanel {
     protected mShowing: boolean = false;
     protected mInitialized: boolean;
     protected mTweening: boolean = false;
     protected mScene: Phaser.Scene;
+    protected mWorld: WorldService;
     protected mWidth: number = 0;
     protected mHeight: number = 0;
     protected mData: any;
     protected mPanelTween: Phaser.Tweens.Tween;
     private mTweenBoo: boolean = true;
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene);
         this.mScene = scene;
+        this.mWorld = world;
         this.mInitialized = false;
     }
 
@@ -73,9 +76,9 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
 
     protected showTween(show: boolean) {
         this.mTweening = true;
-        this.scaleX = show ? 0 : 1;
-        this.scaleY = show ? 0 : 1;
-        const scale: number = show ? 1 : 0;
+        this.scaleX = show ? 0 : this.mWorld.uiScale;
+        this.scaleY = show ? 0 : this.mWorld.uiScale;
+        const scale: number = show ? this.mWorld.uiScale : 0;
         if (this.mPanelTween) {
             this.mPanelTween.stop();
         }

@@ -82,14 +82,23 @@ export class ItemSlot implements IListItemComponent {
                 const des = this.mData.des ? "\n" + this.mData.des : "";
                 this.setToolTipData(this.mData.name + this.mData.des);
             } else {
-                // url = "";
+                this.mIcon.icon.visible = false;
             }
             if (!url) return;
-            this.mIcon.load(url, this, () => {
+            if (this.mScene.textures.exists(Url.getOsdRes(url))) {
                 if (this.mData) {
-                    // this.mIcon.visible = true;
+                    this.mIcon.icon.setTexture(Url.getOsdRes(url));
+                    this.mIcon.icon.visible = true;
                 }
-            });
+            } else {
+                this.mIcon.load(url, this, () => {
+                    if (this.mData) {
+                        this.mIcon.icon.visible = true;
+                    }
+                });
+            }
+        } else {
+            this.mIcon.icon.visible = false;
         }
     }
 
@@ -181,7 +190,7 @@ export class ItemSlot implements IListItemComponent {
     protected downHandler(pointer) {
         if (!this.mData) return;
         // if (this.mWorld.game.device.os.desktop) {
-        const pack: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().model.package;
+        const pack: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
         content.uiId = pack.id;

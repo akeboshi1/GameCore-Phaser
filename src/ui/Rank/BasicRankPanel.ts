@@ -1,9 +1,9 @@
 import { Panel } from "../components/panel";
 import { op_client } from "pixelpai_proto";
-import {Background, BlueButton, Border, Url} from "../../utils/resUtil";
+import { Background, BlueButton, Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import {NinePatch} from "../components/nine.patch";
+import { NinePatch } from "../components/nine.patch";
 
 export class BasicRankPanel extends Panel {
     protected mWorld: WorldService;
@@ -13,7 +13,7 @@ export class BasicRankPanel extends Panel {
     protected mBackground: NinePatch;
     protected mData: any;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mWorld = world;
     }
 
@@ -117,7 +117,7 @@ export class BasicRankPanel extends Panel {
         this.add(this.mContentContainer);
 
         const border = new NinePatch(this.scene, 8, 20, 315, 318, Border.getName(), null, Border.getConfig());
-        border.x =  8 + (border.width >> 1);
+        border.x = 8 + (border.width >> 1);
         border.y = 20 + (border.height >> 1);
         this.mContentContainer.add(border);
 

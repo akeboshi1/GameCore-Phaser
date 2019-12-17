@@ -4,25 +4,26 @@ import { TopBtnGroup } from "./top.btn.group";
 import { RightBtnGroup } from "./right.btn.group";
 import { BottomBtnGroup } from "./bottom.btn.group";
 import { LeftBtnGroup } from "./left.btn.group";
+import { op_gameconfig } from "pixelpai_proto";
 
 /**
  * 主界面UI mobile版本
  */
 export class MainUIMobile extends Panel {
     public static SlotMaxCount: number = 4;
-    private mWorld: WorldService;
     private mTopBtnGroup: TopBtnGroup;
     private mRightBtnGroup: RightBtnGroup;
     private mBottomBtnGroup: BottomBtnGroup;
     private mLeftBtnGroup: LeftBtnGroup;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mScene = scene;
         this.mWorld = world;
         this.mTopBtnGroup = new TopBtnGroup(scene, world);
         this.mRightBtnGroup = new RightBtnGroup(scene, world);
         this.mBottomBtnGroup = new BottomBtnGroup(scene, world);
-        this.mLeftBtnGroup = new LeftBtnGroup(scene, world);
+        // app环境下没有全屏按钮
+        if (world.getConfig().closeGame) this.mLeftBtnGroup = new LeftBtnGroup(scene, world);
     }
     public isShow(): boolean {
         return this.mShowing;
@@ -31,10 +32,10 @@ export class MainUIMobile extends Panel {
         if (this.mShowing) {
             return;
         }
-        this.mTopBtnGroup.show(param);
-        this.mRightBtnGroup.show(param);
-        this.mBottomBtnGroup.show(param);
-        this.mLeftBtnGroup.show(param);
+        if (this.mTopBtnGroup) this.mTopBtnGroup.show(param);
+        if (this.mRightBtnGroup) this.mRightBtnGroup.show(param);
+        if (this.mBottomBtnGroup) this.mBottomBtnGroup.show(param);
+        if (this.mLeftBtnGroup) this.mLeftBtnGroup.show(param);
         super.show(param);
     }
 
@@ -84,5 +85,9 @@ export class MainUIMobile extends Panel {
 
     public getTopView(): TopBtnGroup {
         return this.mTopBtnGroup;
+    }
+
+    public setDataList(items: op_gameconfig.IItem[]) {
+        if (this.mRightBtnGroup) this.mRightBtnGroup.refreshSlot();
     }
 }

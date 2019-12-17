@@ -9,14 +9,19 @@ import { op_client } from "pixelpai_proto";
 export class MessageBoxView extends Panel {
     private mTxt: BBCodeText;
     private mButtons: NinePatchButton[];
-    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
     }
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width - this.mWidth >> 1;
-        this.y = size.height - this.mHeight >> 1;
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = size.width >> 1;
+            this.y = size.height >> 1;
+        } else {
+            this.x = size.width >> 1;
+            this.y = size.height >> 1;
+        }
     }
 
     public show(param?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
@@ -29,22 +34,28 @@ export class MessageBoxView extends Panel {
             this.mTxt.setText(param[0].text[0].text);
         }
         const buttons = param[0].button;
+        // buttons.push({text:"测试",});
         if (buttons) {
             const btnWid: number = 46;
             const btnHei: number = 24;
-            const w = (this.mWidth) / (buttons.length + 1);
+            const w = (this.mWidth) / buttons.length;
+            const btnSp = this.mScene.make.container(undefined, false);
+            btnSp.y = this.mHeight - btnHei - 100;
             for (let i = 0; i < buttons.length; i++) {
+                const txt: string = buttons[i] ? buttons[i].text : "";
                 const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, "button_blue", buttons[i].text, {
                     top: 7,
                     bottom: 7,
                     left: 7,
                     right: 7
                 }, buttons[i]);
-                btn.x = (i + 1) * w;
-                btn.y = this.mHeight - btnHei - 100;
+                btn.x = i * w + btnWid / 2;
                 this.mButtons.push(btn);
-                this.add(btn);
+                btnSp.add(btn);
             }
+            btnSp.setSize((buttons.length - 1) * w + btnWid, btnHei);
+            btnSp.x = this.width - btnSp.width >> 1;
+            this.add(btnSp);
         }
         this.resize();
     }
@@ -88,7 +99,7 @@ export class MessageBoxView extends Panel {
         this.mWidth = 300;
         this.mHeight = 200;
         const border = new NinePatch(this.scene, 0, 0, this.mWidth, this.mHeight, Border.getName(), null, Border.getConfig());
-        border.x = this.mWidth / 2;
+        border.x = 0;
         border.y = 0;
         this.add(border);
 
@@ -96,11 +107,11 @@ export class MessageBoxView extends Panel {
             fontSize: "16px",
             wrap: {
                 mode: "char",
-                width: 250 * this.mWorld.uiScale
+                width: border.width
             },
-            halign: "left"
+            halign: "center"
         });
-        this.mTxt.x = 10;
+        this.mTxt.x = -this.mWidth / 2 + 10;
         this.mTxt.y = -this.mHeight / 2 + 10;
         this.add(this.mTxt);
         super.init();

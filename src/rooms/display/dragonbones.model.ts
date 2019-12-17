@@ -5,6 +5,7 @@ export interface IDragonbonesModel {
     id: number;
     avatarDir?: number;
     avatar?: IAvatar;
+    animationName?: string;
 
     // TODO
     destroy();

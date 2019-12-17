@@ -6,7 +6,6 @@ import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
 
 export class DebugLogger extends Panel {
-    private mWorld: WorldService;
     private mBgWidth: number;
     private mBgHeight: number;
     private mTimeTF: Phaser.GameObjects.Text;
@@ -15,8 +14,7 @@ export class DebugLogger extends Panel {
     private mDescTxt: string;
     private mDelay: number = 0;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
-        this.mWorld = world;
+        super(scene, world);
     }
     public show(param?: any) {
         if (!this.mInitialized) {

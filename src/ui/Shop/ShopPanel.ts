@@ -10,19 +10,29 @@ import { ShopMediator } from "./ShopMediator";
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
     public mClsBtnSprite: Phaser.GameObjects.Sprite;
-    private mWorld: WorldService;
     private mShopItemSlotList: ShopItemSlot[];
     private mShopData: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene);
+        super(scene, world);
         this.mWorld = world;
     }
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width >> 1;
-        this.y = size.height - 300;
-        this.scale = this.mWorld.uiScale;
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = size.width >> 1;
+            this.y = size.height - 300;
+        } else {
+            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
+            } else {
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
+            }
+        }
+
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public setDataList(value: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
@@ -56,15 +66,24 @@ export class ShopPanel extends Panel {
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width >> 1;
-        this.y = size.height - 300;
         const mBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
         mBg.setTexture("shopView", "shopView_bg");
         mBg.x = 0;
         mBg.y = 0;
         this.setSize(mBg.width, mBg.height);
         this.addAt(mBg, 0);
-
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = size.width >> 1;
+            this.y = size.height - 300;
+        } else {
+            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
+            } else {
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
+            }
+        }
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
         titleCon.setTexture("shopView", "shopView_titleIcon");
         titleCon.x = (-mBg.width >> 1) + 35;
@@ -104,6 +123,11 @@ export class ShopPanel extends Panel {
             this.refreshDataList();
         }
         super.init();
+    }
+
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) this.resize();
     }
 
     private onClsLoadCompleteHandler() {

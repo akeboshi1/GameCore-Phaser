@@ -18,6 +18,7 @@ import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
 import {Element} from "./element/element";
 import {ElementDisplay} from "./display/element.display";
+import { DragonbonesDisplay } from "./display/dragonbones.display";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -26,9 +27,13 @@ export interface EditorRoomService extends IRoomService {
     transformToMini45(p: Pos): Pos;
 
     transformToMini90(p: Pos): Pos;
+
+    removeSelected(): void;
 }
 
 export class EditorRoom extends Room implements EditorRoomService {
+    protected mTerrainManager: EditorTerrainManager;
+    protected mElementManager: EditorElementManager;
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
@@ -36,6 +41,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
+            Logger.getInstance().log("this: ===>", this);
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.onSetEditorModeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ALIGN_GRID, this.onAlignGridHandler);
@@ -132,6 +138,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         return Position45.transformTo45(p, this.mNimiSize);
     }
 
+    removeSelected() {
+        if (this.mSelectedElementEffect) {
+            this.mSelectedElementEffect.remove();
+        }
+    }
+
     private moveCameras(pointer) {
         this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
     }
@@ -154,7 +166,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (terrainManager) {
             const positions = this.mMouseFollow.getEaserPosition();
             terrainManager.removeFormPositions(positions);
-            // Logger.getInstance().log("positions: ", positions);
         }
     }
 
@@ -207,13 +218,11 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private addPointerMoveHandler() {
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        // this.mScene.input.on("gameobjectover", this.onGameobjectOverHandler, this);
         this.mScene.input.on("gameout", this.onGameOutHandler, this);
     }
 
     private removePointerMoveHandler() {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        // this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
     }
 
@@ -252,8 +261,6 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private onGameobjectUpHandler(pointer, gameobject) {
         this.removePointerMoveHandler();
-        // this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        // this.mScene.input.off("gameobjectover", this.onGameobjectOverHandler, this);
         const com = gameobject.parentContainer;
         if (!com) {
             return;
@@ -264,21 +271,6 @@ export class EditorRoom extends Room implements EditorRoomService {
                 if (selected) {
                     this.sendFetch([selected.element.id], op_def.NodeType.ElementNodeType);
                 }
-                break;
-            // case BrushEnum.ERASER:
-            //     this.removeElement(com);
-            //     break;
-        }
-    }
-
-    private onGameobjectOverHandler(pointer, gameobject) {
-        const com = gameobject.parentContainer;
-        if (!com) {
-            return;
-        }
-        switch (this.mBrush.mode) {
-            case BrushEnum.ERASER:
-                this.removeElement(com);
                 break;
         }
     }
@@ -299,23 +291,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
         this.mSelectedElementEffect.setElement(<FramesDisplay> com);
         return com;
-    }
-
-    private removeElement(com: DisplayObject) {
-        if (!(com instanceof DisplayObject)) {
-            return;
-        }
-        if (!this.connection) {
-            return;
-        }
-        const element = com.element;
-        if (!element) {
-            return;
-        }
-        if (element instanceof Element) {
-            return;
-        }
-        element.removeMe();
     }
 
     private syncSprite(object: ElementDisplay) {
@@ -372,17 +347,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.moveElement(event.keyCode);
                 break;
             case 46:
-                if (!this.mSelectedElementEffect.display) {
-                    return;
-                }
-                if (!this.mSelectedElementEffect.display.element) {
-                    return;
-                }
-                const ele = this.mElementManager.remove(this.mSelectedElementEffect.display.element.id);
-                Logger.getInstance().log("element: ", ele);
-                if (ele) {
-                    this.mSelectedElementEffect.remove();
-                }
+                this.removeDisplay(this.mSelectedElementEffect.display);
                 break;
         }
     }
@@ -425,5 +390,18 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.mMouseFollow = new MouseFollow(this.mScene, this);
         }
         return this.mMouseFollow;
+    }
+
+    private removeDisplay(display: FramesDisplay | DragonbonesDisplay) {
+        if (!display) {
+            return;
+        }
+        if (!display.element) {
+            return;
+        }
+        const ele = this.mElementManager.removeEditor(display.element.id);
+        if (ele) {
+            this.removeSelected();
+        }
     }
 }

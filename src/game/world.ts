@@ -196,8 +196,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConfig.game_id = content.gameId;
         this.mConfig.virtual_world_id = content.virtualWorldId;
         this._newGame();
-        this.mRoomMamager.addPackListener();
-        this.mUiManager.addPackListener();
         this.loginEnterWorld();
     }
 
@@ -208,8 +206,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConfig.game_id = gameID;
         this.mConfig.virtual_world_id = worldID;
         this._newGame();
-        this.mRoomMamager.addPackListener();
-        this.mUiManager.addPackListener();
         this.loginEnterWorld();
     }
 
@@ -219,9 +215,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.clearGame();
         this.mConfig.game_id = gameID;
         this.mConfig.virtual_world_id = worldID;
-        this._newGame();
-        this.mRoomMamager.addPackListener();
-        this.mUiManager.addPackListener();
+        // this._newGame();
+        // this.mRoomMamager.addPackListener();
+        // this.mUiManager.addPackListener();
         this.loginEnterWorld();
     }
 
@@ -361,7 +357,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
         if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
             Logger.getInstance().debug("缺少必要参数，无法登录游戏");
-            this.mGame.destroy(true);
+            if (this.mGame) this.mGame.destroy(true);
             return;
         }
         content.gameId = this.mConfig.game_id;
@@ -452,6 +448,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.gameConfig.type = !this.game.device.os.desktop ? Phaser.AUTO : Phaser.CANVAS;
         this.mGame = new Game(this.gameConfig);
         this.initUiScale();
+        if (this.mRoomMamager) this.mRoomMamager.addPackListener();
+        if (this.mUiManager) this.mUiManager.addPackListener();
         return this.mGame;
     }
 

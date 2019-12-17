@@ -8,6 +8,7 @@ import { Logger } from "../../utils/log";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "../element/sprite";
 import { IElement } from "../element/element";
+import NodeType = op_def.NodeType;
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
@@ -26,6 +27,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -154,6 +156,21 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = ids;
         this.connection.send(packet);
+    }
+
+    private onChangeAnimation(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
+        if (content.nodeType !== NodeType.TerrainNodeType) {
+            return;
+        }
+        const anis = content.changeAnimation;
+        let terrain: Terrain = null;
+        for (const ani of anis) {
+            terrain = this.get((ani.id));
+            if (terrain) {
+                terrain.play(ani.animationName);
+            }
+        }
     }
 
     get connection(): ConnectionService | undefined {

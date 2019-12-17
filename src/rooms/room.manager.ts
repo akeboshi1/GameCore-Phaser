@@ -54,13 +54,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public onFocus() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.resume(room.scene.scene.key);
+            if (room && room.scene) room.resume(room.scene.scene.key);
         });
     }
 
     public onBlur() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.pause();
+            if (room && room.scene) room.pause();
         });
     }
 
@@ -76,13 +76,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         if (idx >= 0) {
             const room: Room = this.mRooms[idx];
-            room.resume(room.scene.scene.key);
+            if (room && room.scene) room.resume(room.scene.scene.key);
         }
     }
 
     public stop() {
         this.mRooms.forEach((room: Room) => {
-            if (room) room.destroy();
+            if (room && room.scene) room.destroy();
         });
     }
 
@@ -132,7 +132,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const room: DecorateRoom = new DecorateRoom(this);
         room.enter((content.scene));
-        this.mCurRoom = room;
+        // this.mCurRoom = room;
     }
 
     private onEnterEditor(packet: PBpacket) {
@@ -140,6 +140,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const room = new EditorRoom(this);
         room.enter(content.scene);
         this.mCurRoom = room;
+        this.mRooms.push(room);
     }
 
     private leaveScene(room: IRoomService) {

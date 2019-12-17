@@ -15,8 +15,8 @@ export class ChatPanelMobile extends BaseChatPanel {
     private mInputBg;
     private clickContainer: Phaser.GameObjects.Container;
     private arrow;
-    constructor(scene: Phaser.Scene, private mWorld: WorldService) {
-        super(scene);
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super(scene, world);
         this.setTween(false);
     }
 
@@ -68,22 +68,37 @@ export class ChatPanelMobile extends BaseChatPanel {
             this.add(track);
             this.add(thumb);
         }
+        if (this.mInputText) {
+            this.mInputText.destroy();
+            this.mInputText = null;
+            this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
+                type: "input",
+                fontSize: "20px",
+                color: "#808080"
+            })
+                .resize(328, 26)
+                .setOrigin(0, 0)
+                .setStyle({ font: "bold 20px YaHei" })
+                .on("focus", this.onFocusHandler, this)
+                .on("blur", this.onBlurHandler, this);
+        }
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
                 this.mWidth = size.width >> 1;
                 this.mHeight = size.height;
-                this.setSize(this.mWidth, this.mHeight);
+                this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
                 this.x = 0;
                 this.y = 0;
                 this.clickContainer.x = this.mWidth / this.mWorld.uiScale + this.clickContainer.width / 2;
                 this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
                 this.clickContainer.rotation = Math.PI * .5;
                 this.arrow.rotation = Math.PI * .5;
+                this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
                 this.mTextArea = new TextArea(this.mScene, {
-                    x: this.mWidth >> 1,
-                    y: this.mHeight / 2 - 14,
-                    textWidth: this.mWidth - 80,
-                    textHeight: size.height - this.mSendBtn.height * 1.5,
+                    x: this.mWidth * .5 / this.mWorld.uiScale,
+                    y: this.mHeight / 2,
+                    textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
+                    textHeight: this.mHeight,
                     text,
                     slider: {
                         track,
@@ -94,14 +109,15 @@ export class ChatPanelMobile extends BaseChatPanel {
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
                 this.mWidth = size.width;
-                this.mHeight = size.height - 20 * this.mWorld.uiScale >> 1;
-                this.setSize(this.mWidth, this.mHeight);
+                this.mHeight = size.height / 2;
+                this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
                 this.x = 0;
                 this.y = this.mHeight + 20 * this.mWorld.uiScale;
+                this.mInputBg.y = this.mBorder.height - this.mInputBg.height;
                 this.mTextArea = new TextArea(this.mScene, {
-                    x: (this.mWidth - 60) / this.mWorld.uiScale >> 1,
+                    x: (this.mWidth - 15) / this.mWorld.uiScale >> 1,
                     y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
-                    textWidth: (this.mWidth - 60) / this.mWorld.uiScale,
+                    textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
                     textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
                     text,
                     slider: {
@@ -127,18 +143,17 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.mTextArea.layout();
         this.add(this.mTextArea);
         this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
-        this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
         // this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
+        this.setSize(this.mWidth, this.mHeight);
         // this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
         this.mInputBg.x = this.mInputBg.width >> 1;
-        this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
         this.mSendBtn.y = this.mInputBg.y;
-        this.mInputText.x = 2;
-        this.mInputText.y = this.mInputBg.y - 12;
+        this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
         this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.add(this.mInputText);
     }
 
     public destroy() {
@@ -172,7 +187,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 if (!show) this.hide();
             },
         });
-        this.setLocation();
+        if (show) this.setLocation();
     }
 
     public hide() {
@@ -265,7 +280,6 @@ export class ChatPanelMobile extends BaseChatPanel {
             .setStyle({ font: "bold 20px YaHei" })
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
-        this.add(this.mInputText);
 
         this.mSendBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, WhiteButton.getName(), "发送", WhiteButton.getConfig());
         this.mSendBtn.on("pointerdown", this.onSendMsgHandler, this);
@@ -281,6 +295,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.clickContainer.setInteractive();
         this.clickContainer.on("pointerdown", this.clickHandler, this);
         this.add(this.clickContainer);
+        this.add(this.mInputText);
         this.setLocation();
         super.init();
     }

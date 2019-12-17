@@ -2,13 +2,14 @@
 import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../../bag/item.slot";
 import { Size } from "../../../utils/size";
-import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
+import { op_gameconfig } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
 import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
 import { Radio } from "../../components/radio";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { FriendMediator } from "../../friend/friend.mediator";
+import { ChatMediator } from "../../chat/chat.mediator";
 
 /**
  * 主界面ui pc版本
@@ -21,7 +22,6 @@ export class MainUIPC extends Panel {
     public bagSlotList: ItemSlot[];
     private mBagBg: Phaser.GameObjects.Sprite;
     private baseBagBgWid: number;
-    private mWorld: WorldService;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
@@ -36,9 +36,8 @@ export class MainUIPC extends Panel {
     private buttons;
 
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
-        super(scene);
+        super(scene, world);
         this.mScene = scene;
-        this.mWorld = world;
         // this.mParentCon = this.mScene.make.container(undefined, false);
         this.x = x;
         this.y = y;
@@ -59,7 +58,8 @@ export class MainUIPC extends Panel {
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.x = (size.width - this.mWid) / 2;
+        const chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
+        this.x = (size.width - this.mWid) / 2 < chatMed.getView().width ? chatMed.getView().width + this.width / 2 : (size.width - this.mWid) / 2;
         this.y = size.height - 50;
     }
     public destroy() {
@@ -103,23 +103,17 @@ export class MainUIPC extends Panel {
     }
 
     public setDataList(items: op_gameconfig.IItem[]) {
+        if (this.bagSlotList) {
+            this.bagSlotList.forEach((itemslot: ItemSlot) => {
+                if (itemslot) itemslot.getView().visible = false;
+            });
+        }
         const childList: Phaser.GameObjects.GameObject[] = [];
         const len: number = items.length > MainUIPC.SlotMaxCount ? MainUIPC.SlotMaxCount : items.length;
-        const subScriptList: string[] = ["0", "b", "c"];
-        let subScriptRes: string;
         let tempWid: number = this.baseBagBgWid + 5;
         for (let i: number = 0; i < len; i++) {
-            if (i >= 9) {
-                subScriptRes = "bag_SubScript" + subScriptList[i % 9];
-            } else {
-                subScriptRes = "bag_SubScript" + (i + 1);
-            }
-            let itemSlot: ItemSlot = this.bagSlotList[i];
-            if (!itemSlot) {
-                itemSlot = new ItemSlot(this.mScene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
-                itemSlot.createUI();
-                this.bagSlotList.push(itemSlot);
-            }
+            const itemSlot: ItemSlot = this.bagSlotList[i];
+            itemSlot.getView().visible = true;
             childList.push(itemSlot.toolTipCon);
             itemSlot.dataChange(items[i]);
             tempWid += 56 + 5;
@@ -138,7 +132,7 @@ export class MainUIPC extends Panel {
                 orientation: 0,
                 buttons: childList,
                 groupName: "bagBtn",
-                align: "center",
+                align: "right",
                 click: {
                     mode: "pointerup",
                     clickInterval: 100
@@ -190,15 +184,36 @@ export class MainUIPC extends Panel {
         this.bagBtn.on("pointerdown", this.bagHandler, this);
         this.bagBtn.on("pointerover", this.bagBtnOver, this);
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
-
-        const playerModel: ISprite = this.mWorld.roomManager.currentRoom.getHero().model;
-        if (playerModel && playerModel.package && playerModel.package.items) this.setDataList(playerModel.package.items);
+        this.initBagSlot();
+        const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+        if (mPackage && mPackage.items) this.setDataList(mPackage.items);
         // childList.push(this.mBagBtnCon);
         super.init();
     }
 
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) this.resize();
+    }
+
+    private initBagSlot() {
+        const subScriptList: string[] = ["0", "b", "c"];
+        let subScriptRes: string;
+        for (let i: number = 0; i < MainUIPC.SlotMaxCount; i++) {
+            if (i >= 9) {
+                subScriptRes = "bag_SubScript" + subScriptList[i % 9];
+            } else {
+                subScriptRes = "bag_SubScript" + (i + 1);
+            }
+            const itemSlot = new ItemSlot(this.mScene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+            itemSlot.createUI();
+            itemSlot.getView().visible = false;
+            this.bagSlotList.push(itemSlot);
+        }
+    }
+
     private bagHandler() {
-       // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
+        // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
     }

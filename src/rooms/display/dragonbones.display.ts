@@ -218,6 +218,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mAnimationName,
             this.dragonBonesName,
         );
+        this.mArmatureDisplay.visible = false;
+        this.add(this.mArmatureDisplay);
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
         this.clearArmatureSlot();
 
@@ -298,7 +300,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             // const part: string = obj.slot.replace("$", obj.dir.toString());
             // Logger.log(part);
         }
-        if (this.mLoadMap && this.mLoadMap.size > 0) this.startLoad();
+        if (this.mLoadMap && this.mLoadMap.size > 0) {
+            this.startLoad();
+        } else {
+            this.mArmatureDisplay.visible = true;
+        }
         this.replaceArr.splice(0);
     }
 
@@ -761,24 +767,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                         return;
                     }
                     img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
-                    // img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y);
-                    // const texture = this.scene.game.textures.get(this.mDisplayInfo.id + "");
-                    // img.setFrame(texture.firstFrame);
-                    // // 新建的slotImage的texture的槽位名如果不是当前槽位则跳过
-                    // if (img.frame.name.split("/")[1] !== key) {
-                    //     slot.display.visible = false;
-                    //     return;
-                    // }
-                    // // 当前格位上的贴图如果是图集上的贴图只要让display显示即可
-                    // if (slot.display.frame.name === img.frame.name) {
-                    //     slot.display.visible = true;
-                    //     return;
-                    // }
                 } else {
                     img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
                 }
                 slot.replaceDisplay(img);
-                //     Logger.getInstance().debug("slot.name:" + slot.name + ";" + "name:" + name);
             }
         }
     }
@@ -849,7 +841,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             // });
             // this.mArmatureDisplay.armature.replacedTexture = this.mDragonBonesRenderTexture;
             // this.mArmatureDisplay.armature.invalidUpdate(null, true);
-            this.add(this.mArmatureDisplay);
+            this.mArmatureDisplay.visible = true;
             this.mLoadMap.clear();
         }, this);
 

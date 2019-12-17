@@ -30,7 +30,6 @@ export interface ISprite {
     displayInfo: IFramesModel | IDragonbonesModel;
     pos: Pos;
     bindID: number;
-    package: op_gameconfig.IPackage;
 
     newID();
     toSprite(): op_client.ISprite;
@@ -91,7 +90,7 @@ export class Sprite implements ISprite {
                 }
             });
         }
-        this.mCurrentAnimationName = obj.currentAnimationName || "idle";
+        this.mCurrentAnimationName = obj.currentAnimationName;
         this.mDirection = obj.direction;
         this.mNickname = obj.nickname;
         this.mBindID = obj.bindId;
@@ -225,6 +224,7 @@ export class Sprite implements ISprite {
 
     set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+        if (this.currentAnimationName) this.mDisplayInfo.animationName = this.currentAnimationName;
     }
 
     get nodeType(): NodeType {

@@ -9,10 +9,11 @@ import { ISprite, Sprite } from "../element/sprite";
 import { MessageType } from "../../const/MessageType";
 import { Player } from "./player";
 import { IElement } from "../element/element";
+import { Actor } from "./Actor";
+import NodeType = op_def.NodeType;
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     private mPlayerMap: Map<number, Player> = new Map();
-    private mActorID: number;
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -23,9 +24,12 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.onShowEffect);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
-
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onOnlyBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+
         }
     }
 
@@ -114,31 +118,43 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
-        if (character) {
-            const playerModel: ISprite = character.model;
-            if (!playerModel.package) {
-                playerModel.package = op_gameconfig.Package.create();
+        if (character && character.id === this.mRoom.actor.id) {
+            if (!(character as Actor).package) {
+                (character as Actor).package = op_gameconfig.Package.create();
             }
-            playerModel.package.items = playerModel.package.items.concat(items);
-            if (character === this.mRoom.getHero()) {
-                this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
-            }
+            (character as Actor).package.items = (character as Actor).package.items.concat(items);
+            this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
         }
     }
 
     public removePackItems(elementId: number, itemId: number): boolean {
         const character: Player = this.mPlayerMap.get(elementId);
-        if (character) {
-            const playerModel: ISprite = character.model;
-            const len = playerModel.package.items.length;
+        if (character && this.mRoom.actor.id) {
+            const itemList: any[] = (character as Actor).package.items;
+            const len = itemList.length;
             for (let i = 0; i < len; i++) {
-                if (itemId === playerModel.package.items[i].id) {
-                    playerModel.package.items.splice(i, 1);
+                if (itemId === itemList[i].id) {
+                    itemList.splice(i, 1);
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private onSync(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
+            return;
+        }
+        let player: Player = null;
+        const sprites = content.sprites;
+        for (const sprite of sprites) {
+            player = this.get(sprite.id);
+            if (player) {
+                player.model = new Sprite(sprite);
+            }
+        }
     }
 
     private onAdjust(packet: PBpacket) {
@@ -187,7 +203,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap.has(sprite.id)) {
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
-            this.roomService.blocks.add(player);
         }
     }
 
@@ -235,6 +250,22 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
+    private onOnlyBubbleHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
+        const player = this.get(content.receiverid);
+        if (player) {
+            player.showBubble(content.context, content.chatsetting);
+        }
+    }
+
+    private onClearBubbleHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
+        const player = this.get(content.receiverid);
+        if (player) {
+            player.clearBubble();
+        }
+    }
+
     private onShowEffect(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT = packet.content;
         const ids = content.id;
@@ -243,6 +274,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(id);
             if (player) {
                 player.showEffected();
+            }
+        }
+    }
+
+    private onChangeAnimation(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
+        if (content.nodeType !== NodeType.CharacterNodeType) {
+            return;
+        }
+        const anis = content.changeAnimation;
+        let player: Player = null;
+        for (const ani of anis) {
+            player = this.get((ani.id));
+            if (player) {
+                player.play(ani.animationName);
             }
         }
     }

@@ -117,7 +117,6 @@ export class Element extends BlockObject implements IElement {
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
-    protected mCurDir: number = 1;
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
     protected mBlockable: boolean = true;
@@ -126,32 +125,6 @@ export class Element extends BlockObject implements IElement {
         super();
         this.mId = sprite.id;
         this.model = sprite;
-        // if (sprite.avatar) {
-        //     this.mDisplayInfo = new DragonbonesModel(sprite);
-        // } else {
-        // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-        // let conf = null;
-        // if (sprite.displayInfo) {
-        //     conf = sprite.displayInfo;
-        // } else {
-        //     conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-        // }
-        // if (!conf) {
-        //     Logger.getInstance().error("object does not exist");
-        //     return;
-        // }
-        // this.mDisplayInfo = conf;
-        // if (conf.shops) {
-        //     this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
-        //     this.mShopEntity.register();
-        // }
-        // }
-        // this.createDisplay();
-        // this.setPosition(sprite.pos);
-        // this.mDisplay.changeAlpha(sprite.alpha);
-        // this.mDisplay.showNickname(sprite.nickname);
-        // this.setDirection(sprite.direction);
-        // this.setRenderable(true);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -249,10 +222,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setPosition(p: Pos) {
-        if (this.mDisplay) {
+        if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
         }
         this.setDepth();
+        this.updateBlock();
     }
 
     public getPosition(): Pos {
@@ -286,6 +260,14 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.addBubble(text, setting);
         this.updateBubble();
         this.roomService.addToSceneUI(this.mBubble);
+    }
+
+    public clearBubble() {
+        if (!this.mBubble) {
+            return;
+        }
+        this.mBubble.destroy();
+        this.mBubble = null;
     }
 
     public showNickName() {
@@ -413,14 +395,10 @@ export class Element extends BlockObject implements IElement {
                 this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
             }
             const pos = this.mModel.pos;
-            this.mDisplay.setPosition(pos.x, pos.y, pos.z);
+            if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
             this.mDisplay.once("initialized", this.onDisplayReady, this);
             this.mDisplay.load(this.mDisplayInfo);
-            if (this.mBlockable) {
-                this.roomService.addBlockObject(this);
-            } else {
-                this.addDisplay();
-            }
+            this.addToBlock();
         }
         return this.mDisplay;
     }
@@ -434,6 +412,20 @@ export class Element extends BlockObject implements IElement {
         }
         room.addToSurface(this.mDisplay);
         this.setDepth();
+    }
+
+    protected addToBlock() {
+        if (this.mBlockable) {
+            this.roomService.addBlockObject(this);
+        } else {
+            this.addDisplay();
+        }
+    }
+
+    protected updateBlock() {
+        if (this.mBlockable) {
+            this.roomService.updateBlockObject(this);
+        }
     }
 
     protected setDepth() {
@@ -482,6 +474,10 @@ export class Element extends BlockObject implements IElement {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
+            if (this.mBlockable) {
+                this.roomService.updateBlockObject(this);
+                // this.roomService.addBlockObject()
+            }
         }
     }
 }

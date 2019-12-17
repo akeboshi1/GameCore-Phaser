@@ -1,5 +1,3 @@
-import * as url from "url";
-import * as path from "path";
 import { HTTP_REGEX } from "../const/constants";
 
 export class Url {
@@ -25,7 +23,11 @@ export class ResUtils {
         return value + "_png";
     }
     static getPartUrl(value: string): string {
-        return Url.OSD_PATH + "avatar/part/" + value + ".png";
+        // TOOD 编辑器或调式会传入本地资源。Avatar资源只存在cdn
+        if (HTTP_REGEX.test(Url.OSD_PATH)) {
+            return Url.OSD_PATH + "avatar/part/" + value + ".png";
+        }
+        return CONFIG.osd + "avatar/part/" + value + ".png";
     }
     static getGameConfig(value: string): string {
         if (HTTP_REGEX.test(value)) {
