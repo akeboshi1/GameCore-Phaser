@@ -153,9 +153,9 @@ export class Actor extends Player implements InputListener {
         }
         this.mDisplayInfo = this.mModel.displayInfo;
         this.createDisplay();
-        this.setPosition(this.mModel.pos);
+        if (this.mModel.pos) this.setPosition(this.mModel.pos);
         this.mDisplay.changeAlpha(this.mModel.alpha);
-        this.mDisplay.showNickname(this.mModel.nickname);
+        if (this.mModel.nickname) this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
 
         if (this.mElementManager) {
