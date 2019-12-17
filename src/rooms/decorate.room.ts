@@ -113,6 +113,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     updateClock(time: number, delta: number): void {
     }
 
+    updateBlockObject() {
+    }
+
     get id(): number {
         return this.mID;
     }
