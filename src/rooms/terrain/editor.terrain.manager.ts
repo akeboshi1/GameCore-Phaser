@@ -36,17 +36,17 @@ export class EditorTerrainManager extends TerrainManager {
         this.connection.send(pkt);
     }
 
-    remove(id: number): IElement {
+    removeEditor(id: number): IElement {
         if (!this.mTerrains) return;
-        const element = this.tryRemove(id);
-        if (element) {
+        const terrain = this.tryRemove(id);
+        if (terrain) {
             const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
             const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
             content.ids = [id];
             content.nodeType = op_def.NodeType.TerrainNodeType;
             this.connection.send(pkt);
         }
-        return element;
+        return terrain;
     }
 
     removeFormPositions(locations: Pos[]) {
@@ -57,7 +57,7 @@ export class EditorTerrainManager extends TerrainManager {
                 return pos.equal(ter.getPosition45());
             });
             if (terrain) {
-                this.remove(terrain.id);
+                this.removeEditor(terrain.id);
             }
         }
     }

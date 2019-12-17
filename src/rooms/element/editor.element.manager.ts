@@ -2,7 +2,6 @@ import {ElementManager} from "./element.manager";
 import { ISprite, Sprite } from "./sprite";
 import {PBpacket} from "net-socket-packet";
 import {op_editor, op_def, op_client} from "pixelpai_proto";
-import {IRoomService} from "../room";
 import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
 import { Element } from "./element";
@@ -35,7 +34,7 @@ export class EditorElementManager extends ElementManager {
         Logger.getInstance().log("add sprites: ", content);
     }
 
-    remove(id: number) {
+    removeEditor(id: number) {
         const ele = this.tryRemove(id);
         if (ele) {
             const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
