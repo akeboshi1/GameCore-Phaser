@@ -4,9 +4,11 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
+    protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         if (this.mDisplay) {
@@ -23,6 +25,7 @@ export class Player extends Element {
         if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
             this.setDirection(moveData.direction);
         }
+        moveData.destinationPoint3f.y += this.offsetY;
         super.move(moveData);
     }
 
@@ -42,6 +45,11 @@ export class Player extends Element {
         }
     }
 
+    public setPosition(pos: Pos) {
+        pos.y += this.offsetY;
+        super.setPosition(pos);
+    }
+
     protected onMoveStart() {
         this.changeState(PlayerState.WALK);
     }
@@ -49,5 +57,15 @@ export class Player extends Element {
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
+    }
+
+    private get offsetY(): number {
+        if (this.mOffsetY === undefined) {
+            if (!this.mElementManager || !this.mElementManager.roomService || !this.mElementManager.roomService.roomSize) {
+                return 0;
+            }
+            this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
+        }
+        return this.mOffsetY;
     }
 }

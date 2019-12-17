@@ -63,12 +63,7 @@ export class ItemDetail extends Panel {
             const preX: number = this.mWid + 50;
             for (let i: number = 0; i < len; i++) {
                 const btnData: op_gameconfig_01.IButton = data.button[i];
-                btn = new NinePatchButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, "button_blue", btnData.text, {
-                    left: 4,
-                    top: 4,
-                    right: 4,
-                    bottom: 4
-                }, btnData);
+                btn = new NinePatchButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, BlueButton.getName(), btnData.text, BlueButton.getConfig(), btnData);
                 this.mBtnList.push(btn);
                 btn.x = preX;
                 btn.y = preY;

@@ -125,32 +125,6 @@ export class Element extends BlockObject implements IElement {
         super();
         this.mId = sprite.id;
         this.model = sprite;
-        // if (sprite.avatar) {
-        //     this.mDisplayInfo = new DragonbonesModel(sprite);
-        // } else {
-        // const conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-        // let conf = null;
-        // if (sprite.displayInfo) {
-        //     conf = sprite.displayInfo;
-        // } else {
-        //     conf = this.mElementManager.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id) as IFramesModel;
-        // }
-        // if (!conf) {
-        //     Logger.getInstance().error("object does not exist");
-        //     return;
-        // }
-        // this.mDisplayInfo = conf;
-        // if (conf.shops) {
-        //     this.mShopEntity = new ShopEntity(mElementManager.roomService.world);
-        //     this.mShopEntity.register();
-        // }
-        // }
-        // this.createDisplay();
-        // this.setPosition(sprite.pos);
-        // this.mDisplay.changeAlpha(sprite.alpha);
-        // this.mDisplay.showNickname(sprite.nickname);
-        // this.setDirection(sprite.direction);
-        // this.setRenderable(true);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
