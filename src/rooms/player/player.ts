@@ -54,6 +54,11 @@ export class Player extends Element {
         this.changeState(PlayerState.WALK);
     }
 
+    protected onMoveComplete() {
+        super.onMoveComplete();
+        this.changeState(PlayerState.IDLE);
+    }
+
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
