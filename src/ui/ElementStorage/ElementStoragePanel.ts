@@ -4,8 +4,8 @@ import {Background, Border, Url} from "../../utils/resUtil";
 import {Size} from "../../utils/size";
 import {WorldService} from "../../game/world.service";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
-// import Tabs from "../../../lib/rexui/templates/ui/tabs/Tabs";
 import { NinePatchButton } from "../components/ninepatch.button";
+import { CheckboxGroup } from "../components/checkbox.group";
 
 export class ElementStoragePanel extends Panel {
     private mSearchInput: InputText;
@@ -55,28 +55,15 @@ export class ElementStoragePanel extends Panel {
             bottom: 4
         });
 
-        const button2 = new NinePatchButton(this.scene, 0, 0, 60, 30, "button", "全部2",  {
+        const button2 = new NinePatchButton(this.scene, 0, 100, 60, 30, "button", "全部2",  {
             left: 4,
             top: 4,
             right: 4,
             bottom: 4
         });
 
-        // const tabs = new Tabs(this.scene, {
-        //     x: 200,
-        //     y: 100,
-        //     rightButtons: [
-        //         button,
-        //         button2
-        //     ],
-        //     space: {
-        //         left: 20,
-        //         right: 20,
-        //         top: 20,
-        //         bottom: 20,
-        //     }
-        // })
-        // .layout();
+        new CheckboxGroup().appendItemAll([button, button2]);
+
         this.add([background, border, this.mSearchInput, button, button2]);
         super.init();
         this.resize();

@@ -12,14 +12,14 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
         this.mScene = scene;
         this.mKey = key;
         this.setSize(width, height);
-        this.mNingBg = new NinePatch(this.scene, x, y, width, height, key, key + "_normal", config);
+        this.mNingBg = new NinePatch(this.scene, 0, 0, width, height, key, key + "_normal", config);
         this.add(this.mNingBg);
         if (data) {
             this.btnData = data;
         }
 
         this.mLabel = this.scene.make.text(undefined, false)
-            .setOrigin(0.45, 0.5)
+            .setOrigin(0.5, 0.5)
             .setSize(this.width, this.height)
             .setAlign("center")
             .setText(text);
@@ -72,10 +72,10 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
         this.setFrame(`${this.mKey}_over`);
     }
 
-    protected changeDown() {
+    protected changeDown(pointer) {
         // this.scale = 0.9;
         this.setFrame(`${this.mKey}_down`);
-        this.scaleHandler();
+        this.emit("click", pointer, this);
     }
 
     get label(): Phaser.GameObjects.Text {
