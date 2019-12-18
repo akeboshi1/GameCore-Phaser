@@ -209,7 +209,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public startMove() {
-        this.changeState("walk");
+        this.changeState(PlayerState.WALK);
     }
 
     public stopMove() {
@@ -217,7 +217,7 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`can't stopMove, display does not exist`);
             return;
         }
-        this.changeState("idle");
+        this.changeState(PlayerState.IDLE);
         // Logger.debug(`stop,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
     }
 
@@ -445,7 +445,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            this.mDisplay.play("idle");
+            this.mDisplay.play(PlayerState.IDLE);
             this.setDepth();
         }
     }

@@ -6,10 +6,12 @@ import { IconBtn } from "./icon.btn";
 
 export class TopBtnGroup extends Panel {
     // private mWid: number = 0;
+    private mBtnPad: number = 10;
     private mBtnX: number = 0;
     private mBtnList: IconBtn[];
     private mResKey: string;
     private mTurnBtn: IconBtn;
+    private mReturnBtn: IconBtn;
     private mExpandBoo: boolean = false;
     private mOrientation: number = Phaser.Scale.Orientation.LANDSCAPE;
     constructor(scene: Phaser.Scene, world: WorldService) {
@@ -34,6 +36,10 @@ export class TopBtnGroup extends Panel {
             this.mTurnBtn.destroy();
         }
 
+        if (this.mReturnBtn) {
+            this.mReturnBtn.destroy();
+        }
+
         if (this.mBtnList) {
             this.mBtnList.forEach((btn) => {
                 if (btn) {
@@ -45,6 +51,7 @@ export class TopBtnGroup extends Panel {
         this.mResKey = "";
         this.mBtnList = null;
         this.mTurnBtn = null;
+        this.mReturnBtn = null;
         super.destroy();
     }
 
@@ -56,7 +63,7 @@ export class TopBtnGroup extends Panel {
         this.mScene.tweens.add({
             targets: this,
             duration: 200,
-            ease: "Linear",
+            ease: "Cubic.Out",
             props: {
                 y: { value: toY },
                 alpha: { value: toAlpha },
@@ -76,20 +83,32 @@ export class TopBtnGroup extends Panel {
     protected init() {
         const size: Size = this.mWorld.getSize();
         let hei: number = 0;
+        let wid: number = 0;
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mBtnList = [];
         this.mBtnX = 0;
         const bgResKey: string = "btnGroup_bg.png";
         this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_top_expand.png", 1);
         this.mTurnBtn.x = this.mBtnX;
+        this.mTurnBtn.setPos(this.mBtnX, 0);
+        wid += this.mTurnBtn.width;
         this.add(this.mTurnBtn);
-        this.mBtnX += -this.mTurnBtn.width >> 1;
-        this.mTurnBtn.setClick(() => {
-            this.mWorld.closeGame();
-            // this.turnHandler();
-        });
+        this.mBtnX += -this.mTurnBtn.width - this.mBtnPad;
         hei += this.mTurnBtn.height / 2 + 20;
-        this.setSize(this.mTurnBtn.width, hei);
+        this.mReturnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], "btnGroup_top_expand.png", 1);
+        this.mReturnBtn.x = this.mBtnX;
+        this.mReturnBtn.setPos(this.mBtnX, 0);
+        this.mBtnList.push(this.mReturnBtn);
+        wid += this.mReturnBtn.width;
+        this.add(this.mReturnBtn);
+        this.mBtnX += -this.mReturnBtn.width - this.mBtnPad;
+        this.setSize(wid, hei);
+        this.mTurnBtn.setClick(() => {
+            this.turnHandler();
+        });
+        this.mReturnBtn.setClick(() => {
+            this.mWorld.closeGame();
+        });
         this.resize();
         super.init();
     }
@@ -106,7 +125,7 @@ export class TopBtnGroup extends Panel {
             const easeType: string = this.mExpandBoo ? "Sine.easeIn" : "Sine.easeOut";
             this.mScene.tweens.add({
                 targets: btn,
-                duration: 1000,
+                duration: 500,
                 ease: easeType,
                 props: {
                     x: { value: toX },

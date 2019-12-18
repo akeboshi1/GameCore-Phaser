@@ -14,6 +14,7 @@ export interface ILauncherConfig {
     game_id: string;
     virtual_world_id: string;
     ui_scale?: number;
+    platform?: string;
     readonly width: number;
     readonly height: number;
     readonly baseWidth: number;
@@ -67,6 +68,7 @@ export class Launcher {
         baseHeight: this.maxHeight,
         ui_scale: 1,
         closeGame: null,
+        platform: "pc",
     };
 
     constructor(config?: ILauncherConfig) {

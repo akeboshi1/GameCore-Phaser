@@ -23,7 +23,7 @@ export class MainUIMobile extends Panel {
         this.mRightBtnGroup = new RightBtnGroup(scene, world);
         this.mBottomBtnGroup = new BottomBtnGroup(scene, world);
         // app环境下没有全屏按钮
-        if (!world.getConfig().closeGame) this.mLeftBtnGroup = new LeftBtnGroup(scene, world);
+        if (world.getConfig().platform !== "app") this.mLeftBtnGroup = new LeftBtnGroup(scene, world);
     }
     public isShow(): boolean {
         return this.mShowing;

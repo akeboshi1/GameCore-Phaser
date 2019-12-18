@@ -135,7 +135,20 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     public play(val: string) {
         let dir: number = this.mDisplayInfo !== undefined && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
-        dir = dir !== 0 ? dir : 3;
+        switch (dir) {
+            case 0:
+                dir = Math.random() * 1 > .5 ? 1 : 7;
+                break;
+            case 2:
+                dir = Math.random() * 1 > .5 ? 1 : 3;
+                break;
+            case 4:
+                dir = Math.random() * 1 > .5 ? 3 : 5;
+                break;
+            case 6:
+                dir = Math.random() * 1 > .5 ? 5 : 7;
+                break;
+        }
         if (this.mActionName !== val || this.mPreDirection !== dir) {
             let trunDir: string = "";
             if (dir === 3 || dir === 5) {
@@ -870,8 +883,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     set dragonBonesName(val: string) {
         // if (this.mDragonbonesName !== val) {
-            this.mDragonbonesName = val;
-            this.buildDragbones();
+        this.mDragonbonesName = val;
+        this.buildDragbones();
         // }
     }
 

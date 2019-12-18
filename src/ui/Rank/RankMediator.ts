@@ -40,7 +40,6 @@ export class RankMediator extends BaseMediator {
     }
 
     show(param?: any): void {
-        return;
         if (this.mView && this.mView.isShow()) {
             return;
         }

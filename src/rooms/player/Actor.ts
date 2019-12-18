@@ -9,6 +9,7 @@ import { Bag } from "./bag/bag";
 import { Interactive } from "./interactive/interactive";
 import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
+import { PlayerState } from "../element/element";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
@@ -112,7 +113,7 @@ export class Actor extends Player implements InputListener {
 
     public move(moveData: op_client.IMoveData) {
         // TODO 不能仅判断walk, 移动状态可能还有run
-        if (this.mCurState !== "walk") {
+        if (this.mCurState !== PlayerState.WALK) {
             return;
         }
         super.move(moveData);
@@ -122,7 +123,7 @@ export class Actor extends Player implements InputListener {
     }
 
     protected onMoveComplete() {
-        if (this.mCurState !== "walk") {
+        if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
         }
@@ -130,7 +131,7 @@ export class Actor extends Player implements InputListener {
     }
 
     protected onMoving() {
-        if (this.mCurState !== "walk") {
+        if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
         }
