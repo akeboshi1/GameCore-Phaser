@@ -42,7 +42,7 @@ export class LoadingScene extends Phaser.Scene {
       if (!frame) continue;
       tmpFrames.push(key);
     }
-    // 手动把json配置中的frames给予动画
+    // 手动把json配置中的frames给予anims
     this.anims.create({
       key: "loading_anmis",
       frames: this.anims.generateFrameNumbers("loading", { start: 0, end: 59, frames: tmpFrames }),
