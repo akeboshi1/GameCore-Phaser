@@ -63,7 +63,6 @@ export class JoyStickManager implements InputManager {
         this.mKeyEvents = null;
 
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
-        this.mParentcon.name = "joystick";
         const scale = !this.mScale ? 1 : this.mScale;
         this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, scale);
     }
@@ -208,6 +207,7 @@ export class JoyStick {
         this.bg.setTexture("joystick", "joystick_bg.png");
         this.bgRadius = this.bg.width + 140 >> 1;
         this.btn = this.mScene.make.sprite(undefined, false);
+        this.btn.name = "joystick_btn";
         this.btn.setTexture("joystick", "joystick_tab.png");
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
@@ -232,8 +232,18 @@ export class JoyStick {
     }
 
     private downHandler(pointer, gameojectList) {
-        if (gameojectList && gameojectList.length > 0 || (gameojectList.length === 1 && (gameojectList[0] instanceof Phaser.GameObjects.Sprite) && gameojectList[0].name === "joystick")) {
-            return;
+        if (gameojectList) {
+            if (gameojectList.length > 1) {
+                return;
+            } else if (gameojectList.length === 1) {
+                if (gameojectList[0].name) {
+                    if (gameojectList[0].name !== "joystick_btn") {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            }
         }
         this.mjoystickCon.x = pointer.x;
         this.mjoystickCon.y = pointer.y;
