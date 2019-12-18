@@ -3,18 +3,20 @@ import {NinePatch} from "../components/nine.patch";
 import {Background, Border, Url} from "../../utils/resUtil";
 import {Size} from "../../utils/size";
 import {WorldService} from "../../game/world.service";
+import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+// import Tabs from "../../../lib/rexui/templates/ui/tabs/Tabs";
+import { NinePatchButton } from "../components/ninepatch.button";
 
 export class ElementStoragePanel extends Panel {
-    private mBackground: NinePatch;
-    private mBorder: NinePatch;
+    private mSearchInput: InputText;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
 
     resize(oriention?: number) {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width - this.width - 20;
-        this.y = size.height - 200;
+        this.x = size.width - (this.width) - 10;
+        this.y = size.height - this.height >> 1;
     }
 
     protected preload() {
@@ -30,14 +32,52 @@ export class ElementStoragePanel extends Panel {
         }
         this.setSize(683 >> 1, 901 >> 1);
 
-        this.mBackground = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
-        this.mBorder = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, Border.getConfig());
-        this.mBackground.x -= this.mBackground.width >> 1;
-        this.mBackground.y -= this.mBackground.height >> 1;
+        const background = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
+        const border = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, Border.getConfig());
+        background.x += background.width >> 1;
+        background.y += background.height >> 1;
 
-        this.mBorder.x -= this.mBorder.width >> 1;
-        this.mBorder.y -= this.mBorder.height >> 1;
-        this.add([this.mBackground, this.mBorder]);
+        border.x += border.width >> 1;
+        border.y += border.height >> 1;
+
+        // TODO 多语言配置
+        this.mSearchInput = new InputText(this.scene, 40 + 105, 40,  210, 26,  {
+            type: "input",
+            fontSize: "14px",
+            color: "#808080",
+            placeholder: "输入关键词进行搜索"
+        });
+
+        const button = new NinePatchButton(this.scene, 0, 0, 60, 30, "button", "全部",  {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        });
+
+        const button2 = new NinePatchButton(this.scene, 0, 0, 60, 30, "button", "全部2",  {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        });
+
+        // const tabs = new Tabs(this.scene, {
+        //     x: 200,
+        //     y: 100,
+        //     rightButtons: [
+        //         button,
+        //         button2
+        //     ],
+        //     space: {
+        //         left: 20,
+        //         right: 20,
+        //         top: 20,
+        //         bottom: 20,
+        //     }
+        // })
+        // .layout();
+        this.add([background, border, this.mSearchInput, button, button2]);
         super.init();
         this.resize();
     }
