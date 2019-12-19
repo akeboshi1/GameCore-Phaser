@@ -76,6 +76,8 @@ export class MouseFollow {
             sprite = Object.assign(Object.create(Object.getPrototypeOf(this.mSprite)), this.mSprite);
             sprite.newID();
             sprite.pos = this.getPosition(display.x, display.y);
+            Logger.getInstance().log("display position: ", display.x, display.y);
+            Logger.getInstance().log("display pos: ", sprite.pos.x, sprite.pos.y);
             sprite.bindID = this.mSprite.id;
             // sprite.nodeType = this.mSprite.node
             result.push(sprite);
@@ -157,7 +159,6 @@ export class MouseFollow {
         }
         // TODO 多个物件仅支持地块
         const pos = new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
-        pos.y += this.mRoomService.miniSize.tileHeight >> 1;
         return pos;
     }
 
