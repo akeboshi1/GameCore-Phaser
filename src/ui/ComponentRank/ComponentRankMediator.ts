@@ -25,7 +25,11 @@ export class ComponentRankMediator extends BaseMediator {
     }
 
     hide(): void {
-        this.mView.hide();
+        this.isShowing = false;
+        if (this.mView) {
+            this.mView.hide();
+            this.mView = null;
+        }
     }
 
     isSceneUI(): boolean {

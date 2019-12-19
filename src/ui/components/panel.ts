@@ -102,6 +102,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         this.mPanelTween.stop();
         if (!show) {
             this.mShowing = false;
+            this.destroy();
         } else {
             this.mShowing = true;
         }

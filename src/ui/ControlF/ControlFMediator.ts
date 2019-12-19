@@ -25,12 +25,12 @@ export class ControlFMediator extends BaseMediator {
     }
 
     hide(): void {
+        this.isShowing = false;
         if (this.mView) {
             this.mView.off("control", this.handControlF, this);
             this.mView.destroy();
             this.mView = null;
         }
-        super.hide();
     }
 
     isSceneUI(): boolean {

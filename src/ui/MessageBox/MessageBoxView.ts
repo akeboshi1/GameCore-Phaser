@@ -60,10 +60,6 @@ export class MessageBoxView extends Panel {
         this.resize();
     }
 
-    public hide() {
-        super.hide();
-    }
-
     public destroy() {
         if (this.mTxt) {
             this.mTxt.destroy(true);

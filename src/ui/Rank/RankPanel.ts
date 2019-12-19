@@ -21,11 +21,11 @@ export class RankPanel extends BasicRankPanel {
             this.y = 21;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width - this.mWidth >> 1;
+                this.y = size.height - this.mHeight >> 1;
             } else {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width - this.mWidth >> 1;
+                this.y = size.height - this.mHeight >> 1;
             }
         }
     }
@@ -61,7 +61,6 @@ export class RankPanel extends BasicRankPanel {
         // this.mZoonInBtn = this.mScene.make.image()
     }
 
-
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
         if (show) {
@@ -73,8 +72,8 @@ export class RankPanel extends BasicRankPanel {
     private onClsLoadCompleteHandler() {
         this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
         this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mWidth >> 1) - 65;
-        this.mClsBtnSprite.y = (-this.mHeight >> 1);
+        this.mClsBtnSprite.x = this.mWidth - 35;
+        this.mClsBtnSprite.y = 0;
         this.mClsBtnSprite.setInteractive();
         this.mClsBtnSprite.on("pointerup", this.closeHandler, this);
         this.add(this.mClsBtnSprite);

@@ -33,6 +33,7 @@ export class BagPanel extends Panel {
         this.mScene = scene;
         this.mWorld = world;
         this.bagSlotList = [];
+        this.mCheckList = [];
     }
 
     public resize() {
@@ -87,10 +88,14 @@ export class BagPanel extends Panel {
             this.mNextBtn.destroy(true);
             this.mNextBtn = null;
         }
-        if (this.mDataList) {
-            this.mDataList.length = 0;
-            this.mDataList = null;
-        }
+        // if (this.mCheckList) {
+        //     this.mCheckList.length = 0;
+        //     this.mCheckList = null;
+        // }
+        // if (this.mDataList) {
+        //     this.mDataList.length = 0;
+        //     this.mDataList = null;
+        // }
         this.mWorld = null;
         this.mPageNum = 0;
         this.mPageIndex = 1;
@@ -246,7 +251,8 @@ export class BagPanel extends Panel {
             return;
         }
         this.mPageIndex++;
-        this.refreshDataList(this.mCheckList);
+        const list = this.mCheckList.length > 0 ? this.mCheckList : this.mDataList;
+        this.refreshDataList(list);
     }
 
     private preHandler(pointer, gameObject) {
@@ -255,7 +261,8 @@ export class BagPanel extends Panel {
             return;
         }
         this.mPageIndex--;
-        this.refreshDataList(this.mCheckList);
+        const list = this.mCheckList.length > 0 ? this.mCheckList : this.mDataList;
+        this.refreshDataList(list);
     }
 
     private preNextBtnScaleHandler(gameObject: Phaser.GameObjects.Sprite, scaleX: number = 1) {
@@ -331,7 +338,6 @@ export class BagPanel extends Panel {
             this.refreshDataList(this.mDataList);
             return;
         }
-        this.mCheckList = [];
         const itemList: op_gameconfig.IItem[] = this.mWorld.roomManager.currentRoom.getHero().package.items;
         itemList.forEach((item: op_gameconfig.IItem) => {
             if (item) {

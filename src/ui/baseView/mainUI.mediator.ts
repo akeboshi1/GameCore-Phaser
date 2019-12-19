@@ -63,11 +63,15 @@ export class MainUIMediator extends BaseMediator {
     }
 
     public hide() {
+        this.isShowing = false;
         // this.world.game.scale.off("orientationchange", this.orientationChange, this);
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
-        if (this.mView) this.mView.hide();
+        if (this.mView) {
+            this.mView.hide();
+            this.mView = null;
+        }
     }
 
     public destroy() {

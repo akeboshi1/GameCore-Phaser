@@ -18,7 +18,9 @@ export class UserInfoMediator extends BaseMediator {
     }
 
     hide(): void {
+        this.isShowing = false;
         this.mView.hide();
+        this.mView = null;
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
     }
 

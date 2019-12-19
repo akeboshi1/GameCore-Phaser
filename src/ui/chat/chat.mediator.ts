@@ -111,6 +111,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mChatPanel.off("selectedVoice", this.onSelectedVoiceHandler, this);
         this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.hide();
+        this.mChatPanel = null;
     }
 
     public destroy() {

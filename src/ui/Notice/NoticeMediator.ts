@@ -36,6 +36,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     hide(): void {
         if (!this.mNoticePanel) return;
         this.mNoticePanel.hide();
+        this.mNoticePanel = null;
     }
 
     destroy() {

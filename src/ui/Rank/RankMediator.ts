@@ -24,6 +24,7 @@ export class RankMediator extends BaseMediator {
     }
 
     hide(): void {
+        this.isShowing = false;
         if (this.mView) this.mView.hide();
     }
 

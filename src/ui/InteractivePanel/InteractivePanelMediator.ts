@@ -51,6 +51,7 @@ export class InteractivePanelMediator extends BaseMediator {
     }
 
     public hide() {
+        this.isShowing = false;
         if (this.mView) {
             this.mView.hide();
             this.mView = null;

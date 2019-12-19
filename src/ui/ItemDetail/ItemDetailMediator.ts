@@ -43,6 +43,8 @@ export class ItemDetailMediator extends BaseMediator {
 
     public hide() {
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
+        this.mView.hide();
+        this.mView = null;
         super.hide();
     }
 

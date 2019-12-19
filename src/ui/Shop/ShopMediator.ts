@@ -55,6 +55,7 @@ export class ShopMediator extends BaseMediator {
     }
 
     public hide() {
+        this.isShowing = false;
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         if (this.mView) {

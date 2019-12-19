@@ -24,10 +24,12 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     hide(): void {
+        this.isShowing = false;
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         if (this.mView) {
             this.mView.off("menuClick", this.onClickMenuHandler, this);
             this.mView.hide();
+            this.mView = null;
         }
     }
 
