@@ -14,6 +14,8 @@ export class IconBtn extends Phaser.GameObjects.Container {
     private mBtnData: any;
     private mBasePos: Pos;
     private mBgTexture: string[];
+    // 按钮打开模块的name，用于打开和关闭此模块及模块更新时，主界面按钮的更新（显示和隐藏）
+    private medName: string;
     constructor(scene: Phaser.Scene, world: WorldService, bgResKey: string, bgTexture: string[], texture: string, scale: number = 28 / 43) {
         super(scene);
         this.mScene = scene;
@@ -37,6 +39,14 @@ export class IconBtn extends Phaser.GameObjects.Container {
         this.on("pointerdown", this.downHandler, this);
         this.on("pointerover", this.overHandler, this);
         this.on("pointerout", this.outHandler, this);
+    }
+
+    public setMedName(name: string) {
+        this.medName = name;
+    }
+
+    public getMedName(): string {
+        return this.medName;
     }
 
     public setPos(x: number, y: number) {
@@ -97,7 +107,7 @@ export class IconBtn extends Phaser.GameObjects.Container {
 
     private upHandler() {
         if (this.monClick) {
-            this.monClick();
+            this.monClick(this.medName);
         }
         if (this.mBgTexture.length < 3) {
             return;
@@ -106,7 +116,7 @@ export class IconBtn extends Phaser.GameObjects.Container {
     }
 
     private downHandler() {
-        this.scaleHandler();
+        // this.scaleHandler();
         if (this.mBgTexture.length < 4) {
             return;
         }

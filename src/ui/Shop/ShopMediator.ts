@@ -14,7 +14,6 @@ export class ShopMediator extends BaseMediator {
     private _curPage: number;
     private fetching: boolean;
     private isEnd = false;
-    private mParam: any;
     private mScene: Phaser.Scene;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
@@ -42,7 +41,6 @@ export class ShopMediator extends BaseMediator {
         }
         this.mView = new ShopPanel(this.mScene, this.world);
         this.mView.show(param);
-        this.mParam = param;
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
@@ -73,7 +71,6 @@ export class ShopMediator extends BaseMediator {
         this._curPage = 0;
         this.fetching = false;
         this.isEnd = false;
-        this.mParam = null;
         super.destroy();
     }
 

@@ -9,7 +9,6 @@ export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";
     public world: WorldService;
     private mScene: Phaser.Scene;
-    private mParam: any;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
         this.mScene = scene;
@@ -36,7 +35,6 @@ export class InteractivePanelMediator extends BaseMediator {
         if (this.mView && this.isShow()) {
             return;
         }
-        this.mParam = param;
         this.mView = new InteractivePanel(this.mScene, this.world);
         this.mView.show(param);
         super.show(param);
@@ -46,7 +44,6 @@ export class InteractivePanelMediator extends BaseMediator {
         if (!this.mView || !this.mView.isShow) {
             return;
         }
-        this.mParam = param;
         super.update(param);
     }
 

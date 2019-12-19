@@ -12,6 +12,8 @@ import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
 import { DebugLoggerMediator } from "./debuglog/debug.logger.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
+import { TopBtnGroup } from "./baseView/mobile/top.btn.group";
+import { MainUIMobile } from "./baseView/mobile/mainUI.mobile";
 
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;
@@ -114,9 +116,9 @@ export class UiManager extends PacketHandler {
         this.hideMed(ui.name);
     }
 
-    private showMed(type: string, ...params: any[]) {
+    private showMed(type: string, ...param: any[]) {
         if (!this.mMedMap) {
-            this.mCache.push(params);
+            this.mCache.push(param);
             return;
         }
         const className: string = type + "Mediator";
@@ -133,7 +135,19 @@ export class UiManager extends PacketHandler {
             // mediator.setName(type);
         }
         // if (mediator.showing) return;
-        mediator.show(params);
+        if (param) mediator.setParam(param);
+        if (!this.worldService.game.device.os.desktop && className === "RankMediator") {
+            const med: MainUIMediator = this.getMediator(MainUIMediator.NAME) as MainUIMediator;
+            if (med) {
+                if (!med.isShow()) {
+                    med.preRefreshBtn(className);
+                } else {
+                    med.refreshBtn(className, true);
+                }
+            }
+            return;
+        }
+        mediator.show(param);
     }
 
     private updateMed(type: string, ...param: any[]) {
@@ -146,6 +160,7 @@ export class UiManager extends PacketHandler {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
+        if (param) mediator.setParam(param);
         mediator.update(param);
     }
 
@@ -153,11 +168,21 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const name: string = `${type}Mediator`;
-        const mediator: IMediator = this.mMedMap.get(name);
+        const className: string = `${type}Mediator`;
+        const mediator: IMediator = this.mMedMap.get(className);
         if (!mediator) {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
+        }
+        if (!this.worldService.game.device.os.desktop && className === "RankMediator") {
+            const med: MainUIMediator = this.getMediator(MainUIMediator.NAME) as MainUIMediator;
+            if (med) {
+                if (!med.isShow()) {
+                    med.preRefreshBtn(className);
+                } else {
+                    med.refreshBtn(className, false);
+                }
+            }
         }
         // if (!mediator.isShow()) return;
         mediator.hide();
