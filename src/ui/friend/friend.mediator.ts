@@ -34,7 +34,8 @@ export class FriendMediator extends BaseMediator {
     }
 
     public hide() {
-        super.hide();
+        this.isShowing = false;
+        if (this.mView) this.mView = null;
     }
 
     public destroy() {

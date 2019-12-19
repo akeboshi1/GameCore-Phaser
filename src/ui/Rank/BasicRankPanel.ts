@@ -95,7 +95,9 @@ export class BasicRankPanel extends Panel {
 
     protected init() {
         if (this.mInitialized) return;
-        this.setSize(328, 361);
+        this.mWidth = 328;
+        this.mHeight = 361;
+        this.setSize(this.mWidth, this.mHeight);
 
         // this.mBackground = new NinePatch(this.scene, {
         //     x: 0,
@@ -148,10 +150,7 @@ export class BasicRankPanel extends Panel {
             .setOrigin(0, 0.5)
             .setStroke("#000000", 2);
         this.add(this.mTitleLabel);
-
-        const items = this.getData("data");
-        if (items) this.addItem(items);
-
+        super.init();
     }
 
     protected clearText() {

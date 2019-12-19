@@ -10,7 +10,6 @@ export class MessageBoxMediator extends BaseMediator {
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
-    private mParam: any;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
         this.world = world;
@@ -32,8 +31,7 @@ export class MessageBoxMediator extends BaseMediator {
         }
         this.mView = new MessageBoxView(this.mScene, this.world);
         this.mView.show(param);
-        this.mParam = param;
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToToolTipsLayer(this.mView);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         super.show(param);
     }
@@ -43,8 +41,10 @@ export class MessageBoxMediator extends BaseMediator {
     }
 
     public hide() {
+        this.isShowing = false;
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
-        super.hide();
+        this.mView.hide();
+        this.mView = null;
     }
 
     public destroy() {

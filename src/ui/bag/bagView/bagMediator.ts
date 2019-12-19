@@ -78,6 +78,7 @@ export class BagMediator extends BaseMediator {
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
         if (!this.mView) return;
         this.mView.hide();
+        this.mView = null;
     }
 
     public destroy() {

@@ -12,6 +12,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     private mNoticePanel: NoticePanel;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
+    private mParam: any;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
@@ -36,6 +37,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     hide(): void {
         if (!this.mNoticePanel) return;
         this.mNoticePanel.hide();
+        this.mNoticePanel = null;
     }
 
     destroy() {
@@ -76,6 +78,16 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     update(param?: any): void {
+        this.mParam = param;
+        if (!this.mNoticePanel) return;
+    }
+
+    setParam(param: any) {
+        this.mParam = param;
+    }
+
+    getParam(): any {
+        return this.mParam;
     }
 
     private scaleChange() {

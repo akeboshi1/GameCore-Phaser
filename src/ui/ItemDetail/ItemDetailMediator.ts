@@ -10,7 +10,6 @@ export class ItemDetailMediator extends BaseMediator {
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
-    private mParam: any;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
         this.world = world;
@@ -32,7 +31,6 @@ export class ItemDetailMediator extends BaseMediator {
         }
         this.mView = new ItemDetail(this.mScene, this.world);
         this.mView.show(param);
-        this.mParam = param;
         this.mLayerManager.addToUILayer(this.mView);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         this.isShowing = true;
@@ -43,6 +41,8 @@ export class ItemDetailMediator extends BaseMediator {
 
     public hide() {
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
+        this.mView.hide();
+        this.mView = null;
         super.hide();
     }
 

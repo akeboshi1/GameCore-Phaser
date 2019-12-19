@@ -19,6 +19,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mAllMessage: IMessage[] = [];
     private mMaxMessageNum = 50;
     private mScene: Phaser.Scene;
+    private mParam: any;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
@@ -103,6 +104,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
 
     public update(param?: any) {
         this.mChatPanel.update(param);
+        this.mParam = param;
     }
 
     public hide() {
@@ -111,6 +113,15 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mChatPanel.off("selectedVoice", this.onSelectedVoiceHandler, this);
         this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.hide();
+        this.mChatPanel = null;
+    }
+
+    public setParam(param: any) {
+        this.mParam = param;
+    }
+
+    public getParam(): any {
+        return this.mParam;
     }
 
     public destroy() {

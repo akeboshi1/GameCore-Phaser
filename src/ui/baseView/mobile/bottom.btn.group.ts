@@ -138,6 +138,9 @@ export class BottomBtnGroup extends Panel {
     }
 
     private turnHandler() {
+        // const med: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        // (med.getView() as MainUIMobile).getTopView().removeBtn({ medKey: "RankMediator" });
+        // return;
         const easeType: string = this.mExpandBoo ? "Sine.easeIn" : "Sine.easeOut";
         if (this.mChatContainer && this.mChatContainer.parentContainer) {
             const toScaleX: number = this.mExpandBoo ? 1 : 0;

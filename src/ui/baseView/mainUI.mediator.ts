@@ -7,15 +7,35 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { MainUIMobile } from "./mobile/mainUI.mobile";
 import { MainUIPC } from "./pc/mainUI.pc";
 import { JoyStickManager } from "../../game/joystick.manager";
+import { TopBtnGroup } from "./mobile/top.btn.group";
 
 export class MainUIMediator extends BaseMediator {
     public static NAME: string = "MainUIMediator";
     public world: WorldService;
     private mScene: Phaser.Scene;
+    private refreshMedList: string[];
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
         super(mWorld);
         this.world = mWorld;
         this.mScene = scene;
+    }
+
+    public preRefreshBtn(medName: string) {
+        if (!this.refreshMedList) this.refreshMedList = [];
+        this.refreshMedList.push(medName);
+    }
+
+    public refreshBtn(medName: string, addBoo: boolean) {
+        switch (medName) {
+            case "RankMediator":
+                const topBtnGroup: TopBtnGroup = (this.mView as MainUIMobile).getTopView();
+                if (addBoo) {
+                    topBtnGroup.addBtn({ medKey: medName, bgTextureList: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconTexture: "btnGroup_rank_icon.png" });
+                } else {
+                    topBtnGroup.removeBtn({ medKey: medName });
+                }
+                break;
+        }
     }
 
     public setUiScale(value: number) {
@@ -56,6 +76,11 @@ export class MainUIMediator extends BaseMediator {
         this.world.emitter.on(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
         // this.world.game.scale.on("orientationchange", this.orientationChange, this);
         super.show(param);
+        if (this.refreshMedList) {
+            this.refreshMedList.forEach((medName: string) => {
+                this.refreshBtn(medName, true);
+            });
+        }
     }
 
     public update(param: any) {
@@ -63,11 +88,20 @@ export class MainUIMediator extends BaseMediator {
     }
 
     public hide() {
+        this.isShowing = false;
         // this.world.game.scale.off("orientationchange", this.orientationChange, this);
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
-        if (this.mView) this.mView.hide();
+        if (this.refreshMedList) {
+            this.refreshMedList.forEach((medName: string) => {
+                this.refreshBtn(medName, false);
+            });
+        }
+        if (this.mView) {
+            this.mView.hide();
+            this.mView = null;
+        }
     }
 
     public destroy() {

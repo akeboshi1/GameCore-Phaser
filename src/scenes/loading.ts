@@ -2,6 +2,7 @@ import { WorldService } from "../game/world.service";
 import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
 import { World } from "../game/world";
+import { Url } from "../utils/resUtil";
 const LOGO_MARGIN = 25;
 
 export class LoadingScene extends Phaser.Scene {
@@ -15,7 +16,9 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
+    // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
+    this.load.atlas("loading", Url.getRes("loading.png"), Url.getRes("loading.json"));
+    // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
   }
 
   public init(data: any) {
@@ -31,17 +34,26 @@ export class LoadingScene extends Phaser.Scene {
     this.bg = this.add.graphics();
     this.bg.fillStyle(0x616161);
     this.bg.fillRect(0, 0, width, height);
+    const framesObj: {} = this.textures.get("loading").frames;
+    const tmpFrames: any[] = [];
+    for (const key in framesObj) {
+      if (key === "__BASE") continue;
+      const frame = framesObj[key];
+      if (!frame) continue;
+      tmpFrames.push(key);
+    }
+    // 手动把json配置中的frames给予anims
     this.anims.create({
-      key: "loading_rabbit00",
-      frames: this.anims.generateFrameNumbers("rabbit00.png", { start: 0, end: 59 }),
+      key: "loading_anmis",
+      frames: this.anims.generateFrameNumbers("loading", { start: 0, end: 59, frames: tmpFrames }),
       frameRate: 33,
       yoyo: true,
       repeat: -1
     });
     const x: number = width - 150 - LOGO_MARGIN;
     const y: number = height - 150 - LOGO_MARGIN;
-    this.lo = this.add.sprite(x, y, "rabbit00.png");
-    this.lo.anims.play("loading_rabbit00");
+    this.lo = this.add.sprite(x, y, "loading");
+    this.lo.play("loading_anmis");
     this.scale.on("resize", this.checkSize, this);
     this.checkSize(new Size(width, height));
   }

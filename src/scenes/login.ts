@@ -384,7 +384,7 @@ export class LoginScene extends Phaser.Scene {
         const login = this;
         this.mWorld.httpService.login(login.mNameInputTxt.text, login.mPassWordInputTxt.text).then((response: any) => {
             if (response.code === 200 || response.code === 201) {
-                localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
+                if (login.mNameInputTxt.text && login.mPassWordInputTxt.text) localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
                 login.mWorld.account.setAccount(response.data);
                 login.mCallBack(response.data);
             } else {

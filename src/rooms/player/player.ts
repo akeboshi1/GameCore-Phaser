@@ -38,7 +38,7 @@ export class Player extends Element {
 
     public changeState(val?: string) {
         if (this.mCurState === val) return;
-        if (!val) val = "idle";
+        if (!val) val = PlayerState.IDLE;
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             (this.mDisplay as DragonbonesDisplay).play(val);
@@ -52,6 +52,11 @@ export class Player extends Element {
 
     protected onMoveStart() {
         this.changeState(PlayerState.WALK);
+    }
+
+    protected onMoveComplete() {
+        super.onMoveComplete();
+        this.changeState(PlayerState.IDLE);
     }
 
     private mCheckStateHandle(val: string): boolean {

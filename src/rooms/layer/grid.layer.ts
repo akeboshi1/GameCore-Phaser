@@ -1,5 +1,6 @@
 import {IRoomService} from "../room";
 import {Pos} from "../../utils/pos";
+import {Logger} from "../../utils/log";
 
 export class GridLayer extends Phaser.GameObjects.Graphics {
     constructor(scene: Phaser.Scene) {
@@ -13,11 +14,10 @@ export class GridLayer extends Phaser.GameObjects.Graphics {
         const rows = room.roomSize.rows;
         const cols = room.roomSize.cols;
         for (let i = 0; i <= rows; i++) {
-            this.drawLine(room.transformTo90(new Pos(i, 0)), room.transformTo90(new Pos(i, rows)));
-        }
-
-        for (let i = 0; i <= cols; i++) {
             this.drawLine(room.transformTo90(new Pos(0, i)), room.transformTo90(new Pos(cols, i)));
+        }
+        for (let i = 0; i <= cols; i++) {
+            this.drawLine(room.transformTo90(new Pos(i, 0)), room.transformTo90(new Pos(i, rows)));
         }
 
     }

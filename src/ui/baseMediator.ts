@@ -13,6 +13,8 @@ export interface IMediator {
     getView(): IAbstractPanel;
     show(param?: any): void;
     update(param?: any): void;
+    setParam(param): void;
+    getParam(): any;
     hide(): void;
     destroy();
 }
@@ -21,6 +23,7 @@ export class BaseMediator implements IMediator {
     readonly world: WorldService;
     protected mView: Panel;
     protected isShowing: boolean = false;
+    protected mParam: any;
     constructor(world?: WorldService) {
         this.world = world;
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
@@ -67,8 +70,17 @@ export class BaseMediator implements IMediator {
         if (view) view.update(param);
     }
 
+    setParam(param: any) {
+        this.mParam = param;
+    }
+
+    getParam(): any {
+        return this.mParam;
+    }
+
     destroy() {
         this.isShowing = false;
+        this.mParam = null;
         if (this.world && this.world.emitter) this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         let view = this.getView();
         if (view) {

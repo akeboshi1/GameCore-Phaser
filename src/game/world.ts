@@ -395,7 +395,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return this.mGame;
         }
         this.gameConfig = {
-            type: Phaser.WEBGL,
+            type: Phaser.AUTO,
             zoom: 1,
             parent: this.mConfig.parent || "game",
             scene: null,
@@ -445,7 +445,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         };
         Object.assign(this.gameConfig, this.mConfig);
-        // this.gameConfig.type = !this.game.device.os.desktop ? Phaser.AUTO : Phaser.CANVAS;
         this.mGame = new Game(this.gameConfig);
         this.initUiScale();
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();

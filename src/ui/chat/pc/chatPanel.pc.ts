@@ -9,7 +9,6 @@ import { CheckButton } from "../../components/check.button";
 import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 import { NinePatch } from "../../components/nine.patch";
 import { BaseChatPanel } from "../base.chat.panel";
-import { World } from "../../../game/world";
 
 export class ChatPanelPC extends BaseChatPanel {
     private mTextArea: TextArea;
