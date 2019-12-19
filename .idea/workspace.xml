@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge" />
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/release/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/2414599256d846674026.networker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/2414599256d846674026.networker.js.LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/c373a6d1cb5dfcf40f7c.heartbeatworker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.54.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.54.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.54.js.LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.54.js.LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.54.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.54.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.54.js.LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.54.js.LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/layer/grid.layer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/layer/grid.layer.ts" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
