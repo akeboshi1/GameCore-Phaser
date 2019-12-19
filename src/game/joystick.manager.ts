@@ -10,7 +10,19 @@ import { MainUIMediator } from "../ui/baseView/mainUI.mediator";
 import { MainUIPC } from "../ui/baseView/pc/mainUI.pc";
 import { MainUIMobile } from "../ui/baseView/mobile/mainUI.mobile";
 import { BottomBtnGroup } from "../ui/baseView/mobile/bottom.btn.group";
+import { Events } from "phaser";
 
+const TEMP_CONST = {
+    MOUSE_DOWN: 0,
+    MOUSE_MOVE: 1,
+    MOUSE_UP: 2,
+    TOUCH_START: 3,
+    TOUCH_MOVE: 4,
+    TOUCH_END: 5,
+    POINTER_LOCK_CHANGE: 6,
+    TOUCH_CANCEL: 7,
+    MOUSE_WHEEL: 8
+};
 export class JoyStickManager implements InputManager {
     private mRoom: IRoomService;
     private mScene: Phaser.Scene;
@@ -51,54 +63,56 @@ export class JoyStickManager implements InputManager {
         this.mKeyEvents = null;
 
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
+        this.mParentcon.name = "joystick";
         const scale = !this.mScale ? 1 : this.mScale;
         this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, scale);
     }
 
     public resize() {
-        if (!this.mParentcon) return;
-        const size: Size = this.worldService.getSize();
-        const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
-        if (this.mParentcon) {
-            if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.mParentcon.x = this.mParentcon.width * this.worldService.uiScale;
-                this.mParentcon.y = size.height - this.mParentcon.height * this.worldService.uiScale;
-            } else {
-                this.mParentcon.x = this.mParentcon.width * this.worldService.uiScale;
-                this.mParentcon.y = size.height - (padHei + this.mParentcon.height) * this.worldService.uiScale;
-            }
-            this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
-        }
+        // if (!this.mParentcon) return;
+        // const size: Size = this.worldService.getSize();
+        // const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        // const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
+        // if (this.mParentcon) {
+        //     if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+        //         this.mParentcon.x = this.mParentcon.width * this.worldService.uiScale;
+        //         this.mParentcon.y = size.height - this.mParentcon.height * this.worldService.uiScale;
+        //     } else {
+        //         this.mParentcon.x = this.mParentcon.width * this.worldService.uiScale;
+        //         this.mParentcon.y = size.height - (padHei + this.mParentcon.height) * this.worldService.uiScale;
+        //     }
+        //     this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
+        // }
     }
 
     public tweenView(show: boolean) {
         const toAlpha: number = show === true ? 1 : 0;
-        const size: Size = this.worldService.getSize();
-        let baseX: number;
-        let baseY: number;
-        const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
-        if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            baseX = this.mParentcon.width * this.worldService.uiScale;
-            baseY = size.height - this.mParentcon.height * this.worldService.uiScale;
-        } else {
-            baseX = this.mParentcon.width * this.worldService.uiScale;
-            baseY = size.height - (padHei + this.mParentcon.height) * this.worldService.uiScale;
-        }
+        this.mParentcon.visible = show;
+        // const size: Size = this.worldService.getSize();
+        // let baseX: number;
+        // let baseY: number;
+        // const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        // const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
+        // if (this.worldService.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+        //     baseX = this.mParentcon.width * this.worldService.uiScale;
+        //     baseY = size.height - this.mParentcon.height * this.worldService.uiScale;
+        // } else {
+        //     baseX = this.mParentcon.width * this.worldService.uiScale;
+        //     baseY = size.height - (padHei + this.mParentcon.height) * this.worldService.uiScale;
+        // }
 
-        const toX: number = show === true ? baseX : baseX - this.mParentcon.width;
-        const toY: number = baseY;
-        this.mScene.tweens.add({
-            targets: this.mParentcon,
-            duration: 200,
-            ease: "Linear",
-            props: {
-                x: { value: toX },
-                y: { value: toY },
-                alpha: { value: toAlpha },
-            },
-        });
+        // const toX: number = show === true ? baseX : baseX - this.mParentcon.width;
+        // const toY: number = baseY;
+        // this.mScene.tweens.add({
+        //     targets: this.mParentcon,
+        //     duration: 200,
+        //     ease: "Linear",
+        //     props: {
+        //         x: { value: toX },
+        //         y: { value: toY },
+        //         alpha: { value: toAlpha },
+        //     },
+        // });
 
     }
 
@@ -192,7 +206,7 @@ export class JoyStick {
         const size: Size = this.mWorld.getSize();
         this.bg = this.mScene.make.sprite(undefined, false);
         this.bg.setTexture("joystick", "joystick_bg.png");
-        this.bgRadius = this.bg.width + 40 >> 1;
+        this.bgRadius = this.bg.width + 140 >> 1;
         this.btn = this.mScene.make.sprite(undefined, false);
         this.btn.setTexture("joystick", "joystick_tab.png");
         this.btn.x = this.bg.x;
@@ -204,13 +218,34 @@ export class JoyStick {
         this.parentCon.add(this.mjoystickCon);
         this.btn.setInteractive();
         this.mScene.input.setDraggable(this.btn);
-        this.btn.on("drag", this.dragUpdate, this);
-        this.btn.on("dragend", this.dragStop, this);
+        this.mScene.input.on("pointerdown", this.downHandler, this);
         this.parentCon.setSize(this.bg.width, this.bg.height);
-        (this.mWorld.inputManager as JoyStickManager).resize();
+        this.parentCon.visible = false;
+    }
+
+    private dragStart(pointer) {
+        Logger.getInstance().log("dragstart");
+        this.btn.on("drag", this.dragUpdate, this);
+        this.btn.off("dragstart", this.dragStart, this);
+        this.btn.on("dragend", this.dragStop, this);
+        this.btn.on("dragcancel", this.dragStop, this);
+    }
+
+    private downHandler(pointer, gameojectList) {
+        if (gameojectList && gameojectList.length > 0 || (gameojectList.length === 1 && (gameojectList[0] instanceof Phaser.GameObjects.Sprite) && gameojectList[0].name === "joystick")) {
+            return;
+        }
+        this.mjoystickCon.x = pointer.x;
+        this.mjoystickCon.y = pointer.y;
+        this.parentCon.visible = true;
+        this.mScene.input.off("pointerdown", this.downHandler, this);
+        this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_END, [pointer]);
+        this.btn.on("dragstart", this.dragStart, this);
+        this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_START, [pointer]);
     }
 
     private dragUpdate(pointer, dragX, dragY) {
+        Logger.getInstance().log("draging");
         let d = Math.sqrt(dragX * dragX + dragY * dragY);
         if (d > this.bgRadius) {
             d = this.bgRadius;
@@ -227,6 +262,10 @@ export class JoyStick {
     }
 
     private dragStop(pointer) {
+        this.btn.off("drag", this.dragUpdate, this);
+        this.btn.off("dragend", this.dragStop, this);
+        this.btn.off("dragcancel", this.dragStop, this);
+        this.mScene.input.on("pointerdown", this.downHandler, this);
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         Logger.getInstance().log("dragEnd");

@@ -41,7 +41,6 @@ export class EditorRoom extends Room implements EditorRoomService {
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
-            Logger.getInstance().log("this: ===>", this);
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.onSetEditorModeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ALIGN_GRID, this.onAlignGridHandler);
@@ -90,6 +89,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     public startPlay() {
+        Logger.getInstance().log("start play editor room");
         this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
         this.mLayManager = new LayerManager(this);
         this.mLayManager.drawGrid(this);

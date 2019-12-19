@@ -9,7 +9,6 @@ export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mEffecte: DynamicImage;
     constructor(private mScene: Phaser.Scene, private mLayerManager: LayerManager) {
-        Logger.getInstance().log("scene: ", this.mScene, this);
         this.mEffecte = new DynamicImage(this.mScene, 0, 0);
         this.mEffecte.load(Url.getRes("ui/editor/selectFlag.png"));
     }

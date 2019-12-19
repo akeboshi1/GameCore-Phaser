@@ -6,6 +6,7 @@ import {WorldService} from "../../game/world.service";
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
+import { Logger } from "../../utils/log";
 
 export class ElementStoragePanel extends Panel {
     private mSearchInput: InputText;
@@ -22,14 +23,10 @@ export class ElementStoragePanel extends Panel {
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image(Background.getName(), Background.getPNG());
-        this.scene.load.atlas("element_storage", Url.getRes("ui/element_storage/element_storage_atlas.png"), Url.getRes("ui/element_storage/element_storage_atlas.json"));
         super.preload();
     }
 
     protected init() {
-        if (!this.scene) {
-            return;
-        }
         this.setSize(683 >> 1, 901 >> 1);
 
         const background = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
@@ -48,24 +45,28 @@ export class ElementStoragePanel extends Panel {
             placeholder: "输入关键词进行搜索"
         });
 
-        const button = new NinePatchButton(this.scene, 0, 0, 60, 30, "button", "全部",  {
+        const button = new NinePatchButton(this.scene, 280, 40, 60, 30, "button", "全部",  {
             left: 4,
             top: 4,
             right: 4,
             bottom: 4
         });
 
-        const button2 = new NinePatchButton(this.scene, 0, 100, 60, 30, "button", "全部2",  {
+        const button2 = new NinePatchButton(this.scene, 280, 80, 60, 30, "button", "全部2",  {
             left: 4,
             top: 4,
             right: 4,
             bottom: 4
         });
 
-        new CheckboxGroup().appendItemAll([button, button2]);
+        const checkbox = new CheckboxGroup().appendItemAll([button, button2]);
+        checkbox.on("selected", this.onSelectedHandler, this);
 
         this.add([background, border, this.mSearchInput, button, button2]);
         super.init();
         this.resize();
+    }
+
+    private onSelectedHandler() {
     }
 }

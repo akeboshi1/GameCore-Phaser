@@ -141,7 +141,7 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplay) {
             return;
         }
-        this.setPosition(this.mModel.pos);
+        if (this.mModel.pos) this.setPosition(this.mModel.pos);
         this.mDisplay.changeAlpha(this.mModel.alpha);
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
@@ -385,6 +385,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mDisplay) {
+            this.mDisplay.load(this.mDisplayInfo);
             return this.mDisplay;
         }
         const scene = this.mElementManager.scene;

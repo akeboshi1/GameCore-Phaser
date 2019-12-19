@@ -11,11 +11,13 @@ import {TerrainManager} from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
 import {IElement} from "./element/element";
 import {ElementDisplay} from "./display/element.display";
-import { op_client } from "pixelpai_proto";
+import {op_client, op_virtual_world} from "pixelpai_proto";
 import {Pos} from "../utils/pos";
 import {PlayerManager} from "./player/player.manager";
 import { Map } from "./map/map";
-import {PacketHandler} from "net-socket-packet";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {EditScene} from "../scenes/edit";
+import {SelectedElement} from "./decorate/selected.element";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly actor: Actor;
@@ -30,6 +32,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     private mLayerManager: LayerManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
+    private mSelectedElement: SelectedElement;
 
     constructor(manager: IRoomManager) {
         super();
@@ -97,6 +100,18 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     startPlay() {
+        this.mScene = this.world.game.scene.getScene(EditScene.name);
+        // this.mLayManager = new LayerManager(this);
+        // this.mLayManager.drawGrid(this);
+        // this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+        // this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
+        this.mCameraService.camera = this.scene.cameras.main;
+        const mainCameras = this.mScene.cameras.main;
+        mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        this.mCameraService.centerCameas();
     }
 
     transformTo45(p: Pos): Pos {
@@ -114,6 +129,14 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     updateBlockObject() {
+    }
+
+    private onGameobjectUpHandler(pointer, gameobject) {
+
+    }
+
+    private selectedElement(display: ElementDisplay) {
+
     }
 
     get id(): number {

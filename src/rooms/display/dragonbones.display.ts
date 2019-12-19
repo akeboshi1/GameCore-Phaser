@@ -272,7 +272,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     private clearArmatureSlot() {
-        Logger.getInstance().debug("id:" + this.mDisplayInfo.id);
         const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
         slotList.forEach((slot: dragonBones.Slot) => {
             if (slot) slot.display.visible = false;
@@ -869,10 +868,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     set dragonBonesName(val: string) {
-        if (this.mDragonbonesName !== val) {
+        // if (this.mDragonbonesName !== val) {
             this.mDragonbonesName = val;
             this.buildDragbones();
-        }
+        // }
     }
 
     get dragonBonesName(): string {

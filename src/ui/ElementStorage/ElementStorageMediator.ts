@@ -2,6 +2,7 @@ import {BaseMediator} from "../baseMediator";
 import {WorldService} from "../../game/world.service";
 import {ElementStoragePanel} from "./ElementStoragePanel";
 import {ILayerManager} from "../layer.manager";
+import {DecoratePanel} from "../decorate/decorate.panel";
 
 export class ElementStorageMediator extends BaseMediator {
     public static NAME: string = "ElementStorageMediator";
@@ -20,6 +21,10 @@ export class ElementStorageMediator extends BaseMediator {
         this.mView = new ElementStoragePanel(this.mScene, this.world);
         this.mLayerManager.addToUILayer(this.mView);
         this.mView.show(param);
+
+        const controll = new DecoratePanel(this.mScene);
+        this.mLayerManager.addToUILayer(controll);
+        controll.show();
         super.show(param);
     }
 

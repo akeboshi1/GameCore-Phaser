@@ -107,7 +107,7 @@ export class BagPanel extends Panel {
     }
 
     public setBlur() {
-        this.mInputText.setBlur();
+        if (this.mInputText) this.mInputText.setBlur();
     }
 
     protected init() {
@@ -311,12 +311,13 @@ export class BagPanel extends Panel {
             return;
         }
         this.mWorld.inputManager.enable = false;
+        if (!this.mInputText) return;
         this.mInputText.on("textchange", this.checkChinese, this);
         this.mInputText.setText("");
     }
 
     private onBlurHandler() {
-        if (!this.mWorld || !this.mWorld.inputManager) {
+        if (!this.mWorld || !this.mWorld.inputManager || !this.mInputText) {
             return;
         }
         this.mWorld.inputManager.enable = false;

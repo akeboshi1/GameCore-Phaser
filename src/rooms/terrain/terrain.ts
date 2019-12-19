@@ -21,7 +21,6 @@ export class Terrain extends BlockObject implements IElement {
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
         this.mId = sprite.id;
-        this.mModel = sprite;
         this.model = sprite;
     }
 

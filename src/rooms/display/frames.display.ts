@@ -56,15 +56,18 @@ export class FramesDisplay extends DisplayObject {
         field = !field ? DisplayField.STAGE : field;
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
+        const ani = data.getAnimations(animationName);
+        if (!ani) {
+            return;
+        }
         if (sprite && sprite instanceof Phaser.GameObjects.Sprite) {
-            sprite.play(`${data.gene}_${animationName}`);
-        } else {
-            const anis = data.getAnimations(animationName);
-            if (!anis) {
-                Logger.getInstance().log(`error: ${animationName} not found`);
-                return;
+            if (ani.frameName.length > 1) {
+                sprite.play(`${data.gene}_${animationName}`);
+            } else {
+                sprite.setTexture(data.gene, ani.frameName[0]);
             }
-            sprite.setTexture(data.gene, anis.frameName[0]);
+        } else {
+            sprite.setTexture(data.gene, ani.frameName[0]);
         }
         this.initBaseLoc(field, animationName);
     }
@@ -132,8 +135,14 @@ export class FramesDisplay extends DisplayObject {
     }
 
     private onLoadCompleted(field: DisplayField) {
-        this.makeAnimations(field);
-        this.createDisplay(field);
+        const data = this.mDisplayDatas.get(field);
+        if (!data) {
+            return;
+        }
+        if (this.scene.textures.exists(data.gene)) {
+            this.makeAnimations(field);
+            this.createDisplay(field);
+        }
     }
 
     private makeAnimations(field: DisplayField) {
