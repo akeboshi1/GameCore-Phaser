@@ -199,7 +199,7 @@ export class BagPanel extends Panel {
         this.mPreBtn.on("pointerup", this.preHandler, this);
         this.mWidth = this.mBg.width;
         this.mHeight = this.mBg.height;
-        if (!this.mScene.cache.obj.has("clsBtn")) {
+        if (!this.mScene.textures.exists("clsBtn")) {
             this.mScene.load.spritesheet("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
             this.mScene.load.start();

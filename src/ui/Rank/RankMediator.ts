@@ -45,10 +45,10 @@ export class RankMediator extends BaseMediator {
         }
         this.mView = new RankPanel(this.mScene, this.world);
         this.mlayerManager.addToUILayer(this.mView);
-        this.mView.show();
         if (param && param.length > 0) {
             (this.mView as RankPanel).addItem(param[0]);
         }
+        this.mView.show();
         super.show(param);
     }
 

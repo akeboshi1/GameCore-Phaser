@@ -148,10 +148,7 @@ export class BasicRankPanel extends Panel {
             .setOrigin(0, 0.5)
             .setStroke("#000000", 2);
         this.add(this.mTitleLabel);
-
-        const items = this.getData("data");
-        if (items) this.addItem(items);
-
+        super.init();
     }
 
     protected clearText() {
