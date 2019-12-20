@@ -116,7 +116,7 @@ export class UserMenuPanel extends Panel {
     }
 
     private appendItem(menu: op_gameconfig_01.IMenuItem, x: number, y: number): MenuItem {
-        const item = new MenuItem(this.scene, x, y, 59, 29, TransparentButton.getName(), menu.text, TransparentButton.getConfig());
+        const item = new MenuItem(this.scene, x, 0, 59, 29, TransparentButton.getName(), menu.text, TransparentButton.getConfig());
         item.x = x + (item.width >> 1) + (this.width - item.width >> 1);
         item.y = y + (item.height >> 1);
         item.setData("node", menu.node);

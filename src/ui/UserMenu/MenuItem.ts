@@ -1,7 +1,7 @@
 import { NinePatchButton } from "../components/ninepatch.button";
-import {IPatchesConfig} from "../components/patches.config";
+import { IPatchesConfig } from "../components/patches.config";
 import { NinePatch } from "../components/nine.patch";
-import {Border} from "../../utils/resUtil";
+import { Border } from "../../utils/resUtil";
 
 export class MenuItem extends NinePatchButton {
     protected mMenus: MenuItem[];
@@ -17,13 +17,11 @@ export class MenuItem extends NinePatchButton {
             this.mMenus = [];
             this.mChild = this.scene.make.container(undefined, false);
             this.mChild.x = 42;
-
             this.mArrow = this.scene.make.image({
                 x: this.width * this.originX - 3,
                 key: "usermenu_arrow"
             });
             this.add(this.mArrow);
-
             this.mBackground = new NinePatch(this.scene, 0, 0, 0, 0, Border.getName(), null, Border.getConfig());
             this.mChild.add(this.mBackground);
         }
