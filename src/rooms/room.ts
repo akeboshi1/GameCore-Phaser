@@ -251,10 +251,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public requestActorMove(dir: number, keyArr: number[]) {
     this.mActor.setDirection(dir);
     this.playerManager.startActorMove();
-    const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
-    const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-    content.keyCodes = keyArr;
-    this.connection.send(pkt);
+    // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
+    // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+    // const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+    // content.keyCodes = keyArr;
+    // this.connection.send(pkt);
   }
 
   public addActor(data: IActor): void {
