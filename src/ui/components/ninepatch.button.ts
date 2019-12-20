@@ -75,7 +75,7 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
     protected changeDown() {
         // this.scale = 0.9;
         this.setFrame(`${this.mKey}_down`);
-        this.scaleHandler();
+        // this.scaleHandler();
     }
 
     get label(): Phaser.GameObjects.Text {
