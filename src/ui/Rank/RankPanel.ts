@@ -21,13 +21,14 @@ export class RankPanel extends BasicRankPanel {
             this.y = 21;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = size.width - this.mWidth >> 1;
-                this.y = size.height - this.mHeight >> 1;
+                this.x = size.width - this.mWidth * this.mWorld.uiScale >> 1;
+                this.y = size.height - this.mHeight * this.mWorld.uiScale >> 1;
             } else {
-                this.x = size.width - this.mWidth >> 1;
-                this.y = size.height - this.mHeight >> 1;
+                this.x = size.width - this.mWidth * this.mWorld.uiScale >> 1;
+                this.y = size.height - this.mHeight * this.mWorld.uiScale >> 1;
             }
         }
+        this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
     public destroy() {
