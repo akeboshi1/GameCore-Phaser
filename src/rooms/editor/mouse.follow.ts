@@ -157,7 +157,6 @@ export class MouseFollow {
         }
         // TODO 多个物件仅支持地块
         const pos = new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
-        pos.y += this.mRoomService.miniSize.tileHeight >> 1;
         return pos;
     }
 

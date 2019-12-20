@@ -2,39 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
-      <change afterPath="$PROJECT_DIR$/release/js/a75f214680fed949c108.heartbeatworker.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rooms/decorate/selected.element.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/decorate/decorate.manager.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/decorate/decorate.panel.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/37f10a03fee882a1b3c1.networker.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/37f10a03fee882a1b3c1.networker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/37f10a03fee882a1b3c1.networker.js.LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/37f10a03fee882a1b3c1.networker.js.LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.46.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.46.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/tooqing.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/tooqing.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/vendors~game_v1.0.46.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/vendors~game_v1.0.46.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/confirm_btn.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/dir_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/dir_3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/element_storage_atlas.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/element_storage_atlas.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/put_btn.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/ui/element_storage/turn_btn.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/joystick.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/joystick.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/decorate.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/decorate.room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/dragonbones.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/display/frames.display.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor.room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor.room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/selected.element.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/element/element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/element/element.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/Actor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/Actor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/player/player.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/terrain/terrain.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/main.ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/main.ui.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStorageMediator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStorageMediator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStoragePanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ElementStorage/ElementStoragePanel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/bag/bagView/bagPanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/bag/bagView/bagPanel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/components/checkbox.group.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/components/checkbox.group.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/default.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.54.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.54.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/decorate/selected.element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/decorate/selected.element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/decorate/decorate.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/decorate/decorate.manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/decorate/decorate.panel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/decorate/decorate.panel.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -19,6 +19,10 @@ export class DecoratePanel extends Panel {
         this.setTween(false);
     }
 
+    public setElement(ele) {
+
+    }
+
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.atlas(this.resKey, Url.getRes("ui/decorate/decorate_atlas.png"), Url.getRes("ui/decorate/decorate_atlas.json"));
