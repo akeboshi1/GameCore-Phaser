@@ -9,7 +9,7 @@ import { NinePatch } from "../../components/nine.patch";
 import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
-import { Tilemaps } from "phaser";
+import { IconBtn } from "../../baseView/mobile/icon.btn";
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 32;
     public bagSlotList: ItemSlot[];
@@ -18,7 +18,7 @@ export class BagPanel extends Panel {
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
-    private mClsBtnSprite: Phaser.GameObjects.Sprite;
+    private mClsBtn: IconBtn;
     private mPageNum: number = 0;
     private mPageIndex: number = 1;
     private mDataList: any[];
@@ -76,9 +76,9 @@ export class BagPanel extends Panel {
             this.bagSlotList.length = 0;
             this.bagSlotList = null;
         }
-        if (this.mClsBtnSprite) {
-            this.mClsBtnSprite.destroy(true);
-            this.mClsBtnSprite = null;
+        if (this.mClsBtn) {
+            this.mClsBtn.destroy();
+            this.mClsBtn = null;
         }
         if (this.mPreBtn) {
             this.mPreBtn.destroy(true);
@@ -87,6 +87,14 @@ export class BagPanel extends Panel {
         if (this.mNextBtn) {
             this.mNextBtn.destroy(true);
             this.mNextBtn = null;
+        }
+        if (this.mBorder) {
+            this.mBorder.destroy(true);
+            this.mBorder = null;
+        }
+        if (this.mBg) {
+            this.mBg.destroy(true);
+            this.mBg = null;
         }
         // if (this.mCheckList) {
         //     this.mCheckList.length = 0;
@@ -170,21 +178,21 @@ export class BagPanel extends Panel {
         for (let i: number = 0; i < BagPanel.PageMaxCount; i++) {
             tmpX = i % 8 * 60 - 210;
             tmpY = Math.floor(i / 8) * 60 - this.mBorder.height / 2 + this.mBorder.y + this.mBorder.height / 2 - 55;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
             itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
         }
         this.mPreBtn = this.mScene.make.sprite(undefined, false);
-        this.mPreBtn.setTexture(this.mResStr, "bagView_tab");
+        this.mPreBtn.setTexture(this.mResStr, "bagView_tab.png");
         this.mPreBtn.x = -this.mBg.width >> 1;
         this.add(this.mPreBtn);
         // // ===============背包界面右翻按钮
         this.mNextBtn = this.mScene.make.sprite(undefined, false);
-        this.mNextBtn.setTexture(this.mResStr, "bagView_tab");
+        this.mNextBtn.setTexture(this.mResStr, "bagView_tab.png");
         this.mNextBtn.scaleX = -1;
         this.mNextBtn.x = this.mBg.width >> 1;
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        titleCon.setTexture(this.mResStr, "bagView_titleBtn");
+        titleCon.setTexture(this.mResStr, "bagView_titleBtn.png");
         titleCon.x = (-this.mBg.width >> 1) + 50;
         titleCon.y = (-this.mBg.height >> 1);
         this.add(titleCon);
@@ -204,13 +212,11 @@ export class BagPanel extends Panel {
         this.mPreBtn.on("pointerup", this.preHandler, this);
         this.mWidth = this.mBg.width;
         this.mHeight = this.mBg.height;
-        if (!this.mScene.textures.exists("clsBtn")) {
-            this.mScene.load.spritesheet("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onClsLoadCompleteHandler();
-        }
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn.x = (this.mWidth >> 1) - 65;
+        this.mClsBtn.y = -this.mHeight >> 1;
+        this.mClsBtn.on("pointerup", this.closeHandler, this);
+        this.add(this.mClsBtn);
         this.mInitialized = true;
         if (this.mDataList) {
             this.refreshDataList(this.mDataList);
@@ -229,6 +235,7 @@ export class BagPanel extends Panel {
         this.mResJson = "ui/bag/bagView.json";
         this.mScene.load.image(Border.getName(), Border.getPNG());
         this.mScene.load.image(Background.getName(), Background.getPNG());
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
         super.preload();
     }
@@ -294,18 +301,6 @@ export class BagPanel extends Panel {
             if (!item) continue;
             item.dataChange(items[i]);
         }
-    }
-
-    private onClsLoadCompleteHandler() {
-        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
-        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mWidth >> 1) - 65;
-        this.mClsBtnSprite.y = (-this.mHeight >> 1);
-
-        // ===============背包界面左翻按钮
-        this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.closeHandler, this);
-        this.add(this.mClsBtnSprite);
     }
 
     private closeHandler() {

@@ -1,5 +1,5 @@
 import { Panel } from "../components/panel";
-import { Border, Url } from "../../utils/resUtil";
+import { Border, Url, Background } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
@@ -9,16 +9,17 @@ import { DynamicImage } from "../components/dynamic.image";
 import { Geom } from "phaser";
 import { MainUIMediator } from "../baseView/mainUI.mediator";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
+import { IconBtn } from "../baseView/mobile/icon.btn";
 export interface IFriendIcon {
     res: string;
     name: string;
 }
 export class FriendPanel extends Panel {
     public static count: number = 4;
-    private mBg;
+    private mBg: NinePatch;
     private mUpBtn: Phaser.GameObjects.Sprite;
     private mDownBtn: Phaser.GameObjects.Sprite;
-    private mClsBtnSprite: Phaser.GameObjects.Sprite;
+    private mClsBtn: IconBtn;
     private mTitleTxt: Phaser.GameObjects.Text;
     private mFriendList: FriendItem[];
     private mFriendDataList: any[];
@@ -54,9 +55,9 @@ export class FriendPanel extends Panel {
         this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
         this.mTitleTxt.x = (-this.mBg.width / 2 + 15);
         this.mTitleTxt.y = (-this.mBg.height / 2 + 8);
-        if (this.mClsBtnSprite) {
-            this.mClsBtnSprite.x = (this.mBg.width >> 1) - 65;
-            this.mClsBtnSprite.y = (-this.mBg.height >> 1);
+        if (this.mClsBtn) {
+            this.mClsBtn.x = (this.mBg.width >> 1) - 65;
+            this.mClsBtn.y = (-this.mBg.height >> 1);
         }
         this.initFriendItem();
         this.addAt(this.mBg, 0);
@@ -74,7 +75,7 @@ export class FriendPanel extends Panel {
     }
 
     public destroy() {
-        if (this.mBg) this.mBg.destory();
+        if (this.mBg) this.mBg.destroy(true);
         if (this.mTitleTxt) this.mTitleTxt.destroy(true);
         if (this.mUpBtn) this.mUpBtn.destroy(true);
         if (this.mDownBtn) this.mDownBtn.destroy(true);
@@ -129,11 +130,12 @@ export class FriendPanel extends Panel {
         if (!this.mScene) {
             return;
         }
-        this.scene.load.image(Border.getName(), Border.getPNG());
+        this.mScene.load.image(Border.getName(), Border.getPNG());
+        this.mScene.load.image(Background.getName(), Background.getPNG());
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.scene.load.image("friendChat", Url.getRes("ui/friend/friend_chat.png"));
         this.scene.load.image("friendGo", Url.getRes("ui/friend/friend_go.png"));
         this.mScene.load.atlas("bagView", Url.getRes("ui/bag/bagView.png"), Url.getRes("ui/bag/bagView.json"));
-        this.mScene.load.spritesheet("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
         super.preload();
     }
 
@@ -153,11 +155,11 @@ export class FriendPanel extends Panel {
         // this.add(this.mTitleTxt);
 
         this.mUpBtn = this.mScene.make.sprite(undefined, false);
-        this.mUpBtn.setTexture("bagView", "bagView_tab");
+        this.mUpBtn.setTexture("bagView", "bagView_tab.png");
         this.mUpBtn.rotation = Math.PI / 2;
 
         this.mDownBtn = this.mScene.make.sprite(undefined, false);
-        this.mDownBtn.setTexture("bagView", "bagView_tab");
+        this.mDownBtn.setTexture("bagView", "bagView_tab.png");
         this.mDownBtn.rotation = -Math.PI / 2;
 
         this.mDownBtn.setInteractive();
@@ -167,8 +169,16 @@ export class FriendPanel extends Panel {
         const image = this.scene.make.image(undefined, false);
         image.setTexture((this.mWorld.roomManager.currentRoom.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
         this.add(image);
-        this.onClsLoadCompleteHandler();
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+        this.addAt(this.mBg, 0);
+        this.setSize(this.mBg.width, this.mBg.height);
         this.initFriendItem();
+
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn.x = (this.mWidth >> 1) - 65;
+        this.mClsBtn.y = -this.mHeight >> 1;
+        this.mClsBtn.on("pointerup", this.hide, this);
+        this.add(this.mClsBtn);
         super.init();
     }
 
@@ -195,6 +205,7 @@ export class FriendPanel extends Panel {
     }
 
     private setDataList(data: any[]) {
+        if (!this.mFriendList) return;
         this.mFriendDataList = data;
         const len: number = data.length > FriendPanel.count ? FriendPanel.count : data.length;
         for (let i: number = 0; i < 4; i++) {
@@ -251,14 +262,6 @@ export class FriendPanel extends Panel {
                 this.mFriendList.push(item);
             }
         }
-    }
-
-    private onClsLoadCompleteHandler() {
-        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
-        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.hide, this);
-        this.add(this.mClsBtnSprite);
     }
 }
 

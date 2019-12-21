@@ -1,17 +1,19 @@
-import { IAbstractPanel } from "../../abstractPanel";
 import { Panel } from "../../components/panel";
 import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
-import { Url } from "../../../utils/resUtil";
+import { Url, Border, Background } from "../../../utils/resUtil";
+import { IconBtn } from "../../baseView/mobile/icon.btn";
+import { NinePatch } from "../../components/nine.patch";
 
 export class StoragePanel extends Panel {
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
     private mBagItemSlotList: ItemSlot[];
-    private mBg: Phaser.GameObjects.Image;
-    private mClsBtnSprite: Phaser.GameObjects.Image;
+    private mClsBtn: IconBtn;
+    private mBg: NinePatch;
+    private mBorder: NinePatch;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -31,9 +33,13 @@ export class StoragePanel extends Panel {
             this.mBg.destroy(true);
             this.mBg = null;
         }
-        if (this.mClsBtnSprite) {
-            this.mClsBtnSprite.destroy(true);
-            this.mClsBtnSprite = null;
+        if (this.mBorder) {
+            this.mBorder.destroy(true);
+            this.mBorder = null;
+        }
+        if (this.mClsBtn) {
+            this.mClsBtn.destroy();
+            this.mClsBtn = null;
         }
         if (this.mBagItemSlotList) {
             const len: number = this.mBagItemSlotList.length;
@@ -52,13 +58,17 @@ export class StoragePanel extends Panel {
     protected init() {
         if (this.mInitialized) return;
         super.init();
-        this.mBg = this.mScene.make.image(undefined, false);
-        this.mBg.setTexture(this.mResStr, "itemBagView_bg");
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
         this.addAt(this.mBg, 0);
+        this.setSize(this.mBg.width, this.mBg.height);
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, Border.getConfig());
+        this.mBorder.x = this.mBg.x;
+        this.mBorder.y = this.mBg.y + 10;
+        this.addAt(this.mBorder, 1);
         this.mWidth = this.mBg.width;
         this.mHeight = this.mBg.height;
         const titleIcon: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
-        titleIcon.setTexture(this.mResStr, "itemBagView_title");
+        titleIcon.setTexture(this.mResStr, "itemBagView_title.png");
         titleIcon.x = (-this.mBg.width >> 1) + 80;
         titleIcon.y = -this.mBg.height >> 1;
         this.add(titleIcon);
@@ -80,18 +90,16 @@ export class StoragePanel extends Panel {
         for (let i: number = 0; i < 9; i++) {
             tmpX = i % 9 * 60 + 32 - 724 / 2;
             tmpY = Math.floor(i / 9) * 60 - 55;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot", "bagView_itemSelect");
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
             itemSlot.createUI();
             this.mBagItemSlotList.push(itemSlot);
         }
 
-        if (!this.mScene.cache.obj.has("clsBtn")) {
-            this.mScene.load.spritesheet("clsBtn", "resources/ui/common/common_clsBtn.png", { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onClsLoadCompleteHandler();
-        }
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn.x = (this.mWidth >> 1) - 65;
+        this.mClsBtn.y = -this.mHeight >> 1;
+        this.mClsBtn.on("pointerup", this.hide, this);
+        this.add(this.mClsBtn);
     }
 
     protected preload() {
@@ -101,19 +109,10 @@ export class StoragePanel extends Panel {
         this.mResStr = "bagView";
         this.mResPng = "ui/bag/bagView.png";
         this.mResJson = "ui/bag/bagView.json";
+        this.mScene.load.image(Border.getName(), Border.getPNG());
+        this.mScene.load.image(Background.getName(), Background.getPNG());
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
         super.preload();
-    }
-
-    private onClsLoadCompleteHandler() {
-        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
-        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.mWidth >> 1) - 65;
-        this.mClsBtnSprite.y = (-this.mHeight >> 1);
-
-        // ===============背包界面左翻按钮
-        this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.hide, this);
-        this.add(this.mClsBtnSprite);
     }
 }

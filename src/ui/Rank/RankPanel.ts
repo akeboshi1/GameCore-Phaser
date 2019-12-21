@@ -1,12 +1,13 @@
 import { BasicRankPanel } from "./BasicRankPanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
+import { IconBtn } from "../baseView/mobile/icon.btn";
 
 export class RankPanel extends BasicRankPanel {
     private static ZoomSize: number[] = [30, 362];
     private mZoonInBtn: Phaser.GameObjects.Image;
     private mCurrentIndex: number;
-    private mClsBtnSprite: Phaser.GameObjects.Sprite;
+    private mClsBtn: IconBtn;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -50,15 +51,11 @@ export class RankPanel extends BasicRankPanel {
         this.resize();
         this.mZoonInBtn.setInteractive();
         this.mZoonInBtn.on("pointerup", this.onZoomHandler, this);
-        if (!this.mWorld.game.device.os.desktop) {
-            if (!this.mScene.textures.exists("clsBtn")) {
-                this.mScene.load.spritesheet("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
-                this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
-                this.mScene.load.start();
-            } else {
-                this.onClsLoadCompleteHandler();
-            }
-        }
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn.x = this.mWidth - 35;
+        this.mClsBtn.y = 0;
+        this.mClsBtn.on("pointerup", this.hide, this);
+        this.add(this.mClsBtn);
         // this.mZoonInBtn = this.mScene.make.image()
     }
 
@@ -68,20 +65,6 @@ export class RankPanel extends BasicRankPanel {
             const items = this.getData("data");
             if (items) this.addItem(items);
         }
-    }
-
-    private onClsLoadCompleteHandler() {
-        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
-        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = this.mWidth - 35;
-        this.mClsBtnSprite.y = 0;
-        this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.closeHandler, this);
-        this.add(this.mClsBtnSprite);
-    }
-
-    private closeHandler() {
-        this.hide();
     }
 
     private onZoomHandler() {

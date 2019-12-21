@@ -68,7 +68,8 @@ export class JoyStickManager implements InputManager {
     }
 
     public resize() {
-        // if (!this.mParentcon) return;
+        if (!this.mParentcon) return;
+        this.mParentcon.scaleX = this.mParentcon.scaleY = this.worldService.uiScale;
         // const size: Size = this.worldService.getSize();
         // const mainUIMed = this.worldService.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         // const padHei: number = !mainUIMed ? this.mParentcon.height : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
@@ -279,6 +280,7 @@ export class JoyStick {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         Logger.getInstance().log("dragEnd");
+        this.parentCon.visible = false;
         if (!(this.mWorld.inputManager as JoyStickManager).enable) {
             return;
         }

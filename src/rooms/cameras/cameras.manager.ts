@@ -26,8 +26,8 @@ export interface ICameraService {
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
-    readonly MINI_VIEW_SIZE = 18;
-    readonly VIEW_PORT_SIZE = 20;
+    readonly MINI_VIEW_SIZE = 28;
+    readonly VIEW_PORT_SIZE = 30;
     private mCamera: Phaser.Cameras.Scene2D.Camera;
     private viewPort = new Phaser.Geom.Rectangle();
     private miniViewPort = new Phaser.Geom.Rectangle();
