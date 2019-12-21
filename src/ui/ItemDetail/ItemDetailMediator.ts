@@ -31,7 +31,7 @@ export class ItemDetailMediator extends BaseMediator {
         }
         this.mView = new ItemDetail(this.mScene, this.world);
         this.mView.show(param);
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToToolTipsLayer(this.mView);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         this.isShowing = true;
     }
