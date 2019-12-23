@@ -301,8 +301,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   public resize(width: number, height: number) {
-    this.layerManager.resize(width, height);
-    this.mCameraService.resize(width, height);
+    if (this.layerManager) this.layerManager.resize(width, height);
+    if (this.mCameraService) this.mCameraService.resize(width, height);
   }
 
   public transformTo90(p: Pos) {

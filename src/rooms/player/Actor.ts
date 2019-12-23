@@ -10,6 +10,7 @@ import { Interactive } from "./interactive/interactive";
 import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
 import { PlayerState } from "../element/element";
+import { Logger } from "../../utils/log";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
@@ -86,8 +87,13 @@ export class Actor extends Player implements InputListener {
 
     public stopMove() {
         super.stopMove();
-        if (!this.mMoveData) {
+        if (!this.mMoveData || !this.mMoveData.destPos) {
             return;
+        }
+        if (this.mMoveData.destPos) {
+            Logger.getInstance().debug("moveData:" + this.mMoveData.destPos.x + "," + this.mMoveData.destPos.y);
+        } else {
+            Logger.getInstance().error("no destPos");
         }
         delete this.mMoveData.destPos;
         this.mMoveData.arrivalTime = 0;
@@ -108,6 +114,7 @@ export class Actor extends Player implements InputListener {
             },
             direction: this.dir
         };
+        Logger.getInstance().debug("nowPox:" + pos.x + "," + pos.y);
         this.mElementManager.connection.send(pkt);
     }
 

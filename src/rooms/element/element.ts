@@ -204,7 +204,7 @@ export class Element extends BlockObject implements IElement {
             , Math.floor(moveData.destinationPoint3f.y)
         );
         // Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
-        Logger.getInstance().log("walk has movedata");
+        Logger.getInstance().debug("walk has movedata");
         this._doMove();
     }
 

@@ -113,7 +113,10 @@ export class Clock extends PacketHandler {
             //  }
         }
         this.mAutoSync = false;
-        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) this.mListener.onClockReady();
+        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) {
+            Logger.getInstance().debug("clock同步完成");
+            this.mListener.onClockReady();
+        }
         Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
 
     }
