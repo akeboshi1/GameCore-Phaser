@@ -89,6 +89,7 @@ export class BasicRankPanel extends Panel {
     protected preload() {
         this.scene.load.image(Background.getName(), Background.getPNG());
         this.scene.load.image(Border.getName(), Border.getPNG());
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.scene.load.atlas("rank_atlas", Url.getRes("ui/rank/rank_atlas.png"), Url.getRes("ui/rank/rank_atlas.json"));
         super.preload();
     }

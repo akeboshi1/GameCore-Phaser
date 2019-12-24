@@ -8,6 +8,7 @@ import {Logger} from "../../utils/log";
 export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mEffecte: DynamicImage;
+    private mSelecting: boolean;
     constructor(private mScene: Phaser.Scene, private mLayerManager: LayerManager) {
         this.mEffecte = new DynamicImage(this.mScene, 0, 0);
         this.mEffecte.load(Url.getRes("ui/editor/selectFlag.png"));
@@ -25,15 +26,20 @@ export class SelectedElement {
             ele.showNickname();
         }
         this.mLayerManager.addToSceneToUI(this.mEffecte);
+        this.mSelecting = true;
         this.update();
     }
 
     remove() {
+        this.mSelecting = false;
         if (!this.mEffecte) {
             return;
         }
         if (this.mEffecte.parentContainer) {
             this.mEffecte.parentContainer.remove(this.mEffecte);
+        }
+        if (!this.mDisplay) {
+            return;
         }
         if (this.mDisplay.parentContainer) {
             this.mDisplay.hideRefernceArea();
@@ -70,5 +76,16 @@ export class SelectedElement {
 
     get display(): FramesDisplay | DragonbonesDisplay {
         return this.mDisplay;
+    }
+
+    set selecting(val: boolean) {
+        this.mSelecting = val;
+    }
+
+    /**
+     * 鼠标按下选中物件, 松开取消选择
+     */
+    get selecting(): boolean {
+        return this.mSelecting;
     }
 }

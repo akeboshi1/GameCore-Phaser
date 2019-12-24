@@ -1,4 +1,4 @@
-import { IMediator, BaseMediator } from "../baseMediator";
+import { BaseMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { UserMenuPanel } from "./UserMenuPanel";
@@ -16,11 +16,10 @@ export class UserMenuMediator extends BaseMediator {
         this.world = worldService;
         this.mLayerManager = layerManager;
         this.mScene = scene;
-        this.mView = new UserMenuPanel(scene, this.world);
     }
 
     getView(): IAbstractPanel {
-        return undefined;
+        return this.mView;
     }
 
     hide(): void {
@@ -42,10 +41,14 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     resize() {
-        this.mView.resize();
+        if (this.mView) this.mView.resize();
     }
 
     show(param?: any): void {
+        if (this.mView && this.mView.isShow()) {
+            return;
+        }
+        this.mView = new UserMenuPanel(this.mScene, this.world);
         this.mView.show(param[0]);
         this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
@@ -55,7 +58,7 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     update(param?: any): void {
-        this.mView.update(param[0]);
+        if (this.mView) this.mView.update(param[0]);
     }
 
     destroy() {

@@ -132,23 +132,6 @@ export class InteractivePanel extends Panel {
     public resize() {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
-        if (this.mWorld.game.device.os.desktop) {
-            this.y = size.height / 2 - 250;
-        } else {
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
-                this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
-                this.y = 0;
-            } else {
-                this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
-                this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
-                this.y = size.height - this.mBg.height >> 1;
-            }
-            this.setSize(this.mBg.width, this.mBg.height);
-
-        }
-        this.x = size.width >> 1;
-        this.refreshUIPos();
         this.mNameCon.add(this.mNameBg);
         this.mNameCon.add(this.mNameTF);
         this.mDescCon.add(this.mBg);
@@ -156,6 +139,23 @@ export class InteractivePanel extends Panel {
         this.mDescCon.add(this.mDescTF);
         this.add(this.mNameCon);
         this.add(this.mDescCon);
+        if (this.mWorld.game.device.os.desktop) {
+            this.y = size.height / 2 - 250;
+        } else {
+            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
+                this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
+                this.setSize(this.mBg.width, this.mBg.height);
+            } else {
+                this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
+                this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
+                this.setSize(this.mBg.width, this.mBg.height);
+            }
+            this.y = this.mBg.height * 1.5 * this.mWorld.uiScale;
+        }
+
+        this.x = size.width >> 1;
+        this.refreshUIPos();
         if (this.mRadio) {
             this.add(this.mRadio);
         }
@@ -260,12 +260,13 @@ export class InteractivePanel extends Panel {
 
     private refreshUIPos() {
         const size: Size = this.mWorld.getSize();
-
-        this.mNameTF.y = -8;
+        this.mDescCon.setSize(this.mBg.width, this.mBg.height);
+        this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
+        this.mNameTF.y = -8 * this.mWorld.uiScale;
         this.mDescTF.x = -this.mBorder.width / 2;
         this.mDescTF.y = -this.mBorder.height / 2;
 
-        this.mDescCon.y = size.height / 2 + 80;
+        this.mDescCon.y = this.mWorld.game.device.os.desktop ? size.height / 2 + 80 : 0;
         this.mNameCon.x = 150 - this.mDescCon.width / 2;
         this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
         this.mNameTF.setWrapWidth(this.mBorder.width);
@@ -273,12 +274,7 @@ export class InteractivePanel extends Panel {
 
         this.mNameTF.x = - this.mNameTF.width >> 1;
 
-        this.mDescCon.setSize(this.mBg.width, this.mBg.height);
-        this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
-
         if (!this.mWorld.game.device.os.desktop) {
-            const imgX: number = -this.mBorder.width / 2;
-            const imgY: number = -this.mBorder.height / 2;
             const leftIconWid: number = this.mLeftFaceIcon.width * this.mWorld.uiScale;
             const leftIconHei: number = this.mLeftFaceIcon.height * this.mWorld.uiScale;
             let leftScale: number = 1;
@@ -289,8 +285,8 @@ export class InteractivePanel extends Panel {
             }
             this.mLeftFaceIcon.scaleX = this.mLeftBaseScaleX * leftScale * .7;
             this.mLeftFaceIcon.scaleY = this.mLeftBaseScaleY * leftScale * .7;
-            this.mLeftFaceIcon.x = imgX + 200;
-            this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height;
+            this.mLeftFaceIcon.x = this.mNameCon.x;
+            this.mLeftFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
 
             let midScale: number = 1;
             const midIconWid: number = this.mMidFaceIcon.width * this.mWorld.uiScale;
@@ -300,10 +296,10 @@ export class InteractivePanel extends Panel {
             } else {
                 midScale = midIconHei > size.height * .5 ? size.height * .5 / midIconHei : midIconHei / size.height * .5;
             }
-            this.mMidFaceIcon.scaleX = this.mMidBaseScaleX * midScale;
-            this.mMidFaceIcon.scaleY = this.mMidBaseScaleY * midScale;
+            this.mMidFaceIcon.scaleX = this.mMidBaseScaleX * midScale * .7;
+            this.mMidFaceIcon.scaleY = this.mMidBaseScaleY * midScale * .7;
             this.mMidFaceIcon.x = 0;
-            this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 2;
+            this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
 
             let rightScale: number = 1;
             const rightIconWid: number = this.mRightFaceIcon.width * this.mWorld.uiScale;
@@ -313,15 +309,20 @@ export class InteractivePanel extends Panel {
             } else {
                 rightScale = rightIconHei > size.height * .5 ? size.height * .5 / rightIconHei : rightIconHei / size.height * .5;
             }
-            this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale;
-            this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale;
-            this.mRightFaceIcon.x = 200;
-            this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 2;
+            this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale * .7;
+            this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale * .7;
+            this.mRightFaceIcon.x = -this.mNameCon.x;
+            this.mRightFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mRightFaceIcon.height * rightScale * .7 / 2;
         }
 
         if (this.mRadioCom) {
-            this.mRadio.x = 220;
-            this.mRadio.y = this.mDescCon.height + 200;
+            if (this.mWorld.game.device.os.desktop) {
+                this.mRadio.x = this.mBg.x + this.mBg.width / 2 - this.mRadio.width;
+                this.mRadio.y = this.y + this.mBg.height;
+            } else {
+                this.mRadio.x = this.mBg.width / 2 - this.mRadio.width;
+                this.mRadio.y = this.mBg.height / 2 - this.mRadio.height;
+            }
         }
     }
 

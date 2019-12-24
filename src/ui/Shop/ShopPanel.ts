@@ -1,17 +1,21 @@
 import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
-import { Url } from "../../utils/resUtil";
+import { Url, Border, Background } from "../../utils/resUtil";
 import { ShopItemSlot } from "./shop.itemSlot";
 import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
+import { NinePatch } from "../components/nine.patch";
+import { IconBtn } from "../baseView/mobile/icon.btn";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
-    public mClsBtnSprite: Phaser.GameObjects.Sprite;
+    public mClsBtn: IconBtn;
     private mShopItemSlotList: ShopItemSlot[];
     private mShopData: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE;
+    private mBg: NinePatch;
+    private mBorder: NinePatch;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.mWorld = world;
@@ -60,18 +64,26 @@ export class ShopPanel extends Panel {
         if (!this.mScene) {
             return;
         }
+        this.mScene.load.image(Border.getName(), Border.getPNG());
+        this.mScene.load.image(Background.getName(), Background.getPNG());
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.mScene.load.atlas("shopView", Url.getRes("ui/shop/shopView.png"), Url.getRes("ui/shop/shopView.json"));
         super.preload();
     }
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        const mBg: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
-        mBg.setTexture("shopView", "shopView_bg");
-        mBg.x = 0;
-        mBg.y = 0;
-        this.setSize(mBg.width, mBg.height);
-        this.addAt(mBg, 0);
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+        this.mBg.x = 0;
+        this.mBg.y = 0;
+        this.setSize(this.mBg.width, this.mBg.height);
+        this.addAt(this.mBg, 0);
+
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, Border.getConfig());
+        this.mBorder.x = this.mBg.x;
+        this.mBorder.y = this.mBg.y + 10;
+        this.addAt(this.mBorder, 1);
+
         if (this.mWorld.game.device.os.desktop) {
             this.x = size.width >> 1;
             this.y = size.height - 300;
@@ -86,8 +98,8 @@ export class ShopPanel extends Panel {
         }
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
         titleCon.setTexture("shopView", "shopView_titleIcon");
-        titleCon.x = (-mBg.width >> 1) + 35;
-        titleCon.y = -mBg.height >> 1;
+        titleCon.x = (-this.mBg.width >> 1) + 35;
+        titleCon.y = -this.mBg.height >> 1;
         this.add(titleCon);
         const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
 
@@ -103,19 +115,17 @@ export class ShopPanel extends Panel {
         let tmpX: number;
         let tmpY: number;
         for (let i: number = 0; i < 20; i++) {
-            tmpX = (i % 5) * 100 - mBg.width / 2 + 75;
-            tmpY = Math.floor(i / 5) * 90 - mBg.height / 2 + 80;
+            tmpX = (i % 5) * 88 - this.mBg.width / 2 + 75;
+            tmpY = Math.floor(i / 5) * 82 - this.mBg.height / 2 + 72;
             itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", null, null);
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
-        if (!this.mScene.cache.obj.has("clsBtn")) {
-            this.mScene.load.spritesheet("clsBtn", "resources/ui/common/common_clsBtn.png", { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 });
-            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onClsLoadCompleteHandler, this);
-            this.mScene.load.start();
-        } else {
-            this.onClsLoadCompleteHandler();
-        }
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn.x = (this.width >> 1) - 65;
+        this.mClsBtn.y = -this.height >> 1;
+        this.mClsBtn.on("pointerup", this.shopMedClose, this);
+        this.add(this.mClsBtn);
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
 
         // 异步加载过程中会导致数据过来，面板仍然没有加载完毕，所以缓存数据等ui加载完毕再做显示
@@ -128,16 +138,6 @@ export class ShopPanel extends Panel {
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
         if (show) this.resize();
-    }
-
-    private onClsLoadCompleteHandler() {
-        this.mClsBtnSprite = this.mScene.make.sprite(undefined, false);
-        this.mClsBtnSprite.setTexture("clsBtn", "btn_normal");
-        this.mClsBtnSprite.x = (this.width >> 1) - 65;
-        this.mClsBtnSprite.y = (- this.height >> 1);
-        this.mClsBtnSprite.setInteractive();
-        this.mClsBtnSprite.on("pointerup", this.shopMedClose, this);
-        this.add(this.mClsBtnSprite);
     }
 
     private refreshDataList() {
