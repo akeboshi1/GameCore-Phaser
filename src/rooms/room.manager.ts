@@ -20,13 +20,13 @@ export interface IRoomManager {
 
 export class RoomManager extends PacketHandler implements IRoomManager {
     protected mWorld: WorldService;
-    private mRooms: Room[] = [];
+    private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
 
     constructor(world: WorldService) {
         super();
         this.mWorld = world;
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterDecorate);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
     }
 
@@ -42,7 +42,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    public getRoom(id: number): Room | undefined {
+    public getRoom(id: number): IRoomService | undefined {
         // const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         // if (idx >= 0) {
         //     return this.mRooms[idx];
@@ -67,7 +67,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     public pasuseRoom(id: number) {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         if (idx >= 0) {
-            const room: Room = this.mRooms[idx];
+            const room: IRoomService = this.mRooms[idx];
             room.pause();
         }
     }
@@ -75,7 +75,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     public resumeRoom(id: number) {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         if (idx >= 0) {
-            const room: Room = this.mRooms[idx];
+            const room: IRoomService = this.mRooms[idx];
             if (room && room.scene) room.resume(room.scene.scene.key);
         }
     }
@@ -111,7 +111,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const vw: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         let room: Room;
         if (this.hasRoom(vw.scene.id)) {
-            room = this.getRoom(vw.scene.id);
+            room = <Room> this.getRoom(vw.scene.id);
         } else {
             if (this.mCurRoom) {
                 this.leaveScene(this.mCurRoom);
@@ -132,6 +132,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const room: DecorateRoom = new DecorateRoom(this);
         room.enter((content.scene));
+        this.mRooms.push(room);
         // this.mCurRoom = room;
     }
 

@@ -6,7 +6,7 @@ import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
 import {ConnectionService} from "../net/connection.service";
 import {ElementManager} from "./element/element.manager";
 import {LayerManager} from "./layer/layer.manager";
-import {IPosition45Obj} from "../utils/position45";
+import {IPosition45Obj, Position45} from "../utils/position45";
 import {TerrainManager} from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
 import {IElement} from "./element/element";
@@ -18,11 +18,15 @@ import { Map } from "./map/map";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {EditScene} from "../scenes/edit";
 import {SelectedElement} from "./decorate/selected.element";
+import {LoadingScene} from "../scenes/loading";
+import {PlayScene} from "../scenes/play";
+import {Logger} from "../utils/log";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly actor: Actor;
     readonly blocks: ViewblockService;
-    clockSyncComplete: boolean;
+    // TODO clock sync
+    clockSyncComplete: boolean = true;
     readonly playerManager: PlayerManager;
     readonly world: WorldService;
     private mID: number;
@@ -38,6 +42,14 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         super();
         this.world = manager.world;
         this.mCameraService = new CamerasManager(this);
+        if (this.world) {
+            const size = this.world.getSize();
+            if (size) {
+                this.mCameraService.resize(size.width, size.height);
+            } else {
+                throw new Error(`World::getSize undefined!`);
+            }
+        }
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
@@ -54,6 +66,13 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             sceneWidth: (room.rows + room.cols) * (room.tileWidth / 2),
             sceneHeight: (room.rows + room.cols) * (room.tileHeight / 2)
         };
+
+        if (!this.world.game.scene.getScene(LoadingScene.name))
+            this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
+        this.world.game.scene.start(LoadingScene.name, {
+            world: this.world,
+            room: this
+        });
     }
 
     addBlockObject(object: IElement) {
@@ -63,18 +82,24 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     addToGround(element: ElementDisplay | ElementDisplay[]) {
+        this.mLayerManager.addToGround(element);
     }
 
     addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
+        this.mLayerManager.addToSceneToUI(element);
     }
 
     addToSurface(element: ElementDisplay | ElementDisplay[]) {
+        this.mLayerManager.addToSurface(element);
     }
 
     addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {
     }
 
     completeLoad() {
+        this.world.game.scene.add(PlayScene.name, PlayScene, true, {
+            room: this
+        });
     }
 
     destroy() {
@@ -100,26 +125,42 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     startPlay() {
-        this.mScene = this.world.game.scene.getScene(EditScene.name);
-        // this.mLayManager = new LayerManager(this);
-        // this.mLayManager.drawGrid(this);
+        if (this.mLayerManager) {
+            this.mLayerManager.destroy();
+        }
+        this.mScene = this.world.game.scene.getScene(PlayScene.name);
+        this.mLayerManager = new LayerManager(this);
+        this.mLayerManager.drawGrid(this);
         // this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         // this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.mTerrainManager = new TerrainManager(this);
+        this.mElementManager = new ElementManager(this);
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
         this.mCameraService.camera = this.scene.cameras.main;
-        const mainCameras = this.mScene.cameras.main;
-        mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        // const mainCameras = this.mScene.cameras.main;
+        // mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+
+        const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
+        if (loadingScene) loadingScene.sleep();
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        this.mCameraService.centerCameas();
+        // this.mCameraService.centerCameas();
     }
 
     transformTo45(p: Pos): Pos {
-        return undefined;
+        if (!this.mSize) {
+            Logger.getInstance().error("position object is undefined");
+            return;
+        }
+        return Position45.transformTo45(p, this.mSize);
     }
 
     transformTo90(p: Pos): Pos {
-        return undefined;
+        if (!this.mSize) {
+            Logger.getInstance().error("position object is undefined");
+            return;
+        }
+        return Position45.transformTo90(p, this.mSize);
     }
 
     update(time: number, delta: number): void {
@@ -129,6 +170,11 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     updateBlockObject() {
+    }
+
+    resize(width: number, height: number) {
+        this.layerManager.resize(width, height);
+        this.mCameraService.resize(width, height);
     }
 
     private onGameobjectUpHandler(pointer, gameobject) {

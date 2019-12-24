@@ -119,7 +119,7 @@ export class Element extends BlockObject implements IElement {
     protected mCurState: string = PlayerState.IDLE;
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
-    protected mBlockable: boolean = true;
+    protected mBlockable: boolean = false;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();

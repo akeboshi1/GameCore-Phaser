@@ -59,7 +59,7 @@ export class LayerManager {
 
     private mDelta: number = 0;
 
-    constructor(private room: Room) {
+    constructor(private room: IRoomService) {
 
         this.mScene = room.scene;
         // ==========背景层
