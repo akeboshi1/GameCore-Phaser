@@ -11,6 +11,7 @@ import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 
 export class TerrainManager extends PacketHandler implements IElementManager {
+    public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
     protected mGameConfig: IElementStorage;
     // add by 7 ----
@@ -25,6 +26,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.connection.addPacketListener(this);
 
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
@@ -109,6 +111,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         this.mTerrains.set(terrain.id || 0, terrain);
         // this.roomService.blocks.add(terrain);
         return terrain;
+    }
+
+    protected addComplete(packet: PBpacket) {
+        this.hasAddComplete = true;
     }
 
     protected onRemove(packet: PBpacket) {

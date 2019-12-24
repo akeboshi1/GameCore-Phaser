@@ -1,15 +1,16 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {ConnectionService} from "../../net/connection.service";
-import {Element, IElement} from "./element";
-import {IRoomService} from "../room";
-import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
-import {IElementStorage} from "../../game/element.storage";
-import {ISprite, Sprite} from "./sprite";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
+import { Element, IElement } from "./element";
+import { IRoomService } from "../room";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { IElementStorage } from "../../game/element.storage";
+import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
 
 export interface IElementManager {
+    hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
     readonly roomService: IRoomService;
     readonly scene: Phaser.Scene | undefined;
@@ -20,7 +21,7 @@ export interface IElementManager {
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
-
+    public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
     private mGameConfig: IElementStorage;
 
@@ -28,8 +29,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
-
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
@@ -145,6 +146,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         return ele;
+    }
+
+    protected addComplete(packet: PBpacket) {
+        this.hasAddComplete = true;
     }
 
     protected checkDisplay(sprite: ISprite) {
