@@ -352,11 +352,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         Logger.getInstance().debug("move 111");
-        // if (this.mCurState === PlayerState.WALK) {
-        //     // (this.mDisplay.moveTo as MoveToPlugin).isRunning = false;
-        //     // this.changeState(PlayerState.IDLE);
-        // } else {
-        // }
         this.onMoveStart();
         const now: number = this.roomService.now();
         const speed: number = Tool.twoPointDistance(this.mMoveData.destPos, this.getPosition()) / ((this.mMoveData.arrivalTime - now) / 1000);
