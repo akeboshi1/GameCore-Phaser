@@ -87,6 +87,9 @@ export class MouseFollow {
 
     getEaserPosition(): Pos[] {
         const result: Pos[] = [];
+        if (!this.display) {
+            return;
+        }
         let pos: Pos = null;
         for (let i = 0; i < this.mSize; i++) {
             for (let j = 0; j < this.mSize; j++) {

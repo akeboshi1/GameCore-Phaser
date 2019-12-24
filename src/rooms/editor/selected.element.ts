@@ -36,6 +36,9 @@ export class SelectedElement {
         if (this.mEffecte.parentContainer) {
             this.mEffecte.parentContainer.remove(this.mEffecte);
         }
+        if (!this.mDisplay) {
+            return;
+        }
         if (this.mDisplay.parentContainer) {
             this.mDisplay.hideRefernceArea();
             this.mDisplay.showNickname("");
