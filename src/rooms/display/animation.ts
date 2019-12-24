@@ -50,6 +50,7 @@ export class Animation implements IAnimationData {
         }
 
         if (typeof ani.walkableArea === "string") {
+            this.mWalkableArea = this.stringToArray(ani.walkableArea, ",", "&");
         } else {
             this.mWalkableArea = ani.walkableArea;
         }
