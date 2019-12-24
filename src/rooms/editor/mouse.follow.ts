@@ -119,14 +119,14 @@ export class MouseFollow {
         const size = this.mRoomService.miniSize;
         if (pos.x < 0) {
             bound.x = 0;
-        } else if (pos.x > size.rows) {
-            bound.x = size.rows;
+        } else if (pos.x > size.cols) {
+            bound.x = size.cols;
         }
 
         if (pos.y < 0) {
             bound.y = 0;
-        } else if (pos.y > size.cols) {
-            bound.y = size.cols;
+        } else if (pos.y > size.rows) {
+            bound.y = size.rows;
         }
         if (bound.equal(pos) && source) {
             return source;
