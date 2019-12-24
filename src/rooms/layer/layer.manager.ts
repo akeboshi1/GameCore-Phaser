@@ -178,6 +178,7 @@ export class LayerManager {
         if (this.mSurfaceInteractived === val) {
             return;
         }
+        this.mSurfaceInteractived = val;
         const list = this.mSurfaceLayer.list;
         if (val) {
             // this.mSurfaceLayer.setInteractive();

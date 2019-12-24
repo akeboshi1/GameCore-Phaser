@@ -128,7 +128,7 @@ export class EditorTerrainManager extends TerrainManager {
         const pos = sprite.pos;
         const roomSize = this.roomService.roomSize;
         if (!roomSize) return false;
-        if (pos.x < 0 || pos.y < 0 || pos.x >= roomSize.rows || pos.y >= roomSize.cols) {
+        if (pos.x < 0 || pos.y < 0 || pos.x >= roomSize.cols || pos.y >= roomSize.rows) {
             return false;
         }
         const terrains = Array.from(this.mTerrains.values());
