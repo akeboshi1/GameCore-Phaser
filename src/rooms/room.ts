@@ -22,6 +22,7 @@ import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { IElement } from "./element/element";
 import { Size } from "../utils/size";
+import { Data } from "phaser";
 export interface SpriteAddCompletedListener {
   onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -169,6 +170,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public onClockReady(): void {
     // TODO: Unload loading-scene
     Logger.getInstance().debug("onClockReady");
+    Logger.getInstance().debug(new Date().getTime());
     this.clockSyncComplete = true;
   }
 

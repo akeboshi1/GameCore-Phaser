@@ -12,9 +12,6 @@ import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
 import { DebugLoggerMediator } from "./debuglog/debug.logger.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
-import { TopBtnGroup } from "./baseView/mobile/top.btn.group";
-import { MainUIMobile } from "./baseView/mobile/mainUI.mobile";
-
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;

@@ -4,7 +4,7 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
+import { IDragonbonesModel } from "../display/dragonbones.model";
 import { op_client, op_def } from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
@@ -13,6 +13,8 @@ import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
+import MoveToPlugin from "../../../lib/rexui/plugins/moveto-plugin.js";
+import { Tool } from "../../utils/tool";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -110,6 +112,7 @@ export class Element extends BlockObject implements IElement {
         this.setModel(val);
     }
 
+    protected static CHECK_COUNT: number = 10; // 10个包之后进行check
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: ElementDisplay | undefined;
@@ -120,6 +123,8 @@ export class Element extends BlockObject implements IElement {
     protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
     protected mBlockable: boolean = true;
+    protected mCheckCount: number = 0;
+    // protected mMoveSpeed: number = 0;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();
@@ -146,7 +151,7 @@ export class Element extends BlockObject implements IElement {
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
@@ -217,6 +222,7 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`can't stopMove, display does not exist`);
             return;
         }
+        (this.mDisplay.moveTo as MoveToPlugin).isRunning = false;
         this.changeState(PlayerState.IDLE);
         // Logger.debug(`stop,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
     }
@@ -318,10 +324,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public destroy() {
-        if (this.mMoveData && this.mMoveData.tweenAnim) {
-            this.mMoveData.tweenAnim.stop();
-            this.mMoveData.tweenAnim.remove();
-            this.mMoveData.tweenAnim = null;
+        if (this.mMoveData) {
             this.mMoveData = null;
         }
         if (this.mDisplay) {
@@ -344,39 +347,21 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected _doMove() {
-        if (!this.mMoveData.destPos) {
+        if (!this.mMoveData || !this.mMoveData.destPos) {
             Logger.getInstance().log("stopDoMove");
             return;
         }
-        const tw: Tweens.Tween = this.mMoveData.tweenAnim;
-
-        if (tw) {
-            tw.stop();
-            tw.remove();
+        Logger.getInstance().debug("move 111");
+        if (this.mCurState === PlayerState.WALK) {
+            // (this.mDisplay.moveTo as MoveToPlugin).isRunning = false;
+            // this.changeState(PlayerState.IDLE);
+        } else {
         }
-        const time: number = this.mMoveData.arrivalTime - this.roomService.now();
-        // Logger.getInstance().debug(`time:${time},posX:${this.mMoveData.destPos.x},posY:${this.mMoveData.destPos.y}`); // ,arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
-        this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
-            targets: this.mDisplay,
-            duration: time,
-            ease: "Linear",
-            props: {
-                x: { value: this.mMoveData.destPos.x },
-                y: { value: this.mMoveData.destPos.y },
-            },
-            onStart: () => {
-                this.onMoveStart();
-            },
-            onComplete: (tween, targets, element) => {
-                // Logger.getInstance().debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
-                this.onMoveComplete();
-            },
-            onUpdate: (tween, targets, element) => {
-                // Logger.getInstance().debug("moveing:" + this.mDisplay.x + "-" + this.mDisplay.y);
-                this.onMoving();
-            },
-            onCompleteParams: [this],
-        });
+        this.onMoveStart();
+        const now: number = this.roomService.now();
+        const speed: number = Tool.twoPointDistance(this.mMoveData.destPos, this.getPosition()) / ((this.mMoveData.arrivalTime - now) / 1000);
+        (this.mDisplay.moveTo as MoveToPlugin).setSpeed(speed);
+        (this.mDisplay.moveTo as MoveToPlugin).moveTo(this.mMoveData.destPos.x, this.mMoveData.destPos.y);
     }
 
     protected createDisplay(): ElementDisplay {
@@ -412,6 +397,10 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         room.addToSurface(this.mDisplay);
+        const scene = this.mElementManager.scene;
+        this.mDisplay.moveTo = (scene.plugins.get("rexMoveTo") as MoveToPlugin).add(this.mDisplay, { speed: 60, rotateToTarget: false }).on("complete", () => {
+            this.onMoveComplete();
+        });
         this.setDepth();
     }
 
@@ -466,7 +455,8 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onMoveComplete() {
-        this.mMoveData.tweenAnim.stop();
+        this.stopMove();
+        // this.mMoveData.tweenAnim.stop();
     }
 
     protected onMoving() {

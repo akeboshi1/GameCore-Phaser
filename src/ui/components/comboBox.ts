@@ -27,6 +27,8 @@ export class ComboBox extends Phaser.GameObjects.Container implements ISelectCal
     private mItemBG: Phaser.GameObjects.Graphics;
     private mtxt: Phaser.GameObjects.Text;
     private mArrow: Phaser.GameObjects.Image;
+    private mInitialize: boolean = false;
+    private mData: any;
     constructor(scene: Phaser.Scene, config: IComboboxRes) {
         super(scene);
         this.mScene = scene;
@@ -45,6 +47,10 @@ export class ComboBox extends Phaser.GameObjects.Container implements ISelectCal
     }
 
     public set text(value: string[]) {
+        if (!this.mInitialize) {
+            this.mData = this.itemList[0].itemData;
+            return;
+        }
         if (this.itemList) {
             const itemLen: number = this.itemList.length;
             for (let i: number = 0; i < itemLen; i++) {
@@ -89,7 +95,8 @@ export class ComboBox extends Phaser.GameObjects.Container implements ISelectCal
         const resKey: string = this.mConfig.resKey;
         const resPng: string = this.mConfig.resPng;
         const resJson: string = this.mConfig.resJson;
-        if (!this.mScene.cache.obj.has(resKey)) {
+        this.mInitialize = false;
+        if (!this.mScene.textures.exists(resKey)) {
             this.mScene.load.atlas(resKey, resPng, resJson);
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
             this.mScene.load.start();
@@ -122,6 +129,10 @@ export class ComboBox extends Phaser.GameObjects.Container implements ISelectCal
 
         this.mBg.setInteractive();
         this.mBg.on("pointerdown", this.openHandler, this);
+        this.mInitialize = true;
+        if (this.mData) {
+            this.selectCall(this.mData);
+        }
     }
 
     private openHandler() {

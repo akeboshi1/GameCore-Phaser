@@ -1,17 +1,881 @@
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
+/*!*****************************************!*\
+  !*** ./src/game/world.ts + 258 modules ***!
+  \*****************************************/
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+/*! exports provided: World */
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
+/*! all exports used */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/fsm.js because of ./src/ui/components/scroller.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/containerlite/ContainerLite.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/inputtext/InputText.js because of ./src/ui/bag/bagView/bagMediator.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/ninepatch/NinePatch.js because of ./src/ui/components/dynamic.ninepatch.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText.js because of ./src/ui/InteractivePanel/InteractivePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/Text.js because of ./src/ui/InteractivePanel/InteractivePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/textstyle/TextStyle.js because of ./src/ui/InteractivePanel/InteractivePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/pool.js because of ./src/ui/InteractivePanel/InteractivePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/actions/GlobZone.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/defaultbounds/GetDefaultBounds.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/eventemitter/EventEmitterMethods.js because of ./src/ui/components/scroller.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/mask/DefaultMask.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/object/Clear.js because of ./src/ui/InteractivePanel/InteractivePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/object/GetValue.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/object/NOOP.js because of ./src/ui/InteractivePanel/InteractivePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/size/ResizeGameObject.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/system/GetSceneObject.js because of ./src/ui/components/scroller.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/system/IsSceneObject.js because of ./src/ui/components/scroller.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/text/IsTextGameObject.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/basesizer/BaseSizer.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/container/Container.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/sizer/Sizer.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/slider/Slider.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/textarea/TextArea.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/textblock/TextBlock.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/AlignConst.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/GetBoundsConfig.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/GetScrollMode.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/GetSizerConfig.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/OrientationConst.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/ScrollModeConst.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/scrollable/Scrollable.js because of ./src/ui/chat/pc/chatPanel.pc.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/phaser/dist/phaser.js-exposed (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/game-capsule/dist/index.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/net-socket-packet/dist/index.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/node-libs-browser/node_modules/buffer/index.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/pixelpai_proto/protocols.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/simple-sha1/browser.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/const/MessageType.ts because of ./src/ui/bag/bagView/bagMediator.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/const/constants.ts because of ./src/ui/Notice/NoticePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/alert/alert.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/components/comboBox.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/components/dynamic.image.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/components/dynamic.ninepatch.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/components/dynamic.sprite.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/debuglog/debug.logger.mediator.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/ui.manager.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/utils/font.ts because of ./src/ui/Notice/NoticePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/utils/log.ts because of ./src/ui/ui.manager.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/utils/pos.ts because of ./src/ui/baseView/mobile/icon.btn.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/utils/resUtil.ts because of ./src/ui/Notice/NoticePanel.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/worker-loader/dist/cjs.js?name=js/[hash].[name].js!./src/net/heartbeatworker.ts (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/worker-loader/dist/cjs.js?name=js/[hash].[name].js!./src/net/networker.ts (<- Module is not an ECMAScript module) */
+
+/*!******************************!*\
+  !*** ./src/utils/resUtil.ts ***!
+  \******************************/
+
+/*! exports provided: Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton */
+
+/*! exports used: Background, BlackButton, BlueButton, Border, CloseButton, ResUtils, TransparentButton, Url, WhiteButton */
+
+/*!**************************!*\
+  !*** ./src/utils/log.ts ***!
+  \**************************/
+
+/*! exports provided: Logger, log, error */
+
+/*! exports used: Logger */
+
+/*!************************************!*\
+  !*** ./src/ui/components/panel.ts ***!
+  \************************************/
+
+/*! exports provided: Panel */
+
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element) */
+
+/*!**************************!*\
+  !*** ./src/utils/pos.ts ***!
+  \**************************/
+
+/*! exports provided: Pos */
+
+/*! exports used: Pos */
+
+/*!********************************!*\
+  !*** ./src/ui/baseMediator.ts ***!
+  \********************************/
+
+/*! exports provided: BaseMediator */
+
+/*!*****************************************!*\
+  !*** ./src/ui/components/nine.patch.ts ***!
+  \*****************************************/
+
+/*! exports provided: NinePatch */
+
+/*!**********************************************************!*\
+  !*** ./lib/rexui/plugins/utils/system/GetSceneObject.js ***!
+  \**********************************************************/
+
+/*! exports provided: default */
+
+/*! exports used: default */
+
+/*!**********************************!*\
+  !*** ./src/const/MessageType.ts ***!
+  \**********************************/
+
+/*! exports provided: MessageType */
+
+/*! exports used: MessageType */
+
+/*!***********************************************!*\
+  !*** ./src/ui/components/ninepatch.button.ts ***!
+  \***********************************************/
+
+/*! exports provided: NinePatchButton */
+
+/*!********************************************!*\
+  !*** ./src/ui/baseView/mobile/icon.btn.ts ***!
+  \********************************************/
+
+/*! exports provided: IconBtn */
+
+/*!********************************************!*\
+  !*** ./src/ui/components/dynamic.image.ts ***!
+  \********************************************/
+
+/*! exports provided: DynamicImage */
+
+/*!**************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/inputtext/InputText.js + 1 modules ***!
+  \**************************************************************************/
+
+/*!***********************************************************!*\
+  !*** ./lib/rexui/templates/ui/sizer/Sizer.js + 9 modules ***!
+  \***********************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/actions/GlobZone.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/size/ResizeGameObject.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/basesizer/BaseSizer.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/AlignConst.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/GetBoundsConfig.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/OrientationConst.js because of ./src/game/world.ts */
+
+/*!*********************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText.js + 1 modules ***!
+  \*********************************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/Text.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/textstyle/TextStyle.js because of ./src/game/world.ts */
+
+/*!************************************************!*\
+  !*** ./lib/rexui/plugins/utils/object/NOOP.js ***!
+  \************************************************/
+
+/*!**********************************************************!*\
+  !*** ./lib/rexui/plugins/utils/size/ResizeGameObject.js ***!
+  \**********************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./lib/rexui/plugins/utils/eventemitter/EventEmitterMethods.js ***!
+  \*********************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/text/textbase/const.js ***!
+  \**************************************************************/
+
+/*!********************************************!*\
+  !*** ./src/ui/baseView/mainUI.mediator.ts ***!
+  \********************************************/
+
+/*! exports provided: MainUIMediator */
+
+/*!*********************************!*\
+  !*** ./src/ui/bag/item.slot.ts ***!
+  \*********************************/
+
+/*! exports provided: ItemSlot */
+
+/*!**********************************************!*\
+  !*** ./lib/rexui/plugins/fsm.js + 1 modules ***!
+  \**********************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/eventemitter/EventEmitterMethods.js because of ./src/game/world.ts */
+
+/*!***************************!*\
+  !*** ./src/utils/font.ts ***!
+  \***************************/
+
+/*! exports provided: Font */
+
+/*! exports used: Font */
+
+/*!*****************************************************!*\
+  !*** ./lib/rexui/plugins/utils/actions/GlobZone.js ***!
+  \*****************************************************/
+
+/*!********************************************************************!*\
+  !*** ./lib/rexui/templates/ui/basesizer/BaseSizer.js + 30 modules ***!
+  \********************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/defaultbounds/GetDefaultBounds.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/system/GetSceneObject.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/container/Container.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/GetSizerConfig.js because of ./src/game/world.ts */
+
+/*!**************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/ninepatch/NinePatch.js + 7 modules ***!
+  \**************************************************************************/
+
+/*!***********************************!*\
+  !*** ./src/ui/ui.mediatorType.ts ***!
+  \***********************************/
+
+/*! exports provided: UIMediatorType */
+
+/*!**************************************!*\
+  !*** ./src/ui/chat/chat.mediator.ts ***!
+  \**************************************/
+
+/*! exports provided: ChatMediator */
+
+/*!*********************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/GetBoundsConfig.js ***!
+  \*********************************************************/
+
+/*!*****************************************************!*\
+  !*** ./lib/rexui/plugins/utils/mask/DefaultMask.js ***!
+  \*****************************************************/
+
+/*!************************************!*\
+  !*** ./src/ui/bag/dragDropIcon.ts ***!
+  \************************************/
+
+/*! exports provided: DragDropIcon */
+
+/*!***********************************************!*\
+  !*** ./lib/rexui/plugins/pool.js + 1 modules ***!
+  \***********************************************/
+
+/*!*******************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/GetScrollMode.js ***!
+  \*******************************************************/
+
+/*!****************************************!*\
+  !*** ./src/ui/chat/base.chat.panel.ts ***!
+  \****************************************/
+
+/*! exports provided: BaseChatPanel */
+
+/*!*************************************************!*\
+  !*** ./src/ui/baseView/mobile/mainUI.mobile.ts ***!
+  \*************************************************/
+
+/*! exports provided: MainUIMobile */
+
+/*!********************************!*\
+  !*** ./src/ui/tips/toolTip.ts ***!
+  \********************************/
+
+/*! exports provided: ToolTip */
+
+/*!************************************!*\
+  !*** ./src/ui/components/radio.ts ***!
+  \************************************/
+
+/*! exports provided: Radio, RadioItemRender */
+
+/*!*******************************************!*\
+  !*** ./src/ui/bag/bagView/bagMediator.ts ***!
+  \*******************************************/
+
+/*! exports provided: DragType, DropType, BagMediator */
+
+/*!***************************************!*\
+  !*** ./src/ui/Rank/BasicRankPanel.ts ***!
+  \***************************************/
+
+/*! exports provided: BasicRankPanel */
+
+/*!*********************************************!*\
+  !*** ./src/ui/components/dynamic.sprite.ts ***!
+  \*********************************************/
+
+/*! exports provided: DynamicSprite */
+
+/*!************************************************!*\
+  !*** ./src/ui/components/dynamic.ninepatch.ts ***!
+  \************************************************/
+
+/*! exports provided: DynamicNinepatch */
+
+/*!**************************************************!*\
+  !*** ./src/ui/debuglog/debug.logger.mediator.ts ***!
+  \**************************************************/
+
+/*! exports provided: DebugLoggerMediator */
+
+/*!*****************************************!*\
+  !*** ./src/ui/debuglog/debug.logger.ts ***!
+  \*****************************************/
+
+/*! exports provided: DebugLogger */
+
+/*!*********************************************!*\
+  !*** ./src/ui/components/patches.config.ts ***!
+  \*********************************************/
+
+/*! exports provided: normalizePatchesConfig */
+
+/*!******************************!*\
+  !*** ./src/ui/ui.manager.ts ***!
+  \******************************/
+
+/*! exports provided: UiManager */
+
+/*!****************************************!*\
+  !*** ./src/ui/chat/pc/chatPanel.pc.ts ***!
+  \****************************************/
+
+/*! exports provided: ChatPanelPC */
+
+/*!********************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/GetSizerConfig.js ***!
+  \********************************************************/
+
+/*!****************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/AlignConst.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./lib/rexui/plugins/utils/object/GetValue.js ***!
+  \****************************************************/
+
+/*! no static exports found */
+
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+
+/*!*******************************************!*\
+  !*** ./src/ui/components/check.button.ts ***!
+  \*******************************************/
+
+/*! exports provided: CheckButton */
+
+/*!*************************************************!*\
+  !*** ./lib/rexui/plugins/utils/object/Clear.js ***!
+  \*************************************************/
+
+/*!************************************************!*\
+  !*** ./src/ui/chat/mobile/chatPanel.mobile.ts ***!
+  \************************************************/
+
+/*! exports provided: ChatPanelMobile */
+
+/*!*************************************************!*\
+  !*** ./src/ui/baseView/mobile/top.btn.group.ts ***!
+  \*************************************************/
+
+/*! exports provided: TopBtnGroup */
+
+/*!***************************************************!*\
+  !*** ./src/ui/baseView/mobile/right.btn.group.ts ***!
+  \***************************************************/
+
+/*! exports provided: RightBtnGroup */
+
+/*!****************************************************!*\
+  !*** ./src/ui/baseView/mobile/bottom.btn.group.ts ***!
+  \****************************************************/
+
+/*! exports provided: BottomBtnGroup */
+
+/*!**************************************************!*\
+  !*** ./src/ui/baseView/mobile/left.btn.group.ts ***!
+  \**************************************************/
+
+/*! exports provided: LeftBtnGroup */
+
+/*!***************************************************!*\
+  !*** ./src/ui/baseView/mobile/icon.select.btn.ts ***!
+  \***************************************************/
+
+/*! exports provided: IconSelectBtn */
+
+/*!*****************************************!*\
+  !*** ./src/ui/baseView/pc/mainUI.pc.ts ***!
+  \*****************************************/
+
+/*! exports provided: MainUIPC */
+
+/*!*********************************!*\
+  !*** ./src/ui/layer.manager.ts ***!
+  \*********************************/
+
+/*! exports provided: LayerManager */
+
+/*!*****************************************!*\
+  !*** ./src/ui/Notice/NoticeMediator.ts ***!
+  \*****************************************/
+
+/*! exports provided: NoticeMediator */
+
+/*!**************************************!*\
+  !*** ./src/ui/Notice/NoticePanel.ts ***!
+  \**************************************/
+
+/*! exports provided: NoticePanel */
+
+/*!****************************************!*\
+  !*** ./src/ui/bag/bagView/bagPanel.ts ***!
+  \****************************************/
+
+/*! exports provided: BagPanel */
+
+/*!******************************************!*\
+  !*** ./src/ui/friend/friend.mediator.ts ***!
+  \******************************************/
+
+/*! exports provided: FriendMediator */
+
+/*!***************************************!*\
+  !*** ./src/ui/friend/friend.panel.ts ***!
+  \***************************************/
+
+/*! exports provided: FriendPanel, FriendItem */
+
+/*!****************************************************!*\
+  !*** ./src/ui/ComponentRank/ComponentRankPanel.ts ***!
+  \****************************************************/
+
+/*! exports provided: ComponentRankPanel */
+
+/*!******************************************!*\
+  !*** ./src/ui/ControlF/ControlFPanel.ts ***!
+  \******************************************/
+
+/*! exports provided: ControlFPanel */
+
+/*!*****************************************************!*\
+  !*** ./src/ui/InteractivePanel/InteractivePanel.ts ***!
+  \*****************************************************/
+
+/*! exports provided: InteractivePanel */
+
+/*!*************************************************************!*\
+  !*** ./src/ui/InteractivePanel/InteractivePanelMediator.ts ***!
+  \*************************************************************/
+
+/*! exports provided: InteractivePanelMediator */
+
+/*!*****************************************!*\
+  !*** ./src/ui/ItemDetail/ItemDetail.ts ***!
+  \*****************************************/
+
+/*! exports provided: ItemDetail */
+
+/*!*********************************************!*\
+  !*** ./src/ui/MessageBox/MessageBoxView.ts ***!
+  \*********************************************/
+
+/*! exports provided: MessageBoxView */
+
+/*!**********************************!*\
+  !*** ./src/ui/Rank/RankPanel.ts ***!
+  \**********************************/
+
+/*! exports provided: RankPanel */
+
+/*!*************************************!*\
+  !*** ./src/ui/Shop/ShopMediator.ts ***!
+  \*************************************/
+
+/*! exports provided: ShopMediator */
+
+/*!**********************************!*\
+  !*** ./src/ui/Shop/ShopPanel.ts ***!
+  \**********************************/
+
+/*! exports provided: ShopPanel */
+
+/*!******************************************!*\
+  !*** ./src/ui/UserInfo/UserInfoPanel.ts ***!
+  \******************************************/
+
+/*! exports provided: UserInfoPanel */
+
+/*!*************************************!*\
+  !*** ./src/ui/UserMenu/MenuItem.ts ***!
+  \*************************************/
+
+/*! exports provided: MenuItem */
+
+/*!******************************************!*\
+  !*** ./src/ui/UserMenu/UserMenuPanel.ts ***!
+  \******************************************/
+
+/*! exports provided: UserMenuPanel */
+
+/*!*******************************!*\
+  !*** ./src/ui/alert/alert.ts ***!
+  \*******************************/
+
+/*! exports provided: Alert */
+
+/*!***************************************!*\
+  !*** ./src/ui/components/comboBox.ts ***!
+  \***************************************/
+
+/*! exports provided: ComboBox, SelectCallItem */
+
+/*!*************************************************************!*\
+  !*** ./lib/rexui/templates/ui/slider/Slider.js + 9 modules ***!
+  \*************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/sizer/Sizer.js because of ./src/game/world.ts */
+
+/*!*****************************************************************!*\
+  !*** ./lib/rexui/templates/ui/textarea/TextArea.js + 3 modules ***!
+  \*****************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/textblock/TextBlock.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/scrollable/Scrollable.js because of ./src/game/world.ts */
+
+/*!***************************************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/scrollable/Scrollable.js + 2 modules ***!
+  \***************************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/input/scroller/Scroller.js because of ./src/ui/components/scroller.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/slider/Slider.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/templates/ui/utils/GetScrollMode.js because of ./src/game/world.ts */
+
+/*!**************************************************!*\
+  !*** ./src/ui/Shop/shop.itemSlot.ts + 1 modules ***!
+  \**************************************************/
+
+/*! exports provided: ShopItemSlot */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/bag/dragDropIcon.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/bag/item.slot.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/ui/tips/toolTip.ts (<- Module is referenced from these modules with unsupported syntax: ./src/ui sync ^\.\/.*$ (referenced with context element)) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./src/utils/resUtil.ts because of ./src/game/world.ts */
+
+/*!****************************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules ***!
+  \****************************************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/const.js because of ./src/game/world.ts */
+
+/*!********************************!*\
+  !*** ./src/const/constants.ts ***!
+  \********************************/
+
+/*! exports provided: PI_EXTENSION_REGEX, HTTP_REGEX */
+
+/*! exports used: HTTP_REGEX, PI_EXTENSION_REGEX */
+
+/*!*******************************************************!*\
+  !*** ./lib/rexui/templates/ui/container/Container.js ***!
+  \*******************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./lib/rexui/plugins/utils/defaultbounds/GetDefaultBounds.js ***!
+  \*******************************************************************/
+
+/*!*********************************************************!*\
+  !*** ./lib/rexui/plugins/utils/system/IsSceneObject.js ***!
+  \*********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/OrientationConst.js ***!
+  \**********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./lib/rexui/templates/ui/utils/ScrollModeConst.js ***!
+  \*********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./lib/rexui/plugins/utils/text/IsTextGameObject.js ***!
+  \**********************************************************/
+
+/*!***************************!*\
+  !*** ./src/utils/tool.ts ***!
+  \***************************/
+
+/*! exports provided: Tool */
+
+/*! exports used: Tool */
+
+/*!*******************************************************!*\
+  !*** ./src/ui/ComponentRank/ComponentRankMediator.ts ***!
+  \*******************************************************/
+
+/*! exports provided: ComponentRankMediator */
+
+/*!*********************************************!*\
+  !*** ./src/ui/ControlF/ControlFMediator.ts ***!
+  \*********************************************/
+
+/*! exports provided: ControlFMediator */
+
+/*!*************************************************!*\
+  !*** ./src/ui/ItemDetail/ItemDetailMediator.ts ***!
+  \*************************************************/
+
+/*! exports provided: ItemDetailMediator */
+
+/*!*************************************************!*\
+  !*** ./src/ui/MessageBox/MessageBoxMediator.ts ***!
+  \*************************************************/
+
+/*! exports provided: MessageBoxMediator */
+
+/*!*************************************!*\
+  !*** ./src/ui/Rank/RankMediator.ts ***!
+  \*************************************/
+
+/*! exports provided: RankMediator */
+
+/*!*********************************************!*\
+  !*** ./src/ui/UserInfo/UserInfoMediator.ts ***!
+  \*********************************************/
+
+/*! exports provided: UserInfoMediator */
+
+/*!*********************************************!*\
+  !*** ./src/ui/UserMenu/UserMenuMediator.ts ***!
+  \*********************************************/
+
+/*! exports provided: UserMenuMediator */
+
+/*!*********************************!*\
+  !*** ./src/ui/abstractPanel.ts ***!
+  \*********************************/
+
+/*!***************************************!*\
+  !*** ./src/ui/bag/IListItemRender.ts ***!
+  \***************************************/
+
+/*!*******************************!*\
+  !*** ./src/ui/bag/basebag.ts ***!
+  \*******************************/
+
+/*!********************************!*\
+  !*** ./src/ui/bag/baseitem.ts ***!
+  \********************************/
+
+/*!*********************************!*\
+  !*** ./src/ui/bag/idragable.ts ***!
+  \*********************************/
+
+/*!*********************************!*\
+  !*** ./src/ui/bag/idropable.ts ***!
+  \*********************************/
+
+/*!***********************************************!*\
+  !*** ./src/ui/bag/storage/storageMediator.ts ***!
+  \***********************************************/
+
+/*! exports provided: StorageMediator */
+
+/*!********************************************!*\
+  !*** ./src/ui/bag/storage/storagePanel.ts ***!
+  \********************************************/
+
+/*! exports provided: StoragePanel */
+
+/*!********************************!*\
+  !*** ./src/ui/chat/message.ts ***!
+  \********************************/
+
+/*!******************************************!*\
+  !*** ./src/ui/components/message.box.ts ***!
+  \******************************************/
+
+/*! exports provided: MessageBoxUI, MessageBtn */
+
+/*!***************************************!*\
+  !*** ./src/ui/components/scroller.ts ***!
+  \***************************************/
+
+/*! exports provided: ScrollerContainer */
+
+/*!********************************************!*\
+  !*** ./src/ui/components/scroller.view.ts ***!
+  \********************************************/
+
+/*! exports provided: DirectionType, SrollerView */
+
+/*!****************************!*\
+  !*** ./src/ui/loadview.ts ***!
+  \****************************/
+
+/*! exports provided: LoadingView */
+
+/*!*********************************!*\
+  !*** ./src/ui/tips/itoolTip.ts ***!
+  \*********************************/
+
+/*!***********************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/containerlite/ContainerLite.js + 13 modules ***!
+  \***********************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/text/textbase/Text.js + 11 modules ***!
+  \**************************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/render/CanvasRenderer.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/text/textbase/render/WebGLRenderer.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/pool.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/object/Clear.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/object/NOOP.js because of ./src/game/world.ts */
+
+/*!********************************************************************!*\
+  !*** ./lib/rexui/templates/ui/textblock/TextBlock.js + 10 modules ***!
+  \********************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/mask/DefaultMask.js because of ./src/game/world.ts */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/text/IsTextGameObject.js because of ./src/game/world.ts */
+
+/*!******************************************************************!*\
+  !*** ./lib/rexui/plugins/input/scroller/Scroller.js + 5 modules ***!
+  \******************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/fsm.js because of ./src/game/world.ts */
+
+/*!******************************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle.js + 4 modules ***!
+  \******************************************************************************************/
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/shape/roundrectangle/render/CanvasRenderer.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/gameobjects/shape/roundrectangle/render/WebGLRenderer.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/geom/polygon/Earcut.js (<- Module is not an ECMAScript module) */
+
+/*! ModuleConcatenation bailout: Cannot concat with ./lib/rexui/plugins/utils/math/DegToRad.js (<- Module is not an ECMAScript module) */
+
+/*!************************************************!*\
+  !*** ./lib/dragonBones/dragonBones.js-exposed ***!
+  \************************************************/
+
+/*!****************************************!*\
+  !*** ./lib/dragonBones/dragonBones.js ***!
+  \****************************************/
+
+/*!************************************************************************************************!*\
+  !*** ./node_modules/worker-loader/dist/cjs.js?name=js/[hash].[name].js!./src/net/networker.ts ***!
+  \************************************************************************************************/
+
+/*!******************************************************************************************************!*\
+  !*** ./node_modules/worker-loader/dist/cjs.js?name=js/[hash].[name].js!./src/net/heartbeatworker.ts ***!
+  \******************************************************************************************************/
+
+/*!**************************************************!*\
+  !*** ./lib/rexui/plugins/utils/math/DegToRad.js ***!
+  \**************************************************/
+
+/*!********************************************************!*\
+  !*** ./lib/rexui/plugins/utils/geom/polygon/Earcut.js ***!
+  \********************************************************/
+
+/*!************************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/roundrectangle/render/WebGLRenderer.js ***!
+  \************************************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/utils/FillPathWebGL.js ***!
+  \********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/utils/StrokePathWebGL.js ***!
+  \**********************************************************************/
+
+/*!*************************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/roundrectangle/render/CanvasRenderer.js ***!
+  \*************************************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/utils/FillStyleCanvas.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/shape/utils/LineStyleCanvas.js ***!
+  \**********************************************************************/
+
+/*!*****************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/text/textbase/render/WebGLRenderer.js ***!
+  \*****************************************************************************/
+
+/*!******************************************************************************!*\
+  !*** ./lib/rexui/plugins/gameobjects/text/textbase/render/CanvasRenderer.js ***!
+  \******************************************************************************/
+
+/*!******************************!*\
+  !*** ./src/ui sync ^\.\/.*$ ***!
+  \******************************/

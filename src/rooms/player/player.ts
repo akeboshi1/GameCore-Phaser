@@ -3,7 +3,6 @@ import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
-import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 
 export class Player extends Element {

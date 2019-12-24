@@ -27,6 +27,7 @@ import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
 import InputTextPlugin from "../../lib/rexui/plugins/inputtext-plugin.js";
 import BBCodeTextPlugin from "../../lib/rexui/plugins/bbcodetext-plugin.js";
+import MoveToPlugin from "../../lib/rexui/plugins/moveto-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
@@ -428,6 +429,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 {
                     key: "rexBBCodeTextPlugin",
                     plugin: BBCodeTextPlugin,
+                    start: true
+                },
+                {
+                    key: "rexMoveTo",
+                    plugin: MoveToPlugin,
                     start: true
                 }],
                 scene: [

@@ -157,7 +157,6 @@ export class Terrain extends BlockObject implements IElement {
             Logger.getInstance().error("roomService does not exist");
             return;
         }
-
         room.addToGround(this.mDisplay);
         this.setDepth();
     }
