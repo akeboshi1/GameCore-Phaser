@@ -16,11 +16,13 @@ import {Pos} from "../utils/pos";
 import {PlayerManager} from "./player/player.manager";
 import { Map } from "./map/map";
 import {PacketHandler, PBpacket} from "net-socket-packet";
-import {EditScene} from "../scenes/edit";
 import {SelectedElement} from "./decorate/selected.element";
 import {LoadingScene} from "../scenes/loading";
 import {PlayScene} from "../scenes/play";
 import {Logger} from "../utils/log";
+import { FramesDisplay } from "./display/frames.display";
+import { DisplayObject } from "./display/display.object";
+import { TerrainDisplay } from "./display/terrain.display";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly actor: Actor;
@@ -135,6 +137,8 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         // this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mTerrainManager = new TerrainManager(this);
         this.mElementManager = new ElementManager(this);
+        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
         this.mCameraService.camera = this.scene.cameras.main;
         // const mainCameras = this.mScene.cameras.main;
@@ -164,6 +168,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     update(time: number, delta: number): void {
+        if (this.mLayerManager) {
+            this.mLayerManager.update(time, delta);
+        }
     }
 
     updateClock(time: number, delta: number): void {
@@ -177,12 +184,54 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.mCameraService.resize(width, height);
     }
 
-    private onGameobjectUpHandler(pointer, gameobject) {
-
+    private addPointerMoveHandler() {
+        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.on("gameout", this.onGameOutHandler, this);
     }
 
-    private selectedElement(display: ElementDisplay) {
+    private removePointerMoveHandler() {
+        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.off("gameout", this.onGameOutHandler, this);
+    }
 
+    private onPointerUpHandler() {
+        this.removePointerMoveHandler();
+    }
+
+    private onPointerDownHandler() {
+        this.addPointerMoveHandler();
+    }
+
+    private onGameobjectUpHandler(pointer, gameobject) {
+        const com = gameobject.parentContainer;
+        if (!com) {
+            return;
+        }
+        this.selectedElement(com);
+    }
+
+    private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+        if (!this.mSelectedElement) {
+            return;
+        }
+        this.mSelectedElement.setDisplayPos(pointer.worldX, pointer.worldY);
+    }
+
+    private onGameOutHandler() {
+        this.removePointerMoveHandler();
+    }
+
+    private selectedElement(display: FramesDisplay) {
+        if (!(display instanceof DisplayObject)) {
+            return;
+        }
+        if (display instanceof TerrainDisplay) {
+            return;
+        }
+        if (!this.mSelectedElement) {
+            this.mSelectedElement = new SelectedElement(this.mScene, this.mLayerManager);
+        }
+        this.mSelectedElement.setElement(display);
     }
 
     get id(): number {

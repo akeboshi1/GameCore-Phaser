@@ -21,11 +21,6 @@ export class ElementStorageMediator extends BaseMediator {
         this.mView = new ElementStoragePanel(this.mScene, this.world);
         this.mLayerManager.addToUILayer(this.mView);
         this.mView.show(param);
-
-        const controll = new DecoratePanel(this.mScene);
-        this.mLayerManager.addToUILayer(controll);
-        controll.show();
-        super.show(param);
     }
 
     isSceneUI(): boolean {

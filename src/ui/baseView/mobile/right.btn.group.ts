@@ -30,12 +30,14 @@ export class RightBtnGroup extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.refreshSlot();
+        return;
+        // this.refreshSlot();
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const padHei: number = !mainUIMed ? this.height / 2 : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
+                return;
                 const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
                 this.y = size.height - (this.height) * this.mWorld.uiScale;
                 this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
