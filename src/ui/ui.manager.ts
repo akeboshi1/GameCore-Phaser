@@ -17,6 +17,7 @@ export class UiManager extends PacketHandler {
     private mMedMap: Map<UIMediatorType, IMediator>;
     private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
+    
     constructor(private worldService: WorldService) {
         super();
 

@@ -1,6 +1,6 @@
 import { Panel } from "../components/panel";
 import { op_client } from "pixelpai_proto";
-import { Background, BlueButton, Border, Url } from "../../utils/resUtil";
+import { Background, Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
@@ -28,11 +28,11 @@ export class BasicRankPanel extends Panel {
             this.mTitleLabel.setData("node", texts[0].node);
         }
 
-        const locX = [12, 60, 238];
+        const locX = [-this.mWidth / 2 + 15, -this.mWidth / 2 + 63, -this.mWidth / 2 + 241];
         for (let i = 1; i < 4; i++) {
             const text = this.scene.make.text({
                 x: locX[i - 1],
-                y: 27,
+                y: -this.mHeight / 2 + 22,
                 text: texts[i].text,
                 style: { font: Font.YAHEI_16_BOLD }
             }, false);
@@ -45,7 +45,7 @@ export class BasicRankPanel extends Panel {
         for (let i = 4; i < texts.length; i++) {
             const t = texts[i];
             const x = (i - 4) % 3;
-            const y = Math.floor((i - 4) / 3) * 27;
+            const y = Math.floor((i - 4) / 3) * (-this.mHeight / 2 + 22);
             const text = this.scene.make.text({
                 x: locX[x],
                 y: 60 + y,
@@ -99,56 +99,26 @@ export class BasicRankPanel extends Panel {
         this.mWidth = 328;
         this.mHeight = 361;
         this.setSize(this.mWidth, this.mHeight);
-
-        // this.mBackground = new NinePatch(this.scene, {
-        //     x: 0,
-        //     y: 0,
-        //     width: 328,
-        //     height: 361,
-        //     key: Background.getName(),
-        //     columns: Background.getColumns(),
-        //     rows: Background.getRows()
-        // }).setOrigin(0, 0);
-        // this.add(this.mBackground);
-
-        this.mBackground = new NinePatch(this.scene, 0, 180, 328, 361, Background.getName(), null, Background.getConfig());
-        this.mBackground.x = this.mBackground.width >> 1;
-        this.mBackground.y = this.mBackground.height >> 1;
+        this.mBackground = new NinePatch(this.scene, 0, 0, 328, 361, Background.getName(), null, Background.getConfig());
         this.add(this.mBackground);
-
         this.mContentContainer = this.scene.make.container({}, false);
         this.add(this.mContentContainer);
-
-        const border = new NinePatch(this.scene, 8, 20, 315, 318, Border.getName(), null, Border.getConfig());
-        border.x = 8 + (border.width >> 1);
-        border.y = 20 + (border.height >> 1);
+        const border = new NinePatch(this.scene, 0, 0, 315, 318, Border.getName(), null, Border.getConfig());
         this.mContentContainer.add(border);
-
-        // const border = new NinePatch(this.scene, {
-        //     x: 8,
-        //     y: 20,
-        //     width: 315,
-        //     height: 318,
-        //     key: Border.getName(),
-        //     columns: Border.getColumns(),
-        //     rows: Border.getRows()
-        // }).setOrigin(0, 0);
-        // this.mContentContainer.add(border);
-
         const titleIcon = this.scene.make.image({
-            x: 20,
-            y: -15,
+            x: -this.mWidth / 2 + 20,
+            y: -this.mHeight / 2 - 12,
             key: "rank_atlas",
             frame: "icon.png",
         }, false).setOrigin(0, 0);
         this.add(titleIcon);
-
         this.mTitleLabel = this.scene.make.text({
-            x: 54,
+            x: -this.mWidth / 2 + 54,
+            y: -this.mHeight / 2 - 10,
             text: "排行榜",
             style: { font: Font.YAHEI_20_BOLD }
         })
-            .setOrigin(0, 0.5)
+            .setOrigin(0, 0)
             .setStroke("#000000", 2);
         this.add(this.mTitleLabel);
         super.init();

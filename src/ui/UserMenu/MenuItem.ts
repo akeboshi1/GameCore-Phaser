@@ -16,7 +16,7 @@ export class MenuItem extends NinePatchButton {
         if (!this.mChild) {
             this.mMenus = [];
             this.mChild = this.scene.make.container(undefined, false);
-            this.mChild.x = 42;
+            // this.mChild.x = 42;
             this.mArrow = this.scene.make.image({
                 x: this.width * this.originX - 3,
                 key: "usermenu_arrow"
@@ -29,9 +29,9 @@ export class MenuItem extends NinePatchButton {
         this.mChild.add(menu);
         this.mMenus.push(menu);
 
-        this.mBackground.resize(70, this.mMenus.length * 32);
-        this.mBackground.x = this.mBackground.width * this.mBackground.originX;
-        this.mBackground.y = this.mBackground.height * this.mBackground.originY;
+        this.mBackground.resize(74, this.mMenus.length * 32);
+        this.mBackground.x = this.mBackground.width;
+        this.mBackground.y = this.mBackground.height / 2 - 32 / 2;
     }
 
     public show() {

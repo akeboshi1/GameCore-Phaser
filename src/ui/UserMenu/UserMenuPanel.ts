@@ -20,8 +20,8 @@ export class UserMenuPanel extends Panel {
         }
         this.setData("data", param);
         this.addItem(param);
-        this.x = this.scene.input.activePointer.x;
-        this.y = this.scene.input.activePointer.y;
+        this.x = this.scene.input.activePointer.x + 32;
+        this.y = this.scene.input.activePointer.y + 32;
         this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     }
 
@@ -37,8 +37,8 @@ export class UserMenuPanel extends Panel {
         this.setInteractive();
         if (this.mBackground) {
             this.mBackground.resize(width, height);
-            this.mBackground.x = this.mBackground.width * this.originX;
-            this.mBackground.y = this.mBackground.height * this.originY;
+            // this.mBackground.x = this.mBackground.width * this.originX;
+            // this.mBackground.y = this.mBackground.height * this.originY;
         }
         return this;
     }
@@ -79,7 +79,7 @@ export class UserMenuPanel extends Panel {
         if (!actor) return;
         if (mainPlayer.platformId !== actor.platformId) {
             const fn = { text: "关注", platformid: actor.platformId };
-            const follow = this.appendItem({ text: "关注", node: undefined }, 0, this.mMenus.length * 32);
+            const follow = this.appendItem({ text: "关注", node: undefined }, 0, this.mMenus.length * 31);
             follow.setData("node", fn);
             this.add(follow);
             this.mMenus.push(follow);
@@ -108,24 +108,26 @@ export class UserMenuPanel extends Panel {
     protected init() {
         this.mBackground = new NinePatch(this.scene, 0, 0, 70, 30, Border.getName(), null, Border.getConfig());
         this.add(this.mBackground);
-        this.mBackground.x = this.mBackground.width * this.mBackground.originX;
-        this.mBackground.y = this.mBackground.height * this.mBackground.originY;
+        // this.mBackground.x = this.mBackground.width * this.mBackground.originX;
+        // this.mBackground.y = this.mBackground.height * this.mBackground.originY;
         super.init();
-
         this.addItem(this.getData("data"));
     }
 
     private appendItem(menu: op_gameconfig_01.IMenuItem, x: number, y: number): MenuItem {
-        const item = new MenuItem(this.scene, x, 0, 59, 29, TransparentButton.getName(), menu.text, TransparentButton.getConfig());
-        item.x = x + (item.width >> 1) + (this.width - item.width >> 1);
-        item.y = y + (item.height >> 1);
+        const item = new MenuItem(this.scene, 0, 0, 59, 29, TransparentButton.getName(), menu.text, TransparentButton.getConfig());
+        item.x = x;
+        item.y = y - (item.height >> 1);
         item.setData("node", menu.node);
         if (menu.child && menu.child.length > 0) {
             const menuChild = menu.child;
-            for (const child of menuChild) {
-                const btn = this.appendItem(child, 0, item.menus.length * 32);
+            for (let i: number = 0, len = menuChild.length; i < len; i++) {
+                const child = menuChild[i];
+                // parent的宽，高需要加入
+                const btn = this.appendItem(child, 31 + 42, i * 31 - 31 / 2 + this.mMenus.length * 31);
                 item.appendItem(btn);
             }
+
         }
         return item;
     }
