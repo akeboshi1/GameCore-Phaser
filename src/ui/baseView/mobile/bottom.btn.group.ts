@@ -8,6 +8,7 @@ import { ChatMediator } from "../../chat/chat.mediator";
 import { MainUIMediator } from "../mainUI.mediator";
 import { JoyStickManager } from "../../../game/joystick.manager";
 import { MainUIMobile } from "./mainUI.mobile";
+import { BagMediator } from "../../bag/bagView/bagMediator";
 
 export class BottomBtnGroup extends Panel {
     private mResKey: string;
@@ -43,7 +44,6 @@ export class BottomBtnGroup extends Panel {
                 break;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
-
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
@@ -221,6 +221,7 @@ export class BottomBtnGroup extends Panel {
 
     private bagHandler() {
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+        this.mWorld.uiManager.checkUIState(BagMediator.NAME, false);
         // =============index = 0 为背包按钮
     }
 }

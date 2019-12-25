@@ -2,11 +2,13 @@ import { IMediator, BaseMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
 import { IAbstractPanel } from "../../abstractPanel";
 import { StoragePanel } from "./storagePanel";
+import { UIType } from "../../ui.manager";
 
 export class StorageMediator extends BaseMediator {
     public world: WorldService;
     constructor(world: WorldService) {
         super(world);
+        this.mUIType = UIType.NormalUIType;
     }
     public isShow(): boolean {
         return this.mView.isShow();

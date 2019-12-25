@@ -3,6 +3,7 @@ import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { RankPanel } from "./RankPanel";
 import { ILayerManager } from "../layer.manager";
+import { UIType } from "../ui.manager";
 
 export class RankMediator extends BaseMediator {
     readonly world: WorldService;
@@ -13,6 +14,7 @@ export class RankMediator extends BaseMediator {
         this.world = world;
         this.mScene = scene;
         this.mlayerManager = layerManager;
+        this.mUIType = UIType.NormalUIType;
     }
 
     getName(): string {

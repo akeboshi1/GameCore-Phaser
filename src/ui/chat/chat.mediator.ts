@@ -9,6 +9,7 @@ import { ChatPanelPC } from "./pc/chatPanel.pc";
 import { Panel } from "../components/panel";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
+import { UIType } from "../ui.manager";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
@@ -20,15 +21,21 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mMaxMessageNum = 50;
     private mScene: Phaser.Scene;
     private mParam: any;
+    private mUIType: number;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
         this.mScene = scene;
+        this.mUIType = UIType.BaseUIType;
         if (this.world.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+    }
+
+    public getUIType(): number {
+        return this.mUIType;
     }
 
     public setUiScale(value: number) {

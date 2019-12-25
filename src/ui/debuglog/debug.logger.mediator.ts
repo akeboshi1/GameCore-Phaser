@@ -2,12 +2,14 @@ import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { DebugLogger } from "./debug.logger";
+import { UIType } from "../ui.manager";
 
 export class DebugLoggerMediator extends BaseMediator {
     public static NAME: string = "DebugLoggerMediator";
     private mScene: Phaser.Scene;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(world);
+        this.mUIType = UIType.BaseUIType;
         this.mScene = scene;
     }
 

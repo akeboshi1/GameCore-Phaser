@@ -9,6 +9,7 @@ import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
 import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import { UIType } from "../../ui.manager";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -29,6 +30,7 @@ export class BagMediator extends BaseMediator {
         this.mLayerManager = layerManager;
         this.world = mworld;
         this.mScene = scene;
+        this.mUIType = UIType.NormalUIType;
     }
 
     public isSceneUI(): boolean {
@@ -79,6 +81,7 @@ export class BagMediator extends BaseMediator {
         if (!this.mView) return;
         this.mView.hide();
         this.mView = null;
+        this.world.uiManager.checkUIState(BagMediator.NAME, true);
     }
 
     public destroy() {

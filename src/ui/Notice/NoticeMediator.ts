@@ -6,6 +6,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { IMediator } from "../baseMediator";
 import { World } from "../../game/world";
+import { UIType } from "../ui.manager";
 
 export class NoticeMediator extends PacketHandler implements IMediator {
     readonly world: WorldService;
@@ -13,11 +14,13 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
     private mParam: any;
+    private mUIType: number;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
         this.mLayerManager = layerManager;
         this.mScene = scene;
+        this.mUIType = UIType.TipsUIType;
         const connect = worldService.connection;
         if (connect) {
             connect.addPacketListener(this);
@@ -32,6 +35,10 @@ export class NoticeMediator extends PacketHandler implements IMediator {
 
     getView(): IAbstractPanel {
         return this.mNoticePanel;
+    }
+
+    getUIType(): number {
+        return this.mUIType;
     }
 
     hide(): void {

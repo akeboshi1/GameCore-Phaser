@@ -2,6 +2,7 @@ import { IAbstractPanel } from "./abstractPanel";
 import { WorldService } from "../game/world.service";
 import { Panel } from "./components/panel";
 import { World } from "../game/world";
+import { UIType } from "./ui.manager";
 
 export interface IMediator {
     readonly world: WorldService;
@@ -11,6 +12,7 @@ export interface IMediator {
     showing(): boolean;
     resize();
     getView(): IAbstractPanel;
+    getUIType(): number;
     show(param?: any): void;
     update(param?: any): void;
     setParam(param): void;
@@ -24,8 +26,10 @@ export class BaseMediator implements IMediator {
     protected mView: Panel;
     protected isShowing: boolean = false;
     protected mParam: any;
+    protected mUIType: number;
     constructor(world?: WorldService) {
         this.world = world;
+        this.mUIType = UIType.NoneUIType;
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
     }
 
@@ -35,6 +39,10 @@ export class BaseMediator implements IMediator {
 
     getView(): IAbstractPanel {
         return this.mView;
+    }
+
+    getUIType(): number {
+        return this.mUIType;
     }
 
     hide(): void {

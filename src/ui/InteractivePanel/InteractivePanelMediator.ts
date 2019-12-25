@@ -4,6 +4,7 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { InteractivePanel } from "./InteractivePanel";
+import { UIType } from "../ui.manager";
 
 export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";
@@ -11,6 +12,7 @@ export class InteractivePanelMediator extends BaseMediator {
     private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
+        this.mUIType = UIType.MonopolyUIType;
         this.mScene = scene;
     }
 

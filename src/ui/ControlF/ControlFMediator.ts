@@ -6,6 +6,7 @@ import { ControlFPanel } from "./ControlFPanel";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { PlayerState } from "../../rooms/element/element";
+import { UIType } from "../ui.manager";
 export class ControlFMediator extends BaseMediator {
     public static NAME: string = "ControlFMediator";
     readonly world: WorldService;
@@ -13,6 +14,7 @@ export class ControlFMediator extends BaseMediator {
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
+        this.mUIType = UIType.TipsUIType;
         this.mScene = scene;
         this.mLayerManager = layerManager;
         this.world = world;

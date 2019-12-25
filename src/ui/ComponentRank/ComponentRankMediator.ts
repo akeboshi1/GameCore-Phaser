@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { ComponentRankPanel } from "./ComponentRankPanel";
+import { UIType } from "../ui.manager";
 
 export class ComponentRankMediator extends BaseMediator {
     readonly world: WorldService;
@@ -10,6 +11,7 @@ export class ComponentRankMediator extends BaseMediator {
     private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super(worldService);
+        this.mUIType = UIType.NormalUIType;
         this.mView = new ComponentRankPanel(scene, worldService);
         layerManager.addToUILayer(this.mView);
         this.mLayerManager = layerManager;
