@@ -12,6 +12,7 @@ import { PlayerModel } from "./player.model";
 import { PlayerState } from "../element/element";
 import { Logger } from "../../utils/log";
 import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
+
 export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
@@ -27,7 +28,9 @@ export class Actor extends Player implements InputListener {
         // this.mRenderable = true; // Actor is always renderable!!!
         // this.addDisplay();
         this.mRoom = this.mElementManager.roomService;
+
         this.mRoom.world.inputManager.addListener(this);
+
         // if (this.mElementManager) {
         //     const roomService = this.mElementManager.roomService;
         //     if (roomService && roomService.cameraService) {
@@ -90,7 +93,6 @@ export class Actor extends Player implements InputListener {
     }
 
     public stopMove() {
-        // 这边把主角的移动给停止
         super.stopMove();
         if (!this.mMoveData || !this.mMoveData.destPos) {
             return;
@@ -102,6 +104,10 @@ export class Actor extends Player implements InputListener {
         }
         delete this.mMoveData.destPos;
         this.mMoveData.arrivalTime = 0;
+        if (this.mMoveData.tweenAnim) {
+            this.mMoveData.tweenAnim.stop();
+            this.mMoveData.tweenAnim.remove();
+        }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
         ct.nodeType = this.nodeType;
@@ -128,23 +134,19 @@ export class Actor extends Player implements InputListener {
     }
 
     protected onMoveStart() {
-        // 主角是客户端先移动，所以状态在startMove这就改变了
     }
 
     protected onMoveComplete() {
         if (this.mCurState !== PlayerState.WALK) {
-            this.changeState(PlayerState.IDLE);
-            // this.mMoveData.tweenAnim.stop();
+            this.mMoveData.tweenAnim.stop();
             return;
         }
-        super.onMoveComplete();
-        // this._doMove();
+        this._doMove();
     }
 
     protected onMoving() {
         if (this.mCurState !== PlayerState.WALK) {
-            this.changeState(PlayerState.IDLE);
-            // this.mMoveData.tweenAnim.stop();
+            this.mMoveData.tweenAnim.stop();
             return;
         }
         super.onMoving();
@@ -170,6 +172,7 @@ export class Actor extends Player implements InputListener {
         this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
+
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;
             if (roomService && roomService.cameraService) {

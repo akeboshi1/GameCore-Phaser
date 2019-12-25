@@ -1,4 +1,4 @@
-import { IMediator, BaseMediator } from "../baseMediator";
+import { BaseMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
