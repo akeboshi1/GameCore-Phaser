@@ -38,6 +38,7 @@ export class Animation implements IAnimationData {
         this.mName = ani.name;
         this.mFrameName = ani.frameName;
         this.mLoop = ani.loop;
+        this.mFrameRate = ani.frameRate;
         this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;
         if (Array.isArray(origin)) {

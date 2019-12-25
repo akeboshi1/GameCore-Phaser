@@ -13,7 +13,10 @@ export class Url {
 
     static getOsdRes(value: string): string {
         if (Url.OSD_PATH) {
-            return Url.OSD_PATH + value;
+            if (HTTP_REGEX.test(Url.OSD_PATH)) {
+                return Url.OSD_PATH + value;
+            }
+            return CONFIG.osd + value;
         }
         return value;
     }
