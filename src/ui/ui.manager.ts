@@ -3,14 +3,13 @@ import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../utils/log";
-import { IMediator, BaseMediator } from "./baseMediator";
+import { IMediator} from "./baseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
-import { DebugLoggerMediator } from "./debuglog/debug.logger.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;

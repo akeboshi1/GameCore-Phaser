@@ -188,6 +188,10 @@ export class Element extends BlockObject implements IElement {
         this.mCurState = val;
     }
 
+    public getState(): string {
+        return this.mCurState;
+    }
+
     public getRenderable(): boolean {
         return this.mRenderable;
     }

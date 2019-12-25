@@ -11,7 +11,7 @@ import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
 import { PlayerState } from "../element/element";
 import { Logger } from "../../utils/log";
-import MoveToPlugin from "../../../lib/rexui/plugins/moveto-plugin.js";
+import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
 export class Actor extends Player implements InputListener {
     // ME 我自己
     readonly GameObject: Phaser.GameObjects.GameObject;
@@ -83,10 +83,15 @@ export class Actor extends Player implements InputListener {
         this.stopMove();
     }
 
+    public startMove() {
+        super.startMove();
+        const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
+        if (med) med.hide();
+    }
+
     public stopMove() {
         // 这边把主角的移动给停止
         super.stopMove();
-
         if (!this.mMoveData || !this.mMoveData.destPos) {
             return;
         }
@@ -165,7 +170,6 @@ export class Actor extends Player implements InputListener {
         this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
-
         if (this.mElementManager) {
             const roomService = this.mElementManager.roomService;
             if (roomService && roomService.cameraService) {
