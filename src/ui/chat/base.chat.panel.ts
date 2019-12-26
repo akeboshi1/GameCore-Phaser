@@ -11,6 +11,9 @@ export class BaseChatPanel extends Panel {
     public setLocation(x?: number, y?: number) {
     }
 
+    public tweenView(show: boolean) {
+    }
+
     get outChannel(): number {
         return 0;
     }

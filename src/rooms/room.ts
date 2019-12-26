@@ -169,6 +169,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public onClockReady(): void {
     // TODO: Unload loading-scene
     Logger.getInstance().debug("onClockReady");
+    Logger.getInstance().debug(new Date().getTime());
     this.clockSyncComplete = true;
   }
 
@@ -326,8 +327,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   public update(time: number, delta: number) {
-    if (this.mWorld.inputManager.enable === false && this.world.game.loop.actualFps >= 20 && this.clockSyncComplete) {
-      this.mWorld.inputManager.enable = true;
+    // 角色管理器和地块，物件管理器中在登陆时，add_sprite完成后，把交互管理器的交互开放
+    if (this.mPlayerManager.hasAddComplete && this.mTerainManager.hasAddComplete && this.mElementManager.hasAddComplete) {
+      if (this.mWorld.inputManager.enable === false && this.world.game.loop.actualFps >= 20 && this.clockSyncComplete) {
+        this.mWorld.inputManager.enable = true;
+      }
     }
     this.updateClock(time, delta);
     this.mBlocks.update(time, delta);

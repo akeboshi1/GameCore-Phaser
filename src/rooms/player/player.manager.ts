@@ -13,12 +13,14 @@ import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
 
 export class PlayerManager extends PacketHandler implements IElementManager {
+    public hasAddComplete: boolean = false;
     private mPlayerMap: Map<number, Player> = new Map();
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_CHARACTER, this.onMove);
@@ -203,6 +205,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
+    }
+
+    private addComplete(packet: PBpacket) {
+        this.hasAddComplete = true;
     }
 
     private onRemove(packet: PBpacket) {

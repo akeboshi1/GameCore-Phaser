@@ -1,4 +1,4 @@
-import { IMediator, BaseMediator } from "../baseMediator";
+import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { MessageType } from "../../const/MessageType";
@@ -6,6 +6,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
+import { UIType } from "../ui.manager";
 
 export class ShopMediator extends BaseMediator {
     public static NAME: string = "ShopMediator";
@@ -21,6 +22,7 @@ export class ShopMediator extends BaseMediator {
         this.world = world;
         this.mScene = scene;
         this.mLayerManager = layerManager;
+        this.mUIType = UIType.NormalUIType;
     }
 
     public isSceneUI(): boolean {
@@ -45,6 +47,7 @@ export class ShopMediator extends BaseMediator {
         this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
         this.mLayerManager.addToUILayer(this.mView);
+        this.world.uiManager.checkUIState(ShopMediator.NAME, false);
         super.show(param);
     }
 
@@ -53,13 +56,13 @@ export class ShopMediator extends BaseMediator {
     }
 
     public hide() {
+        if (!this.mView) return;
         this.isShowing = false;
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
-        if (this.mView) {
-            this.mView.destroy();
-            this.mView = null;
-        }
+        this.mView.hide();
+        this.mView = null;
+        this.world.uiManager.checkUIState(ShopMediator.NAME, true);
         super.hide();
     }
 

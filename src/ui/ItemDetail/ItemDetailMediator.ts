@@ -5,6 +5,7 @@ import { ILayerManager } from "../layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { NinePatchButton } from "../components/ninepatch.button";
+import { UIType } from "../ui.manager";
 
 export class ItemDetailMediator extends BaseMediator {
     readonly world: WorldService;
@@ -14,6 +15,7 @@ export class ItemDetailMediator extends BaseMediator {
         super(world);
         this.world = world;
         this.mScene = scene;
+        this.mUIType = UIType.TipsUIType;
         this.mLayerManager = layerManager;
     }
 
@@ -40,6 +42,7 @@ export class ItemDetailMediator extends BaseMediator {
     }
 
     public hide() {
+        if (!this.mView) return;
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
         this.mView.hide();
         this.mView = null;

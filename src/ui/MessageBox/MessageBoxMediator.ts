@@ -5,6 +5,7 @@ import { MessageBoxView } from "./MessageBoxView";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { UIType } from "../ui.manager";
 
 export class MessageBoxMediator extends BaseMediator {
     readonly world: WorldService;
@@ -15,6 +16,7 @@ export class MessageBoxMediator extends BaseMediator {
         this.world = world;
         this.mScene = scene;
         this.mLayerManager = layerManager;
+        this.mUIType = UIType.TipsUIType;
     }
 
     public isSceneUI(): boolean {

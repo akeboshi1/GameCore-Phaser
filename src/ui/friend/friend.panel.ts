@@ -177,6 +177,7 @@ export class FriendPanel extends Panel {
         this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
+        this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
         this.mClsBtn.on("pointerup", this.hide, this);
         this.add(this.mClsBtn);
         super.init();

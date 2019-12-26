@@ -1,16 +1,20 @@
-import { IMediator, BaseMediator } from "../baseMediator";
+import { BaseMediator } from "../baseMediator";
 import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { ControlFPanel } from "./ControlFPanel";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
+import { PlayerState } from "../../rooms/element/element";
+import { UIType } from "../ui.manager";
 export class ControlFMediator extends BaseMediator {
+    public static NAME: string = "ControlFMediator";
     readonly world: WorldService;
     private mScene: Phaser.Scene;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
+        this.mUIType = UIType.TipsUIType;
         this.mScene = scene;
         this.mLayerManager = layerManager;
         this.world = world;
@@ -26,10 +30,13 @@ export class ControlFMediator extends BaseMediator {
 
     hide(): void {
         this.isShowing = false;
-        if (this.mView) {
-            this.mView.off("control", this.handControlF, this);
-            this.mView.destroy();
-            this.mView = null;
+        if (this.mView && this.mView.isShow()) {
+            if (!this.world.roomManager.currentRoom || !this.world.roomManager.currentRoom.getHero() ||
+                this.world.roomManager.currentRoom.getHero().getState() === PlayerState.WALK) {
+                this.mView.off("control", this.handControlF, this);
+                this.mView.destroy();
+                this.mView = null;
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import { MainUIMobile } from "./mobile/mainUI.mobile";
 import { MainUIPC } from "./pc/mainUI.pc";
 import { JoyStickManager } from "../../game/joystick.manager";
 import { TopBtnGroup } from "./mobile/top.btn.group";
+import { UIType } from "../ui.manager";
 
 export class MainUIMediator extends BaseMediator {
     public static NAME: string = "MainUIMediator";
@@ -18,6 +19,7 @@ export class MainUIMediator extends BaseMediator {
         super(mWorld);
         this.world = mWorld;
         this.mScene = scene;
+        this.mUIType = UIType.BaseUIType;
     }
 
     public preRefreshBtn(medName: string) {
@@ -114,9 +116,11 @@ export class MainUIMediator extends BaseMediator {
     }
 
     public tweenView(show: boolean) {
-        if (this.world.game.device.os.desktop) return;
+        if (!this.mView) return;
+        if (!this.world.game.device.os.desktop) {
+            (this.world.inputManager as JoyStickManager).tweenView(show);
+        }
         (this.mView as MainUIMobile).tweenView(show);
-        (this.world.inputManager as JoyStickManager).tweenView(show);
     }
 
     // private orientationChange() {

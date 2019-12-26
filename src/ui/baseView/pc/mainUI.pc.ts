@@ -10,6 +10,7 @@ import { Radio } from "../../components/radio";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { FriendMediator } from "../../friend/friend.mediator";
 import { ChatMediator } from "../../chat/chat.mediator";
+import { BagMediator } from "../../bag/bagView/bagMediator";
 
 /**
  * 主界面ui pc版本
@@ -61,6 +62,22 @@ export class MainUIPC extends Panel {
         const chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
         this.x = (size.width - this.mWid) / 2 < chatMed.getView().width ? chatMed.getView().width + this.width / 2 : (size.width - this.mWid) / 2;
         this.y = size.height - 50;
+    }
+    public tweenView(show: boolean) {
+        if (!this.mScene) return;
+        const size: Size = this.mWorld.getSize();
+        const baseY: number = size.height - 50;
+        const toY: number = show === true ? baseY : baseY + 100;
+        const toAlpha: number = show === true ? 1 : 0;
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Cubic.Out",
+            props: {
+                y: { value: toY },
+                alpha: { value: toAlpha },
+            },
+        });
     }
     public destroy() {
         if (this.bagBtn) {
@@ -218,8 +235,12 @@ export class MainUIPC extends Panel {
 
     private bagHandler() {
         // this.mWorld.uiManager.getMediator(FriendMediator.NAME).show();
-        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
-        // =============index = 0 为背包按钮
+        const med = this.mWorld.uiManager.getMediator(BagMediator.NAME);
+        if (med.isShow()) {
+            med.hide();
+            return;
+        }
+        med.show();
     }
 
     private tmpLoad() {

@@ -4,7 +4,7 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragonbones.model";
+import { IDragonbonesModel } from "../display/dragonbones.model";
 import { op_client, op_def } from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
@@ -143,6 +143,7 @@ export class Element extends BlockObject implements IElement {
         }
         if (this.mModel.pos) this.setPosition(this.mModel.pos);
         this.mDisplay.changeAlpha(this.mModel.alpha);
+        // todo 暂时不显示，后续添加显示名字的协议
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
@@ -181,6 +182,10 @@ export class Element extends BlockObject implements IElement {
 
     public changeState(val?: string) {
         this.mCurState = val;
+    }
+
+    public getState(): string {
+        return this.mCurState;
     }
 
     public getRenderable(): boolean {

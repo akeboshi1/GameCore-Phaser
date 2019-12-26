@@ -9,6 +9,7 @@ import { ChatPanelPC } from "./pc/chatPanel.pc";
 import { Panel } from "../components/panel";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
+import { UIType } from "../ui.manager";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
@@ -20,15 +21,21 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mMaxMessageNum = 50;
     private mScene: Phaser.Scene;
     private mParam: any;
+    private mUIType: number;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
         this.mScene = scene;
+        this.mUIType = this.world.game.device.os.desktop ? UIType.BaseUIType : UIType.NormalUIType;
         if (this.world.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+    }
+
+    public getUIType(): number {
+        return this.mUIType;
     }
 
     public setUiScale(value: number) {
@@ -73,6 +80,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return this.mChatPanel.isShow();
     }
 
+    public tweenView(show: boolean) {
+        if (!this.mChatPanel) return;
+        this.mChatPanel.tweenView(show);
+    }
+
     public showing(): boolean {
         return true;
     }
@@ -93,6 +105,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
             this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
         } else {
             this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+            this.world.uiManager.checkUIState(ChatMediator.NAME, false);
         }
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
@@ -114,6 +127,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.hide();
         this.mChatPanel = null;
+        if (!this.world.game.device.os.desktop) this.world.uiManager.checkUIState(ChatMediator.NAME, true);
     }
 
     public setParam(param: any) {
@@ -208,7 +222,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         // const chatSendName = player ? player.name : "";
         // this.mChatPanel.appendChat(content.chatContext);
         const nickname = player ? `${player.model.nickname}:` : "";
-        const color = content.chatSetting.textColor ? content.chatSetting.textColor : "#FFFFFF";
+        const color = content.chatSetting && content.chatSetting.textColor ? content.chatSetting.textColor : "#FFFFFF";
         this.appendMessage(this.mAllMessage, { chat: `[color=${color}]${nickname}:${content.chatContext}[/color]`, channel: content.chatChannel });
         this.mChatPanel.appendChat(`[b][color=${color}]${nickname}${content.chatContext}[/color][/b]\n`);
     }

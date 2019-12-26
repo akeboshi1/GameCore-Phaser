@@ -1,12 +1,14 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { FriendPanel } from "./friend.panel";
+import { UIType } from "../ui.manager";
 
 export class FriendMediator extends BaseMediator {
     public static NAME: string = "FriendMediator";
     private mScene: Phaser.Scene;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(world);
+        this.mUIType = UIType.NormalUIType;
         this.mScene = scene;
     }
 

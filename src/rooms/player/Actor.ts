@@ -11,6 +11,7 @@ import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
 import { PlayerState } from "../element/element";
 import { Logger } from "../../utils/log";
+import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
@@ -83,6 +84,12 @@ export class Actor extends Player implements InputListener {
             return;
         }
         this.stopMove();
+    }
+
+    public startMove() {
+        super.startMove();
+        const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
+        if (med) med.hide();
     }
 
     public stopMove() {

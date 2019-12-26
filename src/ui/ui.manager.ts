@@ -3,29 +3,40 @@ import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../utils/log";
-import { IMediator, BaseMediator } from "./baseMediator";
+import { IMediator } from "./baseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
-import { DebugLoggerMediator } from "./debuglog/debug.logger.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
 import {ElementStoragePanel} from "./ElementStorage/ElementStoragePanel";
 import {ElementStorageMediator} from "./ElementStorage/ElementStorageMediator";
 import { TopBtnGroup } from "./baseView/mobile/top.btn.group";
 import { MainUIMobile } from "./baseView/mobile/mainUI.mobile";
+import { RankMediator } from "./Rank/RankMediator";
 
+export const enum UIType {
+    NoneUIType,
+    BaseUIType,
+    NormalUIType,
+    TipsUIType,
+    MonopolyUIType, // 独占ui
+}
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     private mMedMap: Map<UIMediatorType, IMediator>;
     private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
+    private mNoneUIMap: Map<string, any> = new Map();
+    private mBaseUIMap: Map<string, any> = new Map();
+    private mNormalUIMap: Map<string, any> = new Map();
+    private mTipUIMap: Map<string, any> = new Map();
+    private mMonopolyUIMap: Map<string, any> = new Map();
     constructor(private worldService: WorldService) {
         super();
-
         this.mConnect = worldService.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
@@ -68,10 +79,29 @@ export class UiManager extends PacketHandler {
             }
             this.mCache.length = 0;
         }
-
         // TOOD 通过统一的方法创建打开
-        this.mMedMap.forEach((mediator: IMediator) => {
-            if (mediator.isSceneUI()) mediator.show();
+        this.mMedMap.forEach((mediator: any, key: string) => {
+            let map: Map<string, any>;
+            const deskBoo: boolean = this.worldService.game.device.os.desktop ? true : false;
+            switch (key) {
+                case UIMediatorType.MainUIMediator:
+                    map = this.mBaseUIMap;
+                    break;
+                case UIMediatorType.ChatMediator:
+                    if (deskBoo) {
+                        map = this.mBaseUIMap;
+                    }
+                    break;
+                case RankMediator.NAME:
+                    if (deskBoo) {
+                        map = this.mBaseUIMap;
+                    }
+                    break;
+            }
+            if (map) map.set(key, mediator);
+            if (mediator.isSceneUI()) {
+                mediator.show();
+            }
         });
     }
 
@@ -102,6 +132,40 @@ export class UiManager extends PacketHandler {
             this.mMedMap.clear();
         }
         this.mMedMap = null;
+    }
+
+    public checkUIState(medName: string, show: boolean) {
+        const mediator = this.mMedMap.get(medName);
+        if (!mediator) return;
+        const uiType: number = mediator.getUIType();
+        const deskBoo: boolean = this.worldService.game.device.os.desktop;
+        let map: Map<string, any>;
+        switch (uiType) {
+            case UIType.NoneUIType:
+                map = this.mNoneUIMap;
+                break;
+            case UIType.BaseUIType:
+                map = this.mBaseUIMap;
+                break;
+            case UIType.NormalUIType:
+                map = this.mNormalUIMap;
+                // pc端场景ui无需收进
+                if (deskBoo) {
+                } else {
+                    this.checkBaseUImap(show);
+                }
+                break;
+            case UIType.MonopolyUIType:
+                map = this.mMonopolyUIMap;
+                this.checkBaseUImap(show);
+                this.checkNormalUImap(show);
+                this.chekcTipUImap(show);
+                break;
+            case UIType.TipsUIType:
+                map = this.mTipUIMap;
+                break;
+        }
+        map.set(medName, mediator);
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -139,18 +203,53 @@ export class UiManager extends PacketHandler {
         }
         // if (mediator.showing) return;
         if (param) mediator.setParam(param);
-        if (!this.worldService.game.device.os.desktop && className === "RankMediator") {
-            const med: MainUIMediator = this.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        if (className === "RankMediator") {
+            if (!this.worldService.game.device.os.desktop) {
+                const med: MainUIMediator = this.getMediator(MainUIMediator.NAME) as MainUIMediator;
+                if (med) {
+                    if (!med.isShow()) {
+                        med.preRefreshBtn(className);
+                    } else {
+                        med.refreshBtn(className, true);
+                    }
+                }
+                return;
+            }
+        }
+        this.checkUIState(className, false);
+        mediator.show(param);
+    }
+
+    private checkBaseUImap(show: boolean) {
+        this.mBaseUIMap.forEach((med) => {
+            if (med) med.tweenView(show);
+        });
+    }
+
+    private checkNormalUImap(show: boolean) {
+        this.mNormalUIMap.forEach((med) => {
             if (med) {
-                if (!med.isShow()) {
-                    med.preRefreshBtn(className);
+                if (show) {
+                    // med.show();
                 } else {
-                    med.refreshBtn(className, true);
+                    med.hide();
                 }
             }
-            return;
-        }
-        mediator.show(param);
+        });
+        if (!show) this.mNormalUIMap.clear();
+    }
+
+    private chekcTipUImap(show: boolean) {
+        this.mTipUIMap.forEach((med) => {
+            if (med) {
+                if (show) {
+                    // med.show();
+                } else {
+                    med.hide();
+                }
+            }
+        });
+        if (!show) this.mNormalUIMap.clear();
     }
 
     private updateMed(type: string, ...param: any[]) {
@@ -183,11 +282,12 @@ export class UiManager extends PacketHandler {
                 if (!med.isShow()) {
                     med.preRefreshBtn(className);
                 } else {
-                    med.refreshBtn(className, false);
+                    med.refreshBtn(className, true);
                 }
             }
         }
         // if (!mediator.isShow()) return;
+        this.checkUIState(className, true);
         mediator.hide();
     }
 }

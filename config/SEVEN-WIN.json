@@ -1,4 +1,12 @@
 {
-  "game_id": "5d7201c785d8f75077fa0c71",
-  "virtual_world_id": 0
+  "api_root": "http://172.18.0.100:17170/",
+  "osd": "https://osd.tooqing.com/",
+  "gateway": {
+    "host": "172.18.0.100",
+    "port": 12100,
+    "secure": false
+  },
+  "game_id": "5d28148554ae3d5c17bf1365",
+  "virtual_world_id": "65539"
 }
+

@@ -21,6 +21,7 @@ export class ChatPanelPC extends BaseChatPanel {
     private outPut: Phaser.GameObjects.Container;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.setTween(false);
     }
 
     public appendChat(val: string) {
@@ -28,6 +29,22 @@ export class ChatPanelPC extends BaseChatPanel {
             this.mTextArea.appendText(val);
             this.mTextArea.scrollToBottom();
         }
+    }
+
+    public tweenView(show: boolean) {
+        if (!this.mScene) return;
+        const baseX: number = 0;
+        const toX: number = show === true ? baseX : baseX - 200;
+        const toAlpha: number = show === true ? 1 : 0;
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Cubic.Out",
+            props: {
+                x: { value: toX },
+                alpha: { value: toAlpha },
+            },
+        });
     }
 
     public setLocation(x?: number, y?: number) {
