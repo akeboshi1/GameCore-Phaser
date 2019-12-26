@@ -124,6 +124,7 @@ export class ShopPanel extends Panel {
         this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
         this.mClsBtn.x = (this.width >> 1) - 65;
         this.mClsBtn.y = -this.height >> 1;
+        this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
         this.mClsBtn.on("pointerup", this.shopMedClose, this);
         this.add(this.mClsBtn);
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
@@ -156,10 +157,6 @@ export class ShopPanel extends Panel {
 
     private shopMedClose() {
         const med = this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator;
-        if (med) {
-            med.hide();
-            return;
-        }
-        this.hide();
+        med.hide();
     }
 }

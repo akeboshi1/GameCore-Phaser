@@ -26,7 +26,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         super();
         this.world = world;
         this.mScene = scene;
-        this.mUIType = UIType.BaseUIType;
+        this.mUIType = this.world.game.device.os.desktop ? UIType.BaseUIType : UIType.NormalUIType;
         if (this.world.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
@@ -80,6 +80,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return this.mChatPanel.isShow();
     }
 
+    public tweenView(show: boolean) {
+        if (!this.mChatPanel) return;
+        this.mChatPanel.tweenView(show);
+    }
+
     public showing(): boolean {
         return true;
     }
@@ -100,6 +105,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
             this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
         } else {
             this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+            this.world.uiManager.checkUIState(ChatMediator.NAME, false);
         }
         this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
         this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
@@ -121,6 +127,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
         this.mChatPanel.hide();
         this.mChatPanel = null;
+        if (!this.world.game.device.os.desktop) this.world.uiManager.checkUIState(ChatMediator.NAME, true);
     }
 
     public setParam(param: any) {

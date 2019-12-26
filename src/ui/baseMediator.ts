@@ -10,6 +10,7 @@ export interface IMediator {
     isSceneUI(): boolean;
     isShow(): boolean;
     showing(): boolean;
+    tweenView(show: boolean);
     resize();
     getView(): IAbstractPanel;
     getUIType(): number;
@@ -31,6 +32,9 @@ export class BaseMediator implements IMediator {
         this.world = world;
         this.mUIType = UIType.NoneUIType;
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+    }
+
+    tweenView(show: boolean) {
     }
 
     setUiScale(value: number) {

@@ -63,6 +63,7 @@ export class BagMediator extends BaseMediator {
         }
         this.mView.show(param);
         this.mLayerManager.addToUILayer(this.mView);
+        this.world.uiManager.checkUIState(BagMediator.NAME, false);
         this.refrehView();
         super.show(param);
     }

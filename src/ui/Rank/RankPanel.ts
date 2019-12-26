@@ -2,6 +2,8 @@ import { BasicRankPanel } from "./BasicRankPanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { IconBtn } from "../baseView/mobile/icon.btn";
+import { Size } from "../../utils/size";
+import { RankMediator } from "./RankMediator";
 
 export class RankPanel extends BasicRankPanel {
     private mZoonInBtn: Phaser.GameObjects.Image;
@@ -31,6 +33,22 @@ export class RankPanel extends BasicRankPanel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
     }
 
+    public tweenView(show: boolean) {
+        if (!this.mScene) return;
+        const baseY: number = this.mHeight / 2 + 10;
+        const toY: number = show === true ? baseY : baseY - 300;
+        const toAlpha: number = show === true ? 1 : 0;
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Cubic.Out",
+            props: {
+                y: { value: toY },
+                alpha: { value: toAlpha },
+            },
+        });
+    }
+
     public destroy() {
         if (this.mZoonInBtn) this.mZoonInBtn.destroy(true);
         this.mZoonInBtn = null;
@@ -44,7 +62,8 @@ export class RankPanel extends BasicRankPanel {
             this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
             this.mClsBtn.x = this.mWidth / 2 - 35;
             this.mClsBtn.y = -this.mHeight / 2;
-            this.mClsBtn.on("pointerup", this.hide, this);
+            this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
+            this.mClsBtn.on("pointerup", this.closeHandler, this);
             this.add(this.mClsBtn);
         } else {
             this.mZoonInBtn = this.scene.make.image({
@@ -66,6 +85,11 @@ export class RankPanel extends BasicRankPanel {
             const items = this.getData("data");
             if (items) this.addItem(items);
         }
+    }
+
+    private closeHandler() {
+        const med: RankMediator = this.mWorld.uiManager.getMediator(RankMediator.NAME) as RankMediator;
+        med.hide();
     }
 
     private onZoomHandler() {

@@ -221,7 +221,6 @@ export class BottomBtnGroup extends Panel {
 
     private bagHandler() {
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
-        this.mWorld.uiManager.checkUIState(BagMediator.NAME, false);
         // =============index = 0 为背包按钮
     }
 }

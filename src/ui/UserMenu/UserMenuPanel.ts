@@ -127,7 +127,6 @@ export class UserMenuPanel extends Panel {
                 const btn = this.appendItem(child, 31 + 42, i * 31 - 31 / 2 + this.mMenus.length * 31);
                 item.appendItem(btn);
             }
-
         }
         return item;
     }

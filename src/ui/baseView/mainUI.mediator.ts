@@ -116,9 +116,11 @@ export class MainUIMediator extends BaseMediator {
     }
 
     public tweenView(show: boolean) {
-        if (this.world.game.device.os.desktop) return;
+        if (!this.mView) return;
+        if (!this.world.game.device.os.desktop) {
+            (this.world.inputManager as JoyStickManager).tweenView(show);
+        }
         (this.mView as MainUIMobile).tweenView(show);
-        (this.world.inputManager as JoyStickManager).tweenView(show);
     }
 
     // private orientationChange() {

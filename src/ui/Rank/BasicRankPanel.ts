@@ -62,6 +62,9 @@ export class BasicRankPanel extends Panel {
         }
     }
 
+    public tweenView(show: boolean) {
+    }
+
     update(param: any) {
         this.addItem(param);
     }

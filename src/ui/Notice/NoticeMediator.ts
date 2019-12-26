@@ -9,6 +9,7 @@ import { World } from "../../game/world";
 import { UIType } from "../ui.manager";
 
 export class NoticeMediator extends PacketHandler implements IMediator {
+    public static NAME: string = "NoticeMediator";
     readonly world: WorldService;
     private mNoticePanel: NoticePanel;
     private mLayerManager: ILayerManager;
@@ -66,6 +67,9 @@ export class NoticeMediator extends PacketHandler implements IMediator {
 
     showing(): boolean {
         return false;
+    }
+
+    tweenView(show: boolean) {
     }
 
     resize() {

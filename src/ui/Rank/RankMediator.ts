@@ -6,6 +6,7 @@ import { ILayerManager } from "../layer.manager";
 import { UIType } from "../ui.manager";
 
 export class RankMediator extends BaseMediator {
+    public static NAME: string = "RankMediator";
     readonly world: WorldService;
     private mScene: Phaser.Scene;
     private mlayerManager: ILayerManager;
@@ -14,7 +15,12 @@ export class RankMediator extends BaseMediator {
         this.world = world;
         this.mScene = scene;
         this.mlayerManager = layerManager;
-        this.mUIType = UIType.NormalUIType;
+        this.mUIType = this.world.game.device.os.desktop ? UIType.BaseUIType : UIType.NormalUIType;
+    }
+
+    public tweenView(show: boolean) {
+        if (!this.mView || !this.world.game.device.os.desktop) return;
+        (this.mView as RankPanel).tweenView(show);
     }
 
     getName(): string {
@@ -27,7 +33,13 @@ export class RankMediator extends BaseMediator {
 
     hide(): void {
         this.isShowing = false;
-        if (this.mView) this.mView.hide();
+        if (this.mView) {
+            this.mView.hide();
+            this.mView = null;
+            if (!this.world.game.device.os.desktop) {
+                this.world.uiManager.checkUIState(RankMediator.NAME, true);
+            }
+        }
     }
 
     isSceneUI(): boolean {
@@ -52,6 +64,9 @@ export class RankMediator extends BaseMediator {
             (this.mView as RankPanel).addItem(param[0]);
         }
         this.mView.show();
+        if (!this.world.game.device.os.desktop) {
+            this.world.uiManager.checkUIState(RankMediator.NAME, false);
+        }
         super.show(param);
     }
 
