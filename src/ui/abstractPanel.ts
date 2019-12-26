@@ -3,6 +3,6 @@ export interface IAbstractPanel {
     destroy();
     hide();
     show(param?: any);
-    resize();
+    resize(wid: number, hei: number);
     update(param: any);
 }

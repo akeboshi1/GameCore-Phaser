@@ -22,7 +22,7 @@ export class FriendMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView) return this.mView.resize();
+        if (this.mView) return this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
     public show(param?: any) {

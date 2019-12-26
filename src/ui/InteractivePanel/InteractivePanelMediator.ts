@@ -26,7 +26,7 @@ export class InteractivePanelMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView && this.mView.isShow) return this.mView.resize();
+        if (this.mView && this.mView.isShow) return this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
     public getView(): IAbstractPanel {

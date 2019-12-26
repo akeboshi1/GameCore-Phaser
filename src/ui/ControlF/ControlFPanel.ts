@@ -22,7 +22,7 @@ export class ControlFPanel extends Panel {
         super.hide();
     }
 
-    resize() {
+    resize(wid: number = 0, hei: number = 0) {
         if (!this.mScene) return;
         const worldView = this.mScene.cameras.main.worldView;
         this.x = worldView.x + (worldView.width >> 1);

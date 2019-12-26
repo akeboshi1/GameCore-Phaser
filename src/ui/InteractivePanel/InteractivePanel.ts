@@ -129,7 +129,7 @@ export class InteractivePanel extends Panel {
         this.mRadio.setRadioData(data);
     }
 
-    public resize() {
+    public resize(wid: number = 0, hei: number = 0) {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
         this.mNameCon.add(this.mNameBg);

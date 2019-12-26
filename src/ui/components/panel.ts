@@ -51,7 +51,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         super.destroy();
     }
 
-    resize(oriention?: number) {
+    resize(wid: number, hei: number) {
     }
 
     show(param?: any) {

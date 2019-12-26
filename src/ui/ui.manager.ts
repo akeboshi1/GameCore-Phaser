@@ -12,6 +12,7 @@ import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
 import { RankMediator } from "./Rank/RankMediator";
+import { Size } from "../utils/size";
 
 export const enum UIType {
     NoneUIType,
@@ -31,6 +32,8 @@ export class UiManager extends PacketHandler {
     private mNormalUIMap: Map<string, any> = new Map();
     private mTipUIMap: Map<string, any> = new Map();
     private mMonopolyUIMap: Map<string, any> = new Map();
+    // 用于记录功能ui打开的顺序,最多2个
+    private mShowuiList: any[] = [];
     constructor(private worldService: WorldService) {
         super();
         this.mConnect = worldService.connection;
@@ -144,8 +147,9 @@ export class UiManager extends PacketHandler {
                 break;
             case UIType.NormalUIType:
                 map = this.mNormalUIMap;
-                // pc端场景ui无需收进
+                // pc端场景ui无需收进，但是功能ui可以共存，需要调整位置
                 if (deskBoo) {
+                    this.checkNormalUITween(show, medName);
                 } else {
                     this.checkBaseUImap(show);
                 }
@@ -219,6 +223,40 @@ export class UiManager extends PacketHandler {
         this.mBaseUIMap.forEach((med) => {
             if (med) med.tweenView(show);
         });
+    }
+
+    private checkNormalUITween(show: boolean, medName: string) {
+        const size: Size = this.worldService.getSize();
+        let len: number = this.mShowuiList.length;
+        let tmpName: string;
+        let med;
+        if (!show) {
+            if (this.mShowuiList.indexOf(medName) === -1) this.mShowuiList.push(medName);
+            len = this.mShowuiList.length;
+            const mPad: number = len > 1 ? size.width / 4 : 0;
+            for (let i: number = 0; i < len; i++) {
+                tmpName = this.mShowuiList[i];
+                med = this.mMedMap.get(tmpName);
+                if (len > 2 && i === 0) {
+                    med.hide();
+                } else {
+                    med.setViewAdd((i * 2 - 1) * mPad, 0);
+                }
+            }
+            if (len > 2) this.mShowuiList.shift();
+        } else {
+            let index: number;
+            for (let i: number = 0; i < len; i++) {
+                tmpName = this.mShowuiList[i];
+                med = this.mMedMap.get(tmpName);
+                if (tmpName === medName) {
+                    index = i;
+                    continue;
+                }
+                med.setViewAdd(0, 0);
+            }
+            this.mShowuiList.splice(index, 1);
+        }
     }
 
     private checkNormalUImap(show: boolean) {

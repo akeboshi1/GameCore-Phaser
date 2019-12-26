@@ -33,6 +33,10 @@ export class BagMediator extends BaseMediator {
         this.mUIType = UIType.NormalUIType;
     }
 
+    public resize() {
+        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
+    }
+
     public isSceneUI(): boolean {
         return false;
     }

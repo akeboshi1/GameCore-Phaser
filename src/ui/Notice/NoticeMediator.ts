@@ -16,6 +16,8 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     private mScene: Phaser.Scene;
     private mParam: any;
     private mUIType: number;
+    private mAddWid: number = 0;
+    private mAddHei: number = 0;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
@@ -28,6 +30,11 @@ export class NoticeMediator extends PacketHandler implements IMediator {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_NOTICE, this.noticeHandler);
         }
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+    }
+
+    public setViewAdd(wid: number, hei: number) {
+        this.mAddWid = wid;
+        this.mAddHei = hei;
     }
 
     public setUiScale(value: number) {
@@ -74,7 +81,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
 
     resize() {
         if (!this.mNoticePanel) return;
-        this.mNoticePanel.resize();
+        this.mNoticePanel.resize(this.mAddWid, this.mAddHei);
     }
 
     show(param?: any): void {

@@ -31,10 +31,10 @@ export class NoticePanel extends Panel {
         super.destroy();
     }
 
-    public resize() {
+    public resize(wid: number = 0, hei: number = 0) {
         const view = this.scene.cameras.main.worldView;
-        this.x = view.x + view.width >> 1;
-        this.y = 180;
+        this.x = view.x + view.width + wid >> 1;
+        this.y = 180 + hei;
     }
 
     public showNotice(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_NOTICE) {

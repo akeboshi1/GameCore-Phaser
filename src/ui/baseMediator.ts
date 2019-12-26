@@ -11,6 +11,7 @@ export interface IMediator {
     isShow(): boolean;
     showing(): boolean;
     tweenView(show: boolean);
+    setViewAdd(wid: number, hei: number);
     resize();
     getView(): IAbstractPanel;
     getUIType(): number;
@@ -28,6 +29,8 @@ export class BaseMediator implements IMediator {
     protected isShowing: boolean = false;
     protected mParam: any;
     protected mUIType: number;
+    protected mAddWid: number = 0;
+    protected mAddHei: number = 0;
     constructor(world?: WorldService) {
         this.world = world;
         this.mUIType = UIType.NoneUIType;
@@ -38,7 +41,13 @@ export class BaseMediator implements IMediator {
     }
 
     setUiScale(value: number) {
-        this.mView.scaleX = this.mView.scaleY = value;
+        if (this.mView) this.mView.scaleX = this.mView.scaleY = value;
+    }
+
+    setViewAdd(wid: number, hei: number) {
+        this.mAddWid = wid;
+        this.mAddHei = hei;
+        this.resize();
     }
 
     getView(): IAbstractPanel {
@@ -69,7 +78,7 @@ export class BaseMediator implements IMediator {
 
     resize() {
         const view = this.getView();
-        if (view && view.isShow()) view.resize();
+        if (view && view.isShow()) view.resize(this.mAddWid, this.mAddHei);
     }
 
     show(param?: any): void {

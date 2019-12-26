@@ -22,6 +22,8 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private mScene: Phaser.Scene;
     private mParam: any;
     private mUIType: number;
+    private mAddWid: number = 0;
+    private mAddHei: number = 0;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
@@ -32,6 +34,11 @@ export class ChatMediator extends PacketHandler implements IMediator {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
         }
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+    }
+
+    public setViewAdd(wid: number, hei: number) {
+        this.mAddWid = wid;
+        this.mAddHei = hei;
     }
 
     public getUIType(): number {

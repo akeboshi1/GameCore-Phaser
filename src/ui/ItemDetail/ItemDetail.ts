@@ -27,7 +27,7 @@ export class ItemDetail extends Panel {
         return this.mBtnList;
     }
 
-    public resize() {
+    public resize(wid: number = 0, hei: number = 0) {
         const size: Size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
             this.x = size.width - (this.width + this.mBtnWid) / 2 * this.mWorld.uiScale >> 1;

@@ -6,6 +6,7 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
+import { UserInfoMediator } from "./UserInfoMediator";
 
 export class UserInfoPanel extends Panel {
     private mActor: DynamicImage;
@@ -29,7 +30,7 @@ export class UserInfoPanel extends Panel {
         super.hide();
     }
 
-    resize() {
+    resize(wid: number, hei: number) {
         const size = this.mWorld.getSize();
         this.x = size.width - this.width - 8;
         this.y = size.height - 100 - (this.height);
@@ -171,7 +172,7 @@ export class UserInfoPanel extends Panel {
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
         this.mActor.scale = 2;
         this.add(this.mActor);
-        this.resize();
+        (this.mWorld.uiManager.getMediator(UserInfoMediator.NAME) as UserInfoMediator).resize();
         super.init();
 
         this.setInfo(this.getData("data"));

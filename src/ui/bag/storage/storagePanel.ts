@@ -5,6 +5,7 @@ import { WorldService } from "../../../game/world.service";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { IconBtn } from "../../baseView/mobile/icon.btn";
 import { NinePatch } from "../../components/nine.patch";
+import { StorageMediator } from "./storageMediator";
 
 export class StoragePanel extends Panel {
     private mResStr: string;
@@ -17,10 +18,10 @@ export class StoragePanel extends Panel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
-    public resize() {
+    public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
-        this.x = size.width >> 1;
-        this.y = size.height - 200;
+        this.x = size.width + wid >> 1;
+        this.y = size.height + hei - 200;
     }
     public show(param: any) {
         super.show(param);
@@ -115,5 +116,10 @@ export class StoragePanel extends Panel {
         this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
         super.preload();
+    }
+
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) (this.mWorld.uiManager.getMediator(StorageMediator.NAME) as StorageMediator).resize();
     }
 }

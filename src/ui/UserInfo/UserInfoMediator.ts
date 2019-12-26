@@ -6,6 +6,7 @@ import { UserInfoPanel } from "./UserInfoPanel";
 import { MessageType } from "../../const/MessageType";
 
 export class UserInfoMediator extends BaseMediator {
+    public static NAME: string = "UserInfoMediator";
     readonly world: WorldService;
     constructor(private mLayerManager: ILayerManager, private mScene: Phaser.Scene, world: WorldService) {
         super(world);
@@ -35,7 +36,7 @@ export class UserInfoMediator extends BaseMediator {
     }
 
     resize() {
-        if (this.mView) this.mView.resize();
+        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
     show(param?: any): void {
