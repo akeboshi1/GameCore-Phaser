@@ -32,7 +32,6 @@ export class DecoratePanel extends Panel {
         this.y = ele.y;
         const rows = ele.collisionArea.length;
         const cols = ele.collisionArea[0].length;
-        const originPoint = ele.originPoint;
         const miniSize = this.mRoomService.roomSize;
         const position: IPosition45Obj = {
             rows,
@@ -41,20 +40,35 @@ export class DecoratePanel extends Panel {
             tileHeight: miniSize.tileHeight / 2,
         };
 
-
-        let pos = Position45.transformTo90(new Pos(rows + originPoint[0], (cols >> 1) + originPoint[1]), position);
-        Logger.getInstance().log("pos5", pos);
-        if (this.mArrow5) {
-            this.mArrow5.x = pos.x + this.mArrow5.width;
-            this.mArrow5.y = pos.y;
+        const reference = ele.getElement("reference");
+        if (!reference) {
+            return;
         }
 
-        // pos = Position45.transformTo90(new Pos(rows >> 1, cols), position);
+        let pos = Position45.transformTo90(new Pos(cols + 1, (rows >> 1)), position);
+        if (this.mArrow5) {
+            this.mArrow5.x = pos.x + this.mArrow5.width + reference.x;
+            this.mArrow5.y = pos.y + (this.mArrow5.height) + reference.y;
+        }
+
+        pos = Position45.transformTo90(new Pos(cols >> 1, rows), position);
         // Logger.getInstance().log("pos3", pos);
-        // if (this.mArrow3) {
-        //     this.mArrow3.x = pos.x - this.mArrow3.width;
-        //     this.mArrow3.y = pos.y;
-        // }
+        if (this.mArrow3) {
+            this.mArrow3.x = pos.x - this.mArrow3.width + reference.x;
+            this.mArrow3.y = pos.y + reference.y;
+        }
+
+        pos = Position45.transformTo90(new Pos(-1, (cols >> 1)), position);
+        if (this.mArrow1) {
+            this.mArrow1.x = pos.x - this.mArrow1.width + reference.x;
+            this.mArrow1.y = pos.y - this.mArrow1.height + reference.y;
+        }
+
+        pos = Position45.transformTo90(new Pos((rows >> 1), -1), position);
+        if (this.mArrow7) {
+            this.mArrow7.x = pos.x + this.mArrow7.width + reference.x;
+            this.mArrow7.y = pos.y + reference.y;
+        }
 
     }
 
@@ -81,7 +95,7 @@ export class DecoratePanel extends Panel {
         this.mArrow7 = this.createImage(this.resKey, "dir_3.png", 300, 100).setScale(-1);
         this.mArrow7.on("pointerup", this.onRightDownHandler, this);
 
-        this.add([this.mControllContainer, this.mArrow5]);
+        this.add([this.mControllContainer, this.mArrow1, this.mArrow7, this.mArrow3, this.mArrow5]);
         this.mControllContainer.add([border, this.mTurnBtn, this.mPutBtn, this.mConfirmBtn]);
         super.init();
 

@@ -69,7 +69,6 @@ export class FramesDisplay extends DisplayObject {
         } else {
             sprite.setTexture(data.gene, ani.frameName[0]);
         }
-        sprite.setAlpha(0.2);
         this.initBaseLoc(field, animationName);
     }
 

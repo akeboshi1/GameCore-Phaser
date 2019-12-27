@@ -36,10 +36,12 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
     protected mElement: IElement;
+    protected mChildMap: Map<string, any>;
     constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement) {
         super(scene);
         this.mElement = element;
         this.mRoomService = roomService;
+        this.mChildMap = new Map();
     }
 
     public changeAlpha(val?: number) {
@@ -94,6 +96,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
             this.mReferenceArea.destroy();
             this.mReferenceArea = undefined;
         }
+        if (this.mChildMap) {
+            this.mChildMap.clear();
+            this.mChildMap = null;
+        }
         // this.removeAll(true);
         super.destroy(fromScene);
     }
@@ -121,6 +127,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     public showRefernceArea() {
         if (!this.mReferenceArea) {
             this.mReferenceArea = new ReferenceArea(this.scene, this.mRoomService);
+            this.addChildMap("reference", this.mReferenceArea);
         }
         if (!this.mCollisionArea || this.mCollisionArea.length <= 0) return;
         this.mReferenceArea.draw(this.mCollisionArea, this.mOriginPoint);
@@ -137,6 +144,13 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     public showEffect() {
         this.addEffect(this.mBackEffect, Url.getRes("ui/vip/vip_effect_back.png"), Url.getRes("ui/vip/vip_effect_back.json"), true, 15, false, true);
         this.addEffect(this.mFrontEffect, Url.getRes("ui/vip/vip_effect_front.png"), Url.getRes("ui/vip/vip_effect_front.json"), true, 15, false, true);
+    }
+
+    public getElement(key: string) {
+        if (!this.mChildMap) {
+            return;
+        }
+        return this.mChildMap.get(key);
     }
 
     protected addEffect(target: DynamicSprite, textureURL: string, atlasURL?: string, isBack?: boolean, framerate?: number, loop?: boolean, killComplete?: boolean) {
@@ -181,6 +195,20 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         this.mFlagContainer = this.scene.make.container(undefined, false);
         this.addAt(this.mFlagContainer, DisplayField.FLAG);
         return this.mFlagContainer;
+    }
+
+    protected addChildMap(key: string, display: Phaser.GameObjects.GameObject) {
+        if (!this.mChildMap) {
+            this.mChildMap = new Map();
+        }
+        this.mChildMap.set(key, display);
+    }
+
+    protected removeChildMap(key: string) {
+        if (!this.mChildMap) {
+            return;
+        }
+        this.mChildMap.delete(key);
     }
 
     get baseLoc(): Phaser.Geom.Point {
