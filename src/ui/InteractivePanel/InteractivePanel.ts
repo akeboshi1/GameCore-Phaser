@@ -87,10 +87,11 @@ export class InteractivePanel extends Panel {
         }
         if (this.mRadio) this.mRadio.visible = false;
         if (data.button && data.button.length > 0) {
+            let tmpHei: number = (data.button.length - 1) * 33 + 46
             if (!this.mRadio) {
                 this.mRadio = new Radio(this.mScene, {
-                    wid: 328,
-                    hei: 142,
+                    wid: 350,
+                    hei: tmpHei,
                     resKey: "juqing",
                     resPng: "./resources/ui/juqing/juqing.png",
                     resJson: "./resources/ui/juqing/juqing.json",
@@ -107,7 +108,7 @@ export class InteractivePanel extends Panel {
                 });
                 this.radioComplete();
             }
-            this.mRadio.setRadioData(data.button);
+            this.setRadioData(data.button);
             this.mRadio.visible = true;
         }
         this.resize();
@@ -215,7 +216,6 @@ export class InteractivePanel extends Panel {
 
     protected init() {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
-
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
         this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
@@ -318,7 +318,7 @@ export class InteractivePanel extends Panel {
         if (this.mRadioCom) {
             if (this.mWorld.game.device.os.desktop) {
                 this.mRadio.x = this.mBg.x + this.mBg.width / 2 - this.mRadio.width;
-                this.mRadio.y = this.y + this.mBg.height;
+                this.mRadio.y = this.mDescCon.y + this.mDescCon.height / 2 - this.mRadio.height;
             } else {
                 this.mRadio.x = this.mBg.width / 2 - this.mRadio.width;
                 this.mRadio.y = this.mBg.height / 2 - this.mRadio.height;
@@ -443,8 +443,8 @@ export class InteractivePanel extends Panel {
         this.mRadioCom = true;
         const size: Size = this.mWorld.getSize();
         if (!this.mRadio) return;
-        this.mRadio.x = 220;
-        this.mRadio.y = this.mDescCon.height + 200;
+        // this.mRadio.x = 220;
+        // this.mRadio.y = this.mDescCon.height + 200;
         this.resize();
     }
 }

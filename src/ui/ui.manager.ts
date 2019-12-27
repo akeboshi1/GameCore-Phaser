@@ -233,7 +233,7 @@ export class UiManager extends PacketHandler {
         if (!show) {
             if (this.mShowuiList.indexOf(medName) === -1) this.mShowuiList.push(medName);
             len = this.mShowuiList.length;
-            const mPad: number = len > 1 ? size.width / 4 : 0;
+            const mPad: number = len > 1 ? size.width / 3 : 0;
             for (let i: number = 0; i < len; i++) {
                 tmpName = this.mShowuiList[i];
                 med = this.mMedMap.get(tmpName);
