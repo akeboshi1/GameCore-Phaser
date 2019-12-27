@@ -3,12 +3,14 @@ import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
 import { LayerManager } from "../layer/layer.manager";
 import { Logger } from "../../utils/log";
+import { EditorRoomService } from "../editor.room";
+import { IRoomService } from "../room";
 
 export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mDecorateManager: DecorateManager;
-    constructor(scene: Phaser.Scene, layerManager: LayerManager) {
-        this.mDecorateManager = new DecorateManager(scene, layerManager);
+    constructor(scene: Phaser.Scene, roomService: IRoomService) {
+        this.mDecorateManager = new DecorateManager(scene, roomService);
     }
 
     setElement(display: FramesDisplay | DragonbonesDisplay) {
@@ -27,6 +29,7 @@ export class SelectedElement {
         this.mDecorateManager.remove();
         if (this.mDisplay) {
             this.mDisplay.hideRefernceArea();
+            this.mDisplay = null;
         }
     }
 
@@ -37,5 +40,6 @@ export class SelectedElement {
         this.mDisplay.x = x;
         this.mDisplay.y = y;
         this.mDecorateManager.updatePos(x, y);
+        // this.mLayerManager.depthSurfaceDirty = true;
     }
 }

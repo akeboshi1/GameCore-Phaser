@@ -6,8 +6,8 @@ export interface IPosition45Obj {
   readonly rows: number;
   readonly tileWidth: number;
   readonly tileHeight: number;
-  readonly sceneWidth: number;
-  readonly sceneHeight: number;
+  readonly sceneWidth?: number;
+  readonly sceneHeight?: number;
   readonly offset?: Phaser.Geom.Point;
 }
 

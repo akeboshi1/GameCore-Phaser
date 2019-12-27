@@ -124,6 +124,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     public load(display: IDragonbonesModel) {
         this.mDisplayInfo = display;
+        this.mCollisionArea = [[1, 1], [1, 1]];
+        this.mOriginPoint = new Phaser.Geom.Point(1, 1);
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
         if (this.scene.cache.obj.has(this.dragonBonesName)) { }

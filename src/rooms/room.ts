@@ -35,9 +35,9 @@ export interface IRoomService {
   readonly cameraService: ICameraService;
   readonly roomSize: IPosition45Obj;
   readonly blocks: ViewblockService;
-  readonly actor: Actor;
   readonly world: WorldService;
-  readonly map: Map;
+  readonly map?: Map;
+  readonly actor?: Actor;
 
   readonly scene: Phaser.Scene | undefined;
 

@@ -198,4 +198,12 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     get element(): IElement {
         return this.mElement;
     }
+
+    get collisionArea() {
+        return this.mCollisionArea;
+    }
+
+    get originPoint() {
+        return this.mOriginPoint;
+    }
 }

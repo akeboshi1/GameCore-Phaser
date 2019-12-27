@@ -1,6 +1,5 @@
 import { IRoomService } from "./room";
 import { IRoomManager } from "./room.manager";
-import {Actor} from "./player/Actor";
 import {ViewblockService} from "./cameras/viewblock.manager";
 import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
 import {ConnectionService} from "../net/connection.service";
@@ -14,7 +13,6 @@ import {ElementDisplay} from "./display/element.display";
 import {op_client, op_virtual_world} from "pixelpai_proto";
 import {Pos} from "../utils/pos";
 import {PlayerManager} from "./player/player.manager";
-import { Map } from "./map/map";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {SelectedElement} from "./decorate/selected.element";
 import {LoadingScene} from "../scenes/loading";
@@ -23,9 +21,9 @@ import {Logger} from "../utils/log";
 import { FramesDisplay } from "./display/frames.display";
 import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
+import { EditorRoomService } from "./editor.room";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
-    readonly actor: Actor;
     readonly blocks: ViewblockService;
     // TODO clock sync
     clockSyncComplete: boolean = true;
@@ -33,6 +31,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly world: WorldService;
     private mID: number;
     private mSize: IPosition45Obj;
+    private mMiniSize: IPosition45Obj;
     private mTerrainManager: TerrainManager;
     private mElementManager: ElementManager;
     private mLayerManager: LayerManager;
@@ -60,6 +59,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     enter(room: op_client.IScene): void {
         // this.mID = room.id;
         this.mID = room.id;
+        let { rows, cols, tileWidth, tileHeight } = room;
         this.mSize = {
             cols: room.cols,
             rows: room.rows,
@@ -67,6 +67,19 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             tileWidth: room.tileWidth,
             sceneWidth: (room.rows + room.cols) * (room.tileWidth / 2),
             sceneHeight: (room.rows + room.cols) * (room.tileHeight / 2)
+        };
+
+        rows *= 2;
+        cols *= 2;
+        tileWidth /= 2;
+        tileHeight /= 2;
+        this.mMiniSize = {
+            cols,
+            rows,
+            tileHeight,
+            tileWidth,
+            sceneWidth: (rows + cols) * (tileWidth / 2),
+            sceneHeight: (rows + cols) * (tileHeight / 2),
         };
 
         if (!this.world.game.scene.getScene(LoadingScene.name))
@@ -105,6 +118,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     destroy() {
+        if (this.mTerrainManager) this.mTerrainManager.destroy();
+        if (this.mElementManager) this.mElementManager.destroy();
+        if (this.mLayerManager) this.mLayerManager.destroy();
     }
 
     now(): number {
@@ -112,6 +128,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     pause(): void {
+        if (this.mScene) {
+            this.mScene.scene.pause();
+        }
     }
 
     removeBlockObject(object: IElement) {
@@ -120,7 +139,10 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     requestActorMove(d: number, key: number[]) {
     }
 
-    resume(name: string | string[]): void {
+    resume(name: string): void {
+        if (this.mScene) {
+            this.mScene.scene.resume(name);
+        }
     }
 
     startLoad() {
@@ -167,6 +189,22 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         return Position45.transformTo90(p, this.mSize);
     }
 
+    transformToMini90(p: Pos): undefined | Pos {
+        if (!this.mMiniSize) {
+            Logger.getInstance().error("position object is undefined");
+            return;
+        }
+        return Position45.transformTo90(p, this.mMiniSize);
+    }
+
+    transformToMini45(p: Pos): undefined | Pos {
+        if (!this.mMiniSize) {
+            Logger.getInstance().error("position object is undefined");
+            return;
+        }
+        return Position45.transformTo45(p, this.mMiniSize);
+    }
+
     update(time: number, delta: number): void {
         if (this.mLayerManager) {
             this.mLayerManager.update(time, delta);
@@ -182,6 +220,37 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     resize(width: number, height: number) {
         this.layerManager.resize(width, height);
         this.mCameraService.resize(width, height);
+    }
+
+    transitionGrid(x: number, y: number, ) {
+        const source = new Pos(x, y);
+        const pos = this.transformToMini45(source);
+        return this.checkBound(pos);
+    }
+
+    /**
+     * 边界检查
+     * @param pos 45度坐标，
+     * @param source 没有超出边界并不贴边就返回原始坐标
+     */
+    checkBound(pos: Pos, source?: Pos) {
+        const bound = new Pos(pos.x, pos.y);
+        const size = this.mMiniSize;
+        if (pos.x < 0) {
+            bound.x = 0;
+        } else if (pos.x > size.cols) {
+            bound.x = size.cols;
+        }
+
+        if (pos.y < 0) {
+            bound.y = 0;
+        } else if (pos.y > size.rows) {
+            bound.y = size.rows;
+        }
+        if (bound.equal(pos) && source) {
+            return source;
+        }
+        return this.transformToMini90(bound);
     }
 
     private addPointerMoveHandler() {
@@ -214,7 +283,8 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (!this.mSelectedElement) {
             return;
         }
-        this.mSelectedElement.setDisplayPos(pointer.worldX, pointer.worldY);
+        const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
+        this.mSelectedElement.setDisplayPos(pos.x, pos.y);
     }
 
     private onGameOutHandler() {
@@ -225,11 +295,12 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (!(display instanceof DisplayObject)) {
             return;
         }
-        if (display instanceof TerrainDisplay) {
-            return;
-        }
         if (!this.mSelectedElement) {
-            this.mSelectedElement = new SelectedElement(this.mScene, this.mLayerManager);
+            this.mSelectedElement = new SelectedElement(this.mScene, this);
+        }
+        if (display instanceof TerrainDisplay) {
+            this.mSelectedElement.remove();
+            return;
         }
         this.mSelectedElement.setElement(display);
     }
@@ -260,10 +331,6 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
 
     get scene(): Phaser.Scene | undefined {
         return this.mScene;
-    }
-
-    get map(): Map {
-        return null;
     }
 
     get connection(): ConnectionService {
