@@ -20,8 +20,8 @@ export class SelectedElement {
             this.mDecorateManager.remove();
         }
         this.mDisplay = display;
-        this.mDecorateManager.setElement(display);
         display.showRefernceArea();
+        this.mDecorateManager.setElement(display);
         this.mDisplay = display;
     }
 
