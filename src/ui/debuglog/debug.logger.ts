@@ -4,6 +4,7 @@ import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
+import { DebugLoggerMediator } from "./debug.logger.mediator";
 
 export class DebugLogger extends Panel {
     private mBgWidth: number;
@@ -25,7 +26,7 @@ export class DebugLogger extends Panel {
         this.mShowing = true;
         this.showDescTxT();
     }
-    public resize() {
+    public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         this.showDescTxT();
         this.x = ((this.width >> 1) + 60) * this.mWorld.uiScale;
@@ -105,8 +106,12 @@ export class DebugLogger extends Panel {
         this.add(this.mTimeTF);
         this.add(this.mDescTF);
         this.setSize(this.mBgWidth, this.mBgHeight);
-        this.resize();
         super.init();
+    }
+
+    protected tweenComplete(show) {
+        super.tweenComplete(show);
+        if (show) (this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator).resize();
     }
 
     private showDescTxT() {

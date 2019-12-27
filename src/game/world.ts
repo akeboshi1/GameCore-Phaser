@@ -38,9 +38,11 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
 import { EditScene } from "../scenes/edit";
+import { Clock, ClockReadyListener } from "../rooms/clock";
 // The World act as the global Phaser.World instance;
-export class World extends PacketHandler implements IConnectListener, WorldService, GameMain {
+export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
+    private mClock: Clock;
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -66,6 +68,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
+
+        this.mClock = new Clock(this.mConnection, this);
 
         // add Packet listener.
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
@@ -225,6 +229,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public startHeartBeat() {
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
         this.mConnection.send(pkt);
+        this.mClock.sync(-1);
     }
 
     get uiScale(): number {
@@ -257,6 +262,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConnection;
     }
 
+    get clock(): Clock {
+        return this.mClock;
+    }
+
     get emitter(): Phaser.Events.EventEmitter {
         return this.mGameEmitter;
     }
@@ -271,6 +280,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public getGameConfig(): Phaser.Types.Core.GameConfig {
         return this.gameConfig;
+    }
+
+    public onClockReady(): void {
+
     }
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
@@ -534,6 +547,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Focus;
             this.connection.send(pkt);
+            // 同步心跳
+            this.mClock.sync(-1);
             this.resumeScene();
         } else {
             Logger.getInstance().error("connection is undefined");

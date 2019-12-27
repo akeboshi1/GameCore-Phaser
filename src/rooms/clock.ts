@@ -16,6 +16,8 @@ export interface ClockReadyListener {
 }
 
 export class Clock extends PacketHandler {
+    // clock是否同步完成
+    private mClockSync: boolean = false;
     private mAutoSync: boolean = false;
     protected get sysUnixTime(): number {
         return new Date().getTime();
@@ -74,6 +76,10 @@ export class Clock extends PacketHandler {
         this.mLatency = undefined;
     }
 
+    public get clockSync(): boolean {
+        return this.mClockSync;
+    }
+
     protected _check(): void {
         const self = this;
         this.mIntervalId = setInterval(() => {
@@ -114,6 +120,7 @@ export class Clock extends PacketHandler {
         }
         this.mAutoSync = false;
         if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) {
+            this.mClockSync = true;
             Logger.getInstance().debug("clock同步完成");
             this.mListener.onClockReady();
         }

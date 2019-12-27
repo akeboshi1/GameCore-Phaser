@@ -1,4 +1,6 @@
 import { ISelectCallItemData, ISelectCallUI, SelectCallItem } from "./comboBox";
+import { NinePatch } from "./nine.patch";
+import { Background } from "../../utils/resUtil";
 
 export interface IRadioResConfig {
     wid: number;
@@ -17,7 +19,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     protected itemList: RadioItemRender[];
     private mScene: Phaser.Scene;
     private mConfig: IRadioResConfig;
-    private mBg: Phaser.GameObjects.Image;
+    private mBg: NinePatch;
     private mIsShow: boolean = false;
     private mInit: boolean = false;
     // private mArrow: Phaser.GameObjects.Image;
@@ -111,9 +113,8 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     private onLoadCompleteHandler() {
         this.mInit = true;
         const resKey: string = this.mConfig.resKey;
-        this.mBg = this.mScene.make.image(undefined, false);
+        this.mBg = new NinePatch(this.scene, 0, 0, this.mConfig.wid + 20, this.mConfig.hei, Background.getName(), null, Background.getConfig());
         this.mBg.setTexture(resKey, this.mConfig.resBg);
-        this.mBg.width += 20;
         this.mBg.x = this.mConfig.wid / 2 - 2;
         this.mBg.y = this.mConfig.hei / 2;
         this.addAt(this.mBg, 0);

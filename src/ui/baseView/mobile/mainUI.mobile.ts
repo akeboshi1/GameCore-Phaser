@@ -46,12 +46,12 @@ export class MainUIMobile extends Panel {
         if (this.mLeftBtnGroup) this.mLeftBtnGroup.hide();
         super.hide();
     }
-    public resize() {
+    public resize(wid: number, hei: number) {
         if (this.mTopBtnGroup) this.mTopBtnGroup.resize();
         if (this.mRightBtnGroup) this.mRightBtnGroup.resize();
         if (this.mBottomBtnGroup) this.mBottomBtnGroup.resize();
         if (this.mLeftBtnGroup) this.mLeftBtnGroup.resize();
-        super.resize();
+        super.resize(wid, hei);
     }
     public destroy() {
         if (this.mTopBtnGroup) this.mTopBtnGroup.destroy();

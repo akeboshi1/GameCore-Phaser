@@ -11,6 +11,7 @@ import { UIMediatorType } from "../../ui.mediatorType";
 import { FriendMediator } from "../../friend/friend.mediator";
 import { ChatMediator } from "../../chat/chat.mediator";
 import { BagMediator } from "../../bag/bagView/bagMediator";
+import { MainUIMediator } from "../mainUI.mediator";
 
 /**
  * 主界面ui pc版本
@@ -57,7 +58,7 @@ export class MainUIPC extends Panel {
         }
         super.show(param);
     }
-    public resize() {
+    public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         const chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
         this.x = (size.width - this.mWid) / 2 < chatMed.getView().width ? chatMed.getView().width + this.width / 2 : (size.width - this.mWid) / 2;
@@ -163,7 +164,7 @@ export class MainUIPC extends Panel {
             //     }
             // }, this);
             this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mWid, this.mHei), Phaser.Geom.Rectangle.Contains);
-            this.resize();
+            (this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator).resize();
         }
     }
 
@@ -214,7 +215,7 @@ export class MainUIPC extends Panel {
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) this.resize();
+        if (show) (this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator).resize();
     }
 
     private initBagSlot() {

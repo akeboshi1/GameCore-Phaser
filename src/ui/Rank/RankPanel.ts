@@ -13,7 +13,7 @@ export class RankPanel extends BasicRankPanel {
         super(scene, world);
     }
 
-    public resize() {
+    public resize(wid: number = 0, hei: number = 0) {
         if (!this.mWorld) {
             return;
         }
@@ -23,11 +23,11 @@ export class RankPanel extends BasicRankPanel {
             this.y = this.mHeight / 2 + 10;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width + wid >> 1;
+                this.y = size.height + hei >> 1;
             } else {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width + wid >> 1;
+                this.y = size.height + hei >> 1;
             }
         }
         this.scaleX = this.scaleY = this.mWorld.uiScale;

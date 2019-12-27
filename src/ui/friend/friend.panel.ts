@@ -10,6 +10,7 @@ import { Geom } from "phaser";
 import { MainUIMediator } from "../baseView/mainUI.mediator";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { IconBtn } from "../baseView/mobile/icon.btn";
+import { FriendMediator } from "./friend.mediator";
 export interface IFriendIcon {
     res: string;
     name: string;
@@ -28,12 +29,12 @@ export class FriendPanel extends Panel {
         super(scene, world);
     }
 
-    public resize() {
+    public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         if (!this.mShowing) return;
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width / 2;
-            this.y = size.height / 2;
+            this.x = size.width + wid >> 1;
+            this.y = size.height + hei >> 1;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.mBg.resize((size.width * .5 - 20) / this.mWorld.uiScale, (size.height - 20) / this.mWorld.uiScale);
@@ -188,7 +189,7 @@ export class FriendPanel extends Panel {
         this.mWorld.roomManager.currentRoom.getHero().getFriend().requestFriend((data: any[]) => {
             this.setDataList(data);
         });
-        if (show) this.resize();
+        if (show) (this.mWorld.uiManager.getMediator(FriendMediator.NAME) as FriendMediator).resize();
     }
 
     private downHandler() {

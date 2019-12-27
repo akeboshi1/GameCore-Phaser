@@ -21,18 +21,18 @@ export class ShopPanel extends Panel {
         this.mWorld = world;
     }
 
-    public resize() {
+    public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width >> 1;
-            this.y = size.height - 300;
+            this.x = size.width + wid >> 1;
+            this.y = size.height + hei >> 1;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width + wid >> 1;
+                this.y = size.height + hei >> 1;
             } else {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width + wid >> 1;
+                this.y = size.height + hei >> 1;
             }
         }
 
@@ -138,7 +138,7 @@ export class ShopPanel extends Panel {
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) this.resize();
+        if (show) (this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator).resize();
     }
 
     private refreshDataList() {

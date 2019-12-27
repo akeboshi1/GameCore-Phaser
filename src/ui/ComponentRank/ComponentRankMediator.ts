@@ -6,6 +6,7 @@ import { ComponentRankPanel } from "./ComponentRankPanel";
 import { UIType } from "../ui.manager";
 
 export class ComponentRankMediator extends BaseMediator {
+    public static NAME: string = "ComponentRankMediator";
     readonly world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
@@ -16,6 +17,11 @@ export class ComponentRankMediator extends BaseMediator {
         layerManager.addToUILayer(this.mView);
         this.mLayerManager = layerManager;
         this.mScene = scene;
+    }
+
+    setViewAdd(wid: number, hei: number) {
+        this.mAddWid = wid;
+        this.mAddHei = hei;
     }
 
     getName(): string {
@@ -43,7 +49,7 @@ export class ComponentRankMediator extends BaseMediator {
     }
 
     resize() {
-        this.mView.resize();
+        this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
     show(param?: any): void {

@@ -1,6 +1,7 @@
 import { BasicRankPanel } from "../Rank/BasicRankPanel";
 import { WorldService } from "../../game/world.service";
 import { CloseButton } from "../../utils/resUtil";
+import { ComponentRankMediator } from "./ComponentRankMediator";
 
 export class ComponentRankPanel extends BasicRankPanel {
     private mCloseBtn: Phaser.GameObjects.Image;
@@ -8,11 +9,11 @@ export class ComponentRankPanel extends BasicRankPanel {
         super(scene, worldService);
     }
 
-    resize() {
+    resize(wid: number, hei: number) {
         if (!this.scene) return;
         const view = this.scene.cameras.main.worldView;
-        this.x = view.width - this.width >> 1;
-        this.y = view.height - this.height >> 1;
+        this.x = view.width - this.width - wid >> 1;
+        this.y = view.height - this.height - hei >> 1;
     }
 
     destroy() {
@@ -42,8 +43,13 @@ export class ComponentRankPanel extends BasicRankPanel {
         this.add(this.mCloseBtn);
         this.mCloseBtn.setInteractive();
         this.mCloseBtn.once("pointerup", this.onCloseHandler, this);
-        this.resize();
+        (this.mWorld.uiManager.getMediator(ComponentRankMediator.NAME) as ComponentRankMediator).resize();
         this.mCloseBtn.x = this.width - 18;
+    }
+
+    protected tweenComplete(show: boolean) {
+        super.tweenComplete(show);
+        if (show) (this.mWorld.uiManager.getMediator(ComponentRankMediator.NAME) as ComponentRankMediator).resize();
     }
 
     private onCloseHandler() {

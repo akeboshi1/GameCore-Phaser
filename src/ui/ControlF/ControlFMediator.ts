@@ -51,7 +51,7 @@ export class ControlFMediator extends BaseMediator {
 
     resize() {
         if (!this.mView) return;
-        this.mView.resize();
+        this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
     show(param?: any): void {

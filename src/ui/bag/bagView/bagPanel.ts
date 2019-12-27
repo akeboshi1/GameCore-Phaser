@@ -36,18 +36,18 @@ export class BagPanel extends Panel {
         this.mCheckList = [];
     }
 
-    public resize() {
+    public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width >> 1;
-            this.y = size.height >> 1;
+            this.x = size.width + wid >> 1;
+            this.y = size.height + hei >> 1;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = size.width >> 1;
-                this.y = size.height >> 1;
+                this.x = size.width + wid >> 1;
+                this.y = size.height + hei >> 1;
             } else {
-                this.x = size.width >> 1;
-                this.y = size.height - (this.height / 2) * this.mWorld.uiScale >> 1;
+                this.x = size.width + wid >> 1;
+                this.y = size.height + hei - (this.height / 2) * this.mWorld.uiScale >> 1;
             }
         }
         this.scaleX = this.scaleY = this.mWorld.uiScale;
@@ -223,7 +223,7 @@ export class BagPanel extends Panel {
             this.refreshDataList(this.mDataList);
         }
         this.setInteractive();
-        this.resize();
+        (this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator).resize();
         super.init();
     }
 
@@ -250,7 +250,7 @@ export class BagPanel extends Panel {
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) this.resize();
+        if (show) (this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator).resize();
     }
 
     private nextHandler(pointer, gameObject) {

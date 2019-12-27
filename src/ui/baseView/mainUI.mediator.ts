@@ -55,7 +55,7 @@ export class MainUIMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView) this.mView.resize();
+        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
     public getView(): IAbstractPanel {
