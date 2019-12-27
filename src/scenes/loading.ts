@@ -63,11 +63,11 @@ export class LoadingScene extends Phaser.Scene {
     //   this.cameras.main.emit("renderer", this.cameras.main);
     // }
     if (this.mRoom) {
-      if (this.mRoom.clockSyncComplete && !this.mRequestCom) {
+      if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
         this.mRequestCom = true;
         this.mRoom.completeLoad();
       }
-      this.mRoom.updateClock(time, delta);
+      // this.mRoom.updateClock(time, delta);
     }
   }
 

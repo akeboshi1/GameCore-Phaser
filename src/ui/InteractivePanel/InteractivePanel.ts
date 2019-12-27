@@ -87,7 +87,7 @@ export class InteractivePanel extends Panel {
         }
         if (this.mRadio) this.mRadio.visible = false;
         if (data.button && data.button.length > 0) {
-            let tmpHei: number = (data.button.length - 1) * 33 + 46
+            const tmpHei: number = (data.button.length - 1) * 33 + 46;
             if (!this.mRadio) {
                 this.mRadio = new Radio(this.mScene, {
                     wid: 350,

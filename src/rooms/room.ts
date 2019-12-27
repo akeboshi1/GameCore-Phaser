@@ -44,7 +44,7 @@ export interface IRoomService {
   readonly connection: ConnectionService | undefined;
 
   // blockCheckWorker: BlockCheckWorker;
-  clockSyncComplete: boolean;
+  // clockSyncComplete: boolean;
 
   now(): number;
 
@@ -56,7 +56,7 @@ export interface IRoomService {
 
   // startCheckBlock();
 
-  updateClock(time: number, delta: number): void;
+  // updateClock(time: number, delta: number): void;
 
   enter(room: op_client.IScene): void;
 
@@ -94,7 +94,7 @@ export interface IRoomService {
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
-  public clockSyncComplete: boolean = false;
+  // public clockSyncComplete: boolean = false;
   // public blockCheckWorker: BlockCheckWorker;
   protected mWorld: WorldService;
   protected mMap: Map;
@@ -107,7 +107,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   protected mSize: IPosition45Obj;
   protected mCameraService: ICameraService;
   protected mBlocks: ViewblockService;
-  protected mClock: Clock;
+  // protected mClock: Clock;
 
   private mActor: Actor;
   private mActorData: IActor;
@@ -147,7 +147,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
     this.mMap = new Map(this.mWorld);
     this.mMap.setMapInfo(data);
-    this.mClock = new Clock(this.mWorld.connection, this);
+    // this.mClock = new Clock(this.mWorld.connection, this);
     // if (this.mScene.scene.isActive()) {
     //   this.mWorld.game.scene.sleep(PlayScene.name);
     // }
@@ -170,11 +170,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // TODO: Unload loading-scene
     Logger.getInstance().debug("onClockReady");
     Logger.getInstance().debug(new Date().getTime());
-    this.clockSyncComplete = true;
+    // this.clockSyncComplete = true;
   }
 
   public startLoad() {
-    this.mClock.sync(-1);
+    // this.mClock.sync(-1);
   }
 
   public completeLoad() {
@@ -235,14 +235,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public pause() {
     if (this.mScene) this.mScene.scene.pause();
     this.mWorld.inputManager.enable = false;
-    this.clockSyncComplete = false;
+    // this.clockSyncComplete = false;
     // todo launch
   }
 
   public resume(name: string) {
     if (this.mScene) this.mScene.scene.resume(name);
     this.mWorld.inputManager.enable = true;
-    this.mClock.sync(-1);
+    // this.mClock.sync(-1);
   }
 
   public getHero(): Actor {
@@ -328,11 +328,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
   public update(time: number, delta: number) {
     // 角色管理器和地块，物件管理器中在登陆时，add_sprite完成后，把交互管理器的交互开放
-    if (this.mPlayerManager.hasAddComplete && this.mTerainManager.hasAddComplete && this.mElementManager.hasAddComplete) {
-      if (this.mWorld.inputManager.enable === false && this.world.game.loop.actualFps >= 20 && this.clockSyncComplete) {
-        this.mWorld.inputManager.enable = true;
-      }
-    }
+    // if (this.mPlayerManager.hasAddComplete && this.mTerainManager.hasAddComplete && this.mElementManager.hasAddComplete) {
+    //   if (this.mWorld.inputManager.enable === false && this.world.game.loop.actualFps >= 20) {
+    //     this.mWorld.inputManager.enable = true;
+    //   }
+    // }
     this.updateClock(time, delta);
     this.mBlocks.update(time, delta);
     // this.startCheckBlock();
@@ -356,11 +356,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   // }
 
   public updateClock(time: number, delta: number) {
-    if (this.mClock) this.mClock.update(time, delta);
+    // 客户端自己通过delta来更新游戏时间戳
+    if (this.mWorld.clock) this.mWorld.clock.update(time, delta);
   }
 
   public now(): number {
-    return this.mClock.unixTime;
+    return this.mWorld.clock.unixTime;
   }
 
   get scene(): Phaser.Scene | undefined {
@@ -420,7 +421,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public clear() {
     if (this.mActor) this.mActor.destroy();
     if (this.mLayManager) this.mLayManager.destroy();
-    if (this.mClock) this.mClock.destroy();
+    // if (this.mClock) this.mClock.destroy();
     if (this.mTerainManager) this.mTerainManager.destroy();
     if (this.mElementManager) this.mElementManager.destroy();
     if (this.mPlayerManager) this.mPlayerManager.destroy();
