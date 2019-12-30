@@ -164,13 +164,17 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
         this.mCameraService.camera = this.scene.cameras.main;
         // const mainCameras = this.mScene.cameras.main;
-        // mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        this.mCameraService.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
 
         const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        // this.mCameraService.centerCameas();
+        this.mCameraService.centerCameas();
+
+        if (this.world.uiManager) {
+            this.world.uiManager.showDecorateUI();
+        }
     }
 
     transformTo45(p: Pos): Pos {

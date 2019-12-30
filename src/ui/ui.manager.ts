@@ -11,10 +11,7 @@ import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
 import { MainUIMediator } from "./baseView/mainUI.mediator";
 import { FriendMediator } from "./friend/friend.mediator";
-import {ElementStoragePanel} from "./ElementStorage/ElementStoragePanel";
 import {ElementStorageMediator} from "./ElementStorage/ElementStorageMediator";
-import { TopBtnGroup } from "./baseView/mobile/top.btn.group";
-import { MainUIMobile } from "./baseView/mobile/mainUI.mobile";
 import { RankMediator } from "./Rank/RankMediator";
 import { Size } from "../utils/size";
 
@@ -36,6 +33,7 @@ export class UiManager extends PacketHandler {
     private mNormalUIMap: Map<string, any> = new Map();
     private mTipUIMap: Map<string, any> = new Map();
     private mMonopolyUIMap: Map<string, any> = new Map();
+    private mCacheUI: Function;
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
     constructor(private worldService: WorldService) {
@@ -66,14 +64,25 @@ export class UiManager extends PacketHandler {
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
+        if (this.mCacheUI) {
+            this.mCacheUI();
+            this.mCacheUI = undefined;
+        }
+    }
+
+    public showMainUI() {
+        if (!this.mScene) {
+            this.mCacheUI = this.showMainUI;
+            return;
+        }
         if (!this.mMedMap) {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
-            this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
-            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
-            this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
+            this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, this.mScene));
+            this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, this.mScene));
+            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, this.mScene));
+            this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
+            this.mMedMap.set(FriendMediator.NAME, new FriendMediator(this.mScene, this.worldService));
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
             for (const tmp of this.mCache) {
@@ -102,6 +111,22 @@ export class UiManager extends PacketHandler {
                     break;
             }
             if (map) map.set(key, mediator);
+            if (mediator.isSceneUI()) {
+                mediator.show();
+            }
+        });
+    }
+
+    public showDecorateUI() {
+        if (!this.mScene) {
+            this.mCacheUI = this.showDecorateUI;
+            return;
+        }
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+            this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
+        }
+        this.mMedMap.forEach((mediator) => {
             if (mediator.isSceneUI()) {
                 mediator.show();
             }

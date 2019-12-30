@@ -21,7 +21,6 @@ export class PlayScene extends Phaser.Scene {
   }
 
   public create() {
-    if (this.mRoom) this.mRoom.startPlay();
     const scene = this.game.scene.getScene(MainUIScene.name);
     if (!scene.scene.isActive()) {
       this.scene.launch(MainUIScene.name, {
@@ -32,6 +31,7 @@ export class PlayScene extends Phaser.Scene {
     this.scene.sendToBack();
     this.scale.on("orientationchange", this.checkOriention, this);
     this.scale.on("resize", this.checkSize, this);
+    if (this.mRoom) this.mRoom.startPlay();
   }
 
   update(time: number, delta: number) {
