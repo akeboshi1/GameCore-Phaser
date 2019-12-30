@@ -29,27 +29,29 @@ export class BasicRankPanel extends Panel {
         }
 
         const locX = [-this.mWidth / 2 + 15, -this.mWidth / 2 + 63, -this.mWidth / 2 + 241];
+        let tmpY: number = 0;
         for (let i = 1; i < 4; i++) {
             const text = this.scene.make.text({
                 x: locX[i - 1],
                 y: -this.mHeight / 2 + 22,
-                text: texts[i].text,
+                text: texts ? texts[i].text : "123",
                 style: { font: Font.YAHEI_16_BOLD }
             }, false);
+            tmpY = text.y;
             text.setData("node", texts[i].node);
             text.setStroke("#000000", 2);
             this.mContentContainer.add(text);
             this.mTexts.push(text);
         }
-
+        tmpY += 20;
         for (let i = 4; i < texts.length; i++) {
             const t = texts[i];
             const x = (i - 4) % 3;
-            const y = Math.floor((i - 4) / 3) * (-this.mHeight / 2 + 22);
+            const y = Math.floor((i - 4) / 3) * 22; // Math.floor((i - 4) / 3) * (-this.mHeight / 2 + 42);
             const text = this.scene.make.text({
                 x: locX[x],
-                y: 60 + y,
-                text: t.text,
+                y: tmpY + y,
+                text: t ? t.text : "123",
                 style: { font: Font.YAHEI_14_BOLD }
             }, false);
             if (x === 0) {
