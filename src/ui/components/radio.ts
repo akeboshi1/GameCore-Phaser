@@ -1,7 +1,7 @@
 import { ISelectCallItemData, ISelectCallUI, SelectCallItem } from "./comboBox";
 import { NinePatch } from "./nine.patch";
 import { Background } from "../../utils/resUtil";
-
+import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 export interface IRadioResConfig {
     wid: number;
     hei: number;
@@ -125,7 +125,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
     }
 }
 export class RadioItemRender extends Phaser.GameObjects.Container {
-    protected mText: Phaser.GameObjects.Text;
+    protected mText: BBCodeText;
     protected mSelectBG: Phaser.GameObjects.Graphics;
     protected mData: ISelectCallItemData;
     protected mSelectCallUI: ISelectCallUI;
@@ -133,11 +133,18 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, selectCallUI: ISelectCallUI, wid: number, hei: number, resKey: string, arrowRes: string) {
         super(scene);
         this.mSelectCallUI = selectCallUI;
-        this.mText = this.scene.make.text({
-            x: -wid >> 1, y: -hei >> 1,
-            style: { font: "bold 20px YaHei", fill: "#F7EDED" }
-        }, false);
-        this.mText.style.align = "left";
+        this.mText = new BBCodeText(scene, 0, 0, "", {
+            fontSize: "20px",
+            wrap: {
+                mode: "char",
+                width: wid
+            },
+        });
+        // this.mText = this.scene.make.text({
+        //     x: -wid >> 1, y: -hei >> 1,
+        //     style: { font: "bold 20px YaHei", fill: "#F7EDED" }
+        // }, false);
+        // this.mText.style.align = "left";
         const COLOR = 0xffcc00;
         this.mSelectBG = scene.make.graphics(undefined, false);
         this.mSelectBG.fillStyle(COLOR, .8);

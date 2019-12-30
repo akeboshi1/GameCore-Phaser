@@ -104,6 +104,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     destroy(): void {
         this.mConnection.closeConnect();
+        this.mClock.destroy();
         this.clearGame();
     }
 
@@ -283,7 +284,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public onClockReady(): void {
-
+        if (this.mInputManager) this.mInputManager.enable = true;
     }
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
