@@ -72,6 +72,7 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     private onClickMenuHandler(targetNode) {
+        if (!this.mView) return;
         const uiNode: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mView.getData("data");
         if (!targetNode || !uiNode || !this.world || !this.world.connection) return;
         this.hide();
