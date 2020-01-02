@@ -239,11 +239,12 @@ export class EditorRoom extends Room implements EditorRoomService {
                 break;
             case BrushEnum.SELECT:
                 if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+                    Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
                     if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
                         this.syncSprite(this.mSelectedElementEffect.display);
-                        this.mSelectedElementEffect.selecting = false;
                     }
                 }
+                this.mSelectedElementEffect.selecting = false;
                 break;
             case BrushEnum.ERASER:
                 this.eraserElement();
@@ -325,6 +326,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                 if (!this.mSelectedElementEffect) {
                     return;
                 }
+                Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
                 if (!this.mSelectedElementEffect.selecting) {
                     return;
                 }
