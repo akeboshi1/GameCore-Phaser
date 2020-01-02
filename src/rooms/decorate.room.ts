@@ -21,7 +21,6 @@ import {Logger} from "../utils/log";
 import { FramesDisplay } from "./display/frames.display";
 import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
-import { EditorRoomService } from "./editor.room";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly blocks: ViewblockService;
@@ -289,6 +288,18 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         }
         const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
         this.mSelectedElement.setDisplayPos(pos.x, pos.y);
+
+        if (pointer.x < 300) {
+            if (pointer.prevPosition.x > pointer.x) this.mCameraService.camera.scrollX -= pointer.prevPosition.x - pointer.x;
+        } else if (pointer.x > this.world.getSize().width - 300) {
+            if (pointer.x > pointer.prevPosition.x) this.mCameraService.camera.scrollX += pointer.x - pointer.prevPosition.x;
+        }
+
+        if (pointer.y < 300) {
+            if (pointer.prevPosition.y > pointer.y) this.mCameraService.camera.scrollY -= pointer.prevPosition.y - pointer.y;
+        } else if (pointer.y > this.world.getSize().height - 300) {
+            if (pointer.y > pointer.prevPosition.y) this.mCameraService.camera.scrollY += pointer.y - pointer.prevPosition.y;
+        }
     }
 
     private onGameOutHandler() {

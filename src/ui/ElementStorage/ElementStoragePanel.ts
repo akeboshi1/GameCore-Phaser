@@ -22,6 +22,7 @@ export class ElementStoragePanel extends Panel {
 
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.image("button", Url.getRes("ui/common/button.png"));
         this.scene.load.image(Background.getName(), Background.getPNG());
         super.preload();
     }

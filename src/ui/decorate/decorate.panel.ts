@@ -47,9 +47,9 @@ export class DecoratePanel extends Panel {
         this.mControllContainer = this.scene.make.container({ y: -100 }, false);
         const border = new NinePatch(this.scene, 0, 0, 196, 70, Border.getName(), null, Border.getConfig());
 
-        this.mTurnBtn = this.createImage(this.resKey, "turn_btn.png", -57, 0);
+        this.mTurnBtn = this.createImage(this.resKey, "turn_btn.png", -60, 0);
         this.mPutBtn = this.createImage(this.resKey, "put_btn.png", 0, 0);
-        this.mConfirmBtn = this.createImage(this.resKey, "confirm_btn.png", 57, 0);
+        this.mConfirmBtn = this.createImage(this.resKey, "confirm_btn.png", 60, 0);
 
         this.mArrow1 = this.createImage(this.resKey, "dir_1.png", 0, 0).setOrigin(0, 0);
         this.mArrow1.on("pointerup", this.onLeftUpHandler, this);
