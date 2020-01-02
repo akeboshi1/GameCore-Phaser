@@ -172,23 +172,22 @@ export class BagPanel extends Panel {
         this.mInputText.y = txtBg.y - txtBg.height / 2;
         this.mInputText.setText(this.mBaseStr);
         this.add(this.mInputText);
-
         // 多排背包格位
         this.bagSlotList = [];
         for (let i: number = 0; i < BagPanel.PageMaxCount; i++) {
             tmpX = i % 8 * 60 - 210;
             tmpY = Math.floor(i / 8) * 60 - this.mBorder.height / 2 + this.mBorder.y + this.mBorder.height / 2 - 55;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
+            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "itemSelectFrame");
             itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
         }
         this.mPreBtn = this.mScene.make.sprite(undefined, false);
-        this.mPreBtn.setTexture(this.mResStr, "bagView_tab.png");
+        this.mPreBtn.play("slipBtn");
         this.mPreBtn.x = -this.mBg.width >> 1;
         this.add(this.mPreBtn);
         // // ===============背包界面右翻按钮
         this.mNextBtn = this.mScene.make.sprite(undefined, false);
-        this.mNextBtn.setTexture(this.mResStr, "bagView_tab.png");
+        this.mNextBtn.play("slipBtn");
         this.mNextBtn.scaleX = -1;
         this.mNextBtn.x = this.mBg.width >> 1;
         const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
@@ -234,6 +233,8 @@ export class BagPanel extends Panel {
         this.mResStr = "bagView";
         this.mResPng = "ui/bag/bagView.png";
         this.mResJson = "ui/bag/bagView.json";
+        this.mScene.load.atlas("itemChose", Url.getRes("ui/bag/itemChose.png"), Url.getRes("ui/bag/itemChose.json"));
+        this.mScene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
         this.mScene.load.image(Border.getName(), Border.getPNG());
         this.mScene.load.image(Background.getName(), Background.getPNG());
         this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
@@ -242,10 +243,39 @@ export class BagPanel extends Panel {
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
-        if (this.mInitialized) {
-            return;
+        const selectFramesObj: {} = this.mScene.textures.get("itemChose").frames;
+        const tmpSelectFrames: any[] = [];
+        for (const key in selectFramesObj) {
+            if (key === "__BASE") continue;
+            const frame = selectFramesObj[key];
+            if (!frame) continue;
+            tmpSelectFrames.push(key);
         }
-        this.init();
+        // 手动把json配置中的frames给予anims
+        this.mScene.anims.create({
+            key: "itemSelectFrame",
+            frames: this.mScene.anims.generateFrameNumbers("itemChose", { start: 0, end: 8, frames: tmpSelectFrames }),
+            frameRate: 33,
+            yoyo: true,
+            repeat: -1
+        });
+        const framesObj: {} = this.mScene.textures.get("slip").frames;
+        const tmpFrames: any[] = [];
+        for (const key in framesObj) {
+            if (key === "__BASE") continue;
+            const frame = framesObj[key];
+            if (!frame) continue;
+            tmpFrames.push(key);
+        }
+        // 手动把json配置中的frames给予anims
+        this.mScene.anims.create({
+            key: "slipBtn",
+            frames: this.mScene.anims.generateFrameNumbers("slip", { start: 0, end: 14, frames: tmpFrames }),
+            frameRate: 33,
+            yoyo: true,
+            repeat: -1
+        });
+        super.loadComplete(loader, totalComplete, totalFailed);
     }
 
     protected tweenComplete(show: boolean) {

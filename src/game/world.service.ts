@@ -10,6 +10,7 @@ import { Account } from "./account";
 import { HttpService } from "../net/http.service";
 import { ILauncherConfig } from "../../launcher";
 import { Clock } from "../rooms/clock";
+import { MouseManager } from "./mouse.manager";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -19,6 +20,7 @@ export interface WorldService {
     readonly elementStorage: IElementStorage;
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
+    readonly mouseManager: MouseManager;
     readonly httpService: HttpService;
     readonly uiScale: number;
     readonly account: Account;

@@ -81,7 +81,12 @@ export class RightBtnGroup extends Panel {
         let baseX: number;
         switch (this.mWorld.game.scale.orientation) {
             case Phaser.Scale.Orientation.LANDSCAPE:
-                baseX = size.width - (this.width / 4) * this.mWorld.uiScale;
+                const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+                if (mPackage && mPackage.items && mPackage.items.length > 0) {
+                    baseX = size.width - (this.width / 4) * this.mWorld.uiScale;
+                } else {
+                    baseX = size.width - (this.width / 2) * this.mWorld.uiScale;
+                }
                 break;
             case Phaser.Scale.Orientation.PORTRAIT:
                 baseX = size.width - (this.width / 2) * this.mWorld.uiScale;
