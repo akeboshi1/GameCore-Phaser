@@ -31,13 +31,23 @@ export class ElementStorageMediator extends BaseMediator {
      * 展开
      */
     expand() {
-
+        const view = this.getView();
+        if (view) {
+            view.expand();
+        }
     }
 
     /**
      * 收起
      */
     collapse() {
+        const view = this.getView();
+        if (view) {
+            view.collapse();
+        }
+    }
 
+    getView(): ElementStoragePanel {
+        return <ElementStoragePanel> this.mView;
     }
 }

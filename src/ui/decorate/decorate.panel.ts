@@ -39,6 +39,7 @@ export class DecoratePanel extends Panel {
 
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.image("arrow", Url.getRes("ui/common/common_arrow.png"));
         this.scene.load.atlas(this.resKey, Url.getRes("ui/decorate/decorate_atlas.png"), Url.getRes("ui/decorate/decorate_atlas.json"));
         super.preload();
     }
@@ -50,14 +51,19 @@ export class DecoratePanel extends Panel {
         this.mTurnBtn = this.createImage(this.resKey, "turn_btn.png", -60, 0);
         this.mPutBtn = this.createImage(this.resKey, "put_btn.png", 0, 0);
         this.mConfirmBtn = this.createImage(this.resKey, "confirm_btn.png", 60, 0);
+        const arrow = this.scene.make.image({
+            key: "arrow",
+            y: 46
+        }).setAngle(90);
+        this.mControllContainer.add(arrow);
 
-        this.mArrow1 = this.createImage(this.resKey, "dir_1.png", 0, 0).setOrigin(0, 0);
+        this.mArrow1 = this.createImage(this.resKey, "arrow_1.png", 0, 0).setOrigin(0, 0);
         this.mArrow1.on("pointerup", this.onLeftUpHandler, this);
-        this.mArrow3 = this.createImage(this.resKey, "dir_3.png", 0, 300).setOrigin(0, 0);
+        this.mArrow3 = this.createImage(this.resKey, "arrow_3.png", 0, 300).setOrigin(0, 0);
         this.mArrow3.on("pointerup", this.onLeftDownHandler, this);
-        this.mArrow5 = this.createImage(this.resKey, "dir_1.png", 300, 300).setScale(-1).setOrigin(0, 0);
+        this.mArrow5 = this.createImage(this.resKey, "arrow_5.png", 300, 300).setOrigin(0, 0);
         this.mArrow5.on("pointerup", this.onRightUpHandler, this);
-        this.mArrow7 = this.createImage(this.resKey, "dir_3.png", 300, 100).setScale(-1).setOrigin(0, 0);
+        this.mArrow7 = this.createImage(this.resKey, "arrow_7.png", 300, 100).setOrigin(0, 0);
         this.mArrow7.on("pointerup", this.onRightDownHandler, this);
 
         this.add([this.mControllContainer, this.mArrow1, this.mArrow7, this.mArrow3, this.mArrow5]);
@@ -128,8 +134,8 @@ export class DecoratePanel extends Panel {
 
         let pos = Position45.transformTo90(new Pos(cols, (rows / 2)), position);
         if (this.mArrow5) {
-            this.mArrow5.x = pos.x + this.mArrow5.width + reference.x;
-            this.mArrow5.y = pos.y + (this.mArrow5.height) + reference.y;
+            this.mArrow5.x = pos.x + reference.x;
+            this.mArrow5.y = pos.y + reference.y;
         }
 
         pos = Position45.transformTo90(new Pos((cols / 2), rows), position);
@@ -146,8 +152,8 @@ export class DecoratePanel extends Panel {
 
         pos = Position45.transformTo90(new Pos((cols / 2), 0), position);
         if (this.mArrow7) {
-            this.mArrow7.x = pos.x + this.mArrow7.width + reference.x;
-            this.mArrow7.y = pos.y + reference.y;
+            this.mArrow7.x = pos.x + reference.x;
+            this.mArrow7.y = pos.y - this.mArrow7.height + reference.y;
         }
     }
 }

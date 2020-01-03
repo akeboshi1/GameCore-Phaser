@@ -28,7 +28,7 @@ export class MouseManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     private mDownDelay: number = 200;
-    private mDownTime: NodeJS.Timeout;
+    private mDownTime: any;
     constructor(private worldService: WorldService) {
         super();
         this.mGame = worldService.game;
