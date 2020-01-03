@@ -3,6 +3,7 @@ import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../utils/size";
 import { Url } from "../../../utils/resUtil";
 import { IconBtn } from "./icon.btn";
+import { DebugLoggerMediator } from "../../debuglog/debug.logger.mediator";
 
 export class TopBtnGroup extends Panel {
     // private mWid: number = 0;
@@ -12,6 +13,7 @@ export class TopBtnGroup extends Panel {
     private mResKey: string;
     private mTurnBtn: IconBtn;
     private mReturnBtn: IconBtn;
+    private mDebugBtn: IconBtn;
     // 排行榜按钮
     private mRankBtn: IconBtn;
     private mExpandBoo: boolean = false;
@@ -42,6 +44,10 @@ export class TopBtnGroup extends Panel {
 
         if (this.mReturnBtn) {
             this.mReturnBtn.destroy();
+        }
+
+        if (this.mDebugBtn) {
+            this.mDebugBtn.destroy();
         }
 
         if (this.mBtnList) {
@@ -150,12 +156,30 @@ export class TopBtnGroup extends Panel {
         wid += this.mReturnBtn.width + this.mBtnPad;
         this.add(this.mReturnBtn);
         this.mBtnX += -this.mReturnBtn.width - this.mBtnPad;
+        this.mDebugBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_blue_normal.png", "btnGroup_blue_light.png", "btnGroup_blue_select.png"], "btnGroup_top_expand.png", 1);
+        this.mDebugBtn.x = this.mBtnX;
+        this.mDebugBtn.setPos(this.mBtnX, 0);
+        this.mBtnList.push(this.mDebugBtn);
+        wid += this.mDebugBtn.width + this.mBtnPad;
+        this.add(this.mDebugBtn);
         this.setSize(wid, hei);
         this.mTurnBtn.setClick(() => {
             this.turnHandler();
         });
         this.mReturnBtn.setClick(() => {
             this.mWorld.closeGame();
+        });
+        this.mDebugBtn.setClick(() => {
+            let debugLogMed: DebugLoggerMediator = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
+            if (!debugLogMed) {
+                this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mScene, this.mWorld));
+                debugLogMed = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
+            }
+            if (debugLogMed.isShow()) {
+                debugLogMed.hide();
+                return;
+            }
+            debugLogMed.show();
         });
         this.resize();
         super.init();

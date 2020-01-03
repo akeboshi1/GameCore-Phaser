@@ -22,7 +22,7 @@ export class DebugLoggerMediator extends BaseMediator {
     }
 
     public isShow(): boolean {
-        return this.mView !== undefined ? this.mView.isShow() : false;
+        return this.mView ? this.mView.isShow() : false;
     }
 
     public getView(): IAbstractPanel {

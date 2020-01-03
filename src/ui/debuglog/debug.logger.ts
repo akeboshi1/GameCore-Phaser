@@ -1,10 +1,11 @@
 import { Panel } from "../components/panel";
-import { Background } from "../../utils/resUtil";
+import { Background, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
 import { DebugLoggerMediator } from "./debug.logger.mediator";
+import { IconBtn } from "../baseView/mobile/icon.btn";
 
 export class DebugLogger extends Panel {
     private mBgWidth: number;
@@ -14,6 +15,7 @@ export class DebugLogger extends Panel {
     private mBackground: NinePatch;
     private mDescTxt: string;
     private mDelay: number = 0;
+    private mClsBtn: IconBtn;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -22,16 +24,27 @@ export class DebugLogger extends Panel {
             this.preload();
             return;
         }
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
         this.mShowing = true;
-        this.showDescTxT();
+        this.resize();
     }
-    public resize(wid: number, hei: number) {
+    public resize(wid?: number, hei?: number) {
         const size: Size = this.mWorld.getSize();
         this.showDescTxT();
-        this.x = ((this.width >> 1) + 60) * this.mWorld.uiScale;
-        this.y = (this.height >> 1) * this.mWorld.uiScale;
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        if (this.mWorld.game.device.os.desktop) {
+            this.x = ((this.width >> 1) + 60) * this.mWorld.uiScale;
+            this.y = (this.height >> 1) * this.mWorld.uiScale;
+        } else {
+            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
+            } else {
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
+            }
+        }
+        this.mBgWidth = 400;
+        this.mBgHeight = size.height >> 1;
+        this.setSize(this.mBgWidth, this.mBgHeight);
     }
     public update(param: any) {
         const now: number = this.mWorld.roomManager.currentRoom.now();
@@ -63,6 +76,7 @@ export class DebugLogger extends Panel {
             return;
         }
         this.scene.load.image("logger", Background.getPNG());
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         super.preload();
     }
 
@@ -106,6 +120,14 @@ export class DebugLogger extends Panel {
         this.add(this.mTimeTF);
         this.add(this.mDescTF);
         this.setSize(this.mBgWidth, this.mBgHeight);
+        if (!this.mWorld.game.device.os.desktop) {
+            this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+            this.mClsBtn.x = this.width / 2 - 35;
+            this.mClsBtn.y = -this.height / 2;
+            this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
+            this.mClsBtn.on("pointerup", this.closeHandler, this);
+            this.add(this.mClsBtn);
+        }
         super.init();
     }
 
@@ -124,6 +146,11 @@ export class DebugLogger extends Panel {
         }
         this.mDescTxt = "rendertype:" + renderType + "\n" + " width: " + this.mWorld.getSize().width + "\n" + "height: " + this.mWorld.getSize().height + "\n" + "orientation: " + orientation + "\n" + "devicePixelRatio: " + window.devicePixelRatio;
         this.showErrTxt();
+    }
+
+    private closeHandler() {
+        const med: DebugLoggerMediator = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
+        med.hide();
     }
 
     private showErrTxt() {
