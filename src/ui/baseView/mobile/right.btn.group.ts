@@ -34,23 +34,20 @@ export class RightBtnGroup extends Panel {
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const padHei: number = !mainUIMed ? this.height / 2 : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
-        switch (this.mWorld.game.scale.orientation) {
-            case Phaser.Scale.Orientation.LANDSCAPE:
-                const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+        if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+            this.y = size.height - (this.height) * this.mWorld.uiScale;
+            this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
+            if (mPackage && mPackage.items && mPackage.items.length > 0) {
+                this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
+                this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
+            } else {
                 this.y = size.height - (this.height) * this.mWorld.uiScale;
                 this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
-                if (mPackage && mPackage.items && mPackage.items.length > 0) {
-                    this.y = size.height - (this.height / 2) * this.mWorld.uiScale;
-                    this.x = size.width - (this.width / 4) * this.mWorld.uiScale;
-                } else {
-                    this.y = size.height - (this.height) * this.mWorld.uiScale;
-                    this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
-                }
-                break;
-            case Phaser.Scale.Orientation.PORTRAIT:
-                this.y = size.height - (padHei + this.height / 2) * this.mWorld.uiScale;
-                this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
-                break;
+            }
+        } else {
+            this.y = size.height - (padHei + this.height / 2) * this.mWorld.uiScale;
+            this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
         }
     }
 
@@ -79,18 +76,15 @@ export class RightBtnGroup extends Panel {
     public tweenView(show: boolean) {
         const size: Size = this.mWorld.getSize();
         let baseX: number;
-        switch (this.mWorld.game.scale.orientation) {
-            case Phaser.Scale.Orientation.LANDSCAPE:
-                const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
-                if (mPackage && mPackage.items && mPackage.items.length > 0) {
-                    baseX = size.width - (this.width / 4) * this.mWorld.uiScale;
-                } else {
-                    baseX = size.width - (this.width / 2) * this.mWorld.uiScale;
-                }
-                break;
-            case Phaser.Scale.Orientation.PORTRAIT:
+        if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+            if (mPackage && mPackage.items && mPackage.items.length > 0) {
+                baseX = size.width - (this.width / 4) * this.mWorld.uiScale;
+            } else {
                 baseX = size.width - (this.width / 2) * this.mWorld.uiScale;
-                break;
+            }
+        } else {
+            baseX = size.width - (this.width / 2) * this.mWorld.uiScale;
         }
         const toX: number = show === true ? baseX : baseX + this.width;
         const toAlpha: number = show === true ? 1 : 0;

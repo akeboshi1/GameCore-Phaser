@@ -35,13 +35,10 @@ export class BottomBtnGroup extends Panel {
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.scaleX = this.scaleY = this.mWorld.uiScale;
-        switch (this.mWorld.game.scale.orientation) {
-            case Phaser.Scale.Orientation.LANDSCAPE:
-                this.x = size.width >> 1;
-                break;
-            case Phaser.Scale.Orientation.PORTRAIT:
-                this.x = size.width - (this.width / 2 + 40) * this.mWorld.uiScale;
-                break;
+        if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            this.x = size.width >> 1;
+        } else {
+            this.x = size.width - (this.width / 2 + 40) * this.mWorld.uiScale;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;

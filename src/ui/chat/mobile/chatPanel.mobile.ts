@@ -82,63 +82,60 @@ export class ChatPanelMobile extends BaseChatPanel {
                 .on("focus", this.onFocusHandler, this)
                 .on("blur", this.onBlurHandler, this);
         }
-        switch (this.mWorld.game.scale.orientation) {
-            case Phaser.Scale.Orientation.LANDSCAPE:
-                this.mWidth = size.width >> 1;
-                this.mHeight = size.height;
-                this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
-                this.x = 0;
-                this.y = 0;
-                this.clickContainer.x = this.mWidth / this.mWorld.uiScale + this.clickContainer.width / 2;
-                this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
-                this.clickContainer.rotation = Math.PI * .5;
-                this.arrow.rotation = Math.PI * .5;
-                this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
-                this.mTextArea = new TextArea(this.mScene, {
-                    x: this.mWidth * .5 / this.mWorld.uiScale,
-                    y: this.mHeight / 2,
-                    textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
-                    textHeight: this.mHeight,
-                    text,
-                    slider: {
-                        track,
-                        thumb,
-                    },
-                    clamplChildOY: true,
-                });
-                break;
-            case Phaser.Scale.Orientation.PORTRAIT:
-                this.mWidth = size.width;
-                this.mHeight = size.height / 2;
-                this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
-                this.x = 0;
-                this.y = this.mHeight + 20 * this.mWorld.uiScale;
-                this.mInputBg.y = this.mBorder.height - this.mInputBg.height;
-                this.mTextArea = new TextArea(this.mScene, {
-                    x: (this.mWidth - 15) / this.mWorld.uiScale >> 1,
-                    y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
-                    textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
-                    textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
-                    text,
-                    slider: {
-                        track,
-                        thumb,
-                    },
-                    scroller: {
-                        bounds: [0, this.mHeight >> 1],
-                    },
-                    clamplChildOY: true,
-                    backDeceleration: true,
-                });
-                // this.mTextArea.x = this.mTextArea.childrenMap.child.minWidth >> 1;
-                // this.mTextArea.y = this.mTextArea.childrenMap.child.minHeight >> 1;
-                this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
-                this.clickContainer.y = -this.clickContainer.height >> 1;
-                const silder = this.mTextArea.getElement("slider");
-                silder.y = this.mHeight >> 1;
-                this.clickContainer.rotation = Math.PI;
-                this.arrow.rotation = Math.PI * 1.5;
-                break;
+        if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            this.mWidth = size.width >> 1;
+            this.mHeight = size.height;
+            this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
+            this.x = 0;
+            this.y = 0;
+            this.clickContainer.x = this.mWidth / this.mWorld.uiScale + this.clickContainer.width / 2;
+            this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
+            this.clickContainer.rotation = Math.PI * .5;
+            this.arrow.rotation = Math.PI * .5;
+            this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
+            this.mTextArea = new TextArea(this.mScene, {
+                x: this.mWidth * .5 / this.mWorld.uiScale,
+                y: this.mHeight / 2,
+                textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
+                textHeight: this.mHeight,
+                text,
+                slider: {
+                    track,
+                    thumb,
+                },
+                clamplChildOY: true,
+            });
+        } else {
+            this.mWidth = size.width;
+            this.mHeight = size.height / 2;
+            this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
+            this.x = 0;
+            this.y = this.mHeight + 20 * this.mWorld.uiScale;
+            this.mInputBg.y = this.mBorder.height - this.mInputBg.height;
+            this.mTextArea = new TextArea(this.mScene, {
+                x: (this.mWidth - 15) / this.mWorld.uiScale >> 1,
+                y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
+                textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
+                textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
+                text,
+                slider: {
+                    track,
+                    thumb,
+                },
+                scroller: {
+                    bounds: [0, this.mHeight >> 1],
+                },
+                clamplChildOY: true,
+                backDeceleration: true,
+            });
+            // this.mTextArea.x = this.mTextArea.childrenMap.child.minWidth >> 1;
+            // this.mTextArea.y = this.mTextArea.childrenMap.child.minHeight >> 1;
+            this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
+            this.clickContainer.y = -this.clickContainer.height >> 1;
+            const silder = this.mTextArea.getElement("slider");
+            silder.y = this.mHeight >> 1;
+            this.clickContainer.rotation = Math.PI;
+            this.arrow.rotation = Math.PI * 1.5;
         }
         this.mTextArea.layout();
         this.add(this.mTextArea);
