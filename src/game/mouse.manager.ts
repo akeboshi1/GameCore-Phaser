@@ -5,6 +5,8 @@ import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
 import { MessageType } from "../const/MessageType";
+import { TerrainDisplay } from "../rooms/display/terrain.display";
+import { DisplayObject } from "../rooms/display/display.object";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -25,6 +27,8 @@ export class MouseManager extends PacketHandler {
     private mGame: Phaser.Game;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
+    private mDownDelay: number = 200;
+    private mDownTime: NodeJS.Timeout;
     constructor(private worldService: WorldService) {
         super();
         this.mGame = worldService.game;
@@ -43,6 +47,7 @@ export class MouseManager extends PacketHandler {
         room.scene.input.on("gameobjectdown", this.groundDown, this);
         room.scene.input.on("gameobjectup", this.groundUp, this);
         room.scene.input.on("pointerdown", this.pointerDownHandler, this);
+        room.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.resume();
     }
 
@@ -90,7 +95,7 @@ export class MouseManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
         content.mouseEvent = events;
-        content.point3f = { x: pointer.x, y: pointer.y };
+        content.point3f = { x: pointer.worldX / this.worldService.uiScale, y: pointer.worldY / this.worldService.uiScale };
         this.mConnect.send(pkt);
     }
 
@@ -121,6 +126,10 @@ export class MouseManager extends PacketHandler {
     private groundDown(pointer, gameObject) {
         this.mActivePointer = pointer;
         this.onUpdate(pointer, gameObject);
+
+        this.mDownTime = setTimeout(() => {
+            this.selectedElement(pointer, gameObject);
+        }, this.mDownDelay);
     }
 
     private groundUp(pointer, gameObject) {
@@ -129,8 +138,28 @@ export class MouseManager extends PacketHandler {
     }
 
     private pointerDownHandler() {
-        if (this.worldService && this.worldService.emitter) {
-            this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK);
+        if (this.worldService) {
+            if (this.worldService.emitter) {
+                this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK);
+            }
         }
+    }
+
+    private onPointerUpHandler() {
+        clearTimeout(this.mDownTime);
+    }
+
+    private selectedElement(pointer, gameobject) {
+        const com = gameobject.parentContainer;
+        if (!com) {
+            return;
+        }
+        if (!(com instanceof DisplayObject)) {
+            return;
+        }
+        if (com instanceof TerrainDisplay) {
+            return;
+        }
+        // TODO Enter decorate mode
     }
 }

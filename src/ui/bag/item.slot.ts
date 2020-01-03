@@ -25,7 +25,7 @@ export class ItemSlot implements IListItemComponent {
     protected mSubScriptSprite: Phaser.GameObjects.Sprite;
     protected mSubScriptRes: string;
     protected itemBG: Phaser.GameObjects.Sprite;
-    protected mSelectSprite: Phaser.GameObjects.Image;
+    protected mSelectSprite: Phaser.GameObjects.Sprite;
     protected mSelectRes: string;
     protected mWorld: WorldService;
 
@@ -209,8 +209,8 @@ export class ItemSlot implements IListItemComponent {
             this.toolTip.y = pointer.y;
         }
         if (this.mSelectRes && this.mSelectRes.length > 0) {
-            this.mSelectSprite = this.mScene.make.image(undefined, false);
-            this.mSelectSprite.setTexture(this.mResStr, this.mSelectRes);
+            this.mSelectSprite = this.mScene.make.sprite(undefined, false);
+            this.mSelectSprite.play(this.mSelectRes);
             this.toolTipCon.add(this.mSelectSprite);
         }
     }

@@ -50,11 +50,9 @@ export class LoadingScene extends Phaser.Scene {
       yoyo: true,
       repeat: -1
     });
-    const x: number = width - 150 - LOGO_MARGIN;
-    const y: number = height - 150 - LOGO_MARGIN;
-    this.lo = this.add.sprite(x, y, "loading");
-    this.lo.play("loading_anmis");
+    this.lo = this.add.sprite(0, 0, "loading");
     this.scale.on("resize", this.checkSize, this);
+    this.lo.play("loading_anmis");
     this.checkSize(new Size(width, height));
   }
 
@@ -89,9 +87,14 @@ export class LoadingScene extends Phaser.Scene {
     this.bg.clear();
     this.bg.fillStyle(0x616161);
     this.bg.fillRect(0, 0, width, height);
-    this.lo.x = width - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
-    this.lo.y = height - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
-    this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
+    if (this.mWorld.game.device.os.desktop) {
+      this.lo.x = width - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
+      this.lo.y = height - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
+    } else {
+      this.lo.x = (width - this.lo.width >> 1) + 100;
+      this.lo.y = (height - this.lo.height >> 1) + 100;
+    }
+    // this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
   }
 
 }

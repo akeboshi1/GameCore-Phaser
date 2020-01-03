@@ -4,13 +4,8 @@ import { Size } from "../utils/size";
 import { InputListener, InputManager } from "./input.service";
 import { IRoomService } from "../rooms/room";
 import { Direction } from "../rooms/element/element";
-import { op_def, op_virtual_world } from "pixelpai_proto";
-import { PBpacket } from "net-socket-packet";
-import { MainUIMediator } from "../ui/baseView/mainUI.mediator";
-import { MainUIPC } from "../ui/baseView/pc/mainUI.pc";
-import { MainUIMobile } from "../ui/baseView/mobile/mainUI.mobile";
-import { BottomBtnGroup } from "../ui/baseView/mobile/bottom.btn.group";
-import { Events } from "phaser";
+import { op_def } from "pixelpai_proto";
+import { PlayScene } from "../scenes/play";
 
 const TEMP_CONST = {
     MOUSE_DOWN: 0,
@@ -206,7 +201,7 @@ export class JoyStick {
         const size: Size = this.mWorld.getSize();
         this.bg = this.mScene.make.sprite(undefined, false);
         this.bg.setTexture("joystick", "joystick_bg.png");
-        this.bgRadius = this.bg.width + 140 >> 1;
+        this.bgRadius = this.bg.width + 100 >> 1;
         this.btn = this.mScene.make.sprite(undefined, false);
         this.btn.name = "joystick_btn";
         this.btn.setTexture("joystick", "joystick_tab.png");
@@ -246,13 +241,18 @@ export class JoyStick {
                 }
             }
         }
-        this.mjoystickCon.x = pointer.x;
-        this.mjoystickCon.y = pointer.y;
+        // 由于app环境下，游戏在浏览器中是全屏模式，所以需要在点击事件上除以当前UIscale调整位置
+        this.mjoystickCon.x = pointer.worldX / this.mWorld.uiScale;
+        this.mjoystickCon.y = pointer.worldY / this.mWorld.uiScale;
         this.parentCon.visible = true;
         this.mScene.input.off("pointerdown", this.downHandler, this);
         this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_END, [pointer]);
         this.btn.on("dragstart", this.dragStart, this);
         this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_START, [pointer]);
+        // phaser 的冒泡事件比较奇葩，没有停止冒泡的参数选项，只会把第一个有返回交互事件的scene返回过来，如果是多层scene，后续scene的交互就会return
+        // 实际是为了防止多个事件派发，其实很蠢，应该给参数让用户自己选择是否派发
+        const play: PlayScene = this.mWorld.game.scene.getScene(PlayScene.name) as PlayScene;
+        if (play) (play.input as any).update(TEMP_CONST.MOUSE_DOWN, [pointer]);
     }
 
     private dragUpdate(pointer, dragX, dragY) {

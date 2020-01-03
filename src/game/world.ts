@@ -255,6 +255,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mUiManager;
     }
 
+    get mouseManager(): MouseManager {
+        return this.mMouseManager;
+    }
+
     get inputManager(): InputManager | undefined {
         return this.mInputManager;
     }

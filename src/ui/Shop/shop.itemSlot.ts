@@ -103,10 +103,7 @@ export class ShopItemSlot extends ItemSlot {
 
     protected overHandler(pointer) {
         super.overHandler(pointer);
-        this.mSelectSprite = this.mScene.make.sprite(undefined, false);
-        this.mSelectSprite.setTexture("selectBg");
-        this.toolTipCon.addAt(this.mSelectSprite, 0);
-
+        this.mSelectSprite.y -= 10;
     }
 
     protected downHandler(pointer) {

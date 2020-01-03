@@ -26,4 +26,18 @@ export class ElementStorageMediator extends BaseMediator {
     isSceneUI(): boolean {
         return true;
     }
+
+    /**
+     * 展开
+     */
+    expand() {
+
+    }
+
+    /**
+     * 收起
+     */
+    collapse() {
+
+    }
 }

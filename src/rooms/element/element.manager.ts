@@ -24,7 +24,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
     private mGameConfig: IElementStorage;
-
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -32,7 +31,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
-            this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_MOVE_ELEMENT, this.onMove);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
@@ -208,6 +207,25 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onMove(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE = packet.content;
+        if (content.moveData) {
+            const moveDataList: op_client.IMoveData[] = content.moveData;
+            const len: number = moveDataList.length;
+            const type: op_def.NodeType = content.nodeType || null;
+            let moveData: op_client.IMoveData;
+            let elementID: number;
+            let element: Element;
+            for (let i: number = 0; i < len; i++) {
+                moveData = moveDataList[i];
+                elementID = moveData.moveObjectId;
+                element = this.get(elementID);
+                // Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                if (!element) {
+                    continue;
+                }
+                element.move(moveData);
+            }
+        }
     }
 
     protected onSetPosition(packet: PBpacket) {

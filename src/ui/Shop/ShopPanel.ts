@@ -66,9 +66,30 @@ export class ShopPanel extends Panel {
         }
         this.mScene.load.image(Border.getName(), Border.getPNG());
         this.mScene.load.image(Background.getName(), Background.getPNG());
+        this.mScene.load.atlas("itemChose", Url.getRes("ui/bag/itemChose.png"), Url.getRes("ui/bag/itemChose.json"));
         this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.mScene.load.atlas("shopView", Url.getRes("ui/shop/shopView.png"), Url.getRes("ui/shop/shopView.json"));
         super.preload();
+    }
+
+    protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
+        const selectFramesObj: {} = this.mScene.textures.get("itemChose").frames;
+        const tmpSelectFrames: any[] = [];
+        for (const key in selectFramesObj) {
+            if (key === "__BASE") continue;
+            const frame = selectFramesObj[key];
+            if (!frame) continue;
+            tmpSelectFrames.push(key);
+        }
+        // 手动把json配置中的frames给予anims
+        this.mScene.anims.create({
+            key: "itemSelectFrame",
+            frames: this.mScene.anims.generateFrameNumbers("itemChose", { start: 0, end: 8, frames: tmpSelectFrames }),
+            frameRate: 33,
+            yoyo: true,
+            repeat: -1
+        });
+        super.loadComplete(loader, totalComplete, totalFailed);
     }
 
     protected init() {
@@ -117,7 +138,7 @@ export class ShopPanel extends Panel {
         for (let i: number = 0; i < 20; i++) {
             tmpX = (i % 5) * 88 - this.mBg.width / 2 + 75;
             tmpY = Math.floor(i / 5) * 82 - this.mBg.height / 2 + 72;
-            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", null, null);
+            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", "itemSelectFrame");
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
