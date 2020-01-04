@@ -8,8 +8,7 @@ import { ChatMediator } from "../../chat/chat.mediator";
 import { MainUIMediator } from "../mainUI.mediator";
 import { JoyStickManager } from "../../../game/joystick.manager";
 import { MainUIMobile } from "./mainUI.mobile";
-import { BagMediator } from "../../bag/bagView/bagMediator";
-
+import { CheckButton } from "../../components/check.button";
 export class BottomBtnGroup extends Panel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
@@ -18,6 +17,8 @@ export class BottomBtnGroup extends Panel {
     private mTurnBtn: IconBtn;
     private mBagBtn: IconBtn;
     private mShopBtn: IconBtn;
+    private mVoiceBtn: CheckButton;
+    private mMicBtn: CheckButton;
     private mBtnList: IconBtn[];
     private mExpandBoo: boolean = false;
     private mWid: number = 0;
@@ -37,8 +38,16 @@ export class BottomBtnGroup extends Panel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.x = size.width >> 1;
+            this.mVoiceBtn.x = this.mVoiceBtn.width * this.mMicBtn.scaleX - this.mChatContainer.width / 2;
+            this.mVoiceBtn.y = -this.mVoiceBtn.height / 2 * this.mVoiceBtn.scaleY - this.mChatContainer.height / 2;
+            this.mMicBtn.x = this.mVoiceBtn.x + this.mVoiceBtn.width * this.mMicBtn.scaleX + 20;
+            this.mMicBtn.y = this.mVoiceBtn.y;
         } else if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.PORTRAIT) {
             this.x = size.width - (this.width / 2 + 40) * this.mWorld.uiScale;
+            this.mVoiceBtn.x = this.mVoiceBtn.width - this.mChatContainer.width / 2;
+            this.mVoiceBtn.y = this.mChatContainer.y - this.mChatContainer.height / 2 - this.mVoiceBtn.height / 2 * this.mMicBtn.scaleX;
+            this.mMicBtn.x = this.mVoiceBtn.x + this.mMicBtn.width * this.mMicBtn.scaleX + 20;
+            this.mMicBtn.y = this.mVoiceBtn.y;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
@@ -75,6 +84,7 @@ export class BottomBtnGroup extends Panel {
             return;
         }
         this.mResKey = "baseView";
+        this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
         this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
         super.preload();
     }
@@ -125,6 +135,20 @@ export class BottomBtnGroup extends Panel {
             this.bagHandler();
         });
         this.mChatContainer.on("pointerdown", this.chatHandler, this);
+        this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
+        this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
+        this.mVoiceBtn.y = size.height - this.height;
+        this.add(this.mVoiceBtn);
+
+        this.mMicBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        this.mMicBtn.x = this.width - 20 * this.mWorld.uiScale;
+        this.mMicBtn.y = size.height - this.height;
+        this.add(this.mMicBtn);
+
+        this.mVoiceBtn.scaleX = this.mVoiceBtn.scaleY = 1.5;
+        this.mMicBtn.scaleX = this.mMicBtn.scaleY = 1.5;
+        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
         this.resize();
         super.init();
     }
@@ -134,10 +158,28 @@ export class BottomBtnGroup extends Panel {
         super.tweenComplete(show);
     }
 
+    private onSelectedVoiceHandler(val: boolean) {
+        if (val === false) {
+            this.mMicBtn.selected = false;
+        }
+        this.emit("selectedVoice", val);
+    }
+
+    private onSelectedMicHandler(val: boolean) {
+        if (this.mVoiceBtn.selected === false) {
+            this.mMicBtn.selected = false;
+            return;
+        }
+        this.mMicBtn.selected = val;
+        this.emit("selectedMic", val);
+    }
+
     private turnHandler() {
         // const med: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         // (med.getView() as MainUIMobile).getTopView().removeBtn({ medKey: "RankMediator" });
         // return;
+        this.mVoiceBtn.visible = this.mExpandBoo;
+        this.mMicBtn.visible = this.mExpandBoo;
         const easeType: string = this.mExpandBoo ? "Sine.easeIn" : "Sine.easeOut";
         if (this.mChatContainer && this.mChatContainer.parentContainer) {
             const toScaleX: number = this.mExpandBoo ? 1 : 0;
