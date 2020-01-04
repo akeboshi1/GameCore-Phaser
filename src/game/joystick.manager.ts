@@ -245,8 +245,8 @@ export class JoyStick {
         this.mDown = true;
         this.mScene.input.on("pointermove", this.pointerMove, this);
         // 由于app环境下，游戏在浏览器中是全屏模式，所以需要在点击事件上除以当前UIscale调整位置
-        this.parentCon.x = pointer.worldX / this.mWorld.uiScale;
-        this.parentCon.y = pointer.worldY / this.mWorld.uiScale;
+        this.parentCon.x = pointer.worldX;
+        this.parentCon.y = pointer.worldY;
         this.parentCon.visible = true;
         // this.mScene.input.off("pointerdown", this.downHandler, this);
         // this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_END, [pointer]);
@@ -259,8 +259,8 @@ export class JoyStick {
     }
 
     private pointerMove(pointer) {
-        const dragX = pointer.worldX / this.mWorld.uiScale - this.parentCon.x;
-        const dragY = pointer.worldY / this.mWorld.uiScale - this.parentCon.y;
+        const dragX = pointer.worldX - this.parentCon.x;
+        const dragY = pointer.worldY - this.parentCon.y;
         let d = Math.sqrt(dragX * dragX + dragY * dragY);
         if (d > this.bgRadius) {
             d = this.bgRadius;

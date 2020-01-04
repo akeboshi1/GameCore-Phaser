@@ -7,14 +7,17 @@ import { NinePatch } from "../../components/nine.patch";
 import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 import { NinePatchButton } from "../../components/ninepatch.button";
 import { MainUIMediator } from "../../baseView/mainUI.mediator";
+import { CheckButton } from "../../components/check.button";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;
     private mInputText: InputText;
-    private mBorder;
-    private mSendBtn;
-    private mInputBg;
+    private mBorder: NinePatch;
+    private mSendBtn: NinePatchButton;
+    private mVoiceBtn: CheckButton;
+    private mMicBtn: CheckButton;
+    private mInputBg: NinePatch;
     private clickContainer: Phaser.GameObjects.Container;
-    private arrow;
+    private arrow: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setTween(false);
@@ -106,6 +109,10 @@ export class ChatPanelMobile extends BaseChatPanel {
                 clamplChildOY: true,
             });
             this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
+            this.mVoiceBtn.x = this.clickContainer.x;
+            this.mVoiceBtn.y = this.mVoiceBtn.height * this.mMicBtn.scaleY;
+            this.mMicBtn.x = this.mVoiceBtn.x + this.mVoiceBtn.width * this.mMicBtn.scaleX;
+            this.mMicBtn.y = this.mVoiceBtn.height * this.mMicBtn.scaleY;
         } else {
             this.mWidth = size.width;
             this.mHeight = size.height / 2;
@@ -138,6 +145,10 @@ export class ChatPanelMobile extends BaseChatPanel {
             this.clickContainer.rotation = Math.PI;
             this.arrow.rotation = Math.PI * 1.5;
             this.mInputText.setPosition(2, this.mInputBg.y - 6 * this.mWorld.uiScale);
+            this.mVoiceBtn.x = this.clickContainer.x + this.mVoiceBtn.width * this.mMicBtn.scaleX + this.clickContainer.width / 2;
+            this.mVoiceBtn.y = this.clickContainer.y;
+            this.mMicBtn.x = this.mVoiceBtn.x + this.mMicBtn.width * this.mMicBtn.scaleX + 20;
+            this.mMicBtn.y = this.clickContainer.y;
         }
         this.mTextArea.layout();
         this.add(this.mTextArea);
@@ -294,6 +305,19 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.clickContainer.on("pointerdown", this.clickHandler, this);
         this.add(this.clickContainer);
         this.add(this.mInputText);
+
+        this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
+        this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
+        this.mVoiceBtn.y = size.height - this.height;
+        this.add(this.mVoiceBtn);
+
+        this.mMicBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        this.mMicBtn.x = this.width - 20 * this.mWorld.uiScale;
+        this.mMicBtn.y = size.height - this.height;
+        this.add(this.mMicBtn);
+
+        this.mVoiceBtn.scaleX = this.mVoiceBtn.scaleY = 1.5;
+        this.mMicBtn.scaleX = this.mMicBtn.scaleY = 1.5;
         this.setLocation();
         super.init();
     }
