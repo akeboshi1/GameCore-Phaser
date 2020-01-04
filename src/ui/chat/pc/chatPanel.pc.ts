@@ -221,6 +221,7 @@ export class ChatPanelPC extends BaseChatPanel {
             this.mMicBtn.selected = false;
             return;
         }
+        this.mMicBtn.selected = val;
         this.emit("selectedMic", val);
     }
 

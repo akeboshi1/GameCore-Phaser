@@ -37,7 +37,7 @@ export class BottomBtnGroup extends Panel {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.x = size.width >> 1;
-        } else {
+        } else if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.PORTRAIT) {
             this.x = size.width - (this.width / 2 + 40) * this.mWorld.uiScale;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;

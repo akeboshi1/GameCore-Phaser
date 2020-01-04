@@ -45,7 +45,7 @@ export class RightBtnGroup extends Panel {
                 this.y = size.height - (this.height) * this.mWorld.uiScale;
                 this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
             }
-        } else {
+        } else if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.PORTRAIT) {
             this.y = size.height - (padHei + this.height / 2) * this.mWorld.uiScale;
             this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
         }

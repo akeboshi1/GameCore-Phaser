@@ -105,6 +105,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 },
                 clamplChildOY: true,
             });
+            this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
         } else {
             this.mWidth = size.width;
             this.mHeight = size.height / 2;
@@ -136,6 +137,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             silder.y = this.mHeight >> 1;
             this.clickContainer.rotation = Math.PI;
             this.arrow.rotation = Math.PI * 1.5;
+            this.mInputText.setPosition(2, this.mInputBg.y - 6 * this.mWorld.uiScale);
         }
         this.mTextArea.layout();
         this.add(this.mTextArea);
@@ -148,7 +150,6 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.mInputBg.x = this.mInputBg.width >> 1;
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
         this.mSendBtn.y = this.mInputBg.y;
-        this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         this.add(this.mInputText);
     }
