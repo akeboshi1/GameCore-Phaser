@@ -173,8 +173,9 @@ export class JoyStick {
     private mJoyListeners: InputListener[];
     private mdownStr: string;
     private mScale: number;
-    private mjoystickCon: Phaser.GameObjects.Container;
+    // private mjoystickCon: Phaser.GameObjects.Container;
     private mKeyCodes: any[];
+    private mDown: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, joyListeners: InputListener[], scale: number) {
         this.mScene = scene;
         this.mWorld = world;
@@ -207,27 +208,27 @@ export class JoyStick {
         this.btn.setTexture("joystick", "joystick_tab.png");
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
-        this.mjoystickCon = this.mScene.make.container(undefined, false);
-        this.mjoystickCon.alpha = .5;
-        this.mjoystickCon.addAt(this.bg, 0);
-        this.mjoystickCon.addAt(this.btn, 1);
-        this.parentCon.add(this.mjoystickCon);
-        this.btn.setInteractive();
-        this.mScene.input.setDraggable(this.btn);
+        this.parentCon.alpha = .5;
+        this.parentCon.addAt(this.bg, 0);
+        this.parentCon.addAt(this.btn, 1);
+        this.btn.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.btn.width, this.btn.height), Phaser.Geom.Rectangle.Contains);
+        // this.mScene.input.setDraggable(this.btn);
         this.mScene.input.on("pointerdown", this.downHandler, this);
+        this.mScene.input.on("pointerup", this.upHandler, this);
         this.parentCon.setSize(this.bg.width, this.bg.height);
         this.parentCon.visible = false;
     }
 
-    private dragStart(pointer) {
-        Logger.getInstance().log("dragstart");
-        this.btn.on("drag", this.dragUpdate, this);
-        this.btn.off("dragstart", this.dragStart, this);
-        this.btn.on("dragend", this.dragStop, this);
-        this.btn.on("dragcancel", this.dragStop, this);
-    }
+    // private dragStart(pointer) {
+    //     Logger.getInstance().log("dragstart");
+    //     this.btn.on("drag", this.dragUpdate, this);
+    //     this.btn.off("dragstart", this.dragStart, this);
+    //     this.btn.on("dragend", this.dragStop, this);
+    //     this.btn.on("dragcancel", this.dragStop, this);
+    // }
 
     private downHandler(pointer, gameojectList) {
+        if (this.mDown) return;
         if (gameojectList) {
             if (gameojectList.length > 1) {
                 return;
@@ -241,29 +242,34 @@ export class JoyStick {
                 }
             }
         }
+        this.mDown = true;
+        this.mScene.input.on("pointermove", this.pointerMove, this);
         // 由于app环境下，游戏在浏览器中是全屏模式，所以需要在点击事件上除以当前UIscale调整位置
-        this.mjoystickCon.x = pointer.worldX / this.mWorld.uiScale;
-        this.mjoystickCon.y = pointer.worldY / this.mWorld.uiScale;
+        this.parentCon.x = pointer.worldX;
+        this.parentCon.y = pointer.worldY;
         this.parentCon.visible = true;
-        this.mScene.input.off("pointerdown", this.downHandler, this);
-        this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_END, [pointer]);
-        this.btn.on("dragstart", this.dragStart, this);
-        this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_START, [pointer]);
-        // phaser 的冒泡事件比较奇葩，没有停止冒泡的参数选项，只会把第一个有返回交互事件的scene返回过来，如果是多层scene，后续scene的交互就会return
-        // 实际是为了防止多个事件派发，其实很蠢，应该给参数让用户自己选择是否派发
-        const play: PlayScene = this.mWorld.game.scene.getScene(PlayScene.name) as PlayScene;
-        if (play) (play.input as any).update(TEMP_CONST.MOUSE_DOWN, [pointer]);
+        // this.mScene.input.off("pointerdown", this.downHandler, this);
+        // this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_END, [pointer]);
+        // this.btn.on("dragstart", this.dragStart, this);
+        // this.mScene.input.manager.updateInputPlugins(TEMP_CONST.TOUCH_START, [pointer]);
+        // // phaser 的冒泡事件比较奇葩，没有停止冒泡的参数选项，只会把第一个有返回交互事件的scene返回过来，如果是多层scene，后续scene的交互就会return
+        // // 实际是为了防止多个事件派发，其实很蠢，应该给参数让用户自己选择是否派发
+        // const play: PlayScene = this.mWorld.game.scene.getScene(PlayScene.name) as PlayScene;
+        // if (play) (play.input as any).update(TEMP_CONST.MOUSE_DOWN, [pointer]);
     }
 
-    private dragUpdate(pointer, dragX, dragY) {
-        Logger.getInstance().log("draging");
+    private pointerMove(pointer) {
+        const dragX = pointer.worldX - this.parentCon.x;
+        const dragY = pointer.worldY - this.parentCon.y;
         let d = Math.sqrt(dragX * dragX + dragY * dragY);
         if (d > this.bgRadius) {
             d = this.bgRadius;
         }
         const r = Math.atan2(dragY, dragX);
-        this.btn.x = Math.cos(r) * d + this.bg.x;
-        this.btn.y = Math.sin(r) * d + this.bg.y;
+        this.btn.x = Math.cos(r) * d;
+        this.btn.y = Math.sin(r) * d;
+        Logger.getInstance().debug(`dragX: ${dragX} / dragY: ${dragY} | this.parentCon.x: ${this.parentCon.x} / this.parentCon.y: ${this.parentCon.y}
+        |this.btn.x:${this.btn.x}\this.btn.y:${this.btn.y}`);
         if (!(this.mWorld.inputManager as JoyStickManager).enable) {
             return;
         }
@@ -272,15 +278,29 @@ export class JoyStick {
         });
     }
 
-    private dragStop(pointer) {
-        this.btn.off("drag", this.dragUpdate, this);
-        this.btn.off("dragend", this.dragStop, this);
-        this.btn.off("dragcancel", this.dragStop, this);
-        this.mScene.input.on("pointerdown", this.downHandler, this);
+    // private dragUpdate(pointer, dragX, dragY) {
+    //     Logger.getInstance().log("draging");
+    //     let d = Math.sqrt(dragX * dragX + dragY * dragY);
+    //     if (d > this.bgRadius) {
+    //         d = this.bgRadius;
+    //     }
+    //     const r = Math.atan2(dragY, dragX);
+    //     this.btn.x = Math.cos(r) * d + this.bg.x;
+    //     this.btn.y = Math.sin(r) * d + this.bg.y;
+    //     if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+    //         return;
+    //     }
+    //     this.mJoyListeners.forEach((l: InputListener) => {
+    //         this.checkdragDown(l, r);
+    //     });
+    // }
+    private upHandler(pointer) {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
-        Logger.getInstance().log("dragEnd");
+        this.mDown = false;
+        Logger.getInstance().log("pointerUp");
         this.parentCon.visible = false;
+        this.mScene.input.off("pointermove", this.pointerMove, this);
         if (!(this.mWorld.inputManager as JoyStickManager).enable) {
             return;
         }
@@ -290,6 +310,25 @@ export class JoyStick {
             }
         });
     }
+
+    // private dragStop(pointer) {
+    //     this.btn.off("drag", this.dragUpdate, this);
+    //     this.btn.off("dragend", this.dragStop, this);
+    //     this.btn.off("dragcancel", this.dragStop, this);
+    //     this.mScene.input.on("pointerdown", this.downHandler, this);
+    //     this.btn.x = this.bg.x;
+    //     this.btn.y = this.bg.y;
+    //     Logger.getInstance().log("dragEnd");
+    //     this.parentCon.visible = false;
+    //     if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+    //         return;
+    //     }
+    //     this.mJoyListeners.forEach((l: InputListener) => {
+    //         if (this.checkdragUp()) {
+    //             l.upHandler();
+    //         }
+    //     });
+    // }
 
     private checkdragDown(l: InputListener, r: number): boolean {
         let dir: number;
