@@ -5,12 +5,13 @@ import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { EditorRoomService } from "../../rooms/editor.room";
 import { DisplayObject } from "../../rooms/display/display.object";
 import { IRoomService } from "../../rooms/room";
+import { DecorateRoom } from "../../rooms/decorate.room";
 
 export class DecorateManager {
     private mPanel: DecoratePanel;
     private mLayerManager: LayerManager;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
-        this.mPanel = new DecoratePanel(scene, roomService);
+        this.mPanel = new DecoratePanel(scene, <DecorateRoom> roomService);
         this.mLayerManager = roomService.layerManager;
     }
 

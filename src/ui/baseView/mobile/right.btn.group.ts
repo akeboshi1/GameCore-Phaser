@@ -30,7 +30,6 @@ export class RightBtnGroup extends Panel {
 
     public resize() {
         const size: Size = this.mWorld.getSize();
-        return;
         // this.refreshSlot();
         const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
         const padHei: number = !mainUIMed ? this.height / 2 : (mainUIMed.getView() as MainUIMobile).getBottomView().height;

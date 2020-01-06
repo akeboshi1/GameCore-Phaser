@@ -14,6 +14,7 @@ export class ElementStoragePanel extends Panel {
     private mSearchInput: InputText;
     private mDragBtn: NinePatchButton;
     private mTabs: NinePatchButton[];
+    private mExpaned: boolean = true;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -87,7 +88,8 @@ export class ElementStoragePanel extends Panel {
             ease: "Linear",
             props
         });
-        this.remove(this.mDragBtn);
+        // this.remove(this.mDragBtn);
+        this.mExpaned = true;
     }
 
     collapse() {
@@ -105,6 +107,7 @@ export class ElementStoragePanel extends Panel {
             props
         });
         this.addAt(this.mDragBtn, 0);
+        this.mExpaned = false;
     }
 
     protected preload() {
@@ -139,6 +142,7 @@ export class ElementStoragePanel extends Panel {
         };
 
         this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "物件容器", config);
+        this.mDragBtn.on("pointerup", this.switchExpand, this);
 
         this.mTabs = [];
 
@@ -151,16 +155,15 @@ export class ElementStoragePanel extends Panel {
         this.mTabs.push(button);
         this.mTabs.push(button2);
 
-        this.add([this.mDragBtn, this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
+        this.add([this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
         super.init();
         this.resize();
 
-        // setTimeout(() => {
-        //     this.collapse();
-        // }, 2000);
-        // setTimeout(() => {
-        //     this.expand();
-        // }, 5000);
+        this.collapse();
+    }
+
+    private switchExpand() {
+        this.mExpaned ? this.collapse() : this.expand();
     }
 
     private onSelectedHandler() {

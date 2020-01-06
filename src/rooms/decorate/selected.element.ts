@@ -1,9 +1,6 @@
 import {FramesDisplay} from "../display/frames.display";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
-import { LayerManager } from "../layer/layer.manager";
-import { Logger } from "../../utils/log";
-import { EditorRoomService } from "../editor.room";
 import { IRoomService } from "../room";
 
 export class SelectedElement {
@@ -30,6 +27,12 @@ export class SelectedElement {
         if (this.mDisplay) {
             this.mDisplay.hideRefernceArea();
             this.mDisplay = null;
+        }
+    }
+
+    update(time: number, delta: number) {
+        if (this.mDisplay) {
+            this.mDecorateManager.updatePos(this.mDisplay.x, this.mDisplay.y);
         }
     }
 

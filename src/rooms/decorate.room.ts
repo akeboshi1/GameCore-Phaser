@@ -37,6 +37,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
     private mSelectedElement: SelectedElement;
+    private mMap: number[][];
 
     constructor(manager: IRoomManager) {
         super();
@@ -80,6 +81,11 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             sceneWidth: (rows + cols) * (tileWidth / 2),
             sceneHeight: (rows + cols) * (tileHeight / 2),
         };
+
+        this.mMap = new Array(rows);
+        for (let i = 0; i < rows; i++) {
+            this.mMap[i] = new Array(cols);
+        }
 
         if (!this.world.game.scene.getScene(LoadingScene.name))
             this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
@@ -212,6 +218,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.mLayerManager) {
             this.mLayerManager.update(time, delta);
         }
+        if (this.mSelectedElement) {
+            this.mSelectedElement.update(time, delta);
+        }
     }
 
     updateClock(time: number, delta: number): void {
@@ -254,6 +263,20 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             return source;
         }
         return this.transformToMini90(bound);
+    }
+
+    public canPut(display: DisplayObject) {
+        if (!display) {
+            return;
+        }
+        const pos45 = this.transformToMini45(new Pos(display.x, display.y));
+        if (this.mMap[pos45.y][pos45.x] === 1) {
+            display.alpha = 0.5;
+            return false;
+        } else {
+            display.alpha = 1;
+        }
+        return true;
     }
 
     private addPointerMoveHandler() {

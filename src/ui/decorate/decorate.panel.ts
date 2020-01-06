@@ -5,6 +5,8 @@ import { DisplayObject } from "../../rooms/display/display.object";
 import { Pos } from "../../utils/pos";
 import { Position45, IPosition45Obj } from "../../utils/position45";
 import { IRoomService } from "../../rooms/room";
+import { DecorateRoom } from "../../rooms/decorate.room";
+import { Logger } from "../../utils/log";
 
 export class DecoratePanel extends Panel {
     private readonly resKey = "decorate";
@@ -21,7 +23,7 @@ export class DecoratePanel extends Panel {
     private mArrow7: Phaser.GameObjects.Image;
     private mDisplayObject: DisplayObject;
 
-    constructor(scene: Phaser.Scene, private mRoomService: IRoomService) {
+    constructor(scene: Phaser.Scene, private mRoomService: DecorateRoom) {
         super(scene, null);
         this.setTween(false);
     }
@@ -62,9 +64,9 @@ export class DecoratePanel extends Panel {
         this.mArrow3 = this.createImage(this.resKey, "arrow_3.png", 0, 300).setOrigin(0, 0);
         this.mArrow3.on("pointerup", this.onLeftDownHandler, this);
         this.mArrow5 = this.createImage(this.resKey, "arrow_5.png", 300, 300).setOrigin(0, 0);
-        this.mArrow5.on("pointerup", this.onRightUpHandler, this);
+        this.mArrow5.on("pointerup", this.onRightDownHandler, this);
         this.mArrow7 = this.createImage(this.resKey, "arrow_7.png", 300, 100).setOrigin(0, 0);
-        this.mArrow7.on("pointerup", this.onRightDownHandler, this);
+        this.mArrow7.on("pointerup", this.onRightUpHandler, this);
 
         this.add([this.mControllContainer, this.mArrow1, this.mArrow7, this.mArrow3, this.mArrow5]);
         this.mControllContainer.add([border, this.mTurnBtn, this.mPutBtn, this.mConfirmBtn]);
@@ -77,20 +79,36 @@ export class DecoratePanel extends Panel {
     }
 
     private onLeftUpHandler() {
+        if (!this.mDisplayObject) {
+            return;
+        }
+        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        pos45.x -= 1;
+        this.onMoveElement(pos45);
     }
 
     private onLeftDownHandler() {
+        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        pos45.y += 1;
+        this.onMoveElement(pos45);
     }
 
     private onRightUpHandler() {
+        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        pos45.y -= 1;
+        this.onMoveElement(pos45);
     }
 
     private onRightDownHandler() {
-
+        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        pos45.x  = pos45.x + 1;
+        this.onMoveElement(pos45);
     }
 
-    private onMoveElement() {
-        // this.emit()
+    private onMoveElement(pos45: Pos) {
+        Logger.getInstance().log("element pos: ", pos45);
+        const position = this.mRoomService.transformToMini90(pos45);
+        this.mDisplayObject.setPosition(position.x, position.y);
     }
 
     private createImage(key: string, frame?: string, x?: number, y?: number): Phaser.GameObjects.Image {
