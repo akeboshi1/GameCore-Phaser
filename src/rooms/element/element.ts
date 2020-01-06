@@ -456,7 +456,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            if (this.mDisplayInfo.animationName) this.mDisplay.play(this.mDisplayInfo.animationName);
+            if (this.model.currentAnimationName) this.mDisplay.play(this.model.currentAnimationName);
             this.setDepth();
         }
     }
