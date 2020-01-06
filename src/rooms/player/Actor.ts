@@ -166,8 +166,7 @@ export class Actor extends Player implements InputListener {
             this.mBag = new Bag(this.mElementManager.roomService.world);
             this.mBag.register();
         }
-        this.mDisplayInfo = this.mModel.displayInfo;
-        this.createDisplay();
+        this.load(this.mModel.displayInfo);
         if (this.mModel.pos) this.setPosition(this.mModel.pos);
         this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.mDisplay.showNickname(this.mModel.nickname);

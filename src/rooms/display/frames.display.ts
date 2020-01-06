@@ -32,7 +32,7 @@ export class FramesDisplay extends DisplayObject {
         if (!data || !data.gene) return;
         if (this.mSprites.get(field)) return;
         this.mDisplayDatas.set(field, data);
-        if (this.scene.cache.obj.has(data.gene)) {
+        if (this.scene.cache.obj.exists(data.gene)) {
             this.onLoadCompleted(field);
         } else {
             const display = data.display;

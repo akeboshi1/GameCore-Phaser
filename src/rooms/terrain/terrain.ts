@@ -29,13 +29,23 @@ export class Terrain extends BlockObject implements IElement {
         if (!val) {
             return;
         }
-        this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
-        this.createDisplay();
+        this.load(<IFramesModel> this.mModel.displayInfo);
+        // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
+        // this.createDisplay();
         if (!this.mDisplay) {
             return;
         }
         this.setPosition45(this.mModel.pos);
         // this.addDisplay();
+    }
+
+    public load(displayInfo: IFramesModel) {
+        this.mDisplayInfo = displayInfo;
+        if (!this.mDisplay) {
+            this.createDisplay();
+        }
+        this.mDisplayInfo = displayInfo;
+        this.mDisplay.load(this.mDisplayInfo);
     }
 
     public play(animationName: string): void {
@@ -147,7 +157,6 @@ export class Terrain extends BlockObject implements IElement {
             // Logger.getInstance().error("display does not exist");
             return;
         }
-        this.mDisplay.load(this.mDisplayInfo);
         if (!this.mElementManager) {
             Logger.getInstance().error("element manager does not exist");
             return;

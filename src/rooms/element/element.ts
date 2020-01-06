@@ -129,6 +129,7 @@ export class Element extends BlockObject implements IElement {
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+        this.loadDisplayInfo();
     }
 
     public setModel(model: ISprite) {
@@ -136,8 +137,8 @@ export class Element extends BlockObject implements IElement {
         if (!model) {
             return;
         }
-        this.mDisplayInfo = this.mModel.displayInfo;
-        this.createDisplay();
+        // this.mDisplayInfo = this.mModel.displayInfo;
+        this.load(this.mModel.displayInfo);
         if (!this.mDisplay) {
             return;
         }
@@ -390,7 +391,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mDisplay) {
-            this.mDisplay.load(this.mDisplayInfo);
             return this.mDisplay;
         }
         const scene = this.mElementManager.scene;
@@ -402,11 +402,17 @@ export class Element extends BlockObject implements IElement {
             }
             const pos = this.mModel.pos;
             if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
-            this.mDisplay.once("initialized", this.onDisplayReady, this);
-            this.mDisplay.load(this.mDisplayInfo);
             this.addToBlock();
         }
         return this.mDisplay;
+    }
+
+    protected loadDisplayInfo() {
+        if (!this.mDisplay) {
+            this.createDisplay();
+        }
+        this.mDisplay.once("initialized", this.onDisplayReady, this);
+        this.mDisplay.load(this.mDisplayInfo);
     }
 
     protected addDisplay() {
@@ -450,7 +456,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            this.mDisplay.play(PlayerState.IDLE);
+            if (this.mDisplayInfo.animationName) this.mDisplay.play(this.mDisplayInfo.animationName);
             this.setDepth();
         }
     }
