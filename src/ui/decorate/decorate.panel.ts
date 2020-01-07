@@ -72,9 +72,6 @@ export class DecoratePanel extends Panel {
         this.mControllContainer.add([border, this.mTurnBtn, this.mPutBtn, this.mConfirmBtn]);
         super.init();
 
-        this.x = 700;
-        this.y = 300;
-
         this.setElement(this.mDisplayObject);
     }
 
@@ -106,7 +103,6 @@ export class DecoratePanel extends Panel {
     }
 
     private onMoveElement(pos45: Pos) {
-        Logger.getInstance().log("element pos: ", pos45);
         const position = this.mRoomService.transformToMini90(pos45);
         this.mDisplayObject.setPosition(position.x, position.y);
     }

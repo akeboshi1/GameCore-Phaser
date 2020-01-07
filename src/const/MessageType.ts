@@ -67,4 +67,6 @@ export class MessageType {
     public static UPDATED_CHARACTER_PACKAGE = "updatedCharacterPackage";
 
     public static SHOW_EFFECT = "showEffect";
+
+    public static EDIT_MODE_QUERY_PACKAGE = "editModeQueryPackage";
 }

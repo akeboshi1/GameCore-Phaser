@@ -7,6 +7,7 @@ import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputTex
 import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { Logger } from "../../utils/log";
+import { Item } from "./item/Item";
 
 export class ElementStoragePanel extends Panel {
     private mBackground: NinePatch;
@@ -14,6 +15,7 @@ export class ElementStoragePanel extends Panel {
     private mSearchInput: InputText;
     private mDragBtn: NinePatchButton;
     private mTabs: NinePatchButton[];
+    private mProps: Item[];
     private mExpaned: boolean = true;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
@@ -113,6 +115,7 @@ export class ElementStoragePanel extends Panel {
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image("button", Url.getRes("ui/common/button.png"));
+        this.scene.load.image("prop_background", Url.getRes("ui/common/prop_background.png"));
         this.scene.load.image(Background.getName(), Background.getPNG());
         super.preload();
     }
@@ -120,11 +123,6 @@ export class ElementStoragePanel extends Panel {
     protected init() {
         this.mBackground = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
         this.mBorder = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, Border.getConfig());
-        // this.mBackground.x += this.mBackground.width >> 1;
-        // this.mBackground.y += this.mBackground.height >> 1;
-
-        // this.mBorder.x += this.mBorder.width >> 1;
-        // this.mBorder.y += this.mBorder.height >> 1;
 
         // TODO 多语言配置
         this.mSearchInput = new InputText(this.scene, 40 + 105, 40,  210, 26,  {

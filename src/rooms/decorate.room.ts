@@ -21,6 +21,7 @@ import {Logger} from "../utils/log";
 import { FramesDisplay } from "./display/frames.display";
 import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
+import { DecorateElementManager } from "./element/decorate.element.manager";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly blocks: ViewblockService;
@@ -163,7 +164,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         // this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         // this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mTerrainManager = new TerrainManager(this);
-        this.mElementManager = new ElementManager(this);
+        this.mElementManager = new DecorateElementManager(this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
@@ -265,18 +266,22 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         return this.transformToMini90(bound);
     }
 
-    public canPut(display: DisplayObject) {
-        if (!display) {
+    public canPut(pos: Pos) {
+        if (!pos) {
             return;
         }
-        const pos45 = this.transformToMini45(new Pos(display.x, display.y));
+        const pos45 = this.transformToMini45(pos);
         if (this.mMap[pos45.y][pos45.x] === 1) {
-            display.alpha = 0.5;
             return false;
-        } else {
-            display.alpha = 1;
         }
         return true;
+    }
+
+    public setMap(rows: number, cols: number, type: number) {
+        if (rows < 0 || cols < 0 || this.mMap.length < rows || this.mMap[0].length < cols) {
+            return;
+        }
+        this.mMap[cols][rows] = type;
     }
 
     private addPointerMoveHandler() {
