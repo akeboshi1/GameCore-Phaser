@@ -238,13 +238,12 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.createElement();
                 break;
             case BrushEnum.SELECT:
-                if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
-                    Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
-                    if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
+                if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
+                    if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
                         this.syncSprite(this.mSelectedElementEffect.display);
                     }
+                    this.mSelectedElementEffect.selecting = false;
                 }
-                this.mSelectedElementEffect.selecting = false;
                 break;
             case BrushEnum.ERASER:
                 this.eraserElement();
