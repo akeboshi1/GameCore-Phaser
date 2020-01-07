@@ -57,6 +57,7 @@ export class FramesDisplay extends DisplayObject {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         const ani = data.getAnimations(animationName);
+        Logger.getInstance().log("play AnimationName: ", animationName, ani);
         if (!ani) {
             return;
         }
@@ -168,7 +169,7 @@ export class FramesDisplay extends DisplayObject {
             key,
             frames,
             frameRate: animation.frameRate,
-            repeat: animation.loop ? -1 : 1,
+            repeat: animation.loop ? -1 : 0,
         };
 
         this.mHasAnimation = true;
