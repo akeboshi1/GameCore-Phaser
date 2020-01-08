@@ -225,9 +225,9 @@ export class MouseFollow {
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
     protected mTileSize: IPosition45Obj;
+    protected mOffset: Phaser.Geom.Point;
     private mDisplay: FramesDisplay[];
     private mNodeType: op_def.NodeType;
-    private mOffset: Phaser.Geom.Point;
     constructor(scene: Phaser.Scene, protected mRoomService: IRoomService) {
         super(scene);
         this.mOffset = new Phaser.Geom.Point();
@@ -339,6 +339,9 @@ class EraserArea extends MouseDisplayContainer {
             sceneWidth: (size + size) * (tileWidth / 2),
             sceneHeight: (size + size) * (tileHeight / 2)
         };
+
+        this.mOffset.x = -(this.mTileSize.sceneWidth / 2);
+        this.mOffset.y = -((this.mTileSize.sceneHeight - (size % 2 === 0 ? 0 : tileHeight)) / 2);
         let p1: Pos;
         let p2: Pos;
         let p3: Pos;
