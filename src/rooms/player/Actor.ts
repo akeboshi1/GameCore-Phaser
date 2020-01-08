@@ -115,7 +115,7 @@ export class Actor extends Player implements InputListener {
             id: this.id,
             point3f: {
                 x: pos.x,
-                y: pos.y,
+                y: pos.y - this.offsetY,
                 z: pos.z,
             },
             direction: this.dir

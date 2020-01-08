@@ -58,12 +58,7 @@ export class Player extends Element {
         this.changeState(PlayerState.IDLE);
     }
 
-    private mCheckStateHandle(val: string): boolean {
-        // if (this.mCurState === val) return false;
-        return true;
-    }
-
-    private get offsetY(): number {
+    protected get offsetY(): number {
         if (this.mOffsetY === undefined) {
             if (!this.mElementManager || !this.mElementManager.roomService || !this.mElementManager.roomService.roomSize) {
                 return 0;
@@ -71,5 +66,10 @@ export class Player extends Element {
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return this.mOffsetY;
+    }
+
+    private mCheckStateHandle(val: string): boolean {
+        // if (this.mCurState === val) return false;
+        return true;
     }
 }
