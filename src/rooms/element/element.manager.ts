@@ -33,11 +33,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
-            this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_ELEMENT_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
 
         }
         if (this.mRoom && this.mRoom.world) {
@@ -179,6 +179,17 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
+    protected onSetPosition(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
+        const type: number = content.nodeType;
+        const id: number = content.id;
+        if (type !== NodeType.ElementNodeType) {
+            return;
+        }
+        const ele: Element = this.get(id);
+        ele.setPosition(new Pos(content.position.x, content.position.y, content.position.z));
+    }
+
     protected onRemove(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
@@ -226,9 +237,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 element.move(moveData);
             }
         }
-    }
-
-    protected onSetPosition(packet: PBpacket) {
     }
 
     private onShowBubble(packet: PBpacket) {
