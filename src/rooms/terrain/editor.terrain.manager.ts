@@ -137,7 +137,8 @@ export class EditorTerrainManager extends TerrainManager {
             const pos45 = ter.getPosition45();
             if (sprite.pos.equal(pos45)) {
                 if (sprite.bindID !== ter.model.bindID) {
-                    this.removeEditor(ter.id);
+                    // 编辑器判断重叠地块
+                    // this.removeEditor(ter.id);
                     return true;
                 }
                 return false;

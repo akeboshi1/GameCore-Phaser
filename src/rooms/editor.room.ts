@@ -16,7 +16,6 @@ import {DisplayObject} from "./display/display.object";
 import {Pos} from "../utils/pos";
 import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
-import {Element} from "./element/element";
 import {ElementDisplay} from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
 
@@ -265,7 +264,6 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private onGameobjectUpHandler(pointer, gameobject) {
         this.removePointerMoveHandler();
-        Logger.getInstance().log("gameobject");
         const com = gameobject.parentContainer;
         if (!com) {
             return;

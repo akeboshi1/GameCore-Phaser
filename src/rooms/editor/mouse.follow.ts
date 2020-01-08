@@ -37,7 +37,7 @@ export class MouseFollow {
         this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
         const size = this.mNodeType === NodeType.TerrainNodeType ? this.mSize : 1;
-        this.mDisplay.setDisplay(<IFramesModel> this.mSprite.displayInfo, size);
+        this.mDisplay.setDisplay(this.mSprite, size);
         this.mLayerManager.addToSceneToUI(this.mDisplay);
 
         if (this.mNodeType === NodeType.TerrainNodeType) {
@@ -102,7 +102,7 @@ export class MouseFollow {
 
     transitionGrid(x: number, y: number, ) {
         const source = new Pos(x, y);
-        const pos = this.mRoomService.transformToMini45(source);
+        const pos = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mRoomService.transformTo45(source) : this.mRoomService.transformToMini45(source);
         if (this.mAlignGrid === false) {
             return this.checkBound(pos, source);
         }
@@ -117,7 +117,7 @@ export class MouseFollow {
      */
     checkBound(pos: Pos, source?: Pos) {
         const bound = new Pos(pos.x, pos.y);
-        const size = this.mRoomService.miniSize;
+        const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mRoomService.roomSize : this.mRoomService.miniSize;
         if (pos.x < 0) {
             bound.x = 0;
         } else if (pos.x > size.cols) {
@@ -131,6 +131,9 @@ export class MouseFollow {
         }
         if (bound.equal(pos) && source) {
             return source;
+        }
+        if (this.mNodeType === op_def.NodeType.TerrainNodeType) {
+            return this.mRoomService.transformTo90(bound);
         }
         return this.mRoomService.transformToMini90(bound);
     }
@@ -153,10 +156,8 @@ export class MouseFollow {
 
     private getPosition(rows: number = 0, cols: number = 0) {
         if (this.mNodeType === op_def.NodeType.TerrainNodeType) {
-            return  this.mRoomService.transformTo45(new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols));
-            // pos.x += rows;
-            // pos.y += cols;
-            // return pos;
+            const pos45 = this.mRoomService.transformTo45(new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols));
+            return pos45;
         }
         // TODO 多个物件仅支持地块
         const pos = new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
@@ -183,8 +184,7 @@ export class MouseFollow {
         if (!pos) {
             return;
         }
-        this.mDisplay.x = pos.x - (this.mDisplay.tileWidth >> 1);
-        this.mDisplay.y = pos.y - (this.mDisplay.tileHeight >> 1);
+        this.mDisplay.setLocation(pos.x, pos.y);
     }
 
     set alignGrid(val: boolean) {
@@ -219,24 +219,28 @@ export class MouseFollow {
             val = 10;
         }
         this.mSize = val;
-        let displayInfo = null;
-        if (this.mSprite) {
-            displayInfo = this.mSprite.displayInfo;
-        }
-        this.mDisplay.setDisplay(displayInfo, this.mSize);
+        this.mDisplay.setDisplay(this.mSprite, this.mSize);
     }
 }
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
     protected mTileSize: IPosition45Obj;
     private mDisplay: FramesDisplay[];
+    private mNodeType: op_def.NodeType;
+    private mOffset: Phaser.Geom.Point;
     constructor(scene: Phaser.Scene, protected mRoomService: IRoomService) {
         super(scene);
+        this.mOffset = new Phaser.Geom.Point();
     }
 
-    setDisplay(frame: IFramesModel, size: number) {
+    setDisplay(sprite: ISprite, size: number) {
         this.clear();
         this.mDisplay = [];
+        if (!sprite) {
+            return;
+        }
+        const frame = <IFramesModel> sprite.displayInfo;
+        this.mNodeType = sprite.nodeType;
         let frameDisplay: FramesDisplay;
         const { tileWidth, tileHeight } = this.mRoomService.roomSize;
         this.mTileSize = {
@@ -247,6 +251,9 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
             sceneWidth: (size + size) * (tileWidth / 2),
             sceneHeight: (size + size) * (tileHeight / 2)
         };
+
+        this.mOffset.x = -(this.mTileSize.sceneWidth / 2);
+        this.mOffset.y = -((this.mTileSize.sceneHeight - (size % 2 === 0 ? 0 : tileHeight)) / 2);
 
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
@@ -267,6 +274,17 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         return Position45.transformTo90(new Pos(row, col), this.mTileSize);
     }
 
+    transformTo45(x: number, y: number) {
+        return Position45.transformTo45(new Pos(x, y), this.mTileSize);
+    }
+
+    setLocation(x: number, y: number) {
+        // return super.setPosition(x + this.mOffset.x, y + this.mOffset.y);
+        this.x = x + this.mOffset.x;
+        this.y = y + this.mOffset.y;
+        return this;
+    }
+
     clear() {
         this.removeAll(true);
         this.mDisplay = undefined;
@@ -277,21 +295,27 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         super.destroy(fromScene);
     }
 
+    get displays() {
+        return this.mDisplay;
+    }
+
     get tileWidth(): number {
-        return this.mTileSize.sceneWidth;
+        let tmp = this.mTileSize.tileHeight;
+        if (this.mTileSize.rows % 2 === 0) {
+            tmp = 0;
+        }
+        return this.mTileSize.sceneWidth - tmp;
     }
 
     get tileHeight(): number {
         return this.mTileSize.sceneHeight;
     }
 
-    get displays() {
-        return this.mDisplay;
-    }
-
     private onInitializedHandler(obj: FramesDisplay) {
         if (obj) {
-            obj.showRefernceArea();
+            if (this.mNodeType !== op_def.NodeType.TerrainNodeType) {
+                obj.showRefernceArea();
+            }
         }
     }
 }
@@ -302,7 +326,7 @@ class EraserArea extends MouseDisplayContainer {
         super(scene, roomService);
     }
 
-    setDisplay(frame: IFramesModel, size: number) {
+    setDisplay(frame: ISprite, size: number) {
         if (this.area) {
             this.area.clear();
         }

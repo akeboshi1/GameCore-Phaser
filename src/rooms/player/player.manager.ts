@@ -245,7 +245,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected onSetPosition(packet: PBpacket) {
+    private onSetPosition(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
         const type: number = content.nodeType;
         const id: number = content.id;

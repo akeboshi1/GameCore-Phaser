@@ -403,7 +403,6 @@ export class Element extends BlockObject implements IElement {
                 this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
             }
             const pos = this.mModel.pos;
-            console.log(`createPos`, pos);
             if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
             this.addToBlock();
         }

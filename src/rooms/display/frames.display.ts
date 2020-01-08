@@ -57,7 +57,6 @@ export class FramesDisplay extends DisplayObject {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         const ani = data.getAnimations(animationName);
-        Logger.getInstance().log("play AnimationName: ", animationName, ani);
         if (!ani) {
             return;
         }
