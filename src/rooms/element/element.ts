@@ -142,13 +142,15 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplay) {
             return;
         }
-        if (this.mModel.pos) this.setPosition(this.mModel.pos);
+        if (this.mModel.pos) {
+            this.setPosition(this.mModel.pos);
+        }
         this.mDisplay.changeAlpha(this.mModel.alpha);
         // todo 暂时不显示，后续添加显示名字的协议
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
@@ -401,6 +403,7 @@ export class Element extends BlockObject implements IElement {
                 this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
             }
             const pos = this.mModel.pos;
+            console.log(`createPos`, pos);
             if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
             this.addToBlock();
         }
@@ -482,7 +485,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onMoving() {
         const now = this.roomService.now();
-        if ((now - (this.mMoveData.tweenLastUpdate | 0)) >= 50) {
+        if ((now - (this.mMoveData.tweenLastUpdate || 0)) >= 50) {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();

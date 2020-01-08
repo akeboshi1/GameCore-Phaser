@@ -105,7 +105,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             point = sprite.point3f;
-            ele.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
+            ele.setPosition(new Pos(point.x || 0, point.y || 0, point.z || 0));
         }
     }
 
