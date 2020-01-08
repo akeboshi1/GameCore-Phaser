@@ -228,6 +228,9 @@ export class JoyStick {
     // }
 
     private downHandler(pointer, gameojectList) {
+        if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+            return;
+        }
         if (this.mDown) return;
         if (gameojectList) {
             if (gameojectList.length > 1) {
@@ -259,6 +262,9 @@ export class JoyStick {
     }
 
     private pointerMove(pointer) {
+        if (!(this.mWorld.inputManager as JoyStickManager).enable) {
+            return;
+        }
         const dragX = pointer.worldX - this.parentCon.x;
         const dragY = pointer.worldY - this.parentCon.y;
         let d = Math.sqrt(dragX * dragX + dragY * dragY);
@@ -294,7 +300,7 @@ export class JoyStick {
     //         this.checkdragDown(l, r);
     //     });
     // }
-    private upHandler(pointer) {
+    private upHandler(pointer?: Phaser.Geom.Point) {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         this.mDown = false;

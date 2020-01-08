@@ -1,5 +1,5 @@
 import { IElementManager } from "../element/element.manager";
-import { ISprite, Sprite } from "../element/sprite";
+import { ISprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import { PBpacket } from "net-socket-packet";
@@ -94,19 +94,18 @@ export class Actor extends Player implements InputListener {
 
     public stopMove() {
         super.stopMove();
-        if (!this.mMoveData || !this.mMoveData.destPos) {
-            return;
-        }
-        if (this.mMoveData.destPos) {
-            Logger.getInstance().debug("moveData:" + this.mMoveData.destPos.x + "," + this.mMoveData.destPos.y);
-        } else {
-            Logger.getInstance().error("no destPos");
-        }
-        delete this.mMoveData.destPos;
-        this.mMoveData.arrivalTime = 0;
-        if (this.mMoveData.tweenAnim) {
-            this.mMoveData.tweenAnim.stop();
-            this.mMoveData.tweenAnim.remove();
+        if (this.mMoveData && this.mMoveData.destPos) {
+            if (this.mMoveData.destPos) {
+                Logger.getInstance().debug("moveData:" + this.mMoveData.destPos.x + "," + this.mMoveData.destPos.y);
+            } else {
+                Logger.getInstance().error("no destPos");
+            }
+            delete this.mMoveData.destPos;
+            if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
+            if (this.mMoveData.tweenAnim) {
+                this.mMoveData.tweenAnim.stop();
+                this.mMoveData.tweenAnim.remove();
+            }
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -116,7 +115,7 @@ export class Actor extends Player implements InputListener {
             id: this.id,
             point3f: {
                 x: pos.x,
-                y: pos.y,
+                y: pos.y - this.offsetY,
                 z: pos.z,
             },
             direction: this.dir
@@ -166,8 +165,7 @@ export class Actor extends Player implements InputListener {
             this.mBag = new Bag(this.mElementManager.roomService.world);
             this.mBag.register();
         }
-        this.mDisplayInfo = this.mModel.displayInfo;
-        this.createDisplay();
+        this.load(this.mModel.displayInfo);
         if (this.mModel.pos) this.setPosition(this.mModel.pos);
         this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.mDisplay.showNickname(this.mModel.nickname);

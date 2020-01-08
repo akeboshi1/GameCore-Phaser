@@ -34,4 +34,6 @@ export class TerrainDisplay extends FramesDisplay {
     //         }
     //     });
     // }
+    showRefernceArea() {
+    }
 }

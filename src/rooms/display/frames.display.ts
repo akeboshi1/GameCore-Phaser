@@ -32,7 +32,7 @@ export class FramesDisplay extends DisplayObject {
         if (!data || !data.gene) return;
         if (this.mSprites.get(field)) return;
         this.mDisplayDatas.set(field, data);
-        if (this.scene.cache.obj.has(data.gene)) {
+        if (this.scene.cache.obj.exists(data.gene)) {
             this.onLoadCompleted(field);
         } else {
             const display = data.display;
@@ -168,7 +168,7 @@ export class FramesDisplay extends DisplayObject {
             key,
             frames,
             frameRate: animation.frameRate,
-            repeat: animation.loop ? -1 : 1,
+            repeat: animation.loop ? -1 : 0,
         };
 
         this.mHasAnimation = true;

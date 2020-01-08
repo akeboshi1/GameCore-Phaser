@@ -24,13 +24,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE, this.onMove);
-            this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_REQ_CLIENT_SET_CHARACTER_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.onShowEffect);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onOnlyBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
         }
     }
 
@@ -178,7 +178,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                     }
                 }
                 point = position.point3f;
-                player.setPosition(new Pos(point.x | 0, point.y | 0, point.z | 0));
+                player.setPosition(new Pos(point.x || 0, point.y || 0, point.z || 0));
                 Logger.getInstance().debug(`adjust,x:${point.x},y:${point.y}`);
             }
         }
@@ -246,6 +246,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private onSetPosition(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
+        const type: number = content.nodeType;
+        const id: number = content.id;
+        if (type !== NodeType.CharacterNodeType) {
+            return;
+        }
+        let role: Player = this.get(id);
+        if (!role) {
+            role = this.mRoom.actor;
+        }
+        role.setPosition(new Pos(content.position.x, content.position.y, content.position.z));
     }
 
     private onShowBubble(packet: PBpacket) {

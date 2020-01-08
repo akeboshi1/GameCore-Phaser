@@ -129,6 +129,7 @@ export class Element extends BlockObject implements IElement {
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+        this.loadDisplayInfo();
     }
 
     public setModel(model: ISprite) {
@@ -136,18 +137,20 @@ export class Element extends BlockObject implements IElement {
         if (!model) {
             return;
         }
-        this.mDisplayInfo = this.mModel.displayInfo;
-        this.createDisplay();
+        // this.mDisplayInfo = this.mModel.displayInfo;
+        this.load(this.mModel.displayInfo);
         if (!this.mDisplay) {
             return;
         }
-        if (this.mModel.pos) this.setPosition(this.mModel.pos);
+        if (this.mModel.pos) {
+            this.setPosition(this.mModel.pos);
+        }
         this.mDisplay.changeAlpha(this.mModel.alpha);
         // todo 暂时不显示，后续添加显示名字的协议
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
@@ -390,7 +393,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mDisplay) {
-            this.mDisplay.load(this.mDisplayInfo);
             return this.mDisplay;
         }
         const scene = this.mElementManager.scene;
@@ -402,11 +404,17 @@ export class Element extends BlockObject implements IElement {
             }
             const pos = this.mModel.pos;
             if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
-            this.mDisplay.once("initialized", this.onDisplayReady, this);
-            this.mDisplay.load(this.mDisplayInfo);
             this.addToBlock();
         }
         return this.mDisplay;
+    }
+
+    protected loadDisplayInfo() {
+        if (!this.mDisplay) {
+            this.createDisplay();
+        }
+        this.mDisplay.once("initialized", this.onDisplayReady, this);
+        this.mDisplay.load(this.mDisplayInfo);
     }
 
     protected addDisplay() {
@@ -450,7 +458,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            this.mDisplay.play(PlayerState.IDLE);
+            if (this.model.currentAnimationName) this.mDisplay.play(this.model.currentAnimationName);
             this.setDepth();
         }
     }
@@ -476,7 +484,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onMoving() {
         const now = this.roomService.now();
-        if ((now - (this.mMoveData.tweenLastUpdate | 0)) >= 50) {
+        if ((now - (this.mMoveData.tweenLastUpdate || 0)) >= 50) {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();

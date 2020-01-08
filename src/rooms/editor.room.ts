@@ -16,7 +16,6 @@ import {DisplayObject} from "./display/display.object";
 import {Pos} from "../utils/pos";
 import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
-import {Element} from "./element/element";
 import {ElementDisplay} from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
 
@@ -237,13 +236,12 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.createElement();
                 break;
             case BrushEnum.SELECT:
-                if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
-                    Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
-                    if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
+                if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
+                    if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
                         this.syncSprite(this.mSelectedElementEffect.display);
                     }
+                    this.mSelectedElementEffect.selecting = false;
                 }
-                this.mSelectedElementEffect.selecting = false;
                 break;
             case BrushEnum.ERASER:
                 this.eraserElement();
@@ -265,7 +263,6 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private onGameobjectUpHandler(pointer, gameobject) {
         this.removePointerMoveHandler();
-        Logger.getInstance().log("gameobject");
         const com = gameobject.parentContainer;
         if (!com) {
             return;
