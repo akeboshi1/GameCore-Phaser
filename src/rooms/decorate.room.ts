@@ -22,6 +22,7 @@ import { FramesDisplay } from "./display/frames.display";
 import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
 import { DecorateElementManager } from "./element/decorate.element.manager";
+import { MessageType } from "../const/MessageType";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly blocks: ViewblockService;
@@ -181,6 +182,10 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.world.uiManager) {
             this.world.uiManager.showDecorateUI();
         }
+
+        this.world.emitter.on(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
+        this.world.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
+        this.world.emitter.on(MessageType.PUT_ELEMENT, this.onPutElement, this);
     }
 
     transformTo45(p: Pos): Pos {
@@ -350,6 +355,48 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             return;
         }
         this.mSelectedElement.setElement(display);
+    }
+
+    private onTurnElementHandler(display: DisplayObject) {
+        const ele = display.element;
+        if (!ele) {
+            return;
+        }
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
+        content.sprites = [ele.model];
+        content.nodeType = ele.model.nodeType;
+        this.world.connection.send(packet);
+    }
+
+    private onRecycleHandler(display: DisplayObject) {
+        const ele = display.element;
+        if (!ele) {
+            return;
+        }
+        if (this.mSelectedElement) {
+            this.mSelectedElement.remove();
+        }
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
+        content.sprites = [ele.model];
+        content.nodeType = ele.model.nodeType;
+        this.world.connection.send(packet);
+    }
+
+    private onPutElement(display: DisplayObject) {
+        const ele = display.element;
+        if (!ele) {
+            return;
+        }
+        if (this.mSelectedElement) {
+            this.mSelectedElement.remove();
+        }
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
+        content.sprites = [ele.model];
+        content.nodeType = ele.model.nodeType;
+        this.world.connection.send(packet);
     }
 
     get id(): number {

@@ -7,6 +7,7 @@ import { Position45, IPosition45Obj } from "../../utils/position45";
 import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { Logger } from "../../utils/log";
+import { MessageType } from "../../const/MessageType";
 
 export class DecoratePanel extends Panel {
     private readonly resKey = "decorate";
@@ -14,7 +15,7 @@ export class DecoratePanel extends Panel {
     private readonly maxGrid: number = 10;
     private mControllContainer: Phaser.GameObjects.Container;
     private mTurnBtn: Phaser.GameObjects.Image;
-    private mPutBtn: Phaser.GameObjects.Image;
+    private mRecycleBtn: Phaser.GameObjects.Image;
     private mConfirmBtn: Phaser.GameObjects.Image;
 
     private mArrow1: Phaser.GameObjects.Image;
@@ -24,7 +25,7 @@ export class DecoratePanel extends Panel {
     private mDisplayObject: DisplayObject;
 
     constructor(scene: Phaser.Scene, private mRoomService: DecorateRoom) {
-        super(scene, null);
+        super(scene, mRoomService.world);
         this.setTween(false);
     }
 
@@ -37,6 +38,12 @@ export class DecoratePanel extends Panel {
         this.y = ele.y;
 
         this.updateArrowPos(ele);
+
+        this.register();
+    }
+
+    public close() {
+        this.unregister();
     }
 
     protected preload() {
@@ -51,7 +58,7 @@ export class DecoratePanel extends Panel {
         const border = new NinePatch(this.scene, 0, 0, 196, 70, Border.getName(), null, Border.getConfig());
 
         this.mTurnBtn = this.createImage(this.resKey, "turn_btn.png", -60, 0);
-        this.mPutBtn = this.createImage(this.resKey, "put_btn.png", 0, 0);
+        this.mRecycleBtn = this.createImage(this.resKey, "recycle_btn.png", 0, 0);
         this.mConfirmBtn = this.createImage(this.resKey, "confirm_btn.png", 60, 0);
         const arrow = this.scene.make.image({
             key: "arrow",
@@ -69,10 +76,28 @@ export class DecoratePanel extends Panel {
         this.mArrow7.on("pointerup", this.onRightUpHandler, this);
 
         this.add([this.mControllContainer, this.mArrow1, this.mArrow7, this.mArrow3, this.mArrow5]);
-        this.mControllContainer.add([border, this.mTurnBtn, this.mPutBtn, this.mConfirmBtn]);
+        this.mControllContainer.add([border, this.mTurnBtn, this.mRecycleBtn, this.mConfirmBtn]);
         super.init();
 
         this.setElement(this.mDisplayObject);
+    }
+
+    protected register() {
+        if (!this.mInitialized) {
+            return;
+        }
+        this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
+        this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
+        this.mConfirmBtn.on("pointerup", this.onPutHandler, this);
+    }
+
+    protected unregister() {
+        if (!this.mInitialized) {
+            return;
+        }
+        this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
+        this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
+        this.mConfirmBtn.off("pointerup", this.onPutHandler, this);
     }
 
     private onLeftUpHandler() {
@@ -188,5 +213,17 @@ export class DecoratePanel extends Panel {
             this.mArrow7.x = pos.x + reference.x;
             this.mArrow7.y = pos.y - this.mArrow7.height + reference.y;
         }
+    }
+
+    private onTurnHandler() {
+        this.mWorld.emitter.emit(MessageType.TURN_ELEMENT, this.mDisplayObject);
+    }
+
+    private onRecycleHandler() {
+        this.mWorld.emitter.emit(MessageType.RECYCLE_ELEMENT, this.mDisplayObject);
+    }
+
+    private onPutHandler() {
+        this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
     }
 }

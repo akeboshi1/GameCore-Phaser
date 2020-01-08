@@ -26,6 +26,7 @@ export class DecorateManager {
         if (this.mPanel.parentContainer) {
             this.mPanel.parentContainer.remove(this.mPanel);
         }
+        this.mPanel.close();
     }
 
     public updatePos(x: number, y: number) {

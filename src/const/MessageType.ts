@@ -69,4 +69,11 @@ export class MessageType {
     public static SHOW_EFFECT = "showEffect";
 
     public static EDIT_MODE_QUERY_PACKAGE = "editModeQueryPackage";
+
+    // 旋转物件
+    public static TURN_ELEMENT = "turnElement";
+    // 回收
+    public static RECYCLE_ELEMENT = "recycleElement";
+    // 放置
+    public static PUT_ELEMENT = "putElement";
 }
