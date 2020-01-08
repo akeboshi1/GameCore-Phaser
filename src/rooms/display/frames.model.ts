@@ -16,6 +16,8 @@ export interface IFramesModel {
     package?: op_gameconfig.IPackage;
     shops?: (op_gameconfig.IShop[] | null);
     getAnimations(name: string): IAnimationData;
+    getCollisionArea(aniName: string): number[][];
+    getOriginPoint(aniName: string): Phaser.Geom.Point;
     destroy();
 }
 
@@ -79,6 +81,20 @@ export class FramesModel implements IFramesModel {
             anis.push(ani.toClient());
         }, this);
         return anis;
+    }
+
+    public getCollisionArea(aniName: string): number[][] {
+        const ani = this.getAnimations(aniName);
+        if (ani) {
+            return ani.collisionArea;
+        }
+    }
+
+    public getOriginPoint(aniName): Phaser.Geom.Point {
+        const ani = this.getAnimations(aniName);
+        if (ani) {
+            return ani.originPoint;
+        }
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {

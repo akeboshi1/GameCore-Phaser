@@ -85,7 +85,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
 
         this.mMap = new Array(rows);
         for (let i = 0; i < rows; i++) {
-            this.mMap[i] = new Array(cols);
+            this.mMap[i] = new Array(cols).fill(0);
         }
 
         if (!this.world.game.scene.getScene(LoadingScene.name))
@@ -266,18 +266,22 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         return this.transformToMini90(bound);
     }
 
-    public canPut(pos: Pos) {
-        if (!pos) {
-            return;
+    public canPut(pos: Pos, area: number[][], originPoint: Phaser.Geom.Point) {
+        if (!pos || !area || area.length <= 0 || area[0].length <= 0) {
+            return true;
         }
-        const pos45 = this.transformToMini45(pos);
-        if (this.mMap[pos45.y][pos45.x] === 1) {
-            return false;
+        // const pos45 = this.transformToMini45(pos);
+        for (let i = 0; i < area.length; i++) {
+            for (let j = 0; j < area[i].length; j++) {
+                if (this.mMap[pos.x + i - originPoint.x][pos.y + j - originPoint.y] === 1) {
+                    return false;
+                }
+            }
         }
         return true;
     }
 
-    public setMap(rows: number, cols: number, type: number) {
+    public setMap(cols: number, rows: number, type: number) {
         if (rows < 0 || cols < 0 || this.mMap.length < rows || this.mMap[0].length < cols) {
             return;
         }
@@ -315,7 +319,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             return;
         }
         const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
-        this.mSelectedElement.setDisplayPos(pos.x, pos.y);
+        // this.mSelectedElement.setDisplayPos(pos.x, pos.y);
 
         if (pointer.x < 300) {
             if (pointer.prevPosition.x > pointer.x) this.mCameraService.camera.scrollX -= pointer.prevPosition.x - pointer.x;

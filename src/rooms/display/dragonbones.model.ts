@@ -9,6 +9,8 @@ export interface IDragonbonesModel {
 
     // TODO
     destroy();
+    getCollisionArea(aniName: string): number[][];
+    getOriginPoint(aniName: string): Phaser.Geom.Point;
 }
 
 export interface IAvatar {
@@ -70,5 +72,13 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public destroy() {
+    }
+
+    public getCollisionArea(aniName: string): number[][] {
+        return [[1, 1], [1, 1]];
+    }
+
+    public getOriginPoint(aniName): Phaser.Geom.Point {
+        return new Phaser.Geom.Point(1, 1);
     }
 }
