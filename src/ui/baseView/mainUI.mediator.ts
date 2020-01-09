@@ -129,6 +129,7 @@ export class MainUIMediator extends BaseMediator {
     // }
 
     private heroItemChange() {
+        if (!this.world.roomManager.currentRoom || !this.world.roomManager.currentRoom.playerManager || !this.world.roomManager.currentRoom.playerManager.actor) return;
         const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.playerManager.actor.package.items;
         if (this.mView) {
             if (this.world.game.device.os.desktop) {
@@ -140,8 +141,8 @@ export class MainUIMediator extends BaseMediator {
     }
 
     private queryPackAge(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
+        if (!this.world.roomManager.currentRoom || !this.world.roomManager.currentRoom.playerManager || !this.world.roomManager.currentRoom.playerManager.actor) return;
         if (data.id !== this.world.roomManager.currentRoom.playerManager.actor.package.id) return;
-        const itemLen: number = data.items.length;
         if (this.mView && this.world.game.device.os.desktop) {
             (this.mView as MainUIPC).setDataList(data.items);
         }
