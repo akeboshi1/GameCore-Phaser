@@ -130,7 +130,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const obj of objs) {
             point = obj.point3f;
             if (point) {
-                sprite = new Sprite(obj);
+                sprite = new Sprite(obj, content.nodeType);
                 if (!sprite.displayInfo) {
                     this.checkDisplay(sprite);
                 }
@@ -212,7 +212,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             element = this.get(sprite.id);
             if (element) {
-                element.model = new Sprite(sprite);
+                element.model = new Sprite(sprite, content.nodeType);
             }
         }
     }

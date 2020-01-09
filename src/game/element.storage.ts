@@ -1,8 +1,9 @@
 import {FramesModel, IFramesModel} from "../rooms/display/frames.model";
 import {DragonbonesModel, IDragonbonesModel} from "../rooms/display/dragonbones.model";
-import {Lite} from "game-capsule/index";
+import {Lite, ElementNode, SpawnPointNode} from "game-capsule/index";
 import {Logger} from "../utils/log";
 import {op_def} from "pixelpai_proto";
+import { Animation } from "../rooms/display/animation";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
@@ -29,7 +30,21 @@ export class ElementStorage implements IElementStorage {
             if (obj.type === op_def.NodeType.TerrainNodeType || obj.type === op_def.NodeType.ElementNodeType) {
                 displayModel = this.mModels.get(obj.id);
                 if (!displayModel) {
-                    displayModel = new FramesModel(obj);
+                    const anis = [];
+                    const eleAnis = (<ElementNode> obj).animations;
+                    const objAnis = eleAnis.animationData;
+                    for (const ani of objAnis) {
+                        anis.push(new Animation(ani));
+                    }
+                    displayModel = new FramesModel({
+                        id: obj.id,
+                        sn: obj.sn,
+                        animations: {
+                            defaultAnimationName: eleAnis.defaultAnimationName,
+                            display: eleAnis.display,
+                            animationData: anis
+                        }
+                    });
                     this.mModels.set(obj.id, displayModel);
                 }
                 const ele: IDisplayRef = {

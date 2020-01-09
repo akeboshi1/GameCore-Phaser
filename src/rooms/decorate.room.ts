@@ -362,9 +362,10 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (!ele) {
             return;
         }
+
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
-        content.sprites = [ele.model];
+        content.sprites = [ele.model.toSprite()];
         content.nodeType = ele.model.nodeType;
         this.world.connection.send(packet);
     }
@@ -377,11 +378,13 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.mSelectedElement) {
             this.mSelectedElement.remove();
         }
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
-        content.sprites = [ele.model];
-        content.nodeType = ele.model.nodeType;
-        this.world.connection.send(packet);
+        if (this.mElementManager.remove(ele.id)) {
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
+            content.sprites = [ele.model.toSprite()];
+            content.nodeType = ele.model.nodeType;
+            this.world.connection.send(packet);
+        }
     }
 
     private onPutElement(display: DisplayObject) {
@@ -394,7 +397,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
-        content.sprites = [ele.model];
+        content.sprites = [ele.model.toSprite()];
         content.nodeType = ele.model.nodeType;
         this.world.connection.send(packet);
     }

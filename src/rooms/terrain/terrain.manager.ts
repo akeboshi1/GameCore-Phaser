@@ -87,7 +87,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
-                const s = new Sprite(sprite);
+                const s = new Sprite(sprite, type);
                 if (!s.displayInfo) {
                     this.checkDisplay(s);
                 }
@@ -140,7 +140,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             terrain = this.get(sprite.id);
             if (terrain) {
-                terrain.model = new Sprite(sprite);
+                terrain.model = new Sprite(sprite, content.nodeType);
                 terrain.setRenderable(true);
             }
         }

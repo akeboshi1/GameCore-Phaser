@@ -31,7 +31,7 @@ export class Animation implements IAnimationData {
         if (typeof ani.baseLoc === "string") {
             tmpBaseLoc = ani.baseLoc.split(",");
         } else {
-            tmpBaseLoc = ani.baseLoc;
+            tmpBaseLoc = [ani.baseLoc.x, ani.baseLoc.y];
         }
         this.mID = ani.id;
         this.mBaseLoc = tmpBaseLoc;
@@ -43,6 +43,8 @@ export class Animation implements IAnimationData {
         const origin = ani.originPoint;
         if (Array.isArray(origin)) {
             this.mOriginPoint = new Phaser.Geom.Point(origin[0], origin[1]);
+        } else {
+            this.mOriginPoint = new Phaser.Geom.Point(origin.x, origin.y);
         }
         if (typeof ani.collisionArea === "string") {
             this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&");
