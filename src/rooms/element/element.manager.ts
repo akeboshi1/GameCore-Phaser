@@ -17,6 +17,7 @@ export interface IElementManager {
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
     add(sprite: ISprite[]);
     remove(id: number): IElement;
+    getElements(): IElement[];
     destroy();
 }
 
@@ -64,6 +65,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             element.destroy();
         }
         return element;
+    }
+
+    public getElements(): IElement[] {
+        return Array.from(this.mElements.values());
     }
 
     public add(sprite: ISprite[]) {

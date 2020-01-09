@@ -93,6 +93,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return element;
     }
 
+    public getElements(): IElement[] {
+        return Array.from(this.mPlayerMap.values());
+    }
+
     public set(id: number, player: Player) {
         if (!this.mPlayerMap) {
             this.mPlayerMap = new Map();

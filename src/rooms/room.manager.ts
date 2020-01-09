@@ -6,6 +6,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
 import {EditorRoom} from "./editor.room";
 import {DecorateRoom} from "./decorate.room";
+import { IElement } from "./element/element";
 
 export interface IRoomManager {
     readonly world: WorldService | undefined;
@@ -28,7 +29,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mWorld = world;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEditRoom);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
     public addPackListener() {
@@ -127,12 +128,24 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private onEnterDecorate(packet: PBpacket) {
+        const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
+        const elements = this.currentRoom.elementManager.getElements().map((ele: IElement) => ele.model);
+        const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
+        Logger.getInstance().log("element: ", this.currentRoom.elementManager, this.currentRoom.elementManager.getElements());
+        const scene = {
+            id: this.mCurRoom.id,
+            rows,
+            cols,
+            tileWidth,
+            tileHeight
+        };
+
         if (this.mCurRoom) {
             this.leaveScene(this.mCurRoom);
         }
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const room: DecorateRoom = new DecorateRoom(this);
-        room.enter((content.scene));
+        room.enter(scene);
         this.mRooms.push(room);
         // this.mCurRoom = room;
     }
