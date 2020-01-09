@@ -66,7 +66,7 @@ export class InteractivePanelMediator extends BaseMediator {
 
     public componentClick(componentID: number) {
         if (this.mParam) {
-            this.world.roomManager.currentRoom.getHero().getInteractive().requestTargetUI(this.mParam[0].id, componentID);
+            this.world.roomManager.currentRoom.playerManager.actor.getInteractive().requestTargetUI(this.mParam[0].id, componentID);
         }
     }
 }

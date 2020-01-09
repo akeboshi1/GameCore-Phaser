@@ -35,7 +35,7 @@ export class RightBtnGroup extends Panel {
         const padHei: number = !mainUIMed ? this.height / 2 : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
             this.y = size.height - (this.height) * this.mWorld.uiScale;
             this.x = size.width - (this.width / 2) * this.mWorld.uiScale;
             if (mPackage && mPackage.items && mPackage.items.length > 0) {
@@ -77,7 +77,7 @@ export class RightBtnGroup extends Panel {
         const size: Size = this.mWorld.getSize();
         let baseX: number;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
             if (mPackage && mPackage.items && mPackage.items.length > 0) {
                 baseX = size.width - (this.width / 4) * this.mWorld.uiScale;
             } else {
@@ -108,7 +108,7 @@ export class RightBtnGroup extends Panel {
                 }
             });
             // =============获取角色背包前几位物品
-            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+            const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
             if (mPackage && mPackage.items) {
                 const items: op_gameconfig.IItem[] = mPackage.items;
                 const len: number = items.length > MainUIMobile.SlotMaxCount ? MainUIMobile.SlotMaxCount : items.length;

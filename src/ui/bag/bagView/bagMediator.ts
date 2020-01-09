@@ -61,9 +61,9 @@ export class BagMediator extends BaseMediator {
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.handleSynchroPackage, this);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         if (param) {
-            this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(param[0].id, 1, BagPanel.PageMaxCount);
+            this.world.roomManager.currentRoom.playerManager.actor.getBag().requestVirtualWorldQueryPackage(param[0].id, 1, BagPanel.PageMaxCount);
         } else {
-            this.world.roomManager.currentRoom.getHero().getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.getHero().package.id, 1, BagPanel.PageMaxCount);
+            this.world.roomManager.currentRoom.playerManager.actor.getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.playerManager.actor.package.id, 1, BagPanel.PageMaxCount);
         }
         this.mView.show(param);
         this.mLayerManager.addToUILayer(this.mView);
@@ -115,7 +115,7 @@ export class BagMediator extends BaseMediator {
     private refrehView(mItems?: op_gameconfig.IItem[]): void {
         let items: op_gameconfig.IItem[];
         if (!mItems) {
-            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.getHero().package;
+            const packs: op_gameconfig.IPackage = this.world.roomManager.currentRoom.playerManager.actor.package;
             if (packs == null) {
                 return;
             }
@@ -136,12 +136,12 @@ export class BagMediator extends BaseMediator {
     }
 
     private handleSynchroPackage(): void {
-        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHero().package.items;
+        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.playerManager.actor.package.items;
         this.refrehView(itemList);
     }
 
     private onUpdatePackageHandler() {
-        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.getHero().package.items;
+        const itemList: op_gameconfig.IItem[] = this.world.roomManager.currentRoom.playerManager.actor.package.items;
         this.refrehView(itemList);
     }
 

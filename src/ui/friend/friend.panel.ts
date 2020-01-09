@@ -168,7 +168,7 @@ export class FriendPanel extends Panel {
         this.mDownBtn.on("pointerup", this.downHandler, this);
         this.mUpBtn.on("pointerup", this.upHandler, this);
         const image = this.scene.make.image(undefined, false);
-        image.setTexture((this.mWorld.roomManager.currentRoom.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
+        image.setTexture((this.mWorld.roomManager.currentRoom.playerManager.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
         this.add(image);
         this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
         this.addAt(this.mBg, 0);
@@ -186,7 +186,7 @@ export class FriendPanel extends Panel {
 
     protected tweenComplete(show) {
         super.tweenComplete(show);
-        this.mWorld.roomManager.currentRoom.getHero().getFriend().requestFriend((data: any[]) => {
+        this.mWorld.roomManager.currentRoom.playerManager.actor.getFriend().requestFriend((data: any[]) => {
             this.setDataList(data);
         });
         if (show) (this.mWorld.uiManager.getMediator(FriendMediator.NAME) as FriendMediator).resize();

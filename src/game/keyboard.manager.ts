@@ -247,7 +247,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         if (this.enable) {
             l.setDirection(newDir);
             l.downHandler(newDir, keyCodeList);
-            if (this.mRoom && this.mRoom.actor) this.mRoom.actor.setDirection(newDir);
+            if (this.mRoom && this.mRoom.playerManager.actor) this.mRoom.playerManager.actor.setDirection(newDir);
         }
         return true;
     }

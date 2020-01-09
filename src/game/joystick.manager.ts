@@ -355,7 +355,7 @@ export class JoyStick {
         // if (!(this.mWorld.inputManager as JoyStickManager).enable) {
         //     return false;
         // }
-        this.mWorld.roomManager.currentRoom.actor.setDirection(dir);
+        this.mWorld.roomManager.currentRoom.playerManager.actor.setDirection(dir);
         return true;
     }
 

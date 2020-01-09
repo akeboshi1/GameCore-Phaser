@@ -21,7 +21,7 @@ export class Player extends Element {
     }
 
     public move(moveData: op_client.IMoveData) {
-        if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.actor.id) {
+        if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.playerManager.actor.id) {
             this.setDirection(moveData.direction);
         }
         moveData.destinationPoint3f.y += this.offsetY;
