@@ -61,6 +61,10 @@ export class NoticeMediator extends PacketHandler implements IMediator {
             this.mNoticePanel.destroy();
             this.mNoticePanel = null;
         }
+        const connect = this.world.connection;
+        if (connect) {
+            connect.addPacketListener(this);
+        }
         this.mScene = null;
     }
 

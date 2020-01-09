@@ -182,11 +182,6 @@ export class MainUIPC extends Panel {
     protected init() {
         this.mWid = 0;
         this.mHei = 65;
-
-        if (!this.mWorld.roomManager.currentRoom || !this.mWorld.roomManager.currentRoom.getHero()) {
-            return;
-        }
-
         this.mBagBtnCon = this.mScene.add.container(0, 0);
         this.mBagBg = this.mScene.add.sprite(0, 0, this.mResStr, "bag_BtnBg");
         this.baseBagBgWid = this.mBagBg.width;

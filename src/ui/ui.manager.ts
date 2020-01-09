@@ -122,15 +122,12 @@ export class UiManager extends PacketHandler {
             this.mCacheUI = this.showDecorateUI;
             return;
         }
+        this.clearMediator();
         if (!this.mMedMap) {
             this.mMedMap = new Map();
-            this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
         }
-        this.mMedMap.forEach((mediator) => {
-            if (mediator.isSceneUI()) {
-                mediator.show();
-            }
-        });
+        this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
+        this.showAll();
     }
 
     public resize(width: number, height: number) {
@@ -150,15 +147,17 @@ export class UiManager extends PacketHandler {
         return this.mMedMap.get(type);
     }
 
+    public clearMediator() {
+        if (!this.mMedMap) {
+            return;
+        }
+        this.mMedMap.forEach((med: IMediator) =>  med.destroy());
+        this.mMedMap.clear();
+    }
+
     public destroy() {
         this.removePackListener();
-        if (this.mMedMap) {
-            this.mMedMap.forEach((mediator: IMediator) => {
-                mediator.destroy();
-                mediator = null;
-            });
-            this.mMedMap.clear();
-        }
+        this.clearMediator();
         this.mMedMap = null;
     }
 
@@ -352,5 +351,19 @@ export class UiManager extends PacketHandler {
         // if (!mediator.isShow()) return;
         this.checkUIState(className, true);
         mediator.hide();
+    }
+
+    private showAll() {
+        if (!this.mMedMap) {
+            return;
+        }
+        this.mMedMap.forEach((med: IMediator) => med.show());
+    }
+
+    private closeAll() {
+        if (!this.mMedMap) {
+            return;
+        }
+        this.mMedMap.forEach((med: IMediator) => med.hide());
     }
 }

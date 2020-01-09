@@ -23,6 +23,7 @@ import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
 import { DecorateElementManager } from "./element/decorate.element.manager";
 import { MessageType } from "../const/MessageType";
+import { Sprite } from "./element/sprite";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly blocks: ViewblockService;
@@ -55,6 +56,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         }
         if (this.connection) {
             this.connection.addPacketListener(this);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE, this.onSelectSpriteHandler);
         }
     }
 
@@ -319,7 +321,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             return;
         }
         const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
-        // this.mSelectedElement.setDisplayPos(pos.x, pos.y);
+        this.mSelectedElement.setDisplayPos(pos.x, pos.y);
 
         if (pointer.x < 300) {
             if (pointer.prevPosition.x > pointer.x) this.mCameraService.camera.scrollX -= pointer.prevPosition.x - pointer.x;
@@ -370,16 +372,15 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (!ele) {
             return;
         }
-        if (this.mSelectedElement) {
-            this.mSelectedElement.remove();
+        if (!this.mSelectedElement) {
+            return;
         }
-        if (this.mElementManager.remove(ele.id)) {
-            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE);
-            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
-            content.sprites = [ele.model.toSprite()];
-            content.nodeType = ele.model.nodeType;
-            this.world.connection.send(packet);
-        }
+        this.mSelectedElement.remove();
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
+        content.sprites = [ele.model.toSprite()];
+        content.nodeType = ele.model.nodeType;
+        this.world.connection.send(packet);
     }
 
     private onPutElement(display: DisplayObject) {
@@ -395,6 +396,12 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         content.sprites = [ele.model.toSprite()];
         content.nodeType = ele.model.nodeType;
         this.world.connection.send(packet);
+    }
+
+    private onSelectSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE = packet.content;
+        Logger.getInstance().log("selected sprite: ", content);
+        this.mSelectedElement.setSprite(new Sprite(content.sprite, content.nodeType));
     }
 
     get id(): number {

@@ -2,11 +2,17 @@ import {FramesDisplay} from "../display/frames.display";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
 import { IRoomService } from "../room";
+import { ISprite } from "../element/sprite";
+import { IFramesModel } from "../display/frames.model";
 
 export class SelectedElement {
+    private readonly scene: Phaser.Scene;
+    private readonly roomService: IRoomService;
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mDecorateManager: DecorateManager;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
+        this.scene = scene;
+        this.roomService = roomService;
         this.mDecorateManager = new DecorateManager(scene, roomService);
     }
 
@@ -20,6 +26,16 @@ export class SelectedElement {
         display.showRefernceArea();
         this.mDecorateManager.setElement(display);
         this.mDisplay = display;
+    }
+
+    setSprite(sprite: ISprite) {
+        this.mDisplay = new FramesDisplay(this.scene, this.roomService);
+        this.mDisplay.load(<IFramesModel> sprite.displayInfo);
+        this.roomService.addToSurface(this.mDisplay);
+    }
+
+    turnElement() {
+
     }
 
     remove() {
