@@ -75,7 +75,7 @@ export class Actor extends Player implements InputListener {
         if (!this.mDisplay) {
             return;
         }
-        this.mRoom.requestActorMove(d, keyList); // startActorMove();
+        this.mRoom.playerManager.requestActorMove(d, keyList); // startActorMove();
     }
 
     upHandler() {

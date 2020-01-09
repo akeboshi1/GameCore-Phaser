@@ -54,7 +54,7 @@ export class BagPanel extends Panel {
     }
 
     public setDataList() {
-        const itemList: op_gameconfig.IItem[] = this.mWorld.roomManager.currentRoom.getHero().package.items;
+        const itemList: op_gameconfig.IItem[] = this.mWorld.roomManager.currentRoom.playerManager.actor.package.items;
         this.mPageNum = Math.ceil(itemList.length / BagPanel.PageMaxCount);
         this.mDataList = itemList;
         if (!this.mInitialized) {
@@ -364,7 +364,7 @@ export class BagPanel extends Panel {
             this.refreshDataList(this.mDataList);
             return;
         }
-        const itemList: op_gameconfig.IItem[] = this.mWorld.roomManager.currentRoom.getHero().package.items;
+        const itemList: op_gameconfig.IItem[] = this.mWorld.roomManager.currentRoom.playerManager.actor.package.items;
         itemList.forEach((item: op_gameconfig.IItem) => {
             if (item) {
                 if (Tool.checkItemName(item.name, this.mInputText.text)) {

@@ -1,6 +1,6 @@
 import { IElementManager } from "../element/element.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
+import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { IRoomService, Room } from "../room";
 import { Logger } from "../../utils/log";
@@ -11,9 +11,11 @@ import { Player } from "./player";
 import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
+import { PlayerModel } from "./player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
+    private mActor: Actor;
     private mPlayerMap: Map<number, Player> = new Map();
     constructor(private mRoom: Room) {
         super();
@@ -34,6 +36,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public createActor(playModel: PlayerModel) {
+        this.mActor = new Actor(playModel, this);
+    }
+
+    get actor(): Actor {
+        return this.mActor;
+    }
+
     public destroy() {
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -51,20 +61,32 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public requestActorMove(dir: number, keyArr: number[]) {
+
+        this.startActorMove();
+        if (!this.roomService.world.game.device.os.desktop) {
+            // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
+            const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
+            content.keyCodes = keyArr;
+            this.connection.send(pkt);
+        }
+    }
+
     public startActorMove() {
-        if (!this.mRoom.actor) {
+        if (!this.mActor) {
             Logger.getInstance().error("MainHero miss");
             return;
         }
-        this.mRoom.actor.startMove();
+        this.mActor.startMove();
     }
 
     public stopActorMove() {
-        if (!this.mRoom.actor) {
+        if (!this.mActor) {
             Logger.getInstance().error("MainHero miss");
             return;
         }
-        this.mRoom.actor.stopMove();
+        this.mActor.stopMove();
     }
 
     public get(id: number): Player {
@@ -73,7 +95,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         let player = this.mPlayerMap.get(id);
         if (!player) {
-            const actor = this.roomService.actor;
+            const actor = this.mActor;
             if (actor && actor.id === id) {
                 player = actor;
             }
@@ -89,6 +111,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (element) {
             this.mPlayerMap.delete(id);
             element.destroy();
+        }
+        if (this.mActor) {
+            this.mActor.destroy();
+            this.mActor = null;
         }
         return element;
     }
@@ -123,7 +149,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
-        if (character && character.id === this.mRoom.actor.id) {
+        if (character && character.id === this.mActor.id) {
             if (!(character as Actor).package) {
                 (character as Actor).package = op_gameconfig.Package.create();
             }
@@ -134,7 +160,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public removePackItems(elementId: number, itemId: number): boolean {
         const character: Player = this.mPlayerMap.get(elementId);
-        if (character && this.mRoom.actor.id) {
+        if (character && this.mActor.id) {
             const itemList: any[] = (character as Actor).package.items;
             const len = itemList.length;
             for (let i = 0; i < len; i++) {
@@ -169,14 +195,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.CharacterNodeType) {
             return;
         }
-        if (this.mRoom.actor) {
+        if (this.mActor) {
             let player: Player;
             let point: op_def.IPBPoint3f;
             for (const position of positions) {
                 player = this.mPlayerMap.get(position.id);
                 if (!player) {
-                    if (position.id === this.mRoom.actor.id) {
-                        player = this.mRoom.actor;
+                    if (position.id === this.mActor.id) {
+                        player = this.mActor;
                     } else {
                         continue;
                     }
@@ -258,7 +284,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         let role: Player = this.get(id);
         if (!role) {
-            role = this.mRoom.actor;
+            role = this.mActor;
         }
         role.setPosition(new Pos(content.position.x, content.position.y, content.position.z));
     }

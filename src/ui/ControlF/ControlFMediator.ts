@@ -31,8 +31,8 @@ export class ControlFMediator extends BaseMediator {
     hide(): void {
         this.isShowing = false;
         if (this.mView && this.mView.isShow()) {
-            if (!this.world.roomManager.currentRoom || !this.world.roomManager.currentRoom.getHero() ||
-                this.world.roomManager.currentRoom.getHero().getState() === PlayerState.WALK) {
+            if (!this.world.roomManager.currentRoom || !this.world.roomManager.currentRoom.playerManager.actor ||
+                this.world.roomManager.currentRoom.playerManager.actor.getState() === PlayerState.WALK) {
                 this.mView.off("control", this.handControlF, this);
                 this.mView.destroy();
                 this.mView = null;

@@ -51,9 +51,9 @@ export class ChatMediator extends PacketHandler implements IMediator {
 
     public enterRoom() {
         if (!this.room) return;
-        if (!this.room.actor) return;
+        if (!this.room.playerManager.actor) return;
         if (!this.mGMEApi) return;
-        const playerID = this.room.actor.id;
+        const playerID = this.room.playerManager.actor.id;
         const roomID = this.room.id;
         this.mGMEApi.EnterRoom(roomID.toString(), 1, this.mQCLoudAuth);
         this.mInRoom = true;
@@ -171,8 +171,8 @@ export class ChatMediator extends PacketHandler implements IMediator {
     private initGME() {
         // TODO just for test, need get sdkAppId from settings
         const sdkAppId = "1400209172";
-        if (!this.room.actor) return;
-        const playerID = this.room.actor.id;
+        if (!this.room.playerManager.actor) return;
+        const playerID = this.room.playerManager.actor.id;
         this.mGMEApi = new WebGMEAPI();
         this.mGMEApi.Init(document, sdkAppId, playerID.toString());
         this.mGMEApi.SetTMGDelegate((event, result) => {

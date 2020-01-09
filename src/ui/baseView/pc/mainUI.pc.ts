@@ -207,7 +207,7 @@ export class MainUIPC extends Panel {
         this.bagBtn.on("pointerover", this.bagBtnOver, this);
         this.bagBtn.on("pointerout", this.bagBtnOut, this);
         this.initBagSlot();
-        const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.getHero().package;
+        const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
         if (mPackage && mPackage.items) this.setDataList(mPackage.items);
         // childList.push(this.mBagBtnCon);
         super.init();

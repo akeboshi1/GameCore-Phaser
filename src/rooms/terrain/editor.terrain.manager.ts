@@ -52,7 +52,6 @@ export class EditorTerrainManager extends TerrainManager {
     removeFormPositions(locations: Pos[]) {
         const terrains = Array.from(this.mTerrains.values());
         let terrain: Terrain = null;
-        Logger.getInstance().log("locations: ", locations);
         for (const pos of locations) {
             terrain = terrains.find((ter) => {
                 return pos.equal(ter.getPosition45());

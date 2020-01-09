@@ -15,10 +15,9 @@ import { Logger } from "../utils/log";
 import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
 import { Pos } from "../utils/pos";
 import { LoadingScene } from "../scenes/loading";
-import { Clock, ClockReadyListener } from "./clock";
+import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
-import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { IElement } from "./element/element";
 import { Size } from "../utils/size";
@@ -38,16 +37,10 @@ export interface IRoomService {
   readonly blocks: ViewblockService;
   readonly world: WorldService;
   readonly map?: Map;
-  readonly actor?: Actor;
 
   readonly scene: Phaser.Scene | undefined;
 
   readonly connection: ConnectionService | undefined;
-
-  // blockCheckWorker: BlockCheckWorker;
-  // clockSyncComplete: boolean;
-
-  enter(room: op_client.IScene): void;
 
   now(): number;
 
@@ -57,9 +50,7 @@ export interface IRoomService {
 
   startPlay();
 
-  // startCheckBlock();
-
-  // updateClock(time: number, delta: number): void;
+  enter(room: op_client.IScene): void;
 
   pause(): void;
 
@@ -85,8 +76,6 @@ export interface IRoomService {
 
   addMouseListen();
 
-  requestActorMove(d: number, key: number[]);
-
   update(time: number, delta: number): void;
 
   destroy();
@@ -95,8 +84,6 @@ export interface IRoomService {
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
-  // public clockSyncComplete: boolean = false;
-  // public blockCheckWorker: BlockCheckWorker;
   protected mWorld: WorldService;
   protected mMap: Map;
   protected mID: number;
@@ -108,12 +95,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   protected mSize: IPosition45Obj;
   protected mCameraService: ICameraService;
   protected mBlocks: ViewblockService;
-  // protected mClock: Clock;
-
-  private mActor: Actor;
   private mActorData: IActor;
-  private mCheckBlock: boolean = false;
-
   constructor(protected manager: IRoomManager) {
     super();
     this.mWorld = this.manager.world;
@@ -144,14 +126,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
       sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),
       sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2)
     };
-    // this.blockCheckWorker = new BlockCheckWorker();
-    // this.mScene = this.mWorld.game.scene.getScene(PlayScene.name);
     this.mMap = new Map(this.mWorld);
     this.mMap.setMapInfo(data);
-    // this.mClock = new Clock(this.mWorld.connection, this);
-    // if (this.mScene.scene.isActive()) {
-    //   this.mWorld.game.scene.sleep(PlayScene.name);
-    // }
     if (!this.mWorld.game.scene.getScene(LoadingScene.name))
       this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
     this.mWorld.game.scene.start(LoadingScene.name, {
@@ -164,44 +140,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     if (sprite_t !== op_def.NodeType.TerrainNodeType) {
       return;
     }
-    // this.mClock.sync(3);
   }
 
   public onClockReady(): void {
     // TODO: Unload loading-scene
-    Logger.getInstance().debug("onClockReady");
-    Logger.getInstance().debug(new Date().getTime());
-    // this.clockSyncComplete = true;
   }
 
   public startLoad() {
-    // this.mClock.sync(-1);
   }
 
   public completeLoad() {
-    // const dragonboneName = "bones_human01";
-    // if (!this.mScene.textures.exists(dragonboneName)) {
-    //   this.mScene.load.once(
-    //     Phaser.Loader.Events.COMPLETE,
-    //     () => {
-    //       this.enterRoom();
-    //     },
-    //     this
-    //   );
-    //   const res = "./resources/dragonbones";
-    //   this.mScene.load.dragonbone(
-    //     dragonboneName,
-    //     `${res}/${dragonboneName}_tex.png`,
-    //     `${res}/${dragonboneName}_tex.json`,
-    //     `${res}/${dragonboneName}_ske.dbbin`,
-    //     null,
-    //     null,
-    //     { responseType: "arraybuffer" }
-    //   );
-    //   this.mScene.load.start();
-    // } else {
-    //   this.enterRoom();
-    // }
     this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
       room: this
     });
@@ -225,7 +173,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
       // init block
       this.mBlocks.int(this.mSize);
     }
-    this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
+    this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
+    // this.mActor = new Actor(, this.mPlayerManager);
     const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
     this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
     if (loadingScene) loadingScene.sleep();
@@ -246,22 +195,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     if (this.mScene) this.mScene.scene.resume(name);
     this.mWorld.inputManager.enable = true;
     // this.mClock.sync(-1);
-  }
-
-  public getHero(): Actor {
-    return this.mActor;
-  }
-
-  public requestActorMove(dir: number, keyArr: number[]) {
-    this.mActor.setDirection(dir);
-    this.playerManager.startActorMove();
-    if (!this.mWorld.game.device.os.desktop) {
-      // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
-      const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
-      const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-      content.keyCodes = keyArr;
-      this.connection.send(pkt);
-    }
   }
 
   public addActor(data: IActor): void {
@@ -342,22 +275,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     if (this.layerManager) this.layerManager.update(time, delta);
   }
 
-  // public startCheckBlock() {
-  //     if (!this.mCheckBlock) {
-  //         this.mCheckBlock = true;
-  //         this.blockCheckWorker.onmessage = (event: any) => {
-  //             const type: string = event.data.method;
-  //             switch (type) {
-  //                 case "startCheckBlockCallBack":
-  //                     this.mBlocks.check(event.data.list);
-  //                     break;
-  //             }
-  //             Logger.getInstance().debug(event.method);
-  //         };
-  //         this.blockCheckWorker.postMessage({ "method": "startCheckBlock" });
-  //     }
-  // }
-
   public updateClock(time: number, delta: number) {
     // 客户端自己通过delta来更新游戏时间戳
     if (this.mWorld.clock) this.mWorld.clock.update(time, delta);
@@ -407,10 +324,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     return this.mBlocks;
   }
 
-  get actor(): Actor | undefined {
-    return this.mActor;
-  }
-
   get world(): WorldService | undefined {
     return this.mWorld;
   }
@@ -422,14 +335,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   public clear() {
-    if (this.mActor) this.mActor.destroy();
     if (this.mLayManager) this.mLayManager.destroy();
-    // if (this.mClock) this.mClock.destroy();
     if (this.mTerainManager) this.mTerainManager.destroy();
     if (this.mElementManager) this.mElementManager.destroy();
     if (this.mPlayerManager) this.mPlayerManager.destroy();
     if (this.mBlocks) this.mBlocks.destroy();
-    //  if (this.mCheckBlock && this.blockCheckWorker) this.blockCheckWorker.postMessage({ method: "endCheckBlock" });
     if (this.mActorData) {
       this.mActorData = null;
     }
@@ -437,18 +347,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
   public destroy() {
     this.clear();
-    if (this.mActor) {
-      this.mActor.destroy();
-    }
     this.mWorld.game.scene.remove(PlayScene.name);
     this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
     if (this.mScene) {
-      // this.mScene.scene.stop();
       this.mScene = null;
-      // this.mScene.scene.stop();
-      // this.mWorld.game.scene.stop(PlayScene.name);
-      // this.mWorld.game.scene.stop(MainUIScene.name);
-      // this.mScene = null;
     }
   }
 
@@ -458,17 +360,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   private enterRoom() {
-    // if (this.mScene.scene.isActive()) {
-    //     this.mWorld.changeScene();
-    //     return;
-    // }
-    // if (this.mScene.scene.isActive() || this.mScene.scene.isSleeping()) {
-    //   this.mWorld.game.scene.wake(PlayScene.name, {
-    //     room: this
-    //   });
-    //   return;
-    // this.startPlay();
-    // }
     this.mWorld.game.scene.run(PlayScene.name, {
       room: this
     });
