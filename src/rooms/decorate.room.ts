@@ -162,8 +162,6 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mLayerManager = new LayerManager(this);
         this.mLayerManager.drawGrid(this);
-        // this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
-        // this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mTerrainManager = new TerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
@@ -227,9 +225,6 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.mSelectedElement) {
             this.mSelectedElement.update(time, delta);
         }
-    }
-
-    updateClock(time: number, delta: number): void {
     }
 
     updateBlockObject() {

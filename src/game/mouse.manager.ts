@@ -27,7 +27,7 @@ export class MouseManager extends PacketHandler {
     private mGame: Phaser.Game;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
-    private mDownDelay: number = 200;
+    private mDownDelay: number = 2000;
     private mDownTime: any;
     constructor(private worldService: WorldService) {
         super();
@@ -128,7 +128,7 @@ export class MouseManager extends PacketHandler {
         this.onUpdate(pointer, gameObject);
 
         this.mDownTime = setTimeout(() => {
-            this.selectedElement(pointer, gameObject);
+            this.worldService.emitter.emit(MessageType.PRESS_ELEMENT, pointer, gameObject);
         }, this.mDownDelay);
     }
 

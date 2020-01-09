@@ -22,6 +22,7 @@ import { Actor } from "./player/Actor";
 import { PlayerModel } from "./player/player.model";
 import { IElement } from "./element/element";
 import { Size } from "../utils/size";
+import { MessageType } from "../const/MessageType";
 export interface SpriteAddCompletedListener {
   onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -226,6 +227,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
     this.mActor = new Actor(new PlayerModel(this.mActorData), this.mPlayerManager);
     const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+    this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
     if (loadingScene) loadingScene.sleep();
     this.world.changeRoom(this);
     if (this.world.uiManager) this.world.uiManager.showMainUI();
@@ -439,6 +441,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
       this.mActor.destroy();
     }
     this.mWorld.game.scene.remove(PlayScene.name);
+    this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
     if (this.mScene) {
       // this.mScene.scene.stop();
       this.mScene = null;
@@ -447,6 +450,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
       // this.mWorld.game.scene.stop(MainUIScene.name);
       // this.mScene = null;
     }
+  }
+
+  private onPressElementHandler(pointer, gameObject) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
+    this.connection.send(packet);
   }
 
   private enterRoom() {

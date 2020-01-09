@@ -70,6 +70,8 @@ export class MessageType {
 
     public static EDIT_MODE_QUERY_PACKAGE = "editModeQueryPackage";
 
+    public static PRESS_ELEMENT = "PRESS_ELEMENT";
+
     // 旋转物件
     public static TURN_ELEMENT = "turnElement";
     // 回收

@@ -1970,8 +1970,8 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git":
-  version "1.2.54"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#a751791376bf46d53e683280dc25098623d91ad1"
+  version "1.2.55"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#6e883b5d4efc6f30936aa63f7a6725c6c4448bd0"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
