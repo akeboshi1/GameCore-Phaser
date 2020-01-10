@@ -317,6 +317,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
     }
 
     private onGameobjectUpHandler(pointer, gameobject) {
+        this.addPointerMoveHandler();
         const com = gameobject.parentContainer;
         if (!com) {
             return;
@@ -375,9 +376,15 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (display instanceof TerrainDisplay) {
             return;
         }
-        const sprite = this.mSelectedElement.sprite;
-        if (sprite) {
-            this.removeElement(sprite.id, sprite.nodeType);
+        if (this.mSelectedElement.display === display) {
+            return;
+        }
+        const element = display.element;
+        if (element) {
+            const sprite = element.model;
+            if (sprite) {
+                this.removeElement(element.id, sprite.nodeType);
+            }
         }
         if (this.mSelectedElement.display) {
             this.onPutElement(this.mSelectedElement.display);

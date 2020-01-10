@@ -47,8 +47,6 @@ export class SelectedElement {
             this.mDisplay.showRefernceArea();
             this.mDecorateManager.setElement(this.mDisplay);
             this.roomService.addToSurface(this.mDisplay);
-            this.mDisplay.disableInteractive();
-
         });
         this.mDisplay.load(<FramesModel> sprite.displayInfo);
     }

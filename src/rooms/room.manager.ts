@@ -27,8 +27,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     constructor(world: WorldService) {
         super();
         this.mWorld = world;
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
-        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterDecorate);
+        this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEditRoom);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -128,26 +128,26 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private onEnterDecorate(packet: PBpacket) {
-        const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
-        const elements = this.mCurRoom.elementManager.getElements().map((ele: IElement) => ele.model);
-        const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
-        const scene = {
-            id: this.mCurRoom.id,
-            rows,
-            cols,
-            tileWidth,
-            tileHeight
-        };
+        // const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
+        // const elements = this.mCurRoom.elementManager.getElements().map((ele: IElement) => ele.model);
+        // const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
+        // const scene = {
+        //     id: this.mCurRoom.id,
+        //     rows,
+        //     cols,
+        //     tileWidth,
+        //     tileHeight
+        // };
         if (this.mCurRoom) {
             this.leaveScene(this.mCurRoom);
         }
-        // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const room: DecorateRoom = new DecorateRoom(this);
-        room.enter(scene);
-        setTimeout(() => {
-            room.addElements(elements, op_def.NodeType.ElementNodeType);
-            room.addElements(terrains, op_def.NodeType.TerrainNodeType);
-        }, 2000);
+        room.enter(content.scene);
+        // setTimeout(() => {
+        //     room.addElements(elements, op_def.NodeType.ElementNodeType);
+        //     room.addElements(terrains, op_def.NodeType.TerrainNodeType);
+        // }, 2000);
         this.mRooms.push(room);
         // this.mCurRoom = room;
     }
