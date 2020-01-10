@@ -19,6 +19,8 @@ export class ElementStorageMediator extends BaseMediator {
         this.mStorage = new ElementStorage(world);
         this.mLayerManager = layerManager;
         this.mScene = scene;
+
+        this.register();
     }
 
     show(param?: any): void {
@@ -58,12 +60,35 @@ export class ElementStorageMediator extends BaseMediator {
         }
     }
 
+    destroy() {
+        super.destroy();
+        this.unregister();
+    }
+
     getView(): ElementStoragePanel {
         return <ElementStoragePanel> this.mView;
+    }
+
+    private register() {
+        this.world.emitter.on(MessageType.EDIT_PACKAGE_EXPANED, this.onExpanedHandler, this);
+        this.world.emitter.on(MessageType.EDIT_PACKAGE_COLLAPSE, this.onCollapseHandler, this);
+    }
+
+    private unregister() {
+        this.world.emitter.off(MessageType.EDIT_PACKAGE_EXPANED, this.onExpanedHandler, this);
+        this.world.emitter.off(MessageType.EDIT_PACKAGE_COLLAPSE, this.onCollapseHandler, this);
     }
 
     private onEditModeQueryPackageHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
         Logger.getInstance().log("EditorMode: ", content);
+    }
+
+    private onExpanedHandler() {
+        this.expand();
+    }
+
+    private onCollapseHandler() {
+        this.collapse();
     }
 }

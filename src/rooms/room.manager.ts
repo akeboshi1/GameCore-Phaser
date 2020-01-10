@@ -1,7 +1,7 @@
 import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { Room, IRoomService } from "./room";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
 import {EditorRoom} from "./editor.room";
@@ -129,9 +129,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private onEnterDecorate(packet: PBpacket) {
         const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
-        const elements = this.currentRoom.elementManager.getElements().map((ele: IElement) => ele.model);
+        const elements = this.mCurRoom.elementManager.getElements().map((ele: IElement) => ele.model);
         const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
-        Logger.getInstance().log("element: ", this.currentRoom.elementManager, this.currentRoom.elementManager.getElements());
         const scene = {
             id: this.mCurRoom.id,
             rows,
@@ -139,13 +138,16 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             tileWidth,
             tileHeight
         };
-
         if (this.mCurRoom) {
             this.leaveScene(this.mCurRoom);
         }
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
+        // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const room: DecorateRoom = new DecorateRoom(this);
         room.enter(scene);
+        setTimeout(() => {
+            room.addElements(elements, op_def.NodeType.ElementNodeType);
+            room.addElements(terrains, op_def.NodeType.TerrainNodeType);
+        }, 2000);
         this.mRooms.push(room);
         // this.mCurRoom = room;
     }

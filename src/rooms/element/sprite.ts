@@ -32,6 +32,7 @@ export interface ISprite {
     bindID: number;
 
     newID();
+    setPosition(x: number, y: number);
     toSprite(): op_client.ISprite;
 }
 
@@ -120,6 +121,14 @@ export class Sprite implements ISprite {
 
     public newID() {
         this.mID = Helpers.genId();
+    }
+
+    public setPosition(x: number, y: number) {
+        if (!this.mPos) {
+            this.mPos = new Pos();
+        }
+        this.mPos.x = x;
+        this.mPos.y = y;
     }
 
     get id(): number {

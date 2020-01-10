@@ -77,6 +77,9 @@ export class ElementStoragePanel extends Panel {
     }
 
     expand() {
+        if (this.mExpaned) {
+            return;
+        }
         const size: Size = this.mWorld.getSize();
         let props = null;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
@@ -90,11 +93,14 @@ export class ElementStoragePanel extends Panel {
             ease: "Linear",
             props
         });
-        // this.remove(this.mDragBtn);
+        this.remove(this.mDragBtn);
         this.mExpaned = true;
     }
 
     collapse() {
+        if (!this.mExpaned) {
+            return;
+        }
         const size: Size = this.mWorld.getSize();
         let props = null;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {

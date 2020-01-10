@@ -71,7 +71,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return Array.from(this.mElements.values());
     }
 
-    public add(sprite: ISprite[]) {
+    public add(sprites: ISprite[]) {
+        for (const sprite of sprites) {
+            this._add(sprite);
+        }
     }
 
     public destroy() {

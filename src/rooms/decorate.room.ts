@@ -10,7 +10,7 @@ import {TerrainManager} from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
 import {IElement} from "./element/element";
 import {ElementDisplay} from "./display/element.display";
-import {op_client, op_virtual_world} from "pixelpai_proto";
+import {op_client, op_virtual_world, op_def} from "pixelpai_proto";
 import {Pos} from "../utils/pos";
 import {PlayerManager} from "./player/player.manager";
 import {PacketHandler, PBpacket} from "net-socket-packet";
@@ -23,7 +23,7 @@ import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
 import { DecorateElementManager } from "./element/decorate.element.manager";
 import { MessageType } from "../const/MessageType";
-import { Sprite } from "./element/sprite";
+import { Sprite, ISprite } from "./element/sprite";
 
 export class DecorateRoom extends PacketHandler implements IRoomService {
     readonly blocks: ViewblockService;
@@ -243,6 +243,14 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         return this.checkBound(pos);
     }
 
+    addElements(sprites: ISprite[], nodeType) {
+        if (nodeType === op_def.NodeType.ElementNodeType) {
+            this.mElementManager.add(sprites);
+        } else if (nodeType === op_def.NodeType.TerrainNodeType) {
+            this.mTerrainManager.add(sprites);
+        }
+    }
+
     /**
      * 边界检查
      * @param pos 45度坐标，
@@ -340,6 +348,23 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.removePointerMoveHandler();
     }
 
+    private removeElement(id: number, nodeType: op_def.NodeType) {
+        if (nodeType === op_def.NodeType.ElementNodeType) {
+            this.elementManager.remove(id);
+        } else if (nodeType === op_def.NodeType.TerrainNodeType) {
+            this.elementManager.remove(id);
+        }
+    }
+
+    private addElement(sprite: ISprite) {
+        const nodeType = sprite.nodeType;
+        if (nodeType === op_def.NodeType.ElementNodeType) {
+            this.mElementManager.add([sprite]);
+        } else if (nodeType === op_def.NodeType.TerrainNodeType) {
+            this.mTerrainManager.add([sprite]);
+        }
+    }
+
     private selectedElement(display: FramesDisplay) {
         if (!(display instanceof DisplayObject)) {
             return;
@@ -348,54 +373,68 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             this.mSelectedElement = new SelectedElement(this.mScene, this);
         }
         if (display instanceof TerrainDisplay) {
-            this.mSelectedElement.remove();
             return;
         }
-        this.mSelectedElement.setElement(display);
+        const sprite = this.mSelectedElement.sprite;
+        if (sprite) {
+            this.removeElement(sprite.id, sprite.nodeType);
+        }
+        if (this.mSelectedElement.display) {
+            this.onPutElement(this.mSelectedElement.display);
+        }
+        const ele = display.element;
+        if (ele) this.mSelectedElement.setSprite(ele.model);
+        // this.mSelectedElement.setElement(display);
     }
 
     private onTurnElementHandler(display: DisplayObject) {
-        const ele = display.element;
-        if (!ele) {
+        if (!this.mSelectedElement) {
+            return;
+        }
+        const sprite = this.mSelectedElement.sprite;
+        if (!sprite) {
             return;
         }
 
+        this.addElement(sprite);
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
-        content.sprites = [ele.model.toSprite()];
-        content.nodeType = ele.model.nodeType;
+        content.sprites = [sprite.toSprite()];
+        content.nodeType = sprite.nodeType;
         this.world.connection.send(packet);
     }
 
     private onRecycleHandler(display: DisplayObject) {
-        const ele = display.element;
-        if (!ele) {
-            return;
-        }
         if (!this.mSelectedElement) {
             return;
         }
-        this.mSelectedElement.remove();
+        const sprite = this.mSelectedElement.sprite;
+        if (!sprite) {
+            return;
+        }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
-        content.sprites = [ele.model.toSprite()];
-        content.nodeType = ele.model.nodeType;
+        content.sprites = [sprite.toSprite()];
+        content.nodeType = sprite.nodeType;
         this.world.connection.send(packet);
+        this.mSelectedElement.remove();
     }
 
     private onPutElement(display: DisplayObject) {
-        const ele = display.element;
-        if (!ele) {
+        if (!this.mSelectedElement) {
             return;
         }
-        if (this.mSelectedElement) {
-            this.mSelectedElement.remove();
+        const sprite = this.mSelectedElement.sprite;
+        if (!sprite) {
+            return;
         }
+        this.addElement(sprite);
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
-        content.sprites = [ele.model.toSprite()];
-        content.nodeType = ele.model.nodeType;
+        content.sprites = [sprite.toSprite()];
+        content.nodeType = sprite.nodeType;
         this.world.connection.send(packet);
+        this.mSelectedElement.remove();
     }
 
     private onSelectSpriteHandler(packet: PBpacket) {

@@ -57,7 +57,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         return terrain;
     }
 
-    public add(sprite: ISprite[]) {
+    public add(sprites: ISprite[]) {
+        for (const sprite of sprites) {
+            this._add(sprite);
+        }
     }
 
     public remove(id: number): IElement {

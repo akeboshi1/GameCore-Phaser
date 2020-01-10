@@ -3,13 +3,16 @@ import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
 import { IRoomService } from "../room";
 import { ISprite } from "../element/sprite";
-import { IFramesModel } from "../display/frames.model";
+import { IFramesModel, FramesModel } from "../display/frames.model";
+import { MessageType } from "../../const/MessageType";
+import { DragonbonesModel } from "../display/dragonbones.model";
 
 export class SelectedElement {
     private readonly scene: Phaser.Scene;
     private readonly roomService: IRoomService;
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mDecorateManager: DecorateManager;
+    private mSprite: ISprite;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
         this.scene = scene;
         this.roomService = roomService;
@@ -26,12 +29,28 @@ export class SelectedElement {
         display.showRefernceArea();
         this.mDecorateManager.setElement(display);
         this.mDisplay = display;
+        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
     }
 
     setSprite(sprite: ISprite) {
+        // this.mDisplay = new FramesDisplay(this.scene, this.roomService);
+        const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
+        this.mSprite = sprite;
         this.mDisplay = new FramesDisplay(this.scene, this.roomService);
-        this.mDisplay.load(<IFramesModel> sprite.displayInfo);
-        this.roomService.addToSurface(this.mDisplay);
+        const pos = sprite.pos;
+        this.mDisplay.x = pos.x;
+        this.mDisplay.y = pos.y;
+        this.mDisplay.once("initialized", () => {
+            this.mDisplay.showRefernceArea();
+            this.mDecorateManager.setElement(this.mDisplay);
+            this.roomService.addToSurface(this.mDisplay);
+            this.mDisplay.disableInteractive();
+
+        });
+        this.mDisplay.load(<FramesModel> sprite.displayInfo);
     }
 
     turnElement() {
@@ -41,9 +60,10 @@ export class SelectedElement {
     remove() {
         this.mDecorateManager.remove();
         if (this.mDisplay) {
-            this.mDisplay.hideRefernceArea();
+            this.mDisplay.destroy();
             this.mDisplay = null;
         }
+        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_EXPANED);
     }
 
     update(time: number, delta: number) {
@@ -59,6 +79,16 @@ export class SelectedElement {
         this.mDisplay.x = x;
         this.mDisplay.y = y;
         this.mDecorateManager.updatePos(x, y);
+        this.mSprite.setPosition(x, y);
+
         // this.mLayerManager.depthSurfaceDirty = true;
+    }
+
+    get display(): FramesDisplay | DragonbonesDisplay {
+        return this.mDisplay;
+    }
+
+    get sprite(): ISprite {
+        return this.mSprite;
     }
 }
