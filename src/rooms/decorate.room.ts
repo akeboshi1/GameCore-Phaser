@@ -310,6 +310,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
 
     private onPointerUpHandler() {
         this.removePointerMoveHandler();
+        if (this.mSelectedElement) {
+            this.mSelectedElement.selecting = false;
+        }
     }
 
     private onPointerDownHandler() {
@@ -327,6 +330,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         if (!this.mSelectedElement) {
+            return;
+        }
+        if (this.mSelectedElement.selecting === false) {
             return;
         }
         const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
@@ -376,6 +382,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (display instanceof TerrainDisplay) {
             return;
         }
+        this.mSelectedElement.selecting = true;
         if (this.mSelectedElement.display === display) {
             return;
         }

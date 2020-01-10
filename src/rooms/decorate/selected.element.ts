@@ -13,6 +13,7 @@ export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mDecorateManager: DecorateManager;
     private mSprite: ISprite;
+    private mSelecting: boolean;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
         this.scene = scene;
         this.roomService = roomService;
@@ -49,6 +50,7 @@ export class SelectedElement {
             this.roomService.addToSurface(this.mDisplay);
         });
         this.mDisplay.load(<FramesModel> sprite.displayInfo);
+        this.mSelecting = true;
     }
 
     turnElement() {
@@ -88,5 +90,13 @@ export class SelectedElement {
 
     get sprite(): ISprite {
         return this.mSprite;
+    }
+
+    set selecting(val: boolean) {
+        this.mSelecting = val;
+    }
+
+    get selecting(): boolean {
+        return this.mSelecting;
     }
 }
