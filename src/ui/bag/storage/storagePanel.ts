@@ -3,9 +3,10 @@ import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
 import { Url, Border, Background } from "../../../utils/resUtil";
-import { IconBtn } from "../../baseView/mobile/icon.btn";
+import { IconBtn } from "../../baseView/icon.btn";
 import { NinePatch } from "../../components/nine.patch";
 import { StorageMediator } from "./storageMediator";
+import { UIMediatorType } from "../../ui.mediatorType";
 
 export class StoragePanel extends Panel {
     private mResStr: string;
@@ -96,7 +97,7 @@ export class StoragePanel extends Panel {
             this.mBagItemSlotList.push(itemSlot);
         }
 
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;

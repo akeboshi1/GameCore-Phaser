@@ -1,8 +1,8 @@
 import { Panel } from "../../components/panel";
 import { WorldService } from "../../../game/world.service";
-import { IconBtn } from "./icon.btn";
+import { IconBtn } from "../icon.btn";
 import { Url } from "../../../utils/resUtil";
-import { IconSelectBtn } from "./icon.select.btn";
+import { IconSelectBtn } from "../icon.select.btn";
 
 export class LeftBtnGroup extends Panel {
     private mExpandBtn: IconSelectBtn;

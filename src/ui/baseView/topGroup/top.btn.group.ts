@@ -2,8 +2,9 @@ import { Panel } from "../../components/panel";
 import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../utils/size";
 import { Url } from "../../../utils/resUtil";
-import { IconBtn } from "./icon.btn";
+import { IconBtn, IBtnData } from "../icon.btn";
 import { DebugLoggerMediator } from "../../debuglog/debug.logger.mediator";
+import { UIMediatorType } from "../../ui.mediatorType";
 
 export class TopBtnGroup extends Panel {
     // private mWid: number = 0;
@@ -18,7 +19,7 @@ export class TopBtnGroup extends Panel {
     private mRankBtn: IconBtn;
     private mExpandBoo: boolean = false;
     private mAddBtnDataList: any[];
-    private mRemoveBtnDataList: any[];
+    private mRemoveBtnKeyList: any[];
     private mOrientation: number = Phaser.Scale.Orientation.LANDSCAPE;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
@@ -81,43 +82,28 @@ export class TopBtnGroup extends Panel {
         });
     }
 
-    public addBtn(data: any) {
+    public addBtn(data: IBtnData) {
         if (!this.mAddBtnDataList) this.mAddBtnDataList = [];
         if (!this.mInitialized) {
             this.mAddBtnDataList.push(data);
             return;
         }
-        const btn: IconBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, data.bgTextureList, data.iconTexture, 1);
-        if (data.medKey) btn.setMedName(data.medKey);
-        btn.setClick(() => {
-            const medName: string = btn.getMedName();
-            if (!medName) return;
-            const med = this.mWorld.uiManager.getMediator(medName);
-            if (med) {
-                // 该判断条件用于某些常驻界面ui在移动端需要手动打开，客户端将此逻辑修改为通过后端发送的showui数据将入口按钮变成是否常驻
-                // 好处在于移动端客户端界面让玩家自行选择是否打开，减少ui布局混乱的情况
-                const param = med.getParam();
-                med.show(param);
-            } else {
-                // todo 该判断条件用于热发布活动，后端需要在pi中加一条活动按钮数据，不包含med具体代码，只有name，btnres等数据即可，等需要打开界面时在请求具体数据
-                // 客户端只需要发送medname给后端，后端发送showui给客户端，好处在于每次打开都是请求后端打开界面，活动数据是实时的
-            }
-        });
+        const btn: IconBtn = new IconBtn(this.mScene, this.mWorld, data);
         this.mBtnList.push(btn);
         this.btnRefreshPos();
     }
 
-    public removeBtn(data: any) {
-        if (this.mRemoveBtnDataList) this.mRemoveBtnDataList = [];
+    public removeBtn(key: string) {
+        if (this.mRemoveBtnKeyList) this.mRemoveBtnKeyList = [];
         if (!this.mInitialized) {
-            this.mRemoveBtnDataList.push(data);
+            this.mRemoveBtnKeyList.push(key);
             return;
         }
         for (let i: number = 0, len = this.mBtnList.length; i < len; i++) {
             let btn: IconBtn = this.mBtnList[i];
             if (!btn) continue;
-            const medName: string = btn.getMedName();
-            if (medName && medName === data.medKey) {
+            const btnKey: string = btn.getKey();
+            if (btnKey && btnKey === key) {
                 btn.destroy();
                 btn = null;
                 this.mBtnList.splice(i, 1);
@@ -142,44 +128,46 @@ export class TopBtnGroup extends Panel {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mBtnList = [];
         this.mBtnX = 0;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_top_expand.png", 1);
+        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Turn_Btn_Top, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1 });
         this.mTurnBtn.x = this.mBtnX;
         this.mTurnBtn.setPos(this.mBtnX, 0);
         wid += this.mTurnBtn.width + this.mBtnPad;
         this.add(this.mTurnBtn);
         this.mBtnX += -this.mTurnBtn.width - this.mBtnPad;
         hei += this.mTurnBtn.height / 2 + 20;
-        this.mReturnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], "btnGroup_top_expand.png", 1);
-        this.mReturnBtn.x = this.mBtnX;
-        this.mReturnBtn.setPos(this.mBtnX, 0);
-        this.mBtnList.push(this.mReturnBtn);
-        wid += this.mReturnBtn.width + this.mBtnPad;
-        this.add(this.mReturnBtn);
-        this.mBtnX += -this.mReturnBtn.width - this.mBtnPad;
-        this.mDebugBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_blue_normal.png", "btnGroup_blue_light.png", "btnGroup_blue_select.png"], "btnGroup_top_expand.png", 1);
-        this.mDebugBtn.x = this.mBtnX;
-        this.mDebugBtn.setPos(this.mBtnX, 0);
-        this.mBtnList.push(this.mDebugBtn);
-        wid += this.mDebugBtn.width + this.mBtnPad;
-        this.add(this.mDebugBtn);
+        if (!this.mWorld.game.device.os.desktop) {
+            this.mReturnBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.App_Back, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1 });
+            this.mReturnBtn.x = this.mBtnX;
+            this.mReturnBtn.setPos(this.mBtnX, 0);
+            this.mBtnList.push(this.mReturnBtn);
+            wid += this.mReturnBtn.width + this.mBtnPad;
+            this.add(this.mReturnBtn);
+            this.mBtnX += -this.mReturnBtn.width - this.mBtnPad;
+            this.mDebugBtn = new IconBtn(this.mScene, this.mWorld, { key: DebugLoggerMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_blue_normal.png", "btnGroup_blue_light.png", "btnGroup_blue_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1 });
+            this.mDebugBtn.x = this.mBtnX;
+            this.mDebugBtn.setPos(this.mBtnX, 0);
+            this.mBtnList.push(this.mDebugBtn);
+            wid += this.mDebugBtn.width + this.mBtnPad;
+            this.add(this.mDebugBtn);
+            this.mReturnBtn.setClick(() => {
+                this.mWorld.closeGame();
+            });
+            this.mDebugBtn.setClick(() => {
+                let debugLogMed: DebugLoggerMediator = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
+                if (!debugLogMed) {
+                    this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mScene, this.mWorld));
+                    debugLogMed = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
+                }
+                if (debugLogMed.isShow()) {
+                    debugLogMed.hide();
+                    return;
+                }
+                debugLogMed.show();
+            });
+        }
         this.setSize(wid, hei);
         this.mTurnBtn.setClick(() => {
             this.turnHandler();
-        });
-        this.mReturnBtn.setClick(() => {
-            this.mWorld.closeGame();
-        });
-        this.mDebugBtn.setClick(() => {
-            let debugLogMed: DebugLoggerMediator = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
-            if (!debugLogMed) {
-                this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mScene, this.mWorld));
-                debugLogMed = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
-            }
-            if (debugLogMed.isShow()) {
-                debugLogMed.hide();
-                return;
-            }
-            debugLogMed.show();
         });
         this.resize();
         super.init();
@@ -193,9 +181,9 @@ export class TopBtnGroup extends Panel {
                     this.addBtn(btnData);
                 });
             }
-            if (this.mRemoveBtnDataList) {
-                this.mRemoveBtnDataList.forEach((btnData) => {
-                    this.removeBtn(btnData);
+            if (this.mRemoveBtnKeyList) {
+                this.mRemoveBtnKeyList.forEach((key) => {
+                    this.removeBtn(key);
                 });
             }
         }

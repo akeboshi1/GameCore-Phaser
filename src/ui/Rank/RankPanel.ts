@@ -1,9 +1,10 @@
 import { BasicRankPanel } from "./BasicRankPanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
-import { IconBtn } from "../baseView/mobile/icon.btn";
+import { IconBtn } from "../baseView/icon.btn";
 import { Size } from "../../utils/size";
 import { RankMediator } from "./RankMediator";
+import { UIMediatorType } from "../ui.mediatorType";
 
 export class RankPanel extends BasicRankPanel {
     private mZoonInBtn: Phaser.GameObjects.Image;
@@ -59,7 +60,7 @@ export class RankPanel extends BasicRankPanel {
     protected init() {
         super.init();
         if (!this.mWorld.game.device.os.desktop) {
-            this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+            this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
             this.mClsBtn.x = this.mWidth / 2 - 35;
             this.mClsBtn.y = -this.mHeight / 2;
             this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;

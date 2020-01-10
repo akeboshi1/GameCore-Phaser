@@ -1,10 +1,18 @@
-import { WorldService } from "../../../game/world.service";
-import { Pos } from "../../../utils/pos";
-
+import { WorldService } from "../../game/world.service";
+import { Pos } from "../../utils/pos";
+export interface IBtnData {
+    key: string;
+    bgResKey: string;
+    bgTextures: string[];
+    iconResKey: string;
+    iconTexture: string;
+    scale: number;
+    callBack?: Function;
+}
 /**
- * 切换状态按钮
+ * 多帧资源按钮
  */
-export class IconSelectBtn extends Phaser.GameObjects.Container {
+export class IconBtn extends Phaser.GameObjects.Container {
     private monClick: Function;
     private mScene: Phaser.Scene;
     private mWorld: WorldService;
@@ -14,23 +22,39 @@ export class IconSelectBtn extends Phaser.GameObjects.Container {
     private mBtnData: any;
     private mBasePos: Pos;
     private mBgTexture: string[];
-    constructor(scene: Phaser.Scene, world: WorldService, bgResKey: string, bgTexture: string[], scale: number = 28 / 43) {
+    private mData: IBtnData;
+    // // 按钮打开模块的name，用于打开和关闭此模块及模块更新时，主界面按钮的更新（显示和隐藏）
+    // private medName: string;
+    constructor(scene: Phaser.Scene, world: WorldService, data: IBtnData) {
         super(scene);
         this.mScene = scene;
         this.mWorld = world;
         this.mBtnBg = scene.make.image(undefined, false);
-        this.mBgTexture = bgTexture;
-        this.mBgResKey = bgResKey;
-        this.mBtnBg.setTexture(bgResKey, bgTexture[0]);
-        this.mBtnBg.scaleX = this.mBtnBg.scaleY = scale;
+        this.mBgResKey = data.bgResKey;
+        this.mBgTexture = data.bgTextures;
+        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[0]);
+        this.mBtnBg.scaleX = this.mBtnBg.scaleY = data.scale;
+        this.mData = data;
         this.addAt(this.mBtnBg, 0);
-
+        if (data.iconResKey && data.iconTexture && data.iconTexture.length > 0) {
+            this.mBtnIcon = scene.make.image(undefined, false);
+            this.mBtnIcon.setTexture(data.iconResKey, data.iconTexture);
+            this.add(this.mBtnIcon);
+        }
         this.setSize(this.mBtnBg.width, this.mBtnBg.height);
         this.setInteractive();
         this.on("pointerup", this.upHandler, this);
         this.on("pointerdown", this.downHandler, this);
         this.on("pointerover", this.overHandler, this);
         this.on("pointerout", this.outHandler, this);
+    }
+
+    // public setMedName(name: string) {
+    //     this.medName = name;
+    // }
+
+    public getKey(): string {
+        return this.mData.key;
     }
 
     public setPos(x: number, y: number) {
@@ -60,10 +84,6 @@ export class IconSelectBtn extends Phaser.GameObjects.Container {
         this.monClick = func;
     }
 
-    public setBgRes(index: number) {
-        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[index] || 0);
-    }
-
     public destroy() {
         if (this.mBtnBg) {
             this.mBtnBg.destroy(true);
@@ -80,19 +100,38 @@ export class IconSelectBtn extends Phaser.GameObjects.Container {
     }
 
     private overHandler(pointer) {
+        if (this.mBgTexture.length < 2) {
+            return;
+        }
+        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[1]);
     }
 
     private outHandler(pointer) {
+        if (this.mBgTexture.length < 2) {
+            return;
+        }
+        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[0]);
     }
 
     private upHandler() {
         if (this.monClick) {
             this.monClick();
         }
+        if (this.mData && this.mData.callBack) {
+            this.mData.callBack();
+        }
+        if (this.mBgTexture.length < 3) {
+            return;
+        }
+        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[2]);
     }
 
     private downHandler() {
-        this.scaleHandler();
+        // this.scaleHandler();
+        if (this.mBgTexture.length < 4) {
+            return;
+        }
+        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[3]);
     }
 
     private scaleHandler() {

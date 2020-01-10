@@ -3,6 +3,7 @@ export interface IAbstractPanel {
     destroy();
     hide();
     show(param?: any);
+    tweenView(show: boolean);
     resize(wid: number, hei: number);
     update(param: any);
 }

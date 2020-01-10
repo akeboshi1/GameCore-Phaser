@@ -1,14 +1,14 @@
 import { Panel } from "../../components/panel";
 import { WorldService } from "../../../game/world.service";
 import { Url } from "../../../utils/resUtil";
-import { IconBtn } from "./icon.btn";
+import { IconBtn } from "../icon.btn";
 import { Size } from "../../../utils/size";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { ChatMediator } from "../../chat/chat.mediator";
-import { MainUIMediator } from "../mainUI.mediator";
 import { JoyStickManager } from "../../../game/joystick.manager";
-import { MainUIMobile } from "./mainUI.mobile";
 import { CheckButton } from "../../components/check.button";
+import { BagMediator } from "../../bag/bagView/bagMediator";
+import { RightMediator } from "../rightGroup/right.mediator";
 export class BottomBtnGroup extends Panel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
@@ -50,13 +50,13 @@ export class BottomBtnGroup extends Panel {
             this.mMicBtn.y = this.mVoiceBtn.y;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
-        const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
         const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
-        if (mainUIMed) {
-            rightBtnGroup = (mainUIMed.getView() as MainUIMobile).getRightView();
+        if (rightMediator) {
+            rightBtnGroup = rightMediator.getView();
         }
-        if (mainUIMed) {
+        if (rightMediator) {
             joyStick.resize();
             if (rightBtnGroup) rightBtnGroup.resize();
         }
@@ -113,13 +113,13 @@ export class BottomBtnGroup extends Panel {
         this.add(this.mChatContainer);
         this.mWid += this.mChatContainer.width;
         this.mHei += this.mChatContainer.height;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], "btnGroup_bottom_expand.png", 1);
+        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1 });
         this.mTurnBtn.x = (this.mWid >> 1) + 30;
         this.mTurnBtn.y = this.mHei - this.mTurnBtn.height >> 1;
         this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
         this.add(this.mTurnBtn);
 
-        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], "btnGroup_bag_icon.png", 1);
+        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, { key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1 });
         this.mBagBtn.x = this.mTurnBtn.x;
         this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
         this.mBagBtn.setPos(this.mBagBtn.x, this.mBagBtn.y);
@@ -200,11 +200,11 @@ export class BottomBtnGroup extends Panel {
         }
         const len: number = this.mBtnList.length;
         const size: Size = this.mWorld.getSize();
-        const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
+        const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
         const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
-        if (mainUIMed) {
-            rightBtnGroup = (mainUIMed.getView() as MainUIMobile).getRightView();
+        if (rightMediator) {
+            rightBtnGroup = rightMediator.getView();
         }
         for (let i: number = 0; i < len; i++) {
             const btn: IconBtn = this.mBtnList[i];
@@ -227,7 +227,7 @@ export class BottomBtnGroup extends Panel {
                         } else {
                             this.setSize(this.mWid, btn.height * 2);
                         }
-                        if (mainUIMed) {
+                        if (rightMediator) {
                             joyStick.resize();
                             if (rightBtnGroup) rightBtnGroup.resize();
                         }
@@ -252,10 +252,7 @@ export class BottomBtnGroup extends Panel {
             chatMed.show();
         }
         // =====================tween out/in baseView
-        const baseViewMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        if (baseViewMed) {
-            baseViewMed.tweenView(false);
-        }
+        this.mWorld.uiManager.baseFaceTween(false);
     }
 
     private bagHandler() {

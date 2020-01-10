@@ -188,7 +188,7 @@ export class ItemSlot implements IListItemComponent {
     }
 
     protected downHandler(pointer) {
-        if (!this.mData) return;
+        if (!this.mData || !this.mWorld.roomManager.currentRoom.playerManager.actor || !this.mWorld.roomManager.currentRoom || !this.mWorld.roomManager.currentRoom.playerManager) return;
         // if (this.mWorld.game.device.os.desktop) {
         const pack: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);

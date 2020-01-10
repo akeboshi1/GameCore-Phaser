@@ -67,6 +67,9 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         }
     }
 
+    tweenView(show: boolean) {
+    }
+
     setTween(boo: boolean) {
         this.mTweenBoo = boo;
     }

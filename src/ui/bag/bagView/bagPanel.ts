@@ -9,7 +9,8 @@ import { NinePatch } from "../../components/nine.patch";
 import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
-import { IconBtn } from "../../baseView/mobile/icon.btn";
+import { IconBtn } from "../../baseView/icon.btn";
+import { UIMediatorType } from "../../ui.mediatorType";
 export class BagPanel extends Panel {
     public static PageMaxCount: number = 32;
     public bagSlotList: ItemSlot[];
@@ -211,7 +212,7 @@ export class BagPanel extends Panel {
         this.mPreBtn.on("pointerup", this.preHandler, this);
         this.mWidth = this.mBg.width;
         this.mHeight = this.mBg.height;
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;

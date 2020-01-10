@@ -1,7 +1,5 @@
 import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
 import { op_gameconfig } from "pixelpai_proto";
-import {Logger} from "../../utils/log";
-
 export interface IAnimationData {
     name: string;
     frameName: string[];
