@@ -33,6 +33,7 @@ export interface ISprite {
 
     newID();
     setPosition(x: number, y: number);
+    turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
 
@@ -129,6 +130,12 @@ export class Sprite implements ISprite {
         }
         this.mPos.x = x;
         this.mPos.y = y;
+    }
+
+    public turn(): ISprite {
+        this.mDirection += 2;
+        this.mDirection = this.mDirection > 5 ? 3 : this.mDirection;
+        return this;
     }
 
     get id(): number {

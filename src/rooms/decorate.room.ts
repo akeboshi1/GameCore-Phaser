@@ -410,7 +410,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             return;
         }
 
-        this.addElement(sprite);
+        this.mSelectedElement.turnElement();
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
         content.sprites = [sprite.toSprite()];

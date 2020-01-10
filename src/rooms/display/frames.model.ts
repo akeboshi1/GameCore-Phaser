@@ -37,6 +37,7 @@ export class FramesModel implements IFramesModel {
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
     protected mGen: string;
+    private mDirable: number;
 
     constructor(data: any) {
         // TODO 定义IElement接口
@@ -95,6 +96,9 @@ export class FramesModel implements IFramesModel {
         if (ani) {
             return ani.originPoint;
         }
+    }
+
+    public getDirable() {
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {

@@ -8,6 +8,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { Logger } from "../../utils/log";
 import { Item } from "./item/Item";
+import { op_client } from "pixelpai_proto";
 
 export class ElementStoragePanel extends Panel {
     private mBackground: NinePatch;
@@ -19,6 +20,13 @@ export class ElementStoragePanel extends Panel {
     private mExpaned: boolean = true;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+    }
+
+    show(param?: any) {
+        super.show(param);
+        if (this.mInitialized) {
+            this.emit("queryElement");
+        }
     }
 
     resize(oriention?: number) {
@@ -70,10 +78,25 @@ export class ElementStoragePanel extends Panel {
                 this.mTabs[i].x = 24 + i * this.mTabs[i].width + 10;
                 this.mTabs[i].y = 33;
             }
+
+            const len = this.mProps.length;
+            for (let i = 0; i < len; i++) {
+                this.mProps[i].setPosition((i % 8) * 60 + 20, Math.ceil(i / 8) * 60 + 80);
+            }
         }
         this.scale = this.mWorld.uiScale;
         // this.setScale(this.mWorld.uiScale, this.mWorld.uiScale);
         // this.scaleX = this.scaleY = 5;
+    }
+
+    public setProps(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE) {
+        const items = data.items;
+        for (let i = 0; i < items.length; i++) {
+            if (i >= this.mProps.length) {
+                return;
+            }
+            this.mProps[i].setProp(items[i]);
+        }
     }
 
     expand() {
@@ -158,6 +181,14 @@ export class ElementStoragePanel extends Panel {
         checkbox.on("selected", this.onSelectedHandler, this);
         this.mTabs.push(button);
         this.mTabs.push(button2);
+
+        this.mProps = [];
+
+        for (let i = 0; i < 32; i++) {
+            const item = new Item(this.scene);
+            this.add(item);
+            this.mProps[i] = item;
+        }
 
         this.add([this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
         super.init();

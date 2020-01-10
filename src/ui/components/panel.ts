@@ -44,10 +44,6 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         this.mWidth = 0;
         this.mHeight = 0;
         this.mPanelTween = null;
-        this.scaleX = this.scaleY = 0;
-        this.mScene = null;
-        this.removeAll();
-        this.removeAllListeners();
         super.destroy();
     }
 

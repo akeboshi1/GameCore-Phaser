@@ -54,6 +54,12 @@ export class SelectedElement {
     }
 
     turnElement() {
+        if (!this.mDisplay) {
+            return;
+        }
+        const sprite = this.sprite;
+        sprite.turn();
+        this.mDisplay.setDirection(sprite.direction);
 
     }
 

@@ -83,7 +83,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     protected mActionName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
-    private mDirection: number;
     private mPreDirection: number;
     private replaceArr = [];
     private mLoadMap: Map<string, any> = new Map();
@@ -164,7 +163,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
-            Logger.getInstance().debug("play:" + dir);
             this.mPreDirection = dir;
         }
     }

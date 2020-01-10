@@ -31,9 +31,8 @@ export class ElementStorageMediator extends BaseMediator {
         this.mStorage.register();
         this.mStorage.on(MessageType.EDIT_MODE_QUERY_PACKAGE, this.onEditModeQueryPackageHandler, this);
         this.mLayerManager.addToUILayer(this.mView);
+        this.mView.on("fetchElement", this.onQueryElementHandler, this);
         this.mView.show(param);
-
-        this.mStorage.queryPackage(1, 20);
     }
 
     isSceneUI(): boolean {
@@ -61,12 +60,16 @@ export class ElementStorageMediator extends BaseMediator {
     }
 
     destroy() {
-        super.destroy();
         this.unregister();
+        super.destroy();
     }
 
     getView(): ElementStoragePanel {
         return <ElementStoragePanel> this.mView;
+    }
+
+    private onQueryElementHandler(page: number, perPage: number) {
+        this.mStorage.queryPackage(page, perPage);
     }
 
     private register() {
@@ -81,7 +84,7 @@ export class ElementStorageMediator extends BaseMediator {
 
     private onEditModeQueryPackageHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
-        Logger.getInstance().log("EditorMode: ", content);
+        this.getView().setProps(packet.content);
     }
 
     private onExpanedHandler() {
