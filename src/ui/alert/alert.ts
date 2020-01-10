@@ -66,6 +66,8 @@ export class Alert implements IAbstractPanel {
     }
 
     public update() {
+    }
 
+    public tweenView(show: boolean) {
     }
 }

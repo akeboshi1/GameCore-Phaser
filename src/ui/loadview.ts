@@ -33,6 +33,9 @@ export class LoadingView implements IAbstractPanel {
         }
     }
 
+    public tweenView(show: boolean) {
+    }
+
     public resize() {
     }
 

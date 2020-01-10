@@ -1,10 +1,14 @@
 export class UIMediatorType {
-
-    public static MainUIMediator: string = "MainUIMediator"; // 场景快捷键
     public static BagMediator: string = "BagMediator"; // 角色背包
     public static ChatMediator: string = "ChatMediator"; // 场景聊天框
     public static NOTICE: string = "Notice";
     public static DIALOGO: string = "DIALOGO";
+    public static Turn_Btn_Top: string = "Turn_Btn_Top";
+    public static Turn_Btn_Bottom: string = "Turn_Btn_Bottom";
+    public static App_Back: string = "App_Back";
+    public static Editor_Save: string = "Editor_Save";
+    public static Editor_Cancel: string = "Editor_Cancel";
+    public static Close_Btn: string = "Close_Btn";
 
     public static ControlF = "ControlF"; // 展示框
     public static Storage = "Storage"; // 物件背包

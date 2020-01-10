@@ -6,7 +6,6 @@ import { Url, Border, WhiteButton } from "../../../utils/resUtil";
 import { NinePatch } from "../../components/nine.patch";
 import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 import { NinePatchButton } from "../../components/ninepatch.button";
-import { MainUIMediator } from "../../baseView/mainUI.mediator";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;
     private mInputText: InputText;
@@ -312,8 +311,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         });
         this.clickContainer.scaleX = this.clickContainer.scaleY = 1;
         this.tweenView(false);
-        const mainUIMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        mainUIMed.tweenView(true);
+        this.mWorld.uiManager.baseFaceTween(true);
     }
 
     private onSendMsgHandler() {

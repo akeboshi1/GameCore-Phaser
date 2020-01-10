@@ -7,10 +7,10 @@ import { IListItemComponent } from "../bag/IListItemRender";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { Geom } from "phaser";
-import { MainUIMediator } from "../baseView/mainUI.mediator";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
-import { IconBtn } from "../baseView/mobile/icon.btn";
+import { IconBtn } from "../baseView/icon.btn";
 import { FriendMediator } from "./friend.mediator";
+import { UIMediatorType } from "../ui.mediatorType";
 export interface IFriendIcon {
     res: string;
     name: string;
@@ -122,8 +122,7 @@ export class FriendPanel extends Panel {
     }
 
     public hide() {
-        const mainUIMed: MainUIMediator = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        mainUIMed.tweenView(true);
+        this.mWorld.uiManager.baseFaceTween(true);
         super.hide();
     }
 
@@ -175,7 +174,7 @@ export class FriendPanel extends Panel {
         this.setSize(this.mBg.width, this.mBg.height);
         this.initFriendItem();
 
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;

@@ -10,6 +10,7 @@ import { Panel } from "../components/panel";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
 import { UIType } from "../ui.manager";
+import { IAbstractPanel } from "../abstractPanel";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;

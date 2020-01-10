@@ -7,7 +7,8 @@ import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
 import { NinePatch } from "../components/nine.patch";
-import { IconBtn } from "../baseView/mobile/icon.btn";
+import { IconBtn } from "../baseView/icon.btn";
+import { UIMediatorType } from "../ui.mediatorType";
 
 export class ShopPanel extends Panel {
     public static ShopSlotCount: number = 20;
@@ -142,7 +143,7 @@ export class ShopPanel extends Panel {
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, "clsBtn", ["btn_normal", "btn_over", "btn_click"], "", 1);
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
         this.mClsBtn.x = (this.width >> 1) - 65;
         this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;

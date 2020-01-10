@@ -1,22 +1,17 @@
-
 import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../../bag/item.slot";
 import { Size } from "../../../utils/size";
 import { op_gameconfig } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
-import { ISprite } from "../../../rooms/element/sprite";
 import { Panel } from "../../components/panel";
 import { Radio } from "../../components/radio";
-import { UIMediatorType } from "../../ui.mediatorType";
-import { FriendMediator } from "../../friend/friend.mediator";
 import { ChatMediator } from "../../chat/chat.mediator";
 import { BagMediator } from "../../bag/bagView/bagMediator";
-import { MainUIMediator } from "../mainUI.mediator";
 
 /**
  * 主界面ui pc版本
  */
-export class MainUIPC extends Panel {
+export class BagGroup extends Panel {
 
     public static SlotMaxCount: number = 12;
     // bagBtn
@@ -36,11 +31,9 @@ export class MainUIPC extends Panel {
     private mHei: number = 0;
 
     private buttons;
-
     constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number) {
         super(scene, world);
         this.mScene = scene;
-        // this.mParentCon = this.mScene.make.container(undefined, false);
         this.x = x;
         this.y = y;
         world.uiManager.getUILayerManager().addToToolTipsLayer(this);
@@ -127,7 +120,7 @@ export class MainUIPC extends Panel {
             });
         }
         const childList: Phaser.GameObjects.GameObject[] = [];
-        const len: number = items.length > MainUIPC.SlotMaxCount ? MainUIPC.SlotMaxCount : items.length;
+        const len: number = items.length > BagGroup.SlotMaxCount ? BagGroup.SlotMaxCount : items.length;
         let tempWid: number = this.baseBagBgWid + 5;
         for (let i: number = 0; i < len; i++) {
             const itemSlot: ItemSlot = this.bagSlotList[i];
@@ -164,7 +157,7 @@ export class MainUIPC extends Panel {
             //     }
             // }, this);
             this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mWid, this.mHei), Phaser.Geom.Rectangle.Contains);
-            (this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator).resize();
+            this.mWorld.uiManager.baseFaceResize();
         }
     }
 
@@ -212,13 +205,13 @@ export class MainUIPC extends Panel {
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) (this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator).resize();
+        if (show) this.mWorld.uiManager.baseFaceResize();
     }
 
     private initBagSlot() {
         const subScriptList: string[] = ["0", "b", "c"];
         let subScriptRes: string;
-        for (let i: number = 0; i < MainUIPC.SlotMaxCount; i++) {
+        for (let i: number = 0; i < BagGroup.SlotMaxCount; i++) {
             if (i >= 9) {
                 subScriptRes = "bag_SubScript" + subScriptList[i % 9];
             } else {

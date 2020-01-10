@@ -1,16 +1,15 @@
 import { Panel } from "../../components/panel";
 import { WorldService } from "../../../game/world.service";
-import { IconBtn } from "./icon.btn";
+import { IconBtn } from "../icon.btn";
 import { Size } from "../../../utils/size";
 import { ItemSlot } from "../../bag/item.slot";
 import { Url } from "../../../utils/resUtil";
-import { ISprite } from "../../../rooms/element/sprite";
 import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
-import { MainUIMobile } from "./mainUI.mobile";
 import { PBpacket } from "net-socket-packet";
-import { MainUIMediator } from "../mainUI.mediator";
-import { PlayerModel } from "../../../rooms/player/player.model";
+import { BagMediator } from "../../bag/bagView/bagMediator";
+import { BottomMediator } from "../bottomGroup/bottom.mediator";
 export class RightBtnGroup extends Panel {
+    public static SlotMaxCount: number = 4;
     private mBtnY: number = 0;
     private mWid: number = 0;
     private mHei: number = 0;
@@ -31,8 +30,8 @@ export class RightBtnGroup extends Panel {
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.refreshSlot();
-        const mainUIMed = this.mWorld.uiManager.getMediator(MainUIMediator.NAME) as MainUIMediator;
-        const padHei: number = !mainUIMed ? this.height / 2 : (mainUIMed.getView() as MainUIMobile).getBottomView().height;
+        const bottomMed = this.mWorld.uiManager.getMediator(BottomMediator.NAME) as BottomMediator;
+        const padHei: number = !bottomMed ? this.height / 2 : bottomMed.getView().height;
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
@@ -111,7 +110,7 @@ export class RightBtnGroup extends Panel {
             const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
             if (mPackage && mPackage.items) {
                 const items: op_gameconfig.IItem[] = mPackage.items;
-                const len: number = items.length > MainUIMobile.SlotMaxCount ? MainUIMobile.SlotMaxCount : items.length;
+                const len: number = items.length > RightBtnGroup.SlotMaxCount ? RightBtnGroup.SlotMaxCount : items.length;
                 let posX: number = 0;
                 let posY: number = 0;
                 const radio: number = 110;
@@ -160,7 +159,7 @@ export class RightBtnGroup extends Panel {
         const size: Size = this.mWorld.getSize();
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mBtnY = 0;
-        this.handBtn = new IconBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_bg.png"], "btnGroup_hand.png", 1);
+        this.handBtn = new IconBtn(this.mScene, this.mWorld, { key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_bg.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_hand.png", scale: 1 });
         this.handBtn.x = 0;
         this.handBtn.y = this.mBtnY + this.handBtn.height / 2;
         this.handBtn.setClick(() => {
@@ -185,7 +184,7 @@ export class RightBtnGroup extends Panel {
     private initBagSlotData() {
         this.mBagSlotList = [];
         const size: Size = this.mWorld.getSize();
-        const len: number = MainUIMobile.SlotMaxCount;
+        const len: number = RightBtnGroup.SlotMaxCount;
         const posX: number = 0;
         const posY: number = 0;
         for (let i: number = 0; i < len; i++) {
