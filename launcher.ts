@@ -5,6 +5,7 @@
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
 import { ConnectionService } from "./src/net/connection.service";
+import { Logger } from "./src/utils/log";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -96,6 +97,7 @@ export class Launcher {
         import(/* webpackChunkName: "game" */ "./src/game/world")
             .then((game) => {
                 this.world = new game.World(this.config, this.mCompleteFunc);
+                this.disableClick();
             });
     }
 
@@ -104,7 +106,12 @@ export class Launcher {
     }
 
     public disableClick() {
-        if (this.world) this.world.disableClick();
+        if (this.world) {
+            Logger.getInstance().log("launcher disable");
+            this.world.disableClick();
+        } else {
+            Logger.getInstance().log("no world");
+        }
     }
 
     public destory() {

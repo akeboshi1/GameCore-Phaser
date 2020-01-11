@@ -288,6 +288,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public disableClick() {
+        Logger.getInstance().log("world disable");
         this.pauseScene();
     }
 
