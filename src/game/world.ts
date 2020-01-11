@@ -284,11 +284,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public enableClick() {
-        this.pauseScene();
+        this.resumeScene();
     }
 
     public disableClick() {
-        this.resumeScene();
+        this.pauseScene();
     }
 
     public getGameConfig(): Phaser.Types.Core.GameConfig {
