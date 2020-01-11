@@ -18,6 +18,9 @@ export class ElementStoragePanel extends Panel {
     private mTabs: NinePatchButton[];
     private mProps: Item[];
     private mExpaned: boolean = true;
+    private mPacgeNum: number;
+    private mPrePageBtn: Phaser.GameObjects.Sprite;
+    private mNextPageBtn: Phaser.GameObjects.Sprite;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -25,7 +28,7 @@ export class ElementStoragePanel extends Panel {
     show(param?: any) {
         super.show(param);
         if (this.mInitialized) {
-            this.emit("queryElement");
+            this.mPacgeNum = 1;
         }
     }
 
@@ -81,9 +84,15 @@ export class ElementStoragePanel extends Panel {
 
             const len = this.mProps.length;
             for (let i = 0; i < len; i++) {
-                this.mProps[i].setPosition((i % 8) * 60 + 20, Math.ceil(i / 8) * 60 + 80);
+                // this.mProps[i].setPosition((i % 8) * 60 + 20, Math.ceil(i / 8) * 60 + 80);
+                this.mProps[i].x = (i % 8) * 60 + 20;
+                this.mProps[i].y = Math.floor(i / 8) * 60 + 80;
             }
+
         }
+        this.mPrePageBtn.y = this.height >> 1;
+        this.mNextPageBtn.x = this.width;
+        this.mNextPageBtn.y = this.height >> 1;
         this.scale = this.mWorld.uiScale;
         // this.setScale(this.mWorld.uiScale, this.mWorld.uiScale);
         // this.scaleX = this.scaleY = 5;
@@ -145,6 +154,7 @@ export class ElementStoragePanel extends Panel {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image("button", Url.getRes("ui/common/button.png"));
         this.scene.load.image("prop_background", Url.getRes("ui/common/prop_background.png"));
+        this.scene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
         this.scene.load.image(Background.getName(), Background.getPNG());
         super.preload();
     }
@@ -182,19 +192,45 @@ export class ElementStoragePanel extends Panel {
         this.mTabs.push(button);
         this.mTabs.push(button2);
 
+        this.mPrePageBtn = this.scene.make.sprite({
+            key: "slip"
+        }, false);
+        this.mPrePageBtn.setInteractive();
+        this.mPrePageBtn.on("pointerup", this.onPrePageHandler, this);
+
+        this.mNextPageBtn = this.scene.make.sprite({
+            key: "slip"
+        }, false).setFlipX(true);
+        this.mNextPageBtn.setInteractive();
+        this.mNextPageBtn.on("pointerup", this.onNextPageHandler, this);
+
         this.mProps = [];
 
+        this.add([this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
         for (let i = 0; i < 32; i++) {
             const item = new Item(this.scene);
-            this.add(item);
+            // this.add(item);
             this.mProps[i] = item;
         }
-
-        this.add([this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
+        this.add(this.mProps);
+        this.add([this.mPrePageBtn, this.mNextPageBtn]);
         super.init();
         this.resize();
 
         this.collapse();
+    }
+
+    private onPrePageHandler() {
+        this.setPackageNum(this.mPacgeNum - 1);
+    }
+
+    private onNextPageHandler() {
+        this.setPackageNum(this.mPacgeNum + 1);
+    }
+
+    private setPackageNum(val: number) {
+        this.mPacgeNum = val < 1 ? 1 : val;
+        this.emit("queryElement", this.mPacgeNum, 32);
     }
 
     private switchExpand() {

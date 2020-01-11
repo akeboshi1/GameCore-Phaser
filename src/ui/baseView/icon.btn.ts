@@ -1,6 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { Pos } from "../../utils/pos";
 export interface IBtnData {
+    readonly name: string;
     key: string;
     bgResKey: string;
     bgTextures: string[];

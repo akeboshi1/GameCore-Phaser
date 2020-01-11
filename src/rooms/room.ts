@@ -19,9 +19,10 @@ import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
 import { PlayerModel } from "./player/player.model";
-import { IElement } from "./element/element";
+import { IElement, Element } from "./element/element";
 import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
+import { DisplayObject } from "./display/display.object";
 export interface SpriteAddCompletedListener {
   onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -355,6 +356,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   private onPressElementHandler(pointer, gameObject) {
+    if (!gameObject || !gameObject.parentContainer) {
+      return;
+    }
+    const com = gameObject.parentContainer;
+    if (!(com instanceof DisplayObject)) {
+      return;
+    }
+    const ele = com.element;
+    if (!(ele instanceof Element)) {
+      return;
+    }
+
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
     this.connection.send(packet);
   }

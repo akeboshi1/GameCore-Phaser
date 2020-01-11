@@ -213,8 +213,8 @@ export class JoyStick {
         this.parentCon.addAt(this.btn, 1);
         this.btn.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.btn.width, this.btn.height), Phaser.Geom.Rectangle.Contains);
         // this.mScene.input.setDraggable(this.btn);
-        this.mScene.input.on("pointerdown", this.downHandler, this);
-        this.mScene.input.on("pointerup", this.upHandler, this);
+        // this.mScene.input.on("pointerdown", this.downHandler, this);
+        // this.mScene.input.on("pointerup", this.upHandler, this);
         this.parentCon.setSize(this.bg.width, this.bg.height);
         this.parentCon.visible = false;
     }

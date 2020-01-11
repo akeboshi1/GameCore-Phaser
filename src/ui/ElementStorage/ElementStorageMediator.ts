@@ -31,7 +31,7 @@ export class ElementStorageMediator extends BaseMediator {
         this.mStorage.register();
         this.mStorage.on(MessageType.EDIT_MODE_QUERY_PACKAGE, this.onEditModeQueryPackageHandler, this);
         this.mLayerManager.addToUILayer(this.mView);
-        this.mView.on("fetchElement", this.onQueryElementHandler, this);
+        this.mView.on("queryElement", this.onQueryElementHandler, this);
         this.mView.show(param);
     }
 
@@ -82,9 +82,11 @@ export class ElementStorageMediator extends BaseMediator {
         this.world.emitter.off(MessageType.EDIT_PACKAGE_COLLAPSE, this.onCollapseHandler, this);
     }
 
-    private onEditModeQueryPackageHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
-        this.getView().setProps(packet.content);
+    private onEditModeQueryPackageHandler(items: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE) {
+        if (!items) {
+            return;
+        }
+        this.getView().setProps(items);
     }
 
     private onExpanedHandler() {

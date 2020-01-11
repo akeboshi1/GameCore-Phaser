@@ -9,10 +9,10 @@ export class Item extends Phaser.GameObjects.Container {
     super(scene);
     const background = scene.make.image({
       key: "prop_background"
-    });
+    }).setOrigin(0, 0);
     this.add(background);
 
-    this.mProp = new DynamicImage(this.scene, 0, 0);
+    this.mProp = new DynamicImage(this.scene, 0, 0).setOrigin(0, 0);
     this.add(this.mProp);
 
     this.mCount = scene.make.text(undefined, false);
