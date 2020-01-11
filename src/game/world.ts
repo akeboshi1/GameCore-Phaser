@@ -284,14 +284,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public enableClick() {
-        if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom) {
+        if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom && this.mRoomMamager.currentRoom.scene && this.mRoomMamager.currentRoom.scene.input) {
             Logger.getInstance().debug("world enable");
             this.mRoomMamager.currentRoom.scene.input.enabled = true;
         }
     }
 
     public disableClick() {
-        if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom) {
+        if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom && this.mRoomMamager.currentRoom.scene && this.mRoomMamager.currentRoom.scene.input) {
             Logger.getInstance().debug("world disable");
             this.mRoomMamager.currentRoom.scene.input.enabled = false;
         }
