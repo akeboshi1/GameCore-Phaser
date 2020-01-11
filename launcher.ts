@@ -30,6 +30,8 @@ export interface ILauncherConfig {
 export interface GameMain {
     resize(newWidth, newHeight);
     scaleChange(scale: number);
+    enableClick();
+    disableClick();
 
     startFullscreen(): void;
     stopFullscreen(): void;
@@ -95,6 +97,14 @@ export class Launcher {
             .then((game) => {
                 this.world = new game.World(this.config, this.mCompleteFunc);
             });
+    }
+
+    public enableClick() {
+        if (this.world) this.world.enableClick();
+    }
+
+    public disEnableClick() {
+        if (this.world) this.world.disableClick();
     }
 
     public destory() {
