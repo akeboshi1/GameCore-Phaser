@@ -103,7 +103,7 @@ export class Launcher {
         if (this.world) this.world.enableClick();
     }
 
-    public disEnableClick() {
+    public disableClick() {
         if (this.world) this.world.disableClick();
     }
 
