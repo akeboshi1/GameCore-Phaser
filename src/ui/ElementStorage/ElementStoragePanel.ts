@@ -126,6 +126,7 @@ export class ElementStoragePanel extends Panel {
             props
         });
         this.remove(this.mDragBtn);
+        this.add([this.mPrePageBtn, this.mNextPageBtn]);
         this.mExpaned = true;
     }
 
@@ -147,6 +148,7 @@ export class ElementStoragePanel extends Panel {
             props
         });
         this.addAt(this.mDragBtn, 0);
+        this.remove([this.mPrePageBtn, this.mNextPageBtn]);
         this.mExpaned = false;
     }
 

@@ -51,6 +51,7 @@ export class SelectedElement {
         });
         this.mDisplay.load(<FramesModel> sprite.displayInfo);
         this.mSelecting = true;
+        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
     }
 
     turnElement() {

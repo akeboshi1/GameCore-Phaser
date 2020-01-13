@@ -177,7 +177,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (loadingScene) loadingScene.sleep();
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        this.mCameraService.centerCameas();
+        // this.mCameraService.centerCameas();
 
         if (this.world.uiManager) {
             this.world.uiManager.showDecorateUI();

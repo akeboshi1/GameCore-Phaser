@@ -85,6 +85,7 @@ export class Sprite implements ISprite {
                 anis.push(new Animation(ani));
             }
             this.mDisplayInfo = new FramesModel({
+                id: obj.id,
                 animations: {
                     defaultAnimationName: obj.currentAnimationName,
                     display: obj.display,
