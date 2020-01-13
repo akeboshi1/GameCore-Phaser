@@ -135,6 +135,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         let point: op_def.IPBPoint3f;
         let sprite: ISprite = null;
+        const ids = [];
         for (const obj of objs) {
             point = obj.point3f;
             if (point) {
@@ -142,9 +143,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!sprite.displayInfo) {
                     this.checkDisplay(sprite);
                 }
+                if (!sprite.displayInfo) {
+                    ids.push(sprite.id);
+                }
                 this._add(sprite);
             }
         }
+        this.fetchDisplay(ids);
     }
 
     protected _add(sprite: ISprite): Element {
@@ -164,8 +169,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
-            } else {
-                this.fetchDisplay([sprite.id]);
             }
         }
     }

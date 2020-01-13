@@ -410,6 +410,9 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected loadDisplayInfo() {
+        if (!this.mDisplayInfo) {
+            return;
+        }
         if (!this.mDisplay) {
             this.createDisplay();
         }

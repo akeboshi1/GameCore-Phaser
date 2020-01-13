@@ -91,6 +91,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         let point: op_def.IPBPoint3f;
+        const ids = [];
         for (const sprite of sprites) {
             point = sprite.point3f;
             if (point) {
@@ -98,9 +99,13 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 if (!s.displayInfo) {
                     this.checkDisplay(s);
                 }
+                if (!s.displayInfo) {
+                    ids.push(s.id);
+                }
                 this._add(s);
             }
         }
+        this.fetchDisplay(ids);
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
             this.mListener.onFullPacketReceived(type);
         }
@@ -148,7 +153,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain = this.get(sprite.id);
             if (terrain) {
                 terrain.model = new Sprite(sprite, content.nodeType);
-                terrain.setRenderable(true);
+                // terrain.setRenderable(true);
             }
         }
     }
@@ -158,13 +163,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
-            } else {
-                this.fetchDisplay([sprite.id]);
             }
         }
     }
 
     protected fetchDisplay(ids: number[]) {
+        if (ids.length === 0) {
+            return;
+        }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = ids;

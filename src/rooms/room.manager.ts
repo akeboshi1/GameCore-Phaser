@@ -27,7 +27,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     constructor(world: WorldService) {
         super();
         this.mWorld = world;
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterScene);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
@@ -108,12 +108,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return idx >= 0;
     }
 
-    private onEnterScene(packet: PBpacket) {
+    private onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
-        if (this.currentRoom) {
-            return;
-        }
-        const vw: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
+        const vw = scene;
         let room: Room;
         if (this.hasRoom(vw.scene.id)) {
             room = <Room> this.getRoom(vw.scene.id);
@@ -130,27 +127,26 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mCurRoom = room;
     }
 
-    private onEnterDecorate(packet: PBpacket) {
-        const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
-        const elements = this.mCurRoom.elementManager.getElements().map((ele: IElement) => ele.model);
-        const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
-        const scene = {
-            id: this.mCurRoom.id,
-            rows,
-            cols,
-            tileWidth,
-            tileHeight
-        };
+    private onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+        // const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
+        // const elements = this.mCurRoom.elementManager.getElements().map((ele: IElement) => ele.model);
+        // const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
+        // const scene = {
+        //     id: this.mCurRoom.id,
+        //     rows,
+        //     cols,
+        //     tileWidth,
+        //     tileHeight
+        // };
         if (this.mCurRoom) {
             this.leaveScene(this.mCurRoom);
         }
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const room: DecorateRoom = new DecorateRoom(this);
-        room.enter(scene);
-        setTimeout(() => {
-            room.addElements(elements, op_def.NodeType.ElementNodeType);
-            room.addElements(terrains, op_def.NodeType.TerrainNodeType);
-        }, 1000);
+        room.enter(scene.scene);
+        // setTimeout(() => {
+        //     room.addElements(elements, op_def.NodeType.ElementNodeType);
+        //     room.addElements(terrains, op_def.NodeType.TerrainNodeType);
+        // }, 1000);
         this.mRooms.push(room);
         // this.mCurRoom = room;
     }
@@ -172,6 +168,19 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (!room) return;
         this.mRooms = this.mRooms.filter((r) => r.id !== room.id);
         room.destroy();
+    }
+
+    private onEnterSceneHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
+        const scene = content.scene;
+        switch (scene.sceneType) {
+            case  op_def.SceneTypeEnum.NORMAL_SCENE_TYPE:
+                this.onEnterScene(content);
+                break;
+            case op_def.SceneTypeEnum.EDIT_SCENE_TYPE:
+                this.onEnterDecorate(content);
+                break;
+        }
     }
 
     get world(): WorldService {

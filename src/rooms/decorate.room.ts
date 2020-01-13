@@ -335,9 +335,13 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.mSelectedElement.selecting === false) {
             return;
         }
+        if (pointer.downX === pointer.x && pointer.downY === pointer.y) {
+            return;
+        }
+        // if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
         const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
         this.mSelectedElement.setDisplayPos(pos.x, pos.y);
-
+        // }
         if (pointer.x < 300) {
             if (pointer.prevPosition.x > pointer.x) this.mCameraService.camera.scrollX -= pointer.prevPosition.x - pointer.x;
         } else if (pointer.x > this.world.getSize().width - 300) {
