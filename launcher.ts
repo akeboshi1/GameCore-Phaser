@@ -5,6 +5,7 @@
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
 import { ConnectionService } from "./src/net/connection.service";
+import { Logger } from "./src/utils/log";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -30,6 +31,8 @@ export interface ILauncherConfig {
 export interface GameMain {
     resize(newWidth, newHeight);
     scaleChange(scale: number);
+    enableClick();
+    disableClick();
 
     startFullscreen(): void;
     stopFullscreen(): void;
@@ -94,7 +97,21 @@ export class Launcher {
         import(/* webpackChunkName: "game" */ "./src/game/world")
             .then((game) => {
                 this.world = new game.World(this.config, this.mCompleteFunc);
+                this.disableClick();
             });
+    }
+
+    public enableClick() {
+        if (this.world) this.world.enableClick();
+    }
+
+    public disableClick() {
+        if (this.world) {
+            Logger.getInstance().log("launcher disable");
+            this.world.disableClick();
+        } else {
+            Logger.getInstance().log("no world");
+        }
     }
 
     public destory() {

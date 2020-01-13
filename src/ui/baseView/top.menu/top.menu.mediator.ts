@@ -19,7 +19,7 @@ export class TopMenuMediator extends BaseMediator {
     this.world.emitter.off(MessageType.ADD_ICON_TO_TOP, this.onAddIconHandler, this);
     this.world.emitter.off(MessageType.REMOVE_ICON_FROM_TOP, this.onRemoveIcon, this);
   }
-  
+
   private onAddIconHandler() {
   }
 

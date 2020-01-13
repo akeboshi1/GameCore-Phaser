@@ -83,4 +83,7 @@ export class MessageType {
     public static EDIT_PACKAGE_EXPANED = "editPackageExpaned";
     // 收起物件容器
     public static EDIT_PACKAGE_COLLAPSE = "editPackageCollapse";
+
+    public static ADD_ICON_TO_TOP = "addIconToTop";
+    public static REMOVE_ICON_FROM_TOP = "removeIconFromTop";
 }
