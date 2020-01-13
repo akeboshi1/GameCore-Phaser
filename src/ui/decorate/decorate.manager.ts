@@ -6,12 +6,15 @@ import { EditorRoomService } from "../../rooms/editor.room";
 import { DisplayObject } from "../../rooms/display/display.object";
 import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
+import { Pos } from "../../utils/pos";
 
-export class DecorateManager {
+export class DecorateManager extends Phaser.Events.EventEmitter {
     private mPanel: DecoratePanel;
     private mLayerManager: LayerManager;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
+        super();
         this.mPanel = new DecoratePanel(scene, <DecorateRoom> roomService);
+        this.mPanel.on("moveElement", this.onMoveElementHandler, this);
         this.mLayerManager = roomService.layerManager;
     }
 
@@ -34,5 +37,9 @@ export class DecorateManager {
             return;
         }
         this.mPanel.setPosition(x, y);
+    }
+
+    private onMoveElementHandler(pos: Pos) {
+        this.emit("moveElement", pos);
     }
 }

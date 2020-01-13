@@ -3,9 +3,9 @@ import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
 import { IRoomService } from "../room";
 import { ISprite } from "../element/sprite";
-import { IFramesModel, FramesModel } from "../display/frames.model";
+import { FramesModel } from "../display/frames.model";
 import { MessageType } from "../../const/MessageType";
-import { DragonbonesModel } from "../display/dragonbones.model";
+import { Pos } from "../../utils/pos";
 
 export class SelectedElement {
     private readonly scene: Phaser.Scene;
@@ -18,12 +18,12 @@ export class SelectedElement {
         this.scene = scene;
         this.roomService = roomService;
         this.mDecorateManager = new DecorateManager(scene, roomService);
+        this.mDecorateManager.on("moveElement", this.onMoveElementHandler, this);
     }
 
     setElement(display: FramesDisplay | DragonbonesDisplay) {
         if (this.mDisplay) {
             this.mDisplay.hideRefernceArea();
-            this.mDisplay.showNickname("");
             this.mDecorateManager.remove();
         }
         this.mDisplay = display;
@@ -89,6 +89,13 @@ export class SelectedElement {
         this.mSprite.setPosition(x, y);
 
         // this.mLayerManager.depthSurfaceDirty = true;
+    }
+
+    private onMoveElementHandler(pos: Pos) {
+        if (!pos) {
+            return;
+        }
+        this.setDisplayPos(pos.x, pos.y);
     }
 
     get display(): FramesDisplay | DragonbonesDisplay {

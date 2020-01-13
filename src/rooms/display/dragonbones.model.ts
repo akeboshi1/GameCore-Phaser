@@ -10,6 +10,7 @@ export interface IDragonbonesModel {
     // TODO
     destroy();
     getCollisionArea(aniName: string): number[][];
+    getWalkableArea(aniName: string): number[][];
     getOriginPoint(aniName: string): Phaser.Geom.Point;
 }
 
@@ -75,6 +76,10 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public getCollisionArea(aniName: string): number[][] {
+        return [[1, 1], [1, 1]];
+    }
+
+    public getWalkableArea(): number[][] {
         return [[1, 1], [1, 1]];
     }
 

@@ -21,6 +21,7 @@ export class ElementStoragePanel extends Panel {
     private mPacgeNum: number;
     private mPrePageBtn: Phaser.GameObjects.Sprite;
     private mNextPageBtn: Phaser.GameObjects.Sprite;
+    private mItemNum: number = 32;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -28,7 +29,7 @@ export class ElementStoragePanel extends Panel {
     show(param?: any) {
         super.show(param);
         if (this.mInitialized) {
-            this.mPacgeNum = 1;
+            this.setPackageNum(1);
         }
     }
 
@@ -56,6 +57,13 @@ export class ElementStoragePanel extends Panel {
             for (let i = 0; i < this.mTabs.length; i++) {
                 this.mTabs[i].x = 280;
                 this.mTabs[i].y = 60 + i * this.mTabs[i].height + 10;
+            }
+
+            const len = this.mProps.length;
+            for (let i = 0; i < len; i++) {
+                // this.mProps[i].setPosition((i % 8) * 60 + 20, Math.ceil(i / 8) * 60 + 80);
+                this.mProps[i].x = (i % 4) * 60 + 20;
+                this.mProps[i].y = Math.floor(i / 4) * 60 + 80;
             }
         } else {
             this.setSize(510, 329);
@@ -209,7 +217,7 @@ export class ElementStoragePanel extends Panel {
         this.mProps = [];
 
         this.add([this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
-        for (let i = 0; i < 32; i++) {
+        for (let i = 0; i < this.mItemNum; i++) {
             const item = new Item(this.scene);
             // this.add(item);
             this.mProps[i] = item;

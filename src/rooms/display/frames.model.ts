@@ -17,6 +17,7 @@ export interface IFramesModel {
     shops?: (op_gameconfig.IShop[] | null);
     getAnimations(name: string): IAnimationData;
     getCollisionArea(aniName: string): number[][];
+    getWalkableArea(aniName: string): number[][];
     getOriginPoint(aniName: string): Phaser.Geom.Point;
     destroy();
 }
@@ -88,6 +89,13 @@ export class FramesModel implements IFramesModel {
         const ani = this.getAnimations(aniName);
         if (ani) {
             return ani.collisionArea;
+        }
+    }
+
+    public getWalkableArea(aniName: string): number[][] {
+        const ani = this.getAnimations(aniName);
+        if (ani) {
+            return ani.walkableArea;
         }
     }
 
