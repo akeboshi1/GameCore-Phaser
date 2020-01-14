@@ -172,7 +172,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.mCameraService.camera = this.scene.cameras.main;
         // const mainCameras = this.mScene.cameras.main;
         this.mCameraService.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
-
+        this.world.changeRoom(this);
         const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
 

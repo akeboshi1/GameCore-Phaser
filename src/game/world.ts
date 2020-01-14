@@ -131,9 +131,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
     public changeRoom(room: IRoomService) {
-        if (this.mGame.device.os.desktop) {
-            this.mInputManager.onRoomChanged(room);
-        }
+        this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
     }
 

@@ -63,6 +63,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
             this.mKeyEvents.length = 0;
             this.mKeyEvents = null;
         }
+        // 暂时屏蔽
         // this.removeKeyEvents();
         this.mKeyEventMap.forEach((keyCodeEvent: op_def.IKeyCodeEvent) => {
             if (keyCodeEvent) {
