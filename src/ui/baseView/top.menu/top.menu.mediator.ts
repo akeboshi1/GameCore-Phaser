@@ -63,7 +63,9 @@ export class TopMenuMediator extends BaseMediator {
   }
 
   private onSaveDecorateHandler() {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SAVE);
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_LEAVE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_LEAVE = packet.content;
+    content.needSaveEditScene = true;
     this.world.connection.send(packet);
   }
 
