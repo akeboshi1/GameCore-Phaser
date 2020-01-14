@@ -84,6 +84,7 @@ export class UiManager extends PacketHandler {
             return;
         }
         const scene = this.mScene;
+        this.clearMediator();
         if (!this.mMedMap) {
             this.mMedMap = new Map();
             // ============场景中固定显示ui

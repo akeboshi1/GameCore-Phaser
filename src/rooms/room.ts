@@ -354,6 +354,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
   public destroy() {
     this.clear();
+    if (this.connection) this.connection.removePacketListener(this);
     this.mWorld.game.scene.remove(PlayScene.name);
     this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
     if (this.mScene) {

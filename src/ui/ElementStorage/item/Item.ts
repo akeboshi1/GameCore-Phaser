@@ -32,9 +32,8 @@ export class Item extends Phaser.GameObjects.Container {
 
     if (prop) {
       this.mImage.load(Url.getOsdRes(prop.display.texturePath), this, () => {
-        this.mImage.setInteractive();
         this.mImage.on("pointerup", this.onPointerUpHandler, this);
-
+        this.mImage.setInteractive();
         let imageScale = 1;
         if (this.mImage.width > this.width) {
           imageScale = this.width / this.mImage.width;
@@ -55,7 +54,7 @@ export class Item extends Phaser.GameObjects.Container {
       return;
     }
     this.mCount.setText("");
-    this.mImage.texture = null;
+    this.mImage.setTexture(undefined);
     this.mImage.off("pointerup", this.onPointerUpHandler, this);
     this.mProp = undefined;
   }

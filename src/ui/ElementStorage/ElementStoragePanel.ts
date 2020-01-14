@@ -108,6 +108,7 @@ export class ElementStoragePanel extends Panel {
 
     public setProps(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE) {
         const items = data.items;
+        this.clearItem();
         for (let i = 0; i < items.length; i++) {
             if (i >= this.mProps.length) {
                 return;
@@ -273,5 +274,10 @@ export class ElementStoragePanel extends Panel {
             gameobject.x = dragX;
             gameobject.y = dragY;
         }
+    }
+
+    private clearItem() {
+        if (!this.mProps) return;
+        this.mProps.map((item) => item.clear());
     }
 }
