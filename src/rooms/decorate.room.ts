@@ -281,13 +281,13 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             return true;
         }
         // const pos45 = this.transformToMini45(pos);
-        for (let i = 0; i < area.length; i++) {
-            for (let j = 0; j < area[i].length; j++) {
-                if (this.mMap[pos.x + i - originPoint.x][pos.y + j - originPoint.y] === 1) {
-                    return false;
-                }
-            }
-        }
+        // for (let i = 0; i < area.length; i++) {
+        //     for (let j = 0; j < area[i].length; j++) {
+        //         if (this.mMap[pos.x + i - originPoint.x][pos.y + j - originPoint.y] === 1) {
+        //             return false;
+        //         }
+        //     }
+        // }
         return true;
     }
 
@@ -308,10 +308,17 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
     }
 
-    private onPointerUpHandler() {
+    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.removePointerMoveHandler();
         if (this.mSelectedElement) {
-            this.mSelectedElement.selecting = false;
+            // TODO 移动判断
+            if (this.mSelectedElement.selecting) {
+                this.mSelectedElement.selecting = false;
+                if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+                    this.sendPosition(this.mSelectedElement.sprite);
+                }
+
+            }
         }
     }
 
@@ -401,7 +408,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
             this.onPutElement(this.mSelectedElement.display);
         }
         const ele = display.element;
-        if (ele) this.mSelectedElement.setSprite(ele.model);
+        if (ele) this.mSelectedElement.setSprite(ele.model, ele.model);
         // this.mSelectedElement.setElement(display);
     }
 
@@ -446,13 +453,28 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (!sprite) {
             return;
         }
-        this.addElement(sprite);
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
+        // TODO 还要考虑翻转
+        const aniName: string = sprite.currentAnimationName || sprite.displayInfo.animationName;
+        if (this.canPut(sprite.pos, sprite.displayInfo.getCollisionArea(sprite.currentAnimationName), sprite.displayInfo.getOriginPoint(aniName))) {
+            this.addElement(sprite);
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
+            content.sprites = [sprite.toSprite()];
+            content.nodeType = sprite.nodeType;
+            this.world.connection.send(packet);
+            this.mSelectedElement.remove();
+        } else {
+            // TODO 不可放置，回到之前的位置
+            // this.addElement()
+        }
+    }
+
+    private sendPosition(sprite: ISprite) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_CHANGE_SPRITE_POSITION);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_CHANGE_SPRITE_POSITION = packet.content;
         content.sprites = [sprite.toSprite()];
         content.nodeType = sprite.nodeType;
         this.world.connection.send(packet);
-        this.mSelectedElement.remove();
     }
 
     private onSelectSpriteHandler(packet: PBpacket) {

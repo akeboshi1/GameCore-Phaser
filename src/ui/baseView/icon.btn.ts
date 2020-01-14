@@ -119,8 +119,9 @@ export class IconBtn extends Phaser.GameObjects.Container {
             this.monClick();
         }
         if (this.mData && this.mData.callBack) {
-            this.mData.callBack();
+            this.mData.callBack.apply(this);
         }
+        this.emit("click", this);
         if (this.mBgTexture.length < 3) {
             return;
         }

@@ -6,7 +6,7 @@ import {DecoratePanel} from "../decorate/decorate.panel";
 import { ElementStorage } from "./ElementStorate";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 
 export class ElementStorageMediator extends BaseMediator {
@@ -32,6 +32,7 @@ export class ElementStorageMediator extends BaseMediator {
         this.mStorage.on(MessageType.EDIT_MODE_QUERY_PACKAGE, this.onEditModeQueryPackageHandler, this);
         this.mLayerManager.addToUILayer(this.mView);
         this.mView.on("queryElement", this.onQueryElementHandler, this);
+        this.mView.on("selectedElement", this.onSelectedElement, this);
         this.mView.show(param);
     }
 
@@ -87,6 +88,14 @@ export class ElementStorageMediator extends BaseMediator {
             return;
         }
         this.getView().setProps(items);
+    }
+
+    private onSelectedElement(prop: op_client.ICountablePackageItem) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE = packet.content;
+        content.id = prop.id;
+        this.world.connection.send(packet);
+
     }
 
     private onExpanedHandler() {

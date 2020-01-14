@@ -88,7 +88,6 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     public startPlay() {
-        Logger.getInstance().log("start play editor room");
         this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
         this.mLayManager = new LayerManager(this);
         this.mLayManager.drawGrid(this);

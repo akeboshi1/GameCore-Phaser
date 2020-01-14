@@ -13,7 +13,6 @@ export class DecorateTerrainManager extends TerrainManager {
   public remove(id: number): IElement {
     const terrain = super.remove(id);
     if (terrain) {
-      
     }
     return terrain;
   }

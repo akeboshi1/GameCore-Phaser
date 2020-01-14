@@ -1,6 +1,8 @@
 import { Panel } from "../../components/panel";
 import { IconBtn, IBtnData } from "../icon.btn";
 import { WorldService } from "../../../game/world.service";
+import { Url } from "../../../utils/resUtil";
+import { Logger } from "../../../utils/log";
 
 export class TopMenuContainer extends Panel {
   private readonly maxNum = 3;
@@ -13,13 +15,17 @@ export class TopMenuContainer extends Panel {
   }
 
   resize() {
-
+    const size = this.mWorld.getSize();
+    this.x = size.width - 50 * this.mWorld.uiScale;
+    this.y = this.height / 2 + 10 * this.mWorld.uiScale;
+    this.scaleX = this.scaleY = this.mWorld.uiScale;
   }
 
   show() {
     if (this.mWorld) {
       this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
     }
+    super.show();
   }
 
   hide() {
@@ -36,7 +42,9 @@ export class TopMenuContainer extends Panel {
     // TODO dynamic load texture
     const iconBtn = new IconBtn(this.scene, this.mWorld, data);
     iconBtn.setName(data.name);
+    iconBtn.y = iconBtn.height >> 1;
     this.add(iconBtn);
+    iconBtn.on("click", this.onGameObjectUpHandler, this);
     this.mButtons.push(iconBtn);
 
     if (this.mButtons.length > 3) {
@@ -61,6 +69,20 @@ export class TopMenuContainer extends Panel {
     }
   }
 
+  preload() {
+    this.mScene.load.atlas("baseView", Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+    super.preload();
+  }
+
+  init() {
+    if (this.mInitialized) {
+      return;
+    }
+    super.init();
+    // this.addItem({ key: "Turn_Btn_Top", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1 });
+    this.resize();
+  }
+
   refresh() {
   }
 
@@ -74,6 +96,17 @@ export class TopMenuContainer extends Panel {
     this.mButtons.map((btn: IconBtn) => btn.destroy());
     this.mButtons.length = 0;
     super.destroy();
+  }
+
+  private onGameObjectUpHandler(btn: IconBtn) {
+    switch (btn.name) {
+      case "SaveDecorate":
+        this.emit("saveDecorate");
+        break;
+      case "EnterDecorate":
+        this.emit("enterDecorate");
+        break;
+    }
   }
 
 }

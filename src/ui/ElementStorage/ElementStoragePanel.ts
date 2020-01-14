@@ -220,6 +220,7 @@ export class ElementStoragePanel extends Panel {
         for (let i = 0; i < this.mItemNum; i++) {
             const item = new Item(this.scene);
             // this.add(item);
+            item.on("click", this.onClick, this);
             this.mProps[i] = item;
         }
         this.add(this.mProps);
@@ -227,7 +228,10 @@ export class ElementStoragePanel extends Panel {
         super.init();
         this.resize();
 
-        this.collapse();
+        // this.scene.input.on("dragstart", this.onDragStartHandler, this);
+        // this.scene.input.on("drag", this.onDragHandler, this);
+
+        this.expand();
     }
 
     private onPrePageHandler() {
@@ -248,5 +252,26 @@ export class ElementStoragePanel extends Panel {
     }
 
     private onSelectedHandler() {
+    }
+
+    private onClick(data: op_client.ICountablePackageItem) {
+        this.emit("selectedElement", data);
+    }
+
+    private onDragStartHandler(pointer, gameobject, dragX, dragY) {
+        const item: Item = gameobject.parentContainer;
+        if (item instanceof Item) {
+            // gameobject.x = dragX;
+            // gameobject.y = dragX;
+        }
+        // Logger.getInstance().log("======", pointer, gameobject);
+    }
+
+    private onDragHandler(pointer, gameobject, dragX, dragY) {
+        const item: Item = gameobject.parentContainer;
+        if (item instanceof Item) {
+            gameobject.x = dragX;
+            gameobject.y = dragY;
+        }
     }
 }

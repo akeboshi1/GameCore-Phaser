@@ -6,12 +6,14 @@ import { ISprite } from "../element/sprite";
 import { FramesModel } from "../display/frames.model";
 import { MessageType } from "../../const/MessageType";
 import { Pos } from "../../utils/pos";
+import { Logger } from "../../utils/log";
 
 export class SelectedElement {
     private readonly scene: Phaser.Scene;
     private readonly roomService: IRoomService;
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mDecorateManager: DecorateManager;
+    private mRootSprite: ISprite;
     private mSprite: ISprite;
     private mSelecting: boolean;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
@@ -33,11 +35,16 @@ export class SelectedElement {
         this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
     }
 
-    setSprite(sprite: ISprite) {
+    setSprite(sprite: ISprite, root?: ISprite) {
         // this.mDisplay = new FramesDisplay(this.scene, this.roomService);
         const displayInfo = sprite.displayInfo;
         if (!displayInfo) {
             return;
+        }
+        if (root) {
+            this.mRootSprite =  Object.create(root);
+        } else {
+            this.mRootSprite = null;
         }
         this.mSprite = sprite;
         this.mDisplay = new FramesDisplay(this.scene, this.roomService);
@@ -61,7 +68,6 @@ export class SelectedElement {
         const sprite = this.sprite;
         sprite.turn();
         this.mDisplay.setDirection(sprite.direction);
-
     }
 
     remove() {

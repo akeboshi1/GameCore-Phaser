@@ -96,6 +96,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   protected mSize: IPosition45Obj;
   protected mCameraService: ICameraService;
   protected mBlocks: ViewblockService;
+  protected mEnableEdit: boolean = false;
   private mActorData: IActor;
   constructor(protected manager: IRoomManager) {
     super();
@@ -107,6 +108,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mCameraService.resize(size.width, size.height);
       } else {
         throw new Error(`World::getSize undefined!`);
+      }
+
+      if (this.connection) {
+        this.connection.addPacketListener(this);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
       }
     }
   }
@@ -157,9 +163,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   }
 
   public startPlay() {
-    if (this.connection) {
-      this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-    }
     if (this.mLayManager) {
       this.layerManager.destroy();
     }
@@ -182,6 +185,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     this.world.changeRoom(this);
     if (this.world.uiManager) this.world.uiManager.showMainUI();
 
+    if (this.connection) {
+      this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+    }
     // this.mWorld.inputManager.enable = true;
   }
 
@@ -368,8 +374,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
       return;
     }
 
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
-    this.connection.send(packet);
+    if (this.mEnableEdit) {
+      const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
+      this.connection.send(packet);
+    }
+  }
+
+  private onEnableEditModeHandler(packet: PBpacket) {
+    this.mEnableEdit = true;
+    if (this.world) {
+      this.world.emitter.emit(MessageType.ADD_ICON_TO_TOP, { key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1 });
+    }
   }
 
   private enterRoom() {

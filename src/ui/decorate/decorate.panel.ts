@@ -133,26 +133,6 @@ export class DecoratePanel extends Panel {
         }
         const position = this.mRoomService.transformToMini90(pos45);
         this.emit("moveElement", position);
-        // const canPut = this.mRoomService.canPut(pos45, this.mDisplayObject.collisionArea, this.mDisplayObject.originPoint);
-        // if (canPut) {
-        //     const area = this.mDisplayObject.collisionArea;
-        //     const origin = this.mDisplayObject.originPoint;
-        //     let p = this.mRoomService.transformToMini45(new Pos(position.x, position.y));
-        //     for (let i = 0; i < area.length; i++) {
-        //         for (let j = 0; j < area[0].length; j++) {
-        //           // 避免影响到其他物件
-        //           if (area[i][j] === 1) this.mRoomService.setMap(p.x + i - origin.x, p.y + j - origin.y, 0);
-        //         }
-        //     }
-        //     this.mDisplayObject.setPosition(position.x, position.y);
-        //     p = this.mRoomService.transformToMini45(new Pos(position.x, position.y));
-        //     for (let i = 0; i < area.length; i++) {
-        //         for (let j = 0; j < area[0].length; j++) {
-        //           // 避免影响到其他物件
-        //           if (area[i][j] === 1) this.mRoomService.setMap(p.x + i - origin.x, p.y + j - origin.y, 1);
-        //         }
-        //     }
-        // }
     }
 
     private createImage(key: string, frame?: string, x?: number, y?: number): Phaser.GameObjects.Image {

@@ -2,6 +2,9 @@ import { BaseFaceMediator } from "../baseFace.mediator";
 import { WorldService } from "../../../game/world.service";
 import { TopBtnGroup } from "./top.btn.group";
 import { RankMediator } from "../../Rank/RankMediator";
+import { PBpacket } from "net-socket-packet";
+import { op_virtual_world } from "pixelpai_proto";
+import { Alert } from "../../alert/alert";
 
 export class TopMediator extends BaseFaceMediator {
     public static NAME: string = "TopMediator";
@@ -16,9 +19,9 @@ export class TopMediator extends BaseFaceMediator {
     }
 
     public refreshBtn(medName: string, addBoo: boolean) {
+        const topBtnGroup: TopBtnGroup = this.mView as TopBtnGroup;
         switch (medName) {
             case RankMediator.NAME:
-                const topBtnGroup: TopBtnGroup = this.mView as TopBtnGroup;
                 if (addBoo) {
                     topBtnGroup.addBtn({
                         key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, callBack: () => {
@@ -32,6 +35,28 @@ export class TopMediator extends BaseFaceMediator {
                                 // todo 该判断条件用于热发布活动，后端需要在pi中加一条活动按钮数据，不包含med具体代码，只有name，btnres等数据即可，等需要打开界面时在请求具体数据
                                 // 客户端只需要发送medname给后端，后端发送showui给客户端，好处在于每次打开都是请求后端打开界面，活动数据是实时的
                             }
+                        }
+                    });
+                } else {
+                    topBtnGroup.removeBtn(medName);
+                }
+                break;
+            case "EnterDecorate":
+                if (addBoo) {
+                    topBtnGroup.addBtn({
+                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, callBack: () => {
+                            this.onEnterDecorate();
+                        }
+                    });
+                } else {
+                    topBtnGroup.removeBtn(medName);
+                }
+                break;
+            case "SaveDecorate":
+                if (addBoo) {
+                    topBtnGroup.addBtn({
+                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, callBack: () => {
+                            this.onEnterDecorate();
                         }
                     });
                 } else {
@@ -74,5 +99,20 @@ export class TopMediator extends BaseFaceMediator {
 
     public addBtn(data: any) {
         if (this.mView) (this.mView as TopBtnGroup).addBtn(data);
+    }
+
+    private onEnterDecorate() {
+        if (this.world && this.world.connection) {
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
+            this.world.connection.send(packet);
+        }
+    }
+
+    private onSaveDecorate() {
+        if (this.world && this.world.connection) {
+            // Alert.
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SAVE);
+            this.world.connection.send(packet);
+        }
     }
 }
