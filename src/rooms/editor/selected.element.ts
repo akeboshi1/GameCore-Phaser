@@ -4,11 +4,13 @@ import {DynamicImage} from "../../ui/components/dynamic.image";
 import {LayerManager} from "../layer/layer.manager";
 import { Url } from "../../utils/resUtil";
 import {Logger} from "../../utils/log";
+import { ISprite } from "../element/sprite";
 
 export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mEffecte: DynamicImage;
     private mSelecting: boolean;
+    private mSprite: ISprite;
     constructor(private mScene: Phaser.Scene, private mLayerManager: LayerManager) {
         Logger.getInstance().log("scene: ", this.mScene, this);
         this.mEffecte = new DynamicImage(this.mScene, 0, 0);
@@ -19,12 +21,14 @@ export class SelectedElement {
         if (this.mDisplay) {
             this.mDisplay.hideRefernceArea();
             this.mDisplay.showNickname("");
+            this.mSprite = undefined;
         }
         this.mDisplay = display;
         display.showRefernceArea();
         const ele = display.element;
         if (ele) {
             ele.showNickname();
+            this.mSprite = ele.model;
         }
         this.mLayerManager.addToSceneToUI(this.mEffecte);
         this.mSelecting = true;
@@ -47,6 +51,7 @@ export class SelectedElement {
             this.mDisplay.showNickname("");
         }
         this.mDisplay = null;
+        this.mSprite = undefined;
     }
 
     update() {
@@ -64,6 +69,13 @@ export class SelectedElement {
         }
         this.mDisplay.x = x;
         this.mDisplay.y = y;
+        if (this.mSprite) {
+            const pos = this.mSprite.pos;
+            if (pos) {
+                pos.x = x;
+                pos.y = y;
+            }
+        }
     }
 
     destroy() {
