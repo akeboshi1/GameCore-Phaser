@@ -22,6 +22,9 @@ export class ElementStoragePanel extends Panel {
     private mPrePageBtn: Phaser.GameObjects.Sprite;
     private mNextPageBtn: Phaser.GameObjects.Sprite;
     private mItemNum: number = 32;
+    private mDragImage: Phaser.GameObjects.Image;
+    private mDragData: op_client.ICountablePackageItem;
+    private mDragging: boolean;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -67,6 +70,7 @@ export class ElementStoragePanel extends Panel {
             }
         } else {
             this.setSize(510, 329);
+            // this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height));
             // this.scale = this.mWorld.uiScale;
             this.mBackground.resize(this.width, this.height);
             this.mBackground.x = this.mBackground.width >> 1;
@@ -102,6 +106,7 @@ export class ElementStoragePanel extends Panel {
         this.mNextPageBtn.x = this.width;
         this.mNextPageBtn.y = this.height >> 1;
         this.scale = this.mWorld.uiScale;
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
         // this.setScale(this.mWorld.uiScale, this.mWorld.uiScale);
         // this.scaleX = this.scaleY = 5;
     }
@@ -173,6 +178,8 @@ export class ElementStoragePanel extends Panel {
     protected init() {
         this.mBackground = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
         this.mBorder = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, Border.getConfig());
+        // this.mBackground.setInteractive();
+        this.mBackground.on("pointerout", this.onPointerOutHandler, this);
 
         // TODO 多语言配置
         this.mSearchInput = new InputText(this.scene, 40 + 105, 40,  210, 26,  {
@@ -221,7 +228,8 @@ export class ElementStoragePanel extends Panel {
         for (let i = 0; i < this.mItemNum; i++) {
             const item = new Item(this.scene);
             // this.add(item);
-            item.on("click", this.onClick, this);
+            // this.scene.input.setDraggable(item);
+            // item.on("click", this.onClick, this);
             this.mProps[i] = item;
         }
         this.add(this.mProps);
@@ -229,8 +237,9 @@ export class ElementStoragePanel extends Panel {
         super.init();
         this.resize();
 
-        // this.scene.input.on("dragstart", this.onDragStartHandler, this);
-        // this.scene.input.on("drag", this.onDragHandler, this);
+        this.scene.input.on("dragstart", this.onDragStartHandler, this);
+        this.scene.input.on("dragend", this.onDragEndHandler, this);
+        this.scene.input.on("drag", this.onDragHandler, this);
 
         this.expand();
     }
@@ -256,23 +265,50 @@ export class ElementStoragePanel extends Panel {
     }
 
     private onClick(data: op_client.ICountablePackageItem) {
-        this.emit("selectedElement", data);
+        // this.emit("selectedElement", data);
     }
 
     private onDragStartHandler(pointer, gameobject, dragX, dragY) {
         const item: Item = gameobject.parentContainer;
         if (item instanceof Item) {
+            // this.emit("selectedElement", item.prop);
             // gameobject.x = dragX;
             // gameobject.y = dragX;
+            this.mDragData = item.prop;
         }
+        if (!this.mDragImage) {
+            this.mDragImage = this.scene.make.image(undefined, false);
+            this.add(this.mDragImage);
+        }
+        this.mDragImage.x = item.x;
+        this.mDragImage.y = item.y;
+        this.mDragImage.setTexture(gameobject.texture.key);
+        this.mDragging = true;
+        // this.mDragImage.texture = gameobject.texture;
         // Logger.getInstance().log("======", pointer, gameobject);
     }
 
+    private onDragEndHandler() {
+        if (!this.mDragImage) {
+            return;
+        }
+        this.mDragImage.setTexture(undefined);
+        this.mDragging = false;
+    }
+
     private onDragHandler(pointer, gameobject, dragX, dragY) {
-        const item: Item = gameobject.parentContainer;
-        if (item instanceof Item) {
-            gameobject.x = dragX;
-            gameobject.y = dragY;
+        if (!this.mDragImage) {
+            return;
+        }
+        this.mDragImage.x += pointer.x - pointer.prevPosition.x;
+        this.mDragImage.y += pointer.y - pointer.prevPosition.y;
+    }
+
+    private onPointerOutHandler() {
+        if (this.mDragImage && this.mDragging) {
+            this.emit("selectedElement", this.mDragData);
+            this.mDragImage.setTexture(undefined);
+            this.mDragging = false;
         }
     }
 

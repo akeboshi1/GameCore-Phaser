@@ -94,7 +94,7 @@ export class Sprite implements ISprite {
             });
         }
         this.mCurrentAnimationName = obj.currentAnimationName;
-        this.mDirection = obj.direction;
+        this.mDirection = obj.direction || 3;
         this.mNickname = obj.nickname;
         this.mBindID = obj.bindId;
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
