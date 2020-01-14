@@ -6,6 +6,7 @@ import { IRoomService } from "../rooms/room";
 import { Direction } from "../rooms/element/element";
 import { op_def } from "pixelpai_proto";
 import { PlayScene } from "../scenes/play";
+import { DecorateRoom } from "../rooms/decorate.room";
 
 const TEMP_CONST = {
     MOUSE_DOWN: 0,
@@ -28,6 +29,8 @@ export class JoyStickManager implements InputManager {
     private mKeyEvents: op_def.IKeyCodeEvent[];
     private mKeyEventMap: Map<op_def.TQ_EVENT, op_def.IKeyCodeEvent>;
     private mEnabled: boolean = false;
+    // 用于记录room类型，初始化完成后让joystick处理
+    private mOnListener: boolean = false;
     constructor(private worldService: WorldService, keyEvents: op_def.IKeyCodeEvent[]) {
         this.mJoyListeners = [];
         this.mScale = worldService.uiScale;
@@ -37,6 +40,15 @@ export class JoyStickManager implements InputManager {
     }
 
     onRoomChanged(currentRoom: IRoomService, previousRoom?: IRoomService): void {
+        if (!this.mJoyStick) {
+            this.mOnListener = currentRoom instanceof DecorateRoom ? false : true;
+            return;
+        }
+        if (currentRoom instanceof DecorateRoom) {
+            this.mJoyStick.offListener();
+        } else {
+            this.mJoyStick.onListener();
+        }
     }
 
     public setScene(scene: Phaser.Scene) {
@@ -60,6 +72,11 @@ export class JoyStickManager implements InputManager {
         this.mParentcon = this.mScene.add.container(0, 0); // (150, size.height - 150);
         const scale = !this.mScale ? 1 : this.mScale;
         this.mJoyStick = new JoyStick(this.mScene, this.worldService, this.mParentcon, this.mJoyListeners, scale);
+        if (this.mOnListener) {
+            this.mJoyStick.onListener();
+        } else {
+            this.mJoyStick.offListener();
+        }
     }
 
     public resize() {
@@ -194,6 +211,18 @@ export class JoyStick {
         this.mScene.load.start();
     }
 
+    public onListener() {
+        this.mScene.input.on("pointerdown", this.downHandler, this);
+        this.mScene.input.on("pointerup", this.upHandler, this);
+    }
+
+    public offListener() {
+        this.parentCon.visible = false;
+        this.mScene.input.off("pointermove", this.pointerMove, this);
+        this.mScene.input.off("pointerdown", this.downHandler, this);
+        this.mScene.input.off("pointerup", this.upHandler, this);
+    }
+
     public changeListeners(list: InputListener[]) {
         this.mJoyListeners = list;
     }
@@ -274,8 +303,6 @@ export class JoyStick {
         const r = Math.atan2(dragY, dragX);
         this.btn.x = Math.cos(r) * d;
         this.btn.y = Math.sin(r) * d;
-        Logger.getInstance().debug(`dragX: ${dragX} / dragY: ${dragY} | this.parentCon.x: ${this.parentCon.x} / this.parentCon.y: ${this.parentCon.y}
-        |this.btn.x:${this.btn.x}\this.btn.y:${this.btn.y}`);
         if (!(this.mWorld.inputManager as JoyStickManager).enable) {
             return;
         }
@@ -316,25 +343,6 @@ export class JoyStick {
             }
         });
     }
-
-    // private dragStop(pointer) {
-    //     this.btn.off("drag", this.dragUpdate, this);
-    //     this.btn.off("dragend", this.dragStop, this);
-    //     this.btn.off("dragcancel", this.dragStop, this);
-    //     this.mScene.input.on("pointerdown", this.downHandler, this);
-    //     this.btn.x = this.bg.x;
-    //     this.btn.y = this.bg.y;
-    //     Logger.getInstance().log("dragEnd");
-    //     this.parentCon.visible = false;
-    //     if (!(this.mWorld.inputManager as JoyStickManager).enable) {
-    //         return;
-    //     }
-    //     this.mJoyListeners.forEach((l: InputListener) => {
-    //         if (this.checkdragUp()) {
-    //             l.upHandler();
-    //         }
-    //     });
-    // }
 
     private checkdragDown(l: InputListener, r: number): boolean {
         let dir: number;
