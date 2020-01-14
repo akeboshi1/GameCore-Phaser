@@ -15,7 +15,7 @@ export class ElementStoragePanel extends Panel {
     private mBorder: NinePatch;
     private mSearchInput: InputText;
     private mDragBtn: NinePatchButton;
-    private mTabs: NinePatchButton[];
+    // private mTabs: NinePatchButton[];
     private mProps: Item[];
     private mExpaned: boolean = true;
     private mPacgeNum: number;
@@ -54,10 +54,10 @@ export class ElementStoragePanel extends Panel {
             this.mDragBtn.x = -this.mDragBtn.height;
             this.mDragBtn.y = this.height >> 1;
 
-            for (let i = 0; i < this.mTabs.length; i++) {
-                this.mTabs[i].x = 280;
-                this.mTabs[i].y = 60 + i * this.mTabs[i].height + 10;
-            }
+            // for (let i = 0; i < this.mTabs.length; i++) {
+            //     this.mTabs[i].x = 280;
+            //     this.mTabs[i].y = 60 + i * this.mTabs[i].height + 10;
+            // }
 
             const len = this.mProps.length;
             for (let i = 0; i < len; i++) {
@@ -85,10 +85,10 @@ export class ElementStoragePanel extends Panel {
             this.mDragBtn.x = this.width >> 1;
             this.mDragBtn.y = -this.mDragBtn.height >> 1;
 
-            for (let i = 0; i < this.mTabs.length; i++) {
-                this.mTabs[i].x = 24 + i * this.mTabs[i].width + 10;
-                this.mTabs[i].y = 33;
-            }
+            // for (let i = 0; i < this.mTabs.length; i++) {
+            //     this.mTabs[i].x = 24 + i * this.mTabs[i].width + 10;
+            //     this.mTabs[i].y = 33;
+            // }
 
             const len = this.mProps.length;
             for (let i = 0; i < len; i++) {
@@ -192,16 +192,16 @@ export class ElementStoragePanel extends Panel {
         this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "物件容器", config);
         this.mDragBtn.on("pointerup", this.switchExpand, this);
 
-        this.mTabs = [];
+        // this.mTabs = [];
 
-        const button = new NinePatchButton(this.scene, 280, 40, 60, 30, "button", "地块",  config);
+        // const button = new NinePatchButton(this.scene, 280, 40, 60, 30, "button", "地块",  config);
 
-        const button2 = new NinePatchButton(this.scene, 280, 80, 60, 30, "button", "物件",  config);
+        // const button2 = new NinePatchButton(this.scene, 280, 80, 60, 30, "button", "物件",  config);
 
-        const checkbox = new CheckboxGroup().appendItemAll([button, button2]);
-        checkbox.on("selected", this.onSelectedHandler, this);
-        this.mTabs.push(button);
-        this.mTabs.push(button2);
+        // const checkbox = new CheckboxGroup().appendItemAll([button, button2]);
+        // checkbox.on("selected", this.onSelectedHandler, this);
+        // this.mTabs.push(button);
+        // this.mTabs.push(button2);
 
         this.mPrePageBtn = this.scene.make.sprite({
             key: "slip"

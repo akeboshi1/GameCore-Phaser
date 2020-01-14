@@ -53,6 +53,9 @@ export class Item extends Phaser.GameObjects.Container {
     if (!this.count) {
       return;
     }
+    if (!this.mProp) {
+      return;
+    }
     this.mCount.setText("");
     this.mImage.setTexture(undefined);
     this.mImage.off("pointerup", this.onPointerUpHandler, this);
