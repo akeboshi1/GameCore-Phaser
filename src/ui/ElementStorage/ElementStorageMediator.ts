@@ -62,6 +62,10 @@ export class ElementStorageMediator extends BaseMediator {
 
     destroy() {
         this.unregister();
+        if (this.mStorage) {
+            this.mStorage.unregister();
+            this.mStorage = undefined;
+        }
         super.destroy();
     }
 

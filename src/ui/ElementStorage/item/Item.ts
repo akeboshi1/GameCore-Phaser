@@ -62,6 +62,11 @@ export class Item extends Phaser.GameObjects.Container {
     this.mProp = undefined;
   }
 
+  destroy() {
+    this.clear();
+    super.destroy();
+  }
+
   private onPointerUpHandler() {
     this.emit("click", this.mProp);
   }

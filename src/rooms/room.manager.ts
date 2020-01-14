@@ -148,7 +148,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         //     room.addElements(terrains, op_def.NodeType.TerrainNodeType);
         // }, 1000);
         this.mRooms.push(room);
-        // this.mCurRoom = room;
+        this.mCurRoom = room;
     }
 
     private onEditRoom(packet: PBpacket) {

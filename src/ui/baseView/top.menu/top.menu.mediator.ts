@@ -7,8 +7,8 @@ import { op_virtual_world } from "pixelpai_proto";
 import { IBtnData } from "../icon.btn";
 
 export class TopMenuMediator extends BaseMediator {
+  protected mView: TopMenuContainer;
   private readonly scene: Phaser.Scene;
-  private mMenuPanel: TopMenuContainer;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(world);
     this.scene = scene;
@@ -38,20 +38,25 @@ export class TopMenuMediator extends BaseMediator {
     this.world.emitter.off(MessageType.REMOVE_ICON_FROM_TOP, this.onRemoveIcon, this);
   }
 
+  destroy() {
+    this.hide();
+    super.destroy();
+  }
+
   public addItem(data: IBtnData) {
-    if (!this.mMenuPanel) {
-      this.mMenuPanel = new TopMenuContainer(this.scene, this.world);
-      this.mMenuPanel.on("saveDecorate", this.onSaveDecorateHandler, this);
-      this.mMenuPanel.on("enterDecorate", this.onEnterDecorateHandler, this);
+    if (!this.mView) {
+      this.mView = new TopMenuContainer(this.scene, this.world);
+      this.mView.on("saveDecorate", this.onSaveDecorateHandler, this);
+      this.mView.on("enterDecorate", this.onEnterDecorateHandler, this);
     }
-    this.mMenuPanel.addItem(data);
+    this.mView.addItem(data);
   }
 
   public removeItem(name: string) {
-    if (!this.mMenuPanel) {
+    if (!this.mView) {
       return;
     }
-    this.mMenuPanel.removeItem(name);
+    this.mView.removeItem(name);
   }
 
   private onAddIconHandler(data: IBtnData) {

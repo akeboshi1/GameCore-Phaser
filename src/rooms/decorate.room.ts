@@ -130,6 +130,10 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
+        this.world.game.scene.remove(PlayScene.name);
+        this.world.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
+        this.world.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
+        this.world.emitter.off(MessageType.PUT_ELEMENT, this.onPutElement, this);
     }
 
     now(): number {

@@ -217,7 +217,7 @@ export class ElementStoragePanel extends Panel {
 
         this.mProps = [];
 
-        this.add([this.mBackground, this.mBorder, this.mSearchInput, button, button2]);
+        this.add([this.mBackground, this.mBorder, this.mSearchInput]);
         for (let i = 0; i < this.mItemNum; i++) {
             const item = new Item(this.scene);
             // this.add(item);
