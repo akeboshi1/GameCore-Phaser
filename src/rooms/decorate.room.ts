@@ -303,13 +303,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const map = this.mElementManager.map;
         const displayInfo = sprite.displayInfo;
         const aniName = sprite.currentAnimationName || displayInfo.animationName;
-        Logger.getInstance().log("pos: ", pos);
         const collisionArea = displayInfo.getCollisionArea(aniName);
-        const walkArea = displayInfo.getWalkableArea(aniName);
         const origin = displayInfo.getOriginPoint(aniName);
         for (let i = 0; i < collisionArea.length; i++) {
             for (let j = 0; j < collisionArea[i].length; j++) {
-                if (map[i + pos.x - origin.x][j + pos.y - origin.y] === 0) {
+                if (map[j + pos.y - origin.y][i + pos.x - origin.x] === 0) {
                     return false;
                 }
             }
