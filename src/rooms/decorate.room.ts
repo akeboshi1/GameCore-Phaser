@@ -307,7 +307,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const origin = displayInfo.getOriginPoint(aniName);
         for (let i = 0; i < collisionArea.length; i++) {
             for (let j = 0; j < collisionArea[i].length; j++) {
-                if (map[j + pos.y - origin.y][i + pos.x - origin.x] === 0) {
+                if (map[i + pos.y - origin.y][j + pos.x - origin.x] === 0) {
                     return false;
                 }
             }

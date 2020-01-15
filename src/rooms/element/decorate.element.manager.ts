@@ -70,7 +70,7 @@ export class DecorateElementManager extends ElementManager {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if (collisionArea[i][j] === 1 && walkArea[i][j] === 0) {
-          this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = 0;
+          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = 0;
         }
       }
     }
@@ -97,7 +97,7 @@ export class DecorateElementManager extends ElementManager {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if (collisionArea[i][j] === 1) {
-          this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = -1;
+          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = -1;
         }
       }
     }
@@ -124,7 +124,7 @@ export class DecorateElementManager extends ElementManager {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if (walkArea[i][j] === 0) {
-          this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = type;
         }
       }
     }
