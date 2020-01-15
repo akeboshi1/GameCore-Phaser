@@ -12,9 +12,9 @@ export class DecorateTerrainManager extends TerrainManager {
   constructor(roomService: DecorateRoomService) {
     super(roomService);
     const miniSize = roomService.miniSize;
-    this.map = new Array(miniSize.rows);
+    this.map = new Array(miniSize.cols);
     for (let i = 0; i < miniSize.rows; i++) {
-      this.map[i] = new Array(miniSize.cols).fill(0);
+      this.map[i] = new Array(miniSize.rows).fill(0);
     }
   }
 

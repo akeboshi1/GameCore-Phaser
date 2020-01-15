@@ -32,6 +32,8 @@ export interface DecorateRoomService extends IRoomService {
     transformToMini45(p: Pos): Pos;
 
     transformToMini90(p: Pos): Pos;
+
+    canPut(sprite: ISprite): boolean;
 }
 
 export class DecorateRoom extends PacketHandler implements DecorateRoomService {
@@ -294,19 +296,24 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     public canPut(sprite: ISprite) {
-        // if (!pos || !area || area.length <= 0 || area[0].length <= 0) {
-        //     return true;
-        // }
-        // const pos45 = this.transformToMini45(pos);
-        // for (let i = 0; i < area.length; i++) {
-        //     for (let j = 0; j < area[i].length; j++) {
-        //         if (this.mMap[pos.x + i - originPoint.x][pos.y + j - originPoint.y] === 1) {
-        //             return false;
-        //         }
-        //     }
-        // }
         const pos = this.transformToMini45(sprite.pos);
+        if (pos.x < 0 || pos.y < 0 || pos.x > this.miniSize.rows || pos.y > this.miniSize.cols) {
+            return false;
+        }
         const map = this.mElementManager.map;
+        const displayInfo = sprite.displayInfo;
+        const aniName = sprite.currentAnimationName || displayInfo.animationName;
+        Logger.getInstance().log("pos: ", pos);
+        const collisionArea = displayInfo.getCollisionArea(aniName);
+        const walkArea = displayInfo.getWalkableArea(aniName);
+        const origin = displayInfo.getOriginPoint(aniName);
+        for (let i = 0; i < collisionArea.length; i++) {
+            for (let j = 0; j < collisionArea[i].length; j++) {
+                if (map[i + pos.x - origin.x][j + pos.y - origin.y] === 0) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -485,7 +492,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         } else {
             // TODO 不可放置，回到之前的位置
             // this.addElement()
+            if (this.mSelectedElement.root) {
+                this.addElement(this.mSelectedElement.root);
+                this.sendPosition(this.mSelectedElement.root);
+            }
         }
+        this.mSelectedElement.remove();
     }
 
     private sendPosition(sprite: ISprite) {

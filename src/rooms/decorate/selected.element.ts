@@ -2,21 +2,22 @@ import {FramesDisplay} from "../display/frames.display";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
 import { IRoomService } from "../room";
-import { ISprite } from "../element/sprite";
+import { ISprite, Sprite } from "../element/sprite";
 import { FramesModel } from "../display/frames.model";
 import { MessageType } from "../../const/MessageType";
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
+import { DecorateRoomService } from "../decorate.room";
 
 export class SelectedElement {
     private readonly scene: Phaser.Scene;
-    private readonly roomService: IRoomService;
+    private readonly roomService: DecorateRoomService;
     private mDisplay: FramesDisplay | DragonbonesDisplay;
     private mDecorateManager: DecorateManager;
     private mRootSprite: ISprite;
     private mSprite: ISprite;
     private mSelecting: boolean;
-    constructor(scene: Phaser.Scene, roomService: IRoomService) {
+    constructor(scene: Phaser.Scene, roomService: DecorateRoomService) {
         this.scene = scene;
         this.roomService = roomService;
         this.mDecorateManager = new DecorateManager(scene, roomService);
@@ -42,7 +43,7 @@ export class SelectedElement {
             return;
         }
         if (root) {
-            this.mRootSprite =  Object.create(root);
+            this.mRootSprite = new Sprite(sprite.toSprite(), sprite.nodeType);
         } else {
             this.mRootSprite = null;
         }
@@ -77,6 +78,9 @@ export class SelectedElement {
             this.mDisplay.destroy();
             this.mDisplay = null;
         }
+        if (this.mRootSprite) {
+            this.mRootSprite = null;
+        }
         this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_EXPANED);
     }
 
@@ -95,6 +99,11 @@ export class SelectedElement {
         this.mDecorateManager.updatePos(x, y);
         this.mSprite.setPosition(x, y);
 
+        if (this.roomService.canPut(this.mSprite)) {
+            this.mDisplay.alpha = 1;
+        } else {
+            this.mDisplay.alpha = 0.6;
+        }
         // this.mLayerManager.depthSurfaceDirty = true;
     }
 
@@ -111,6 +120,10 @@ export class SelectedElement {
 
     get sprite(): ISprite {
         return this.mSprite;
+    }
+
+    get root(): ISprite {
+        return this.mRootSprite;
     }
 
     set selecting(val: boolean) {
