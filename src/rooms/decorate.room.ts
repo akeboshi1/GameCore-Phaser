@@ -24,8 +24,17 @@ import { TerrainDisplay } from "./display/terrain.display";
 import { DecorateElementManager } from "./element/decorate.element.manager";
 import { MessageType } from "../const/MessageType";
 import { Sprite, ISprite } from "./element/sprite";
+import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
 
-export class DecorateRoom extends PacketHandler implements IRoomService {
+export interface DecorateRoomService extends IRoomService {
+    readonly miniSize: IPosition45Obj;
+
+    transformToMini45(p: Pos): Pos;
+
+    transformToMini90(p: Pos): Pos;
+}
+
+export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     readonly blocks: ViewblockService;
     // TODO clock sync
     clockSyncComplete: boolean = true;
@@ -130,6 +139,10 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
+        this.removePointerMoveHandler();
+        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
+        this.mScene.input.off("gameobjectdown", this.onGameobjectUpHandler, this);
         this.world.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         this.world.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
@@ -168,7 +181,7 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mLayerManager = new LayerManager(this);
         this.mLayerManager.drawGrid(this);
-        this.mTerrainManager = new TerrainManager(this);
+        this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
@@ -523,5 +536,9 @@ export class DecorateRoom extends PacketHandler implements IRoomService {
 
     get connection(): ConnectionService {
         return this.world.connection;
+    }
+
+    get miniSize(): IPosition45Obj {
+        return this.mMiniSize;
     }
 }

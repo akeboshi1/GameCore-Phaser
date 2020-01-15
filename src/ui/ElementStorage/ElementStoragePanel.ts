@@ -166,6 +166,13 @@ export class ElementStoragePanel extends Panel {
         this.mExpaned = false;
     }
 
+    destroy() {
+        this.scene.input.off("dragstart", this.onDragStartHandler, this);
+        this.scene.input.off("dragend", this.onDragEndHandler, this);
+        this.scene.input.off("drag", this.onDragHandler, this);
+        super.destroy();
+    }
+
     protected preload() {
         this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.image("button", Url.getRes("ui/common/button.png"));

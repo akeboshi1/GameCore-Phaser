@@ -313,6 +313,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
             this.mGame.plugins.removeGlobalPlugin("rexInputText");
             this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+            this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
             this.mGame.plugins.removeScenePlugin("DragonBones");
             this.mGame.plugins.removeScenePlugin("rexUI");
             this.mGameEmitter.destroy();

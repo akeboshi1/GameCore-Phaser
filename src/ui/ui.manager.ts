@@ -192,7 +192,8 @@ export class UiManager extends PacketHandler {
     public destroy() {
         this.removePackListener();
         this.clearMediator();
-        this.mMedMap = null;
+        this.mMedMap = undefined;
+        this.mScene = undefined;
     }
 
     public baseFaceResize() {
