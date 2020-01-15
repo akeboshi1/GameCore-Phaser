@@ -43,8 +43,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mID: number;
     private mSize: IPosition45Obj;
     private mMiniSize: IPosition45Obj;
-    private mTerrainManager: TerrainManager;
-    private mElementManager: ElementManager;
+    private mTerrainManager: DecorateTerrainManager;
+    private mElementManager: DecorateElementManager;
     private mLayerManager: LayerManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
@@ -293,10 +293,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.transformToMini90(bound);
     }
 
-    public canPut(pos: Pos, area: number[][], originPoint: Phaser.Geom.Point) {
-        if (!pos || !area || area.length <= 0 || area[0].length <= 0) {
-            return true;
-        }
+    public canPut(sprite: ISprite) {
+        // if (!pos || !area || area.length <= 0 || area[0].length <= 0) {
+        //     return true;
+        // }
         // const pos45 = this.transformToMini45(pos);
         // for (let i = 0; i < area.length; i++) {
         //     for (let j = 0; j < area[i].length; j++) {
@@ -305,6 +305,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         //         }
         //     }
         // }
+        const pos = this.transformToMini45(sprite.pos);
+        const map = this.mElementManager.map;
         return true;
     }
 
