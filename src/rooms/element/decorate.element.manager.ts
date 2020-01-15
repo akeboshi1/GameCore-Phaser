@@ -1,59 +1,66 @@
 import { ElementManager } from "./element.manager";
-import { IRoomService } from "../room";
 import { ISprite } from "./sprite";
 import { Element, IElement } from "./element";
-import { DecorateRoom } from "../decorate.room";
-import { FramesModel } from "../display/frames.model";
-import { IDragonbonesModel } from "../display/dragonbones.model";
-import { Pos } from "../../utils/pos";
+import { DecorateRoomService } from "../decorate.room";
 
 export class DecorateElementManager extends ElementManager {
-  private map: number[][] = [];
-  constructor(room: IRoomService) {
+  protected mRoom: DecorateRoomService;
+  private mMap: number[][];
+  constructor(room: DecorateRoomService) {
     super(room);
+    const size = room.miniSize;
+    this.mMap = new Array(size.rows);
+    for (let i = 0; i < this.mMap.length; i++) {
+      this.mMap[i] = new Array(size.cols).fill(-1);
+    }
   }
 
   public remove(id: number): IElement {
     const ele = super.remove(id);
     if (ele) {
-      // ele.model
+      this.removeMap(ele.model);
     }
     return ele;
   }
 
   protected _add(sprite: ISprite): Element {
     const ele = super._add(sprite);
-    const displayInfo = sprite.displayInfo;
-    if (displayInfo) {
-      // TODO 添加放到外面
-      const aniName = sprite.currentAnimationName || displayInfo.animationName;
-      this.addMap(aniName, sprite.pos, sprite.displayInfo);
-    }
+    this.addMap(sprite);
     return ele;
   }
 
-  protected addMap(aniName: string, pos: Pos, displayInfo: FramesModel | IDragonbonesModel) {
-      const collisionArea = displayInfo.getCollisionArea(aniName);
-      const walkArea = displayInfo.getWalkableArea(aniName);
-      const origin = displayInfo.getOriginPoint(aniName);
-      if (!walkArea) {
-        return;
-      }
-      const decorateRoom: DecorateRoom = <DecorateRoom> this.mRoom;
-      const pos45 = decorateRoom.transformToMini45(pos);
-      for (let i = 0; i < collisionArea.length; i++) {
-        for (let j = 0; j < collisionArea[0].length; j++) {
-          // 避免影响到其他物件
-          if (collisionArea[i][j] === 1) {
-            if (i > walkArea.length && j > walkArea[j].length && walkArea[i][j] === 1) {
-              decorateRoom.setMap(pos45.x + i - origin.x, pos45.y + j - origin.y, collisionArea[i][j]);
-            }
-          }
-        }
-      }
+  protected addMap(sprite: ISprite) {
+    this.setMap(sprite, 1);
   }
 
-  protected removeMap() {
+  protected removeMap(sprite: ISprite) {
+    this.setMap(sprite, 0);
+  }
 
+  protected setMap(sprite: ISprite, type: number) {
+    const displayInfo = sprite.displayInfo;
+    if (!displayInfo) {
+      return;
+    }
+    const aniName = sprite.currentAnimationName || displayInfo.animationName;
+    const collisionArea = displayInfo.getCollisionArea(aniName);
+    let walkArea = displayInfo.getWalkableArea(aniName);
+    const origin = displayInfo.getOriginPoint(aniName);
+    const rows = collisionArea.length;
+    const cols = collisionArea[0].length;
+    const pos = sprite.pos;
+    if (!walkArea) {
+      walkArea = new Array(rows);
+      for (let i = 0; i < cols; i++) {
+        walkArea[i] = new Array(cols).fill(0);
+      }
+    }
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        if (collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
+          this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+        }
+      }
+    }
   }
 }

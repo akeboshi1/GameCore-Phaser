@@ -1,11 +1,8 @@
 import { TerrainManager } from "./terrain.manager";
-import { IRoomService } from "../room";
 import { ISprite, Sprite } from "../element/sprite";
 import { Terrain } from "./terrain";
-import { DecorateRoom, DecorateRoomService } from "../decorate.room";
+import { DecorateRoomService } from "../decorate.room";
 import { IElement } from "../element/element";
-import { IFramesModel } from "../display/frames.model";
-import { IDragonbonesModel } from "../display/dragonbones.model";
 import { PBpacket } from "net-socket-packet";
 import { op_def, op_client } from "pixelpai_proto";
 
@@ -24,6 +21,7 @@ export class DecorateTerrainManager extends TerrainManager {
   public remove(id: number): IElement {
     const terrain = super.remove(id);
     if (terrain) {
+      this.removeMap(terrain.model);
     }
     return terrain;
   }
@@ -58,6 +56,14 @@ export class DecorateTerrainManager extends TerrainManager {
 }
 
   protected addMap(sprite: ISprite) {
+    this.setMap(sprite, 1);
+  }
+
+  protected removeMap(sprite: ISprite) {
+    this.setMap(sprite, 0);
+  }
+
+  protected setMap(sprite: ISprite, type: number) {
     const displayInfo = sprite.displayInfo;
     const aniName = sprite.currentAnimationName || displayInfo.animationName;
     const collisionArea = displayInfo.getCollisionArea(aniName);
@@ -65,13 +71,17 @@ export class DecorateTerrainManager extends TerrainManager {
     const origin = displayInfo.getOriginPoint(aniName);
     let rows = collisionArea.length;
     let cols = collisionArea[0].length;
-    rows = rows === 1 ? 2 : rows;
-    cols = cols === 1 ? 2 : cols;
+    let hasCollisionArea = true;
+    if (rows === 1 && cols === 1) {
+      rows = 2;
+      cols = 2;
+      hasCollisionArea = false;
+    }
     const pos = sprite.pos;
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
-        if ((i >= collisionArea.length || j >= collisionArea[i].length) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-          this.map[pos.x + i - origin.x][pos.y + j - origin.y] = 1;
+        if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
+          this.map[pos.x + i - origin.x][pos.y + j - origin.y] = type;
         }
       }
     }
