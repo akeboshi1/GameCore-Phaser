@@ -474,7 +474,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         // TODO 还要考虑翻转
         const aniName: string = sprite.currentAnimationName || sprite.displayInfo.animationName;
-        if (this.canPut(sprite.pos, sprite.displayInfo.getCollisionArea(sprite.currentAnimationName), sprite.displayInfo.getOriginPoint(aniName))) {
+        if (this.canPut(sprite)) {
             this.addElement(sprite);
             const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;

@@ -114,10 +114,6 @@ export class Launcher {
         }
     }
 
-    public destory() {
-        this.world.destroy();
-    }
-
     public startFullscreen() {
         if (!this.world) {
             return;

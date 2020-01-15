@@ -297,10 +297,10 @@ export class EditorRoom extends Room implements EditorRoomService {
     private syncSprite(object: ElementDisplay) {
         if (!object) return;
         const ele = object.element;
-        if (!ele) return;
+        if (!ele || !ele.model) return;
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_SYNC_SPRITE);
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
-        content.sprites = [ele.toSprite()];
+        content.sprites = [ele.model.toSprite()];
         this.connection.send(pkt);
     }
 
