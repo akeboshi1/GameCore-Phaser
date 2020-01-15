@@ -27,7 +27,6 @@ import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
 import InputTextPlugin from "../../lib/rexui/plugins/inputtext-plugin.js";
 import BBCodeTextPlugin from "../../lib/rexui/plugins/bbcodetext-plugin.js";
-import MoveToPlugin from "../../lib/rexui/plugins/moveto-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
@@ -203,6 +202,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConfig.virtual_world_id = content.virtualWorldId;
         this._newGame();
         this.loginEnterWorld();
+        const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+        if (loginScene) loginScene.remove();
+        this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
     public changeScene() {
@@ -310,6 +312,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private clearGame() {
+        if (this.mClock) {
+            this.clock.clearTime();
+        }
         if (this.mGame) {
             this.mGame.plugins.removeGlobalPlugin("rexButton");
             this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
@@ -461,11 +466,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 {
                     key: "rexBBCodeTextPlugin",
                     plugin: BBCodeTextPlugin,
-                    start: true
-                },
-                {
-                    key: "rexMoveTo",
-                    plugin: MoveToPlugin,
                     start: true
                 }],
                 scene: [

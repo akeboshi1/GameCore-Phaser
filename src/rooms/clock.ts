@@ -65,6 +65,15 @@ export class Clock extends PacketHandler {
             this.mTimestamp += delta;
     }
 
+    public clearTime() {
+        this.mClockSync = false;
+        if (this.mIntervalId) {
+            clearInterval(this.mIntervalId);
+        }
+        this.mTimestamp = 0;
+        this._check();
+    }
+
     public destroy(): void {
         if (this.mConn) {
             this.mConn.removePacketListener(this);
