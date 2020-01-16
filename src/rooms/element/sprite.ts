@@ -11,7 +11,6 @@ export interface ISprite {
     readonly id: number;
     readonly avatar: IAvatar;
     readonly currentAnimationName: string;
-    readonly direction: number;
     readonly nickname: string;
     readonly alpha: number;
     readonly displayBadgeCards: op_def.IBadgeCard[];
@@ -28,6 +27,7 @@ export interface ISprite {
     readonly sceneId: number;
     readonly nodeType: op_def.NodeType;
     displayInfo: IFramesModel | IDragonbonesModel;
+    direction: number;
     pos: Pos;
     bindID: number;
 
@@ -161,6 +161,10 @@ export class Sprite implements ISprite {
 
     get direction(): number {
         return this.mDirection;
+    }
+
+    set direction(val: number) {
+        this.mDirection = val;
     }
 
     get nickname(): string {

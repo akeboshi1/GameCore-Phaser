@@ -170,6 +170,9 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
+        if (this.model) {
+            this.model.direction = val;
+        }
         if (this.mDisplay) {
             if (val === 3) {
                 this.mDisplay.scaleX = 1;
