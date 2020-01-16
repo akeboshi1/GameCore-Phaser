@@ -86,7 +86,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mElementStorage = new ElementStorage();
         this.mHttpService = new HttpService(this);
         this.mCharacterManager = new CharacterManager(this);
-        // this.mCharacterManager.register();
+        this.mCharacterManager.register();
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
@@ -490,7 +490,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.initUiScale();
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
-        // if (this.mCharacterManager) this.mCharacterManager.register();
+        if (this.mCharacterManager) this.mCharacterManager.register();
         return this.mGame;
     }
 
