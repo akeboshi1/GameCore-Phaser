@@ -9,7 +9,7 @@ export class MenuItem extends NinePatchButton {
     protected mArrow: Phaser.GameObjects.Image;
     protected mBackground: NinePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text: string, config: IPatchesConfig) {
-        super(scene, x, y, width, height, key, text, config);
+        super(scene, x, y, width, height, key, "", text, config);
     }
 
     public appendItem(menu: MenuItem) {

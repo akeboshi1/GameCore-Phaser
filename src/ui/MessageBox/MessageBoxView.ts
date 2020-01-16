@@ -43,7 +43,7 @@ export class MessageBoxView extends Panel {
             btnSp.y = this.mHeight - btnHei - 100;
             for (let i = 0; i < buttons.length; i++) {
                 const txt: string = buttons[i] ? buttons[i].text : "";
-                const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, "button_blue", buttons[i].text, {
+                const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, "button_blue", "", buttons[i].text, {
                     top: 7,
                     bottom: 7,
                     left: 7,

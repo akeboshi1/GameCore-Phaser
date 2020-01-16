@@ -203,7 +203,7 @@ export class ElementStoragePanel extends Panel {
             bottom: 4
         };
 
-        this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "物件容器", config);
+        this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器", config);
         this.mDragBtn.on("pointerup", this.switchExpand, this);
 
         // this.mTabs = [];

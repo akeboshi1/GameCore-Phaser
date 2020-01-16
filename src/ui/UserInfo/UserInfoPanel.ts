@@ -163,7 +163,7 @@ export class UserInfoPanel extends Panel {
         });
         this.add(this.mLv);
 
-        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "关注", BlueButton.getConfig());
+        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "", "关注", BlueButton.getConfig());
         this.mFollwerBtn.x = 258 + (this.mFollwerBtn.width >> 1);
         this.mFollwerBtn.y = 145 + (this.mFollwerBtn.height >> 1);
         this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });

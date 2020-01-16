@@ -38,7 +38,7 @@ import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
 import { EditScene } from "../scenes/edit";
 import { Clock, ClockReadyListener } from "../rooms/clock";
-import { CharacterManager } from "../character/character.manager";
+import { RoleManager } from "../role/role.manager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -56,7 +56,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mHttpService: HttpService;
     private mAccount: Account;
     private gameConfig: Phaser.Types.Core.GameConfig;
-    private mCharacterManager: CharacterManager;
+    private mRoleManager: RoleManager;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -85,8 +85,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mMouseManager = new MouseManager(this);
         this.mElementStorage = new ElementStorage();
         this.mHttpService = new HttpService(this);
-        this.mCharacterManager = new CharacterManager(this);
-        this.mCharacterManager.register();
+        this.mRoleManager = new RoleManager(this);
+        this.mRoleManager.register();
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
@@ -490,7 +490,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.initUiScale();
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
-        if (this.mCharacterManager) this.mCharacterManager.register();
+        if (this.mRoleManager) this.mRoleManager.register();
         return this.mGame;
     }
 

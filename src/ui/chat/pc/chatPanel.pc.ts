@@ -106,7 +106,7 @@ export class ChatPanelPC extends BaseChatPanel {
         const background = new RoundRectangle(this.mScene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         this.outPut.add(background);
 
-        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", {
+        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", "", {
             left: 0,
             top: 2,
             right: 0,
@@ -125,7 +125,7 @@ export class ChatPanelPC extends BaseChatPanel {
         });
         this.outPut.add(text);
 
-        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", {
+        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", "", {
             left: 4,
             top: 4,
             right: 4,
@@ -181,7 +181,7 @@ export class ChatPanelPC extends BaseChatPanel {
         this.mInputText.y = size.height - 40 * this.mWorld.uiScale;
         inputContainer.add(this.mInputText);
 
-        const sendMsgBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, "button", "发送", {
+        const sendMsgBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, "button", "", "发送", {
             left: 4,
             top: 4,
             right: 4,

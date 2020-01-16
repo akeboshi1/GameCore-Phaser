@@ -49,7 +49,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 },
             });
 
-            track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", {
+            track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", "", {
                 left: 0,
                 top: 2,
                 right: 0,
@@ -57,7 +57,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             });
             // track.x = this.mWidth / 2;
             // track.y = 8 * this.mWorld.uiScale;
-            thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", {
+            thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", "", {
                 left: 4,
                 top: 4,
                 right: 4,
@@ -233,7 +233,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             },
         });
 
-        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", {
+        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", "", {
             left: 0,
             top: 2,
             right: 0,
@@ -241,7 +241,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         });
         track.x = this.mWidth / 2;
         track.y = 8 * this.mWorld.uiScale;
-        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", {
+        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", "", {
             left: 4,
             top: 4,
             right: 4,
@@ -278,7 +278,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
 
-        this.mSendBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, WhiteButton.getName(), "发送", WhiteButton.getConfig());
+        this.mSendBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", WhiteButton.getConfig());
         this.mSendBtn.on("pointerdown", this.onSendMsgHandler, this);
         this.add(this.mSendBtn);
 

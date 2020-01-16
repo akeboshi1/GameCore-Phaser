@@ -1,20 +1,20 @@
-import { ICharacter } from "../character/create.character";
+import { ICreateRole } from "../role/create.role";
 
-export class CreateCharacterScene extends Phaser.Scene {
-  private character: ICharacter;
+export class CreateRoleScene extends Phaser.Scene {
+  private role: ICreateRole;
   constructor() {
-    super({key: CreateCharacterScene.name});
+    super({key: CreateRoleScene.name});
   }
 
   init(data: any) {
-    if (data.character) {
-      this.character = data.character;
+    if (data.role) {
+      this.role = data.role;
     }
   }
 
   create() {
-    if (this.character) {
-      this.character.start(this);
+    if (this.role) {
+      this.role.start(this);
     }
   }
 }

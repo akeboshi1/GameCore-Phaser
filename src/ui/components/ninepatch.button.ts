@@ -5,14 +5,16 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
     protected mLabel: Phaser.GameObjects.Text;
     protected mNingBg: NinePatch;
     protected mKey: string;
+    protected mFrame: string;
     protected btnData: any;
     private mScene: Phaser.Scene;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text?: string, config?: IPatchesConfig, data?: any) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, config?: IPatchesConfig, data?: any) {
         super(scene, x, y);
         this.mScene = scene;
         this.mKey = key;
+        this.mFrame = frame ? frame : "__BASE";
         this.setSize(width, height);
-        this.mNingBg = new NinePatch(this.scene, 0, 0, width, height, key, key + "_normal", config);
+        this.mNingBg = new NinePatch(this.scene, 0, 0, width, height, key, this.mFrame + "_normal", config);
         this.add(this.mNingBg);
         if (data) {
             this.btnData = data;
@@ -64,17 +66,20 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
     }
 
     protected changeNormal() {
-        this.setFrame(`${this.mKey}_normal`);
+        const frame = this.mFrame ? this.mFrame : this.mKey;
+        this.setFrame(`${frame}_normal`);
     }
 
     protected changeOver() {
         // this.setTexture()
-        this.setFrame(`${this.mKey}_over`);
+        const frame = this.mFrame ? this.mFrame : this.mKey;
+        this.setFrame(`${frame}_over`);
     }
 
     protected changeDown(pointer) {
         // this.scale = 0.9;
-        this.setFrame(`${this.mKey}_down`);
+        const frame = this.mFrame ? this.mFrame : this.mKey;
+        this.setFrame(`${frame}_down`);
         this.emit("click", pointer, this);
         // this.scaleHandler();
     }
