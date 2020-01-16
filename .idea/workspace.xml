@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
+      <change afterPath="$PROJECT_DIR$/src/scenes/create.player.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/default.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/release/js/game_v1.0.54.js" beforeDir="false" afterPath="$PROJECT_DIR$/release/js/game_v1.0.54.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/decorate/selected.element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/decorate/selected.element.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rooms/editor/mouse.follow.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/decorate/decorate.manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/decorate/decorate.manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/decorate/decorate.panel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/decorate/decorate.panel.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -193,6 +188,7 @@
       <workItem from="1574826545576" duration="6370000" />
       <workItem from="1576051405429" duration="11451000" />
       <workItem from="1576721350798" duration="16786000" />
+      <workItem from="1579141016555" duration="1117000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
