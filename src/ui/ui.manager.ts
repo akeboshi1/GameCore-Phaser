@@ -10,10 +10,9 @@ import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
 import { FriendMediator } from "./friend/friend.mediator";
-import {ElementStorageMediator} from "./ElementStorage/ElementStorageMediator";
+import { ElementStorageMediator } from "./ElementStorage/ElementStorageMediator";
 import { RankMediator } from "./Rank/RankMediator";
 import { Size } from "../utils/size";
-import { TopMediator } from "./baseView/topGroup/top.mediator";
 import { RightMediator } from "./baseView/rightGroup/right.mediator";
 import { LeftMediator } from "./baseView/leftGroup/left.mediator";
 import { BottomMediator } from "./baseView/bottomGroup/bottom.mediator";
@@ -91,7 +90,7 @@ export class UiManager extends PacketHandler {
             if (this.worldService.game.device.os.desktop) {
                 this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
             } else {
-                this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
+                // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
                 this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
                 this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
                 this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
@@ -120,11 +119,11 @@ export class UiManager extends PacketHandler {
                 case BottomMediator.NAME:
                     map = this.mBaseUIMap;
                     break;
-                case TopMediator.NAME:
-                    if (deskBoo) {
-                        map = this.mBaseUIMap;
-                    }
-                    break;
+                // case TopMediator.NAME:
+                //     if (deskBoo) {
+                //         map = this.mBaseUIMap;
+                //     }
+                //     break;
                 case BagGroupMediator.NAME:
                     if (deskBoo) {
                         map = this.mBaseUIMap;
@@ -185,7 +184,7 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        this.mMedMap.forEach((med: IMediator) =>  med.destroy());
+        this.mMedMap.forEach((med: IMediator) => med.destroy());
         this.mMedMap.clear();
     }
 
@@ -200,11 +199,11 @@ export class UiManager extends PacketHandler {
         const rightMed = this.getMediator(RightMediator.NAME);
         const leftMed = this.getMediator(LeftMediator.NAME);
         const bottomMed = this.getMediator(BottomMediator.NAME);
-        const topMed = this.getMediator(TopMediator.NAME);
+        // const topMed = this.getMediator(TopMediator.NAME);
         if (rightMed && rightMed.getView()) rightMed.getView().resize(0, 0);
         if (leftMed && leftMed.getView()) leftMed.getView().resize(0, 0);
         if (bottomMed && bottomMed.getView()) bottomMed.getView().resize(0, 0);
-        if (topMed && topMed.getView()) topMed.getView().resize(0, 0);
+        // if (topMed && topMed.getView()) topMed.getView().resize(0, 0);
     }
 
     public baseFaceTween(show: boolean) {
@@ -214,10 +213,10 @@ export class UiManager extends PacketHandler {
         const rightMed = this.getMediator(RightMediator.NAME);
         const leftMed = this.getMediator(LeftMediator.NAME);
         const bottomMed = this.getMediator(BottomMediator.NAME);
-        const topMed = this.getMediator(TopMediator.NAME);
-        // if (rightMed && rightMed.getView()) rightMed.getView().tweenView(show);
-        // if (leftMed && leftMed.getView()) leftMed.getView().tweenView(show);
-        // if (bottomMed && bottomMed.getView()) bottomMed.getView().tweenView(show);
+        // const topMed = this.getMediator(TopMediator.NAME);
+        if (rightMed && rightMed.getView()) rightMed.getView().tweenView(show);
+        if (leftMed && leftMed.getView()) leftMed.getView().tweenView(show);
+        if (bottomMed && bottomMed.getView()) bottomMed.getView().tweenView(show);
         // if (topMed && topMed.getView()) topMed.getView().tweenView(show);
     }
 
@@ -300,19 +299,19 @@ export class UiManager extends PacketHandler {
         }
         // if (mediator.showing) return;
         if (param) mediator.setParam(param);
-        if (className === "RankMediator") {
-            if (!this.worldService.game.device.os.desktop) {
-                const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
-                if (med) {
-                    if (!med.isShow()) {
-                        med.preRefreshBtn(className);
-                    } else {
-                        med.refreshBtn(className, true);
-                    }
-                }
-                return;
-            }
-        }
+        // if (className === "RankMediator") {
+        //     if (!this.worldService.game.device.os.desktop) {
+        //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
+        //         if (med) {
+        //             if (!med.isShow()) {
+        //                 med.preRefreshBtn(className);
+        //             } else {
+        //                 med.refreshBtn(className, true);
+        //             }
+        //         }
+        //         return;
+        //     }
+        // }
         this.checkUIState(className, false);
         mediator.show(param);
     }
@@ -407,16 +406,16 @@ export class UiManager extends PacketHandler {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
-        if (!this.worldService.game.device.os.desktop && medName === "RankMediator") {
-            const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
-            if (med) {
-                if (!med.isShow()) {
-                    med.preRefreshBtn(medName);
-                } else {
-                    med.refreshBtn(medName, true);
-                }
-            }
-        }
+        // if (!this.worldService.game.device.os.desktop && medName === "RankMediator") {
+        //     const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
+        //     if (med) {
+        //         if (!med.isShow()) {
+        //             med.preRefreshBtn(medName);
+        //         } else {
+        //             med.refreshBtn(medName, true);
+        //         }
+        //     }
+        // }
         // if (!mediator.isShow()) return;
         this.checkUIState(medName, true);
         mediator.hide();
