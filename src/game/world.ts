@@ -87,6 +87,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mHttpService = new HttpService(this);
         this.mRoleManager = new RoleManager(this);
         this.mRoleManager.register();
+        // this.mCharacterManager = new CharacterManager(this);
+        // this.mCharacterManager.register();
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
@@ -107,7 +109,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     destroy(): void {
         this.mConnection.closeConnect();
-        this.mClock.destroy();
         this.clearGame();
     }
 
@@ -200,10 +201,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
         this.clearGame();
+        if (this.mConnection) {
+            this.mConnection.closeConnect();
+        }
+        if (this.mClock) {
+            this.mClock.destroy();
+            this.mClock = null;
+        }
         this.mConfig.game_id = content.gameId;
         this.mConfig.virtual_world_id = content.virtualWorldId;
+        this.mConnection.addPacketListener(this);
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        if (gateway) { // connect to game server.
+            this.mConnection.startConnect(gateway);
+        }
+        this.mClock = new Clock(this.mConnection, this);
         this._newGame();
-        this.loginEnterWorld();
         const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
         if (loginScene) loginScene.remove();
         this.mGame.scene.start(LoadingScene.name, { world: this });
@@ -225,10 +238,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.clearGame();
         this.mConfig.game_id = gameID;
         this.mConfig.virtual_world_id = worldID;
-        // this._newGame();
-        // this.mRoomMamager.addPackListener();
-        // this.mUiManager.addPackListener();
-        this.loginEnterWorld();
+        if (this.mConnection) {
+            this.mConnection.closeConnect();
+        }
+        this.mConnection.addPacketListener(this);
+        this._newGame();
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        if (gateway) { // connect to game server.
+            this.mConnection.startConnect(gateway);
+        }
+        const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+        if (loginScene) loginScene.remove();
+        this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
     public startHeartBeat() {
@@ -306,7 +327,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public onClockReady(): void {
-        if (this.mInputManager) this.mInputManager.enable = true;
+        if (this.mInputManager) {
+            Logger.getInstance().log("clock inputManager:", true);
+            this.mInputManager.enable = true;
+        }
     }
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
@@ -314,9 +338,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private clearGame() {
-        if (this.mClock) {
-            this.clock.clearTime();
-        }
         if (this.mGame) {
             this.mGame.plugins.removeGlobalPlugin("rexButton");
             this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
@@ -344,10 +365,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const baseHeight: number = this.mConfig.baseHeight;
         if (!this.mGame.device.os.desktop) {
             if (width < height) {
-                this.mConfig.ui_scale = width / baseHeight * 2;
+                this.mConfig.ui_scale = width / baseHeight;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
             } else if (width > height) {
-                this.mConfig.ui_scale = width / baseWidth * 2;
+                this.mConfig.ui_scale = width / baseWidth;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
             }
         }
@@ -370,6 +391,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private enterVirtualWorld() {
+        if (!this.mGame) {
+            this.reconnect();
+            return;
+        }
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
             const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
@@ -403,9 +428,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         content.gameId = this.mConfig.game_id;
         // const accountObj = JSON.parse();
-        content.userToken = this.mAccount.accountData.token; // auth_token;
-        content.expire = this.mAccount.accountData.expire + "";
-        content.fingerprint = this.mAccount.accountData.fingerprint;
+        content.userToken = this.mConfig.auth_token = this.mAccount.accountData.token; // auth_token;
+        content.expire = this.mConfig.token_expire = this.mAccount.accountData.expire + "";
+        content.fingerprint = this.mConfig.token_fingerprint = this.mAccount.accountData.fingerprint;
         this.mConnection.send(pkt);
     }
 
@@ -491,6 +516,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
+        // if (this.mCharacterManager) this.mCharacterManager.register();
         return this.mGame;
     }
 

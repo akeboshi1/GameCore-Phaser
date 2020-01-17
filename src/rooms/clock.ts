@@ -133,7 +133,7 @@ export class Clock extends PacketHandler {
             Logger.getInstance().debug("clock同步完成");
             this.mListener.onClockReady();
         }
-        Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
+        // Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
 
     }
 }

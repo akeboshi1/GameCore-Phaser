@@ -128,7 +128,10 @@ export class TopBtnGroup extends Panel {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mBtnList = [];
         this.mBtnX = 0;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Turn_Btn_Top, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1 });
+        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: UIMediatorType.Turn_Btn_Top, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
         this.mTurnBtn.x = this.mBtnX;
         this.mTurnBtn.setPos(this.mBtnX, 0);
         wid += this.mTurnBtn.width + this.mBtnPad;
@@ -136,14 +139,20 @@ export class TopBtnGroup extends Panel {
         this.mBtnX += -this.mTurnBtn.width - this.mBtnPad;
         hei += this.mTurnBtn.height / 2 + 20;
         if (!this.mWorld.game.device.os.desktop) {
-            this.mReturnBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.App_Back, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1 });
+            this.mReturnBtn = new IconBtn(this.mScene, this.mWorld, {
+                key: UIMediatorType.App_Back, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
+                iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+            });
             this.mReturnBtn.x = this.mBtnX;
             this.mReturnBtn.setPos(this.mBtnX, 0);
             this.mBtnList.push(this.mReturnBtn);
             wid += this.mReturnBtn.width + this.mBtnPad;
             this.add(this.mReturnBtn);
             this.mBtnX += -this.mReturnBtn.width - this.mBtnPad;
-            this.mDebugBtn = new IconBtn(this.mScene, this.mWorld, { key: DebugLoggerMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_blue_normal.png", "btnGroup_blue_light.png", "btnGroup_blue_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1 });
+            this.mDebugBtn = new IconBtn(this.mScene, this.mWorld, {
+                key: DebugLoggerMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_blue_normal.png", "btnGroup_blue_light.png", "btnGroup_blue_select.png"],
+                iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+            });
             this.mDebugBtn.x = this.mBtnX;
             this.mDebugBtn.setPos(this.mBtnX, 0);
             this.mBtnList.push(this.mDebugBtn);

@@ -1,5 +1,4 @@
 import { IRoomService } from "../rooms/room";
-import { op_def } from "pixelpai_proto";
 export interface InputManager {
     enable: boolean;
     addListener(l: InputListener);

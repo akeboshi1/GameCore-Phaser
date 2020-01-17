@@ -24,7 +24,8 @@ export class TopMediator extends BaseFaceMediator {
             case RankMediator.NAME:
                 if (addBoo) {
                     topBtnGroup.addBtn({
-                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, callBack: () => {
+                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"],
+                        iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json", callBack: () => {
                             const med = this.world.uiManager.getMediator(medName);
                             if (med) {
                                 // 该判断条件用于某些常驻界面ui在移动端需要手动打开，客户端将此逻辑修改为通过后端发送的showui数据将入口按钮变成是否常驻
@@ -44,7 +45,8 @@ export class TopMediator extends BaseFaceMediator {
             case "EnterDecorate":
                 if (addBoo) {
                     topBtnGroup.addBtn({
-                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, callBack: () => {
+                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"],
+                        iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json", callBack: () => {
                             this.onEnterDecorate();
                         }
                     });
@@ -55,7 +57,8 @@ export class TopMediator extends BaseFaceMediator {
             case "SaveDecorate":
                 if (addBoo) {
                     topBtnGroup.addBtn({
-                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"], iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, callBack: () => {
+                        key: medName, bgResKey: "baseView", bgTextures: ["btnGroup_red_normal.png", "btnGroup_red_light.png", "btnGroup_red_select.png"],
+                        iconResKey: "baseView", iconTexture: "btnGroup_rank_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json", callBack: () => {
                             this.onEnterDecorate();
                         }
                     });

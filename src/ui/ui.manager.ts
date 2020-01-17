@@ -159,7 +159,10 @@ export class UiManager extends PacketHandler {
         const topMenu = new TopMenuMediator(this.mScene, this.worldService);
         this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
         this.mMedMap.set(TopMenuMediator.name, topMenu);
-        topMenu.addItem({ key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1 });
+        topMenu.addItem({
+            key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
         this.showAll();
     }
 
@@ -276,7 +279,10 @@ export class UiManager extends PacketHandler {
             topMenu = new TopMenuMediator(this.mScene, this.worldService);
             this.mMedMap.set(TopMenuMediator.name, topMenu);
         }
-        topMenu.addItem({ key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1 });
+        topMenu.addItem({
+            key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
     }
 
     private showMed(type: string, ...param: any[]) {
@@ -291,7 +297,7 @@ export class UiManager extends PacketHandler {
             const ns: any = require(`./${type}/${className}`);
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
             if (!mediator) {
-                Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }
             this.mMedMap.set(type + "Mediator", mediator);
@@ -389,7 +395,7 @@ export class UiManager extends PacketHandler {
         const name: string = `${type}Mediator`;
         const mediator: IMediator = this.mMedMap.get(name);
         if (!mediator) {
-            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
         if (param) mediator.setParam(param);
@@ -403,7 +409,7 @@ export class UiManager extends PacketHandler {
         const medName: string = `${type}Mediator`;
         const mediator: IMediator = this.mMedMap.get(medName);
         if (!mediator) {
-            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
         // if (!this.worldService.game.device.os.desktop && medName === "RankMediator") {

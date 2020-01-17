@@ -113,13 +113,19 @@ export class BottomBtnGroup extends Panel {
         this.add(this.mChatContainer);
         this.mWid += this.mChatContainer.width;
         this.mHei += this.mChatContainer.height;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1 });
+        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: UIMediatorType.Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
+            iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
         this.mTurnBtn.x = (this.mWid >> 1) + 30;
         this.mTurnBtn.y = this.mHei - this.mTurnBtn.height >> 1;
         this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
         this.add(this.mTurnBtn);
 
-        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, { key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1 });
+        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
         this.mBagBtn.x = this.mTurnBtn.x;
         this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
         this.mBagBtn.setPos(this.mBagBtn.x, this.mBagBtn.y);

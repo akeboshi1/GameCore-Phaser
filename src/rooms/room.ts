@@ -120,7 +120,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
   public enter(data: op_client.IScene): void {
     const size: Size = this.mWorld.getSize();
     if (!data) {
-      Logger.getInstance().error("wrong room");
+      // Logger.getInstance().error("wrong room");
       return;
     }
     this.mID = data.id;
@@ -251,7 +251,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
   public transformTo90(p: Pos) {
     if (!this.mSize) {
-      Logger.getInstance().error("position object is undefined");
+      // Logger.getInstance().error("position object is undefined");
       return;
     }
     return Position45.transformTo90(p, this.mSize);
@@ -259,7 +259,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
   public transformTo45(p: Pos) {
     if (!this.mSize) {
-      Logger.getInstance().error("position object is undefined");
+      // Logger.getInstance().error("position object is undefined");
       return;
     }
     return Position45.transformTo45(p, this.mSize);

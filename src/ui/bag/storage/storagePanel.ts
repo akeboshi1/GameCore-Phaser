@@ -97,7 +97,10 @@ export class StoragePanel extends Panel {
             this.mBagItemSlotList.push(itemSlot);
         }
 
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
+            iconResKey: "", iconTexture: "", scale: 1, pngUrl: "ui/common/common_clsBtn.png", jsonUrl: "ui/common/common_clsBtn.json"
+        });
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;

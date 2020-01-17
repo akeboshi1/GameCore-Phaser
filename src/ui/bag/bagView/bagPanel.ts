@@ -212,7 +212,10 @@ export class BagPanel extends Panel {
         this.mPreBtn.on("pointerup", this.preHandler, this);
         this.mWidth = this.mBg.width;
         this.mHeight = this.mBg.height;
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
+            iconResKey: "", iconTexture: "", scale: 1, pngUrl: this.mResPng, jsonUrl: this.mResJson
+        });
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
@@ -344,7 +347,7 @@ export class BagPanel extends Panel {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorld.inputManager.enable = false;
+        // this.mWorld.inputManager.enable = false;
         if (!this.mInputText) return;
         this.mInputText.on("textchange", this.checkChinese, this);
         this.mInputText.setText("");
@@ -354,7 +357,7 @@ export class BagPanel extends Panel {
         if (!this.mWorld || !this.mWorld.inputManager || !this.mInputText) {
             return;
         }
-        this.mWorld.inputManager.enable = false;
+        // this.mWorld.inputManager.enable = false;
         this.mInputText.on("textchange", this.checkChinese, this);
         this.mInputText.setText(this.mBaseStr);
     }

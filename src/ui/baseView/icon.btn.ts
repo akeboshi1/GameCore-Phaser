@@ -1,5 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Pos } from "../../utils/pos";
+import { Url } from "../../utils/resUtil";
 export interface IBtnData {
     readonly name?: string;
     key: string;
@@ -8,6 +9,8 @@ export interface IBtnData {
     iconResKey: string;
     iconTexture: string;
     scale: number;
+    pngUrl: string;
+    jsonUrl: string;
     callBack?: Function;
 }
 /**
@@ -33,21 +36,14 @@ export class IconBtn extends Phaser.GameObjects.Container {
         this.mBtnBg = scene.make.image(undefined, false);
         this.mBgResKey = data.bgResKey;
         this.mBgTexture = data.bgTextures;
-        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[0]);
-        this.mBtnBg.scaleX = this.mBtnBg.scaleY = data.scale;
         this.mData = data;
-        this.addAt(this.mBtnBg, 0);
-        if (data.iconResKey && data.iconTexture && data.iconTexture.length > 0) {
-            this.mBtnIcon = scene.make.image(undefined, false);
-            this.mBtnIcon.setTexture(data.iconResKey, data.iconTexture);
-            this.add(this.mBtnIcon);
+        if (!this.mScene.textures.exists(this.mBgResKey)) {
+            this.mScene.load.atlas(data.key, Url.getRes(data.pngUrl), Url.getRes(data.jsonUrl));
+            this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
+            this.mScene.load.start();
+            return;
         }
-        this.setSize(this.mBtnBg.width, this.mBtnBg.height);
-        this.setInteractive();
-        this.on("pointerup", this.upHandler, this);
-        this.on("pointerdown", this.downHandler, this);
-        this.on("pointerover", this.overHandler, this);
-        this.on("pointerout", this.outHandler, this);
+        this.loadComplete();
     }
 
     // public setMedName(name: string) {
@@ -98,6 +94,23 @@ export class IconBtn extends Phaser.GameObjects.Container {
         this.mBtnData = null;
         this.mScene = null;
         super.destroy();
+    }
+
+    protected loadComplete() {
+        this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[0]);
+        this.mBtnBg.scaleX = this.mBtnBg.scaleY = this.mData.scale;
+        this.addAt(this.mBtnBg, 0);
+        if (this.mData.iconResKey && this.mData.iconTexture && this.mData.iconTexture.length > 0) {
+            this.mBtnIcon = this.mScene.make.image(undefined, false);
+            this.mBtnIcon.setTexture(this.mData.iconResKey, this.mData.iconTexture);
+            this.add(this.mBtnIcon);
+        }
+        this.setSize(this.mBtnBg.width, this.mBtnBg.height);
+        this.setInteractive();
+        this.on("pointerup", this.upHandler, this);
+        this.on("pointerdown", this.downHandler, this);
+        this.on("pointerover", this.overHandler, this);
+        this.on("pointerout", this.outHandler, this);
     }
 
     private overHandler(pointer) {

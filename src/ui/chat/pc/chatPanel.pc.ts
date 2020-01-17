@@ -238,7 +238,7 @@ export class ChatPanelPC extends BaseChatPanel {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorld.inputManager.enable = false;
+        // this.mWorld.inputManager.enable = false;
         if (this.mSendKey) {
             this.mSendKey.on("down", this.onDownEnter, this);
         }
@@ -248,7 +248,7 @@ export class ChatPanelPC extends BaseChatPanel {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorld.inputManager.enable = true;
+        // this.mWorld.inputManager.enable = true;
         if (this.mSendKey) {
             this.mSendKey.off("down", this.onDownEnter, this);
         }

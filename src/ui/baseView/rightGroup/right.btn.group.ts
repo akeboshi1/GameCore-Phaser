@@ -159,7 +159,10 @@ export class RightBtnGroup extends Panel {
         const size: Size = this.mWorld.getSize();
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mBtnY = 0;
-        this.handBtn = new IconBtn(this.mScene, this.mWorld, { key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_bg.png"], iconResKey: this.mResKey, iconTexture: "btnGroup_hand.png", scale: 1 });
+        this.handBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_bg.png"],
+            iconResKey: this.mResKey, iconTexture: "btnGroup_hand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
         this.handBtn.x = 0;
         this.handBtn.y = this.mBtnY + this.handBtn.height / 2;
         this.handBtn.setClick(() => {

@@ -96,9 +96,9 @@ export class Actor extends Player implements InputListener {
         super.stopMove();
         if (this.mMoveData && this.mMoveData.destPos) {
             if (this.mMoveData.destPos) {
-                Logger.getInstance().debug("moveData:" + this.mMoveData.destPos.x + "," + this.mMoveData.destPos.y);
+                // Logger.getInstance().debug("moveData:" + this.mMoveData.destPos.x + "," + this.mMoveData.destPos.y);
             } else {
-                Logger.getInstance().error("no destPos");
+                // Logger.getInstance().error("no destPos");
             }
             delete this.mMoveData.destPos;
             if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
@@ -120,7 +120,7 @@ export class Actor extends Player implements InputListener {
             },
             direction: this.dir
         };
-        Logger.getInstance().debug("nowPox:" + pos.x + "," + pos.y);
+        // Logger.getInstance().debug("nowPox:" + pos.x + "," + pos.y);
         this.mElementManager.connection.send(pkt);
     }
 

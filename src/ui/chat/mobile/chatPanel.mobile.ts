@@ -332,14 +332,14 @@ export class ChatPanelMobile extends BaseChatPanel {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorld.inputManager.enable = false;
+        // this.mWorld.inputManager.enable = false;
     }
 
     private onBlurHandler() {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        this.mWorld.inputManager.enable = true;
+        // this.mWorld.inputManager.enable = true;
     }
 
 }

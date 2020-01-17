@@ -1,5 +1,4 @@
 import { Pos } from "./pos";
-import {Logger} from "./log";
 
 export interface IPosition45Obj {
   readonly cols: number;

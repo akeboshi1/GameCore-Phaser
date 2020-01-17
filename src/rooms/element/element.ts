@@ -92,7 +92,7 @@ export class Element extends BlockObject implements IElement {
 
     get roomService(): IRoomService {
         if (!this.mElementManager) {
-            Logger.getInstance().error("element manager is undefined");
+            // Logger.getInstance().error("element manager is undefined");
             return;
         }
         return this.mElementManager.roomService;
@@ -204,10 +204,10 @@ export class Element extends BlockObject implements IElement {
 
     public move(moveData: op_client.IMoveData) {
         if (!this.mElementManager) {
-            return Logger.getInstance().error(`Element::move - Empty element-manager.`);
+            return; // Logger.getInstance().error(`Element::move - Empty element-manager.`);
         }
         if (!this.mDisplay) {
-            return Logger.getInstance().error("display is undefined");
+            return; // Logger.getInstance().error("display is undefined");
         }
         this.mMoveData.arrivalTime = moveData.timestemp;
         this.mMoveData.destPos = new Pos(
@@ -215,7 +215,7 @@ export class Element extends BlockObject implements IElement {
             , Math.floor(moveData.destinationPoint3f.y)
         );
         // Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
-        Logger.getInstance().debug("walk has movedata");
+        // Logger.getInstance().debug("walk has movedata");
         this._doMove();
     }
 
@@ -225,7 +225,7 @@ export class Element extends BlockObject implements IElement {
 
     public stopMove() {
         if (!this.mDisplay) {
-            Logger.getInstance().error(`can't stopMove, display does not exist`);
+            // Logger.getInstance().error(`can't stopMove, display does not exist`);
             return;
         }
         this.changeState(PlayerState.IDLE);
@@ -356,7 +356,7 @@ export class Element extends BlockObject implements IElement {
 
     protected _doMove() {
         if (!this.mMoveData.destPos) {
-            Logger.getInstance().log("stopDoMove");
+            // Logger.getInstance().log("stopDoMove");
             return;
         }
         const tw: Tweens.Tween = this.mMoveData.tweenAnim;
@@ -392,7 +392,7 @@ export class Element extends BlockObject implements IElement {
 
     protected createDisplay(): ElementDisplay {
         if (!this.mDisplayInfo) {
-            Logger.getInstance().error("displayinfo does not exist, Create display failed");
+            // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
         if (this.mDisplay) {
@@ -427,7 +427,7 @@ export class Element extends BlockObject implements IElement {
         this.createDisplay();
         const room = this.roomService;
         if (!room) {
-            Logger.getInstance().error("roomService is undefined");
+            // Logger.getInstance().error("roomService is undefined");
             return;
         }
         room.addToSurface(this.mDisplay);

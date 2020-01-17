@@ -80,7 +80,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected onAdd(packet: PBpacket) {
         this.mPacketFrameCount++;
         if (!this.mGameConfig) {
-            Logger.getInstance().error("gameconfig is undefined");
+            // Logger.getInstance().error("gameconfig is undefined");
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
@@ -139,7 +139,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             this.remove(id);
         }
-        Logger.getInstance().log("remove terrain length: ", ids.length);
+        // Logger.getInstance().log("remove terrain length: ", ids.length);
     }
 
     protected onSyncSprite(packet: PBpacket) {
@@ -196,7 +196,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.connection;
         }
-        Logger.getInstance().error("room manager is undefined");
+        // Logger.getInstance().error("room manager is undefined");
     }
 
     get roomService(): IRoomService {

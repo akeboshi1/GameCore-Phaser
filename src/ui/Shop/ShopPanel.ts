@@ -143,7 +143,10 @@ export class ShopPanel extends Panel {
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, { key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"], iconResKey: "", iconTexture: "", scale: 1 });
+        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
+            key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
+            iconResKey: "", iconTexture: "", scale: 1, pngUrl: "ui/shop/shopView.png", jsonUrl: "ui/shop/shopView.json"
+        });
         this.mClsBtn.x = (this.width >> 1) - 65;
         this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
@@ -165,7 +168,7 @@ export class ShopPanel extends Panel {
 
     private refreshDataList() {
         if (!this.mShopData) {
-            Logger.getInstance().error("this.mDataList is undefiend");
+            // Logger.getInstance().error("this.mDataList is undefiend");
             return;
         }
         const len = ShopPanel.ShopSlotCount;
