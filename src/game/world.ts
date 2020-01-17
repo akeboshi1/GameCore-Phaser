@@ -200,26 +200,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        this.clearGame();
-        if (this.mConnection) {
-            this.mConnection.closeConnect();
-        }
-        if (this.mClock) {
-            this.mClock.destroy();
-            this.mClock = null;
-        }
-        this.mConfig.game_id = content.gameId;
-        this.mConfig.virtual_world_id = content.virtualWorldId;
-        this.mConnection.addPacketListener(this);
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
-        if (gateway) { // connect to game server.
-            this.mConnection.startConnect(gateway);
-        }
-        this.mClock = new Clock(this.mConnection, this);
-        this._newGame();
-        const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-        if (loginScene) loginScene.remove();
-        this.mGame.scene.start(LoadingScene.name, { world: this });
+        this._createAnotherGame(content.gameId, content.virtualWorldId);
     }
 
     public changeScene() {
@@ -235,21 +216,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public reconnect() {
         const gameID: string = this.mConfig.game_id;
         const worldID: string = this.mConfig.virtual_world_id;
-        this.clearGame();
-        this.mConfig.game_id = gameID;
-        this.mConfig.virtual_world_id = worldID;
-        if (this.mConnection) {
-            this.mConnection.closeConnect();
-        }
-        this.mConnection.addPacketListener(this);
-        this._newGame();
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
-        if (gateway) { // connect to game server.
-            this.mConnection.startConnect(gateway);
-        }
-        const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-        if (loginScene) loginScene.remove();
-        this.mGame.scene.start(LoadingScene.name, { world: this });
+        this._createAnotherGame(gameID, worldID);
     }
 
     public startHeartBeat() {
@@ -332,6 +299,30 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mInputManager.enable = true;
         }
     }
+
+    private _createAnotherGame(gameId, worldId) {
+        this.clearGame();
+        if (this.mConnection) {
+            this.mConnection.closeConnect();
+        }
+        if (this.mClock) {
+            this.mClock.destroy();
+            this.mClock = null;
+        }
+        this.mConfig.game_id = gameId;
+        this.mConfig.virtual_world_id = worldId;
+        this.mConnection.addPacketListener(this);
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        if (gateway) { // connect to game server.
+            this.mConnection.startConnect(gateway);
+        }
+        this.mClock = new Clock(this.mConnection, this);
+        this._newGame();
+        const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+        if (loginScene) loginScene.remove();
+        this.mGame.scene.start(LoadingScene.name, { world: this });
+    }
+
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);

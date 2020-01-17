@@ -1,7 +1,7 @@
 import { Logger } from "../utils/log";
 
 const heartWorker: Worker = self as any;
-const delayTime: number = 10000;
+const delayTime: number = 3000;
 let reConnectCount: number = 0;
 let startDelay: any;
 function startBeat() {
