@@ -39,6 +39,8 @@ import { GamePauseScene } from "../scenes/gamepause";
 import { EditScene } from "../scenes/edit";
 import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
+import { initLocales } from "../i18n";
+import * as  path from "path";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -66,6 +68,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             throw new Error(`Config.game_id is required.`);
         }
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
+
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
@@ -407,7 +410,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    private loginEnterWorld() {
+    private async loginEnterWorld() {
+        await initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
@@ -547,9 +551,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private loadGameConfig(paths: string[]): Promise<Lite> {
         const promises = [];
         let configPath = "";
-        for (const path of paths) {
-            if (PI_EXTENSION_REGEX.test(path)) {
-                configPath = ResUtils.getGameConfig(path);
+        for (const remotePath of paths) {
+            if (PI_EXTENSION_REGEX.test(remotePath)) {
+                configPath = ResUtils.getGameConfig(remotePath);
                 Logger.getInstance().log(`start download config: ${configPath}`);
                 promises.push(load(configPath, "arraybuffer"));
             }
