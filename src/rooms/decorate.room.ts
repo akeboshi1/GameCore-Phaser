@@ -360,16 +360,26 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        if (!this.mSelectedElement) {
-            return;
-        }
-        if (this.mSelectedElement.selecting === false) {
+        if (!this.mSelectedElement || this.mSelectedElement.selecting === false) {
+            this.moveCamera(pointer);
             return;
         }
         if (pointer.downX === pointer.x && pointer.downY === pointer.y) {
             return;
         }
         // if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+        this.moveElement(pointer);
+    }
+
+    private onGameOutHandler() {
+        this.removePointerMoveHandler();
+    }
+
+    private moveCamera(pointer: Phaser.Input.Pointer) {
+        this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+    }
+
+    private moveElement(pointer: Phaser.Input.Pointer) {
         const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
         this.mSelectedElement.setDisplayPos(pos.x, pos.y);
         // }
@@ -384,10 +394,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         } else if (pointer.y > this.world.getSize().height - 300) {
             if (pointer.y > pointer.prevPosition.y) this.mCameraService.camera.scrollY += pointer.y - pointer.prevPosition.y;
         }
-    }
-
-    private onGameOutHandler() {
-        this.removePointerMoveHandler();
     }
 
     private removeElement(id: number, nodeType: op_def.NodeType) {
