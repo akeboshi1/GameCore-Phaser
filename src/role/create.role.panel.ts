@@ -7,7 +7,7 @@ import { NinePatch } from "../ui/components/nine.patch";
 import { Logger } from "../utils/log";
 import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
-import { DragonbonesModel } from "../rooms/display/dragonbones.model";
+import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbones.model";
 // import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
 export class CreateRolePanel extends Panel {
@@ -22,7 +22,9 @@ export class CreateRolePanel extends Panel {
   private mError: Phaser.GameObjects.Text;
   private mErrorBg: Phaser.GameObjects.Image;
   private dragonbones: DragonbonesDisplay;
+  private dragonbonesModel: IDragonbonesModel;
   private avatars: op_gameconfig.IAvatar[];
+  private mCurPageNum: number;
 
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -32,13 +34,19 @@ export class CreateRolePanel extends Panel {
     // container.scale = 1 / this.mWorld.uiScale;
   }
 
+  show(param: any) {
+    if (param) {
+      this.avatars = param.avatars;
+    }
+    super.show(param);
+  }
+
   preload() {
     this.scene.load.atlas(
       this.key,
       Url.getRes("ui/create_role/create_role.png"),
       Url.getRes("ui/create_role/create_role.json")
     );
-    this.scene.load.image("role", Url.getRes("ui/create_role/role01.png"));
     super.preload();
   }
 
@@ -47,8 +55,8 @@ export class CreateRolePanel extends Panel {
     this.setSize(size.width, size.height);
     // this.scale = 1 / this.mWorld.uiScale;
 
-    this.mBackground.x = this.width >> 1;
-    this.mBackground.y = 60 + (this.mBackground.height >> 1);
+    // this.mBackground.x = this.width >> 1;
+    // this.mBackground.y = 60 + (this.mBackground.height >> 1);
 
     this.mFoot.x = this.width >> 1;
     this.mFoot.y = this.height - (this.mFoot.height >> 1);
@@ -58,7 +66,9 @@ export class CreateRolePanel extends Panel {
     const size = this.mWorld.getSize();
     this.mBackground = this.scene.make.image({
       key: this.key,
-      frame: "bg.png"
+      frame: "bg.png",
+      x: size.width >> 1,
+      y: 700
     });
     this.add(this.mBackground);
 
@@ -95,13 +105,20 @@ export class CreateRolePanel extends Panel {
     });
     this.add(this.inputText);
 
-    this.mSubmit = new NinePatchButton(this.scene, size.width >> 1, 1274, 584, 164, this.key, "yellow_button", "提交", {
-      left: 36,
-      top: 34,
-      right: 21,
-      bottom: 24
+    let text = "提 交";
+    if (this.mData && this.mData.button) {
+      text = this.mData.button.text;
+    }
+    this.mSubmit = new NinePatchButton(this.scene, size.width >> 1, 1274, 584, 164, this.key, "submit_button", text, {
+      left: 39,
+      top: 36,
+      right: 32,
+      bottom: 26
   });
-    this.mSubmit.setTextStyle({fontSize: "48px"});
+    this.mSubmit.setTextStyle({
+      color: "#976400",
+      font: "bold 48px YaHei"
+    });
     this.mSubmit.on("pointerup", this.onSubmitHandler, this);
     this.add(this.mSubmit);
 
@@ -109,30 +126,32 @@ export class CreateRolePanel extends Panel {
       x: 150,
       y: 615,
       key: this.key,
-      frame: "arrow.png"
-    });
+      frame: "arrow_left.png"
+    }).setInteractive();
+    this.mPrePageBtn.on("pointerup", this.onPrePageHandler, this);
     this.mNextPageBtn = this.scene.make.image({
       x: size.width - 150,
       y: 615,
       key: this.key,
       frame: "arrow.png"
-    }).setFlipX(true);
+    }).setFlipX(true).setInteractive();
+    this.mNextPageBtn.on("pointerup", this.onNextPageHandler, this);
 
     this.mRandomBtn = this.scene.make.image({
       x: 790,
       y: 1000,
       key: this.key,
       frame: "random.png"
-    }).setScale(1.6).setInteractive();
+    }).setScale(1.4).setInteractive();
     this.add([this.mPrePageBtn, this.mNextPageBtn, this.mRandomBtn]);
     this.mRandomBtn.on("pointerup", this.onRandomNameHandler, this);
 
-    const role = this.scene.make.image({
-      x: size.width >> 1,
-      y: 560,
-      key: "role",
-    }, false);
-    this.add(role);
+    // const role = this.scene.make.image({
+    //   x: size.width >> 1,
+    //   y: 560,
+    //   key: "role",
+    // }, false);
+    // this.add(role);
 
     this.mErrorBg = this.scene.make.image({
       key: this.key,
@@ -142,13 +161,13 @@ export class CreateRolePanel extends Panel {
     }).setVisible(false);
 
     this.mError = this.scene.make.text({
-      x: 416,
+      x: 420,
       y: 180,
       style: {
         color: "#26265d",
         font: "bold 34px YaHei",
         wordWrap: {
-          width: 440,
+          width: 420,
           useAdvancedWrap: true
         },
       },
@@ -156,15 +175,16 @@ export class CreateRolePanel extends Panel {
     this.add([this.mErrorBg, this.mError]);
 
     this.dragonbones = new DragonbonesDisplay(this.scene, undefined);
-    this.dragonbones.load(new DragonbonesModel({
-      id: 0,
-      avatar: this.avatars[0]
-    }));
-    this.dragonbones.scale = this.mWorld.uiScale;
-    this.dragonbones.x = 100;
-    this.dragonbones.y = 100;
-    this.dragonbones.play("idle");
-    // this.add(this.dragonbones);
+    this.dragonbones.scale = 5;
+    this.dragonbones.x = size.width >> 1;
+    this.dragonbones.y = 740;
+    // this.dragonbones.play("idle");
+    this.dragonbones.once("initialized", () => {
+      this.dragonbones.play("idle");
+    });
+    this.add(this.dragonbones);
+
+    this.setPageNum(0);
 
     super.init();
     this.resize(0, 0);
@@ -202,5 +222,26 @@ export class CreateRolePanel extends Panel {
       this.mError.setVisible(false);
       this.mErrorBg.setVisible(false);
     }
+  }
+
+  private onPrePageHandler() {
+    this.setPageNum(this.mCurPageNum - 1);
+  }
+
+  private onNextPageHandler() {
+    this.setPageNum(this.mCurPageNum + 1);
+  }
+
+  private setPageNum(val: number) {
+    this.mCurPageNum = val;
+    if (this.mCurPageNum < 0) {
+      this.mCurPageNum = 0;
+    } else if (this.mCurPageNum >= this.avatars.length) {
+      this.mCurPageNum = this.avatars.length - 1;
+    }
+    this.dragonbones.load(new DragonbonesModel({
+      id: 0,
+      avatar: this.avatars[this.mCurPageNum]
+    }));
   }
 }

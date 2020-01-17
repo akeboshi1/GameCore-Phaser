@@ -16,6 +16,7 @@ export class CreateRole extends PacketHandler {
   private createPanel: CreateRolePanel;
   private world: WorldService;
   private mAvatars: op_gameconfig.IAvatar[];
+  private mParam: any;
   constructor($roleManager: RoleManager) {
     super();
     this.roleManager = $roleManager;
@@ -24,6 +25,7 @@ export class CreateRole extends PacketHandler {
 
   enter(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI) {
     this.mAvatars = content.avatars;
+    this.mParam = content;
     if (!this.world.game.scene.getScene(CreateRoleScene.name))
       this.world.game.scene.add(CreateRoleScene.name, CreateRoleScene);
     this.world.game.scene.start(CreateRoleScene.name, {
@@ -34,8 +36,7 @@ export class CreateRole extends PacketHandler {
 
   start(scene: Phaser.Scene) {
     this.createPanel = new CreateRolePanel(scene, this.world);
-    this.createPanel.show();
-    this.createPanel.setAvatars(this.mAvatars);
+    this.createPanel.show(this.mParam);
     this.createPanel.on("randomName", this.onRandomNameHandler, this);
     this.createPanel.on("submit", this.onSubmitHandler, this);
 
