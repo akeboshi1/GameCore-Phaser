@@ -13,8 +13,10 @@ import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbone
 export class CreateRolePanel extends Panel {
   private readonly key = "createCharacter";
   private mFoot: Phaser.GameObjects.Image;
+  private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mBackground: Phaser.GameObjects.Image;
   private mSubmit: NinePatchButton;
+  private mInputTextBg: NinePatch;
   private inputText: InputText;
   private mPrePageBtn: Phaser.GameObjects.Image;
   private mNextPageBtn: Phaser.GameObjects.Image;
@@ -53,13 +55,40 @@ export class CreateRolePanel extends Panel {
   resize(wid: number, hei: number) {
     const size = this.mWorld.getSize();
     this.setSize(size.width, size.height);
+    if (!this.mBackground) {
+      return;
+    }
     // this.scale = 1 / this.mWorld.uiScale;
 
     // this.mBackground.x = this.width >> 1;
     // this.mBackground.y = 60 + (this.mBackground.height >> 1);
 
-    this.mFoot.x = this.width >> 1;
-    this.mFoot.y = this.height - (this.mFoot.height >> 1);
+    const scale = this.scene.cameras.main.height / 1920;
+    const width = this.scene.cameras.main.width / scale;
+    const height = this.scene.cameras.main.height / scale;
+    const centerX = this.scene.cameras.main.centerX / scale;
+    this.setScale(scale);
+
+    // this.mBackground.setScale(scale);
+    this.mBackground.x = centerX;
+    // this.mBackground.y = 700;
+
+    this.mFoot.x = centerX;
+    this.mFoot.y = height - (this.mFoot.height >> 1);
+
+    this.mBackgroundColor.clear();
+    this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+    this.mBackgroundColor.fillRect(0, 0, width, height);
+
+    this.mSubmit.x = centerX;
+
+    this.inputText.x = centerX;
+    this.mInputTextBg.x = centerX;
+    this.dragonbones.x  = centerX;
+
+    this.mNextPageBtn.x = width - 150;
+
+    this.mRandomBtn.x = (this.mInputTextBg.width >> 1) + centerX - this.mRandomBtn.width;
   }
 
   init() {
@@ -81,18 +110,18 @@ export class CreateRolePanel extends Panel {
     );
     this.add(this.mFoot);
 
-    const graphics = this.scene.make.graphics(undefined, false);
-    graphics.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
-    graphics.fillRect(0, 0, size.width, size.height);
-    this.addAt(graphics, 0);
+    this.mBackgroundColor = this.scene.make.graphics(undefined, false);
+    this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+    this.mBackgroundColor.fillRect(0, 0, size.width, size.height);
+    this.addAt(this.mBackgroundColor, 0);
 
-    const bg = new NinePatch(this.scene, size.width >> 1, 1000, 730, 120, this.key, "input_bg.png", {
+    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 1000, 730, 120, this.key, "input_bg.png", {
       left: 49,
       top: 49,
       right: 49,
       bottom: 48
     });
-    this.add(bg);
+    this.add(this.mInputTextBg);
 
     this.inputText = new InputText(this.scene, size.width >> 1, 1000, 520, 80, {
       type: "input",
@@ -175,7 +204,7 @@ export class CreateRolePanel extends Panel {
     this.add([this.mErrorBg, this.mError]);
 
     this.dragonbones = new DragonbonesDisplay(this.scene, undefined);
-    this.dragonbones.scale = 5;
+    this.dragonbones.scale = 6;
     this.dragonbones.x = size.width >> 1;
     this.dragonbones.y = 740;
     // this.dragonbones.play("idle");
@@ -214,10 +243,12 @@ export class CreateRolePanel extends Panel {
 
   private onRandomNameHandler() {
     this.emit("randomName");
+    this.inputText.setBlur();
   }
 
   private onSubmitHandler() {
     this.emit("submit", this.inputText.text);
+    this.inputText.setBlur();
     if (this.mError) {
       this.mError.setVisible(false);
       this.mErrorBg.setVisible(false);
@@ -226,18 +257,20 @@ export class CreateRolePanel extends Panel {
 
   private onPrePageHandler() {
     this.setPageNum(this.mCurPageNum - 1);
+    this.inputText.setBlur();
   }
 
   private onNextPageHandler() {
     this.setPageNum(this.mCurPageNum + 1);
+    this.inputText.setBlur();
   }
 
   private setPageNum(val: number) {
     this.mCurPageNum = val;
     if (this.mCurPageNum < 0) {
-      this.mCurPageNum = 0;
-    } else if (this.mCurPageNum >= this.avatars.length) {
       this.mCurPageNum = this.avatars.length - 1;
+    } else if (this.mCurPageNum >= this.avatars.length) {
+      this.mCurPageNum = 0;
     }
     this.dragonbones.load(new DragonbonesModel({
       id: 0,
