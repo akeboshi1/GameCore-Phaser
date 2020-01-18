@@ -15,6 +15,7 @@ export class LoginScene extends Phaser.Scene {
     private mWorld: WorldService;
     private mCurTabIndex: number = 0;
 
+    private rect: Phaser.GameObjects.Graphics;
     private mBg: Phaser.GameObjects.Image;
     private mEnterBtn: Phaser.GameObjects.Image;
     private mQuickBtn: Phaser.GameObjects.Image;
@@ -47,17 +48,17 @@ export class LoginScene extends Phaser.Scene {
 
     public create() {
         const loginRes: string = "login";
-        const width = this.scale.gameSize.width;
-        const height = this.scale.gameSize.height;
-        const rect = this.add.graphics();
-        rect.fillStyle(0);
-        rect.fillRect(0, 0, width, height);
+        const width = window.screen.width;
+        const height = window.screen.height;
+        this.rect = this.add.graphics();
+        this.rect.fillStyle(0);
+        this.rect.fillRect(0, 0, width, height);
 
         const accountData: string = localStorage.getItem("account");
         const logo: Phaser.GameObjects.Image = this.make.image(undefined, false);
         logo.setTexture(loginRes, "login_logo");
         this.mHei += logo.height;
-        this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100 * this.mWorld.uiScale);
+        this.mParentCon = this.add.container(width >> 1, (height >> 1) + 100);
 
         this.mBg = this.make.image(undefined, false);
         this.mHei += this.mBg.height + 10;
@@ -191,7 +192,7 @@ export class LoginScene extends Phaser.Scene {
         this.combobox.x = -158;
         this.combobox.y = -28;
 
-        logo.x = -25 * this.mWorld.uiScale;
+        logo.x = -25;
         logo.y = -logo.height / 2;
         this.changePanelState(accountData);
 
@@ -215,7 +216,6 @@ export class LoginScene extends Phaser.Scene {
         this.mParentCon.add(this.mtxt4);
         this.mParentCon.add(this.mtxt5);
         this.mParentCon.add(this.combobox);
-        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
 
         this.mTab0.setInteractive();
         this.mTab1.setInteractive();
@@ -235,7 +235,8 @@ export class LoginScene extends Phaser.Scene {
         this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
         this.mtxt4.on("pointerdown", this.changeAccount, this);
         this.scale.on("resize", this.checkSize, this);
-        this.checkSize(new Size(width, height));
+        this.scale.on("orientationchange", this.onOrientationChange, this);
+        this.checkSize();
     }
 
     public init(data: any) {
@@ -266,19 +267,37 @@ export class LoginScene extends Phaser.Scene {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
     }
 
-    private checkSize(size: Size) {
-        const width: number = size.width;
-        const height: number = size.height;
-        this.mParentCon.x = width >> 1 * this.mWorld.uiScale;
-        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+    private onOrientationChange() {
+        const width: number = window.screen.width;
+        const height: number = window.screen.height;
+        this.game.scale.resize(width, height);
+        this.game.canvas.style.width = window.screen.width + "";
+        this.game.canvas.style.height = window.screen.height + "";
+        this.checkSize();
+    }
+
+    private checkSize() {
+        const width: number = window.screen.width;
+        const height: number = window.screen.height;
+        this.mParentCon.x = width >> 1;
+        if (!this.game.device.os.desktop) {
+            let scale;
+            if (this.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+                scale = this.mParentCon.width / width;
+            } else {
+                scale = this.mParentCon.height / height;
+            }
+            this.mParentCon.setScale(scale);
+        }
+        // this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
         if (!this.mWorld.game.device.os.desktop) {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.mParentCon.y = ((height >> 1) + 100) * this.mWorld.uiScale;
+                this.mParentCon.y = (height >> 1) + 50;
             } else {
-                this.mParentCon.y = (height / 4) * this.mWorld.uiScale;
+                this.mParentCon.y = (height >> 1) + 50;
             }
         } else {
-            this.mParentCon.y = (height >> 1) + 100;
+            this.mParentCon.y = (height >> 1) + 50;
         }
     }
 
@@ -316,6 +335,8 @@ export class LoginScene extends Phaser.Scene {
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];
         this.mPassWordInputTxt.text = !accountObj ? "" : accountObj.password;
         this.mParentCon.setSize(this.mBg.width, this.mHei);
+        // const scale = this.mParentCon.width / this.cameras.main.width;
+        // this.mParentCon.setScale(scale);
     }
 
     private verificaHandler(show: boolean) {
