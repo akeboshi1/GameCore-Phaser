@@ -41,11 +41,6 @@ import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
 import * as  path from "path";
-
-const DEFAULT_WIDTH: number = 576;
-const DEFAULT_HEIGHT: number = 1024;
-const MAX_WIDTH: number = 864;
-const MAX_HEIGHT: number = 1536;
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -163,43 +158,24 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    public resize() {
-        // if (this.mGame) {
-        //     if (!this.mGame.device.os.desktop) {
-        //         if (width < height) {
-        //             this.mConfig.ui_scale = width / this.mConfig.baseHeight;
-        //             this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-        //             Logger.getInstance().debug("portrait:", width, height);
-        //         } else if (width > height) {
-        //             this.mConfig.ui_scale = width / this.mConfig.baseWidth;
-        //             this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-        //             Logger.getInstance().debug("landscape:", width, height);
-        //         }
-        //     }
-        //     this.mGame.scale.resize(width, height);
-        // }
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-
-        const width = DEFAULT_WIDTH;
-        const height = DEFAULT_HEIGHT;
-        const maxWidth = MAX_WIDTH;
-        const maxHeight = MAX_HEIGHT;
-        // let scaleMode = SCALE_MODE
-        const smooth = 1;
-
-        const scale = Math.min(w / width, h / height);
-        const newWidth = Math.min(w / scale, maxWidth);
-        const newHeight = Math.min(h / scale, maxHeight);
-
-        this.mGame.scale.resize(newWidth * smooth, newHeight * smooth);
-
-        this.mGame.canvas.style.width = newWidth * scale + "px";
-        this.mGame.canvas.style.height = newHeight * scale + "px";
-
-    // // center the game with css margin
-        this.mGame.canvas.style.marginTop = `${(h - newHeight * scale) / 2}px`;
-        this.mGame.canvas.style.marginLeft = `${(w - newWidth * scale) / 2}px`;
+    public resize(width: number, height: number) {
+        if (this.mGame) {
+            if (!this.mGame.device.os.desktop) {
+                if (width < height) {
+                    this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
+                } else if (width > height) {
+                    this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
+                }
+            }
+            this.mGame.scale.resize(width, height);
+            this.game.canvas.style.width = window.screen.width + "";
+            this.game.canvas.style.height = window.screen.height + "";
+            if (this.mGame.device.os.iOS) {
+                Logger.getInstance().log("物理像素:" + window.screen.width * this.mGame.device.os.pixelRatio + "|" + "wid:" + window.screen.width + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
+            } else if (this.mGame.device.os.android || this.mGame.device.os.windowsPhone) {
+                Logger.getInstance().log("独立像素:" + window.screen.width / this.mGame.device.os.pixelRatio + "|" + "wid:" + window.screen.width + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
+            }
+        }
 
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);
@@ -353,6 +329,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
+    private onFullScreenChange() {
+        this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
+    }
+
+    /**！！！
+     * 翻转后cavas必须重新设置且必须设置为设备的独立像素(当前设备用于逻辑处理的像素)，否则phaser里面的canvas的尺寸会被撑开，导致适配出问题
+     * @param orientation 翻转
+     */
+    private onOrientationChange(orientation: Phaser.Scale.Orientation) {
+        this.resize(window.screen.width, window.screen.height);
+    }
+
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
@@ -497,11 +485,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             dom: {
                 createContainer: true
             },
-            scale: {
-                mode: Phaser.Scale.NONE,
-                width: DEFAULT_WIDTH,
-                height: DEFAULT_HEIGHT
-            },
             plugins: {
                 global: [{
                     key: "rexButton",
@@ -561,7 +544,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mInputManager = new JoyStickManager(this, keyEvents);
         }
         this.mInputManager.enable = false;
-        this.resize();
+        this.resize(this.mConfig.width, this.mConfig.height);
         this.gameCreated();
     }
 
@@ -578,6 +561,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             Logger.getInstance().error("connection is undefined");
         }
+        this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
+        this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
+        this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
     private loadGameConfig(paths: string[]): Promise<Lite> {

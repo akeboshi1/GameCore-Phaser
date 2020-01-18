@@ -2,7 +2,6 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../net/connection.service";
 import { Algorithm } from "../utils/algorithm";
-import { Logger } from "../utils/log";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 
@@ -121,7 +120,7 @@ export class Clock extends PacketHandler {
         if (mistake > MAX_DELAY) {
             this.mTimestamp = remote_time;
             this.mAutoSync = true;
-            Logger.getInstance().debug("正在同步clock");
+            // Logger.getInstance().debug("正在同步clock");
             // if (this.mAutoSync) {
             this.sync(-1);
             return;
@@ -130,7 +129,7 @@ export class Clock extends PacketHandler {
         this.mAutoSync = false;
         if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) {
             this.mClockSync = true;
-            Logger.getInstance().debug("clock同步完成");
+            // Logger.getInstance().debug("clock同步完成");
             this.mListener.onClockReady();
         }
         // Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
