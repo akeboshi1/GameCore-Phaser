@@ -618,10 +618,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.connection.send(pkt);
             // 同步心跳
             this.mClock.sync(-1);
-            this.resumeScene();
         } else {
             Logger.getInstance().error("connection is undefined");
         }
+        this.resumeScene();
     }
 
     private onBlur() {
@@ -630,10 +630,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Blur;
             this.connection.send(pkt);
-            this.pauseScene();
         } else {
             Logger.getInstance().error("connection is undefined");
         }
+        this.pauseScene();
     }
 
     private resumeScene() {
@@ -643,6 +643,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoomMamager.onFocus();
         const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
         if (pauseScene) {
+            (pauseScene as GamePauseScene).sleep();
             this.mGame.scene.stop(GamePauseScene.name);
         }
     }
