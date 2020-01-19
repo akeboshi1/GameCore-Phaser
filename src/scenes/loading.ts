@@ -51,6 +51,7 @@ export class LoadingScene extends Phaser.Scene {
       repeat: -1
     });
     this.lo = this.add.sprite(0, 0, "loading");
+    this.lo.setScale(.8);
     this.scale.on("resize", this.checkSize, this);
     this.lo.play("loading_anmis");
     this.checkSize(new Size(width, height));
