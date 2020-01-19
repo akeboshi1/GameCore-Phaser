@@ -199,9 +199,9 @@ export class UiManager extends PacketHandler {
     }
 
     public baseFaceResize() {
+        const bottomMed = this.getMediator(BottomMediator.NAME);
         const rightMed = this.getMediator(RightMediator.NAME);
         const leftMed = this.getMediator(LeftMediator.NAME);
-        const bottomMed = this.getMediator(BottomMediator.NAME);
         // const topMed = this.getMediator(TopMediator.NAME);
         if (rightMed && rightMed.getView()) rightMed.getView().resize(0, 0);
         if (leftMed && leftMed.getView()) leftMed.getView().resize(0, 0);

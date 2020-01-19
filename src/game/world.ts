@@ -8,6 +8,7 @@ import { ConnectionService } from "../net/connection.service";
 import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
+import { Logger } from "../utils/log";
 import { PlayScene } from "../scenes/play";
 import { RoomManager } from "../rooms/room.manager";
 import { ServerAddress } from "../net/address";
@@ -16,7 +17,6 @@ import { MouseManager } from "./mouse.manager";
 import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
 import { MainUIScene } from "../scenes/main.ui";
-import { Logger } from "../utils/log";
 import { JoyStickManager } from "./joystick.manager";
 import { GameMain, ILauncherConfig } from "../../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";
@@ -116,7 +116,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onConnected(connection?: SocketConnection): void {
-        Logger.getInstance().info(`enterVirtualWorld`);
+        // Logger.getInstance().info(`enterVirtualWorld`);
         this.enterVirtualWorld();
         // this.login();
     }
@@ -131,7 +131,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        // Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
@@ -163,17 +163,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             if (!this.mGame.device.os.desktop) {
                 if (width < height) {
                     this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
+                    this.mGame.scale.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
+                    Logger.getInstance().log("竖变横版");
                 } else if (width > height) {
                     this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
+                    this.mGame.scale.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
+                    Logger.getInstance().log("横变竖版");
                 }
+            } else {
+                this.mGame.scale.resize(width, height);
             }
-            this.mGame.scale.resize(width, height);
-            this.game.canvas.style.width = this.mConfig.screenWidth + "";
-            this.game.canvas.style.height = this.mConfig.screenHeight + "";
+            // this.game.canvas.style.width = this.mConfig.screenWidth + "";
+            // this.game.canvas.style.height = this.mConfig.screenHeight + "";
             if (this.mGame.device.os.iOS) {
-                Logger.getInstance().log("物理像素:" + this.mConfig.screenWidth * this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
+                // Logger.getInstance().log("物理像素:" + this.mConfig.screenWidth * this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
             } else if (this.mGame.device.os.android || this.mGame.device.os.windowsPhone) {
-                Logger.getInstance().log("独立像素:" + this.mConfig.screenWidth / this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
+                // Logger.getInstance().log("独立像素:" + this.mConfig.screenWidth / this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
             }
         }
 
@@ -190,7 +195,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public startFullscreen() {
         if (!this.mGame) {
-            Logger.getInstance().warn("game does not exist!");
             return;
         }
         this.mGame.scale.startFullscreen();
@@ -198,7 +202,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public stopFullscreen() {
         if (!this.mGame) {
-            Logger.getInstance().warn("game does not exist!");
             return;
         }
         this.mGame.scale.stopFullscreen();
@@ -283,14 +286,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public enableClick() {
         if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom && this.mRoomMamager.currentRoom.scene && this.mRoomMamager.currentRoom.scene.input) {
-            Logger.getInstance().debug("world enable");
             this.mRoomMamager.currentRoom.scene.input.enabled = true;
         }
     }
 
     public disableClick() {
         if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom && this.mRoomMamager.currentRoom.scene && this.mRoomMamager.currentRoom.scene.input) {
-            Logger.getInstance().debug("world disable");
             this.mRoomMamager.currentRoom.scene.input.enabled = false;
         }
     }
@@ -301,7 +302,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public onClockReady(): void {
         if (this.mInputManager) {
-            Logger.getInstance().log("clock inputManager:", true);
             this.mInputManager.enable = true;
         }
     }
@@ -338,10 +338,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * @param orientation 翻转
      */
     private onOrientationChange(orientation: Phaser.Scale.Orientation) {
+        if (this.mConfig.platform === "app") return;
+        this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
         if (orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
+            Logger.getInstance().log("landscape:" + this.mConfig.screenWidth + ":" + this.mConfig.screenHeight);
         } else {
             this.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
+            Logger.getInstance().log("portrait:" + this.mConfig.screenWidth + ":" + this.mConfig.screenHeight);
         }
     }
 
@@ -354,7 +358,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
             this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
-            this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+            // this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
             this.mGame.plugins.removeGlobalPlugin("rexButton");
             this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
             this.mGame.plugins.removeGlobalPlugin("rexInputText");
@@ -436,10 +440,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         await initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-        Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
+        // Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
         if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
-            Logger.getInstance().debug("缺少必要参数，无法登录游戏");
+            // Logger.getInstance().debug("缺少必要参数，无法登录游戏");
             if (this.mGame) this.mGame.destroy(true);
             return;
         }
@@ -466,10 +470,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame(content.keyEvents);
-                Logger.getInstance().debug("created game suc");
+                // Logger.getInstance().debug("created game suc");
             })
             .catch((err) => {
-                Logger.getInstance().log(err);
+                // Logger.getInstance().log(err);
             });
     }
 
@@ -551,7 +555,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mInputManager = new JoyStickManager(this, keyEvents);
         }
         this.mInputManager.enable = false;
-        this.resize(this.mConfig.width, this.mConfig.height);
         this.gameCreated();
     }
 
@@ -566,11 +569,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mConfig.game_created();
             }
         } else {
-            Logger.getInstance().error("connection is undefined");
+            // Logger.getInstance().error("connection is undefined");
         }
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
-        this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
+        // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
     private loadGameConfig(paths: string[]): Promise<Lite> {
@@ -579,7 +582,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         for (const remotePath of paths) {
             if (PI_EXTENSION_REGEX.test(remotePath)) {
                 configPath = ResUtils.getGameConfig(remotePath);
-                Logger.getInstance().log(`start download config: ${configPath}`);
+                // Logger.getInstance().log(`start download config: ${configPath}`);
                 promises.push(load(configPath, "arraybuffer"));
             }
         }

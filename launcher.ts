@@ -5,7 +5,6 @@
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
 import { ConnectionService } from "./src/net/connection.service";
-import { Logger } from "./src/utils/log";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -111,10 +110,8 @@ export class Launcher {
 
     public disableClick() {
         if (this.world) {
-            Logger.getInstance().log("launcher disable");
             this.world.disableClick();
         } else {
-            Logger.getInstance().log("no world");
         }
     }
 
@@ -144,7 +141,11 @@ export class Launcher {
         if (!this.world)
             return;
         if (ui_scale) this.mConfig.ui_scale = ui_scale;
-        this.world.resize(width, height);
+        if (width < height) {
+            this.world.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
+        } else {
+            this.world.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
+        }
     }
 
     public destroy(): void {

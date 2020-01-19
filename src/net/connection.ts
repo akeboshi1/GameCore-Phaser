@@ -98,7 +98,7 @@ export default class Connection implements ConnectionService {
     }
 
     private _doConnect() {
-        Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
+        // Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
         if (this.mWorker) {
             this.mWorker.onmessage = (event: any) => {
@@ -132,7 +132,7 @@ export default class Connection implements ConnectionService {
                     if (this.mReConnectCount < 10)
                         this.mReConnectCount++;
                     const delay = this.mReConnectCount ** 2;
-                    Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
+                    // Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
                     this.mTimeout = setTimeout(() => {
                         self.mTimeout = undefined;
                         self._doConnect();
