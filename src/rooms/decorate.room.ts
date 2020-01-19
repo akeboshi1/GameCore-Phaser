@@ -1,23 +1,23 @@
 import { IRoomService } from "./room";
 import { IRoomManager } from "./room.manager";
-import {ViewblockService} from "./cameras/viewblock.manager";
-import {CamerasManager, ICameraService} from "./cameras/cameras.manager";
-import {ConnectionService} from "../net/connection.service";
-import {ElementManager} from "./element/element.manager";
-import {LayerManager} from "./layer/layer.manager";
-import {IPosition45Obj, Position45} from "../utils/position45";
-import {TerrainManager} from "./terrain/terrain.manager";
+import { ViewblockService } from "./cameras/viewblock.manager";
+import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
+import { ConnectionService } from "../net/connection.service";
+import { ElementManager } from "./element/element.manager";
+import { LayerManager } from "./layer/layer.manager";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { TerrainManager } from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
-import {IElement} from "./element/element";
-import {ElementDisplay} from "./display/element.display";
-import {op_client, op_virtual_world, op_def} from "pixelpai_proto";
-import {Pos} from "../utils/pos";
-import {PlayerManager} from "./player/player.manager";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {SelectedElement} from "./decorate/selected.element";
-import {LoadingScene} from "../scenes/loading";
-import {PlayScene} from "../scenes/play";
-import {Logger} from "../utils/log";
+import { IElement } from "./element/element";
+import { ElementDisplay } from "./display/element.display";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { Pos } from "../utils/pos";
+import { PlayerManager } from "./player/player.manager";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { SelectedElement } from "./decorate/selected.element";
+import { LoadingScene } from "../scenes/loading";
+import { PlayScene } from "../scenes/play";
+import { Logger } from "../utils/log";
 import { FramesDisplay } from "./display/frames.display";
 import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
@@ -142,13 +142,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
         this.removePointerMoveHandler();
-        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
-        this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
-        this.mScene.input.off("gameobjectdown", this.onGameobjectUpHandler, this);
         this.world.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         this.world.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
         this.world.emitter.off(MessageType.PUT_ELEMENT, this.onPutElement, this);
+        if (!this.mScene) return;
+        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
+        this.mScene.input.off("gameobjectdown", this.onGameobjectUpHandler, this);
     }
 
     now(): number {
@@ -323,11 +324,13 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private addPointerMoveHandler() {
+        if (!this.mScene) return;
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.on("gameout", this.onGameOutHandler, this);
     }
 
     private removePointerMoveHandler() {
+        if (!this.mScene) return;
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
     }

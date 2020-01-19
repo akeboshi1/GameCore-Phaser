@@ -61,12 +61,12 @@ export class CreateRole extends PacketHandler {
     connection.send(packet);
   }
 
-  private onSubmitHandler(name: string) {
+  private onSubmitHandler(name: string, avatar: op_gameconfig.IAvatar) {
     const connection = this.world.connection;
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CREATE_ROLE);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CREATE_ROLE = packet.content;
     content.name = name;
-    content.avatar = this.mAvatars[0];
+    content.avatar = avatar;
     connection.send(packet);
   }
 

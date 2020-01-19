@@ -352,6 +352,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private clearGame() {
         if (this.mGame) {
+            this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+            this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+            this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
             this.mGame.plugins.removeGlobalPlugin("rexButton");
             this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
             this.mGame.plugins.removeGlobalPlugin("rexInputText");

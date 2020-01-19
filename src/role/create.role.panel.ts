@@ -26,7 +26,7 @@ export class CreateRolePanel extends Panel {
   private dragonbones: DragonbonesDisplay;
   private dragonbonesModel: IDragonbonesModel;
   private avatars: op_gameconfig.IAvatar[];
-  private mCurPageNum: number;
+  private mCurPageNum: number = 0;
 
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -247,7 +247,7 @@ export class CreateRolePanel extends Panel {
   }
 
   private onSubmitHandler() {
-    this.emit("submit", this.inputText.text);
+    this.emit("submit", this.inputText.text, this.avatars[this.mCurPageNum]);
     this.inputText.setBlur();
     if (this.mError) {
       this.mError.setVisible(false);

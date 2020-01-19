@@ -252,14 +252,38 @@ export class LoginScene extends Phaser.Scene {
     }
 
     public awake() {
+        this.mTab0.on("pointerdown", this.tab0Handler, this);
+        this.mTab1.on("pointerdown", this.tab1Handler, this);
+        this.mQuickBtn.on("pointerdown", this.quickHandler, this);
+        this.mEnterBtn.on("pointerdown", this.enterHandler, this);
+        this.mSendCodeBtn.on("pointerdown", this.sendCodeHandler, this);
+        this.mtxt4.on("pointerdown", this.changeAccount, this);
+        this.scale.on("resize", this.checkSize, this);
+        this.scale.on("orientationchange", this.onOrientationChange, this);
         this.scene.wake();
     }
 
     public sleep() {
+        this.mTab0.off("pointerdown", this.tab0Handler, this);
+        this.mTab1.off("pointerdown", this.tab1Handler, this);
+        this.mQuickBtn.off("pointerdown", this.quickHandler, this);
+        this.mEnterBtn.off("pointerdown", this.enterHandler, this);
+        this.mSendCodeBtn.off("pointerdown", this.sendCodeHandler, this);
+        this.mtxt4.off("pointerdown", this.changeAccount, this);
+        this.scale.off("resize", this.checkSize, this);
+        this.scale.off("orientationchange", this.onOrientationChange, this);
         this.scene.sleep();
     }
 
     public remove() {
+        this.mTab0.off("pointerdown", this.tab0Handler, this);
+        this.mTab1.off("pointerdown", this.tab1Handler, this);
+        this.mQuickBtn.off("pointerdown", this.quickHandler, this);
+        this.mEnterBtn.off("pointerdown", this.enterHandler, this);
+        this.mSendCodeBtn.off("pointerdown", this.sendCodeHandler, this);
+        this.mtxt4.off("pointerdown", this.changeAccount, this);
+        this.scale.off("resize", this.checkSize, this);
+        this.scale.off("orientationchange", this.onOrientationChange, this);
         this.scene.remove();
     }
 
@@ -277,22 +301,15 @@ export class LoginScene extends Phaser.Scene {
     }
 
     private checkSize() {
-        let width: number = 0;
-        let height: number = 0;
-        if (this.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            width = this.mWorld.getConfig().screenWidth;
-            height = this.mWorld.getConfig().screenHeight;
-        } else {
-            width = this.mWorld.getConfig().screenHeight;
-            height = this.mWorld.getConfig().screenWidth;
-        }
+        const width: number = this.cameras.main.width;
+        const height: number = this.cameras.main.height;
         this.mParentCon.x = width >> 1;
         if (!this.game.device.os.desktop) {
             let scale;
             if (this.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                scale = this.mParentCon.width / width;
+                scale = this.mParentCon.width / this.cameras.main.width;
             } else {
-                scale = this.mParentCon.height / height;
+                scale = this.mParentCon.height / this.cameras.main.height;
             }
             this.mParentCon.setScale(scale);
         }

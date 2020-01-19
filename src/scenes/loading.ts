@@ -70,10 +70,12 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public awake() {
+    this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
   }
 
   public sleep() {
+    this.scale.off("resize", this.checkSize, this);
     this.scene.sleep();
   }
 
