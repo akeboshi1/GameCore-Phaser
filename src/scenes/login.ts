@@ -48,8 +48,8 @@ export class LoginScene extends Phaser.Scene {
 
     public create() {
         const loginRes: string = "login";
-        const width = window.screen.width;
-        const height = window.screen.height;
+        const width = this.mWorld.getConfig().screenWidth;
+        const height = this.mWorld.getConfig().screenHeight;
         this.rect = this.add.graphics();
         this.rect.fillStyle(0);
         this.rect.fillRect(0, 0, width, height);
@@ -277,8 +277,15 @@ export class LoginScene extends Phaser.Scene {
     }
 
     private checkSize() {
-        const width: number = window.screen.width;
-        const height: number = window.screen.height;
+        let width: number = 0;
+        let height: number = 0;
+        if (this.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            width = this.mWorld.getConfig().screenWidth;
+            height = this.mWorld.getConfig().screenHeight;
+        } else {
+            width = this.mWorld.getConfig().screenHeight;
+            height = this.mWorld.getConfig().screenWidth;
+        }
         this.mParentCon.x = width >> 1;
         if (!this.game.device.os.desktop) {
             let scale;

@@ -168,12 +168,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 }
             }
             this.mGame.scale.resize(width, height);
-            this.game.canvas.style.width = window.screen.width + "";
-            this.game.canvas.style.height = window.screen.height + "";
+            this.game.canvas.style.width = this.mConfig.screenWidth + "";
+            this.game.canvas.style.height = this.mConfig.screenHeight + "";
             if (this.mGame.device.os.iOS) {
-                Logger.getInstance().log("物理像素:" + window.screen.width * this.mGame.device.os.pixelRatio + "|" + "wid:" + window.screen.width + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
+                Logger.getInstance().log("物理像素:" + this.mConfig.screenWidth * this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
             } else if (this.mGame.device.os.android || this.mGame.device.os.windowsPhone) {
-                Logger.getInstance().log("独立像素:" + window.screen.width / this.mGame.device.os.pixelRatio + "|" + "wid:" + window.screen.width + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
+                Logger.getInstance().log("独立像素:" + this.mConfig.screenWidth / this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
             }
         }
 
@@ -338,7 +338,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * @param orientation 翻转
      */
     private onOrientationChange(orientation: Phaser.Scale.Orientation) {
-        this.resize(window.screen.width, window.screen.height);
+        if (orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
+        } else {
+            this.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
+        }
     }
 
     private onSelectCharacter() {
