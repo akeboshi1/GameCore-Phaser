@@ -30,7 +30,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const launcher = TooqingCore.Launcher;
-            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.screen.width, screenHeight: window.screen.height });
+            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
             app.registerReload(window.reload);
             app.registerComplete(() => {
                 const loadingImg = document.getElementById('loading_img');
@@ -41,6 +41,9 @@
 
             if (!window.navigator) {
                 // FR.Msg.alert("提示", "当前设备：移动端APP")
+                window.addEventListener("resize", (e) => {
+                    app.onResize(window.innerWidth, window.innerHeight);
+                });
             }
             else {
                 if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {

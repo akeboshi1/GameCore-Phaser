@@ -119,6 +119,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     public showNickname(val: string) {
         if (!this.mNickname) {
             this.mNickname = this.scene.make.text({ style: { font: Font.YAHEI_14_BOLD } }, false).setOrigin(0.5, 0.5);
+            this.mNickname.setStroke("#0", 2);
             this.flagContainer.add(this.mNickname);
         }
         this.mNickname.setText(val);

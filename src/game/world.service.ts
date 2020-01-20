@@ -16,6 +16,7 @@ export interface WorldService {
     connection: ConnectionService;
     clock: Clock;
     moveStyle: number;
+    orientation: number;
     readonly game: Phaser.Game;
     readonly roomManager: RoomManager;
     readonly elementStorage: IElementStorage;
