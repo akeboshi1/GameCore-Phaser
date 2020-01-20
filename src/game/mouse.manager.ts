@@ -1,6 +1,6 @@
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
