@@ -1,7 +1,8 @@
 import { NinePatch } from "./nine.patch";
 import { IPatchesConfig } from "./patches.config";
+import { IButtonState } from "./interface/IButtonState";
 
-export class NinePatchButton extends Phaser.GameObjects.Container {
+export class NinePatchButton extends Phaser.GameObjects.Container implements IButtonState {
     protected mLabel: Phaser.GameObjects.Text;
     protected mNingBg: NinePatch;
     protected mKey: string;
@@ -29,7 +30,7 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
 
         // this.setSize(this.mNingBg.width, this.mNingBg.height);
         this.setInteractive();
-        this.on("pointerdown", this.changeDown, this);
+        this.on("pointerdown", this.onPointerDown, this);
         this.on("pointerup", this.changeNormal, this);
         this.on("pointerout", this.changeNormal, this);
         this.on("pointerover", this.changeOver, this);
@@ -65,9 +66,18 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
         super.destroy(fromScene);
     }
 
-    protected changeNormal() {
+    // public setState(val: string) {
+    // }
+
+    public changeNormal() {
         const frame = this.mFrame ? this.mFrame : this.mKey;
         this.setFrame(`${frame}_normal`);
+    }
+
+    public changeDown() {
+        // this.scale = 0.9;
+        const frame = this.mFrame ? this.mFrame : this.mKey;
+        this.setFrame(`${frame}_down`);
     }
 
     protected changeOver() {
@@ -76,12 +86,9 @@ export class NinePatchButton extends Phaser.GameObjects.Container {
         this.setFrame(`${frame}_over`);
     }
 
-    protected changeDown(pointer) {
-        // this.scale = 0.9;
-        const frame = this.mFrame ? this.mFrame : this.mKey;
-        this.setFrame(`${frame}_down`);
+    private onPointerDown(pointer) {
+        this.changeDown();
         this.emit("click", pointer, this);
-        // this.scaleHandler();
     }
 
     get label(): Phaser.GameObjects.Text {

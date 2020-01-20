@@ -92,7 +92,7 @@ export class BottomBtnGroup extends Panel {
     protected init() {
         this.mBtnList = [];
         const size: Size = this.mWorld.getSize();
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
         const chatBgWidth: number = 430;
         const chatBgHeight: number = 230;
         this.mChatContainer = this.mScene.make.container(undefined, false);

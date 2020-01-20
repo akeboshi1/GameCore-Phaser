@@ -50,6 +50,7 @@ export class TopMenuContainer extends Panel {
     if (this.mButtons.length > 3) {
       // TODO add turn button
     }
+    this.refresh();
   }
 
   removeItem(name: string) {
@@ -67,6 +68,7 @@ export class TopMenuContainer extends Panel {
       // TODO remove
       this.hide();
     }
+    this.refresh();
   }
 
   preload() {
@@ -84,6 +86,9 @@ export class TopMenuContainer extends Panel {
   }
 
   refresh() {
+    for (let i = 0; i < this.mButtons.length; i++) {
+      this.mButtons[i].x = -(i * 60 + 30);
+    }
   }
 
   expand() {
@@ -105,6 +110,9 @@ export class TopMenuContainer extends Panel {
         break;
       case "EnterDecorate":
         this.emit("enterDecorate");
+        break;
+      case "Market":
+        this.emit("showMarket");
         break;
     }
   }

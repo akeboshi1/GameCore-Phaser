@@ -8,6 +8,8 @@ import { Pos } from "../../utils/pos";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
+import { IFramesModel } from "../display/frames.model";
+import { IDragonbonesModel } from "../display/dragonbones.model";
 
 export interface IElementManager {
     hasAddComplete: boolean;
@@ -141,10 +143,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (point) {
                 sprite = new Sprite(obj, content.nodeType);
                 if (!sprite.displayInfo) {
-                    this.checkDisplay(sprite);
-                }
-                if (!sprite.displayInfo) {
-                    ids.push(sprite.id);
+                    if (!this.checkDisplay(sprite)) {
+                        ids.push(sprite.id);
+                    }
                 }
                 this._add(sprite);
             }
@@ -164,11 +165,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.hasAddComplete = true;
     }
 
-    protected checkDisplay(sprite: ISprite) {
+    protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
             const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
+                return displayInfo;
             }
         }
     }
