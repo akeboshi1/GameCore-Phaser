@@ -38,13 +38,40 @@
                 const loadingGif = document.getElementById('loading_gif');
                 if (loadingGif) loadingGif.remove();
             })
-            // document.addEventListener(window.ondeviceorientation ? "deviceorientation" : "resize", function () {
-            //     if (window.ondeviceorientation ? app.onOrientationChange(window.orientation) :
-            //         app.onResize(window.innerWidth, window.innerHeight));
+
+            if (!window.navigator) {
+                // FR.Msg.alert("提示", "当前设备：移动端APP")
+            }
+            else {
+                if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {
+                    window.addEventListener('orientationchange', (e) => {
+                        // window.orientation === 0 为竖屏，1为横屏
+                        app.onOrientationChange(window.orientation, window.innerWidth, window.innerHeight);
+                    });
+                }
+                else {
+                    window.addEventListener("resize", (e) => {
+                        app.onResize(window.innerWidth, window.innerHeight);
+                    });
+                }
+            }
+            // if (window.orientation) {
+            //     window.addEventListener('deviceorientation', (e) => {
+            //         // window.orientation === 0 为竖屏，1为横屏
+            //         app.onOrientationChange(window.innerWidth, window.innerHeight);
+            //     });
+            // } else {
+            //     window.addEventListener("resize", (e) => {
+            //         app.onResize(window.innerWidth, window.innerHeight);
+            //     });
+            // }
+            // window.addEventListener(window.ori ? "deviceorientation" : "reisze", function () {
+            //     window.ondeviceorientation ? app.onOrientationChange(window.orientation) :
+            //         app.onResize(window.innerWidth, window.innerHeight);
             // }, false);
-            window.addEventListener("resize", (e) => {
-                app.onResize(window.innerWidth, window.innerHeight);
-            });
+            // window.addEventListener("resize", (e) => {
+            //     app.onResize(window.innerWidth, window.innerHeight);
+            // });
             // window.addEventListener("orientationchange", (e) => {
             //     // window.orientation === 0 为竖屏，1为横屏
             //     app.onOrientationChange(window.orientation);

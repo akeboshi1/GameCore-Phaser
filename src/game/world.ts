@@ -59,6 +59,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mAccount: Account;
     private gameConfig: Phaser.Types.Core.GameConfig;
     private mRoleManager: RoleManager;
+    private isFullStart: boolean = false;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -160,28 +161,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public resize(width: number, height: number) {
         if (this.mGame) {
-            if (!this.mGame.device.os.desktop) {
-                if (width < height) {
-                    this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
-                    this.mGame.scale.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
-                    Logger.getInstance().log("竖变横版");
-                } else if (width > height) {
-                    this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
-                    this.mGame.scale.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-                    Logger.getInstance().log("横变竖版");
-                }
-            } else {
-                this.mGame.scale.resize(width, height);
-            }
-            // this.game.canvas.style.width = this.mConfig.screenWidth + "";
-            // this.game.canvas.style.height = this.mConfig.screenHeight + "";
-            if (this.mGame.device.os.iOS) {
-                // Logger.getInstance().log("物理像素:" + this.mConfig.screenWidth * this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
-            } else if (this.mGame.device.os.android || this.mGame.device.os.windowsPhone) {
-                // Logger.getInstance().log("独立像素:" + this.mConfig.screenWidth / this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
-            }
+            this.mGame.scale.resize(width, height);
         }
-
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);
         }
@@ -193,10 +174,30 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public onOrientationChange(orientation: number, width: number, height: number) {
+        if (this.mConfig.platform === "app") return;
+        if (this.mConfig.screenWidth > this.mConfig.screenHeight) {
+            // 基础是横屏
+            if (orientation === 90 || orientation === -90) {
+                this.orientationResize(this.mConfig.screenWidth, this.mConfig.screenHeight, width, height);
+            } else {
+                this.orientationResize(this.mConfig.screenHeight, this.mConfig.screenWidth, width, height);
+            }
+        } else {
+            // 基础是竖屏
+            if (orientation === 0) {
+                this.orientationResize(this.mConfig.screenWidth, this.mConfig.screenHeight, width, height);
+            } else {
+                this.orientationResize(this.mConfig.screenHeight, this.mConfig.screenWidth, width, height);
+            }
+        }
+    }
+
     public startFullscreen() {
         if (!this.mGame) {
             return;
         }
+        this.isFullStart = true;
         this.mGame.scale.startFullscreen();
     }
 
@@ -204,6 +205,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!this.mGame) {
             return;
         }
+        this.isFullStart = false;
         this.mGame.scale.stopFullscreen();
     }
 
@@ -333,22 +335,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
 
-    /**！！！
-     * 翻转后cavas必须重新设置且必须设置为设备的独立像素(当前设备用于逻辑处理的像素)，否则phaser里面的canvas的尺寸会被撑开，导致适配出问题
-     * @param orientation 翻转
-     */
-    private onOrientationChange(orientation: Phaser.Scale.Orientation) {
-        if (this.mConfig.platform === "app") return;
-        this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-        if (orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-            Logger.getInstance().log("landscape:" + this.mConfig.screenWidth + ":" + this.mConfig.screenHeight);
-        } else {
-            this.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
-            Logger.getInstance().log("portrait:" + this.mConfig.screenWidth + ":" + this.mConfig.screenHeight);
-        }
-    }
-
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
@@ -385,10 +371,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const baseHeight: number = this.mConfig.baseHeight;
         if (!this.mGame.device.os.desktop) {
             if (width < height) {
-                this.mConfig.ui_scale = width / baseHeight;
+                this.mConfig.ui_scale = width / baseHeight * 2;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
             } else if (width > height) {
-                this.mConfig.ui_scale = width / baseWidth;
+                this.mConfig.ui_scale = width / baseWidth * 2;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
             }
         }
@@ -408,6 +394,36 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.scene.start(LoadingScene.name, { world: this });
             },
         });
+    }
+
+    private orientationResize(screenWidth, screenHeight, width, height) {
+        if (this.mGame) {
+            if (width < height) { // 基础竖版
+                // this.mConfig.ui_scale = width / this.mConfig.baseHeight;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+                if (!this.isFullStart) {
+                    Logger.getInstance().log("竖版" + this.mGame.scale.orientation);
+                }
+            } else { // 基础横版
+                // this.mConfig.ui_scale = width / this.mConfig.baseWidth;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+                if (!this.isFullStart) {
+                    Logger.getInstance().log("横版" + this.mGame.scale.orientation);
+                }
+            }
+            this.mGame.scale.resize(screenWidth, screenHeight);
+            Logger.getInstance().log("orientation" + this.mGame.scale.orientation);
+        }
+
+        if (this.mRoomMamager) {
+            this.mRoomMamager.resize(width, height);
+        }
+        if (this.mUiManager) {
+            this.mUiManager.resize(width, height);
+        }
+        if (this.mInputManager) {
+            this.mInputManager.resize(width, height);
+        }
     }
 
     private enterVirtualWorld() {
