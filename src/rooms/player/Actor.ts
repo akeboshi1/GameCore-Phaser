@@ -146,6 +146,7 @@ export class Actor extends Player implements InputListener {
         }
         if (this.mRoom.world.moveStyle === op_def.MoveStyle.FOLLOW_MOUSE_MOVE_STYLE) {
             this.changeState(PlayerState.IDLE);
+            this.stopMove();
         }
         this._doMove();
     }
