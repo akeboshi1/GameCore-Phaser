@@ -577,7 +577,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(EditScene.name, EditScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle) {
+        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
             if (this.mGame.device.os.desktop) {
                 this.mInputManager = new KeyBoardManager(this, keyEvents);
             } else {
