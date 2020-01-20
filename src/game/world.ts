@@ -586,6 +586,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
             this.mInputManager.enable = false;
         }
+        if (window.screen.width > window.screen.height) {
+            if (this.mConfig.width > this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        } else {
+            if (this.mConfig.width < this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        }
+
         this.gameCreated();
     }
 
