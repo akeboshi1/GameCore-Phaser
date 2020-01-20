@@ -90,10 +90,10 @@ export class UiManager extends PacketHandler {
             if (this.worldService.game.device.os.desktop) {
                 this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
             } else {
-                // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
-                this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
-                this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
                 this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
+                this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
+                // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
+                this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
             }
             // this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
@@ -189,6 +189,7 @@ export class UiManager extends PacketHandler {
         }
         this.mMedMap.forEach((med: IMediator) => med.destroy());
         this.mMedMap.clear();
+        this.mMedMap = null;
     }
 
     public destroy() {
