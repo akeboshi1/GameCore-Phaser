@@ -178,6 +178,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mInputManager) {
             this.mInputManager.resize(width, height);
         }
+        Logger.getInstance().log(`resize${width}|${height}`);
     }
 
     public onOrientationChange(orientation: number, width: number, height: number) {
