@@ -27,7 +27,9 @@ export class MainUIScene extends Phaser.Scene {
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
     } else {
-      (world.inputManager as JoyStickManager).setScene(this);
+      if (world.inputManager) {
+        (world.inputManager as JoyStickManager).setScene(this);
+      }
     }
     world.uiManager.setScene(this);
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);

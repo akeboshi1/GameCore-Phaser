@@ -193,14 +193,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
   public pause() {
     if (this.mScene) this.mScene.scene.pause();
-    this.mWorld.inputManager.enable = false;
+    if (this.mWorld.inputManager) this.mWorld.inputManager.enable = false;
     // this.clockSyncComplete = false;
     // todo launch
   }
 
   public resume(name: string) {
     if (this.mScene) this.mScene.scene.resume(name);
-    this.mWorld.inputManager.enable = true;
+    if (this.mWorld.inputManager) this.mWorld.inputManager.enable = true;
     // this.mClock.sync(-1);
   }
 

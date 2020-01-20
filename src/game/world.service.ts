@@ -15,6 +15,7 @@ import { MouseManager } from "./mouse.manager";
 export interface WorldService {
     connection: ConnectionService;
     clock: Clock;
+    moveStyle: number;
     readonly game: Phaser.Game;
     readonly roomManager: RoomManager;
     readonly elementStorage: IElementStorage;

@@ -45,6 +45,7 @@ import * as  path from "path";
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
     private mClock: Clock;
+    private mMoveStyle: number = 0;
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -107,6 +108,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    get moveStyle(): number {
+        return this.mMoveStyle;
+    }
+
     getConfig(): ILauncherConfig {
         return this.mConfig;
     }
@@ -139,7 +144,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
     public changeRoom(room: IRoomService) {
-        this.mInputManager.onRoomChanged(room);
+        if (this.mInputManager) this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
     }
 
@@ -476,6 +481,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
+        this.mMoveStyle = content.moveStyle;
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
             this.createGame(content.keyEvents);
@@ -565,12 +571,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(EditScene.name, EditScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (this.mGame.device.os.desktop) {
-            this.mInputManager = new KeyBoardManager(this, keyEvents);
-        } else {
-            this.mInputManager = new JoyStickManager(this, keyEvents);
+        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || !this.moveStyle) {
+            if (this.mGame.device.os.desktop) {
+                this.mInputManager = new KeyBoardManager(this, keyEvents);
+            } else {
+                this.mInputManager = new JoyStickManager(this, keyEvents);
+            }
+            this.mInputManager.enable = false;
         }
-        this.mInputManager.enable = false;
         this.gameCreated();
     }
 
