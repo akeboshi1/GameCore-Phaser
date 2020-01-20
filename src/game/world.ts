@@ -45,7 +45,7 @@ import * as  path from "path";
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
     private mClock: Clock;
-    private mMoveStyle: number = 0;
+    private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -493,7 +493,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.createGame(content.keyEvents);
             return;
         }
-        // Logger.log("start download gameConfig");
+        Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
         this.loadGameConfig(content.configUrls)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
@@ -577,7 +577,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(EditScene.name, EditScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || !this.moveStyle) {
+        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle) {
             if (this.mGame.device.os.desktop) {
                 this.mInputManager = new KeyBoardManager(this, keyEvents);
             } else {
