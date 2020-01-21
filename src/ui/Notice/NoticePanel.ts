@@ -108,5 +108,6 @@ export class NoticePanel extends Panel {
             this.mTween.remove();
             this.mTween = null;
         }
+        this.mShowing = false;
     }
 }

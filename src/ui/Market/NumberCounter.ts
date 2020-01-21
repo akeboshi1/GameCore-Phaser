@@ -37,6 +37,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       type: "number",
       text: 1
     }).setOrigin(0.5);
+    this.mInputText.on("textchange", this.onTextChangeHandler, this);
     this.add([this.mBackground, this.mInputText, this.mReduceBtn, this.mIncreaseBtn]);
   }
 
@@ -87,5 +88,9 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private onIncreaseHandler() {
     let num = parseInt(this.mInputText.text, 10);
     this.setCounter(++num);
+  }
+
+  private onTextChangeHandler() {
+    this.setCounter(this.mInputText.text);
   }
 }

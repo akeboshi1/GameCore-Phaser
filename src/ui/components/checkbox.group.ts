@@ -35,7 +35,9 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     if (index >= this.mList.length) {
       index = this.mList.length - 1;
     }
-    this.select(this.mList[index]);
+    if (this.mList.length > 0) {
+      this.select(this.mList[index]);
+    }
     return this;
   }
 

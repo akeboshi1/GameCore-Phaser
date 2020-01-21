@@ -8,6 +8,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
+import { TabButton } from "../components/tab.button";
 
 export class MarketPanel extends Panel {
   private readonly key = "market";
@@ -65,7 +66,7 @@ export class MarketPanel extends Panel {
     };
     const group: CheckboxGroup = new CheckboxGroup();
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchButton(this.scene, i * 233 + 100, 1100, 224, 104, this.key, "categories", categorys[i].category, config);
+      const btn = new TabButton(this.scene, i * 233 + 100, 1100, 224, 104, this.key, "categories", categorys[i].category.value, config);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: "42px"
@@ -94,6 +95,8 @@ export class MarketPanel extends Panel {
       this.mItems[i] = item;
     }
     this.add(this.mItems);
+
+    // if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
   }
 
   public setCommodityResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
@@ -149,8 +152,8 @@ export class MarketPanel extends Panel {
     this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     // 多层容器嵌套必须把input的点击区域移到中间去，否则点击pointer会有坐标问题
-    this.input.hitArea.x += this.width / 2;
-    this.input.hitArea.y += this.height / 2;
+    // this.input.hitArea.x += this.width / 2;
+    // this.input.hitArea.y += this.height / 2;
   }
 
   protected setSelect() {
@@ -174,7 +177,7 @@ export class MarketPanel extends Panel {
       const group = new CheckboxGroup();
       const subcategorys = subcategory.subcategory;
       for (let i = 0; i < subcategorys.length; i++) {
-        const textBtn = new TextButton(this.scene, subcategorys[i], i * 158 + 60, 1220);
+        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * 158 + 60, 1220);
         textBtn.setData("category", subcategorys[i]);
         textBtn.setSize(180, 90);
         this.mSubTabs[i] = textBtn;
@@ -199,7 +202,7 @@ export class MarketPanel extends Panel {
       return;
     }
 
-    this.queryProp(categories.category, subCategories);
+    this.queryProp(categories.category.key, subCategories.key);
   }
 
   private queryProp(category: string, subCategory: string) {

@@ -266,8 +266,8 @@ export class BottomBtnGroup extends Panel {
     }
 
     private bagHandler() {
-        this.mWorld.closeGame();
-        // this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+        // this.mWorld.closeGame();
+        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
     }
 }

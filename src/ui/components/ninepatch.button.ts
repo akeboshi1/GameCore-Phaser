@@ -31,9 +31,9 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
         // this.setSize(this.mNingBg.width, this.mNingBg.height);
         this.setInteractive();
         this.on("pointerdown", this.onPointerDown, this);
-        this.on("pointerup", this.changeNormal, this);
-        this.on("pointerout", this.changeNormal, this);
-        this.on("pointerover", this.changeOver, this);
+        this.on("pointerup", this.onPointerUp, this);
+        // this.on("pointerout", this.changeNormal, this);
+        // this.on("pointerover", this.changeOver, this);
     }
 
     public getBtnData(): any {
@@ -86,9 +86,13 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
         this.setFrame(`${frame}_over`);
     }
 
-    private onPointerDown(pointer) {
+    protected onPointerDown(pointer) {
         this.changeDown();
         this.emit("click", pointer, this);
+    }
+
+    protected onPointerUp() {
+        this.changeNormal();
     }
 
     get label(): Phaser.GameObjects.Text {
