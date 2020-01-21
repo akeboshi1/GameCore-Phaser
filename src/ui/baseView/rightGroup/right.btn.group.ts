@@ -99,6 +99,7 @@ export class RightBtnGroup extends Panel {
     }
 
     public refreshSlot() {
+        if (!this.handBtn) return;
         this.mHei = this.handBtn.height;
         if (this.mBagSlotList) {
             this.mBagSlotList.forEach((itemslot: ItemSlot) => {

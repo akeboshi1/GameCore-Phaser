@@ -331,7 +331,6 @@ export class JoyStick {
         this.btn.x = this.bg.x;
         this.btn.y = this.bg.y;
         this.mDown = false;
-        Logger.getInstance().log("pointerUp");
         this.parentCon.visible = false;
         this.mScene.input.off("pointermove", this.pointerMove, this);
         if (!(this.mWorld.inputManager as JoyStickManager).enable) {

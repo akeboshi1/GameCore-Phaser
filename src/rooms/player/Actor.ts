@@ -3,7 +3,7 @@ import { ISprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import { PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
+import { op_virtual_world, op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import { Player } from "./player";
 import { Bag } from "./bag/bag";
 import { Interactive } from "./interactive/interactive";
@@ -29,7 +29,7 @@ export class Actor extends Player implements InputListener {
         // this.addDisplay();
         this.mRoom = this.mElementManager.roomService;
 
-        this.mRoom.world.inputManager.addListener(this);
+        if (this.mRoom.world.inputManager) this.mRoom.world.inputManager.addListener(this);
 
         // if (this.mElementManager) {
         //     const roomService = this.mElementManager.roomService;
@@ -67,7 +67,7 @@ export class Actor extends Player implements InputListener {
             this.mBag.destroy();
             this.mBag = null;
         }
-        this.mRoom.world.inputManager.removeListener(this);
+        if (this.mRoom.world.inputManager) this.mRoom.world.inputManager.removeListener(this);
         super.destroy();
     }
 
@@ -126,8 +126,12 @@ export class Actor extends Player implements InputListener {
 
     public move(moveData: op_client.IMoveData) {
         // TODO 不能仅判断walk, 移动状态可能还有run
-        if (this.mCurState !== PlayerState.WALK) {
-            return;
+        if (this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+            if (this.mCurState !== PlayerState.WALK) {
+                return;
+            }
+        } else {
+            this.startMove();
         }
         super.move(moveData);
     }
@@ -139,6 +143,10 @@ export class Actor extends Player implements InputListener {
         if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
+        }
+        if (this.mRoom.world.moveStyle === op_def.MoveStyle.FOLLOW_MOUSE_MOVE_STYLE) {
+            this.changeState(PlayerState.IDLE);
+            this.stopMove();
         }
         this._doMove();
     }

@@ -48,8 +48,8 @@ export class LoginScene extends Phaser.Scene {
 
     public create() {
         const loginRes: string = "login";
-        const width = this.mWorld.getConfig().screenWidth;
-        const height = this.mWorld.getConfig().screenHeight;
+        const width = this.scale.gameSize.width;
+        const height = this.scale.gameSize.height;
         this.rect = this.add.graphics();
         this.rect.fillStyle(0);
         this.rect.fillRect(0, 0, width, height);
@@ -236,7 +236,7 @@ export class LoginScene extends Phaser.Scene {
         this.mtxt4.on("pointerdown", this.changeAccount, this);
         this.scale.on("resize", this.checkSize, this);
         this.scale.on("orientationchange", this.onOrientationChange, this);
-        this.checkSize();
+        this.checkSize(new Size(width, height));
     }
 
     public init(data: any) {
@@ -292,37 +292,26 @@ export class LoginScene extends Phaser.Scene {
     }
 
     private onOrientationChange() {
+        if (this.mWorld.getConfig().platform === "app") return;
         const width: number = window.screen.width;
         const height: number = window.screen.height;
         this.game.scale.resize(width, height);
         this.game.canvas.style.width = window.screen.width + "";
         this.game.canvas.style.height = window.screen.height + "";
-        this.checkSize();
-    }
-
-    private checkSize() {
-        const width: number = this.cameras.main.width;
-        const height: number = this.cameras.main.height;
         this.mParentCon.x = width >> 1;
-        if (!this.game.device.os.desktop) {
-            let scale;
-            if (this.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                scale = this.mParentCon.width / this.cameras.main.width;
-            } else {
-                scale = this.mParentCon.height / this.cameras.main.height;
-            }
-            this.mParentCon.setScale(scale);
-        }
-        // this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
         if (!this.mWorld.game.device.os.desktop) {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.mParentCon.y = (height >> 1) + 50;
             } else {
                 this.mParentCon.y = (height >> 1) + 50;
             }
-        } else {
-            this.mParentCon.y = (height >> 1) + 50;
         }
+    }
+
+    private checkSize(size: Size) {
+        this.mParentCon.x = size.width >> 1;
+        this.mParentCon.y = (size.height >> 1) + 50;
+        Logger.getInstance().log(`width:${size.width}`);
     }
 
     private changeID(data: ISelectCallItemData) {
@@ -359,8 +348,7 @@ export class LoginScene extends Phaser.Scene {
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];
         this.mPassWordInputTxt.text = !accountObj ? "" : accountObj.password;
         this.mParentCon.setSize(this.mBg.width, this.mHei);
-        // const scale = this.mParentCon.width / this.cameras.main.width;
-        // this.mParentCon.setScale(scale);
+        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
     }
 
     private verificaHandler(show: boolean) {

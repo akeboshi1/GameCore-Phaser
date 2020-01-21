@@ -59,6 +59,14 @@ export class Market extends PacketHandler {
     this.connection.send(packet);
   }
 
+  queryCommodityResource(id: string, category: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_COMMODITY_RESOURCE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_COMMODITY_RESOURCE = packet.content;
+    content.id = id;
+    content.category = category;
+    this.connection.send(packet);
+  }
+
   destroy() {
     this.unregister();
     this.mEvent.destroy();

@@ -11,7 +11,7 @@ function startBeat() {
             return;
         }
         reConnectCount++;
-        Logger.getInstance().debug("heartBeat:" + reConnectCount);
+        // Logger.getInstance().debug("heartBeat:" + reConnectCount);
         postMessage({ "method": "heartBeat" });
     }, delayTime);
 }
@@ -32,7 +32,7 @@ heartWorker.onmessage = (ev) => {
             break;
         case "clearBeat":
             reConnectCount = 0;
-            Logger.getInstance().debug("clearHeartBeat:" + reConnectCount);
+            // Logger.getInstance().debug("clearHeartBeat:" + reConnectCount);
             break;
         case "endBeat":
             endBeat();

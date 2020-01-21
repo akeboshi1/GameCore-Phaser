@@ -356,7 +356,6 @@ export class Element extends BlockObject implements IElement {
 
     protected _doMove() {
         if (!this.mMoveData.destPos) {
-            // Logger.getInstance().log("stopDoMove");
             return;
         }
         const tw: Tweens.Tween = this.mMoveData.tweenAnim;

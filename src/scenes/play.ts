@@ -27,7 +27,6 @@ export class PlayScene extends Phaser.Scene {
         room: this.mRoom
       });
     }
-    Logger.getInstance().log("play created");
     this.scene.sendToBack();
     this.scale.on("orientationchange", this.checkOriention, this);
     this.scale.on("resize", this.checkSize, this);

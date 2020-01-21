@@ -4,6 +4,8 @@ import { MarketPanel } from "./MarketPanel";
 import { ILayerManager } from "../layer.manager";
 import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+import { MessageType } from "../../const/MessageType";
 
 export class MarketMediator extends BaseMediator {
   protected mView: MarketPanel;
@@ -29,6 +31,8 @@ export class MarketMediator extends BaseMediator {
     this.mView.on("queryProp", this.onQueryPropHandler, this);
     this.mView.on("buyItem", this.onBuyItemHandler, this);
     this.mView.on("close", this.onCloseHandler, this);
+    this.mView.on("popItemCard", this.onPopItemCardHandler, this);
+    this.mView.on("queryPropResource", this.onQueryPropresouceHandler, this);
     this.mView.show();
     this.layerManager.addToUILayer(this.mView);
   }
@@ -51,6 +55,17 @@ export class MarketMediator extends BaseMediator {
 
   private onBuyItemHandler(prop: op_def.IOrderCommodities) {
     this.mMarket.buyMarketCommodities([prop]);
+  }
+
+  private onQueryPropresouceHandler(prop: op_client.IMarketCommodity) {
+    this.mMarket.queryCommodityResource(prop.id, prop.category);
+  }
+
+  private onPopItemCardHandler() {
+    const packet: PBpacket = new PBpacket(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI);
+    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
+    content.name = "ItemPopCard";
+    this.world.emitter.emit(MessageType.SHOW_UI, packet);
   }
 
   private onCloseHandler() {

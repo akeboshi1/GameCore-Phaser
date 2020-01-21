@@ -62,6 +62,19 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mReduceBtn.off("pointerup", this.onReduceHandler, this);
   }
 
+  setCounter(num: number) {
+    if (isNaN(num)) {
+      num = 0;
+    }
+    if (num < this.mMinNum) {
+      num = this.mMinNum;
+    } else if (num > this.mMaxNum) {
+      num = this.mMaxNum;
+    }
+    this.mInputText.text = num;
+    this.emit("change", num);
+  }
+
   get number(): number {
     return parseInt(this.mInputText.text, 10);
   }
@@ -74,18 +87,5 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private onIncreaseHandler() {
     let num = parseInt(this.mInputText.text, 10);
     this.setCounter(++num);
-  }
-
-  private setCounter(num: number) {
-    if (isNaN(num)) {
-      num = 0;
-    }
-    if (num < this.mMinNum) {
-      num = this.mMinNum;
-    } else if (num > this.mMaxNum) {
-      num = this.mMaxNum;
-    }
-    this.mInputText.text = num;
-    this.emit("change", num);
   }
 }

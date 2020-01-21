@@ -51,13 +51,15 @@ export class BottomBtnGroup extends Panel {
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
         const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
-        const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
         if (rightMediator) {
             rightBtnGroup = rightMediator.getView();
         }
         if (rightMediator) {
-            joyStick.resize();
+            if (this.mWorld.inputManager) {
+                const joyStick = this.mWorld.inputManager as JoyStickManager;
+                joyStick.resize();
+            }
             if (rightBtnGroup) rightBtnGroup.resize();
         }
         this.mChatText.setStyle({ "fontSize": Math.floor(30 * this.mWorld.uiScale) });
@@ -207,7 +209,6 @@ export class BottomBtnGroup extends Panel {
         const len: number = this.mBtnList.length;
         const size: Size = this.mWorld.getSize();
         const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
-        const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
         if (rightMediator) {
             rightBtnGroup = rightMediator.getView();
@@ -234,7 +235,10 @@ export class BottomBtnGroup extends Panel {
                             this.setSize(this.mWid, btn.height * 2);
                         }
                         if (rightMediator) {
-                            joyStick.resize();
+                            if (this.mWorld.inputManager) {
+                                const joyStick = this.mWorld.inputManager as JoyStickManager;
+                                joyStick.resize();
+                            }
                             if (rightBtnGroup) rightBtnGroup.resize();
                         }
                     }
@@ -262,7 +266,8 @@ export class BottomBtnGroup extends Panel {
     }
 
     private bagHandler() {
-        this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
+        this.mWorld.closeGame();
+        // this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
     }
 }

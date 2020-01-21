@@ -1,3 +1,6 @@
 {
-  "pixel": "pixelPai"
+  "market": {
+    "title": "Market",
+    "buy_button": "Buy"
+  }
 }

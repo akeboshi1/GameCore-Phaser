@@ -60,19 +60,21 @@ export class LeftBtnGroup extends Panel {
         this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
         let hei: number = 0;
         // const btnResList: string[] = this.mCollapse === false ? ["btnGroup_expand.png", "btnGroup_expand.png", "btnGroup_collapse.png", "btnGroup_collapse.png"] : ["btnGroup_collapse.png", "btnGroup_collapse.png", "btnGroup_expand.png", "btnGroup_expand.png"];
-        this.mExpandBtn = new IconSelectBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_expand.png", "btnGroup_collapse.png"], 1);
-        this.add(this.mExpandBtn);
-        this.mExpandBtn.setClick(() => {
-            if (!this.mCollapse) {
-                this.mWorld.startFullscreen();
-            } else {
-                this.mWorld.stopFullscreen();
-            }
-            this.mExpandBtn.setBgRes(Number(!this.mCollapse));
-            this.mCollapse = !this.mCollapse;
-        });
-        hei += this.mExpandBtn.height / 2 + 20;
-        this.setSize(this.mExpandBtn.width, hei);
+        if (this.mWorld.getConfig().platform !== "app") {
+            this.mExpandBtn = new IconSelectBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_expand.png", "btnGroup_collapse.png"], 1);
+            this.add(this.mExpandBtn);
+            this.mExpandBtn.setClick(() => {
+                if (!this.mCollapse) {
+                    this.mWorld.startFullscreen();
+                } else {
+                    this.mWorld.stopFullscreen();
+                }
+                this.mExpandBtn.setBgRes(Number(!this.mCollapse));
+                this.mCollapse = !this.mCollapse;
+            });
+            hei += this.mExpandBtn.height / 2 + 20;
+            this.setSize(this.mExpandBtn.width, hei);
+        }
         this.resize();
         super.init();
     }

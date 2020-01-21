@@ -98,7 +98,7 @@ export default class Connection implements ConnectionService {
     }
 
     private _doConnect() {
-        Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
+        // Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
         if (this.mWorker) {
             this.mWorker.onmessage = (event: any) => {
@@ -140,7 +140,7 @@ export default class Connection implements ConnectionService {
                 }
                 break;
             case "onConnectError":
-                // Logger.getInstance().error("error" + data.error);
+                Logger.getInstance().error("error" + data.error);
                 // TODO
                 this.reConnect();
                 break;

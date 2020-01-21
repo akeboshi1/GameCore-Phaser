@@ -6,7 +6,7 @@ import { DebugLoggerMediator } from "../ui/debuglog/debug.logger.mediator";
 
 export class MainUIScene extends Phaser.Scene {
   private fps: Phaser.GameObjects.Text;
-  // private sizeTF: Phaser.GameObjects.Text;
+  private sizeTF: Phaser.GameObjects.Text;
   private mDebugLoger: DebugLoggerMediator;
   private mRoom: Room;
   constructor() {
@@ -22,12 +22,15 @@ export class MainUIScene extends Phaser.Scene {
 
   public create() {
     this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17" } });
-    // this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
-    // this.sizeTF.setFontSize(20);
+    this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
+    this.sizeTF.setFontSize(20);
+    this.sizeTF.setStroke("#0", 3);
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
     } else {
-      (world.inputManager as JoyStickManager).setScene(this);
+      if (world.inputManager) {
+        (world.inputManager as JoyStickManager).setScene(this);
+      }
     }
     world.uiManager.setScene(this);
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
@@ -43,7 +46,8 @@ export class MainUIScene extends Phaser.Scene {
     }
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-    // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
+    this.sizeTF.text = "orientation:" + this.mRoom.world.orientation + "\n" + "width:" + this.mRoom.world.getSize().width +
+      "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "moveStyle:" + this.mRoom.world.moveStyle;
   }
 
   getKey(): string {

@@ -33,6 +33,7 @@ export class CreateRolePanel extends Panel {
     this.setTween(false);
     const container = this.scene.add.container(0, 0);
     container.add(this);
+    scene.scale.on("resize", this.onResize, this);
     // container.scale = 1 / this.mWorld.uiScale;
   }
 
@@ -84,7 +85,7 @@ export class CreateRolePanel extends Panel {
 
     this.inputText.x = centerX;
     this.mInputTextBg.x = centerX;
-    this.dragonbones.x  = centerX;
+    this.dragonbones.x = centerX;
 
     this.mNextPageBtn.x = width - 150;
 
@@ -143,7 +144,7 @@ export class CreateRolePanel extends Panel {
       top: 36,
       right: 32,
       bottom: 26
-  });
+    });
     this.mSubmit.setTextStyle({
       color: "#976400",
       font: "bold 48px YaHei"
@@ -276,5 +277,9 @@ export class CreateRolePanel extends Panel {
       id: 0,
       avatar: this.avatars[this.mCurPageNum]
     }));
+  }
+
+  private onResize(gameSize) {
+    this.resize(gameSize.width, gameSize.height);
   }
 }

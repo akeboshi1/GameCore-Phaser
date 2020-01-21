@@ -48,6 +48,8 @@ export class MarketPanel extends Panel {
 
     this.mTIle.x = centerX;
 
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+
     this.mSelectItem.resize(w, h);
   }
 
@@ -137,6 +139,7 @@ export class MarketPanel extends Panel {
 
     this.emit("getCategories");
     this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
+    this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -195,6 +198,7 @@ export class MarketPanel extends Panel {
 
   private onSelectItemHandler(prop: op_client.IMarketCommodity) {
     this.mSelectItem.setProp(prop);
+    this.emit("queryPropResource", prop);
   }
 
   private onBuyItemHandler(prop: op_def.IOrderCommodities) {
@@ -203,5 +207,9 @@ export class MarketPanel extends Panel {
 
   private onCloseHandler() {
     this.emit("close");
+  }
+
+  private onPopItemCardHandler() {
+    this.emit("popItemCard");
   }
 }

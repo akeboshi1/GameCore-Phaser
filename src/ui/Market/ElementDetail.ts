@@ -126,6 +126,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     } else {
       this.mPriceText.setText("");
     }
+    this.mCounter.setCounter(1);
   }
 
   private onBuyHandler() {
@@ -150,7 +151,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   private onPointerUpHandler() {
-    this.emit("showItemPopCard", this.mSelectedProp);
+    this.emit("popItemCard", this.mSelectedProp);
   }
 
 }
