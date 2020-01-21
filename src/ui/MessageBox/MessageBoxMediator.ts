@@ -45,8 +45,10 @@ export class MessageBoxMediator extends BaseMediator {
     public hide() {
         this.isShowing = false;
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
-        this.mView.hide();
-        this.mView = null;
+        if (this.mView) {
+            this.mView.hide();
+            this.mView = null;
+        }
     }
 
     public destroy() {

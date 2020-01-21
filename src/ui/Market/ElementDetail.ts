@@ -3,6 +3,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
 import { Logger } from "../../utils/log";
+import { DetailDisplay } from "./DetailDisplay";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mBackground: Phaser.GameObjects.Image;
@@ -14,6 +15,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mSelectedProp: op_client.IMarketCommodity;
   private mPriceIcon: Phaser.GameObjects.Image;
   private mPriceText: Phaser.GameObjects.Text;
+  private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   constructor(scene: Phaser.Scene, $key: string, ) {
     super(scene);
@@ -44,7 +46,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mBuyBtn.on("pointerup", this.onBuyHandler, this);
 
     this.mNickName = this.scene.make.text({
-      x: 400,
+      x: 360,
       y: 630,
       text: "小黄鸭奶油小食棚",
       style: {
@@ -86,7 +88,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       }
     });
 
-    this.add([this.mBackground, this.mCounter, this.mBuyBtn, this.mNickName, this.mDetailBubble, this.mDesText]);
+    this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.x = 360;
+    this.mDetailDisplay.y = 400;
+
+    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickName, this.mDetailBubble, this.mDesText]);
     this.mBuyBtn.add([this.mPriceIcon, this.mPriceText]);
 
     this.addActionListener();
@@ -127,6 +133,17 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       this.mPriceText.setText("");
     }
     this.mCounter.setCounter(1);
+  }
+
+  setResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
+    if (content.display) {
+      this.mDetailDisplay.loadDisplay(content);
+    } else if (content.avatar) {
+      this.mDetailDisplay.loadAvatar(content);
+    } else {
+      this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
+    }
+    // this.mDetailDisplay.loadDisplay(content.display || this.mSelectedProp.icon);
   }
 
   private onBuyHandler() {

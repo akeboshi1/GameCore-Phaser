@@ -26,6 +26,7 @@ export class MarketMediator extends BaseMediator {
     this.mMarket.register();
     this.mMarket.on("getMarketCategories", this.onCategoriesHandler, this);
     this.mMarket.on("queryMarket", this.onQueryResuleHandler, this);
+    this.mMarket.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
     this.mView = new MarketPanel(this.scene, this.world);
     this.mView.on("getCategories", this.onGetCategoriesHandler, this);
     this.mView.on("queryProp", this.onQueryPropHandler, this);
@@ -66,6 +67,13 @@ export class MarketMediator extends BaseMediator {
     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
     content.name = "ItemPopCard";
     this.world.emitter.emit(MessageType.SHOW_UI, packet);
+  }
+
+  private onQueryCommodityResourceHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
+    if (!this.mView) {
+      return;
+    }
+    this.mView.setCommodityResource(content);
   }
 
   private onCloseHandler() {

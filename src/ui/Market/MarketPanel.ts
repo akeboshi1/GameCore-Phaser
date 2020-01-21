@@ -66,6 +66,7 @@ export class MarketPanel extends Panel {
     const group: CheckboxGroup = new CheckboxGroup();
     for (let i = 0; i < categorys.length; i++) {
       const btn = new NinePatchButton(this.scene, i * 233 + 100, 1100, 224, 104, this.key, "categories", categorys[i].category, config);
+      // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: "42px"
       });
@@ -93,6 +94,12 @@ export class MarketPanel extends Panel {
       this.mItems[i] = item;
     }
     this.add(this.mItems);
+  }
+
+  public setCommodityResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
+    if (this.mSelectItem) {
+      this.mSelectItem.setResource(content);
+    }
   }
 
   protected preload() {
