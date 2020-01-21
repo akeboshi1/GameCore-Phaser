@@ -412,13 +412,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             if (width < height) { // 基础竖版
                 // this.mConfig.ui_scale = width / this.mConfig.baseHeight;
-                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
                 if (!this.isFullStart) {
                     Logger.getInstance().log("竖版" + this.mGame.scale.orientation);
                 }
             } else { // 基础横版
                 // this.mConfig.ui_scale = width / this.mConfig.baseWidth;
-                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
                 if (!this.isFullStart) {
                     Logger.getInstance().log("横版" + this.mGame.scale.orientation);
                 }
