@@ -48,7 +48,7 @@ export class MarketPanel extends Panel {
 
     this.mTIle.x = centerX;
 
-    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+    this.setInteractive();
 
     this.mSelectItem.resize(w, h);
   }
@@ -148,6 +148,9 @@ export class MarketPanel extends Panel {
     this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    // 多层容器嵌套必须把input的点击区域移到中间去，否则点击pointer会有坐标问题
+    this.input.hitArea.x += this.width / 2;
+    this.input.hitArea.y += this.height / 2;
   }
 
   protected setSelect() {
