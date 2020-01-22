@@ -171,9 +171,11 @@ export class ElementStoragePanel extends Panel {
     }
 
     destroy() {
-        this.scene.input.off("dragstart", this.onDragStartHandler, this);
-        this.scene.input.off("dragend", this.onDragEndHandler, this);
-        this.scene.input.off("drag", this.onDragHandler, this);
+        if (this.scene) {
+            this.scene.input.off("dragstart", this.onDragStartHandler, this);
+            this.scene.input.off("dragend", this.onDragEndHandler, this);
+            this.scene.input.off("drag", this.onDragHandler, this);
+        }
         super.destroy();
     }
 
