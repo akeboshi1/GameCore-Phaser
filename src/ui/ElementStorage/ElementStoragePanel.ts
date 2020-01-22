@@ -254,7 +254,7 @@ export class ElementStoragePanel extends Panel {
         this.mCloseBtn = this.scene.make.image({
             key: "clsBtn",
             frame: "btn_normal"
-        }, false).setInteractive();
+        }, false).setInteractive().setScale(2);
         this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
         this.add(this.mCloseBtn);
         super.init();
