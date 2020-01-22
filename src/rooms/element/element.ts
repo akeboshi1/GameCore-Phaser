@@ -391,7 +391,7 @@ export class Element extends BlockObject implements IElement {
 
     protected createDisplay(): ElementDisplay {
         if (!this.mDisplayInfo) {
-            // Logger.getInstance().error("displayinfo does not exist, Create display failed");
+            Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
             return;
         }
         if (this.mDisplay) {
@@ -425,7 +425,7 @@ export class Element extends BlockObject implements IElement {
     protected addDisplay() {
         this.createDisplay();
         const room = this.roomService;
-        if (!room) {
+        if (!room || !this.mDisplay) {
             // Logger.getInstance().error("roomService is undefined");
             return;
         }

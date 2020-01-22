@@ -222,7 +222,7 @@ export class MarketPanel extends Panel {
     this.emit("close");
   }
 
-  private onPopItemCardHandler() {
-    this.emit("popItemCard");
+  private onPopItemCardHandler(prop) {
+    this.emit("popItemCard", prop);
   }
 }

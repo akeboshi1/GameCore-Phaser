@@ -180,6 +180,26 @@
 				"h": 160
 			}
 		},
+		"name_bg.png": {
+			"frame": {
+				"x": 389,
+				"y": 666,
+				"w": 637,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 637,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 637,
+				"h": 86
+			}
+		},
 		"price_bg.png": {
 			"frame": {
 				"x": 797,
@@ -242,8 +262,8 @@
 		},
 		"tuding_icon.png": {
 			"frame": {
-				"x": 1150,
-				"y": 322,
+				"x": 1196,
+				"y": 1,
 				"w": 27,
 				"h": 29
 			},
@@ -262,8 +282,8 @@
 		},
 		"yellow_button_down": {
 			"frame": {
-				"x": 1053,
-				"y": 484,
+				"x": 1150,
+				"y": 322,
 				"w": 58,
 				"h": 60
 			},
@@ -282,8 +302,8 @@
 		},
 		"yellow_button_normal": {
 			"frame": {
-				"x": 1113,
-				"y": 484,
+				"x": 1150,
+				"y": 384,
 				"w": 58,
 				"h": 60
 			},
@@ -302,8 +322,8 @@
 		},
 		"yellow_button_over": {
 			"frame": {
-				"x": 797,
-				"y": 546,
+				"x": 1150,
+				"y": 446,
 				"w": 58,
 				"h": 60
 			},
@@ -327,7 +347,7 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1195,
+			"w": 1224,
 			"h": 843
 		},
 		"scale": "1"

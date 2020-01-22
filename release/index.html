@@ -48,9 +48,8 @@
             else {
                 if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {
                     window.addEventListener('orientationchange', (e) => {
-                        window.availWidth
                         // window.orientation === 0 为竖屏，1为横屏
-                        app.onOrientationChange(window.orientation, window.screen.availWidth, window.screen.availHeight);
+                        app.onOrientationChange(window.orientation, window.innerWidth, window.innerHeight);
                     });
                 }
                 else {

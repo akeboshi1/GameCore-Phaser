@@ -2,6 +2,7 @@ import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { DynamicImage } from "../components/dynamic.image";
+import { i18n } from "../../i18n";
 
 export class ItemPopCardPanel extends Panel {
   private readonly key = "item_pop_card";
@@ -12,6 +13,7 @@ export class ItemPopCardPanel extends Panel {
   private mDesBg: Phaser.GameObjects.Image;
   private mDesText: Phaser.GameObjects.Text;
   private mCloseBtn: Phaser.GameObjects.Image;
+  private mSource: Phaser.GameObjects.Text;
   private mProp: DynamicImage;
   constructor(scene: Phaser.Scene, worldService: WorldService) {
     super(scene, worldService);
@@ -52,8 +54,17 @@ export class ItemPopCardPanel extends Panel {
     if (!this.mData) {
       return;
     }
-    this.mDesText.setText(this.mData.des);
-    this.mNickName.setText(this.mData.name);
+    const prop = this.mData[0].prop;
+    if (!prop) {
+      return;
+    }
+    this.mDesText.setText(prop.des);
+    this.mNickName.setText(prop.name);
+    if (prop.source) {
+      this.mSource.setText(i18n.t("item.source") + prop.source);
+    } else {
+      this.mSource.setText("");
+    }
   }
 
   protected preload() {
@@ -95,9 +106,9 @@ export class ItemPopCardPanel extends Panel {
       x: -350,
       y: 264,
       style: {
-        font: "68px",
+        font: "38px",
         wordWrap: {
-          width: 260,
+          width: 700,
           useAdvancedWrap: true
         }
       }
@@ -108,8 +119,16 @@ export class ItemPopCardPanel extends Panel {
       frame: "close.png"
     }, false).setInteractive();
 
+    this.mSource = this.scene.make.text({
+      x: -350,
+      y: 500,
+      style: {
+        font: "32px"
+      }
+    }, false);
+
     this.add(this.mCardContainer);
-    this.mCardContainer.add([this.mBackground, this.mNickNameBg, this.mNickName, this.mDesText]);
+    this.mCardContainer.add([this.mBackground, this.mNickNameBg, this.mNickName, this.mDesText, this.mSource]);
     this.add(this.mCloseBtn);
 
     super.init();

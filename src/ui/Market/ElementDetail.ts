@@ -9,30 +9,32 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mBackground: Phaser.GameObjects.Image;
   private mCounter: NumberCounter;
   private mBuyBtn: NinePatchButton;
+  private mNickNameBg: Phaser.GameObjects.Image;
   private mNickName: Phaser.GameObjects.Text;
   private mDetailBubble: Phaser.GameObjects.Image;
   private mDesText: Phaser.GameObjects.Text;
   private mSelectedProp: op_client.IMarketCommodity;
   private mPriceIcon: Phaser.GameObjects.Image;
   private mPriceText: Phaser.GameObjects.Text;
+  private mSource: Phaser.GameObjects.Text;
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   constructor(scene: Phaser.Scene, $key: string, ) {
     super(scene);
     this.key = $key;
 
-    this.setPosition(0, 150);
+    this.setPosition(0, 250);
 
     this.mBackground = this.scene.make.image({
       x: this.scene.cameras.main.width >> 1,
       key: this.key,
       frame: "bg.png"
     });
-    this.mBackground.y = (this.mBackground.height >> 1);
+    this.mBackground.y = (this.mBackground.height >> 1) - 50;
 
-    this.mCounter = new NumberCounter(this.scene, $key, 360, 800);
+    this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
 
-    this.mBuyBtn = new NinePatchButton(this.scene, 880, 800, 328, 164, this.key, "yellow_button", i18n.t("market.buy_button"), {
+    this.mBuyBtn = new NinePatchButton(this.scene, 880, 700, 328, 164, this.key, "yellow_button", i18n.t("market.buy_button"), {
       left: 36,
       top: 34,
       right: 20,
@@ -45,9 +47,16 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mBuyBtn.setTextOffset(0, 33);
     this.mBuyBtn.on("pointerup", this.onBuyHandler, this);
 
+    this.mNickNameBg = this.scene.make.image({
+      x: 360,
+      y: 580,
+      key: this.key,
+      frame: "name_bg.png"
+    }, false);
+
     this.mNickName = this.scene.make.text({
       x: 360,
-      y: 630,
+      y: 580,
       text: "小黄鸭奶油小食棚",
       style: {
         font: "42px YaHei",
@@ -57,14 +66,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     this.mDetailBubble = this.scene.make.image({
       x: 830,
-      y: 380,
+      y: 330,
       key: this.key,
       frame: "detail_bubble.png"
     }, false);
 
     this.mDesText = this.scene.make.text({
       x: 720,
-      y: 235,
+      y: 185,
       style: {
         font: "40px",
         wordWrap: {
@@ -88,11 +97,19 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       }
     });
 
+    this.mSource = this.scene.make.text({
+      x: 710,
+      y: 440,
+      style: {
+        font: "32px"
+      }
+    }, false);
+
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.x = 360;
-    this.mDetailDisplay.y = 400;
+    this.mDetailDisplay.y = 350;
 
-    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickName, this.mDetailBubble, this.mDesText]);
+    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickNameBg, this.mNickName, this.mDetailBubble, this.mDesText, this.mSource]);
     this.mBuyBtn.add([this.mPriceIcon, this.mPriceText]);
 
     this.addActionListener();
@@ -106,6 +123,12 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.setSize(width, height);
 
     this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
+
+    // test interactive
+    // const graphics = this.scene.make.graphics(undefined, false);
+    // graphics.fillStyle(0xFF9900, 0.5);
+    // graphics.fillRect(0, 0, width, height);
+    // this.add(graphics);
 
     this.mCounter.resize();
   }
@@ -131,6 +154,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       this.mPriceText.setText(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");
+    }
+    if (prop.source) {
+      this.mSource.setText(`来源： ${prop.source}`);
+    } else {
+      this.mSource.setText("");
     }
     this.mCounter.setCounter(1);
   }

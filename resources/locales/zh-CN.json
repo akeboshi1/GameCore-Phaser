@@ -2,5 +2,8 @@
   "market": {
     "title": "商城",
     "buy_button": "购 买"
+  },
+  "item": {
+    "source": "来源："
   }
 }
