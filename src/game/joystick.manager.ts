@@ -7,6 +7,7 @@ import { Direction } from "../rooms/element/element";
 import { op_def } from "pixelpai_proto";
 import { PlayScene } from "../scenes/play";
 import { DecorateRoom } from "../rooms/decorate.room";
+import { Tool } from "../utils/tool";
 
 const TEMP_CONST = {
     MOUSE_DOWN: 0,
@@ -306,8 +307,12 @@ export class JoyStick {
         if (!(this.mWorld.inputManager as JoyStickManager).enable) {
             return;
         }
+        let radian = Math.acos(dragX / d);
+        if (pointer.worldY > this.parentCon.y) {
+            radian = -radian;
+        }
         this.mJoyListeners.forEach((l: InputListener) => {
-            this.checkdragDown(l, r);
+            this.checkdragDown(l, radian);
         });
     }
 
@@ -346,14 +351,31 @@ export class JoyStick {
     private checkdragDown(l: InputListener, r: number): boolean {
         let dir: number;
         let keyArr: number[] = [];
-        if (r <= 0 && r > (-Math.PI / 2)) {
-            dir = r !== 0 ? Direction.right_up : Direction.right;
-        } else if (r <= (-Math.PI / 2) && r > (-Math.PI)) {
-            dir = r !== (-Math.PI / 2) ? Direction.up_left : Direction.up;
-        } else if (r > (Math.PI / 2) && r <= Math.PI) {
-            dir = r !== Math.PI ? Direction.left_down : Direction.left;
-        } else if (r > 0 && r <= (Math.PI / 2)) {
-            dir = r !== Math.PI / 2 ? Direction.down_right : Direction.down;
+        const radian: number = Math.PI * 0.125;
+        if (r > -radian && r <= radian) {
+            dir = Direction.east;
+            Logger.getInstance().log("dir:Direction.east");
+        } else if (r > radian && r <= 3 * radian) {
+            dir = Direction.east_north;
+            Logger.getInstance().log("dir:Direction.east_north");
+        } else if (r > 3 * radian && r <= 5 * radian) {
+            dir = Direction.north;
+            Logger.getInstance().log("dir:Direction.north");
+        } else if (r > 5 * radian && r <= 7 * radian) {
+            dir = Direction.north_west;
+            Logger.getInstance().log("dir:Direction.nroth_west");
+        } else if ((r >= 7 * radian && r <= Math.PI) || (r >= -Math.PI && r < -7 * radian)) {
+            dir = Direction.west;
+            Logger.getInstance().log("dir:Direction.west");
+        } else if (r < -5 * radian && r >= -7 * radian) {
+            dir = Direction.west_south;
+            Logger.getInstance().log("dir:Direction.west_south");
+        } else if (r > -5 * radian && r <= -3 * radian) {
+            dir = Direction.south;
+            Logger.getInstance().log("dir:Direction.south");
+        } else if (r > -3 * radian && r <= -radian) {
+            dir = Direction.south_east;
+            Logger.getInstance().log("dir:Direction.south_east");
         }
         keyArr = this.getKeys(dir);
         if (this.mdownStr === keyArr.toString()) return false;
