@@ -52,19 +52,20 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
 
-        this.worldService.emitter.on(MessageType.SHOW_UI, this.handleShowUI, this);
         this.mUILayerManager = new LayerManager();
     }
 
     public addPackListener() {
         if (this.mConnect) {
             this.mConnect.addPacketListener(this);
+            this.worldService.emitter.on(MessageType.SHOW_UI, this.handleShowUI, this);
         }
     }
 
     public removePackListener() {
         if (this.mConnect) {
             this.mConnect.removePacketListener(this);
+            this.worldService.emitter.off(MessageType.SHOW_UI, this.handleShowUI, this);
         }
     }
 
