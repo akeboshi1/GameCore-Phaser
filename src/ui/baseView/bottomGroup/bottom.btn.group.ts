@@ -300,7 +300,7 @@ export class BottomBtnGroup extends Panel {
         if (mediator.isShow()) {
             mediator.hide();
         } else {
-            mediator.show();
+            mediator.show(true);
         }
     }
 }
