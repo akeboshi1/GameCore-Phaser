@@ -122,6 +122,8 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mBackground.x = this.scene.cameras.main.centerX / scale;
     this.setSize(width, height);
 
+    this.mDetailDisplay.scale = 1 / scale;
+
     this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
 
     // test interactive
@@ -196,7 +198,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   private onPointerUpHandler() {
-    this.emit("popItemCard", this.mSelectedProp);
+    this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
   }
 
 }

@@ -49,6 +49,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.scene.load.start();
   }
 
+  get display(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE {
+    return this.mDisplay;
+  }
+
   private onCompleteHandler() {
     if (!this.mImage) {
       this.mImage = this.scene.make.image(undefined, false);

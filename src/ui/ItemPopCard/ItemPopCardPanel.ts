@@ -3,6 +3,9 @@ import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { DynamicImage } from "../components/dynamic.image";
 import { i18n } from "../../i18n";
+import * as copy from "copy-text-to-clipboard";
+import { DetailDisplay } from "../Market/DetailDisplay";
+import { op_client } from "pixelpai_proto";
 
 export class ItemPopCardPanel extends Panel {
   private readonly key = "item_pop_card";
@@ -14,6 +17,8 @@ export class ItemPopCardPanel extends Panel {
   private mDesText: Phaser.GameObjects.Text;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mSource: Phaser.GameObjects.Text;
+  private mNickNameDown: boolean;
+  private mDetailDisplay: DetailDisplay;
   private mProp: DynamicImage;
   constructor(scene: Phaser.Scene, worldService: WorldService) {
     super(scene, worldService);
@@ -37,6 +42,8 @@ export class ItemPopCardPanel extends Panel {
     this.mCloseBtn.y = centerY + this.mBackground.height / 2 + 140;
 
     this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+
+    this.mDetailDisplay.scale = 1 / scale;
 
     // this.mCloseBtn.x = centerX;
     // this.mCloseBtn.y = centerY;
@@ -64,6 +71,16 @@ export class ItemPopCardPanel extends Panel {
       this.mSource.setText(i18n.t("item.source") + prop.source);
     } else {
       this.mSource.setText("");
+    }
+    const resource: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE = this.mData[0].display;
+    if (resource) {
+      if (resource.display) {
+        this.mDetailDisplay.loadDisplay(resource);
+      } else if (resource.avatar) {
+        this.mDetailDisplay.loadAvatar(resource.avatar);
+      } else {
+        this.mDetailDisplay.loadUrl(prop.icon);
+      }
     }
   }
 
@@ -94,7 +111,7 @@ export class ItemPopCardPanel extends Panel {
       style: {
         font: "68px"
       }
-    }, false).setOrigin(0.5);
+    }, false).setOrigin(0.5).setInteractive();
 
     this.mDesBg = this.scene.make.image({
       y: 392,
@@ -114,6 +131,9 @@ export class ItemPopCardPanel extends Panel {
       }
     }, false);
 
+    this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.y = -150;
+
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
       frame: "close.png"
@@ -128,7 +148,7 @@ export class ItemPopCardPanel extends Panel {
     }, false);
 
     this.add(this.mCardContainer);
-    this.mCardContainer.add([this.mBackground, this.mNickNameBg, this.mNickName, this.mDesText, this.mSource]);
+    this.mCardContainer.add([this.mBackground, this.mDetailDisplay, this.mNickNameBg, this.mNickName, this.mDesText, this.mSource]);
     this.add(this.mCloseBtn);
 
     super.init();
@@ -138,9 +158,21 @@ export class ItemPopCardPanel extends Panel {
 
     this.on("pointerup", this.onCloseHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mNickName.on("pointerup", this.onPointerNickNameHandler, this);
+    this.mNickName.on("pointerdown", this.onPointerNickNameDownHandler, this);
   }
 
   private onCloseHandler() {
     this.emit("close");
+    this.mNickNameDown = false;
+  }
+
+  private onPointerNickNameHandler() {
+    if (this.mNickNameDown) copy(this.mNickName.text);
+    this.mNickNameDown = false;
+  }
+
+  private onPointerNickNameDownHandler() {
+    this.mNickNameDown = true;
   }
 }

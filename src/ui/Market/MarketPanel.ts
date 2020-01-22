@@ -96,7 +96,7 @@ export class MarketPanel extends Panel {
     }
     this.add(this.mItems);
 
-    // if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
+    if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
   }
 
   public setCommodityResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
@@ -222,7 +222,9 @@ export class MarketPanel extends Panel {
     this.emit("close");
   }
 
-  private onPopItemCardHandler(prop) {
-    this.emit("popItemCard", prop);
+  private onPopItemCardHandler(prop, display) {
+    if (prop) {
+      this.emit("popItemCard", prop, display);
+    }
   }
 }

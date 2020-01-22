@@ -62,14 +62,15 @@ export class MarketMediator extends BaseMediator {
     this.mMarket.queryCommodityResource(prop.id, prop.category);
   }
 
-  private onPopItemCardHandler(prop) {
+  private onPopItemCardHandler(prop, display) {
     // const packet: PBpacket = new PBpacket(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI);
     // const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
     // content.name = "ItemPopCard";
     const packet = {
       content: {
         name: "ItemPopCard",
-        prop
+        prop,
+        display
       }
     };
     this.world.emitter.emit(MessageType.SHOW_UI, packet);

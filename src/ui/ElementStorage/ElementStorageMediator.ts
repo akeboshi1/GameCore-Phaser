@@ -74,7 +74,8 @@ export class ElementStorageMediator extends BaseMediator {
     }
 
     private onQueryElementHandler(page: number, perPage: number) {
-        this.mStorage.queryPackage(page, perPage);
+        // this.mStorage.queryPackage(page, perPage);
+        this.mStorage.queryMarketPackage(page, perPage);
     }
 
     private register() {
