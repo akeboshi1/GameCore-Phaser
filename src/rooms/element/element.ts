@@ -28,7 +28,7 @@ export enum PlayerState {
     GREET01 = "greet01",
     SIT = "sit",
     LIE = "lit",
-    EMOTION01 = "emotion01",
+    EMOTION01 = "emotion01"
 }
 
 export enum Direction {
@@ -39,7 +39,7 @@ export enum Direction {
     down,
     down_right,
     right,
-    right_up,
+    right_up
 }
 
 export interface IElement {
@@ -85,7 +85,6 @@ export interface MoveData {
 }
 
 export class Element extends BlockObject implements IElement {
-
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
     }
@@ -150,7 +149,7 @@ export class Element extends BlockObject implements IElement {
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
@@ -183,7 +182,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public getDirection(): number {
-        return (this.mDisplayInfo && this.mDisplayInfo.avatarDir) ? this.mDisplayInfo.avatarDir : 3;
+        return this.mDisplayInfo && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
     }
 
     public changeState(val?: string) {
@@ -211,8 +210,8 @@ export class Element extends BlockObject implements IElement {
         }
         this.mMoveData.arrivalTime = moveData.timestemp;
         this.mMoveData.destPos = new Pos(
-            Math.floor(moveData.destinationPoint3f.x)
-            , Math.floor(moveData.destinationPoint3f.y)
+            Math.floor(moveData.destinationPoint3f.x),
+            Math.floor(moveData.destinationPoint3f.y)
         );
         // Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
         // Logger.getInstance().debug("walk has movedata");
@@ -243,9 +242,7 @@ export class Element extends BlockObject implements IElement {
     public getPosition(): Pos {
         let pos: Pos;
         if (this.mDisplay) {
-            pos = new Pos(this.mDisplay.x,
-                this.mDisplay.y,
-                this.mDisplay.z);
+            pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
         }
         return pos;
     }
@@ -373,7 +370,7 @@ export class Element extends BlockObject implements IElement {
             ease: "Linear",
             props: {
                 x: { value: this.mMoveData.destPos.x },
-                y: { value: this.mMoveData.destPos.y },
+                y: { value: this.mMoveData.destPos.y }
             },
             onStart: () => {
                 this.onMoveStart();
@@ -386,11 +383,12 @@ export class Element extends BlockObject implements IElement {
                 // Logger.getInstance().debug("moveing:" + this.mDisplay.x + "-" + this.mDisplay.y);
                 this.onMoving();
             },
-            onCompleteParams: [this],
+            onCompleteParams: [this]
         });
     }
 
     protected createDisplay(): ElementDisplay {
+        console.log("create terrain display====>");
         if (!this.mDisplayInfo) {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
@@ -481,8 +479,7 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.y = position.y - 130;
     }
 
-    protected onMoveStart() {
-    }
+    protected onMoveStart() {}
 
     protected onMoveComplete() {
         this.mMoveData.tweenAnim.stop();
@@ -490,7 +487,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onMoving() {
         const now = this.roomService.now();
-        if ((now - (this.mMoveData.tweenLastUpdate || 0)) >= 50) {
+        if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
             this.setDepth();
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();

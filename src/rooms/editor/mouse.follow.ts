@@ -1,15 +1,15 @@
-import {IFramesModel} from "../display/frames.model";
-import {FramesDisplay} from "../display/frames.display";
-import {LayerManager} from "../layer/layer.manager";
-import {EditorRoomService} from "../editor.room";
-import {IElementManager} from "../element/element.manager";
-import {op_client, op_def} from "pixelpai_proto";
+import { IFramesModel } from "../display/frames.model";
+import { FramesDisplay } from "../display/frames.display";
+import { LayerManager } from "../layer/layer.manager";
+import { EditorRoomService } from "../editor.room";
+import { IElementManager } from "../element/element.manager";
+import { op_client, op_def } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
-import {ISprite, Sprite} from "../element/sprite";
+import { ISprite, Sprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
-import {Logger} from "../../utils/log";
-import {IRoomService} from "../room";
-import {IPosition45Obj, Position45} from "../../utils/position45";
+import { Logger } from "../../utils/log";
+import { IRoomService } from "../room";
+import { IPosition45Obj, Position45 } from "../../utils/position45";
 
 export class MouseFollow {
     private mNodeType: NodeType;
@@ -77,6 +77,7 @@ export class MouseFollow {
             sprite.newID();
             sprite.pos = this.getPosition(display.x, display.y);
             sprite.bindID = this.mSprite.id;
+            sprite.sn = this.mSprite.sn;
             // sprite.nodeType = this.mSprite.node
             result.push(sprite);
         }
@@ -100,9 +101,12 @@ export class MouseFollow {
         return result;
     }
 
-    transitionGrid(x: number, y: number, ) {
+    transitionGrid(x: number, y: number) {
         const source = new Pos(x, y);
-        const pos = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mRoomService.transformTo45(source) : this.mRoomService.transformToMini45(source);
+        const pos =
+            this.mNodeType === op_def.NodeType.TerrainNodeType
+                ? this.mRoomService.transformTo45(source)
+                : this.mRoomService.transformToMini45(source);
         if (this.mAlignGrid === false) {
             return this.checkBound(pos, source);
         }
@@ -117,7 +121,10 @@ export class MouseFollow {
      */
     checkBound(pos: Pos, source?: Pos) {
         const bound = new Pos(pos.x, pos.y);
-        const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mRoomService.roomSize : this.mRoomService.miniSize;
+        const size =
+            this.mNodeType === op_def.NodeType.TerrainNodeType
+                ? this.mRoomService.roomSize
+                : this.mRoomService.miniSize;
         if (pos.x < 0) {
             bound.x = 0;
         } else if (pos.x > size.cols) {
@@ -239,7 +246,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         if (!sprite) {
             return;
         }
-        const frame = <IFramesModel> sprite.displayInfo;
+        const frame = <IFramesModel>sprite.displayInfo;
         this.mNodeType = sprite.nodeType;
         let frameDisplay: FramesDisplay;
         const { tileWidth, tileHeight } = this.mRoomService.roomSize;

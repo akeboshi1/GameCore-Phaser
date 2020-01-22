@@ -40,7 +40,7 @@ import { EditScene } from "../scenes/edit";
 import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
-import * as  path from "path";
+import * as path from "path";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -76,7 +76,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mClock = new Clock(this.mConnection, this);
 
         // add Packet listener.
-        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
+        this.addHandlerFun(
+            op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT,
+            this.onInitVirtualWorldPlayerInit
+        );
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
@@ -97,7 +100,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mUiManager.addPackListener();
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
-        if (gateway) { // connect to game server.
+        if (gateway) {
+            // connect to game server.
             this.mConnection.startConnect(gateway);
         }
 
@@ -121,13 +125,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void {
+    onDisConnected(connection?: SocketConnection): void {}
 
-    }
-
-    onError(reason: SocketConnectionError | undefined): void {
-
-    }
+    onError(reason: SocketConnectionError | undefined): void {}
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -162,11 +162,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             if (!this.mGame.device.os.desktop) {
                 if (width < height) {
-                    this.mConfig.ui_scale = width / this.mConfig.baseHeight * 2;
+                    this.mConfig.ui_scale = (width / this.mConfig.baseHeight) * 2;
                     this.mGame.scale.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
                     Logger.getInstance().log("竖变横版");
                 } else if (width > height) {
-                    this.mConfig.ui_scale = width / this.mConfig.baseWidth * 2;
+                    this.mConfig.ui_scale = (width / this.mConfig.baseWidth) * 2;
                     this.mGame.scale.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
                     Logger.getInstance().log("横变竖版");
                 }
@@ -235,8 +235,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     get uiScale(): number {
-        if (this.mConfig)
-            return this.mConfig.ui_scale;
+        if (this.mConfig) return this.mConfig.ui_scale;
         return 1;
     }
 
@@ -285,13 +284,25 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public enableClick() {
-        if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom && this.mRoomMamager.currentRoom.scene && this.mRoomMamager.currentRoom.scene.input) {
+        if (
+            this.game &&
+            this.mRoomMamager &&
+            this.mRoomMamager.currentRoom &&
+            this.mRoomMamager.currentRoom.scene &&
+            this.mRoomMamager.currentRoom.scene.input
+        ) {
             this.mRoomMamager.currentRoom.scene.input.enabled = true;
         }
     }
 
     public disableClick() {
-        if (this.game && this.mRoomMamager && this.mRoomMamager.currentRoom && this.mRoomMamager.currentRoom.scene && this.mRoomMamager.currentRoom.scene.input) {
+        if (
+            this.game &&
+            this.mRoomMamager &&
+            this.mRoomMamager.currentRoom &&
+            this.mRoomMamager.currentRoom.scene &&
+            this.mRoomMamager.currentRoom.scene.input
+        ) {
             this.mRoomMamager.currentRoom.scene.input.enabled = false;
         }
     }
@@ -319,7 +330,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConfig.virtual_world_id = worldId;
         this.mConnection.addPacketListener(this);
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
-        if (gateway) { // connect to game server.
+        if (gateway) {
+            // connect to game server.
             this.mConnection.startConnect(gateway);
         }
         this.mClock = new Clock(this.mConnection, this);
@@ -406,7 +418,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
                 loginScene.remove();
                 this.mGame.scene.start(LoadingScene.name, { world: this });
-            },
+            }
         });
     }
 
@@ -442,7 +454,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         // Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
-        if (!this.mConfig.game_id || !this.mAccount || !this.mAccount.accountData || !this.mAccount.accountData.token || !this.mAccount.accountData.expire || !this.mAccount.accountData.fingerprint) {
+        if (
+            !this.mConfig.game_id ||
+            !this.mAccount ||
+            !this.mAccount.accountData ||
+            !this.mAccount.accountData.token ||
+            !this.mAccount.accountData.expire ||
+            !this.mAccount.accountData.fingerprint
+        ) {
             // Logger.getInstance().debug("缺少必要参数，无法登录游戏");
             if (this.mGame) this.mGame.destroy(true);
             return;
@@ -472,8 +491,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.createGame(content.keyEvents);
                 // Logger.getInstance().debug("created game suc");
             })
-            .catch((err) => {
-                // Logger.getInstance().log(err);
+            .catch(err => {
+                Logger.getInstance().log(err);
             });
     }
 
@@ -497,31 +516,33 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 createContainer: true
             },
             plugins: {
-                global: [{
-                    key: "rexButton",
-                    plugin: ButtonPlugin,
-                    start: true
-                },
-                {
-                    key: "rexNinePatchPlugin",
-                    plugin: NinePatchPlugin,
-                    start: true
-                },
-                {
-                    key: "rexInputText",
-                    plugin: InputTextPlugin,
-                    start: true
-                },
-                {
-                    key: "rexBBCodeTextPlugin",
-                    plugin: BBCodeTextPlugin,
-                    start: true
-                }],
+                global: [
+                    {
+                        key: "rexButton",
+                        plugin: ButtonPlugin,
+                        start: true
+                    },
+                    {
+                        key: "rexNinePatchPlugin",
+                        plugin: NinePatchPlugin,
+                        start: true
+                    },
+                    {
+                        key: "rexInputText",
+                        plugin: InputTextPlugin,
+                        start: true
+                    },
+                    {
+                        key: "rexBBCodeTextPlugin",
+                        plugin: BBCodeTextPlugin,
+                        start: true
+                    }
+                ],
                 scene: [
                     {
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-                        mapping: "dragonbone",
+                        mapping: "dragonbone"
                     },
                     { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
                 ]
@@ -578,20 +599,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private loadGameConfig(paths: string[]): Promise<Lite> {
         const promises = [];
-        let configPath = "";
-        for (const remotePath of paths) {
-            if (PI_EXTENSION_REGEX.test(remotePath)) {
-                configPath = ResUtils.getGameConfig(remotePath);
-                // Logger.getInstance().log(`start download config: ${configPath}`);
-                promises.push(load(configPath, "arraybuffer"));
-            }
-        }
+        // let configPath = "";
+        // for (const remotePath of paths) {
+        //     if (PI_EXTENSION_REGEX.test(remotePath)) {
+        //         configPath = ResUtils.getGameConfig(remotePath);
+        //         // Logger.getInstance().log(`start download config: ${configPath}`);
+        //         promises.push(load(configPath, "arraybuffer"));
+        //     }
+        // }
+        promises.push(load("http://172.17.19.48:8080/5e1d81163bcc774a3c172e94.pi", "arraybuffer"));
         // TODO Promise.all如果其中有一个下载失败，会返回error
-        return Promise.all(promises)
-            .then((reqs: any[]) => {
-                Logger.getInstance().log("start decodeConfig");
-                return this.decodeConfigs(reqs);
-            });
+        return Promise.all(promises).then((reqs: any[]) => {
+            Logger.getInstance().log("start decodeConfig");
+            return this.decodeConfigs(reqs);
+        });
     }
 
     private decodeConfigs(reqs: any[]): Promise<Lite> {
@@ -602,6 +623,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     try {
                         const gameConfig = new Lite();
                         gameConfig.deserialize(new Uint8Array(arraybuffer));
+                        console.log("TCL: World -> gameConfig", gameConfig);
                         resolve(gameConfig);
                     } catch (error) {
                         reject(error);

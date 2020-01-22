@@ -1,9 +1,9 @@
 import { Pos } from "../../utils/pos";
-import {DragonbonesModel, IAvatar, IDragonbonesModel} from "../display/dragonbones.model";
+import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
 import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import { SlotInfo } from "../player/slot.info";
-import {FramesModel, IFramesModel} from "../display/frames.model";
-import {Animation} from "../display/animation";
+import { FramesModel, IFramesModel } from "../display/frames.model";
+import { Animation } from "../display/animation";
 import Helpers from "../../utils/helpers";
 import NodeType = op_def.NodeType;
 
@@ -30,6 +30,7 @@ export interface ISprite {
     direction: number;
     pos: Pos;
     bindID: number;
+    sn: string;
 
     newID();
     setPosition(x: number, y: number);
@@ -44,6 +45,7 @@ export class Sprite implements ISprite {
     protected mCurrentAnimationName: string;
     protected mDirection: number;
     protected mBindID: number;
+    protected mSn: string;
     protected mAlpha: number;
     protected mNickname: string;
     protected mDisplayBadgeCards: op_def.IBadgeCard[];
@@ -93,6 +95,9 @@ export class Sprite implements ISprite {
                 }
             });
         }
+        if (obj.sn) {
+            this.mSn = obj.sn;
+        }
         this.mCurrentAnimationName = obj.currentAnimationName;
         this.mDirection = obj.direction || 3;
         this.mNickname = obj.nickname;
@@ -114,10 +119,11 @@ export class Sprite implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel> this.displayInfo).toClient();
+            sprite.animations = (<FramesModel>this.displayInfo).toClient();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
+        sprite.sn = this.sn;
         return sprite;
     }
 
@@ -177,6 +183,14 @@ export class Sprite implements ISprite {
 
     set bindID(id: number) {
         this.mBindID = id;
+    }
+
+    get sn(): string {
+        return this.mSn;
+    }
+
+    set sn(value: string) {
+        this.mSn = value;
     }
 
     get alpha(): number {

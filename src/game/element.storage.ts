@@ -1,14 +1,24 @@
-import {FramesModel, IFramesModel} from "../rooms/display/frames.model";
-import {DragonbonesModel, IDragonbonesModel} from "../rooms/display/dragonbones.model";
-import {Lite, ElementNode, SpawnPointNode} from "game-capsule/index";
-import {Logger} from "../utils/log";
-import {op_def} from "pixelpai_proto";
+import { FramesModel, IFramesModel } from "../rooms/display/frames.model";
+import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbones.model";
+import {
+    Lite,
+    ElementNode,
+    SpawnPointNode,
+    TerrainNode,
+    PaletteNode,
+    TerrainCollectionNode,
+    SceneNode
+} from "game-capsule/index";
+import { Logger } from "../utils/log";
+import { op_def } from "pixelpai_proto";
 import { Animation } from "../rooms/display/animation";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
     add(obj: IFramesModel | IDragonbonesModel): void;
     getObject(id: number): IFramesModel | IDragonbonesModel;
+    getTerrainCollection();
+    getPalette(id: number): IFramesModel;
 }
 
 interface IDisplayRef {
@@ -20,18 +30,23 @@ interface IDisplayRef {
 export class ElementStorage implements IElementStorage {
     private mModels = new Map<number, FramesModel | DragonbonesModel>();
     private mElementRef = new Map<number, IDisplayRef>();
+    private mPaletteModels = new Map<number, FramesModel>();
+    private _terrainCollection = new Map<number, TerrainCollectionNode>();
 
     public setGameConfig(config: Lite) {
-        if (!config) { return; }
+        console.log("TCL: ElementStorage -> config", config);
+        if (!config) {
+            return;
+        }
         const objs = config.objectsList;
         let displayModel = null;
         // TODO Lite deserialize可能会有个别Display link失败
         for (const obj of objs) {
-            if (obj.type === op_def.NodeType.TerrainNodeType || obj.type === op_def.NodeType.ElementNodeType) {
+            if (obj.type === op_def.NodeType.ElementNodeType) {
                 displayModel = this.mModels.get(obj.id);
                 if (!displayModel) {
                     const anis = [];
-                    const eleAnis = (<ElementNode> obj).animations;
+                    const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
                         anis.push(new Animation(ani));
@@ -49,10 +64,32 @@ export class ElementStorage implements IElementStorage {
                 }
                 const ele: IDisplayRef = {
                     id: obj.id,
-                    displayModel,
+                    displayModel
                 };
                 this.mElementRef.set(obj.id, ele);
             }
+        }
+
+        for (const peer of config.root.palette.peers) {
+            const { key, entity } = peer;
+            const terrain = entity as TerrainNode;
+            const terrainModel = this.mModels.get(entity.id);
+            if (!terrainModel) {
+                const frameModel = new FramesModel({
+                    id: entity.id,
+                    sn: entity.sn,
+                    animations: {
+                        defaultAnimationName: terrain.animations.defaultAnimationName,
+                        display: terrain.animations.display,
+                        animationData: terrain.animations.animationData.map(ani => new Animation(ani))
+                    }
+                });
+                this.mPaletteModels.set(entity.id, frameModel);
+            }
+        }
+
+        for (const scene of config.root.children) {
+            this._terrainCollection.set(scene.id, (scene as SceneNode).terrainCollection);
         }
     }
 
@@ -67,6 +104,14 @@ export class ElementStorage implements IElementStorage {
         }
         // Logger.getInstance().error(`can't find element ${id}`);
         return;
+    }
+
+    public getTerrainCollection() {
+        return this._terrainCollection;
+    }
+
+    public getPalette(id: number) {
+        return this.mPaletteModels.get(id);
     }
 
     // public loadGameConfig(paths: string[]): Promise<Lite> {

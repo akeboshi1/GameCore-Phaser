@@ -9,6 +9,7 @@ import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "../element/sprite";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
+import { WorldService } from "../../game/world.service";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -29,7 +30,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+            this.addHandlerFun(
+                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION,
+                this.onChangeAnimation
+            );
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -45,7 +49,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.connection.removePacketListener(this);
         }
         if (!this.mTerrains) return;
-        this.mTerrains.forEach((terrain) => this.remove(terrain.id));
+        this.mTerrains.forEach(terrain => this.remove(terrain.id));
         this.mTerrains.clear();
     }
 
@@ -56,6 +60,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         return terrain;
     }
+
 
     public add(sprites: ISprite[]) {
         for (const sprite of sprites) {
@@ -80,6 +85,55 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected onAdd(packet: PBpacket) {
         this.mPacketFrameCount++;
         if (!this.mGameConfig) {
+            return;
+        }
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
+        console.log("TCL: TerrainManager -> onAdd-----content", content);
+        const sprites = content.sprites;
+        const type = content.nodeType;
+        const pf: op_def.IPacket = content.packet;
+
+        // this.mRoom.mCurRoom
+        console.log("TCL: TerrainManager -> this.mRoom.mCurRoom", this.mRoom.world.roomManager.currentRoom);
+
+        if (type !== op_def.NodeType.TerrainNodeType) {
+            return;
+        }
+
+        // const currentRoomId = this.mRoom.world.roomManager.currentRoom.id;
+
+        // const terrainCollection = this.mRoom.world.elementStorage.getTerrainCollection();
+
+        // const curRoomTerrainCol = terrainCollection.get(currentRoomId);
+
+        let point: op_def.IPBPoint3f;
+        const ids = [];
+        // sprites 服务端
+        for (const sprite of sprites) {
+            point = sprite.point3f;
+            if (point) {
+                const s = new Sprite(sprite, type);
+                if (!s.displayInfo) {
+                    this.checkTerrainDisplay(s);
+                }
+                if (!s.displayInfo) {
+                    ids.push(s.id);
+                }
+                this._add(s);
+            }
+        }
+        this.fetchDisplay(ids);
+
+        console.log("sprites =====>", sprites);
+
+        if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
+            this.mListener.onFullPacketReceived(type);
+        }
+    }
+
+    protected onAdd1(packet: PBpacket) {
+        this.mPacketFrameCount++;
+        if (!this.mGameConfig) {
             // Logger.getInstance().error("gameconfig is undefined");
             return;
         }
@@ -87,6 +141,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const sprites = content.sprites;
         const type = content.nodeType;
         const pf: op_def.IPacket = content.packet;
+
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
@@ -167,6 +222,15 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
+    protected checkTerrainDisplay(sprite: ISprite) {
+        if (!sprite.displayInfo) {
+            const palette = this.roomService.world.elementStorage.getPalette(sprite.bindID || sprite.id);
+            if (palette) {
+                sprite.displayInfo = palette;
+            }
+        }
+    }
+
     protected fetchDisplay(ids: number[]) {
         if (ids.length === 0) {
             return;
@@ -185,7 +249,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const anis = content.changeAnimation;
         let terrain: Terrain = null;
         for (const ani of anis) {
-            terrain = this.get((ani.id));
+            terrain = this.get(ani.id);
             if (terrain) {
                 terrain.play(ani.animationName);
             }

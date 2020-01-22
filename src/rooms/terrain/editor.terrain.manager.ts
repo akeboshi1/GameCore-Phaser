@@ -1,11 +1,11 @@
-import {TerrainManager} from "./terrain.manager";
-import {ISprite} from "../element/sprite";
-import {PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_editor} from "pixelpai_proto";
-import {IRoomService, SpriteAddCompletedListener} from "../room";
-import {Terrain} from "./terrain";
-import {Pos} from "../../utils/pos";
-import {Logger} from "../../utils/log";
+import { TerrainManager } from "./terrain.manager";
+import { ISprite } from "../element/sprite";
+import { PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_editor } from "pixelpai_proto";
+import { IRoomService, SpriteAddCompletedListener } from "../room";
+import { Terrain } from "./terrain";
+import { Pos } from "../../utils/pos";
+import { Logger } from "../../utils/log";
 import { IElement } from "../element/element";
 
 export class EditorTerrainManager extends TerrainManager {
@@ -14,7 +14,7 @@ export class EditorTerrainManager extends TerrainManager {
         if (this.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE , this.onRemove);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
         }
     }
 
@@ -36,30 +36,29 @@ export class EditorTerrainManager extends TerrainManager {
         this.connection.send(pkt);
     }
 
-    removeEditor(id: number): IElement {
+    removeEditor(ids: number[]) {
         if (!this.mTerrains) return;
-        const terrain = this.tryRemove(id);
-        if (terrain) {
-            const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
-            const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
-            content.ids = [id];
-            content.nodeType = op_def.NodeType.TerrainNodeType;
-            this.connection.send(pkt);
-        }
-        return terrain;
+        ids.forEach(id => this.tryRemove(id));
+
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
+        content.ids = ids;
+        content.nodeType = op_def.NodeType.TerrainNodeType;
+        this.connection.send(pkt);
     }
 
     removeFormPositions(locations: Pos[]) {
         const terrains = Array.from(this.mTerrains.values());
-        let terrain: Terrain = null;
+        let ids = [];
         for (const pos of locations) {
-            terrain = terrains.find((ter) => {
+            const terrain = terrains.find(ter => {
                 return pos.equal(ter.getPosition45());
             });
             if (terrain) {
-                this.removeEditor(terrain.id);
+                ids.push(terrain.id);
             }
         }
+        this.removeEditor(ids);
     }
 
     protected _add(sprite: ISprite) {
@@ -72,6 +71,15 @@ export class EditorTerrainManager extends TerrainManager {
             return;
         }
         // TODO update terrain
+        // 根据x, y, z去重
+        const repeatTerrain = Array.from(this.mTerrains.values()).find(terrain => {
+            const pos = terrain.getPosition();
+            return pos.x === sprite.pos.x && pos.y === sprite.pos.y && pos.z === sprite.pos.z;
+        });
+
+        if (repeatTerrain) {
+            this.mTerrains.delete(repeatTerrain.id);
+        }
         this.mTerrains.set(terrain.id || 0, terrain);
         // this.roomService.blocks.add(terrain);
         return terrain;
@@ -95,7 +103,7 @@ export class EditorTerrainManager extends TerrainManager {
             return;
         }
         const sprites = content.sprites;
-        for (const  sprite of sprites) {
+        for (const sprite of sprites) {
             this.trySync(sprite);
         }
     }

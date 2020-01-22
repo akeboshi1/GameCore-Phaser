@@ -19,7 +19,6 @@ export interface ViewblockService {
 }
 
 export class ViewblockManager implements ViewblockService {
-
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];
     private mDelay: number = 0;
