@@ -192,25 +192,33 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
             keyCode = key.keyCode;
             if (key && key.isDown) {
                 keyCodeList.push(key.keyCode);
-                const left: number = keyLeftArr.indexOf(keyCode);
-                if (left > -1) {
-                    outPut += -1;
-                    continue;
+                if (keyLeftArr) {
+                    const left: number = keyLeftArr.indexOf(keyCode);
+                    if (left > -1) {
+                        outPut += -1;
+                        continue;
+                    }
                 }
-                const right: number = keyRightArr.indexOf(keyCode);
-                if (right > -1) {
-                    outPut += 1;
-                    continue;
+                if (keyRightArr) {
+                    const right: number = keyRightArr.indexOf(keyCode);
+                    if (right > -1) {
+                        outPut += 1;
+                        continue;
+                    }
                 }
-                const down: number = keyDownArr.indexOf(keyCode);
-                if (down > -1) {
-                    outPut += 3;
-                    continue;
+                if (keyDownArr) {
+                    const down: number = keyDownArr.indexOf(keyCode);
+                    if (down > -1) {
+                        outPut += 3;
+                        continue;
+                    }
                 }
-                const up: number = keyUpArr.indexOf(keyCode);
-                if (up > -1) {
-                    outPut += -3;
-                    continue;
+                if (keyUpArr) {
+                    const up: number = keyUpArr.indexOf(keyCode);
+                    if (up > -1) {
+                        outPut += -3;
+                        continue;
+                    }
                 }
             }
         }
