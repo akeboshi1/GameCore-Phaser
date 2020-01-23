@@ -59,11 +59,15 @@ export class MessageBoxMediator extends BaseMediator {
     private onBtnHandler(pointer, gameobject) {
         if (!gameobject) return;
         if (gameobject instanceof NinePatchButton) {
+            const btn = (gameobject as NinePatchButton).getBtnData();
+            if (!btn) {
+                return;
+            }
             const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam[0];
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
             content.uiId = param.id;
-            content.componentId = (gameobject as NinePatchButton).getBtnData().node.id;
+            content.componentId = btn.node.id;
             this.world.connection.send(pkt);
         }
     }

@@ -12,7 +12,7 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
     }, false).setOrigin(0.5);
     this.add(this.text);
 
-    this.text.on("pointerup", this.onPointerUpHandler, this);
+    this.on("pointerup", this.onPointerUpHandler, this);
   }
 
   setText(val: string) {
@@ -33,7 +33,8 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
 
   setSize(w: number, h: number) {
     super.setSize(w, h);
-    this.text.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+    // this.text.setInteractive(new Phaser.Geom.Rectangle(w >> 1, h >> 1, w, h), Phaser.Geom.Rectangle.Contains);
     return this;
   }
 

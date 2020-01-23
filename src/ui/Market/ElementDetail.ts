@@ -106,7 +106,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     }, false);
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
-    this.mDetailDisplay.x = 360;
+    this.mDetailDisplay.x = 265;
     this.mDetailDisplay.y = 350;
 
     this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickNameBg, this.mNickName, this.mDetailBubble, this.mDesText, this.mSource]);
@@ -119,8 +119,20 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const scale = this.scene.cameras.main.height / 1920;
     const width = (this.scene.cameras.main.width / scale);
     const height = ((this.scene.cameras.main.height / scale) >> 1) - 150;
+    const centerX = this.scene.cameras.main.centerX / scale;
     this.mBackground.x = this.scene.cameras.main.centerX / scale;
     this.setSize(width, height);
+
+    this.mBuyBtn.x = width - (this.mBuyBtn.width >> 1) - 35;
+    this.mDetailBubble.x = width - (this.mDetailBubble.width >> 1) - 93;
+
+    this.mDesText.x = this.mDetailBubble.x - (this.mDetailBubble.width >> 1) + 50;
+    this.mSource.x = this.mDesText.x;
+
+    this.mCounter.x = centerX * 0.6;
+    this.mNickName.x = this.mCounter.x;
+    this.mNickNameBg.x = this.mNickName.x;
+    this.mDetailDisplay.x = this.mNickName.x;
 
     this.mDetailDisplay.scale = 1 / scale;
 
@@ -149,7 +161,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
   setProp(prop: op_client.IMarketCommodity) {
     this.mSelectedProp = prop;
-    this.mNickName.setText(prop.name);
+    this.mNickName.setText(prop.shortName || prop.name);
     this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
       this.mPriceIcon.setTexture(this.key, "tuding_icon.png");

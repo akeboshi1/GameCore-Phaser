@@ -9,6 +9,7 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
 import { TabButton } from "../components/tab.button";
+import { Logger } from "../../utils/log";
 
 export class MarketPanel extends Panel {
   private readonly key = "market";
@@ -45,11 +46,11 @@ export class MarketPanel extends Panel {
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
-    this.mCategoriesBar.fillRect(0, 1153, width, 120);
+    this.mCategoriesBar.fillRect(0, 1150, width, 120);
 
     this.mTIle.x = centerX;
 
-    this.setInteractive();
+    this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mSelectItem.resize(w, h);
   }

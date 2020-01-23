@@ -16,7 +16,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mBackground = this.scene.make.image({
       key: "market",
       frame: "border.png"
-    }, false).setInteractive();
+    }, false);
 
     this.mBorder = this.scene.make.image({
       key: "market",
@@ -60,7 +60,9 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, 385, 180), Phaser.Geom.Rectangle.Contains);
 
-    this.mBackground.on("pointerup", this.onPointerUpHandler, this);
+    this.setSize(this.mBackground.width, this.mBackground.height);
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBackground.width, this.mBackground.height), Phaser.Geom.Rectangle.Contains);
+    this.on("pointerup", this.onPointerUpHandler, this);
   }
 
   setProp(content: op_client.IMarketCommodity) {
