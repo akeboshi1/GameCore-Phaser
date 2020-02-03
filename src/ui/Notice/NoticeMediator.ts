@@ -7,6 +7,7 @@ import { op_client } from "pixelpai_proto";
 import { IMediator } from "../baseMediator";
 import { World } from "../../game/world";
 import { UIType } from "../ui.manager";
+import { MessageType } from "../../const/MessageType";
 
 export class NoticeMediator extends PacketHandler implements IMediator {
     public static NAME: string = "NoticeMediator";
@@ -30,6 +31,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_NOTICE, this.noticeHandler);
         }
         this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+        this.world.emitter.on(MessageType.SHOW_NOTICE, this.noticeHandler, this);
     }
 
     public setViewAdd(wid: number, hei: number) {
@@ -57,13 +59,14 @@ export class NoticeMediator extends PacketHandler implements IMediator {
 
     destroy() {
         this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
+        this.world.emitter.off(MessageType.SHOW_NOTICE, this.noticeHandler, this);
         if (this.mNoticePanel) {
             this.mNoticePanel.destroy();
             this.mNoticePanel = null;
         }
         const connect = this.world.connection;
         if (connect) {
-            connect.addPacketListener(this);
+            connect.removePacketListener(this);
         }
         this.mScene = null;
     }
@@ -90,6 +93,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
 
     show(param?: any): void {
         if (this.mNoticePanel && this.mNoticePanel.isShow()) {
+            this.mNoticePanel.showNotice(param);
             return;
         }
         this.mNoticePanel = new NoticePanel(this.mScene, this.world);
@@ -117,6 +121,9 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     private noticeHandler(packet: PBpacket) {
+        if (!packet || !packet.content) {
+            return;
+        }
         this.show(packet.content);
     }
 }

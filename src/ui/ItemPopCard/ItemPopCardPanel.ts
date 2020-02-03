@@ -6,6 +6,8 @@ import { i18n } from "../../i18n";
 import * as copy from "copy-text-to-clipboard";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { op_client } from "pixelpai_proto";
+import { MessageType } from "../../const/MessageType";
+import { PBpacket } from "net-socket-packet";
 
 export class ItemPopCardPanel extends Panel {
   private readonly key = "item_pop_card";
@@ -19,7 +21,9 @@ export class ItemPopCardPanel extends Panel {
   private mSource: Phaser.GameObjects.Text;
   private mNickNameDown: boolean;
   private mDetailDisplay: DetailDisplay;
-  private mProp: DynamicImage;
+
+  private mPressDelay = 1000;
+  private mPressTime: any;
   constructor(scene: Phaser.Scene, worldService: WorldService) {
     super(scene, worldService);
     this.setTween(false);
@@ -41,7 +45,8 @@ export class ItemPopCardPanel extends Panel {
     this.mCloseBtn.x = centerX;
     this.mCloseBtn.y = centerY + this.mBackground.height / 2 + 140;
 
-    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+    this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mDetailDisplay.scale = 1 / scale;
 
@@ -98,8 +103,6 @@ export class ItemPopCardPanel extends Panel {
 
     this.mBackground.setSize(this.mBackground.width, this.mBackground.height);
 
-    this.mProp = new DynamicImage(this.scene, 0, 0);
-
     this.mNickNameBg = this.scene.make.image({
       y: 118,
       key: this.key,
@@ -129,7 +132,7 @@ export class ItemPopCardPanel extends Panel {
           useAdvancedWrap: true
         }
       }
-    }, false);
+    }, false).setInteractive();
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.y = -150;
@@ -160,19 +163,61 @@ export class ItemPopCardPanel extends Panel {
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mNickName.on("pointerup", this.onPointerNickNameHandler, this);
     this.mNickName.on("pointerdown", this.onPointerNickNameDownHandler, this);
+    this.mDesText.on("pointerdown", this.onPointerDesDownHandler, this);
+    this.mDesText.on("pointerup", this.onPointerNickNameHandler, this);
   }
 
   private onCloseHandler() {
     this.emit("close");
+    clearTimeout(this.mPressTime);
     this.mNickNameDown = false;
   }
 
   private onPointerNickNameHandler() {
-    if (this.mNickNameDown) copy(this.mNickName.text);
+    // if (this.mNickNameDown) {
+    //   copy(this.mNickName.text);
+
+    //   const content = {
+    //     noticeContext: "复制名字成功"
+    //   };
+    //   this.mWorld.emitter.emit(MessageType.SHOW_NOTICE, { content });
+    // }
+    clearTimeout(this.mPressTime);
     this.mNickNameDown = false;
   }
 
   private onPointerNickNameDownHandler() {
-    this.mNickNameDown = true;
+    // this.mNickNameDown = true;
+    this.mPressTime = setTimeout(() => {
+      this.copyName();
+    }, this.mPressDelay);
+  }
+
+  private onPointerDesDownHandler() {
+    this.mPressTime = setTimeout(() => {
+      this.copyDes();
+    }, this.mPressDelay);
+  }
+
+  private copyName() {
+    if (this.mNickName) {
+      copy(this.mNickName.text);
+
+      const content = {
+        noticeContext: i18n.t("item.copy_suc", { name: i18n.t("item.name") })
+      };
+      this.mWorld.emitter.emit(MessageType.SHOW_NOTICE, { content });
+    }
+  }
+
+  private copyDes() {
+    if (this.mDesText) {
+      copy(this.mDesText.text);
+
+      const content = {
+        noticeContext: i18n.t("item.copy_suc", { name: i18n.t("item.des") })
+      };
+      this.mWorld.emitter.emit(MessageType.SHOW_NOTICE, { content });
+    }
   }
 }

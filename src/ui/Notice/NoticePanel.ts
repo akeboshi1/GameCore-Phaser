@@ -45,19 +45,27 @@ export class NoticePanel extends Panel {
             this.mTween.stop();
             this.mTween.remove();
         }
+        let color = "#FFFFFF";
+        let delay = 5000;
         const setting = data.chatsetting;
+        if (setting) {
+            if (setting.textColor) {
+                color = setting.textColor;
+            }
+            if (setting.duration) {
+                delay = setting.duration;
+            }
+        }
         this.mContentText.setText(data.noticeContext);
-        this.mContentText.setFill(setting.textColor ? setting.textColor : "#FFFFFF");
+        this.mContentText.setFill(color);
         this.mContentText.x = -(this.mContentText.width >> 1);
         this.mContentText.y = -(this.mContentText.height >> 1);
 
-        this.mTween = this.scene.tweens.add({
-            targets: this,
-            alpha: 1,
-            duration: 200
-        });
-
-        const delay = setting.duration ? setting.duration : 5000;
+        // this.mTween = this.scene.tweens.add({
+        //     targets: this,
+        //     alpha: 1,
+        //     duration: 200
+        // });
         this.mTween = this.scene.tweens.add({
             targets: this,
             alpha: 0,

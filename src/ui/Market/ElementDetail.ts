@@ -11,6 +11,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mBuyBtn: NinePatchButton;
   private mNickNameBg: Phaser.GameObjects.Image;
   private mNickName: Phaser.GameObjects.Text;
+  private mDetailBubbleContainer: Phaser.GameObjects.Container;
   private mDetailBubble: Phaser.GameObjects.Image;
   private mDesText: Phaser.GameObjects.Text;
   private mSelectedProp: op_client.IMarketCommodity;
@@ -64,25 +65,6 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       }
     }).setOrigin(0.5);
 
-    this.mDetailBubble = this.scene.make.image({
-      x: 830,
-      y: 330,
-      key: this.key,
-      frame: "detail_bubble.png"
-    }, false);
-
-    this.mDesText = this.scene.make.text({
-      x: 720,
-      y: 185,
-      style: {
-        font: "40px",
-        wordWrap: {
-          width: 260,
-          useAdvancedWrap: true
-        }
-      }
-    }, false);
-
     this.mPriceIcon = this.scene.make.image({
       x: -55,
       y: -30,
@@ -97,19 +79,45 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       }
     });
 
+    this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.x = 265;
+    this.mDetailDisplay.y = 250;
+
+    this.mDetailBubble = this.scene.make.image({
+      x: 0,
+      y: 0,
+      key: this.key,
+      frame: "detail_bubble.png"
+    }, false);
+
+    this.mDetailBubbleContainer = this.scene.make.container({
+      x: 700,
+      y: this.mDetailDisplay.y
+    }, false);
+    this.mDetailBubbleContainer.setSize(this.mDetailBubble.width, this.mDetailBubble.height);
+
+    this.mDesText = this.scene.make.text({
+      x: -(this.mDetailBubbleContainer.width >> 1) + 46,
+      y: -(this.mDetailBubbleContainer.height >> 1) + 20,
+      style: {
+        font: "40px",
+        wordWrap: {
+          width: 260,
+          useAdvancedWrap: true
+        }
+      }
+    }, false);
+
     this.mSource = this.scene.make.text({
-      x: 710,
-      y: 440,
+      x: -(this.mDetailBubbleContainer.width >> 1) + 40,
+      y: (this.mDetailBubbleContainer.height >> 1) - 40,
       style: {
         font: "32px"
       }
     }, false);
 
-    this.mDetailDisplay = new DetailDisplay(this.scene);
-    this.mDetailDisplay.x = 265;
-    this.mDetailDisplay.y = 350;
-
-    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickNameBg, this.mNickName, this.mDetailBubble, this.mDesText, this.mSource]);
+    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickNameBg, this.mNickName, this.mDetailBubbleContainer]);
+    this.mDetailBubbleContainer.add([this.mDetailBubble, this.mDesText, this.mSource]);
     this.mBuyBtn.add([this.mPriceIcon, this.mPriceText]);
 
     this.addActionListener();
@@ -124,10 +132,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.setSize(width, height);
 
     this.mBuyBtn.x = width - (this.mBuyBtn.width >> 1) - 35;
-    this.mDetailBubble.x = width - (this.mDetailBubble.width >> 1) - 93;
+    this.mDetailBubbleContainer.x = width - (this.mDetailBubbleContainer.width >> 1) - 93;
+    // this.mDetailBubble.x = width - (this.mDetailBubble.width >> 1) - 93;
 
-    this.mDesText.x = this.mDetailBubble.x - (this.mDetailBubble.width >> 1) + 50;
-    this.mSource.x = this.mDesText.x;
+    // this.mDesText.x = this.mDetailBubble.x - (this.mDetailBubble.width >> 1) + 50;
+    // this.mSource.x = this.mDesText.x;
 
     this.mCounter.x = centerX * 0.6;
     this.mNickName.x = this.mCounter.x;
@@ -136,12 +145,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     this.mDetailDisplay.scale = 1 / scale;
 
-    this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
+    const clickW = width * 0.8;
+    const clickH = height * 0.7;
+    this.setInteractive(new Phaser.Geom.Rectangle((width >> 1) + (width - clickW >> 1), height >> 1, clickW, clickH), Phaser.Geom.Rectangle.Contains);
 
     // test interactive
     // const graphics = this.scene.make.graphics(undefined, false);
     // graphics.fillStyle(0xFF9900, 0.5);
-    // graphics.fillRect(0, 0, width, height);
+    // graphics.fillRect(width - clickW >> 1, 0, clickW, clickH);
     // this.add(graphics);
 
     this.mCounter.resize();

@@ -67,7 +67,7 @@ export class MarketPanel extends Panel {
     };
     const group: CheckboxGroup = new CheckboxGroup();
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new TabButton(this.scene, i * 233 + 100, 1100, 224, 104, this.key, "categories", categorys[i].category.value, config);
+      const btn = new TabButton(this.scene, i * 233 + 110, 1100, 224, 104, this.key, "categories", categorys[i].category.value, config);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: "42px"
@@ -178,7 +178,7 @@ export class MarketPanel extends Panel {
       const group = new CheckboxGroup();
       const subcategorys = subcategory.subcategory;
       for (let i = 0; i < subcategorys.length; i++) {
-        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * 158 + 60, 1220);
+        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * 158 + 70, 1220);
         textBtn.setData("category", subcategorys[i]);
         textBtn.setSize(180, 90);
         this.mSubTabs[i] = textBtn;

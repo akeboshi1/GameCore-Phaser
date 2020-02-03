@@ -4,6 +4,9 @@
     "buy_button": "购 买"
   },
   "item": {
-    "source": "来源："
+    "source": "来源：",
+    "copy_suc": "复制{{name}}成功",
+    "name": "名字",
+    "des": "描述"
   }
 }

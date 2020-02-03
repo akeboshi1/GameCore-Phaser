@@ -89,4 +89,6 @@ export class MessageType {
 
     public static SHOW_UI = "showUI";
 
+    public static SHOW_NOTICE = "showNotice";
+
 }

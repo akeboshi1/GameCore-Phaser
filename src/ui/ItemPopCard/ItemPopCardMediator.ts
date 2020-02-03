@@ -21,7 +21,7 @@ export class ItemPopCardMediator extends BaseMediator {
     this.mView = new ItemPopCardPanel(this.scene, this.world);
     this.mView.show(param);
     this.mView.on("close", this.onCloseHandler, this);
-    this.layerManager.addToToolTipsLayer(this.mView);
+    this.layerManager.addToDialogLayer(this.mView);
   }
 
   private onCloseHandler() {

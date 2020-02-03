@@ -4,6 +4,9 @@
     "buy_button": "Buy"
   },
   "item": {
-    "source": "source: "
+    "source": "source: ",
+    "copy_suc": "copy {{name}} succeed",
+    "name": "name",
+    "des": "description"
   }
 }
