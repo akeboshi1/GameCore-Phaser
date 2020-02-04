@@ -34,7 +34,7 @@ export class ElementStorage implements IElementStorage {
     private _terrainCollection = new Map<number, TerrainCollectionNode>();
 
     public setGameConfig(config: Lite) {
-        console.log("TCL: ElementStorage -> config", config);
+        Logger.getInstance().log("TCL: ElementStorage -> config", config);
         if (!config) {
             return;
         }
@@ -46,7 +46,7 @@ export class ElementStorage implements IElementStorage {
                 displayModel = this.mModels.get(obj.id);
                 if (!displayModel) {
                     const anis = [];
-                    const eleAnis = (<ElementNode>obj).animations;
+                    const eleAnis = (<ElementNode> obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
                         anis.push(new Animation(ani));
@@ -81,7 +81,7 @@ export class ElementStorage implements IElementStorage {
                     animations: {
                         defaultAnimationName: terrain.animations.defaultAnimationName,
                         display: terrain.animations.display,
-                        animationData: terrain.animations.animationData.map(ani => new Animation(ani))
+                        animationData: terrain.animations.animationData.map((ani) => new Animation(ani))
                     }
                 });
                 this.mPaletteModels.set(entity.id, frameModel);

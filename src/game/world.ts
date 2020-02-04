@@ -520,7 +520,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.createGame(content.keyEvents);
                 // Logger.getInstance().debug("created game suc");
             })
-            .catch(err => {
+            .catch((err) => {
                 Logger.getInstance().log(err);
             });
     }
@@ -672,7 +672,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     try {
                         const gameConfig = new Lite();
                         gameConfig.deserialize(new Uint8Array(arraybuffer));
-                        console.log("TCL: World -> gameConfig", gameConfig);
+                        Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
                         resolve(gameConfig);
                     } catch (error) {
                         reject(error);

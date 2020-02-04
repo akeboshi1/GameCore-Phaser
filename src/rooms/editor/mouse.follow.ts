@@ -246,7 +246,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         if (!sprite) {
             return;
         }
-        const frame = <IFramesModel>sprite.displayInfo;
+        const frame = <IFramesModel> sprite.displayInfo;
         this.mNodeType = sprite.nodeType;
         let frameDisplay: FramesDisplay;
         const { tileWidth, tileHeight } = this.mRoomService.roomSize;
