@@ -38,7 +38,7 @@ export class EditorTerrainManager extends TerrainManager {
 
     removeEditor(ids: number[]) {
         if (!this.mTerrains) return;
-        ids.forEach(id => this.tryRemove(id));
+        ids.forEach((id) => this.tryRemove(id));
 
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
@@ -49,9 +49,9 @@ export class EditorTerrainManager extends TerrainManager {
 
     removeFormPositions(locations: Pos[]) {
         const terrains = Array.from(this.mTerrains.values());
-        let ids = [];
+        const ids = [];
         for (const pos of locations) {
-            const terrain = terrains.find(ter => {
+            const terrain = terrains.find((ter) => {
                 return pos.equal(ter.getPosition45());
             });
             if (terrain) {
@@ -72,8 +72,8 @@ export class EditorTerrainManager extends TerrainManager {
         }
         // TODO update terrain
         // 根据x, y, z去重
-        const repeatTerrain = Array.from(this.mTerrains.values()).find(terrain => {
-            const pos = terrain.getPosition();
+        const repeatTerrain = Array.from(this.mTerrains.values()).find((ter) => {
+            const pos = ter.getPosition();
             return pos.x === sprite.pos.x && pos.y === sprite.pos.y && pos.z === sprite.pos.z;
         });
 

@@ -119,7 +119,7 @@ export class Sprite implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel>this.displayInfo).toClient();
+            sprite.animations = (<FramesModel> this.displayInfo).toClient();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;

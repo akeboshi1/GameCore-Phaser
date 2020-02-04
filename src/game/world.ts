@@ -9,7 +9,6 @@ import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto"
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
 import { Logger } from "../utils/log";
-import { PlayScene } from "../scenes/play";
 import { RoomManager } from "../rooms/room.manager";
 import { ServerAddress } from "../net/address";
 import { KeyBoardManager } from "./keyboard.manager";
@@ -21,7 +20,7 @@ import { JoyStickManager } from "./joystick.manager";
 import { GameMain, ILauncherConfig } from "../../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";
 import { load } from "../utils/http";
-import { ResUtils, Url } from "../utils/resUtil";
+import { Url, ResUtils } from "../utils/resUtil";
 import { Lite } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
@@ -30,7 +29,6 @@ import BBCodeTextPlugin from "../../lib/rexui/plugins/bbcodetext-plugin.js";
 import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
 import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
-import { PI_EXTENSION_REGEX } from "../const/constants";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
@@ -41,6 +39,7 @@ import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
 import * as path from "path";
+import { PI_EXTENSION_REGEX } from "../const/constants";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -520,7 +519,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.createGame(content.keyEvents);
                 // Logger.getInstance().debug("created game suc");
             })
-            .catch(err => {
+            .catch((err) => {
                 Logger.getInstance().log(err);
             });
     }
@@ -648,15 +647,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private loadGameConfig(paths: string[]): Promise<Lite> {
         const promises = [];
-        // let configPath = "";
-        // for (const remotePath of paths) {
-        //     if (PI_EXTENSION_REGEX.test(remotePath)) {
-        //         configPath = ResUtils.getGameConfig(remotePath);
-        //         // Logger.getInstance().log(`start download config: ${configPath}`);
-        //         promises.push(load(configPath, "arraybuffer"));
-        //     }
-        // }
-        promises.push(load("http://172.17.19.48:8080/5e1d81163bcc774a3c172e94.pi", "arraybuffer"));
+        let configPath = "";
+        for (const remotePath of paths) {
+            if (PI_EXTENSION_REGEX.test(remotePath)) {
+                configPath = ResUtils.getGameConfig(remotePath);
+                // Logger.getInstance().log(`start download config: ${configPath}`);
+                promises.push(load(configPath, "arraybuffer"));
+            }
+        }
+        // promises.push(load("http://172.17.19.48:8080/5e1d81163bcc774a3c172e94.pi", "arraybuffer"));
         // TODO Promise.all如果其中有一个下载失败，会返回error
         return Promise.all(promises).then((reqs: any[]) => {
             Logger.getInstance().log("start decodeConfig");
@@ -672,7 +671,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     try {
                         const gameConfig = new Lite();
                         gameConfig.deserialize(new Uint8Array(arraybuffer));
-                        console.log("TCL: World -> gameConfig", gameConfig);
+                        Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
                         resolve(gameConfig);
                     } catch (error) {
                         reject(error);

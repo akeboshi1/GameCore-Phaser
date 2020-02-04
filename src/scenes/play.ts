@@ -1,7 +1,5 @@
 import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
-import { Logger } from "../utils/log";
-import { LoadingScene } from "./loading";
 import { Size } from "../utils/size";
 
 // 游戏正式运行用 Phaser.Scene

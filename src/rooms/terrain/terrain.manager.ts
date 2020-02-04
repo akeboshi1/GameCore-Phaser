@@ -51,7 +51,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.connection.removePacketListener(this);
         }
         if (!this.mTerrains) return;
-        this.mTerrains.forEach(terrain => this.remove(terrain.id));
+        this.mTerrains.forEach((terrain) => this.remove(terrain.id));
         this.mTerrains.clear();
     }
 
@@ -62,7 +62,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         return terrain;
     }
-
 
     public add(sprites: ISprite[]) {
         for (const sprite of sprites) {
@@ -90,13 +89,13 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-        console.log("TCL: TerrainManager -> onAdd-----content", content);
+        Logger.getInstance().log("TCL: TerrainManager -> onAdd-----content", content);
         const sprites = content.sprites;
         const type = content.nodeType;
         const pf: op_def.IPacket = content.packet;
 
         // this.mRoom.mCurRoom
-        console.log("TCL: TerrainManager -> this.mRoom.mCurRoom", this.mRoom.world.roomManager.currentRoom);
+        Logger.getInstance().log("TCL: TerrainManager -> this.mRoom.mCurRoom", this.mRoom.world.roomManager.currentRoom);
 
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
@@ -126,7 +125,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         this.fetchDisplay(ids);
 
-        console.log("sprites =====>", sprites);
+        Logger.getInstance().log("sprites =====>", sprites);
 
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
             this.mListener.onFullPacketReceived(type);
