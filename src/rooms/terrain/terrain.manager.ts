@@ -10,6 +10,8 @@ import { ISprite, Sprite } from "../element/sprite";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { WorldService } from "../../game/world.service";
+import { IFramesModel } from "../display/frames.model";
+import { IDragonbonesModel } from "../display/dragonbones.model";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -152,10 +154,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             if (point) {
                 const s = new Sprite(sprite, type);
                 if (!s.displayInfo) {
-                    this.checkDisplay(s);
-                }
-                if (!s.displayInfo) {
-                    ids.push(s.id);
+                    if (!this.checkDisplay(s)) {
+                        ids.push(s.id);
+                    }
                 }
                 this._add(s);
             }
@@ -213,11 +214,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected checkDisplay(sprite: ISprite) {
+    protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
             const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
+                return displayInfo;
             }
         }
     }

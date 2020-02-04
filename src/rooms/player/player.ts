@@ -21,8 +21,14 @@ export class Player extends Element {
     }
 
     public move(moveData: op_client.IMoveData) {
-        if (this.getDirection() !== moveData.direction && this.mId !== this.roomService.playerManager.actor.id) {
-            this.setDirection(moveData.direction);
+        if (this.getDirection() !== moveData.direction) {
+            if (this.roomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+                if (this.mId !== this.roomService.playerManager.actor.id) {
+                    this.setDirection(moveData.direction);
+                }
+            } else {
+                this.setDirection(moveData.direction);
+            }
         }
         moveData.destinationPoint3f.y += this.offsetY;
         super.move(moveData);

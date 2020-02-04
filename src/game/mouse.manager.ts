@@ -1,6 +1,6 @@
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService } from "../rooms/room";
 import { Logger } from "../utils/log";
@@ -95,7 +95,7 @@ export class MouseManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
         content.mouseEvent = events;
-        content.point3f = { x: pointer.worldX / this.worldService.uiScale, y: pointer.worldY / this.worldService.uiScale };
+        content.point3f = { x: pointer.worldX, y: pointer.worldY };
         this.mConnect.send(pkt);
     }
 

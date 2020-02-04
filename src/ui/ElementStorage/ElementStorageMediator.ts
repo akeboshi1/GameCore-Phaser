@@ -24,6 +24,7 @@ export class ElementStorageMediator extends BaseMediator {
     }
 
     show(param?: any): void {
+        this.mParam = param;
         if (this.mView && this.mView.isShow() || this.isShowing) {
             return;
         }
@@ -34,6 +35,11 @@ export class ElementStorageMediator extends BaseMediator {
         this.mView.on("queryElement", this.onQueryElementHandler, this);
         this.mView.on("selectedElement", this.onSelectedElement, this);
         this.mView.show(param);
+    }
+
+    hide() {
+        this.mParam = undefined;
+        super.hide();
     }
 
     isSceneUI(): boolean {
@@ -74,6 +80,10 @@ export class ElementStorageMediator extends BaseMediator {
     }
 
     private onQueryElementHandler(page: number, perPage: number) {
+        if (this.mParam) {
+            this.mStorage.queryMarketPackage(page, perPage);
+            return;
+        }
         this.mStorage.queryPackage(page, perPage);
     }
 

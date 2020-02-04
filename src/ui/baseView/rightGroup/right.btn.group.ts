@@ -158,7 +158,7 @@ export class RightBtnGroup extends Panel {
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
         this.mBtnY = 0;
         this.handBtn = new IconBtn(this.mScene, this.mWorld, {
             key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_bg.png"],

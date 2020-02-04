@@ -132,7 +132,7 @@ export default class Connection implements ConnectionService {
                     if (this.mReConnectCount < 10)
                         this.mReConnectCount++;
                     const delay = this.mReConnectCount ** 2;
-                    // Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
+                    Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
                     this.mTimeout = setTimeout(() => {
                         self.mTimeout = undefined;
                         self._doConnect();
@@ -140,7 +140,7 @@ export default class Connection implements ConnectionService {
                 }
                 break;
             case "onConnectError":
-                // Logger.getInstance().error("error" + data.error);
+                Logger.getInstance().error("error" + data.error);
                 // TODO
                 this.reConnect();
                 break;

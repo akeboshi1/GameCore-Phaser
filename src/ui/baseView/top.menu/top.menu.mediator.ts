@@ -3,7 +3,7 @@ import { WorldService } from "../../../game/world.service";
 import { MessageType } from "../../../const/MessageType";
 import { TopMenuContainer } from "./top.menu.container";
 import { PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world, op_client } from "pixelpai_proto";
 import { IBtnData } from "../icon.btn";
 
 export class TopMenuMediator extends BaseMediator {
@@ -48,6 +48,7 @@ export class TopMenuMediator extends BaseMediator {
       this.mView = new TopMenuContainer(this.scene, this.world);
       this.mView.on("saveDecorate", this.onSaveDecorateHandler, this);
       this.mView.on("enterDecorate", this.onEnterDecorateHandler, this);
+      this.mView.on("showMarket", this.onShowMarketHandler, this);
     }
     this.mView.addItem(data);
   }
@@ -77,5 +78,12 @@ export class TopMenuMediator extends BaseMediator {
   private onEnterDecorateHandler() {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
     this.world.connection.send(packet);
+  }
+
+  private onShowMarketHandler() {
+    const packet: PBpacket = new PBpacket(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI);
+    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
+    content.name = "Market";
+    this.world.emitter.emit(MessageType.SHOW_UI, packet);
   }
 }

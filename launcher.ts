@@ -31,6 +31,7 @@ export interface ILauncherConfig {
 
 export interface GameMain {
     resize(newWidth, newHeight);
+    onOrientationChange(oriation: number, newWidth: number, newHeight: number);
     scaleChange(scale: number);
     enableClick();
     disableClick();
@@ -141,11 +142,18 @@ export class Launcher {
         if (!this.world)
             return;
         if (ui_scale) this.mConfig.ui_scale = ui_scale;
-        if (width < height) {
-            this.world.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
-        } else {
-            this.world.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-        }
+        this.world.resize(width, height);
+        // if (width < height) {
+        //     this.world.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
+        // } else {
+        //     this.world.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
+        // }
+    }
+
+    public onOrientationChange(orientation: number, width: number, height: number) {
+        if (!this.world)
+            return;
+        this.world.onOrientationChange(orientation, width, height);
     }
 
     public destroy(): void {

@@ -85,7 +85,12 @@ export class ControlFMediator extends BaseMediator {
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
         const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-        let keyArr: number[] = this.world.inputManager.getKeyDowns();
+        let keyArr: number[];
+        if (this.world.inputManager) {
+            keyArr = this.world.inputManager.getKeyDowns();
+        } else {
+            keyArr = [];
+        }
         keyArr = keyArr.concat(Phaser.Input.Keyboard.KeyCodes.F);
         content.keyCodes = keyArr;
         this.world.connection.send(pkt);

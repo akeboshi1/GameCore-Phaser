@@ -45,6 +45,7 @@ import * as path from "path";
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
     private mClock: Clock;
+    private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
@@ -59,6 +60,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mAccount: Account;
     private gameConfig: Phaser.Types.Core.GameConfig;
     private mRoleManager: RoleManager;
+    private isFullStart: boolean = false;
+    private mOrientation: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -110,6 +113,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    get moveStyle(): number {
+        return this.mMoveStyle;
+    }
+
     getConfig(): ILauncherConfig {
         return this.mConfig;
     }
@@ -131,14 +138,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        // Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
      * 当scene发生改变时，调用该方法并传入各个需要调整监听的manager中去
      */
     public changeRoom(room: IRoomService) {
-        this.mInputManager.onRoomChanged(room);
+        if (this.mInputManager) this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
     }
 
@@ -160,28 +167,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public resize(width: number, height: number) {
         if (this.mGame) {
-            if (!this.mGame.device.os.desktop) {
-                if (width < height) {
-                    this.mConfig.ui_scale = (width / this.mConfig.baseHeight) * 2;
-                    this.mGame.scale.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
-                    Logger.getInstance().log("竖变横版");
-                } else if (width > height) {
-                    this.mConfig.ui_scale = (width / this.mConfig.baseWidth) * 2;
-                    this.mGame.scale.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-                    Logger.getInstance().log("横变竖版");
-                }
-            } else {
-                this.mGame.scale.resize(width, height);
-            }
-            // this.game.canvas.style.width = this.mConfig.screenWidth + "";
-            // this.game.canvas.style.height = this.mConfig.screenHeight + "";
-            if (this.mGame.device.os.iOS) {
-                // Logger.getInstance().log("物理像素:" + this.mConfig.screenWidth * this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
-            } else if (this.mGame.device.os.android || this.mGame.device.os.windowsPhone) {
-                // Logger.getInstance().log("独立像素:" + this.mConfig.screenWidth / this.mGame.device.os.pixelRatio + "|" + "wid:" + this.mConfig.screenWidth + "|" + "pixelratio:" + this.mGame.device.os.pixelRatio);
-            }
+            this.mGame.scale.resize(width, height);
         }
-
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(width, height);
         }
@@ -191,12 +178,34 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mInputManager) {
             this.mInputManager.resize(width, height);
         }
+        Logger.getInstance().log(`resize${width}|${height}`);
+    }
+
+    public onOrientationChange(orientation: number, width: number, height: number) {
+        if (this.mConfig.platform === "app") return;
+        this.mOrientation = orientation;
+        if (this.mConfig.screenWidth > this.mConfig.screenHeight) {
+            // 基础是横屏
+            if ((orientation <= 135 && orientation >= 45) || (orientation <= -45 && orientation >= -135)) {
+                this.orientationResize(this.mConfig.screenWidth, this.mConfig.screenHeight, width, height);
+            } else {
+                this.orientationResize(this.mConfig.screenHeight, this.mConfig.screenWidth, width, height);
+            }
+        } else {
+            // 基础是竖屏
+            if ((orientation <= 135 && orientation >= 45) || (orientation <= -45 && orientation >= -135)) {
+                this.orientationResize(this.mConfig.screenHeight, this.mConfig.screenWidth, width, height);
+            } else {
+                this.orientationResize(this.mConfig.screenWidth, this.mConfig.screenHeight, width, height);
+            }
+        }
     }
 
     public startFullscreen() {
         if (!this.mGame) {
             return;
         }
+        this.isFullStart = true;
         this.mGame.scale.startFullscreen();
     }
 
@@ -204,6 +213,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!this.mGame) {
             return;
         }
+        this.isFullStart = false;
         this.mGame.scale.stopFullscreen();
     }
 
@@ -245,6 +255,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get roomManager(): RoomManager | undefined {
         return this.mRoomMamager;
+    }
+
+    get orientation(): number {
+        return this.mOrientation;
     }
 
     get elementStorage(): IElementStorage | undefined {
@@ -345,22 +359,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
 
-    /**！！！
-     * 翻转后cavas必须重新设置且必须设置为设备的独立像素(当前设备用于逻辑处理的像素)，否则phaser里面的canvas的尺寸会被撑开，导致适配出问题
-     * @param orientation 翻转
-     */
-    private onOrientationChange(orientation: Phaser.Scale.Orientation) {
-        if (this.mConfig.platform === "app") return;
-        this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-        if (orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            this.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-            Logger.getInstance().log("landscape:" + this.mConfig.screenWidth + ":" + this.mConfig.screenHeight);
-        } else {
-            this.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
-            Logger.getInstance().log("portrait:" + this.mConfig.screenWidth + ":" + this.mConfig.screenHeight);
-        }
-    }
-
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
@@ -397,10 +395,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const baseHeight: number = this.mConfig.baseHeight;
         if (!this.mGame.device.os.desktop) {
             if (width < height) {
-                this.mConfig.ui_scale = width / baseHeight;
+                this.mConfig.ui_scale = width / baseHeight * 2;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
             } else if (width > height) {
-                this.mConfig.ui_scale = width / baseWidth;
+                this.mConfig.ui_scale = width / baseWidth * 2;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
             }
         }
@@ -420,6 +418,36 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.scene.start(LoadingScene.name, { world: this });
             }
         });
+    }
+
+    private orientationResize(screenWidth, screenHeight, width, height) {
+        if (this.mGame) {
+            if (width < height) { // 基础竖版
+                // this.mConfig.ui_scale = width / this.mConfig.baseHeight;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+                if (!this.isFullStart) {
+                    Logger.getInstance().log("竖版" + this.mGame.scale.orientation);
+                }
+            } else { // 基础横版
+                // this.mConfig.ui_scale = width / this.mConfig.baseWidth;
+                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+                if (!this.isFullStart) {
+                    Logger.getInstance().log("横版" + this.mGame.scale.orientation);
+                }
+            }
+            this.mGame.scale.resize(screenWidth, screenHeight);
+            Logger.getInstance().log("orientation" + this.mGame.scale.orientation);
+        }
+
+        if (this.mRoomMamager) {
+            this.mRoomMamager.resize(width, height);
+        }
+        if (this.mUiManager) {
+            this.mUiManager.resize(width, height);
+        }
+        if (this.mInputManager) {
+            this.mInputManager.resize(width, height);
+        }
     }
 
     private enterVirtualWorld() {
@@ -479,12 +507,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
+        this.mMoveStyle = content.moveStyle;
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
             this.createGame(content.keyEvents);
             return;
         }
-        // Logger.log("start download gameConfig");
+        Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
         this.loadGameConfig(content.configUrls)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
@@ -570,12 +599,32 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scene.add(EditScene.name, EditScene);
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (this.mGame.device.os.desktop) {
-            this.mInputManager = new KeyBoardManager(this, keyEvents);
+        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
+            if (this.mGame.device.os.desktop) {
+                this.mInputManager = new KeyBoardManager(this, keyEvents);
+            } else {
+                this.mInputManager = new JoyStickManager(this, keyEvents);
+            }
         } else {
-            this.mInputManager = new JoyStickManager(this, keyEvents);
+            if (this.mGame.device.os.desktop) {
+                this.mInputManager = new KeyBoardManager(this, keyEvents);
+            }
         }
-        this.mInputManager.enable = false;
+        if (this.mInputManager) this.mInputManager.enable = false;
+        if (window.screen.width > window.screen.height) {
+            if (this.mConfig.width > this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        } else {
+            if (this.mConfig.width < this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        }
+
         this.gameCreated();
     }
 
@@ -666,10 +715,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.mRoomMamager.onFocus();
-        const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
-        if (pauseScene) {
-            (pauseScene as GamePauseScene).sleep();
-            this.mGame.scene.stop(GamePauseScene.name);
+        if (this.mGame && this.mConfig.platform === "pc") {
+            const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
+            if (pauseScene) {
+                (pauseScene as GamePauseScene).sleep();
+                this.mGame.scene.stop(GamePauseScene.name);
+            }
         }
     }
 
@@ -678,9 +729,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.mRoomMamager.onBlur();
-        if (!this.mGame.scene.getScene(GamePauseScene.name)) {
-            this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
+        if (this.mGame && this.mConfig.platform === "pc") {
+            if (!this.mGame.scene.getScene(GamePauseScene.name)) {
+                this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
+            }
+            this.mGame.scene.start(GamePauseScene.name, { world: this });
         }
-        this.mGame.scene.start(GamePauseScene.name, { world: this });
     }
 }

@@ -43,14 +43,14 @@ class WorkerClient extends SocketConnection {
         protobuf_packet.Deserialization(new Buffer(data));
         protobuf_packet.header.uuid = this.mUuid || 0;
         super.send(protobuf_packet.Serialization());
-        // Logger.getInstance().info(`NetWorker[发送] >>> ${protobuf_packet.toString()}`);
+        Logger.getInstance().info(`NetWorker[发送] >>> ${protobuf_packet.toString()}`);
     }
 
     protected onData(data: any) {
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         this.mUuid = protobuf_packet.header.uuid;
-        // Logger.getInstance().info(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
+        Logger.getInstance().info(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
         // Send the packet to parent thread
         ctx.postMessage({
             method: "onData",

@@ -9,6 +9,9 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { Logger } from "../../utils/log";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";
+import { IconBtn } from "../baseView/icon.btn";
+import { UIMediatorType } from "../ui.mediatorType";
+import { ElementStorageMediator } from "./ElementStorageMediator";
 
 export class ElementStoragePanel extends Panel {
     private mBackground: NinePatch;
@@ -24,6 +27,7 @@ export class ElementStoragePanel extends Panel {
     private mItemNum: number = 32;
     private mDragImage: Phaser.GameObjects.Image;
     private mDragData: op_client.ICountablePackageItem;
+    private mCloseBtn: Phaser.GameObjects.Image;
     private mDragging: boolean;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
@@ -167,9 +171,11 @@ export class ElementStoragePanel extends Panel {
     }
 
     destroy() {
-        this.scene.input.off("dragstart", this.onDragStartHandler, this);
-        this.scene.input.off("dragend", this.onDragEndHandler, this);
-        this.scene.input.off("drag", this.onDragHandler, this);
+        if (this.scene) {
+            this.scene.input.off("dragstart", this.onDragStartHandler, this);
+            this.scene.input.off("dragend", this.onDragEndHandler, this);
+            this.scene.input.off("drag", this.onDragHandler, this);
+        }
         super.destroy();
     }
 
@@ -178,6 +184,7 @@ export class ElementStoragePanel extends Panel {
         this.scene.load.image("button", Url.getRes("ui/common/button.png"));
         this.scene.load.image("prop_background", Url.getRes("ui/common/prop_background.png"));
         this.scene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
+        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
         this.scene.load.image(Background.getName(), Background.getPNG());
         super.preload();
     }
@@ -241,6 +248,17 @@ export class ElementStoragePanel extends Panel {
         }
         this.add(this.mProps);
         this.add([this.mPrePageBtn, this.mNextPageBtn]);
+
+        // this.mCloseBtn = new IconBtn(this.mScene, this.mWorld, {
+        //     key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
+        //     iconResKey: "", iconTexture: "", scale: 1, pngUrl: this.mResPng, jsonUrl: this.mResJson
+        // });
+        this.mCloseBtn = this.scene.make.image({
+            key: "clsBtn",
+            frame: "btn_normal"
+        }, false).setInteractive().setScale(2);
+        this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+        this.add(this.mCloseBtn);
         super.init();
         this.resize();
 
@@ -322,5 +340,10 @@ export class ElementStoragePanel extends Panel {
     private clearItem() {
         if (!this.mProps) return;
         this.mProps.map((item) => item.clear());
+    }
+
+    private onCloseHandler() {
+        const med = this.mWorld.uiManager.getMediator(ElementStorageMediator.name);
+        if (med) med.hide();
     }
 }

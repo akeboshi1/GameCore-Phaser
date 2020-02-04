@@ -86,4 +86,9 @@ export class MessageType {
 
     public static ADD_ICON_TO_TOP = "addIconToTop";
     public static REMOVE_ICON_FROM_TOP = "removeIconFromTop";
+
+    public static SHOW_UI = "showUI";
+
+    public static SHOW_NOTICE = "showNotice";
+
 }

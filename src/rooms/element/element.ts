@@ -32,14 +32,14 @@ export enum PlayerState {
 }
 
 export enum Direction {
-    up,
-    up_left,
-    left,
-    left_down,
-    down,
-    down_right,
-    right,
-    right_up
+    north,
+    north_west,
+    west,
+    west_south,
+    south,
+    south_east,
+    east,
+    east_north,
 }
 
 export interface IElement {
@@ -353,7 +353,6 @@ export class Element extends BlockObject implements IElement {
 
     protected _doMove() {
         if (!this.mMoveData.destPos) {
-            // Logger.getInstance().log("stopDoMove");
             return;
         }
         const tw: Tweens.Tween = this.mMoveData.tweenAnim;
@@ -390,7 +389,7 @@ export class Element extends BlockObject implements IElement {
     protected createDisplay(): ElementDisplay {
         console.log("create terrain display====>");
         if (!this.mDisplayInfo) {
-            // Logger.getInstance().error("displayinfo does not exist, Create display failed");
+            Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
             return;
         }
         if (this.mDisplay) {
@@ -424,7 +423,7 @@ export class Element extends BlockObject implements IElement {
     protected addDisplay() {
         this.createDisplay();
         const room = this.roomService;
-        if (!room) {
+        if (!room || !this.mDisplay) {
             // Logger.getInstance().error("roomService is undefined");
             return;
         }

@@ -9,6 +9,7 @@ import { JoyStickManager } from "../../../game/joystick.manager";
 import { CheckButton } from "../../components/check.button";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { RightMediator } from "../rightGroup/right.mediator";
+import { ElementStorageMediator } from "../../ElementStorage/ElementStorageMediator";
 export class BottomBtnGroup extends Panel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
@@ -16,6 +17,7 @@ export class BottomBtnGroup extends Panel {
     private mChatText: Phaser.GameObjects.Text;
     private mTurnBtn: IconBtn;
     private mBagBtn: IconBtn;
+    private mMarketBag: IconBtn;
     private mShopBtn: IconBtn;
     private mVoiceBtn: CheckButton;
     private mMicBtn: CheckButton;
@@ -51,13 +53,15 @@ export class BottomBtnGroup extends Panel {
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
         const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
-        const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
         if (rightMediator) {
             rightBtnGroup = rightMediator.getView();
         }
         if (rightMediator) {
-            joyStick.resize();
+            if (this.mWorld.inputManager) {
+                const joyStick = this.mWorld.inputManager as JoyStickManager;
+                joyStick.resize();
+            }
             if (rightBtnGroup) rightBtnGroup.resize();
         }
         this.mChatText.setStyle({ "fontSize": Math.floor(30 * this.mWorld.uiScale) });
@@ -92,7 +96,7 @@ export class BottomBtnGroup extends Panel {
     protected init() {
         this.mBtnList = [];
         const size: Size = this.mWorld.getSize();
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
         const chatBgWidth: number = 430;
         const chatBgHeight: number = 230;
         this.mChatContainer = this.mScene.make.container(undefined, false);
@@ -140,6 +144,23 @@ export class BottomBtnGroup extends Panel {
         this.mBagBtn.setClick(() => {
             this.bagHandler();
         });
+
+        this.mMarketBag = new IconBtn(this.mScene, this.mWorld, {
+            key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
+        this.mMarketBag.x = this.mTurnBtn.x;
+        this.mMarketBag.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 60 - this.mMarketBag.height / 2;
+        this.mMarketBag.setPos(this.mMarketBag.x, this.mBagBtn.y);
+        this.mWid += this.mMarketBag.width + 30;
+        this.add(this.mMarketBag);
+        this.setSize(this.mWid, this.mHei);
+        this.mBtnList.push(this.mMarketBag);
+
+        this.mMarketBag.setClick(() => {
+            this.marketBagHandler();
+        });
+
         this.mChatContainer.on("pointerdown", this.chatHandler, this);
         this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
         this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
@@ -207,7 +228,6 @@ export class BottomBtnGroup extends Panel {
         const len: number = this.mBtnList.length;
         const size: Size = this.mWorld.getSize();
         const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
-        const joyStick = this.mWorld.inputManager as JoyStickManager;
         let rightBtnGroup;
         if (rightMediator) {
             rightBtnGroup = rightMediator.getView();
@@ -234,7 +254,10 @@ export class BottomBtnGroup extends Panel {
                             this.setSize(this.mWid, btn.height * 2);
                         }
                         if (rightMediator) {
-                            joyStick.resize();
+                            if (this.mWorld.inputManager) {
+                                const joyStick = this.mWorld.inputManager as JoyStickManager;
+                                joyStick.resize();
+                            }
                             if (rightBtnGroup) rightBtnGroup.resize();
                         }
                     }
@@ -262,7 +285,22 @@ export class BottomBtnGroup extends Panel {
     }
 
     private bagHandler() {
+        // this.mWorld.closeGame();
         this.mWorld.uiManager.getMediator(UIMediatorType.BagMediator).show();
         // =============index = 0 为背包按钮
+    }
+
+    private marketBagHandler() {
+        // test code
+        let mediator = this.mWorld.uiManager.getMediator(ElementStorageMediator.name);
+        if (!mediator) {
+            mediator = new ElementStorageMediator(this.mWorld.uiManager.getUILayerManager(), this.scene, this.mWorld);
+            this.mWorld.uiManager.setMediator(ElementStorageMediator.name, mediator);
+        }
+        if (mediator.isShow()) {
+            mediator.hide();
+        } else {
+            mediator.show(true);
+        }
     }
 }

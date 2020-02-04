@@ -16,7 +16,7 @@ export class SelectedElement {
     private mDecorateManager: DecorateManager;
     private mRootSprite: ISprite;
     private mSprite: ISprite;
-    private mSelecting: boolean;
+    private mSelecting: boolean = false;
     constructor(scene: Phaser.Scene, roomService: DecorateRoomService) {
         this.scene = scene;
         this.roomService = roomService;
