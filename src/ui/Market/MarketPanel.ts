@@ -9,7 +9,6 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
 import { TabButton } from "../components/tab.button";
-import { Logger } from "../../utils/log";
 
 export class MarketPanel extends Panel {
   private readonly key = "market";

@@ -1,11 +1,13 @@
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { NinePatch } from "../components/nine.patch";
+import { LabelInput } from "../components/label.input";
 
 export class NumberCounter extends Phaser.GameObjects.Container {
   private mBackground: NinePatch;
   private mReduceBtn: Phaser.GameObjects.Image;
   private mIncreaseBtn: Phaser.GameObjects.Image;
   private mInputText: InputText;
+  private mLabelInput: LabelInput;
   private readonly pressDelay = 500;
   private pressTimeout: any;
   private tween: Phaser.Tweens.Tween;
@@ -33,15 +35,27 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       x: this.mBackground.x + (this.mBackground.width >> 1) + 60
     }, false).setInteractive();
 
-    this.mInputText = new InputText(this.scene, 0, 0, 200, 80, {
+    // this.mInputText = new InputText(this.scene, 0, 0, 200, 80, {
+    //   fontSize: "46px",
+    //   color: "#666666",
+    //   align: "center",
+    //   type: "number",
+    //   text: 1
+    // }).setOrigin(0.5);
+    this.mLabelInput = new LabelInput(this.scene, {
+      x: 0,
+      y: 0,
+      width: 160,
+      height: 80,
       fontSize: "46px",
       color: "#666666",
       align: "center",
       type: "number",
-      text: 1
-    }).setOrigin(0.5);
-    this.mInputText.on("textchange", this.onTextChangeHandler, this);
-    this.add([this.mBackground, this.mInputText, this.mReduceBtn, this.mIncreaseBtn]);
+    });
+    this.mLabelInput.setOrigin(0.5);
+    this.mLabelInput.setText("1");
+    this.mLabelInput.on("textchange", this.onTextChangeHandler, this);
+    this.add([this.mBackground, this.mLabelInput, this.mReduceBtn, this.mIncreaseBtn]);
   }
 
   resize() {
@@ -79,28 +93,32 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     } else if (num > this.mMaxNum) {
       num = this.mMaxNum;
     }
-    this.mInputText.text = num;
+    this.mLabelInput.setText(num.toString());
     this.emit("change", num);
   }
 
+  setBlur() {
+    this.mLabelInput.setBlur();
+  }
+
   get number(): number {
-    return parseInt(this.mInputText.text, 10);
+    return parseInt(this.mLabelInput.text, 10);
   }
 
   private onReduceHandler() {
-    let num = parseInt(this.mInputText.text, 10);
+    let num = parseInt(this.mLabelInput.text, 10);
     this.setCounter(--num);
     this.clearTween();
   }
 
   private onIncreaseHandler() {
-    let num = parseInt(this.mInputText.text, 10);
+    let num = parseInt(this.mLabelInput.text, 10);
     this.setCounter(++num);
     this.clearTween();
   }
 
   private onTextChangeHandler() {
-    this.setCounter(this.mInputText.text);
+    this.setCounter(parseInt(this.mLabelInput.text, 10));
   }
 
   private onReduceDownHandler() {
