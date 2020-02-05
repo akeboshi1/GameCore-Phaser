@@ -306,9 +306,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const aniName = sprite.currentAnimationName || displayInfo.animationName;
         const collisionArea = displayInfo.getCollisionArea(aniName);
         const origin = displayInfo.getOriginPoint(aniName);
+        let row = 0;
+        let col = 0;
         for (let i = 0; i < collisionArea.length; i++) {
+            row = i + pos.y - origin.y;
+            if (row >= map.length) {
+                return false;
+            }
             for (let j = 0; j < collisionArea[i].length; j++) {
-                if (map[i + pos.y - origin.y][j + pos.x - origin.x] === 0) {
+                col = j + pos.x - origin.x;
+                if (col >= map[i].length || map[row][col] === 0) {
                     return false;
                 }
             }
