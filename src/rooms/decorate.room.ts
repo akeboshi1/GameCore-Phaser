@@ -526,6 +526,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE = packet.content;
         if (!this.mSelectedElement) {
             this.mSelectedElement = new SelectedElement(this.scene, this);
+        } else {
+            if (this.mSelectedElement.display) {
+                this.onPutElement(this.mSelectedElement.display);
+            }
         }
         this.mSelectedElement.selecting = true;
         const sprite = new Sprite(content.sprite, content.nodeType);
