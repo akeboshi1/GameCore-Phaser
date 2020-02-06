@@ -393,6 +393,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
                 iconResKey: "",
                 iconTexture: "btnGroup_top_expand.png",
+                pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json",
                 scale: 1
             });
         }

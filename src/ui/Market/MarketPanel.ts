@@ -45,7 +45,7 @@ export class MarketPanel extends Panel {
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
-    this.mCategoriesBar.fillRect(0, 1150, width, 120);
+    this.mCategoriesBar.fillRect(0, 1152, width, 120);
 
     this.mTIle.x = centerX;
 
@@ -142,7 +142,7 @@ export class MarketPanel extends Panel {
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mCategoriesBar.fillStyle(0x33ccff, 1);
-    this.mCategoriesBar.fillRect(0, 1153, w, 120);
+    this.mCategoriesBar.fillRect(0, 1152, w, 120);
     this.add(this.mCategoriesBar);
 
     this.resize(0, 0);

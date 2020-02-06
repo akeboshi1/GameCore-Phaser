@@ -37,7 +37,7 @@ export class IconBtn extends Phaser.GameObjects.Container {
         this.mBgResKey = data.bgResKey;
         this.mBgTexture = data.bgTextures;
         this.mData = data;
-        if (!this.mScene.textures.exists(this.mBgResKey)) {
+        if (!this.mScene.textures.exists(this.mBgResKey) && data.pngUrl && data.jsonUrl) {
             this.mScene.load.atlas(data.key, Url.getRes(data.pngUrl), Url.getRes(data.jsonUrl));
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
             this.mScene.load.start();
