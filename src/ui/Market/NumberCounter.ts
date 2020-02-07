@@ -1,20 +1,21 @@
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { NinePatch } from "../components/nine.patch";
-import { InputTextField, InputTextFieldEvent } from "../components/inputTextFactory";
-import { WorldService } from "../../game/world.service";
+import { LabelInput } from "../components/label.input";
 
 export class NumberCounter extends Phaser.GameObjects.Container {
   private mBackground: NinePatch;
   private mReduceBtn: Phaser.GameObjects.Image;
   private mIncreaseBtn: Phaser.GameObjects.Image;
-  private mInputText: InputTextField;
+  private mInputText: InputText;
+  private mLabelInput: LabelInput;
   private readonly pressDelay = 500;
   private pressTimeout: any;
   private tween: Phaser.Tweens.Tween;
   private mMinNum: number = 1;
   private mMaxNum: number = 99;
-  constructor(scene: Phaser.Scene, world: WorldService, key: string, x?: number, y?: number) {
+  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number) {
     super(scene, x, y);
+
     this.mBackground = new NinePatch(this.scene, 0, 0, 200, 100, key, "input_bg.png", {
       left: 50,
       top: 48,
@@ -34,37 +35,6 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       x: this.mBackground.x + (this.mBackground.width >> 1) + 60
     }, false).setInteractive();
 
-    this.mInputText = world.uiManager.getInputTextFactory().getInputText(this.scene, {
-      id: "numbercounter",
-      x: 0,
-      y: 0,
-      type: "number",
-      color: 0x3D383,
-      font: "46px",
-      text: "1",
-      textWidth: 200,
-      textHeight: 80,
-      minNum: 1,
-      maxNum: 99,
-      align: "center",
-      posType: 1, // 0 顶部  1 当前文本位置
-    });
-    // (this.scene, 0, 0, this.mMinNum, this.mMaxNum, 200, 80, "46px", "1");
-    // this.mInputText = scene.make.text({
-    //   align: "center",
-    //   x: 0,
-    //   y: 0,
-    //   style: {
-    //     font: "16px",
-    //     fill: "#FFCC00",
-    //     wordWrap: {
-    //       width: 200,
-    //       height: 80,
-    //       useAdvancedWrap: true
-    //     }
-    //   }
-    // }, false).setInteractive();
-    // this.mInputText.setText("1");
     // this.mInputText = new InputText(this.scene, 0, 0, 200, 80, {
     //   fontSize: "46px",
     //   color: "#666666",
@@ -72,12 +42,24 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     //   type: "number",
     //   text: 1
     // }).setOrigin(0.5);
-    this.mInputText.on(InputTextFieldEvent.textchange, this.onTextChangeHandler, this);
-
-    this.add([this.mBackground, this.mInputText.getView(), this.mReduceBtn, this.mIncreaseBtn]);
+    this.mLabelInput = new LabelInput(this.scene, {
+      x: 0,
+      y: 0,
+      width: 160,
+      height: 80,
+      fontSize: "46px",
+      color: "#666666",
+      align: "center",
+      type: "number",
+    });
+    this.mLabelInput.setOrigin(0.5);
+    this.mLabelInput.setText("1");
+    this.mLabelInput.on("textchange", this.onTextChangeHandler, this);
+    this.add([this.mBackground, this.mLabelInput, this.mReduceBtn, this.mIncreaseBtn]);
   }
 
   resize() {
+
   }
 
   setMinNumber(val: number) {
@@ -111,32 +93,32 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     } else if (num > this.mMaxNum) {
       num = this.mMaxNum;
     }
-    this.mInputText.getView().setText(num + "");
+    this.mLabelInput.setText(num.toString());
     this.emit("change", num);
   }
 
-  // setBlur() {
-  //   this.mLabelInput.setBlur();
-  // }
+  setBlur() {
+    this.mLabelInput.setBlur();
+  }
 
   get number(): number {
-    return parseInt(this.mInputText.getView().text, 10);
+    return parseInt(this.mLabelInput.text, 10);
   }
 
   private onReduceHandler() {
-    let num = parseInt(this.mInputText.getView().text, 10);
+    let num = parseInt(this.mLabelInput.text, 10);
     this.setCounter(--num);
     this.clearTween();
   }
 
   private onIncreaseHandler() {
-    let num = parseInt(this.mInputText.getView().text, 10);
+    let num = parseInt(this.mLabelInput.text, 10);
     this.setCounter(++num);
     this.clearTween();
   }
 
   private onTextChangeHandler() {
-    this.setCounter(Number(this.mInputText.getView().text));
+    this.setCounter(parseInt(this.mLabelInput.text, 10));
   }
 
   private onReduceDownHandler() {

@@ -104,7 +104,7 @@ export class InputTextField extends Phaser.Events.EventEmitter {
         this.mInputText.on("focus", this.onTextFocus, this);
         this.mInputText.on("blur", this.onTextBlur, this);
         this.mScene.input.on("gameobjectdown", this.sceneDown, this);
-        if (this.mWorld.game.device.os.iOS) {
+        if (this.mWorld.game.device.os.iOS && !this.mWorld.game.device.os.desktop) {
             this.setInputFocus();
         } else {
             this.mInputTimeID = (this.mScene as MainUIScene).setTimeout(() => {

@@ -36,7 +36,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     this.mBackground.y = (this.mBackground.height >> 1) - 50;
 
-    this.mCounter = new NumberCounter(this.scene, this.mWorld, $key, 360, 700);
+    this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
 
     this.mBuyBtn = new NinePatchButton(this.scene, 880, 700, 328, 164, this.key, "yellow_button", i18n.t("market.buy_button"), {
       left: 36,
@@ -225,7 +225,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
   private onPointerUpHandler() {
     this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
-    // this.mCounter.setBlur();
+    this.mCounter.setBlur();
   }
 
 }
