@@ -353,7 +353,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             Logger.getInstance().error("connection is undefined");
         }
-        this.pauseScene();
+        if (this.game.device.os.desktop) {
+            this.pauseScene();
+        }
     }
 
     private _createAnotherGame(gameId, worldId) {
