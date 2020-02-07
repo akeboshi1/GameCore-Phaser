@@ -22,6 +22,7 @@ import { BagGroupMediator } from "./baseView/bagGroup/bag.group.mediator";
 import { TopMenuMediator } from "./baseView/top.menu/top.menu.mediator";
 import { TopMediator } from "./baseView/topGroup/top.mediator";
 import { MessageType } from "../const/MessageType";
+import { InputTextFactory } from "./components/inputTextFactory";
 
 export const enum UIType {
     NoneUIType,
@@ -44,6 +45,7 @@ export class UiManager extends PacketHandler {
     private mCacheUI: Function;
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
+    private mInputTextFactory: InputTextFactory;
     constructor(private worldService: WorldService) {
         super();
         this.mConnect = worldService.connection;
@@ -54,6 +56,11 @@ export class UiManager extends PacketHandler {
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
 
         this.mUILayerManager = new LayerManager();
+        this.mInputTextFactory = new InputTextFactory(worldService);
+    }
+
+    public getInputTextFactory(): InputTextFactory {
+        return this.mInputTextFactory;
     }
 
     public addPackListener() {

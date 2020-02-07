@@ -4,8 +4,10 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
 import { Logger } from "../../utils/log";
 import { DetailDisplay } from "./DetailDisplay";
+import { WorldService } from "../../game/world.service";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
+  private mWorld: WorldService;
   private mBackground: Phaser.GameObjects.Image;
   private mCounter: NumberCounter;
   private mBuyBtn: NinePatchButton;
@@ -20,9 +22,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mSource: Phaser.GameObjects.Text;
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
-  constructor(scene: Phaser.Scene, $key: string, ) {
+  constructor(scene: Phaser.Scene, world: WorldService, $key: string, ) {
     super(scene);
     this.key = $key;
+    this.mWorld = world;
 
     this.setPosition(0, 250);
 
@@ -33,7 +36,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     this.mBackground.y = (this.mBackground.height >> 1) - 50;
 
-    this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
+    this.mCounter = new NumberCounter(this.scene, this.mWorld, $key, 360, 700);
 
     this.mBuyBtn = new NinePatchButton(this.scene, 880, 700, 328, 164, this.key, "yellow_button", i18n.t("market.buy_button"), {
       left: 36,
@@ -222,7 +225,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
   private onPointerUpHandler() {
     this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
-    this.mCounter.setBlur();
+    // this.mCounter.setBlur();
   }
 
 }

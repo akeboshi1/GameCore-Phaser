@@ -5,6 +5,10 @@ import { Size } from "../utils/size";
 import { DebugLoggerMediator } from "../ui/debuglog/debug.logger.mediator";
 
 export class MainUIScene extends Phaser.Scene {
+  private timeOutID = 0;
+  private timeOutCancelMap = {};
+  private timeOutCallerList = [];
+  private timeOutTimeMap = {};
   private fps: Phaser.GameObjects.Text;
   private sizeTF: Phaser.GameObjects.Text;
   private mDebugLoger: DebugLoggerMediator;
@@ -37,12 +41,41 @@ export class MainUIScene extends Phaser.Scene {
     this.mRoom.world.game.scale.on("resize", this.checkSize, this);
   }
 
+  public setTimeout(caller, time): number {
+    const begin = Date.now();
+    this.timeOutCallerList[++this.timeOutID] = caller;
+    this.timeOutTimeMap[this.timeOutID] = { now: begin, delay: time };
+    return this.timeOutID;
+  }
+
+  public clearTimeout(id) {
+    this.timeOutCancelMap[id] = true;
+  }
+
   public update() {
     if (!this.mDebugLoger) {
       this.mDebugLoger = this.mRoom.world.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
     }
     if (this.mDebugLoger && this.mDebugLoger.isShow()) {
       this.mDebugLoger.update(this.game.loop.actualFps.toFixed());
+    }
+    const len: number = this.timeOutCallerList.length;
+    for (let i: number = 1; i < len; i++) {
+      if (this.timeOutCancelMap[i]) {
+        continue;
+      }
+      const caller = this.timeOutCallerList[i];
+      const callerObj = this.timeOutTimeMap[i];
+      if (!caller || !callerObj) {
+        continue;
+      }
+      const begin: number = callerObj.now;
+      const delay: number = callerObj.delay;
+      const nowTime: number = Date.now();
+      if (nowTime - begin > delay) {
+        callerObj.now = nowTime;
+        caller();
+      }
     }
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
@@ -57,7 +90,6 @@ export class MainUIScene extends Phaser.Scene {
   // private checkOriention(orientation) {
   //   this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation + "\n" + "orientationChange:" + orientation;
   // }
-
   private checkSize(size: Size) {
     const width: number = size.width;
     const height: number = size.height;

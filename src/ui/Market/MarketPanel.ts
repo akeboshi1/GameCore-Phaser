@@ -126,7 +126,7 @@ export class MarketPanel extends Panel {
       y: 140
     }).setInteractive();
 
-    this.mSelectItem = new ElementDetail(this.scene, this.key);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key);
     this.mSelectItem.setSize(w, 1020);
 
     this.mTIle = this.scene.make.text({

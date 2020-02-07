@@ -131,9 +131,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void {}
+    onDisConnected(connection?: SocketConnection): void { }
 
-    onError(reason: SocketConnectionError | undefined): void {}
+    onError(reason: SocketConnectionError | undefined): void { }
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -330,6 +330,32 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public onFocus() {
+        if (this.connection) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+            context.gameStatus = op_def.GameStatus.Focus;
+            this.connection.send(pkt);
+            // 同步心跳
+            this.mClock.sync(-1);
+        } else {
+            Logger.getInstance().error("connection is undefined");
+        }
+        this.resumeScene();
+    }
+
+    public onBlur() {
+        if (this.connection) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+            context.gameStatus = op_def.GameStatus.Blur;
+            this.connection.send(pkt);
+        } else {
+            Logger.getInstance().error("connection is undefined");
+        }
+        this.pauseScene();
+    }
+
     private _createAnotherGame(gameId, worldId) {
         this.clearGame();
         if (this.mConnection) {
@@ -365,6 +391,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private clearGame() {
         if (this.mGame) {
+            this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
+            this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
             this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
             this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
             // this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
@@ -681,32 +709,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 }
             }
         });
-    }
-
-    private onFocus() {
-        if (this.connection) {
-            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
-            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
-            context.gameStatus = op_def.GameStatus.Focus;
-            this.connection.send(pkt);
-            // 同步心跳
-            this.mClock.sync(-1);
-        } else {
-            Logger.getInstance().error("connection is undefined");
-        }
-        this.resumeScene();
-    }
-
-    private onBlur() {
-        if (this.connection) {
-            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
-            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
-            context.gameStatus = op_def.GameStatus.Blur;
-            this.connection.send(pkt);
-        } else {
-            Logger.getInstance().error("connection is undefined");
-        }
-        this.pauseScene();
     }
 
     private resumeScene() {
