@@ -391,7 +391,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private clearGame() {
         if (this.mGame) {
-            this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
+            // this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
             this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
             this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
             this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
@@ -624,7 +624,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mGame.scene.add(PlayScene.name, PlayScene);
         this.mGame.scene.add(MainUIScene.name, MainUIScene);
         this.mGame.scene.add(EditScene.name, EditScene);
-        this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
+        // this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
             if (this.mGame.device.os.desktop) {
