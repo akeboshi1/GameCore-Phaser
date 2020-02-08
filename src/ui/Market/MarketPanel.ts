@@ -9,6 +9,8 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
 import { TabButton } from "../components/tab.button";
+import { Font } from "../../utils/font";
+import { Logger } from "../../utils/log";
 
 export class MarketPanel extends Panel {
   private readonly key = "market";
@@ -20,7 +22,11 @@ export class MarketPanel extends Panel {
   private mSubTabs: TextButton[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
   private mSelectedSubCategories: Phaser.GameObjects.GameObject;
+  private mPropContainer: Phaser.GameObjects.Container;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
+  private mCategoriesContainer: Phaser.GameObjects.Container;
+  private mSubCategeoriesContainer: Phaser.GameObjects.Container;
+  private mShelfContainer: Phaser.GameObjects.Container;
   private mItems: MarketItem[];
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -40,41 +46,58 @@ export class MarketPanel extends Panel {
     this.setSize(width, height);
 
     this.mBackgroundColor.clear();
-    this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+    // this.mBackgroundColor.fillStyle(0x6f75ff);
+    this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff, 1);
     this.mBackgroundColor.fillRect(0, 0, width, height);
-
-    this.mCategoriesBar.clear();
-    this.mCategoriesBar.fillStyle(0x33ccff);
-    this.mCategoriesBar.fillRect(0, 1152, width, 120);
+    this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mTIle.x = centerX;
 
-    this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
+    this.mShelfContainer.setSize(width, 880);
+    this.mShelfContainer.setPosition(0, height - this.mShelfContainer.height);
+
+    this.mCategoriesBar.clear();
+    this.mCategoriesBar.fillStyle(0x3ee1ff);
+    this.mCategoriesBar.fillRect(0, 0, width, 120);
+    this.mCategoriesBar.fillStyle(0x04b3d3);
+    this.mCategoriesBar.fillRect(0, 120, width, 7);
+    this.mSubCategeoriesContainer.setSize(width, 127);
+
+    this.setInteractive();
+    // this.setInteractive(new Phaser.Geom.Rectangle(-(width >> 1), -(height >> 1), width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mSelectItem.resize(w, h);
   }
 
   public setCategories(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
+    if (!this.mCategoriesContainer) {
+      return;
+    }
+    this.mCategoriesContainer.removeAll(true);
     const categorys = content.marketCategory;
-    this.clearCategories(this.mTabs);
     this.mTabs = [];
     const config = {
-      left: 19,
-      top: 19,
-      right: 14,
-      bottom: 2
+      left: 24,
+      top: 27,
+      right: 19,
+      bottom: 13
     };
     const group: CheckboxGroup = new CheckboxGroup();
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new TabButton(this.scene, i * 233 + 110, 1100, 224, 104, this.key, "categories", categorys[i].category.value, config);
+      const btn = new TabButton(this.scene, i * 233 + 112, 52, 224, 104, this.key, "categories", categorys[i].category.value, config);
       // btn.removeAllListeners();
       btn.setTextStyle({
-        fontSize: "42px"
+        fontSize: "42px",
+        fontFamily: Font.DEFULT_FONT,
       });
       this.mTabs[i] = btn;
       btn.setData("category", categorys[i]);
-      this.add(btn);
+      // this.add(btn);
     }
+    this.mCategoriesContainer.setSize(this.mTabs.length * 224, 104);
+    this.mShelfContainer.add(this.mTabs);
+    this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
+    this.mPropContainer.y = this.mSubCategeoriesContainer.y + this.mSubCategeoriesContainer.height + 28;
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
 
@@ -89,12 +112,12 @@ export class MarketPanel extends Panel {
     this.mItems = [];
     const commodities = content.commodities;
     for (let i = 0; i < commodities.length; i++) {
-      const item = new MarketItem(this.scene, Math.floor(i / 3) * 410 + 210, Math.floor(i % 3) * 210 + 1400);
+      const item = new MarketItem(this.scene, Math.floor(i / 3) * 410 + 210, Math.floor(i % 3) * 210 + 91);
       item.setProp(commodities[i]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
-    this.add(this.mItems);
+    this.mPropContainer.add(this.mItems);
 
     if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
   }
@@ -114,9 +137,10 @@ export class MarketPanel extends Panel {
     const w = this.scene.cameras.main.width;
     const h = this.scene.cameras.main.height;
     this.mBackgroundColor = this.scene.make.graphics(undefined, false);
-    this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+    // this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+    this.mBackgroundColor.fillStyle(0x6f75ff);
     this.mBackgroundColor.fillRect(0, 0, w, h);
-    this.mBackgroundColor.setInteractive();
+    // this.mBackgroundColor.setInteractive();
     this.addAt(this.mBackgroundColor, 0);
 
     this.mCloseBtn = this.scene.make.image({
@@ -129,11 +153,23 @@ export class MarketPanel extends Panel {
     this.mSelectItem = new ElementDetail(this.scene, this.key);
     this.mSelectItem.setSize(w, 1020);
 
+    this.mShelfContainer = this.scene.make.container({
+      x: (w / 2),
+      y: h
+    }, false).setSize(w, 880);
+    this.add(this.mShelfContainer);
+    this.mPropContainer = this.scene.make.container(undefined, false);
+    this.mCategoriesContainer = this.scene.make.container(undefined, false);
+    this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
+    this.mShelfContainer.add([this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
+
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
       y: 140,
       style: {
-        font: "bold 96px YaHei"
+      //   // font: "bold 96px",
+        fontSize: "96px",
+        fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
 
@@ -141,9 +177,11 @@ export class MarketPanel extends Panel {
     super.init();
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
-    this.mCategoriesBar.fillStyle(0x33ccff, 1);
-    this.mCategoriesBar.fillRect(0, 1152, w, 120);
-    this.add(this.mCategoriesBar);
+    // this.mCategoriesBar.fillStyle(0x3ee1ff, 1);
+    // this.mCategoriesBar.fillRect(0, 0, w, 120);
+    // this.mCategoriesBar.fillStyle(0x04b3d3);
+    // this.mCategoriesBar.fillRect(0, 120, w, 7);
+    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
 
     this.resize(0, 0);
 
@@ -169,21 +207,25 @@ export class MarketPanel extends Panel {
   }
 
   private onSelectCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
-    const subcategory: op_def.IMarketCategory = gameobject.getData("category");
+    if (!this.mSubCategeoriesContainer) {
+      return;
+    }
     this.clearCategories(this.mSubTabs);
+    const subcategory: op_def.IMarketCategory = gameobject.getData("category");
     this.mSelectedCategories = gameobject;
     if (subcategory) {
       this.mSubTabs = [];
       const group = new CheckboxGroup();
       const subcategorys = subcategory.subcategory;
       for (let i = 0; i < subcategorys.length; i++) {
-        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * 158 + 70, 1220);
+        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * 158 + 70, 60);
         textBtn.setData("category", subcategorys[i]);
         textBtn.setSize(180, 90);
         this.mSubTabs[i] = textBtn;
       }
       group.appendItemAll(this.mSubTabs);
-      this.add(this.mSubTabs);
+      this.mSubCategeoriesContainer.add(this.mSubTabs);
+
       group.on("selected", this.onSelectSubCategoryHandler, this);
       group.selectIndex(0);
     }

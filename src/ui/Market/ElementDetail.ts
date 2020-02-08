@@ -4,11 +4,13 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
 import { Logger } from "../../utils/log";
 import { DetailDisplay } from "./DetailDisplay";
+import { Font } from "../../utils/font";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mBackground: Phaser.GameObjects.Image;
   private mCounter: NumberCounter;
   private mBuyBtn: NinePatchButton;
+  private mNickNameContainer: Phaser.GameObjects.Container;
   private mNickNameBg: Phaser.GameObjects.Image;
   private mNickName: Phaser.GameObjects.Text;
   private mDetailBubbleContainer: Phaser.GameObjects.Container;
@@ -36,50 +38,53 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
 
     this.mBuyBtn = new NinePatchButton(this.scene, 880, 700, 328, 164, this.key, "yellow_button", i18n.t("market.buy_button"), {
-      left: 36,
-      top: 34,
-      right: 20,
-      bottom: 24
+      left: 52,
+      top: 49,
+      right: 24,
+      bottom: 23
     });
     this.mBuyBtn.setTextStyle({
       color: "#976400",
-      font: "bold 48px YaHei"
+      fontSize: "52px",
+      fontFamily: Font.DEFULT_FONT
     });
     this.mBuyBtn.setTextOffset(0, 33);
     this.mBuyBtn.on("pointerup", this.onBuyHandler, this);
 
+    this.mNickNameContainer = this.scene.make.container(undefined, false);
+
     this.mNickNameBg = this.scene.make.image({
-      x: 360,
-      y: 580,
       key: this.key,
       frame: "name_bg.png"
     }, false);
+    this.mNickNameContainer.setSize(this.mNickNameBg.width, this.mNickNameBg.height);
 
     this.mNickName = this.scene.make.text({
-      x: 360,
-      y: 580,
       text: "小黄鸭奶油小食棚",
       style: {
-        font: "42px YaHei",
+        fontSize: "42px",
+        fontFamily: Font.DEFULT_FONT,
         align: "center"
       }
     }).setOrigin(0.5);
 
     this.mPriceIcon = this.scene.make.image({
-      x: -55,
-      y: -30,
+      x: -78,
+      y: -42,
       key: this.key,
       frame: "tuding_icon.png"
     }, false);
     this.mPriceText = this.scene.make.text({
-      x: -30,
-      y: -56,
+      x: 0,
+      y: -42,
       style: {
-        font: "40px YaHei"
+        fontSize: "40px",
+        fontFamily: Font.DEFULT_FONT
       }
-    });
+    }).setOrigin(0.5);
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.scale = 2;
     this.mDetailDisplay.x = 265;
     this.mDetailDisplay.y = 250;
 
@@ -100,7 +105,8 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: -(this.mDetailBubbleContainer.width >> 1) + 46,
       y: -(this.mDetailBubbleContainer.height >> 1) + 20,
       style: {
-        font: "40px",
+        fontSize: "34px",
+        fontFamily: Font.DEFULT_FONT,
         wordWrap: {
           width: 260,
           useAdvancedWrap: true
@@ -110,15 +116,17 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     this.mSource = this.scene.make.text({
       x: -(this.mDetailBubbleContainer.width >> 1) + 40,
-      y: (this.mDetailBubbleContainer.height >> 1) - 40,
+      y: (this.mDetailBubbleContainer.height >> 1) - 70,
       style: {
-        font: "32px"
+        fontSize: "32px",
+        fontFamily: Font.DEFULT_FONT,
       }
     }, false);
 
-    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickNameBg, this.mNickName, this.mDetailBubbleContainer]);
+    this.add([this.mBackground, this.mDetailDisplay, this.mCounter, this.mBuyBtn, this.mNickNameContainer, this.mDetailBubbleContainer]);
     this.mDetailBubbleContainer.add([this.mDetailBubble, this.mDesText, this.mSource]);
     this.mBuyBtn.add([this.mPriceIcon, this.mPriceText]);
+    this.mNickNameContainer.add([this.mNickNameBg, this.mNickName]);
 
     this.addActionListener();
   }
@@ -131,19 +139,17 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mBackground.x = this.scene.cameras.main.centerX / scale;
     this.setSize(width, height);
 
-    this.mBuyBtn.x = width - (this.mBuyBtn.width >> 1) - 35;
-    this.mDetailBubbleContainer.x = width - (this.mDetailBubbleContainer.width >> 1) - 93;
-    // this.mDetailBubble.x = width - (this.mDetailBubble.width >> 1) - 93;
+    this.mDetailBubbleContainer.x = centerX + this.mDetailBubbleContainer.width / 2 + 150;
 
-    // this.mDesText.x = this.mDetailBubble.x - (this.mDetailBubble.width >> 1) + 50;
-    // this.mSource.x = this.mDesText.x;
+    this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 50;
 
-    this.mCounter.x = centerX * 0.6;
-    this.mNickName.x = this.mCounter.x;
-    this.mNickNameBg.x = this.mNickName.x;
-    this.mDetailDisplay.x = this.mNickName.x;
-
-    this.mDetailDisplay.scale = 1 / scale;
+    let counterX = this.mBuyBtn.x - this.mBuyBtn.width / 2 - this.mCounter.width / 2 -  122;
+    if (counterX < this.mCounter.width / 2 + 10) {
+      counterX = this.mCounter.width / 2 + 10;
+    }
+    this.mCounter.x = counterX;
+    this.mDetailDisplay.x = centerX;
+    this.mDetailDisplay.scale = (1 / scale) * 2;
 
     const clickW = width * 0.8;
     const clickH = height * 0.7;
@@ -159,14 +165,22 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   addActionListener() {
+    if (!this.mCounter) {
+      return;
+    }
     this.mCounter.addActionListener();
     this.mCounter.on("change", this.onChangeCounterHandler, this);
+    this.mDetailDisplay.on("show", this.onShowDisplayHandler, this);
     this.on("pointerup", this.onPointerUpHandler, this);
   }
 
   removeActionListener() {
+    if (!this.mCounter) {
+      return;
+    }
     this.mCounter.removeActionListener();
     this.mCounter.off("change", this.onChangeCounterHandler, this);
+    this.mDetailDisplay.off("show", this.onShowDisplayHandler, this);
     this.off("gameobjectup", this.onPointerUpHandler, this);
   }
 
@@ -176,7 +190,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
       this.mPriceIcon.setTexture(this.key, "tuding_icon.png");
-      this.mPriceText.setText(prop.price[0].price.toString());
+      this.updatePrice(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");
     }
@@ -199,6 +213,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     // this.mDetailDisplay.loadDisplay(content.display || this.mSelectedProp.icon);
   }
 
+  private updatePrice(price: string) {
+    this.mPriceText.setText(price);
+    this.mPriceIcon.x = this.mPriceText.x - this.mPriceText.width / 2 - 44;
+  }
+
   private onBuyHandler() {
     if (!this.mSelectedProp) {
       return;
@@ -217,12 +236,24 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     if (!this.mSelectedProp.price || this.mSelectedProp.price.length < 1) {
       return;
     }
-    this.mPriceText.setText((this.mSelectedProp.price[0].price * this.mCounter.number).toString());
+    this.updatePrice((this.mSelectedProp.price[0].price * this.mCounter.number).toString());
   }
 
   private onPointerUpHandler() {
     this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
     this.mCounter.setBlur();
+  }
+
+  private onShowDisplayHandler(image: Phaser.GameObjects.Image) {
+    if (!image) {
+      return;
+    }
+    this.mNickNameContainer.x = this.mDetailDisplay.x; // + this.mDetailDisplay.width / 2 - this.mNickNameContainer.width / 2;
+    let _y = this.mDetailDisplay.y + this.mDetailDisplay.height / 2 + this.mNickNameContainer.height / 2 + 45;
+    if (_y > this.mCounter.y - this.mNickNameContainer.height - 45) {
+      _y = this.mCounter.y - this.mNickNameContainer.height - 45;
+    }
+    this.mNickNameContainer.y = _y;
   }
 
 }

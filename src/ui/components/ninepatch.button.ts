@@ -52,6 +52,10 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
         this.mLabel.setStyle(style);
     }
 
+    public setFontStyle(val: string) {
+        this.mLabel.setFontStyle(val);
+    }
+
     public setTextOffset(x: number, y: number) {
         this.mLabel.setPosition(x, y);
     }

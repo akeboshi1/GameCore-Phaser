@@ -1,5 +1,6 @@
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { Logger } from "../../utils/log";
+import { Font } from "../../utils/font";
 
 export class LabelInput extends Phaser.GameObjects.Container {
     private mLabel: Phaser.GameObjects.Text;
@@ -9,7 +10,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         super(scene);
 
         const labelConfig = {
-            fontFamily: "YaHei"
+            fontFamily: Font.DEFULT_FONT
         };
         const clickW = config.width || 100;
         const clickH = config.height || 100;

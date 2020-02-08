@@ -67,10 +67,16 @@ export class DecorateElementManager extends ElementManager {
         walkArea[i] = new Array(cols).fill(0);
       }
     }
+    let row = 0;
+    let col = 0;
     for (let i = 0; i < rows; i++) {
+      row = pos.y + i - origin.x;
       for (let j = 0; j < cols; j++) {
         if (collisionArea[i][j] === 1 && walkArea[i][j] === 0) {
-          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = 0;
+          col = pos.x + j - origin.y;
+          if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+            this.mMap[row][col] = 0;
+          }
         }
       }
     }
@@ -94,10 +100,16 @@ export class DecorateElementManager extends ElementManager {
         walkArea[i] = new Array(cols).fill(0);
       }
     }
+    let row = 0;
+    let col = 0;
     for (let i = 0; i < rows; i++) {
+      row = pos.y + i - origin.x;
       for (let j = 0; j < cols; j++) {
+        col = pos.x + j - origin.y;
         if (collisionArea[i][j] === 1) {
-          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = -1;
+          if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+            this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = -1;
+          }
         }
       }
     }

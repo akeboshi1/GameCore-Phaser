@@ -1,4 +1,5 @@
 import { IButtonState } from "../components/interface/IButtonState";
+import { Font } from "../../utils/font";
 
 export class TextButton extends Phaser.GameObjects.Container implements IButtonState {
   private text: Phaser.GameObjects.Text;
@@ -7,7 +8,8 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
     this.text = this.scene.make.text({
       text,
       style: {
-        font: "bold 42px YaHei"
+        fontSize: "42px",
+        fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
     this.add(this.text);

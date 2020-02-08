@@ -19,9 +19,13 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     if (content.display) {
       const display = content.display;
-      this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
-      this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
-      this.scene.load.start();
+      if (this.scene.textures.exists(display.texturePath)) {
+        this.onCompleteHandler();
+      } else {
+        this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
+        this.scene.load.start();
+      }
     }
   }
 
@@ -44,9 +48,13 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     if (this.mDragonboneDisplay) {
       this.mDragonboneDisplay.destroy();
     }
-    this.scene.load.image(url, Url.getOsdRes(url));
-    this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
-    this.scene.load.start();
+    if (this.scene.textures.exists(url)) {
+      this.onCompleteHandler();
+    } else {
+      this.scene.load.image(url, Url.getOsdRes(url));
+      this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
+      this.scene.load.start();
+    }
   }
 
   get display(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE {
@@ -67,6 +75,8 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     } else {
       this.mImage.setTexture(this.mUrl);
     }
+    this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.add(this.mImage);
+    this.emit("show", this.mImage);
   }
 }
