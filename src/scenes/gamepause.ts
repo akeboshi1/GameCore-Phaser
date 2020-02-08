@@ -28,20 +28,27 @@ export class GamePauseScene extends Phaser.Scene {
         this.tipTF = this.add.text(width - 240 >> 1, height - 50, "点击任意位置开始游戏", { font: "30px Tahoma" });
         this.scale.on("resize", this.checkSize, this);
         this.checkSize(new Size(width, height));
+        this.input.on("pointerdown", this.downHandler, this);
     }
 
     public awake() {
         this.scale.on("resize", this.checkSize, this);
+        this.input.on("pointerdown", this.downHandler, this);
         this.scene.wake();
     }
 
     public sleep() {
         this.scale.off("resize", this.checkSize, this);
+        this.input.off("pointerdown", this.downHandler, this);
         this.scene.sleep();
     }
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    private downHandler() {
+        this.mWorld.onFocus();
     }
 
     private checkSize(size: Size) {
