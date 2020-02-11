@@ -18,16 +18,29 @@ export class LoadingScene extends Phaser.Scene {
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
     this.load.atlas("loading", Url.getRes("loading.png"), Url.getRes("loading.json"));
+    this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
     // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
   }
 
   public init(data: any) {
+    const element = document.createElement("style");
+    document.head.appendChild(element);
+    const sheet: CSSStyleSheet = <CSSStyleSheet> element.sheet;
+
+    const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansSC-Normal.otf') format('opentype'); }\n";
+    sheet.insertRule(styles, 0);
+
     this.mWorld = data.world;
     this.mRoom = data.room;
     this.mRequestCom = false;
   }
 
   public create() {
+    WebFont.load({
+      custom: {
+          families: [ "Source Han Sans" ]
+      },
+  });
     if (this.mRoom) this.mRoom.startLoad();
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;

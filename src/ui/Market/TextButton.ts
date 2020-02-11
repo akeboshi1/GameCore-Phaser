@@ -8,7 +8,7 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
     this.text = this.scene.make.text({
       text,
       style: {
-        fontSize: "42px",
+        fontSize: 15 * window.devicePixelRatio,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
@@ -36,7 +36,6 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
   setSize(w: number, h: number) {
     super.setSize(w, h);
     this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-    // this.text.setInteractive(new Phaser.Geom.Rectangle(w >> 1, h >> 1, w, h), Phaser.Geom.Rectangle.Contains);
     return this;
   }
 

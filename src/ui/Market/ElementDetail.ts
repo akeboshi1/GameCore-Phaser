@@ -24,34 +24,44 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mSource: Phaser.GameObjects.Text;
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
+  private readonly dpr: number;
   constructor(scene: Phaser.Scene, world: WorldService, $key: string, ) {
     super(scene);
     this.key = $key;
     this.mWorld = world;
 
-    this.setPosition(0, 250);
+    this.dpr = Math.floor(window.devicePixelRatio || 1);
+
+    this.setPosition(0, 0);
 
     this.mBackground = this.scene.make.image({
       x: this.scene.cameras.main.width >> 1,
       key: this.key,
       frame: "bg.png"
     });
-    this.mBackground.y = (this.mBackground.height >> 1) - 50;
+    this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
 
     this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
 
-    this.mBuyBtn = new NinePatchButton(this.scene, 880, 700, 328, 164, this.key, "yellow_button", i18n.t("market.buy_button"), {
-      left: 52,
-      top: 49,
-      right: 24,
-      bottom: 23
+    const frame = this.scene.textures.getFrame(this.key, "yellow_button_normal");
+    let w = 60;
+    let h = 65;
+    if (frame) {
+      w = frame.width;
+      h = frame.height;
+    }
+    this.mBuyBtn = new NinePatchButton(this.scene, 440, 700, 115 * this.dpr, 58 * this.dpr, this.key, "yellow_button", i18n.t("market.buy_button"), {
+      left: 20 * this.dpr,
+      top: 18 * this.dpr,
+      right: w - 2 - 20 * this.dpr,
+      bottom: h - 2 - 18 * this.dpr
     });
     this.mBuyBtn.setTextStyle({
       color: "#976400",
-      fontSize: "52px",
+      fontSize: 18 * this.dpr,
       fontFamily: Font.DEFULT_FONT
     });
-    this.mBuyBtn.setTextOffset(0, 33);
+    this.mBuyBtn.setTextOffset(0, 10 * this.dpr);
     this.mBuyBtn.on("pointerup", this.onBuyHandler, this);
 
     this.mNickNameContainer = this.scene.make.container(undefined, false);
@@ -63,9 +73,9 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mNickNameContainer.setSize(this.mNickNameBg.width, this.mNickNameBg.height);
 
     this.mNickName = this.scene.make.text({
-      text: "小黄鸭奶油小食棚",
+      text: "",
       style: {
-        fontSize: "42px",
+        fontSize: 15 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         align: "center"
       }
@@ -73,23 +83,22 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     this.mPriceIcon = this.scene.make.image({
       x: -78,
-      y: -42,
+      y: -16 * this.dpr,
       key: this.key,
       frame: "tuding_icon.png"
     }, false);
     this.mPriceText = this.scene.make.text({
       x: 0,
-      y: -42,
+      y: -16 * this.dpr,
       style: {
-        fontSize: "40px",
+        fontSize: 14 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
-    this.mDetailDisplay.scale = 2;
-    this.mDetailDisplay.x = 265;
-    this.mDetailDisplay.y = 250;
+    this.mDetailDisplay.scale = this.dpr * 2;
+    this.mDetailDisplay.y = 110 * this.dpr;
 
     this.mDetailBubble = this.scene.make.image({
       x: 0,
@@ -99,19 +108,18 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     }, false);
 
     this.mDetailBubbleContainer = this.scene.make.container({
-      x: 700,
       y: this.mDetailDisplay.y
     }, false);
     this.mDetailBubbleContainer.setSize(this.mDetailBubble.width, this.mDetailBubble.height);
 
     this.mDesText = this.scene.make.text({
-      x: -(this.mDetailBubbleContainer.width >> 1) + 46,
-      y: -(this.mDetailBubbleContainer.height >> 1) + 20,
+      x: -(this.mDetailBubbleContainer.width >> 1) + 15 * this.dpr,
+      y: -(this.mDetailBubbleContainer.height >> 1) + 10 * this.dpr,
       style: {
-        fontSize: "34px",
+        fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         wordWrap: {
-          width: 260,
+          width: 90 * this.dpr,
           useAdvancedWrap: true
         }
       }
@@ -119,9 +127,9 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     this.mSource = this.scene.make.text({
       x: -(this.mDetailBubbleContainer.width >> 1) + 40,
-      y: (this.mDetailBubbleContainer.height >> 1) - 70,
+      y: (this.mDetailBubbleContainer.height >> 1) - 23 * this.dpr,
       style: {
-        fontSize: "32px",
+        fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
       }
     }, false);
@@ -135,24 +143,25 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   resize(w: number, h: number) {
-    const scale = this.scene.cameras.main.height / 1920;
-    const width = (this.scene.cameras.main.width / scale);
-    const height = ((this.scene.cameras.main.height / scale) >> 1) - 150;
-    const centerX = this.scene.cameras.main.centerX / scale;
-    this.mBackground.x = this.scene.cameras.main.centerX / scale;
-    this.setSize(width, height);
+    const width = (this.scene.cameras.main.width );
+    const height = ((this.scene.cameras.main.height) >> 1) - 150;
+    const centerX = this.scene.cameras.main.centerX;
+    this.mBackground.x = this.scene.cameras.main.centerX;
 
-    this.mDetailBubbleContainer.x = centerX + this.mDetailBubbleContainer.width / 2 + 150;
+    this.mDetailBubbleContainer.x = centerX + this.mDetailBubbleContainer.width / 2 + 57 * this.dpr;
 
-    this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 50;
+    this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 18 * this.dpr;
+    this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.height / 2 - 12 * this.dpr;
 
-    let counterX = this.mBuyBtn.x - this.mBuyBtn.width / 2 - this.mCounter.width / 2 -  122;
+    let counterX = this.mBuyBtn.x - this.mBuyBtn.width / 2 - this.mCounter.width / 2 -  42 * this.dpr;
     if (counterX < this.mCounter.width / 2 + 10) {
       counterX = this.mCounter.width / 2 + 10;
     }
     this.mCounter.x = counterX;
+    this.mCounter.y = this.mBuyBtn.y;
     this.mDetailDisplay.x = centerX;
-    this.mDetailDisplay.scale = (1 / scale) * 2;
+    this.mDetailDisplay.y = (this.height - this.y) / 2;
+    this.mDetailBubbleContainer.y = this.mDetailDisplay.y;
 
     const clickW = width * 0.8;
     const clickH = height * 0.7;
@@ -190,7 +199,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   setProp(prop: op_client.IMarketCommodity) {
     this.mSelectedProp = prop;
     this.mNickName.setText(prop.shortName || prop.name);
-    this.mDesText.setText(prop.des);
+    this.mDesText.setText(prop.des +  "了速度法律上的肌肤螺丝钉解放螺丝钉解放少了几分了解丽江老君山辣鸡");
     if (prop.price && prop.price.length > 0) {
       this.mPriceIcon.setTexture(this.key, "tuding_icon.png");
       this.updatePrice(prop.price[0].price.toString());
@@ -218,7 +227,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
   private updatePrice(price: string) {
     this.mPriceText.setText(price);
-    this.mPriceIcon.x = this.mPriceText.x - this.mPriceText.width / 2 - 44;
+    this.mPriceIcon.x = this.mPriceText.x - this.mPriceText.width / 2 - 16 * this.dpr;
   }
 
   private onBuyHandler() {

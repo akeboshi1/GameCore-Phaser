@@ -165,19 +165,21 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public resize(width: number, height: number) {
-        if (this.mGame) {
-            this.mGame.scale.resize(width, height);
-        }
-        if (this.mRoomMamager) {
-            this.mRoomMamager.resize(width, height);
-        }
-        if (this.mUiManager) {
-            this.mUiManager.resize(width, height);
-        }
-        if (this.mInputManager) {
-            this.mInputManager.resize(width, height);
-        }
-        Logger.getInstance().log(`resize${width}|${height}`);
+        const w = width; // * window.devicePixelRatio;
+        const h = height; // * window.devicePixelRatio;
+        // if (this.mGame) {
+        //     this.mGame.scale.resize(w, h);
+        // }
+        // if (this.mRoomMamager) {
+        //     this.mRoomMamager.resize(w, h);
+        // }
+        // if (this.mUiManager) {
+        //     this.mUiManager.resize(w, h);
+        // }
+        // if (this.mInputManager) {
+        //     this.mInputManager.resize(w, h);
+        // }
+        Logger.getInstance().log(`resize${w}|${h}`);
     }
 
     public onOrientationChange(orientation: number, width: number, height: number) {
@@ -560,7 +562,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.gameConfig = {
             type: Phaser.AUTO,
-            zoom: 1,
             parent: this.mConfig.parent || "game",
             scene: null,
             disableContextMenu: true,
@@ -608,6 +609,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             render: {
                 pixelArt: true,
                 roundPixels: true
+            },
+            scale: {
+                mode: Phaser.Scale.NONE,
+                width: this.mConfig.width * window.devicePixelRatio,
+                height: this.mConfig.height * window.devicePixelRatio,
+                zoom: 1 / window.devicePixelRatio
             }
         };
         Object.assign(this.gameConfig, this.mConfig);

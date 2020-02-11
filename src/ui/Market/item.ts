@@ -12,9 +12,11 @@ export class MarketItem extends Phaser.GameObjects.Container {
   private mPriceText: Phaser.GameObjects.Text;
   private mTagIcon: Phaser.GameObjects.Image;
   private mProp: op_client.IMarketCommodity;
+  private readonly dpr: number;
 
   constructor(scene: Phaser.Scene, x, y) {
     super(scene, x, y);
+    this.dpr = window.devicePixelRatio;
     this.mBackground = this.scene.make.image({
       key: "market",
       frame: "border.png"
@@ -24,38 +26,38 @@ export class MarketItem extends Phaser.GameObjects.Container {
       key: "market",
       frame: "item_border.png"
     }, false);
-    this.mBorder.x = -100;
+    this.mBorder.x = -37 * this.dpr;
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = 1 / (this.scene.scale.height / 1920);
+    this.mPropImage.scale = window.devicePixelRatio;
 
     this.mNickName = this.scene.make.text({
-      y: -76,
+      y: -24 * this.dpr,
       style: {
-        fontSize: "42px",
+        fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#3399cc"
       }
     }, false);
 
     const priceBg = this.scene.make.image({
-      x: 80,
-      y: 46,
+      x: 25 * this.dpr,
+      y: 17 * this.dpr,
       key: "market",
       frame: "price_bg.png"
     }, false);
 
     this.mCoinIcon = this.scene.make.image({
-      x: -46,
-      y: 46,
+      x: -15 * this.dpr,
+      y: 17 * this.dpr,
       key: "market",
       frame: "tuding_icon.png"
     }, false);
 
     this.mPriceText = this.scene.make.text({
-      x: 16,
-      y: 32,
+      x: 1 * this.dpr,
+      y: 12 * this.dpr,
       style: {
-        fontSize: "36px",
+        fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#996600"
       }
@@ -64,8 +66,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mTagIcon = this.scene.make.image({
       key: "market",
       frame: "tip_red.png",
-      x: -173,
-      y: -68
+      x: -86 * this.dpr,
+      y: -34 * this.dpr
     }, false);
 
     this.add([this.mBackground, this.mBorder, this.mPropImage, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);

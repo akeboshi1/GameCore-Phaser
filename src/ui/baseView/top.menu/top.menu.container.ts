@@ -17,7 +17,7 @@ export class TopMenuContainer extends Panel {
   resize() {
     const size = this.mWorld.getSize();
     this.x = size.width - 50 * this.mWorld.uiScale;
-    this.y = this.height / 2 + 20 * this.mWorld.uiScale;
+    this.y = this.height / 2 + 120 * this.mWorld.uiScale;
     this.scaleX = this.scaleY = this.mWorld.uiScale;
   }
 

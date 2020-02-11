@@ -11,6 +11,14 @@ export class Url {
         return "./resources/" + value;
     }
 
+    static getUIRes(dpr: number, value: string): string {
+        if (CONFIG.BUNDLE_RESOURCES_ROOT) {
+            return CONFIG.BUNDLE_RESOURCES_ROOT
+                + dpr + "x" + value;
+        }
+        return `./resources/ui/${dpr}x/${value}`;
+    }
+
     static getOsdRes(value: string): string {
         if (Url.OSD_PATH) {
             if (HTTP_REGEX.test(Url.OSD_PATH)) {
