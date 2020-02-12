@@ -27,7 +27,7 @@ export class LoadingScene extends Phaser.Scene {
     document.head.appendChild(element);
     const sheet: CSSStyleSheet = <CSSStyleSheet> element.sheet;
 
-    const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansSC-Normal.otf') format('opentype'); }\n";
+    const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype'); }\n";
     sheet.insertRule(styles, 0);
 
     this.mWorld = data.world;
@@ -36,11 +36,13 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public create() {
-    WebFont.load({
-      custom: {
+    if (WebFont) {
+      WebFont.load({
+        custom: {
           families: [ "Source Han Sans" ]
-      },
-  });
+        },
+      });
+    }
     if (this.mRoom) this.mRoom.startLoad();
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;

@@ -58,7 +58,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     this.mBuyBtn.setTextStyle({
       color: "#976400",
-      fontSize: 18 * this.dpr,
+      fontSize: 20 * this.dpr,
       fontFamily: Font.DEFULT_FONT
     });
     this.mBuyBtn.setTextOffset(0, 10 * this.dpr);

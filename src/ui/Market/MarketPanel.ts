@@ -153,7 +153,6 @@ export class MarketPanel extends Panel {
       y: 51 * this.dpr
     }).setInteractive();
 
-
     this.mShelfContainer = this.scene.make.container({
       x: (w / 2),
       y: h
