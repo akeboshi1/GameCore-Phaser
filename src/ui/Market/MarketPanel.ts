@@ -119,9 +119,9 @@ export class MarketPanel extends Panel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    for (let i = 0; i < commodities.length + 10; i++) {
+    for (let i = 0; i < commodities.length; i++) {
       const item = new MarketItem(this.scene, Math.floor(i / 3) * (142 * this.dpr) + (76 * this.dpr), Math.floor(i % 3) * (71 * this.dpr) + 31 * this.dpr);
-      item.setProp(commodities[0]);
+      item.setProp(commodities[i]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
@@ -137,7 +137,8 @@ export class MarketPanel extends Panel {
   }
 
   protected preload() {
-    this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market.png"), Url.getUIRes(this.dpr, "market/market.json"));
+    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market.png"), Url.getUIRes(this.dpr, "market/market.json"));
+    this.addAtlas(this.key, "market/market.png", "market/market.json");
     super.preload();
   }
 

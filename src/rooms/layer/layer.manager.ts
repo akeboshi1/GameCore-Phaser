@@ -70,21 +70,17 @@ export class LayerManager {
 
         // ==========舞台层
         this.mGroundLayer = this.mScene.add.container(0, 0);
-        this.mGroundLayer.scale = window.devicePixelRatio;
 
         this.mTileLayer = new GridLayer(this.mScene);
-        this.mTileLayer.scale = window.devicePixelRatio;
         this.mScene.sys.displayList.add(this.mTileLayer);
 
         this.mSurfaceLayer = this.mScene.add.container(0, 0);
-        this.mSurfaceLayer.scale = window.devicePixelRatio;
 
         this.mAtmosphere = this.mScene.add.container(0, 0);
 
         // ==========UI层
 
         this.mSceneUILayer = this.mScene.add.container(0, 0);
-        this.mSceneUILayer.scale = window.devicePixelRatio;
 
         this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
         // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);

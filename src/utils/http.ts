@@ -1,5 +1,3 @@
-import { Logger } from "./log";
-
 export function load(path: string, responseType: XMLHttpRequestResponseType): Promise<any> {
   return new Promise((resolve, reject) => {
     const http = new XMLHttpRequest();

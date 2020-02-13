@@ -19,6 +19,9 @@ export interface ICameraService {
 
     setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void;
 
+    setPosition(x: number, y: number): void;
+
+    setScroll(x: number, y: number): void;
     offsetScroll(x: number, y: number): void;
     syncToEditor(): void;
     centerCameas(): void;
@@ -76,12 +79,19 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.resetCameraSize(width, height);
     }
 
+    public setScroll(x: number, y: number) {
+        if (!this.mCamera) {
+            return;
+        }
+        this.mCamera.setScroll(x, y);
+    }
+
     public offsetScroll(x: number, y: number) {
         if (!this.mCamera) {
             return;
         }
-        this.mCamera.scrollX += x;
-        this.mCamera.scrollY += y;
+        this.mCamera.scrollX += x / window.devicePixelRatio;
+        this.mCamera.scrollY += y / window.devicePixelRatio;
         // this.mCamera.setScroll(x, y);
 
         // const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
@@ -105,6 +115,13 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             return;
         }
         this.mCamera.setBounds(x, y, width, height, centerOn);
+    }
+
+    public setPosition(x: number, y: number) {
+        if (!this.mCamera) {
+            return;
+        }
+        this.mCamera.setPosition(x, y);
     }
 
     public syncToEditor() {

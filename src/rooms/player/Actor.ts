@@ -37,6 +37,14 @@ export class Actor extends Player implements InputListener {
         //         roomService.cameraService.startFollow(this.mDisplay);
         //     }
         // }
+        if (this.mElementManager) {
+            const roomService = this.mElementManager.roomService;
+            if (roomService && roomService.cameraService) {
+                const pos = sprite.pos;
+                const size = this.mElementManager.scene.scale;
+                roomService.cameraService.setScroll(pos.x - size.width / 2, pos.y - size.height / 2);
+            }
+        }
 
         this.mFriend = new Friend(this.mRoom.world);
         this.mRoom.playerManager.set(this.id, this);

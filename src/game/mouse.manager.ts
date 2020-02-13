@@ -100,7 +100,7 @@ export class MouseManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
         content.mouseEvent = events;
-        content.point3f = { x: pointer.worldX / window.devicePixelRatio, y: pointer.worldY / window.devicePixelRatio };
+        content.point3f = { x: pointer.worldX, y: pointer.worldY };
         this.mConnect.send(pkt);
     }
 
