@@ -175,7 +175,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
         if (this.scene) {
-            this.mCameraService.camera = this.scene.cameras.main;
+            const camera = this.scene.cameras.main;
+            this.mCameraService.camera = camera;
+            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * window.devicePixelRatio + camera.width, this.mSize.sceneHeight * window.devicePixelRatio + camera.height);
             // init block
             this.mBlocks.int(this.mSize);
         }
@@ -190,6 +192,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) {
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
+
+        this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         // this.mWorld.inputManager.enable = true;
     }
 
@@ -293,6 +298,53 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mWorld.clock.unixTime;
     }
 
+    public clear() {
+        if (this.mLayManager) this.mLayManager.destroy();
+        if (this.mTerainManager) this.mTerainManager.destroy();
+        if (this.mElementManager) this.mElementManager.destroy();
+        if (this.mPlayerManager) this.mPlayerManager.destroy();
+        if (this.mBlocks) this.mBlocks.destroy();
+        if (this.mActorData) {
+            this.mActorData = null;
+        }
+    }
+
+    public destroy() {
+        this.clear();
+        if (this.connection) this.connection.removePacketListener(this);
+        this.mWorld.game.scene.remove(PlayScene.name);
+        this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
+        // if (this.mScene) {
+        //   this.mScene = null;
+        // }
+    }
+
+    protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        this.addPointerMoveHandler();
+    }
+
+    protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        this.removePointerMoveHandler();
+    }
+
+    protected addPointerMoveHandler() {
+        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.on("gameout", this.onGameOutHandler, this);
+    }
+
+    protected removePointerMoveHandler() {
+        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.off("gameout", this.onGameOutHandler, this);
+    }
+
+    protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+        this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+    }
+
+    protected onGameOutHandler() {
+        this.removePointerMoveHandler();
+    }
+
     get scene(): Phaser.Scene | undefined {
         return this.mScene || undefined;
     }
@@ -341,27 +393,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.manager) {
             return this.manager.connection;
         }
-    }
-
-    public clear() {
-        if (this.mLayManager) this.mLayManager.destroy();
-        if (this.mTerainManager) this.mTerainManager.destroy();
-        if (this.mElementManager) this.mElementManager.destroy();
-        if (this.mPlayerManager) this.mPlayerManager.destroy();
-        if (this.mBlocks) this.mBlocks.destroy();
-        if (this.mActorData) {
-            this.mActorData = null;
-        }
-    }
-
-    public destroy() {
-        this.clear();
-        if (this.connection) this.connection.removePacketListener(this);
-        this.mWorld.game.scene.remove(PlayScene.name);
-        this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
-        // if (this.mScene) {
-        //   this.mScene = null;
-        // }
     }
 
     private onPressElementHandler(pointer, gameObject) {

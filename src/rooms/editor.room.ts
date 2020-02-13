@@ -142,6 +142,76 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
+    protected addPointerMoveHandler() {
+        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.on("gameout", this.onGameOutHandler, this);
+    }
+
+    protected removePointerMoveHandler() {
+        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.mScene.input.off("gameout", this.onGameOutHandler, this);
+    }
+
+    protected onPointerDownHandler() {
+        this.addPointerMoveHandler();
+    }
+
+    protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        this.removePointerMoveHandler();
+        switch (this.brush.mode) {
+            case BrushEnum.BRUSH:
+                this.createElement();
+                break;
+            case BrushEnum.SELECT:
+                if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
+                    if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+                        this.syncSprite(this.mSelectedElementEffect.display);
+                    }
+                    this.mSelectedElementEffect.selecting = false;
+                }
+                break;
+            case BrushEnum.ERASER:
+                this.eraserElement();
+                break;
+        }
+    }
+
+    protected onPointerMoveHandler(pointer) {
+        if (!this.mScene.cameras) {
+            return;
+        }
+        switch (this.mBrush.mode) {
+            case BrushEnum.BRUSH:
+                if (this.mMouseFollow.nodeType === op_def.NodeType.TerrainNodeType) {
+                    this.createElement();
+                }
+                break;
+            case BrushEnum.MOVE:
+                this.moveCameras(pointer);
+                break;
+            case BrushEnum.SELECT:
+                if (!this.mSelectedElementEffect) {
+                    return;
+                }
+                Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
+                if (!this.mSelectedElementEffect.selecting) {
+                    return;
+                }
+                if (!this.mouseFollow) {
+                    return;
+                }
+                const pos = this.mMouseFollow.transitionGrid(pointer.worldX, pointer.worldY);
+                if (pos) {
+                    this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
+                    this.mLayManager.depthSurfaceDirty = true;
+                }
+                break;
+            case BrushEnum.ERASER:
+                this.eraserElement();
+                break;
+        }
+    }
+
     private moveCameras(pointer) {
         this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
     }
@@ -214,40 +284,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
-    private addPointerMoveHandler() {
-        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.on("gameout", this.onGameOutHandler, this);
-    }
-
-    private removePointerMoveHandler() {
-        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameout", this.onGameOutHandler, this);
-    }
-
-    private onPointerDownHandler() {
-        this.addPointerMoveHandler();
-    }
-
-    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        this.removePointerMoveHandler();
-        switch (this.brush.mode) {
-            case BrushEnum.BRUSH:
-                this.createElement();
-                break;
-            case BrushEnum.SELECT:
-                if (this.mSelectedElementEffect && this.mSelectedElementEffect.selecting) {
-                    if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
-                        this.syncSprite(this.mSelectedElementEffect.display);
-                    }
-                    this.mSelectedElementEffect.selecting = false;
-                }
-                break;
-            case BrushEnum.ERASER:
-                this.eraserElement();
-                break;
-        }
-    }
-
     private sendFetch(ids: number[], nodetype: op_def.NodeType) {
         if (!this.mSelectedElementEffect || !this.mSelectedElementEffect.display) {
             return;
@@ -276,10 +312,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
     }
 
-    private onGameOutHandler() {
-        this.removePointerMoveHandler();
-    }
-
     private selectedElement(com: ElementDisplay): DisplayObject {
         if (!(com instanceof DisplayObject)) {
             return;
@@ -302,42 +334,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
         content.sprites = [ele.model.toSprite()];
         this.connection.send(pkt);
-    }
-
-    private onPointerMoveHandler(pointer) {
-        if (!this.mScene.cameras) {
-            return;
-        }
-        switch (this.mBrush.mode) {
-            case BrushEnum.BRUSH:
-                if (this.mMouseFollow.nodeType === op_def.NodeType.TerrainNodeType) {
-                    this.createElement();
-                }
-                break;
-            case BrushEnum.MOVE:
-                this.moveCameras(pointer);
-                break;
-            case BrushEnum.SELECT:
-                if (!this.mSelectedElementEffect) {
-                    return;
-                }
-                Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
-                if (!this.mSelectedElementEffect.selecting) {
-                    return;
-                }
-                if (!this.mouseFollow) {
-                    return;
-                }
-                const pos = this.mMouseFollow.transitionGrid(pointer.worldX, pointer.worldY);
-                if (pos) {
-                    this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
-                    this.mLayManager.depthSurfaceDirty = true;
-                }
-                break;
-            case BrushEnum.ERASER:
-                this.eraserElement();
-                break;
-        }
     }
 
     private onKeyDownHandler(event) {

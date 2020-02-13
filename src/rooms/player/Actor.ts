@@ -179,12 +179,12 @@ export class Actor extends Player implements InputListener {
         if (this.mModel.nickname) this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
 
-        if (this.mElementManager) {
-            const roomService = this.mElementManager.roomService;
-            if (roomService && roomService.cameraService) {
-                roomService.cameraService.startFollow(this.mDisplay);
-            }
-        }
+        // if (this.mElementManager) {
+        //     const roomService = this.mElementManager.roomService;
+        //     if (roomService && roomService.cameraService) {
+        //         roomService.cameraService.startFollow(this.mDisplay);
+        //     }
+        // }
     }
 
     get model(): ISprite {

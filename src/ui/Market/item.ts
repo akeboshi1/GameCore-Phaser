@@ -82,7 +82,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPropImage.load(Url.getOsdRes(content.icon));
     this.mPropImage.x = this.mBorder.x;
     this.mPropImage.y = this.mBorder.y;
-    this.mNickName.setText(content.name);
+    this.mNickName.setText(content.shortName || content.name);
     this.mPriceText.setText(content.price[0].price.toString());
   }
 

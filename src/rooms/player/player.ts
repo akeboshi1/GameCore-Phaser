@@ -30,7 +30,7 @@ export class Player extends Element {
                 this.setDirection(moveData.direction);
             }
         }
-        moveData.destinationPoint3f.y += this.offsetY;
+        moveData.destinationPoint3f.y += this.offsetY * window.devicePixelRatio;
         super.move(moveData);
     }
 

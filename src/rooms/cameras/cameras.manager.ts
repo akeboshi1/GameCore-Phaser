@@ -28,9 +28,9 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     readonly MINI_VIEW_SIZE = 28;
     readonly VIEW_PORT_SIZE = 30;
-    private mCamera: Phaser.Cameras.Scene2D.Camera;
-    private viewPort = new Phaser.Geom.Rectangle();
-    private miniViewPort = new Phaser.Geom.Rectangle();
+    protected mCamera: Phaser.Cameras.Scene2D.Camera;
+    protected viewPort = new Phaser.Geom.Rectangle();
+    protected miniViewPort = new Phaser.Geom.Rectangle();
 
     constructor(private mRoomService: IRoomService) {
         super();
@@ -84,13 +84,13 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.mCamera.scrollY += y;
         // this.mCamera.setScroll(x, y);
 
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
-        content.x = this.mCamera.scrollX;
-        content.y = this.mCamera.scrollY;
-        content.width = 0;
-        content.height = 0;
-        this.connection.send(pkt);
+        // const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        // const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        // content.x = this.mCamera.scrollX;
+        // content.y = this.mCamera.scrollY;
+        // content.width = 0;
+        // content.height = 0;
+        // this.connection.send(pkt);
     }
 
     public startFollow(target: Phaser.GameObjects.GameObject) {
