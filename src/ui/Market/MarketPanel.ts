@@ -28,7 +28,6 @@ export class MarketPanel extends Panel {
   private mSubCategeoriesContainer: Phaser.GameObjects.Container;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mItems: MarketItem[];
-  private readonly dpr: number = 1;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);

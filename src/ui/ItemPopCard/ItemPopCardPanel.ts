@@ -8,19 +8,18 @@ import { DetailDisplay } from "../Market/DetailDisplay";
 import { op_client } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
+import { Font } from "../../utils/font";
 
 export class ItemPopCardPanel extends Panel {
   private readonly key = "item_pop_card";
   private mCardContainer: Phaser.GameObjects.Container;
-  private mBackground: Phaser.GameObjects.Image;
-  private mNickNameBg: Phaser.GameObjects.Image;
   private mNickName: Phaser.GameObjects.Text;
-  private mDesBg: Phaser.GameObjects.Image;
   private mDesText: Phaser.GameObjects.Text;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mSource: Phaser.GameObjects.Text;
   private mNickNameDown: boolean;
   private mDetailDisplay: DetailDisplay;
+  private mBorder: Phaser.GameObjects.Graphics;
 
   private mPressDelay = 1000;
   private mPressTime: any;
@@ -30,25 +29,25 @@ export class ItemPopCardPanel extends Panel {
   }
 
   resize(w: number, h: number) {
-    const scale = this.scene.cameras.main.height / 1920;
-    const width = this.scene.cameras.main.width / scale;
-    const height = this.scene.cameras.main.height / scale;
-    const centerX = this.scene.cameras.main.centerX / scale;
-    const centerY = this.scene.cameras.main.centerY / scale;
-    this.setScale(scale);
+    // const scale = this.scene.cameras.main.height / 1920;
+    const width = this.scene.cameras.main.width;
+    const height = this.scene.cameras.main.height;
+    const centerX = this.scene.cameras.main.centerX;
+    const centerY = this.scene.cameras.main.centerY;
+    // this.setScale(scale);
     this.setSize(width, height);
     // this.mCardContainer.setScale(scale);
 
-    this.mCardContainer.x = centerX;
-    this.mCardContainer.y = centerY;
+    this.mCardContainer.x = centerX; // - this.mCardContainer.width / 2;
+    this.mCardContainer.y = centerY; // - this.mCardContainer.height / 2;
 
     this.mCloseBtn.x = centerX;
-    this.mCloseBtn.y = centerY + this.mBackground.height / 2 + 140;
+    this.mCloseBtn.y = centerY + this.mCardContainer.height / 2 + 48 * this.dpr;
 
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
 
-    this.mDetailDisplay.scale = 1 / scale;
+    // this.mDetailDisplay.scale = 1 / scale;
 
     // this.mCloseBtn.x = centerX;
     // this.mCloseBtn.y = centerY;
@@ -90,52 +89,67 @@ export class ItemPopCardPanel extends Panel {
   }
 
   protected preload() {
-    this.scene.load.atlas(this.key, Url.getRes("ui/item_pop_card/item_pop_card.png"), Url.getRes("ui/item_pop_card/item_pop_card.json"));
+    this.addAtlas(this.key, "item_pop_card/item_pop_card.png", "item_pop_card/item_pop_card.json");
+    // this.scene.load.atlas(this.key, Url.getRes("ui/item_pop_card/item_pop_card.png"), Url.getRes("ui/item_pop_card/item_pop_card.json"));
     super.preload();
   }
 
   protected init() {
-    this.mCardContainer = this.scene.make.container(undefined, false);
-    this.mBackground = this.scene.make.image({
+    this.mCardContainer = this.scene.make.container({
+      width: 325 * this.dpr,
+      height: 468 * this.dpr
+    }, false);
+    this.mCardContainer.setSize(325 * this.dpr, 468 * this.dpr);
+    this.mCardContainer.setInteractive();
+
+    this.mBorder = this.scene.make.graphics(undefined, false);
+    this.mBorder.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x01cdff, 0x01cdff);
+    this.mBorder.fillRect(-this.mCardContainer.width / 2, -this.mCardContainer.height / 2, this.mCardContainer.width, this.mCardContainer.height);
+    // this.mBorder.setInteractive();
+
+    const background = this.scene.make.image({
       key: this.key,
       frame: "bg.png"
-    }, false).setInteractive();
+    }, false);
+    background.y = 23 * this.dpr - background.height / 2;
 
-    this.mBackground.setSize(this.mBackground.width, this.mBackground.height);
-
-    this.mNickNameBg = this.scene.make.image({
-      y: 118,
+    const nickNameBg = this.scene.make.image({
+      y: 42 * this.dpr,
       key: this.key,
       frame: "name_bg.png"
     });
 
     this.mNickName = this.scene.make.text({
-      y: 118,
+      y: 42 * this.dpr,
       style: {
-        font: "68px"
+        fontSize: 18 * this.dpr,
+        fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5).setInteractive();
 
-    this.mDesBg = this.scene.make.image({
-      y: 392,
+    const desBg = this.scene.make.image({
+      y: 138 * this.dpr,
       key: this.key,
       frame: "des_bg.png"
     }, false);
 
     this.mDesText = this.scene.make.text({
-      x: -350,
-      y: 264,
+      x: desBg.x - desBg.width / 2 + 12 * this.dpr,
+      y: desBg.y - desBg.height / 2 + 10 * this.dpr,
       style: {
-        font: "38px",
+        fontSize: 10 * this.dpr,
+        fontFamily: Font.DEFULT_FONT,
         wordWrap: {
-          width: 700,
+          width: 240 * this.dpr,
           useAdvancedWrap: true
         }
       }
     }, false).setInteractive();
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
-    this.mDetailDisplay.y = -150;
+    this.mDetailDisplay.scale = this.dpr * 2;
+    this.mDetailDisplay.on("show", this.onShowHandler, this);
+    // this.mDetailDisplay.y = -150;
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
@@ -143,15 +157,16 @@ export class ItemPopCardPanel extends Panel {
     }, false).setInteractive();
 
     this.mSource = this.scene.make.text({
-      x: -350,
-      y: 500,
+      x: desBg.x - desBg.width / 2 + 12 * this.dpr,
+      y: desBg.y + desBg.height / 2 - 23 * this.dpr,
       style: {
-        font: "32px"
+        fontSize: 10 * this.dpr,
+        fontFamily: Font.DEFULT_FONT
       }
     }, false);
 
     this.add(this.mCardContainer);
-    this.mCardContainer.add([this.mBackground, this.mDetailDisplay, this.mNickNameBg, this.mNickName, this.mDesText, this.mSource]);
+    this.mCardContainer.add([this.mBorder, background, desBg, this.mDetailDisplay, nickNameBg, this.mNickName, this.mDesText, this.mSource]);
     this.add(this.mCloseBtn);
 
     super.init();
@@ -219,5 +234,9 @@ export class ItemPopCardPanel extends Panel {
       };
       this.mWorld.emitter.emit(MessageType.SHOW_NOTICE, { content });
     }
+  }
+
+  private onShowHandler(image: Phaser.GameObjects.Image) {
+    this.mDetailDisplay.y = -this.mCardContainer.height / 4;
   }
 }

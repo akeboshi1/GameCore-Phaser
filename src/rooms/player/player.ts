@@ -34,6 +34,15 @@ export class Player extends Element {
         super.move(moveData);
     }
 
+    public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
+        if (this.mDisplay) this.mDisplay.play(PlayerState.WALK);
+        const paths = movePath.path;
+        for (const path of paths) {
+            path.y += this.offsetY;
+        }
+        super.movePath(movePath);
+    }
+
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;

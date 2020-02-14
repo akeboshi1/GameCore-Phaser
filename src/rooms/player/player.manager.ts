@@ -33,6 +33,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollow);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
         }
     }
 
@@ -337,6 +339,26 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             if (player) {
                 player.play(ani.animationName);
             }
+        }
+    }
+
+    private onCameraFollow(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
+        const player = this.get(content.id);
+        if (player) {
+            const camera = this.roomService.cameraService;
+            if (camera) camera.startFollow(player.getDisplay());
+        }
+    }
+
+    private onMovePath(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
+        if (content.nodeType !== NodeType.CharacterNodeType) {
+            return;
+        }
+        const play = this.get(content.id);
+        if (play) {
+            play.movePath(content);
         }
     }
 

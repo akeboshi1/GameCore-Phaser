@@ -11,6 +11,7 @@ export class TopMenuContainer extends Panel {
   private mExpaned: boolean;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
+    this.setTween(false);
     this.mButtons = [];
   }
 
@@ -18,7 +19,8 @@ export class TopMenuContainer extends Panel {
     const size = this.mWorld.getSize();
     this.x = size.width - 50 * this.mWorld.uiScale;
     this.y = this.height / 2 + 120 * this.mWorld.uiScale;
-    this.scaleX = this.scaleY = this.mWorld.uiScale;
+    this.scale = this.dpr;
+    // this.scaleX = this.scaleY = this.mWorld.uiScale;
   }
 
   show() {

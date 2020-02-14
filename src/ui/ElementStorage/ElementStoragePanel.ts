@@ -31,6 +31,7 @@ export class ElementStoragePanel extends Panel {
     private mDragging: boolean;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.setTween(false);
     }
 
     show(param?: any) {
@@ -109,7 +110,6 @@ export class ElementStoragePanel extends Panel {
         this.mPrePageBtn.y = this.height >> 1;
         this.mNextPageBtn.x = this.width;
         this.mNextPageBtn.y = this.height >> 1;
-        this.scale = this.mWorld.uiScale;
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
         // this.setScale(this.mWorld.uiScale, this.mWorld.uiScale);
         // this.scaleX = this.scaleY = 5;

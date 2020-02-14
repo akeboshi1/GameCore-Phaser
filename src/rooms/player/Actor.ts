@@ -108,28 +108,32 @@ export class Actor extends Player implements InputListener {
             } else {
                 // Logger.getInstance().error("no destPos");
             }
-            delete this.mMoveData.destPos;
+            // delete this.mMoveData.destPos;
+            delete this.mMoveData.posPath;
             if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
-            if (this.mMoveData.tweenAnim) {
-                this.mMoveData.tweenAnim.stop();
-                this.mMoveData.tweenAnim.remove();
+            if (this.mMoveData.tweenLineAnim) {
+                this.mMoveData.tweenLineAnim.stop();
+                this.mMoveData.tweenLineAnim.destroy();
             }
         }
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.nodeType = this.nodeType;
-        const pos = this.getPosition();
-        ct.spritePositions = {
-            id: this.id,
-            point3f: {
-                x: pos.x,
-                y: pos.y - this.offsetY,
-                z: pos.z,
-            },
-            direction: this.dir
-        };
-        // Logger.getInstance().debug("nowPox:" + pos.x + "," + pos.y);
-        this.mElementManager.connection.send(pkt);
+
+        if (this.mRoom && this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+            const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+            ct.nodeType = this.nodeType;
+            const pos = this.getPosition();
+            ct.spritePositions = {
+                id: this.id,
+                point3f: {
+                    x: pos.x,
+                    y: pos.y - this.offsetY,
+                    z: pos.z,
+                },
+                direction: this.dir
+            };
+            // Logger.getInstance().debug("nowPox:" + pos.x + "," + pos.y);
+            this.mElementManager.connection.send(pkt);
+        }
     }
 
     public move(moveData: op_client.IMoveData) {
@@ -144,6 +148,17 @@ export class Actor extends Player implements InputListener {
         super.move(moveData);
     }
 
+    public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
+        if (this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+            if (this.mCurState !== PlayerState.WALK) {
+                return;
+            }
+        } else {
+            this.startMove();
+        }
+        super.movePath(movePath);
+    }
+
     protected onMoveStart() {
     }
 
@@ -152,7 +167,7 @@ export class Actor extends Player implements InputListener {
             this.mMoveData.tweenAnim.stop();
             return;
         }
-        if (this.mRoom.world.moveStyle === op_def.MoveStyle.FOLLOW_MOUSE_MOVE_STYLE) {
+        if (this.mRoom.world.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             this.changeState(PlayerState.IDLE);
             this.stopMove();
         }
@@ -161,7 +176,7 @@ export class Actor extends Player implements InputListener {
 
     protected onMoving() {
         if (this.mCurState !== PlayerState.WALK) {
-            this.mMoveData.tweenAnim.stop();
+            this.mMoveData.tweenLineAnim.stop();
             return;
         }
         super.onMoving();

@@ -348,7 +348,8 @@ export class LoginScene extends Phaser.Scene {
         this.combobox.text = !accountObj ? [""] : [accountObj.account + ""];
         this.mPassWordInputTxt.text = !accountObj ? "" : accountObj.password;
         this.mParentCon.setSize(this.mBg.width, this.mHei);
-        this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
+        this.mParentCon.scale = window.devicePixelRatio;
+        // this.mParentCon.scaleX = this.mParentCon.scaleY = this.mWorld.uiScale;
     }
 
     private verificaHandler(show: boolean) {

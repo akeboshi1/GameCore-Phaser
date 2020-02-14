@@ -25,6 +25,7 @@ export interface ICameraService {
     offsetScroll(x: number, y: number): void;
     syncToEditor(): void;
     centerCameas(): void;
+    syncCamera(): void;
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
@@ -104,7 +105,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public startFollow(target: Phaser.GameObjects.GameObject) {
-        if (this.mCamera) {
+        if (this.mCamera && target) {
             this.mCamera.startFollow(target);
         }
     }
@@ -154,16 +155,24 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.connection.send(pkt);
     }
 
+    public syncCamera() {
+        if (!this.mCamera) {
+            return;
+        }
+
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+        const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
+        size.width = this.mCamera.width;
+        size.height = this.mCamera.height;
+        this.connection.send(packet);
+    }
+
     private resetCameraSize(width: number, height: number) {
         if (!this.connection) {
             Logger.getInstance().error("connection is undefined");
             return;
         }
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
-        const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
-        size.width = width;
-        size.height = height;
-        this.connection.send(packet);
+        this.syncCamera();
     }
 
     private setViewPortSize() {

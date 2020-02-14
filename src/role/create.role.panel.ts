@@ -8,6 +8,7 @@ import { Logger } from "../utils/log";
 import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbones.model";
+import { Font } from "../utils/font";
 // import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
 export class CreateRolePanel extends Panel {
@@ -45,11 +46,12 @@ export class CreateRolePanel extends Panel {
   }
 
   preload() {
-    this.scene.load.atlas(
-      this.key,
-      Url.getRes("ui/create_role/create_role.png"),
-      Url.getRes("ui/create_role/create_role.json")
-    );
+    // this.scene.load.atlas(
+    //   this.key,
+    //   Url.getRes("ui/create_role/create_role.png"),
+    //   Url.getRes("ui/create_role/create_role.json")
+    // );
+    this.addAtlas(this.key, "create_role/create_role.png", "create_role/create_role.json");
     super.preload();
   }
 
@@ -64,11 +66,11 @@ export class CreateRolePanel extends Panel {
     // this.mBackground.x = this.width >> 1;
     // this.mBackground.y = 60 + (this.mBackground.height >> 1);
 
-    const scale = this.scene.cameras.main.height / 1920;
-    const width = this.scene.cameras.main.width / scale;
-    const height = this.scene.cameras.main.height / scale;
-    const centerX = this.scene.cameras.main.centerX / scale;
-    this.setScale(scale);
+    // const scale = this.scene.cameras.main.height / 1920;
+    const width = this.scene.cameras.main.width;
+    const height = this.scene.cameras.main.height;
+    const centerX = this.scene.cameras.main.centerX;
+    // this.setScale(scale);
 
     // this.mBackground.setScale(scale);
     this.mBackground.x = centerX;
@@ -98,8 +100,8 @@ export class CreateRolePanel extends Panel {
       key: this.key,
       frame: "bg.png",
       x: size.width >> 1,
-      y: 700
     });
+    this.mBackground.y = this.mBackground.height / 2 + 92 * this.dpr;
     this.add(this.mBackground);
 
     this.mFoot = this.scene.make.image(
@@ -116,63 +118,71 @@ export class CreateRolePanel extends Panel {
     this.mBackgroundColor.fillRect(0, 0, size.width, size.height);
     this.addAt(this.mBackgroundColor, 0);
 
-    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 1000, 730, 120, this.key, "input_bg.png", {
-      left: 49,
-      top: 49,
-      right: 49,
-      bottom: 48
+    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 350 * this.dpr, 270 * this.dpr, 50 * this.dpr, this.key, "input_bg.png", {
+      left: 27 * this.dpr,
+      top: 24 * this.dpr,
+      right: 28 * this.dpr,
+      bottom: 24 * this.dpr
     });
     this.add(this.mInputTextBg);
 
-    this.inputText = new InputText(this.scene, size.width >> 1, 1000, 520, 80, {
+    this.inputText = new InputText(this.scene, size.width >> 1, 350 * this.dpr, 270 * this.dpr, 80, {
       type: "input",
-      fontSize: "52px",
+      fontSize: 18 * this.dpr + "px",
       color: "#717171",
-      style: {
-        align: "center"
-      },
+      align: "center",
       placeholder: "输入关键词进行搜索"
-    });
+    }).setOrigin(0.5);
     this.add(this.inputText);
 
     let text = "提 交";
     if (this.mData && this.mData.button) {
       text = this.mData.button.text;
     }
-    this.mSubmit = new NinePatchButton(this.scene, size.width >> 1, 1274, 584, 164, this.key, "submit_button", text, {
-      left: 39,
-      top: 36,
-      right: 32,
-      bottom: 26
+
+    const frame = this.scene.textures.getFrame(this.key, "submit_button_normal");
+    let w = 42;
+    let h = 43;
+    if (frame) {
+      w = frame.width;
+      h = frame.height;
+    }
+    this.mSubmit = new NinePatchButton(this.scene, size.width >> 1, 445 * this.dpr, 202 * this.dpr, 55 * this.dpr, this.key, "submit_button", text, {
+      left: 19 * this.dpr,
+      top: 20 * this.dpr,
+      right: w - 2 - 19 * this.dpr,
+      bottom: h - 2 - 20 * this.dpr
     });
     this.mSubmit.setTextStyle({
       color: "#976400",
-      font: "bold 48px YaHei"
+      fontSize: 18 * this.dpr,
+      fontFamily: Font.DEFULT_FONT,
     });
+    this.mSubmit.setFontStyle("bold");
     this.mSubmit.on("pointerup", this.onSubmitHandler, this);
     this.add(this.mSubmit);
 
     this.mPrePageBtn = this.scene.make.image({
-      x: 150,
-      y: 615,
+      x: 60 * this.dpr,
+      y: 216 * this.dpr,
       key: this.key,
       frame: "arrow_left.png"
     }).setInteractive();
     this.mPrePageBtn.on("pointerup", this.onPrePageHandler, this);
     this.mNextPageBtn = this.scene.make.image({
-      x: size.width - 150,
-      y: 615,
+      x: size.width - 60 * this.dpr,
+      y: this.mPrePageBtn.y,
       key: this.key,
       frame: "arrow.png"
     }).setFlipX(true).setInteractive();
     this.mNextPageBtn.on("pointerup", this.onNextPageHandler, this);
 
     this.mRandomBtn = this.scene.make.image({
-      x: 790,
-      y: 1000,
+      x: this.mInputTextBg.x + this.mInputTextBg.width / 2 - 30 * this.dpr,
+      y: this.mInputTextBg.y,
       key: this.key,
       frame: "random.png"
-    }).setScale(1.4).setInteractive();
+    }).setInteractive();
     this.add([this.mPrePageBtn, this.mNextPageBtn, this.mRandomBtn]);
     this.mRandomBtn.on("pointerup", this.onRandomNameHandler, this);
 
@@ -186,13 +196,13 @@ export class CreateRolePanel extends Panel {
     this.mErrorBg = this.scene.make.image({
       key: this.key,
       frame: "tips_bg.png",
-      x: 620,
-      y: 232
+      x: 220 * this.dpr,
+      y: 57 * this.dpr
     }).setVisible(false);
 
     this.mError = this.scene.make.text({
-      x: 420,
-      y: 180,
+      x: 127 * this.dpr,
+      y: 30 * this.dpr,
       style: {
         color: "#26265d",
         font: "bold 34px YaHei",
@@ -205,9 +215,10 @@ export class CreateRolePanel extends Panel {
     this.add([this.mErrorBg, this.mError]);
 
     this.dragonbones = new DragonbonesDisplay(this.scene, undefined);
-    this.dragonbones.scale = 6;
+    this.dragonbones.scale = this.dpr * 3;
     this.dragonbones.x = size.width >> 1;
-    this.dragonbones.y = 740;
+    this.dragonbones.y = this.mNextPageBtn.y + 70 * this.dpr;
+    // this.dragonbones.y = 286 * this.dpr;
     // this.dragonbones.play("idle");
     this.dragonbones.once("initialized", () => {
       this.dragonbones.play("idle");

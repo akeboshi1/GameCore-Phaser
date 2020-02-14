@@ -79,8 +79,10 @@ export interface IElement {
 
 export interface MoveData {
     destPos?: Pos;
+    posPath?: any[];
     arrivalTime?: number;
     tweenAnim?: Tweens.Tween;
+    tweenLineAnim?: Tweens.Timeline;
     tweenLastUpdate?: number;
 }
 
@@ -209,12 +211,39 @@ export class Element extends BlockObject implements IElement {
             return; // Logger.getInstance().error("display is undefined");
         }
         this.mMoveData.arrivalTime = moveData.timestemp;
-        this.mMoveData.destPos = new Pos(
-            Math.floor(moveData.destinationPoint3f.x),
-            Math.floor(moveData.destinationPoint3f.y)
-        );
+        // this.mMoveData.destPos = new Pos(
+        //     Math.floor(moveData.destinationPoint3f.x),
+        //     Math.floor(moveData.destinationPoint3f.y)
+        // );
         // Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
         // Logger.getInstance().debug("walk has movedata");
+        this.mMoveData.posPath = [{
+            x: moveData.destinationPoint3f.x,
+            y: moveData.destinationPoint3f.y
+        }];
+        this._doMove();
+    }
+
+    public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
+        if (!this.mElementManager) {
+            return;
+        }
+        if (!this.mDisplay) {
+            return;
+        }
+        const tmpPath = movePath.path;
+        if (!tmpPath) {
+            return;
+        }
+        this.mMoveData.arrivalTime = movePath.timestemp;
+        const paths = [];
+        for (const path of movePath.path) {
+            paths.push({
+                x: path.x,
+                y: path.y
+            });
+        }
+        this.mMoveData.posPath = paths;
         this._doMove();
     }
 
@@ -352,34 +381,56 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected _doMove() {
-        if (!this.mMoveData.destPos) {
+        if (!this.mMoveData.posPath) {
             return;
         }
-        const tw: Tweens.Tween = this.mMoveData.tweenAnim;
+        // const tw: Tweens.Tween = this.mMoveData.tweenAnim;
 
-        if (tw) {
-            tw.stop();
-            tw.remove();
+        // if (tw) {
+        //     tw.stop();
+        //     tw.remove();
+        // }
+        // const time: number = this.mMoveData.arrivalTime - this.roomService.now();
+        // this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
+        //     targets: this.mDisplay,
+        //     duration: time,
+        //     ease: "Linear",
+        //     props: {
+        //         x: { value: this.mMoveData.destPos.x },
+        //         y: { value: this.mMoveData.destPos.y }
+        //     },
+        //     onStart: () => {
+        //         this.onMoveStart();
+        //     },
+        //     onComplete: (tween, targets, element) => {
+        //         this.onMoveComplete();
+        //     },
+        //     onUpdate: (tween, targets, element) => {
+        //         this.onMoving();
+        //     },
+        //     onCompleteParams: [this]
+        // });
+
+        const line = this.mMoveData.tweenLineAnim;
+        if (line) {
+            line.stop();
+            line.destroy();
         }
-        const time: number = this.mMoveData.arrivalTime - this.roomService.now();
-        // Logger.getInstance().debug(`time:${time},posX:${this.mMoveData.destPos.x},posY:${this.mMoveData.destPos.y}`); // ,arrivalTime:${this.mMoveData.arrivalTime},now:${this.roomService.now()}`);
-        this.mMoveData.tweenAnim = this.mElementManager.scene.tweens.add({
+
+        const time: number = (this.mMoveData.arrivalTime - this.roomService.now());
+        Logger.getInstance().log("time: ", time);
+        this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
             targets: this.mDisplay,
-            duration: time,
+            totalDuration: time,
             ease: "Linear",
-            props: {
-                x: { value: this.mMoveData.destPos.x },
-                y: { value: this.mMoveData.destPos.y }
-            },
+            tweens: this.mMoveData.posPath,
             onStart: () => {
                 this.onMoveStart();
             },
-            onComplete: (tween, targets, element) => {
-                // Logger.getInstance().debug("complete move:" + this.mDisplay.x + "-" + this.mDisplay.y);
+            onComplete: () => {
                 this.onMoveComplete();
             },
-            onUpdate: (tween, targets, element) => {
-                // Logger.getInstance().debug("moveing:" + this.mDisplay.x + "-" + this.mDisplay.y);
+            onUpdate: () => {
                 this.onMoving();
             },
             onCompleteParams: [this]
@@ -478,7 +529,9 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.y = position.y - 130;
     }
 
-    protected onMoveStart() {}
+    protected onMoveStart() {
+        Logger.getInstance().log("start move!!!");
+    }
 
     protected onMoveComplete() {
         this.mMoveData.tweenAnim.stop();

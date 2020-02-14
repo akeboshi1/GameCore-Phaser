@@ -13,6 +13,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
     protected mHeight: number = 0;
     protected mData: any;
     protected mPanelTween: Phaser.Tweens.Tween;
+    protected dpr: number;
     private mResources: Map<string, any>;
     private mReLoadResources: Map<string, any>;
     private mReloadTimes: number = 0;
@@ -22,6 +23,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         this.mScene = scene;
         this.mWorld = world;
         this.mInitialized = false;
+        this.dpr = Math.floor(window.devicePixelRatio || 1);
     }
 
     isShow(): boolean {
@@ -127,7 +129,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
             this.mResources = new Map();
         }
         this.mResources.set(key, {
-            dpr: window.devicePixelRatio,
+            dpr: this.dpr,
             texture,
             data
         });
