@@ -94,8 +94,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         if (!this.mCamera) {
             return;
         }
-        this.mCamera.scrollX += x / window.devicePixelRatio;
-        this.mCamera.scrollY += y / window.devicePixelRatio;
+        this.mCamera.scrollX += x / this.camera.zoom;
+        this.mCamera.scrollY += y / this.camera.zoom;
         this.moving = true;
         // this.mCamera.setScroll(x, y);
     }
@@ -145,8 +145,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
         const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
-        size.width = this.mCamera.width;
-        size.height = this.mCamera.height;
+        size.width = this.mCamera.width / this.mCamera.zoom;
+        size.height = this.mCamera.height / this.mCamera.zoom;
         this.connection.send(packet);
     }
 
@@ -157,8 +157,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION = pkt.content;
         const pos = op_def.PBPoint3f.create();
-        pos.x = this.mCamera.scrollX;
-        pos.y = this.mCamera.scrollY;
+        pos.x = this.mCamera.scrollX + (this.mCamera.width * 0.5 - this.mCamera.width / this.mCamera.zoom * 0.5);
+        pos.y = this.mCamera.scrollY + (this.mCamera.height * 0.5 - this.mCamera.height / this.mCamera.zoom * 0.5);
         content.pos = pos;
         this.connection.send(pkt);
     }

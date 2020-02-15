@@ -173,8 +173,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
             camera.zoom = window.devicePixelRatio;
-            const cameraW = camera.width >> 1;
-            const cameraH = camera.height >> 1;
+            const cameraW = camera.width / window.devicePixelRatio;
+            const cameraH = camera.height / window.devicePixelRatio;
+            // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
             this.mCameraService.setBounds(-cameraW >> 1, -cameraH >> 1, this.mSize.sceneWidth + cameraW, this.mSize.sceneHeight + cameraH);
             // init block
             this.mBlocks.int(this.mSize);
@@ -190,6 +191,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) {
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
             this.cameraService.syncCamera();
+            this.mCameraService.syncCameraScroll();
         }
 
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
