@@ -51,6 +51,8 @@ export class LayerManager {
      */
     protected mUILayer: Phaser.GameObjects.Container;
 
+    protected mMiddleLayer: Phaser.GameObjects.Container;
+
     private mScene: Phaser.Scene;
 
     private mDepthSurface: boolean;
@@ -73,6 +75,8 @@ export class LayerManager {
 
         this.mTileLayer = new GridLayer(this.mScene);
         this.mScene.sys.displayList.add(this.mTileLayer);
+
+        this.mMiddleLayer = this.mScene.add.container(0, 0);
 
         this.mSurfaceLayer = this.mScene.add.container(0, 0);
 
@@ -110,6 +114,10 @@ export class LayerManager {
 
     public addToAtmosphere(child: Phaser.GameObjects.GameObject) {
         this.mAtmosphere.add(child);
+    }
+
+    public addToMiddle(child: Phaser.GameObjects.GameObject) {
+        this.mMiddleLayer.add(child);
     }
 
     public resize(width: number, height: number) {

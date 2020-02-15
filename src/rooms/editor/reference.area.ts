@@ -56,4 +56,8 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
         const _y = y - (this.mOrigin.x + this.mOrigin.y) * (this.mSize.tileHeight >> 1);
         return super.setPosition(_x, _y, z, w);
     }
+
+    get size(): IPosition45Obj {
+        return  this.mSize;
+    }
 }

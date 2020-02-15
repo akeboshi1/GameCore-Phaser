@@ -23,6 +23,7 @@ import { IElement, Element } from "./element/element";
 import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
 import { DisplayObject } from "./display/display.object";
+import { ReferenceArea } from "./editor/reference.area";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -116,6 +117,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE,
                     this.onEnableEditModeHandler
                 );
+                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
             }
         }
     }
@@ -339,6 +341,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected removePointerMoveHandler() {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
+        if (this.cameraService.moving) {
+            this.cameraService.syncCameraScroll();
+        }
     }
 
     protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
@@ -432,6 +437,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 scale: 1
             });
         }
+    }
+
+    private onShowMapTitle(packet: PBpacket) {
+        if (!this.scene) {
+            return;
+        }
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP = packet.content;
+        const area = new ReferenceArea(this.scene, this);
+        const num = [];
+        const intArray: op_def.IIntArray[] = content.intArray;
+        for (let i = 0; i < intArray.length; i++) {
+            num[i] = [];
+            for (let j = 0; j < intArray[i].value.length; j++) {
+                num[i][j] = intArray[i].value[j];
+            }
+            // num[i] = intArray[i];
+        }
+        area.draw(num, new Phaser.Geom.Point(0, 0));
+        if (area.size) {
+            area.setPosition(area.size.sceneWidth / 2, 0);
+            this.mLayManager.addToMiddle(area);
+        } 
     }
 
     private enterRoom() {

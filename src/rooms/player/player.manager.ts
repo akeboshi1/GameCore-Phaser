@@ -284,11 +284,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.CharacterNodeType) {
             return;
         }
-        let role: Player = this.get(id);
-        if (!role) {
-            role = this.mActor;
+        const role: Player = this.get(id);
+        if (role) {
+            role.setPosition(new Pos(content.position.x, content.position.y, content.position.z));
         }
-        role.setPosition(new Pos(content.position.x, content.position.y, content.position.z));
     }
 
     private onShowBubble(packet: PBpacket) {

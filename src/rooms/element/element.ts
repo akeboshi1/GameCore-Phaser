@@ -418,7 +418,6 @@ export class Element extends BlockObject implements IElement {
         }
 
         const time: number = (this.mMoveData.arrivalTime - this.roomService.now());
-        Logger.getInstance().log("time: ", time);
         this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
             targets: this.mDisplay,
             totalDuration: time,
@@ -514,6 +513,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) {
             if (this.model.currentAnimationName) this.mDisplay.play(this.model.currentAnimationName);
             this.setDepth();
+            // this.mDisplay.showRefernceArea();
         }
     }
 

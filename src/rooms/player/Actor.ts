@@ -22,6 +22,7 @@ export class Actor extends Player implements InputListener {
     protected mInteractive: Interactive;
     private mRoom: IRoomService;
     private mPackage: op_gameconfig.IPackage;
+    private mMovePath: Phaser.GameObjects.Graphics;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.mBlockable = false;
@@ -156,6 +157,7 @@ export class Actor extends Player implements InputListener {
         } else {
             this.startMove();
         }
+        this.drawPath(movePath.path);
         super.movePath(movePath);
     }
 
@@ -184,6 +186,27 @@ export class Actor extends Player implements InputListener {
 
     protected addToBlock() {
         this.addDisplay();
+    }
+
+    private drawPath(pos) {
+        if (!pos) {
+            return;
+        }
+        if (!this.mMovePath) {
+            this.mMovePath = this.mElementManager.scene.make.graphics(undefined, false);
+        }
+        this.mMovePath.clear();
+        this.mMovePath.lineStyle(2, 0xFFFF00);
+        this.mMovePath.moveTo(pos[0].x, pos[0].y);
+        // for (let i = 0; i < pos.length; i++) {
+        //     this.mMovePath.lineTo(pos[i].x, pos[i].y);
+        // }
+        for (const point of pos) {
+            this.mMovePath.lineTo(point.x, point.y);
+        }
+        this.mMovePath.strokePath();
+        this.mRoom.addToSurface(<any> this.mMovePath);
+
     }
 
     set model(val: ISprite) {
