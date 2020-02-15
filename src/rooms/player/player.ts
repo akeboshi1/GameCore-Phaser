@@ -45,7 +45,7 @@ export class Player extends Element {
         let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y);
         const paths = [];
         this.mMoveData.arrivalTime = movePath.timestemp;
-        this.setPosition(new Pos(tmpPath[0].x, tmpPath[1].y));
+        // this.setPosition(new Pos(tmpPath[0].x, tmpPath[1].y));
         for (const path of tmpPath) {
             const angle = Math.atan2(path.y - lastPos.y, path.x - lastPos.x);
             paths.push({
