@@ -455,10 +455,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // num[i] = intArray[i];
         }
         area.draw(num, new Phaser.Geom.Point(0, 0));
+        area.setAlpha(0.1);
         if (area.size) {
             area.setPosition(area.size.sceneWidth / 2, 0);
             this.mLayManager.addToMiddle(area);
-        } 
+        }
     }
 
     private enterRoom() {

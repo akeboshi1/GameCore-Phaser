@@ -103,21 +103,6 @@ export class Actor extends Player implements InputListener {
 
     public stopMove() {
         super.stopMove();
-        if (this.mMoveData && this.mMoveData.destPos) {
-            if (this.mMoveData.destPos) {
-                // Logger.getInstance().debug("moveData:" + this.mMoveData.destPos.x + "," + this.mMoveData.destPos.y);
-            } else {
-                // Logger.getInstance().error("no destPos");
-            }
-            // delete this.mMoveData.destPos;
-            delete this.mMoveData.posPath;
-            if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
-            if (this.mMoveData.tweenLineAnim) {
-                this.mMoveData.tweenLineAnim.stop();
-                this.mMoveData.tweenLineAnim.destroy();
-            }
-        }
-
         if (this.mRoom && this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -159,9 +144,6 @@ export class Actor extends Player implements InputListener {
         }
         this.drawPath(movePath.path);
         super.movePath(movePath);
-    }
-
-    protected onMoveStart() {
     }
 
     protected onMoveComplete() {

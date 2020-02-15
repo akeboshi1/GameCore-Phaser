@@ -79,11 +79,18 @@ export interface IElement {
 
 export interface MoveData {
     destPos?: Pos;
-    posPath?: any[];
+    posPath?: MovePath[];
     arrivalTime?: number;
     tweenAnim?: Tweens.Tween;
     tweenLineAnim?: Tweens.Timeline;
     tweenLastUpdate?: number;
+}
+
+export interface MovePath {
+    x: number;
+    y: number;
+    onStartParams?: any;
+    onStart?: Function;
 }
 
 export class Element extends BlockObject implements IElement {
@@ -256,8 +263,16 @@ export class Element extends BlockObject implements IElement {
             // Logger.getInstance().error(`can't stopMove, display does not exist`);
             return;
         }
+        if (this.mMoveData && this.mMoveData.posPath) {
+            // delete this.mMoveData.destPos;
+            delete this.mMoveData.posPath;
+            if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
+            if (this.mMoveData.tweenLineAnim) {
+                this.mMoveData.tweenLineAnim.stop();
+                this.mMoveData.tweenLineAnim.destroy();
+            }
+        }
         this.changeState(PlayerState.IDLE);
-        // Logger.debug(`stop,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
     }
 
     public setPosition(p: Pos) {
@@ -417,12 +432,19 @@ export class Element extends BlockObject implements IElement {
             line.destroy();
         }
 
+        const posPath = this.mMoveData.posPath;
+        // for (const path of posPath) {
+        //     path.onStart = () => {
+        //         this.onMoveStart();
+        //     }
+        // }
+
         const time: number = (this.mMoveData.arrivalTime - this.roomService.now());
         this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
             targets: this.mDisplay,
             totalDuration: time,
             ease: "Linear",
-            tweens: this.mMoveData.posPath,
+            tweens: posPath,
             onStart: () => {
                 this.onMoveStart();
             },
@@ -530,11 +552,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onMoveStart() {
-        Logger.getInstance().log("start move!!!");
     }
 
     protected onMoveComplete() {
-        if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
+        // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
+        this.stopMove();
     }
 
     protected onMoving() {

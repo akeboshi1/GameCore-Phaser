@@ -35,12 +35,31 @@ export class Player extends Element {
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (this.mDisplay) this.mDisplay.play(PlayerState.WALK);
-        const paths = movePath.path;
-        for (const path of paths) {
-            path.y += this.offsetY;
+        if (!this.mDisplay) {
+            return;
         }
-        super.movePath(movePath);
+        const tmpPath = movePath.path;
+        if (!tmpPath) {
+            return;
+        }
+        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y);
+        const paths = [];
+        this.mMoveData.arrivalTime = movePath.timestemp;
+        this.setPosition(new Pos(tmpPath[0].x, tmpPath[1].y));
+        for (const path of tmpPath) {
+            const angle = Math.atan2(path.y - lastPos.y, path.x - lastPos.x);
+            paths.push({
+                x: path.x,
+                y: path.y + this.offsetY,
+                onStartParams: angle * (180 / Math.PI),
+                onStart: (tween, target, param) => {
+                    this.onCheckDirection(param);
+                }
+            });
+            lastPos = new Pos(path.x, path.y);
+        }
+        this.mMoveData.posPath = paths;
+        this._doMove();
     }
 
     public setDirection(dir: number) {
@@ -65,6 +84,21 @@ export class Player extends Element {
     public setPosition(pos: Pos) {
         pos.y += this.offsetY;
         super.setPosition(pos);
+    }
+
+    protected onCheckDirection(param: any) {
+        if (typeof param !== "number") {
+            return;
+        }
+        if (param > 90) {
+            this.setDirection(3);
+        } else  if (param > 0) {
+            this.setDirection(5);
+        } else  if (param > -90) {
+            this.setDirection(7);
+        } else {
+            this.setDirection(1);
+        }
     }
 
     protected onMoveStart() {
