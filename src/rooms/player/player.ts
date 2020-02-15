@@ -51,6 +51,9 @@ export class Player extends Element {
     }
 
     public changeState(val?: string) {
+        if (!this.mDisplay) {
+            return;
+        }
         if (this.mCurState === val) return;
         if (!val) val = PlayerState.IDLE;
         if (this.mCheckStateHandle(val)) {

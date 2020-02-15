@@ -534,7 +534,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onMoveComplete() {
-        this.mMoveData.tweenAnim.stop();
+        if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
     }
 
     protected onMoving() {
