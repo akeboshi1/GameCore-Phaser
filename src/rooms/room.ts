@@ -6,7 +6,7 @@ import { TerrainManager } from "./terrain/terrain.manager";
 import { ConnectionService } from "../net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
-import { ICameraService } from "./cameras/cameras.manager";
+import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
@@ -23,7 +23,6 @@ import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
 import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
-import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -102,15 +101,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     constructor(protected manager: IRoomManager) {
         super();
         this.mWorld = this.manager.world;
-        this.mCameraService = new EditorCamerasManager(this);
         if (this.mWorld) {
-            const size = this.mWorld.getSize();
-            if (size) {
-                this.mCameraService.resize(size.width, size.height);
-            } else {
-                throw new Error(`World::getSize undefined!`);
-            }
-
             if (this.connection) {
                 this.connection.addPacketListener(this);
                 this.addHandlerFun(
@@ -146,6 +137,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             world: this.world,
             room: this
         });
+
+        this.mCameraService = new CamerasManager(this);
     }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {

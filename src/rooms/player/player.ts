@@ -4,6 +4,7 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
+import { Logger } from "../../utils/log";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -42,16 +43,18 @@ export class Player extends Element {
         if (!tmpPath) {
             return;
         }
-        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y);
+        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
         const paths = [];
         this.mMoveData.arrivalTime = movePath.timestemp;
-        // this.setPosition(new Pos(tmpPath[0].x, tmpPath[1].y));
+        let angle = null;
         for (const path of tmpPath) {
-            const angle = Math.atan2(path.y - lastPos.y, path.x - lastPos.x);
+            if (!(path.y === lastPos.y && path.x === lastPos.x)) {
+                angle = Math.atan2(path.y - lastPos.y, path.x - lastPos.x) * (180 / Math.PI);
+            }
             paths.push({
                 x: path.x,
                 y: path.y + this.offsetY,
-                onStartParams: angle * (180 / Math.PI),
+                onStartParams: angle,
                 onStart: (tween, target, param) => {
                     this.onCheckDirection(param);
                 }
@@ -90,11 +93,12 @@ export class Player extends Element {
         if (typeof param !== "number") {
             return;
         }
+        // 重叠
         if (param > 90) {
             this.setDirection(3);
-        } else  if (param > 0) {
+        } else  if (param >= 0) {
             this.setDirection(5);
-        } else  if (param > -90) {
+        } else  if (param >= -90) {
             this.setDirection(7);
         } else {
             this.setDirection(1);
@@ -115,6 +119,7 @@ export class Player extends Element {
             if (!this.mElementManager || !this.mElementManager.roomService || !this.mElementManager.roomService.roomSize) {
                 return 0;
             }
+            // this.mOffsetY = 0;
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return this.mOffsetY;

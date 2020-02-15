@@ -18,6 +18,7 @@ import {EditorElementManager} from "./element/editor.element.manager";
 import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
 import {ElementDisplay} from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
+import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -83,6 +84,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mTerainManager = new EditorTerrainManager(this);
         this.mElementManager = new EditorElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
+        this.mCameraService = new EditorCamerasManager(this);
 
         this.mWorld.game.scene.start(EditScene.name, { room: this });
     }
