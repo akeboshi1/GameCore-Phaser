@@ -10,8 +10,8 @@ import { Interactive } from "./interactive/interactive";
 import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
 import { PlayerState } from "../element/element";
-import { Logger } from "../../utils/log";
 import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
+import { Logger } from "../../utils/log";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
@@ -113,7 +113,7 @@ export class Actor extends Player implements InputListener {
                 id: this.id,
                 point3f: {
                     x: pos.x,
-                    y: pos.y - this.offsetY,
+                    y: pos.y,
                     z: pos.z,
                 },
                 direction: this.dir
@@ -146,6 +146,14 @@ export class Actor extends Player implements InputListener {
         // movePath.path = [{ x: 885.000000, y: 637.50000}, { x: 915.000000, y: 637.50000}, { x: 945.000000, y: 637.50000}, { x: 975.000000, y: 637.50000}, { x: 1005.00000, y: 637.50000}, { x: 1035.00000, y: 637.50000}, { x: 1065.00000, y: 637.50000}, { x: 1080.00000, y: 645.00000}, { x: 1095.00000, y: 652.50000}, { x: 1110.00000, y: 660.00000}, { x: 1125.00000, y: 667.50000}, { x: 1140.00000, y: 675.00000}, { x: 1155.00000, y: 682.50000}, { x: 1170.00000, y: 690.00000}];
         // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
         // movePath.timestemp = 3965;
+        const path = movePath.path;
+        const pathAry = path.map((value) => {
+            return {
+                x: value.point3f.x, y: value.point3f.y, duration: value.duration
+            };
+        });
+        Logger.getInstance().log("astar receive latency", this.mRoom.world.clock.medianLatency);
+        Logger.getInstance().log("astar path: ", pathAry);
         this.drawPath(movePath.path);
         super.movePath(movePath);
     }

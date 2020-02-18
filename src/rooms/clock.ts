@@ -135,4 +135,8 @@ export class Clock extends PacketHandler {
         // Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
 
     }
+
+    get medianLatency() {
+        return Algorithm.median(this.mLatency);
+    }
 }

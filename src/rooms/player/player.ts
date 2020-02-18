@@ -91,6 +91,12 @@ export class Player extends Element {
         super.setPosition(pos);
     }
 
+    public getPosition() {
+        const pos = super.getPosition();
+        pos.y -= this.offsetY;
+        return pos;
+    }
+
     protected onCheckDirection(param: any) {
         if (typeof param !== "number") {
             return;

@@ -2,7 +2,7 @@ import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "./world.service";
-import { IRoomService } from "../rooms/room";
+import { IRoomService, Room } from "../rooms/room";
 import { Logger } from "../utils/log";
 import { MessageType } from "../const/MessageType";
 import { TerrainDisplay } from "../rooms/display/terrain.display";
@@ -30,6 +30,7 @@ export class MouseManager extends PacketHandler {
     private mConnect: ConnectionService;
     private mDownDelay: number = 2000;
     private mDownTime: any;
+    private mRoom: Room;
     constructor(private worldService: WorldService) {
         super();
         this.mGame = worldService.game;
@@ -39,6 +40,7 @@ export class MouseManager extends PacketHandler {
     public changeRoom(room: IRoomService) {
         this.pause();
         this.mScene = room.scene;
+        this.mRoom = <Room> room;
         if (!this.mScene) return;
         this.mActivePointer = this.mScene.input.activePointer;
         try {
@@ -87,6 +89,10 @@ export class MouseManager extends PacketHandler {
         if (pointer.isDown === false) {
             if (pointer.downX === pointer.upX && pointer.downY === pointer.upY) {
                 events.push(MouseEvent.Tap);
+                const player = this.mRoom.playerManager.actor;
+                if (player) {
+                    Logger.getInstance().log("astar actor position: ", player.getPosition());
+                }
             }
         }
         if (events.length === 0) {
