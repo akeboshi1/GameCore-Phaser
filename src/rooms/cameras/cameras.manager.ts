@@ -11,6 +11,7 @@ export interface ICameraService {
     moving: boolean;
 
     startFollow(target: Phaser.GameObjects.GameObject): void;
+    stopFollow(): void;
 
     resize(width: number, height: number): void;
 
@@ -103,6 +104,12 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     public startFollow(target: Phaser.GameObjects.GameObject) {
         if (this.mCamera && target) {
             this.mCamera.startFollow(target);
+        }
+    }
+
+    public stopFollow() {
+        if (this.mCamera) {
+            this.mCamera.stopFollow();
         }
     }
 

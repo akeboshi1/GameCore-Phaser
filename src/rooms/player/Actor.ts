@@ -23,6 +23,8 @@ export class Actor extends Player implements InputListener {
     private mRoom: IRoomService;
     private mPackage: op_gameconfig.IPackage;
     private mMovePath: Phaser.GameObjects.Graphics;
+    private mMoveTime: number;
+    private mMoveStartTime: number;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.mBlockable = false;
@@ -152,6 +154,8 @@ export class Actor extends Player implements InputListener {
                 x: value.point3f.x, y: value.point3f.y, duration: value.duration
             };
         });
+        this.mMoveStartTime = new Date().getTime();
+        Logger.getInstance().log("astar receive time: ", this.mMoveStartTime - this.mMoveTime, this.mMoveStartTime);
         Logger.getInstance().log("astar receive latency", this.mRoom.world.clock.medianLatency);
         Logger.getInstance().log("astar path: ", pathAry);
         this.drawPath(movePath.path);
@@ -159,6 +163,8 @@ export class Actor extends Player implements InputListener {
     }
 
     protected onMoveComplete() {
+        const time = new Date().getTime();
+        Logger.getInstance().log("astar move complete: ", time - this.mMoveStartTime, time);
         if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
@@ -236,5 +242,9 @@ export class Actor extends Player implements InputListener {
 
     set package(value: op_gameconfig.IPackage) {
         this.mPackage = value;
+    }
+
+    set moveTime(val: number) {
+        this.mMoveTime = val;
     }
 }

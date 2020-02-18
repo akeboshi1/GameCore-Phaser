@@ -7,6 +7,7 @@ import { Logger } from "../utils/log";
 import { MessageType } from "../const/MessageType";
 import { TerrainDisplay } from "../rooms/display/terrain.display";
 import { DisplayObject } from "../rooms/display/display.object";
+import { Data } from "phaser";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -92,6 +93,9 @@ export class MouseManager extends PacketHandler {
                 const player = this.mRoom.playerManager.actor;
                 if (player) {
                     Logger.getInstance().log("astar actor position: ", player.getPosition());
+                    const time = new Date().getTime();
+                    player.moveTime = time;
+                    Logger.getInstance().log("astar send time: ", time);
                 }
             }
         }

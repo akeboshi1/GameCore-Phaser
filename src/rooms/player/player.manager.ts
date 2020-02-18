@@ -344,9 +344,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onCameraFollow(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
         const player = this.get(content.id);
+        const camera = this.roomService.cameraService;
+        if (!camera) {
+            return;
+        }
         if (player) {
-            const camera = this.roomService.cameraService;
-            // if (camera) camera.startFollow(player.getDisplay());
+            camera.startFollow(player.getDisplay());
+        } else {
+            camera.stopFollow();
         }
     }
 

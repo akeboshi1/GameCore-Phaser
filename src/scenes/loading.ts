@@ -3,6 +3,7 @@ import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
 import { World } from "../game/world";
 import { Url } from "../utils/resUtil";
+import { Logger } from "../utils/log";
 const LOGO_MARGIN = 25;
 
 export class LoadingScene extends Phaser.Scene {
@@ -36,12 +37,21 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public create() {
-    if (WebFont) {
+    // if (WebFont) {
+    //   WebFont.load({
+    //     custom: {
+    //       families: [ "Source Han Sans" ]
+    //     },
+    //   });
+    // }
+    try {
       WebFont.load({
         custom: {
           families: [ "Source Han Sans" ]
         },
       });
+    } catch (error) {
+      Logger.getInstance().warn("webfont failed to load");
     }
     if (this.mRoom) this.mRoom.startLoad();
     const width = this.scale.gameSize.width;
