@@ -202,15 +202,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             let point: op_def.IPBPoint3f;
             for (const position of positions) {
                 player = this.mPlayerMap.get(position.id);
-                if (!player) {
-                    if (position.id === this.mActor.id) {
-                        player = this.mActor;
-                    } else {
-                        continue;
-                    }
+                // if (!player) {
+                //     if (position.id === this.mActor.id) {
+                //         player = this.mActor;
+                //     } else {
+                //         continue;
+                //     }
+                // }
+                if (player) {
+                    point = position.point3f;
+                    player.setPosition(new Pos(point.x || 0, point.y || 0, point.z || 0));
                 }
-                point = position.point3f;
-                player.setPosition(new Pos(point.x || 0, point.y || 0, point.z || 0));
                 // Logger.getInstance().debug(`adjust,x:${point.x},y:${point.y}`);
             }
         }
@@ -268,11 +270,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 playID = moveData.moveObjectId;
                 player = this.get(playID);
-                // Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
-                if (!player) {
-                    player = this.actor;
+                if (player) {
+                    player.move(moveData);
                 }
-                player.move(moveData);
             }
         }
     }
@@ -346,7 +346,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const player = this.get(content.id);
         if (player) {
             const camera = this.roomService.cameraService;
-            if (camera) camera.startFollow(player.getDisplay());
+            // if (camera) camera.startFollow(player.getDisplay());
         }
     }
 

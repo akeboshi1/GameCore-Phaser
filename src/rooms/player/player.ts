@@ -4,7 +4,6 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
-import { Logger } from "../../utils/log";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -47,19 +46,22 @@ export class Player extends Element {
         const paths = [];
         this.mMoveData.arrivalTime = movePath.timestemp;
         let angle = null;
+        let point = null;
         for (const path of tmpPath) {
-            if (!(path.y === lastPos.y && path.x === lastPos.x)) {
-                angle = Math.atan2(path.y - lastPos.y, path.x - lastPos.x) * (180 / Math.PI);
+            point = path.point3f;
+            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
             }
             paths.push({
-                x: path.x,
-                y: path.y + this.offsetY,
+                x: point.x,
+                y: point.y + this.offsetY,
+                duration: path.duration,
                 onStartParams: angle,
                 onStart: (tween, target, param) => {
                     this.onCheckDirection(param);
                 }
             });
-            lastPos = new Pos(path.x, path.y);
+            lastPos = new Pos(point.x, point.y);
         }
         this.mMoveData.posPath = paths;
         this._doMove();

@@ -223,10 +223,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._createAnotherGame(content.gameId, content.virtualWorldId);
     }
 
-    public changeScene() {
+    public async changeScene() {
         const gameID: string = this.mConfig.game_id;
         const worldID: string = this.mConfig.virtual_world_id;
-        this.clearGame();
+        await this.clearGame();
         this.mConfig.game_id = gameID;
         this.mConfig.virtual_world_id = worldID;
         this._newGame();
@@ -360,8 +360,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    private _createAnotherGame(gameId, worldId) {
-        this.clearGame();
+    private async _createAnotherGame(gameId, worldId) {
+        await this.clearGame();
         if (this.mConnection) {
             this.mConnection.closeConnect();
         }
@@ -378,7 +378,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mConnection.startConnect(gateway);
         }
         this.mClock = new Clock(this.mConnection, this);
+        // setTimeout(() => {
         this._newGame();
+        // }, 1000);
         const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
         if (loginScene) loginScene.remove();
         this.mGame.scene.start(LoadingScene.name, { world: this });
@@ -393,26 +395,32 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.connection.send(pkt);
     }
 
-    private clearGame() {
-        if (this.mGame) {
-            // this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
-            this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
-            this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
-            this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
-            // this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-            this.mGame.plugins.removeGlobalPlugin("rexButton");
-            this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-            this.mGame.plugins.removeGlobalPlugin("rexInputText");
-            this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-            this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
-            this.mGame.plugins.removeScenePlugin("DragonBones");
-            this.mGame.plugins.removeScenePlugin("rexUI");
-            this.mGameEmitter.destroy();
-            this.roomManager.destroy();
-            this.uiManager.destroy();
-            this.mGame.destroy(true);
-            this.mGame = null;
-        }
+    private clearGame(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.mGame) {
+                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
+                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+                this.mGame.plugins.removeGlobalPlugin("rexButton");
+                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexInputText");
+                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                this.mGame.plugins.removeScenePlugin("DragonBones");
+                this.mGame.plugins.removeScenePlugin("rexUI");
+                this.mGameEmitter.destroy();
+                this.roomManager.destroy();
+                this.uiManager.destroy();
+                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame = undefined;
+                    resolve();
+                });
+                this.mGame.destroy(true);
+            } else {
+                resolve();
+            }
+        });
     }
 
     private heartBeatCallBack() {

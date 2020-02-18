@@ -89,6 +89,7 @@ export interface MoveData {
 export interface MovePath {
     x: number;
     y: number;
+    duration?: number;
     onStartParams?: any;
     onStart?: Function;
 }
@@ -244,10 +245,13 @@ export class Element extends BlockObject implements IElement {
         }
         this.mMoveData.arrivalTime = movePath.timestemp;
         const paths = [];
+        let point = null;
         for (const path of movePath.path) {
+            point = path.point3f;
             paths.push({
-                x: path.x,
-                y: path.y
+                x: point.x,
+                y: point.y,
+                duration: path.duration
             });
         }
         this.mMoveData.posPath = paths;
@@ -439,10 +443,9 @@ export class Element extends BlockObject implements IElement {
         //     }
         // }
 
-        const time: number = (this.mMoveData.arrivalTime - this.roomService.now());
+        // const time: number = (this.mMoveData.arrivalTime - this.roomService.now());
         this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
             targets: this.mDisplay,
-            totalDuration: time,
             ease: "Linear",
             tweens: posPath,
             onStart: () => {

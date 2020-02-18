@@ -44,6 +44,7 @@ export class Actor extends Player implements InputListener {
                 const pos = sprite.pos;
                 const size = this.mElementManager.scene.scale;
                 roomService.cameraService.setScroll(pos.x - size.width / 2, pos.y - size.height / 2);
+                roomService.cameraService.syncCameraScroll();
             }
         }
 
@@ -142,6 +143,9 @@ export class Actor extends Player implements InputListener {
         } else {
             this.startMove();
         }
+        // movePath.path = [{ x: 885.000000, y: 637.50000}, { x: 915.000000, y: 637.50000}, { x: 945.000000, y: 637.50000}, { x: 975.000000, y: 637.50000}, { x: 1005.00000, y: 637.50000}, { x: 1035.00000, y: 637.50000}, { x: 1065.00000, y: 637.50000}, { x: 1080.00000, y: 645.00000}, { x: 1095.00000, y: 652.50000}, { x: 1110.00000, y: 660.00000}, { x: 1125.00000, y: 667.50000}, { x: 1140.00000, y: 675.00000}, { x: 1155.00000, y: 682.50000}, { x: 1170.00000, y: 690.00000}];
+        // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
+        // movePath.timestemp = 3965;
         this.drawPath(movePath.path);
         super.movePath(movePath);
     }
@@ -170,8 +174,8 @@ export class Actor extends Player implements InputListener {
         this.addDisplay();
     }
 
-    private drawPath(pos) {
-        if (!pos) {
+    private drawPath(pos: op_client.IMovePoint[]) {
+        if (!pos && pos.length > 0) {
             return;
         }
         if (!this.mMovePath) {
@@ -179,12 +183,11 @@ export class Actor extends Player implements InputListener {
         }
         this.mMovePath.clear();
         this.mMovePath.lineStyle(2, 0xFFFF00);
-        this.mMovePath.moveTo(pos[0].x, pos[0].y);
-        // for (let i = 0; i < pos.length; i++) {
-        //     this.mMovePath.lineTo(pos[i].x, pos[i].y);
-        // }
+        this.mMovePath.moveTo(pos[0].point3f.x, pos[0].point3f.y);
+        let point3f = null;
         for (const point of pos) {
-            this.mMovePath.lineTo(point.x, point.y);
+            point3f = point.point3f;
+            if (point3f) this.mMovePath.lineTo(point3f.x, point3f.y);
         }
         this.mMovePath.strokePath();
         this.mRoom.addToSurface(<any> this.mMovePath);
