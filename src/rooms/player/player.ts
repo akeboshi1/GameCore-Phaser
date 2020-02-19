@@ -49,6 +49,7 @@ export class Player extends Element {
         this.mMoveData.arrivalTime = movePath.timestemp;
         let angle = null;
         let point = null;
+        const now = this.mElementManager.roomService.now();
         for (const path of tmpPath) {
             point = path.point3f;
             if (!(point.y === lastPos.y && point.x === lastPos.x)) {
@@ -57,13 +58,14 @@ export class Player extends Element {
             paths.push({
                 x: point.x,
                 y: point.y + this.offsetY,
-                duration: path.duration,
+                duration: path.timestemp - now,
                 onStartParams: angle,
                 onStart: (tween, target, param) => {
                     this.onCheckDirection(param);
                 },
-                onComplete: () => {
-                    this.onMovePathPointComplete();
+                onCompleteParams: path.timestemp - now,
+                onComplete: (tween, targets, param) => {
+                    this.onMovePathPointComplete(param);
                 }
             });
             lastPos = new Pos(point.x, point.y);
@@ -127,12 +129,12 @@ export class Player extends Element {
         this.changeState(PlayerState.IDLE);
     }
 
-    protected onMovePathPointComplete() {
+    protected onMovePathPointComplete(param) {
         if (!this.mElementManager || !this.mElementManager.connection) {
             return;
         }
         const position = this.getPosition();
-        Logger.getInstance().log("astar move to: ", position);
+        Logger.getInstance().log("astar move to: ", position, " duration: ", param, " timestemp: ", this.mElementManager.roomService.now());
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = packet.content;
         const point = op_def.PBPoint3f.create();
@@ -140,6 +142,7 @@ export class Player extends Element {
         point.y = position.y;
         point.z = position.z;
         content.point = point;
+        content.timestemp = this.mElementManager.roomService.now();
         this.mElementManager.connection.send(packet);
     }
 

@@ -247,12 +247,13 @@ export class Element extends BlockObject implements IElement {
         this.mMoveData.arrivalTime = movePath.timestemp;
         const paths = [];
         let point = null;
+        const now = this.mElementManager.roomService.now();
         for (const path of movePath.path) {
             point = path.point3f;
             paths.push({
                 x: point.x,
                 y: point.y,
-                duration: path.duration
+                duration: path.timestemp - now
             });
         }
         this.mMoveData.posPath = paths;

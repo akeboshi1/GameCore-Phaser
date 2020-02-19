@@ -252,6 +252,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected removeMap(sprite: ISprite) {
     }
 
+    protected addMap(sprite: ISprite) {
+
+    }
+
     private onChangeAnimation(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
         if (content.nodeType !== NodeType.TerrainNodeType) {

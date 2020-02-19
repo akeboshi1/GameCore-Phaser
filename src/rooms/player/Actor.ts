@@ -149,9 +149,10 @@ export class Actor extends Player implements InputListener {
         // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
         // movePath.timestemp = 3965;
         const path = movePath.path;
+        const now = this.mElementManager.roomService.now();
         const pathAry = path.map((value) => {
             return {
-                x: value.point3f.x, y: value.point3f.y, duration: value.duration
+                x: value.point3f.x, y: value.point3f.y, duration: value.timestemp - now, timestemp: value.timestemp
             };
         });
         this.mMoveStartTime = new Date().getTime();
