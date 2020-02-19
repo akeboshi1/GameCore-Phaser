@@ -37,13 +37,6 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   public create() {
-    // if (WebFont) {
-    //   WebFont.load({
-    //     custom: {
-    //       families: [ "Source Han Sans" ]
-    //     },
-    //   });
-    // }
     try {
       WebFont.load({
         custom: {

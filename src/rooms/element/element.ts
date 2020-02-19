@@ -92,6 +92,7 @@ export interface MovePath {
     duration?: number;
     onStartParams?: any;
     onStart?: Function;
+    onComplete?: Function;
 }
 
 export class Element extends BlockObject implements IElement {

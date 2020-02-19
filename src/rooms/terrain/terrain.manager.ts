@@ -21,6 +21,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected mPacketFrameCount: number = 0;
     protected mListener: SpriteAddCompletedListener;
     // ---- by 7
+    protected mMap: number[][];
 
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
@@ -39,6 +40,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
+        }
+
+        const miniSize = this.roomService.miniSize;
+        this.mMap = new Array(miniSize.cols);
+        for (let i = 0; i < miniSize.rows; i++) {
+            this.mMap[i] = new Array(miniSize.rows).fill(0);
         }
     }
 
@@ -240,6 +247,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = ids;
         this.connection.send(packet);
+    }
+
+    protected removeMap(sprite: ISprite) {
     }
 
     private onChangeAnimation(packet: PBpacket) {

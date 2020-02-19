@@ -35,6 +35,7 @@ export interface IRoomService {
     readonly layerManager: LayerManager;
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
+    readonly miniSize: IPosition45Obj;
     readonly blocks: ViewblockService;
     readonly world: WorldService;
     readonly map?: Map;
@@ -94,6 +95,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mLayManager: LayerManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
+    protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
@@ -128,6 +130,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth,
             sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),
             sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2)
+        };
+
+        this.mMiniSize = {
+            cols: data.cols * 2,
+            rows: data.rows * 2,
+            tileWidth: data.tileWidth / 2,
+            tileHeight: data.tileHeight / 2
         };
         this.mMap = new Map(this.mWorld);
         this.mMap.setMapInfo(data);
@@ -383,6 +392,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get roomSize(): IPosition45Obj | undefined {
         return this.mSize || undefined;
+    }
+
+    get miniSize(): IPosition45Obj | undefined {
+        return this.mMiniSize;
     }
 
     get blocks(): ViewblockService {

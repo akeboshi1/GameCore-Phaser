@@ -1,9 +1,11 @@
 import { Element, PlayerState } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
+import { PBpacket } from "net-socket-packet";
+import { Logger } from "../../utils/log";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -59,6 +61,9 @@ export class Player extends Element {
                 onStartParams: angle,
                 onStart: (tween, target, param) => {
                     this.onCheckDirection(param);
+                },
+                onComplete: () => {
+                    this.onMovePathPointComplete();
                 }
             });
             lastPos = new Pos(point.x, point.y);
@@ -120,6 +125,22 @@ export class Player extends Element {
     protected onMoveComplete() {
         super.onMoveComplete();
         this.changeState(PlayerState.IDLE);
+    }
+
+    protected onMovePathPointComplete() {
+        if (!this.mElementManager || !this.mElementManager.connection) {
+            return;
+        }
+        const position = this.getPosition();
+        Logger.getInstance().log("astar move to: ", position);
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = packet.content;
+        const point = op_def.PBPoint3f.create();
+        point.x = position.x;
+        point.y = position.y;
+        point.z = position.z;
+        content.point = point;
+        this.mElementManager.connection.send(packet);
     }
 
     protected get offsetY(): number {
