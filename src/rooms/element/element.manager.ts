@@ -17,6 +17,7 @@ export interface IElementManager {
     readonly roomService: IRoomService;
     readonly scene: Phaser.Scene | undefined;
     readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
+    readonly map: number[][];
     add(sprite: ISprite[]);
     remove(id: number): IElement;
     getElements(): IElement[];
@@ -72,6 +73,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (element) {
             this.mElements.delete(id);
             element.destroy();
+            this.removeMap(element.model);
         }
         return element;
     }
@@ -229,6 +231,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected _add(sprite: ISprite): Element {
         let ele = this.mElements.get(sprite.id);
         if (!ele) ele = new Element(sprite, this);
+        this.addMap(sprite);
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         return ele;
@@ -263,6 +266,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.scene;
         }
+    }
+
+    get map(): number[][] {
+        return this.mMap;
     }
 
     protected onSetPosition(packet: PBpacket) {

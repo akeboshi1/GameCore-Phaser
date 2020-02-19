@@ -382,4 +382,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         Logger.getInstance().error("room is undefined");
     }
+
+    get map(): number[][] {
+        return [];
+    }
 }

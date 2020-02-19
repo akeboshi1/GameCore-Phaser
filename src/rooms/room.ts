@@ -24,6 +24,7 @@ import { MessageType } from "../const/MessageType";
 import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
+import { FallEffect } from "./fall.effect/fall.effect";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -311,6 +312,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.layerManager.addMouseListen();
     }
 
+    public moveable(pos: Pos): boolean {
+        const pos45 = this.transformToMini45(pos);
+        const map = this.mElementManager.map;
+        if (pos45.x < 0 || pos45.x > map.length || pos45.y < 0 || pos45.y > map[0].length) {
+            return false;
+        }
+        if (map[pos45.y][pos45.x] === 0) {
+            return false;
+        }
+        return true;
+    }
+
     public update(time: number, delta: number) {
         // 角色管理器和地块，物件管理器中在登陆时，add_sprite完成后，把交互管理器的交互开放
         // if (this.mPlayerManager.hasAddComplete && this.mTerainManager.hasAddComplete && this.mElementManager.hasAddComplete) {
@@ -497,9 +510,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onTapHandler(pointer: Phaser.Input.Pointer) {
-        if (this.mFallEffectContainer) {
-            this.mFallEffectContainer.addFall(new Pos(pointer.worldX, pointer.worldY));
+        if (this.mWorld.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+            return;
         }
+        const enable = this.moveable(new  Pos(pointer.worldX, pointer.worldY));
+        const fall = new FallEffect(this.scene);
+        fall.show(enable);
+        fall.setPosition(pointer.worldX, pointer.worldY);
+        this.addToSceneUI(fall);
     }
 
     private enterRoom() {

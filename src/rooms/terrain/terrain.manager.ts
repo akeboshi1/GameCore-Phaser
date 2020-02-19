@@ -316,4 +316,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     get camera(): Phaser.Cameras.Scene2D.Camera {
         return this.camera;
     }
+
+    get map(): number[][] {
+        return this.mMap;
+    }
 }

@@ -8,7 +8,7 @@ export class FallEffectContainer {
         this.mFalls = [];
     }
 
-    public addFall(pos: Pos) {
+    public addFall(pos: Pos, enable: boolean) {
         if (!pos) {
             return;
         }

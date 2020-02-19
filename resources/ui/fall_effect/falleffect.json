@@ -1,28 +1,28 @@
 {
 	"frames": {
-		"forbid.png": {
+		"enable01": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 50,
-				"h": 50
+				"w": 72,
+				"h": 88
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 50,
-				"h": 50
+				"w": 72,
+				"h": 88
 			},
 			"sourceSize": {
-				"w": 50,
-				"h": 50
+				"w": 72,
+				"h": 88
 			}
 		},
-		"mouse_1.png": {
+		"enable02": {
 			"frame": {
-				"x": 53,
+				"x": 75,
 				"y": 1,
 				"w": 72,
 				"h": 88
@@ -40,7 +40,7 @@
 				"h": 88
 			}
 		},
-		"mouse_2.png": {
+		"enable03": {
 			"frame": {
 				"x": 1,
 				"y": 91,
@@ -60,7 +60,7 @@
 				"h": 88
 			}
 		},
-		"mouse_3.png": {
+		"enable04": {
 			"frame": {
 				"x": 75,
 				"y": 91,
@@ -80,9 +80,9 @@
 				"h": 88
 			}
 		},
-		"mouse_4.png": {
+		"enable05": {
 			"frame": {
-				"x": 127,
+				"x": 149,
 				"y": 1,
 				"w": 72,
 				"h": 88
@@ -100,7 +100,7 @@
 				"h": 88
 			}
 		},
-		"mouse_5.png": {
+		"enable06": {
 			"frame": {
 				"x": 149,
 				"y": 91,
@@ -119,15 +119,35 @@
 				"w": 72,
 				"h": 88
 			}
+		},
+		"forbid": {
+			"frame": {
+				"x": 223,
+				"y": 1,
+				"w": 50,
+				"h": 50
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 50,
+				"h": 50
+			},
+			"sourceSize": {
+				"w": 50,
+				"h": 50
+			}
 		}
 	},
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 222,
+			"w": 274,
 			"h": 180
 		},
 		"scale": "1"

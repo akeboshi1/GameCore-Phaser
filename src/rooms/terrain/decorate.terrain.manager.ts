@@ -8,13 +8,12 @@ import { op_def, op_client } from "pixelpai_proto";
 
 export class DecorateTerrainManager extends TerrainManager {
   protected mRoom: DecorateRoomService;
-  private map: number[][];
   constructor(roomService: DecorateRoomService) {
     super(roomService);
     const miniSize = roomService.miniSize;
-    this.map = new Array(miniSize.cols);
+    this.mMap = new Array(miniSize.cols);
     for (let i = 0; i < miniSize.rows; i++) {
-      this.map[i] = new Array(miniSize.rows).fill(0);
+      this.mMap[i] = new Array(miniSize.rows).fill(0);
     }
   }
 
@@ -81,7 +80,7 @@ export class DecorateTerrainManager extends TerrainManager {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-          this.map[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+          this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
         }
       }
     }
