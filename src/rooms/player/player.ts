@@ -49,21 +49,24 @@ export class Player extends Element {
         this.mMoveData.arrivalTime = movePath.timestemp;
         let angle = null;
         let point = null;
-        const now = this.mElementManager.roomService.now();
+        let now = this.mElementManager.roomService.now();
+        let duration = 0;
         for (const path of tmpPath) {
             point = path.point3f;
             if (!(point.y === lastPos.y && point.x === lastPos.x)) {
                 angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
             }
+            now += duration;
+            duration = path.timestemp - now;
             paths.push({
                 x: point.x,
                 y: point.y + this.offsetY,
-                duration: path.timestemp - now,
+                duration,
                 onStartParams: angle,
                 onStart: (tween, target, param) => {
                     this.onCheckDirection(param);
                 },
-                onCompleteParams: path.timestemp - now,
+                onCompleteParams: duration,
                 onComplete: (tween, targets, param) => {
                     this.onMovePathPointComplete(param);
                 }

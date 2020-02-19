@@ -250,10 +250,35 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     protected removeMap(sprite: ISprite) {
+        this.setMap(sprite, 1);
     }
 
     protected addMap(sprite: ISprite) {
+        this.setMap(sprite, 0);
+    }
 
+    protected setMap(sprite: ISprite, type: number) {
+        const displayInfo = sprite.displayInfo;
+        const aniName = sprite.currentAnimationName || displayInfo.animationName;
+        const collisionArea = displayInfo.getCollisionArea(aniName);
+        const walkArea = displayInfo.getWalkableArea(aniName);
+        const origin = displayInfo.getOriginPoint(aniName);
+        let rows = collisionArea.length;
+        let cols = collisionArea[0].length;
+        let hasCollisionArea = true;
+        if (rows === 1 && cols === 1) {
+            rows = 2;
+            cols = 2;
+            hasCollisionArea = false;
+        }
+        const pos = sprite.pos;
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
+                    this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+                }
+            }
+        }
     }
 
     private onChangeAnimation(packet: PBpacket) {
