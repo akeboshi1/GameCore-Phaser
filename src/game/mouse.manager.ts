@@ -90,13 +90,8 @@ export class MouseManager extends PacketHandler {
         if (pointer.isDown === false) {
             if (pointer.downX === pointer.upX && pointer.downY === pointer.upY) {
                 events.push(MouseEvent.Tap);
-                const player = this.mRoom.playerManager.actor;
-                if (player) {
-                    Logger.getInstance().log("astar actor position: ", player.getPosition());
-                    const time = new Date().getTime();
-                    player.moveTime = time;
-                    Logger.getInstance().log("astar send time: ", time);
-                }
+                this.tryMove();
+                this.worldService.emitter.emit("Tap", pointer);
             }
         }
         if (events.length === 0) {
@@ -162,6 +157,40 @@ export class MouseManager extends PacketHandler {
 
     private onPointerUpHandler() {
         clearTimeout(this.mDownTime);
+    }
+
+    private tryMove() {
+        const player = this.mRoom.playerManager.actor;
+        if (!player || !player.moveData) {
+            return;
+        }
+        if (this.mRoom.world.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+            return;
+        }
+        if (player) {
+            Logger.getInstance().log("astar actor position: ", player.getPosition());
+            // player.moveTime = time;
+            // Logger.getInstance().log("astar send time: ", time);
+        }
+        const moveData = player.moveData;
+        const pos = moveData.posPath;
+        if (!pos || pos.length < 0) {
+            return;
+        }
+        const playerPosition = player.getPosition();
+        const position = op_def.PBPoint3f.create();
+        position.x = playerPosition.x;
+        position.y = playerPosition.y;
+
+        const nextPosition = op_def.PBPoint3f.create();
+        nextPosition.x = pos[0].x;
+        nextPosition.y = pos[0].y;
+
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
+        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
+        conten.timestemp = this.mRoom.now();
+        conten.position = position;
+        conten.nextPoint = nextPosition;
     }
 
     private selectedElement(pointer, gameobject) {

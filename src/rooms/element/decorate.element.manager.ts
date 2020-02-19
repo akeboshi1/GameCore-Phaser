@@ -8,14 +8,8 @@ import NodeType = op_def.NodeType;
 
 export class DecorateElementManager extends ElementManager {
   protected mRoom: DecorateRoomService;
-  private mMap: number[][];
   constructor(room: DecorateRoomService) {
     super(room);
-    const size = room.miniSize;
-    this.mMap = new Array(size.cols);
-    for (let i = 0; i < this.mMap.length; i++) {
-      this.mMap[i] = new Array(size.rows).fill(-1);
-    }
   }
 
   public remove(id: number): IElement {

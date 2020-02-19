@@ -26,6 +26,7 @@ export interface IElementManager {
 export class ElementManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
+    protected mMap: number[][];
     private mGameConfig: IElementStorage;
     constructor(protected mRoom: IRoomService) {
         super();
@@ -45,6 +46,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
+        }
+
+        const size = this.mRoom.miniSize;
+        this.mMap = new Array(size.cols);
+        for (let i = 0; i < this.mMap.length; i++) {
+            this.mMap[i] = new Array(size.rows).fill(-1);
         }
     }
 
@@ -86,6 +93,72 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!this.mElements) return;
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
+    }
+
+    protected addMap(sprite: ISprite) {
+        const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
+        const aniName = sprite.currentAnimationName || displayInfo.animationName;
+        const collisionArea = displayInfo.getCollisionArea(aniName);
+        let walkArea = displayInfo.getWalkableArea(aniName);
+        const origin = displayInfo.getOriginPoint(aniName);
+        const rows = collisionArea.length;
+        const cols = collisionArea[0].length;
+        const pos = this.mRoom.transformToMini45(sprite.pos);
+        if (!walkArea) {
+            walkArea = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkArea[i] = new Array(cols).fill(0);
+            }
+        }
+        let row = 0;
+        let col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.x;
+            for (let j = 0; j < cols; j++) {
+                if (collisionArea[i][j] === 1 && walkArea[i][j] === 0) {
+                    col = pos.x + j - origin.y;
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                        this.mMap[row][col] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    protected removeMap(sprite: ISprite) {
+        const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
+        const aniName = sprite.currentAnimationName || displayInfo.animationName;
+        const collisionArea = displayInfo.getCollisionArea(aniName);
+        let walkArea = displayInfo.getWalkableArea(aniName);
+        const origin = displayInfo.getOriginPoint(aniName);
+        const rows = collisionArea.length;
+        const cols = collisionArea[0].length;
+        const pos = this.mRoom.transformToMini45(sprite.pos);
+        if (!walkArea) {
+            walkArea = new Array(rows);
+            for (let i = 0; i < cols; i++) {
+                walkArea[i] = new Array(cols).fill(0);
+            }
+        }
+        let row = 0;
+        let col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.x;
+            for (let j = 0; j < cols; j++) {
+                col = pos.x + j - origin.y;
+                if (collisionArea[i][j] === 1) {
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                        this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = -1;
+                    }
+                }
+            }
+        }
     }
 
     get camera(): Phaser.Cameras.Scene2D.Camera | undefined {

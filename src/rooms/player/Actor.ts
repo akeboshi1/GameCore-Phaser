@@ -155,7 +155,7 @@ export class Actor extends Player implements InputListener {
             now += duration;
             duration = value.timestemp - now;
             return {
-                x: value.point3f.x, y: value.point3f.y, duration: duration, timestemp: value.timestemp
+                x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp
             };
         });
         this.mMoveStartTime = new Date().getTime();
@@ -250,5 +250,9 @@ export class Actor extends Player implements InputListener {
 
     set moveTime(val: number) {
         this.mMoveTime = val;
+    }
+
+    get moveData() {
+        return this.mMoveData;
     }
 }

@@ -51,6 +51,7 @@ export class Player extends Element {
         let point = null;
         let now = this.mElementManager.roomService.now();
         let duration = 0;
+        let index = 0;
         for (const path of tmpPath) {
             point = path.point3f;
             if (!(point.y === lastPos.y && point.x === lastPos.x)) {
@@ -63,15 +64,16 @@ export class Player extends Element {
                 y: point.y + this.offsetY,
                 duration,
                 onStartParams: angle,
-                onStart: (tween, target, param) => {
-                    this.onCheckDirection(param);
+                onStart: (tween, target, params) => {
+                    this.onCheckDirection(params);
                 },
-                onCompleteParams: duration,
-                onComplete: (tween, targets, param) => {
-                    this.onMovePathPointComplete(param);
+                onCompleteParams: {duration, index},
+                onComplete: (tween, targets, params) => {
+                    this.onMovePathPointComplete(params);
                 }
             });
             lastPos = new Pos(point.x, point.y);
+            index++;
         }
         this.mMoveData.posPath = paths;
         this._doMove();
@@ -107,16 +109,16 @@ export class Player extends Element {
         return pos;
     }
 
-    protected onCheckDirection(param: any) {
-        if (typeof param !== "number") {
+    protected onCheckDirection(params: any) {
+        if (typeof params !== "number") {
             return;
         }
         // 重叠
-        if (param > 90) {
+        if (params > 90) {
             this.setDirection(3);
-        } else  if (param >= 0) {
+        } else  if (params >= 0) {
             this.setDirection(5);
-        } else  if (param >= -90) {
+        } else  if (params >= -90) {
             this.setDirection(7);
         } else {
             this.setDirection(1);
@@ -132,21 +134,23 @@ export class Player extends Element {
         this.changeState(PlayerState.IDLE);
     }
 
-    protected onMovePathPointComplete(param) {
+    protected onMovePathPointComplete(params) {
         if (!this.mElementManager || !this.mElementManager.connection) {
             return;
         }
+        const posPath = this.mMoveData.posPath;
+        posPath.shift();
         const position = this.getPosition();
-        Logger.getInstance().log("astar move to: ", position, " duration: ", param, " timestemp: ", this.mElementManager.roomService.now());
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = packet.content;
-        const point = op_def.PBPoint3f.create();
-        point.x = position.x;
-        point.y = position.y;
-        point.z = position.z;
-        content.point = point;
-        content.timestemp = this.mElementManager.roomService.now();
-        this.mElementManager.connection.send(packet);
+        Logger.getInstance().log("astar move to: ", position, " duration: ", params.duration);
+        // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
+        // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = packet.content;
+        // const point = op_def.PBPoint3f.create();
+        // point.x = position.x;
+        // point.y = position.y;
+        // point.z = position.z;
+        // content.point = point;
+        // content.timestemp = this.mElementManager.roomService.now();
+        // this.mElementManager.connection.send(packet);
     }
 
     protected get offsetY(): number {

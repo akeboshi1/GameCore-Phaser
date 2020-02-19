@@ -23,6 +23,7 @@ import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
 import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
+import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -62,6 +63,10 @@ export interface IRoomService {
 
     transformTo90(p: Pos): Pos;
 
+    transformToMini45(p: Pos): Pos;
+
+    transformToMini90(p: Pos): Pos;
+
     addBlockObject(object: IElement);
 
     removeBlockObject(object: IElement);
@@ -100,6 +105,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     private mActorData: IActor;
+    private mFallEffectContainer: FallEffectContainer;
     constructor(protected manager: IRoomManager) {
         super();
         this.mWorld = this.manager.world;
@@ -188,6 +194,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mCameraService.setBounds(-cameraW >> 1, -cameraH >> 1, this.mSize.sceneWidth + cameraW, this.mSize.sceneHeight + cameraH);
             // init block
             this.mBlocks.int(this.mSize);
+
+            if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+                this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
+            }
         }
         this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
         // this.mActor = new Actor(, this.mPlayerManager);
@@ -205,6 +215,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.world.emitter.on("Tap", this.onTapHandler, this);
         // this.mWorld.inputManager.enable = true;
     }
 
@@ -282,6 +293,20 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return Position45.transformTo45(p, this.mSize);
     }
 
+    public transformToMini90(p: Pos) {
+        if (!this.mMiniSize) {
+            return;
+        }
+        return Position45.transformTo90(p, this.miniSize);
+    }
+
+    public transformToMini45(p: Pos) {
+        if (!this.mMiniSize) {
+            return;
+        }
+        return Position45.transformTo45(p, this.mMiniSize);
+    }
+
     public addMouseListen() {
         this.layerManager.addMouseListen();
     }
@@ -321,6 +346,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public destroy() {
         this.clear();
+        this.world.emitter.off("Tap", this.onTapHandler, this);
         if (this.connection) this.connection.removePacketListener(this);
         this.mWorld.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
@@ -467,6 +493,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (area.size) {
             area.setPosition(area.size.sceneWidth / 2, 0);
             this.mLayManager.addToMiddle(area);
+        }
+    }
+
+    private onTapHandler(pointer: Phaser.Input.Pointer) {
+        if (this.mFallEffectContainer) {
+            this.mFallEffectContainer.addFall(new Pos(pointer.worldX / window.devicePixelRatio, pointer.worldY / window.devicePixelRatio));
         }
     }
 
