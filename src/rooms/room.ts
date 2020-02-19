@@ -498,7 +498,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onTapHandler(pointer: Phaser.Input.Pointer) {
         if (this.mFallEffectContainer) {
-            this.mFallEffectContainer.addFall(new Pos(pointer.worldX / window.devicePixelRatio, pointer.worldY / window.devicePixelRatio));
+            this.mFallEffectContainer.addFall(new Pos(pointer.worldX, pointer.worldY));
         }
     }
 

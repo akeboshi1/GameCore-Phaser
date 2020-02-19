@@ -15,7 +15,22 @@ export class FallEffect extends Phaser.GameObjects.Container {
     }
 
     private onCompleteHandler() {
-        this.mDisplay = this.scene.make.sprite(undefined, false);
+        this.mDisplay = this.scene.make.sprite({
+            key: "fall_effect",
+            frame: "mouse_1.png",
+            x: 25,
+            y: -25
+        }, false);
         this.add(this.mDisplay);
+
+        this.scene.tweens.add({
+            targets: this,
+            duration: 2000,
+            props: { alpha: 0 },
+            onComplete: () => {
+                this.destroy();
+                this.emit("remove", this);
+            }
+        });
     }
 }

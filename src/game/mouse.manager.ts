@@ -191,6 +191,7 @@ export class MouseManager extends PacketHandler {
         conten.timestemp = this.mRoom.now();
         conten.position = position;
         conten.nextPoint = nextPosition;
+        this.mRoom.connection.send(packet);
     }
 
     private selectedElement(pointer, gameobject) {

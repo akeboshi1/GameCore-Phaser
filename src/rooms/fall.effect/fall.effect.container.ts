@@ -13,7 +13,14 @@ export class FallEffectContainer {
             return;
         }
         const fall = new FallEffect(this.scene);
+        fall.once("remove", this.onRemoveHandler, this);
         fall.setPosition(pos.x, pos.y);
         this.room.addToSceneUI(fall);
+    }
+
+    private onRemoveHandler(fall: FallEffect) {
+        if (!fall) {
+            return;
+        }
     }
 }
