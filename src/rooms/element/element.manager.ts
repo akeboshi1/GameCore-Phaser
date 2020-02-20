@@ -305,7 +305,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             element = this.get(sprite.id);
             if (element) {
-                element.model = new Sprite(sprite, content.nodeType);
+                const sp = new Sprite(sprite, content.nodeType);
+                element.model = sp;
+                this.addMap(sp);
             }
         }
     }
