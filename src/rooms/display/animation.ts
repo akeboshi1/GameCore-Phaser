@@ -1,5 +1,5 @@
 import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_def } from "pixelpai_proto";
 export interface IAnimationData {
     name: string;
     frameName: string[];
@@ -23,6 +23,7 @@ export class Animation implements IAnimationData {
     protected mCollisionArea: number[][];
     protected mWalkableArea: number[][];
     protected mOriginPoint: Phaser.Geom.Point;
+    protected mInteractiveArea: op_def.IPBPoint2i[];
 
     constructor(ani: AnimationDataNode | op_gameconfig.IAnimation) {
         let tmpBaseLoc = null;
@@ -55,6 +56,7 @@ export class Animation implements IAnimationData {
         } else {
             this.mWalkableArea = ani.walkableArea;
         }
+        this.mInteractiveArea = ani.interactiveArea;
     }
 
     toClient(): op_gameconfig.IAnimation {
@@ -69,6 +71,7 @@ export class Animation implements IAnimationData {
         ani.walkOriginPoint = [this.originPoint.x, this.originPoint.y];
         ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
         ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
+        ani.interactiveArea = this.mInteractiveArea;
         return ani;
     }
 

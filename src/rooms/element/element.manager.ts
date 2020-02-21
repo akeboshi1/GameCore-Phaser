@@ -230,9 +230,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected _add(sprite: ISprite): Element {
         let ele = this.mElements.get(sprite.id);
-        if (!ele) ele = new Element(sprite, this);
+        if (ele) {
+            ele.model = sprite;
+        } else {
+            ele = new Element(sprite, this);
+        }
+        // if (!ele) ele = new Element(sprite, this);
         this.addMap(sprite);
-        // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         return ele;
     }

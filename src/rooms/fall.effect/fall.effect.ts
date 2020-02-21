@@ -41,7 +41,7 @@ export class FallEffect extends Phaser.GameObjects.Container {
         this.mDisplay = this.scene.make.sprite({
             key: "fall_effect",
             frame: "forbid"
-        }, false);
+        }, false).setScale(0.5);
         this.add(this.mDisplay);
     }
 
@@ -83,9 +83,9 @@ class EnableDisplay extends Phaser.GameObjects.Container {
         super(scene);
         this.mImage = scene.make.sprite({
             key,
-            x: 20,
-            y: -30
-        }, false);
+            x: 9,
+            y: -20
+        }, false).setScale(0.5);
         this.add(this.mImage);
 
         // const tween = this.scene.tweens.add({

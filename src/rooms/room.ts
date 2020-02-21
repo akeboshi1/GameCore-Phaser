@@ -25,6 +25,7 @@ import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
+import { isMobile } from "../utils/device";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -188,7 +189,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            camera.zoom = window.devicePixelRatio;
+            camera.zoom = window.devicePixelRatio * (isMobile(this.scene.game) ? 0.9 : 1);
             const cameraW = camera.width / camera.zoom;
             const cameraH = camera.height / camera.zoom;
             // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);

@@ -179,11 +179,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain = new Terrain(sprite, this);
             // terrain.setRenderable(true);
         } else {
-            return;
+            terrain.model = sprite;
         }
-        // TODO update terrain
+        this.addMap(sprite);
         this.mTerrains.set(terrain.id || 0, terrain);
-        // this.roomService.blocks.add(terrain);
         return terrain;
     }
 

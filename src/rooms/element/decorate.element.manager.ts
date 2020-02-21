@@ -12,14 +12,6 @@ export class DecorateElementManager extends ElementManager {
     super(room);
   }
 
-  public remove(id: number): IElement {
-    const ele = super.remove(id);
-    if (ele) {
-      this.removeMap(ele.model);
-    }
-    return ele;
-  }
-
   protected onSync(packet: PBpacket) {
     const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
     if (content.nodeType !== NodeType.ElementNodeType) {
@@ -35,12 +27,6 @@ export class DecorateElementManager extends ElementManager {
             this.addMap(sp);
         }
     }
-}
-
-  protected _add(sprite: ISprite): Element {
-    const ele = super._add(sprite);
-    this.addMap(sprite);
-    return ele;
   }
 
   protected addMap(sprite: ISprite) {
