@@ -1,7 +1,7 @@
 import { ResUtils, Url } from "../../utils/resUtil";
 
 export class FallEffect extends Phaser.GameObjects.Container {
-    private mDisplay: Phaser.GameObjects.Sprite | EnableDisplay;
+    private mDisplay: DisableDisplay | EnableDisplay;
     private mEnable: boolean;
     constructor(scene: Phaser.Scene) {
         super(scene);
@@ -38,10 +38,11 @@ export class FallEffect extends Phaser.GameObjects.Container {
     }
 
     private showDisable() {
-        this.mDisplay = this.scene.make.sprite({
-            key: "fall_effect",
-            frame: "forbid"
-        }, false).setScale(0.5);
+        // this.mDisplay = this.scene.make.sprite({
+        //     key: "fall_effect",
+        //     frame: "forbid"
+        // }, false).setScale(0.5);
+        this.mDisplay = new DisableDisplay(this.scene, "fall_effect");
         this.add(this.mDisplay);
     }
 
@@ -125,5 +126,26 @@ class EnableDisplay extends Phaser.GameObjects.Container {
         };
         this.scene.anims.create(ellipseConfig);
         this.mEllipse.play("fill_effect_ellipse");
+    }
+}
+
+class DisableDisplay extends Phaser.GameObjects.Container {
+    private mImage: Phaser.GameObjects.Image;
+    private mEllipse: Phaser.GameObjects.Image;
+    constructor(scene: Phaser.Scene, key: string) {
+        super(scene);
+        this.mImage = scene.make.image({
+            key,
+            y: -10,
+            frame: "disable",
+        }, false).setScale(0.5);
+        this.add(this.mImage);
+
+        this.mEllipse = scene.make.image({
+            key,
+            frame: "forbid"
+        }, false).setScale(0.5);
+
+        this.add([this.mImage, this.mEllipse]);
     }
 }

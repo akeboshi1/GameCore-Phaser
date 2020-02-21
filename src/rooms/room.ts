@@ -189,7 +189,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            camera.zoom = window.devicePixelRatio * (isMobile(this.scene.game) ? 0.9 : 1);
+            camera.zoom = window.devicePixelRatio;
             const cameraW = camera.width / camera.zoom;
             const cameraH = camera.height / camera.zoom;
             // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
