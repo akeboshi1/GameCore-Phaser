@@ -33,7 +33,6 @@ export class MarketPanel extends Panel {
     this.setTween(false);
     this.mSubTabs = [];
     this.mTabs = [];
-    this.dpr = Math.floor(window.devicePixelRatio || 1);
   }
 
   public resize(w: number, h: number) {

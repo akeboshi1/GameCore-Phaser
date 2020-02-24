@@ -28,7 +28,7 @@ export class MainUIScene extends Phaser.Scene {
     this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17" } });
     this.fps.setStroke("0x0", 1);
     this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
-    this.sizeTF.setFontSize(20);
+    this.sizeTF.setFontSize(20 * window.devicePixelRatio);
     this.sizeTF.setStroke("#0", 3);
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
@@ -80,8 +80,8 @@ export class MainUIScene extends Phaser.Scene {
     }
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-    this.sizeTF.text = "orientation:" + this.mRoom.world.orientation + "\n" + "width:" + this.mRoom.world.getSize().width +
-      "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "moveStyle:" + this.mRoom.world.moveStyle;
+    this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +
+      "\n" + "height:" + this.mRoom.world.getSize().height + `\npixelRatio: ${window.devicePixelRatio} \nscene Scale: ${Math.ceil(window.devicePixelRatio)} \nuiscale：${Math.floor(window.devicePixelRatio || 1)}`;
   }
 
   getKey(): string {
