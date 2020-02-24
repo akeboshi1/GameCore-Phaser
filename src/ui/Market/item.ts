@@ -16,7 +16,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, x, y) {
     super(scene, x, y);
-    this.dpr = window.devicePixelRatio;
+    this.dpr = Math.floor(window.devicePixelRatio || 1);
     this.mBackground = this.scene.make.image({
       key: "market",
       frame: "border.png"
@@ -43,7 +43,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       x: 25 * this.dpr,
       y: 17 * this.dpr,
       key: "market",
-      frame: "price_bg.png"
+      frame: "price_border.png"
     }, false);
 
     this.mCoinIcon = this.scene.make.image({

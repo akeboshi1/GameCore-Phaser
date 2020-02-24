@@ -1,8 +1,8 @@
 import { ICreateRole } from "../role/create.role";
-import { LoginScene } from "./login";
 import { LoadingScene } from "./loading";
+import { BasicScene } from "./basic.scene";
 
-export class CreateRoleScene extends Phaser.Scene {
+export class CreateRoleScene extends BasicScene {
   private role: ICreateRole;
   constructor() {
     super({ key: CreateRoleScene.name });

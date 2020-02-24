@@ -16,7 +16,7 @@ export class Terrain extends BlockObject implements IElement {
     protected mDisplay: TerrainDisplay | undefined;
     protected mAnimationName: string;
     protected mModel: ISprite;
-    protected mBlockable: boolean = false;
+    protected mBlockable: boolean = true;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super();

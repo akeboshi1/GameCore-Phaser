@@ -3,8 +3,10 @@ import { Room } from "../rooms/room";
 import { JoyStickManager } from "../game/joystick.manager";
 import { Size } from "../utils/size";
 import { DebugLoggerMediator } from "../ui/debuglog/debug.logger.mediator";
+import { Font } from "../utils/font";
+import { BasicScene } from "./basic.scene";
 
-export class MainUIScene extends Phaser.Scene {
+export class MainUIScene extends BasicScene {
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];
@@ -25,10 +27,13 @@ export class MainUIScene extends Phaser.Scene {
   }
 
   public create() {
-    this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17" } });
+    this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17", } });
     this.fps.setStroke("0x0", 1);
+    this.fps.setFontFamily(Font.DEFULT_FONT);
+    this.fps.setFontSize(20 * window.devicePixelRatio);
     this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
     this.sizeTF.setFontSize(20 * window.devicePixelRatio);
+    this.sizeTF.setFontFamily(Font.DEFULT_FONT);
     this.sizeTF.setStroke("#0", 3);
     const world = this.mRoom.world;
     if (world.game.device.os.desktop) {

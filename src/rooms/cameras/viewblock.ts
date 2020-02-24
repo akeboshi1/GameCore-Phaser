@@ -52,7 +52,7 @@ export class Viewblock {
             // }
             this.mElements.forEach((ele) => {
                const pos = ele.getPosition45();
-               ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1000);
+               ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 0);
             });
         }
         this.mInCamera = newStat;

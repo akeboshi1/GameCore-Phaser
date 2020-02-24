@@ -1,9 +1,10 @@
 import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
+import { BasicScene } from "./basic.scene";
 
 // 游戏正式运行用 Phaser.Scene
-export class PlayScene extends Phaser.Scene {
+export class PlayScene extends BasicScene {
   protected mRoom: IRoomService;
   constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
     super(config || { key: PlayScene.name });
@@ -39,6 +40,11 @@ export class PlayScene extends Phaser.Scene {
     if (this.mRoom) {
       this.mRoom.update(time, delta);
     }
+  }
+
+  setViewPort(x: number, y: number, width: number, height: number) {
+    super.setViewPort(x, y, width, height);
+    this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
   }
 
   getKey(): string {

@@ -166,11 +166,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         let terrain = this.mTerrains.get(sprite.id);
         if (!terrain) {
             terrain = new Terrain(sprite, this);
-            // terrain.setRenderable(true);
         } else {
             terrain.model = sprite;
         }
-        this.addMap(sprite);
+        // this.addMap(sprite);
         this.mTerrains.set(terrain.id || 0, terrain);
         return terrain;
     }

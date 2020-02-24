@@ -46,17 +46,17 @@
                 });
             }
             else {
-                if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {
-                    window.addEventListener('orientationchange', (e) => {
-                        // window.orientation === 0 为竖屏，1为横屏
-                        app.onOrientationChange(window.orientation, window.innerWidth, window.innerHeight);
-                    });
-                }
-                else {
+                // if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {
+                //     window.addEventListener('orientationchange', (e) => {
+                //         // window.orientation === 0 为竖屏，1为横屏
+                //         app.onOrientationChange(window.orientation, window.innerWidth, window.innerHeight);
+                //     });
+                // }
+                // else {
                     window.addEventListener("resize", (e) => {
                         app.onResize(window.innerWidth, window.innerHeight);
                     });
-                }
+                // }
             }
             // if (window.orientation) {
             //     window.addEventListener('deviceorientation', (e) => {

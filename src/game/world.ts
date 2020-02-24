@@ -165,11 +165,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public resize(width: number, height: number) {
-        const w = width; // * window.devicePixelRatio;
-        const h = height; // * window.devicePixelRatio;
-        // if (this.mGame) {
-        //     this.mGame.scale.resize(w, h);
-        // }
+        const w = width * window.devicePixelRatio;
+        const h = height * window.devicePixelRatio;
+        if (this.mGame) {
+            this.mGame.scale.resize(w, h);
+            const scenes = this.mGame.scene.scenes;
+            for (const scene of scenes) {
+                scene.setViewPort(0, 0, w, h);
+                // scene.cameras.main.setViewport(0, 0, w, h);
+            }
+        }
         // if (this.mRoomMamager) {
         //     this.mRoomMamager.resize(w, h);
         // }

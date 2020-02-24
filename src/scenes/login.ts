@@ -5,10 +5,10 @@ import { WorldService } from "../game/world.service";
 import { ComboBox, IComboboxRes, ISelectCallUI, ISelectCallItemData } from "../ui/components/comboBox";
 import { Logger } from "../utils/log";
 import { Size } from "../utils/size";
-import { World } from "../game/world";
+import { BasicScene } from "./basic.scene";
 
 // 编辑器用 Phaser.Scene
-export class LoginScene extends Phaser.Scene {
+export class LoginScene extends BasicScene {
     private mCallBack: Function;
     private mConnect: ConnectionService;
     private mTabDic: Map<number, Phaser.GameObjects.Image>;

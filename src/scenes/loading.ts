@@ -1,12 +1,12 @@
 import { WorldService } from "../game/world.service";
 import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
-import { World } from "../game/world";
 import { Url } from "../utils/resUtil";
 import { Logger } from "../utils/log";
+import { BasicScene } from "./basic.scene";
 const LOGO_MARGIN = 25;
 
-export class LoadingScene extends Phaser.Scene {
+export class LoadingScene extends BasicScene {
   private mWorld: WorldService;
   private mRoom: IRoomService;
   private lo: Phaser.GameObjects.Sprite;
