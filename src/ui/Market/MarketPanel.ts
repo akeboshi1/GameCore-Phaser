@@ -50,12 +50,12 @@ export class MarketPanel extends Panel {
 
     this.mTIle.x = centerX;
 
-    let shelfHeight = 430 * this.dpr;
-    if (shelfHeight > height / 2) {
-      shelfHeight = height / 2;
-    }
+    // let shelfHeight = 310 * this.dpr;
+    // if (shelfHeight > height / 2) {
+    //   shelfHeight = height / 2;
+    // }
 
-    this.mShelfContainer.setSize(width, shelfHeight);
+    // this.mShelfContainer.setSize(width, shelfHeight);
     this.mShelfContainer.setPosition(0, height - this.mShelfContainer.height);
 
     this.mSelectItem.setSize(width, height - this.mShelfContainer.height);
@@ -117,9 +117,9 @@ export class MarketPanel extends Panel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    for (let i = 0; i < commodities.length; i++) {
+    for (let i = 0; i < commodities.length + 10; i++) {
       const item = new MarketItem(this.scene, Math.floor(i / 3) * (142 * this.dpr) + (76 * this.dpr), Math.floor(i % 3) * (71 * this.dpr) + 31 * this.dpr);
-      item.setProp(commodities[i]);
+      item.setProp(commodities[0]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
@@ -159,7 +159,7 @@ export class MarketPanel extends Panel {
     this.mShelfContainer = this.scene.make.container({
       x: (w / 2),
       y: h
-    }, false).setSize(w, 430 * this.dpr);
+    }, false).setSize(w, 310 * this.dpr);
     this.add(this.mShelfContainer);
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
