@@ -11,7 +11,6 @@ import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
 import { PlayerState } from "../element/element";
 import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
-import { Logger } from "../../utils/log";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
@@ -22,9 +21,7 @@ export class Actor extends Player implements InputListener {
     protected mInteractive: Interactive;
     private mRoom: IRoomService;
     private mPackage: op_gameconfig.IPackage;
-    private mMovePath: Phaser.GameObjects.Graphics;
     private mMoveTime: number;
-    private mMoveStartTime: number;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.mBlockable = false;
@@ -158,17 +155,11 @@ export class Actor extends Player implements InputListener {
                 x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp
             };
         });
-        this.mMoveStartTime = new Date().getTime();
-        Logger.getInstance().log("astar receive time: ", this.mMoveStartTime - this.mMoveTime, this.mMoveStartTime);
-        Logger.getInstance().log("astar receive latency", this.mRoom.world.clock.medianLatency);
-        Logger.getInstance().log("astar path: ", pathAry);
-        this.drawPath(movePath.path);
+        // this.drawPath(movePath.path);
         super.movePath(movePath);
     }
 
     protected onMoveComplete() {
-        const time = new Date().getTime();
-        Logger.getInstance().log("astar move complete: ", time - this.mMoveStartTime, time);
         if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
@@ -193,22 +184,22 @@ export class Actor extends Player implements InputListener {
     }
 
     private drawPath(pos: op_client.IMovePoint[]) {
-        if (!pos && pos.length > 0) {
-            return;
-        }
-        if (!this.mMovePath) {
-            this.mMovePath = this.mElementManager.scene.make.graphics(undefined, false);
-        }
-        this.mMovePath.clear();
-        this.mMovePath.lineStyle(2, 0xFFFF00);
-        this.mMovePath.moveTo(pos[0].point3f.x, pos[0].point3f.y);
-        let point3f = null;
-        for (const point of pos) {
-            point3f = point.point3f;
-            if (point3f) this.mMovePath.lineTo(point3f.x, point3f.y);
-        }
-        this.mMovePath.strokePath();
-        this.mRoom.addToSurface(<any> this.mMovePath);
+        // if (!pos && pos.length > 0) {
+        //     return;
+        // }
+        // if (!this.mMovePath) {
+        //     this.mMovePath = this.mElementManager.scene.make.graphics(undefined, false);
+        // }
+        // this.mMovePath.clear();
+        // this.mMovePath.lineStyle(2, 0xFFFF00);
+        // this.mMovePath.moveTo(pos[0].point3f.x, pos[0].point3f.y);
+        // let point3f = null;
+        // for (const point of pos) {
+        //     point3f = point.point3f;
+        //     if (point3f) this.mMovePath.lineTo(point3f.x, point3f.y);
+        // }
+        // this.mMovePath.strokePath();
+        // this.mRoom.addToSurface(<any> this.mMovePath);
 
     }
 

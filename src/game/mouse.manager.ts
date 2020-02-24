@@ -88,7 +88,9 @@ export class MouseManager extends PacketHandler {
             events.push(MouseEvent.RightMouseUp);
         }
         if (pointer.isDown === false) {
-            if (pointer.downX === pointer.upX && pointer.downY === pointer.upY) {
+            const diffX = Math.abs(pointer.downX - pointer.upX);
+            const diffY = Math.abs(pointer.downY - pointer.upY);
+            if (diffX < 10 && diffY < 10) {
                 events.push(MouseEvent.Tap);
                 this.tryMove();
                 this.worldService.emitter.emit("Tap", pointer);
@@ -160,6 +162,9 @@ export class MouseManager extends PacketHandler {
     }
 
     private tryMove() {
+        if (!this.mRoom.playerManager) {
+            return;
+        }
         const player = this.mRoom.playerManager.actor;
         if (!player || !player.moveData) {
             return;

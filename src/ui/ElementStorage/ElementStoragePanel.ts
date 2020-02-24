@@ -32,6 +32,7 @@ export class ElementStoragePanel extends Panel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setTween(false);
+        this.dpr /= 2;
     }
 
     show(param?: any) {
@@ -43,10 +44,11 @@ export class ElementStoragePanel extends Panel {
 
     resize(oriention?: number) {
         const size: Size = this.mWorld.getSize();
+        this.setScale(this.dpr);
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.setSize(683 >> 1, 901 >> 1);
-            this.x = size.width - (this.width * this.mWorld.uiScale) - 10;
-            this.y = size.height - this.height * this.mWorld.uiScale >> 1;
+            this.x = size.width - (this.width * this.dpr) - 10;
+            this.y = size.height - this.height * this.dpr >> 1;
 
             this.mBackground.resize(this.width, this.height);
             this.mBackground.x = this.mBackground.width >> 1;
@@ -88,8 +90,8 @@ export class ElementStoragePanel extends Panel {
             this.mSearchInput.x = 270;
             this.mSearchInput.y = 33;
 
-            this.x = (size.width - this.width * this.mWorld.uiScale >> 1);
-            this.y = size.height - this.height * this.mWorld.uiScale - 10;
+            this.x = (size.width - this.width * this.dpr >> 1);
+            this.y = size.height - this.height * this.dpr - 10;
 
             this.mDragBtn.x = this.width >> 1;
             this.mDragBtn.y = -this.mDragBtn.height >> 1;
@@ -133,9 +135,9 @@ export class ElementStoragePanel extends Panel {
         const size: Size = this.mWorld.getSize();
         let props = null;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            props = { x: size.width - (this.width * this.mWorld.uiScale) - 10 };
+            props = { x: size.width - (this.width * this.dpr) - 10 };
         } else {
-            props = {y: size.height - this.height * this.mWorld.uiScale - 10};
+            props = {y: size.height - this.height * this.dpr - 10};
         }
         this.scene.tweens.add({
             targets: this,

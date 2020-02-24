@@ -464,7 +464,6 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected createDisplay(): ElementDisplay {
-        Logger.getInstance().log("create terrain display====>");
         if (!this.mDisplayInfo) {
             Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
             return;

@@ -26,6 +26,7 @@ export class MainUIScene extends Phaser.Scene {
 
   public create() {
     this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17" } });
+    this.fps.setStroke("0x0", 1);
     this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
     this.sizeTF.setFontSize(20);
     this.sizeTF.setStroke("#0", 3);

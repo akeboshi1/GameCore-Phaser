@@ -119,6 +119,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.onEnableEditModeHandler
                 );
                 this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
+                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             }
         }
     }
@@ -189,7 +190,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            camera.zoom = window.devicePixelRatio;
+            // camera.zoom = Math.ceil(window.devicePixelRatio);
             const cameraW = camera.width / camera.zoom;
             const cameraH = camera.height / camera.zoom;
             // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
@@ -510,15 +511,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private onTapHandler(pointer: Phaser.Input.Pointer) {
-        if (this.mWorld.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+    private onMovePathHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
+        const status = content.pathStatus;
+        if (!status) {
             return;
         }
-        const enable = this.moveable(new  Pos(pointer.worldX, pointer.worldY));
         const fall = new FallEffect(this.scene);
-        fall.show(enable);
-        fall.setPosition(pointer.worldX, pointer.worldY);
+        const pos = content.targetPos;
+        fall.show(status);
+        fall.setPosition(pos.x, pos.y);
         this.addToSceneUI(fall);
+    }
+
+    private onTapHandler(pointer: Phaser.Input.Pointer) {
+        // if (this.mWorld.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+        //     return;
+        // }
+        // const enable = this.moveable(new  Pos(pointer.worldX, pointer.worldY));
+        // const fall = new FallEffect(this.scene);
+        // fall.show(enable);
+        // fall.setPosition(pointer.worldX, pointer.worldY);
+        // this.addToSceneUI(fall);
     }
 
     private enterRoom() {

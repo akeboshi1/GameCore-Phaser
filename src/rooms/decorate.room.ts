@@ -56,15 +56,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     constructor(manager: IRoomManager) {
         super();
         this.world = manager.world;
-        this.mCameraService = new CamerasManager(this);
-        if (this.world) {
-            const size = this.world.getSize();
-            if (size) {
-                this.mCameraService.resize(size.width, size.height);
-            } else {
-                throw new Error(`World::getSize undefined!`);
-            }
-        }
+        // if (this.world) {
+        //     const size = this.world.getSize();
+        //     if (size) {
+        //         this.mCameraService.resize(size.width, size.height);
+        //     } else {
+        //         throw new Error(`World::getSize undefined!`);
+        //     }
+        // }
         if (this.connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE, this.onSelectSpriteHandler);
@@ -101,6 +100,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         for (let i = 0; i < rows; i++) {
             this.mMap[i] = new Array(cols).fill(0);
         }
+        this.mCameraService = new CamerasManager(this);
 
         if (!this.world.game.scene.getScene(LoadingScene.name))
             this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
@@ -189,9 +189,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
-        this.mCameraService.camera = this.scene.cameras.main;
         // const mainCameras = this.mScene.cameras.main;
-        this.mCameraService.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        const camera = this.scene.cameras.main;
+        this.mCameraService.camera = camera;
+        const cameraW = camera.width / camera.zoom;
+        const cameraH = camera.height / camera.zoom;
+        // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
+        this.mCameraService.setBounds(-cameraW >> 1, -cameraH >> 1, this.mSize.sceneWidth + cameraW, this.mSize.sceneHeight + cameraH);
+        // this.mCameraService.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
         this.world.changeRoom(this);
         const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
@@ -361,7 +366,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onGameobjectUpHandler(pointer, gameobject) {
-        this.addPointerMoveHandler();
+        // this.addPointerMoveHandler();
         const com = gameobject.parentContainer;
         if (!com) {
             return;

@@ -5,7 +5,6 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
-import { Logger } from "../../utils/log";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -135,22 +134,11 @@ export class Player extends Element {
     }
 
     protected onMovePathPointComplete(params) {
-        if (!this.mElementManager || !this.mElementManager.connection) {
+        if (!this.mMoveData.posPath) {
             return;
         }
         const posPath = this.mMoveData.posPath;
         posPath.shift();
-        const position = this.getPosition();
-        Logger.getInstance().log("astar move to: ", position, " duration: ", params.duration);
-        // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
-        // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = packet.content;
-        // const point = op_def.PBPoint3f.create();
-        // point.x = position.x;
-        // point.y = position.y;
-        // point.z = position.z;
-        // content.point = point;
-        // content.timestemp = this.mElementManager.roomService.now();
-        // this.mElementManager.connection.send(packet);
     }
 
     protected get offsetY(): number {

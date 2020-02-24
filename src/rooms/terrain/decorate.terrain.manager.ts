@@ -64,6 +64,9 @@ export class DecorateTerrainManager extends TerrainManager {
 
   protected setMap(sprite: ISprite, type: number) {
     const displayInfo = sprite.displayInfo;
+    if (!displayInfo) {
+      return;
+    }
     const aniName = sprite.currentAnimationName || displayInfo.animationName;
     const collisionArea = displayInfo.getCollisionArea(aniName);
     const walkArea = displayInfo.getWalkableArea(aniName);

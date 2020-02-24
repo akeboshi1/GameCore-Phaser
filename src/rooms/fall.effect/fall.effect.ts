@@ -1,14 +1,16 @@
 import { ResUtils, Url } from "../../utils/resUtil";
+import { op_def } from "pixelpai_proto";
 
 export class FallEffect extends Phaser.GameObjects.Container {
     private mDisplay: DisableDisplay | EnableDisplay;
+    private mStatus: op_def.PathReachableStatus;
     private mEnable: boolean;
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
 
-    public show(enable: boolean) {
-        this.mEnable = enable;
+    public show(status: op_def.PathReachableStatus) {
+        this.mStatus = status;
         this.load();
     }
 
@@ -52,7 +54,7 @@ export class FallEffect extends Phaser.GameObjects.Container {
         // }, false);
         // this.add(this.mDisplay);
 
-        if (this.mEnable) {
+        if (this.mStatus === op_def.PathReachableStatus.PATH_REACHABLE_AREA || this.mStatus === op_def.PathReachableStatus.PATH_REACHABLE_WITH_INTERACTION_SPRITE) {
             this.showEnable();
         } else {
             this.showDisable();
@@ -136,7 +138,7 @@ class DisableDisplay extends Phaser.GameObjects.Container {
         super(scene);
         this.mImage = scene.make.image({
             key,
-            y: -10,
+            y: -6,
             frame: "disable",
         }, false).setScale(0.5);
         this.add(this.mImage);

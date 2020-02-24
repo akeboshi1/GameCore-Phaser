@@ -96,23 +96,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-        Logger.getInstance().log("TCL: TerrainManager -> onAdd-----content", content);
         const sprites = content.sprites;
         const type = content.nodeType;
         const pf: op_def.IPacket = content.packet;
 
         // this.mRoom.mCurRoom
-        Logger.getInstance().log("TCL: TerrainManager -> this.mRoom.mCurRoom", this.mRoom.world.roomManager.currentRoom);
-
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-
-        // const currentRoomId = this.mRoom.world.roomManager.currentRoom.id;
-
-        // const terrainCollection = this.mRoom.world.elementStorage.getTerrainCollection();
-
-        // const curRoomTerrainCol = terrainCollection.get(currentRoomId);
 
         let point: op_def.IPBPoint3f;
         const ids = [];
@@ -131,8 +122,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             }
         }
         this.fetchDisplay(ids);
-
-        Logger.getInstance().log("sprites =====>", sprites);
 
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
             this.mListener.onFullPacketReceived(type);
@@ -260,6 +249,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     protected setMap(sprite: ISprite, type: number) {
         const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
         const aniName = sprite.currentAnimationName || displayInfo.animationName;
         const collisionArea = displayInfo.getCollisionArea(aniName);
         const walkArea = displayInfo.getWalkableArea(aniName);
@@ -275,9 +267,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const pos = sprite.pos;
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
-                if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-                    this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
-                }
+                // if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
+                    // this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+                // }
             }
         }
     }

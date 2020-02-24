@@ -91,7 +91,7 @@ export class CreateRolePanel extends Panel {
 
     this.mNextPageBtn.x = width - 150;
 
-    this.mRandomBtn.x = (this.mInputTextBg.width >> 1) + centerX - this.mRandomBtn.width;
+    // this.mRandomBtn.x = (this.mInputTextBg.width >> 1) + centerX - this.mRandomBtn.width;
   }
 
   init() {
@@ -126,7 +126,7 @@ export class CreateRolePanel extends Panel {
     });
     this.add(this.mInputTextBg);
 
-    this.inputText = new InputText(this.scene, size.width >> 1, 350 * this.dpr, 270 * this.dpr, 80, {
+    this.inputText = new InputText(this.scene, size.width >> 1, 350 * this.dpr, 160 * this.dpr, 80, {
       type: "input",
       fontSize: 18 * this.dpr + "px",
       color: "#717171",

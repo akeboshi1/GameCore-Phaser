@@ -20,6 +20,7 @@ export class PlayScene extends Phaser.Scene {
 
   public create() {
     const scene = this.game.scene.getScene(MainUIScene.name);
+    this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
     if (!scene.scene.isActive()) {
       this.scene.launch(MainUIScene.name, {
         room: this.mRoom
