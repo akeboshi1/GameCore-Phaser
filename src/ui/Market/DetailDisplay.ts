@@ -22,8 +22,8 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       if (this.scene.textures.exists(display.texturePath)) {
         this.onCompleteHandler();
       } else {
-        this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
+        this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
         this.scene.load.start();
       }
     }

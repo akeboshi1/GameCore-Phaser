@@ -50,7 +50,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       y: 0,
       width: 160,
       height: 80,
-      fontSize: "52px",
+      fontSize: 16 * Math.round(window.devicePixelRatio || 1),
       color: "#666666",
       align: "center",
       type: "number",

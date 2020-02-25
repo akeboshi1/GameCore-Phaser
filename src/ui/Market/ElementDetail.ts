@@ -29,7 +29,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.key = $key;
     this.mWorld = world;
 
-    this.dpr = Math.floor(window.devicePixelRatio || 1);
+    this.dpr = Math.round(window.devicePixelRatio || 1);
 
     this.setPosition(0, 0);
 
@@ -150,7 +150,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const centerX = this.scene.cameras.main.centerX;
     this.mBackground.x = this.scene.cameras.main.centerX;
 
-    this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 18 * this.dpr;
+    this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 10 * this.dpr;
     this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.height / 2 - 12 * this.dpr;
 
     let counterX = this.mBuyBtn.x - this.mBuyBtn.width / 2 - this.mCounter.width / 2 -  20 * this.dpr;
@@ -161,7 +161,9 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
-    this.mDetailBubbleContainer.x = this.mCounter.x - this.mCounter.width / 2 - this.mDetailBubbleContainer.width - 12 * this.dpr;
+
+    this.mDetailBubbleContainer.x = 10 * this.dpr;
+    // this.mDetailBubbleContainer.x = this.mCounter.x - this.mCounter.width / 2 - this.mDetailBubbleContainer.width - 12 * this.dpr;
     // this.mDetailBubbleContainer.x = centerX + this.mDetailBubbleContainer.width / 2 + 57 * this.dpr;
 
     this.mPriceContainer.x = this.mCounter.x;

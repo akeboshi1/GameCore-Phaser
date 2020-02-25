@@ -16,7 +16,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, x, y) {
     super(scene, x, y);
-    this.dpr = Math.floor(window.devicePixelRatio || 1);
+    this.dpr = Math.round(window.devicePixelRatio || 1);
     this.mBackground = this.scene.make.image({
       key: "market",
       frame: "border.png"
@@ -28,7 +28,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }, false);
     this.mBorder.x = -37 * this.dpr;
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = window.devicePixelRatio;
+    this.mPropImage.scale = this.dpr;
 
     this.mNickName = this.scene.make.text({
       y: -24 * this.dpr,

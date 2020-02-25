@@ -91,8 +91,7 @@ export class MouseManager extends PacketHandler {
             const diffX = Math.abs(pointer.downX - pointer.upX);
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
-                events.push(MouseEvent.Tap);
-                this.tryMove();
+                // events.push(MouseEvent.Tap);
                 this.worldService.emitter.emit("Tap", pointer);
             }
         }
@@ -161,55 +160,4 @@ export class MouseManager extends PacketHandler {
         clearTimeout(this.mDownTime);
     }
 
-    private tryMove() {
-        if (!this.mRoom.playerManager) {
-            return;
-        }
-        const player = this.mRoom.playerManager.actor;
-        if (!player || !player.moveData) {
-            return;
-        }
-        if (this.mRoom.world.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
-            return;
-        }
-        if (player) {
-            Logger.getInstance().log("astar actor position: ", player.getPosition());
-            // player.moveTime = time;
-            // Logger.getInstance().log("astar send time: ", time);
-        }
-        const moveData = player.moveData;
-        const pos = moveData.posPath;
-        if (!pos || pos.length < 0) {
-            return;
-        }
-        const playerPosition = player.getPosition();
-        const position = op_def.PBPoint3f.create();
-        position.x = playerPosition.x;
-        position.y = playerPosition.y;
-
-        const nextPosition = op_def.PBPoint3f.create();
-        nextPosition.x = pos[0].x;
-        nextPosition.y = pos[0].y;
-
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
-        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
-        conten.timestemp = this.mRoom.now();
-        conten.position = position;
-        conten.nextPoint = nextPosition;
-        this.mRoom.connection.send(packet);
-    }
-
-    private selectedElement(pointer, gameobject) {
-        const com = gameobject.parentContainer;
-        if (!com) {
-            return;
-        }
-        if (!(com instanceof DisplayObject)) {
-            return;
-        }
-        if (com instanceof TerrainDisplay) {
-            return;
-        }
-        // TODO Enter decorate mode
-    }
 }

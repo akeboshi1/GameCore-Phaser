@@ -26,6 +26,7 @@ import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
 import { isMobile } from "../utils/device";
+import { IPoint } from "game-capsule/lib/helpers";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -511,28 +512,79 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
+    private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+        const fall = new FallEffect(this.scene);
+        fall.show(status);
+        fall.setPosition(pos.x, pos.y);
+        this.addToSceneUI(fall);
+    }
+
     private onMovePathHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
         const status = content.pathStatus;
         if (!status) {
             return;
         }
-        const fall = new FallEffect(this.scene);
-        const pos = content.targetPos;
-        fall.show(status);
-        fall.setPosition(pos.x, pos.y);
-        this.addToSceneUI(fall);
+        this.addFillEffect(content.targetPos, status);
+    }
+
+    private move(x: number, y: number) {
+        if (this.world.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+            return;
+        }
+        if (!this.mPlayerManager) {
+            return;
+        }
+        const actor = this.mPlayerManager.actor;
+        if (!actor) {
+            return;
+        }
+        const pos45 = actor.getPosition45();
+        const click45 = this.transformTo45(new Pos(x, y));
+        if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
+            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+            return;
+        }
+
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
+        content.mouseEvent = [9];
+        content.point3f = { x, y };
+        this.connection.send(pkt);
+
+        this.tryMove();
+    }
+
+    private tryMove() {
+        const player = this.mPlayerManager.actor;
+        if (!player) {
+            return;
+        }
+        const moveData = player.moveData;
+        const pos = moveData.posPath;
+        if (!pos || pos.length < 0) {
+            return;
+        }
+
+        const playerPosition = player.getPosition();
+        const position = op_def.PBPoint3f.create();
+        position.x = playerPosition.x;
+        position.y = playerPosition.y;
+
+        const nextPosition = op_def.PBPoint3f.create();
+        nextPosition.x = pos[0].x;
+        nextPosition.y = pos[0].y;
+
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
+        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
+        conten.timestemp = this.now();
+        conten.position = position;
+        conten.nextPoint = nextPosition;
+        this.connection.send(packet);
     }
 
     private onTapHandler(pointer: Phaser.Input.Pointer) {
-        // if (this.mWorld.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
-        //     return;
-        // }
-        // const enable = this.moveable(new  Pos(pointer.worldX, pointer.worldY));
-        // const fall = new FallEffect(this.scene);
-        // fall.show(enable);
-        // fall.setPosition(pointer.worldX, pointer.worldY);
-        // this.addToSceneUI(fall);
+        this.move(pointer.worldX, pointer.worldY);
     }
 
     private enterRoom() {

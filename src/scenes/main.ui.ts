@@ -86,7 +86,7 @@ export class MainUIScene extends BasicScene {
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
     this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +
-      "\n" + "height:" + this.mRoom.world.getSize().height + `\npixelRatio: ${window.devicePixelRatio} \nscene Scale: ${Math.ceil(window.devicePixelRatio)} \nuiscale：${Math.floor(window.devicePixelRatio || 1)}`;
+      "\n" + "height:" + this.mRoom.world.getSize().height + `\npixelRatio: ${window.devicePixelRatio} \nscene Scale: ${Math.ceil(window.devicePixelRatio)} \nuiscale：${Math.round(window.devicePixelRatio || 1)}`;
   }
 
   getKey(): string {
