@@ -15,10 +15,13 @@ import { Animation } from "../rooms/display/animation";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
+    loadSceneConfig(sceneId: number)
     add(obj: IFramesModel | IDragonbonesModel): void;
     getObject(id: number): IFramesModel | IDragonbonesModel;
     getTerrainCollection();
     getPalette(id: number): IFramesModel;
+    on(...args: any[])
+    off(...args: any[])
 }
 
 interface IDisplayRef {
@@ -33,6 +36,20 @@ export class ElementStorage implements IElementStorage {
     private mPaletteModels = new Map<number, FramesModel>();
     private _terrainCollection = new Map<number, TerrainCollectionNode>();
 
+    private event: Phaser.Events.EventEmitter;
+
+    constructor() {
+        this.event = new Phaser.Events.EventEmitter();
+    }
+
+    public on(event: string | symbol, fn: Function, context?: any) {
+        this.event.on(event, fn, context);
+    }
+
+    public off(event: string | symbol, fn: Function, context?: any) {
+        this.event.off(event, fn, context);
+    }
+
     public setGameConfig(config: Lite) {
         Logger.getInstance().log("TCL: ElementStorage -> config", config);
         if (!config) {
@@ -46,7 +63,7 @@ export class ElementStorage implements IElementStorage {
                 displayModel = this.mModels.get(obj.id);
                 if (!displayModel) {
                     const anis = [];
-                    const eleAnis = (<ElementNode> obj).animations;
+                    const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
                         anis.push(new Animation(ani));
@@ -91,6 +108,10 @@ export class ElementStorage implements IElementStorage {
         for (const scene of config.root.children) {
             this._terrainCollection.set(scene.id, (scene as SceneNode).terrainCollection);
         }
+    }
+
+    public loadSceneConfig(sceneId: number) {
+        this.event.emit("SCENE_PI_LOAD_COMPELETE", sceneId)
     }
 
     public add(obj: FramesModel | DragonbonesModel) {

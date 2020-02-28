@@ -4,8 +4,9 @@ import { Room, IRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
-import {EditorRoom} from "./editor.room";
-import {DecorateRoom} from "./decorate.room";
+import { EditorRoom } from "./editor.room";
+import { DecorateRoom } from "./decorate.room";
+import { Tool } from "../utils/tool";
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
@@ -21,6 +22,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     protected mWorld: WorldService;
     private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
+    sceneConfigUrls: Map<number, string> = new Map()
 
     constructor(world: WorldService) {
         super();
@@ -28,6 +30,17 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
+    }
+
+    public initSceneConfigUrl(urls: string[]) {
+        for (const url of urls) {
+            const sceneId = Tool.baseName(url)
+            this.sceneConfigUrls.set(parseInt(sceneId), url)
+        }
+    }
+
+    public getSceneConfigUrl(sceneId: number) {
+        return this.sceneConfigUrls.get(sceneId)
     }
 
     public addPackListener() {
@@ -111,7 +124,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const vw = scene;
         let room: Room;
         if (this.hasRoom(vw.scene.id)) {
-            room = <Room> this.getRoom(vw.scene.id);
+            room = <Room>this.getRoom(vw.scene.id);
+            // load this scene config in gameConfig
+            this.world.elementStorage.loadSceneConfig(vw.scene.id)
         } else {
             if (this.mCurRoom) {
                 this.leaveScene(this.mCurRoom);
@@ -172,7 +187,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const scene = content.scene;
         switch (scene.sceneType) {
-            case  op_def.SceneTypeEnum.NORMAL_SCENE_TYPE:
+            case op_def.SceneTypeEnum.NORMAL_SCENE_TYPE:
                 this.onEnterScene(content);
                 break;
             case op_def.SceneTypeEnum.EDIT_SCENE_TYPE:
@@ -186,7 +201,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     get currentRoom(): Room {
-        return <Room> this.mCurRoom;
+        return <Room>this.mCurRoom;
     }
 
     get connection(): ConnectionService {

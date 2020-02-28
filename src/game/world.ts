@@ -40,6 +40,7 @@ import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
 import * as path from "path";
 import { PI_EXTENSION_REGEX } from "../const/constants";
+import { Tool } from "../utils/tool";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -62,6 +63,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mRoleManager: RoleManager;
     private isFullStart: boolean = false;
     private mOrientation: number = 0;
+    sceneConfigUrls: Map<number, string> = new Map()
+
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -91,6 +94,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
+
+        this.elementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig)
+
 
         this.mGameEmitter = new Phaser.Events.EventEmitter();
         this.mRoomMamager = new RoomManager(this);
@@ -561,6 +567,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
         this.mMoveStyle = content.moveStyle;
+
+        this.initSceneConfigUrl(configUrls)
+
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
             this.createGame(content.keyEvents);
@@ -572,6 +581,28 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame(content.keyEvents);
                 // Logger.getInstance().debug("created game suc");
+            })
+            .catch((err) => {
+                Logger.getInstance().log(err);
+            });
+    }
+
+    public initSceneConfigUrl(urls: string[]) {
+        for (const url of urls) {
+            const sceneId = Tool.baseName(url)
+            this.sceneConfigUrls.set(parseInt(sceneId), url)
+        }
+    }
+
+    public getSceneConfigUrl(sceneId: number) {
+        return this.sceneConfigUrls.get(sceneId)
+    }
+
+
+    public loadSceneConfig(sceneId: number) {
+        const url = this.getSceneConfigUrl(sceneId)
+        this.loadGameConfig([url])
+            .then((gameConfig: Lite) => {
             })
             .catch((err) => {
                 Logger.getInstance().log(err);
@@ -720,6 +751,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             Logger.getInstance().log("start decodeConfig");
             return this.decodeConfigs(reqs);
         });
+    }
+
+    private makeupConfigsWithScene() {
+
     }
 
     private decodeConfigs(reqs: any[]): Promise<Lite> {
