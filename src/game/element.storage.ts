@@ -15,7 +15,7 @@ import { Animation } from "../rooms/display/animation";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
-    loadSceneConfig(sceneId: number)
+    setSceneConfig(config: Lite)
     add(obj: IFramesModel | IDragonbonesModel): void;
     getObject(id: number): IFramesModel | IDragonbonesModel;
     getTerrainCollection();
@@ -55,6 +55,29 @@ export class ElementStorage implements IElementStorage {
         if (!config) {
             return;
         }
+
+        for (const peer of config.root.palette.peers) {
+            const { key, entity } = peer;
+            const terrain = entity as TerrainNode;
+            const terrainModel = this.mModels.get(entity.id);
+            if (!terrainModel) {
+                const frameModel = new FramesModel({
+                    id: entity.id,
+                    sn: entity.sn,
+                    animations: {
+                        defaultAnimationName: terrain.animations.defaultAnimationName,
+                        display: terrain.animations.display,
+                        animationData: terrain.animations.animationData.map((ani) => new Animation(ani))
+                    }
+                });
+                this.mPaletteModels.set(entity.id, frameModel);
+            }
+        }
+
+
+    }
+
+    public setSceneConfig(config) {
         const objs = config.objectsList;
         let displayModel = null;
         // TODO Lite deserialize可能会有个别Display link失败
@@ -87,31 +110,9 @@ export class ElementStorage implements IElementStorage {
             }
         }
 
-        for (const peer of config.root.palette.peers) {
-            const { key, entity } = peer;
-            const terrain = entity as TerrainNode;
-            const terrainModel = this.mModels.get(entity.id);
-            if (!terrainModel) {
-                const frameModel = new FramesModel({
-                    id: entity.id,
-                    sn: entity.sn,
-                    animations: {
-                        defaultAnimationName: terrain.animations.defaultAnimationName,
-                        display: terrain.animations.display,
-                        animationData: terrain.animations.animationData.map((ani) => new Animation(ani))
-                    }
-                });
-                this.mPaletteModels.set(entity.id, frameModel);
-            }
-        }
-
         for (const scene of config.root.children) {
             this._terrainCollection.set(scene.id, (scene as SceneNode).terrainCollection);
         }
-    }
-
-    public loadSceneConfig(sceneId: number) {
-        this.event.emit("SCENE_PI_LOAD_COMPELETE", sceneId)
     }
 
     public add(obj: FramesModel | DragonbonesModel) {
