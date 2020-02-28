@@ -93,8 +93,8 @@ export class DecoratePanel extends Panel {
         // this.mArrow5.on("pointerup", this.onRightDownHandler, this);
         // this.mArrow7 = this.createImage(this.resKey, "arrow_7.png", 300, 100).setOrigin(0, 0);
         // this.mArrow7.on("pointerup", this.onRightUpHandler, this);
-        const w = this.scene.cameras.main.width / this.scene.cameras.main.zoom;
-        const h = this.scene.cameras.main.height / this.scene.cameras.main.zoom;
+        const w = this.scene.cameras.main.width / this.scale;
+        const h = this.scene.cameras.main.height / this.scale;
 
         this.mMainMenus = [];
         this.mMenuContainer = this.scene.make.container({
@@ -145,6 +145,8 @@ export class DecoratePanel extends Panel {
             frame: "extend_btn.png"
         }, false).setInteractive().setOrigin(0);
 
+        const zoom = this.scale;
+
         // this.add(this.mMenuGroup);
         // this.mMenuGroup.addMultiple([this.mOkBtn, this.mTurnBtn, this.mRecycleBtn, this.mCancelBtn])
 
@@ -154,22 +156,22 @@ export class DecoratePanel extends Panel {
         this.mMenuContainer.add([this.mOkBtn, this.mTurnBtn, this.mRecycleBtn, this.mCancelBtn]);
         this.mSubMenus.add([this.mHorizontalBtn, this.mMoveBtn, this.mRepeatBtn, this.mExtendBtn]);
         // this.add(this.mSubMenus);
-        let mainMenuW = w - 55 * this.dpr * 2;
+        let mainMenuW = w - 55 * this.dpr * this.mWorld.uiScale * 2;
         this.mMenuContainer.x = -mainMenuW >> 1;
         const list = this.mMenuContainer.list;
         list.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.width);
-        let margin = mainMenuW / (list.length - 1);
+        let margin = mainMenuW / (list.length - 1) / zoom;
         for (let i = 1; i < list.length; i++) {
             const preButton = <Phaser.GameObjects.Image> list[i - 1];
             const button = <Phaser.GameObjects.Image> list[i];
             button.x = preButton.width + preButton.x + margin;
         }
 
-        mainMenuW = w - 70 * this.dpr * 2;
+        mainMenuW = w - 70 * this.dpr * this.mWorld.uiScale * 2;
         this.mSubMenus.x = -mainMenuW >> 1;
         const subList = this.mSubMenus.list;
         subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.width);
-        margin = mainMenuW / (subList.length - 1);
+        margin = mainMenuW / (subList.length - 1) / zoom;
         for (let i = 1; i < subList.length; i++) {
             const preButton = <Phaser.GameObjects.Image> subList[i - 1];
             const button = <Phaser.GameObjects.Image> subList[i];

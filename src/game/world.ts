@@ -71,8 +71,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             throw new Error(`Config.game_id is required.`);
         }
         if (!config.scale_ratio) {
-            config.scale_ratio = window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
+            config.scale_ratio = Math.ceil(window.devicePixelRatio);
+            // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
         }
+        config.ui_ratio = Math.round(window.devicePixelRatio);
+        config.ui_scale_n = window.innerWidth / this.DEFAULT_WIDTH;
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
 
@@ -258,6 +261,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     get uiScale(): number {
         if (this.mConfig) return this.mConfig.ui_scale;
         return 1;
+    }
+
+    get uiScaleNew(): number {
+        return this.mConfig.ui_scale_n;
+    }
+
+    get uiRatio(): number {
+        return this.mConfig.ui_ratio;
     }
 
     get scaleRatio(): number {

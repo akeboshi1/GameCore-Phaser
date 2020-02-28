@@ -37,9 +37,10 @@ export class MarketPanel extends Panel {
 
   public resize(w: number, h: number) {
     // super.resize(w, h);
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
-    const centerX = this.scene.cameras.main.centerX;
+    const scale = this.scale;
+    const width = this.scene.cameras.main.width / scale;
+    const height = this.scene.cameras.main.height / scale;
+    const centerX = this.scene.cameras.main.centerX / scale;
 
     this.setSize(width, height);
 
@@ -124,9 +125,9 @@ export class MarketPanel extends Panel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    for (let i = 0; i < commodities.length + 10; i++) {
+    for (let i = 0; i < commodities.length; i++) {
       const item = new MarketItem(this.scene, Math.floor(i / 3) * (167 * this.dpr) + (85 * this.dpr), Math.floor(i % 3) * (80 * this.dpr) + 31 * this.dpr, this.dpr);
-      item.setProp(commodities[0]);
+      item.setProp(commodities[i]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
@@ -160,7 +161,7 @@ export class MarketPanel extends Panel {
       key: this.key,
       frame: "back_arrow.png",
       x: 21 * this.dpr,
-      y: 51 * this.dpr
+      y: 30 * this.dpr
     }).setInteractive();
 
     this.mShelfContainer = this.scene.make.container({
@@ -173,14 +174,14 @@ export class MarketPanel extends Panel {
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
     this.mShelfContainer.add([this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.scale);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
-      y: 51 * this.dpr,
+      y: 30 * this.dpr,
       style: {
-        fontSize: 40 * this.dpr,
+        fontSize: 36 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);

@@ -15,6 +15,8 @@ export interface ILauncherConfig {
     virtual_world_id: string;
     ui_scale?: number;
     scale_ratio?: number;
+    ui_ratio?: number;
+    ui_scale_n?: number;
     platform?: string;
     readonly width: number;
     readonly height: number;

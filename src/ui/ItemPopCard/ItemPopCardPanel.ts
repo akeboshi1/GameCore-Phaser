@@ -30,10 +30,11 @@ export class ItemPopCardPanel extends Panel {
 
   resize(w: number, h: number) {
     // const scale = this.scene.cameras.main.height / 1920;
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
-    const centerX = this.scene.cameras.main.centerX;
-    const centerY = this.scene.cameras.main.centerY;
+    const zoom = this.mWorld.uiScaleNew;
+    const width = this.scene.cameras.main.width / zoom;
+    const height = this.scene.cameras.main.height / zoom;
+    const centerX = this.scene.cameras.main.centerX / zoom;
+    const centerY = this.scene.cameras.main.centerY / zoom;
     // this.setScale(scale);
     this.setSize(width, height);
     // this.mCardContainer.setScale(scale);
