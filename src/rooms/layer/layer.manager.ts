@@ -62,6 +62,13 @@ export class LayerManager {
     private mDelta: number = 0;
 
     constructor(private room: IRoomService) {
+        let zoom = 1;
+        if (!room) {
+            return;
+        }
+        if (room.world) {
+            zoom = room.world.scaleRatio;
+        }
 
         this.mScene = room.scene;
         // ==========背景层
@@ -71,14 +78,14 @@ export class LayerManager {
         this.mUGroundLayer2 = this.mScene.add.container(0, 0);
 
         // ==========舞台层
-        this.mGroundLayer = this.mScene.add.container(0, 0);
+        this.mGroundLayer = this.mScene.add.container(0, 0).setScale(zoom);
 
-        this.mTileLayer = new GridLayer(this.mScene);
+        this.mTileLayer = new GridLayer(this.mScene).setScale(zoom);
         this.mScene.sys.displayList.add(this.mTileLayer);
 
         this.mMiddleLayer = this.mScene.add.container(0, 0);
 
-        this.mSurfaceLayer = this.mScene.add.container(0, 0);
+        this.mSurfaceLayer = this.mScene.add.container(0, 0).setScale(zoom);
 
         this.mAtmosphere = this.mScene.add.container(0, 0);
 

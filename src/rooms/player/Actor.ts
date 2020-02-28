@@ -34,7 +34,8 @@ export class Actor extends Player implements InputListener {
         // if (this.mElementManager) {
         //     const roomService = this.mElementManager.roomService;
         //     if (roomService && roomService.cameraService) {
-        //         roomService.cameraService.startFollow(this.mDisplay);
+        //         roomService.cameraService.startFollow(this.getDisplay());
+        //         roomService.cameraService.syncCameraScroll();
         //     }
         // }
         if (this.mElementManager) {
@@ -42,7 +43,7 @@ export class Actor extends Player implements InputListener {
             if (roomService && roomService.cameraService) {
                 const pos = sprite.pos;
                 const size = this.mElementManager.scene.scale;
-                roomService.cameraService.setScroll(pos.x - size.width / 2, pos.y - size.height / 2);
+                roomService.cameraService.setScroll(pos.x * roomService.world.scaleRatio - size.width / 2, pos.y * roomService.world.scaleRatio - size.height / 2);
                 roomService.cameraService.syncCameraScroll();
             }
         }

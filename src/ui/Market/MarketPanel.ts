@@ -50,10 +50,10 @@ export class MarketPanel extends Panel {
 
     this.mTIle.x = centerX;
 
-    let shelfHeight = 310 * this.dpr;
-    if (shelfHeight > height / 2) {
-      shelfHeight = height / 2;
-    }
+    const shelfHeight = 332 * this.dpr;
+    // if (shelfHeight > height / 2) {
+    //   shelfHeight = height / 2;
+    // }
 
     this.mShelfContainer.setSize(width, shelfHeight);
     this.mShelfContainer.setPosition(0, height - this.mShelfContainer.height);
@@ -80,11 +80,18 @@ export class MarketPanel extends Panel {
     this.mCategoriesContainer.removeAll(true);
     const categorys = content.marketCategory;
     this.mTabs = [];
+    const frame = this.scene.textures.getFrame(this.key, "categories_normal");
+    let w = 60;
+    let h = 65;
+    if (frame) {
+      w = frame.width;
+      h = frame.height;
+    }
     const config = {
-      left: 24,
-      top: 27,
-      right: 19,
-      bottom: 13
+      left: 10 * this.dpr,
+      top: 13 * this.dpr,
+      right: w - 2 - 10 * this.dpr,
+      bottom: h - 2 - 13 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
     const capW = 78 * this.dpr;
@@ -117,9 +124,9 @@ export class MarketPanel extends Panel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    for (let i = 0; i < commodities.length; i++) {
-      const item = new MarketItem(this.scene, Math.floor(i / 3) * (142 * this.dpr) + (76 * this.dpr), Math.floor(i % 3) * (71 * this.dpr) + 31 * this.dpr);
-      item.setProp(commodities[i]);
+    for (let i = 0; i < commodities.length + 10; i++) {
+      const item = new MarketItem(this.scene, Math.floor(i / 3) * (167 * this.dpr) + (85 * this.dpr), Math.floor(i % 3) * (80 * this.dpr) + 31 * this.dpr, this.dpr);
+      item.setProp(commodities[0]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
@@ -159,14 +166,14 @@ export class MarketPanel extends Panel {
     this.mShelfContainer = this.scene.make.container({
       x: (w / 2),
       y: h
-    }, false).setSize(w, 310 * this.dpr);
+    }, false).setSize(w, 332 * this.dpr);
     this.add(this.mShelfContainer);
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
     this.mShelfContainer.add([this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({

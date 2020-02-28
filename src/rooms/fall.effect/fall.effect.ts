@@ -5,8 +5,9 @@ export class FallEffect extends Phaser.GameObjects.Container {
     private mDisplay: DisableDisplay | EnableDisplay;
     private mStatus: op_def.PathReachableStatus;
     private mEnable: boolean;
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, scaleRatio: number) {
         super(scene);
+        this.scale = scaleRatio;
     }
 
     public show(status: op_def.PathReachableStatus) {

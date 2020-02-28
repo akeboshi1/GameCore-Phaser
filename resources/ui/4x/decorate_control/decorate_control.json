@@ -1,0 +1,175 @@
+{
+	"frames": {
+		"add.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 143,
+				"h": 144
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 143,
+				"h": 144
+			},
+			"sourceSize": {
+				"w": 143,
+				"h": 144
+			}
+		},
+		"doorBtn.png": {
+			"frame": {
+				"x": 146,
+				"y": 1,
+				"w": 145,
+				"h": 152
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 145,
+				"h": 152
+			},
+			"sourceSize": {
+				"w": 145,
+				"h": 152
+			}
+		},
+		"exitBtn.png": {
+			"frame": {
+				"x": 293,
+				"y": 1,
+				"w": 174,
+				"h": 175
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 174,
+				"h": 175
+			},
+			"sourceSize": {
+				"w": 174,
+				"h": 175
+			}
+		},
+		"furniBtn.png": {
+			"frame": {
+				"x": 1,
+				"y": 155,
+				"w": 252,
+				"h": 253
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 252,
+				"h": 253
+			},
+			"sourceSize": {
+				"w": 252,
+				"h": 253
+			}
+		},
+		"recycleAllBtn.png": {
+			"frame": {
+				"x": 255,
+				"y": 178,
+				"w": 174,
+				"h": 175
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 174,
+				"h": 175
+			},
+			"sourceSize": {
+				"w": 174,
+				"h": 175
+			}
+		},
+		"redoBtn.png": {
+			"frame": {
+				"x": 255,
+				"y": 355,
+				"w": 174,
+				"h": 175
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 174,
+				"h": 175
+			},
+			"sourceSize": {
+				"w": 174,
+				"h": 175
+			}
+		},
+		"saveBtn.png": {
+			"frame": {
+				"x": 469,
+				"y": 1,
+				"w": 252,
+				"h": 253
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 252,
+				"h": 253
+			},
+			"sourceSize": {
+				"w": 252,
+				"h": 253
+			}
+		},
+		"stairBtn.png": {
+			"frame": {
+				"x": 431,
+				"y": 256,
+				"w": 145,
+				"h": 152
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 145,
+				"h": 152
+			},
+			"sourceSize": {
+				"w": 145,
+				"h": 152
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 722,
+			"h": 531
+		},
+		"scale": "1"
+	}
+}

@@ -44,66 +44,66 @@
 			"frame": {
 				"x": 830,
 				"y": 1,
-				"w": 405,
-				"h": 185
+				"w": 480,
+				"h": 219
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 405,
-				"h": 185
+				"w": 480,
+				"h": 219
 			},
 			"sourceSize": {
-				"w": 405,
-				"h": 185
+				"w": 480,
+				"h": 219
 			}
 		},
 		"categories_down": {
 			"frame": {
-				"x": 1,
-				"y": 188,
-				"w": 44,
-				"h": 41
+				"x": 830,
+				"y": 222,
+				"w": 70,
+				"h": 51
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 44,
-				"h": 41
+				"w": 70,
+				"h": 51
 			},
 			"sourceSize": {
-				"w": 44,
-				"h": 41
+				"w": 70,
+				"h": 51
 			}
 		},
 		"categories_normal": {
 			"frame": {
-				"x": 830,
-				"y": 188,
-				"w": 44,
-				"h": 41
+				"x": 902,
+				"y": 222,
+				"w": 70,
+				"h": 51
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 44,
-				"h": 41
+				"w": 70,
+				"h": 51
 			},
 			"sourceSize": {
-				"w": 44,
-				"h": 41
+				"w": 70,
+				"h": 51
 			}
 		},
 		"increase.png": {
 			"frame": {
-				"x": 876,
-				"y": 188,
+				"x": 974,
+				"y": 222,
 				"w": 88,
 				"h": 91
 			},
@@ -122,8 +122,8 @@
 		},
 		"input_bg.png": {
 			"frame": {
-				"x": 966,
-				"y": 188,
+				"x": 1064,
+				"y": 222,
 				"w": 169,
 				"h": 97
 			},
@@ -143,27 +143,27 @@
 		"item_border.png": {
 			"frame": {
 				"x": 830,
-				"y": 287,
-				"w": 168,
-				"h": 168
+				"y": 321,
+				"w": 195,
+				"h": 195
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 168,
-				"h": 168
+				"w": 195,
+				"h": 195
 			},
 			"sourceSize": {
-				"w": 168,
-				"h": 168
+				"w": 195,
+				"h": 195
 			}
 		},
 		"price_bg.png": {
 			"frame": {
-				"x": 830,
-				"y": 457,
+				"x": 1027,
+				"y": 321,
 				"w": 316,
 				"h": 59
 			},
@@ -182,8 +182,8 @@
 		},
 		"price_border.png": {
 			"frame": {
-				"x": 1000,
-				"y": 287,
+				"x": 1027,
+				"y": 382,
 				"w": 177,
 				"h": 56
 			},
@@ -202,8 +202,8 @@
 		},
 		"reduce.png": {
 			"frame": {
-				"x": 1137,
-				"y": 188,
+				"x": 1235,
+				"y": 222,
 				"w": 88,
 				"h": 91
 			},
@@ -222,8 +222,8 @@
 		},
 		"tip_red.png": {
 			"frame": {
-				"x": 1179,
-				"y": 281,
+				"x": 1312,
+				"y": 1,
 				"w": 62,
 				"h": 69
 			},
@@ -242,8 +242,8 @@
 		},
 		"tuding_icon.png": {
 			"frame": {
-				"x": 1227,
-				"y": 188,
+				"x": 1312,
+				"y": 72,
 				"w": 43,
 				"h": 46
 			},
@@ -262,8 +262,8 @@
 		},
 		"yellow_button_down": {
 			"frame": {
-				"x": 1000,
-				"y": 352,
+				"x": 1206,
+				"y": 382,
 				"w": 96,
 				"h": 93
 			},
@@ -282,8 +282,8 @@
 		},
 		"yellow_button_normal": {
 			"frame": {
-				"x": 1098,
-				"y": 352,
+				"x": 1027,
+				"y": 477,
 				"w": 96,
 				"h": 93
 			},
@@ -302,8 +302,8 @@
 		},
 		"yellow_button_over": {
 			"frame": {
-				"x": 1148,
-				"y": 447,
+				"x": 1125,
+				"y": 477,
 				"w": 96,
 				"h": 93
 			},
@@ -327,7 +327,7 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1271,
+			"w": 1375,
 			"h": 696
 		},
 		"scale": "1"

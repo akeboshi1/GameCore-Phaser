@@ -14,9 +14,9 @@ export class MarketItem extends Phaser.GameObjects.Container {
   private mProp: op_client.IMarketCommodity;
   private readonly dpr: number;
 
-  constructor(scene: Phaser.Scene, x, y) {
+  constructor(scene: Phaser.Scene, x, y, dpr) {
     super(scene, x, y);
-    this.dpr = Math.round(window.devicePixelRatio || 1);
+    this.dpr = dpr;
     this.mBackground = this.scene.make.image({
       key: "market",
       frame: "border.png"
@@ -26,7 +26,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       key: "market",
       frame: "item_border.png"
     }, false);
-    this.mBorder.x = -37 * this.dpr;
+    this.mBorder.x = -42 * this.dpr;
     this.mPropImage = new DynamicImage(scene, 0, 0);
     this.mPropImage.scale = this.dpr;
 

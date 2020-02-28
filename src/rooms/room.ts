@@ -25,7 +25,6 @@ import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
-import { isMobile } from "../utils/device";
 import { IPoint } from "game-capsule/lib/helpers";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -107,11 +106,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mCameraService: ICameraService;
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
+    protected mScaleRatio: number;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
     constructor(protected manager: IRoomManager) {
         super();
         this.mWorld = this.manager.world;
+        this.mScaleRatio = this.mWorld.scaleRatio;
         if (this.mWorld) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
@@ -191,11 +192,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            // camera.zoom = Math.ceil(window.devicePixelRatio);
-            const cameraW = camera.width / camera.zoom;
-            const cameraH = camera.height / camera.zoom;
+            const zoom = Math.ceil(window.devicePixelRatio);
             // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
-            this.mCameraService.setBounds(-cameraW >> 1, -cameraH >> 1, this.mSize.sceneWidth + cameraW, this.mSize.sceneHeight + cameraH);
+            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -513,9 +512,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        const fall = new FallEffect(this.scene);
+        const fall = new FallEffect(this.scene, this.mScaleRatio);
         fall.show(status);
-        fall.setPosition(pos.x, pos.y);
+        fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         this.addToSceneUI(fall);
     }
 
@@ -525,10 +524,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!status) {
             return;
         }
-        this.addFillEffect(content.targetPos, status);
+        const pos = content.targetPos;
+        this.addFillEffect({ x: pos.x, y: pos.y }, status);
     }
 
-    private move(x: number, y: number) {
+    private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {
         if (this.world.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
             return;
         }
@@ -548,6 +548,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
+
+        // if (gameObject) {
+        //     const displsy = gameObject.parentContainer;
+        //     if (displsy && displsy instanceof DisplayObject) {
+        //         const ele = displsy.element;
+        //         if (ele && ele.model) {
+        //             content.id = ele.model.id;
+        //             content.nodeType = ele.model.nodeType;
+        //         }
+        //     }
+        // }
         content.mouseEvent = [9];
         content.point3f = { x, y };
         this.connection.send(pkt);
@@ -583,8 +594,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.connection.send(packet);
     }
 
-    private onTapHandler(pointer: Phaser.Input.Pointer) {
-        this.move(pointer.worldX, pointer.worldY);
+    private onTapHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
+        this.move(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio, gameObject);
     }
 
     private enterRoom() {

@@ -2,6 +2,7 @@ import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
 import { BasicScene } from "./basic.scene";
+import { PlayCamera } from "../rooms/cameras/play.camera";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends BasicScene {
@@ -21,7 +22,12 @@ export class PlayScene extends BasicScene {
 
   public create() {
     const scene = this.game.scene.getScene(MainUIScene.name);
-    this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
+    // this.scale.zoom = Math.ceil(window.devicePixelRatio);
+    // this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
+    const oldCamera = this.cameras.main;
+    this.cameras.addExisting(new PlayCamera(0, 0, this.sys.scale.width, this.sys.scale.height, this.mRoom.world.scaleRatio), true);
+    this.cameras.remove(oldCamera);
+
     if (!scene.scene.isActive()) {
       this.scene.launch(MainUIScene.name, {
         room: this.mRoom

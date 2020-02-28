@@ -1,6 +1,6 @@
 import { IRoomService } from "./room";
 import { IRoomManager } from "./room.manager";
-import { ViewblockService } from "./cameras/viewblock.manager";
+import { ViewblockService, ViewblockManager } from "./cameras/viewblock.manager";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
 import { ConnectionService } from "../net/connection.service";
 import { ElementManager } from "./element/element.manager";
@@ -43,6 +43,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     readonly playerManager: PlayerManager;
     readonly world: WorldService;
     private mID: number;
+    private mBlocks: ViewblockManager;
     private mSize: IPosition45Obj;
     private mMiniSize: IPosition45Obj;
     private mTerrainManager: DecorateTerrainManager;
@@ -52,10 +53,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mScene: Phaser.Scene | undefined;
     private mSelectedElement: SelectedElement;
     private mMap: number[][];
+    private mScaleRatio: number;
 
     constructor(manager: IRoomManager) {
         super();
         this.world = manager.world;
+        this.mScaleRatio = this.world.scaleRatio;
         // if (this.world) {
         //     const size = this.world.getSize();
         //     if (size) {
@@ -111,6 +114,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     addBlockObject(object: IElement) {
+        if (this.mBlocks) {
+            this.mBlocks.add(object);
+        }
     }
 
     addMouseListen() {
@@ -141,11 +147,13 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
+        if (this.mBlocks) this.mBlocks.destroy();
         this.removePointerMoveHandler();
         this.world.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         this.world.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
         this.world.emitter.off(MessageType.PUT_ELEMENT, this.onPutElement, this);
+        this.world.emitter.off(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
         if (!this.mScene) return;
         this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
@@ -163,6 +171,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     removeBlockObject(object: IElement) {
+        if (this.mBlocks) {
+            this.mBlocks.remove(object);
+        }
     }
 
     requestActorMove(d: number, key: number[]) {
@@ -186,17 +197,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mLayerManager.drawGrid(this);
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
+        this.mBlocks = new ViewblockManager(this.mCameraService);
+        this.mBlocks.int(this.mSize);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
         // const mainCameras = this.mScene.cameras.main;
         const camera = this.scene.cameras.main;
         this.mCameraService.camera = camera;
-        const cameraW = camera.width / camera.zoom;
-        const cameraH = camera.height / camera.zoom;
-        // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
-        this.mCameraService.setBounds(-cameraW >> 1, -cameraH >> 1, this.mSize.sceneWidth + cameraW, this.mSize.sceneHeight + cameraH);
-        // this.mCameraService.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        const zoom = Math.ceil(window.devicePixelRatio);
+        this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
         this.world.changeRoom(this);
         const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
@@ -211,6 +221,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.world.emitter.on(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         this.world.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
         this.world.emitter.on(MessageType.PUT_ELEMENT, this.onPutElement, this);
+        this.world.emitter.on(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
     }
 
     transformTo45(p: Pos): Pos {
@@ -251,6 +262,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         if (this.mSelectedElement) {
             this.mSelectedElement.update(time, delta);
+        }
+        if (this.mBlocks) {
+            this.mBlocks.update(time, delta);
         }
     }
 
@@ -395,7 +409,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private moveElement(pointer: Phaser.Input.Pointer) {
-        const pos = this.transitionGrid(pointer.worldX, pointer.worldY);
+        const pos = this.transitionGrid(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
         this.mSelectedElement.setDisplayPos(pos.x, pos.y);
         // }
         // if (pointer.x < 300) {
@@ -515,6 +529,13 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
                 this.addElement(this.mSelectedElement.root);
                 this.sendPosition(this.mSelectedElement.root);
             }
+        }
+        this.mSelectedElement.remove();
+    }
+
+    private onCancelPutHandler() {
+        if (this.mSelectedElement.root) {
+            this.addElement(this.mSelectedElement.root);
         }
         this.mSelectedElement.remove();
     }

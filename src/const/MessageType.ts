@@ -78,6 +78,7 @@ export class MessageType {
     public static RECYCLE_ELEMENT = "recycleElement";
     // 放置
     public static PUT_ELEMENT = "putElement";
+    public static CANCEL_PUT = "cancelPut";
 
     // 展开物件容器
     public static EDIT_PACKAGE_EXPANED = "editPackageExpaned";

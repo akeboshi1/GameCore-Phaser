@@ -10,7 +10,7 @@ export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
     moving: boolean;
 
-    startFollow(target: Phaser.GameObjects.GameObject): void;
+    startFollow(target: any): void;
     stopFollow(): void;
 
     resize(width: number, height: number): void;
@@ -33,15 +33,17 @@ export interface ICameraService {
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
-    readonly MINI_VIEW_SIZE = 30;
-    readonly VIEW_PORT_SIZE = 30;
+    readonly MINI_VIEW_SIZE = 40;
+    readonly VIEW_PORT_SIZE = 40;
     protected mCamera: Phaser.Cameras.Scene2D.Camera;
     protected viewPort = new Phaser.Geom.Rectangle();
     protected miniViewPort = new Phaser.Geom.Rectangle();
     protected mMoving: boolean;
+    protected readonly zoom: number;
 
     constructor(protected mRoomService: IRoomService) {
         super();
+        this.zoom = Math.ceil(window.devicePixelRatio || 1);
     }
 
     public getViewPort(): Phaser.Geom.Rectangle | undefined {
@@ -57,16 +59,16 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         // out.width += 400;
         // out.height += 400;
         // this.viewPort.setPosition(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2);
-        this.viewPort.x = worldView.x + (worldView.width - this.viewPort.width >> 1);
-        this.viewPort.y = worldView.y + (worldView.height - this.viewPort.height >> 1);
+        this.viewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.viewPort.width >> 1);
+        this.viewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.viewPort.height >> 1);
         return this.viewPort;
     }
 
     public getMiniViewPort(): Rectangle45 {
         if (!this.mCamera) return;
         const worldView = this.mCamera.worldView;
-        this.miniViewPort.x = worldView.x + (worldView.width - this.miniViewPort.width >> 1);
-        this.miniViewPort.y = worldView.y + (worldView.height - this.miniViewPort.height >> 1);
+        this.miniViewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.miniViewPort.width >> 1);
+        this.miniViewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.miniViewPort.height >> 1);
         const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
         return new Rectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
     }
@@ -101,7 +103,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         // this.mCamera.setScroll(x, y);
     }
 
-    public startFollow(target: Phaser.GameObjects.GameObject) {
+    public startFollow(target: any) {
         if (this.mCamera && target) {
             this.mCamera.startFollow(target);
         }
@@ -164,8 +166,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION = pkt.content;
         const pos = op_def.PBPoint3f.create();
-        pos.x = this.mCamera.scrollX + (this.mCamera.width * 0.5 - this.mCamera.width / this.mCamera.zoom * 0.5);
-        pos.y = this.mCamera.scrollY + (this.mCamera.height * 0.5 - this.mCamera.height / this.mCamera.zoom * 0.5);
+        pos.x = this.mCamera.scrollX / Math.ceil(window.devicePixelRatio);
+        pos.y = this.mCamera.scrollY / Math.ceil(window.devicePixelRatio);
         content.pos = pos;
         this.connection.send(pkt);
     }

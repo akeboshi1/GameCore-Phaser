@@ -43,6 +43,7 @@ import { PI_EXTENSION_REGEX } from "../const/constants";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
+    private readonly DEFAULT_WIDTH = 360;
     private mClock: Clock;
     private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
@@ -69,6 +70,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
+        if (!config.scale_ratio) {
+            config.scale_ratio = window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
+        }
+        // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
 
         this._newGame();
@@ -253,6 +258,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     get uiScale(): number {
         if (this.mConfig) return this.mConfig.ui_scale;
         return 1;
+    }
+
+    get scaleRatio(): number {
+        return this.mConfig.scale_ratio;
     }
 
     get game(): Phaser.Game | undefined {

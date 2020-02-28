@@ -22,6 +22,7 @@ export class SelectedElement {
         this.roomService = roomService;
         this.mDecorateManager = new DecorateManager(scene, roomService);
         this.mDecorateManager.on("moveElement", this.onMoveElementHandler, this);
+        this.mDecorateManager.on("cancel", this.onCancelHandler, this);
     }
 
     setElement(display: FramesDisplay | DragonbonesDisplay) {
@@ -112,6 +113,10 @@ export class SelectedElement {
             return;
         }
         this.setDisplayPos(pos.x, pos.y);
+    }
+
+    private onCancelHandler() {
+        this.remove();
     }
 
     get display(): FramesDisplay | DragonbonesDisplay {

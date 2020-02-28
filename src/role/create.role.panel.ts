@@ -131,7 +131,7 @@ export class CreateRolePanel extends Panel {
       fontSize: 18 * this.dpr + "px",
       color: "#717171",
       align: "center",
-      placeholder: "请输入名字"
+      placeholder: "请输入昵称"
     }).setOrigin(0.5);
     this.add(this.inputText);
 

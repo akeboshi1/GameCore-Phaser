@@ -2,7 +2,6 @@ import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
-import { Logger } from "../utils/log";
 import { IMediator } from "./baseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { ChatMediator } from "./chat/chat.mediator";
@@ -16,13 +15,11 @@ import { Size } from "../utils/size";
 import { RightMediator } from "./baseView/rightGroup/right.mediator";
 import { LeftMediator } from "./baseView/leftGroup/left.mediator";
 import { BottomMediator } from "./baseView/bottomGroup/bottom.mediator";
-import { JoyStickManager } from "../game/joystick.manager";
-import { BagGroup } from "./baseView/bagGroup/bag.group";
 import { BagGroupMediator } from "./baseView/bagGroup/bag.group.mediator";
 import { TopMenuMediator } from "./baseView/top.menu/top.menu.mediator";
-import { TopMediator } from "./baseView/topGroup/top.mediator";
 import { MessageType } from "../const/MessageType";
 import { InputTextFactory } from "./components/inputTextFactory";
+import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
 
 export const enum UIType {
     NoneUIType,
@@ -170,13 +167,14 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
         }
-        const topMenu = new TopMenuMediator(this.mScene, this.worldService);
+        // const topMenu = new TopMenuMediator(this.mScene, this.worldService);
         this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
-        this.mMedMap.set(TopMenuMediator.name, topMenu);
-        topMenu.addItem({
-            key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
-        });
+        this.mMedMap.set(DecorateControlMediator.name, new DecorateControlMediator(this.mUILayerManager, this.mScene, this.worldService));
+        // this.mMedMap.set(TopMenuMediator.name, topMenu);
+        // topMenu.addItem({
+        //     key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+        //     iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        // });
         this.showAll();
     }
 

@@ -31,10 +31,12 @@ export class MouseManager extends PacketHandler {
     private mConnect: ConnectionService;
     private mDownDelay: number = 2000;
     private mDownTime: any;
+    private readonly zoom: number;
     private mRoom: Room;
     constructor(private worldService: WorldService) {
         super();
         this.mGame = worldService.game;
+        this.zoom = this.worldService.scaleRatio || 1;
         this.mConnect = this.worldService.connection;
     }
 
@@ -92,7 +94,7 @@ export class MouseManager extends PacketHandler {
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
-                this.worldService.emitter.emit("Tap", pointer);
+                this.worldService.emitter.emit("Tap", pointer, gameobject);
             }
         }
         if (events.length === 0) {
@@ -106,7 +108,7 @@ export class MouseManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
         content.mouseEvent = events;
-        content.point3f = { x: pointer.worldX, y: pointer.worldY };
+        content.point3f = { x: pointer.worldX / this.zoom , y: pointer.worldY / this.zoom };
         this.mConnect.send(pkt);
     }
 

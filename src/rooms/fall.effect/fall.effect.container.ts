@@ -12,7 +12,7 @@ export class FallEffectContainer {
         if (!pos) {
             return;
         }
-        const fall = new FallEffect(this.scene);
+        const fall = new FallEffect(this.scene, this.room.world.scaleRatio);
         fall.once("remove", this.onRemoveHandler, this);
         fall.setPosition(pos.x, pos.y);
         this.room.addToSceneUI(fall);

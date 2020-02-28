@@ -24,12 +24,12 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   private readonly dpr: number;
-  constructor(scene: Phaser.Scene, world: WorldService, $key: string, ) {
+  constructor(scene: Phaser.Scene, world: WorldService, $key: string, dpr: number) {
     super(scene);
     this.key = $key;
     this.mWorld = world;
 
-    this.dpr = Math.round(window.devicePixelRatio || 1);
+    this.dpr = dpr;
 
     this.setPosition(0, 0);
 
