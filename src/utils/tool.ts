@@ -59,18 +59,18 @@ export class Tool {
         return checkBoo;
     }
 
+    public static baseName(str) {
+        let base = new String(str).substring(str.lastIndexOf("/") + 1);
+        if (base.lastIndexOf(".") !== -1)
+            base = base.substring(0, base.lastIndexOf("."));
+        return base;
+    }
+
     private static chunk(str, n) {
         const result = [];
         for (let i = 0; i < str.length; i += n) {
             result.push(str.substr(i, n));
         }
         return result;
-    }
-
-    public static baseName(str) {
-        var base = new String(str).substring(str.lastIndexOf('/') + 1);
-        if (base.lastIndexOf(".") != -1)
-            base = base.substring(0, base.lastIndexOf("."));
-        return base;
     }
 }

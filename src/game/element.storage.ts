@@ -15,13 +15,13 @@ import { Animation } from "../rooms/display/animation";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
-    setSceneConfig(config: Lite)
+    setSceneConfig(config: Lite);
     add(obj: IFramesModel | IDragonbonesModel): void;
     getObject(id: number): IFramesModel | IDragonbonesModel;
     getTerrainCollection();
     getPalette(id: number): IFramesModel;
-    on(...args: any[])
-    off(...args: any[])
+    on(event: string | symbol, fn: Function, context?: any);
+    off(event: string | symbol, fn: Function, context?: any);
 }
 
 interface IDisplayRef {
@@ -73,8 +73,6 @@ export class ElementStorage implements IElementStorage {
                 this.mPaletteModels.set(entity.id, frameModel);
             }
         }
-
-
     }
 
     public setSceneConfig(config) {

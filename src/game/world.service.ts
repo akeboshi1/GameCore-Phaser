@@ -44,4 +44,6 @@ export interface WorldService {
     stopFullscreen();
 
     closeGame();
+
+    loadSceneConfig(sceneId: number);
 }

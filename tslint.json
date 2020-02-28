@@ -14,7 +14,9 @@
         "one-variable-per-declaration": false,
         "no-angle-bracket-type-assertion": false,
         "forin": false,
+        "whitespace": false,
         "no-var-requires": false,
+        "no-construct": false,
         "member-access": false,
         "variable-name": false,
         "max-classes-per-file": false,
@@ -33,7 +35,16 @@
             }
         ],
         "only-arrow-functions": false,
-        "ban-types": [true, ["Object", "Use {} instead."], ["String"]],
+        "ban-types": [
+            true,
+            [
+                "Object",
+                "Use {} instead."
+            ],
+            [
+                "String"
+            ]
+        ],
         "no-string-literal": false
     },
     "rulesDirectory": [],
