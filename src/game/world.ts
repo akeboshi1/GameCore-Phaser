@@ -94,7 +94,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
-        this.elementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         this.mGameEmitter = new Phaser.Events.EventEmitter();
         this.mRoomMamager = new RoomManager(this);
         this.mUiManager = new UiManager(this);
@@ -673,6 +672,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
+        if (this.mElementStorage) {
+            this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
+        }
         // if (this.mCharacterManager) this.mCharacterManager.register();
         return this.mGame;
     }
