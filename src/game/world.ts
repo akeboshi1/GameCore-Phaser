@@ -568,7 +568,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const configUrls = content.configUrls;
         this.mMoveStyle = content.moveStyle;
 
-        this.initSceneConfigUrl(configUrls)
+        this.initSceneConfigUrls(configUrls)
 
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
@@ -587,7 +587,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             });
     }
 
-    public initSceneConfigUrl(urls: string[]) {
+    public initSceneConfigUrls(urls: string[]) {
         for (const url of urls) {
             const sceneId = Tool.baseName(url)
             this.sceneConfigUrls.set(parseInt(sceneId), url)
