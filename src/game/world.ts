@@ -389,13 +389,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public loadSceneConfig(sceneId: number) {
         const url = this.getSceneConfigUrl(sceneId);
-        this.loadGameConfig([url])
-            .then((config: Lite) => {
-                this.mElementStorage.setSceneConfig(config);
-            })
-            .catch((err) => {
-                Logger.getInstance().log(err);
-            });
+        return this.loadGameConfig([url]);
     }
 
     private async _createAnotherGame(gameId, worldId) {

@@ -7,6 +7,7 @@ import { Logger } from "../utils/log";
 import { EditorRoom } from "./editor.room";
 import { DecorateRoom } from "./decorate.room";
 import { Tool } from "../utils/tool";
+import { Lite } from "game-capsule";
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
@@ -113,19 +114,24 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         let room: Room;
         if (this.hasRoom(vw.scene.id)) {
             room = <Room>this.getRoom(vw.scene.id);
-            // load this scene config in gameConfig
-            this.world.loadSceneConfig(vw.scene.id);
+            room.addActor(vw.actor);
+            room.enter(vw.scene);
+            this.mCurRoom = room;
         } else {
             if (this.mCurRoom) {
                 this.leaveScene(this.mCurRoom);
             }
             room = new Room(this);
             this.mRooms.push(room);
+
+            // load this scene config in gameConfig
+            this.world.loadSceneConfig(vw.scene.id).then((config: Lite) => {
+                this.world.elementStorage.setSceneConfig(config);
+                room.addActor(vw.actor);
+                room.enter(vw.scene);
+                this.mCurRoom = room;
+            });
         }
-        room.addActor(vw.actor);
-        room.enter(vw.scene);
-        // this.mWorld.changeRoom(room);
-        this.mCurRoom = room;
     }
 
     private onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
