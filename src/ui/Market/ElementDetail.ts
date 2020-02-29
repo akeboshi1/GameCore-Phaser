@@ -168,6 +168,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const endW = width - this.mCounter.x - this.mCounter.width / 2;
     if (this.mDetailBubbleContainer.width + this.mDetailBubbleContainer.x > endW) {
       const bubbleW = endW - 16 * this.dpr;
+      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr, true);
       this.resizeDesBubble(bubbleW, this.mDetailBubbleContainer.height);
     }
     // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;

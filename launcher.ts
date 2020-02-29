@@ -14,9 +14,8 @@ export interface ILauncherConfig {
     game_id: string;
     virtual_world_id: string;
     ui_scale?: number;
+    devecePixelRatio?: number;
     scale_ratio?: number;
-    ui_ratio?: number;
-    ui_scale_n?: number;
     platform?: string;
     readonly width: number;
     readonly height: number;
