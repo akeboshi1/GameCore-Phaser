@@ -33,7 +33,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPropImage.scale = this.dpr;
 
     this.mNickName = this.scene.make.text({
-      y: -30 * this.dpr,
+      y: -26 * this.dpr,
       style: {
         fontSize: 14 * this.dpr,
         fontFamily: Font.DEFULT_FONT,

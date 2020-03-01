@@ -9,7 +9,6 @@ import { WorldService } from "../../game/world.service";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
-  private mBackground: Phaser.GameObjects.Image;
   private mCounter: NumberCounter;
   private mBuyBtn: NinePatchButton;
   private mPriceContainer: Phaser.GameObjects.Container;
@@ -35,12 +34,12 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     this.setPosition(0, 0);
 
-    this.mBackground = this.scene.make.image({
-      x: this.scene.cameras.main.width >> 1,
-      key: this.key,
-      frame: "bg.png"
-    });
-    this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
+    // this.mBackground = this.scene.make.image({
+    //   x: this.scene.cameras.main.width >> 1,
+    //   key: this.key,
+    //   frame: "bg.png"
+    // });
+    // this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
 
     this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
 
@@ -140,7 +139,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       }
     }, false);
 
-    this.add([this.mBackground, this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubbleContainer]);
+    this.add([this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubbleContainer]);
     this.mDetailBubbleContainer.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource]);
     this.mPriceContainer.add([priceBg, this.mPriceIcon, this.mPriceText]);
     // this.mNickNameContainer.add([this.mNickNameBg, this.mNickName]);
@@ -152,7 +151,6 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const width = (this.scene.cameras.main.width / this.uiScale);
     const height = ((this.scene.cameras.main.height / this.uiScale) >> 1) - 150;
     const centerX = this.scene.cameras.main.centerX / this.uiScale;
-    this.mBackground.x = this.scene.cameras.main.centerX / this.uiScale;
 
     this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 10 * this.dpr;
     this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.height / 2 - 12 * this.dpr;
@@ -165,10 +163,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubbleContainer.x = 10 * this.dpr;
-    const endW = width - this.mCounter.x - this.mCounter.width / 2;
+    const endW = width -  (width - this.mCounter.x) - this.mCounter.width / 2;
     if (this.mDetailBubbleContainer.width + this.mDetailBubbleContainer.x > endW) {
       const bubbleW = endW - 16 * this.dpr;
       this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr, true);
+
       this.resizeDesBubble(bubbleW, this.mDetailBubbleContainer.height);
     }
     // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;

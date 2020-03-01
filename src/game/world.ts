@@ -44,6 +44,7 @@ import { PI_EXTENSION_REGEX } from "../const/constants";
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
     private readonly DEFAULT_WIDTH = 360;
+    private readonly DEFAULT_HEIGHT = 640;
     private mClock: Clock;
     private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
@@ -78,11 +79,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.mScaleRatio = Math.ceil(config.devecePixelRatio);
         this.mUIRatio = Math.round(window.devicePixelRatio);
-        this.mUIScale = window.innerWidth / this.DEFAULT_WIDTH;
+        const scaleW = window.innerWidth / this.DEFAULT_WIDTH;
+        const scaleH = window.innerHeight / this.DEFAULT_HEIGHT;
+        this.mUIScale = Math.min(scaleW, scaleH);
         // if (!config.scale_ratio) {
             // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
         // }
-        
+
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
 
