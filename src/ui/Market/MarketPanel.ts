@@ -14,7 +14,6 @@ import { Logger } from "../../utils/log";
 
 export class MarketPanel extends Panel {
   private readonly key = "market";
-  private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mTIle: Phaser.GameObjects.Text;
@@ -27,6 +26,8 @@ export class MarketPanel extends Panel {
   private mCategoriesContainer: Phaser.GameObjects.Container;
   private mSubCategeoriesContainer: Phaser.GameObjects.Container;
   private mShelfContainer: Phaser.GameObjects.Container;
+  private mBackgroundColor: Phaser.GameObjects.Graphics;
+  private mShelfBackground: Phaser.GameObjects.Graphics;
   private mItems: MarketItem[];
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -37,20 +38,16 @@ export class MarketPanel extends Panel {
 
   public resize(w: number, h: number) {
     // super.resize(w, h);
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
-    const centerX = this.scene.cameras.main.centerX;
+    const scale = this.scale;
+    const width = this.scene.cameras.main.width / scale;
+    const height = this.scene.cameras.main.height / scale;
+    const centerX = this.scene.cameras.main.centerX / scale;
 
     this.setSize(width, height);
 
-    this.mBackgroundColor.clear();
-    this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff, 1);
-    this.mBackgroundColor.fillRect(0, 0, width, height);
-    this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-
     this.mTIle.x = centerX;
 
-    const shelfHeight = 332 * this.dpr;
+    const shelfHeight = 290 * this.dpr;
     // if (shelfHeight > height / 2) {
     //   shelfHeight = height / 2;
     // }
@@ -58,16 +55,21 @@ export class MarketPanel extends Panel {
     this.mShelfContainer.setSize(width, shelfHeight);
     this.mShelfContainer.setPosition(0, height - this.mShelfContainer.height);
 
+    this.mShelfBackground.clear();
+    this.mShelfBackground.fillStyle(0x02ccff);
+    this.mShelfBackground.fillRect(0, 0, this.mShelfContainer.width, this.mShelfContainer.height);
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y;
+
     this.mSelectItem.setSize(width, height - this.mShelfContainer.height);
     // this.mSelectItem.y = 45 * this.dpr;
     this.mSelectItem.resize(w, h);
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x3ee1ff);
-    this.mCategoriesBar.fillRect(0, 0, width, 41 * this.dpr);
+    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.mCategoriesBar.fillStyle(0x04b3d3);
-    this.mCategoriesBar.fillRect(0, 41 * this.dpr, width, 4 * this.dpr);
-    this.mSubCategeoriesContainer.setSize(width, 45 * this.dpr);
+    this.mCategoriesBar.fillRect(0, 41 * this.dpr, width, 3 * this.dpr);
+    this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
 
     this.setInteractive();
     // this.setInteractive(new Phaser.Geom.Rectangle(-(width >> 1), -(height >> 1), width, height), Phaser.Geom.Rectangle.Contains);
@@ -94,8 +96,8 @@ export class MarketPanel extends Panel {
       bottom: h - 2 - 13 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
-    const capW = 78 * this.dpr;
-    const capH = 39 * this.dpr;
+    const capW = 77 * this.dpr;
+    const capH = 38 * this.dpr;
     for (let i = 0; i < categorys.length; i++) {
       const btn = new TabButton(this.scene, i * 80 * this.dpr + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
       // btn.removeAllListeners();
@@ -111,6 +113,7 @@ export class MarketPanel extends Panel {
     this.mShelfContainer.add(this.mTabs);
     this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
     this.mPropContainer.y = this.mSubCategeoriesContainer.y + this.mSubCategeoriesContainer.height + 9 * this.dpr;
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y;
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
 
@@ -124,9 +127,9 @@ export class MarketPanel extends Panel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    for (let i = 0; i < commodities.length + 10; i++) {
-      const item = new MarketItem(this.scene, Math.floor(i / 3) * (167 * this.dpr) + (85 * this.dpr), Math.floor(i % 3) * (80 * this.dpr) + 31 * this.dpr, this.dpr);
-      item.setProp(commodities[0]);
+    for (let i = 0; i < commodities.length; i++) {
+      const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr) + (72 * this.dpr), Math.floor(i % 3) * (68 * this.dpr) + 30 * this.dpr, this.dpr);
+      item.setProp(commodities[i]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
@@ -148,39 +151,57 @@ export class MarketPanel extends Panel {
   }
 
   protected init() {
-    const w = this.scene.scale.width;
-    const h = this.scene.scale.height;
+    const w = this.scene.scale.width / this.scale;
+    const h = this.scene.scale.height / this.scale;
     this.mBackgroundColor = this.scene.make.graphics(undefined, false);
     this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     // this.mBackgroundColor.fillStyle(0x6f75ff);
     this.mBackgroundColor.fillRect(0, 0, w, h);
-    this.addAt(this.mBackgroundColor, 0);
+    this.add(this.mBackgroundColor);
+
+    this.mShelfContainer = this.scene.make.container({
+      x: (w / 2),
+      y: h
+    }, false).setSize(w, 290 * this.dpr);
+
+    const frame = this.scene.textures.getFrame(this.key, "bg.png");
+    const countW = Math.ceil(w / this.scale / frame.width);
+    const countH = Math.ceil((h / this.scale - this.mShelfContainer.height + frame.height) / frame.height);
+    for (let i = 0; i < countW; i++) {
+      for (let j = 0; j < countH; j++) {
+        const bg = this.scene.make.image({
+          x: i * frame.width,
+          y: j * frame.height,
+          key: this.key,
+          frame: "bg.png"
+        }, false);
+        this.add(bg);
+      }
+    }
+
+    this.mShelfBackground = this.scene.make.graphics(undefined, false);
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
       frame: "back_arrow.png",
       x: 21 * this.dpr,
-      y: 51 * this.dpr
+      y: 30 * this.dpr
     }).setInteractive();
 
-    this.mShelfContainer = this.scene.make.container({
-      x: (w / 2),
-      y: h
-    }, false).setSize(w, 332 * this.dpr);
     this.add(this.mShelfContainer);
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.add([this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
+    this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.scale);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
-      y: 51 * this.dpr,
+      y: 30 * this.dpr,
       style: {
-        fontSize: 40 * this.dpr,
+        fontSize: 36 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);

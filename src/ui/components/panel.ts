@@ -23,7 +23,11 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         this.mScene = scene;
         this.mWorld = world;
         this.mInitialized = false;
-        this.dpr = Math.round(world.scaleRatio || 1);
+        if (world) {
+            this.dpr = Math.round(world.uiRatio || 1);
+            this.scale = this.mWorld.uiScaleNew;
+        }
+
     }
 
     isShow(): boolean {

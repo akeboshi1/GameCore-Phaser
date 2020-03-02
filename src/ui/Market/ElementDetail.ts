@@ -9,7 +9,6 @@ import { WorldService } from "../../game/world.service";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
-  private mBackground: Phaser.GameObjects.Image;
   private mCounter: NumberCounter;
   private mBuyBtn: NinePatchButton;
   private mPriceContainer: Phaser.GameObjects.Container;
@@ -24,21 +23,23 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   private readonly dpr: number;
-  constructor(scene: Phaser.Scene, world: WorldService, $key: string, dpr: number) {
+  private readonly uiScale: number;
+  constructor(scene: Phaser.Scene, world: WorldService, $key: string, dpr: number, uiScale?: number) {
     super(scene);
     this.key = $key;
     this.mWorld = world;
+    this.uiScale = uiScale || 1;
 
     this.dpr = dpr;
 
     this.setPosition(0, 0);
 
-    this.mBackground = this.scene.make.image({
-      x: this.scene.cameras.main.width >> 1,
-      key: this.key,
-      frame: "bg.png"
-    });
-    this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
+    // this.mBackground = this.scene.make.image({
+    //   x: this.scene.cameras.main.width >> 1,
+    //   key: this.key,
+    //   frame: "bg.png"
+    // });
+    // this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
 
     this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
 
@@ -57,9 +58,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     this.mBuyBtn.setTextStyle({
       color: "#976400",
-      fontSize: 20 * this.dpr,
+      fontSize: 16 * this.dpr,
       fontFamily: Font.DEFULT_FONT
     });
+    this.mBuyBtn.setFontStyle("bold");
     // this.mBuyBtn.setTextOffset(0, 10 * this.dpr);
     this.mBuyBtn.on("pointerup", this.onBuyHandler, this);
 
@@ -118,6 +120,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: 8 * this.dpr,
       y: 56 * this.dpr,
       style: {
+        color: "#32347b",
         fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         wordWrap: {
@@ -136,7 +139,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       }
     }, false);
 
-    this.add([this.mBackground, this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubbleContainer]);
+    this.add([this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubbleContainer]);
     this.mDetailBubbleContainer.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource]);
     this.mPriceContainer.add([priceBg, this.mPriceIcon, this.mPriceText]);
     // this.mNickNameContainer.add([this.mNickNameBg, this.mNickName]);
@@ -145,10 +148,9 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   resize(w: number, h: number) {
-    const width = (this.scene.cameras.main.width );
-    const height = ((this.scene.cameras.main.height) >> 1) - 150;
-    const centerX = this.scene.cameras.main.centerX;
-    this.mBackground.x = this.scene.cameras.main.centerX;
+    const width = (this.scene.cameras.main.width / this.uiScale);
+    const height = ((this.scene.cameras.main.height / this.uiScale) >> 1) - 150;
+    const centerX = this.scene.cameras.main.centerX / this.uiScale;
 
     this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 10 * this.dpr;
     this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.height / 2 - 12 * this.dpr;
@@ -160,11 +162,15 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.x = counterX;
     this.mCounter.y = this.mBuyBtn.y;
 
-    this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
-
     this.mDetailBubbleContainer.x = 10 * this.dpr;
-    // this.mDetailBubbleContainer.x = this.mCounter.x - this.mCounter.width / 2 - this.mDetailBubbleContainer.width - 12 * this.dpr;
-    // this.mDetailBubbleContainer.x = centerX + this.mDetailBubbleContainer.width / 2 + 57 * this.dpr;
+    const endW = width -  (width - this.mCounter.x) - this.mCounter.width / 2;
+    if (this.mDetailBubbleContainer.width + this.mDetailBubbleContainer.x > endW) {
+      const bubbleW = endW - 16 * this.dpr;
+      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr, true);
+
+      this.resizeDesBubble(bubbleW, this.mDetailBubbleContainer.height);
+    }
+    // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
 
     this.mPriceContainer.x = this.mCounter.x;
     this.mPriceContainer.y = this.mCounter.y - 35 * this.dpr;
@@ -209,11 +215,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   setProp(prop: op_client.IMarketCommodity) {
     this.mSelectedProp = prop;
     this.mNickName.setText(prop.shortName || prop.name);
-    let des = prop.des + "了速度法律上的肌肤螺丝钉解放螺丝钉解放少了几分了解丽江老君山辣鸡";
-    if (des.length > 27) {
-      des = des.substring(0, 26) + "...";
-    }
-    this.mDesText.setText(des);
+    this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
       this.mPriceIcon.setTexture(this.key, "tuding_icon.png");
       this.updatePrice(prop.price[0].price.toString());
@@ -225,6 +227,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     } else {
       this.mSource.setText("");
     }
+    this.resizeDesBubble();
     this.mCounter.setCounter(1);
   }
 
@@ -268,6 +271,21 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private onPointerUpHandler() {
     this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
     this.mCounter.setBlur();
+  }
+
+  private resizeDesBubble(w?, h?) {
+    // const bubbleW = 110 * this.dpr;
+    if (w === undefined) w = this.mDetailBubbleContainer.width;
+    const bubbleH = this.mDesText.height + 60 * this.dpr;
+    if (w === this.mDetailBubbleContainer.width && bubbleH === this.mDetailBubbleContainer.height) {
+      return;
+    }
+    this.mDetailBubble.clear();
+    this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
+    this.mDetailBubble.fillRoundedRect(0, 0, w, bubbleH);
+
+    this.mDetailBubbleContainer.setSize(w, bubbleH);
+    this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
   }
 
   private onShowDisplayHandler(image: Phaser.GameObjects.Image) {

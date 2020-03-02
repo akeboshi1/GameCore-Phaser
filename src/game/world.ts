@@ -45,6 +45,7 @@ import { Tool } from "../utils/tool";
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
     private readonly DEFAULT_WIDTH = 360;
+    private readonly DEFAULT_HEIGHT = 640;
     private mClock: Clock;
     private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
@@ -65,6 +66,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mOrientation: number = 0;
     private gameConfigUrls: Map<string, string> = new Map();
 
+    private mScaleRatio: number;
+    private mUIRatio: number;
+    private mUIScale: number;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -73,9 +77,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
-        if (!config.scale_ratio) {
-            config.scale_ratio = (window.innerWidth / this.DEFAULT_WIDTH) * window.devicePixelRatio;
+        if (!config.devecePixelRatio) {
+            config.devecePixelRatio = window.devicePixelRatio;
         }
+        this.mScaleRatio = Math.ceil(config.devecePixelRatio);
+        this.mUIRatio = Math.round(window.devicePixelRatio);
+        const scaleW = window.innerWidth / this.DEFAULT_WIDTH;
+        const scaleH = window.innerHeight / this.DEFAULT_HEIGHT;
+        this.mUIScale = Math.min(scaleW, scaleH);
+        // if (!config.scale_ratio) {
+            // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
+        // }
+
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
 
@@ -262,8 +275,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return 1;
     }
 
+    get uiScaleNew(): number {
+        return this.mUIScale;
+    }
+
+    get uiRatio(): number {
+        return this.mUIRatio;
+    }
+
     get scaleRatio(): number {
-        return this.mConfig.scale_ratio;
+        return this.mScaleRatio;
     }
 
     get game(): Phaser.Game | undefined {
@@ -655,7 +676,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 ]
             },
             render: {
-                pixelArt: true,
+                pixelArt: false,
                 roundPixels: true
             },
             scale: {

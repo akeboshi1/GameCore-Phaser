@@ -26,14 +26,16 @@ export class MarketItem extends Phaser.GameObjects.Container {
       key: "market",
       frame: "item_border.png"
     }, false);
-    this.mBorder.x = -42 * this.dpr;
+    // this.mBorder.x = -42 * this.dpr;
+    // this.mBorder.x = -this.mBackground.width / 2 + this.mBorder.width / 2 + (this.mBackground.height - this.mBorder.height / 2);
+    this.mBorder.x = -(this.mBackground.width - this.mBorder.width) / 2 + (this.mBackground.height - this.mBorder.height) / 2;
     this.mPropImage = new DynamicImage(scene, 0, 0);
     this.mPropImage.scale = this.dpr;
 
     this.mNickName = this.scene.make.text({
-      y: -24 * this.dpr,
+      y: -26 * this.dpr,
       style: {
-        fontSize: 12 * this.dpr,
+        fontSize: 14 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#3399cc"
       }
@@ -41,27 +43,30 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
     const priceBg = this.scene.make.image({
       x: 25 * this.dpr,
-      y: 17 * this.dpr,
+      // y: 17 * this.dpr,
       key: "market",
       frame: "price_border.png"
     }, false);
+    priceBg.y = this.mBorder.y + this.mBorder.height / 2 - priceBg.height / 2;
 
     this.mCoinIcon = this.scene.make.image({
       x: -15 * this.dpr,
-      y: 17 * this.dpr,
+      // y: 17 * this.dpr,
       key: "market",
       frame: "tuding_icon.png"
     }, false);
+    this.mCoinIcon.y = priceBg.y;
 
     this.mPriceText = this.scene.make.text({
       x: 1 * this.dpr,
-      y: 12 * this.dpr,
+      // y: 12 * this.dpr,
       style: {
-        fontSize: 12 * this.dpr,
+        fontSize: 14 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#996600"
       }
     });
+    this.mPriceText.y = this.mCoinIcon.y - this.mPriceText.height / 2;
 
     this.mTagIcon = this.scene.make.image({
       key: "market",

@@ -25,7 +25,9 @@ export interface WorldService {
     readonly mouseManager: MouseManager;
     readonly httpService: HttpService;
     readonly uiScale: number;
+    readonly uiScaleNew: number;
     readonly scaleRatio: number;
+    readonly uiRatio: number;
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
 

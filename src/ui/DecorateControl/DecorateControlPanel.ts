@@ -1,5 +1,6 @@
 import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
+import { Logger } from "../../utils/log";
 
 export class DecorateControlPanel extends Panel {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -11,6 +12,7 @@ export class DecorateControlPanel extends Panel {
     private mTopBtns: Phaser.GameObjects.Image[];
     private mDoorBtn: Phaser.GameObjects.Image;
     private mStairBtn: Phaser.GameObjects.Image;
+    private mMenuContainer: Phaser.GameObjects.Container;
     private readonly key = "decorateControl";
 
     constructor(scene: Phaser.Scene, worldService: WorldService) {
@@ -83,12 +85,14 @@ export class DecorateControlPanel extends Panel {
         this.add(this.mTopBtns);
         this.add([this.mDoorBtn, this.mStairBtn]);
 
-        let totalWidth = w - 10 * 2 * this.dpr;
-        this.mTopBtns.map((btn) => totalWidth -= btn.width);
-        const space = totalWidth / (this.mTopBtns.length - 1);
+        const zoom = this.mWorld.uiScaleNew;
+        let totalWidth = w - 10 * 2 * this.dpr * zoom;
+        this.mTopBtns.map((btn) => totalWidth -= btn.width * zoom);
+        const space = totalWidth / (this.mTopBtns.length - 1) / zoom;
+
         for (let i = 0; i < this.mTopBtns.length; i++) {
             if (i > 0) {
-                this.mTopBtns[i].x = space + (i > 0 ? this.mTopBtns[i - 1].width + this.mTopBtns[i - 1].x : 0);
+                this.mTopBtns[i].x = space + (this.mTopBtns[i - 1].width) + this.mTopBtns[i - 1].x;
             } else {
                 this.mTopBtns[i].x = 10 * this.dpr;
             }
