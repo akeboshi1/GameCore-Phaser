@@ -21,6 +21,10 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
     this.text.text = val;
   }
 
+  setFontSize(size: number) {
+    this.text.setFontSize(size);
+  }
+
   setStyle(style: object) {
     this.text.setStyle(style);
   }

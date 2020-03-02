@@ -293,6 +293,8 @@ export class Element extends BlockObject implements IElement {
         let pos: Pos;
         if (this.mDisplay) {
             pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+        } else {
+            pos = new Pos();
         }
         return pos;
     }

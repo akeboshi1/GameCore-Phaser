@@ -41,7 +41,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     // });
     // this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
 
-    this.mCounter = new NumberCounter(this.scene, $key, 360, 700);
+    this.mCounter = new NumberCounter(this.scene, $key, 360, 700, this.dpr, uiScale);
 
     const frame = this.scene.textures.getFrame(this.key, "yellow_button_normal");
     let w = 60;
@@ -55,10 +55,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       top: 14 * this.dpr,
       right: w - 2 - 14 * this.dpr,
       bottom: h - 2 - 14 * this.dpr
-    });
+    }).setScale(uiScale);
     this.mBuyBtn.setTextStyle({
       color: "#976400",
-      fontSize: 16 * this.dpr,
+      fontSize: 16 * this.dpr * uiScale,
       fontFamily: Font.DEFULT_FONT
     });
     this.mBuyBtn.setFontStyle("bold");
@@ -77,7 +77,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: 7 * this.dpr,
       y: 9 * this.dpr,
       style: {
-        fontSize: 12 * this.dpr,
+        fontSize: 12 * this.dpr * uiScale,
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFF00",
         align: "center"
@@ -89,11 +89,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: -78,
       key: this.key,
       frame: "tuding_icon.png"
-    }, false);
+    }, false).setScale(uiScale);
     this.mPriceText = this.scene.make.text({
       x: 0,
       style: {
-        fontSize: 14 * this.dpr,
+        fontSize: 14 * this.dpr * uiScale,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
@@ -101,14 +101,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const priceBg = this.scene.make.image({
       key: this.key,
       frame: "price_bg.png"
-    });
+    }).setScale(uiScale);
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.scale = this.dpr;
     this.mDetailDisplay.y = 110 * this.dpr;
 
-    const bubbleW = 110 * this.dpr;
-    const bubbleH = 96 * this.dpr;
+    const bubbleW = 110 * this.dpr * this.uiScale;
+    const bubbleH = 96 * this.dpr * this.uiScale;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
     this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
     this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
@@ -121,10 +121,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       y: 56 * this.dpr,
       style: {
         color: "#32347b",
-        fontSize: 10 * this.dpr,
+        fontSize: 10 * this.dpr * uiScale,
         fontFamily: Font.DEFULT_FONT,
         wordWrap: {
-          width: 90 * this.dpr,
+          width: 90 * this.dpr * uiScale,
           useAdvancedWrap: true
         }
       }
@@ -134,7 +134,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: 8 * this.dpr,
       y: 38 * this.dpr,
       style: {
-        fontSize: 10 * this.dpr,
+        fontSize: 10 * this.dpr * uiScale,
         fontFamily: Font.DEFULT_FONT,
       }
     }, false);
@@ -148,25 +148,25 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   resize(w: number, h: number) {
-    const width = (this.scene.cameras.main.width / this.uiScale);
-    const height = ((this.scene.cameras.main.height / this.uiScale) >> 1) - 150;
-    const centerX = this.scene.cameras.main.centerX / this.uiScale;
+    const width = (this.scene.cameras.main.width);
+    const height = ((this.scene.cameras.main.height) >> 1) - 150;
+    const centerX = this.scene.cameras.main.centerX;
 
-    this.mBuyBtn.x = width - this.mBuyBtn.width / 2 - 10 * this.dpr;
-    this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.height / 2 - 12 * this.dpr;
+    this.mBuyBtn.x = width - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr * this.uiScale;
+    this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.displayHeight / 2 - 12 * this.dpr * this.uiScale;
 
-    let counterX = this.mBuyBtn.x - this.mBuyBtn.width / 2 - this.mCounter.width / 2 -  20 * this.dpr;
-    if (counterX < this.mCounter.width / 2 + 10) {
-      counterX = this.mCounter.width / 2 + 10;
-    }
+    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 -  17 * this.dpr * this.uiScale;
+    // if (counterX < this.mCounter.displayWidth / 2 + 10) {
+    //   counterX = this.mCounter.displayWidth / 2 + 10;
+    // }
     this.mCounter.x = counterX;
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubbleContainer.x = 10 * this.dpr;
     const endW = width -  (width - this.mCounter.x) - this.mCounter.width / 2;
-    if (this.mDetailBubbleContainer.width + this.mDetailBubbleContainer.x > endW) {
-      const bubbleW = endW - 16 * this.dpr;
-      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr, true);
+    if (this.mDetailBubbleContainer.displayWidth + this.mDetailBubbleContainer.x + 10 * this.dpr > endW) {
+      const bubbleW = endW - 16 * this.dpr * this.uiScale;
+      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr * this.uiScale, true);
 
       this.resizeDesBubble(bubbleW, this.mDetailBubbleContainer.height);
     }
@@ -276,7 +276,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private resizeDesBubble(w?, h?) {
     // const bubbleW = 110 * this.dpr;
     if (w === undefined) w = this.mDetailBubbleContainer.width;
-    const bubbleH = this.mDesText.height + 60 * this.dpr;
+    const bubbleH = this.mDesText.height + 60 * this.dpr * this.uiScale;
     if (w === this.mDetailBubbleContainer.width && bubbleH === this.mDetailBubbleContainer.height) {
       return;
     }

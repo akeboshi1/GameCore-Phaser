@@ -34,11 +34,13 @@ export class MarketPanel extends Panel {
     this.setTween(false);
     this.mSubTabs = [];
     this.mTabs = [];
+    this.scale = 1;
   }
 
   public resize(w: number, h: number) {
     // super.resize(w, h);
     const scale = this.scale;
+    const zoom = this.mWorld.uiScaleNew;
     const width = this.scene.cameras.main.width / scale;
     const height = this.scene.cameras.main.height / scale;
     const centerX = this.scene.cameras.main.centerX / scale;
@@ -47,7 +49,7 @@ export class MarketPanel extends Panel {
 
     this.mTIle.x = centerX;
 
-    const shelfHeight = 290 * this.dpr;
+    const shelfHeight = 290 * this.dpr * zoom;
     // if (shelfHeight > height / 2) {
     //   shelfHeight = height / 2;
     // }
@@ -68,7 +70,7 @@ export class MarketPanel extends Panel {
     this.mCategoriesBar.fillStyle(0x3ee1ff);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.mCategoriesBar.fillStyle(0x04b3d3);
-    this.mCategoriesBar.fillRect(0, 41 * this.dpr, width, 3 * this.dpr);
+    this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
 
     this.setInteractive();
@@ -96,10 +98,11 @@ export class MarketPanel extends Panel {
       bottom: h - 2 - 13 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
-    const capW = 77 * this.dpr;
-    const capH = 38 * this.dpr;
+    const zoom = this.mWorld.uiScaleNew;
+    const capW = 77 * this.dpr * zoom;
+    const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new TabButton(this.scene, i * 80 * this.dpr + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
+      const btn = new TabButton(this.scene, i * 80 * this.dpr * zoom + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr,
@@ -127,8 +130,9 @@ export class MarketPanel extends Panel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
+    const zoom = this.mWorld.uiScaleNew;
     for (let i = 0; i < commodities.length; i++) {
-      const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr) + (72 * this.dpr), Math.floor(i % 3) * (68 * this.dpr) + 30 * this.dpr, this.dpr);
+      const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr * zoom) + (72 * this.dpr * zoom), Math.floor(i % 3) * (68 * this.dpr * zoom) + 30 * this.dpr * zoom, this.dpr, zoom);
       item.setProp(commodities[i]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
@@ -153,6 +157,7 @@ export class MarketPanel extends Panel {
   protected init() {
     const w = this.scene.scale.width / this.scale;
     const h = this.scene.scale.height / this.scale;
+    const zoom = this.mWorld.uiScaleNew;
     this.mBackgroundColor = this.scene.make.graphics(undefined, false);
     this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     // this.mBackgroundColor.fillStyle(0x6f75ff);
@@ -162,19 +167,19 @@ export class MarketPanel extends Panel {
     this.mShelfContainer = this.scene.make.container({
       x: (w / 2),
       y: h
-    }, false).setSize(w, 290 * this.dpr);
+    }, false).setSize(w, 290 * this.dpr * zoom);
 
     const frame = this.scene.textures.getFrame(this.key, "bg.png");
-    const countW = Math.ceil(w / this.scale / frame.width);
-    const countH = Math.ceil((h / this.scale - this.mShelfContainer.height + frame.height) / frame.height);
+    const countW = Math.ceil(w / (frame.width * zoom));
+    const countH = Math.ceil((h - this.mShelfContainer.height + frame.height * zoom) / (frame.height * zoom));
     for (let i = 0; i < countW; i++) {
       for (let j = 0; j < countH; j++) {
         const bg = this.scene.make.image({
-          x: i * frame.width,
-          y: j * frame.height,
+          x: i * frame.width * zoom,
+          y: j * frame.height * zoom,
           key: this.key,
           frame: "bg.png"
-        }, false);
+        }, false).setScale(zoom);
         this.add(bg);
       }
     }
@@ -186,7 +191,7 @@ export class MarketPanel extends Panel {
       frame: "back_arrow.png",
       x: 21 * this.dpr,
       y: 30 * this.dpr
-    }).setInteractive();
+    }).setInteractive().setScale(zoom);
 
     this.add(this.mShelfContainer);
     this.mPropContainer = this.scene.make.container(undefined, false);
@@ -194,14 +199,14 @@ export class MarketPanel extends Panel {
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.scale);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScaleNew);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
-      y: 30 * this.dpr,
+      y: 30 * this.dpr * zoom,
       style: {
-        fontSize: 36 * this.dpr,
+        fontSize: 36 * this.dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
@@ -243,15 +248,17 @@ export class MarketPanel extends Panel {
     const subcategory: op_def.IMarketCategory = gameobject.getData("category");
     this.mSelectedCategories = gameobject;
     if (subcategory) {
+      const zoom = this.mWorld.uiScaleNew;
       this.mSubTabs = [];
       const group = new CheckboxGroup();
       const subcategorys = subcategory.subcategory;
-      const capW = 56 * this.dpr;
-      const capH = 41 * this.dpr;
+      const capW = 56 * this.dpr * zoom;
+      const capH = 41 * this.dpr * zoom;
       for (let i = 0; i < subcategorys.length; i++) {
-        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2, capH / 2);
+        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 * zoom, capH / 2);
         textBtn.setData("category", subcategorys[i]);
         textBtn.setSize(capW, capH);
+        textBtn.setFontSize(15 * this.dpr * zoom);
         this.mSubTabs[i] = textBtn;
       }
       group.appendItemAll(this.mSubTabs);

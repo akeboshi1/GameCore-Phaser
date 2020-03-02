@@ -107,11 +107,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
+    private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
     constructor(protected manager: IRoomManager) {
         super();
         this.mWorld = this.manager.world;
+        this.moveStyle = this.mWorld.moveStyle;
         this.mScaleRatio = this.mWorld.scaleRatio;
         if (this.mWorld) {
             if (this.connection) {
@@ -392,7 +394,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+        if (!this.mCameraService.targetFollow) {
+            this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+        }
     }
 
     protected onGameOutHandler() {
@@ -529,7 +533,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {
-        if (this.world.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+        if (this.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
             return;
         }
         if (!this.mPlayerManager) {

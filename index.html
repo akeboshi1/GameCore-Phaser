@@ -28,7 +28,7 @@
         <div id="game"></div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
+        window.addEventListener('load', (event) => {
             const launcher = TooqingCore.Launcher;
             const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
             app.registerReload(window.reload);
