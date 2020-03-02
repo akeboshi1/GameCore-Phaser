@@ -45,5 +45,5 @@ export interface WorldService {
 
     closeGame();
 
-    loadSceneConfig(sceneId: number): Promise<any>;
+    loadSceneConfig(sceneId: string): Promise<any>;
 }

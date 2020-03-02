@@ -63,7 +63,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mRoleManager: RoleManager;
     private isFullStart: boolean = false;
     private mOrientation: number = 0;
-    private sceneConfigUrls: Map<number, string> = new Map();
+    private gameConfigUrls: Map<string, string> = new Map();
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
@@ -74,7 +74,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             throw new Error(`Config.game_id is required.`);
         }
         if (!config.scale_ratio) {
-            config.scale_ratio = window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
+            config.scale_ratio = (window.innerWidth / this.DEFAULT_WIDTH) * window.devicePixelRatio;
         }
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
@@ -138,9 +138,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void { }
+    onDisConnected(connection?: SocketConnection): void {}
 
-    onError(reason: SocketConnectionError | undefined): void { }
+    onError(reason: SocketConnectionError | undefined): void {}
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -376,20 +376,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    public initSceneConfigUrls(urls: string[]) {
+    public initgameConfigUrls(urls: string[]) {
         for (const url of urls) {
             const sceneId = Tool.baseName(url);
-            this.sceneConfigUrls.set(parseInt(sceneId, 10), url);
+            this.gameConfigUrls.set(sceneId, url);
         }
     }
 
-    public getSceneConfigUrl(sceneId: number) {
-        return this.sceneConfigUrls.get(sceneId);
+    public getConfigUrl(sceneId: string) {
+        return this.gameConfigUrls.get(sceneId);
     }
 
-    public loadSceneConfig(sceneId: number) {
-        const url = this.getSceneConfigUrl(sceneId);
-        return this.loadGameConfig([url]);
+    public loadSceneConfig(sceneId: string) {
+        const url = this.getConfigUrl(sceneId);
+        return this.loadGameConfig(url);
     }
 
     private async _createAnotherGame(gameId, worldId) {
@@ -466,10 +466,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const baseHeight: number = this.mConfig.baseHeight;
         if (!this.mGame.device.os.desktop) {
             if (width < height) {
-                this.mConfig.ui_scale = width / baseHeight * 2;
+                this.mConfig.ui_scale = (width / baseHeight) * 2;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
             } else if (width > height) {
-                this.mConfig.ui_scale = width / baseWidth * 2;
+                this.mConfig.ui_scale = (width / baseWidth) * 2;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
             }
         }
@@ -493,13 +493,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private orientationResize(screenWidth, screenHeight, width, height) {
         if (this.mGame) {
-            if (width < height) { // 基础竖版
+            if (width < height) {
+                // 基础竖版
                 // this.mConfig.ui_scale = width / this.mConfig.baseHeight;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
                 if (!this.isFullStart) {
                     Logger.getInstance().log("竖版" + this.mGame.scale.orientation);
                 }
-            } else { // 基础横版
+            } else {
+                // 基础横版
                 // this.mConfig.ui_scale = width / this.mConfig.baseWidth;
                 this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
                 if (!this.isFullStart) {
@@ -580,7 +582,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const configUrls = content.configUrls;
         this.mMoveStyle = content.moveStyle;
 
-        this.initSceneConfigUrls(configUrls);
+        this.initgameConfigUrls(configUrls);
 
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
@@ -588,13 +590,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
-        this.loadGameConfig(content.configUrls)
+
+        const mainGameConfigUrl = this.getConfigUrl(this.mConfig.game_id);
+
+        this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame(content.keyEvents);
                 // Logger.getInstance().debug("created game suc");
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 Logger.getInstance().log(err);
             });
     }
@@ -728,40 +733,29 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
-    private loadGameConfig(paths: string[]): Promise<Lite> {
-        const promises = [];
-        let configPath = "";
-        for (const remotePath of paths) {
-            if (PI_EXTENSION_REGEX.test(remotePath)) {
-                configPath = ResUtils.getGameConfig(remotePath);
-                // Logger.getInstance().log(`start download config: ${configPath}`);
-                promises.push(load(configPath, "arraybuffer"));
-            }
-        }
-        // promises.push(load("http://172.17.19.48:8080/5e1d81163bcc774a3c172e94.pi", "arraybuffer"));
-        // TODO Promise.all如果其中有一个下载失败，会返回error
-        return Promise.all(promises).then((reqs: any[]) => {
+    private loadGameConfig(remotePath): Promise<Lite> {
+        const configPath = ResUtils.getGameConfig(remotePath);
+
+        return load(configPath, "arraybuffer").then((req: any) => {
             Logger.getInstance().log("start decodeConfig");
-            return this.decodeConfigs(reqs);
+            return this.decodeConfigs(req);
         });
     }
 
-    private decodeConfigs(reqs: any[]): Promise<Lite> {
+    private decodeConfigs(req): Promise<Lite> {
         return new Promise((resolve, reject) => {
-            for (const req of reqs) {
-                const arraybuffer = req.response;
-                if (arraybuffer) {
-                    try {
-                        const gameConfig = new Lite();
-                        gameConfig.deserialize(new Uint8Array(arraybuffer));
-                        Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
-                        resolve(gameConfig);
-                    } catch (error) {
-                        reject(error);
-                    }
-                } else {
-                    reject("error");
+            const arraybuffer = req.response;
+            if (arraybuffer) {
+                try {
+                    const gameConfig = new Lite();
+                    gameConfig.deserialize(new Uint8Array(arraybuffer));
+                    Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
+                    resolve(gameConfig);
+                } catch (error) {
+                    reject(error);
                 }
+            } else {
+                reject("error");
             }
         });
     }

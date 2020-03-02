@@ -7,7 +7,8 @@ import {
     TerrainNode,
     PaletteNode,
     TerrainCollectionNode,
-    SceneNode
+    SceneNode,
+    AnimationDataNode
 } from "game-capsule";
 import { Logger } from "../utils/log";
 import { op_def } from "pixelpai_proto";
@@ -56,6 +57,37 @@ export class ElementStorage implements IElementStorage {
             return;
         }
 
+        const objs = config.objectsList;
+        let displayModel = null;
+        for (const obj of objs) {
+            if (obj.type === op_def.NodeType.ElementNodeType) {
+                displayModel = this.mModels.get(obj.id);
+                if (!displayModel) {
+                    const anis = [];
+                    const eleAnis = (<ElementNode>obj).animations;
+                    const objAnis = eleAnis.animationData;
+                    for (const ani of objAnis) {
+                        anis.push(new Animation(ani));
+                    }
+                    displayModel = new FramesModel({
+                        id: obj.id,
+                        sn: obj.sn,
+                        animations: {
+                            defaultAnimationName: eleAnis.defaultAnimationName,
+                            display: eleAnis.display,
+                            animationData: anis
+                        }
+                    });
+                    this.mModels.set(obj.id, displayModel);
+                }
+                const ele: IDisplayRef = {
+                    id: obj.id,
+                    displayModel
+                };
+                this.mElementRef.set(obj.id, ele);
+            }
+        }
+
         for (const peer of config.root.palette.peers) {
             const { key, entity } = peer;
             const terrain = entity as TerrainNode;
@@ -67,7 +99,9 @@ export class ElementStorage implements IElementStorage {
                     animations: {
                         defaultAnimationName: terrain.animations.defaultAnimationName,
                         display: terrain.animations.display,
-                        animationData: terrain.animations.animationData.map((ani) => new Animation(ani))
+                        animationData: terrain.animations.animationData.map(
+                            (ani: AnimationDataNode) => new Animation(ani)
+                        )
                     }
                 });
                 this.mPaletteModels.set(entity.id, frameModel);

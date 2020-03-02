@@ -121,16 +121,16 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             if (this.mCurRoom) {
                 this.leaveScene(this.mCurRoom);
             }
-            room = new Room(this);
-            this.mRooms.push(room);
 
             // load this scene config in gameConfig
-            this.world.loadSceneConfig(vw.scene.id).then((config: Lite) => {
-                this.world.elementStorage.setSceneConfig(config);
-                room.addActor(vw.actor);
-                room.enter(vw.scene);
-                this.mCurRoom = room;
-            });
+            // this.world.loadSceneConfig(vw.scene.id.toString()).then((config: Lite) => {
+            //     this.world.elementStorage.setSceneConfig(config);
+            room = new Room(this);
+            this.mRooms.push(room);
+            room.addActor(vw.actor);
+            room.enter(vw.scene);
+            this.mCurRoom = room;
+            // });
         }
     }
 
@@ -173,7 +173,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private leaveScene(room: IRoomService) {
         if (!room) return;
-        this.mRooms = this.mRooms.filter((r) => r.id !== room.id);
+        this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
         room.destroy();
     }
 
