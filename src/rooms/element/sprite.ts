@@ -26,6 +26,7 @@ export interface ISprite {
     readonly platformId: string;
     readonly sceneId: number;
     readonly nodeType: op_def.NodeType;
+    readonly isFlip: boolean;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
     pos: Pos;
@@ -64,6 +65,7 @@ export class Sprite implements ISprite {
     protected mPlatformId: string;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mNodeType: NodeType;
+    protected mIsFlip: boolean = false;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -151,7 +153,7 @@ export class Sprite implements ISprite {
             if (this.mDisplayInfo.existAnimation(aniName)) {
                 this.mCurrentAnimationName = aniName;
             } else {
-                this.mDirection = 3;
+                this.direction = 3;
             }
         }
         return this;
@@ -183,6 +185,11 @@ export class Sprite implements ISprite {
 
     set direction(val: number) {
         this.mDirection = val;
+        this.mIsFlip = this.checkIsFlip();
+    }
+
+    get isFlip(): boolean {
+        return this.mIsFlip;
     }
 
     get nickname(): string {
@@ -354,5 +361,16 @@ export class Sprite implements ISprite {
             this._originWalkPoint.x = value[0];
             this._originWalkPoint.y = value[1];
         }
+    }
+
+    private checkIsFlip(): boolean {
+        if (!this.mDisplayInfo) {
+            return;
+        }
+        if (this.mDirection === 3 || this.mDirection === 7) {
+            return false;
+        }
+        const aniName = this.mCurrentAnimationName.split("_")[0] + "_" + this.mDirection;
+        return !this.mDisplayInfo.existAnimation(aniName);
     }
 }

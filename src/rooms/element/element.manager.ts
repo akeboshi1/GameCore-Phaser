@@ -103,9 +103,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         const aniName = sprite.currentAnimationName || displayInfo.animationName;
-        const collisionArea = displayInfo.getCollisionArea(aniName);
-        let walkArea = displayInfo.getWalkableArea(aniName);
-        const origin = displayInfo.getOriginPoint(aniName);
+        const flip = sprite.isFlip;
+        const collisionArea = displayInfo.getCollisionArea(aniName, false);
+        let walkArea = displayInfo.getWalkableArea(aniName, false);
+        const origin = displayInfo.getOriginPoint(aniName, false);
         const rows = collisionArea.length;
         const cols = collisionArea[0].length;
         const pos = this.mRoom.transformToMini45(sprite.pos);
@@ -136,9 +137,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         const aniName = sprite.currentAnimationName || displayInfo.animationName;
-        const collisionArea = displayInfo.getCollisionArea(aniName);
-        let walkArea = displayInfo.getWalkableArea(aniName);
-        const origin = displayInfo.getOriginPoint(aniName);
+        const flip = sprite.isFlip;
+        const collisionArea = displayInfo.getCollisionArea(aniName, flip);
+        let walkArea = displayInfo.getWalkableArea(aniName, flip);
+        const origin = displayInfo.getOriginPoint(aniName, flip);
         const rows = collisionArea.length;
         const cols = collisionArea[0].length;
         const pos = this.mRoom.transformToMini45(sprite.pos);

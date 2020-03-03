@@ -68,9 +68,10 @@ export class DecorateTerrainManager extends TerrainManager {
       return;
     }
     const aniName = sprite.currentAnimationName || displayInfo.animationName;
-    const collisionArea = displayInfo.getCollisionArea(aniName);
-    const walkArea = displayInfo.getWalkableArea(aniName);
-    const origin = displayInfo.getOriginPoint(aniName);
+    const flip = sprite.isFlip;
+    const collisionArea = displayInfo.getCollisionArea(aniName, flip);
+    const walkArea = displayInfo.getWalkableArea(aniName, flip);
+    const origin = displayInfo.getOriginPoint(aniName, flip);
     let rows = collisionArea.length;
     let cols = collisionArea[0].length;
     let hasCollisionArea = true;

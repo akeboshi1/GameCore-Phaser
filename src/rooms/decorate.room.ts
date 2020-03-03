@@ -323,8 +323,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const map = this.mElementManager.map;
         const displayInfo = sprite.displayInfo;
         const aniName = sprite.currentAnimationName || displayInfo.animationName;
-        const collisionArea = displayInfo.getCollisionArea(aniName);
-        const origin = displayInfo.getOriginPoint(aniName);
+        const flip = sprite.isFlip;
+        const collisionArea = displayInfo.getCollisionArea(aniName, flip);
+        const origin = displayInfo.getOriginPoint(aniName, flip);
         let row = 0;
         let col = 0;
         for (let i = 0; i < collisionArea.length; i++) {
@@ -367,9 +368,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             // TODO 移动判断
             if (this.mSelectedElement.selecting) {
                 this.mSelectedElement.selecting = false;
-                if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
-                    this.sendPosition(this.mSelectedElement.sprite);
-                }
+                // if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+                //     this.sendPosition(this.mSelectedElement.sprite);
+                // }
 
             }
         }
@@ -481,11 +482,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
 
         this.mSelectedElement.turnElement();
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
-        content.sprites = [sprite.toSprite()];
-        content.nodeType = sprite.nodeType;
-        this.world.connection.send(packet);
+        // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
+        // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
+        // content.sprites = [sprite.toSprite()];
+        // content.nodeType = sprite.nodeType;
+        // this.world.connection.send(packet);
     }
 
     private onRecycleHandler(display: DisplayObject) {
@@ -532,7 +533,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             // this.addElement()
             if (this.mSelectedElement.root) {
                 this.addElement(this.mSelectedElement.root);
-                this.sendPosition(this.mSelectedElement.root);
+                // this.sendPosition(this.mSelectedElement.root);
             }
         }
         this.mSelectedElement.remove();
