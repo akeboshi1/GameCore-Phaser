@@ -1,7 +1,7 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { DecorateControlPanel } from "./DecorateControlPanel";
-import { LayerManager, ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../layer.manager";
 import { ConnectionService } from "../../net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
@@ -50,9 +50,7 @@ export class DecorateControlMediator extends BaseMediator {
         if (!this.connection) {
             return;
         }
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_LEAVE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_LEAVE = packet.content;
-        content.needSaveEditScene = true;
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_ALL);
         this.world.connection.send(packet);
     }
 

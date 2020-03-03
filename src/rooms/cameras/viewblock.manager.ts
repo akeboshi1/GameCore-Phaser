@@ -28,7 +28,7 @@ export class ViewblockManager implements ViewblockService {
     }
 
     public add(e: IElement): boolean {
-        if (this.mCameras) return false;
+        if (!this.mCameras) return false;
         const miniView = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
             const rect = block.rectangle;
