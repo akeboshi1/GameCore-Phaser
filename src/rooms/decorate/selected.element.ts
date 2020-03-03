@@ -62,6 +62,7 @@ export class SelectedElement {
         this.mDisplay.load(<FramesModel> sprite.displayInfo);
         this.mSelecting = true;
         this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
+        this.roomService.world.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT);
     }
 
     turnElement() {
@@ -70,6 +71,8 @@ export class SelectedElement {
         }
         const sprite = this.sprite;
         sprite.turn();
+        if (this.mDisplay.element) this.mDisplay.element.play(sprite.currentAnimationName);
+        // this.mDisplay.play(sprite.currentAnimationName);
         this.mDisplay.setDirection(sprite.direction);
     }
 
@@ -83,6 +86,7 @@ export class SelectedElement {
             this.mRootSprite = null;
         }
         this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_EXPANED);
+        this.roomService.world.emitter.emit(MessageType.CANCEL_DECORATE_ELEMENT);
     }
 
     update(time: number, delta: number) {

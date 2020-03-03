@@ -516,11 +516,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const aniName: string = sprite.currentAnimationName || sprite.displayInfo.animationName;
         if (this.canPut(sprite)) {
             this.addElement(sprite);
-            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
-            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
-            content.sprites = [sprite.toSprite()];
-            content.nodeType = sprite.nodeType;
-            this.world.connection.send(packet);
+            // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
+            // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
+            // content.sprites = [sprite.toSprite()];
+            // content.nodeType = sprite.nodeType;
+            // this.world.connection.send(packet);
+            if (this.mSelectedElement.root) {
+                this.sendUpdateSprite(sprite);
+            } else {
+                this.sendAddSprite(sprite);
+            }
             this.mSelectedElement.remove();
         } else {
             // TODO 不可放置，回到之前的位置
@@ -540,12 +545,28 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mSelectedElement.remove();
     }
 
+    private sendAddSprite(sprite: ISprite) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
+        content.sprites = [sprite.toSprite()];
+        content.nodeType = sprite.nodeType;
+        this.connection.send(packet);
+    }
+
+    private sendUpdateSprite(sprite: ISprite) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_UPDATE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_UPDATE_SPRITE = packet.content;
+        content.sprites = [sprite.toSprite()];
+        content.nodeType = sprite.nodeType;
+        this.connection.send(packet);
+    }
+
     private sendPosition(sprite: ISprite) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_CHANGE_SPRITE_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_CHANGE_SPRITE_POSITION = packet.content;
         content.sprites = [sprite.toSprite()];
         content.nodeType = sprite.nodeType;
-        this.world.connection.send(packet);
+        this.connection.send(packet);
     }
 
     private onSelectSpriteHandler(packet: PBpacket) {

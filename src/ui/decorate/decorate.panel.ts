@@ -1,13 +1,10 @@
 import {Panel} from "../components/panel";
-import {Border, Url} from "../../utils/resUtil";
-import {NinePatch} from "../components/nine.patch";
 import { DisplayObject } from "../../rooms/display/display.object";
 import { Pos } from "../../utils/pos";
 import { Position45, IPosition45Obj } from "../../utils/position45";
-import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
-import { Logger } from "../../utils/log";
 import { MessageType } from "../../const/MessageType";
+import { Direction } from "../../rooms/element/element";
 
 export class DecoratePanel extends Panel {
     private readonly resKey = "decorate";
@@ -27,11 +24,7 @@ export class DecoratePanel extends Panel {
     private mExtendBtn: Phaser.GameObjects.Image;
     private mSubMenus: Phaser.GameObjects.Container;
 
-    private mMoveMenuContainer: Phaser.GameObjects.Container;
-    private mArrow1: Phaser.GameObjects.Image;
-    private mArrow3: Phaser.GameObjects.Image;
-    private mArrow5: Phaser.GameObjects.Image;
-    private mArrow7: Phaser.GameObjects.Image;
+    private mMoveMenuContainer: MoveMenu;
     private mDisplayObject: DisplayObject;
     private readonly key = "decorate_edit_menu";
     private offset: Pos = new Pos();
@@ -62,6 +55,11 @@ export class DecoratePanel extends Panel {
 
     public close() {
         this.unregister();
+    }
+
+    public destroy() {
+        this.unregister();
+        super.destroy();
     }
 
     protected preload() {
@@ -104,7 +102,9 @@ export class DecoratePanel extends Panel {
             x: w >> 1,
             y: 60 * this.dpr
         }, false);
-        this.mMoveMenuContainer = this.scene.make.container(undefined, false);
+        this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
+        this.mMoveMenuContainer.y = this.mSubMenus.y + 60 * this.dpr + this.mMoveMenuContainer.height / 2;
+
         this.mOkBtn = this.scene.make.image({
             key: this.key,
             frame: "ok_btn.png"
@@ -192,6 +192,9 @@ export class DecoratePanel extends Panel {
         this.mOkBtn.on("pointerup", this.onAddHandler, this);
         this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
         this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
+        this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
+        this.mMoveMenuContainer.register();
+        this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
         // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
         // this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
         // this.mOkBtn.on("pointerup", this.onPutHandler, this);
@@ -201,7 +204,14 @@ export class DecoratePanel extends Panel {
         if (!this.mInitialized) {
             return;
         }
-        this.mCancelBtn.on("pointerup", this.onCancelHandler, this);
+        this.mCancelBtn.off("pointerup", this.onCancelHandler, this);
+        this.mOkBtn.off("pointerup", this.onAddHandler, this);
+        this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
+        this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
+        this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
+        this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
+        this.mMoveMenuContainer.unRegister();
+
         // this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
         // this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
         // this.mOkBtn.off("pointerup", this.onPutHandler, this);
@@ -327,39 +337,116 @@ export class DecoratePanel extends Panel {
         this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
     }
 
+    private onMoveHandler(dir: number) {
+        if (typeof dir !== "number") {
+            return;
+        }
+        switch (dir) {
+            case Direction.north_west:
+                this.onLeftUpHandler();
+                break;
+            case Direction.west_south:
+                this.onLeftDownHandler();
+                break;
+            case Direction.south_east:
+                this.onRightDownHandler();
+                break;
+            case Direction.east_north:
+                this.onRightUpHandler();
+                break;
+        }
+    }
+
     private onPutHandler() {
         this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
+    }
+
+    private onShowMoveMenuHandler() {
+        this.add(this.mMoveMenuContainer);
     }
 }
 
 class MoveMenu extends Phaser.GameObjects.Container {
+    private mBtns: Phaser.GameObjects.Image[];
     private mArrow1: Phaser.GameObjects.Image;
     private mArrow3: Phaser.GameObjects.Image;
     private mArrow5: Phaser.GameObjects.Image;
     private mArrow7: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, key: string) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number = 1, uiScale: number = 1) {
         super(scene);
         const bg = scene.make.image({
             key,
             frame: "bg.png"
         }, false);
+        this.setSize(bg.displayWidth, bg.displayHeight);
 
         this.mArrow1 = scene.make.image({
             key,
-            frame: "arrow1.png"
-        }, false);
+            frame: "arrow_1.png"
+        }, false).setInteractive().setData("dir", 1);
+
         this.mArrow3 = scene.make.image({
             key,
-            frame: "arrow3.png"
-        }, false);
+            frame: "arrow_3.png"
+        }, false).setInteractive().setData("dir", 3);
         this.mArrow5 = scene.make.image({
             key,
-            frame: "arrow5.png"
-        }, false);
+            frame: "arrow_5.png"
+        }, false).setInteractive().setData("dir", 5);
         this.mArrow7 = scene.make.image({
             key,
-            frame: "arrow7.png"
-        }, false);
-        this.add([bg, this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7]);
+            frame: "arrow_7.png"
+        }, false).setInteractive().setData("dir", 7);
+        this.mBtns = [this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7];
+        this.add(bg);
+        this.add(this.mBtns);
+
+        const w = this.width;
+        let totalWidth = this.width;
+        this.mBtns.map((btn) => totalWidth -= btn.displayWidth);
+        const space = totalWidth = totalWidth / (this.mBtns.length - 1);
+        const arrowH = (6 * dpr);
+        for (let i = 0; i < this.mBtns.length; i++) {
+            if (i === 0) {
+                this.mBtns[i].x = 0 + this.mBtns[i].width / 2 - this.width / 2;
+            } else {
+                this.mBtns[i].x = space + this.mBtns[i - 1].x + this.mBtns[i - 1].width;
+            }
+            this.mBtns[i].y = (this.height - this.mBtns[i].height) / 2 - arrowH;
+        }
+        this.setInteractive();
+    }
+
+    public register() {
+        // for (const btn of this.mBtns) {
+        //     btn.on("pointerup", this.onArrowHandler, this);
+        // }
+        this.mArrow1.on("pointerup", this.onArrow1Handler, this);
+        this.mArrow3.on("pointerup", this.onArrow3Handler, this);
+        this.mArrow5.on("pointerup", this.onArrow5Handler, this);
+        this.mArrow7.on("pointerup", this.onArrow7Handler, this);
+    }
+
+    public unRegister() {
+        this.mArrow1.off("pointerup", this.onArrow1Handler, this);
+        this.mArrow3.off("pointerup", this.onArrow3Handler, this);
+        this.mArrow5.off("pointerup", this.onArrow5Handler, this);
+        this.mArrow7.off("pointerup", this.onArrow7Handler, this);
+    }
+
+    private onArrow1Handler() {
+        this.emit("move", Direction.north_west);
+    }
+
+    private onArrow3Handler() {
+        this.emit("move", Direction.west_south);
+    }
+
+    private onArrow5Handler() {
+        this.emit("move", Direction.south_east);
+    }
+
+    private onArrow7Handler() {
+        this.emit("move", Direction.east_north);
     }
 }

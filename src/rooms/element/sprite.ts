@@ -140,8 +140,20 @@ export class Sprite implements ISprite {
     }
 
     public turn(): ISprite {
+        if (!this.mDisplayInfo) {
+            return;
+        }
         this.mDirection += 2;
-        this.mDirection = this.mDirection > 5 ? 3 : this.mDirection;
+        this.mDirection = this.mDirection > 7 ? 1 : this.mDirection;
+        const baseAniName = this.mCurrentAnimationName.split("_3");
+        if (this.mDirection === 7) {
+            const aniName = baseAniName[0] + "_" + this.mDirection;
+            if (this.mDisplayInfo.existAnimation(aniName)) {
+                this.mCurrentAnimationName = aniName;
+            } else {
+                this.mDirection = 3;
+            }
+        }
         return this;
     }
 

@@ -16,6 +16,7 @@ export interface IFramesModel {
     package?: op_gameconfig.IPackage;
     shops?: (op_gameconfig.IShop[] | null);
     getAnimations(name: string): IAnimationData;
+    existAnimation(aniName: string): boolean;
     getCollisionArea(aniName: string): number[][];
     getWalkableArea(aniName: string): number[][];
     getOriginPoint(aniName: string): Phaser.Geom.Point;
@@ -62,6 +63,11 @@ export class FramesModel implements IFramesModel {
 
     public getAnimationData(): Map<string, IAnimationData> {
         return this.animations;
+    }
+
+    public existAnimation(aniName: string): boolean {
+        if (!this.animations) return false;
+        return this.animations.has(aniName);
     }
 
     public getAnimations(name: string): IAnimationData {
