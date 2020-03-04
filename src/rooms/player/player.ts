@@ -81,7 +81,7 @@ export class Player extends Element {
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
-            if (this.mDisplay) this.mDisplay.play(this.mCurState);
+            if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
         }
     }
 
@@ -93,7 +93,7 @@ export class Player extends Element {
         if (!val) val = PlayerState.IDLE;
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
-            (this.mDisplay as DragonbonesDisplay).play(val);
+            (this.mDisplay as DragonbonesDisplay).play({ animationName: val, flip: false });
         }
     }
 

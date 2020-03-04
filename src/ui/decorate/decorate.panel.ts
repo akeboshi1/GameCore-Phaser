@@ -25,6 +25,7 @@ export class DecoratePanel extends Panel {
     private mSubMenus: Phaser.GameObjects.Container;
 
     private mMoveMenuContainer: MoveMenu;
+    private mExtendsMenuContainer: MoveMenu;
     private mDisplayObject: DisplayObject;
     private readonly key = "decorate_edit_menu";
     private offset: Pos = new Pos();
@@ -71,26 +72,6 @@ export class DecoratePanel extends Panel {
     }
 
     protected init() {
-        // this.mControllContainer = this.scene.make.container({ y: -100 }, false);
-        // const border = new NinePatch(this.scene, 0, 0, 196, 70, Border.getName(), null, Border.getConfig());
-
-        // this.mTurnBtn = this.createImage(this.resKey, "turn_btn.png", -60, 0);
-        // this.mRecycleBtn = this.createImage(this.resKey, "recycle_btn.png", 0, 0);
-        // this.mConfirmBtn = this.createImage(this.resKey, "confirm_btn.png", 60, 0);
-        // const arrow = this.scene.make.image({
-        //     key: "arrow",
-        //     y: 46
-        // }).setAngle(90);
-        // this.mControllContainer.add(arrow);
-
-        // this.mArrow1 = this.createImage(this.resKey, "arrow_1.png", 0, 0).setOrigin(0, 0);
-        // this.mArrow1.on("pointerup", this.onLeftUpHandler, this);
-        // this.mArrow3 = this.createImage(this.resKey, "arrow_3.png", 0, 300).setOrigin(0, 0);
-        // this.mArrow3.on("pointerup", this.onLeftDownHandler, this);
-        // this.mArrow5 = this.createImage(this.resKey, "arrow_5.png", 300, 300).setOrigin(0, 0);
-        // this.mArrow5.on("pointerup", this.onRightDownHandler, this);
-        // this.mArrow7 = this.createImage(this.resKey, "arrow_7.png", 300, 100).setOrigin(0, 0);
-        // this.mArrow7.on("pointerup", this.onRightUpHandler, this);
         const w = this.scene.cameras.main.width / this.scale;
         const h = this.scene.cameras.main.height / this.scale;
 
@@ -104,6 +85,9 @@ export class DecoratePanel extends Panel {
         }, false);
         this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
         this.mMoveMenuContainer.y = this.mSubMenus.y + 60 * this.dpr + this.mMoveMenuContainer.height / 2;
+
+        this.mExtendsMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
+        this.mExtendsMenuContainer.y = this.mMoveMenuContainer.y;
 
         this.mOkBtn = this.scene.make.image({
             key: this.key,
@@ -193,6 +177,7 @@ export class DecoratePanel extends Panel {
         this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
         this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
         this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
+        this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
         this.mMoveMenuContainer.register();
         this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
         // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
@@ -208,6 +193,7 @@ export class DecoratePanel extends Panel {
         this.mOkBtn.off("pointerup", this.onAddHandler, this);
         this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
         this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
+        this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
         this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
         this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
         this.mMoveMenuContainer.unRegister();
@@ -363,6 +349,10 @@ export class DecoratePanel extends Panel {
 
     private onShowMoveMenuHandler() {
         this.add(this.mMoveMenuContainer);
+    }
+
+    private onShowExtendsHandler() {
+        this.add(this.mExtendsMenuContainer);
     }
 }
 

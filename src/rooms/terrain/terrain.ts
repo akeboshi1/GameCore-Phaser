@@ -14,7 +14,6 @@ export class Terrain extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
     protected mDisplay: TerrainDisplay | undefined;
-    protected mAnimationName: string;
     protected mModel: ISprite;
     protected mBlockable: boolean = true;
 
@@ -52,10 +51,15 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public play(animationName: string): void {
-        if (this.mAnimationName !== animationName) {
-            this.mAnimationName = animationName;
+        if (!this.mModel) {
+            Logger.getInstance().error(`${Terrain.name}: sprite is empty`);
+            return;
+        }
+        if (this.mModel.currentAnimationName !== animationName) {
+            // this.mAnimationName = animationName;
+            this.mModel.currentAnimationName = animationName;
             if (this.mDisplay) {
-                this.mDisplay.play(this.mAnimationName);
+                this.mDisplay.play(this.model.currentAnimation);
             }
         }
     }
@@ -226,5 +230,12 @@ export class Terrain extends BlockObject implements IElement {
 
     set model(val: ISprite) {
         this.setModel(val);
+    }
+
+    get currentAnimationName() {
+        if (this.mModel) {
+            return this.mModel.currentAnimationName;
+        }
+        return "";
     }
 }

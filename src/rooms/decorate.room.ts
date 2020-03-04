@@ -25,6 +25,7 @@ import { DecorateElementManager } from "./element/decorate.element.manager";
 import { MessageType } from "../const/MessageType";
 import { Sprite, ISprite } from "./element/sprite";
 import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
+import { SpawnPoint } from "./decorate/spawn.point";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -70,6 +71,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE, this.onSelectSpriteHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_SPAWN_POINT, this.onShowSpawnPointHandler);
         }
     }
 
@@ -322,8 +324,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         const map = this.mElementManager.map;
         const displayInfo = sprite.displayInfo;
-        const aniName = sprite.currentAnimationName || displayInfo.animationName;
-        const flip = sprite.isFlip;
+        const curAni = sprite.currentAnimation;
+        const aniName = curAni.animationName;
+        const flip = curAni.flip;
         const collisionArea = displayInfo.getCollisionArea(aniName, flip);
         const origin = displayInfo.getOriginPoint(aniName, flip);
         let row = 0;
@@ -525,7 +528,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             if (this.mSelectedElement.root) {
                 this.sendUpdateSprite(sprite);
             } else {
-                this.sendAddSprite(sprite);
+                if (sprite.nodeType === op_def.NodeType.SpawnPointType) {
+                    this.sendSpawnPoint(sprite.pos);
+                } else {
+                    this.sendAddSprite(sprite);
+                }
             }
             this.mSelectedElement.remove();
         } else {
@@ -562,6 +569,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.connection.send(packet);
     }
 
+    private sendSpawnPoint(pos: Pos) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SET_SPAWN_POINT);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SET_SPAWN_POINT = packet.content;
+        const pos3f = op_def.PBPoint3f.create();
+        pos3f.x = pos.x;
+        pos3f.y = pos.y;
+        content.spawnPoint = pos3f;
+        this.connection.send(packet);
+    }
+
     private sendPosition(sprite: ISprite) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_CHANGE_SPRITE_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_CHANGE_SPRITE_POSITION = packet.content;
@@ -584,6 +601,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const pointer = this.scene.input.activePointer;
         sprite.setPosition(pointer.worldX, pointer.worldY);
         this.mSelectedElement.setSprite(sprite);
+    }
+
+    private onShowSpawnPointHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_SPAWN_POINT = packet.content;
+        const spawnPoint = new SpawnPoint();
+        const pos = content.spawnPoint;
+        spawnPoint.setPosition(pos.x, pos.y);
+        this.mSelectedElement.setSprite(spawnPoint);
     }
 
     get id(): number {

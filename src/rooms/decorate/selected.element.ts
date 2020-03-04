@@ -71,9 +71,9 @@ export class SelectedElement {
         }
         const sprite = this.sprite;
         sprite.turn();
-        if (this.mDisplay.element) this.mDisplay.element.play(sprite.currentAnimationName);
+        if (this.mDisplay) this.mDisplay.play(sprite.currentAnimation);
         // this.mDisplay.play(sprite.currentAnimationName);
-        this.mDisplay.setDirection(sprite.direction);
+        // this.mDisplay.setDirection(sprite.direction);
         this.checkCanPut();
     }
 

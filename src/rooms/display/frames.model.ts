@@ -40,7 +40,6 @@ export class FramesModel implements IFramesModel {
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
     protected mGen: string;
-    private mDirable: number;
 
     constructor(data: any) {
         // TODO 定义IElement接口
@@ -156,6 +155,9 @@ export class FramesModel implements IFramesModel {
             //     originPoint: aniData.originPoint
             // };
             this.animations.set(aniData.name, aniData);
+            // this.animations.set(aniData.name + "_7", aniData);
+            // this.animations.set(aniData.name + "_1", aniData);
+            // this.animations.set(aniData.name + "_5", aniData);
         }
     }
 }

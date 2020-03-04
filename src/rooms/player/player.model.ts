@@ -11,10 +11,6 @@ export class PlayerModel extends Sprite {
         this.mCollisionArea = data.collisionArea;
         this.mOriginPoint = data.originPoint;
         this.mWalkOriginPoint = data.walkOriginPoint;
-        this.mSlot = data.slot;
-        this.mMaxNum = data.maxNum;
-        this.mCamp = data.camp;
-        this.mAttributes = data.attributes;
         this.mPackage = data.package;
         this.mSceneId = data.sceneId;
         this.mUuid = data.uuid;

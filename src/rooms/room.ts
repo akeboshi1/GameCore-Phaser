@@ -213,8 +213,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
             this.cameraService.syncCamera();
+            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
             // this.mCameraService.syncCameraScroll();
         }
 

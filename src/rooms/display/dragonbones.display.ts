@@ -1,10 +1,10 @@
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
-import { Logger } from "../../utils/log";
 import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
+import { AnimationData } from "../element/sprite";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -134,7 +134,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         return this.mArmatureDisplay;
     }
 
-    public play(val: string) {
+    public play(val: AnimationData) {
         let dir: number = this.mDisplayInfo !== undefined && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
         switch (dir) {
             case 0:
@@ -150,7 +150,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 dir = Math.random() * 1 > .5 ? 5 : 7;
                 break;
         }
-        if (this.mActionName !== val || this.mPreDirection !== dir) {
+        const animationName = val.animationName;
+        if (this.mActionName !== animationName || this.mPreDirection !== dir) {
             let trunDir: string = "";
             if (dir === 3 || dir === 5) {
                 this.setScaleStageX(-dir + 4);
@@ -159,7 +160,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 this.setScaleStageX(-(1 / 3) * dir + (4 / 3));
                 trunDir = "_1";
             }
-            this.mActionName = val + trunDir;
+            this.mActionName = animationName + trunDir;
             if (this.mArmatureDisplay) {
                 this.mArmatureDisplay.animation.play(this.mActionName);
             }
