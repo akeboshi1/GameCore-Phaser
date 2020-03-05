@@ -62,6 +62,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   private onCompleteHandler() {
+    if (!this.scene) {
+      return;
+    }
     if (!this.mImage) {
       this.mImage = this.scene.make.image(undefined, false);
     }

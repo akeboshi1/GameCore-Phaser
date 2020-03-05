@@ -1,15 +1,20 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { DecorateControlPanel } from "./DecorateControlPanel";
-import { LayerManager, ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../layer.manager";
 import { ConnectionService } from "../../net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
+import { MessageType } from "../../const/MessageType";
 
 export class DecorateControlMediator extends BaseMediator {
     protected mView: DecorateControlPanel;
     constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, world: WorldService) {
         super(world);
+        if (world) {
+            world.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.onSelectedDecorateHandler, this);
+            world.emitter.on(MessageType.CANCEL_DECORATE_ELEMENT, this.onCancelDecorateHandler, this);
+        }
     }
 
     show() {
@@ -21,6 +26,30 @@ export class DecorateControlMediator extends BaseMediator {
         }
         this.addActionListener();
         this.mView.show();
+        this.layerManager.addToUILayer(this.mView);
+    }
+
+    destroy() {
+        if (this.world) {
+            this.world.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.onSelectedDecorateHandler, this);
+            this.world.emitter.on(MessageType.CANCEL_DECORATE_ELEMENT, this.onCancelDecorateHandler, this);
+        }
+        super.destroy();
+    }
+
+    private onSelectedDecorateHandler() {
+        if (!this.mView) {
+            return;
+        }
+        if (this.mView.parentContainer) {
+            this.mView.parentContainer.remove(this.mView);
+        }
+    }
+
+    private onCancelDecorateHandler() {
+        if (!this.mView) {
+            return;
+        }
         this.layerManager.addToUILayer(this.mView);
     }
 
@@ -50,9 +79,7 @@ export class DecorateControlMediator extends BaseMediator {
         if (!this.connection) {
             return;
         }
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_LEAVE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_LEAVE = packet.content;
-        content.needSaveEditScene = true;
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_ALL);
         this.world.connection.send(packet);
     }
 

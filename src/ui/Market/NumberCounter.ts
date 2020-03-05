@@ -13,7 +13,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private tween: Phaser.Tweens.Tween;
   private mMinNum: number = 1;
   private mMaxNum: number = 99;
-  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number) {
+  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr: number = 1, scale: number = 1) {
     super(scene, x, y);
 
     // this.mBackground = new Phaser.GameObjects.Image(this.scene, 0, 0, 200, 144, key, "input_bg.png", {
@@ -25,19 +25,19 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mBackground = this.scene.make.image({
       key,
       frame: "input_bg.png"
-    });
+    }).setScale(scale);
 
     this.mReduceBtn = this.scene.make.image({
       key,
       frame: "reduce.png",
-    }, false).setInteractive();
-    this.mReduceBtn.x = -(this.mBackground.width / 2) - this.mReduceBtn.width / 2 - 20;
+    }, false).setInteractive().setScale(scale);
+    this.mReduceBtn.x = -(this.mBackground.displayWidth / 2) - this.mReduceBtn.displayWidth / 2 - 7 * dpr * scale;
 
     this.mIncreaseBtn = this.scene.make.image({
       key,
       frame: "increase.png",
-    }, false).setInteractive();
-    this.mIncreaseBtn.x = (this.mBackground.width + this.mIncreaseBtn.width) / 2 + 20;
+    }, false).setInteractive().setScale(scale);
+    this.mIncreaseBtn.x = (this.mBackground.displayWidth + this.mIncreaseBtn.displayWidth) / 2 + 7 * dpr * scale;
     // this.mInputText = new InputText(this.scene, 0, 0, 200, 80, {
     //   fontSize: "46px",
     //   color: "#666666",
@@ -50,7 +50,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       y: 0,
       width: 160,
       height: 80,
-      fontSize: 14 * Math.round(window.devicePixelRatio || 1),
+      fontSize: 14 * dpr * scale + "px",
       color: "#666666",
       align: "center",
       type: "number",
@@ -59,7 +59,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mLabelInput.setText("1");
     this.mLabelInput.on("textchange", this.onTextChangeHandler, this);
     this.add([this.mBackground, this.mLabelInput, this.mReduceBtn, this.mIncreaseBtn]);
-    this.setSize(this.mIncreaseBtn.width + this.mReduceBtn.width + this.mBackground.width + 40, this.mBackground.height);
+    this.setSize(this.mIncreaseBtn.displayWidth + this.mReduceBtn.displayWidth + this.mBackground.displayWidth + 14 * dpr * scale, this.mBackground.displayHeight);
   }
 
   resize() {

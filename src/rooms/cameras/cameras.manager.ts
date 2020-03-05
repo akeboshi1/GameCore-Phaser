@@ -9,6 +9,7 @@ import {Pos} from "../../utils/pos";
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
     moving: boolean;
+    readonly targetFollow: any;
 
     startFollow(target: any): void;
     stopFollow(): void;
@@ -29,16 +30,18 @@ export interface ICameraService {
     centerCameas(): void;
     syncCamera(): void;
     syncCameraScroll(): void;
+
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
-    readonly MINI_VIEW_SIZE = 40;
-    readonly VIEW_PORT_SIZE = 40;
+    readonly MINI_VIEW_SIZE = 30;
+    readonly VIEW_PORT_SIZE = 30;
     protected mCamera: Phaser.Cameras.Scene2D.Camera;
     protected viewPort = new Phaser.Geom.Rectangle();
     protected miniViewPort = new Phaser.Geom.Rectangle();
     protected mMoving: boolean;
+    protected mTarget: any;
     protected readonly zoom: number;
 
     constructor(protected mRoomService: IRoomService) {
@@ -104,12 +107,14 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public startFollow(target: any) {
+        this.mTarget = target;
         if (this.mCamera && target) {
             this.mCamera.startFollow(target);
         }
     }
 
     public stopFollow() {
+        this.mTarget = null;
         if (this.mCamera) {
             this.mCamera.stopFollow();
         }
@@ -213,5 +218,9 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     get moving(): boolean {
         return this.mMoving;
+    }
+
+    get targetFollow() {
+        return this.mTarget;
     }
 }

@@ -11,6 +11,7 @@ import { ElementDisplay } from "./element.display";
 import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { IElement } from "../element/element";
+import { AnimationData } from "../element/sprite";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -68,7 +69,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: string, field?: DisplayField) {
+    play(animationName: AnimationData, field?: DisplayField) {
     }
 
     public setDirection(val: number) {

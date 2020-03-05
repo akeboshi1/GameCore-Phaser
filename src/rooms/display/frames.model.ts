@@ -3,6 +3,7 @@ import { Logger } from "../../utils/log";
 import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
 import {Animation, IAnimationData} from "./animation";
+import Helpers from "../../utils/helpers";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -16,9 +17,10 @@ export interface IFramesModel {
     package?: op_gameconfig.IPackage;
     shops?: (op_gameconfig.IShop[] | null);
     getAnimations(name: string): IAnimationData;
-    getCollisionArea(aniName: string): number[][];
-    getWalkableArea(aniName: string): number[][];
-    getOriginPoint(aniName: string): Phaser.Geom.Point;
+    existAnimation(aniName: string): boolean;
+    getCollisionArea(aniName: string, flip: boolean): number[][];
+    getWalkableArea(aniName: string, flip: boolean): number[][];
+    getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
     destroy();
 }
 
@@ -38,7 +40,6 @@ export class FramesModel implements IFramesModel {
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
     protected mGen: string;
-    private mDirable: number;
 
     constructor(data: any) {
         // TODO 定义IElement接口
@@ -64,6 +65,11 @@ export class FramesModel implements IFramesModel {
         return this.animations;
     }
 
+    public existAnimation(aniName: string): boolean {
+        if (!this.animations) return false;
+        return this.animations.has(aniName);
+    }
+
     public getAnimations(name: string): IAnimationData {
         if (!this.animations) return;
         return this.animations.get(name);
@@ -85,24 +91,32 @@ export class FramesModel implements IFramesModel {
         return anis;
     }
 
-    public getCollisionArea(aniName: string): number[][] {
+    public getCollisionArea(aniName: string, flip: boolean = false): number[][] {
         const ani = this.getAnimations(aniName);
         if (ani) {
+            if (flip) {
+                return Helpers.flipArray(ani.collisionArea);
+            }
             return ani.collisionArea;
         }
     }
 
-    public getWalkableArea(aniName: string): number[][] {
+    public getWalkableArea(aniName: string, flip: boolean = false): number[][] {
         const ani = this.getAnimations(aniName);
-        if (ani) {
-            return ani.walkableArea;
+        if (flip) {
+            return Helpers.flipArray(ani.walkableArea);
         }
+        return ani.walkableArea;
     }
 
-    public getOriginPoint(aniName): Phaser.Geom.Point {
+    public getOriginPoint(aniName, flip: boolean = false): Phaser.Geom.Point {
         const ani = this.getAnimations(aniName);
         if (ani) {
-            return ani.originPoint;
+            const originPoint = ani.originPoint;
+            if (flip) {
+                return new Phaser.Geom.Point(originPoint.y, originPoint.x);
+            }
+            return originPoint;
         }
     }
 
@@ -141,6 +155,9 @@ export class FramesModel implements IFramesModel {
             //     originPoint: aniData.originPoint
             // };
             this.animations.set(aniData.name, aniData);
+            // this.animations.set(aniData.name + "_7", aniData);
+            // this.animations.set(aniData.name + "_1", aniData);
+            // this.animations.set(aniData.name + "_5", aniData);
         }
     }
 }

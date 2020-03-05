@@ -12,6 +12,7 @@ export interface IDragonbonesModel {
     getCollisionArea(aniName: string): number[][];
     getWalkableArea(aniName: string): number[][];
     getOriginPoint(aniName: string): Phaser.Geom.Point;
+    existAnimation(aniName: string): boolean;
 }
 
 export interface IAvatar {
@@ -85,5 +86,9 @@ export class DragonbonesModel implements IDragonbonesModel {
 
     public getOriginPoint(aniName): Phaser.Geom.Point {
         return new Phaser.Geom.Point(1, 1);
+    }
+
+    existAnimation(aniName: string) {
+        return true;
     }
 }

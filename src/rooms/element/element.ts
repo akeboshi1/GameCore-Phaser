@@ -168,10 +168,15 @@ export class Element extends BlockObject implements IElement {
     }
 
     public play(animationName: string): void {
-        if (this.mAnimationName !== animationName) {
-            this.mAnimationName = animationName;
+        if (!this.mModel) {
+            Logger.getInstance().error(`${Element.name}: sprite is empty`);
+            return;
+        }
+        if (this.mModel.currentAnimationName !== animationName) {
+            // this.mAnimationName = animationName;
+            this.mModel.currentAnimationName = animationName;
             if (this.mDisplay) {
-                this.mDisplay.play(this.mAnimationName);
+                this.mDisplay.play(this.model.currentAnimation);
             }
         }
     }
@@ -184,11 +189,7 @@ export class Element extends BlockObject implements IElement {
             this.model.direction = val;
         }
         if (this.mDisplay) {
-            if (val === 3) {
-                this.mDisplay.scaleX = 1;
-            } else {
-                this.mDisplay.scaleX = -1;
-            }
+            this.mDisplay.play(this.model.currentAnimation);
         }
     }
 
@@ -293,6 +294,8 @@ export class Element extends BlockObject implements IElement {
         let pos: Pos;
         if (this.mDisplay) {
             pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+        } else {
+            pos = new Pos();
         }
         return pos;
     }
@@ -537,7 +540,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            if (this.model.currentAnimationName) this.mDisplay.play(this.model.currentAnimationName);
+            this.mDisplay.play(this.model.currentAnimation);
             this.setDepth();
             // this.mDisplay.showRefernceArea();
         }

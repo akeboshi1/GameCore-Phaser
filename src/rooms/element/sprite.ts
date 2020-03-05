@@ -6,11 +6,12 @@ import { FramesModel, IFramesModel } from "../display/frames.model";
 import { Animation } from "../display/animation";
 import Helpers from "../../utils/helpers";
 import NodeType = op_def.NodeType;
+import { Logger } from "../../utils/log";
+import { Direction } from "./element";
 
 export interface ISprite {
     readonly id: number;
     readonly avatar: IAvatar;
-    readonly currentAnimationName: string;
     readonly nickname: string;
     readonly alpha: number;
     readonly displayBadgeCards: op_def.IBadgeCard[];
@@ -19,13 +20,11 @@ export interface ISprite {
     readonly collisionArea: string;
     readonly originPoint: number[];
     readonly walkOriginPoint: number[];
-    readonly slot: SlotInfo[];
-    readonly maxNum: number;
-    readonly camp: string;
-    readonly attributes: op_gameconfig.IAttribute[];
     readonly platformId: string;
     readonly sceneId: number;
     readonly nodeType: op_def.NodeType;
+    readonly currentAnimation: AnimationData;
+    currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
     pos: Pos;
@@ -36,6 +35,11 @@ export interface ISprite {
     setPosition(x: number, y: number);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
+}
+
+export interface AnimationData {
+    animationName: string;
+    flip: boolean;
 }
 
 export class Sprite implements ISprite {
@@ -54,16 +58,13 @@ export class Sprite implements ISprite {
     protected mCollisionArea: string;
     protected mOriginPoint: number[];
     protected mWalkOriginPoint: number[];
-    protected mSlot: op_gameconfig.ISlot[];
-    protected mMaxNum: number;
-    protected mCamp: string;
-    protected mAttributes: op_gameconfig.IAttribute[];
     protected mPackage: op_gameconfig.IPackage;
     protected mSceneId: number;
     protected mUuid: number;
     protected mPlatformId: string;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mNodeType: NodeType;
+    protected mCurrentAnimation: AnimationData;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -98,8 +99,11 @@ export class Sprite implements ISprite {
         if (obj.sn) {
             this.mSn = obj.sn;
         }
-        this.mCurrentAnimationName = obj.currentAnimationName;
-        this.mDirection = obj.direction || 3;
+        // if (obj.currentAnimationName) {
+        //     Logger.getInstance().error(`${Sprite.name}: currentAnimationName is null, ${JSON.stringify(obj)}`);
+        // }
+        this.mCurrentAnimationName = obj.currentAnimationName || "idle";
+        this.direction = obj.direction || 3;
         this.mNickname = obj.nickname;
         this.mBindID = obj.bindId;
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
@@ -140,8 +144,17 @@ export class Sprite implements ISprite {
     }
 
     public turn(): ISprite {
-        this.mDirection += 2;
-        this.mDirection = this.mDirection > 5 ? 3 : this.mDirection;
+        if (!this.mDisplayInfo) {
+            return;
+        }
+        const dirable = this.dirable(this.mCurrentAnimationName);
+        const index = dirable.indexOf(this.mDirection);
+        if (index > -1) {
+            this.direction = dirable[(index + 1) % dirable.length];
+        } else {
+            Logger.getInstance().error(`${Sprite.name}: error dir ${this.mDirection}`);
+        }
+
         return this;
     }
 
@@ -165,12 +178,22 @@ export class Sprite implements ISprite {
         return this.mCurrentAnimationName;
     }
 
+    set currentAnimationName(animationName: string) {
+        this.mCurrentAnimationName = animationName;
+        this.setAnimationData(animationName, this.direction);
+        // this.mCurrentAnimation = this.findAnimation(animationName, this.mDirection);
+    }
+
     get direction(): number {
         return this.mDirection;
     }
 
     set direction(val: number) {
         this.mDirection = val;
+        if (!this.mDisplayInfo) {
+            return;
+        }
+        this.setAnimationData(this.mCurrentAnimationName, val);
     }
 
     get nickname(): string {
@@ -213,22 +236,6 @@ export class Sprite implements ISprite {
         return this.mWalkOriginPoint;
     }
 
-    get slot(): SlotInfo[] {
-        return this.getSlots();
-    }
-
-    get maxNum(): number {
-        return this.mMaxNum;
-    }
-
-    get camp(): string {
-        return this.mCamp;
-    }
-
-    get attributes(): op_gameconfig.IAttribute[] {
-        return this.mAttributes;
-    }
-
     get package(): op_gameconfig.IPackage {
         return this.mPackage;
     }
@@ -266,54 +273,8 @@ export class Sprite implements ISprite {
         return this.mNodeType;
     }
 
-    public getSlots(): SlotInfo[] {
-        if (this.mSlot === undefined) return null;
-        const len = this.slot.length;
-        let info: SlotInfo;
-        let attri: op_gameconfig.IAttribute;
-        const slots: SlotInfo[] = [];
-        for (let i = 0; i < len; i++) {
-            info = new SlotInfo();
-            attri = this.getAttriByKey(this.mSlot[i].bondAttrCurkey);
-            info.bondAttrCur = attri.intVal;
-            attri = this.getAttriByKey(this.mSlot[i].bondAttrMaxkey);
-            info.bondAttrMax = attri.intVal;
-            info.bondName = this.slot[i].bondName;
-            info.color = this.slot[i].color;
-            slots.push(info);
-        }
-        return slots;
-    }
-
-    public getSlotByName(name: string): SlotInfo {
-        if (this.mSlot === undefined) return null;
-        const len = this.slot.length;
-        let info: SlotInfo;
-        let attri: op_gameconfig.IAttribute;
-        for (let i = 0; i < len; i++) {
-            if (this.slot[i].bondName === name) {
-                info = new SlotInfo();
-                attri = this.getAttriByKey(this.mSlot[i].bondAttrCurkey);
-                info.bondAttrCur = attri.intVal;
-                attri = this.getAttriByKey(this.mSlot[i].bondAttrMaxkey);
-                info.bondAttrMax = attri.intVal;
-                info.bondName = this.slot[i].bondName;
-                info.color = this.slot[i].color;
-                return info;
-            }
-        }
-        return null;
-    }
-
-    public getAttriByKey(key: string): op_gameconfig.IAttribute {
-        if (this.attributes === undefined) return null;
-        const len = this.attributes.length;
-        for (let i = 0; i < len; i++) {
-            if (this.attributes[i].name === key) {
-                return this.attributes[i];
-            }
-        }
-        return null;
+    get currentAnimation(): AnimationData {
+        return this.mCurrentAnimation;
     }
 
     public get originCollisionPoint(): Phaser.Geom.Point {
@@ -342,5 +303,71 @@ export class Sprite implements ISprite {
             this._originWalkPoint.x = value[0];
             this._originWalkPoint.y = value[1];
         }
+    }
+
+    private setAnimationData(animationName: string, direction: Direction) {
+        const baseAniName = animationName.split(`_`)[0];
+        this.mCurrentAnimation = this.findAnimation(baseAniName, direction);
+        // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
+        if (animationName !== this.mCurrentAnimation.animationName) {
+            Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
+        }
+    }
+
+    private checkDirectionAnimation(baseAniName: string, dir: Direction) {
+        const aniName = `${baseAniName}_${dir}`;
+        if (this.mDisplayInfo.existAnimation(aniName)) {
+            return aniName;
+        }
+        return null;
+    }
+
+    private findAnimation(baseName: string, dir: Direction): AnimationData {
+        let animationName = this.checkDirectionAnimation(baseName, dir);
+        let flip = false;
+        if (animationName) {
+            return { animationName, flip };
+        }
+        switch (dir) {
+            case Direction.west_south:
+            case Direction.east_north:
+                animationName = this.getDefaultAnimation(baseName);
+                break;
+            case Direction.south_east:
+                animationName = this.getDefaultAnimation(baseName);
+                flip = true;
+                break;
+            case Direction.north_west:
+                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
+                if (animationName === null) {
+                    animationName = this.getDefaultAnimation(baseName);
+                }
+                flip = true;
+                break;
+        }
+        return { animationName, flip };
+    }
+
+    private getDefaultAnimation(baseName: string) {
+        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
+        if (animationName === null) {
+            if (this.mDisplayInfo.existAnimation(baseName)) {
+                animationName = baseName;
+            } else {
+                Logger.getInstance().warn(`${Sprite.name}: can't find animation ${baseName}`);
+                animationName = "idle";
+            }
+        }
+        return animationName;
+    }
+
+    private dirable(aniName: string): number[] {
+        const baseAniName = aniName.split("_")[0];
+        const dirs = [3, 5];
+        if (this.checkDirectionAnimation(baseAniName, Direction.east_north)) {
+            dirs.push(7, 1);
+            // dirs = [1, 3, 5, 7];
+        }
+        return dirs;
     }
 }

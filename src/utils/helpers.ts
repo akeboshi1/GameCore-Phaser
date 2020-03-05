@@ -8,4 +8,20 @@ export default class Helpers {
             max: Helpers.MAX_ID
         });
     }
+
+    static flipArray<T>(source: T[][]): any[][] {
+        if (!source) return;
+        const array = [...source];
+        const result: T[][] = [];
+        if (array.length > 0) {
+            const len = array[0].length;
+            for (let i = 0; i < len; i++) {
+                result[i] = [];
+                for (const j of array) {
+                    result[i].push(j[i]);
+                }
+            }
+        }
+        return result;
+    }
 }

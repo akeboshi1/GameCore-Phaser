@@ -127,6 +127,12 @@ export class EditorElementManager extends ElementManager {
         }
     }
 
+    protected removeMap(sprite: ISprite) {
+    }
+
+    protected addMap(sprite: ISprite) {
+    }
+
     get roomService(): EditorRoomService {
         return this.mRoom;
     }

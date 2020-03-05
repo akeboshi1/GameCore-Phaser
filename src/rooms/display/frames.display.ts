@@ -3,6 +3,7 @@ import { Logger } from "../../utils/log";
 import {DisplayObject} from "./display.object";
 import {IAnimationData} from "./animation";
 import { Url } from "../../utils/resUtil";
+import { AnimationData } from "../element/sprite";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -51,25 +52,38 @@ export class FramesDisplay extends DisplayObject {
 
     }
 
-    public play(animationName: string, field?: DisplayField) {
-        if (!animationName) return;
+    public play(animation: AnimationData, field?: DisplayField) {
+        if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
-        const ani = data.getAnimations(animationName);
+        const ani = data.getAnimations(animation.animationName);
         if (!ani) {
             return;
         }
-        if (sprite && sprite instanceof Phaser.GameObjects.Sprite) {
-            if (ani.frameName.length > 1) {
-                sprite.play(`${data.gene}_${animationName}`);
+        // if (sprite && sprite instanceof Phaser.GameObjects.Sprite) {
+        //     if (ani.frameName.length > 1) {
+        //         sprite.play(`${data.gene}_${animation.animationName}`);
+        //     } else {
+        //         sprite.setTexture(data.gene, ani.frameName[0]);
+        //     }
+        // } else {
+        //     sprite.setTexture(data.gene, ani.frameName[0]);
+        // }
+        if (sprite) {
+            if (sprite instanceof Phaser.GameObjects.Sprite) {
+                if (ani.frameName.length > 1) {
+                    sprite.play(`${data.gene}_${animation.animationName}`);
+                } else {
+                    sprite.setTexture(data.gene, ani.frameName[0]);
+                }
             } else {
                 sprite.setTexture(data.gene, ani.frameName[0]);
             }
-        } else {
-            sprite.setTexture(data.gene, ani.frameName[0]);
+            this.scaleX = animation.flip ? -1 : 1;
+            // this.flipX = animation.flip;
         }
-        this.initBaseLoc(field, animationName);
+        this.initBaseLoc(field, animation.animationName);
     }
 
     public fadeIn(callback?: () => void) {
@@ -201,7 +215,7 @@ export class FramesDisplay extends DisplayObject {
                 sprite.setTexture(data.gene);
             }
             this.mSprites.set(field, sprite);
-            this.play(data.animationName, field);
+            this.play({ animationName: data.animationName, flip: false }, field);
             sprite.x = this.baseLoc.x;
             sprite.y = this.baseLoc.y;
             this.addAt(sprite, field);

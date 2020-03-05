@@ -4,6 +4,7 @@ import { DisplayField } from "./frames.display";
 import { SortRectangle } from "../../utils/sort.rectangle";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
+import { AnimationData } from "../element/sprite";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
     readonly baseLoc: Phaser.Geom.Point;
@@ -14,7 +15,7 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
     changeAlpha(val?: number);
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField);
 
-    play(animationName: string, field?: DisplayField);
+    play(animationName: AnimationData, field?: DisplayField);
 
     removeFromParent(): void;
 

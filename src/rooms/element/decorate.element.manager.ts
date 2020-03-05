@@ -1,6 +1,6 @@
 import { ElementManager } from "./element.manager";
 import { ISprite, Sprite } from "./sprite";
-import { Element, IElement } from "./element";
+import { Element } from "./element";
 import { DecorateRoomService } from "../decorate.room";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
@@ -34,10 +34,12 @@ export class DecorateElementManager extends ElementManager {
     if (!displayInfo) {
       return;
     }
-    const aniName = sprite.currentAnimationName || displayInfo.animationName;
-    const collisionArea = displayInfo.getCollisionArea(aniName);
-    let walkArea = displayInfo.getWalkableArea(aniName);
-    const origin = displayInfo.getOriginPoint(aniName);
+    const curAni = sprite.currentAnimation;
+    const aniName = curAni.animationName;
+    const flip = curAni.flip;
+    const collisionArea = displayInfo.getCollisionArea(aniName, flip);
+    let walkArea = displayInfo.getWalkableArea(aniName, flip);
+    const origin = displayInfo.getOriginPoint(aniName, flip);
     const rows = collisionArea.length;
     const cols = collisionArea[0].length;
     const pos = this.mRoom.transformToMini45(sprite.pos);
@@ -67,10 +69,12 @@ export class DecorateElementManager extends ElementManager {
     if (!displayInfo) {
       return;
     }
-    const aniName = sprite.currentAnimationName || displayInfo.animationName;
-    const collisionArea = displayInfo.getCollisionArea(aniName);
-    let walkArea = displayInfo.getWalkableArea(aniName);
-    const origin = displayInfo.getOriginPoint(aniName);
+    const curAni = sprite.currentAnimation;
+    const aniName = curAni.animationName;
+    const flip = curAni.flip;
+    const collisionArea = displayInfo.getCollisionArea(aniName, flip);
+    let walkArea = displayInfo.getWalkableArea(aniName, flip);
+    const origin = displayInfo.getOriginPoint(aniName, flip);
     const rows = collisionArea.length;
     const cols = collisionArea[0].length;
     const pos = this.mRoom.transformToMini45(sprite.pos);
@@ -100,10 +104,12 @@ export class DecorateElementManager extends ElementManager {
     if (!displayInfo) {
       return;
     }
-    const aniName = sprite.currentAnimationName || displayInfo.animationName;
-    const collisionArea = displayInfo.getCollisionArea(aniName);
-    let walkArea = displayInfo.getWalkableArea(aniName);
-    const origin = displayInfo.getOriginPoint(aniName);
+    const curAni = sprite.currentAnimation;
+    const aniName = curAni.animationName;
+    const flip = curAni.flip;
+    const collisionArea = displayInfo.getCollisionArea(aniName, flip);
+    let walkArea = displayInfo.getWalkableArea(aniName, flip);
+    const origin = displayInfo.getOriginPoint(aniName, flip);
     const rows = collisionArea.length;
     const cols = collisionArea[0].length;
     const pos = sprite.pos;

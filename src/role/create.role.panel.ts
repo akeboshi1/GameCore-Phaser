@@ -221,7 +221,7 @@ export class CreateRolePanel extends Panel {
     // this.dragonbones.y = 286 * this.dpr;
     // this.dragonbones.play("idle");
     this.dragonbones.once("initialized", () => {
-      this.dragonbones.play("idle");
+      this.dragonbones.play({ animationName: "idle", flip: false });
     });
     this.add(this.dragonbones);
 
