@@ -120,6 +120,12 @@ export class EditorTerrainManager extends TerrainManager {
         }
     }
 
+    protected removeMap(sprite: ISprite) {
+    }
+
+    protected addMap(sprite: ISprite) {
+    }
+
     private tryRemove(id: number): Terrain {
         const terrain = this.mTerrains.get(id);
         if (terrain) {

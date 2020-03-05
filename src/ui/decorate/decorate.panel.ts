@@ -25,7 +25,7 @@ export class DecoratePanel extends Panel {
     private mSubMenus: Phaser.GameObjects.Container;
 
     private mMoveMenuContainer: MoveMenu;
-    private mExtendsMenuContainer: MoveMenu;
+    private mRepeatMenuContainer: MoveMenu;
     private mDisplayObject: DisplayObject;
     private readonly key = "decorate_edit_menu";
     private offset: Pos = new Pos();
@@ -86,8 +86,8 @@ export class DecoratePanel extends Panel {
         this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
         this.mMoveMenuContainer.y = this.mSubMenus.y + 60 * this.dpr + this.mMoveMenuContainer.height / 2;
 
-        this.mExtendsMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
-        this.mExtendsMenuContainer.y = this.mMoveMenuContainer.y;
+        this.mRepeatMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
+        this.mRepeatMenuContainer.y = this.mMoveMenuContainer.y;
 
         this.mOkBtn = this.scene.make.image({
             key: this.key,
@@ -177,9 +177,12 @@ export class DecoratePanel extends Panel {
         this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
         this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
         this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
+        this.mRepeatBtn.on("pointerup", this.onShowRepeatHandler, this);
         this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
         this.mMoveMenuContainer.register();
         this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
+        this.mRepeatMenuContainer.register();
+        this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
         // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
         // this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
         // this.mOkBtn.on("pointerup", this.onPutHandler, this);
@@ -193,10 +196,13 @@ export class DecoratePanel extends Panel {
         this.mOkBtn.off("pointerup", this.onAddHandler, this);
         this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
         this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
-        this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
         this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
+        this.mRepeatBtn.off("pointerup", this.onShowRepeatHandler, this);
+        this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
         this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
         this.mMoveMenuContainer.unRegister();
+        this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
+        this.mRepeatMenuContainer.unRegister();
 
         // this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
         // this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
@@ -347,12 +353,22 @@ export class DecoratePanel extends Panel {
         this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
     }
 
+    private onRepeatHandler() {
+    }
+
     private onShowMoveMenuHandler() {
         this.add(this.mMoveMenuContainer);
+        this.remove(this.mRepeatMenuContainer);
+    }
+
+    private onShowRepeatHandler() {
+        this.add(this.mRepeatMenuContainer);
+        this.remove(this.mMoveMenuContainer);
     }
 
     private onShowExtendsHandler() {
-        this.add(this.mExtendsMenuContainer);
+        this.mRoomService.canPut()
+        this.mDisplayObject.
     }
 }
 
