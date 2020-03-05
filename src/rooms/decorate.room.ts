@@ -200,6 +200,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
+        this.mSelectedElement = new SelectedElement(this.mScene, this);
         this.mBlocks.int(this.mSize);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
@@ -393,7 +394,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        if (!this.mSelectedElement || this.mSelectedElement.selecting === false) {
+        if (this.mSelectedElement.selecting === false) {
             this.moveCamera(pointer);
             return;
         }
@@ -450,9 +451,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (!(display instanceof DisplayObject)) {
             return;
         }
-        if (!this.mSelectedElement) {
-            this.mSelectedElement = new SelectedElement(this.mScene, this);
-        }
         if (display instanceof TerrainDisplay) {
             return;
         }
@@ -476,9 +474,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onTurnElementHandler(display: DisplayObject) {
-        if (!this.mSelectedElement) {
-            return;
-        }
         const sprite = this.mSelectedElement.sprite;
         if (!sprite) {
             return;
@@ -493,9 +488,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onRecycleHandler(display: DisplayObject) {
-        if (!this.mSelectedElement) {
-            return;
-        }
         const sprite = this.mSelectedElement.sprite;
         if (!sprite) {
             return;
@@ -509,9 +501,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onPutElement(display: DisplayObject) {
-        if (!this.mSelectedElement) {
-            return;
-        }
         const sprite = this.mSelectedElement.sprite;
         if (!sprite) {
             return;
@@ -589,13 +578,13 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onSelectSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE = packet.content;
-        if (!this.mSelectedElement) {
-            this.mSelectedElement = new SelectedElement(this.scene, this);
-        } else {
-            if (this.mSelectedElement.display) {
-                this.onPutElement(this.mSelectedElement.display);
-            }
+        // if (!this.mSelectedElement) {
+        //     this.mSelectedElement = new SelectedElement(this.scene, this);
+        // } else {
+        if (this.mSelectedElement.display) {
+            this.onPutElement(this.mSelectedElement.display);
         }
+        // }
         this.mSelectedElement.selecting = true;
         const sprite = new Sprite(content.sprite, content.nodeType);
         const pointer = this.scene.input.activePointer;
