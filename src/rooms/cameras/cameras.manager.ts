@@ -26,6 +26,7 @@ export interface ICameraService {
 
     setScroll(x: number, y: number): void;
     offsetScroll(x: number, y: number): void;
+    scrollTargetPoint(x: number, y: number);
     syncToEditor(): void;
     centerCameas(): void;
     syncCamera(): void;
@@ -175,6 +176,13 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         pos.y = this.mCamera.scrollY / Math.ceil(window.devicePixelRatio);
         content.pos = pos;
         this.connection.send(pkt);
+    }
+
+    public scrollTargetPoint(x: number, y: number) {
+        if (!this.mCamera) {
+            return;
+        }
+        this.setScroll(x * this.mRoomService.world.scaleRatio - this.mCamera.width / 2, y * this.mRoomService.world.scaleRatio - this.mCamera.height / 2);
     }
 
     private resetCameraSize(width: number, height: number) {

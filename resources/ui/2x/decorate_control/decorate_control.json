@@ -63,7 +63,27 @@
 		"furniBtn.png": {
 			"frame": {
 				"x": 1,
-				"y": 77,
+				"y": 91,
+				"w": 88,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 88,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 88,
+				"h": 88
+			}
+		},
+		"furniBtn_old.png": {
+			"frame": {
+				"x": 91,
+				"y": 91,
 				"w": 127,
 				"h": 128
 			},
@@ -82,8 +102,8 @@
 		},
 		"recycleAllBtn.png": {
 			"frame": {
-				"x": 130,
-				"y": 91,
+				"x": 238,
+				"y": 1,
 				"w": 88,
 				"h": 88
 			},
@@ -102,8 +122,8 @@
 		},
 		"redoBtn.png": {
 			"frame": {
-				"x": 130,
-				"y": 181,
+				"x": 220,
+				"y": 91,
 				"w": 88,
 				"h": 88
 			},
@@ -122,8 +142,28 @@
 		},
 		"saveBtn.png": {
 			"frame": {
-				"x": 238,
-				"y": 1,
+				"x": 1,
+				"y": 181,
+				"w": 88,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 88,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 88,
+				"h": 88
+			}
+		},
+		"saveBtn_old.png": {
+			"frame": {
+				"x": 220,
+				"y": 181,
 				"w": 127,
 				"h": 128
 			},
@@ -142,8 +182,8 @@
 		},
 		"stairBtn.png": {
 			"frame": {
-				"x": 220,
-				"y": 131,
+				"x": 310,
+				"y": 91,
 				"w": 71,
 				"h": 74
 			},
@@ -167,8 +207,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 366,
-			"h": 270
+			"w": 382,
+			"h": 310
 		},
 		"scale": "1"
 	}

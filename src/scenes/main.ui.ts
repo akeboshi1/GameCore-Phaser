@@ -43,8 +43,9 @@ export class MainUIScene extends BasicScene {
       }
     }
     world.uiManager.setScene(this);
+    this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
-    this.mRoom.world.game.scale.on("resize", this.checkSize, this);
+    this.scale.on("resize", this.checkSize, this);
   }
 
   public setTimeout(caller, time): number {
@@ -87,14 +88,6 @@ export class MainUIScene extends BasicScene {
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
     // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +
     //   "\n" + "height:" + this.mRoom.world.getSize().height + `\npixelRatio: ${window.devicePixelRatio} \nscene Scale: ${this.mRoom.world.scaleRatio} \nuiscale：${Math.round(this.mRoom.world.scaleRatio)}`;
-    const size = this.mRoom.world.getSize();
-    this.sizeTF.text = `CSS size: ${window.innerWidth} ${window.innerHeight}
-    Game size: ${size.width.toFixed(2)} ${size.height.toFixed(2)}
-    deviceRatio: ${window.devicePixelRatio}
-    scene ratio: ${this.mRoom.world.scaleRatio}
-    ui ratio: ${this.mRoom.world.uiRatio}
-    ui scale: ${this.mRoom.world.uiScaleNew.toFixed(5)}
-    `;
   }
 
   getKey(): string {
@@ -107,6 +100,15 @@ export class MainUIScene extends BasicScene {
   private checkSize(size: Size) {
     const width: number = size.width;
     const height: number = size.height;
+    const world = this.mRoom.world;
+    const gameSize = world.getSize();
+    this.sizeTF.text = `CSS size: ${world.getConfig().width} ${world.getConfig().height}
+    Game size: ${gameSize.width.toFixed(2)} ${gameSize.height.toFixed(2)}
+    deviceRatio: ${window.devicePixelRatio}
+    scene ratio: ${world.scaleRatio}
+    ui ratio: ${world.uiRatio}
+    ui scale: ${world.uiScaleNew.toFixed(5)}
+    `;
     //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
   }
 }

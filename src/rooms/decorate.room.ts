@@ -598,6 +598,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const pos = content.spawnPoint;
         spawnPoint.setPosition(pos.x, pos.y);
         this.mSelectedElement.setSprite(spawnPoint);
+        this.mCameraService.scrollTargetPoint(pos.x, pos.y);
     }
 
     get id(): number {

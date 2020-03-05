@@ -236,6 +236,9 @@ export class DecoratePanel extends Panel {
         this.onMoveElement(pos45);
     }
 
+    private onRepeatNorthWestHandler() {
+    }
+
     private onMoveElement(pos45: Pos) {
         if (!this.mDisplayObject) {
             return;
@@ -353,7 +356,13 @@ export class DecoratePanel extends Panel {
         this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
     }
 
-    private onRepeatHandler() {
+    private onRepeatHandler(dir: Direction) {
+        switch (dir) {
+            case Direction.north_west:
+                this.onRepeatNorthWestHandler();
+                break;
+        }
+
     }
 
     private onShowMoveMenuHandler() {

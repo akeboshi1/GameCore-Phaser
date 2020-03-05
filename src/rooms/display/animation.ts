@@ -46,15 +46,15 @@ export class Animation implements IAnimationData {
             this.mOriginPoint = new Phaser.Geom.Point(origin.x, origin.y);
         }
         if (typeof ani.collisionArea === "string") {
-            this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&");
+            this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
         } else {
-            this.mCollisionArea = ani.collisionArea;
+            this.mCollisionArea = ani.collisionArea || [[0]];
         }
 
         if (typeof ani.walkableArea === "string") {
-            this.mWalkableArea = this.stringToArray(ani.walkableArea, ",", "&");
+            this.mWalkableArea = this.stringToArray(ani.walkableArea, ",", "&") || [[0]];
         } else {
-            this.mWalkableArea = ani.walkableArea;
+            this.mWalkableArea = ani.walkableArea || [[0]];
         }
         this.mInteractiveArea = ani.interactiveArea;
     }

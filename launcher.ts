@@ -17,8 +17,8 @@ export interface ILauncherConfig {
     devecePixelRatio?: number;
     scale_ratio?: number;
     platform?: string;
-    readonly width: number;
-    readonly height: number;
+    width: number;
+    height: number;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;

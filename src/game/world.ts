@@ -77,10 +77,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.devecePixelRatio) {
             config.devecePixelRatio = window.devicePixelRatio;
         }
+        if (config.width === undefined) {
+            config.width = window.innerWidth;
+        }
+        if (config.height === undefined) {
+            config.height = window.innerHeight;
+        }
         this.mScaleRatio = Math.ceil(config.devecePixelRatio);
         this.mUIRatio = Math.round(window.devicePixelRatio);
-        const scaleW = window.innerWidth / this.DEFAULT_WIDTH;
-        const scaleH = window.innerHeight / this.DEFAULT_HEIGHT;
+        const scaleW = config.width / this.DEFAULT_WIDTH;
+        const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = Math.min(scaleW, scaleH);
         // if (!config.scale_ratio) {
             // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
