@@ -55,7 +55,8 @@ export class SelectedElement {
         this.mDisplay.y = pos.y;
         this.mDisplay.once("initialized", () => {
             this.mDisplay.showRefernceArea();
-            this.mDisplay.setDirection(sprite.direction);
+            this.mDisplay.play(this.sprite.currentAnimation);
+            // this.mDisplay.setDirection(sprite.direction);
             this.mDecorateManager.setElement(this.mDisplay);
             this.roomService.addToSurface(this.mDisplay);
         });

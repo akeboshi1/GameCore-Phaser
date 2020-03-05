@@ -83,11 +83,6 @@ export class DecoratePanel extends Panel {
             x: w >> 1,
             y: 60 * this.dpr
         }, false);
-        this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
-        this.mMoveMenuContainer.y = this.mSubMenus.y + 60 * this.dpr + this.mMoveMenuContainer.height / 2;
-
-        this.mRepeatMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
-        this.mRepeatMenuContainer.y = this.mMoveMenuContainer.y;
 
         this.mOkBtn = this.scene.make.image({
             key: this.key,
@@ -129,6 +124,12 @@ export class DecoratePanel extends Panel {
             frame: "extend_btn.png"
         }, false).setInteractive().setOrigin(0);
 
+        this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
+        this.mMoveMenuContainer.y = this.mSubMenus.y + 60 * this.dpr + this.mMoveMenuContainer.height / 2;
+
+        this.mRepeatMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
+        this.mRepeatMenuContainer.y = this.mMoveMenuContainer.y;
+
         const zoom = this.scale;
 
         // this.add(this.mMenuGroup);
@@ -161,6 +162,9 @@ export class DecoratePanel extends Panel {
             const button = <Phaser.GameObjects.Image> subList[i];
             button.x = preButton.width + preButton.x + margin;
         }
+
+        this.mMoveMenuContainer.x = this.mSubMenus.x + this.mMoveBtn.x + this.mMoveBtn.width / 2 + 29 * this.dpr;
+        this.mRepeatMenuContainer.x = this.mSubMenus.x + this.mRepeatBtn.x + this.mRepeatBtn.width / 2 + 29 * this.dpr;
 
         // this.mControllContainer.add([border, this.mTurnBtn, this.mRecycleBtn, this.mConfirmBtn]);
         super.init();
@@ -417,13 +421,13 @@ class MoveMenu extends Phaser.GameObjects.Container {
         this.add(this.mBtns);
 
         const w = this.width;
-        let totalWidth = this.width;
+        let totalWidth = this.width - 20 * dpr;
         this.mBtns.map((btn) => totalWidth -= btn.displayWidth);
         const space = totalWidth = totalWidth / (this.mBtns.length - 1);
         const arrowH = (6 * dpr);
         for (let i = 0; i < this.mBtns.length; i++) {
             if (i === 0) {
-                this.mBtns[i].x = 0 + this.mBtns[i].width / 2 - this.width / 2;
+                this.mBtns[i].x = 10 * dpr + this.mBtns[i].width / 2 - this.width / 2;
             } else {
                 this.mBtns[i].x = space + this.mBtns[i - 1].x + this.mBtns[i - 1].width;
             }
