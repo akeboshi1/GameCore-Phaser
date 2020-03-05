@@ -367,8 +367,8 @@ export class DecoratePanel extends Panel {
     }
 
     private onShowExtendsHandler() {
-        this.mRoomService.canPut()
-        this.mDisplayObject.
+        // this.mRoomService.canPut()
+        // this.mDisplayObject.
     }
 }
 
