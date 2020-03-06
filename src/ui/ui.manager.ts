@@ -170,6 +170,7 @@ export class UiManager extends PacketHandler {
         // const topMenu = new TopMenuMediator(this.mScene, this.worldService);
         this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
         this.mMedMap.set(DecorateControlMediator.name, new DecorateControlMediator(this.mUILayerManager, this.mScene, this.worldService));
+        this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
         // this.mMedMap.set(TopMenuMediator.name, topMenu);
         // topMenu.addItem({
         //     key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
@@ -456,7 +457,11 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        this.mMedMap.forEach((med: IMediator) => med.show());
+        this.mMedMap.forEach((med: IMediator) => {
+            if (med.isSceneUI()) {
+                med.show();
+            }
+        });
     }
 
     private closeAll() {

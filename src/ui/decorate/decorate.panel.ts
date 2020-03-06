@@ -7,6 +7,7 @@ import { MessageType } from "../../const/MessageType";
 import { Direction } from "../../rooms/element/element";
 import { Logger } from "../../utils/log";
 import { ISprite } from "../../rooms/element/sprite";
+import { Button } from "../components/button";
 
 export class DecoratePanel extends Panel {
     private readonly resKey = "decorate";
@@ -191,6 +192,7 @@ export class DecoratePanel extends Panel {
         this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
         this.mRepeatMenuContainer.register();
         this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
+        this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
         // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
         // this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
         // this.mOkBtn.on("pointerup", this.onPutHandler, this);
@@ -210,6 +212,7 @@ export class DecoratePanel extends Panel {
         this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
         this.mMoveMenuContainer.unRegister();
         this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
+        this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
         this.mRepeatMenuContainer.unRegister();
 
         // this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
@@ -244,50 +247,50 @@ export class DecoratePanel extends Panel {
         this.onMoveElement(pos45);
     }
 
-    private getNorthWestPoints() {
+    private getNorthWestPoints(count: number = 10) {
         const area = this.mSprite.currentCollisionArea;
         const origin = this.mSprite.currentCollisionPoint;
         const posList = [];
         const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        for (let i = 0; i < 10; i++) {
-            pos45.x -= i * area.length;
+        for (let i = 0; i < count; i++) {
             posList[i] = this.mRoomService.transformToMini90(pos45);
+            pos45.x -= area[0].length;
         }
         return this.checkNextPos(posList, area, origin);
     }
 
-    private getWestSouthPoints() {
+    private getWestSouthPoints(count: number = 10) {
         const area = this.mSprite.currentCollisionArea;
         const origin = this.mSprite.currentCollisionPoint;
         const posList = [];
         const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        for (let i = 0; i < 10; i++) {
-            pos45.y -= i * area[0].length;
+        for (let i = 0; i < count; i++) {
             posList[i] = this.mRoomService.transformToMini90(pos45);
+            pos45.y += area.length;
         }
         return this.checkNextPos(posList, area, origin);
     }
 
-    private getSouthEastPoints() {
+    private getSouthEastPoints(count: number = 10) {
         const area = this.mSprite.currentCollisionArea;
         const origin = this.mSprite.currentCollisionPoint;
         const posList = [];
         const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        for (let i = 0; i < 10; i++) {
-            pos45.x += i * area.length;
+        for (let i = 0; i < count; i++) {
             posList[i] = this.mRoomService.transformToMini90(pos45);
+            pos45.x += area[0].length;
         }
         return this.checkNextPos(posList, area, origin);
     }
 
-    private getEastNorthPoints() {
+    private getEastNorthPoints(count: number = 10) {
         const area = this.mSprite.currentCollisionArea;
         const origin = this.mSprite.currentCollisionPoint;
         const posList = [];
         const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        for (let i = 0; i < 10; i++) {
-            pos45.y -= i * area[0].length;
+        for (let i = 0; i < count; i++) {
             posList[i] = this.mRoomService.transformToMini90(pos45);
+            pos45.y -= area.length;
         }
         return this.checkNextPos(posList, area, origin);
     }
@@ -432,6 +435,25 @@ export class DecoratePanel extends Panel {
         let result = null;
         switch (dir) {
             case Direction.north_west:
+                result = this.getNorthWestPoints(2);
+                break;
+            case Direction.west_south:
+                result = this.getWestSouthPoints(2);
+                break;
+            case Direction.south_east:
+                result = this.getSouthEastPoints(2);
+                break;
+            case Direction.east_north:
+                result = this.getEastNorthPoints(2);
+                break;
+        }
+        this.onSendAddSingleSprite(result);
+    }
+
+    private onHoldRepeatHandler(dir: Direction) {
+        let result = null;
+        switch (dir) {
+            case Direction.north_west:
                 result = this.getNorthWestPoints();
                 break;
             case Direction.west_south:
@@ -445,7 +467,6 @@ export class DecoratePanel extends Panel {
                 break;
         }
         this.onSendAddSprites(result);
-
     }
 
     private onShowMoveMenuHandler() {
@@ -464,16 +485,24 @@ export class DecoratePanel extends Panel {
     }
 
     private onSendAddSprites(points: Pos[]) {
-        this.emit("addSprite", this.mSprite, points);
+        if (points.length > 1) {
+            this.emit("addSprite", this.mSprite, points);
+        }
+    }
+
+    private onSendAddSingleSprite(points: Pos[]) {
+        if (points.length > 1) {
+            this.emit("addSingleSprite", this.mSprite, points);
+        }
     }
 }
 
 class MoveMenu extends Phaser.GameObjects.Container {
-    private mBtns: Phaser.GameObjects.Image[];
-    private mArrow1: Phaser.GameObjects.Image;
-    private mArrow3: Phaser.GameObjects.Image;
-    private mArrow5: Phaser.GameObjects.Image;
-    private mArrow7: Phaser.GameObjects.Image;
+    private mBtns: Button[];
+    private mArrow1: Button;
+    private mArrow3: Button;
+    private mArrow5: Button;
+    private mArrow7: Button;
     constructor(scene: Phaser.Scene, key: string, dpr: number = 1, uiScale: number = 1) {
         super(scene);
         const bg = scene.make.image({
@@ -482,23 +511,27 @@ class MoveMenu extends Phaser.GameObjects.Container {
         }, false);
         this.setSize(bg.displayWidth, bg.displayHeight);
 
-        this.mArrow1 = scene.make.image({
-            key,
-            frame: "arrow_1.png"
-        }, false).setInteractive().setData("dir", 1);
+        // this.mArrow1 = scene.make.image({
+        //     key,
+        //     frame: "arrow_1.png"
+        // }, false).setInteractive().setData("dir", 1);
 
-        this.mArrow3 = scene.make.image({
-            key,
-            frame: "arrow_3.png"
-        }, false).setInteractive().setData("dir", 3);
-        this.mArrow5 = scene.make.image({
-            key,
-            frame: "arrow_5.png"
-        }, false).setInteractive().setData("dir", 5);
-        this.mArrow7 = scene.make.image({
-            key,
-            frame: "arrow_7.png"
-        }, false).setInteractive().setData("dir", 7);
+        // this.mArrow3 = scene.make.image({
+        //     key,
+        //     frame: "arrow_3.png"
+        // }, false).setInteractive().setData("dir", 3);
+        // this.mArrow5 = scene.make.image({
+        //     key,
+        //     frame: "arrow_5.png"
+        // }, false).setInteractive().setData("dir", 5);
+        // this.mArrow7 = scene.make.image({
+        //     key,
+        //     frame: "arrow_7.png"
+        // }, false).setInteractive().setData("dir", 7);
+        this.mArrow1 = new Button(this.scene, key, "arrow_1.png").setData("dir", Direction.north_west);
+        this.mArrow3 = new Button(this.scene, key, "arrow_3.png").setData("dir", Direction.west_south);
+        this.mArrow5 = new Button(this.scene, key, "arrow_5.png").setData("dir", Direction.south_east);
+        this.mArrow7 = new Button(this.scene, key, "arrow_7.png").setData("dir", Direction.east_north);
         this.mBtns = [this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7];
         this.add(bg);
         this.add(this.mBtns);
@@ -507,14 +540,14 @@ class MoveMenu extends Phaser.GameObjects.Container {
         let totalWidth = this.width - 20 * dpr;
         this.mBtns.map((btn) => totalWidth -= btn.displayWidth);
         const space = totalWidth = totalWidth / (this.mBtns.length - 1);
-        const arrowH = (6 * dpr);
+        const arrowH = (3 * dpr);
         for (let i = 0; i < this.mBtns.length; i++) {
             if (i === 0) {
                 this.mBtns[i].x = 10 * dpr + this.mBtns[i].width / 2 - this.width / 2;
             } else {
                 this.mBtns[i].x = space + this.mBtns[i - 1].x + this.mBtns[i - 1].width;
             }
-            this.mBtns[i].y = (this.height - this.mBtns[i].height) / 2 - arrowH;
+            this.mBtns[i].y = arrowH;
         }
         this.setInteractive();
     }
@@ -523,20 +556,36 @@ class MoveMenu extends Phaser.GameObjects.Container {
         // for (const btn of this.mBtns) {
         //     btn.on("pointerup", this.onArrowHandler, this);
         // }
-        this.mArrow1.on("pointerup", this.onArrow1Handler, this);
-        this.mArrow3.on("pointerup", this.onArrow3Handler, this);
-        this.mArrow5.on("pointerup", this.onArrow5Handler, this);
-        this.mArrow7.on("pointerup", this.onArrow7Handler, this);
+        this.mArrow1.on("hold", this.onHoldHandler, this);
+        this.mArrow1.on("click", this.onClickHandler, this);
+        this.mArrow3.on("hold", this.onHoldHandler, this);
+        this.mArrow3.on("click", this.onClickHandler, this);
+        this.mArrow5.on("hold", this.onHoldHandler, this);
+        this.mArrow5.on("click", this.onClickHandler, this);
+        this.mArrow7.on("hold", this.onHoldHandler, this);
+        this.mArrow7.on("click", this.onClickHandler, this);
+        // this.mArrow1.on("pointerup", this.onArrow1Handler, this);
+        // this.mArrow3.on("pointerup", this.onArrow3Handler, this);
+        // this.mArrow5.on("pointerup", this.onArrow5Handler, this);
+        // this.mArrow7.on("pointerup", this.onArrow7Handler, this);
     }
 
     public unRegister() {
-        this.mArrow1.off("pointerup", this.onArrow1Handler, this);
-        this.mArrow3.off("pointerup", this.onArrow3Handler, this);
-        this.mArrow5.off("pointerup", this.onArrow5Handler, this);
-        this.mArrow7.off("pointerup", this.onArrow7Handler, this);
+        this.mArrow1.off("hold", this.onHoldHandler, this);
+        this.mArrow1.off("click", this.onClickHandler, this);
+        this.mArrow3.off("hold", this.onHoldHandler, this);
+        this.mArrow3.off("click", this.onClickHandler, this);
+        this.mArrow5.off("hold", this.onHoldHandler, this);
+        this.mArrow5.off("click", this.onClickHandler, this);
+        this.mArrow7.off("hold", this.onHoldHandler, this);
+        this.mArrow7.off("click", this.onClickHandler, this);
+        // this.mArrow1.off("pointerup", this.onArrow1Handler, this);
+        // this.mArrow3.off("pointerup", this.onArrow3Handler, this);
+        // this.mArrow5.off("pointerup", this.onArrow5Handler, this);
+        // this.mArrow7.off("pointerup", this.onArrow7Handler, this);
     }
 
-    private onArrow1Handler() {
+    private onArrow1Handler(pointer: Phaser.Input.Pointer) {
         this.emit("move", Direction.north_west);
     }
 
@@ -550,5 +599,13 @@ class MoveMenu extends Phaser.GameObjects.Container {
 
     private onArrow7Handler() {
         this.emit("move", Direction.east_north);
+    }
+
+    private onHoldHandler(gameobject) {
+        this.emit("hold", gameobject.getData("dir"));
+    }
+
+    private onClickHandler(pointer, gameobject) {
+        this.emit("move", gameobject.getData("dir"));
     }
 }

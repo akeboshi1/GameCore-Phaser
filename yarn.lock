@@ -3724,8 +3724,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript":
-  version "1.0.159"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#0a3a11ca9eb9c10746f017b27ac4abb6f6fd367a"
+  version "1.0.160"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#953e85627ca75643894775df5b3d04ed4a20a0c8"
   dependencies:
     protobufjs "^6.8.8"
 

@@ -74,6 +74,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE, this.onSelectSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_SPAWN_POINT, this.onShowSpawnPointHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SPRITE_BY_TYPE, this.onAddSpriteHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE, this.onAddSingleSpriteHandler);
         }
     }
 
@@ -627,6 +629,32 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         spawnPoint.setPosition(pos.x, pos.y);
         this.mSelectedElement.setSprite(spawnPoint);
         this.mCameraService.scrollTargetPoint(pos.x, pos.y);
+    }
+
+    private onAddSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
+        const addedSpriteIds = content.addedSpriteIds;
+        if (content.id === this.mSelectedElement.root.id) {
+            this.addElement(this.mSelectedElement.root);
+        }
+        this.mSelectedElement.remove();
+        const element = this.mElementManager.get(addedSpriteIds[addedSpriteIds.length - 1]);
+        if (element) {
+            this.mSelectedElement.setSprite(element.model, element.model);
+        }
+    }
+
+    private onAddSingleSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
+        const addedSpriteIds = content.addedSpriteIds;
+        if (content.id === this.mSelectedElement.root.id) {
+            this.addElement(this.mSelectedElement.root);
+        }
+        const element = this.mElementManager.get(addedSpriteIds[addedSpriteIds.length - 1]);
+        this.mSelectedElement.remove();
+        if (element) {
+            this.mSelectedElement.setSprite(element.model, element.model);
+        }
     }
 
     get id(): number {
