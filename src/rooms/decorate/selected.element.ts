@@ -1,12 +1,10 @@
 import {FramesDisplay} from "../display/frames.display";
 import {DragonbonesDisplay} from "../display/dragonbones.display";
 import {DecorateManager} from "../../ui/decorate/decorate.manager";
-import { IRoomService } from "../room";
 import { ISprite, Sprite } from "../element/sprite";
 import { FramesModel } from "../display/frames.model";
 import { MessageType } from "../../const/MessageType";
 import { Pos } from "../../utils/pos";
-import { Logger } from "../../utils/log";
 import { DecorateRoomService } from "../decorate.room";
 
 export class SelectedElement {
@@ -32,7 +30,7 @@ export class SelectedElement {
         }
         this.mDisplay = display;
         display.showRefernceArea();
-        this.mDecorateManager.setElement(display);
+        this.mDecorateManager.setElement(display, this.sprite);
         this.mDisplay = display;
         this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
     }
@@ -57,7 +55,7 @@ export class SelectedElement {
             this.mDisplay.showRefernceArea();
             this.mDisplay.play(this.sprite.currentAnimation);
             // this.mDisplay.setDirection(sprite.direction);
-            this.mDecorateManager.setElement(this.mDisplay);
+            this.mDecorateManager.setElement(this.mDisplay, this.mSprite);
             this.roomService.addToSurface(this.mDisplay);
         });
         this.mDisplay.load(<FramesModel> sprite.displayInfo);

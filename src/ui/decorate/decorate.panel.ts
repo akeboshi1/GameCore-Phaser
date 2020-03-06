@@ -5,6 +5,8 @@ import { Position45, IPosition45Obj } from "../../utils/position45";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { MessageType } from "../../const/MessageType";
 import { Direction } from "../../rooms/element/element";
+import { Logger } from "../../utils/log";
+import { ISprite } from "../../rooms/element/sprite";
 
 export class DecoratePanel extends Panel {
     private readonly resKey = "decorate";
@@ -27,6 +29,7 @@ export class DecoratePanel extends Panel {
     private mMoveMenuContainer: MoveMenu;
     private mRepeatMenuContainer: MoveMenu;
     private mDisplayObject: DisplayObject;
+    private mSprite: ISprite;
     private readonly key = "decorate_edit_menu";
     private offset: Pos = new Pos();
     private mScaleRatio: number = 1;
@@ -37,8 +40,9 @@ export class DecoratePanel extends Panel {
         if (this.mWorld) this.mScaleRatio = this.mWorld.scaleRatio;
     }
 
-    public setElement(ele: DisplayObject) {
+    public setElement(ele: DisplayObject, sprite: ISprite) {
         this.mDisplayObject = ele;
+        this.mSprite = sprite;
         if (!this.mInitialized) {
             return;
         }
@@ -169,7 +173,7 @@ export class DecoratePanel extends Panel {
         // this.mControllContainer.add([border, this.mTurnBtn, this.mRecycleBtn, this.mConfirmBtn]);
         super.init();
 
-        this.setElement(this.mDisplayObject);
+        this.setElement(this.mDisplayObject, this.mSprite);
     }
 
     protected register() {
@@ -240,7 +244,71 @@ export class DecoratePanel extends Panel {
         this.onMoveElement(pos45);
     }
 
-    private onRepeatNorthWestHandler() {
+    private getNorthWestPoints() {
+        const area = this.mSprite.currentCollisionArea;
+        const origin = this.mSprite.currentCollisionPoint;
+        const posList = [];
+        const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
+        for (let i = 0; i < 10; i++) {
+            pos45.x -= i * area.length;
+            posList[i] = this.mRoomService.transformToMini90(pos45);
+        }
+        return this.checkNextPos(posList, area, origin);
+    }
+
+    private getWestSouthPoints() {
+        const area = this.mSprite.currentCollisionArea;
+        const origin = this.mSprite.currentCollisionPoint;
+        const posList = [];
+        const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
+        for (let i = 0; i < 10; i++) {
+            pos45.y -= i * area[0].length;
+            posList[i] = this.mRoomService.transformToMini90(pos45);
+        }
+        return this.checkNextPos(posList, area, origin);
+    }
+
+    private getSouthEastPoints() {
+        const area = this.mSprite.currentCollisionArea;
+        const origin = this.mSprite.currentCollisionPoint;
+        const posList = [];
+        const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
+        for (let i = 0; i < 10; i++) {
+            pos45.x += i * area.length;
+            posList[i] = this.mRoomService.transformToMini90(pos45);
+        }
+        return this.checkNextPos(posList, area, origin);
+    }
+
+    private getEastNorthPoints() {
+        const area = this.mSprite.currentCollisionArea;
+        const origin = this.mSprite.currentCollisionPoint;
+        const posList = [];
+        const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
+        for (let i = 0; i < 10; i++) {
+            pos45.y -= i * area[0].length;
+            posList[i] = this.mRoomService.transformToMini90(pos45);
+        }
+        return this.checkNextPos(posList, area, origin);
+    }
+
+    private checkNextPos(pos45: Pos[], collisionArea: number[][], origin: Phaser.Geom.Point) {
+        const result = [];
+        for (const pos of pos45) {
+            const nextPos = this.getNextRepeatPos(pos, collisionArea, origin);
+            if (nextPos) {
+                result.push(nextPos);
+            } else {
+                break;
+            }
+        }
+        return result;
+    }
+
+    private getNextRepeatPos(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+        if (this.mRoomService.canPut2(pos, collisionArea, origin)) {
+            return pos;
+        }
     }
 
     private onMoveElement(pos45: Pos) {
@@ -361,11 +429,22 @@ export class DecoratePanel extends Panel {
     }
 
     private onRepeatHandler(dir: Direction) {
+        let result = null;
         switch (dir) {
             case Direction.north_west:
-                this.onRepeatNorthWestHandler();
+                result = this.getNorthWestPoints();
+                break;
+            case Direction.west_south:
+                result = this.getWestSouthPoints();
+                break;
+            case Direction.south_east:
+                result = this.getSouthEastPoints();
+                break;
+            case Direction.east_north:
+                result = this.getEastNorthPoints();
                 break;
         }
+        this.onSendAddSprites(result);
 
     }
 
@@ -382,6 +461,10 @@ export class DecoratePanel extends Panel {
     private onShowExtendsHandler() {
         // this.mRoomService.canPut()
         // this.mDisplayObject.
+    }
+
+    private onSendAddSprites(points: Pos[]) {
+        this.emit("addSprite", this.mSprite, points);
     }
 }
 

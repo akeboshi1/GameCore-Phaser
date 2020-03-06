@@ -24,6 +24,9 @@ export interface ISprite {
     readonly sceneId: number;
     readonly nodeType: op_def.NodeType;
     readonly currentAnimation: AnimationData;
+    readonly currentCollisionArea: number[][];
+    readonly currentWalkableArea: number[][];
+    readonly currentCollisionPoint: Phaser.Geom.Point;
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -65,6 +68,9 @@ export class Sprite implements ISprite {
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mNodeType: NodeType;
     protected mCurrentAnimation: AnimationData;
+    protected mCurrentCollisionArea: number[][];
+    protected mCurrentWalkableArea: number[][];
+    protected mCurrentCollisionPoint: Phaser.Geom.Point;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -277,6 +283,27 @@ export class Sprite implements ISprite {
         return this.mCurrentAnimation;
     }
 
+    get currentCollisionArea(): number[][] {
+        if (!this.mCurrentCollisionArea) {
+            this.mCurrentCollisionArea = this.getCollisionArea();
+        }
+        return this.mCurrentCollisionArea;
+    }
+
+    get currentWalkableArea(): number[][] {
+        if (!this.mCurrentWalkableArea) {
+            this.mCurrentWalkableArea = this.getWalkableArea();
+        }
+        return this.mCurrentWalkableArea;
+    }
+
+    get currentCollisionPoint(): Phaser.Geom.Point {
+        if (!this.mCurrentCollisionPoint) {
+            this.mCurrentCollisionPoint = this.getOriginPoint();
+        }
+        return this.mCurrentCollisionPoint;
+    }
+
     public get originCollisionPoint(): Phaser.Geom.Point {
         return this._originCollisionPoint;
     }
@@ -308,6 +335,9 @@ export class Sprite implements ISprite {
     private setAnimationData(animationName: string, direction: Direction) {
         const baseAniName = animationName.split(`_`)[0];
         this.mCurrentAnimation = this.findAnimation(baseAniName, direction);
+        if (this.mCurrentCollisionArea) {
+            this.setArea();
+        }
         // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
         if (animationName !== this.mCurrentAnimation.animationName) {
             Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
@@ -359,6 +389,36 @@ export class Sprite implements ISprite {
             }
         }
         return animationName;
+    }
+
+    private setArea() {
+        this.mCurrentCollisionArea = this.getCollisionArea();
+        this.mCurrentWalkableArea = this.getWalkableArea();
+        this.mCurrentCollisionPoint = this.getOriginPoint();
+    }
+
+    private getCollisionArea() {
+        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+            return;
+        }
+        const { animationName, flip } = this.mCurrentAnimation;
+        return this.mDisplayInfo.getCollisionArea(animationName, flip);
+    }
+
+    private getWalkableArea() {
+        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+            return;
+        }
+        const { animationName, flip } = this.mCurrentAnimation;
+        return this.mDisplayInfo.getWalkableArea(animationName, flip);
+    }
+
+    private getOriginPoint() {
+        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+            return;
+        }
+        const { animationName, flip } = this.mCurrentAnimation;
+        return this.mDisplayInfo.getOriginPoint(animationName, flip);
     }
 
     private dirable(aniName: string): number[] {

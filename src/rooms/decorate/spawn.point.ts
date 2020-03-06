@@ -9,6 +9,9 @@ import { IFramesModel, FramesModel } from "../display/frames.model";
 import { Animation } from "../display/animation";
 
 export class SpawnPoint implements ISprite {
+    currentCollisionArea: number[][];
+    currentWalkableArea: number[][];
+    currentCollisionPoint: Phaser.Geom.Point;
     id: number;
     avatar: IAvatar;
     nickname: string;
