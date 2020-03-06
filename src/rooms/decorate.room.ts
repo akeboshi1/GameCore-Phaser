@@ -633,22 +633,17 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onAddSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
-        const addedSpriteIds = content.addedSpriteIds;
-        if (content.id === this.mSelectedElement.root.id) {
-            this.addElement(this.mSelectedElement.root);
+        if (this.mSelectedElement.root && content.id === this.mSelectedElement.root.id) {
+            this.addElement(this.mSelectedElement.sprite);
         }
         this.mSelectedElement.remove();
-        const element = this.mElementManager.get(addedSpriteIds[addedSpriteIds.length - 1]);
-        if (element) {
-            this.mSelectedElement.setSprite(element.model, element.model);
-        }
     }
 
     private onAddSingleSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
         const addedSpriteIds = content.addedSpriteIds;
-        if (content.id === this.mSelectedElement.root.id) {
-            this.addElement(this.mSelectedElement.root);
+        if (this.mSelectedElement.root && content.id === this.mSelectedElement.root.id) {
+            this.addElement(this.mSelectedElement.sprite);
         }
         const element = this.mElementManager.get(addedSpriteIds[addedSpriteIds.length - 1]);
         this.mSelectedElement.remove();
