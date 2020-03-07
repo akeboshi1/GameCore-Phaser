@@ -43,9 +43,9 @@ export class MainUIScene extends BasicScene {
       }
     }
     world.uiManager.setScene(this);
-    this.checkSize(this.mRoom.world.getSize());
+    // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
-    this.scale.on("resize", this.checkSize, this);
+    // this.scale.on("resize", this.checkSize, this);
   }
 
   public setTimeout(caller, time): number {

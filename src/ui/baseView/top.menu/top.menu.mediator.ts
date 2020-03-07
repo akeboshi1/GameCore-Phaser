@@ -44,13 +44,13 @@ export class TopMenuMediator extends BaseMediator {
   }
 
   public addItem(data: IBtnData) {
-    if (!this.mView) {
-      this.mView = new TopMenuContainer(this.scene, this.world);
-      this.mView.on("saveDecorate", this.onSaveDecorateHandler, this);
-      this.mView.on("enterDecorate", this.onEnterDecorateHandler, this);
-      this.mView.on("showMarket", this.onShowMarketHandler, this);
-    }
-    this.mView.addItem(data);
+    // if (!this.mView) {
+    //   this.mView = new TopMenuContainer(this.scene, this.world);
+    //   this.mView.on("saveDecorate", this.onSaveDecorateHandler, this);
+    //   this.mView.on("enterDecorate", this.onEnterDecorateHandler, this);
+    //   this.mView.on("showMarket", this.onShowMarketHandler, this);
+    // }
+    // this.mView.addItem(data);
   }
 
   public removeItem(name: string) {

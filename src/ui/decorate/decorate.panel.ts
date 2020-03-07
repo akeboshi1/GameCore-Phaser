@@ -309,7 +309,7 @@ export class DecoratePanel extends Panel {
     }
 
     private getNextRepeatPos(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point) {
-        if (this.mRoomService.canPut2(pos, collisionArea, origin)) {
+        if (this.mRoomService.canPut(pos, collisionArea, origin)) {
             return pos;
         }
     }

@@ -99,35 +99,6 @@ export class DecorateElementManager extends ElementManager {
     }
   }
 
-  protected setMap(sprite: ISprite, type: number) {
-    const displayInfo = sprite.displayInfo;
-    if (!displayInfo) {
-      return;
-    }
-    const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
-    const flip = curAni.flip;
-    const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-    let walkArea = displayInfo.getWalkableArea(aniName, flip);
-    const origin = displayInfo.getOriginPoint(aniName, flip);
-    const rows = collisionArea.length;
-    const cols = collisionArea[0].length;
-    const pos = sprite.pos;
-    if (!walkArea) {
-      walkArea = new Array(rows);
-      for (let i = 0; i < cols; i++) {
-        walkArea[i] = new Array(cols).fill(0);
-      }
-    }
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        if (walkArea[i][j] === 0) {
-          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = type;
-        }
-      }
-    }
-  }
-
   get map(): number[][] {
     return this.mMap;
   }

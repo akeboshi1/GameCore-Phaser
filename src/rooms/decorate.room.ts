@@ -29,14 +29,13 @@ import { SpawnPoint } from "./decorate/spawn.point";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
+    readonly selectedSprite: ISprite | undefined;
 
     transformToMini45(p: Pos): Pos;
 
     transformToMini90(p: Pos): Pos;
 
-    canPut(sprite: ISprite): boolean;
-
-    canPut2(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
+    canPut(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
 }
 
 export class DecorateRoom extends PacketHandler implements DecorateRoomService {
@@ -322,36 +321,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.transformToMini90(bound);
     }
 
-    public canPut(sprite: ISprite) {
-        const pos = this.transformToMini45(sprite.pos);
-        if (pos.x < 0 || pos.y < 0 || pos.x > this.miniSize.rows || pos.y > this.miniSize.cols) {
-            return false;
-        }
-        const map = this.mElementManager.map;
-        const displayInfo = sprite.displayInfo;
-        const curAni = sprite.currentAnimation;
-        const aniName = curAni.animationName;
-        const flip = curAni.flip;
-        const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-        const origin = displayInfo.getOriginPoint(aniName, flip);
-        let row = 0;
-        let col = 0;
-        for (let i = 0; i < collisionArea.length; i++) {
-            row = i + pos.y - origin.y;
-            if (row >= map.length) {
-                return false;
-            }
-            for (let j = 0; j < collisionArea[i].length; j++) {
-                col = j + pos.x - origin.x;
-                if (col >= map[i].length || map[row][col] === 0) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    canPut2(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+    public canPut(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point) {
         if (!collisionArea || !origin) {
             return;
         }
@@ -537,7 +507,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         // TODO 还要考虑翻转
         const aniName: string = sprite.currentAnimationName || sprite.displayInfo.animationName;
-        if (this.canPut(sprite)) {
+        if (this.canPut(sprite.pos, sprite.currentCollisionArea, sprite.currentCollisionPoint)) {
             this.addElement(sprite);
             // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
             // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
@@ -641,14 +611,22 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onAddSingleSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
-        const addedSpriteIds = content.addedSpriteIds;
+        const addedSprites = content.addedSprites;
         if (this.mSelectedElement.root && content.id === this.mSelectedElement.root.id) {
             this.addElement(this.mSelectedElement.sprite);
         }
-        const element = this.mElementManager.get(addedSpriteIds[addedSpriteIds.length - 1]);
-        this.mSelectedElement.remove();
-        if (element) {
-            this.mSelectedElement.setSprite(element.model, element.model);
+        if (addedSprites) {
+            const sprites: ISprite[] = [];
+            for (const sprite of addedSprites) {
+                sprites.push(new Sprite(sprite, content.nodeType));
+            }
+            if (sprites.length > 0) {
+                this.mElementManager.add(sprites);
+                this.mSelectedElement.remove();
+                const sprite = sprites[sprites.length - 1];
+                this.removeElement(sprite.id, sprite.nodeType);
+                this.mSelectedElement.setSprite(sprite);
+            }
         }
     }
 
@@ -686,5 +664,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     get miniSize(): IPosition45Obj {
         return this.mMiniSize;
+    }
+
+    get selectedSprite(): ISprite | undefined {
+        return this.mSelectedElement.sprite;
     }
 }

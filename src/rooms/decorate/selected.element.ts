@@ -123,7 +123,7 @@ export class SelectedElement {
         if (!this.roomService || !this.mSprite || !this.mDisplay) {
             return;
         }
-        if (this.roomService.canPut(this.mSprite)) {
+        if (this.roomService.canPut(this.mSprite.pos, this.mSprite.currentCollisionArea, this.mSprite.currentCollisionPoint)) {
             this.mDisplay.alpha = 1;
         } else {
             this.mDisplay.alpha = 0.6;
