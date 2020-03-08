@@ -16,10 +16,6 @@ export interface ISprite {
     readonly alpha: number;
     readonly displayBadgeCards: op_def.IBadgeCard[];
 
-    readonly walkableArea: string;
-    readonly collisionArea: string;
-    readonly originPoint: number[];
-    readonly walkOriginPoint: number[];
     readonly platformId: string;
     readonly sceneId: number;
     readonly nodeType: op_def.NodeType;
@@ -57,10 +53,6 @@ export class Sprite implements ISprite {
     protected mNickname: string;
     protected mDisplayBadgeCards: op_def.IBadgeCard[];
 
-    protected mWalkableArea: string;
-    protected mCollisionArea: string;
-    protected mOriginPoint: number[];
-    protected mWalkOriginPoint: number[];
     protected mPackage: op_gameconfig.IPackage;
     protected mSceneId: number;
     protected mUuid: number;
@@ -224,22 +216,6 @@ export class Sprite implements ISprite {
 
     get alpha(): number {
         return this.mAlpha;
-    }
-
-    get walkableArea(): string {
-        return this.mWalkableArea;
-    }
-
-    get collisionArea(): string {
-        return this.mCollisionArea;
-    }
-
-    get originPoint(): number[] {
-        return this.mOriginPoint;
-    }
-
-    get walkOriginPoint(): number[] {
-        return this.mWalkOriginPoint;
     }
 
     get package(): op_gameconfig.IPackage {

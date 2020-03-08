@@ -378,6 +378,14 @@ export class Element extends BlockObject implements IElement {
         return this;
     }
 
+    public turn(): void {
+        if (!this.mModel) {
+            return;
+        }
+        this.mModel.turn();
+        if (this.mDisplay) this.mDisplay.play(this.mModel.currentAnimation);
+    }
+
     public destroy() {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();

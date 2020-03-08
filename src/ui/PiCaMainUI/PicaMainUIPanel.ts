@@ -15,10 +15,10 @@ export class PicaMainUIPanel extends Panel {
     }
 
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width / this.scale;
-        const height = this.scene.cameras.main.height / this.scale;
-        // const width = this.scene.scale.width / this.scale;
-        // const height = this.scene.scale.height / this.scale;
+        // const width = this.scene.cameras.main.width;
+        // const height = this.scene.cameras.main.height;
+        const width = this.scene.scale.width / this.scale;
+        const height = this.scene.scale.height / this.scale;
         super.resize(width, height);
         this.mCoinValue.x = width - this.mCoinValue.width / 2 - 5 * this.dpr;
         this.mDiamondValue.x = width - this.mDiamondValue.width / 2 - 5 * this.dpr;
@@ -134,5 +134,25 @@ class IconText extends Phaser.GameObjects.Container {
 
     public setColor(color: string) {
         this.mText.setColor(color);
+    }
+}
+
+class ProgressBar extends Phaser.GameObjects.Container {
+    private mProgress: Phaser.GameObjects.Image;
+    private mMask: Phaser.GameObjects.Image;
+    constructor(scene: Phaser.Scene, key: string, progress: string) {
+        super(scene);
+
+        this.mProgress = scene.make.image({
+            key,
+            frame: progress
+        }, false);
+
+        this.add(this.mProgress);
+    }
+
+    public setBackground(key: string, frame: string) {
+        const background = this.scene.make.image({ key, frame }, false);
+        this.addAt(background, 0);
     }
 }

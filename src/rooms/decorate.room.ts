@@ -416,18 +416,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private moveElement(pointer: Phaser.Input.Pointer) {
         const pos = this.transitionGrid(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
         this.mSelectedElement.setDisplayPos(pos.x, pos.y);
-        // }
-        // if (pointer.x < 300) {
-        //     if (pointer.prevPosition.x > pointer.x) this.mCameraService.camera.scrollX -= pointer.prevPosition.x - pointer.x;
-        // } else if (pointer.x > this.world.getSize().width - 300) {
-        //     if (pointer.x > pointer.prevPosition.x) this.mCameraService.camera.scrollX += pointer.x - pointer.prevPosition.x;
-        // }
-
-        // if (pointer.y < 300) {
-        //     if (pointer.prevPosition.y > pointer.y) this.mCameraService.camera.scrollY -= pointer.prevPosition.y - pointer.y;
-        // } else if (pointer.y > this.world.getSize().height - 300) {
-        //     if (pointer.y > pointer.prevPosition.y) this.mCameraService.camera.scrollY += pointer.y - pointer.prevPosition.y;
-        // }
     }
 
     private removeElement(id: number, nodeType: op_def.NodeType) {
@@ -581,15 +569,20 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         // if (!this.mSelectedElement) {
         //     this.mSelectedElement = new SelectedElement(this.scene, this);
         // } else {
-        if (this.mSelectedElement.display) {
-            this.onPutElement(this.mSelectedElement.display);
-        }
+        // if (this.mSelectedElement.display) {
+        //     this.onPutElement(this.mSelectedElement.display);
         // }
-        this.mSelectedElement.selecting = true;
+        // // }
+        // this.mSelectedElement.selecting = true;
+        // const sprite = new Sprite(content.sprite, content.nodeType);
+        // const pointer = this.scene.input.activePointer;
+        // sprite.setPosition(pointer.worldX, pointer.worldY);
+        // this.mSelectedElement.setSprite(sprite);
+        const camera = this.cameraService.camera;
         const sprite = new Sprite(content.sprite, content.nodeType);
-        const pointer = this.scene.input.activePointer;
-        sprite.setPosition(pointer.worldX, pointer.worldY);
-        this.mSelectedElement.setSprite(sprite);
+        sprite.setPosition((camera.scrollX + camera.width / 2) / this.world.scaleRatio, (camera.scrollY + camera.height / 2) / this.world.scaleRatio);
+        this.addElement(sprite);
+        const element = this.mElementManager.get(content.sprite.id);
     }
 
     private onShowSpawnPointHandler(packet: PBpacket) {

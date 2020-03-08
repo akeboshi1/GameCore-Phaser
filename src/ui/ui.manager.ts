@@ -22,6 +22,7 @@ import { InputTextFactory } from "./components/inputTextFactory";
 import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
 import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
 import { TopMediator } from "./baseView/topGroup/top.mediator";
+import { ActivityMediator } from "./Activity/ActivityMediator";
 
 export const enum UIType {
     NoneUIType,
@@ -104,16 +105,17 @@ export class UiManager extends PacketHandler {
             } else {
                 this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
                 this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
-                this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
+                // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
                 this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
                 this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
             }
             // this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
             if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
-            this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
+            // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
 
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
