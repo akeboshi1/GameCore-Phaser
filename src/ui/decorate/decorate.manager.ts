@@ -1,12 +1,12 @@
 import {DecoratePanel} from "./decorate.panel";
 import {LayerManager} from "../../rooms/layer/layer.manager";
-import { DisplayObject } from "../../rooms/display/display.object";
 import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { Pos } from "../../utils/pos";
 import { ISprite } from "../../rooms/element/sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def } from "pixelpai_proto";
+import { IElement } from "../../rooms/element/element";
 
 export class DecorateManager extends Phaser.Events.EventEmitter {
     private mPanel: DecoratePanel;
@@ -22,8 +22,8 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
         this.mLayerManager = roomService.layerManager;
     }
 
-    public setElement(ele: DisplayObject, sprite: ISprite) {
-        this.mPanel.setElement(ele, sprite);
+    public setElement(ele: IElement) {
+        this.mPanel.setElement(ele);
         this.mLayerManager.addToSceneToUI(this.mPanel);
         this.mPanel.show();
     }
@@ -41,6 +41,13 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
             return;
         }
         this.mPanel.updatePos(x, y);
+    }
+
+    public destroy() {
+        if (this.mPanel) {
+            this.mPanel.destroy();
+        }
+        super.destroy();
     }
 
     private onMoveElementHandler(pos: Pos) {

@@ -1,11 +1,9 @@
 import {Panel} from "../components/panel";
-import { DisplayObject } from "../../rooms/display/display.object";
 import { Pos } from "../../utils/pos";
 import { Position45, IPosition45Obj } from "../../utils/position45";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { MessageType } from "../../const/MessageType";
-import { Direction } from "../../rooms/element/element";
-import { Logger } from "../../utils/log";
+import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
 import { Button } from "../components/button";
 
@@ -29,7 +27,7 @@ export class DecoratePanel extends Panel {
 
     private mMoveMenuContainer: MoveMenu;
     private mRepeatMenuContainer: MoveMenu;
-    private mDisplayObject: DisplayObject;
+    private mDisplayObject: IElement;
     private mSprite: ISprite;
     private readonly key = "decorate_edit_menu";
     private offset: Pos = new Pos();
@@ -41,14 +39,15 @@ export class DecoratePanel extends Panel {
         if (this.mWorld) this.mScaleRatio = this.mWorld.scaleRatio;
     }
 
-    public setElement(ele: DisplayObject, sprite: ISprite) {
+    public setElement(ele: IElement) {
         this.mDisplayObject = ele;
-        this.mSprite = sprite;
+        this.mSprite = ele.model;
         if (!this.mInitialized) {
             return;
         }
-        this.x = ele.x;
-        this.y = ele.y;
+        const pos = this.mDisplayObject.getPosition();
+        this.x = pos.x;
+        this.y = pos.y;
 
         this.updateArrowPos(ele);
 
@@ -174,7 +173,7 @@ export class DecoratePanel extends Panel {
         // this.mControllContainer.add([border, this.mTurnBtn, this.mRecycleBtn, this.mConfirmBtn]);
         super.init();
 
-        this.setElement(this.mDisplayObject, this.mSprite);
+        this.setElement(this.mDisplayObject);
     }
 
     protected register() {
@@ -224,25 +223,25 @@ export class DecoratePanel extends Panel {
         if (!this.mDisplayObject) {
             return;
         }
-        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
         pos45.x -= 1;
         this.onMoveElement(pos45);
     }
 
     private onLeftDownHandler() {
-        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
         pos45.y += 1;
         this.onMoveElement(pos45);
     }
 
     private onRightUpHandler() {
-        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
         pos45.y -= 1;
         this.onMoveElement(pos45);
     }
 
     private onRightDownHandler() {
-        const pos45 = this.mRoomService.transformToMini45(new Pos(this.mDisplayObject.x, this.mDisplayObject.y));
+        const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
         pos45.x  = pos45.x + 1;
         this.onMoveElement(pos45);
     }
@@ -336,17 +335,18 @@ export class DecoratePanel extends Panel {
         return val;
     }
 
-    private updateArrowPos(ele: DisplayObject) {
-        if (!ele || !ele.collisionArea) {
+    private updateArrowPos(ele: IElement) {
+        if (!ele || !ele.model || !ele.getDisplay()) {
             return;
         }
         // return;
-        let rows = ele.collisionArea.length;
-        let cols = ele.collisionArea[0].length;
+        const display = ele.getDisplay();
+        let rows = ele.model.currentCollisionArea.length;
+        let cols = ele.model.currentCollisionArea[0].length;
 
         rows = this.validateGrid(rows);
         cols = this.validateGrid(cols);
-        if (ele.scaleX === -1) {
+        if (ele.getDisplay().scaleX === -1) {
             [rows, cols] = [cols, rows];
         }
 
@@ -358,12 +358,12 @@ export class DecoratePanel extends Panel {
             tileHeight: miniSize.tileHeight / 2,
         };
 
-        const reference = ele.getElement("reference");
-        if (!reference) {
-            return;
-        }
-
-        const pos = Position45.transformTo90(new Pos(cols - ele.originPoint.y, rows - ele.originPoint.x), position);
+        // const reference = ele.getElement("reference");
+        // if (!reference) {
+        //     return;
+        // }
+        const sprite = ele.model;
+        const pos = Position45.transformTo90(new Pos(cols - sprite.currentCollisionPoint.y, rows - sprite.currentCollisionPoint.x), position);
         this.offset.y = pos.y;
 
         // let pos = Position45.transformTo90(new Pos(cols, (rows / 2)), position);

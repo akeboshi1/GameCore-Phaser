@@ -12,26 +12,12 @@ export class DecorateElementManager extends ElementManager {
     super(room);
   }
 
-  protected onSync(packet: PBpacket) {
-    const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
-    if (content.nodeType !== NodeType.ElementNodeType) {
-        return;
-    }
-    let element: Element = null;
-    const sprites = content.sprites;
-    for (const sprite of sprites) {
-        element = this.get(sprite.id);
-        if (element) {
-            const sp = new Sprite(sprite, content.nodeType);
-            element.model = sp;
-            this.addMap(sp);
-        }
-    }
-  }
-
-  protected addMap(sprite: ISprite) {
+  public addMap(sprite: ISprite) {
     const displayInfo = sprite.displayInfo;
     if (!displayInfo) {
+      return;
+    }
+    if (this.mRoom.selectedSprite && this.mRoom.selectedSprite.id === sprite.id) {
       return;
     }
     const curAni = sprite.currentAnimation;
@@ -64,7 +50,7 @@ export class DecorateElementManager extends ElementManager {
     }
   }
 
-  protected removeMap(sprite: ISprite) {
+  public removeMap(sprite: ISprite) {
     const displayInfo = sprite.displayInfo;
     if (!displayInfo) {
       return;
@@ -96,6 +82,23 @@ export class DecorateElementManager extends ElementManager {
           }
         }
       }
+    }
+  }
+
+  protected onSync(packet: PBpacket) {
+    const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+    if (content.nodeType !== NodeType.ElementNodeType) {
+        return;
+    }
+    let element: Element = null;
+    const sprites = content.sprites;
+    for (const sprite of sprites) {
+        element = this.get(sprite.id);
+        if (element) {
+            const sp = new Sprite(sprite, content.nodeType);
+            element.model = sp;
+            this.addMap(sp);
+        }
     }
   }
 

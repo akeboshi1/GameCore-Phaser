@@ -13,6 +13,7 @@ import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
+import { DisplayObject } from "../display/display.object";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -52,6 +53,8 @@ export interface IElement {
 
     play(animationName: string): void;
 
+    getDisplay(): DisplayObject;
+
     setPosition(p: Pos): void;
 
     getPosition(): Pos;
@@ -75,6 +78,10 @@ export interface IElement {
     toSprite(): op_client.ISprite;
 
     setBlockable(val: boolean): this;
+
+    turn();
+
+    setAlpha(val: number);
 }
 
 export interface MoveData {
@@ -122,7 +129,7 @@ export class Element extends BlockObject implements IElement {
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    protected mDisplay: ElementDisplay | undefined;
+    protected mDisplay: DisplayObject | undefined;
     protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
@@ -209,7 +216,7 @@ export class Element extends BlockObject implements IElement {
         return this.mRenderable;
     }
 
-    public getDisplay(): ElementDisplay {
+    public getDisplay(): DisplayObject {
         return this.mDisplay;
     }
 
@@ -285,6 +292,7 @@ export class Element extends BlockObject implements IElement {
     public setPosition(p: Pos) {
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
+            this.mModel.setPosition(p.x, p.y);
         }
         this.setDepth();
         this.updateBlock();
@@ -384,6 +392,13 @@ export class Element extends BlockObject implements IElement {
         }
         this.mModel.turn();
         if (this.mDisplay) this.mDisplay.play(this.mModel.currentAnimation);
+    }
+
+    public setAlpha(val: number) {
+        if (!this.mDisplay) {
+            return;
+        }
+        this.mDisplay.setAlpha(val);
     }
 
     public destroy() {

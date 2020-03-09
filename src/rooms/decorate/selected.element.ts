@@ -24,44 +24,44 @@ export class SelectedElement {
     }
 
     setElement(display: FramesDisplay | DragonbonesDisplay) {
-        if (this.mDisplay) {
-            this.mDisplay.hideRefernceArea();
-            this.mDecorateManager.remove();
-        }
-        this.mDisplay = display;
-        display.showRefernceArea();
-        this.mDecorateManager.setElement(display, this.sprite);
-        this.mDisplay = display;
-        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
+        // if (this.mDisplay) {
+        //     this.mDisplay.hideRefernceArea();
+        //     this.mDecorateManager.remove();
+        // }
+        // this.mDisplay = display;
+        // display.showRefernceArea();
+        // this.mDecorateManager.setElement(display, this.sprite);
+        // this.mDisplay = display;
+        // this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
     }
 
     setSprite(sprite: ISprite, root?: ISprite) {
         // this.mDisplay = new FramesDisplay(this.scene, this.roomService);
-        const displayInfo = sprite.displayInfo;
-        if (!displayInfo) {
-            return;
-        }
-        if (root) {
-            this.mRootSprite = new Sprite(sprite.toSprite(), sprite.nodeType);
-        } else {
-            this.mRootSprite = null;
-        }
-        this.mSprite = sprite;
-        this.mDisplay = new FramesDisplay(this.scene, this.roomService);
-        const pos = sprite.pos;
-        this.mDisplay.x = pos.x;
-        this.mDisplay.y = pos.y;
-        this.mDisplay.once("initialized", () => {
-            this.mDisplay.showRefernceArea();
-            this.mDisplay.play(this.sprite.currentAnimation);
-            // this.mDisplay.setDirection(sprite.direction);
-            this.mDecorateManager.setElement(this.mDisplay, this.mSprite);
-            this.roomService.addToSurface(this.mDisplay);
-        });
-        this.mDisplay.load(<FramesModel> sprite.displayInfo);
-        this.mSelecting = true;
-        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
-        this.roomService.world.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT);
+        // const displayInfo = sprite.displayInfo;
+        // if (!displayInfo) {
+        //     return;
+        // }
+        // if (root) {
+        //     this.mRootSprite = new Sprite(sprite.toSprite(), sprite.nodeType);
+        // } else {
+        //     this.mRootSprite = null;
+        // }
+        // this.mSprite = sprite;
+        // this.mDisplay = new FramesDisplay(this.scene, this.roomService);
+        // const pos = sprite.pos;
+        // this.mDisplay.x = pos.x;
+        // this.mDisplay.y = pos.y;
+        // this.mDisplay.once("initialized", () => {
+        //     this.mDisplay.showRefernceArea();
+        //     this.mDisplay.play(this.sprite.currentAnimation);
+        //     // this.mDisplay.setDirection(sprite.direction);
+        //     this.mDecorateManager.setElement(this.mDisplay, this.mSprite);
+        //     this.roomService.addToSurface(this.mDisplay);
+        // });
+        // this.mDisplay.load(<FramesModel> sprite.displayInfo);
+        // this.mSelecting = true;
+        // this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
+        // this.roomService.world.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT);
     }
 
     turnElement() {
