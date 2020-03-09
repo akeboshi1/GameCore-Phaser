@@ -95,8 +95,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     // private mDragonBonesRenderTexture;
 
-    public constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement) {
-        super(scene, roomService, element);
+    public constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
+        super(scene, roomService, element, antial);
     }
 
     get spriteWidth(): number {
@@ -783,6 +783,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 } else {
                     img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
                 }
+                if (this.mAntial) {
+                    // 用于设置边缘抗锯齿
+                    img.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                }
                 slot.replaceDisplay(img);
             }
         }
@@ -807,6 +811,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     const baseY = slot.display ? slot.display.y : 0;
                     const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, baseX, baseY, name);
                     if (img.texture.key === name) {
+                        if (this.mAntial) {
+                            // 用于设置边缘抗锯齿
+                            img.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                        }
                         slot.replaceDisplay(img);
                     }
                 }
