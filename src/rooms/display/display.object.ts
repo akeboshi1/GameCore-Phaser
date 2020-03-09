@@ -39,11 +39,13 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mElement: IElement;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
-    constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement) {
+    protected mAntial: boolean = false;
+    constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
         super(scene);
         this.mElement = element;
         this.mRoomService = roomService;
         this.mChildMap = new Map();
+        this.mAntial = antial;
     }
 
     public changeAlpha(val?: number) {
@@ -121,6 +123,9 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         if (!this.mNickname) {
             this.mNickname = this.scene.make.text({ style: { font: Font.YAHEI_14_BOLD } }, false).setOrigin(0.5, 0.5);
             this.mNickname.setStroke("#0", 2);
+            if (this.mAntial) {
+                this.mNickname.setShadow(2, 2, "#0", 4, true, true);
+            }
             this.flagContainer.add(this.mNickname);
         }
         this.mNickname.setText(val);
