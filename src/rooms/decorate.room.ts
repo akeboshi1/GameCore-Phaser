@@ -410,7 +410,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private removeElement(id: number, nodeType: op_def.NodeType) {
-        if (nodeType === op_def.NodeType.ElementNodeType) {
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
             this.elementManager.remove(id);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             this.elementManager.remove(id);
@@ -419,7 +419,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private addElement(sprite: ISprite) {
         const nodeType = sprite.nodeType;
-        if (nodeType === op_def.NodeType.ElementNodeType) {
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
             this.mElementManager.add([sprite]);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             this.mTerrainManager.add([sprite]);
@@ -505,6 +505,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             } else {
                 if (sprite.nodeType === op_def.NodeType.SpawnPointType) {
                     this.sendSpawnPoint(sprite.pos);
+                    this.removeElement(sprite.id, sprite.nodeType);
                 } else {
                     this.sendAddSprite(sprite);
                 }
@@ -585,7 +586,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         spawnPoint.setPosition(pos.x, pos.y);
         this.addElement(spawnPoint);
 
-        this.selectedElement(this.mElementManager.get(spawnPoint.id));
+        this.selectedElement(this.mElementManager.get(spawnPoint.id), false);
         // this.mSelectedElement.setSprite(spawnPoint);
         this.mCameraService.scrollTargetPoint(pos.x, pos.y);
     }

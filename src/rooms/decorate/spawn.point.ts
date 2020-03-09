@@ -9,9 +9,6 @@ import { IFramesModel, FramesModel } from "../display/frames.model";
 import { Animation } from "../display/animation";
 
 export class SpawnPoint implements ISprite {
-    currentCollisionArea: number[][];
-    currentWalkableArea: number[][];
-    currentCollisionPoint: Phaser.Geom.Point;
     id: number;
     avatar: IAvatar;
     nickname: string;
@@ -33,6 +30,7 @@ export class SpawnPoint implements ISprite {
     sn: string;
 
     constructor() {
+        this.id = 100;
         this.nodeType = op_def.NodeType.SpawnPointType;
         this.pos = new Pos();
         this.displayInfo = new FramesModel({
@@ -89,5 +87,17 @@ export class SpawnPoint implements ISprite {
         animation.originPoint = [0, 0];
         animation.frameName = ["switch_0027_3_01.png"];
         return animation;
+    }
+
+    get currentCollisionArea(): number[][] {
+        return [[1, 1], [1, 1]];
+    }
+
+    get currentWalkableArea(): number[][] {
+        return [[0]];
+    }
+
+    get currentCollisionPoint() {
+        return new Phaser.Geom.Point(0, 0);
     }
 }

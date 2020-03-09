@@ -58,6 +58,8 @@ export class PicaMainUIPanel extends Panel {
 
         let frame = this.scene.textures.getFrame(this.key, "strength_progress.png");
         const strengthValue = new ProgressValue(this.scene, this.key, "strength_icon.png", this.dpr);
+        strengthValue.x = 50 * this.dpr;
+        strengthValue.y = 27 * this.dpr;
         const ninePatch = new NinePatch(this.scene, 62 * this.dpr / 2, strengthValue.height / 2 - frame.height, 62 * this.dpr, frame.height, this.key, "strength_progress.png", {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
@@ -65,26 +67,23 @@ export class PicaMainUIPanel extends Panel {
             bottom: frame.height - 1 - 3 * this.dpr
 
         });
-        strengthValue.setProgress(ninePatch);
-        strengthValue.x = 50 * this.dpr;
-        strengthValue.y = 27 * this.dpr;
+        strengthValue.setProgress(ninePatch,  this.scale);
         this.add(strengthValue);
         strengthValue.setValue(1000, 1000);
 
         frame = this.scene.textures.getFrame(this.key, "health_progress.png");
         const healthValue = new ProgressValue(this.scene, this.key, "health_con.png", this.dpr);
+        healthValue.x = 150 * this.dpr;
+        healthValue.y = 27 * this.dpr;
         const healthNinePatch =  new NinePatch(this.scene, 62 * this.dpr / 2, healthValue.height / 2 - frame.height, 62 * this.dpr, frame.height, this.key, "health_progress.png", {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
             right: frame.width - 2 - 8 * this.dpr,
             bottom: frame.height - 1 - 3 * this.dpr
-
         });
-        healthValue.setProgress(healthNinePatch);
-        healthValue.x = 150 * this.dpr;
-        healthValue.y = 27 * this.dpr;
+        healthValue.setProgress(healthNinePatch, this.scale);
         this.add(healthValue);
-        healthValue.setValue(1200, 1000);
+        healthValue.setValue(200, 1000);
 
         const expProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
         this.add(expProgress);
@@ -205,8 +204,8 @@ class ExpProgress extends Phaser.GameObjects.Container {
             right: frame.width - 2 - 10 * dpr,
             bottom: frame.height - 1 - 5 * dpr
         });
-        this.mProgressBar.setProgress(progres);
-        this.mProgressBar.setRatio(0.9);
+        this.mProgressBar.setProgress(progres, this.x, this.y, scale);
+        this.mProgressBar.setRatio(0.6);
 
         this.mCurrentLv = scene.make.text({
             text: "Lv. 57",
@@ -237,8 +236,8 @@ class ProgressValue extends ValueContainer {
         super(scene, key, leftIcon, dpr);
     }
 
-    setProgress(progres: NinePatch) {
-        this.mProgress.setProgress(progres);
+    setProgress(progres: NinePatch, scale: number) {
+        this.mProgress.setProgress(progres, this.x + this.mProgress.x, this.y + this.mProgress.y, scale);
     }
 
     setValue(val: number, maxValue: number) {
@@ -261,8 +260,8 @@ class ProgressValue extends ValueContainer {
         }, false);
 
         this.mProgress = new ProgressBar(this.scene, dpr);
-        this.mProgress.x = -this.width / 2 + 6 * dpr;
-        this.mProgress.y = 2 * dpr;
+        this.mProgress.x = -this.width / 2 + 10 * dpr;
+        this.mProgress.y = 4 * dpr;
 
         this.mText = this.scene.make.text({
             text: "349343",
@@ -293,41 +292,41 @@ class ProgressBar extends Phaser.GameObjects.Container {
     private mProgress: NinePatch;
     private readonly dpr: number;
     private mMaskGraphics: Phaser.GameObjects.Graphics;
+    private offsetX: number = 0;
+    private offsetY: number = 0;
+    private mScale: number;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
     }
 
     public setBackground(bg: NinePatch) {
-        // const background = this.scene.make.image({ key, frame }, false);
         this.addAt(bg, 0);
     }
 
-    public setProgress(progress: NinePatch) {
+    public setProgress(progress: NinePatch, offsetX: number, offsetY: number, scale: number) {
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.mScale = scale;
         this.mProgress = progress;
-        this.setSize(progress.width, progress.height);
+        this.setSize(progress.width * this.mScale, progress.height * this.mScale);
 
         this.mMaskGraphics = this.scene.make.graphics(undefined, false);
         this.mMaskGraphics.fillStyle(0xFF9900);
-        // this.mMaskGraphics.fillRoundedRect(0, 0, 300 * this.dpr, 100, 10);
-        this.mMaskGraphics.fillRoundedRect(0, progress.y - progress.height / 2 + 1 * this.dpr, this.width, progress.height, 8);
+        this.mMaskGraphics.fillRoundedRect(0, progress.y - progress.height / 2 + 1 * this.dpr, this.width, progress.height, 10);
         this.add(this.mProgress);
-        // this.add(this.mMaskGraphics);
-        // this.mProgress.setMask(this.mMaskGraphics.createGeometryMask());
-        // this.mMaskGraphics.mask = new Phaser.Display.Masks.BitmapMask(this.scene, this.mProgress);
         this.mProgress.mask = new Phaser.Display.Masks.BitmapMask(this.scene, this.mMaskGraphics);
+        this.mMaskGraphics.x = offsetX;
+        this.mMaskGraphics.y = offsetY;
     }
 
     public setRatio(ratio: number) {
-        this.mMaskGraphics.x = -this.width;
-        // this.mMaskGraphics.x = (this.width * ratio) - this.width;
-        // this.mMaskGraphics.x = (this.width * ratio) - this.width;
-        // setInteractive(() => {
-        //     this.mMaskGraphics.x ++;
+        if (!this.mMaskGraphics) {
+            return;
+        }
+        this.mMaskGraphics.x = ((this.width * ratio) - this.width + this.offsetX * this.mScale);
+        // setInterval(() => {
+        //     this.mMaskGraphics.x += 1 * this.dpr;
         // }, 100);
-        setInterval(() => {
-            this.mMaskGraphics.x += 1 * this.dpr;
-        }, 100);
-
     }
 }

@@ -1,0 +1,295 @@
+{
+	"frames": {
+		"add_btn.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 55,
+				"h": 57
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 55,
+				"h": 57
+			},
+			"sourceSize": {
+				"w": 55,
+				"h": 57
+			}
+		},
+		"coin.png": {
+			"frame": {
+				"x": 58,
+				"y": 1,
+				"w": 62,
+				"h": 63
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 62,
+				"h": 63
+			},
+			"sourceSize": {
+				"w": 62,
+				"h": 63
+			}
+		},
+		"counter_icon.png": {
+			"frame": {
+				"x": 122,
+				"y": 1,
+				"w": 42,
+				"h": 47
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 42,
+				"h": 47
+			},
+			"sourceSize": {
+				"w": 42,
+				"h": 47
+			}
+		},
+		"diamond.png": {
+			"frame": {
+				"x": 166,
+				"y": 1,
+				"w": 69,
+				"h": 57
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 69,
+				"h": 57
+			},
+			"sourceSize": {
+				"w": 69,
+				"h": 57
+			}
+		},
+		"exp_bg.png": {
+			"frame": {
+				"x": 1,
+				"y": 60,
+				"w": 38,
+				"h": 14
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 38,
+				"h": 14
+			},
+			"sourceSize": {
+				"w": 38,
+				"h": 14
+			}
+		},
+		"exp_progress.png": {
+			"frame": {
+				"x": 122,
+				"y": 60,
+				"w": 25,
+				"h": 11
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 25,
+				"h": 11
+			},
+			"sourceSize": {
+				"w": 25,
+				"h": 11
+			}
+		},
+		"health_con.png": {
+			"frame": {
+				"x": 149,
+				"y": 60,
+				"w": 33,
+				"h": 43
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 33,
+				"h": 43
+			},
+			"sourceSize": {
+				"w": 33,
+				"h": 43
+			}
+		},
+		"health_progress.png": {
+			"frame": {
+				"x": 184,
+				"y": 60,
+				"w": 33,
+				"h": 17
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 33,
+				"h": 17
+			},
+			"sourceSize": {
+				"w": 33,
+				"h": 17
+			}
+		},
+		"price_bg.png": {
+			"frame": {
+				"x": 1,
+				"y": 105,
+				"w": 254,
+				"h": 54
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 254,
+				"h": 54
+			},
+			"sourceSize": {
+				"w": 254,
+				"h": 54
+			}
+		},
+		"room_icon.png": {
+			"frame": {
+				"x": 1,
+				"y": 161,
+				"w": 47,
+				"h": 34
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 47,
+				"h": 34
+			},
+			"sourceSize": {
+				"w": 47,
+				"h": 34
+			}
+		},
+		"setting_icon.png": {
+			"frame": {
+				"x": 50,
+				"y": 161,
+				"w": 39,
+				"h": 41
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 39,
+				"h": 41
+			},
+			"sourceSize": {
+				"w": 39,
+				"h": 41
+			}
+		},
+		"strength_bg.png": {
+			"frame": {
+				"x": 237,
+				"y": 1,
+				"w": 176,
+				"h": 39
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 176,
+				"h": 39
+			},
+			"sourceSize": {
+				"w": 176,
+				"h": 39
+			}
+		},
+		"strength_icon.png": {
+			"frame": {
+				"x": 237,
+				"y": 42,
+				"w": 30,
+				"h": 39
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 30,
+				"h": 39
+			},
+			"sourceSize": {
+				"w": 30,
+				"h": 39
+			}
+		},
+		"strength_progress.png": {
+			"frame": {
+				"x": 269,
+				"y": 42,
+				"w": 33,
+				"h": 17
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 33,
+				"h": 17
+			},
+			"sourceSize": {
+				"w": 33,
+				"h": 17
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 414,
+			"h": 203
+		},
+		"scale": "1"
+	}
+}
