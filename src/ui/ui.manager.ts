@@ -104,7 +104,7 @@ export class UiManager extends PacketHandler {
                 this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
             } else {
                 this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
-                this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
+                // this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
                 // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
                 this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
                 this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));

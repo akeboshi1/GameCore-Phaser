@@ -33,7 +33,7 @@ export class ActivityPanel extends Panel {
         }
         super.init();
 
-        let mainMenuW = 150 * this.dpr;
+        let mainMenuW = 160 * this.dpr;
         const subList = this.list;
         subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.height);
         const margin = mainMenuW / (subList.length - 1);

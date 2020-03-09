@@ -612,13 +612,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
                 const ele = this.mElementManager.get(sprites[sprites.length - 1].id);
                 if (ele) {
                     this.cancelSelector();
-                    this.mSelectorElement = new SelectorElement(this, ele);
-                    this.mElementManager.removeMap(ele.model);
+                    this.selectedElement(ele);
+                    if (this.mSelectorElement) this.mSelectorElement.selecting = false;
                 }
-                // this.mSelectedElement.remove();
-                // const sprite = sprites[sprites.length - 1];
-                // this.removeElement(sprite.id, sprite.nodeType);
-                // this.mSelectedElement.setSprite(sprite);
             }
         }
     }
