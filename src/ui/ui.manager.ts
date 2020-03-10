@@ -21,8 +21,9 @@ import { MessageType } from "../const/MessageType";
 import { InputTextFactory } from "./components/inputTextFactory";
 import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
 import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
-import { TopMediator } from "./baseView/topGroup/top.mediator";
 import { ActivityMediator } from "./Activity/ActivityMediator";
+import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
+import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 
 export const enum UIType {
     NoneUIType,
@@ -103,16 +104,18 @@ export class UiManager extends PacketHandler {
             if (this.worldService.game.device.os.desktop) {
                 this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
             } else {
-                this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
+                // this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
                 // this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
                 // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
-                this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
-                this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
+                // this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
                 this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
             }
+            this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
+            this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
+            this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
-            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
+            // if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
@@ -277,6 +280,43 @@ export class UiManager extends PacketHandler {
         map.set(medName, mediator);
     }
 
+    public showMed(type: string, ...param: any[]) {
+        if (!this.mMedMap) {
+            this.mCache.push(param);
+            return;
+        }
+        const className: string = type + "Mediator";
+        let mediator: IMediator = this.mMedMap.get(className);
+        if (!mediator) {
+            const path: string = `./${type}/${type}Mediator`;
+            const ns: any = require(`./${type}/${className}`);
+            mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
+            if (!mediator) {
+                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                return;
+            }
+            this.mMedMap.set(type + "Mediator", mediator);
+            // mediator.setName(type);
+        }
+        // if (mediator.showing) return;
+        if (param) mediator.setParam(param);
+        // if (className === "RankMediator") {
+        //     if (!this.worldService.game.device.os.desktop) {
+        //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
+        //         if (med) {
+        //             if (!med.isShow()) {
+        //                 med.preRefreshBtn(className);
+        //             } else {
+        //                 med.refreshBtn(className, true);
+        //             }
+        //         }
+        //         return;
+        //     }
+        // }
+        this.checkUIState(className, false);
+        mediator.show(param);
+    }
+
     private handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         this.showMed(ui.name, ui);
@@ -314,43 +354,6 @@ export class UiManager extends PacketHandler {
             key: "Turn_Btn_Top", name: "Market", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
             iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
-    }
-
-    private showMed(type: string, ...param: any[]) {
-        if (!this.mMedMap) {
-            this.mCache.push(param);
-            return;
-        }
-        const className: string = type + "Mediator";
-        let mediator: IMediator = this.mMedMap.get(className);
-        if (!mediator) {
-            const path: string = `./${type}/${type}Mediator`;
-            const ns: any = require(`./${type}/${className}`);
-            mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
-            if (!mediator) {
-                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                return;
-            }
-            this.mMedMap.set(type + "Mediator", mediator);
-            // mediator.setName(type);
-        }
-        // if (mediator.showing) return;
-        if (param) mediator.setParam(param);
-        // if (className === "RankMediator") {
-        //     if (!this.worldService.game.device.os.desktop) {
-        //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
-        //         if (med) {
-        //             if (!med.isShow()) {
-        //                 med.preRefreshBtn(className);
-        //             } else {
-        //                 med.refreshBtn(className, true);
-        //             }
-        //         }
-        //         return;
-        //     }
-        // }
-        this.checkUIState(className, false);
-        mediator.show(param);
     }
 
     private checkBaseUImap(show: boolean) {

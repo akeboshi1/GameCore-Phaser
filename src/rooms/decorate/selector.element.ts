@@ -4,15 +4,18 @@ import { Pos } from "../../utils/pos";
 import { DecorateRoomService } from "../decorate.room";
 import { MessageType } from "../../const/MessageType";
 import { ISprite, Sprite } from "../element/sprite";
+import { IRoomService } from "../room";
 
 export class SelectorElement {
     private mScene: Phaser.Scene;
     private mDecorateManager: DecorateManager;
     private mSelecting: boolean;
     private mSourceData: SourceSprite;
-    constructor(private roomService: DecorateRoomService, private mElement: IElement) {
-        this.mScene = roomService.scene;
-        this.mDecorateManager = new DecorateManager(this.mScene, roomService);
+    private mRoomService: DecorateRoomService;
+    constructor(private mElement: IElement) {
+        this.mScene = this.mElement.scene;
+        this.mRoomService = <DecorateRoomService> this.mElement.roomService;
+        this.mDecorateManager = new DecorateManager(this.mScene, this.mRoomService);
         this.mDecorateManager.setElement(mElement);
         const display = mElement.getDisplay();
         display.showRefernceArea();
@@ -20,8 +23,8 @@ export class SelectorElement {
 
         this.mDecorateManager.on("moveElement", this.onMoveElementHandler, this);
 
-        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
-        this.roomService.world.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT);
+        this.mRoomService.world.emitter.emit(MessageType.EDIT_PACKAGE_COLLAPSE);
+        this.mRoomService.world.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT);
     }
 
     turnElement() {
@@ -83,16 +86,16 @@ export class SelectorElement {
             }
         }
         this.mSourceData = undefined;
-        this.roomService.world.emitter.emit(MessageType.EDIT_PACKAGE_EXPANED);
-        this.roomService.world.emitter.emit(MessageType.CANCEL_DECORATE_ELEMENT);
+        this.mRoomService.world.emitter.emit(MessageType.EDIT_PACKAGE_EXPANED);
+        this.mRoomService.world.emitter.emit(MessageType.CANCEL_DECORATE_ELEMENT);
     }
 
     private checkCanPut() {
-        if (!this.roomService || !this.mElement) {
+        if (!this.mRoomService || !this.mElement) {
             return;
         }
         const sprite = this.mElement.model;
-        if (this.roomService.canPut(this.mElement.getPosition(), sprite.currentCollisionArea, sprite.currentCollisionPoint)) {
+        if (this.mRoomService.canPut(this.mElement.getPosition(), sprite.currentCollisionArea, sprite.currentCollisionPoint)) {
             this.element.setAlpha(1);
         } else {
             this.element.setAlpha(0.6);

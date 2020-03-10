@@ -431,7 +431,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             return;
         }
         if (!this.mSelectorElement) {
-            this.mSelectorElement = new SelectorElement(this, <Element> element);
+            this.mSelectorElement = new SelectorElement(element);
             if (isClone) {
                 this.mSelectorElement.clone();
             }

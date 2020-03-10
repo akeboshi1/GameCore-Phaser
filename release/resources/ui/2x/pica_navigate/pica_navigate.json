@@ -1,0 +1,155 @@
+{
+	"frames": {
+		"bag_btn.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 67,
+				"h": 78
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 67,
+				"h": 78
+			},
+			"sourceSize": {
+				"w": 67,
+				"h": 78
+			}
+		},
+		"bg.png": {
+			"frame": {
+				"x": 70,
+				"y": 1,
+				"w": 2,
+				"h": 113
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 2,
+				"h": 113
+			},
+			"sourceSize": {
+				"w": 2,
+				"h": 113
+			}
+		},
+		"close_btn.png": {
+			"frame": {
+				"x": 74,
+				"y": 1,
+				"w": 68,
+				"h": 70
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 68,
+				"h": 70
+			},
+			"sourceSize": {
+				"w": 68,
+				"h": 70
+			}
+		},
+		"family_btn.png": {
+			"frame": {
+				"x": 74,
+				"y": 73,
+				"w": 83,
+				"h": 78
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 83,
+				"h": 78
+			},
+			"sourceSize": {
+				"w": 83,
+				"h": 78
+			}
+		},
+		"gift_btn.png": {
+			"frame": {
+				"x": 159,
+				"y": 1,
+				"w": 74,
+				"h": 76
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 74,
+				"h": 76
+			},
+			"sourceSize": {
+				"w": 74,
+				"h": 76
+			}
+		},
+		"map_btn.png": {
+			"frame": {
+				"x": 159,
+				"y": 79,
+				"w": 85,
+				"h": 79
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 85,
+				"h": 79
+			},
+			"sourceSize": {
+				"w": 85,
+				"h": 79
+			}
+		},
+		"shop_btn.png": {
+			"frame": {
+				"x": 1,
+				"y": 160,
+				"w": 71,
+				"h": 73
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 71,
+				"h": 73
+			},
+			"sourceSize": {
+				"w": 71,
+				"h": 73
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 245,
+			"h": 234
+		},
+		"scale": "1"
+	}
+}

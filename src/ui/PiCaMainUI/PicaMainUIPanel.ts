@@ -16,10 +16,8 @@ export class PicaMainUIPanel extends Panel {
     }
 
     resize(w: number, h: number) {
-        // const width = this.scene.cameras.main.width;
-        // const height = this.scene.cameras.main.height;
-        const width = this.scene.scale.width / this.scale;
-        const height = this.scene.scale.height / this.scale;
+        const width = this.scene.cameras.main.width / this.scale;
+        const height = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
         this.mCoinValue.x = width - this.mCoinValue.width / 2 - 5 * this.dpr;
         this.mDiamondValue.x = width - this.mDiamondValue.width / 2 - 5 * this.dpr;

@@ -10,10 +10,10 @@ export class ActivityPanel extends Panel {
     }
 
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width; // / this.scale;
-        const height = this.scene.cameras.main.height; // / this.scale;
-        this.x = width - 60 * this.dpr;
-        this.y = 120 * this.dpr;
+        const width = this.scene.cameras.main.width;
+        const height = this.scene.cameras.main.height;
+        this.x = width - 40 * this.dpr;
+        this.y = 150 * this.dpr;
         super.resize(width, height);
     }
 
@@ -27,7 +27,7 @@ export class ActivityPanel extends Panel {
             const img = this.scene.make.image({
                 key: this.key,
                 frame: `icon_${i + 1}.png`
-            }, false).setOrigin(0);
+            }, false);
             // img.y = i * 50 * this.dpr;
             this.add(img);
         }

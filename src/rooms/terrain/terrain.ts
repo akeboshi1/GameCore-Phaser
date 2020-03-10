@@ -247,4 +247,10 @@ export class Terrain extends BlockObject implements IElement {
         }
         return "";
     }
+
+    get scene(): Phaser.Scene {
+        if (this.mElementManager) {
+            return this.mElementManager.scene;
+        }
+    }
 }

@@ -46,6 +46,8 @@ export enum Direction {
 export interface IElement {
     readonly id: number;
     readonly dir: number;
+    readonly roomService: IRoomService;
+    readonly scene: Phaser.Scene;
 
     model: ISprite;
 
@@ -125,6 +127,12 @@ export class Element extends BlockObject implements IElement {
 
     set model(val: ISprite) {
         this.setModel(val);
+    }
+
+    get scene(): Phaser.Scene {
+        if (this.mElementManager) {
+            return this.mElementManager.scene;
+        }
     }
 
     protected mId: number;
