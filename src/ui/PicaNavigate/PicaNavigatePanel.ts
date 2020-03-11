@@ -84,7 +84,7 @@ export class PicaNavigatePanel extends Panel {
   }
 
   private onShowMapHandler() {
-    this.emit("showPanel", "");
+    this.emit("showPanel", "PicaRoomList");
   }
 
   private onShowShopHandler() {

@@ -43,7 +43,9 @@ export class PicaChatPanel extends Panel {
 
         this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr;
 
+        // this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2);
         // this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
+        // this.mTextArea.childrenMap.child.setPosition(this.x + w / 2, this.y + h / 2);
         this.mTextArea.childrenMap.child.textMask.setPosition(this.x, this.y).resize(w, h);
         // this.setInteractive();
         super.resize(w, h);
@@ -67,6 +69,7 @@ export class PicaChatPanel extends Panel {
 
     protected init() {
         const width = this.scene.cameras.main.width;
+        const height = this.scene.cameras.main.height;
         this.mBackground = this.scene.make.graphics(undefined, false);
         this.setSize(width, 135 * this.dpr);
 
@@ -131,6 +134,7 @@ export class PicaChatPanel extends Panel {
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
             strokeThickness: 1 * this.dpr,
+            textMask: false,
             shadow: {
                 offsetX: 0,
                 offsetY: 0,
@@ -145,9 +149,11 @@ export class PicaChatPanel extends Panel {
             }
         });
 
+        const background = this.scene.make.graphics(undefined, false);
         this.mTextArea = new TextArea(this.mScene, {
             x: width / 2 + 4 * this.dpr,
             y: 160 * this.dpr,
+            // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900),
             textWidth: width - 4 * this.dpr,
             textHeight: 300 * this.dpr,
             text,
@@ -173,8 +179,11 @@ export class PicaChatPanel extends Panel {
             this.mTileContainer,
             this.mTextArea,
             text,
+            background,
             this.mNavigateBtn
         ]);
+        this.mTextArea.setSliderEnable(false);
+        this.mTextArea.childrenMap.child.disableInteractive();
         super.init();
 
         this.scene.input.setDraggable(this.mScrollBtn, true);

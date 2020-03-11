@@ -5,9 +5,15 @@ export class Button extends GameObjects.Container implements IButtonState {
   private mBackground: Phaser.GameObjects.Image;
   private mPressDelay = 1000;
   private mPressTime: any;
+  private mKey: string;
+  private mFrame: string;
+  private mDownFrame: string;
 
-  constructor(scene: Phaser.Scene, key: string, frame?: string) {
+  constructor(scene: Phaser.Scene, key: string, frame?: string, downFrame?: string) {
     super(scene);
+    this.mKey = key;
+    this.mFrame = frame;
+    this.mDownFrame = downFrame;
     this.mBackground = scene.make.image({
       key,
       frame
@@ -19,9 +25,13 @@ export class Button extends GameObjects.Container implements IButtonState {
   }
 
   changeNormal() {
+    this.mBackground.setFrame(this.mFrame);
   }
 
   changeDown() {
+    if (this.mDownFrame) {
+      this.mBackground.setFrame(this.mDownFrame);
+    }
   }
 
   private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
