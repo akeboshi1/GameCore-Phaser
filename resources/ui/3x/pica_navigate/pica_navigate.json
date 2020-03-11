@@ -4,25 +4,25 @@
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 101,
-				"h": 117
+				"w": 127,
+				"h": 127
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 101,
-				"h": 117
+				"w": 127,
+				"h": 127
 			},
 			"sourceSize": {
-				"w": 101,
-				"h": 117
+				"w": 127,
+				"h": 127
 			}
 		},
 		"bg.png": {
 			"frame": {
-				"x": 104,
+				"x": 130,
 				"y": 1,
 				"w": 2,
 				"h": 169
@@ -42,7 +42,7 @@
 		},
 		"close_btn.png": {
 			"frame": {
-				"x": 108,
+				"x": 134,
 				"y": 1,
 				"w": 104,
 				"h": 106
@@ -62,82 +62,62 @@
 		},
 		"family_btn.png": {
 			"frame": {
-				"x": 108,
+				"x": 134,
 				"y": 109,
-				"w": 125,
-				"h": 118
+				"w": 133,
+				"h": 135
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 125,
-				"h": 118
+				"w": 133,
+				"h": 135
 			},
 			"sourceSize": {
-				"w": 125,
-				"h": 118
-			}
-		},
-		"gift_btn.png": {
-			"frame": {
-				"x": 235,
-				"y": 1,
-				"w": 110,
-				"h": 114
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 110,
-				"h": 114
-			},
-			"sourceSize": {
-				"w": 110,
-				"h": 114
+				"w": 133,
+				"h": 135
 			}
 		},
 		"map_btn.png": {
 			"frame": {
-				"x": 235,
-				"y": 117,
-				"w": 127,
-				"h": 118
+				"x": 269,
+				"y": 1,
+				"w": 103,
+				"h": 132
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 127,
-				"h": 118
+				"w": 103,
+				"h": 132
 			},
 			"sourceSize": {
-				"w": 127,
-				"h": 118
+				"w": 103,
+				"h": 132
 			}
 		},
 		"shop_btn.png": {
 			"frame": {
 				"x": 1,
-				"y": 237,
-				"w": 105,
-				"h": 110
+				"y": 246,
+				"w": 116,
+				"h": 126
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 105,
-				"h": 110
+				"w": 116,
+				"h": 126
 			},
 			"sourceSize": {
-				"w": 105,
-				"h": 110
+				"w": 116,
+				"h": 126
 			}
 		}
 	},
@@ -147,8 +127,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 363,
-			"h": 348
+			"w": 373,
+			"h": 373
 		},
 		"scale": "1"
 	}

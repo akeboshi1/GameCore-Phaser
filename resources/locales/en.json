@@ -13,6 +13,10 @@
     "player_room": "Player Room",
     "popularity_room": "Popularity Room",
     "my_room": "My Room",
-    "my_history": "My history"
+    "my_history": "My history",
+    "password": "Password",
+    "close": "Close",
+    "visit": "访 问",
+    "my": "我 的"
   }
 }

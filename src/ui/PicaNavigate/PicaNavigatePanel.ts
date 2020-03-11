@@ -7,7 +7,6 @@ export class PicaNavigatePanel extends Panel {
   private mMapBtn: Phaser.GameObjects.Image;
   private mShopBtn: Phaser.GameObjects.Image;
   private mBagBtn: Phaser.GameObjects.Image;
-  private mGiftBtn: Phaser.GameObjects.Image;
   private mFamilyBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
@@ -41,10 +40,9 @@ export class PicaNavigatePanel extends Panel {
     this.mMapBtn = this.createImage(this.key, "map_btn.png").setInteractive();
     this.mShopBtn = this.createImage(this.key, "shop_btn.png").setInteractive();
     this.mBagBtn = this.createImage(this.key, "bag_btn.png").setInteractive();
-    this.mGiftBtn = this.createImage(this.key, "gift_btn.png").setInteractive();
     this.mFamilyBtn = this.createImage(this.key, "family_btn.png").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn.png").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGiftBtn, this.mFamilyBtn];
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
@@ -69,7 +67,6 @@ export class PicaNavigatePanel extends Panel {
     this.mMapBtn.on("pointerup", this.onShowMapHandler, this);
     this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
-    this.mGiftBtn.on("pointerup", this.onShowGiftHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
@@ -78,7 +75,6 @@ export class PicaNavigatePanel extends Panel {
     this.mMapBtn.off("pointerup", this.onShowMapHandler, this);
     this.mShopBtn.off("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
-    this.mGiftBtn.off("pointerup", this.onShowGiftHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
@@ -93,10 +89,6 @@ export class PicaNavigatePanel extends Panel {
   }
 
   private onShowBagHandler() {
-    this.emit("showPanel", "");
-  }
-
-  private onShowGiftHandler() {
     this.emit("showPanel", "");
   }
 

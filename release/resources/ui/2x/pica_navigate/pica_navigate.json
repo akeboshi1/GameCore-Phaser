@@ -4,25 +4,25 @@
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 67,
-				"h": 78
+				"w": 85,
+				"h": 85
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 67,
-				"h": 78
+				"w": 85,
+				"h": 85
 			},
 			"sourceSize": {
-				"w": 67,
-				"h": 78
+				"w": 85,
+				"h": 85
 			}
 		},
 		"bg.png": {
 			"frame": {
-				"x": 70,
+				"x": 88,
 				"y": 1,
 				"w": 2,
 				"h": 113
@@ -42,7 +42,7 @@
 		},
 		"close_btn.png": {
 			"frame": {
-				"x": 74,
+				"x": 92,
 				"y": 1,
 				"w": 68,
 				"h": 70
@@ -62,82 +62,62 @@
 		},
 		"family_btn.png": {
 			"frame": {
-				"x": 74,
+				"x": 92,
 				"y": 73,
-				"w": 83,
-				"h": 78
+				"w": 89,
+				"h": 91
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 83,
-				"h": 78
+				"w": 89,
+				"h": 91
 			},
 			"sourceSize": {
-				"w": 83,
-				"h": 78
-			}
-		},
-		"gift_btn.png": {
-			"frame": {
-				"x": 159,
-				"y": 1,
-				"w": 74,
-				"h": 76
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 74,
-				"h": 76
-			},
-			"sourceSize": {
-				"w": 74,
-				"h": 76
+				"w": 89,
+				"h": 91
 			}
 		},
 		"map_btn.png": {
 			"frame": {
-				"x": 159,
-				"y": 79,
-				"w": 85,
-				"h": 79
+				"x": 183,
+				"y": 1,
+				"w": 69,
+				"h": 89
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 85,
-				"h": 79
+				"w": 69,
+				"h": 89
 			},
 			"sourceSize": {
-				"w": 85,
-				"h": 79
+				"w": 69,
+				"h": 89
 			}
 		},
 		"shop_btn.png": {
 			"frame": {
 				"x": 1,
-				"y": 160,
-				"w": 71,
-				"h": 73
+				"y": 166,
+				"w": 78,
+				"h": 85
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 71,
-				"h": 73
+				"w": 78,
+				"h": 85
 			},
 			"sourceSize": {
-				"w": 71,
-				"h": 73
+				"w": 78,
+				"h": 85
 			}
 		}
 	},
@@ -147,8 +127,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 245,
-			"h": 234
+			"w": 253,
+			"h": 252
 		},
 		"scale": "1"
 	}

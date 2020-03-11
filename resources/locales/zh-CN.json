@@ -13,6 +13,12 @@
     "player_room": "玩家房间",
     "popularity_room": "人气房间",
     "my_room": "我的房间",
-    "my_history": "我的足迹"
+    "my_history": "我的足迹",
+    "password": "密码",
+    "close": "关闭",
+    "visit": "访 问",
+    "my": "我 的",
+    "seach": "探索",
+    "room": "房间"
   }
 }
