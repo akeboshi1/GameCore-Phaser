@@ -66,6 +66,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mScaleRatio: number;
     private mUIRatio: number;
     private mUIScale: number;
+    private _isIOS = -1;
+
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -89,7 +91,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = Math.min(scaleW, scaleH);
         // if (!config.scale_ratio) {
-            // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
+        // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
         // }
 
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
@@ -133,6 +135,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         if (config.isEditor) {
             this.createGame();
+        }
+        document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
+    }
+
+    // 软键盘弹出的事件处理
+    public focusoutFunc = () => {
+        // isIOS函数在前面
+        if (this.game.device.os.iOS) {
+            window.scrollTo(0, 0);
         }
     }
 

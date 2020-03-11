@@ -1,16 +1,13 @@
 import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 import { WorldService } from "../../game/world.service";
-import { World } from "../../game/world";
-import { Tool } from "../../utils/tool";
 import { MainUIScene } from "../../scenes/main.ui";
-
 export class InputTextFactory {
     private mWorld: WorldService;
     constructor(world: WorldService) {
         this.mWorld = world;
     }
 
-    public getInputText(scene: Phaser.Scene, style: any): InputTextField {
+    public getInputText(scene: Phaser.Scene, style?: any): InputTextField {
         const inputtext = new InputTextField(scene, this.mWorld, style);
         return inputtext;
     }
@@ -22,6 +19,7 @@ export const InputTextFieldEvent = {
     textdblclick: "textdblclick",
     textfocus: "textfocus",
     textblur: "textblur",
+    textExit: "textExit",
 };
 
 export class InputTextField extends Phaser.Events.EventEmitter {
@@ -38,17 +36,16 @@ export class InputTextField extends Phaser.Events.EventEmitter {
         this.mWorld = world;
         this.textConfig = config;
         this.mTextField = scene.make.text({
-            align: config.align,
-            x: config.x,
-            y: config.y,
+            x: config.x || 0,
+            y: config.y || 0,
             stroke: "#000000",
             strokeThickness: 2,
+            align: config.align || "left",
             style: {
-                color: config.color,
-                font: config.font,
+                color: config.color || "#fff",
+                font: config.font || "16px YaHei",
                 wordWrap: {
-                    width: config.textWidth,
-                    height: config.textHeight,
+                    width: config.textWidt || null,
                 }
             }
         }, false).setInteractive(new Phaser.Geom.Rectangle(0, 0, config.textWidth, config.textHeight), Phaser.Geom.Rectangle.Contains);
@@ -58,7 +55,19 @@ export class InputTextField extends Phaser.Events.EventEmitter {
         this.mTextField.on("pointerdown", this.showText, this);
     }
 
-    public getView(): Phaser.GameObjects.Text {
+    public onBlur() {
+        this.mInputText.onBlur();
+    }
+
+    public onFocus() {
+        this.mInputText.onFocus();
+    }
+
+    public getText(): string {
+        return this.mTextField.text;
+    }
+
+    public getSkin(): Phaser.GameObjects.Text {
         return this.mTextField;
     }
 
@@ -75,16 +84,16 @@ export class InputTextField extends Phaser.Events.EventEmitter {
             this.mTextField.text : this.textConfig.minNum;
         if (!this.mInputText) {
             this.mInputText = new InputText(this.mScene, {
-                id: this.textConfig.id,
-                x: textX,
-                y: this.textConfig.y,
-                width: this.textConfig.textWidth,
-                height: this.textConfig.textHeight,
-                type: this.textConfig.type,
-                fontSize: this.textConfig.font,
-                color: this.textConfig.color,
+                id: this.textConfig.id || "input",
+                x: textX || 0,
+                y: this.textConfig.y || 0,
+                width: this.textConfig.textWidth || 100,
+                height: this.textConfig.textHeight || 100,
+                type: this.textConfig.type || "",
+                fontSize: this.textConfig.font || "16px YaHei",
+                color: this.textConfig.color || "#fff",
                 "z-index": 999,
-                align: "center",
+                align: "left",
                 text: defaultText,
                 posType: this.textConfig.posType
             });
@@ -103,6 +112,14 @@ export class InputTextField extends Phaser.Events.EventEmitter {
         this.mInputText.on("ondblclick", this.onTextDbclick, this);
         this.mInputText.on("focus", this.onTextFocus, this);
         this.mInputText.on("blur", this.onTextBlur, this);
+        // 监听键盘enter事件，移动端会监听软件盘的enter事件
+        this.mInputText.node.addEventListener("keypress", (e) => {
+            const keycode = e.keyCode || e.which;
+            if (keycode === 13) {
+                this.emit(InputTextFieldEvent.textExit);
+                this.hideText();
+            }
+        });
         this.mScene.input.on("gameobjectdown", this.sceneDown, this);
         if (this.mWorld.game.device.os.iOS && !this.mWorld.game.device.os.desktop) {
             this.setInputFocus();
@@ -179,10 +196,12 @@ export class InputTextField extends Phaser.Events.EventEmitter {
     }
 
     private onTextFocus() {
+        this.onFocus();
         this.emit(InputTextFieldEvent.textfocus);
     }
 
     private onTextBlur() {
+        this.onBlur();
         this.hideText();
         this.emit(InputTextFieldEvent.textblur);
     }
