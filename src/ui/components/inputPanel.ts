@@ -25,6 +25,7 @@ export class InputPanel extends Phaser.GameObjects.Container {
 
     public hide() {
         if (this.mInputText) {
+            this.mInputText.onBlur();
             this.mInputText.off(InputTextFieldEvent.textExit, this.hide, this);
             this.mInputText.destroy();
             this.mInputText = null;

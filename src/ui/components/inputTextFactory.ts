@@ -55,6 +55,14 @@ export class InputTextField extends Phaser.Events.EventEmitter {
         this.mTextField.on("pointerdown", this.showText, this);
     }
 
+    public onBlur() {
+        this.mInputText.onBlur();
+    }
+
+    public onFocus() {
+        this.mInputText.onFocus();
+    }
+
     public getText(): string {
         return this.mTextField.text;
     }
@@ -188,10 +196,12 @@ export class InputTextField extends Phaser.Events.EventEmitter {
     }
 
     private onTextFocus() {
+        this.onFocus();
         this.emit(InputTextFieldEvent.textfocus);
     }
 
     private onTextBlur() {
+        this.onBlur();
         this.hideText();
         this.emit(InputTextFieldEvent.textblur);
     }
