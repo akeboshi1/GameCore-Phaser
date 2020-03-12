@@ -13,6 +13,7 @@ import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
+import { DisplayObject } from "../display/display.object";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -45,12 +46,16 @@ export enum Direction {
 export interface IElement {
     readonly id: number;
     readonly dir: number;
+    readonly roomService: IRoomService;
+    readonly scene: Phaser.Scene;
 
     model: ISprite;
 
     setModel(model: ISprite);
 
     play(animationName: string): void;
+
+    getDisplay(): DisplayObject;
 
     setPosition(p: Pos): void;
 
@@ -75,6 +80,10 @@ export interface IElement {
     toSprite(): op_client.ISprite;
 
     setBlockable(val: boolean): this;
+
+    turn();
+
+    setAlpha(val: number);
 }
 
 export interface MoveData {
@@ -120,9 +129,15 @@ export class Element extends BlockObject implements IElement {
         this.setModel(val);
     }
 
+    get scene(): Phaser.Scene {
+        if (this.mElementManager) {
+            return this.mElementManager.scene;
+        }
+    }
+
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    protected mDisplay: ElementDisplay | undefined;
+    protected mDisplay: DisplayObject | undefined;
     protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
@@ -209,7 +224,7 @@ export class Element extends BlockObject implements IElement {
         return this.mRenderable;
     }
 
-    public getDisplay(): ElementDisplay {
+    public getDisplay(): DisplayObject {
         return this.mDisplay;
     }
 
@@ -285,6 +300,7 @@ export class Element extends BlockObject implements IElement {
     public setPosition(p: Pos) {
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
+            this.mModel.setPosition(p.x, p.y);
         }
         this.setDepth();
         this.updateBlock();
@@ -376,6 +392,21 @@ export class Element extends BlockObject implements IElement {
             }
         }
         return this;
+    }
+
+    public turn(): void {
+        if (!this.mModel) {
+            return;
+        }
+        this.mModel.turn();
+        if (this.mDisplay) this.mDisplay.play(this.mModel.currentAnimation);
+    }
+
+    public setAlpha(val: number) {
+        if (!this.mDisplay) {
+            return;
+        }
+        this.mDisplay.setAlpha(val);
     }
 
     public destroy() {

@@ -8,5 +8,15 @@
     "copy_suc": "copy {{name}} succeed",
     "name": "name",
     "des": "description"
+  },
+  "room_list": {
+    "player_room": "Player Room",
+    "popularity_room": "Popularity Room",
+    "my_room": "My Room",
+    "my_history": "My history",
+    "password": "Password",
+    "close": "Close",
+    "visit": "访 问",
+    "my": "我 的"
   }
 }

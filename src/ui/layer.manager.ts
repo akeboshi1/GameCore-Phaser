@@ -2,6 +2,7 @@ import {Logger} from "../utils/log";
 
 export interface ILayerManager {
     readonly interactive: Phaser.GameObjects.Container;
+    readonly scene: Phaser.Scene;
     setScene(scene: Phaser.Scene): void;
 
     addToUILayer(obj: Phaser.GameObjects.GameObject);
@@ -92,5 +93,9 @@ export class LayerManager implements ILayerManager {
 
     get interactive(): Phaser.GameObjects.Container {
         return this.mInteractive;
+    }
+
+    get scene(): Phaser.Scene {
+        return this.mScene;
     }
 }

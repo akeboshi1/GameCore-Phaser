@@ -69,6 +69,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mScaleRatio: number;
     private mUIRatio: number;
     private mUIScale: number;
+    private _isIOS = -1;
+
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.mCallBack = callBack;
@@ -80,13 +82,19 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.devecePixelRatio) {
             config.devecePixelRatio = window.devicePixelRatio;
         }
+        if (config.width === undefined) {
+            config.width = window.innerWidth;
+        }
+        if (config.height === undefined) {
+            config.height = window.innerHeight;
+        }
         this.mScaleRatio = Math.ceil(config.devecePixelRatio);
         this.mUIRatio = Math.round(window.devicePixelRatio);
-        const scaleW = window.innerWidth / this.DEFAULT_WIDTH;
-        const scaleH = window.innerHeight / this.DEFAULT_HEIGHT;
+        const scaleW = config.width / this.DEFAULT_WIDTH;
+        const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = Math.min(scaleW, scaleH);
         // if (!config.scale_ratio) {
-            // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
+        // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
         // }
 
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
@@ -129,6 +137,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         if (config.isEditor) {
             this.createGame();
+        }
+        document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
+    }
+
+    // 软键盘弹出的事件处理
+    public focusoutFunc = () => {
+        // isIOS函数在前面
+        if (this.game.device.os.iOS) {
+            window.scrollTo(0, 0);
         }
     }
 
@@ -611,8 +628,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
+        let game_id = this.mConfig.game_id;
+        if (game_id.indexOf(".") > -1) {
+            game_id = game_id.split(".")[1];
+        }
 
-        const mainGameConfigUrl = this.getConfigUrl(this.mConfig.game_id);
+        const mainGameConfigUrl = this.getConfigUrl(game_id);
 
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {

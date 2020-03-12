@@ -3,22 +3,19 @@ import { IRoomManager } from "./room.manager";
 import { ViewblockService, ViewblockManager } from "./cameras/viewblock.manager";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
 import { ConnectionService } from "../net/connection.service";
-import { ElementManager } from "./element/element.manager";
 import { LayerManager } from "./layer/layer.manager";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
-import { IElement } from "./element/element";
+import { IElement, Element } from "./element/element";
 import { ElementDisplay } from "./display/element.display";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Pos } from "../utils/pos";
 import { PlayerManager } from "./player/player.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { SelectedElement } from "./decorate/selected.element";
 import { LoadingScene } from "../scenes/loading";
 import { PlayScene } from "../scenes/play";
 import { Logger } from "../utils/log";
-import { FramesDisplay } from "./display/frames.display";
 import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
 import { DecorateElementManager } from "./element/decorate.element.manager";
@@ -26,15 +23,17 @@ import { MessageType } from "../const/MessageType";
 import { Sprite, ISprite } from "./element/sprite";
 import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
 import { SpawnPoint } from "./decorate/spawn.point";
+import { SelectorElement } from "./decorate/selector.element";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
+    readonly selectedSprite: IElement | undefined;
 
     transformToMini45(p: Pos): Pos;
 
     transformToMini90(p: Pos): Pos;
 
-    canPut(sprite: ISprite): boolean;
+    canPut(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
 }
 
 export class DecorateRoom extends PacketHandler implements DecorateRoomService {
@@ -52,7 +51,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mLayerManager: LayerManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
-    private mSelectedElement: SelectedElement;
+    private mSelectorElement: SelectorElement;
     private mMap: number[][];
     private mScaleRatio: number;
 
@@ -60,18 +59,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         super();
         this.world = manager.world;
         this.mScaleRatio = this.world.scaleRatio;
-        // if (this.world) {
-        //     const size = this.world.getSize();
-        //     if (size) {
-        //         this.mCameraService.resize(size.width, size.height);
-        //     } else {
-        //         throw new Error(`World::getSize undefined!`);
-        //     }
-        // }
         if (this.connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE, this.onSelectSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_SPAWN_POINT, this.onShowSpawnPointHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SPRITE_BY_TYPE, this.onAddSpriteHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE, this.onAddSingleSpriteHandler);
         }
     }
 
@@ -200,7 +193,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
-        this.mSelectedElement = new SelectedElement(this.mScene, this);
         this.mBlocks.int(this.mSize);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
@@ -263,8 +255,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mLayerManager) {
             this.mLayerManager.update(time, delta);
         }
-        if (this.mSelectedElement) {
-            this.mSelectedElement.update(time, delta);
+        if (this.mSelectorElement) {
+            this.mSelectorElement.update(time, delta);
         }
         if (this.mBlocks) {
             this.mBlocks.update(time, delta);
@@ -318,27 +310,24 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.transformToMini90(bound);
     }
 
-    public canPut(sprite: ISprite) {
-        const pos = this.transformToMini45(sprite.pos);
-        if (pos.x < 0 || pos.y < 0 || pos.x > this.miniSize.rows || pos.y > this.miniSize.cols) {
+    public canPut(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+        if (!collisionArea || !origin) {
+            return;
+        }
+        const pos45 = this.transformToMini45(pos);
+        if (pos45.x < 0 || pos45.y < 0 || pos45.x > this.miniSize.rows || pos45.y > this.miniSize.cols) {
             return false;
         }
-        const map = this.mElementManager.map;
-        const displayInfo = sprite.displayInfo;
-        const curAni = sprite.currentAnimation;
-        const aniName = curAni.animationName;
-        const flip = curAni.flip;
-        const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-        const origin = displayInfo.getOriginPoint(aniName, flip);
         let row = 0;
         let col = 0;
+        const map = this.mElementManager.map;
         for (let i = 0; i < collisionArea.length; i++) {
-            row = i + pos.y - origin.y;
+            row = i + pos45.y - origin.y;
             if (row >= map.length) {
                 return false;
             }
             for (let j = 0; j < collisionArea[i].length; j++) {
-                col = j + pos.x - origin.x;
+                col = j + pos45.x - origin.x;
                 if (col >= map[i].length || map[row][col] === 0) {
                     return false;
                 }
@@ -368,15 +357,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.removePointerMoveHandler();
-        if (this.mSelectedElement) {
-            // TODO 移动判断
-            if (this.mSelectedElement.selecting) {
-                this.mSelectedElement.selecting = false;
-                // if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
-                //     this.sendPosition(this.mSelectedElement.sprite);
-                // }
-
-            }
+        if (this.mSelectorElement) {
+            this.mSelectorElement.selecting = false;
         }
     }
 
@@ -390,11 +372,17 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (!com) {
             return;
         }
-        this.selectedElement(com);
+        if (!(com instanceof DisplayObject)) {
+            return;
+        }
+        if (com instanceof TerrainDisplay) {
+            return;
+        }
+        this.selectedElement(com.element);
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        if (this.mSelectedElement.selecting === false) {
+        if (!this.mSelectorElement || (this.mSelectorElement && this.mSelectorElement.selecting === false)) {
             this.moveCamera(pointer);
             return;
         }
@@ -415,23 +403,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private moveElement(pointer: Phaser.Input.Pointer) {
         const pos = this.transitionGrid(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
-        this.mSelectedElement.setDisplayPos(pos.x, pos.y);
-        // }
-        // if (pointer.x < 300) {
-        //     if (pointer.prevPosition.x > pointer.x) this.mCameraService.camera.scrollX -= pointer.prevPosition.x - pointer.x;
-        // } else if (pointer.x > this.world.getSize().width - 300) {
-        //     if (pointer.x > pointer.prevPosition.x) this.mCameraService.camera.scrollX += pointer.x - pointer.prevPosition.x;
-        // }
-
-        // if (pointer.y < 300) {
-        //     if (pointer.prevPosition.y > pointer.y) this.mCameraService.camera.scrollY -= pointer.prevPosition.y - pointer.y;
-        // } else if (pointer.y > this.world.getSize().height - 300) {
-        //     if (pointer.y > pointer.prevPosition.y) this.mCameraService.camera.scrollY += pointer.y - pointer.prevPosition.y;
-        // }
+        if (this.mSelectorElement) {
+            this.mSelectorElement.setDisplayPos(pos);
+        }
+        // this.mSelectedElement.setDisplayPos(pos.x, pos.y);
     }
 
     private removeElement(id: number, nodeType: op_def.NodeType) {
-        if (nodeType === op_def.NodeType.ElementNodeType) {
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
             this.elementManager.remove(id);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             this.elementManager.remove(id);
@@ -440,55 +419,62 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private addElement(sprite: ISprite) {
         const nodeType = sprite.nodeType;
-        if (nodeType === op_def.NodeType.ElementNodeType) {
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
             this.mElementManager.add([sprite]);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             this.mTerrainManager.add([sprite]);
         }
     }
 
-    private selectedElement(display: FramesDisplay) {
-        if (!(display instanceof DisplayObject)) {
+    private selectedElement(element: IElement, isClone: boolean = true) {
+        if (!element) {
             return;
         }
-        if (display instanceof TerrainDisplay) {
-            return;
-        }
-        this.mSelectedElement.selecting = true;
-        if (this.mSelectedElement.display === display) {
-            return;
-        }
-        const element = display.element;
-        if (element) {
-            const sprite = element.model;
-            if (sprite) {
-                this.removeElement(element.id, sprite.nodeType);
+        if (!this.mSelectorElement) {
+            this.mSelectorElement = new SelectorElement(element);
+            if (isClone) {
+                this.mSelectorElement.clone();
+            }
+            this.elementManager.removeMap(element.model);
+        } else {
+            if (this.mSelectorElement.element === element) {
+                this.mSelectorElement.selecting = true;
+            } else {
+                this.onPutElement(null);
+                // this.cancelSelector();
+                this.selectedElement(element, isClone);
             }
         }
-        if (this.mSelectedElement.display) {
-            this.onPutElement(this.mSelectedElement.display);
+    }
+
+    private cancelSelector() {
+        if (this.mSelectorElement) {
+            let sprite = null;
+            if (this.mSelectorElement.root) {
+                sprite = this.mSelectorElement.element.model;
+            }
+            this.mSelectorElement.destroy();
+            this.mSelectorElement = undefined;
+            if (sprite) {
+                this.mElementManager.addMap(sprite);
+            }
         }
-        const ele = display.element;
-        if (ele) this.mSelectedElement.setSprite(ele.model, ele.model);
-        // this.mSelectedElement.setElement(display);
     }
 
     private onTurnElementHandler(display: DisplayObject) {
-        const sprite = this.mSelectedElement.sprite;
-        if (!sprite) {
+        if (!this.mSelectorElement) {
             return;
         }
 
-        this.mSelectedElement.turnElement();
-        // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE);
-        // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_FLIP_SPRITE = packet.content;
-        // content.sprites = [sprite.toSprite()];
-        // content.nodeType = sprite.nodeType;
-        // this.world.connection.send(packet);
+        this.mSelectorElement.turnElement();
     }
 
     private onRecycleHandler(display: DisplayObject) {
-        const sprite = this.mSelectedElement.sprite;
+        if (!this.mSelectorElement) {
+            return;
+        }
+        const element = this.mSelectorElement.element;
+        const sprite = element.model;
         if (!sprite) {
             return;
         }
@@ -497,49 +483,56 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         content.sprites = [sprite.toSprite()];
         content.nodeType = sprite.nodeType;
         this.world.connection.send(packet);
-        this.mSelectedElement.remove();
+        this.mSelectorElement.destroy();
+        this.mSelectorElement = undefined;
     }
 
     private onPutElement(display: DisplayObject) {
-        const sprite = this.mSelectedElement.sprite;
+        if (!this.mSelectorElement) {
+            return;
+        }
+        const element = this.mSelectorElement.element;
+        if (!element) {
+            return;
+        }
+        const sprite = element.model;
         if (!sprite) {
             return;
         }
-        // TODO 还要考虑翻转
-        const aniName: string = sprite.currentAnimationName || sprite.displayInfo.animationName;
-        if (this.canPut(sprite)) {
-            this.addElement(sprite);
-            // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE);
-            // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ADD_SPRITE = packet.content;
-            // content.sprites = [sprite.toSprite()];
-            // content.nodeType = sprite.nodeType;
-            // this.world.connection.send(packet);
-            if (this.mSelectedElement.root) {
+        if (this.canPut(sprite.pos, sprite.currentCollisionArea, sprite.currentCollisionPoint)) {
+            if (this.mSelectorElement.root) {
                 this.sendUpdateSprite(sprite);
             } else {
                 if (sprite.nodeType === op_def.NodeType.SpawnPointType) {
                     this.sendSpawnPoint(sprite.pos);
+                    this.removeElement(sprite.id, sprite.nodeType);
                 } else {
                     this.sendAddSprite(sprite);
                 }
             }
-            this.mSelectedElement.remove();
+            this.cancelSelector();
         } else {
-            // TODO 不可放置，回到之前的位置
-            // this.addElement()
-            if (this.mSelectedElement.root) {
-                this.addElement(this.mSelectedElement.root);
-                // this.sendPosition(this.mSelectedElement.root);
-            }
+            this.onCancelPutHandler(element);
         }
-        this.mSelectedElement.remove();
     }
 
-    private onCancelPutHandler() {
-        if (this.mSelectedElement.root) {
-            this.addElement(this.mSelectedElement.root);
+    private onCancelPutHandler(element?: IElement) {
+        if (!this.mSelectorElement) {
+            return;
         }
-        this.mSelectedElement.remove();
+        if (!element) {
+            element = this.mElementManager.get(this.mSelectorElement.element.id);
+        }
+        if (!element) {
+            return;
+        }
+        const root = this.mSelectorElement.root;
+        if (root) {
+            this.mSelectorElement.recover();
+        } else {
+            this.removeElement(element.id, element.model.nodeType);
+        }
+        this.cancelSelector();
     }
 
     private sendAddSprite(sprite: ISprite) {
@@ -578,18 +571,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onSelectSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE = packet.content;
-        // if (!this.mSelectedElement) {
-        //     this.mSelectedElement = new SelectedElement(this.scene, this);
-        // } else {
-        if (this.mSelectedElement.display) {
-            this.onPutElement(this.mSelectedElement.display);
-        }
-        // }
-        this.mSelectedElement.selecting = true;
+        const camera = this.cameraService.camera;
         const sprite = new Sprite(content.sprite, content.nodeType);
-        const pointer = this.scene.input.activePointer;
-        sprite.setPosition(pointer.worldX, pointer.worldY);
-        this.mSelectedElement.setSprite(sprite);
+        sprite.setPosition((camera.scrollX + camera.width / 2) / this.world.scaleRatio, (camera.scrollY + camera.height / 2) / this.world.scaleRatio);
+        this.addElement(sprite);
+        const element = this.mElementManager.get(content.sprite.id);
+        if (element) this.selectedElement(element, false);
     }
 
     private onShowSpawnPointHandler(packet: PBpacket) {
@@ -597,7 +584,40 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const spawnPoint = new SpawnPoint();
         const pos = content.spawnPoint;
         spawnPoint.setPosition(pos.x, pos.y);
-        this.mSelectedElement.setSprite(spawnPoint);
+        this.addElement(spawnPoint);
+
+        this.selectedElement(this.mElementManager.get(spawnPoint.id), false);
+        // this.mSelectedElement.setSprite(spawnPoint);
+        this.mCameraService.scrollTargetPoint(pos.x, pos.y);
+    }
+
+    private onAddSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
+        // if (this.mSelectedElement.root && content.id === this.mSelectedElement.root.id) {
+        //     this.addElement(this.mSelectedElement.sprite);
+        // }
+        // this.mSelectedElement.remove();
+        this.cancelSelector();
+    }
+
+    private onAddSingleSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ADD_SINGLE_SPRITE_BY_TYPE = packet.content;
+        const addedSprites = content.addedSprites;
+        if (addedSprites) {
+            const sprites: ISprite[] = [];
+            for (const sprite of addedSprites) {
+                sprites.push(new Sprite(sprite, content.nodeType));
+            }
+            if (sprites.length > 0) {
+                this.mElementManager.add(sprites);
+                const ele = this.mElementManager.get(sprites[sprites.length - 1].id);
+                if (ele) {
+                    this.cancelSelector();
+                    this.selectedElement(ele);
+                    if (this.mSelectorElement) this.mSelectorElement.selecting = false;
+                }
+            }
+        }
     }
 
     get id(): number {
@@ -612,7 +632,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.mTerrainManager;
     }
 
-    get elementManager(): ElementManager {
+    get elementManager(): DecorateElementManager {
         return this.mElementManager;
     }
 
@@ -634,5 +654,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     get miniSize(): IPosition45Obj {
         return this.mMiniSize;
+    }
+
+    get selectedSprite(): IElement | undefined {
+        if (!this.mSelectorElement) {
+            return;
+        }
+        return this.mSelectorElement.element;
     }
 }

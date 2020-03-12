@@ -30,7 +30,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
             connect.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_NOTICE, this.noticeHandler);
         }
-        this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
+        // this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
         this.world.emitter.on(MessageType.SHOW_NOTICE, this.noticeHandler, this);
     }
 
@@ -100,7 +100,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
         this.mNoticePanel.show(param);
         this.mNoticePanel.showNotice(param);
         this.mLayerManager.addToDialogLayer(this.mNoticePanel);
-        this.setUiScale(this.world.uiScale);
+        // this.setUiScale(this.world.uiScale);
     }
 
     update(param?: any): void {

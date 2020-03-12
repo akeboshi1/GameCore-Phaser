@@ -37,22 +37,22 @@ export class TopMenuContainer extends Panel {
   }
 
   addItem(data: IBtnData) {
-    if (!this.mShowing) {
-      this.show();
-    }
+    // if (!this.mShowing) {
+    //   this.show();
+    // }
 
-    // TODO dynamic load texture
-    const iconBtn = new IconBtn(this.scene, this.mWorld, data);
-    iconBtn.setName(data.name);
-    iconBtn.y = iconBtn.height >> 1;
-    this.add(iconBtn);
-    iconBtn.on("click", this.onGameObjectUpHandler, this);
-    this.mButtons.push(iconBtn);
+    // // TODO dynamic load texture
+    // const iconBtn = new IconBtn(this.scene, this.mWorld, data);
+    // iconBtn.setName(data.name);
+    // iconBtn.y = iconBtn.height >> 1;
+    // this.add(iconBtn);
+    // iconBtn.on("click", this.onGameObjectUpHandler, this);
+    // this.mButtons.push(iconBtn);
 
-    if (this.mButtons.length > 3) {
-      // TODO add turn button
-    }
-    this.refresh();
+    // if (this.mButtons.length > 3) {
+    //   // TODO add turn button
+    // }
+    // this.refresh();
   }
 
   removeItem(name: string) {

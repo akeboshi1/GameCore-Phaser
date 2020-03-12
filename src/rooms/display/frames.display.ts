@@ -1,7 +1,7 @@
 import { IFramesModel } from "./frames.model";
 import { Logger } from "../../utils/log";
-import {DisplayObject} from "./display.object";
-import {IAnimationData} from "./animation";
+import { DisplayObject } from "./display.object";
+import { IAnimationData } from "./animation";
 import { Url } from "../../utils/resUtil";
 import { AnimationData } from "../element/sprite";
 
@@ -20,7 +20,6 @@ export class FramesDisplay extends DisplayObject {
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mHasAnimation: boolean = false;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
-
     public setPosition(x?: number, y?: number, z?: number): this {
         super.setPosition(x, y, z);
         this.setDepth(this.x + this.baseLoc.x + this.y + this.baseLoc.y);
@@ -218,6 +217,9 @@ export class FramesDisplay extends DisplayObject {
             this.play({ animationName: data.animationName, flip: false }, field);
             sprite.x = this.baseLoc.x;
             sprite.y = this.baseLoc.y;
+            if (this.mAntial) {
+                sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+            }
             this.addAt(sprite, field);
         }
         sprite.setInteractive({ pixelPerfect: true });

@@ -91,7 +91,7 @@ export class CreateRolePanel extends Panel {
 
     this.mNextPageBtn.x = width - 150;
 
-    // this.mRandomBtn.x = (this.mInputTextBg.width >> 1) + centerX - this.mRandomBtn.width;
+    this.mRandomBtn.x = this.mInputTextBg.x + this.mInputTextBg.width / 2 - 26 * this.dpr;
   }
 
   init() {
@@ -118,7 +118,7 @@ export class CreateRolePanel extends Panel {
     this.mBackgroundColor.fillRect(0, 0, size.width, size.height);
     this.addAt(this.mBackgroundColor, 0);
 
-    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 350 * this.dpr, 270 * this.dpr, 50 * this.dpr, this.key, "input_bg.png", {
+    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 350 * this.dpr, 255 * this.dpr, 50 * this.dpr, this.key, "input_bg.png", {
       left: 27 * this.dpr,
       top: 24 * this.dpr,
       right: 28 * this.dpr,
@@ -178,7 +178,7 @@ export class CreateRolePanel extends Panel {
     this.mNextPageBtn.on("pointerup", this.onNextPageHandler, this);
 
     this.mRandomBtn = this.scene.make.image({
-      x: this.mInputTextBg.x + this.mInputTextBg.width / 2 - 30 * this.dpr,
+      x: this.mInputTextBg.x,
       y: this.mInputTextBg.y,
       key: this.key,
       frame: "random.png"

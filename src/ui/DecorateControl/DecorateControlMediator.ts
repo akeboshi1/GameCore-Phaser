@@ -37,6 +37,10 @@ export class DecorateControlMediator extends BaseMediator {
         super.destroy();
     }
 
+    isSceneUI(): boolean {
+        return true;
+    }
+
     private onSelectedDecorateHandler() {
         if (!this.mView) {
             return;

@@ -12,26 +12,12 @@ export class DecorateElementManager extends ElementManager {
     super(room);
   }
 
-  protected onSync(packet: PBpacket) {
-    const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
-    if (content.nodeType !== NodeType.ElementNodeType) {
-        return;
-    }
-    let element: Element = null;
-    const sprites = content.sprites;
-    for (const sprite of sprites) {
-        element = this.get(sprite.id);
-        if (element) {
-            const sp = new Sprite(sprite, content.nodeType);
-            element.model = sp;
-            this.addMap(sp);
-        }
-    }
-  }
-
-  protected addMap(sprite: ISprite) {
+  public addMap(sprite: ISprite) {
     const displayInfo = sprite.displayInfo;
     if (!displayInfo) {
+      return;
+    }
+    if (this.mRoom.selectedSprite && this.mRoom.selectedSprite.id === sprite.id) {
       return;
     }
     const curAni = sprite.currentAnimation;
@@ -64,7 +50,7 @@ export class DecorateElementManager extends ElementManager {
     }
   }
 
-  protected removeMap(sprite: ISprite) {
+  public removeMap(sprite: ISprite) {
     const displayInfo = sprite.displayInfo;
     if (!displayInfo) {
       return;
@@ -99,32 +85,20 @@ export class DecorateElementManager extends ElementManager {
     }
   }
 
-  protected setMap(sprite: ISprite, type: number) {
-    const displayInfo = sprite.displayInfo;
-    if (!displayInfo) {
-      return;
+  protected onSync(packet: PBpacket) {
+    const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+    if (content.nodeType !== NodeType.ElementNodeType) {
+        return;
     }
-    const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
-    const flip = curAni.flip;
-    const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-    let walkArea = displayInfo.getWalkableArea(aniName, flip);
-    const origin = displayInfo.getOriginPoint(aniName, flip);
-    const rows = collisionArea.length;
-    const cols = collisionArea[0].length;
-    const pos = sprite.pos;
-    if (!walkArea) {
-      walkArea = new Array(rows);
-      for (let i = 0; i < cols; i++) {
-        walkArea[i] = new Array(cols).fill(0);
-      }
-    }
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        if (walkArea[i][j] === 0) {
-          this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = type;
+    let element: Element = null;
+    const sprites = content.sprites;
+    for (const sprite of sprites) {
+        element = this.get(sprite.id);
+        if (element) {
+            const sp = new Sprite(sprite, content.nodeType);
+            element.model = sp;
+            this.addMap(sp);
         }
-      }
     }
   }
 

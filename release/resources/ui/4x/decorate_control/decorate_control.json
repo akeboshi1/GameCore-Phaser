@@ -44,106 +44,106 @@
 			"frame": {
 				"x": 293,
 				"y": 1,
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			},
 			"sourceSize": {
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			}
 		},
 		"furniBtn.png": {
 			"frame": {
 				"x": 1,
-				"y": 155,
-				"w": 252,
-				"h": 253
+				"y": 182,
+				"w": 178,
+				"h": 179
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 252,
-				"h": 253
+				"w": 178,
+				"h": 179
 			},
 			"sourceSize": {
-				"w": 252,
-				"h": 253
+				"w": 178,
+				"h": 179
 			}
 		},
 		"recycleAllBtn.png": {
 			"frame": {
-				"x": 255,
-				"y": 178,
-				"w": 174,
-				"h": 175
+				"x": 181,
+				"y": 182,
+				"w": 178,
+				"h": 179
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			},
 			"sourceSize": {
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			}
 		},
 		"redoBtn.png": {
 			"frame": {
-				"x": 255,
-				"y": 355,
-				"w": 174,
-				"h": 175
+				"x": 473,
+				"y": 1,
+				"w": 178,
+				"h": 179
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			},
 			"sourceSize": {
-				"w": 174,
-				"h": 175
+				"w": 178,
+				"h": 179
 			}
 		},
 		"saveBtn.png": {
 			"frame": {
-				"x": 469,
-				"y": 1,
-				"w": 252,
-				"h": 253
+				"x": 361,
+				"y": 182,
+				"w": 178,
+				"h": 179
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 252,
-				"h": 253
+				"w": 178,
+				"h": 179
 			},
 			"sourceSize": {
-				"w": 252,
-				"h": 253
+				"w": 178,
+				"h": 179
 			}
 		},
 		"stairBtn.png": {
 			"frame": {
-				"x": 431,
-				"y": 256,
+				"x": 1,
+				"y": 363,
 				"w": 145,
 				"h": 152
 			},
@@ -167,8 +167,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 722,
-			"h": 531
+			"w": 652,
+			"h": 516
 		},
 		"scale": "1"
 	}

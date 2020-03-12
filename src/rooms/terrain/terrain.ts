@@ -9,6 +9,7 @@ import { IRoomService } from "../room";
 import { TerrainDisplay } from "../display/terrain.display";
 import { BlockObject } from "../cameras/block.object";
 import { op_client } from "pixelpai_proto";
+import { DisplayObject } from "../display/display.object";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
@@ -97,6 +98,10 @@ export class Terrain extends BlockObject implements IElement {
         return this.roomService.transformTo45(pos);
     }
 
+    public getDisplay(): DisplayObject {
+        return this.mDisplay;
+    }
+
     public showNickname() {
     }
 
@@ -132,6 +137,10 @@ export class Terrain extends BlockObject implements IElement {
         }
         return this;
     }
+
+    public turn() { }
+
+    public setAlpha(val: number) { }
 
     public destroy() {
         if (this.mBlockable && this.mDisplay) {
@@ -237,5 +246,11 @@ export class Terrain extends BlockObject implements IElement {
             return this.mModel.currentAnimationName;
         }
         return "";
+    }
+
+    get scene(): Phaser.Scene {
+        if (this.mElementManager) {
+            return this.mElementManager.scene;
+        }
     }
 }

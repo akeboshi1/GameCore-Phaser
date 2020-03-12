@@ -7,10 +7,6 @@ export class PlayerModel extends Sprite {
         super(data);
         this.mPos = new Pos(data.x, data.y, data.z);
         this.mAlpha = 1;
-        this.mWalkableArea = data.walkableArea;
-        this.mCollisionArea = data.collisionArea;
-        this.mOriginPoint = data.originPoint;
-        this.mWalkOriginPoint = data.walkOriginPoint;
         this.mPackage = data.package;
         this.mSceneId = data.sceneId;
         this.mUuid = data.uuid;

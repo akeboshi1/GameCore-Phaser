@@ -10,12 +10,14 @@ export class NoticePanel extends Panel {
     private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.setTween(false);
     }
 
     public show(param?: any) {
         super.show(param);
         this.setData("data", param);
         this.resize();
+        this.scale = this.mWorld.uiRatio;
     }
 
     public destroy() {
