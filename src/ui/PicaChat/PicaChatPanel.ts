@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
 import { Font } from "../../utils/font";
+import { Logger } from "../../utils/log";
 
 export class PicaChatPanel extends Panel {
     private readonly key: string = "pica_chat";
@@ -43,11 +44,12 @@ export class PicaChatPanel extends Panel {
 
         this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr;
 
-        // this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2);
-        // this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
-        // this.mTextArea.childrenMap.child.setPosition(this.x + w / 2, this.y + h / 2);
-        this.mTextArea.childrenMap.child.textMask.setPosition(this.x, this.y).resize(w, h);
-        // this.setInteractive();
+        this.mTextArea.resize(w, h);
+        this.mTextArea.childrenMap.child.textMask.resize(w, h);
+        this.mTextArea.layout();
+        this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2);
+        const textMask = this.mTextArea.childrenMap.text;
+        textMask.y = 8 * this.dpr;
         super.resize(w, h);
     }
 
@@ -153,9 +155,9 @@ export class PicaChatPanel extends Panel {
         this.mTextArea = new TextArea(this.mScene, {
             x: width / 2 + 4 * this.dpr,
             y: 160 * this.dpr,
-            // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900),
+            // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, 0.2),
             textWidth: width - 4 * this.dpr,
-            textHeight: 300 * this.dpr,
+            textHeight: this.MAX_HEIGHT,
             text,
         })
             .layout();
@@ -183,7 +185,7 @@ export class PicaChatPanel extends Panel {
             this.mNavigateBtn
         ]);
         this.mTextArea.setSliderEnable(false);
-        this.mTextArea.childrenMap.child.disableInteractive();
+        // this.mTextArea.childrenMap.child.disableInteractive();
         super.init();
 
         this.scene.input.setDraggable(this.mScrollBtn, true);
@@ -197,7 +199,10 @@ export class PicaChatPanel extends Panel {
         this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
         this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
         this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
-
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
     }
 
     private onChatHandler() {}

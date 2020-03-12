@@ -390,6 +390,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
         if (this.cameraService.moving) {
             this.cameraService.syncCameraScroll();
+            this.cameraService.moving = false;
         }
     }
 
