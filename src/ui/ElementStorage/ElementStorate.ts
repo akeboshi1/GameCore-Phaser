@@ -45,26 +45,26 @@ export class ElementStorage extends PacketHandler {
     if (!this.world) {
       return;
     }
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
-    content.page = page;
-    content.perPage = perPage;
-    content.nodeType = nodeType;
-    content.queryString = queryString;
-    this.world.connection.send(packet);
+    // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE);
+    // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
+    // content.page = page;
+    // content.perPage = perPage;
+    // content.nodeType = nodeType;
+    // content.queryString = queryString;
+    // this.world.connection.send(packet);
   }
 
   queryMarketPackage(page: number, perPage: number, nodeType?: op_def.NodeType, queryString?: string) {
     if (!this.world) {
       return;
     }
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
-    content.page = page;
-    content.perPage = perPage;
-    content.nodeType = nodeType;
-    content.queryString = queryString;
-    this.world.connection.send(packet);
+    // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
+    // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
+    // content.page = page;
+    // content.perPage = perPage;
+    // content.nodeType = nodeType;
+    // content.queryString = queryString;
+    // this.world.connection.send(packet);
   }
 
   destroy() {

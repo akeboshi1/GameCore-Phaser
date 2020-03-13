@@ -140,7 +140,7 @@
 				"h": 47
 			}
 		},
-		"yellow_btn_down.png": {
+		"yellow_btn_down": {
 			"frame": {
 				"x": 744,
 				"y": 102,
@@ -160,7 +160,7 @@
 				"h": 63
 			}
 		},
-		"yellow_btn_normal.png": {
+		"yellow_btn_normal": {
 			"frame": {
 				"x": 654,
 				"y": 167,

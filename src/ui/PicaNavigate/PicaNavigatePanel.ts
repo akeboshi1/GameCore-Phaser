@@ -14,6 +14,19 @@ export class PicaNavigatePanel extends Panel {
     this.setTween(false);
   }
 
+  show() {
+    super.show();
+    if (this.mInitialized) {
+      this.addActionListener();
+    }
+  }
+
+  close() {
+    if (this.mInitialized) {
+      this.removeActionListener();
+    }
+  }
+
   resize(w: number, h: number) {
     this.setSize(w, h);
     const height = this.scene.cameras.main.height;
@@ -52,8 +65,6 @@ export class PicaNavigatePanel extends Panel {
     }
     super.init();
     this.resize(this.mScene.cameras.main.width / this.scale, this.mBackground.height);
-
-    this.addActionListener();
   }
 
   private createImage(key: string, frame: string) {
@@ -89,7 +100,7 @@ export class PicaNavigatePanel extends Panel {
   }
 
   private onShowBagHandler() {
-    this.emit("showPanel", "");
+    this.emit("showPanel", "FurniBag");
   }
 
   private onShowFamilyHandler() {

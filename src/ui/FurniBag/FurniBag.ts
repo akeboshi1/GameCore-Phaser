@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
 
 export class FurniBag extends PacketHandler {
@@ -15,7 +15,8 @@ export class FurniBag extends PacketHandler {
     const connection = this.connection;
     if (connection) {
       this.connection.addPacketListener(this);
-    //  this.addHandlerFun()
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES, this.onPackageCategoriesHandler);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
     }
   }
 
@@ -35,13 +36,41 @@ export class FurniBag extends PacketHandler {
   }
 
   getCategories() {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES);
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PACKAGE_CATEGORIES);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
+    content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
+    this.connection.send(packet);
+  }
+
+  queryPackage(key: string, queryString?: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
+    content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
+    content.page = 1;
+    content.perPage = 30;
+    content.subcategory = key;
+    content.queryString = queryString;
+    // content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
     this.connection.send(packet);
   }
 
   destroy() {
     this.unregister();
     this.mEvent.destroy();
+  }
+
+  private onPackageCategoriesHandler(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
+    if (content.category === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
+      this.mEvent.emit("packageCategory", content.subcategory);
+    }
+  }
+
+  private onQueryEditPackage(packge: PBpacket) {
+    const content = op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE = packge.content;
+    if (content.category === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
+      this.mEvent.emit("queryPackage", content);
+    }
   }
 
   get connection(): ConnectionService {

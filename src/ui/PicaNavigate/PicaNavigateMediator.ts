@@ -17,6 +17,7 @@ export class PicaNavigateMediator extends BaseMediator {
 
     show() {
         if ((this.mView && this.mView.isShow()) || this.isShowing) {
+            this.mView.show();
             this.layerManager.addToUILayer(this.mView);
             return;
         }
@@ -41,6 +42,7 @@ export class PicaNavigateMediator extends BaseMediator {
       const mediator = uiManager.getMediator(PicaChatMediator.name);
       if (mediator) {
         mediator.show();
+        (<PicaNavigatePanel> this.mView).close();
         this.layerManager.removeToUILayer(this.mView);
       }
     }

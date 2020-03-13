@@ -25,6 +25,19 @@ export class PicaChatPanel extends Panel {
         this.MIN_HEIGHT = 100 * this.dpr;
     }
 
+    show() {
+        super.show();
+        if (this.mInitialized) {
+            this.addActionListener();
+        }
+    }
+
+    close() {
+        if (this.mInitialized) {
+            this.removeActionListener();
+        }
+    }
+
     resize(w: number, h: number) {
         const width = this.scene.cameras.main.width / this.scale;
         const height = this.scene.cameras.main.height;
@@ -37,7 +50,7 @@ export class PicaChatPanel extends Panel {
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
         this.mBackground.fillRect(0, 0, w, h);
-        this.mBackground.setInteractive();
+        // this.mBackground.setInteractive();
 
         this.mNavigateBtn.x = width - this.mNavigateBtn.width / 2 - 5 * this.dpr;
         this.mNavigateBtn.y = h - this.mNavigateBtn.height / 2 - 5 * this.dpr;
@@ -188,11 +201,9 @@ export class PicaChatPanel extends Panel {
         // this.mTextArea.childrenMap.child.disableInteractive();
         super.init();
 
-        this.scene.input.setDraggable(this.mScrollBtn, true);
-        this.mScrollBtn.on("drag", this.onDragHandler, this);
-        this.mChatBtn.on("pointerup", this.onChatHandler, this);
-        this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
         this.resize(this.width, this.height);
+
+        // this.addActionListener();
 
         this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
         this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
@@ -205,11 +216,42 @@ export class PicaChatPanel extends Panel {
         this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
     }
 
+    private addActionListener() {
+        // this.mBackground.setInteractive();
+        this.mChatBtn.setInteractive();
+        this.mEmojiBtn.setInteractive();
+        this.mScrollBtn.setInteractive();
+        this.mNavigateBtn.setInteractive();
+        this.mTextArea.childrenMap.child.setInteractive();
+
+        this.scene.input.setDraggable(this.mScrollBtn, true);
+        this.mScrollBtn.on("drag", this.onDragHandler, this);
+        this.mChatBtn.on("pointerup", this.onChatHandler, this);
+        this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
+
+        this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
+    }
+
+    private removeActionListener() {
+        this.mBackground.disableInteractive();
+        this.mChatBtn.disableInteractive();
+        this.mEmojiBtn.disableInteractive();
+        this.mScrollBtn.disableInteractive();
+        this.mNavigateBtn.disableInteractive();
+        this.mTextArea.childrenMap.child.disableInteractive();
+
+        // this.scene.input.setDraggable(this.mScrollBtn, false);
+        this.mScrollBtn.off("drag", this.onDragHandler, this);
+        this.mChatBtn.off("pointerup", this.onChatHandler, this);
+        this.resize(this.width, this.height);
+
+        this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
+    }
+
     private onChatHandler() {}
 
     private onDragHandler(pointer, dragX, dragY) {
-        const height =
-            this.height + pointer.prevPosition.y - pointer.position.y;
+        const height = this.height + (pointer.prevPosition.y - pointer.position.y);
         if (height > this.MAX_HEIGHT || height < this.MIN_HEIGHT) {
             return;
         }
@@ -219,5 +261,51 @@ export class PicaChatPanel extends Panel {
 
     private onShowNavigateHandler() {
       this.emit("showNavigate");
+    }
+
+    private onShowInputHanldler() {
+        // new InputPanel(this.scene);
+         new InputPanel(this.scene, this.mWorld).once("close", this.sendChat, this);
+    }
+
+    private sendChat(val: string) {
+        if (!val) {
+            return;
+        }
+        this.emit("chat", val);
+    }
+}
+
+class InputPanel extends Phaser.Events.EventEmitter {
+    private mBackground: Phaser.GameObjects.Graphics;
+    private mInput;
+    constructor(scene: Phaser.Scene, world: WorldService) {
+        super();
+        const width = scene.cameras.main.width;
+        const height = scene.cameras.main.height;
+        this.mBackground = scene.add.graphics();
+        this.mBackground.fillStyle(0x0, 0.6);
+        this.mBackground.fillRect(0, 0, width, height).setInteractive();
+
+        this.mInput = (<any>scene.add).rexInputText(6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
+            fontSize: `${20 * world.uiRatio}px`,
+            color: "#0",
+            backgroundColor: "#FFFFFF",
+            borderColor: "#FF9900"
+        }).setOrigin(0, 0).setFocus();
+        // this.mInput.y = -height / 2;
+        this.mInput.node.addEventListener("keypress", (e) => {
+            const keycode = e.keyCode || e.which;
+            if (keycode === 13) {
+                this.onCloseHandler();
+            }
+        });
+    }
+
+    private onCloseHandler() {
+        this.emit("close", this.mInput.text);
+        this.mBackground.destroy();
+        this.mInput.destroy();
+        this.destroy();
     }
 }

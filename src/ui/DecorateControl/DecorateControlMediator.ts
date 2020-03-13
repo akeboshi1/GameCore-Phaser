@@ -96,6 +96,10 @@ export class DecorateControlMediator extends BaseMediator {
     }
 
     private onShowFurniHandler() {
+        const uiManager = this.world.uiManager;
+        if (uiManager) {
+            uiManager.showMed("FurniBag");
+        }
     }
 
     private onSaveHandler() {
