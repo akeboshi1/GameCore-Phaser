@@ -2,6 +2,7 @@ import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
+import { Logger } from "../../utils/log";
 
 export class PicaMainUIPanel extends Panel {
     private readonly key = "main_ui";
@@ -42,6 +43,9 @@ export class PicaMainUIPanel extends Panel {
         this.mSceneName.setText("皮卡小镇");
         this.mSceneName.x = 15 * this.dpr;
         this.mSceneName.y = 50 * this.dpr;
+        const bound = this.mSceneName.getBounds();
+        this.mSceneName.setSize(bound.width, bound.height);
+        this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mSceneType = new IconText(this.scene, this.key, "setting_icon.png", this.dpr);
         this.mSceneType.setText("公共场景");
         this.mSceneType.x = 15 * this.dpr;
@@ -87,6 +91,12 @@ export class PicaMainUIPanel extends Panel {
         this.add(expProgress);
 
         this.resize(w, h);
+
+        this.mSceneName.on("pointerup", this.onEnterEditScene, this);
+    }
+
+    private onEnterEditScene() {
+        this.emit("enterEdit");
     }
 }
 

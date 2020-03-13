@@ -662,4 +662,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         return this.mSelectorElement.element;
     }
+
+    get enableEdit(): boolean {
+        return false;
+    }
 }

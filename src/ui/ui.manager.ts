@@ -176,7 +176,7 @@ export class UiManager extends PacketHandler {
             this.mMedMap = new Map();
         }
         // const topMenu = new TopMenuMediator(this.mScene, this.worldService);
-        this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
+        // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
         this.mMedMap.set(DecorateControlMediator.name, new DecorateControlMediator(this.mUILayerManager, this.mScene, this.worldService));
         this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
         // this.mMedMap.set(TopMenuMediator.name, topMenu);

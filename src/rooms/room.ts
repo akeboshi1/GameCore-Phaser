@@ -42,6 +42,7 @@ export interface IRoomService {
     readonly blocks: ViewblockService;
     readonly world: WorldService;
     readonly map?: Map;
+    readonly enableEdit: boolean;
 
     readonly scene: Phaser.Scene | undefined;
 
@@ -452,6 +453,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mWorld;
     }
 
+    get enableEdit() {
+        return this.mEnableEdit;
+    }
+
     get connection(): ConnectionService | undefined {
         if (this.manager) {
             return this.manager.connection;
@@ -479,18 +484,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onEnableEditModeHandler(packet: PBpacket) {
         this.mEnableEdit = true;
-        if (this.world) {
-            this.world.emitter.emit(MessageType.ADD_ICON_TO_TOP, {
-                key: "Turn_Btn_Top",
-                name: "EnterDecorate",
-                bgResKey: "baseView",
-                bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-                iconResKey: "",
-                iconTexture: "btnGroup_top_expand.png",
-                pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json",
-                scale: 1
-            });
-        }
+        // if (this.world) {
+        //     this.world.emitter.emit(MessageType.ADD_ICON_TO_TOP, {
+        //         key: "Turn_Btn_Top",
+        //         name: "EnterDecorate",
+        //         bgResKey: "baseView",
+        //         bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+        //         iconResKey: "",
+        //         iconTexture: "btnGroup_top_expand.png",
+        //         pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json",
+        //         scale: 1
+        //     });
+        // }
     }
 
     private onShowMapTitle(packet: PBpacket) {

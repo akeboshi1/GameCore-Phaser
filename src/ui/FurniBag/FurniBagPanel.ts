@@ -9,6 +9,7 @@ import { DynamicImage } from "../components/dynamic.image";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "../Market/TextButton";
 import { Logger } from "../../utils/log";
+import { Url } from "../../utils/resUtil";
 
 export class FurniBagPanel extends Panel {
   private key: string = "furni_bag";
@@ -30,6 +31,7 @@ export class FurniBagPanel extends Panel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
+    this.mItems = [];
   }
 
   resize(w: number, h: number) {
@@ -48,6 +50,9 @@ export class FurniBagPanel extends Panel {
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
+    this.mCategeoriesContainer.setSize(width, 43 * this.dpr);
+
+    this.mPropsContainer.y = 7 * this.dpr * this.mCategeoriesContainer.height;
 
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 48 * this.dpr;
@@ -77,7 +82,16 @@ export class FurniBagPanel extends Panel {
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
-    Logger.getInstance().log(props);
+    for (const item of this.mItems) {
+      item.destroy();
+    }
+    for (let i = 0; i < props.length; i++) {
+      const item = new Item(this.scene, Math.floor(i / 4) * (57 * this.dpr) + (35 * this.dpr), Math.floor(i % 3) * (57 * this.dpr), this.key, this.dpr);
+      item.setProp(props[i]);
+      item.on("select", this.onSelectItemHandler, this);
+      this.mItems[i] = item;
+    }
+    this.mPropsContainer.add(this.mItems);
   }
 
   protected preload() {
@@ -153,6 +167,10 @@ export class FurniBagPanel extends Panel {
 
   private onCloseHandler() {
     this.emit("close");
+  }
+
+  private onSelectItemHandler(prop: op_client.IMarketCommodity) {
+    Logger.getInstance().log("=================>>>", prop);
   }
 }
 
@@ -243,8 +261,9 @@ class SelectedElement extends Phaser.GameObjects.Container {
 class Item extends Phaser.GameObjects.Container {
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
-  constructor(scene: Phaser.Scene, key: string, dpr: number) {
-    super(scene);
+  private mProp: op_client.ICountablePackageItem;
+  constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
+    super(scene, x, y);
 
     const background = scene.make.image({
       key,
@@ -259,10 +278,23 @@ class Item extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false);
-    this.add([background, this.mPropImage, this.mCounter]);
+    this.add([background, this.mPropImage]);
+
+    this.setSize(background.width, background.height);
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
+    this.emit("pointer", this.onSelectedHandler, this);
   }
 
-  setProp() {
+  setProp(prop: op_client.ICountablePackageItem) {
+    this.mProp = prop;
+    this.mPropImage.load(Url.getOsdRes(prop.display.texturePath));
+    if (prop.count > 1) {
+      this.mCounter.setText(prop.count.toString());
+      this.add(this.mCounter);
+    }
+  }
 
+  private onSelectedHandler() {
+    this.emit("select", this.mProp);
   }
 }
