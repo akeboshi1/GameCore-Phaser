@@ -43,6 +43,7 @@ export interface IRoomService {
     readonly world: WorldService;
     readonly map?: Map;
     readonly enableEdit: boolean;
+    readonly sceneType: op_def.SceneTypeEnum;
 
     readonly scene: Phaser.Scene | undefined;
 
@@ -461,6 +462,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.manager) {
             return this.manager.connection;
         }
+    }
+
+    get sceneType(): op_def.SceneTypeEnum {
+        return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
     }
 
     private onPressElementHandler(pointer, gameObject) {

@@ -11,6 +11,7 @@ export class FurniBagMediator extends BaseMediator {
     protected mView: FurniBagPanel;
     private scene: Phaser.Scene;
     private mFurniBag: FurniBag;
+    private mScneType: op_def.SceneTypeEnum;
     constructor(
         private layerManager: ILayerManager,
         scene: Phaser.Scene,
@@ -18,6 +19,11 @@ export class FurniBagMediator extends BaseMediator {
     ) {
         super(worldService);
         this.scene = this.layerManager.scene;
+        if (this.world && this.world.roomManager && this.world.roomManager.currentRoom) {
+            this.mScneType = this.world.roomManager.currentRoom.sceneType;
+        } else {
+            this.mScneType = op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
+        }
     }
 
     show() {
@@ -27,16 +33,20 @@ export class FurniBagMediator extends BaseMediator {
         }
 
         if (!this.mFurniBag) {
-            this.mFurniBag = new FurniBag(this.world);
+            this.mFurniBag = new FurniBag(this.world, this.mScneType);
             this.mFurniBag.register();
             this.mFurniBag.on("packageCategory", this.onPackageCategoryHandler, this);
             this.mFurniBag.on("queryPackage", this.onQueryPackageHandler, this);
+            this.mFurniBag.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
         }
         if (!this.mView) {
-            this.mView = new FurniBagPanel(this.scene, this.world);
+            this.mView = new FurniBagPanel(this.scene, this.world, this.mScneType);
             this.mView.on("getCategories", this.onGetCategoriesHandler, this);
             this.mView.on("queryPackage", this.onQueryPackage, this);
             this.mView.on("close", this.onCloseHandler, this);
+            this.mView.on("queryPropResource", this.onQueryPropResourceHandler, this);
+            this.mView.on("seachPackage", this.onSeachPackageHandler, this);
+            this.mView.on("addFurniToScene", this.onAddFurniHandler, this);
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView);
@@ -68,6 +78,10 @@ export class FurniBagMediator extends BaseMediator {
         this.mView.setCategories(subcategory);
     }
 
+    private onQueryCommodityResourceHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
+        this.mView.setSelectedResource(content);
+    }
+
     private onGetCategoriesHandler() {
         if (this.mFurniBag) {
             this.mFurniBag.getCategories();
@@ -80,5 +94,18 @@ export class FurniBagMediator extends BaseMediator {
 
     private onQueryPackage(key: string) {
         this.mFurniBag.queryPackage(key);
+    }
+
+    private onQueryPropResourceHandler(prop: op_client.IMarketCommodity) {
+        this.mFurniBag.queryCommodityResource(prop.id);
+    }
+
+    private onSeachPackageHandler(query: string, categories: string) {
+        this.mFurniBag.seachPackage(query, categories);
+    }
+
+    private onAddFurniHandler(id: string) {
+        this.mFurniBag.addFurniToScene(id);
+        this.destroy();
     }
 }

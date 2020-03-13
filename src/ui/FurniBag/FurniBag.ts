@@ -6,9 +6,11 @@ import { WorldService } from "../../game/world.service";
 export class FurniBag extends PacketHandler {
   private readonly world: WorldService;
   private mEvent: Phaser.Events.EventEmitter;
-  constructor($world: WorldService) {
+  private mSceneType: op_def.SceneTypeEnum;
+  constructor($world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super();
     this.world = $world;
+    this.mSceneType = sceneType;
     this.mEvent = new Phaser.Events.EventEmitter();
   }
   register() {
@@ -16,7 +18,9 @@ export class FurniBag extends PacketHandler {
     if (connection) {
       this.connection.addPacketListener(this);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES, this.onPackageCategoriesHandler);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE, this.onQueryEditPackage);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE, this.onQueryMarketPackage);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE, this.onQueryCommodityResultHandler);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
     }
   }
 
@@ -43,15 +47,33 @@ export class FurniBag extends PacketHandler {
   }
 
   queryPackage(key: string, queryString?: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
-    const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
-    content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
-    content.page = 1;
-    content.perPage = 30;
-    content.subcategory = key;
-    content.queryString = queryString;
-    // content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
+    // if (this.mSceneType === op_def.SceneTypeEnum.NORMAL_SCENE_TYPE) {
+    //   this.queryMarketPackage(key, queryString);
+    // } else {
+    //   this.queryEditPackage(key, queryString);
+    // }
+    this.queryMarketPackage(key, queryString);
+  }
+
+  queryCommodityResource(id: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE_ITEM_RESOURCE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE_ITEM_RESOURCE = packet.content;
+    content.id = id;
     this.connection.send(packet);
+  }
+
+  addFurniToScene(id: string) {
+    if (this.mSceneType !== op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
+      return;
+    }
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE = packet.content;
+    content.id = id;
+    this.connection.send(packet);
+  }
+
+  seachPackage(seach: string, category: string) {
+    this.queryPackage(category, seach);
   }
 
   destroy() {
@@ -66,11 +88,45 @@ export class FurniBag extends PacketHandler {
     }
   }
 
-  private onQueryEditPackage(packge: PBpacket) {
-    const content = op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE = packge.content;
+  private onQueryMarketPackage(packge: PBpacket) {
+    // OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE
+    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE = packge.content;
     if (content.category === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
       this.mEvent.emit("queryPackage", content);
     }
+  }
+
+  private onQueryEditPackage(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE = packet.content;
+    if (content.category === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
+      this.mEvent.emit("queryPackage", content);
+    }
+  }
+
+  private onQueryCommodityResultHandler(packet: PBpacket) {
+    this.mEvent.emit("queryCommodityResource", packet.content);
+  }
+
+  private queryMarketPackage(key: string, queryString?: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
+    content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
+    content.page = 1;
+    content.perPage = 30;
+    content.subcategory = key;
+    content.queryString = queryString;
+    this.connection.send(packet);
+  }
+
+  private queryEditPackage(key: string, queryString?: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
+    content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
+    content.page = 1;
+    content.perPage = 30;
+    content.subcategory = key;
+    content.queryString = queryString;
+    this.connection.send(packet);
   }
 
   get connection(): ConnectionService {

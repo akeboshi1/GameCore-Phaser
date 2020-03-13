@@ -16,7 +16,11 @@
     "my_history": "My history",
     "password": "Password",
     "close": "Close",
-    "visit": "访 问",
-    "my": "我 的"
+    "visit": "Visit",
+    "my": "My"
+  },
+  "furni_bag": {
+    "add": "Add",
+    "furni": "Furniture"
   }
 }

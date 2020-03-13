@@ -666,4 +666,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     get enableEdit(): boolean {
         return false;
     }
+
+    get sceneType(): op_def.SceneTypeEnum {
+        return op_def.SceneTypeEnum.EDIT_SCENE_TYPE;
+    }
 }

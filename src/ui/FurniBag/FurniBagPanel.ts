@@ -8,8 +8,8 @@ import { op_client, op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "../Market/TextButton";
-import { Logger } from "../../utils/log";
 import { Url } from "../../utils/resUtil";
+import { LabelInput } from "../components/label.input";
 
 export class FurniBagPanel extends Panel {
   private key: string = "furni_bag";
@@ -17,19 +17,24 @@ export class FurniBagPanel extends Panel {
   private mCloseBtn: Phaser.GameObjects.Image;
   private mBackground: Phaser.GameObjects.Graphics;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
-  private mSelectedElement: SelectedElement;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mCategeoriesContainer: Phaser.GameObjects.Container;
   private mPropsContainer: Phaser.GameObjects.Container;
+  private mDetailDisplay: DetailDisplay;
   private mAdd: NinePatchButton;
   private mItems: Item[];
   private mCategeories: TextButton[];
   private mBg: Phaser.GameObjects.Image;
+  private mSeachInput: SeachInput;
+  private mSelectedCategory: op_def.IStrMap;
+  private mSelectedFurni: op_client.ICountablePackageItem;
 
   private mDetailBubble: DetailBubble;
+  private mSceneType: op_def.SceneTypeEnum;
 
-  constructor(scene: Phaser.Scene, world: WorldService) {
+  constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
+    this.mSceneType = sceneType;
     this.setTween(false);
     this.mItems = [];
   }
@@ -51,8 +56,9 @@ export class FurniBagPanel extends Panel {
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
     this.mCategeoriesContainer.setSize(width, 43 * this.dpr);
+    this.mSeachInput.y = 20 * this.dpr;
 
-    this.mPropsContainer.y = 7 * this.dpr * this.mCategeoriesContainer.height;
+    this.mPropsContainer.y = 7 * this.dpr + this.mCategeoriesContainer.height;
 
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 48 * this.dpr;
@@ -61,15 +67,23 @@ export class FurniBagPanel extends Panel {
 
     this.mAdd.x = width - this.mAdd.width / 2 - 20 * this.dpr;
     this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr;
+
+    this.mDetailDisplay.x = width / 2;
+    this.mDetailDisplay.y = this.mBg.y;
+
+    this.setSize(width, height);
+    // this.setInteractive(new Phaser.Geom.Rectangle(width / 2, height / 2, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
   setCategories(subcategorys: op_def.IStrMap[]) {
     const group = new CheckboxGroup();
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
+    this.mSelectedCategory = null;
     this.mCategeories = [];
+    const _x = this.mSeachInput.x; // + this.mSeachInput.width / 2 + 6 * this.dpr;
     for (let i = 0; i < subcategorys.length; i++) {
-      const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 , capH / 2);
+      const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 + this.mSeachInput.x + _x , capH / 2);
       textBtn.setData("category", subcategorys[i]);
       textBtn.setSize(capW, capH);
       textBtn.setFontSize(15 * this.dpr);
@@ -82,16 +96,31 @@ export class FurniBagPanel extends Panel {
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
+    this.mSelectedFurni = null;
     for (const item of this.mItems) {
       item.destroy();
     }
+    if (!props || props.length < 1) {
+      return;
+    }
     for (let i = 0; i < props.length; i++) {
-      const item = new Item(this.scene, Math.floor(i / 4) * (57 * this.dpr) + (35 * this.dpr), Math.floor(i % 3) * (57 * this.dpr), this.key, this.dpr);
+      const item = new Item(this.scene, Math.floor(i / 4) * (57 * this.dpr) + (35 * this.dpr), Math.floor(i % 4) * (57 * this.dpr) + 25 * this.dpr, this.key, this.dpr);
       item.setProp(props[i]);
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
     this.mPropsContainer.add(this.mItems);
+    this.setSelectedItem(props[0]);
+  }
+
+  public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
+    if (content.display) {
+      this.mDetailDisplay.loadDisplay(content);
+    } else if (content.avatar) {
+      this.mDetailDisplay.loadAvatar(content);
+    } else {
+      // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
+    }
   }
 
   protected preload() {
@@ -107,7 +136,6 @@ export class FurniBagPanel extends Panel {
       frame: "bg.png"
     }, false);
 
-    this.mSelectedElement = new SelectedElement(this.scene, this.key, this.dpr);
     this.mShelfContainer = this.scene.make.container(undefined, false);
     this.mPropsContainer = this.scene.make.container(undefined, false);
     this.mCategeoriesContainer = this.scene.make.container(undefined, false);
@@ -145,22 +173,46 @@ export class FurniBagPanel extends Panel {
     this.mAdd.setFontStyle("bold");
     // this.mAdd.on("pointerup", this.onBuyHandler, this);
 
-    this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
+    this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
 
-    this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mSelectedElement, this.mDetailBubble, this.mAdd, this.mShelfContainer]);
+    this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
+    this.mDetailBubble.x = 10 * this.dpr;
+    this.mDetailDisplay.scale = this.mWorld.scaleRatio;
+
+    this.mSeachInput = new SeachInput(this.scene, this.key, this.dpr);
+    this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
+
+    this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer]);
     this.mShelfContainer.add([this.mCategeoriesContainer, this.mPropsContainer]);
-    this.mCategeoriesContainer.add(this.mCategoriesBar);
+    this.mCategeoriesContainer.add([this.mCategoriesBar, this.mSeachInput]);
+    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
+      this.add(this.mAdd);
+    }
     super.init();
 
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mSeachInput.on("seach", this.onSeachHandler, this);
+    this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
     this.emit("getCategories");
 
     this.resize(0, 0);
   }
 
+  private setSelectedItem(prop: op_client.ICountablePackageItem) {
+    if (!prop) {
+      return;
+    }
+    this.mSelectedFurni = prop;
+    this.emit("queryPropResource", prop);
+    this.mDetailBubble.setProp(prop);
+    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+  }
+
   private onSelectSubCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
     const category: op_def.IStrMap = gameobject.getData("category");
     if (category) {
+      this.mSelectedCategory = category;
       this.emit("queryPackage", category.key);
     }
   }
@@ -169,8 +221,60 @@ export class FurniBagPanel extends Panel {
     this.emit("close");
   }
 
-  private onSelectItemHandler(prop: op_client.IMarketCommodity) {
-    Logger.getInstance().log("=================>>>", prop);
+  private onSelectItemHandler(prop: op_client.ICountablePackageItem) {
+    this.setSelectedItem(prop);
+  }
+
+  private onSeachHandler(val: string) {
+    if (this.mSelectedCategory) {
+      this.emit("seachPackage", val, this.mSelectedCategory.key);
+    }
+  }
+
+  private onAddFurniToSceneHandler() {
+    if (!this.mSelectedFurni) {
+      return;
+    }
+    this.emit("addFurniToScene", this.mSelectedFurni.id);
+  }
+}
+
+class SeachInput extends Phaser.GameObjects.Container {
+  private mSeachBtn: Phaser.GameObjects.Image;
+  private mLabelInput: LabelInput;
+  constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    super(scene);
+
+    const bg = scene.make.image({
+      key,
+      frame: "seach_bg.png"
+    }, false);
+
+    this.mLabelInput = new LabelInput(this.scene, {
+      x: -10 * dpr,
+      y: 0,
+      width: 160,
+      height: 60,
+      fontSize: 14 * dpr + "px",
+      color: "#666666",
+    });
+
+    this.mSeachBtn = scene.make.image({
+      key,
+      frame: "seach_normal.png"
+    }, false).setInteractive();
+    this.mSeachBtn.x = (bg.width - this.mSeachBtn.width) / 2 - 4 * dpr,
+    this.add([bg, this.mLabelInput, this.mSeachBtn]);
+    this.setSize(bg.width, bg.height);
+
+    this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
+  }
+
+  private onSeachHandler() {
+    if (!this.mLabelInput.text) {
+      return;
+    }
+    this.emit("seach", this.mLabelInput.text);
   }
 }
 
@@ -182,12 +286,24 @@ class DetailBubble extends Phaser.GameObjects.Container {
   private dpr: number;
   constructor(scene: Phaser.Scene, key: string, dpr: number) {
     super(scene);
+    this.dpr = dpr;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
     const bubbleW = 110 * dpr;
     const bubbleH = 96 * dpr;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
     this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
     this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
+
+    this.mNickName = this.scene.make.text({
+      x: 7 * this.dpr,
+      y: 9 * this.dpr,
+      style: {
+        fontSize: 12 * this.dpr,
+        fontFamily: Font.DEFULT_FONT,
+        color: "#FFFF00",
+        align: "center"
+      }
+    });
 
     this.mDesText = this.scene.make.text({
       x: 8 * dpr,
@@ -211,9 +327,11 @@ class DetailBubble extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT,
       }
     }, false);
+    this.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource]);
+    this.setSize(bubbleW, bubbleH);
   }
 
-  setProp(prop): this {
+  setProp(prop: op_client.ICountablePackageItem): this {
     this.mNickName.setText(prop.shortName || prop.name);
     this.mDesText.setText(prop.des);
     if (prop.source) {
@@ -240,24 +358,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
   }
 }
 
-class SelectedElement extends Phaser.GameObjects.Container {
-  private mDetailDisplay: DetailDisplay;
-  constructor(scene: Phaser.Scene, key: string, dpr: number) {
-    super(scene, dpr);
-  }
-
-  setResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
-    if (content.display) {
-      this.mDetailDisplay.loadDisplay(content);
-    } else if (content.avatar) {
-      this.mDetailDisplay.loadAvatar(content);
-    } else {
-      // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
-    }
-    // this.mDetailDisplay.loadDisplay(content.display || this.mSelectedProp.icon);
-  }
-}
-
 class Item extends Phaser.GameObjects.Container {
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
@@ -271,18 +371,21 @@ class Item extends Phaser.GameObjects.Container {
     }, false);
 
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
+    this.mPropImage.scale = dpr;
 
     this.mCounter = scene.make.text({
+      x: background.width / 2 - 4 * dpr,
+      y: background.height / 2 - 4 * dpr,
       style: {
         fontSize: 12 * dpr,
         fontFamily: Font.DEFULT_FONT
       }
-    }, false);
+    }, false).setOrigin(1);
     this.add([background, this.mPropImage]);
 
     this.setSize(background.width, background.height);
     this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
-    this.emit("pointer", this.onSelectedHandler, this);
+    this.on("pointerup", this.onSelectedHandler, this);
   }
 
   setProp(prop: op_client.ICountablePackageItem) {
