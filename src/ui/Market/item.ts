@@ -84,11 +84,20 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
   setProp(content: op_client.IMarketCommodity) {
     this.mProp = content;
-    this.mPropImage.load(Url.getOsdRes(content.icon));
+    this.mPropImage.load(Url.getOsdRes(content.icon), this, this.onPropLoadComplete);
     this.mPropImage.x = this.mBorder.x;
     this.mPropImage.y = this.mBorder.y;
     this.mNickName.setText(content.shortName || content.name);
     this.mPriceText.setText(content.price[0].price.toString());
+  }
+
+  private onPropLoadComplete() {
+    if (this.mPropImage) {
+      const texture = this.mPropImage.texture;
+      if (texture) {
+        texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+      }
+    }
   }
 
   private onPointerUpHandler() {

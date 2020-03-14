@@ -497,6 +497,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onPutElement(display: DisplayObject) {
+        this.removePointerMoveHandler();
         if (!this.mSelectorElement) {
             return;
         }
@@ -526,6 +527,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onCancelPutHandler(element?: IElement) {
+        this.removePointerMoveHandler();
         if (!this.mSelectorElement) {
             return;
         }

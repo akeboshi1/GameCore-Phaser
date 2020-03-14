@@ -47,8 +47,9 @@ export class FurniBagPanel extends Panel {
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width, height);
 
-    this.mShelfContainer.setSize(width, 277 * this.dpr * this.scale);
+    this.mShelfContainer.setSize(width, 277 * this.dpr);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
+    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
@@ -100,15 +101,22 @@ export class FurniBagPanel extends Panel {
     for (const item of this.mItems) {
       item.destroy();
     }
-    if (!props || props.length < 1) {
+    if (!props) {
       return;
     }
-    for (let i = 0; i < props.length; i++) {
+    let len = props.length;
+    if (props.length < 24) {
+      len = 24;
+    }
+    for (let i = 0; i < len; i++) {
       const item = new Item(this.scene, Math.floor(i / 4) * (57 * this.dpr) + (35 * this.dpr), Math.floor(i % 4) * (57 * this.dpr) + 25 * this.dpr, this.key, this.dpr);
-      item.setProp(props[i]);
+      if (props[i]) {
+        item.setProp(props[i]);
+      }
       item.on("select", this.onSelectItemHandler, this);
       this.mItems[i] = item;
     }
+
     this.mPropsContainer.add(this.mItems);
     this.setSelectedItem(props[0]);
   }
@@ -174,6 +182,8 @@ export class FurniBagPanel extends Panel {
     // this.mAdd.on("pointerup", this.onBuyHandler, this);
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.setTexture(this.key, "ghost.png");
+    this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
 
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
@@ -323,7 +333,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mSource = this.scene.make.text({
       x: 8 * dpr,
       y: 38 * dpr,
-      text: "可以通过商城购物获得",
+      text: "可通过商城购物获得",
       style: {
         fontSize: 10 * dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -392,10 +402,22 @@ class Item extends Phaser.GameObjects.Container {
 
   setProp(prop: op_client.ICountablePackageItem) {
     this.mProp = prop;
-    this.mPropImage.load(Url.getOsdRes(prop.display.texturePath));
+    if (!prop) {
+      return;
+    }
+    this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     if (prop.count > 1) {
       this.mCounter.setText(prop.count.toString());
       this.add(this.mCounter);
+    }
+  }
+
+  private onPropLoadCompleteHandler() {
+    if (this.mPropImage && this.mPropImage.texture) {
+      const texture = this.mPropImage.texture;
+      if (texture) {
+        texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+      }
     }
   }
 

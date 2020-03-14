@@ -59,6 +59,9 @@ export class DecoratePanel extends Panel {
     public canPUt(val: boolean) {
         if (val !== this.mCanPut) {
             this.mCanPut = val;
+            if (!this.mOkBtn) {
+                return;
+            }
             if (val) {
                 this.mOkBtn.clearTint();
             } else {
@@ -182,6 +185,12 @@ export class DecoratePanel extends Panel {
 
         this.mMoveMenuContainer.x = this.mSubMenus.x + this.mMoveBtn.x + this.mMoveBtn.width / 2 + 29 * this.dpr;
         this.mRepeatMenuContainer.x = this.mSubMenus.x + this.mRepeatBtn.x + this.mRepeatBtn.width / 2 + 29 * this.dpr;
+
+        if (this.mCanPut) {
+            this.mOkBtn.clearTint();
+        } else {
+            this.mOkBtn.setTint(0x666666);
+        }
 
         // this.mControllContainer.add([border, this.mTurnBtn, this.mRecycleBtn, this.mConfirmBtn]);
         super.init();

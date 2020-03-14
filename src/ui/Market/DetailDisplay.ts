@@ -57,6 +57,24 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
   }
 
+  setTexture(key: string, frame?: string) {
+    if (!this.mImage) {
+      this.mImage = this.scene.make.image({
+        key,
+        frame
+      }, false);
+    }
+    this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
+    this.add(this.mImage);
+    this.emit("show", this.mImage);
+  }
+
+  setNearest() {
+    if (this.mImage) {
+      this.mImage.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    }
+  }
+
   get display(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE {
     return this.mDisplay;
   }
@@ -78,6 +96,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     } else {
       this.mImage.setTexture(this.mUrl);
     }
+    this.setNearest();
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.add(this.mImage);
     this.emit("show", this.mImage);

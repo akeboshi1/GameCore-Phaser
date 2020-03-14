@@ -60,6 +60,26 @@
 				"h": 93
 			}
 		},
+		"ghost.png": {
+			"frame": {
+				"x": 1306,
+				"y": 96,
+				"w": 75,
+				"h": 109
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 75,
+				"h": 109
+			},
+			"sourceSize": {
+				"w": 75,
+				"h": 109
+			}
+		},
 		"prop_bg.png": {
 			"frame": {
 				"x": 1402,
@@ -102,7 +122,7 @@
 		},
 		"seach_down.png": {
 			"frame": {
-				"x": 1306,
+				"x": 1383,
 				"y": 200,
 				"w": 81,
 				"h": 86
@@ -122,7 +142,7 @@
 		},
 		"seach_normal.png": {
 			"frame": {
-				"x": 1389,
+				"x": 1466,
 				"y": 200,
 				"w": 89,
 				"h": 94

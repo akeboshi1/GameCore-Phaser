@@ -60,9 +60,29 @@
 				"h": 68
 			}
 		},
+		"ghost.png": {
+			"frame": {
+				"x": 981,
+				"y": 71,
+				"w": 75,
+				"h": 109
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 75,
+				"h": 109
+			},
+			"sourceSize": {
+				"w": 75,
+				"h": 109
+			}
+		},
 		"prop_bg.png": {
 			"frame": {
-				"x": 1056,
+				"x": 1058,
 				"y": 1,
 				"w": 148,
 				"h": 148
@@ -102,7 +122,7 @@
 		},
 		"seach_down.png": {
 			"frame": {
-				"x": 981,
+				"x": 1058,
 				"y": 151,
 				"w": 61,
 				"h": 65
@@ -122,7 +142,7 @@
 		},
 		"seach_normal.png": {
 			"frame": {
-				"x": 1044,
+				"x": 1121,
 				"y": 151,
 				"w": 67,
 				"h": 71
@@ -140,10 +160,10 @@
 				"h": 71
 			}
 		},
-		"yellow_btn_down.png": {
+		"yellow_btn_down": {
 			"frame": {
-				"x": 1113,
-				"y": 151,
+				"x": 981,
+				"y": 224,
 				"w": 98,
 				"h": 95
 			},
@@ -162,8 +182,8 @@
 		},
 		"yellow_btn_normal": {
 			"frame": {
-				"x": 981,
-				"y": 248,
+				"x": 1081,
+				"y": 224,
 				"w": 98,
 				"h": 95
 			},
@@ -180,10 +200,10 @@
 				"h": 95
 			}
 		},
-		"yellow_btn_over": {
+		"yellow_btn_over.png": {
 			"frame": {
-				"x": 1081,
-				"y": 248,
+				"x": 981,
+				"y": 321,
 				"w": 98,
 				"h": 95
 			},
@@ -207,7 +227,7 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1212,
+			"w": 1207,
 			"h": 1038
 		},
 		"scale": "1"

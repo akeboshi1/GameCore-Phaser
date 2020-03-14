@@ -18,7 +18,10 @@ export class SelectorElement {
         this.mDecorateManager = new DecorateManager(this.mScene, this.mRoomService);
         this.mDecorateManager.setElement(mElement);
         const display = mElement.getDisplay();
-        display.showRefernceArea();
+        display.once("initialized", () => {
+            display.showRefernceArea();
+            this.checkCanPut();
+        });
         this.mSelecting = true;
 
         this.mDecorateManager.on("moveElement", this.onMoveElementHandler, this);

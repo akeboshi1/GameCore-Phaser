@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { Logger } from "../../utils/log";
+import Scroller from "../../../lib/rexui/plugins/input/scroller/Scroller";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 
@@ -241,6 +241,19 @@ class RoomList extends Phaser.GameObjects.Container {
     this.add([activity, this.mPopularityRoom, this.mPlayerRoom]);
   }
 
+  addMask() {
+    const bg = this.scene.make.graphics(undefined, false);
+    bg.fillStyle(0);
+    bg.fillRect(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height).setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+    this.setMask(bg.createGeometryMask());
+
+    const scroll = new Scroller(bg, {
+      valuechangeCallback: (newValue) => {
+        this.y = newValue;
+      }
+    });
+  }
+
   updateList(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
     if (!this.mPopularityRoom) {
       return;
@@ -292,7 +305,11 @@ export class RoomContainer extends Phaser.GameObjects.Container {
     if (rooms.length < 1) {
       return;
     }
-    for (let i = 0; i < rooms.length; i++) {
+    let len = rooms.length;
+    if (len > 6) {
+      len = 6;
+    }
+    for (let i = 0; i < len; i++) {
       const room = new RoomItem(this.scene, this.mKey, this.mDpr);
       room.setInfo(rooms[i]);
       room.on("enterRoom", this.onEnterRoomHandler, this);

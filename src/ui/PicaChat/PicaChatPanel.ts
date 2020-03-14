@@ -17,6 +17,7 @@ export class PicaChatPanel extends Panel {
     private mHornBtn: Phaser.GameObjects.Image;
     private mEmojiBtn: Phaser.GameObjects.Image;
     private mNavigateBtn: Phaser.GameObjects.Image;
+    private mOutputText: BBCodeText;
     private mTextArea: TextArea;
     private mInputText: InputPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
@@ -58,12 +59,12 @@ export class PicaChatPanel extends Panel {
 
         this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr;
 
-        this.mTextArea.resize(w, h);
-        this.mTextArea.childrenMap.child.textMask.resize(w, h);
+        this.mTextArea.childrenMap.child.setMinSize(w, h - 10 * this.dpr);
         this.mTextArea.layout();
-        this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2);
+        this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr);
         const textMask = this.mTextArea.childrenMap.text;
         textMask.y = 8 * this.dpr;
+        this.mTextArea.scrollToBottom();
         super.resize(w, h);
     }
 
@@ -145,7 +146,7 @@ export class PicaChatPanel extends Panel {
             .setInteractive();
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
 
-        const text = new BBCodeText(this.mScene, 0, 0, "", {
+        this.mOutputText = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: 14 * this.dpr + "px",
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
@@ -161,7 +162,7 @@ export class PicaChatPanel extends Panel {
             },
             wrap: {
                 mode: "char",
-                width: width - 6 * this.dpr
+                width: width - 12 * this.dpr
             }
         });
 
@@ -172,7 +173,7 @@ export class PicaChatPanel extends Panel {
             // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, 0.2),
             textWidth: width - 4 * this.dpr,
             textHeight: this.MAX_HEIGHT,
-            text,
+            text: this.mOutputText,
         })
             .layout();
         this.mNavigateBtn = this.scene.make.image(
@@ -194,7 +195,7 @@ export class PicaChatPanel extends Panel {
             this.mBackground,
             this.mTileContainer,
             this.mTextArea,
-            text,
+            this.mOutputText,
             background,
             this.mNavigateBtn
         ]);
@@ -206,6 +207,33 @@ export class PicaChatPanel extends Panel {
 
         // this.addActionListener();
 
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
+        this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
+        this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
+        this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
+        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
+        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
+        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
+        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
         this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
         this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
         this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
