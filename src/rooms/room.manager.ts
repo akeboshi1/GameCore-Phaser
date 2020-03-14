@@ -135,25 +135,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        // const { rows, cols, tileWidth, tileHeight } = this.mCurRoom.roomSize;
-        // const elements = this.mCurRoom.elementManager.getElements().map((ele: IElement) => ele.model);
-        // const terrains = this.mCurRoom.terrainManager.getElements().map((ele: IElement) => ele.model);
-        // const scene = {
-        //     id: this.mCurRoom.id,
-        //     rows,
-        //     cols,
-        //     tileWidth,
-        //     tileHeight
-        // };
         if (this.mCurRoom) {
             this.leaveScene(this.mCurRoom);
         }
         const room: DecorateRoom = new DecorateRoom(this);
         room.enter(scene.scene);
-        // setTimeout(() => {
-        //     room.addElements(elements, op_def.NodeType.ElementNodeType);
-        //     room.addElements(terrains, op_def.NodeType.TerrainNodeType);
-        // }, 1000);
+        const actor = scene.actor;
+        if (actor) room.setEnterPos(actor.x, actor.y);
         this.mRooms.push(room);
         this.mCurRoom = room;
     }

@@ -297,6 +297,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mNickName = this.scene.make.text({
       x: 7 * this.dpr,
       y: 9 * this.dpr,
+      text: "背包里空空如也",
       style: {
         fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -322,6 +323,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mSource = this.scene.make.text({
       x: 8 * dpr,
       y: 38 * dpr,
+      text: "可以通过商城购物获得",
       style: {
         fontSize: 10 * dpr,
         fontFamily: Font.DEFULT_FONT,

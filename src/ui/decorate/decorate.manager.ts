@@ -28,6 +28,12 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
         this.mPanel.show();
     }
 
+    public canPut(val: boolean) {
+        if (this.mPanel) {
+            this.mPanel.canPUt(val);
+        }
+    }
+
     public remove() {
         // TODO panel只有destroy。需要封装个仅移除的方法
         if (this.mPanel.parentContainer) {

@@ -95,10 +95,14 @@ export class SelectorElement {
             return;
         }
         const sprite = this.mElement.model;
-        if (this.mRoomService.canPut(this.mElement.getPosition(), sprite.currentCollisionArea, sprite.currentCollisionPoint)) {
+        const canPut = this.mRoomService.canPut(this.mElement.getPosition(), sprite.currentCollisionArea, sprite.currentCollisionPoint);
+        if (canPut) {
             this.element.setAlpha(1);
         } else {
             this.element.setAlpha(0.6);
+        }
+        if (this.mDecorateManager) {
+            this.mDecorateManager.canPut(canPut);
         }
     }
 

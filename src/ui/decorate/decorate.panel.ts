@@ -33,6 +33,8 @@ export class DecoratePanel extends Panel {
     private offset: Pos = new Pos();
     private mScaleRatio: number = 1;
 
+    private mCanPut: boolean;
+
     constructor(scene: Phaser.Scene, private mRoomService: DecorateRoom) {
         super(scene, mRoomService.world);
         this.setTween(false);
@@ -52,6 +54,17 @@ export class DecoratePanel extends Panel {
         this.updateArrowPos(ele);
 
         this.register();
+    }
+
+    public canPUt(val: boolean) {
+        if (val !== this.mCanPut) {
+            this.mCanPut = val;
+            if (val) {
+                this.mOkBtn.clearTint();
+            } else {
+                this.mOkBtn.setTint(0x666666);
+            }
+        }
     }
 
     public updatePos(x: number, y?: number, z?: number) {
@@ -404,7 +417,9 @@ export class DecoratePanel extends Panel {
     }
 
     private onAddHandler() {
-        this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
+        if (this.mCanPut) {
+            this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
+        }
     }
 
     private onMoveHandler(dir: number) {

@@ -246,7 +246,7 @@ class RoomList extends Phaser.GameObjects.Container {
       return;
     }
     this.mPopularityRoom.addItem(content.popularRooms);
-    this.mPlayerRoom.addItem(content.popularRooms);
+    this.mPlayerRoom.addItem(content.playerRooms);
     // this.mPlayerRoom.y = 0;
     this.mPlayerRoom.y = this.mPopularityRoom.y + this.mPopularityRoom.height + 22 * this.mDpr;
   }

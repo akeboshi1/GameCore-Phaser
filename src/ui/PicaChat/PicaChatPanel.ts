@@ -18,6 +18,7 @@ export class PicaChatPanel extends Panel {
     private mEmojiBtn: Phaser.GameObjects.Image;
     private mNavigateBtn: Phaser.GameObjects.Image;
     private mTextArea: TextArea;
+    private mInputText: InputPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setTween(false);
@@ -265,7 +266,11 @@ export class PicaChatPanel extends Panel {
 
     private onShowInputHanldler() {
         // new InputPanel(this.scene);
-         new InputPanel(this.scene, this.mWorld).once("close", this.sendChat, this);
+        if (this.mInputText) {
+            return;
+        }
+        this.mInputText = new InputPanel(this.scene, this.mWorld);
+        this.mInputText.once("close", this.sendChat, this);
     }
 
     private sendChat(val: string) {
@@ -273,6 +278,7 @@ export class PicaChatPanel extends Panel {
             return;
         }
         this.emit("chat", val);
+        this.mInputText = undefined;
     }
 }
 
@@ -285,7 +291,7 @@ class InputPanel extends Phaser.Events.EventEmitter {
         const height = scene.cameras.main.height;
         this.mBackground = scene.add.graphics();
         this.mBackground.fillStyle(0x0, 0.6);
-        this.mBackground.fillRect(0, 0, width, height).setInteractive();
+        this.mBackground.fillRect(0, 0, width, height).setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
         this.mInput = (<any>scene.add).rexInputText(6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
             fontSize: `${20 * world.uiRatio}px`,

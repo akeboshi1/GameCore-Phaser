@@ -47,12 +47,11 @@ export class FurniBag extends PacketHandler {
   }
 
   queryPackage(key: string, queryString?: string) {
-    // if (this.mSceneType === op_def.SceneTypeEnum.NORMAL_SCENE_TYPE) {
-    //   this.queryMarketPackage(key, queryString);
-    // } else {
-    //   this.queryEditPackage(key, queryString);
-    // }
-    this.queryMarketPackage(key, queryString);
+    if (this.mSceneType === op_def.SceneTypeEnum.NORMAL_SCENE_TYPE) {
+      this.queryMarketPackage(key, queryString);
+    } else {
+      this.queryEditPackage(key, queryString);
+    }
   }
 
   queryCommodityResource(id: string) {
@@ -119,8 +118,8 @@ export class FurniBag extends PacketHandler {
   }
 
   private queryEditPackage(key: string, queryString?: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
     content.category = op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
     content.page = 1;
     content.perPage = 30;

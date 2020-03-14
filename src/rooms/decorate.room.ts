@@ -54,6 +54,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mSelectorElement: SelectorElement;
     private mMap: number[][];
     private mScaleRatio: number;
+    private cameraPos: Pos;
 
     constructor(manager: IRoomManager) {
         super();
@@ -202,6 +203,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mCameraService.camera = camera;
         const zoom = Math.ceil(window.devicePixelRatio);
         this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
+        if (this.cameraPos) {
+            this.mCameraService.scrollTargetPoint(this.cameraPos.x, this.cameraPos.y);
+            this.mCameraService.syncCameraScroll();
+        }
         this.world.changeRoom(this);
         const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
@@ -283,6 +288,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             this.mTerrainManager.add(sprites);
         }
+    }
+
+    setEnterPos(x: number, y: number) {
+        this.cameraPos = new Pos(x, y);
     }
 
     /**

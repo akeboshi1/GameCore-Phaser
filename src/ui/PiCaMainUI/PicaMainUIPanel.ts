@@ -39,22 +39,22 @@ export class PicaMainUIPanel extends Panel {
         this.mDiamondValue.y = 68 * this.dpr;
         this.mDiamondValue.setText("2334234");
 
-        this.mSceneName = new IconText(this.scene, this.key, "room_icon.png", this.dpr);
+        this.mSceneName = new SceneName(this.scene, this.key, "room_icon.png", "setting_icon.png", this.dpr);
         this.mSceneName.setText("皮卡小镇");
         this.mSceneName.x = 15 * this.dpr;
-        this.mSceneName.y = 50 * this.dpr;
+        this.mSceneName.y = 55 * this.dpr;
         const bound = this.mSceneName.getBounds();
         this.mSceneName.setSize(bound.width, bound.height);
         this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
-        this.mSceneType = new IconText(this.scene, this.key, "setting_icon.png", this.dpr);
+        this.mSceneType = new IconText(this.scene, this.key, "star_icon.png", this.dpr);
         this.mSceneType.setText("公共场景");
         this.mSceneType.x = 15 * this.dpr;
-        this.mSceneType.y = 75 * this.dpr;
+        this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");
         this.mCounter = new IconText(this.scene, this.key, "counter_icon.png", this.dpr);
         this.mCounter.setText("54人");
         this.mCounter.x = 15 * this.dpr;
-        this.mCounter.y = 100 * this.dpr;
+        this.mCounter.y = 105 * this.dpr;
         this.mCounter.setColor("#27f6ff");
         this.add([this.mCoinValue, this.mDiamondValue, this.mSceneName, this.mSceneType, this.mCounter]);
 
@@ -150,7 +150,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
 }
 
 class IconText extends Phaser.GameObjects.Container {
-    private mText: Phaser.GameObjects.Text;
+    protected mText: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, key: string, frame: string, dpr: number = 1) {
         super(scene);
 
@@ -161,12 +161,12 @@ class IconText extends Phaser.GameObjects.Container {
 
         this.mText = scene.make.text({
             style: {
-                fontSize: 14 * dpr,
+                fontSize: 16 * dpr,
                 fontFamily: Font.DEFULT_FONT
             }
-        }, false);
+        }, false).setOrigin(0, 0.5);
         this.mText.x = icon.width / 2 + 8 * dpr;
-        this.mText.y = -icon.height / 2;
+        // this.mText.y = -icon.height / 2;
         this.mText.setStroke("#000000", 1 * dpr);
         this.add([icon, this.mText]);
     }
@@ -181,6 +181,25 @@ class IconText extends Phaser.GameObjects.Container {
 
     public setColor(color: string) {
         this.mText.setColor(color);
+    }
+}
+
+class SceneName extends IconText {
+    private mRightIcon: Phaser.GameObjects.Image;
+    private mDpr: number;
+    constructor(scene: Phaser.Scene, key: string, leftFrame: string, rightFrame: string, dpr: number = 1) {
+        super(scene, key, leftFrame, dpr);
+        this.mDpr = dpr;
+        this.mRightIcon = scene.make.image({
+            key,
+            frame: rightFrame
+        }, false);
+        this.add(this.mRightIcon);
+    }
+
+    public setText(val: string) {
+        super.setText(val);
+        this.mRightIcon.x = this.mText.x + this.mText.width + this.mRightIcon.width / 2 + 2 * this.mDpr;
     }
 }
 
