@@ -426,10 +426,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
     }
 
-    private addElement(sprite: ISprite) {
+    private addElement(sprite: ISprite, addMap?: boolean) {
         const nodeType = sprite.nodeType;
         if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
-            this.mElementManager.add([sprite]);
+            this.mElementManager.add([sprite], addMap);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             this.mTerrainManager.add([sprite]);
         }
@@ -443,8 +443,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             this.mSelectorElement = new SelectorElement(element);
             if (isClone) {
                 this.mSelectorElement.clone();
+                this.elementManager.removeMap(element.model);
             }
-            this.elementManager.removeMap(element.model);
+            this.mSelectorElement.update();
         } else {
             if (this.mSelectorElement.element === element) {
                 this.mSelectorElement.selecting = true;
@@ -585,7 +586,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const camera = this.cameraService.camera;
         const sprite = new Sprite(content.sprite, content.nodeType);
         sprite.setPosition((camera.scrollX + camera.width / 2) / this.world.scaleRatio, (camera.scrollY + camera.height / 2) / this.world.scaleRatio);
-        this.addElement(sprite);
+        this.addElement(sprite, false);
         const element = this.mElementManager.get(content.sprite.id);
         if (element) this.selectedElement(element, false);
     }
@@ -595,7 +596,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const spawnPoint = new SpawnPoint();
         const pos = content.spawnPoint;
         spawnPoint.setPosition(pos.x, pos.y);
-        this.addElement(spawnPoint);
+        this.addElement(spawnPoint, false);
 
         this.selectedElement(this.mElementManager.get(spawnPoint.id), false);
         // this.mSelectedElement.setSprite(spawnPoint);

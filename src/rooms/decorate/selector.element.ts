@@ -18,10 +18,13 @@ export class SelectorElement {
         this.mDecorateManager = new DecorateManager(this.mScene, this.mRoomService);
         this.mDecorateManager.setElement(mElement);
         const display = mElement.getDisplay();
-        display.once("initialized", () => {
+        if (!display.collisionArea) {
+            display.once("initialized", () => {
+                display.showRefernceArea();
+            });
+        } else {
             display.showRefernceArea();
-            this.checkCanPut();
-        });
+        }
         this.mSelecting = true;
 
         this.mDecorateManager.on("moveElement", this.onMoveElementHandler, this);
@@ -46,10 +49,11 @@ export class SelectorElement {
         this.checkCanPut();
     }
 
-    update(time: number, delta: number) {
+    update(time?: number, delta?: number) {
         if (this.mElement) {
             const pos = this.mElement.getPosition();
             this.mDecorateManager.updatePos(pos.x, pos.y);
+            this.checkCanPut();
         }
     }
 

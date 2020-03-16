@@ -285,6 +285,9 @@ export class UiManager extends PacketHandler {
             this.mCache.push(param);
             return;
         }
+        if (type === "MessageBox") {
+            type = "PicaMessageBox";
+        }
         const className: string = type + "Mediator";
         let mediator: IMediator = this.mMedMap.get(className);
         if (!mediator) {
@@ -439,6 +442,9 @@ export class UiManager extends PacketHandler {
     private hideMed(type: string) {
         if (!this.mMedMap) {
             return;
+        }
+        if (type === "MessageBox") {
+            type = "PicaMessageBox";
         }
         const medName: string = `${type}Mediator`;
         const mediator: IMediator = this.mMedMap.get(medName);

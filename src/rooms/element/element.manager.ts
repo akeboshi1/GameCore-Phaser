@@ -82,9 +82,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return Array.from(this.mElements.values());
     }
 
-    public add(sprites: ISprite[]) {
+    public add(sprites: ISprite[], addMap?: boolean) {
         for (const sprite of sprites) {
-            this._add(sprite);
+            this._add(sprite, addMap);
         }
     }
 
@@ -168,7 +168,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.fetchDisplay(ids);
     }
 
-    protected _add(sprite: ISprite): Element {
+    protected _add(sprite: ISprite, addMap?: boolean): Element {
+        if (addMap === undefined) addMap = true;
         let ele = this.mElements.get(sprite.id);
         if (ele) {
             ele.model = sprite;
@@ -176,7 +177,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele = new Element(sprite, this);
         }
         // if (!ele) ele = new Element(sprite, this);
-        this.addMap(sprite);
+        if (addMap) this.addMap(sprite);
         this.mElements.set(ele.id || 0, ele);
         return ele;
     }

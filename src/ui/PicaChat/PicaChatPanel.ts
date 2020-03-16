@@ -212,37 +212,6 @@ export class PicaChatPanel extends Panel {
         this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
         this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
         this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
-        this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
-        this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
-        this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
-        this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
-        this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
-        this.appendChat("[color=#ffffff][当前]小盆友：玩家注册后，账户等级为Lv1级。[/color]\n");
-        this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
     }
 
     private addActionListener() {

@@ -43,7 +43,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
 
     destroy() {
         if (this.parentContainer) {
-            this.parentContainer.remove(this);
+            this.parentContainer.remove(this, true);
         }
         if (this.mPanelTween) {
             this.mPanelTween.stop();

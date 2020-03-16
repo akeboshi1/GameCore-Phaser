@@ -92,11 +92,11 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
 
     protected onPointerDown(pointer) {
         this.changeDown();
-        this.emit("click", pointer, this);
     }
 
-    protected onPointerUp() {
+    protected onPointerUp(pointer) {
         this.changeNormal();
+        this.emit("click", pointer, this);
     }
 
     get label(): Phaser.GameObjects.Text {

@@ -94,7 +94,7 @@ export class PicaRoomListPanel extends Panel {
     this.mSeachBtn = this.scene.make.image({
       key: this.key,
       frame: "seach_btn.png"
-    }, false);
+    }, false).setInteractive();
     this.mSeachBtn.y = this.height / 2 - this.mSeachBtn.height / 2 + 12 * this.dpr;
 
     const seachText = this.scene.make.text({
@@ -135,6 +135,7 @@ export class PicaRoomListPanel extends Panel {
 
   private showRoomList() {
     this.addAt(this.mRoomList, 1);
+    // this.mRoomList.addMask();
     this.remove(this.mMyRoomList);
     this.emit("getRoomList");
   }
@@ -242,14 +243,30 @@ class RoomList extends Phaser.GameObjects.Container {
   }
 
   addMask() {
-    const bg = this.scene.make.graphics(undefined, false);
-    bg.fillStyle(0);
-    bg.fillRect(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height).setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+    const bg = this.scene.add.graphics(undefined);
+    bg.fillStyle(0, 0.2);
+    // bg.fillRect(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height);
+    // bg.setInteractive(new Phaser.Geom.Rectangle(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+    // bg.fillRect(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height).setInteractive(new Phaser.Geom.Rectangle(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+    const w = this.width * this.parentContainer.scale;
+    const h = this.height * this.parentContainer.scale;
+    bg.fillRect(0, 0, this.width, this.height);
+    bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+    bg.setPosition(this.parentContainer.x - w / 2, h / 2 - 40 * this.mDpr);
+    // bg.on("pointerup", () => {
+    //   Logger.getInstance().log("================");
+    // });
+
+    // this.addAt(bg, 0);
     this.setMask(bg.createGeometryMask());
 
     const scroll = new Scroller(bg, {
+      bounds: [
+        this.parentContainer.y,
+        this.parentContainer.y - h + (362 * this.mDpr / 2)
+      ],
       valuechangeCallback: (newValue) => {
-        this.y = newValue;
+        this.y = newValue - this.parentContainer.y - h / 2;
       }
     });
   }
@@ -471,9 +488,12 @@ class RoomItem extends Phaser.GameObjects.Container {
     this.mLabelText.x = this.mLabelImg.x - 7 * this.mDpr;
   }
 
-  protected onEnterRoomHandler() {
+  protected onEnterRoomHandler(pointer: Phaser.Input.Pointer) {
     if (this.mRoom) {
-      this.emit("enterRoom", this.mRoom.roomId);
+      if (Math.abs(pointer.downX - pointer.upX) < 10 * this.mDpr &&
+        Math.abs(pointer.downY - pointer.upY) < 10 * this.mDpr) {
+          this.emit("enterRoom", this.mRoom.roomId);
+      }
     }
   }
 }
