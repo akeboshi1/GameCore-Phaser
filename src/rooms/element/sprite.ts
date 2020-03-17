@@ -23,6 +23,7 @@ export interface ISprite {
     readonly currentCollisionArea: number[][];
     readonly currentWalkableArea: number[][];
     readonly currentCollisionPoint: Phaser.Geom.Point;
+    readonly hasInteractive: boolean;
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -280,6 +281,18 @@ export class Sprite implements ISprite {
         return this.mCurrentCollisionPoint;
     }
 
+    get hasInteractive(): boolean {
+        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+            return false;
+        }
+        const { animationName } = this.mCurrentAnimation;
+        const area = this.mDisplayInfo.getInteractiveArea(animationName);
+        if (area && area.length > 1) {
+            return true;
+        }
+        return false;
+    }
+
     public get originCollisionPoint(): Phaser.Geom.Point {
         return this._originCollisionPoint;
     }
@@ -306,6 +319,14 @@ export class Sprite implements ISprite {
             this._originWalkPoint.x = value[0];
             this._originWalkPoint.y = value[1];
         }
+    }
+
+    public getInteracviveArea(): op_def.IPBPoint2i[] {
+        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+            return;
+        }
+        const { animationName } = this.mCurrentAnimation;
+        return this.mDisplayInfo.getInteractiveArea(animationName);
     }
 
     private setAnimationData(animationName: string, direction: Direction) {

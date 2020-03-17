@@ -75,6 +75,8 @@ export interface IElement {
 
     showNickname();
 
+    scaleTween();
+
     removeMe(): void;
 
     toSprite(): op_client.ISprite;
@@ -180,6 +182,13 @@ export class Element extends BlockObject implements IElement {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
         }
+    }
+
+    scaleTween(): void {
+        if (!this.mDisplay) {
+            return;
+        }
+        this.mDisplay.scaleTween();
     }
 
     public play(animationName: string): void {

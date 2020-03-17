@@ -160,6 +160,8 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         }
     }
 
+    scaleTween(): void {}
+
     public showEffect() {
         this.addEffect(this.mBackEffect, Url.getRes("ui/vip/vip_effect_back.png"), Url.getRes("ui/vip/vip_effect_back.json"), true, 15, false, true);
         this.addEffect(this.mFrontEffect, Url.getRes("ui/vip/vip_effect_front.png"), Url.getRes("ui/vip/vip_effect_front.json"), true, 15, false, true);

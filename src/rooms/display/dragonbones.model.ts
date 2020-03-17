@@ -1,4 +1,4 @@
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_def } from "pixelpai_proto";
 
 export interface IDragonbonesModel {
     readonly discriminator: string;
@@ -13,6 +13,7 @@ export interface IDragonbonesModel {
     getWalkableArea(aniName: string): number[][];
     getOriginPoint(aniName: string): Phaser.Geom.Point;
     existAnimation(aniName: string): boolean;
+    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
 }
 
 export interface IAvatar {
@@ -86,6 +87,10 @@ export class DragonbonesModel implements IDragonbonesModel {
 
     public getOriginPoint(aniName): Phaser.Geom.Point {
         return new Phaser.Geom.Point(1, 1);
+    }
+
+    public getInteractiveArea(): op_def.IPBPoint2i[] {
+        return undefined;
     }
 
     existAnimation(aniName: string) {

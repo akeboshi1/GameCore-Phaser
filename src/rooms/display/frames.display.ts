@@ -19,6 +19,7 @@ export class FramesDisplay extends DisplayObject {
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mHasAnimation: boolean = false;
+    protected mScaleTween: Phaser.Tweens.Tween;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
     public setPosition(x?: number, y?: number, z?: number): this {
         super.setPosition(x, y, z);
@@ -111,6 +112,31 @@ export class FramesDisplay extends DisplayObject {
         });
     }
 
+    public scaleTween() {
+        const display = this.mSprites.get(DisplayField.STAGE);
+        if (!display) {
+            return;
+        }
+        if (this.mScaleTween) {
+            return;
+        }
+        const tmp = display.scale;
+        this.mScaleTween = this.scene.tweens.add({
+            targets: display,
+            duration: 100,
+            scale: tmp * 1.25,
+            yoyo: true,
+            repeat: 0,
+            onComplete: () => {
+                display.scale = 1;
+                if (this.mScaleTween) {
+                    // this.mScaleTween.destroy();
+                    this.mScaleTween = undefined;
+                }
+            }
+        });
+    }
+
     public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
         super.setInteractive(shape, callback, dropZone);
         this.mSprites.forEach((sprite) => {
@@ -134,6 +160,10 @@ export class FramesDisplay extends DisplayObject {
         if (this.mFadeTween) {
             this.clearFadeTween();
             this.mFadeTween = undefined;
+        }
+        if (this.mScaleTween) {
+            this.mScaleTween.stop();
+            this.mScaleTween = undefined;
         }
 
         this.mDisplayDatas.clear();
@@ -197,8 +227,8 @@ export class FramesDisplay extends DisplayObject {
         this.mBaseLoc = animations.baseLoc;
         this.mCollisionArea = animations.collisionArea;
         this.mOriginPoint = animations.originPoint;
-        sprite.x = this.baseLoc.x;
-        sprite.y = this.baseLoc.y;
+        sprite.x = this.baseLoc.x + sprite.width / 2;
+        sprite.y = this.baseLoc.y + sprite.height / 2;
     }
 
     private createDisplay(field: DisplayField) {
@@ -208,15 +238,15 @@ export class FramesDisplay extends DisplayObject {
         // Create Sprite
         if (!sprite) {
             if (this.mHasAnimation) {
-                sprite = this.scene.make.sprite(undefined, false).setOrigin(0, 0);
+                sprite = this.scene.make.sprite(undefined, false);
             } else {
-                sprite = this.scene.make.image(undefined, false).setOrigin(0, 0);
+                sprite = this.scene.make.image(undefined, false);
                 sprite.setTexture(data.gene);
             }
             this.mSprites.set(field, sprite);
             this.play({ animationName: data.animationName, flip: false }, field);
-            sprite.x = this.baseLoc.x;
-            sprite.y = this.baseLoc.y;
+            sprite.x = this.baseLoc.x + sprite.width / 2;
+            sprite.y = this.baseLoc.y + sprite.height / 2;
             if (this.mAntial) {
                 sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
             }

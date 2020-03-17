@@ -142,6 +142,8 @@ export class Terrain extends BlockObject implements IElement {
 
     public setAlpha(val: number) { }
 
+    public scaleTween() { }
+
     public destroy() {
         if (this.mBlockable && this.mDisplay) {
             this.roomService.removeBlockObject(this);

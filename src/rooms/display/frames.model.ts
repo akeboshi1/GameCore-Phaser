@@ -1,4 +1,4 @@
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
@@ -20,6 +20,7 @@ export interface IFramesModel {
     existAnimation(aniName: string): boolean;
     getCollisionArea(aniName: string, flip: boolean): number[][];
     getWalkableArea(aniName: string, flip: boolean): number[][];
+    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
     destroy();
 }
@@ -107,6 +108,11 @@ export class FramesModel implements IFramesModel {
             return Helpers.flipArray(ani.walkableArea);
         }
         return ani.walkableArea;
+    }
+
+    public getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined {
+        const ani = this.getAnimations(aniName);
+        return ani.interactiveArea;
     }
 
     public getOriginPoint(aniName, flip: boolean = false): Phaser.Geom.Point {

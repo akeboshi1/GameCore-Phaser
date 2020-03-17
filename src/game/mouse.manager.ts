@@ -3,11 +3,9 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService, Room } from "../rooms/room";
-import { Logger } from "../utils/log";
 import { MessageType } from "../const/MessageType";
-import { TerrainDisplay } from "../rooms/display/terrain.display";
-import { DisplayObject } from "../rooms/display/display.object";
-import { Data } from "phaser";
+import { FramesDisplay } from "../rooms/display/frames.display";
+import { Element } from "../rooms/element/element";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -102,7 +100,17 @@ export class MouseManager extends PacketHandler {
         }
         let id = 0;
         if (gameobject.parentContainer) {
+            const com = gameobject.parentContainer;
             id = gameobject.parentContainer.getData("id");
+            if (pointer.isDown === false) {
+                if (com instanceof FramesDisplay) {
+                    // com.element.scaleTween();
+                    const ele = com.element;
+                    if (ele instanceof Element) {
+                        com.scaleTween();
+                    }
+                }
+            }
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;

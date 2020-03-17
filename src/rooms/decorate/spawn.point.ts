@@ -100,4 +100,8 @@ export class SpawnPoint implements ISprite {
     get currentCollisionPoint() {
         return new Phaser.Geom.Point(0, 0);
     }
+
+    get hasInteractive() {
+        return false;
+    }
 }

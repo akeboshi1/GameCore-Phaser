@@ -10,6 +10,8 @@ export interface IAnimationData {
     walkableArea?: number[][];
     originPoint: Phaser.Geom.Point;
 
+    readonly interactiveArea?: op_def.IPBPoint2i[];
+
     toClient(): op_gameconfig.IAnimation;
 }
 
@@ -127,5 +129,9 @@ export class Animation implements IAnimationData {
 
     get originPoint(): Phaser.Geom.Point {
         return this.mOriginPoint;
+    }
+
+    get interactiveArea(): op_def.IPBPoint2i[] {
+        return this.mInteractiveArea;
     }
 }
