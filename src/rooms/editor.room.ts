@@ -96,9 +96,11 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
-        this.mCameraService.camera = this.scene.cameras.main;
-        const mainCameras = this.mScene.cameras.main;
-        mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        const camera = this.scene.cameras.main;
+        this.mCameraService.camera = camera;
+        const zoom = this.world.scaleRatio;
+        // mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
+        this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         this.mCameraService.centerCameas();
@@ -195,14 +197,13 @@ export class EditorRoom extends Room implements EditorRoomService {
                 if (!this.mSelectedElementEffect) {
                     return;
                 }
-                Logger.getInstance().log("selecting: ", this.mSelectedElementEffect.selecting);
                 if (!this.mSelectedElementEffect.selecting) {
                     return;
                 }
                 if (!this.mouseFollow) {
                     return;
                 }
-                const pos = this.mMouseFollow.transitionGrid(pointer.worldX, pointer.worldY);
+                const pos = this.mMouseFollow.transitionGrid(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
                 if (pos) {
                     this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
                     this.mLayManager.depthSurfaceDirty = true;

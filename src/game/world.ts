@@ -79,8 +79,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (!config.game_id) {
             throw new Error(`Config.game_id is required.`);
         }
-        if (!config.devecePixelRatio) {
-            config.devecePixelRatio = window.devicePixelRatio;
+        if (!config.devicePixelRatio) {
+            config.devicePixelRatio = window.devicePixelRatio || 1;
         }
         if (config.width === undefined) {
             config.width = window.innerWidth;
@@ -88,8 +88,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (config.height === undefined) {
             config.height = window.innerHeight;
         }
-        this.mScaleRatio = Math.ceil(config.devecePixelRatio);
-        this.mUIRatio = Math.round(window.devicePixelRatio);
+        this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
+        this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = config.width / this.DEFAULT_WIDTH;
         const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = Math.min(scaleW, scaleH);

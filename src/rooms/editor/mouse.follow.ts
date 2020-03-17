@@ -7,7 +7,6 @@ import { op_client, op_def } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
 import { ISprite, Sprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
-import { Logger } from "../../utils/log";
 import { IRoomService } from "../room";
 import { IPosition45Obj, Position45 } from "../../utils/position45";
 
@@ -18,6 +17,7 @@ export class MouseFollow {
     private mElementManager: IElementManager;
     private mSprite: ISprite;
     private mAlignGrid: boolean;
+    private mScaleRatio: number = 1;
 
     /**
      * 笔触大小
@@ -25,6 +25,7 @@ export class MouseFollow {
     private mSize: number = 1;
     constructor(private mScene: Phaser.Scene, private mRoomService: EditorRoomService) {
         this.mLayerManager = this.mRoomService.layerManager;
+        this.mScaleRatio = this.mRoomService.world.scaleRatio;
     }
 
     setDisplay(content: op_client.IOP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE) {
@@ -38,8 +39,8 @@ export class MouseFollow {
         this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
         const size = this.mNodeType === NodeType.TerrainNodeType ? this.mSize : 1;
         this.mDisplay.setDisplay(this.mSprite, size);
+        this.mDisplay.scale = this.mScaleRatio;
         this.mLayerManager.addToSceneToUI(this.mDisplay);
-
         if (this.mNodeType === NodeType.TerrainNodeType) {
             this.mElementManager = this.mRoomService.terrainManager;
         } else if (this.mNodeType === NodeType.ElementNodeType || this.mNodeType === NodeType.SpawnPointType) {
@@ -158,16 +159,16 @@ export class MouseFollow {
     }
 
     private onPointerMoveHandler(pointer) {
-        this.updatePos(pointer.worldX, pointer.worldY);
+        this.updatePos(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
     }
 
     private getPosition(rows: number = 0, cols: number = 0) {
         if (this.mNodeType === op_def.NodeType.TerrainNodeType) {
-            const pos45 = this.mRoomService.transformTo45(new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols));
+            const pos45 = this.mRoomService.transformTo45(new Pos(this.mDisplay.x / this.mScaleRatio + rows, this.mDisplay.y / this.mScaleRatio + cols));
             return pos45;
         }
         // TODO 多个物件仅支持地块
-        const pos = new Pos(this.mDisplay.x + rows, this.mDisplay.y + cols, this.mDisplay.z);
+        const pos = new Pos(this.mDisplay.x / this.mScaleRatio + rows, this.mDisplay.y / this.mScaleRatio + cols, this.mDisplay.z);
         return pos;
     }
 
@@ -180,7 +181,7 @@ export class MouseFollow {
         } else {
             this.size++;
         }
-        this.updatePos(pointer.worldX, pointer.worldY);
+        this.updatePos(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
     }
 
     private updatePos(worldX: number, worldY: number) {
@@ -191,7 +192,7 @@ export class MouseFollow {
         if (!pos) {
             return;
         }
-        this.mDisplay.setLocation(pos.x, pos.y);
+        this.mDisplay.setLocation(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
     }
 
     set alignGrid(val: boolean) {
@@ -235,8 +236,10 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     protected mOffset: Phaser.Geom.Point;
     private mDisplay: FramesDisplay[];
     private mNodeType: op_def.NodeType;
+    private mScaleRatio: number = 1;
     constructor(scene: Phaser.Scene, protected mRoomService: IRoomService) {
         super(scene);
+        this.mScaleRatio = this.mRoomService.world.scaleRatio;
         this.mOffset = new Phaser.Geom.Point();
     }
 
@@ -259,8 +262,8 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
             sceneHeight: (size + size) * (tileHeight / 2)
         };
 
-        this.mOffset.x = -(this.mTileSize.sceneWidth / 2);
-        this.mOffset.y = -((this.mTileSize.sceneHeight - (size % 2 === 0 ? 0 : tileHeight)) / 2);
+        this.mOffset.x = -(this.mTileSize.sceneWidth / 2 * this.mScaleRatio);
+        this.mOffset.y = -((this.mTileSize.sceneHeight / this.mScaleRatio - (size % 2 === 0 ? 0 : tileHeight)) / 2);
 
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {

@@ -43,11 +43,14 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     protected miniViewPort = new Phaser.Geom.Rectangle();
     protected mMoving: boolean;
     protected mTarget: any;
-    protected readonly zoom: number;
+    protected readonly zoom: number = 1;
 
     constructor(protected mRoomService: IRoomService) {
         super();
-        this.zoom = Math.ceil(window.devicePixelRatio || 1);
+        if (this.mRoomService && this.mRoomService.world) {
+            this.zoom = this.mRoomService.world.scaleRatio;
+        }
+        // this.zoom = this.mRoomService.world.scaleRatio;
     }
 
     public getViewPort(): Phaser.Geom.Rectangle | undefined {
