@@ -6,7 +6,7 @@ import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { Terrain } from "./terrain";
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
-import { IElement } from "../element/element";
+import { IElement, InputEnable } from "../element/element";
 
 export class EditorTerrainManager extends TerrainManager {
     constructor(room: IRoomService, listener?: SpriteAddCompletedListener) {
@@ -67,7 +67,7 @@ export class EditorTerrainManager extends TerrainManager {
             terrain = new Terrain(sprite, this);
             terrain.setBlockable(false);
             terrain.setRenderable(true);
-            terrain.setInputEnable(true);
+            terrain.setInputEnable(InputEnable.Enable);
         } else {
             return;
         }

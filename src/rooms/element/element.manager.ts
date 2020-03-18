@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
-import { Element, IElement } from "./element";
+import { Element, IElement, InputEnable } from "./element";
 import { IRoomService } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
@@ -84,7 +84,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public add(sprites: ISprite[], addMap?: boolean) {
         for (const sprite of sprites) {
-            // this._add(sprite, addMap);
+            this._add(sprite, addMap);
         }
     }
 
@@ -175,7 +175,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.model = sprite;
         } else {
             ele = new Element(sprite, this);
-            ele.setInputEnable(true);
+            ele.setInputEnable(InputEnable.Interactive);
         }
         // if (!ele) ele = new Element(sprite, this);
         if (addMap) this.addMap(sprite);

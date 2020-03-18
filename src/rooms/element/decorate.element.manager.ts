@@ -1,6 +1,6 @@
 import { ElementManager } from "./element.manager";
 import { ISprite, Sprite } from "./sprite";
-import { Element } from "./element";
+import { Element, InputEnable } from "./element";
 import { DecorateRoomService } from "../decorate.room";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
@@ -84,6 +84,21 @@ export class DecorateElementManager extends ElementManager {
       }
     }
   }
+
+  protected _add(sprite: ISprite, addMap?: boolean): Element {
+    if (addMap === undefined) addMap = true;
+    let ele = this.mElements.get(sprite.id);
+    if (ele) {
+        ele.model = sprite;
+    } else {
+        ele = new Element(sprite, this);
+        ele.setInputEnable(InputEnable.Enable);
+    }
+    // if (!ele) ele = new Element(sprite, this);
+    if (addMap) this.addMap(sprite);
+    this.mElements.set(ele.id || 0, ele);
+    return ele;
+}
 
   protected onSync(packet: PBpacket) {
     const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;

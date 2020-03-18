@@ -4,7 +4,7 @@ import {PBpacket} from "net-socket-packet";
 import {op_editor, op_def, op_client} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {Pos} from "../../utils/pos";
-import { Element } from "./element";
+import { Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
 import { EditorRoomService } from "../editor.room";
 
@@ -71,7 +71,7 @@ export class EditorElementManager extends ElementManager {
         if (!ele) ele = new Element(sprite, this);
         ele.setBlockable(false);
         ele.setRenderable(true);
-        ele.setInputEnable(true);
+        ele.setInputEnable(InputEnable.Enable);
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         return ele;

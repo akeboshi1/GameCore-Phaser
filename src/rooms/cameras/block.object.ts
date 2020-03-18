@@ -1,9 +1,12 @@
 import { ElementDisplay } from "../display/element.display";
+import { InputEnable } from "../element/element";
+import { ISprite } from "../element/sprite";
 
 export abstract class BlockObject {
     protected mDisplay?: ElementDisplay;
     protected mRenderable: boolean = false;
-    protected mInputEnable: boolean = false;
+    protected mModel: ISprite;
+    protected mInputEnable: InputEnable = InputEnable.Diasble;
     constructor() {
     }
 
@@ -48,14 +51,22 @@ export abstract class BlockObject {
         // this.mDisplay.alpha = alpha;
     }
 
-    public setInputEnable(val: boolean) {
+    public setInputEnable(val: InputEnable) {
         if (this.mInputEnable !== val) {
             this.mInputEnable = val;
             if (this.mDisplay) {
-                if (val) {
-                    this.mDisplay.setInteractive();
-                } else {
-                    this.mDisplay.disableInteractive();
+                switch (val) {
+                    case InputEnable.Interactive:
+                        if (this.mModel && this.mModel.hasInteractive) {
+                            this.mDisplay.setInteractive();
+                        }
+                        break;
+                    case InputEnable.Enable:
+                        this.mDisplay.setInteractive();
+                        break;
+                    default:
+                        this.mDisplay.disableInteractive();
+                        break;
                 }
             }
         }

@@ -20,11 +20,14 @@ export class PicaChatPanel extends Panel {
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
     private mInputText: InputPanel;
+    private mScale: number = 1;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setTween(false);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
+        this.scale = 1;
+        this.mScale = this.mWorld.uiScaleNew;
     }
 
     show() {
@@ -41,12 +44,13 @@ export class PicaChatPanel extends Panel {
     }
 
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width / this.scale;
+        const zoom = this.mScale;
+        const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         const frame = this.scene.textures.getFrame(this.key, "title_bg.png");
-        const scaleRatio = (width / frame.width) * this.scale;
+        const scaleRatio = (width / frame.width) * zoom;
         this.mTitleBg.scaleX = scaleRatio;
-        this.mTitleBg.x = width / 2;
+        this.mTitleBg.x = width / 2 / zoom;
 
         this.y = height - this.height * this.scale;
         this.mBackground.clear();
@@ -54,14 +58,14 @@ export class PicaChatPanel extends Panel {
         this.mBackground.fillRect(0, 0, w, h);
         // this.mBackground.setInteractive();
 
-        this.mNavigateBtn.x = width - this.mNavigateBtn.width / 2 - 5 * this.dpr;
-        this.mNavigateBtn.y = h - this.mNavigateBtn.height / 2 - 5 * this.dpr;
+        this.mNavigateBtn.x = width - this.mNavigateBtn.width / 2 - 5 * this.dpr * zoom;
+        this.mNavigateBtn.y = h - this.mNavigateBtn.height / 2 - 5 * this.dpr * zoom;
 
-        this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr;
+        this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr * zoom;
 
-        this.mTextArea.childrenMap.child.setMinSize(w, h - 2 * this.dpr);
+        this.mTextArea.childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
         this.mTextArea.layout();
-        this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr);
+        this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr * zoom);
         const textMask = this.mTextArea.childrenMap.text;
         textMask.y = 8 * this.dpr;
         this.mTextArea.scrollToBottom();
@@ -88,6 +92,7 @@ export class PicaChatPanel extends Panel {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         this.mBackground = this.scene.make.graphics(undefined, false);
+        const zoom = this.mScale;
         this.setSize(width, 135 * this.dpr);
 
         this.mTileContainer = this.scene.make.container(undefined, false);
@@ -99,6 +104,7 @@ export class PicaChatPanel extends Panel {
                 },
                 false
             )
+            .setScale(zoom)
             .setInteractive();
 
         this.mTitleBg = this.scene.make.image(
@@ -107,50 +113,54 @@ export class PicaChatPanel extends Panel {
                 frame: "title_bg.png"
             },
             false
-        );
+        )
+        .setScale(zoom);
         this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.mChatBtn = this.scene.make
             .image(
                 {
-                    x: 33 * this.dpr,
+                    x: 33 * this.dpr * zoom,
                     key: this.key,
                     frame: "chat_icon.png"
                 },
                 false
             )
+            .setScale(zoom)
             .setInteractive();
         this.mChatBtn.y = -this.mChatBtn.height / 2 + this.mTitleBg.height;
 
         this.mHornBtn = this.scene.make
             .image(
                 {
-                    x: 96 * this.dpr,
+                    x: 96 * this.dpr * zoom,
                     key: this.key,
                     frame: "horn_icon.png"
                 },
                 false
             )
+            .setScale(zoom)
             .setInteractive();
         this.mHornBtn.y = -this.mHornBtn.height / 2 + this.mTitleBg.height;
 
         this.mEmojiBtn = this.scene.make
             .image(
                 {
-                    x: 155 * this.dpr,
+                    x: 155 * this.dpr * zoom,
                     key: this.key,
                     frame: "emoji.png"
                 },
                 false
             )
+            .setScale(zoom)
             .setInteractive();
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
 
         this.mOutputText = new BBCodeText(this.mScene, 0, 0, "", {
-            fontSize: 14 * this.dpr + "px",
+            fontSize: 14 * this.dpr * zoom + "px",
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
-            strokeThickness: 1 * this.dpr,
+            strokeThickness: 1 * this.dpr * zoom,
             textMask: false,
             shadow: {
                 offsetX: 0,
@@ -162,16 +172,16 @@ export class PicaChatPanel extends Panel {
             },
             wrap: {
                 mode: "char",
-                width: width - 12 * this.dpr
+                width: width - 12 * this.dpr * zoom
             }
         });
 
         const background = this.scene.make.graphics(undefined, false);
         this.mTextArea = new TextArea(this.mScene, {
-            x: width / 2 + 4 * this.dpr,
-            y: 160 * this.dpr,
+            x: width / 2 + 4 * this.dpr * zoom,
+            y: 160 * this.dpr * zoom,
             // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, 0.2),
-            textWidth: width - 4 * this.dpr,
+            textWidth: width - 4 * this.dpr * zoom,
             textHeight: this.MAX_HEIGHT,
             text: this.mOutputText,
         })
@@ -182,7 +192,9 @@ export class PicaChatPanel extends Panel {
                 frame: "more_btn.png"
             },
             false
-        ).setInteractive();
+        )
+        .setScale(zoom)
+        .setInteractive();
 
         this.mTileContainer.add([
             this.mTitleBg,

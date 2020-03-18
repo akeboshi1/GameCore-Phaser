@@ -106,6 +106,11 @@ export interface MovePath {
     onComplete?: Function;
 }
 
+export enum InputEnable {
+    Diasble,
+    Enable,
+    Interactive
+}
 export class Element extends BlockObject implements IElement {
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
@@ -144,7 +149,6 @@ export class Element extends BlockObject implements IElement {
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
-    protected mModel: ISprite;
     protected mShopEntity: ShopEntity;
     protected mBlockable: boolean = true;
 
@@ -178,6 +182,9 @@ export class Element extends BlockObject implements IElement {
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
         const frameModel = <IFramesModel> this.mDisplayInfo;
+        if (this.mInputEnable === InputEnable.Interactive) {
+            this.setInputEnable(this.mInputEnable);
+        }
         if (frameModel && frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
@@ -578,9 +585,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            if (this.mInputEnable) {
-                this.mDisplay.setInteractive();
-            }
+            this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
             this.setDepth();
             // this.mDisplay.showRefernceArea();
