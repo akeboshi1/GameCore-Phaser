@@ -123,9 +123,7 @@ export class ComboBox extends Phaser.GameObjects.Container implements ISelectCal
             style: { fill: "#F7EDED", fontSize: 18 }
         }, false);
 
-        this.add(this.mBg);
-        this.add(this.mArrow);
-        this.add(this.mtxt);
+        this.add([this.mBg, this.mArrow, this.mtxt]);
 
         this.mBg.setInteractive();
         this.mBg.on("pointerdown", this.openHandler, this);
@@ -207,16 +205,25 @@ export class SelectCallItem extends Phaser.GameObjects.Container {
         this.mSelectBG.fillStyle(COLOR, .8);
         this.mSelectBG.fillRect(-wid >> 1, -hei >> 1, wid, hei);
         this.mSelectBG.visible = false;
-        this.addAt(this.mSelectBG, 0);
-        this.add(this.mText);
+
+        this.add([this.mSelectBG, this.mText]);
 
         this.setSize(wid, hei);
 
         this.setInteractive();
+        this.addListen();
+    }
+
+    public addListen() {
         this.on("pointerover", this.overHandler, this);
         this.on("pointerout", this.outHandler, this);
         this.on("pointerdown", this.selectHandler, this);
+    }
 
+    public removeListen() {
+        this.off("pointerover", this.overHandler, this);
+        this.off("pointerout", this.outHandler, this);
+        this.off("pointerdown", this.selectHandler, this);
     }
 
     public set itemData(val: ISelectCallItemData) {
@@ -231,6 +238,7 @@ export class SelectCallItem extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
+        this.removeAllListeners();
         this.mText.destroy(true);
         this.mSelectBG.destroy(true);
         this.mData = null;
