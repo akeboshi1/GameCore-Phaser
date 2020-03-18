@@ -48,6 +48,7 @@ export class Terrain extends BlockObject implements IElement {
             this.createDisplay();
         }
         this.mDisplayInfo = displayInfo;
+        this.mDisplay.once("initialized", this.onInitializedHandler, this);
         this.mDisplay.load(this.mDisplayInfo);
     }
 
@@ -207,6 +208,12 @@ export class Terrain extends BlockObject implements IElement {
                 throw new Error("layerManager is undefined");
             }
             layerManager.depthGroundDirty = true;
+        }
+    }
+
+    protected onInitializedHandler() {
+        if (this.mDisplay) {
+            // this.mDisplay.setInteractive();
         }
     }
 

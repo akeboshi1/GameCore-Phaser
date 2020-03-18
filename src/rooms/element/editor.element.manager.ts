@@ -71,6 +71,7 @@ export class EditorElementManager extends ElementManager {
         if (!ele) ele = new Element(sprite, this);
         ele.setBlockable(false);
         ele.setRenderable(true);
+        ele.setInputEnable(true);
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
         return ele;

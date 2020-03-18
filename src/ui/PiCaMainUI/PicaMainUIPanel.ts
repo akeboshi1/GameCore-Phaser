@@ -342,7 +342,8 @@ class ProgressBar extends Phaser.GameObjects.Container {
         this.mMaskGraphics.fillStyle(0xFF9900);
         this.mMaskGraphics.fillRoundedRect(0, progress.y - progress.height / 2 + 1 * this.dpr, this.width, progress.height, 10);
         this.add(this.mProgress);
-        this.mProgress.mask = new Phaser.Display.Masks.BitmapMask(this.scene, this.mMaskGraphics);
+        this.mProgress.mask = new Phaser.Display.Masks.GeometryMask(this.scene, this.mMaskGraphics);
+        // this.mProgress.mask = new Phaser.Display.Masks.BitmapMask(this.scene, this.mMaskGraphics);
         this.mMaskGraphics.x = offsetX;
         this.mMaskGraphics.y = offsetY;
     }

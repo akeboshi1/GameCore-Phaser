@@ -3,6 +3,7 @@ import { ElementDisplay } from "../display/element.display";
 export abstract class BlockObject {
     protected mDisplay?: ElementDisplay;
     protected mRenderable: boolean = false;
+    protected mInputEnable: boolean = false;
     constructor() {
     }
 
@@ -45,6 +46,19 @@ export abstract class BlockObject {
     public fadeAlpha(alpha: number) {
         if (!this.mDisplay) return;
         // this.mDisplay.alpha = alpha;
+    }
+
+    public setInputEnable(val: boolean) {
+        if (this.mInputEnable !== val) {
+            this.mInputEnable = val;
+            if (this.mDisplay) {
+                if (val) {
+                    this.mDisplay.setInteractive();
+                } else {
+                    this.mDisplay.disableInteractive();
+                }
+            }
+        }
     }
 
     public destroy() {

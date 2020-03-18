@@ -61,15 +61,6 @@ export class FramesDisplay extends DisplayObject {
         if (!ani) {
             return;
         }
-        // if (sprite && sprite instanceof Phaser.GameObjects.Sprite) {
-        //     if (ani.frameName.length > 1) {
-        //         sprite.play(`${data.gene}_${animation.animationName}`);
-        //     } else {
-        //         sprite.setTexture(data.gene, ani.frameName[0]);
-        //     }
-        // } else {
-        //     sprite.setTexture(data.gene, ani.frameName[0]);
-        // }
         if (sprite) {
             if (sprite instanceof Phaser.GameObjects.Sprite) {
                 if (ani.frameName.length > 1) {
@@ -138,15 +129,15 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
-        super.setInteractive(shape, callback, dropZone);
+        // super.setInteractive(shape, callback, dropZone);
         this.mSprites.forEach((sprite) => {
-            sprite.setInteractive();
+            sprite.setInteractive({ pixelPerfect: true });
         });
         return this;
     }
 
     public disableInteractive(): this {
-        super.disableInteractive();
+        // super.disableInteractive();
         this.mSprites.forEach((sprite) => {
             sprite.disableInteractive();
         });
@@ -241,7 +232,7 @@ export class FramesDisplay extends DisplayObject {
                 sprite = this.scene.make.sprite(undefined, false);
             } else {
                 sprite = this.scene.make.image(undefined, false);
-                sprite.setTexture(data.gene);
+                // sprite.setTexture(data.gene);
             }
             this.mSprites.set(field, sprite);
             this.play({ animationName: data.animationName, flip: false }, field);
@@ -252,10 +243,10 @@ export class FramesDisplay extends DisplayObject {
             }
             this.addAt(sprite, field);
         }
-        sprite.setInteractive({ pixelPerfect: true });
+        // sprite.setInteractive({ pixelPerfect: true });
         this.setData("id", data.id);
 
-        this.mSprites.set(field, sprite);
+        // this.mSprites.set(field, sprite);
         this.emit("initialized", this);
     }
 

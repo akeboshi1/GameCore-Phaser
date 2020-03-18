@@ -60,30 +60,6 @@ export class MainUIScene extends BasicScene {
   }
 
   public update() {
-    if (!this.mDebugLoger) {
-      this.mDebugLoger = this.mRoom.world.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
-    }
-    if (this.mDebugLoger && this.mDebugLoger.isShow()) {
-      this.mDebugLoger.update(this.game.loop.actualFps.toFixed());
-    }
-    const len: number = this.timeOutCallerList.length;
-    for (let i: number = 1; i < len; i++) {
-      if (this.timeOutCancelMap[i]) {
-        continue;
-      }
-      const caller = this.timeOutCallerList[i];
-      const callerObj = this.timeOutTimeMap[i];
-      if (!caller || !callerObj) {
-        continue;
-      }
-      const begin: number = callerObj.now;
-      const delay: number = callerObj.delay;
-      const nowTime: number = Date.now();
-      if (nowTime - begin > delay) {
-        callerObj.now = nowTime;
-        caller();
-      }
-    }
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
     // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +

@@ -20,13 +20,13 @@ export enum MouseEvent {
 }
 
 export class MouseManager extends PacketHandler {
-    private mActivePointer: Phaser.Input.Pointer;
     private mGroundLayer: Phaser.GameObjects.Container;
     private running = false;
     // ===============================
     private mGame: Phaser.Game;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
+    private mGameObject: Phaser.GameObjects.GameObject;
     private mDownDelay: number = 2000;
     private mDownTime: any;
     private readonly zoom: number;
@@ -43,7 +43,6 @@ export class MouseManager extends PacketHandler {
         this.mScene = room.scene;
         this.mRoom = <Room> room;
         if (!this.mScene) return;
-        this.mActivePointer = this.mScene.input.activePointer;
         try {
             room.addMouseListen();
         } catch (e) {
@@ -68,49 +67,50 @@ export class MouseManager extends PacketHandler {
     }
 
     public onUpdate(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject): void {
-        if (this.running === false || this.mActivePointer === undefined) {
+        if (this.running === false || pointer === undefined) {
             return;
         }
         const events: number[] = [];
-        if (this.mActivePointer.leftButtonDown()) {
+        if (pointer.leftButtonDown()) {
             events.push(MouseEvent.LeftMouseDown);
-        } else if (this.mActivePointer.leftButtonReleased()) {
+        } else if (pointer.leftButtonReleased()) {
             events.push(MouseEvent.LeftMouseUp);
         }
-        if (this.mActivePointer.middleButtonDown()) {
+        if (pointer.middleButtonDown()) {
             events.push(MouseEvent.WheelDown);
-        } else if (this.mActivePointer.middleButtonReleased()) {
+        } else if (pointer.middleButtonReleased()) {
             events.push(MouseEvent.WheelUp);
         }
-        if (this.mActivePointer.rightButtonDown()) {
+        if (pointer.rightButtonDown()) {
             events.push(MouseEvent.RightMouseDown);
-        } else if (this.mActivePointer.rightButtonReleased()) {
+        } else if (pointer.rightButtonReleased()) {
             events.push(MouseEvent.RightMouseUp);
         }
+        let id = 0;
         if (pointer.isDown === false) {
             const diffX = Math.abs(pointer.downX - pointer.upX);
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
                 this.worldService.emitter.emit("Tap", pointer, gameobject);
+
+                if (gameobject && gameobject.parentContainer) {
+                    const com = gameobject.parentContainer;
+                    id = gameobject.parentContainer.getData("id");
+                    if (pointer.isDown === false) {
+                        if (com instanceof FramesDisplay) {
+                            // com.element.scaleTween();
+                            const ele = com.element;
+                            if (ele instanceof Element) {
+                                com.scaleTween();
+                            }
+                        }
+                    }
+                }
             }
         }
         if (events.length === 0) {
             return;
-        }
-        let id = 0;
-        if (gameobject.parentContainer) {
-            const com = gameobject.parentContainer;
-            id = gameobject.parentContainer.getData("id");
-            if (pointer.isDown === false) {
-                if (com instanceof FramesDisplay) {
-                    // com.element.scaleTween();
-                    const ele = com.element;
-                    if (ele instanceof Element) {
-                        com.scaleTween();
-                    }
-                }
-            }
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
@@ -137,7 +137,6 @@ export class MouseManager extends PacketHandler {
     }
 
     public destroy() {
-        this.mActivePointer = null;
         this.mScene = null;
         this.mConnect = null;
         this.mGroundLayer = null;
@@ -145,29 +144,31 @@ export class MouseManager extends PacketHandler {
     }
 
     private groundDown(pointer, gameObject) {
-        this.mActivePointer = pointer;
-        this.onUpdate(pointer, gameObject);
-
+        this.mGameObject = gameObject;
         this.mDownTime = setTimeout(() => {
             this.worldService.emitter.emit(MessageType.PRESS_ELEMENT, pointer, gameObject);
         }, this.mDownDelay);
+
     }
 
     private groundUp(pointer, gameObject) {
-        this.mActivePointer = pointer;
+        // this.mGameObject = null;
         this.onUpdate(pointer, gameObject);
     }
 
-    private pointerDownHandler() {
+    private pointerDownHandler(pointer, gameobject) {
         if (this.worldService) {
             if (this.worldService.emitter) {
                 this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK);
             }
         }
+        this.onUpdate(pointer, this.mGameObject);
     }
 
-    private onPointerUpHandler() {
+    private onPointerUpHandler(pointer) {
         clearTimeout(this.mDownTime);
+        this.onUpdate(pointer, this.mGameObject);
+        this.mGameObject = null;
     }
 
 }

@@ -249,8 +249,6 @@ export class Element extends BlockObject implements IElement {
         //     Math.floor(moveData.destinationPoint3f.x),
         //     Math.floor(moveData.destinationPoint3f.y)
         // );
-        // Logger.debug(`move,x:${this.mDisplay.x},y:${this.mDisplay.y},tox:${this.mMoveData.destPos.x},toy:${this.mMoveData.destPos.y}`);
-        // Logger.getInstance().debug("walk has movedata");
         this.mMoveData.posPath = [{
             x: moveData.destinationPoint3f.x,
             y: moveData.destinationPoint3f.y
@@ -580,6 +578,9 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
+            if (this.mInputEnable) {
+                this.mDisplay.setInteractive();
+            }
             this.mDisplay.play(this.model.currentAnimation);
             this.setDepth();
             // this.mDisplay.showRefernceArea();

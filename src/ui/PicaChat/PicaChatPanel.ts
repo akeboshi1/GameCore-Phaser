@@ -59,7 +59,7 @@ export class PicaChatPanel extends Panel {
 
         this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr;
 
-        this.mTextArea.childrenMap.child.setMinSize(w, h - 10 * this.dpr);
+        this.mTextArea.childrenMap.child.setMinSize(w, h - 2 * this.dpr);
         this.mTextArea.layout();
         this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr);
         const textMask = this.mTextArea.childrenMap.text;

@@ -84,7 +84,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public add(sprites: ISprite[], addMap?: boolean) {
         for (const sprite of sprites) {
-            this._add(sprite, addMap);
+            // this._add(sprite, addMap);
         }
     }
 
@@ -175,6 +175,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.model = sprite;
         } else {
             ele = new Element(sprite, this);
+            ele.setInputEnable(true);
         }
         // if (!ele) ele = new Element(sprite, this);
         if (addMap) this.addMap(sprite);
