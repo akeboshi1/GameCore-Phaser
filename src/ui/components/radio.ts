@@ -1,4 +1,4 @@
-import { ISelectCallItemData, ISelectCallUI, SelectCallItem } from "./comboBox";
+import { ISelectCallItemData, ISelectCallUI } from "./comboBox";
 import { NinePatch } from "./nine.patch";
 import { Background } from "../../utils/resUtil";
 import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
@@ -150,22 +150,29 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
         this.mSelectBG.fillStyle(COLOR, .8);
         this.mSelectBG.fillRect(-wid >> 1, -hei >> 1, wid - 36, hei);
         this.mSelectBG.visible = false;
-        this.addAt(this.mSelectBG, 0);
-        this.add(this.mText);
-
         this.setSize(wid, hei);
 
         this.setInteractive();
-        this.on("pointerover", this.overHandler, this);
-        this.on("pointerout", this.outHandler, this);
-        this.on("pointerdown", this.selectHandler, this);
+        this.addListen();
 
         this.mArrow = scene.make.image(undefined, false);
         this.mArrow.setTexture(resKey, arrowRes);
         this.mArrow.x = -wid / 2 - 10;
         this.mArrow.y = 0;
         this.mArrow.visible = false;
-        this.add(this.mArrow);
+        this.add([this.mSelectBG, this.mText, this.mArrow]);
+    }
+
+    public addListen() {
+        this.on("pointerover", this.overHandler, this);
+        this.on("pointerout", this.outHandler, this);
+        this.on("pointerdown", this.selectHandler, this);
+    }
+
+    public removeListen() {
+        this.off("pointerover", this.overHandler, this);
+        this.off("pointerout", this.outHandler, this);
+        this.off("pointerdown", this.selectHandler, this);
     }
 
     public set itemData(val: ISelectCallItemData) {
@@ -180,6 +187,7 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
+        this.removeAllListeners();
         this.mText.destroy(true);
         this.mSelectBG.destroy(true);
         this.mArrow.destroy(true);
