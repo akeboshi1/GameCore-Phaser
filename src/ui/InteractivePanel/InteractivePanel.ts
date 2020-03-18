@@ -133,13 +133,8 @@ export class InteractivePanel extends Panel {
     public resize(wid: number = 0, hei: number = 0) {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
-        this.mNameCon.add(this.mNameBg);
-        this.mNameCon.add(this.mNameTF);
-        this.mDescCon.add(this.mBg);
-        this.mDescCon.add(this.mBorder);
-        this.mDescCon.add(this.mDescTF);
-        this.add(this.mNameCon);
-        this.add(this.mDescCon);
+        this.mNameCon.add([this.mNameBg, this.mNameTF, this.mBg, this.mBorder, this.mDescTF]);
+        this.add([this.mNameCon, this.mDescCon]);
         if (this.mWorld.game.device.os.desktop) {
             this.y = size.height / 2 - 250;
         } else {
@@ -162,26 +157,38 @@ export class InteractivePanel extends Panel {
         }
     }
 
+    public addListen() {
+        this.mNameCon.on("pointerdown", this.nameConClick, this);
+        this.mDescCon.on("pointerdown", this.descConClick, this);
+        this.mLeftFaceIcon.on("pointerdown", this.leftFaceClick, this);
+        this.mMidFaceIcon.on("pointerdown", this.midFaceClick, this);
+        this.mRightFaceIcon.on("pointerdown", this.midFaceClick, this);
+    }
+
+    public removeListen() {
+        this.mNameCon.off("pointerdown", this.nameConClick, this);
+        this.mDescCon.off("pointerdown", this.descConClick, this);
+        this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
+        this.mMidFaceIcon.off("pointerdown", this.midFaceClick, this);
+        this.mRightFaceIcon.off("pointerdown", this.midFaceClick, this);
+    }
+
     public destroy() {
         this.mInitialized = false;
+        this.removeAllListeners();
         if (this.mNameCon) {
-            this.mNameCon.off("pointerdown", this.nameConClick, this);
             this.mNameCon.destroy(true);
         }
         if (this.mDescCon) {
-            this.mDescCon.off("pointerdown", this.descConClick, this);
             this.mDescCon.destroy(true);
         }
         if (this.mLeftFaceIcon) {
-            this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
             this.mLeftFaceIcon.destroy(true);
         }
         if (this.mMidFaceIcon) {
-            this.mMidFaceIcon.off("pointerdown", this.midFaceClick, this);
             this.mMidFaceIcon.destroy(true);
         }
         if (this.mRightFaceIcon) {
-            this.mRightFaceIcon.off("pointerdown", this.midFaceClick, this);
             this.mRightFaceIcon.destroy(true);
         }
         if (this.mNameTF) {
