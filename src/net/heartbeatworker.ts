@@ -1,12 +1,12 @@
 import { Logger } from "../utils/log";
 
 const heartWorker: Worker = self as any;
-const delayTime: number = 3000;
+const delayTime: number = 20000;
 let reConnectCount: number = 0;
 let startDelay: any;
 function startBeat() {
     startDelay = setInterval(() => {
-        if (reConnectCount >= 5) {
+        if (reConnectCount >= 8) {
             postMessage({ "method": "reConnect" });
             return;
         }
