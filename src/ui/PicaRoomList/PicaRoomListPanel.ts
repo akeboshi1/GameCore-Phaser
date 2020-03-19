@@ -250,7 +250,7 @@ class RoomList extends Phaser.GameObjects.Container {
     // bg.fillRect(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height).setInteractive(new Phaser.Geom.Rectangle(this.parentContainer.x - this.width / 2, this.parentContainer.y - this.height / 2, this.width, this.height), Phaser.Geom.Rectangle.Contains);
     const w = this.width * this.parentContainer.scale;
     const h = this.height * this.parentContainer.scale;
-    bg.fillRect(0, 0, this.width, this.height);
+    bg.fillRect(0, 0, w, h);
     bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     bg.setPosition(this.parentContainer.x - w / 2, h / 2 - 40 * this.mDpr);
     // bg.on("pointerup", () => {

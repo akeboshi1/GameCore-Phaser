@@ -287,7 +287,7 @@ export class Sprite implements ISprite {
         }
         const { animationName } = this.mCurrentAnimation;
         const area = this.mDisplayInfo.getInteractiveArea(animationName);
-        if (area && area.length > 1) {
+        if (area && area.length > 0) {
             return true;
         }
         return false;

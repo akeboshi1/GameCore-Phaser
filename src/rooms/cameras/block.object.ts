@@ -52,7 +52,7 @@ export abstract class BlockObject {
     }
 
     public setInputEnable(val: InputEnable) {
-        if (this.mInputEnable !== val) {
+        // if (this.mInputEnable !== val) {
             this.mInputEnable = val;
             if (this.mDisplay) {
                 switch (val) {
@@ -69,7 +69,7 @@ export abstract class BlockObject {
                         break;
                 }
             }
-        }
+        // }
     }
 
     public destroy() {
