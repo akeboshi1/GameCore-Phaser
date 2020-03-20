@@ -68,10 +68,10 @@ export class MarketPanel extends Panel {
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x3ee1ff);
-    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
+    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
     this.mCategoriesBar.fillStyle(0x04b3d3);
-    this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
-    this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
+    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
+    this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
 
     this.setInteractive();
     // this.setInteractive(new Phaser.Geom.Rectangle(-(width >> 1), -(height >> 1), width, height), Phaser.Geom.Rectangle.Contains);

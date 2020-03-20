@@ -10,6 +10,8 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
 import { LabelInput } from "../components/label.input";
+import GridTable from "../../../lib/rexui/templates/ui/gridtable/GridTable";
+import { Logger } from "../../utils/log";
 
 export class FurniBagPanel extends Panel {
   private key: string = "furni_bag";
@@ -28,6 +30,7 @@ export class FurniBagPanel extends Panel {
   private mSeachInput: SeachInput;
   private mSelectedCategory: op_def.IStrMap;
   private mSelectedFurni: op_client.ICountablePackageItem;
+  private mCategoryScroll: GridTable;
 
   private mDetailBubble: DetailBubble;
   private mSceneType: op_def.SceneTypeEnum;
@@ -83,17 +86,54 @@ export class FurniBagPanel extends Panel {
     this.mSelectedCategory = null;
     this.mCategeories = [];
     const _x = this.mSeachInput.x; // + this.mSeachInput.width / 2 + 6 * this.dpr;
-    for (let i = 0; i < subcategorys.length; i++) {
-      const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 + this.mSeachInput.x + _x , capH / 2);
-      textBtn.setData("category", subcategorys[i]);
-      textBtn.setSize(capW, capH);
-      textBtn.setFontSize(15 * this.dpr);
-      this.mCategeories[i] = textBtn;
-    }
-    this.mCategeoriesContainer.add(this.mCategeories);
+    // for (let i = 0; i < subcategorys.length; i++) {
+    //   const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 + this.mSeachInput.x + _x , capH / 2);
+    //   textBtn.setData("category", subcategorys[i]);
+    //   textBtn.setSize(capW, capH);
+    //   textBtn.setFontSize(15 * this.dpr);
+    //   this.mCategeories[i] = textBtn;
+    // }
+    // this.mCategeoriesContainer.add(this.mCategeories);
     group.appendItemAll(this.mCategeories);
     group.on("selected", this.onSelectSubCategoryHandler, this);
     group.selectIndex(0);
+    this.mCategoryScroll = new GridTable(this.scene, {
+      x: this.width / 2,
+      y: 0,
+      Width: this.width,
+      height: capH,
+      table: {
+        cellWidth: capW,
+        cellHeight: capH
+      },
+      scrollMode: 1,
+      createCellContainerCallback: (cell, cellContainer) => {
+        const  scene = cell.scene,
+              width = cell.width,
+              height = cell.height,
+              item = cell.item,
+              index = cell.index;
+        if (cellContainer === null) {
+          cellContainer = new TextButton(scene, "3sdfsdf");
+          // cellContainer.width = capW;
+          // cellContainer.height = capH;
+          this.mCategeoriesContainer.add(cellContainer);
+        }
+        cellContainer.setText(item.value);
+        cellContainer.setSize(width, height);
+        return cellContainer;
+      },
+      items: [{key: "ak", value: "爱丽丝的急啊离开"}, {key: "aslkd", value: "来得及就"}]
+    })
+    .layout();
+    this.mCategoryScroll.on("cell.1tap", (cell, index) => {
+      Logger.getInstance().log("===================", cell, index);
+    });
+    this.add(this.mCategoryScroll);
+
+    setTimeout(() => {
+      Logger.getInstance().log("=====.....", this.mCategoryScroll);
+    }, 3000);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
@@ -195,7 +235,7 @@ export class FurniBagPanel extends Panel {
 
     this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer]);
     this.mShelfContainer.add([this.mCategeoriesContainer, this.mPropsContainer]);
-    this.mCategeoriesContainer.add([this.mCategoriesBar, this.mSeachInput]);
+    this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
       this.add(this.mAdd);
     }

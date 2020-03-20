@@ -39,7 +39,7 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
 
   setSize(w: number, h: number) {
     super.setSize(w, h);
-    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     return this;
   }
 
