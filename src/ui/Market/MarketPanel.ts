@@ -10,6 +10,7 @@ import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
 import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
+import GridTable from "../../../lib/rexui/templates/ui/gridtable/GridTable";
 import { Logger } from "../../utils/log";
 
 export class MarketPanel extends Panel {
@@ -28,7 +29,9 @@ export class MarketPanel extends Panel {
   private mShelfContainer: Phaser.GameObjects.Container;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mShelfBackground: Phaser.GameObjects.Graphics;
+  private mSubCategorisScroll: GridTable;
   private mItems: MarketItem[];
+  private mPreSubCategoris: TextButton;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
@@ -60,7 +63,7 @@ export class MarketPanel extends Panel {
     this.mShelfBackground.clear();
     this.mShelfBackground.fillStyle(0x02ccff);
     this.mShelfBackground.fillRect(0, 0, this.mShelfContainer.width, this.mShelfContainer.height);
-    this.mShelfBackground.y = this.mSubCategeoriesContainer.y;
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
 
     this.mSelectItem.setSize(width, height - this.mShelfContainer.height);
     // this.mSelectItem.y = 45 * this.dpr;
@@ -73,7 +76,9 @@ export class MarketPanel extends Panel {
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
 
-    this.setInteractive();
+    this.mSubCategorisScroll.y = this.mShelfContainer.y + this.mSubCategeoriesContainer.height + 41 * this.dpr / 2 * zoom;
+    this.mSubCategorisScroll.layout();
+    // this.setInteractive();
     // this.setInteractive(new Phaser.Geom.Rectangle(-(width >> 1), -(height >> 1), width, height), Phaser.Geom.Rectangle.Contains);
   }
 
@@ -114,9 +119,11 @@ export class MarketPanel extends Panel {
     }
     this.mCategoriesContainer.setSize(this.mTabs.length * capW, capH);
     this.mShelfContainer.add(this.mTabs);
-    this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
-    this.mPropContainer.y = this.mSubCategeoriesContainer.y + this.mSubCategeoriesContainer.height + 9 * this.dpr;
-    this.mShelfBackground.y = this.mSubCategeoriesContainer.y;
+    // this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
+    this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
+    this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom + this.mSubCategeoriesContainer.height + 9 * this.dpr;
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
+    this.mSubCategorisScroll.layout();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
 
@@ -124,6 +131,7 @@ export class MarketPanel extends Panel {
     // for (const category of categorys) {
     //   const btn = new NinePatchButton(this.scene, )
     // }
+    
   }
 
   public setProp(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
@@ -184,6 +192,7 @@ export class MarketPanel extends Panel {
       }
     }
 
+
     this.mShelfBackground = this.scene.make.graphics(undefined, false);
 
     this.mCloseBtn = this.scene.make.image({
@@ -193,11 +202,11 @@ export class MarketPanel extends Panel {
       y: 30 * this.dpr
     }).setInteractive().setScale(zoom);
 
-    this.add(this.mShelfContainer);
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mSubCategeoriesContainer, this.mPropContainer]);
+    this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
+    this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
     this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScaleNew);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
@@ -216,6 +225,46 @@ export class MarketPanel extends Panel {
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
+
+    const capW = 56 * this.dpr;
+    const capH = 41 * this.dpr;
+    this.mSubCategorisScroll = new GridTable(this.scene, {
+      x: w / 2,
+      // y: 0,
+      width: w,
+      height: capH,
+      table: {
+        width: w,
+        height: capH,
+        cellWidth: capW,
+        cellHeight: capH
+      },
+      scrollMode: 1,
+      createCellContainerCallback: (cell, cellContainer) => {
+        const  scene = cell.scene,
+              width = cell.width,
+              height = cell.height,
+              item = cell.item,
+              index = cell.index;
+        if (cellContainer === null) {
+          cellContainer = new TextButton(scene, "");
+          // cellContainer.width = capW;
+          // cellContainer.height = capH;
+          this.add(cellContainer);
+        }
+        cellContainer.setText(item.value);
+        cellContainer.setSize(width, height);
+        cellContainer.setData({ item });
+        if (!this.mPreSubCategoris) {
+          this.onSelectSubCategoryHandler(cellContainer);
+        }
+        return cellContainer;
+      },
+    });
+    this.mSubCategorisScroll.on("cell.1tap", (cell, index) => {
+      this.onSelectSubCategoryHandler(cell);
+    });
+    this.add(this.mSubCategorisScroll);
 
     this.resize(0, 0);
 
@@ -244,45 +293,59 @@ export class MarketPanel extends Panel {
     if (!this.mSubCategeoriesContainer) {
       return;
     }
+    this.mPreSubCategoris = null;
     this.clearCategories(this.mSubTabs);
     const subcategory: op_def.IMarketCategory = gameobject.getData("category");
     this.mSelectedCategories = gameobject;
     if (subcategory) {
-      const zoom = this.mWorld.uiScaleNew;
-      this.mSubTabs = [];
-      const group = new CheckboxGroup();
+      // const zoom = this.mWorld.uiScaleNew;
+      // this.mSubTabs = [];
+      // const group = new CheckboxGroup();
       const subcategorys = subcategory.subcategory;
-      const capW = 56 * this.dpr * zoom;
-      const capH = 41 * this.dpr * zoom;
-      for (let i = 0; i < subcategorys.length; i++) {
-        const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 * zoom, capH / 2);
-        textBtn.setData("category", subcategorys[i]);
-        textBtn.setSize(capW, capH);
-        textBtn.setFontSize(15 * this.dpr * zoom);
-        this.mSubTabs[i] = textBtn;
-      }
-      group.appendItemAll(this.mSubTabs);
-      this.mSubCategeoriesContainer.add(this.mSubTabs);
+      // const capW = 56 * this.dpr * zoom;
+      // const capH = 41 * this.dpr * zoom;
+      // for (let i = 0; i < subcategorys.length; i++) {
+      //   const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 * zoom, capH / 2);
+      //   textBtn.setData("category", subcategorys[i]);
+      //   textBtn.setSize(capW, capH);
+      //   textBtn.setFontSize(15 * this.dpr * zoom);
+      //   this.mSubTabs[i] = textBtn;
+      // }
+      // group.appendItemAll(this.mSubTabs);
+      // this.mSubCategeoriesContainer.add(this.mSubTabs);
 
-      group.on("selected", this.onSelectSubCategoryHandler, this);
-      group.selectIndex(0);
+      // group.on("selected", this.onSelectSubCategoryHandler, this);
+      // group.selectIndex(0);
+
+      if (this.mSubCategorisScroll) {
+        this.mSubCategorisScroll.setItems(subcategorys);
+        this.mSubCategorisScroll.layout();
+      }
     }
   }
 
-  private onSelectSubCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
+  private onSelectSubCategoryHandler(gameobject: TextButton) {
     if (!this.mSelectedCategories) {
+      return;
+    }
+    if (!(gameobject instanceof TextButton)) {
       return;
     }
     const categories: op_def.IMarketCategory = this.mSelectedCategories.getData("category");
     if (!categories) {
       return;
     }
-    const subCategories = gameobject.getData("category");
+    const subCategories = gameobject.getData("item");
     if (!subCategories) {
       return;
     }
+    if (this.mPreSubCategoris) {
+      this.mPreSubCategoris.changeNormal();
+    }
 
     this.queryProp(categories.category.key, subCategories.key);
+    gameobject.changeDown();
+    this.mPreSubCategoris = gameobject;
   }
 
   private queryProp(category: string, subCategory: string) {

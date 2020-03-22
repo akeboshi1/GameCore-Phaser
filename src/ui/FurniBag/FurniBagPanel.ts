@@ -25,12 +25,12 @@ export class FurniBagPanel extends Panel {
   private mDetailDisplay: DetailDisplay;
   private mAdd: NinePatchButton;
   private mItems: Item[];
-  private mCategeories: TextButton[];
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
   private mSelectedCategory: op_def.IStrMap;
   private mSelectedFurni: op_client.ICountablePackageItem;
   private mCategoryScroll: GridTable;
+  private mPreCategoryBtn: TextButton;
 
   private mDetailBubble: DetailBubble;
   private mSceneType: op_def.SceneTypeEnum;
@@ -52,6 +52,7 @@ export class FurniBagPanel extends Panel {
 
     this.mShelfContainer.setSize(width, 277 * this.dpr);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
+    this.mCategoriesBar.y = this.mShelfContainer.y;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
 
     this.mCategoriesBar.clear();
@@ -80,29 +81,19 @@ export class FurniBagPanel extends Panel {
   }
 
   setCategories(subcategorys: op_def.IStrMap[]) {
-    const group = new CheckboxGroup();
+    this.mPreCategoryBtn = null;
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
     this.mSelectedCategory = null;
-    this.mCategeories = [];
-    const _x = this.mSeachInput.x; // + this.mSeachInput.width / 2 + 6 * this.dpr;
-    // for (let i = 0; i < subcategorys.length; i++) {
-    //   const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 + this.mSeachInput.x + _x , capH / 2);
-    //   textBtn.setData("category", subcategorys[i]);
-    //   textBtn.setSize(capW, capH);
-    //   textBtn.setFontSize(15 * this.dpr);
-    //   this.mCategeories[i] = textBtn;
-    // }
-    // this.mCategeoriesContainer.add(this.mCategeories);
-    group.appendItemAll(this.mCategeories);
-    group.on("selected", this.onSelectSubCategoryHandler, this);
-    group.selectIndex(0);
     this.mCategoryScroll = new GridTable(this.scene, {
       x: this.width / 2,
-      y: 0,
-      Width: this.width,
+      y: this.mShelfContainer.y + (41 * this.dpr + capH) / 2,
+      // y: 0,
+      Width: this.width * this.scale,
       height: capH,
       table: {
+        width: this.width * this.scale,
+        height: capH,
         cellWidth: capW,
         cellHeight: capH
       },
@@ -114,26 +105,26 @@ export class FurniBagPanel extends Panel {
               item = cell.item,
               index = cell.index;
         if (cellContainer === null) {
-          cellContainer = new TextButton(scene, "3sdfsdf");
+          cellContainer = new TextButton(scene, "");
           // cellContainer.width = capW;
           // cellContainer.height = capH;
           this.mCategeoriesContainer.add(cellContainer);
         }
         cellContainer.setText(item.value);
         cellContainer.setSize(width, height);
+        cellContainer.setData({ item });
+        if (!this.mPreCategoryBtn) {
+          this.onSelectSubCategoryHandler(cellContainer);
+        }
         return cellContainer;
       },
-      items: [{key: "ak", value: "爱丽丝的急啊离开"}, {key: "aslkd", value: "来得及就"}]
+      items: subcategorys
     })
     .layout();
     this.mCategoryScroll.on("cell.1tap", (cell, index) => {
-      Logger.getInstance().log("===================", cell, index);
+      this.onSelectSubCategoryHandler(cell);
     });
-    this.add(this.mCategoryScroll);
-
-    setTimeout(() => {
-      Logger.getInstance().log("=====.....", this.mCategoryScroll);
-    }, 3000);
+    this.mCategeoriesContainer.add(this.mCategoryScroll);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
@@ -233,8 +224,8 @@ export class FurniBagPanel extends Panel {
     this.mSeachInput = new SeachInput(this.scene, this.key, this.dpr);
     this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
-    this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer]);
-    this.mShelfContainer.add([this.mCategeoriesContainer, this.mPropsContainer]);
+    this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
+    this.mShelfContainer.add(this.mPropsContainer);
     this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
       this.add(this.mAdd);
@@ -259,11 +250,19 @@ export class FurniBagPanel extends Panel {
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
   }
 
-  private onSelectSubCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
-    const category: op_def.IStrMap = gameobject.getData("category");
+  private onSelectSubCategoryHandler(gameobject: TextButton) {
+    if (!(gameobject instanceof TextButton)) {
+      return;
+    }
+    const category: op_def.IStrMap = gameobject.getData("item");
     if (category) {
+      if (this.mPreCategoryBtn) {
+        this.mPreCategoryBtn.changeNormal();
+      }
       this.mSelectedCategory = category;
       this.emit("queryPackage", category.key);
+      gameobject.changeDown();
+      this.mPreCategoryBtn = gameobject;
     }
   }
 
