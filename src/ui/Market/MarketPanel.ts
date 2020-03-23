@@ -1,6 +1,5 @@
 import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
-import { Url } from "../../utils/resUtil";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
@@ -32,6 +31,7 @@ export class MarketPanel extends Panel {
   private mSubCategorisScroll: GridTable;
   private mItems: MarketItem[];
   private mPreSubCategoris: TextButton;
+  private mPropGrid: GridTable;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
@@ -75,9 +75,6 @@ export class MarketPanel extends Panel {
     this.mCategoriesBar.fillStyle(0x04b3d3);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
-
-    this.mSubCategorisScroll.y = this.mShelfContainer.y + this.mSubCategeoriesContainer.height + 41 * this.dpr / 2 * zoom;
-    this.mSubCategorisScroll.layout();
     // this.setInteractive();
     // this.setInteractive(new Phaser.Geom.Rectangle(-(width >> 1), -(height >> 1), width, height), Phaser.Geom.Rectangle.Contains);
   }
@@ -110,7 +107,7 @@ export class MarketPanel extends Panel {
       const btn = new TabButton(this.scene, i * 80 * this.dpr * zoom + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
       // btn.removeAllListeners();
       btn.setTextStyle({
-        fontSize: 18 * this.dpr,
+        fontSize: 18 * this.dpr * zoom,
         fontFamily: Font.DEFULT_FONT,
       });
       this.mTabs[i] = btn;
@@ -121,8 +118,14 @@ export class MarketPanel extends Panel {
     this.mShelfContainer.add(this.mTabs);
     // this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
     this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
+    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
     this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom + this.mSubCategeoriesContainer.height + 9 * this.dpr;
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
+    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
+    this.mSubCategorisScroll.layout();
+
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom; // + this.mPropGrid.height / 2;
+    this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
@@ -131,22 +134,22 @@ export class MarketPanel extends Panel {
     // for (const category of categorys) {
     //   const btn = new NinePatchButton(this.scene, )
     // }
-    
   }
 
   public setProp(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    const zoom = this.mWorld.uiScaleNew;
-    for (let i = 0; i < commodities.length; i++) {
-      const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr * zoom) + (72 * this.dpr * zoom), Math.floor(i % 3) * (68 * this.dpr * zoom) + 30 * this.dpr * zoom, this.dpr, zoom);
-      item.setProp(commodities[i]);
-      item.on("select", this.onSelectItemHandler, this);
-      this.mItems[i] = item;
-    }
-    this.mPropContainer.add(this.mItems);
-
+    // const zoom = this.mWorld.uiScaleNew;
+    // for (let i = 0; i < commodities.length; i++) {
+    //   const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr * zoom) + (72 * this.dpr * zoom), Math.floor(i % 3) * (68 * this.dpr * zoom) + 30 * this.dpr * zoom, this.dpr, zoom);
+    //   item.setProp(commodities[i]);
+    //   item.on("select", this.onSelectItemHandler, this);
+    //   this.mItems[i] = item;
+    // }
+    // this.mPropContainer.add(this.mItems);
+    this.mPropGrid.setItems(commodities);
+    this.mPropGrid.layout();
     if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
   }
 
@@ -192,7 +195,6 @@ export class MarketPanel extends Panel {
       }
     }
 
-
     this.mShelfBackground = this.scene.make.graphics(undefined, false);
 
     this.mCloseBtn = this.scene.make.image({
@@ -224,7 +226,6 @@ export class MarketPanel extends Panel {
     super.init();
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
-    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
 
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
@@ -237,7 +238,8 @@ export class MarketPanel extends Panel {
         width: w,
         height: capH,
         cellWidth: capW,
-        cellHeight: capH
+        cellHeight: capH,
+        reuseCellContainer: true
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
@@ -247,7 +249,7 @@ export class MarketPanel extends Panel {
               item = cell.item,
               index = cell.index;
         if (cellContainer === null) {
-          cellContainer = new TextButton(scene, "");
+          cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
           // cellContainer.height = capH;
           this.add(cellContainer);
@@ -265,6 +267,49 @@ export class MarketPanel extends Panel {
       this.onSelectSubCategoryHandler(cell);
     });
     this.add(this.mSubCategorisScroll);
+
+    const propFrame = this.scene.textures.getFrame(this.key, "border.png");
+    const cellWidth = propFrame.width * zoom + 10 * this.dpr;
+    const cellHeight = propFrame.height * zoom + 10 * this.dpr;
+    this.mPropGrid = new GridTable(this.scene, {
+      x: w / 2,
+      y: 1050 + (41 * this.dpr * zoom) / 2,
+      // y: 0,
+      table: {
+        width: w - 20 * this.dpr * zoom,
+        height: 224 * this.dpr * zoom,
+        columns: 3,
+        cellWidth,
+        cellHeight,
+        reuseCellContainer: true,
+      },
+      scrollMode: 1,
+      clamplChildOY: true,
+      createCellContainerCallback: (cell, cellContainer) => {
+        const  scene = cell.scene,
+              width = cell.width,
+              height = cell.height,
+              item = cell.item,
+              index = cell.index;
+        if (cellContainer === null) {
+          cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
+          // cellContainer.width = capW;
+          // cellContainer.height = capH;
+          this.add(cellContainer);
+        }
+        cellContainer.setSize(width, height);
+        cellContainer.setData({ item });
+        cellContainer.setProp(item);
+        return cellContainer;
+      },
+    });
+    this.mPropGrid.on("cell.1tap", (cell) => {
+      const data = cell.getData("item");
+      if (data) {
+        this.onSelectItemHandler(data);
+      }
+    });
+    this.add(this.mPropGrid);
 
     this.resize(0, 0);
 
@@ -298,25 +343,7 @@ export class MarketPanel extends Panel {
     const subcategory: op_def.IMarketCategory = gameobject.getData("category");
     this.mSelectedCategories = gameobject;
     if (subcategory) {
-      // const zoom = this.mWorld.uiScaleNew;
-      // this.mSubTabs = [];
-      // const group = new CheckboxGroup();
       const subcategorys = subcategory.subcategory;
-      // const capW = 56 * this.dpr * zoom;
-      // const capH = 41 * this.dpr * zoom;
-      // for (let i = 0; i < subcategorys.length; i++) {
-      //   const textBtn = new TextButton(this.scene, subcategorys[i].value, i * capW + capW / 2 * zoom, capH / 2);
-      //   textBtn.setData("category", subcategorys[i]);
-      //   textBtn.setSize(capW, capH);
-      //   textBtn.setFontSize(15 * this.dpr * zoom);
-      //   this.mSubTabs[i] = textBtn;
-      // }
-      // group.appendItemAll(this.mSubTabs);
-      // this.mSubCategeoriesContainer.add(this.mSubTabs);
-
-      // group.on("selected", this.onSelectSubCategoryHandler, this);
-      // group.selectIndex(0);
-
       if (this.mSubCategorisScroll) {
         this.mSubCategorisScroll.setItems(subcategorys);
         this.mSubCategorisScroll.layout();
