@@ -1,6 +1,7 @@
 import { Logger } from "../../utils/log";
 
-export class DynamicImage extends Phaser.GameObjects.Image {    private mLoadCompleteCallbak: Function;
+export class DynamicImage extends Phaser.GameObjects.Image {
+    private mLoadCompleteCallbak: Function;
     private mLoadContext: any;
     private mLoadErrorCallback: Function;
     private mUrl: string;

@@ -67,7 +67,6 @@ export class EditorTerrainManager extends TerrainManager {
             terrain = new Terrain(sprite, this);
             terrain.setBlockable(false);
             terrain.setRenderable(true);
-            terrain.setInputEnable(InputEnable.Enable);
         } else {
             return;
         }

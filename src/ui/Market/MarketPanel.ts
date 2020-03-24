@@ -56,6 +56,7 @@ export class MarketPanel extends Panel {
     // if (shelfHeight > height / 2) {
     //   shelfHeight = height / 2;
     // }
+    this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width * zoom, height * zoom), Phaser.Geom.Rectangle.Contains);
 
     this.mShelfContainer.setSize(width, shelfHeight);
     this.mShelfContainer.setPosition(0, height - this.mShelfContainer.height);
@@ -255,7 +256,7 @@ export class MarketPanel extends Panel {
           this.add(cellContainer);
         }
         cellContainer.setText(item.value);
-        cellContainer.setSize(width, height);
+        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         if (!this.mPreSubCategoris) {
           this.onSelectSubCategoryHandler(cellContainer);
@@ -266,7 +267,7 @@ export class MarketPanel extends Panel {
     this.mSubCategorisScroll.on("cell.1tap", (cell, index) => {
       this.onSelectSubCategoryHandler(cell);
     });
-    this.add(this.mSubCategorisScroll);
+    this.add(this.mSubCategorisScroll.childrenMap.child);
 
     const propFrame = this.scene.textures.getFrame(this.key, "border.png");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
@@ -297,7 +298,7 @@ export class MarketPanel extends Panel {
           // cellContainer.height = capH;
           this.add(cellContainer);
         }
-        cellContainer.setSize(width, height);
+        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
         return cellContainer;
@@ -309,7 +310,7 @@ export class MarketPanel extends Panel {
         this.onSelectItemHandler(data);
       }
     });
-    this.add(this.mPropGrid);
+    this.add(this.mPropGrid.childrenMap.child);
 
     this.resize(0, 0);
 

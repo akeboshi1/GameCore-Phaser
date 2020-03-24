@@ -32,7 +32,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     // this.mBorder.x = -this.mBackground.width / 2 + this.mBorder.width / 2 + (this.mBackground.height - this.mBorder.height / 2);
     // this.mBorder.x = -(this.mBackground.displayWidth - this.mBorder.displayWidth) / 2 + (this.mBackground.displayHeight - this.mBorder.displayHeight) / 2;
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = this.dpr;
+    this.mPropImage.scale = this.dpr * zoom;
 
     this.mNickName = this.scene.make.text({
       x: 62 * this.dpr * zoom,

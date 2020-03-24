@@ -80,7 +80,6 @@ export class FurniBagPanel extends Panel {
     this.mDetailDisplay.y = this.mBg.y;
 
     this.setSize(width, height);
-    // this.setInteractive(new Phaser.Geom.Rectangle(width / 2, height / 2, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
   setCategories(subcategorys: op_def.IStrMap[]) {
@@ -103,10 +102,7 @@ export class FurniBagPanel extends Panel {
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
         const  scene = cell.scene,
-              width = cell.width,
-              height = cell.height,
-              item = cell.item,
-              index = cell.index;
+              item = cell.item;
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -114,7 +110,7 @@ export class FurniBagPanel extends Panel {
           this.mCategeoriesContainer.add(cellContainer);
         }
         cellContainer.setText(item.value);
-        cellContainer.setSize(width, height);
+        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         if (!this.mPreCategoryBtn) {
           this.onSelectSubCategoryHandler(cellContainer);
@@ -130,7 +126,7 @@ export class FurniBagPanel extends Panel {
 
     this.mPropGrid.y = this.mCategoryScroll.y + 120 * this.dpr * zoom;
     this.mPropGrid.layout();
-    this.mCategeoriesContainer.add(this.mCategoryScroll);
+    this.add(this.mCategoryScroll.childrenMap.child);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
@@ -180,6 +176,8 @@ export class FurniBagPanel extends Panel {
   }
 
   protected init() {
+    const width = this.scene.cameras.main.width;
+    const height = this.scene.cameras.main.height;
     this.mBackground = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScaleNew;
 
@@ -193,6 +191,10 @@ export class FurniBagPanel extends Panel {
     this.mCategeoriesContainer = this.scene.make.container(undefined, false);
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
+    this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+    this.mBackground.on("pointerup", () => {
+      Logger.getInstance().log("================");
+    });
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
@@ -263,18 +265,15 @@ export class FurniBagPanel extends Panel {
       scrollMode: 1,
       clamplChildOY: true,
       createCellContainerCallback: (cell, cellContainer) => {
-        const  scene = cell.scene,
-              width = cell.width,
-              height = cell.height,
-              item = cell.item,
-              index = cell.index;
+        const scene = cell.scene,
+              item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
           // cellContainer.width = capW;
           // cellContainer.height = capH;
           this.add(cellContainer);
         }
-        cellContainer.setSize(width, height);
+        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
         // if (!this.mPreCategoryBtn) {
@@ -289,7 +288,8 @@ export class FurniBagPanel extends Panel {
         this.onSelectItemHandler(item);
       }
     });
-    this.add(this.mPropGrid);
+    // this.add(this.mPropGrid);
+    this.add(this.mPropGrid.childrenMap.child);
     super.init();
 
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
@@ -481,7 +481,7 @@ class Item extends Phaser.GameObjects.Container {
       frame: "prop_bg.png"
     }, false).setOrigin(0).setScale(zoom);
 
-    this.mPropImage = new DynamicImage(this.scene, 0, 0).setOrigin(0);
+    this.mPropImage = new DynamicImage(this.scene, 0, 0);
     this.mPropImage.scale = dpr * zoom;
 
     this.mCounter = scene.make.text({
@@ -492,7 +492,7 @@ class Item extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
-    this.add([background, this.mPropImage]);
+    this.add([background]);
 
     this.setSize(background.displayWidth, background.displayHeight);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.displayWidth, background.displayHeight), Phaser.Geom.Rectangle.Contains);
@@ -518,6 +518,9 @@ class Item extends Phaser.GameObjects.Container {
   private onPropLoadCompleteHandler() {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
+      // this.mPropImage.setPosition((this.mPropImage.displayWidth) / 2, (this.mPropImage.displayHeight) / 2);
+      this.mPropImage.x = this.width / 2;
+      this.mPropImage.y = this.height / 2;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
