@@ -24,7 +24,7 @@ export class LoadingScene extends BasicScene {
       dpr = this.mWorld.uiRatio || 2;
     }
     this.load.image("loading_bg", Url.getUIRes(dpr, "loading/loading_bg.jpg"));
-    this.load.atlas("loading", Url.getRes("loading.png"), Url.getRes("loading.json"));
+    this.load.atlas("loading", Url.getUIRes(dpr, "loading/loading.png"), Url.getUIRes(dpr, "loading/loading.json"));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
     // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
   }
@@ -58,26 +58,27 @@ export class LoadingScene extends BasicScene {
     // this.bg = this.add.graphics();
     // this.bg.fillStyle(0x616161);
     // this.bg.fillRect(0, 0, width, height);
-    const framesObj: {} = this.textures.get("loading").frames;
-    const tmpFrames: any[] = [];
-    for (const key in framesObj) {
-      if (key === "__BASE") continue;
-      const frame = framesObj[key];
-      if (!frame) continue;
-      tmpFrames.push(key);
-    }
+    // const framesObj: {} = this.textures.get("loading").frames;
+    // const tmpFrames: any[] = [];
+    // for (const key in framesObj) {
+    //   if (key === "__BASE") continue;
+    //   const frame = framesObj[key];
+    //   if (!frame) continue;
+    //   tmpFrames.push(key);
+    // }
     // 手动把json配置中的frames给予anims
     this.anims.create({
       key: "loading_anmis",
-      frames: this.anims.generateFrameNumbers("loading", { start: 0, end: 59, frames: tmpFrames }),
-      frameRate: 30,
-      yoyo: true,
+      // frames: this.anims.generateFrameNumbers("loading", { start: 0, end: 59, frames: tmpFrames }),
+      frames: this.anims.generateFrameNames("loading", { prefix: "loading_", start: 1, end: 59, zeroPad: 3, suffix: ".png" }),
+      frameRate: 16,
+      yoyo: false,
       repeat: -1
     });
     this.bg = this.add.image(width / 2, height / 2, "loading_bg");
     this.bg.scale = this.mWorld.uiScaleNew;
     this.lo = this.add.sprite(0, 0, "loading");
-    this.lo.setScale(.8);
+    this.lo.setScale(this.mWorld.uiScaleNew);
     this.scale.on("resize", this.checkSize, this);
     this.lo.play("loading_anmis");
 
@@ -117,13 +118,13 @@ export class LoadingScene extends BasicScene {
     // this.bg.clear();
     // this.bg.fillStyle(0x616161);
     // this.bg.fillRect(0, 0, width, height);
-    if (this.mWorld.game.device.os.desktop) {
-      this.lo.x = width - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
-      this.lo.y = height - (150 + LOGO_MARGIN) * this.mWorld.uiScale;
-    } else {
-      this.lo.x = (width - this.lo.width >> 1) + 100;
-      this.lo.y = (height - this.lo.height >> 1) + 100;
-    }
+    // if (this.mWorld.game.device.os.desktop) {
+    this.lo.x = width / 2;
+    this.lo.y = height / 2;
+    // } else {
+    //   this.lo.x = (width - this.lo.width >> 1) + 100;
+    //   this.lo.y = (height - this.lo.height >> 1) + 100;
+    // }
     // this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
   }
 

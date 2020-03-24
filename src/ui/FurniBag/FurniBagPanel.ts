@@ -15,6 +15,7 @@ import { Logger } from "../../utils/log";
 
 export class FurniBagPanel extends Panel {
   private key: string = "furni_bag";
+  private seachKey: string = "key.seach";
   private mTiltle: Phaser.GameObjects.Text;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mBackground: Phaser.GameObjects.Graphics;
@@ -24,13 +25,12 @@ export class FurniBagPanel extends Panel {
   private mPropsContainer: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
   private mAdd: NinePatchButton;
-  private mItems: Item[];
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
-  private mSelectedCategory: op_def.IStrMap;
   private mSelectedFurni: op_client.ICountablePackageItem;
   private mCategoryScroll: GridTable;
   private mPreCategoryBtn: TextButton;
+  private mSelectedCategeories: op_def.IStrMap;
   private mPropGrid: GridTable;
 
   private mDetailBubble: DetailBubble;
@@ -40,7 +40,6 @@ export class FurniBagPanel extends Panel {
     super(scene, world);
     this.mSceneType = sceneType;
     this.setTween(false);
-    this.mItems = [];
     this.scale = 1;
   }
 
@@ -64,7 +63,7 @@ export class FurniBagPanel extends Panel {
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr *zoom);
     this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
-    this.mSeachInput.y = 20 * this.dpr * zoom;
+    this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
 
     this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
 
@@ -83,11 +82,12 @@ export class FurniBagPanel extends Panel {
   }
 
   setCategories(subcategorys: op_def.IStrMap[]) {
+    subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
+    this.mSelectedCategeories = null;
     const zoom = this.mWorld.uiScaleNew;
     const capW = 56 * this.dpr * zoom;
     const capH = 41 * this.dpr * zoom;
-    this.mSelectedCategory = null;
     this.mCategoryScroll = new GridTable(this.scene, {
       x: this.width / 2,
       y: this.mShelfContainer.y + (41 * this.dpr * zoom + capH) / 2,
@@ -105,14 +105,12 @@ export class FurniBagPanel extends Panel {
               item = cell.item;
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr, zoom);
-          // cellContainer.width = capW;
-          // cellContainer.height = capH;
           this.mCategeoriesContainer.add(cellContainer);
         }
         cellContainer.setText(item.value);
-        // cellContainer.setSize(width, height);
+        cellContainer.setSize(capW, capH);
         cellContainer.setData({ item });
-        if (!this.mPreCategoryBtn) {
+        if (!this.mPreCategoryBtn && item.key !== this.seachKey) {
           this.onSelectSubCategoryHandler(cellContainer);
         }
         return cellContainer;
@@ -124,6 +122,7 @@ export class FurniBagPanel extends Panel {
       this.onSelectSubCategoryHandler(cell);
     });
 
+    this.mSeachInput.x = capW + this.mSeachInput.width / 2;
     this.mPropGrid.y = this.mCategoryScroll.y + 120 * this.dpr * zoom;
     this.mPropGrid.layout();
     this.add(this.mCategoryScroll.childrenMap.child);
@@ -131,32 +130,16 @@ export class FurniBagPanel extends Panel {
 
   public setProp(props: op_client.ICountablePackageItem[]) {
     this.mSelectedFurni = null;
-    for (const item of this.mItems) {
-      item.destroy();
-    }
     if (!props) {
       return;
     }
     const len = props.length;
-    const zoom = this.mWorld.uiScaleNew;
-    if (props.length < 24) {
-      // len = 24;
-      props = props.concat(new Array(24 - props.length));
+    if (len < 24) {
+      props = props.concat(new Array(24 - len));
     }
-    // for (let i = 0; i < len; i++) {
-    //   const item = new Item(this.scene, Math.floor(i / 4) * (57 * this.dpr * zoom) + (35 * this.dpr * zoom), Math.floor(i % 4) * (57 * this.dpr * zoom) + 25 * this.dpr * zoom, this.key, this.dpr, zoom);
-    //   if (props[i]) {
-    //     item.setProp(props[i]);
-    //   }
-    //   item.on("select", this.onSelectItemHandler, this);
-    //   this.mItems[i] = item;
-    // }
 
     this.mPropGrid.setItems(props);
-    this.mPropGrid.layout();
-    // this.mPropGrid.layout();
 
-    this.mPropsContainer.add(this.mItems);
     this.setSelectedItem(props[0]);
   }
 
@@ -192,9 +175,6 @@ export class FurniBagPanel extends Panel {
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
-    this.mBackground.on("pointerup", () => {
-      Logger.getInstance().log("================");
-    });
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
@@ -237,7 +217,7 @@ export class FurniBagPanel extends Panel {
     this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
 
     this.mSeachInput = new SeachInput(this.scene, this.key, this.dpr);
-    this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
+    // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
     this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
     this.mShelfContainer.add(this.mPropsContainer);
@@ -319,9 +299,22 @@ export class FurniBagPanel extends Panel {
       if (this.mPreCategoryBtn) {
         this.mPreCategoryBtn.changeNormal();
       }
-      this.mSelectedCategory = category;
-      this.emit("queryPackage", category.key);
       gameobject.changeDown();
+      let key = category.key;
+      if (key === this.seachKey) {
+        // gameobject.setSize(100 * this.dpr * this.mWorld.uiScaleNew, gameobject.height);
+        this.showSeach(gameobject);
+      } else {
+        if (this.mPreCategoryBtn) {
+          const preBtn = this.mPreCategoryBtn.getData("item");
+          key = preBtn.key;
+          if (key === this.seachKey) {
+           this.closeSeach(gameobject);
+          }
+        }
+        this.mSelectedCategeories = category;
+        this.emit("queryPackage", category.key);
+      }
       this.mPreCategoryBtn = gameobject;
     }
   }
@@ -335,8 +328,8 @@ export class FurniBagPanel extends Panel {
   }
 
   private onSeachHandler(val: string) {
-    if (this.mSelectedCategory) {
-      this.emit("seachPackage", val, this.mSelectedCategory.key);
+    if (this.mSelectedCategeories) {
+      this.emit("seachPackage", val, this.mSelectedCategeories.key);
     }
   }
 
@@ -346,6 +339,20 @@ export class FurniBagPanel extends Panel {
     }
     this.emit("addFurniToScene", this.mSelectedFurni.id);
   }
+
+  private showSeach(parent: TextButton) {
+    const cellTable = this.mCategoryScroll.childrenMap.child;
+    cellTable.setCellWidth(0, this.mSeachInput.x + this.mSeachInput.width / 2);
+    cellTable.updateTable(true);
+    this.mCategeoriesContainer.add(this.mSeachInput);
+  }
+
+  private closeSeach(parent: TextButton) {
+    const cellTable = this.mCategoryScroll.childrenMap.child;
+    cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
+    cellTable.updateTable(true);
+    this.mCategeoriesContainer.remove(this.mSeachInput);
+}
 }
 
 class SeachInput extends Phaser.GameObjects.Container {

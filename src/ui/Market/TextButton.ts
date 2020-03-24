@@ -11,7 +11,7 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
         fontSize: 15 * window.devicePixelRatio,
         fontFamily: Font.DEFULT_FONT
       }
-    }, false).setOrigin(0);
+    }, false);
     this.add(this.text);
 
     // this.on("pointerup", this.onPointerUpHandler, this);

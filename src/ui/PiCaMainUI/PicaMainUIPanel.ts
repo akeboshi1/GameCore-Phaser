@@ -167,7 +167,7 @@ class IconText extends Phaser.GameObjects.Container {
         }, false).setOrigin(0, 0.5);
         this.mText.x = icon.width / 2 + 8 * dpr;
         // this.mText.y = -icon.height / 2;
-        this.mText.setStroke("#000000", 1 * dpr);
+        this.mText.setStroke("#000000", 2 * dpr);
         this.add([icon, this.mText]);
     }
 
@@ -211,8 +211,9 @@ class ExpProgress extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
         super(scene);
 
+        const width = scene.cameras.main.width / scale;
         let frame = this.scene.textures.getFrame(key, "exp_bg.png");
-        this.setSize(360 * dpr, frame.height);
+        this.setSize(width, frame.height);
         const progressW = this.width;
         const progressH = this.height;
         this.mProgressBar = new ProgressBar(scene, dpr);
@@ -226,7 +227,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.mProgressBar.setBackground(bg);
 
         frame = this.scene.textures.getFrame(key, "exp_progress.png");
-        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, 360 * dpr, frame.height, key, "exp_progress.png", {
+        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress.png", {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 10 * dpr,
