@@ -1,6 +1,3 @@
 [submodule "lib/rexui"]
 	path = lib/rexui
 	url = git@code.apowo.com:PixelPai/phaser3-rexui.git
-[submodule "lib/phaser3-rexui"]
-	path = lib/phaser3-rexui
-	url = git@code.apowo.com:PixelPai/phaser3-rexui.git
