@@ -71,6 +71,13 @@ export class FurniBag extends PacketHandler {
     this.connection.send(packet);
   }
 
+  enterEditAndSelectedSprite(id: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENABLE_AND_SELECTED_SPRITE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENABLE_AND_SELECTED_SPRITE = packet.content;
+    content.id = id;
+    this.connection.send(packet);
+  }
+
   seachPackage(seach: string, category: string) {
     this.queryPackage(category, seach);
   }

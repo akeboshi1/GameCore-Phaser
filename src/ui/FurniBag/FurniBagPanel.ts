@@ -6,7 +6,6 @@ import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
 import { op_client, op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
 import { LabelInput } from "../components/label.input";
@@ -35,6 +34,7 @@ export class FurniBagPanel extends Panel {
 
   private mDetailBubble: DetailBubble;
   private mSceneType: op_def.SceneTypeEnum;
+  private mEnableEdit: boolean = false;
 
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
@@ -222,7 +222,10 @@ export class FurniBagPanel extends Panel {
     this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
     this.mShelfContainer.add(this.mPropsContainer);
     this.mCategeoriesContainer.add([this.mCategoriesBar]);
-    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
+    if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
+      this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
+    }
+    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
       this.add(this.mAdd);
     }
 
@@ -352,7 +355,11 @@ export class FurniBagPanel extends Panel {
     cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
     cellTable.updateTable(true);
     this.mCategeoriesContainer.remove(this.mSeachInput);
-}
+  }
+
+  get enableEdit() {
+    return this.mEnableEdit;
+  }
 }
 
 class SeachInput extends Phaser.GameObjects.Container {

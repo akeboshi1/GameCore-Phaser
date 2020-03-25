@@ -105,7 +105,11 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     private onAddFurniHandler(id: string) {
-        this.mFurniBag.addFurniToScene(id);
+        if (this.mView.enableEdit) {
+            this.mFurniBag.enterEditAndSelectedSprite(id);
+        } else {
+            this.mFurniBag.addFurniToScene(id);
+        }
         this.destroy();
     }
 }
