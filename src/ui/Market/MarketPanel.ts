@@ -10,7 +10,6 @@ import { MarketItem } from "./item";
 import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
-import { Logger } from "../../utils/log";
 
 export class MarketPanel extends Panel {
   private readonly key = "market";
