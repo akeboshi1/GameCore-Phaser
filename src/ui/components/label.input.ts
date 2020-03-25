@@ -1,4 +1,4 @@
-import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Logger } from "../../utils/log";
 import { Font } from "../../utils/font";
 

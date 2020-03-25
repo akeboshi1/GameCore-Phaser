@@ -9,7 +9,7 @@ import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
 import { LabelInput } from "../components/label.input";
-import GridTable from "../../../lib/rexui/templates/ui/gridtable/GridTable";
+import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { Logger } from "../../utils/log";
 
 export class FurniBagPanel extends Panel {

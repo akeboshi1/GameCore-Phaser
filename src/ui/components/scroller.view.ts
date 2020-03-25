@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import ScrollablePanel from "../../../lib/rexui/templates/ui/scrollablepanel/ScrollablePanel.js";
+import ScrollablePanel from "../../../lib/rexui/lib/ui/scrollablepanel/ScrollablePanel.js";
 import { IListItemComponent } from "../bag/IListItemRender";
 
 export enum DirectionType {

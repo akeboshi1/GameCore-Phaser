@@ -1,12 +1,12 @@
 import { WorldService } from "../../../game/world.service";
-import RoundRectangle from "../../../../lib/rexui/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
-import TextArea from "../../../../lib/rexui/templates/ui/textarea/TextArea";
-import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import RoundRectangle from "../../../../lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
+import TextArea from "../../../../lib/rexui/lib/ui/textarea/TextArea";
+import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Panel } from "../../components/panel";
 import { NinePatchButton } from "../../components/ninepatch.button";
 import { Border, Url } from "../../../utils/resUtil";
 import { CheckButton } from "../../components/check.button";
-import BBCodeText from "../../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
+import BBCodeText from "../../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { NinePatch } from "../../components/nine.patch";
 import { BaseChatPanel } from "../base.chat.panel";
 

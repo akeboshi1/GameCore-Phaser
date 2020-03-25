@@ -1,4 +1,4 @@
-import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatch } from "../components/nine.patch";
 import { LabelInput } from "../components/label.input";
 
