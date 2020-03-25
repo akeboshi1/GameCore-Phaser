@@ -1,4 +1,4 @@
-import InputText from "../../../lib/phaser3-rexui/lib/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { WorldService } from "../../game/world.service";
 import { MainUIScene } from "../../scenes/main.ui";
 export class InputTextFactory {

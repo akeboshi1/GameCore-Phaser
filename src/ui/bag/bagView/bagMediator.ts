@@ -8,7 +8,7 @@ import { IDropable } from "../idropable";
 import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
-import InputText from "../../../../lib/phaser3-rexui/lib/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { UIType } from "../../ui.manager";
 
 export enum DragType {

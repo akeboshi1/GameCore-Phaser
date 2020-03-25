@@ -6,7 +6,7 @@ import { Panel } from "../../components/panel";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { BagMediator } from "./bagMediator";
 import { NinePatch } from "../../components/nine.patch";
-import InputText from "../../../../lib/phaser3-rexui/lib/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
 import { IconBtn } from "../../baseView/icon.btn";

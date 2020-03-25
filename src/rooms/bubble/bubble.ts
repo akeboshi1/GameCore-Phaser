@@ -1,4 +1,4 @@
-import NinePatch from "../../../lib/phaser3-rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
+import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import { op_client } from "pixelpai_proto";
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { Url } from "../../utils/resUtil";

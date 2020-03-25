@@ -5,8 +5,8 @@ import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { GameScroller } from "../../../lib/phaser3-rexui/lib/ui/scroller/scroller";
-import { ScrollerConfig } from "../../../lib/phaser3-rexui/lib/ui/interface/scroller/scrollerConfig";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/scroller";
+import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/scrollerConfig";
 import { Logger } from "../../utils/log";
 
 export class PicaRoomListPanel extends Panel {
@@ -136,6 +136,7 @@ export class PicaRoomListPanel extends Panel {
         this.mRoomContainer.y = newValue - this.y - h / 2;
       },
       cellupCallBack: (gameobject: RoomItem) => {
+        gameobject.onEnterRoomHandler();
         Logger.getInstance().log(gameobject.roomData().name);
       }
     };
@@ -573,6 +574,12 @@ class RoomItem extends Phaser.GameObjects.Container {
     return this.mRoom;
   }
 
+  public onEnterRoomHandler(pointer?: Phaser.Input.Pointer) {
+    if (this.mRoom) {
+      this.emit("enterRoom", this.mRoom.roomId);
+    }
+  }
+
   protected init(key: string, dpr: number) {
     this.mBackground = this.scene.make.image({
       key,
@@ -639,15 +646,6 @@ class RoomItem extends Phaser.GameObjects.Container {
     this.add([this.mLabelImg, this.mLabelText]);
     this.mLabelImg.x = this.width / 2 - 85 * this.mDpr;
     this.mLabelText.x = this.mLabelImg.x - 7 * this.mDpr;
-  }
-
-  protected onEnterRoomHandler(pointer: Phaser.Input.Pointer) {
-    if (this.mRoom) {
-      if (Math.abs(pointer.downX - pointer.upX) < 10 * this.mDpr &&
-        Math.abs(pointer.downY - pointer.upY) < 10 * this.mDpr) {
-        this.emit("enterRoom", this.mRoom.roomId);
-      }
-    }
   }
 }
 

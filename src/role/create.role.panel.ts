@@ -2,7 +2,7 @@ import { Panel } from "../ui/components/panel";
 import { WorldService } from "../game/world.service";
 import { ResUtils, Url } from "../utils/resUtil";
 import { NinePatchButton } from "../ui/components/ninepatch.button";
-import InputText from "../../lib/phaser3-rexui/lib/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatch } from "../ui/components/nine.patch";
 import { Logger } from "../utils/log";
 import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
