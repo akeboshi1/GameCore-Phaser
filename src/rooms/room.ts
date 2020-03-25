@@ -221,6 +221,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // this.mCameraService.syncCameraScroll();
         }
 
+        this.world.uiManager.showMed("EnterSceneName", {name: "EnterSceneName", text: ["皮卡小镇"]});
+
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);

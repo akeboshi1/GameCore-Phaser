@@ -5,7 +5,7 @@ import { EnterSceneNamePanel } from "./EnterSceneNamePanel";
 
 export class EnterSceneNameMediator extends BaseMediator {
   constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, world: WorldService) {
-    super();
+    super(world);
   }
 
   show(param?: any) {
@@ -13,7 +13,15 @@ export class EnterSceneNameMediator extends BaseMediator {
       return;
     }
     this.mView = new EnterSceneNamePanel(this.scene, this.world);
+    this.mView.once("close", this.onCloseHandler, this);
     this.mView.show(param);
     this.layerManager.addToToolTipsLayer(this.mView);
+  }
+
+  private onCloseHandler() {
+    if (this.mView) {
+      this.mView.destroy();
+      this.mView = undefined;
+    }
   }
 }
