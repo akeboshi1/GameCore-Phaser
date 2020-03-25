@@ -48,7 +48,9 @@ export class ComboBox extends Phaser.GameObjects.Container implements ISelectCal
 
     public set text(value: string[]) {
         if (!this.mInitialize) {
-            this.mData = this.itemList[0].itemData;
+            if (this.itemList && this.itemList.length > 0) {
+                this.mData = this.itemList[0].itemData;
+            }
             return;
         }
         if (this.itemList) {

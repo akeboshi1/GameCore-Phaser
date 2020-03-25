@@ -1,6 +1,7 @@
 import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
 import { op_gameconfig, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule/lib/helpers";
+import { Logger } from "../../utils/log";
 export interface IAnimationData {
     name: string;
     frameName: string[];
@@ -39,7 +40,22 @@ export class Animation implements IAnimationData {
         this.mBaseLoc = tmpBaseLoc;
         this.mName = ani.name;
         this.mFrameName = ani.frameName;
+        if (!ani.frameName || this.mFrameName.length < 1) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} frames is invalid`);
+        }
         this.mLoop = ani.loop;
+        if (!ani.loop) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} loop is invalid`);
+        }
+        if (!ani.frameRate) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} frameRate is invalid`);
+        }
+        if (ani.originPoint) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} originPoint is invalid`);
+        }
+        if (!ani.baseLoc) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} baseLoc is invalid`);
+        }
         this.mFrameRate = ani.frameRate;
         this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;

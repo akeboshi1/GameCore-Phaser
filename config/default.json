@@ -1,4 +1,5 @@
 {
+    "debug":true,
     "api_root": "https://api-dev.tooqing.com/",
     "osd": "https://osd.tooqing.com/",
     "gateway": {

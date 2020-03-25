@@ -26,6 +26,7 @@ import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule/lib/helpers";
+import { Logger } from "../utils/log";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -527,6 +528,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+        if (!this.scene) {
+            Logger.getInstance().log("Room scene  does not exist");
+            return;
+        }
         const fall = new FallEffect(this.scene, this.mScaleRatio);
         fall.show(status);
         fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);

@@ -1,3 +1,5 @@
+import { Logger } from "../../utils/log";
+
 export class DynamicImage extends Phaser.GameObjects.Image {
     private mLoadCompleteCallbak: Function;
     private mLoadContext: any;
@@ -11,6 +13,10 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         this.mLoadCompleteCallbak = completeCallBack;
         this.mLoadErrorCallback = errorCallBack;
         this.mLoadContext = loadContext;
+        if (!this.scene) {
+            Logger.getInstance().fatal(`${DynamicImage.name} Create failed does not exist`);
+            return;
+        }
 
         this.mUrl = value;
         if (this.scene.cache.obj.exists(value)) {

@@ -14,6 +14,13 @@ export class Logger {
     if (!Logger._instance) Logger._instance = new Logger();
     return Logger._instance;
   }
+  fatal(message?: any,...optionalParams: any[]){
+    if(!CONFIG.debug){
+      return console.error(message,...optionalParams);
+    }
+
+    throw message;
+  }
   log(message?: any, ...optionalParams: any[]) {
     console.log(message, ...optionalParams);
   }
