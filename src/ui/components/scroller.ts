@@ -1,6 +1,6 @@
 import GameObjects = Phaser.GameObjects;
 import {Logger} from "../../utils/log";
-import Scroller from "../../../lib/rexui/plugins/input/scroller/Scroller";
+import Scroller from "../../../lib/phaser3-rexui/lib/plugins/input/scroller/Scroller";
 
 export class ScrollerContainer extends Scroller {
     private mMask: GameObjects.Graphics;

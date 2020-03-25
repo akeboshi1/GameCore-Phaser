@@ -1,4 +1,4 @@
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
+import NinePatch from "../../../lib/phaser3-rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import {Url} from "../../utils/resUtil";
 
 export class DynamicNinepatch {

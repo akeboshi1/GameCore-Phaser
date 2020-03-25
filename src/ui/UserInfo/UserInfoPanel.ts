@@ -1,7 +1,7 @@
 import { Panel } from "../components/panel";
 import { DynamicImage } from "../components/dynamic.image";
 import { Background, Border, Url, BlueButton } from "../../utils/resUtil";
-import NinePatch from "../../../lib/rexui/plugins/gameobjects/ninepatch/NinePatch";
+import NinePatch from "../../../lib/phaser3-rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatchButton } from "../components/ninepatch.button";

@@ -1,5 +1,5 @@
 import { ConnectionService } from "../net/connection.service";
-import InputText from "../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../lib/phaser3-rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Alert } from "../ui/alert/alert";
 import { WorldService } from "../game/world.service";
 import { ComboBox, IComboboxRes, ISelectCallUI, ISelectCallItemData } from "../ui/components/comboBox";

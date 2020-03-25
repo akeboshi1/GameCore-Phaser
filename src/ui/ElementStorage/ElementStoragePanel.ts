@@ -3,7 +3,7 @@ import {NinePatch} from "../components/nine.patch";
 import {Background, Border, Url} from "../../utils/resUtil";
 import {Size} from "../../utils/size";
 import {WorldService} from "../../game/world.service";
-import InputText from "../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
+import InputText from "../../../lib/phaser3-rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { Logger } from "../../utils/log";

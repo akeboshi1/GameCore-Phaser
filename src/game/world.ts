@@ -23,11 +23,11 @@ import { load } from "../utils/http";
 import { Url, ResUtils } from "../utils/resUtil";
 import { Lite } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
-import NinePatchPlugin from "../../lib/rexui/plugins/ninepatch-plugin.js";
-import InputTextPlugin from "../../lib/rexui/plugins/inputtext-plugin.js";
-import BBCodeTextPlugin from "../../lib/rexui/plugins/bbcodetext-plugin.js";
-import ButtonPlugin from "../../lib/rexui/plugins/button-plugin.js";
-import UIPlugin from "../../lib/rexui/templates/ui/ui-plugin.js";
+import NinePatchPlugin from "../../lib/phaser3-rexui/lib/plugins/ninepatch-plugin.js";
+import InputTextPlugin from "../../lib/phaser3-rexui/lib/plugins/inputtext-plugin.js";
+import BBCodeTextPlugin from "../../lib/phaser3-rexui/lib/plugins/bbcodetext-plugin.js";
+import ButtonPlugin from "../../lib/phaser3-rexui/lib/plugins/button-plugin.js";
+import UIPlugin from "../../lib/phaser3-rexui/lib/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
@@ -692,8 +692,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone"
-                    },
-                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
+                    }
+                    // { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
                 ]
             },
             render: {
@@ -709,6 +709,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         };
         Object.assign(this.gameConfig, this.mConfig);
         this.mGame = new Game(this.gameConfig);
+        this.mGame.input.mouse.capture = true;
         this.initUiScale();
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();

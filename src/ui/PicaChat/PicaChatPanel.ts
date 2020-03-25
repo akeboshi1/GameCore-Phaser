@@ -1,7 +1,7 @@
 import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
-import TextArea from "../../../lib/rexui/templates/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/plugins/gameobjects/text/bbocdetext/BBCodeText";
+import TextArea from "../../../lib/phaser3-rexui/lib/ui/textarea/TextArea";
+import BBCodeText from "../../../lib/phaser3-rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { Font } from "../../utils/font";
 import { Logger } from "../../utils/log";
 
