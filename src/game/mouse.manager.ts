@@ -87,8 +87,10 @@ export class MouseManager extends PacketHandler {
             events.push(MouseEvent.RightMouseUp);
         }
         let id = 0;
+        let com = null;
         if (gameobject && gameobject.parentContainer) {
             id = gameobject.parentContainer.getData("id");
+            com = gameobject.parentContainer;
         }
         if (pointer.isDown === false) {
             const diffX = Math.abs(pointer.downX - pointer.upX);
@@ -96,7 +98,6 @@ export class MouseManager extends PacketHandler {
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
                 this.worldService.emitter.emit("Tap", pointer, gameobject);
-                const com = gameobject.parentContainer;
                 if (pointer.isDown === false) {
                     if (com instanceof FramesDisplay) {
                         // com.element.scaleTween();
