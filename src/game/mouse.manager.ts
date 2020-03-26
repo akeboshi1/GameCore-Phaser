@@ -41,7 +41,7 @@ export class MouseManager extends PacketHandler {
     public changeRoom(room: IRoomService) {
         this.pause();
         this.mScene = room.scene;
-        this.mRoom = <Room> room;
+        this.mRoom = <Room>room;
         if (!this.mScene) return;
         try {
             room.addMouseListen();
@@ -87,23 +87,22 @@ export class MouseManager extends PacketHandler {
             events.push(MouseEvent.RightMouseUp);
         }
         let id = 0;
+        if (gameobject && gameobject.parentContainer) {
+            id = gameobject.parentContainer.getData("id");
+        }
         if (pointer.isDown === false) {
             const diffX = Math.abs(pointer.downX - pointer.upX);
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
                 this.worldService.emitter.emit("Tap", pointer, gameobject);
-
-                if (gameobject && gameobject.parentContainer) {
-                    const com = gameobject.parentContainer;
-                    id = gameobject.parentContainer.getData("id");
-                    if (pointer.isDown === false) {
-                        if (com instanceof FramesDisplay) {
-                            // com.element.scaleTween();
-                            const ele = com.element;
-                            if (ele instanceof Element) {
-                                com.scaleTween();
-                            }
+                const com = gameobject.parentContainer;
+                if (pointer.isDown === false) {
+                    if (com instanceof FramesDisplay) {
+                        // com.element.scaleTween();
+                        const ele = com.element;
+                        if (ele instanceof Element) {
+                            com.scaleTween();
                         }
                     }
                 }
@@ -116,7 +115,7 @@ export class MouseManager extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
         content.mouseEvent = events;
-        content.point3f = { x: pointer.worldX / this.zoom , y: pointer.worldY / this.zoom };
+        content.point3f = { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom };
         this.mConnect.send(pkt);
     }
 
