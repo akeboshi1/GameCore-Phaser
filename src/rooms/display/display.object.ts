@@ -159,7 +159,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         }
     }
 
-    scaleTween(): void {}
+    scaleTween(): void { }
 
     public showEffect() {
         this.addEffect(this.mBackEffect, Url.getRes("ui/vip/vip_effect_back.png"), Url.getRes("ui/vip/vip_effect_back.json"), true, 15, false, true);
@@ -241,6 +241,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
 
     get sortY(): number {
         return this.y;
+    }
+
+    get sortZ(): number {
+        return this.z || 0;
     }
 
     get element(): IElement {
