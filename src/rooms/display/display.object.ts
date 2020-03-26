@@ -44,7 +44,6 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         super(scene);
         this.mElement = element;
         this.mRoomService = roomService;
-        this.mChildMap = new Map();
         this.mAntial = antial;
     }
 

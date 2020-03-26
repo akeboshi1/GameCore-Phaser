@@ -27,6 +27,7 @@ import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
+import { WallManager } from "./wall/wall.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -102,6 +103,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mTerainManager: TerrainManager;
     protected mElementManager: ElementManager;
     protected mPlayerManager: PlayerManager;
+    protected mWallManager: WallManager;
     protected mLayManager: LayerManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
@@ -121,10 +123,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mWorld) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
-                this.addHandlerFun(
-                    op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE,
-                    this.onEnableEditModeHandler
-                );
+                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
                 this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
                 this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             }
@@ -192,6 +191,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mTerainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
+        this.mWallManager = new WallManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
         if (this.scene) {
