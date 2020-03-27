@@ -172,7 +172,7 @@ export class Element extends BlockObject implements IElement {
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (this.mInputEnable === InputEnable.Interactive) {
             this.setInputEnable(this.mInputEnable);
         }
@@ -306,8 +306,8 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
+            this.setDepth(p.depth);
         }
-        this.setDepth();
         this.updateBlock();
     }
 
@@ -508,12 +508,12 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         room.addToSurface(this.mDisplay);
-        this.setDepth();
+        this.setDepth(this.model.pos.depth);
     }
 
-    protected setDepth() {
+    protected setDepth(depth: number) {
         if (this.mDisplay) {
-            this.mDisplay.setDepth(this.mDisplay.x + this.mDisplay.y);
+            this.mDisplay.setDepth(depth);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }
@@ -529,7 +529,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) {
             this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
-            this.setDepth();
+            this.setDepth(this.model.pos.depth);
             // this.mDisplay.showRefernceArea();
         }
     }
@@ -557,7 +557,7 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            this.setDepth();
+            this.setDepth(this.model.pos.depth);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
             if (this.mBlockable) {

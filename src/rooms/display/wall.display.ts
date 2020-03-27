@@ -68,6 +68,10 @@ export class WallDisplay extends Phaser.GameObjects.Container implements Element
     return 0;
   }
 
+  get sortZ(): number {
+    return 0;
+  }
+
   get baseLoc(): Phaser.Geom.Point {
     return;
   }

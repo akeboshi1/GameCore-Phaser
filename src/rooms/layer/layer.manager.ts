@@ -1,7 +1,7 @@
 import { ElementDisplay } from "../display/element.display";
-import {IRoomService, Room} from "../room";
-import {GridLayer} from "./grid.layer";
-import {Logger} from "../../utils/log";
+import { IRoomService, Room } from "../room";
+import { GridLayer } from "./grid.layer";
+import { Logger } from "../../utils/log";
 
 export class LayerManager {
 
@@ -174,6 +174,11 @@ export class LayerManager {
 
                 // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
+                const depthA: number = displayA.depth ? displayA.depth : 0;
+                const depthB: number = displayB.depth ? displayB.depth : 0;
+                if (depthA > depthB) {
+                    return 1;
+                }
                 const angle: number = Math.atan2((displayA.sortY - displayB.sortY), (displayA.sortX - displayB.sortX));
                 if (angle * (180 * Math.PI) >= 70) {
                     return 1;
