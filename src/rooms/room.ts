@@ -19,6 +19,7 @@ import IActor = op_client.IActor;
 import { Map } from "./map/map";
 import { PlayerModel } from "./player/player.model";
 import { IElement, Element } from "./element/element";
+import { IBlockObject } from "./cameras/block.object";
 import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
 import { DisplayObject } from "./display/display.object";
@@ -73,11 +74,11 @@ export interface IRoomService {
 
     transformToMini90(p: Pos): Pos;
 
-    addBlockObject(object: IElement);
+    addBlockObject(object: IBlockObject);
 
-    removeBlockObject(object: IElement);
+    removeBlockObject(object: IBlockObject);
 
-    updateBlockObject(object: IElement);
+    updateBlockObject(object: IBlockObject);
 
     addToGround(element: ElementDisplay | ElementDisplay[]);
 
@@ -248,19 +249,19 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // playerDataModel.setmainPlayerInfo(data);
     }
 
-    public addBlockObject(object: IElement) {
+    public addBlockObject(object: IBlockObject) {
         if (this.blocks) {
             this.blocks.add(object);
         }
     }
 
-    public removeBlockObject(object: IElement) {
+    public removeBlockObject(object: IBlockObject) {
         if (this.blocks) {
             this.blocks.remove(object);
         }
     }
 
-    public updateBlockObject(object: IElement) {
+    public updateBlockObject(object: IBlockObject) {
         if (this.blocks) {
             this.blocks.check(object);
         }

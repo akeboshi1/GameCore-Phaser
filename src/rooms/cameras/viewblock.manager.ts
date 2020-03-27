@@ -1,19 +1,19 @@
 import { Viewblock } from "./viewblock";
 import { ICameraService } from "./cameras.manager";
 import { IPosition45Obj } from "../../utils/position45";
-import { IElement } from "../element/element";
 import { Pos } from "../../utils/pos";
+import { IBlockObject } from "./block.object";
 
 export interface ViewblockService {
     update(time: number, delta: number): void;
 
     int(size: IPosition45Obj): void;
 
-    add(e: IElement): boolean;
+    add(e: IBlockObject): boolean;
 
-    remove(e: IElement): boolean;
+    remove(e: IBlockObject): boolean;
 
-    check(e: IElement): void;
+    check(e: IBlockObject): void;
 
     destroy(): void;
 }
@@ -27,7 +27,7 @@ export class ViewblockManager implements ViewblockService {
         this.mCameras = cameras;
     }
 
-    public add(e: IElement): boolean {
+    public add(e: IBlockObject): boolean {
         if (!this.mCameras) return false;
         const miniView = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
@@ -41,7 +41,7 @@ export class ViewblockManager implements ViewblockService {
         }
     }
 
-    public remove(e: IElement): boolean {
+    public remove(e: IBlockObject): boolean {
         if (!e) return;
         for (const block of this.mBlocks) {
             if (block.remove(e)) {
@@ -50,7 +50,7 @@ export class ViewblockManager implements ViewblockService {
         }
     }
 
-    public check(e: IElement): void {
+    public check(e: IBlockObject): void {
         if (!e) return;
         for (const block of this.mBlocks) {
             if (block.inCamera) {
