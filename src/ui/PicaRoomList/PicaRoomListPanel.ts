@@ -510,7 +510,7 @@ class MyRoomZoon extends RoomZoon {
     this.mHeight = this.icon.height;
     this.mPad = pad ? pad : this.mPad;
     if (rooms.length > 0) {
-      this.mPad += this.mHeight;
+      // this.mPad += this.mHeight;
       // TODO 通过反射创建
       for (let i = 0; i < rooms.length; i++) {
         const room = new MyRoomItem(this.mScene, this.mKey, this.mDpr);
