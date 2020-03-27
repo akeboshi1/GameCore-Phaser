@@ -3,6 +3,7 @@ import { Wall, Direction } from "./wall";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Pos } from "../../utils/pos";
+import { Logger } from "../../utils/log";
 export class WallManager extends PacketHandler  {
   private mWalls: Map<number, Wall> = new Map<number, Wall>();
   constructor(protected mRoom: IRoomService) {
@@ -15,13 +16,90 @@ export class WallManager extends PacketHandler  {
   }
 
   protected _add(x: number, y: number, dir: Direction) {
-    // const wall = new Wall(this.mRoom);
-    // wall.setPosition(x, y);
+    const pos = this.mRoom.transformTo90(new Pos(x, y));
+    const wall = new Wall(this.mRoom, x * 1000000 + y * 1000, pos, dir);
+    // wall.setPosition(pos);
   }
 
   private onDawWallHandler(packet: PBpacket) {
     const terrain = this.mRoom.terrainManager;
     const pos = this.mRoom.transformTo90(new Pos(0, 0));
     this._add(pos.x, pos.y, Direction.UP);
+    const map = this.mRoom.world.elementStorage.getTerrainCollection().get(this.mRoom.id).data;
+    let lastW = -1;
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[0].length; j++) {
+        if (map[i][j] !== 0) {
+          if (this.isUp(i, j, map)) {
+            this._add(i, j, Direction.UP);
+          } else if (this.isLeft(i, j, map)) {
+            this._add(i, j, Direction.RIGHT);
+          } else if (this.isRight(i, j, map)) {
+            // if (lastW < j) {
+            //   i++;
+            //   break;
+            // }
+            this._add(i, j, Direction.LEFT);
+          } else if (this.isDown(i, j, map)) {
+            this._add(i, j, Direction.DOWN);
+          }
+        }
+        lastW = j;
+      }
+    }
+  }
+
+  private isUp(rows: number, cols: number, map: number[][]) {
+    if (rows === 0) {
+      if (cols === 0) {
+        return true;
+      } else if (map[rows][cols - 1] === 0) {
+        return true;
+      }
+      return false;
+    } else if (cols === 0) {
+      if (rows === 0) {
+        return true;
+      } else if (map[rows - 1][cols] === 0) {
+        return true;
+      }
+      return false;
+    }
+    if (map[rows - 1][cols] === 0 && map[rows][cols - 1] === 0) {
+      return true;
+    }
+    return false;
+  }
+
+  private isLeft(rows: number, cols: number, map: number[][]) {
+    if (cols === 0) {
+     if (rows > 0) {
+      return true;
+     }
+    } else if (rows > 0) {
+      if (cols > 0 && map[rows][cols - 1] === 0) {
+        return true;
+      }
+    }
+  }
+
+  private isRight(rows: number, cols: number, map: number[][]) {
+    if (rows === 0) {
+     if (cols > 0) {
+      return true;
+     }
+    } else if (cols > 0) {
+      if (rows > 0 && map[rows - 1][cols] === 0) {
+        return true;
+      }
+    }
+  }
+
+  private isDown(rows: number, cols: number, map: number[][]) {
+    if (rows > 0 && cols > 0) {
+      if (map[rows - 1][cols - 1] === 0 && map[rows - 1][cols] !== 0 && map[rows][cols - 1] !== 0) {
+        return true;
+      }
+    }
   }
 }

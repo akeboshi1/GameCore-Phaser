@@ -2,28 +2,37 @@ import { BlockObject } from "../cameras/block.object";
 import { ElementDisplay } from "../display/element.display";
 import { IRoomService } from "../room";
 import { WallDisplay } from "../display/wall.display";
-import { IElement } from "../element/element";
 import { Url } from "../../utils/resUtil";
+import { Pos } from "../../utils/pos";
 
 export enum Direction {
-    UP,
-    LEFT,
-    RIGHT,
-    DOWN
+    UP = "up",
+    LEFT = "left",
+    RIGHT = "right",
+    DOWN = "down"
 }
 
 export class Wall extends BlockObject {
     protected mDisplay?: WallDisplay;
-    constructor(private room: IRoomService) {
+    protected mDirection: Direction;
+    protected mPosition: Pos;
+    protected mID: number;
+    constructor(private room: IRoomService, id: number, pos: Pos, dir: Direction) {
         super(room);
-        this.mBlockable = false;
+        // this.mBlockable = false;
+        this.mID = id;
+        this.mDirection = dir;
+        this.mPosition = pos;
 
-        this.addDisplay();
+        this.createDisplay();
     }
 
-    setPosition(x: number, y: number) {
-      this.mDisplay.x = x;
-      this.mDisplay.y = y;
+    setPosition(pos: Pos) {
+      this.mPosition = pos;
+      if (this.mDisplay) {
+        this.mDisplay.x = pos.x;
+        this.mDisplay.y = pos.y;
+      }
     }
 
     protected createDisplay(): ElementDisplay {
@@ -37,16 +46,18 @@ export class Wall extends BlockObject {
         const scene = this.room.scene;
         if (scene) {
             this.mDisplay = new WallDisplay(scene, this.room);
+            // this.setPosition(this.mPosition.x, this.mPosition.y);
+            this.setPosition(this.mPosition);
             this.mDisplay.once("initialized", this.onInitializedHandler, this);
             this.mDisplay.loadDisplay(Url.getRes("wall/wall.png"), Url.getRes("wall/wall.json"));
-            // this.addToBlock();
+            this.addToBlock();
             // this.mDisplay.load(this.mDisplayInfo);
         }
         return this.mDisplay;
     }
 
     protected onInitializedHandler() {
-
+      this.mDisplay.setDir(this.mDirection);
     }
 
     protected addDisplay() {
@@ -55,12 +66,13 @@ export class Wall extends BlockObject {
             // Logger.getInstance().error("display does not exist");
             return;
         }
-        this.mRoomService.addToGround(this.mDisplay);
+        this.mRoomService.addToGround(this.mDisplay, 0);
         this.setDepth();
     }
 
     protected setDepth() {
         if (this.mDisplay) {
+            this.mDisplay.setDepth(this.mDisplay.y);
             if (!this.mRoomService) {
                 throw new Error("roomService is undefined");
             }
@@ -70,5 +82,9 @@ export class Wall extends BlockObject {
             }
             layerManager.depthGroundDirty = true;
         }
+    }
+
+    get id(): number {
+      return this.mID;
     }
 }

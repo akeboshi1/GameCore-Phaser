@@ -146,10 +146,10 @@ export class PicaRoomListPanel extends Panel {
       },
       cellupCallBack: (gameobject: RoomItem) => {
         gameobject.onEnterRoomHandler();
-        Logger.getInstance().log(gameobject.roomData().name);
+        // Logger.getInstance().log(gameobject.roomData().name);
       }
     };
-    this.mScroller = new GameScroller(this.mScene, this.mRoomContainer, config);
+    this.mScroller = new GameScroller(this.scene, this.mRoomContainer, config);
     checkbox.selectIndex(0);
     this.addActionListener();
   }

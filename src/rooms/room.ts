@@ -80,7 +80,7 @@ export interface IRoomService {
 
     updateBlockObject(object: IBlockObject);
 
-    addToGround(element: ElementDisplay | ElementDisplay[]);
+    addToGround(element: ElementDisplay | ElementDisplay[], index?: number);
 
     addToSurface(element: ElementDisplay | ElementDisplay[]);
 
@@ -267,8 +267,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public addToGround(element: ElementDisplay | ElementDisplay[]) {
-        this.layerManager.addToGround(element);
+    public addToGround(element: ElementDisplay | ElementDisplay[], index?: number) {
+        this.layerManager.addToGround(element, index);
     }
 
     public addToSurface(element: ElementDisplay | ElementDisplay[]) {

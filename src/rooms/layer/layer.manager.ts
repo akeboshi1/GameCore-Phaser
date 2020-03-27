@@ -97,9 +97,13 @@ export class LayerManager {
         // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
-    public addToGround(ele: ElementDisplay | ElementDisplay[]) {
+    public addToGround(ele: ElementDisplay | ElementDisplay[], index?: number) {
         const tmp = [].concat(ele);
-        this.mGroundLayer.add(tmp);
+        if (index !== undefined) {
+            this.mGroundLayer.addAt(ele, index);
+        } else {
+            this.mGroundLayer.add(tmp);
+        }
         // this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
         // Logger.log("terrain num: ", this.mGroundLayer.list.length);
     }
