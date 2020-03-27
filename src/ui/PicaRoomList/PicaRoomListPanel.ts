@@ -5,8 +5,8 @@ import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/scroller";
-import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/scrollerConfig";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
+import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 import { Logger } from "../../utils/log";
 
 export class PicaRoomListPanel extends Panel {
