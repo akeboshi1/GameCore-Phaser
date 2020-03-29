@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { Font } from "../../utils/font";
-import { Logger } from "../../utils/log";
+import { InputPanel } from "../components/input.panel";
 
 export class PicaChatPanel extends Panel {
     private readonly key: string = "pica_chat";
@@ -288,39 +288,5 @@ export class PicaChatPanel extends Panel {
         }
         this.emit("chat", val);
         this.mInputText = undefined;
-    }
-}
-
-class InputPanel extends Phaser.Events.EventEmitter {
-    private mBackground: Phaser.GameObjects.Graphics;
-    private mInput;
-    constructor(scene: Phaser.Scene, world: WorldService) {
-        super();
-        const width = scene.cameras.main.width;
-        const height = scene.cameras.main.height;
-        this.mBackground = scene.add.graphics();
-        this.mBackground.fillStyle(0x0, 0.6);
-        this.mBackground.fillRect(0, 0, width, height).setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-
-        this.mInput = (<any>scene.add).rexInputText(6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
-            fontSize: `${20 * world.uiRatio}px`,
-            color: "#0",
-            backgroundColor: "#FFFFFF",
-            borderColor: "#FF9900"
-        }).setOrigin(0, 0).setFocus();
-        // this.mInput.y = -height / 2;
-        this.mInput.node.addEventListener("keypress", (e) => {
-            const keycode = e.keyCode || e.which;
-            if (keycode === 13) {
-                this.onCloseHandler();
-            }
-        });
-    }
-
-    private onCloseHandler() {
-        this.emit("close", this.mInput.text);
-        this.mBackground.destroy();
-        this.mInput.destroy();
-        this.destroy();
     }
 }

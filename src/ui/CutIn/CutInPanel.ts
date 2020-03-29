@@ -2,22 +2,25 @@ import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
+import { op_client } from "pixelpai_proto";
 
-export class EnterSceneNamePanel extends Panel {
-  private readonly key = "enter_scene_name";
+export class CutInPanel extends Panel {
+  private readonly key = "cut_in";
   private mName: Phaser.GameObjects.Text;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
   }
 
-  show(param) {
+  show(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[]) {
     this.mData = param;
     if (!this.mInitialized) {
         this.preload();
         return;
     }
+    if (param.length < 1) return;
+    const text = param[0].text;
     if (this.mName) {
-      this.mName.setText("进入房间名字");
+      this.mName.setText(text[0].text);
     }
     const width = this.scene.cameras.main.width;
     this.x = width + this.width / 2;
@@ -47,7 +50,7 @@ export class EnterSceneNamePanel extends Panel {
   }
 
   preload() {
-    this.scene.load.image(this.key, Url.getUIRes(this.dpr, "enter_scene_name/enter_scene_name_bg.png"));
+    this.scene.load.image(this.key, Url.getUIRes(this.dpr, "cut_in/cut_in_bg.png"));
     super.preload();
   }
 

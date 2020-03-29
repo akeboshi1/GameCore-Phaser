@@ -1,9 +1,9 @@
 import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
-import { EnterSceneNamePanel } from "./EnterSceneNamePanel";
+import { CutInPanel } from "./CutInPanel";
 
-export class EnterSceneNameMediator extends BaseMediator {
+export class CutInMediator extends BaseMediator {
   constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, world: WorldService) {
     super(world);
   }
@@ -12,7 +12,7 @@ export class EnterSceneNameMediator extends BaseMediator {
     if (this.mView && this.mView.isShow()) {
       return;
     }
-    this.mView = new EnterSceneNamePanel(this.scene, this.world);
+    this.mView = new CutInPanel(this.scene, this.world);
     this.mView.once("close", this.onCloseHandler, this);
     this.mView.show(param);
     this.layerManager.addToToolTipsLayer(this.mView);
