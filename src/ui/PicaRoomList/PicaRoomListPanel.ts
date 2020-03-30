@@ -163,7 +163,7 @@ export class PicaRoomListPanel extends Panel {
       this.mMyRoomDele.removeFromContainer();
       this.mMyRoomDele.off("enterRoom", this.onEnterRoomHandler, this);
     }
-    if (!this.mRoomDele) this.mRoomDele = new RoomDelegate(this.mRoomContainer, this.mScroller, this.scene, this.key, this.dpr);
+    if (!this.mRoomDele) this.mRoomDele = new RoomDelegate(this.mRoomContainer, this.mScroller, this.scene, this.mWorld, this.key, this.dpr);
     this.mRoomDele.on("enterRoom", this.onEnterRoomHandler, this);
     this.mRoomDele.addToContainer();
     this.emit("getRoomList");
@@ -174,7 +174,7 @@ export class PicaRoomListPanel extends Panel {
       this.mRoomDele.removeFromContainer();
       this.mRoomDele.off("enterRoom", this.onEnterRoomHandler, this);
     }
-    if (!this.mMyRoomDele) this.mMyRoomDele = new MyRoomDelegate(this.mRoomContainer, this.mScroller, this.scene, this.key, this.dpr);
+    if (!this.mMyRoomDele) this.mMyRoomDele = new MyRoomDelegate(this.mRoomContainer, this.mScroller, this.mWorld, this.scene, this.key, this.dpr);
     this.mMyRoomDele.on("enterRoom", this.onEnterRoomHandler, this);
     this.mMyRoomDele.addToContainer();
     this.emit("getMyRoomList");
@@ -222,11 +222,13 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   protected mContainer: Phaser.GameObjects.Container;
   protected mShow: boolean = false;
   protected mKey: string;
+  protected mWorld: WorldService;
   private mPopularityRoom: RoomZoon;
   private mPlayerRoom: RoomZoon;
-  constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, scene: Phaser.Scene, key: string, dpr: number = 1) {
+  constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, scene: Phaser.Scene, world: WorldService, key: string, dpr: number = 1) {
     super();
     this.mDpr = dpr;
+    this.mWorld = world;
     this.mChildPad = 0;
     this.mScene = scene;
     this.mContainer = container;
@@ -298,6 +300,8 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     if (this.mPopularityRoom.roomList) this.mContainer.add(this.mPopularityRoom.roomList);
     if (this.mPlayerRoom.showList) this.mContainer.add(this.mPlayerRoom.showList);
     if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
+    const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
+    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - this.mChildPad - 100 * this.mWorld.uiRatio + (350 * this.mWorld.uiRatio / 2));
   }
 
   protected onEnterRoomHandler(room) {
@@ -315,8 +319,8 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
 class MyRoomDelegate extends RoomDelegate {
   private mMyRoom: RoomZoon;
   private mMyHistory: RoomZoon;
-  constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, scene: Phaser.Scene, key: string, dpr: number = 1) {
-    super(container, scroller, scene, key, dpr);
+  constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, world: WorldService, scene: Phaser.Scene, key: string, dpr: number = 1) {
+    super(container, scroller, scene, world, key, dpr);
   }
 
   addListen() {
@@ -354,6 +358,8 @@ class MyRoomDelegate extends RoomDelegate {
     if (this.mMyRoom.roomList) this.mContainer.add(this.mMyRoom.roomList);
     if (this.mMyHistory.showList) this.mContainer.add(this.mMyHistory.showList);
     if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
+    const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
+    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - 100 * this.mWorld.uiRatio + (350 * this.mWorld.uiRatio / 2));
   }
 
   protected init() {

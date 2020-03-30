@@ -12,6 +12,7 @@ import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { Logger } from "../../utils/log";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
+import { Size } from "../../utils/size";
 
 export class FurniBagPanel extends Panel {
   private key: string = "furni_bag";
@@ -37,7 +38,7 @@ export class FurniBagPanel extends Panel {
   private mDetailBubble: DetailBubble;
   private mSceneType: op_def.SceneTypeEnum;
   private mEnableEdit: boolean = false;
-
+  private mInputBoo: boolean = false;
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
@@ -63,7 +64,7 @@ export class FurniBagPanel extends Panel {
     this.mCategoriesBar.fillStyle(0x33ccff);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
     this.mCategoriesBar.fillStyle(0x00cccc);
-    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr *zoom);
+    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
     this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
     this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
 
@@ -179,7 +180,7 @@ export class FurniBagPanel extends Panel {
     this.mBackground = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScaleNew;
 
-    this.mBg =this.scene.make.image({
+    this.mBg = this.scene.make.image({
       key: this.key,
       frame: "bg.png"
     }, false).setScale(zoom);
@@ -247,21 +248,21 @@ export class FurniBagPanel extends Panel {
       this.add(this.mAdd);
     }
 
-    const w = this.scene.cameras.main.width;
-
+    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
     this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesContainer, {
       x: 0,
-      y: this.mShelfContainer.y,
+      y: this.mCategeoriesContainer.y,
       width: w,
       height: 41 * this.dpr * zoom,
       value: w / 2,
+      orientation: 1,
       bounds: [
         -w / 2,
         w / 2
       ],
       valuechangeCallback: (newValue) => {
-        Logger.getInstance().log("=====>", newValue);
-        this.mCategeoriesContainer.x = newValue - w / 2;
+        this.refreshPos(newValue);
       },
       cellupCallBack: (gameobject) => {
         this.onSelectSubCategoryHandler(gameobject);
@@ -286,7 +287,7 @@ export class FurniBagPanel extends Panel {
       clamplChildOY: true,
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
-              item = cell.item;
+          item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -318,6 +319,13 @@ export class FurniBagPanel extends Panel {
     this.emit("getCategories");
 
     this.resize(0, 0);
+  }
+
+  private refreshPos(value: number) {
+    const zoom: number = this.mWorld.uiScaleNew;
+    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+    this.mCategeoriesContainer.x = value - w / 2;
   }
 
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
@@ -358,7 +366,7 @@ export class FurniBagPanel extends Panel {
           const preBtn = this.mPreCategoryBtn.getData("item");
           key = preBtn.key;
           if (key === this.seachKey) {
-           this.closeSeach(gameobject);
+            this.closeSeach(gameobject);
           }
         }
         this.mSelectedCategeories = category;
@@ -396,7 +404,7 @@ export class FurniBagPanel extends Panel {
     this.mCategeoriesContainer.addAt(this.mSeachInput, 1);
     this.mCategoryScroll.setInteractiveObject(this.mSeachInput.seachBtn);
     this.mCategoryScroll.setInteractiveObject(this.mSeachInput.label);
-    this.updateCategeoriesLoc();
+    this.updateCategeoriesLoc(true);
   }
 
   private closeSeach(parent: TextButton) {
@@ -406,21 +414,27 @@ export class FurniBagPanel extends Panel {
     this.mCategeoriesContainer.remove(this.mSeachInput);
     this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.seachBtn);
     this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.label);
-    this.updateCategeoriesLoc();
+    this.updateCategeoriesLoc(false);
   }
 
-  private updateCategeoriesLoc() {
+  private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategeoriesContainer.list;
+    const zoom = this.mWorld.uiScaleNew;
+    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
+    const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
     for (let i = 0; i < list.length; i++) {
-      const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> list[i];
+      const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>list[i];
       if (i > 0) {
-        preBtn = <Phaser.GameObjects.Container> list[i - 1];
+        preBtn = <Phaser.GameObjects.Container>list[i - 1];
         item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
       } else {
         item.x = 0;
       }
     }
+    const inputWid: number = inputBoo ? 200 * this.dpr * zoom : 0;
+    const updateWid: number = w + inputWid;
+    this.mCategoryScroll.setSize(updateWid, h, -w / 2 - inputWid, w / 2);
   }
 
   get enableEdit() {
@@ -465,7 +479,7 @@ class SeachInput extends Phaser.GameObjects.Container {
       frame: "seach_normal.png"
     }, false).setData("type", "seachBtn");
     this.mSeachBtn.x = bg.displayWidth - this.mSeachBtn.width / 2 - 4 * dpr,
-    this.add([bg, this.mLabelInput, this.mSeachBtn]);
+      this.add([bg, this.mLabelInput, this.mSeachBtn]);
     this.setSize(bg.displayWidth + 20 * dpr, bg.displayHeight);
 
     // this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
@@ -488,7 +502,7 @@ class SeachInput extends Phaser.GameObjects.Container {
 
   private sendChat(val: string) {
     this.mLabelInput.setText(val);
-}
+  }
 
   get seachBtn(): Phaser.GameObjects.Image {
     return this.mSeachBtn;
