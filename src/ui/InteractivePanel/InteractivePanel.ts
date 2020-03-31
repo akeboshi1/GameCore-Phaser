@@ -133,8 +133,13 @@ export class InteractivePanel extends Panel {
     public resize(wid: number = 0, hei: number = 0) {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
-        this.mNameCon.add([this.mNameBg, this.mNameTF, this.mBg, this.mBorder, this.mDescTF]);
-        this.add([this.mNameCon, this.mDescCon]);
+        this.mNameCon.add(this.mNameBg);
+        this.mNameCon.add(this.mNameTF);
+        this.mDescCon.add(this.mBg);
+        this.mDescCon.add(this.mBorder);
+        this.mDescCon.add(this.mDescTF);
+        this.add(this.mNameCon);
+        this.add(this.mDescCon);
         if (this.mWorld.game.device.os.desktop) {
             this.y = size.height / 2 - 250;
         } else {
@@ -272,7 +277,6 @@ export class InteractivePanel extends Panel {
         this.mNameTF.y = -8 * this.mWorld.uiScale;
         this.mDescTF.x = -this.mBorder.width / 2;
         this.mDescTF.y = -this.mBorder.height / 2;
-
         this.mDescCon.y = this.mWorld.game.device.os.desktop ? size.height / 2 + 80 : 0;
         this.mNameCon.x = 150 - this.mDescCon.width / 2;
         this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
