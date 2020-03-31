@@ -4,80 +4,80 @@
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 22,
-				"h": 132
+				"w": 62,
+				"h": 172
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 22,
-				"h": 132
+				"w": 62,
+				"h": 172
 			},
 			"sourceSize": {
-				"w": 22,
-				"h": 132
+				"w": 62,
+				"h": 172
 			}
 		},
 		"wall_left.png": {
 			"frame": {
-				"x": 25,
+				"x": 65,
 				"y": 1,
-				"w": 16,
-				"h": 132
+				"w": 36,
+				"h": 172
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 16,
-				"h": 132
+				"w": 36,
+				"h": 172
 			},
 			"sourceSize": {
-				"w": 16,
-				"h": 132
+				"w": 36,
+				"h": 172
 			}
 		},
 		"wall_right.png": {
 			"frame": {
-				"x": 43,
+				"x": 103,
 				"y": 1,
-				"w": 16,
-				"h": 132
+				"w": 36,
+				"h": 172
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 16,
-				"h": 132
+				"w": 36,
+				"h": 172
 			},
 			"sourceSize": {
-				"w": 16,
-				"h": 132
+				"w": 36,
+				"h": 172
 			}
 		},
 		"wall_up.png": {
 			"frame": {
-				"x": 61,
+				"x": 141,
 				"y": 1,
-				"w": 30,
-				"h": 134
+				"w": 70,
+				"h": 174
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 30,
-				"h": 134
+				"w": 70,
+				"h": 174
 			},
 			"sourceSize": {
-				"w": 30,
-				"h": 134
+				"w": 70,
+				"h": 174
 			}
 		}
 	},
@@ -87,8 +87,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 92,
-			"h": 136
+			"w": 212,
+			"h": 176
 		},
 		"scale": "1"
 	}

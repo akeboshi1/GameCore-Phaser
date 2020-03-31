@@ -26,10 +26,11 @@ export class WallManager extends PacketHandler  {
     const pos = this.mRoom.transformTo90(new Pos(0, 0));
     this._add(pos.x, pos.y, Direction.UP);
     const map = this.mRoom.world.elementStorage.getTerrainCollection().get(this.mRoom.id).data;
-    let lastW = -1;
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[0].length; j++) {
-        if (map[i][j] !== 0) {
+          if (map[i][j] === 0) {
+            continue;
+          }
           if (this.isUp(i, j, map)) {
             this._add(i, j, Direction.UP);
           } else if (this.isLeft(i, j, map)) {
@@ -43,8 +44,8 @@ export class WallManager extends PacketHandler  {
           } else if (this.isDown(i, j, map)) {
             this._add(i, j, Direction.DOWN);
           }
-        }
-        lastW = j;
+        // lastW = j;
+          // break;
       }
     }
   }

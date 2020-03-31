@@ -29,6 +29,7 @@ import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
+import { CloseShot } from "./background/close.shot";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -198,9 +199,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            const zoom = Math.ceil(window.devicePixelRatio);
+            // const zoom = Math.ceil(window.devicePixelRatio);
             // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
-            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
+            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * this.mScaleRatio + camera.width, this.mSize.sceneHeight * this.mScaleRatio + camera.height);
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -222,19 +223,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // this.mCameraService.syncCameraScroll();
         }
 
-        // this.world.uiManager.showMed("EnterSceneName", {name: "EnterSceneName", text: ["皮卡小镇"]});
-
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
-        // this.mWorld.inputManager.enable = true;
+
+        // const close = new CloseShot(this.world, this.mCameraService);
     }
 
     public pause() {
         if (this.mScene) this.mScene.scene.pause();
         if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = false;
-        // this.clockSyncComplete = false;
-        // todo launch
     }
 
     public resume(name: string) {
@@ -245,8 +243,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public addActor(data: IActor): void {
         this.mActorData = data;
-        // const playerDataModel = this.mWorld.modelManager.getModel(PlayerDataModel.NAME) as PlayerDataModel;
-        // playerDataModel.setmainPlayerInfo(data);
     }
 
     public addBlockObject(object: IBlockObject) {

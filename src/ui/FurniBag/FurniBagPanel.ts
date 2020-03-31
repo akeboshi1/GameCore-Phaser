@@ -169,6 +169,16 @@ export class FurniBagPanel extends Panel {
     }
   }
 
+  destroy() {
+    if (this.mCategoryScroll) {
+      this.mCategoryScroll.destroy();
+    }
+    if (this.mPropGrid) {
+      this.mPropGrid.destroy();
+    }
+    super.destroy();
+  }
+
   protected preload() {
     this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
     super.preload();
@@ -322,6 +332,9 @@ export class FurniBagPanel extends Panel {
   }
 
   private refreshPos(value: number) {
+    if (!this.scene) {
+      return;
+    }
     const zoom: number = this.mWorld.uiScaleNew;
     const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
     const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;

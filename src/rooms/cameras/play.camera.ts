@@ -3,9 +3,11 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
     private matrix: any;
     private rotation: any;
     private pixelRatio: number;
-    constructor(x: number, y: number, width: number, height: number, pixelRatio: number) {
+    private moveRatio: number;
+    constructor(x: number, y: number, width: number, height: number, pixelRatio: number, moveRatio?: number) {
         super(x, y, width, height);
         this.pixelRatio = pixelRatio;
+        this.moveRatio = moveRatio || 1;
     }
 
     startFollow(target: any, roundPixels: boolean, lerpX: number, lerpY: number, offsetX: number, offsetY: number) {
@@ -29,8 +31,8 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
         const originX = this.width / 2;
         const originY = this.height / 2;
 
-        const fx = target.x * this.pixelRatio - offsetX;
-        const fy = target.y * this.pixelRatio - offsetY;
+        const fx = target.x * this.pixelRatio * this.moveRatio - offsetX;
+        const fy = target.y * this.pixelRatio * this.moveRatio - offsetY;
 
         this.midPoint.set(fx, fy);
 
@@ -69,8 +71,8 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
         }
 
         if (follow && !this.panEffect.isRunning) {
-            const fx = (follow.x * this.pixelRatio - this.followOffset.x);
-            const fy = (follow.y * this.pixelRatio - this.followOffset.y);
+            const fx = (follow.x * this.pixelRatio * this.moveRatio - this.followOffset.x);
+            const fy = (follow.y * this.pixelRatio * this.moveRatio - this.followOffset.y);
 
             if (deadzone) {
                 if (fx < deadzone.x) {
