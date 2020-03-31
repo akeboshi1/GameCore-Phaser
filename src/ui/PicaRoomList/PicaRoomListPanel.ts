@@ -301,6 +301,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     if (this.mPlayerRoom.showList) this.mContainer.add(this.mPlayerRoom.showList);
     if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
     const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
+    this.mContainer.setSize(this.mScroller.width, this.mChildPad);
     this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - this.mChildPad - 100 * this.mWorld.uiRatio + (350 * this.mWorld.uiRatio / 2));
   }
 
@@ -359,7 +360,8 @@ class MyRoomDelegate extends RoomDelegate {
     if (this.mMyHistory.showList) this.mContainer.add(this.mMyHistory.showList);
     if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
     const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
-    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - this.mChildPad + 320 * this.mWorld.uiRatio);
+    this.mContainer.setSize(this.mScroller.width, this.mChildPad);
+    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], (h - this.mChildPad) / 2 + (350 * this.mWorld.uiRatio / 2));
   }
 
   protected init() {
