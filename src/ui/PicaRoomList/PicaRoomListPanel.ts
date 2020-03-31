@@ -146,7 +146,7 @@ export class PicaRoomListPanel extends Panel {
       },
       cellupCallBack: (gameobject: RoomItem) => {
         gameobject.onEnterRoomHandler();
-        // Logger.getInstance().log(gameobject.roomData().name);
+        Logger.getInstance().log(gameobject.roomData().name);
       }
     };
     this.mScroller = new GameScroller(this.scene, this.mRoomContainer, config);
@@ -223,7 +223,8 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   protected mShow: boolean = false;
   protected mKey: string;
   protected mWorld: WorldService;
-  private mPopularityRoom: RoomZoon;
+  protected mHeight: number = 0;
+  private mPopularityRoom: PopularRoomZoon;
   private mPlayerRoom: RoomZoon;
   constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, scene: Phaser.Scene, world: WorldService, key: string, dpr: number = 1) {
     super();
@@ -248,12 +249,13 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   }
 
   updateList(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
+    this.mScroller.clearInteractiveObject();
+    this.mHeight = this.activity.height;
     this.mChildPad = this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
     this.mPopularityRoom.addItem(content.popularRooms, this.mChildPad);
+    if (this.mPopularityRoom.roomList) this.setScrollInteractive(this.mPopularityRoom.roomList);
     this.mChildPad += this.mPopularityRoom.height + 10 * this.mDpr;
     this.mPlayerRoom.addItem(content.playerRooms, this.mChildPad);
-    this.mScroller.clearInteractiveObject();
-    if (this.mPopularityRoom.roomList) this.setScrollInteractive(this.mPopularityRoom.roomList);
     if (this.mPlayerRoom.roomList) this.setScrollInteractive(this.mPlayerRoom.roomList);
   }
 
@@ -285,10 +287,12 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     }, false);
     this.activity.y = this.activity.height / 2 + 2 * this.mDpr;
     this.mChildPad += this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
-    this.mPopularityRoom = new PopularRoomZoon(this.mScene, this.mKey, "popularity_icon.png", i18n.t("room_list.popularity_room"), this.mDpr, 0, this.mChildPad, () => {
+    this.mPopularityRoom = new PopularRoomZoon(this.mScene, this.mKey, "popularity_icon.png", i18n.t("room_list.popularity_room"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+      this.mHeight += hei;
       this.refreshPos();
     });
-    this.mPlayerRoom = new RoomZoon(this.mScene, this.mKey, "player_icon.png", i18n.t("room_list.player_room"), this.mDpr, 0, this.mChildPad, () => {
+    this.mPlayerRoom = new RoomZoon(this.mScene, this.mKey, "player_icon.png", i18n.t("room_list.player_room"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+      this.mHeight += hei;
       this.refreshPos();
     });
     this.mShow = true;
@@ -300,9 +304,12 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     if (this.mPopularityRoom.roomList) this.mContainer.add(this.mPopularityRoom.roomList);
     if (this.mPlayerRoom.showList) this.mContainer.add(this.mPlayerRoom.showList);
     if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
-    const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
-    this.mContainer.setSize(this.mScroller.width, this.mChildPad);
-    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - this.mChildPad - 100 * this.mWorld.uiRatio + (350 * this.mWorld.uiRatio / 2));
+    this.mContainer.setSize(this.mScroller.width, this.mHeight);
+    const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
+    const parentY: number = this.mContainer.parentContainer.y;
+    const refreshHei: number = parentY - h + (540 * this.mDpr / 2);
+    this.mScroller.setSize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScaleNew + (80 * this.mWorld.uiRatio / 2));
   }
 
   protected onEnterRoomHandler(room) {
@@ -318,7 +325,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
 }
 
 class MyRoomDelegate extends RoomDelegate {
-  private mMyRoom: RoomZoon;
+  private mMyRoom: MyRoomZoon;
   private mMyHistory: RoomZoon;
   constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, world: WorldService, scene: Phaser.Scene, key: string, dpr: number = 1) {
     super(container, scroller, scene, world, key, dpr);
@@ -338,12 +345,13 @@ class MyRoomDelegate extends RoomDelegate {
     if (!this.mMyRoom) {
       return;
     }
+    this.mScroller.clearInteractiveObject();
+    this.mHeight = this.activity.height;
     this.mChildPad = this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
     this.mMyRoom.addItem(content.selfRooms, this.mChildPad);
+    if (this.mMyRoom.roomList) this.setScrollInteractive(this.mMyRoom.roomList);
     this.mChildPad += this.mMyRoom.height + 14 * this.mDpr;
     this.mMyHistory.addItem(content.historyRooms, this.mChildPad);
-    this.mScroller.clearInteractiveObject();
-    if (this.mMyRoom.roomList) this.setScrollInteractive(this.mMyRoom.roomList);
     if (this.mMyHistory.roomList) this.setScrollInteractive(this.mMyHistory.roomList);
   }
 
@@ -359,9 +367,11 @@ class MyRoomDelegate extends RoomDelegate {
     if (this.mMyRoom.roomList) this.mContainer.add(this.mMyRoom.roomList);
     if (this.mMyHistory.showList) this.mContainer.add(this.mMyHistory.showList);
     if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
-    const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
-    this.mContainer.setSize(this.mScroller.width, this.mChildPad);
-    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], (h - this.mChildPad) / 2 + (350 * this.mWorld.uiRatio / 2));
+    this.mContainer.setSize(this.mScroller.width, this.mHeight);
+    const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
+    const parentY: number = this.mContainer.parentContainer.y;
+    const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
+    this.mScroller.setSize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
   }
 
   protected init() {
@@ -371,10 +381,12 @@ class MyRoomDelegate extends RoomDelegate {
     }, false);
     this.activity.y = this.activity.height / 2 + 2 * this.mDpr;
     this.mChildPad += this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
-    this.mMyRoom = new MyRoomZoon(this.mScene, this.mKey, "my_room_icon.png", i18n.t("room_list.my_room"), this.mDpr, 0, this.mChildPad, () => {
+    this.mMyRoom = new MyRoomZoon(this.mScene, this.mKey, "my_room_icon.png", i18n.t("room_list.my_room"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+      this.mHeight += hei;
       this.refreshPos();
     });
-    this.mMyHistory = new RoomZoon(this.mScene, this.mKey, "history_icon.png", i18n.t("room_list.my_history"), this.mDpr, 0, this.mChildPad, () => {
+    this.mMyHistory = new RoomZoon(this.mScene, this.mKey, "history_icon.png", i18n.t("room_list.my_history"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+      this.mHeight += hei;
       this.refreshPos();
     });
     // this.mChildPad += 100 * this.mDpr;
@@ -473,7 +485,7 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
       }
     }
     if (this.mAddCallBack) {
-      this.mAddCallBack(this.mPad);
+      this.mAddCallBack(this.mHeight);
     }
   }
 
@@ -531,13 +543,13 @@ class MyRoomZoon extends RoomZoon {
       }
     }
     if (this.mAddCallBack) {
-      this.mAddCallBack(this.mPad);
+      this.mAddCallBack(this.mHeight);
     }
   }
 }
 
 class PopularRoomZoon extends RoomZoon {
-  addItem(rooms: op_client.IEditModeRoom[], pad: number = 0) {
+  addItem(rooms: op_client.IEditModeRoom[], pad: number = 0): number {
     this.clear();
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
@@ -563,6 +575,7 @@ class PopularRoomZoon extends RoomZoon {
     if (this.mAddCallBack) {
       this.mAddCallBack(this.mPad);
     }
+    return this.mHeight;
   }
 }
 
