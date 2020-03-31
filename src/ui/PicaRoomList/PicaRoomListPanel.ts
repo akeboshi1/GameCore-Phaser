@@ -339,7 +339,7 @@ class MyRoomDelegate extends RoomDelegate {
     }
     this.mChildPad = this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
     this.mMyRoom.addItem(content.selfRooms, this.mChildPad);
-    this.mChildPad += this.mMyRoom.height + 10 * this.mDpr;
+    this.mChildPad += this.mMyRoom.height + 14 * this.mDpr;
     this.mMyHistory.addItem(content.historyRooms, this.mChildPad);
     this.mScroller.clearInteractiveObject();
     if (this.mMyRoom.roomList) this.setScrollInteractive(this.mMyRoom.roomList);
@@ -359,7 +359,7 @@ class MyRoomDelegate extends RoomDelegate {
     if (this.mMyHistory.showList) this.mContainer.add(this.mMyHistory.showList);
     if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
     const h: number = this.mContainer.height * this.mWorld.uiScale * this.mWorld.uiRatio;
-    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - 100 * this.mWorld.uiRatio + (350 * this.mWorld.uiRatio / 2));
+    this.mScroller.setSize(this.mScroller.width, this.mChildPad, this.mScroller.bounds[0], h - this.mChildPad + 320 * this.mWorld.uiRatio);
   }
 
   protected init() {
