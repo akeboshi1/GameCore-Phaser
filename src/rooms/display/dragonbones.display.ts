@@ -813,7 +813,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     const name = frames[i];
                     // =============龙骨part资源key 带图片资源名及方向
                     const key = name.split("/")[1].split("_");
-                    const slotKey = key[0] + "_" + key[1] + "_" + key[3];
+                    // =============front || back单独也有格位
+                    const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[3] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
                     const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
                     const dat = dragonBonesTexture.get(name);
                     const loadArr = this.mLoadMap.get(slotKey);
