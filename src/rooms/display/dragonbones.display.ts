@@ -129,8 +129,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
         if (this.scene.cache.obj.has(this.dragonBonesName)) { }
-
-        this.scene.load.image("human02", "resources/dragonbones/bones_human01_change_tex.png");
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
