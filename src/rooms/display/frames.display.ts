@@ -44,9 +44,7 @@ export class FramesDisplay extends DisplayObject {
             // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
             //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
             // }, this);
-            this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-                this.onLoadCompleted(field);
-            }, this);
+            this.scene.textures.on(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
             this.scene.load.start();
         }
 
@@ -165,6 +163,14 @@ export class FramesDisplay extends DisplayObject {
         if (this.mFadeTween) {
             this.mFadeTween.stop();
             this.mFadeTween.remove();
+        }
+    }
+
+    private onAddTextureHandler(key: string) {
+        const data = this.mDisplayDatas.get(DisplayField.STAGE);
+        if (data.gene === key) {
+            this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
+            this.onLoadCompleted(DisplayField.STAGE);
         }
     }
 

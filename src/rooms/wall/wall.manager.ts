@@ -22,10 +22,11 @@ export class WallManager extends PacketHandler  {
   }
 
   private onDawWallHandler(packet: PBpacket) {
-    const terrain = this.mRoom.terrainManager;
-    const pos = this.mRoom.transformTo90(new Pos(0, 0));
-    this._add(pos.x, pos.y, Direction.UP);
-    const map = this.mRoom.world.elementStorage.getTerrainCollection().get(this.mRoom.id).data;
+    const terrains = this.mRoom.world.elementStorage.getTerrainCollection().get(this.mRoom.id);
+    if (!terrains) {
+      return;
+    }
+    const map = terrains.data;
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[0].length; j++) {
           if (map[i][j] === 0) {

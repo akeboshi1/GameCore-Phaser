@@ -377,6 +377,9 @@ export class JoyStick {
             dir = Direction.south_east;
             Logger.getInstance().log("dir:Direction.south_east");
         }
+        if (dir === undefined) {
+            return;
+        }
         keyArr = this.getKeys(dir);
         if (this.mdownStr === keyArr.toString()) return false;
         this.mdownStr = keyArr.toString();

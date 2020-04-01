@@ -18,7 +18,7 @@ import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
 import { PlayerModel } from "./player/player.model";
-import { IElement, Element } from "./element/element";
+import { Element } from "./element/element";
 import { IBlockObject } from "./cameras/block.object";
 import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
@@ -29,7 +29,7 @@ import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
-import { CloseShot } from "./background/close.shot";
+import { BackgroundManager } from "./sky.box/background.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -228,6 +228,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
         // const close = new CloseShot(this.world, this.mCameraService);
+        // const close = new BackgroundManager(this.world, "close", this.mCameraService);
     }
 
     public pause() {
