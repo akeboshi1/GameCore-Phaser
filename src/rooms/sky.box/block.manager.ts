@@ -3,9 +3,9 @@ import { WorldService } from "../../game/world.service";
 
 export class BlockManager {
   private mContainer: Phaser.GameObjects.Container;
-  private mRows: number = 14;
-  private mCols: number = 8;
-  private mGridWidth: number = 256;
+  private mRows: number = 1;
+  private mCols: number = 1;
+  private mGridWidth: number;
   private mGridHeight: number;
   private mGrids: Block[];
   private mKey: string;
@@ -14,11 +14,8 @@ export class BlockManager {
   private mMainCamera: Phaser.Cameras.Scene2D.Camera;
   constructor(private scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera, key: string, private world: WorldService) {
     this.mGrids = [];
-    this.mGridWidth = 256;
-    this.mGridHeight = this.mGridWidth;
     this.mMainCamera = camera;
     this.mKey = key;
-    this.initBlock();
   }
 
   check(time?: number, delta?: number) {
@@ -27,6 +24,14 @@ export class BlockManager {
     for (const block of this.mGrids) {
       block.checkCamera(viewPort.contains(block.x * this.world.scaleRatio, block.y * this.world.scaleRatio));
     }
+  }
+
+  setSize(imageW: number, imageH: number, gridW: number, gridH: number) {
+    this.mRows = Math.ceil(imageW / gridW);
+    this.mCols = Math.ceil(imageH / gridH);
+    this.mGridWidth = gridW;
+    this.mGridHeight = gridH;
+    this.initBlock();
   }
 
   private initBlock() {
@@ -71,5 +76,6 @@ class Block extends DynamicImage {
   protected onLoadComplete() {
     super.onLoadComplete();
     this.mLoaded = true;
+    this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
   }
 }

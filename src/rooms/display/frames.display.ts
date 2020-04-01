@@ -168,7 +168,7 @@ export class FramesDisplay extends DisplayObject {
 
     private onAddTextureHandler(key: string) {
         const data = this.mDisplayDatas.get(DisplayField.STAGE);
-        if (data.gene === key) {
+        if (data && data.gene === key) {
             this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
             this.onLoadCompleted(DisplayField.STAGE);
         }
