@@ -269,6 +269,8 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     this.mShow = false;
     this.removeListen();
     this.mContainer.removeAll(false);
+    if (this.mPopularityRoom) this.mPopularityRoom.clear();
+    if (this.mPlayerRoom) this.mPlayerRoom.clear();
   }
 
   destroy() {
@@ -339,6 +341,8 @@ class MyRoomDelegate extends RoomDelegate {
   removeListen() {
     this.mMyRoom.off("enterRoom", this.onEnterRoomHandler, this);
     this.mMyHistory.off("enterRoom", this.onEnterRoomHandler, this);
+    if (this.mMyRoom) this.mMyRoom.clear();
+    if (this.mMyHistory) this.mMyHistory.clear();
   }
 
   updateList(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
@@ -462,7 +466,7 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   }
 
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0) {
-    this.clear();
+    // this.clear();
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
     this.text.x = this.mOrientaction ? this.icon.x + this.icon.width / 2 + 4 * this.mDpr + pad : this.icon.x + this.icon.width / 2 + 4 * this.mDpr;
@@ -498,29 +502,29 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   }
 
   public destroy() {
-    for (const obj of this.mShowList) {
-      obj.destroy();
-    }
-    this.mShowList.length = 0;
     this.clear();
     super.destroy();
+  }
+
+  public clear() {
+    for (const room of this.mRooms) {
+      room.destroy();
+    }
+    for (const show of this.mShowList) {
+      show.destroy();
+    }
+    this.mShowList.length = 0;
+    this.mRooms.length = 0;
   }
 
   protected onEnterRoomHandler(room) {
     this.emit("enterRoom", room);
   }
-
-  protected clear() {
-    for (const room of this.mRooms) {
-      room.destroy();
-    }
-    this.mRooms.length = 0;
-  }
 }
 
 class MyRoomZoon extends RoomZoon {
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0) {
-    this.clear();
+    // this.clear();
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
     this.text.x = this.mOrientaction ? this.icon.x + this.icon.width / 2 + 4 * this.mDpr + pad : this.icon.x + this.icon.width / 2 + 4 * this.mDpr;
@@ -550,7 +554,7 @@ class MyRoomZoon extends RoomZoon {
 
 class PopularRoomZoon extends RoomZoon {
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0): number {
-    this.clear();
+    // this.clear();
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
     this.text.x = this.mOrientaction ? this.icon.x + this.icon.width / 2 + 4 * this.mDpr + pad : this.icon.x + this.icon.width / 2 + 4 * this.mDpr;
