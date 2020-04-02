@@ -228,7 +228,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
         // const close = new CloseShot(this.world, this.mCameraService);
-        const close = new BackgroundManager(this, "close", this.mCameraService);
+        // const close = new BackgroundManager(this, "close", this.mCameraService);
     }
 
     public pause() {
