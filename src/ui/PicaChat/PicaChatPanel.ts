@@ -283,10 +283,10 @@ export class PicaChatPanel extends Panel {
     }
 
     private sendChat(val: string) {
+        this.mInputText = undefined;
         if (!val) {
             return;
         }
         this.emit("chat", val);
-        this.mInputText = undefined;
     }
 }
