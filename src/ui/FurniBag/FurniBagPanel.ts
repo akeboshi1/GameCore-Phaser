@@ -8,9 +8,11 @@ import { op_client, op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
-import { LabelInput } from "../components/label.input";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { Logger } from "../../utils/log";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
+import { InputPanel } from "../components/input.panel";
+import { Size } from "../../utils/size";
 
 export class FurniBagPanel extends Panel {
   private key: string = "furni_bag";
@@ -27,15 +29,16 @@ export class FurniBagPanel extends Panel {
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
   private mSelectedFurni: op_client.ICountablePackageItem;
-  private mCategoryScroll: GridTable;
+  // private mCategoryScroll: GridTable;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: op_def.IStrMap;
   private mPropGrid: GridTable;
+  private mCategoryScroll: GameScroller;
 
   private mDetailBubble: DetailBubble;
   private mSceneType: op_def.SceneTypeEnum;
   private mEnableEdit: boolean = false;
-
+  private mInputBoo: boolean = false;
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
@@ -54,14 +57,14 @@ export class FurniBagPanel extends Panel {
 
     this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
-    this.mCategoriesBar.y = this.mShelfContainer.y;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
+    // this.mCategoriesBar.y = this.mShelfContainer.y;
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
     this.mCategoriesBar.fillStyle(0x00cccc);
-    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr *zoom);
+    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
     this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
     this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
 
@@ -88,44 +91,57 @@ export class FurniBagPanel extends Panel {
     const zoom = this.mWorld.uiScaleNew;
     const capW = 56 * this.dpr * zoom;
     const capH = 41 * this.dpr * zoom;
-    this.mCategoryScroll = new GridTable(this.scene, {
-      x: this.width / 2,
-      y: this.mShelfContainer.y + (41 * this.dpr * zoom + capH) / 2,
-      // y: 0,
-      table: {
-        width: this.width - 18 * this.dpr * zoom,
-        height: capH,
-        cellWidth: capW,
-        cellHeight: capH,
-        reuseCellContainer: true
-      },
-      scrollMode: 1,
-      createCellContainerCallback: (cell, cellContainer) => {
-        const  scene = cell.scene,
-              item = cell.item;
-        if (cellContainer === null) {
-          cellContainer = new TextButton(scene, this.dpr, zoom);
-          this.mCategeoriesContainer.add(cellContainer);
-        }
-        cellContainer.setText(item.value);
-        cellContainer.setSize(capW, capH);
-        cellContainer.setData({ item });
-        if (!this.mPreCategoryBtn && item.key !== this.seachKey) {
-          this.onSelectSubCategoryHandler(cellContainer);
-        }
-        return cellContainer;
-      },
-      items: subcategorys
-    })
-    .layout();
-    this.mCategoryScroll.on("cell.1tap", (cell, index) => {
-      this.onSelectSubCategoryHandler(cell);
-    });
+    const items = [];
+    this.mCategoryScroll.clearInteractiveObject();
+    for (let i = 0; i < subcategorys.length; i++) {
+      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW, 0);
+      item.y = capH - item.text.height >> 1;
+      item.setData("item", subcategorys[i]);
+      this.mCategeoriesContainer.add(item);
+      item.setSize(capW, capH);
+      this.mCategoryScroll.setInteractiveObject(item);
+      items[i] = item;
+    }
+    if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
+    // this.mCategoryScroll.setInteractiveObject(items);
+    // this.mCategoryScroll = new GridTable(this.scene, {
+    //   x: this.width / 2,
+    //   y: this.mShelfContainer.y + (41 * this.dpr * zoom + capH) / 2,
+    //   // y: 0,
+    //   table: {
+    //     width: this.width - 18 * this.dpr * zoom,
+    //     height: capH,
+    //     cellWidth: capW,
+    //     cellHeight: capH,
+    //     reuseCellContainer: true
+    //   },
+    //   scrollMode: 1,
+    //   createCellContainerCallback: (cell, cellContainer) => {
+    //     const  scene = cell.scene,
+    //           item = cell.item;
+    //     if (cellContainer === null) {
+    //       cellContainer = new TextButton(scene, this.dpr, zoom);
+    //       this.mCategeoriesContainer.add(cellContainer);
+    //     }
+    //     cellContainer.setText(item.value);
+    //     cellContainer.setSize(capW, capH);
+    //     cellContainer.setData({ item });
+    //     if (!this.mPreCategoryBtn && item.key !== this.seachKey) {
+    //       this.onSelectSubCategoryHandler(cellContainer);
+    //     }
+    //     return cellContainer;
+    //   },
+    //   items: subcategorys
+    // })
+    // .layout();
+    // this.mCategoryScroll.on("cell.1tap", (cell, index) => {
+    //   this.onSelectSubCategoryHandler(cell);
+    // });
 
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-    this.mPropGrid.y = this.mCategoryScroll.y + 120 * this.dpr * zoom;
+    this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
     this.mPropGrid.layout();
-    this.add(this.mCategoryScroll.childrenMap.child);
+    // this.add(this.mCategoryScroll.childrenMap.child);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
@@ -153,6 +169,16 @@ export class FurniBagPanel extends Panel {
     }
   }
 
+  destroy() {
+    if (this.mCategoryScroll) {
+      this.mCategoryScroll.destroy();
+    }
+    if (this.mPropGrid) {
+      this.mPropGrid.destroy();
+    }
+    super.destroy();
+  }
+
   protected preload() {
     this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
     super.preload();
@@ -164,14 +190,17 @@ export class FurniBagPanel extends Panel {
     this.mBackground = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScaleNew;
 
-    this.mBg =this.scene.make.image({
+    this.mBg = this.scene.make.image({
       key: this.key,
       frame: "bg.png"
     }, false).setScale(zoom);
 
     this.mShelfContainer = this.scene.make.container(undefined, false);
+    this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
+    this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mPropsContainer = this.scene.make.container(undefined, false);
     this.mCategeoriesContainer = this.scene.make.container(undefined, false);
+    this.mCategeoriesContainer.y = this.mShelfContainer.y;
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
@@ -216,12 +245,12 @@ export class FurniBagPanel extends Panel {
     this.mDetailBubble.x = 10 * this.dpr;
     this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
 
-    this.mSeachInput = new SeachInput(this.scene, this.key, this.dpr);
+    this.mSeachInput = new SeachInput(this.scene, this.mWorld, this.key, this.dpr);
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
     this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
-    this.mShelfContainer.add(this.mPropsContainer);
-    this.mCategeoriesContainer.add([this.mCategoriesBar]);
+    this.mShelfContainer.add([this.mCategoriesBar, this.mPropsContainer]);
+    // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
@@ -229,14 +258,33 @@ export class FurniBagPanel extends Panel {
       this.add(this.mAdd);
     }
 
-    const w = this.scene.cameras.main.width;
+    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+    this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesContainer, {
+      x: 0,
+      y: this.mCategeoriesContainer.y,
+      width: w,
+      height: 41 * this.dpr * zoom,
+      value: w / 2,
+      orientation: 1,
+      bounds: [
+        -w / 2,
+        w / 2
+      ],
+      valuechangeCallback: (newValue) => {
+        this.refreshPos(newValue);
+      },
+      cellupCallBack: (gameobject) => {
+        this.onSelectSubCategoryHandler(gameobject);
+      }
+    });
+
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg.png");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
     this.mPropGrid = new GridTable(this.scene, {
       x: w / 2,
       y: 1050 + (41 * this.dpr * zoom) / 2,
-      // y: 0,
       table: {
         width: w - 20 * this.dpr * zoom,
         height: 224 * this.dpr * zoom,
@@ -249,7 +297,7 @@ export class FurniBagPanel extends Panel {
       clamplChildOY: true,
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
-              item = cell.item;
+          item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -283,6 +331,16 @@ export class FurniBagPanel extends Panel {
     this.resize(0, 0);
   }
 
+  private refreshPos(value: number) {
+    if (!this.scene) {
+      return;
+    }
+    const zoom: number = this.mWorld.uiScaleNew;
+    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+    this.mCategeoriesContainer.x = value - w / 2;
+  }
+
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
     if (!prop) {
       return;
@@ -294,6 +352,15 @@ export class FurniBagPanel extends Panel {
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
+    const type = gameobject.getData("type");
+    if (type) {
+      if (type === "seachBtn") {
+        this.onSeachHandler(this.mSeachInput.seachText);
+      } else if (type === "label") {
+        this.mSeachInput.showInputPanel();
+      }
+      return;
+    }
     if (!(gameobject instanceof TextButton)) {
       return;
     }
@@ -312,7 +379,7 @@ export class FurniBagPanel extends Panel {
           const preBtn = this.mPreCategoryBtn.getData("item");
           key = preBtn.key;
           if (key === this.seachKey) {
-           this.closeSeach(gameobject);
+            this.closeSeach(gameobject);
           }
         }
         this.mSelectedCategeories = category;
@@ -331,7 +398,7 @@ export class FurniBagPanel extends Panel {
   }
 
   private onSeachHandler(val: string) {
-    if (this.mSelectedCategeories) {
+    if (this.mSelectedCategeories && val.length > 0) {
       this.emit("seachPackage", val, this.mSelectedCategeories.key);
     }
   }
@@ -344,17 +411,43 @@ export class FurniBagPanel extends Panel {
   }
 
   private showSeach(parent: TextButton) {
-    const cellTable = this.mCategoryScroll.childrenMap.child;
-    cellTable.setCellWidth(0, this.mSeachInput.x + this.mSeachInput.width / 2);
-    cellTable.updateTable(true);
-    this.mCategeoriesContainer.add(this.mSeachInput);
+    // const cellTable = this.mCategoryScroll.childrenMap.child;
+    // cellTable.setCellWidth(0, this.mSeachInput.x + this.mSeachInput.width / 2);
+    // cellTable.updateTable(true);
+    this.mCategeoriesContainer.addAt(this.mSeachInput, 1);
+    this.mCategoryScroll.setInteractiveObject(this.mSeachInput.seachBtn);
+    this.mCategoryScroll.setInteractiveObject(this.mSeachInput.label);
+    this.updateCategeoriesLoc(true);
   }
 
   private closeSeach(parent: TextButton) {
-    const cellTable = this.mCategoryScroll.childrenMap.child;
-    cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
-    cellTable.updateTable(true);
+    // const cellTable = this.mCategoryScroll.childrenMap.child;
+    // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
+    // cellTable.updateTable(true);
     this.mCategeoriesContainer.remove(this.mSeachInput);
+    this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.seachBtn);
+    this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.label);
+    this.updateCategeoriesLoc(false);
+  }
+
+  private updateCategeoriesLoc(inputBoo: boolean) {
+    const list = this.mCategeoriesContainer.list;
+    const zoom = this.mWorld.uiScaleNew;
+    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
+    const h = 41 * this.dpr * zoom;
+    let preBtn: Phaser.GameObjects.Container = null;
+    for (let i = 0; i < list.length; i++) {
+      const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>list[i];
+      if (i > 0) {
+        preBtn = <Phaser.GameObjects.Container>list[i - 1];
+        item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
+      } else {
+        item.x = 0;
+      }
+    }
+    const inputWid: number = inputBoo ? 200 * this.dpr * zoom : 0;
+    const updateWid: number = w + inputWid;
+    this.mCategoryScroll.setSize(updateWid, h, -w / 2 - inputWid, w / 2);
   }
 
   get enableEdit() {
@@ -364,40 +457,76 @@ export class FurniBagPanel extends Panel {
 
 class SeachInput extends Phaser.GameObjects.Container {
   private mSeachBtn: Phaser.GameObjects.Image;
-  private mLabelInput: LabelInput;
-  constructor(scene: Phaser.Scene, key: string, dpr: number) {
+  private mLabelInput: Phaser.GameObjects.Text;
+  private mInputText: InputPanel;
+  private mWorldService: WorldService;
+  constructor(scene: Phaser.Scene, world: WorldService, key: string, dpr: number) {
     super(scene);
+    this.mWorldService = world;
 
     const bg = scene.make.image({
       key,
       frame: "seach_bg.png"
-    }, false);
+    }, false).setOrigin(0, 0.5);
 
-    this.mLabelInput = new LabelInput(this.scene, {
-      x: -10 * dpr,
-      y: 0,
-      width: 160,
-      height: 60,
-      fontSize: 14 * dpr + "px",
-      color: "#666666",
-    });
+    // this.mLabelInput = new LabelInput(this.scene, {
+    //   x: -10 * dpr,
+    //   y: 0,
+    //   width: 160,
+    //   height: 60,
+    //   fontSize: 14 * dpr + "px",
+    //   color: "#666666",
+    // });
+    this.mLabelInput = this.scene.make.text({
+      x: 10 * dpr,
+      width: bg.displayWidth,
+      height: bg.displayHeight,
+      style: {
+        fontFamily: Font.DEFULT_FONT,
+        fontSize: 14 * dpr
+      }
+    }, false).setData("type", "label").setOrigin(0, 0.5);
 
     this.mSeachBtn = scene.make.image({
       key,
       frame: "seach_normal.png"
-    }, false).setInteractive();
-    this.mSeachBtn.x = (bg.width - this.mSeachBtn.width) / 2 - 4 * dpr,
-    this.add([bg, this.mLabelInput, this.mSeachBtn]);
-    this.setSize(bg.width, bg.height);
+    }, false).setData("type", "seachBtn");
+    this.mSeachBtn.x = bg.displayWidth - this.mSeachBtn.width / 2 - 4 * dpr,
+      this.add([bg, this.mLabelInput, this.mSeachBtn]);
+    this.setSize(bg.displayWidth + 20 * dpr, bg.displayHeight);
 
-    this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
+    // this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
   }
 
-  private onSeachHandler() {
-    if (!this.mLabelInput.text) {
+  // private onSeachHandler() {
+  //   if (!this.mLabelInput.text) {
+  //     return;
+  //   }
+  //   this.emit("seach", this.mLabelInput.text);
+  // }
+
+  public showInputPanel() {
+    if (this.mInputText) {
       return;
     }
-    this.emit("seach", this.mLabelInput.text);
+    this.mInputText = new InputPanel(this.scene, this.mWorldService, this.mLabelInput.text);
+    this.mInputText.once("close", this.sendChat, this);
+  }
+
+  private sendChat(val: string) {
+    this.mLabelInput.setText(val);
+  }
+
+  get seachBtn(): Phaser.GameObjects.Image {
+    return this.mSeachBtn;
+  }
+
+  get label(): Phaser.GameObjects.Text {
+    return this.mLabelInput;
+  }
+
+  get seachText(): string {
+    return this.mLabelInput.text;
   }
 }
 

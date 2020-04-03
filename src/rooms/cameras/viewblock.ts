@@ -1,13 +1,12 @@
-import { Element, IElement } from "../element/element";
-import { Logger } from "../../utils/log";
 import { Rectangle45 } from "../../utils/rectangle45";
+import { IBlockObject } from "./block.object";
 
 /**
  * 显示区域
  */
 export class Viewblock {
     // private mElements: IElement[] = [];
-    private mElements = new Map<number, IElement>();
+    private mElements = new Map<number, IBlockObject>();
     private mInCamera: boolean;
     private mIndex: number;
 
@@ -15,7 +14,7 @@ export class Viewblock {
         this.mIndex = index;
     }
 
-    public add(element: IElement, miniViewPort?: Rectangle45) {
+    public add(element: IBlockObject, miniViewPort?: Rectangle45) {
         // this.mElements.push(element);
         this.mElements.set(element.id, element);
         if (!miniViewPort) {
@@ -25,7 +24,7 @@ export class Viewblock {
         element.setRenderable(miniViewPort.contains(pos.x, pos.y) && this.mInCamera);
     }
 
-    public remove(ele: IElement): boolean {
+    public remove(ele: IBlockObject): boolean {
         // const index = this.mElements.indexOf(ele);
         // if (index !== -1) {
         //     this.mElements.splice(index, 1);
@@ -58,7 +57,7 @@ export class Viewblock {
         this.mInCamera = newStat;
     }
 
-    getElement(id: number): IElement {
+    getElement(id: number): IBlockObject {
         return this.mElements.get(id);
     }
 

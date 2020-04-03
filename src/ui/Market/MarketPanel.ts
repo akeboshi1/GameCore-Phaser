@@ -159,6 +159,16 @@ export class MarketPanel extends Panel {
     }
   }
 
+  public destroy() {
+    if (this.mSubCategorisScroll) {
+      this.mSubCategorisScroll.destroy();
+    }
+    if (this.mPropGrid) {
+      this.mPropGrid.destroy();
+    }
+    super.destroy();
+  }
+
   protected preload() {
     // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market.png"), Url.getUIRes(this.dpr, "market/market.json"));
     this.addAtlas(this.key, "market/market.png", "market/market.json");
@@ -287,10 +297,7 @@ export class MarketPanel extends Panel {
       clamplChildOY: true,
       createCellContainerCallback: (cell, cellContainer) => {
         const  scene = cell.scene,
-              width = cell.width,
-              height = cell.height,
-              item = cell.item,
-              index = cell.index;
+              item = cell.item;
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
           // cellContainer.width = capW;

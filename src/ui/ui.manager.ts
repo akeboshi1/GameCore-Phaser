@@ -109,13 +109,13 @@ export class UiManager extends PacketHandler {
                 // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
                 // this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
                 this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
             }
-            this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
-            this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
-            this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(UIMediatorType.MainUIMediator, new MainUIMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
-            // if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
+            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
@@ -336,7 +336,7 @@ export class UiManager extends PacketHandler {
     }
 
     private onEnableEditMode(packet: PBpacket) {
-        let topMenu: TopMenuMediator = <TopMenuMediator> this.mMedMap.get(TopMenuMediator.name);
+        let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.name);
         if (!topMenu) {
             topMenu = new TopMenuMediator(this.mScene, this.worldService);
             this.mMedMap.set(TopMenuMediator.name, topMenu);
@@ -348,7 +348,7 @@ export class UiManager extends PacketHandler {
     }
 
     private onEnableMarket() {
-        let topMenu: TopMenuMediator = <TopMenuMediator> this.mMedMap.get(TopMenuMediator.name);
+        let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.name);
         if (!topMenu) {
             topMenu = new TopMenuMediator(this.mScene, this.worldService);
             this.mMedMap.set(TopMenuMediator.name, topMenu);

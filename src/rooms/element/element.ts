@@ -67,21 +67,13 @@ export interface IElement {
 
     getDirection(): number;
 
-    setRenderable(isRenderable: boolean, delay?: number): void;
-
-    getRenderable(): boolean;
-
     showEffected();
 
     showNickname();
 
     scaleTween();
 
-    removeMe(): void;
-
     toSprite(): op_client.ISprite;
-
-    setBlockable(val: boolean): this;
 
     turn();
 
@@ -150,10 +142,9 @@ export class Element extends BlockObject implements IElement {
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mShopEntity: ShopEntity;
-    protected mBlockable: boolean = true;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super();
+        super(mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -181,7 +172,7 @@ export class Element extends BlockObject implements IElement {
         // this.mDisplay.showNickname(this.mModel.nickname);
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
-        const frameModel = <IFramesModel> this.mDisplayInfo;
+        const frameModel = <IFramesModel>this.mDisplayInfo;
         if (this.mInputEnable === InputEnable.Interactive) {
             this.setInputEnable(this.mInputEnable);
         }
@@ -315,25 +306,9 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
+            this.setDepth(p.depth);
         }
-        this.setDepth();
         this.updateBlock();
-    }
-
-    public getPosition(): Pos {
-        let pos: Pos;
-        if (this.mDisplay) {
-            pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
-        } else {
-            pos = new Pos();
-        }
-        return pos;
-    }
-
-    public getPosition45(): Pos {
-        const pos = this.getPosition();
-        if (!pos) return new Pos();
-        return this.roomService.transformTo45(pos);
     }
 
     public getRootPosition(): Pos {
@@ -377,11 +352,6 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public removeMe(): void {
-        if (!this.mElementManager) return;
-        this.mElementManager.remove(this.id);
-    }
-
     public toSprite(): op_client.ISprite {
         const sprite = op_client.Sprite.create();
         sprite.id = this.id;
@@ -392,20 +362,6 @@ export class Element extends BlockObject implements IElement {
             sprite.point3f.z = this.mDisplay.z;
         }
         return sprite;
-    }
-
-    public setBlockable(val: boolean): this {
-        if (this.mBlockable !== val) {
-            this.mBlockable = val;
-            if (this.mDisplay && this.roomService) {
-                if (val) {
-                    this.roomService.addBlockObject(this);
-                } else {
-                    this.roomService.removeBlockObject(this);
-                }
-            }
-        }
-        return this;
     }
 
     public turn(): void {
@@ -552,26 +508,12 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         room.addToSurface(this.mDisplay);
-        this.setDepth();
+        this.setDepth(this.model.pos.depth);
     }
 
-    protected addToBlock() {
-        if (this.mBlockable) {
-            this.roomService.addBlockObject(this);
-        } else {
-            this.addDisplay();
-        }
-    }
-
-    protected updateBlock() {
-        if (this.mBlockable) {
-            this.roomService.updateBlockObject(this);
-        }
-    }
-
-    protected setDepth() {
+    protected setDepth(depth: number) {
         if (this.mDisplay) {
-            this.mDisplay.setDepth(this.mDisplay.x + this.mDisplay.y);
+            this.mDisplay.setDepth(depth);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }
@@ -587,7 +529,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) {
             this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
-            this.setDepth();
+            this.setDepth(this.model.pos.depth);
             // this.mDisplay.showRefernceArea();
         }
     }
@@ -615,7 +557,7 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            this.setDepth();
+            this.setDepth(this.model.pos.depth);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
             if (this.mBlockable) {

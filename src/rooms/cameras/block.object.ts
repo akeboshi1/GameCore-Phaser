@@ -1,13 +1,29 @@
 import { ElementDisplay } from "../display/element.display";
 import { InputEnable } from "../element/element";
 import { ISprite } from "../element/sprite";
+import { Pos } from "../../utils/pos";
+import { IRoomService } from "../room";
 
-export abstract class BlockObject {
+export interface IBlockObject {
+    readonly id: number;
+
+    getPosition(): Pos;
+
+    getPosition45(): Pos;
+
+    setRenderable(isRenderable: boolean, delay?: number): void;
+
+    getRenderable(): boolean;
+
+    setBlockable(val: boolean): this;
+}
+export abstract class BlockObject implements IBlockObject {
     protected mDisplay?: ElementDisplay;
     protected mRenderable: boolean = false;
+    protected mBlockable: boolean = true;
     protected mModel: ISprite;
     protected mInputEnable: InputEnable = InputEnable.Diasble;
-    constructor() {
+    constructor(protected mRoomService: IRoomService) {
     }
 
     public setRenderable(isRenderable: boolean, delay?: number) {
@@ -30,6 +46,22 @@ export abstract class BlockObject {
                 }
             }
         }
+    }
+
+    public getPosition(): Pos {
+        let pos: Pos;
+        if (this.mDisplay) {
+            pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+        } else {
+            pos = new Pos();
+        }
+        return pos;
+    }
+
+    public getPosition45(): Pos {
+        const pos = this.getPosition();
+        if (!pos) return new Pos();
+        return this.mRoomService .transformTo45(pos);
     }
 
     public getRenderable() {
@@ -72,6 +104,20 @@ export abstract class BlockObject {
         // }
     }
 
+    public setBlockable(val: boolean): this {
+        if (this.mBlockable !== val) {
+            this.mBlockable = val;
+            if (this.mDisplay && this.mRoomService) {
+                if (val) {
+                    this.mRoomService.addBlockObject(this);
+                } else {
+                    this.mRoomService.removeBlockObject(this);
+                }
+            }
+        }
+        return this;
+    }
+
     public destroy() {
         if (this.mDisplay) {
             this.mDisplay.destroy();
@@ -90,9 +136,20 @@ export abstract class BlockObject {
     }
 
     protected addToBlock() {
+        if (this.mBlockable) {
+            this.mRoomService.addBlockObject(this);
+        } else {
+            this.addDisplay();
+        }
     }
 
     protected updateBlock() {
+        if (this.mBlockable) {
+            this.mRoomService.updateBlockObject(this);
+        }
     }
 
+    get id(): number {
+        return -1;
+    }
 }

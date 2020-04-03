@@ -30,7 +30,7 @@ export class Clock extends PacketHandler {
         return this.mTimestamp;
     }
 
-    private mTimestamp: number; // The timestamp in JavaScript is expressed in milliseconds.
+    private mTimestamp: number = 0; // The timestamp in JavaScript is expressed in milliseconds.
     private mConn: ConnectionService;
     private mLatency: number[] = [];
     private mIntervalId: any;

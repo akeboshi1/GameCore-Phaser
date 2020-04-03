@@ -23,13 +23,17 @@ export class DynamicImage extends Phaser.GameObjects.Image {
             this.onLoadComplete();
         } else {
             this.scene.load.image(value, value);
-            this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onLoadComplete, this);
-            this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
+            this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
+            this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
             this.scene.load.start();
         }
     }
 
-    private onLoadComplete() {
+    protected onLoadComplete(file?: Phaser.Loader.File) {
+        if (file && file.key === this.mUrl) {
+            this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
+            this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
+        }
         this.setTexture(this.mUrl);
         if (this.mLoadCompleteCallbak) {
             const cb: Function = this.mLoadCompleteCallbak;
@@ -39,7 +43,7 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         }
     }
 
-    private onLoadError(file: Phaser.Loader.File) {
+    protected onLoadError(file: Phaser.Loader.File) {
         if (this.mUrl === file.url) {
             if (this.mLoadErrorCallback) {
                 const cb: Function = this.mLoadErrorCallback;

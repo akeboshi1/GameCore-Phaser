@@ -5,6 +5,7 @@ import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
+import { Logger } from "../../utils/log";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -93,7 +94,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
      */
     private mClickCon: Phaser.GameObjects.Container;
 
-    // private mDragonBonesRenderTexture;
+    private mDragonBonesRenderTexture: Phaser.GameObjects.RenderTexture;
 
     public constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
         super(scene, roomService, element, antial);
@@ -318,7 +319,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         } else {
             this.mArmatureDisplay.visible = true;
         }
-        this.replaceArr.splice(0);
+        // this.replaceArr.splice(0);
     }
 
     private getReplaceArr() {
@@ -773,21 +774,21 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 this.mLoadMap.set(slot.name, [slot.name, key]);
             } else {
                 //     // ==============贴图集上的资源 / 单个替换资源
-                let img: dragonBones.phaser.display.SlotImage;
-                if (dragonBonesTexture.frames[frameName]) {// && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
-                    if (!this.scene.textures.exists(partName)) {
-                        this.mLoadMap.set(slot.name, [slot.name, key]);
-                        return;
-                    }
-                    img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
-                } else {
-                    img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
-                }
-                if (this.mAntial) {
-                    // 用于设置边缘抗锯齿
-                    img.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                }
-                slot.replaceDisplay(img);
+                // let img: dragonBones.phaser.display.SlotImage;
+                // if (dragonBonesTexture.frames[frameName]) {// && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
+                //     if (!this.scene.textures.exists(partName)) {
+                //         this.mLoadMap.set(slot.name, [slot.name, key]);
+                //         return;
+                //     }
+                //     img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
+                // } else {
+                //     img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
+                // }
+                // if (this.mAntial) {
+                //     // 用于设置边缘抗锯齿
+                //     img.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
+                // slot.replaceDisplay(img);
             }
         }
     }
@@ -797,71 +798,49 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, totalComplete: integer, totalFailed: integer) => {
             if (!configList || !this.scene) return;
-            const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
-            // if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.add.renderTexture(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+            const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
             const frames = dragonBonesTexture.getFrameNames();
-            // ==============有队列加载说明此处有新资源加载，在队列加载完成后，重新画一张龙骨的贴图并存入缓存中，下次渲染从缓存中获取贴图
-            this.mLoadMap.forEach((load) => {
-                // ==========load[0]slot名  load[1]part名
-                const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(load[0]);
-                // slot.display.visible = true;
-                const name: string = ResUtils.getPartName(load[1]);
-                if (this.scene.textures.exists(name) && !this.mErrorLoadMap.get(name)) {
-                    const baseX = slot.display ? slot.display.x : 0;
-                    const baseY = slot.display ? slot.display.y : 0;
-                    const img: dragonBones.phaser.display.SlotImage = new dragonBones.phaser.display.SlotImage(this.scene, baseX, baseY, name);
-                    if (img.texture.key === name) {
-                        if (this.mAntial) {
-                            // 用于设置边缘抗锯齿
-                            img.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+            // ==============重绘贴图方式
+            if (this.mLoadMap.size > 0) {
+                const renderTextureKey = "bones_" + this.mDisplayInfo.id;// "bones_" + this.mDisplayInfo.id;// "bones_human01";
+                if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
+                    { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
+                const checkID = 1;
+                for (let i: number = 0, len = frames.length; i < len; i++) {
+                    // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
+                    const name = frames[i];
+                    // =============龙骨part资源key 带图片资源名及方向
+                    const key = name.split("/")[1].split("_");
+                    // =============front || back单独也有格位
+                    const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[3] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
+                    const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
+                    const dat = dragonBonesTexture.get(name);
+                    const loadArr = this.mLoadMap.get(slotKey);
+                    // if (!this.mDragonBonesRenderTexture.frames) this.mDragonBonesRenderTexture.frames = {};
+                    // 原始资源
+                    if (!loadArr) {
+                        for (const obj of this.replaceArr) {
+                            const part: string = obj.slot.replace("$", obj.dir.toString());
+                            if (part === slotKey) {
+                                this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                                break;
+                            }
                         }
-                        slot.replaceDisplay(img);
+                        // this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                    } else {
+                        const drawTextureKey = loadArr[1] + "_png";
+                        const drawTexture = this.scene.game.textures.get(drawTextureKey);
+                        this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
                     }
                 }
-            });
+                this.mDragonBonesRenderTexture.snapshot((snapshot: Phaser.Display.Color | HTMLImageElement) => {
+                    if (snapshot instanceof HTMLImageElement) {
+                        const changeTexture = this.scene.game.textures.exists(renderTextureKey) ? this.scene.textures.get(renderTextureKey) : this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+                        this.mArmatureDisplay.armature.replacedTexture = changeTexture;
+                    }
+                });
+            }
 
-            // for (let i: number = 0, len = frames.length; i < len; i++) {
-            //     // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
-            //     const name = frames[i];
-            //     // =============龙骨part资源key 带图片资源名及方向
-            //     const key = name.split("/")[1].split("_");
-            //     const slotKey = key[0] + "_" + key[1] + "_" + key[3];
-            //     const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
-            //     const dat = dragonBonesTexture.get(name);
-            //     const loadArr = this.mLoadMap.get(slotKey);
-            //     if (!this.mDragonBonesRenderTexture.frames) this.mDragonBonesRenderTexture.frames = {};
-            //     if (!loadArr) {
-            //         this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
-            //         this.mDragonBonesRenderTexture.frames[dat.name] = dragonBonesTexture.frames[dat.name];
-            //     } else {
-            //         const drawTexture = this.scene.game.textures.get(loadArr[1] + "_png");
-            //         const drawFrame = drawTexture.frames[drawTexture.firstFrame];
-            //         drawFrame.centerX = dat.centerX;
-            //         drawFrame.centerY = dat.centerY;
-            //         drawFrame.cutWidth = dat.cutWidth;
-            //         drawFrame.cutHeight = dat.cutHeight;
-            //         drawFrame.cutX = dat.cutX;
-            //         drawFrame.cutY = dat.cutY;
-            //         drawFrame.data = (dat as any).data;
-            //         this.mDragonBonesRenderTexture.draw(loadArr[1] + "_png", dat.cutX, dat.cutY);
-            //         this.mDragonBonesRenderTexture.frames["test resources/" + loadArr[1]] = dragonBonesTexture.frames[dat.name];
-            //         if (!this.mDragonBonesRenderTexture.frames["test resources/" + loadArr[1]].name || this.mDragonBonesRenderTexture.frames["test resources/" + loadArr[1]].name !== name) {
-            //             this.mDragonBonesRenderTexture.frames["test resources/" + loadArr[1]].name = "test resources/" + loadArr[1];
-            //         }
-            //     }
-            // }
-            // this.mDragonBonesRenderTexture.saveTexture("bones_human01");
-            // const img = this.scene.make.image(undefined, false);
-            // img.setTexture("bones_human01");
-            // this.add(img);
-            // this.mDragonBonesRenderTexture.snapshotArea(0, 0, this.mDragonBonesRenderTexture.width, this.mDragonBonesRenderTexture.height, (image: Phaser.GameObjects.Image) => {
-            //     // this.mArmatureDisplay.armature.replacedTexture = this.mDragonBonesRenderTexture;
-            //     const sp = this.scene.make.container(undefined, false);
-            //     sp.add(image);
-            //     this.add(sp);
-            // });
-            // this.mArmatureDisplay.armature.replacedTexture = this.mDragonBonesRenderTexture;
-            // this.mArmatureDisplay.armature.invalidUpdate(null, true);
             this.mArmatureDisplay.visible = true;
             this.mLoadMap.clear();
         }, this);

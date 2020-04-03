@@ -7,7 +7,7 @@ import { LayerManager } from "./layer/layer.manager";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
-import { IElement, Element } from "./element/element";
+import { IElement } from "./element/element";
 import { ElementDisplay } from "./display/element.display";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Pos } from "../utils/pos";
@@ -24,6 +24,7 @@ import { Sprite, ISprite } from "./element/sprite";
 import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
 import { SpawnPoint } from "./decorate/spawn.point";
 import { SelectorElement } from "./decorate/selector.element";
+import { IBlockObject } from "./cameras/block.object";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -109,7 +110,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         });
     }
 
-    addBlockObject(object: IElement) {
+    addBlockObject(object: IBlockObject) {
         if (this.mBlocks) {
             this.mBlocks.add(object);
         }
@@ -166,7 +167,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
     }
 
-    removeBlockObject(object: IElement) {
+    removeBlockObject(object: IBlockObject) {
         if (this.mBlocks) {
             this.mBlocks.remove(object);
         }

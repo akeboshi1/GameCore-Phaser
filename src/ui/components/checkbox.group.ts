@@ -42,6 +42,9 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
   }
 
   public select(item: IButtonState) {
+    if (this.mPrevButton === item) {
+      return;
+    }
     if (this.mPrevButton) {
       this.mPrevButton.changeNormal();
     }

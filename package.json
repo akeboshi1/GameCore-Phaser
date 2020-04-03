@@ -1,6 +1,6 @@
 {
   "name": "game-core",
-  "version": "1.0.176",
+  "version": "1.0.180",
   "main": "release/js/tooqing.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",

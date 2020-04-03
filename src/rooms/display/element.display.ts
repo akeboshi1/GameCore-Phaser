@@ -12,6 +12,7 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
 
     sortX: number;
     sortY: number;
+    sortZ: number;
     changeAlpha(val?: number);
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField);
 

@@ -145,7 +145,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     // 软键盘弹出的事件处理
     public focusoutFunc = () => {
         // isIOS函数在前面
-        if (this.game.device.os.iOS) {
+        if (this.game && this.game.device.os.iOS) {
             window.scrollTo(0, 0);
         }
     }
@@ -160,6 +160,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     destroy(): void {
         this.mConnection.closeConnect();
+        document.body.removeEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
         this.clearGame();
     }
 

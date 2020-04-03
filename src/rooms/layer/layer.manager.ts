@@ -1,7 +1,7 @@
 import { ElementDisplay } from "../display/element.display";
-import {IRoomService, Room} from "../room";
-import {GridLayer} from "./grid.layer";
-import {Logger} from "../../utils/log";
+import { IRoomService, Room } from "../room";
+import { GridLayer } from "./grid.layer";
+import { Logger } from "../../utils/log";
 
 export class LayerManager {
 
@@ -97,9 +97,13 @@ export class LayerManager {
         // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
-    public addToGround(ele: ElementDisplay | ElementDisplay[]) {
+    public addToGround(ele: ElementDisplay | ElementDisplay[], index?: number) {
         const tmp = [].concat(ele);
-        this.mGroundLayer.add(tmp);
+        if (index !== undefined) {
+            this.mGroundLayer.addAt(ele, index);
+        } else {
+            this.mGroundLayer.add(tmp);
+        }
         // this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
         // Logger.log("terrain num: ", this.mGroundLayer.list.length);
     }
@@ -174,6 +178,11 @@ export class LayerManager {
 
                 // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
+                const depthA: number = displayA.depth ? displayA.depth : 0;
+                const depthB: number = displayB.depth ? displayB.depth : 0;
+                if (depthA > depthB) {
+                    return 1;
+                }
                 const angle: number = Math.atan2((displayA.sortY - displayB.sortY), (displayA.sortX - displayB.sortX));
                 if (angle * (180 * Math.PI) >= 70) {
                     return 1;
