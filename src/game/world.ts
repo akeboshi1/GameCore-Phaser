@@ -65,6 +65,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private isFullStart: boolean = false;
     private mOrientation: number = 0;
     private gameConfigUrls: Map<string, string> = new Map();
+    private gameConfigUrl: string = "";
 
     private mScaleRatio: number;
     private mUIRatio: number;
@@ -418,6 +419,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         for (const url of urls) {
             const sceneId = Tool.baseName(url);
             this.gameConfigUrls.set(sceneId, url);
+            if (url.split(sceneId).length  === 3) {
+                this.gameConfigUrl = url;
+            }
         }
     }
 
@@ -633,7 +637,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             game_id = game_id.split(".")[1];
         }
 
-        const mainGameConfigUrl = this.getConfigUrl(game_id);
+        const mainGameConfigUrl = this.gameConfigUrl;
 
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
