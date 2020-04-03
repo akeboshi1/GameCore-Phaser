@@ -834,8 +834,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     }
                 }
                 this.mDragonBonesRenderTexture.snapshot((snapshot: Phaser.Display.Color | HTMLImageElement) => {
-                    if (snapshot instanceof HTMLImageElement)
-                        this.mArmatureDisplay.armature.replacedTexture = this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+                    if (snapshot instanceof HTMLImageElement) {
+                        const changeTexture = this.scene.game.textures.exists(renderTextureKey) ? this.scene.textures.get(renderTextureKey) : this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+                        this.mArmatureDisplay.armature.replacedTexture = changeTexture;
+                    }
                 });
             }
 

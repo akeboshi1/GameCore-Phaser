@@ -53,8 +53,14 @@ export class ChatPanelPC extends BaseChatPanel {
         this.x = 0;
         this.y = size.height - this.mPreHei;
         if (this.mTextArea) {
+            // this.mTextArea.childrenMap.child.setMinSize(width, (h - 16 * this.dpr) * zoom);
+            // this.mTextArea.layout();
+            // this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr * zoom);
+            const textMask = this.mTextArea.childrenMap.text;
+            textMask.y = size.height - this.height + 25 * this.dpr;
+            this.mTextArea.scrollToBottom();
             // 每次resize更新textBlock中的textMask的位置
-            this.mTextArea.childrenMap.child.textMask.setPosition(undefined, size.height - this.height + 30).resize();
+            // this.mTextArea.childrenMap.child.textMask.setPosition(undefined, size.height - this.height + 30).resize();
         }
     }
 
@@ -141,7 +147,7 @@ export class ChatPanelPC extends BaseChatPanel {
         // this.outPut.add(indicator);
         this.mTextArea = new TextArea(this.mScene, {
             x: 230 * this.mWorld.uiScale,
-            y: size.height - 150 * this.mWorld.uiScale,
+            y: size.height - 155 * this.mWorld.uiScale,
             textWidth: 430,
             textHeight: 200,
             text,
