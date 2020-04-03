@@ -114,6 +114,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
+    protected mBackgrounds: BackgroundManager[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -228,7 +229,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
         // const close = new CloseShot(this.world, this.mCameraService);
-        // const close = new BackgroundManager(this, "close", this.mCameraService);
+        if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
+            this.mBackgrounds = [];
+            this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
+            // const close = new BackgroundManager(this, "close", this.mCameraService);
+        }
     }
 
     public pause() {
@@ -370,6 +375,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) this.connection.removePacketListener(this);
         this.mWorld.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
+        if (this.mBackgrounds) {
+            for (const background of this.mBackgrounds) {
+                background.destroy();
+            }
+        }
         // if (this.mScene) {
         //   this.mScene = null;
         // }

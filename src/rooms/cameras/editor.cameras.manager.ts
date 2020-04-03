@@ -23,8 +23,13 @@ export class EditorCamerasManager extends CamerasManager {
         if (!this.mMain) {
             return;
         }
-        this.mMain.scrollX += x / this.zoom;
-        this.mMain.scrollY += y / this.zoom;
+
+        for (const camera of this.mCameras) {
+            camera.scrollX += x / this.zoom;
+            camera.scrollY += y / this.zoom;
+        }
+        // this.mMain.scrollX += x / this.zoom;
+        // this.mMain.scrollY += y / this.zoom;
         // this.mCamera.setScroll(x, y);
 
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);

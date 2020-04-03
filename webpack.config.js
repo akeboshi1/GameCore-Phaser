@@ -51,7 +51,7 @@ const config = {
                     toplevel: false,
                     nameCache: null,
                     ie8: false,
-                    keep_classnames: false,
+                    keep_classnames: true,
                     keep_fnames: true,
                     safari10: false,
                 },
