@@ -34,6 +34,12 @@ export class BlockManager {
     this.initBlock();
   }
 
+  destroy() {
+    for (const grid of this.mGrids) {
+      grid.destroy();
+    }
+  }
+
   private initBlock() {
     this.mGrids.length = 0;
     this.mViewPort = new Phaser.Geom.Rectangle();

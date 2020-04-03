@@ -1,8 +1,6 @@
 import { WorldService } from "../../game/world.service";
-import { PlayScene } from "../../scenes/play";
 import { SkyBoxScene } from "../../scenes/sky.box";
 import { ICameraService } from "../cameras/cameras.manager";
-import { BackgroundDisplay } from "./display";
 import { Url } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
 import { BlockManager } from "./block.manager";
@@ -29,11 +27,13 @@ export class BackgroundManager {
     this.mRoom = room;
     this.mType = type;
     this.mCameras = camerasManager;
-    this.mWorld.game.scene.add(SkyBoxScene.name + `_${type}`, SkyBoxScene, false);
-    const playScene = this.mWorld.game.scene.getScene(PlayScene.name);
-    if (playScene) {
-      playScene.scene.launch(SkyBoxScene.name + `_${type}`, this);
+    const playScene = room.scene;
+    if (!playScene) {
+      Logger.getInstance().fatal(`${BackgroundManager.name} scene does not exist`);
+      return;
     }
+    this.mWorld.game.scene.add(SkyBoxScene.name + `_${type}`, SkyBoxScene, false);
+    playScene.scene.launch(SkyBoxScene.name + `_${type}`, this);
   }
 
   startPlay(scene: Phaser.Scene) {
@@ -49,13 +49,17 @@ export class BackgroundManager {
       return;
     }
     this.mTime = time;
-    const camera = this.mCameras.camera;
     this.mBackground.check(time, delta);
     // this.mBackground.setScroll(camera.scrollX, camera.scrollY);
   }
 
   destroy() {
-    this.mWorld.game.scene.remove(SkyBoxScene.name + `_${this.mType}`);
+    if (this.mWorld && this.mWorld.game) {
+      this.mWorld.game.scene.remove(SkyBoxScene.name + `_${this.mType}`);
+    }
+    if (this.mBackground) {
+      this.mBackground.destroy();
+    }
   }
 
   private initCamera() {
@@ -66,7 +70,7 @@ export class BackgroundManager {
       const imageWidth = 3400;
       const imageHeight = 1900;
       const size = this.mRoom.roomSize;
-      if (imageWidth > size.tileHeight) {
+      if (imageWidth > size.sceneWidth) {
         // main.setBounds(0, 0, imageWidth, imageHeight);
       }
       const bound = main.getBounds();

@@ -1,5 +1,4 @@
 import { IAbstractPanel } from "../abstractPanel";
-import { Logger } from "../../utils/log";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 
@@ -134,6 +133,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         }
         this.mResources.set(key, {
             dpr: this.dpr,
+            type: "atlas",
             texture,
             data
         });
@@ -156,7 +156,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         if (this.mInitialized) {
             return;
         }
-        if (totalFailed > 0) {
+        if (totalFailed > 0 && this.mResources && this.mResources.size > 0) {
             this.reload();
             return;
         }
@@ -216,7 +216,7 @@ export class Panel extends Phaser.GameObjects.Container implements IAbstractPane
         }
         this.scene.load.on(Phaser.Loader.Events.FILE_KEY_COMPLETE, this.onFileKeyComplete, this);
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
-        this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, this.loadError, this);
+        this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.loadError, this);
         this.scene.load.start();
     }
 
