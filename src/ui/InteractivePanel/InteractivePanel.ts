@@ -227,6 +227,7 @@ export class InteractivePanel extends Panel {
     }
 
     protected init() {
+        const zoom: number = this.mWorld.uiScaleNew;
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
@@ -251,6 +252,13 @@ export class InteractivePanel extends Panel {
 
         this.mDescTF = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: "20px",
+            align: Phaser.Display.Align.LEFT_CENTER,
+            space: {
+                top: 10 * this.dpr * zoom,
+                bottom: 10 * this.dpr * zoom,
+                left: 10 * this.dpr * zoom,
+                right: 10 * this.dpr * zoom,
+            },
             wrap: {
                 mode: "char",
                 width: this.mBorder.width
