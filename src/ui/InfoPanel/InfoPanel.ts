@@ -87,10 +87,10 @@ export class InfoPanel extends Panel {
             this.mActor.destroy(true);
             this.mActor = null;
         }
-        if (this.mScroller) {
-            this.mScroller.destroy();
-            this.mScroller = null;
-        }
+        // if (this.mScroller) {
+        //     this.mScroller.destroy();
+        //     this.mScroller = null;
+        // }
 
         // if (this.mNameTextArea) {
         //     this.mNameTextArea.destroy();
@@ -195,12 +195,12 @@ export class InfoPanel extends Panel {
 
     private addListen() {
         // this.mNameTextArea.childrenMap.child.setInteractive();
-        this.mCloseBtn.on("pointerup", this.closeHandler, this);
+        if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.closeHandler, this);
     }
 
     private removeListen() {
         // this.mNameTextArea.childrenMap.child.disableInteractive();
-        this.mCloseBtn.off("pointerup", this.closeHandler, this);
+        if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.closeHandler, this);
     }
 
     private closeHandler(pointer) {

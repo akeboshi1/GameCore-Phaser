@@ -697,8 +697,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone"
-                    }
-                    // { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
+                    },
+                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
                 ]
             },
             render: {

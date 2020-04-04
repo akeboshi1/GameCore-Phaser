@@ -29,6 +29,16 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         }
     }
 
+    public destroy(fromScene: boolean = false) {
+        this.mLoadCompleteCallbak = null;
+        this.mLoadContext = null;
+        this.mLoadErrorCallback = null;
+        this.mUrl = "";
+        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
+        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
+        super.destroy(fromScene);
+    }
+
     protected onLoadComplete(file?: Phaser.Loader.File) {
         if (file && file.key === this.mUrl) {
             this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
