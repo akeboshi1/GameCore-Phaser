@@ -30,6 +30,7 @@ import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { BackgroundManager } from "./sky.box/background.manager";
+import { SoundManager } from "../game/soud.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -115,6 +116,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mBackgrounds: BackgroundManager[];
+    protected mSoundManager: SoundManager;
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
