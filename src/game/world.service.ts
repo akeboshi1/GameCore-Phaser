@@ -11,6 +11,7 @@ import { HttpService } from "../net/http.service";
 import { ILauncherConfig } from "../../launcher";
 import { Clock } from "../rooms/clock";
 import { MouseManager } from "./mouse.manager";
+import { ISoundConfig } from "./sound.manager";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -48,4 +49,6 @@ export interface WorldService {
     closeGame();
 
     loadSceneConfig(sceneId: string): Promise<any>;
+
+    playSound(config: ISoundConfig);
 }

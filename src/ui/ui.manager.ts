@@ -348,6 +348,9 @@ export class UiManager extends PacketHandler {
     }
 
     private onEnableMarket() {
+        if (!this.mMedMap) {
+            return;
+        }
         let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.name);
         if (!topMenu) {
             topMenu = new TopMenuMediator(this.mScene, this.worldService);

@@ -30,7 +30,8 @@ import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { BackgroundManager } from "./sky.box/background.manager";
-import { SoundManager } from "../game/soud.manager";
+import { SoundManager, SoundField } from "../game/sound.manager";
+import { Url } from "../utils/resUtil";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -116,7 +117,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mBackgrounds: BackgroundManager[];
-    protected mSoundManager: SoundManager;
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -236,6 +236,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
             // const close = new BackgroundManager(this, "close", this.mCameraService);
         }
+        const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
+        this.world.playSound({
+            urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
+            field: SoundField.Element,
+            soundConfig: { loop: true }
+        });
     }
 
     public pause() {

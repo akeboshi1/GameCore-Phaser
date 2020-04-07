@@ -39,8 +39,8 @@ import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
 import * as path from "path";
-import { PI_EXTENSION_REGEX } from "../const/constants";
 import { Tool } from "../utils/tool";
+import { SoundManager, ISoundConfig } from "./sound.manager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -62,6 +62,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mAccount: Account;
     private gameConfig: Phaser.Types.Core.GameConfig;
     private mRoleManager: RoleManager;
+    private mSoundManager: SoundManager;
     private isFullStart: boolean = false;
     private mOrientation: number = 0;
     private gameConfigUrls: Map<string, string> = new Map();
@@ -123,6 +124,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mElementStorage = new ElementStorage();
         this.mHttpService = new HttpService(this);
         this.mRoleManager = new RoleManager(this);
+        this.mSoundManager = new SoundManager();
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();
@@ -185,6 +187,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public changeRoom(room: IRoomService) {
         if (this.mInputManager) this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
+        this.mSoundManager.changeRoom(room);
     }
 
     public getSize(): Size | undefined {
@@ -287,6 +290,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
         this.mConnection.send(pkt);
         this.mClock.sync(-1);
+    }
+
+    public playSound(config: ISoundConfig) {
+        this.mSoundManager.play(config);
     }
 
     get uiScale(): number {
