@@ -5,6 +5,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
+import { Logger } from "../../utils/log";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;

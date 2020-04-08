@@ -180,7 +180,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // TODO: Unload loading-scene
     }
 
-    public startLoad() {}
+    public startLoad() { }
 
     public completeLoad() {
         this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
@@ -549,6 +549,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         fall.show(status);
         fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         this.addToSceneUI(fall);
+        // test
+        // const content = new op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE();
+        // content.duration = 2000;
+        // this.playerManager.actor.showInteractionBubble(content);
     }
 
     private onMovePathHandler(packet: PBpacket) {
@@ -629,6 +633,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.connection.send(packet);
     }
 
+    // Move through the location returned by the server
     private onTapHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
         this.move(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio, gameObject);
     }

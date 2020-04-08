@@ -8,6 +8,7 @@ import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
+import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 export class InteractivePanel extends Panel {
     private mNameCon: Phaser.GameObjects.Container;
     private mDescCon: Phaser.GameObjects.Container;
@@ -31,7 +32,8 @@ export class InteractivePanel extends Panel {
     private mMidBaseScaleY: number = 1;
     private mRightBaseScaleX: number = 1;
     private mRightBaseScaleY: number = 1;
-
+    private mTextArea: TextArea;
+    private mDisDelection: number = 10;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -72,16 +74,17 @@ export class InteractivePanel extends Panel {
             if (data.text.length > 0) {
                 const descData: op_gameconfig_01.IText = data.text[0];
                 this.mDescCon.setData("nodeID", descData.node.id);
-                this.mDescTF.text = descData.text;
-                this.mDescCon.off("pointerdown", this.descConClick, this);
-                this.mDescCon.on("pointerdown", this.descConClick, this);
+                this.mTextArea.appendText(descData.text);
+                // this.mDescTF.text = descData.text;
+                this.mDescCon.off("pointerup", this.descConClick, this);
+                this.mDescCon.on("pointerup", this.descConClick, this);
                 if (data.text[1]) {
                     const nameData: op_gameconfig_01.IText = data.text[1];
                     this.mNameCon.setData("nodeID", nameData.node.id);
                     this.mNameTF.text = nameData.text;
                     this.mNameTF.x = - this.mNameTF.width >> 1;
-                    this.mNameCon.off("pointerdown", this.nameConClick, this);
-                    this.mNameCon.on("pointerdown", this.nameConClick, this);
+                    this.mNameCon.off("pointerup", this.nameConClick, this);
+                    this.mNameCon.on("pointerup", this.nameConClick, this);
                 }
             }
         }
@@ -133,11 +136,15 @@ export class InteractivePanel extends Panel {
     public resize(wid: number = 0, hei: number = 0) {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
+        const width = this.scene.cameras.main.width;
+        const height = this.scene.cameras.main.height;
+        const zoom = this.mWorld.uiScaleNew;
         this.mNameCon.add(this.mNameBg);
         this.mNameCon.add(this.mNameTF);
         this.mDescCon.add(this.mBg);
         this.mDescCon.add(this.mBorder);
         this.mDescCon.add(this.mDescTF);
+        this.mDescCon.add(this.mTextArea);
         this.add(this.mNameCon);
         this.add(this.mDescCon);
         if (this.mWorld.game.device.os.desktop) {
@@ -154,28 +161,41 @@ export class InteractivePanel extends Panel {
             }
             this.y = this.mBg.height * 1.5 * this.mWorld.uiScale;
         }
+        // this.y = 0;
 
         this.x = size.width >> 1;
         this.refreshUIPos();
         if (this.mRadio) {
             this.add(this.mRadio);
         }
+        this.mTextArea.childrenMap.child.setMinSize(this.mBorder.width - 10 * this.dpr * zoom, this.mBorder.height - 3 * this.dpr * zoom);
+        this.mTextArea.layout();
+        this.mTextArea.setPosition(width / 2, this.y + this.mDescCon.y);
+        const textMask = this.mTextArea.childrenMap.text;
+        textMask.x = -this.mBorder.width >> 1;
+        textMask.y = -this.mBorder.height / 2;
+        textMask.resize(this.mBorder.width,this.mDescTF.displayHeight+2000);
+        // textMask.bottomChildOY = this.mDescTF.displayHeight + 20 * this.dpr * zoom;
+        this.mTextArea.scrollToBottom();
+        super.resize(wid, hei);
     }
 
     public addListen() {
-        this.mNameCon.on("pointerdown", this.nameConClick, this);
-        this.mDescCon.on("pointerdown", this.descConClick, this);
-        this.mLeftFaceIcon.on("pointerdown", this.leftFaceClick, this);
-        this.mMidFaceIcon.on("pointerdown", this.midFaceClick, this);
-        this.mRightFaceIcon.on("pointerdown", this.midFaceClick, this);
+        this.mTextArea.childrenMap.child.setInteractive();
+        this.mNameCon.on("pointerup", this.nameConClick, this);
+        // this.mDescCon.on("pointerup", this.descConClick, this);
+        this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
+        this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
+        this.mRightFaceIcon.on("pointerup", this.midFaceClick, this);
     }
 
     public removeListen() {
-        this.mNameCon.off("pointerdown", this.nameConClick, this);
-        this.mDescCon.off("pointerdown", this.descConClick, this);
-        this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
-        this.mMidFaceIcon.off("pointerdown", this.midFaceClick, this);
-        this.mRightFaceIcon.off("pointerdown", this.midFaceClick, this);
+        this.mTextArea.childrenMap.child.disableInteractive();
+        this.mNameCon.off("pointerup", this.nameConClick, this);
+        // this.mDescCon.off("pointerup", this.descConClick, this);
+        this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
+        this.mMidFaceIcon.off("pointerup", this.midFaceClick, this);
+        this.mRightFaceIcon.off("pointerup", this.midFaceClick, this);
     }
 
     public destroy() {
@@ -227,6 +247,8 @@ export class InteractivePanel extends Panel {
     }
 
     protected init() {
+        const width = this.scene.cameras.main.width;
+        const height = this.scene.cameras.main.height;
         const zoom: number = this.mWorld.uiScaleNew;
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mNameCon = this.mScene.make.container(undefined, false);
@@ -249,25 +271,37 @@ export class InteractivePanel extends Panel {
 
         this.mNameBg = this.mScene.make.image(undefined, false);
         this.mNameBg.setTexture("juqing", "juqing_name.png");
-
         this.mDescTF = new BBCodeText(this.mScene, 0, 0, "", {
+            // width: this.mBorder.width - 20 * this.dpr * zoom,
             fontSize: "20px",
-            align: Phaser.Display.Align.LEFT_CENTER,
-            space: {
-                top: 10 * this.dpr * zoom,
-                bottom: 10 * this.dpr * zoom,
-                left: 10 * this.dpr * zoom,
-                right: 10 * this.dpr * zoom,
+            halign: "left",
+            textMask: false,
+            padding: {
+                top: 0,
+                bottom: 0,
+                left: 8 * this.dpr * zoom,
+                right: 3 * this.dpr * zoom,
             },
             wrap: {
-                mode: "char",
-                width: this.mBorder.width
+                mode: "character",
+                width: this.mBorder.width - 12 * this.dpr * zoom,
             },
         });
+
+        this.mTextArea = new TextArea(this.mScene, {
+            x: width / 2,
+            y: this.mBorder.y + this.mBorder.height / 2 + 80 * this.dpr * zoom,
+            width: this.mBorder.width,
+            height: this.mBorder.height - 20 * this.dpr * zoom,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            textWidth: this.mBorder.width - 12 * this.dpr * zoom,
+            textHeight: 0,
+            text: this.mDescTF,
+        })
+            .layout();
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
-
-        this.mDescCon.setInteractive();
+        // this.mDescCon.setInteractive();
         this.mNameCon.setInteractive();
 
         super.init();
@@ -280,17 +314,17 @@ export class InteractivePanel extends Panel {
 
     private refreshUIPos() {
         const size: Size = this.mWorld.getSize();
+        const zoom = this.mWorld.uiScaleNew;
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
         this.mNameTF.y = -8 * this.mWorld.uiScale;
-        this.mDescTF.x = -this.mBorder.width / 2;
-        this.mDescTF.y = -this.mBorder.height / 2;
+        // this.mDescTF.x = -this.mBorder.width / 2;
+        // this.mDescTF.y = -this.mBorder.height / 2;
         this.mDescCon.y = this.mWorld.game.device.os.desktop ? size.height / 2 + 80 : 0;
         this.mNameCon.x = 150 - this.mDescCon.width / 2;
         this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
         this.mNameTF.setWrapWidth(this.mBorder.width);
-        this.mDescTF.setWrapWidth(this.mBorder.width);
-
+        this.mDescTF.setWrapWidth(this.mBorder.width - 10 * this.dpr * zoom);
         this.mNameTF.x = - this.mNameTF.width >> 1;
 
         if (!this.mWorld.game.device.os.desktop) {
@@ -376,8 +410,8 @@ export class InteractivePanel extends Panel {
                 this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
-                this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
-                this.mLeftFaceIcon.on("pointerdown", this.leftFaceClick, this);
+                this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
+                this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
@@ -397,8 +431,8 @@ export class InteractivePanel extends Panel {
                 this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
-                this.mLeftFaceIcon.off("pointerdown", this.midFaceClick, this);
-                this.mMidFaceIcon.on("pointerdown", this.midFaceClick, this);
+                this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
+                this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
@@ -418,41 +452,51 @@ export class InteractivePanel extends Panel {
                 this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
-                this.mRightFaceIcon.off("pointerdown", this.rightFaceClick, this);
-                this.mRightFaceIcon.on("pointerdown", this.rightFaceClick, this);
+                this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
+                this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
                 break;
         }
         this.resize();
     }
 
-    private rightFaceClick() {
+    private rightFaceClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!med) return;
         med.componentClick(this.mRightFaceIcon.getData("nodeID"));
     }
 
-    private midFaceClick() {
+    private midFaceClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!med) return;
         med.componentClick(this.mMidFaceIcon.getData("nodeID"));
     }
 
-    private leftFaceClick() {
+    private leftFaceClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!med) return;
         med.componentClick(this.mLeftFaceIcon.getData("nodeID"));
     }
 
-    private descConClick() {
+    private descConClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!this.mDescCon.getData("nodeID") || !med) return;
         med.componentClick(this.mDescCon.getData("nodeID"));
     }
 
-    private nameConClick() {
+    private nameConClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!this.mNameCon.getData("nodeID") || !med) return;
         med.componentClick(this.mNameCon.getData("nodeID"));
+    }
+
+    private checkPointer(pointer: Phaser.Input.Pointer): boolean {
+        return Math.abs(pointer.downX - pointer.upX) < this.mDisDelection &&
+            Math.abs(pointer.downY - pointer.upY) < this.mDisDelection;
     }
 
     private onLoadError(file: Phaser.Loader.File) {
@@ -462,8 +506,8 @@ export class InteractivePanel extends Panel {
         this.mRadioCom = true;
         const size: Size = this.mWorld.getSize();
         if (!this.mRadio) return;
-        // this.mRadio.x = 220;
-        // this.mRadio.y = this.mDescCon.height + 200;
+        this.mRadio.x = 220;
+        this.mRadio.y = this.mDescCon.height + 200;
         this.resize();
     }
 }
