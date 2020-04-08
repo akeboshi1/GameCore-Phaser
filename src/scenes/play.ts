@@ -3,6 +3,7 @@ import { IRoomService } from "../rooms/room";
 import { Size } from "../utils/size";
 import { BasicScene } from "./basic.scene";
 import { PlayCamera } from "../rooms/cameras/play.camera";
+import { Logger } from "../utils/log";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends BasicScene {

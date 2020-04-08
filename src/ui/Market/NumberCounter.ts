@@ -63,7 +63,6 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   }
 
   resize() {
-
   }
 
   setMinNumber(val: number) {
