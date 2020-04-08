@@ -81,7 +81,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public mDisplayInfo: IDragonbonesModel | undefined;
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
-    protected mActionName: string = "";
+    protected mActionName: AnimationData;
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
     private mPreDirection: number;
@@ -127,7 +127,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.mCollisionArea = [[1, 1], [1, 1]];
         this.mOriginPoint = new Phaser.Geom.Point(1, 1);
         if (!this.mDisplayInfo) return;
-        this.dragonBonesName = this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+        this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
         if (this.scene.cache.obj.has(this.dragonBonesName)) { }
     }
 
@@ -136,36 +136,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     public play(val: AnimationData) {
-        let dir: number = this.mDisplayInfo !== undefined && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
-        switch (dir) {
-            case 0:
-                dir = Math.random() * 1 > .5 ? 1 : 7;
-                break;
-            case 2:
-                dir = Math.random() * 1 > .5 ? 1 : 3;
-                break;
-            case 4:
-                dir = Math.random() * 1 > .5 ? 3 : 5;
-                break;
-            case 6:
-                dir = Math.random() * 1 > .5 ? 5 : 7;
-                break;
-        }
-        const animationName = val.animationName;
-        if (this.mActionName !== animationName || this.mPreDirection !== dir) {
-            let trunDir: string = "";
-            if (dir === 3 || dir === 5) {
-                this.setScaleStageX(-dir + 4);
-                trunDir = "_3";
-            } else if (dir === 1 || dir === 7) {
-                this.setScaleStageX(-(1 / 3) * dir + (4 / 3));
-                trunDir = "_1";
-            }
-            this.mActionName = animationName + trunDir;
-            if (this.mArmatureDisplay) {
-                this.mArmatureDisplay.animation.play(this.mActionName);
-            }
-            this.mPreDirection = dir;
+        this.mActionName = val;
+        if (this.mArmatureDisplay) {
+            this.mArmatureDisplay.animation.play(val.animationName);
+            this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
         }
     }
 
@@ -258,16 +232,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.emit("initialized");
     }
 
-    protected setScaleStage(val: number) {
-        if (this.mArmatureDisplay) {
-            this.mArmatureDisplay.scale = val;
-        }
-    }
-
-    protected setScaleStageX(val: number) {
-        if (this.mArmatureDisplay) this.mArmatureDisplay.scaleX = val;
-    }
-
     private loadDragonBones(resUrl: string, pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.scene.load.dragonbone(
             this.mDragonbonesName,
@@ -311,15 +275,12 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private showReplaceArmatrue() {
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
-            // const part: string = obj.slot.replace("$", obj.dir.toString());
-            // Logger.log(part);
         }
         if (this.mLoadMap && this.mLoadMap.size > 0) {
             this.startLoad();
         } else {
             this.mArmatureDisplay.visible = true;
         }
-        // this.replaceArr.splice(0);
     }
 
     private getReplaceArr() {

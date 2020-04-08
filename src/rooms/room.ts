@@ -202,8 +202,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            // const zoom = Math.ceil(window.devicePixelRatio);
-            // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
             this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * this.mScaleRatio + camera.width, this.mSize.sceneHeight * this.mScaleRatio + camera.height);
             // init block
             this.mBlocks.int(this.mSize);
@@ -213,7 +211,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
         this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        // this.mActor = new Actor(, this.mPlayerManager);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();
@@ -223,25 +220,23 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) {
             this.cameraService.syncCamera();
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-            // this.mCameraService.syncCameraScroll();
         }
 
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
-        // const close = new CloseShot(this.world, this.mCameraService);
         if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
             this.mBackgrounds = [];
             this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
             // const close = new BackgroundManager(this, "close", this.mCameraService);
         }
         const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
-        this.world.playSound({
-            urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
-            field: SoundField.Element,
-            soundConfig: { loop: true }
-        });
+        // this.world.playSound({
+        //     urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
+        //     field: SoundField.Element,
+        //     soundConfig: { loop: true }
+        // });
     }
 
     public pause() {

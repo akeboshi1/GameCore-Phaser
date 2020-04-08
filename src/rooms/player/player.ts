@@ -81,7 +81,11 @@ export class Player extends Element {
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
-            if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
+            this.mModel.direction = dir;
+            // if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
+            if (this.mDisplay) {
+                this.mDisplay.play(this.mModel.currentAnimation);
+            }
         }
     }
 
@@ -90,10 +94,14 @@ export class Player extends Element {
             return;
         }
         if (this.mCurState === val) return;
-        if (!val) val = PlayerState.IDLE;
+        // if (!val) val = PlayerState.IDLE;
+        if (!val) {
+            val = PlayerState.IDLE;
+        }
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
-            (this.mDisplay as DragonbonesDisplay).play({ animationName: val, flip: false });
+            this.mModel.currentAnimationName = this.mCurState;
+            (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }
 

@@ -21,7 +21,9 @@ export class SoundManager {
     }
 
     changeRoom(room: IRoomService) {
-        this.destroy();
+        if (this.mSoundMap) {
+            this.mSoundMap.clear();
+        }
         this.mSoundMap = new Map();
         this.mScene = room.scene;
     }

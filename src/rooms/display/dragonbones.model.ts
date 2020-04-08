@@ -1,4 +1,6 @@
-import { op_gameconfig, op_def } from "pixelpai_proto";
+import { op_def } from "pixelpai_proto";
+import { AnimationData } from "../element/sprite";
+import { Direction } from "../element/element";
 
 export interface IDragonbonesModel {
     readonly discriminator: string;
@@ -14,6 +16,8 @@ export interface IDragonbonesModel {
     getOriginPoint(aniName: string): Phaser.Geom.Point;
     existAnimation(aniName: string): boolean;
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
+    findAnimation(baseName: string, dir: Direction): AnimationData;
+
 }
 
 export interface IAvatar {
@@ -95,5 +99,20 @@ export class DragonbonesModel implements IDragonbonesModel {
 
     existAnimation(aniName: string) {
         return true;
+    }
+
+    public findAnimation(baseName: string, dir: Direction): AnimationData {
+        let flip = false;
+        switch (dir) {
+            case Direction.south_east:
+                flip = true;
+                dir = Direction.west_south;
+                break;
+            case Direction.east_north:
+                flip = true;
+                dir = Direction.north_west;
+                break;
+            }
+        return { animationName: `${baseName}_${dir}`, flip };
     }
 }

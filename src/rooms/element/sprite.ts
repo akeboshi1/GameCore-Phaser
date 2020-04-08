@@ -330,8 +330,11 @@ export class Sprite implements ISprite {
     }
 
     private setAnimationData(animationName: string, direction: Direction) {
+        if (!this.displayInfo) {
+            return;
+        }
         const baseAniName = animationName.split(`_`)[0];
-        this.mCurrentAnimation = this.findAnimation(baseAniName, direction);
+        this.mCurrentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
         if (this.mCurrentCollisionArea) {
             this.setArea();
         }
@@ -347,45 +350,6 @@ export class Sprite implements ISprite {
             return aniName;
         }
         return null;
-    }
-
-    private findAnimation(baseName: string, dir: Direction): AnimationData {
-        let animationName = this.checkDirectionAnimation(baseName, dir);
-        let flip = false;
-        if (animationName) {
-            return { animationName, flip };
-        }
-        switch (dir) {
-            case Direction.west_south:
-            case Direction.east_north:
-                animationName = this.getDefaultAnimation(baseName);
-                break;
-            case Direction.south_east:
-                animationName = this.getDefaultAnimation(baseName);
-                flip = true;
-                break;
-            case Direction.north_west:
-                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
-                if (animationName === null) {
-                    animationName = this.getDefaultAnimation(baseName);
-                }
-                flip = true;
-                break;
-        }
-        return { animationName, flip };
-    }
-
-    private getDefaultAnimation(baseName: string) {
-        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
-        if (animationName === null) {
-            if (this.mDisplayInfo.existAnimation(baseName)) {
-                animationName = baseName;
-            } else {
-                Logger.getInstance().warn(`${Sprite.name}: can't find animation ${baseName}`);
-                animationName = "idle";
-            }
-        }
-        return animationName;
     }
 
     private setArea() {
