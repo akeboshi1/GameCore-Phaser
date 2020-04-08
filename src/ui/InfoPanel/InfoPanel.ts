@@ -34,19 +34,19 @@ export class InfoPanel extends Panel {
         this.x = size.width >> 1;
         this.y = size.height >> 1;
         this.mActor.x = -this.width / 2 + 80 * scale * zoom;
-        this.mActor.y = -this.height / 2 + 133 * scale * zoom;
+        this.mActor.y = -this.height / 2 + 160 * scale * zoom;
         this.mNameTextArea.setMinSize(220 * this.dpr * scale, 222 * this.dpr * scale);
-        this.mNameTextArea.setPosition(size.width / 2 + 80 * this.dpr * scale, size.height / 2 - 110 * this.dpr * scale);
+        this.mNameTextArea.setPosition(size.width / 2 + 60 * this.dpr * scale, size.height / 2 - 110 * this.dpr * scale);
         this.mNameTextArea.layout();
         const textMask = this.mNameTextArea.childrenMap.text;
         textMask.x = -10 * this.dpr * scale;
         textMask.y = -200 * this.dpr * scale;
-        this.mAttributesTextArea.setMinSize(this.width - 40 * this.dpr * scale, 180 * this.dpr * scale);
+        this.mAttributesTextArea.setMinSize(360 * this.dpr * scale, 180 * this.dpr * scale);
         this.mAttributesTextArea.setPosition(size.width / 2 + 3 * this.dpr * scale, size.height / 2 + 95 * this.dpr * scale);
         this.mAttributesTextArea.layout();
-        // const attributesMask = this.mAttributesTextArea.childrenMap.text;
-        // attributesMask.x = this.x;
-        // attributesMask.y = this.y;
+        const attributesMask = this.mAttributesTextArea.childrenMap.text;
+        attributesMask.x = -this.width / 2 + 30 * this.dpr * scale;
+        attributesMask.y = 5 * this.dpr * scale;
     }
 
     show(param?: any) {
@@ -115,6 +115,7 @@ export class InfoPanel extends Panel {
     }
 
     protected init() {
+        const size = this.mWorld.getSize();
         const scale: number = this.mWorld.uiScaleNew;
         this.setSize(400 * this.dpr * scale, 500 * this.dpr * scale);
         const background = new NinePatch(this.scene, {
@@ -138,16 +139,16 @@ export class InfoPanel extends Panel {
             textMask: false,
             wrap: {
                 mode: "char",
-                width: 120 * this.dpr * scale
+                width: 270 * this.dpr * scale
             }
         });
         this.mNameTextArea = new TextArea(this.scene, {
             x: this.width / 2 - 80 * scale * this.dpr,
             y: -75 * scale * this.dpr,
-            textWidth: 150 * this.dpr * scale,
+            textWidth: 270 * this.dpr * scale,
             textHeight: 180 * this.dpr * scale,
             textMask: true,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             text: this.mNameBBCodeText,
         })
             .layout();
@@ -157,20 +158,19 @@ export class InfoPanel extends Panel {
             textMask: false,
             wrap: {
                 mode: "char",
-                width: 120 * this.dpr * scale
+                width: this.width - 30 * this.dpr * scale
             }
         });
         this.mAttributesTextArea = new TextArea(this.scene, {
-            x: this.width >> 1,
-            y: this.height >> 1,
-            width: 200 * this.dpr * scale,
-            height: 0,
+            x: size.width / 2 + 3 * this.dpr * scale,
+            y: size.height / 2 + 95 * this.dpr * scale,
             textMask: true,
-            textWidth: this.mAttributesBBCodeText.width,
+            textWidth: this.width - 60 * this.dpr * scale,
             textHeight: 180 * this.dpr * scale,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             text: this.mAttributesBBCodeText,
-        }).layout();
+        })
+            .layout();
 
         this.mCloseBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "", "关闭", BlueButton.getConfig());
         this.mCloseBtn.x = 0;
