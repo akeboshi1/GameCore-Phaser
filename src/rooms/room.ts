@@ -30,6 +30,8 @@ import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { BackgroundManager } from "./sky.box/background.manager";
+import { SoundManager, SoundField } from "../game/sound.manager";
+import { Url } from "../utils/resUtil";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -114,6 +116,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
+    protected mBackgrounds: BackgroundManager[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -228,7 +231,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
         // const close = new CloseShot(this.world, this.mCameraService);
-        // const close = new BackgroundManager(this, "close", this.mCameraService);
+        if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
+            this.mBackgrounds = [];
+            this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
+            // const close = new BackgroundManager(this, "close", this.mCameraService);
+        }
+        const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
+        this.world.playSound({
+            urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
+            field: SoundField.Element,
+            soundConfig: { loop: true }
+        });
     }
 
     public pause() {
@@ -370,6 +383,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) this.connection.removePacketListener(this);
         this.mWorld.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
+        if (this.mBackgrounds) {
+            for (const background of this.mBackgrounds) {
+                background.destroy();
+            }
+        }
         // if (this.mScene) {
         //   this.mScene = null;
         // }

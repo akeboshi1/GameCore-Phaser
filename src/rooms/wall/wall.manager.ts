@@ -26,6 +26,13 @@ export class WallManager extends PacketHandler  {
     if (!terrains) {
       return;
     }
+    const tmp = this.mRoom.world.getConfig().game_id.split(".");
+    if (tmp.length < 2) {
+      return;
+    }
+    if (tmp[1] !== "5e410ba50681ad5557b4d6e9") {
+      return;
+    }
     const map = terrains.data;
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[0].length; j++) {
