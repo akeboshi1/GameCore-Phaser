@@ -19,14 +19,15 @@ export class InfoPanel extends Panel {
     private mScroller: GameScroller;
     private mAttributesBBCodeText: BBCodeText;
     private mNameBBCodeText: BBCodeText;
-    // private mAttributesTextArea: TextArea;
-    // private mNameTextArea: TextArea;
+    private mAttributesTextArea: TextArea;
+    private mNameTextArea: TextArea;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
         this.mWorld = worldService;
     }
 
     resize(wid: number, hei: number) {
+        if (!this.mInitialized) return;
         const size = this.mWorld.getSize();
         const scale: number = this.mWorld.uiScaleNew;
         const zoom: number = this.mWorld.uiRatio;
@@ -34,23 +35,30 @@ export class InfoPanel extends Panel {
         this.y = size.height >> 1;
         this.mActor.x = -this.width / 2 + 80 * scale * zoom;
         this.mActor.y = -this.height / 2 + 133 * scale * zoom;
-        // this.mNameTextArea.childrenMap.child.setMinSize(150 * this.dpr * zoom, 220 * this.dpr * zoom);
-        // this.mNameTextArea.layout();
-        // const textMask = this.mNameTextArea.childrenMap.text;
-        // textMask.x = 200;
-        // textMask.y = 100;
-        // this.mNameTextArea.scrollToBottom();
+        this.mNameTextArea.setMinSize(220 * this.dpr * scale, 222 * this.dpr * scale);
+        this.mNameTextArea.setPosition(size.width / 2 + 80 * this.dpr * scale, size.height / 2 - 110 * this.dpr * scale);
+        this.mNameTextArea.layout();
+        const textMask = this.mNameTextArea.childrenMap.text;
+        textMask.x = -10 * this.dpr * scale;
+        textMask.y = -200 * this.dpr * scale;
+        this.mAttributesTextArea.setMinSize(this.width - 40 * this.dpr * scale, 180 * this.dpr * scale);
+        this.mAttributesTextArea.setPosition(size.width / 2 + 3 * this.dpr * scale, size.height / 2 + 95 * this.dpr * scale);
+        this.mAttributesTextArea.layout();
         // const attributesMask = this.mAttributesTextArea.childrenMap.text;
-        // attributesMask.y=0;
+        // attributesMask.x = this.x;
+        // attributesMask.y = this.y;
     }
 
     show(param?: any) {
+        if (this.mShowing) return;
         super.show(param);
         if (this.mInitialized) {
+            const size = this.mWorld.getSize();
             this.addListen();
+            this.setData("data", param);
+            this.setInfo(param);
+            this.resize(size.width, size.height);
         }
-        this.setData("data", param);
-        this.setInfo(param);
     }
 
     hide() {
@@ -75,11 +83,8 @@ export class InfoPanel extends Panel {
             }
         });
         const text: any[] = data.text;
-        this.mNameBBCodeText.setText(text[0].text);
-        this.mAttributesBBCodeText.setText(text[1].text);
-        // this.mNameTextArea.appendText(text[0].text);
-        // this.mNameTextArea.scrollToBottom();
-        // this.mAttributesTextArea.appendText(text[1].text);
+        this.mNameTextArea.appendText(text[0].text);
+        this.mAttributesTextArea.appendText(text[1].text);
     }
 
     destroy() {
@@ -87,20 +92,16 @@ export class InfoPanel extends Panel {
             this.mActor.destroy(true);
             this.mActor = null;
         }
-        // if (this.mScroller) {
-        //     this.mScroller.destroy();
-        //     this.mScroller = null;
-        // }
 
-        // if (this.mNameTextArea) {
-        //     this.mNameTextArea.destroy();
-        //     this.mNameTextArea = null;
-        // }
+        if (this.mNameTextArea) {
+            this.mNameTextArea.destroy();
+            this.mNameTextArea = null;
+        }
 
-        // if (this.mAttributesTextArea) {
-        //     this.mAttributesTextArea.destroy();
-        //     this.mAttributesTextArea = null;
-        // }
+        if (this.mAttributesTextArea) {
+            this.mAttributesTextArea.destroy();
+            this.mAttributesTextArea = null;
+        }
 
         this.mWorld = null;
         super.destroy();
@@ -114,10 +115,8 @@ export class InfoPanel extends Panel {
     }
 
     protected init() {
-        const zoom: number = this.mWorld.uiRatio;
         const scale: number = this.mWorld.uiScaleNew;
-        this.setSize(400 * this.dpr * zoom, 500 * this.dpr * zoom);
-        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+        this.setSize(400 * this.dpr * scale, 500 * this.dpr * scale);
         const background = new NinePatch(this.scene, {
             width: this.width,
             height: this.height,
@@ -126,59 +125,56 @@ export class InfoPanel extends Panel {
             rows: Background.getRows()
         });
         const border = new NinePatch(this.scene, {
-            width: this.width - 20 * this.dpr * zoom,
-            height: this.height - 20 * this.dpr * zoom,
+            width: this.width - 20 * this.dpr * scale,
+            height: this.height - 20 * this.dpr * scale,
             key: Border.getName(),
             columns: Border.getColumns(),
             rows: Border.getRows()
         });
 
-        this.mNameBBCodeText = new BBCodeText(this.scene, this.width / 2 - 120 * zoom * scale, -155 * zoom * scale, "", {
-            fontSize: 14 * this.dpr * zoom + "px",
+        this.mNameBBCodeText = new BBCodeText(this.scene, 0, 0, "", {
+            fontSize: 14 * this.dpr * scale + "px",
             fontFamily: Font.DEFULT_FONT,
             textMask: false,
             wrap: {
                 mode: "char",
-                width: 120 * this.dpr * zoom
+                width: 120 * this.dpr * scale
             }
         });
-        // const bg = this.scene.add.graphics();
-        // bg.fillStyle(0xffffff);
-        // bg.fillRect(0, 0, 150 * this.dpr * zoom, 220 * this.dpr * zoom);
-        // this.mNameTextArea = new TextArea(this.scene, {
-        //     x: this.width / 2 - 80 * zoom * scale,
-        //     y: -75 * zoom * scale,
-        //     textWidth: 150 * this.dpr * zoom,
-        //     textHeight: 220 * this.dpr * zoom,
-        //     textMask: true,
-        //     background: bg,
-        //     text: this.mNameBBCodeText,
-        // })
-        //     .layout()
-        //     .setSliderEnable(false);
-        this.mAttributesBBCodeText = new BBCodeText(this.scene, -this.width / 2 + 40 * zoom * scale, 0, "", {
-            fontSize: 14 * this.dpr * zoom + "px",
+        this.mNameTextArea = new TextArea(this.scene, {
+            x: this.width / 2 - 80 * scale * this.dpr,
+            y: -75 * scale * this.dpr,
+            textWidth: 150 * this.dpr * scale,
+            textHeight: 180 * this.dpr * scale,
+            textMask: true,
+            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            text: this.mNameBBCodeText,
+        })
+            .layout();
+        this.mAttributesBBCodeText = new BBCodeText(this.scene, 0, 0, "", {
+            fontSize: 14 * this.dpr * scale + "px",
             fontFamily: Font.DEFULT_FONT,
             textMask: false,
             wrap: {
                 mode: "char",
-                width: 120 * this.dpr * zoom
+                width: 120 * this.dpr * scale
             }
         });
-        // this.mAttributesTextArea = new TextArea(this.scene, {
-        //     x: this.width >> 1,
-        //     y: this.height >> 1,
-        //     width: this.mAttributesBBCodeText.width,
-        //     height: 220 * this.dpr * zoom,
-        //     textWidth: this.mAttributesBBCodeText.width,
-        //     textHeight: 220 * this.dpr * zoom,
-        //     text: this.mAttributesBBCodeText,
-        //     content: "123"
-        // }).layout();
+        this.mAttributesTextArea = new TextArea(this.scene, {
+            x: this.width >> 1,
+            y: this.height >> 1,
+            width: 200 * this.dpr * scale,
+            height: 0,
+            textMask: true,
+            textWidth: this.mAttributesBBCodeText.width,
+            textHeight: 180 * this.dpr * scale,
+            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            text: this.mAttributesBBCodeText,
+        }).layout();
 
         this.mCloseBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "", "关闭", BlueButton.getConfig());
         this.mCloseBtn.x = 0;
-        this.mCloseBtn.y = this.height - 100 * this.mWorld.uiRatio * zoom >> 1;
+        this.mCloseBtn.y = this.height - 100 * this.mWorld.uiRatio * scale >> 1;
         this.mCloseBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });
 
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
@@ -186,7 +182,7 @@ export class InfoPanel extends Panel {
         (this.mWorld.uiManager.getMediator(InfoPanelMediator.NAME) as InfoPanelMediator).resize();
         this.add([background, border,
             this.mNameBBCodeText, this.mAttributesBBCodeText, this.mCloseBtn, this.mActor]);
-        // this.mAttributesTextArea, this.mAttributesBBCodeText,this.mNameTextArea,
+        // this.mAttributesTextArea, this.mAttributesBBCodeText,this.mNameTextArea, this.mNameTextArea,
         this.addListen();
         super.init();
 
@@ -194,12 +190,10 @@ export class InfoPanel extends Panel {
     }
 
     private addListen() {
-        // this.mNameTextArea.childrenMap.child.setInteractive();
         if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.closeHandler, this);
     }
 
     private removeListen() {
-        // this.mNameTextArea.childrenMap.child.disableInteractive();
         if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.closeHandler, this);
     }
 

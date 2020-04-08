@@ -160,7 +160,7 @@ export class MouseManager extends PacketHandler {
     private pointerDownHandler(pointer, gameobject) {
         if (this.worldService) {
             if (this.worldService.emitter) {
-                this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK);
+                this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK, pointer);
             }
         }
         this.onUpdate(pointer, this.mGameObject);

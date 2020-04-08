@@ -59,6 +59,23 @@ export class Tool {
         return checkBoo;
     }
 
+    public static checkPointerContains(gameObject: any, pointer: Phaser.Input.Pointer): boolean {
+        const left = -gameObject.width / 2;
+        const right = gameObject.width / 2;
+        const top = -gameObject.height / 2;
+        const bottom = gameObject.height / 2;
+        if (pointer) {
+            const worldMatrix: Phaser.GameObjects.Components.TransformMatrix = gameObject.getWorldTransformMatrix();
+            const x: number = pointer.x - worldMatrix.tx;
+            const y: number = pointer.y - worldMatrix.ty;
+            if (left <= x && right >= x && top <= y && bottom >= y) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     public static baseName(str) {
         let base = new String(str).substring(str.lastIndexOf("/") + 1);
         if (base.lastIndexOf(".") !== -1)

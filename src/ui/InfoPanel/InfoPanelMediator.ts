@@ -4,6 +4,7 @@ import { WorldService } from "../../game/world.service";
 import { IAbstractPanel } from "../abstractPanel";
 import { MessageType } from "../../const/MessageType";
 import { InfoPanel } from "./InfoPanel";
+import { Tool } from "../../utils/tool";
 
 export class InfoPanelMediator extends BaseMediator {
     public static NAME: string = "InfoPanelMediator";
@@ -61,7 +62,8 @@ export class InfoPanelMediator extends BaseMediator {
         if (this.mView) this.mView.update(param);
     }
 
-    private onClosePanel() {
+    private onClosePanel(pointer: Phaser.Input.Pointer) {
+        if (Tool.checkPointerContains(this.mView, pointer)) return;
         this.hide();
     }
 }
