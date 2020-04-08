@@ -604,7 +604,7 @@ export class Element extends BlockObject implements IElement {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE);
         const content: op_virtual_world.OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE = packet.content;
         content.id = data.id;
-        content.receiverId = data.receiverId;
+        // content.receiverId = data.receiverId;
         connection.send(packet);
         Logger.getInstance().log("*******************onInteractiveBubbleHandler");
     }
