@@ -229,9 +229,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
+        // if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
+        //     this.mBackgrounds = [];
+        //     this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
+        //     // const close = new BackgroundManager(this, "close", this.mCameraService);
+        // }
         if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
             this.mBackgrounds = [];
-            this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
+            if (this.id === 926312429) {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/mine/mine",
+                    width: 1120,
+                    height: 684
+                }, this.mCameraService));
+            } else {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/bh/bh",
+                    width: 3400,
+                    height: 1900,
+                    gridW: 256,
+                    gridH: 256
+                }, this.mCameraService));
+            }
             // const close = new BackgroundManager(this, "close", this.mCameraService);
         }
         const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];

@@ -13,6 +13,14 @@ export interface IBackgroundManager {
   update(time?: number, delta?: number): void;
 }
 
+export interface IBackgroundConfig {
+  key: string;
+  width: number;
+  height: number;
+  gridW?: number;
+  gridH?: number;
+}
+
 export class BackgroundManager {
   private mWorld: WorldService;
   private mRoom: IRoomService;
@@ -22,10 +30,13 @@ export class BackgroundManager {
   private mBackground: BlockManager;
   private mType: string;
   private mTime: number = 0;
-  constructor(room: Room, type: string, camerasManager: ICameraService) {
+  private mConfig: IBackgroundConfig;
+  constructor(room: Room, type: string, config: IBackgroundConfig, camerasManager: ICameraService) {
     this.mWorld = room.world;
     this.mRoom = room;
     this.mType = type;
+    this.mConfig = config;
+    this.mKey = config.key;
     this.mCameras = camerasManager;
     const playScene = room.scene;
     if (!playScene) {
@@ -38,9 +49,10 @@ export class BackgroundManager {
 
   startPlay(scene: Phaser.Scene) {
     this.mScene = scene;
-    const key = Url.getRes("skybox/bh");
+    const key = Url.getRes(this.mKey);
     this.mBackground = new BlockManager(this.mScene, this.mCameras.camera, key, this.mWorld);
-    this.mBackground.setSize(3400, 1900, 256, 256);
+    // this.mBackground.setSize(3400, 1900, 256, 256);
+    this.mBackground.setSize(this.mConfig.width, this.mConfig.height, this.mConfig.gridW, this.mConfig.gridH);
     this.initCamera();
   }
 
@@ -67,8 +79,8 @@ export class BackgroundManager {
 
     if (this.mCameras) {
       const main = this.mCameras.camera;
-      const imageWidth = 3400;
-      const imageHeight = 1900;
+      const imageWidth = this.mConfig.width;
+      const imageHeight = this.mConfig.height;
       const size = this.mRoom.roomSize;
       if (imageWidth > size.sceneWidth) {
         // main.setBounds(0, 0, imageWidth, imageHeight);
