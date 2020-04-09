@@ -26,7 +26,9 @@ export class BlockManager {
     }
   }
 
-  setSize(imageW: number, imageH: number, gridW: number, gridH: number) {
+  setSize(imageW: number, imageH: number, gridW?: number, gridH?: number) {
+    if (gridW === undefined) gridW = imageW;
+    if (gridH === undefined) gridH = imageH;
     this.mRows = Math.ceil(imageW / gridW);
     this.mCols = Math.ceil(imageH / gridH);
     this.mGridWidth = gridW;

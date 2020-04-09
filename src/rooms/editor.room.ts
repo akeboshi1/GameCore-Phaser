@@ -19,6 +19,7 @@ import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
 import {ElementDisplay} from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
 import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
+import { BackgroundManager } from "./sky.box/background.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -108,6 +109,26 @@ export class EditorRoom extends Room implements EditorRoomService {
         //     this.mCameraService.syncToEditor();
         // }, 10);
         this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
+
+        if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
+            this.mBackgrounds = [];
+            if (this.id === 926312429) {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/mine/mine",
+                    width: 1120,
+                    height: 684
+                }, this.mCameraService));
+            } else {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/bh/bh",
+                    width: 3400,
+                    height: 1900,
+                    gridW: 256,
+                    gridH: 256
+                }, this.mCameraService));
+            }
+            // const close = new BackgroundManager(this, "close", this.mCameraService);
+        }
     }
 
     public destroy() {
