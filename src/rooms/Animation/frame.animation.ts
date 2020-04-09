@@ -13,11 +13,13 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
         super(scene);
     }
 
-    public load(resName: string, resUrl: string) {
-        this.resName = resName;
+    public load(resName: string, resUrl: string, jsonUrl?: string) {
+        this.resName = resName ? resName : jsonUrl;
         this.resUrl = resUrl;
         this.animUrlData = new AnimationUrlData();
-        this.animUrlData.setData(this.resName, this.resUrl);
+        if (this.resName)
+            this.animUrlData.setData(this.resName, this.resUrl);
+        else this.animUrlData.setDisplayData(resUrl, jsonUrl);
         this.scene.load.atlas(this.resName, this.animUrlData.pngUrl, this.animUrlData.jsonUrl,
             this.animUrlData.textureXhrSettings, this.animUrlData.atlasXhrSettings);
         this.scene.load.once(

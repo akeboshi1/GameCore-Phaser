@@ -14,9 +14,6 @@ import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
 import { DisplayObject } from "../display/display.object";
-import { InteractionBubbleContainer } from "../bubble/interactionbubble.container";
-import { PBpacket } from "net-socket-packet";
-import { Handler } from "../../Handler/Handler";
 export enum PlayerState {
     IDLE = "idle",
     WALK = "walk",
@@ -140,7 +137,6 @@ export class Element extends BlockObject implements IElement {
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: DisplayObject | undefined;
     protected mBubble: BubbleContainer;
-    protected mInteractionBubble: InteractionBubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
@@ -330,25 +326,6 @@ export class Element extends BlockObject implements IElement {
         this.updateBubble();
         this.roomService.addToSceneUI(this.mBubble);
     }
-
-    public showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
-        const scene = this.mElementManager.scene;
-        if (!scene) {
-            return;
-        }
-        if (!this.roomService) return;
-        if (!this.mInteractionBubble) {
-            this.mInteractionBubble = new InteractionBubbleContainer(scene);
-        }
-        this.mInteractionBubble.addBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
-        const position = this.getPosition();
-        if (position) {
-            const ration = this.roomService.world.scaleRatio;
-            this.mInteractionBubble.setPosition(position.x * ration, (position.y - 100) * ration, position.z * ration);
-        }
-        this.roomService.addToSceneUI(this.mInteractionBubble);
-    }
-
     public clearBubble() {
         if (!this.mBubble) {
             return;
@@ -356,14 +333,6 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.destroy();
         this.mBubble = null;
     }
-
-    public clearInteractionBubble() {
-        if (!this.mInteractionBubble) {
-            return;
-        }
-        this.mInteractionBubble.destroy();
-    }
-
     public showNickName() {
         if (this.mDisplay && this.model) {
             this.mDisplay.showNickname(this.model.nickname);
@@ -429,11 +398,6 @@ export class Element extends BlockObject implements IElement {
             this.mShopEntity.destroy();
             this.mShopEntity = null;
         }
-        if (this.mInteractionBubble) {
-            this.mInteractionBubble.destroy();
-            this.mInteractionBubble = null;
-        }
-
         super.destroy();
     }
 
@@ -597,15 +561,5 @@ export class Element extends BlockObject implements IElement {
                 // this.roomService.addBlockObject()
             }
         }
-    }
-
-    private onInteractiveBubbleHandler(data: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
-        const connection = this.mRoomService.connection;
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE);
-        const content: op_virtual_world.OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE = packet.content;
-        content.id = data.id;
-        // content.receiverId = data.receiverId;
-        connection.send(packet);
-        Logger.getInstance().log("*******************onInteractiveBubbleHandler");
     }
 }

@@ -15,11 +15,13 @@ export class DragonbonesAnimation extends Phaser.GameObjects.Container implement
         super(scene);
     }
 
-    public load(resName: string, resUrl: string) {
-        this.resName = resName;
+    public load(resName: string, resUrl: string, jsonUrl?: string) {
+        this.resName = resName ? resName : jsonUrl;
         this.resUrl = resUrl;
         this.animUrlData = new AnimationUrlData();
-        this.animUrlData.setData(this.resName, this.resUrl, true, ".dbbin");
+        if (this.resName)
+            this.animUrlData.setData(this.resName, this.resUrl, true, ".dbbin");
+        else this.animUrlData.setDisplayData(resUrl, jsonUrl);
         this.scene.load.dragonbone(this.resName, this.animUrlData.pngUrl, this.animUrlData.jsonUrl, this.animUrlData.boneUrl,
             this.animUrlData.textureXhrSettings, this.animUrlData.atlasXhrSettings, this.animUrlData.boneXhrSettings);
         this.scene.load.once(

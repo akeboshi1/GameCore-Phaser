@@ -36,13 +36,13 @@
     "buffer": "^5.2.1",
     "chance": "^1.1.3",
     "copy-text-to-clipboard": "^2.1.1",
-    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
+    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#master",
     "i18next": "^19.0.3",
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-xhr-backend": "^3.2.2",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
     "phaser": "3.19.0",
-    "pixelpai_proto": "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript",
+    "pixelpai_proto": "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#a53d6bbf4af169d83ef2e107b3ad405efced4ae8",
     "simple-sha1": "^3.0.1"
   }
 }
