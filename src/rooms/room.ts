@@ -256,6 +256,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     field: SoundField.Element,
         //     soundConfig: { loop: true }
         // });
+
+        import(/*  */ "../module/template/main.js").then(({Template}) => {
+            const tmp = new Template();
+            tmp.init(this.world);
+        //   Logger.getInstance().log("module: ", Template);
+        });
     }
 
     public pause() {

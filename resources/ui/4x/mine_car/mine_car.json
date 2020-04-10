@@ -1,0 +1,175 @@
+{
+	"frames": {
+		"bg.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 897,
+				"h": 1176
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 897,
+				"h": 1176
+			},
+			"sourceSize": {
+				"w": 897,
+				"h": 1176
+			}
+		},
+		"close_btn.png": {
+			"frame": {
+				"x": 900,
+				"y": 1,
+				"w": 97,
+				"h": 97
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 97,
+				"h": 97
+			},
+			"sourceSize": {
+				"w": 97,
+				"h": 97
+			}
+		},
+		"help.png": {
+			"frame": {
+				"x": 999,
+				"y": 1,
+				"w": 63,
+				"h": 67
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 63,
+				"h": 67
+			},
+			"sourceSize": {
+				"w": 63,
+				"h": 67
+			}
+		},
+		"item_boder.png": {
+			"frame": {
+				"x": 999,
+				"y": 70,
+				"w": 145,
+				"h": 146
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 145,
+				"h": 146
+			},
+			"sourceSize": {
+				"w": 145,
+				"h": 146
+			}
+		},
+		"lock.png": {
+			"frame": {
+				"x": 1064,
+				"y": 1,
+				"w": 48,
+				"h": 59
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 48,
+				"h": 59
+			},
+			"sourceSize": {
+				"w": 48,
+				"h": 59
+			}
+		},
+		"nav_bg.png": {
+			"frame": {
+				"x": 1146,
+				"y": 1,
+				"w": 818,
+				"h": 101
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 818,
+				"h": 101
+			},
+			"sourceSize": {
+				"w": 818,
+				"h": 101
+			}
+		},
+		"nav_btn_down.png": {
+			"frame": {
+				"x": 1146,
+				"y": 104,
+				"w": 146,
+				"h": 91
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 146,
+				"h": 91
+			},
+			"sourceSize": {
+				"w": 146,
+				"h": 91
+			}
+		},
+		"tips_bg.png": {
+			"frame": {
+				"x": 1294,
+				"y": 104,
+				"w": 615,
+				"h": 229
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 615,
+				"h": 229
+			},
+			"sourceSize": {
+				"w": 615,
+				"h": 229
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 1965,
+			"h": 1178
+		},
+		"scale": "1"
+	}
+}
