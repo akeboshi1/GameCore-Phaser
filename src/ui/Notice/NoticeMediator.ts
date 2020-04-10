@@ -1,5 +1,4 @@
 import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { NoticePanel } from "./NoticePanel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
@@ -8,6 +7,7 @@ import { IMediator } from "../baseMediator";
 import { World } from "../../game/world";
 import { UIType } from "../ui.manager";
 import { MessageType } from "../../const/MessageType";
+import { BasePanel } from "../components/BasePanel";
 
 export class NoticeMediator extends PacketHandler implements IMediator {
     public static NAME: string = "NoticeMediator";
@@ -43,7 +43,7 @@ export class NoticeMediator extends PacketHandler implements IMediator {
         this.mNoticePanel.scaleX = this.mNoticePanel.scaleY = value;
     }
 
-    getView(): IAbstractPanel {
+    getView(): BasePanel {
         return this.mNoticePanel;
     }
 

@@ -1,4 +1,4 @@
-import { Panel } from "../ui/components/panel";
+import { BasePanel } from "../ui/components/BasePanel";
 import { WorldService } from "../game/world.service";
 import { ResUtils, Url } from "../utils/resUtil";
 import { NinePatchButton } from "../ui/components/ninepatch.button";
@@ -11,7 +11,7 @@ import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbone
 import { Font } from "../utils/font";
 // import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
-export class CreateRolePanel extends Panel {
+export class CreateRolePanel extends BasePanel {
   private readonly key = "createCharacter";
   private mFoot: Phaser.GameObjects.Image;
   private mBackgroundColor: Phaser.GameObjects.Graphics;

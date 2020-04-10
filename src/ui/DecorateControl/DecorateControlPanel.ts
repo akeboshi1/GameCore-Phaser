@@ -1,8 +1,7 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Logger } from "../../utils/log";
 
-export class DecorateControlPanel extends Panel {
+export class DecorateControlPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private mExitBtn: Phaser.GameObjects.Image;
     private mRecycleAllBtn: Phaser.GameObjects.Image;

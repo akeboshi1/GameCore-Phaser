@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Url, Border, Background } from "../../utils/resUtil";
 import { ShopItemSlot } from "./shop.itemSlot";
@@ -10,7 +10,7 @@ import { NinePatch } from "../components/nine.patch";
 import { IconBtn } from "../baseView/icon.btn";
 import { UIMediatorType } from "../ui.mediatorType";
 
-export class ShopPanel extends Panel {
+export class ShopPanel extends BasePanel {
     public static ShopSlotCount: number = 20;
     public mClsBtn: IconBtn;
     private mShopItemSlotList: ShopItemSlot[];

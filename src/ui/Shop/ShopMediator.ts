@@ -1,12 +1,12 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
 import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
 
 export class ShopMediator extends BaseMediator {
     public static NAME: string = "ShopMediator";
@@ -33,7 +33,7 @@ export class ShopMediator extends BaseMediator {
         if (this.mView) return this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
-    public getView(): IAbstractPanel {
+    public getView(): BasePanel {
         return this.mView;
     }
 

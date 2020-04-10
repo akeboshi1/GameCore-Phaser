@@ -1,4 +1,3 @@
-import { Panel } from "../../components/panel";
 import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
@@ -7,8 +6,9 @@ import { IconBtn } from "../../baseView/icon.btn";
 import { NinePatch } from "../../components/nine.patch";
 import { StorageMediator } from "./storageMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
+import { BasePanel } from "../../components/BasePanel";
 
-export class StoragePanel extends Panel {
+export class StoragePanel extends BasePanel {
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;

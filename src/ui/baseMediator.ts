@@ -1,8 +1,8 @@
-import { IAbstractPanel } from "./abstractPanel";
 import { WorldService } from "../game/world.service";
-import { Panel } from "./components/panel";
+import { BasePanel } from "./components/BasePanel";
 import { World } from "../game/world";
 import { UIType } from "./ui.manager";
+import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
 
 export interface IMediator {
     readonly world: WorldService;
@@ -25,7 +25,7 @@ export interface IMediator {
 
 export class BaseMediator implements IMediator {
     readonly world: WorldService;
-    protected mView: Panel;
+    protected mView: BasePanel;
     protected isShowing: boolean = false;
     protected mParam: any;
     protected mUIType: number;

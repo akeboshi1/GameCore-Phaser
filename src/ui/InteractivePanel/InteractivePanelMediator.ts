@@ -1,10 +1,10 @@
 import { BaseMediator } from "../baseMediator";
-import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { InteractivePanel } from "./InteractivePanel";
 import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
 
 export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";
@@ -29,7 +29,7 @@ export class InteractivePanelMediator extends BaseMediator {
         if (this.mView && this.mView.isShow) return this.mView.resize(this.mAddWid, this.mAddHei);
     }
 
-    public getView(): IAbstractPanel {
+    public getView(): BasePanel {
         return this.mView;
     }
 

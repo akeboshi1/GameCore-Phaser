@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { Button } from "../components/button";
@@ -9,7 +9,7 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 import { Logger } from "../../utils/log";
 
-export class PicaRoomListPanel extends Panel {
+export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";
   private mCloseBtn: Phaser.GameObjects.Image;
   private mRoomDeleBtn: Button;

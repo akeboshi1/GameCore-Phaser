@@ -1,11 +1,11 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { NinePatch } from "../components/nine.patch";
 import { Font } from "../../utils/font";
 import { NinePatchButton } from "../components/ninepatch.button";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 
-export class PicaMessageBoxPanel extends Panel {
+export class PicaMessageBoxPanel extends BasePanel {
   private key: string = "pica_message_box";
   private mTitleLabel: Phaser.GameObjects.Text;
   private mButtons: NinePatchButton[];
@@ -23,43 +23,43 @@ export class PicaMessageBoxPanel extends Panel {
     }
     this.mButtons = [];
     if (param[0] && param[0].text && param[0].text[0]) {
-        this.mText.setText(param[0].text[0].text);
-        this.mText.x = -this.mText.width / 2;
-        this.mText.y = -this.mText.height;
+      this.mText.setText(param[0].text[0].text);
+      this.mText.x = -this.mText.width / 2;
+      this.mText.y = -this.mText.height;
     }
     const buttons = param[0].button;
     if (buttons) {
-        const btnWid: number = 114 * this.dpr;
-        const btnHei: number = 40 * this.dpr ;
-        const w = (this.width - 42 * this.dpr) / buttons.length;
-        // const mButtonsContainer = this.mScene.make.container(undefined, false);
-        this.mButtonContaier.y = this.height / 2 - btnHei;
-        const frame = this.scene.textures.getFrame(this.key, "yellow_btn_normal");
-        if (!frame) {
-          return;
-        }
-        const config = {
-          left: 13 * this.dpr,
-          top: 13 * this.dpr,
-          bottom: frame.width - 2 - 13 * this.dpr,
-          right: frame.height - 2 - 13 * this.dpr
-        };
-        let totalW = 0;
-        for (let i = 0; i < buttons.length; i++) {
-            const txt: string = buttons[i] ? buttons[i].text : "";
-            const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, this.key, i === 0 ? "yellow_btn" : "red_btn", buttons[i].text, config, buttons[i]);
-            btn.setTextStyle({
-              fontFamily: Font.DEFULT_FONT,
-              fontSize: 16 * this.dpr
-            });
-            btn.x = i * w + btnWid / 2;
-            totalW += i * w + btnWid / 2;
-            this.mButtons.push(btn);
-            btn.on("click", this.onClickHandler, this);
-          }
-        this.mButtonContaier.add(this.mButtons);
-        // btnSp.setSize((buttons.length - 1) * w + btnWid, btnHei);
-        this.mButtonContaier.x = -totalW / 2;
+      const btnWid: number = 114 * this.dpr;
+      const btnHei: number = 40 * this.dpr;
+      const w = (this.width - 42 * this.dpr) / buttons.length;
+      // const mButtonsContainer = this.mScene.make.container(undefined, false);
+      this.mButtonContaier.y = this.height / 2 - btnHei;
+      const frame = this.scene.textures.getFrame(this.key, "yellow_btn_normal");
+      if (!frame) {
+        return;
+      }
+      const config = {
+        left: 13 * this.dpr,
+        top: 13 * this.dpr,
+        bottom: frame.width - 2 - 13 * this.dpr,
+        right: frame.height - 2 - 13 * this.dpr
+      };
+      let totalW = 0;
+      for (let i = 0; i < buttons.length; i++) {
+        const txt: string = buttons[i] ? buttons[i].text : "";
+        const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, this.key, i === 0 ? "yellow_btn" : "red_btn", buttons[i].text, config, buttons[i]);
+        btn.setTextStyle({
+          fontFamily: Font.DEFULT_FONT,
+          fontSize: 16 * this.dpr
+        });
+        btn.x = i * w + btnWid / 2;
+        totalW += i * w + btnWid / 2;
+        this.mButtons.push(btn);
+        btn.on("click", this.onClickHandler, this);
+      }
+      this.mButtonContaier.add(this.mButtons);
+      // btnSp.setSize((buttons.length - 1) * w + btnWid, btnHei);
+      this.mButtonContaier.x = -totalW / 2;
     }
     this.resize(0, 0);
   }
@@ -112,8 +112,8 @@ export class PicaMessageBoxPanel extends Panel {
       color: "#000000",
       origin: { x: 0.5, y: 0.5 },
       wrap: {
-          mode: "char",
-          width: this.width
+        mode: "char",
+        width: this.width
       },
       align: "center"
     });
@@ -130,7 +130,7 @@ export class PicaMessageBoxPanel extends Panel {
     }
     const btn = (gameobject as NinePatchButton).getBtnData();
     if (!btn) {
-        return;
+      return;
     }
     this.emit("click", btn);
   }

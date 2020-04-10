@@ -1,19 +1,15 @@
-import {Panel} from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import {NinePatch} from "../components/nine.patch";
 import {Background, Border, Url} from "../../utils/resUtil";
 import {Size} from "../../utils/size";
 import {WorldService} from "../../game/world.service";
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatchButton } from "../components/ninepatch.button";
-import { CheckboxGroup } from "../components/checkbox.group";
-import { Logger } from "../../utils/log";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";
-import { IconBtn } from "../baseView/icon.btn";
-import { UIMediatorType } from "../ui.mediatorType";
 import { ElementStorageMediator } from "./ElementStorageMediator";
 
-export class ElementStoragePanel extends Panel {
+export class ElementStoragePanel extends BasePanel {
     private mBackground: NinePatch;
     private mBorder: NinePatch;
     private mSearchInput: InputText;

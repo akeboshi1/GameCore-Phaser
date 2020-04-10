@@ -1,13 +1,12 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Url, BlueButton } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { DragDropIcon } from "../bag/dragDropIcon";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { op_gameconfig_01 } from "pixelpai_proto";
-import { World } from "../../game/world";
 
-export class ItemDetail extends Panel {
+export class ItemDetail extends BasePanel {
     private mBtnList: NinePatchButton[];
     private mBtnWid: number = 100;
     private mBtnHei: number = 40;

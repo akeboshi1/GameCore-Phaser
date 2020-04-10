@@ -3,15 +3,15 @@ import { ItemSlot } from "../../bag/item.slot";
 import { Size } from "../../../utils/size";
 import { op_gameconfig } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";
-import { Panel } from "../../components/panel";
 import { Radio } from "../../components/radio";
 import { ChatMediator } from "../../chat/chat.mediator";
 import { BagMediator } from "../../bag/bagView/bagMediator";
+import { BasePanel } from "../../components/BasePanel";
 
 /**
  * 主界面ui pc版本
  */
-export class BagGroup extends Panel {
+export class BagGroup extends BasePanel {
 
     public static SlotMaxCount: number = 12;
     // bagBtn

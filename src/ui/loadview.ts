@@ -1,6 +1,6 @@
 
-import { IAbstractPanel } from "./abstractPanel";
 import { Tweens } from "phaser";
+import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
 
 export class LoadingView implements IAbstractPanel {
     private mShowing: boolean = false;

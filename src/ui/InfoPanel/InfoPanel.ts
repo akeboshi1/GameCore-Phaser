@@ -1,7 +1,6 @@
 import { WorldService } from "../../game/world.service";
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { op_client } from "pixelpai_proto";
@@ -13,7 +12,7 @@ import { Font } from "../../utils/font";
 import { InfoPanelMediator } from "./InfoPanelMediator";
 import { Size } from "../../utils/size";
 
-export class InfoPanel extends Panel {
+export class InfoPanel extends BasePanel {
     private mActor: DynamicImage;
     private mCloseBtn: NinePatchButton;
     private mScroller: GameScroller;

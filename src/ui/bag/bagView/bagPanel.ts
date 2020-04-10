@@ -2,7 +2,6 @@ import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../item.slot";
 import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
-import { Panel } from "../../components/panel";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { BagMediator } from "./bagMediator";
 import { NinePatch } from "../../components/nine.patch";
@@ -11,7 +10,8 @@ import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
 import { IconBtn } from "../../baseView/icon.btn";
 import { UIMediatorType } from "../../ui.mediatorType";
-export class BagPanel extends Panel {
+import { BasePanel } from "../../components/BasePanel";
+export class BagPanel extends BasePanel {
     public static PageMaxCount: number = 32;
     public bagSlotList: ItemSlot[];
     public mPreBtn: Phaser.GameObjects.Sprite;

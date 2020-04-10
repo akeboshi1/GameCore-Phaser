@@ -1,4 +1,4 @@
-import { Panel } from "../../components/panel";
+import { BasePanel } from "../../components/BasePanel";
 import { WorldService } from "../../../game/world.service";
 import { IconBtn } from "../icon.btn";
 import { Size } from "../../../utils/size";
@@ -8,7 +8,7 @@ import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { BottomMediator } from "../bottomGroup/bottom.mediator";
-export class RightBtnGroup extends Panel {
+export class RightBtnGroup extends BasePanel {
     public static SlotMaxCount: number = 4;
     private mBtnY: number = 0;
     private mWid: number = 0;

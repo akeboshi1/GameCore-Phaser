@@ -1,11 +1,11 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { BlackButton, Border, TransparentButton, Url } from "../../utils/resUtil";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
 import { WorldService } from "../../game/world.service";
 import { NinePatch } from "../components/nine.patch";
 
-export class UserMenuPanel extends Panel {
+export class UserMenuPanel extends BasePanel {
     private mBackground: NinePatch;
     private mMenus: MenuItem[] = [];
     constructor(scene: Phaser.Scene, world: WorldService) {

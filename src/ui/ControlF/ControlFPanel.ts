@@ -1,9 +1,9 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
 import { WorldService } from "../../game/world.service";
 
-export class ControlFPanel extends Panel {
+export class ControlFPanel extends BasePanel {
     private mControlText: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);

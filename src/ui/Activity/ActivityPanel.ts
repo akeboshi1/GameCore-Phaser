@@ -1,8 +1,7 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Logger } from "../../utils/log";
 
-export class ActivityPanel extends Panel {
+export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);

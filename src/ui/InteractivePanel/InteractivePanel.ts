@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { Url, Background, Border } from "../../utils/resUtil";
@@ -10,7 +10,7 @@ import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import { Tool } from "../../utils/tool";
-export class InteractivePanel extends Panel {
+export class InteractivePanel extends BasePanel {
     private mNameCon: Phaser.GameObjects.Container;
     private mDescCon: Phaser.GameObjects.Container;
     private mLeftFaceIcon: Phaser.GameObjects.Image;
