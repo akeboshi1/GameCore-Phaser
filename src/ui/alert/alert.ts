@@ -1,6 +1,6 @@
-import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
+import { IAbstractPanel } from "../../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
 
 export class Alert implements IAbstractPanel {
     private mShowing: boolean;

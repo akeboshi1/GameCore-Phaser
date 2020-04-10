@@ -32,6 +32,7 @@ import { WallManager } from "./wall/wall.manager";
 import { BackgroundManager } from "./sky.box/background.manager";
 import { SoundManager, SoundField } from "../game/sound.manager";
 import { Url } from "../utils/resUtil";
+import { InteractiveBubbleManager } from "./bubble/interactivebubble.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -109,6 +110,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mPlayerManager: PlayerManager;
     protected mWallManager: WallManager;
     protected mLayManager: LayerManager;
+    protected mInteractiveMgr: InteractiveBubbleManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -199,6 +201,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mWallManager = new WallManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
+        this.mInteractiveMgr = new InteractiveBubbleManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
@@ -391,6 +394,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mTerainManager) this.mTerainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mPlayerManager) this.mPlayerManager.destroy();
+        if (this.mInteractiveMgr) this.mInteractiveMgr.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
         if (this.mActorData) {
             this.mActorData = null;

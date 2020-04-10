@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
 import { Background, Border, Url, BlueButton } from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
@@ -8,7 +8,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
 import { UserInfoMediator } from "./UserInfoMediator";
 
-export class UserInfoPanel extends Panel {
+export class UserInfoPanel extends BasePanel {
     private mActor: DynamicImage;
     private mBadgeImages: DynamicImage[] = [];
     private mNickName: Phaser.GameObjects.Text;

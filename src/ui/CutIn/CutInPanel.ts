@@ -1,10 +1,10 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
 
-export class CutInPanel extends Panel {
+export class CutInPanel extends BasePanel {
   private readonly key = "cut_in";
   private mName: Phaser.GameObjects.Text;
   constructor(scene: Phaser.Scene, world: WorldService) {

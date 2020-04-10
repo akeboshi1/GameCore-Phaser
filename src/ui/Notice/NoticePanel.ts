@@ -1,11 +1,11 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Border } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { WorldService } from "../../game/world.service";
 
-export class NoticePanel extends Panel {
+export class NoticePanel extends BasePanel {
     private mContentText: Phaser.GameObjects.Text;
     private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
@@ -63,11 +63,6 @@ export class NoticePanel extends Panel {
         this.mContentText.x = -(this.mContentText.width >> 1);
         this.mContentText.y = -(this.mContentText.height >> 1);
 
-        // this.mTween = this.scene.tweens.add({
-        //     targets: this,
-        //     alpha: 1,
-        //     duration: 200
-        // });
         this.mTween = this.scene.tweens.add({
             targets: this,
             alpha: 0,

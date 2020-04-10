@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
@@ -11,7 +11,7 @@ import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 
-export class MarketPanel extends Panel {
+export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;

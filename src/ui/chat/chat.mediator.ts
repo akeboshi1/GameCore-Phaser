@@ -5,12 +5,11 @@ import { Logger } from "../../utils/log";
 import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
 import { World } from "../../game/world";
-import { ChatPanelPC } from "./pc/chatPanel.pc";
-import { Panel } from "../components/panel";
+import { ChatPanelPC } from "./chatPanel.pc";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
 import { UIType } from "../ui.manager";
-import { IAbstractPanel } from "../abstractPanel";
+import { BasePanel } from "../components/BasePanel";
 export class ChatMediator extends PacketHandler implements IMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
@@ -77,7 +76,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return true;
     }
 
-    public getView(): Panel {
+    public getView(): BasePanel {
         return this.mChatPanel;
     }
 

@@ -6,7 +6,7 @@ export interface IAnimationBase {
     animUrlData: AnimationUrlData;
     loaded: boolean;
     loop: boolean;
-    load(resName: string, resUrl: string);
+    load(resName: string, resUrl: string, jsonUrl?: string);
     play(aniName: string);
 }
 
@@ -27,6 +27,13 @@ export class AnimationUrlData {
         this.jsonUrl = resUrl + "/" + resName + (!isbone ? ".json" : "_tex.json");
         if (isbone)
             this.boneUrl = resUrl + "/" + resName + "_ske" + extension;
+        this.responseType = extension === ".dbbin" ? "arraybuffer" : null;
+        this.boneXhrSettings = this.responseType ? { responseType: "arraybuffer" } : null;
+    }
+
+    setDisplayData(pngUrl: string, jsonUrl: string, extension: string = ".json") {
+        this.pngUrl = pngUrl;
+        this.jsonUrl = jsonUrl;
         this.responseType = extension === ".dbbin" ? "arraybuffer" : null;
         this.boneXhrSettings = this.responseType ? { responseType: "arraybuffer" } : null;
     }

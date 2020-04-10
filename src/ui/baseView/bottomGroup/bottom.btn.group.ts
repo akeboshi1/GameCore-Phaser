@@ -1,4 +1,4 @@
-import { Panel } from "../../components/panel";
+import { BasePanel } from "../../components/BasePanel";
 import { WorldService } from "../../../game/world.service";
 import { Url } from "../../../utils/resUtil";
 import { IconBtn } from "../icon.btn";
@@ -10,7 +10,7 @@ import { CheckButton } from "../../components/check.button";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { RightMediator } from "../rightGroup/right.mediator";
 import { ElementStorageMediator } from "../../ElementStorage/ElementStorageMediator";
-export class BottomBtnGroup extends Panel {
+export class BottomBtnGroup extends BasePanel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
     private mChatBg: Phaser.GameObjects.Image;

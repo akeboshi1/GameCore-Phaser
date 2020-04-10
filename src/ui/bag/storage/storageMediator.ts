@@ -1,9 +1,9 @@
-import { IMediator, BaseMediator } from "../../baseMediator";
+import { BaseMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
-import { IAbstractPanel } from "../../abstractPanel";
 import { StoragePanel } from "./storagePanel";
 import { UIType } from "../../ui.manager";
 import { ILayerManager } from "../../layer.manager";
+import { BasePanel } from "../../components/BasePanel";
 
 export class StorageMediator extends BaseMediator {
     public static NAME: string = "StorageMediator";
@@ -23,7 +23,7 @@ export class StorageMediator extends BaseMediator {
     public resize() {
         if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
     }
-    public getView(): IAbstractPanel {
+    public getView(): BasePanel {
         return this.mView;
     }
 

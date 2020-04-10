@@ -1,7 +1,7 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 
-export class PicaNavigatePanel extends Panel {
+export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private mBackground: Phaser.GameObjects.Image;
   private mMapBtn: Phaser.GameObjects.Image;

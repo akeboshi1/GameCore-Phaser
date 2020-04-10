@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Border, Url, Background } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
@@ -15,7 +15,7 @@ export interface IFriendIcon {
     res: string;
     name: string;
 }
-export class FriendPanel extends Panel {
+export class FriendPanel extends BasePanel {
     public static count: number = 4;
     private mBg: NinePatch;
     private mUpBtn: Phaser.GameObjects.Sprite;

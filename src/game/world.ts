@@ -101,6 +101,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
+        Url.RES_PATH= "./resources/";
+        Url.RESUI_PATH = "./resources/ui/";
 
         this._newGame();
         this.mConnection = config.connection || new Connection(this);

@@ -1,8 +1,8 @@
-import { Panel } from "../ui/components/panel";
+import {BasePanel } from "../ui/components/BasePanel";
 import { WorldService } from "../game/world.service";
-import { ResUtils, Url } from "../utils/resUtil";
+import { Url } from "../utils/resUtil";
 
-export class CreateCharacterPanel extends Panel {
+export class CreateCharacterPanel extends BasePanel {
   private readonly key = "createCharacter";
   private foot;
   constructor(scene: Phaser.Scene, world: WorldService) {

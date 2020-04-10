@@ -5,7 +5,7 @@ import { PicaRoomListPanel } from "./PicaRoomListPanel";
 import { RoomList } from "./RoomList";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 
 export class PicaRoomListMediator extends BaseMediator {
   protected mView: PicaRoomListPanel;
@@ -41,7 +41,7 @@ export class PicaRoomListMediator extends BaseMediator {
     this.layerManager.addToUILayer(this.mView);
   }
 
-  getView(): Panel {
+  getView(): BasePanel {
     return this.mView;
   }
 

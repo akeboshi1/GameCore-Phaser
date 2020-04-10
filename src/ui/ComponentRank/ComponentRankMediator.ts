@@ -1,9 +1,9 @@
 import { IMediator, BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { ComponentRankPanel } from "./ComponentRankPanel";
 import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
 
 export class ComponentRankMediator extends BaseMediator {
     public static NAME: string = "ComponentRankMediator";
@@ -28,7 +28,7 @@ export class ComponentRankMediator extends BaseMediator {
         return "";
     }
 
-    getView(): IAbstractPanel {
+    getView(): BasePanel {
         return this.mView;
     }
 

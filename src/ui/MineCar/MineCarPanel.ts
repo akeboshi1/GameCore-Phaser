@@ -1,10 +1,10 @@
-import { Panel } from "../components/panel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
+import { BasePanel } from "../components/BasePanel";
 
-export class MineCarPanel extends Panel {
+export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   private mPanel: Phaser.GameObjects.Container;
   private mMask: Phaser.GameObjects.Graphics;

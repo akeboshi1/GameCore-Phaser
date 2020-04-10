@@ -1,11 +1,11 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { op_client } from "pixelpai_proto";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 
-export class BasicRankPanel extends Panel {
+export class BasicRankPanel extends BasePanel {
     protected mWorld: WorldService;
     protected mContentContainer: Phaser.GameObjects.Container;
     protected mTitleLabel: Phaser.GameObjects.Text;

@@ -1,4 +1,4 @@
-import {Panel} from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Pos } from "../../utils/pos";
 import { Position45, IPosition45Obj } from "../../utils/position45";
 import { DecorateRoom } from "../../rooms/decorate.room";
@@ -7,7 +7,7 @@ import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
 import { Button } from "../components/button";
 
-export class DecoratePanel extends Panel {
+export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
     private readonly minGrid: number = 2;
     private readonly maxGrid: number = 10;

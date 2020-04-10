@@ -2,13 +2,15 @@ import { HTTP_REGEX } from "../const/constants";
 
 export class Url {
     static OSD_PATH = "";
+    static RES_PATH: string = "";
+    static RESUI_PATH: string = "";
     static getRes(value: string): string {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
         if (CONFIG.BUNDLE_RESOURCES_ROOT) {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + value;
         }
-        return "./resources/" + value;
+        return Url.RES_PATH + value;
     }
 
     static getUIRes(dpr: number, value: string): string {
@@ -16,7 +18,7 @@ export class Url {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + dpr + "x" + value;
         }
-        return `./resources/ui/${dpr}x/${value}`;
+        return Url.RESUI_PATH + `${dpr}x/${value}`;
     }
 
     static getOsdRes(value: string): string {

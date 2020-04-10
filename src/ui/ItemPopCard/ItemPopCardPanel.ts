@@ -1,16 +1,13 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Url } from "../../utils/resUtil";
-import { DynamicImage } from "../components/dynamic.image";
 import { i18n } from "../../i18n";
 import * as copy from "copy-text-to-clipboard";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { op_client } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
-import { PBpacket } from "net-socket-packet";
 import { Font } from "../../utils/font";
 
-export class ItemPopCardPanel extends Panel {
+export class ItemPopCardPanel extends BasePanel {
   private readonly key = "item_pop_card";
   private mCardContainer: Phaser.GameObjects.Container;
   private mNickName: Phaser.GameObjects.Text;

@@ -6,8 +6,8 @@ import { Handler } from "../../Handler/Handler";
 
 export class InteractionBubble extends Phaser.GameObjects.Container {
     private mBubbleAni: DragonbonesAnimation | FrameAnimation;
-    private mWdith: number = 100;
-    private mHeight: number = 100;
+    private mWdith: number = 60;
+    private mHeight: number = 60;
     private content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE;
     private mRemoveDelay: any;
     private handler: Handler;
@@ -23,9 +23,9 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
         this.handler = handler;
     }
 
-    public load(resName?: string, url?: string) {
+    public load(resName?: string, url?: string,jsonUrl?: string) {
         this.createAnimation();
-        this.mBubbleAni.load(resName, url);
+        this.mBubbleAni.load(resName, url,jsonUrl);
         this.mBubbleAni.play();
     }
 
@@ -53,6 +53,7 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
         if (this.handler) this.handler.clear();
         this.mBubbleAni = null;
         this.handler = null;
+        super.destroy();
     }
 
     private createAnimation() {

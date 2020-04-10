@@ -1,7 +1,7 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { UIType } from "../ui.manager";
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 /**
  * 场景UImediator
  */
@@ -13,7 +13,7 @@ export class BaseFaceMediator extends BaseMediator {
         this.mUIType = UIType.BaseUIType;
     }
 
-    public getView(): Panel {
+    public getView(): BasePanel {
         return this.mView;
     }
 

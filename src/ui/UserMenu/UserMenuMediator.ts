@@ -1,5 +1,4 @@
 import { BaseMediator } from "../baseMediator";
-import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { UserMenuPanel } from "./UserMenuPanel";
 import { ILayerManager } from "../layer.manager";
@@ -7,6 +6,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
 import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
 
 export class UserMenuMediator extends BaseMediator {
     readonly world: WorldService;
@@ -20,7 +20,7 @@ export class UserMenuMediator extends BaseMediator {
         this.mUIType = UIType.TipsUIType;
     }
 
-    getView(): IAbstractPanel {
+    getView(): BasePanel {
         return this.mView;
     }
 

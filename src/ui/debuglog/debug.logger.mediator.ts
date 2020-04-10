@@ -1,8 +1,8 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
 import { DebugLogger } from "./debug.logger";
 import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
 
 export class DebugLoggerMediator extends BaseMediator {
     public static NAME: string = "DebugLoggerMediator";
@@ -25,7 +25,7 @@ export class DebugLoggerMediator extends BaseMediator {
         return this.mView ? this.mView.isShow() : false;
     }
 
-    public getView(): IAbstractPanel {
+    public getView(): BasePanel {
         return this.mView;
     }
 

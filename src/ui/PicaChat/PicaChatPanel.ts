@@ -1,11 +1,11 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
 
-export class PicaChatPanel extends Panel {
+export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";
     private readonly MAX_HEIGHT: number;
     private readonly MIN_HEIGHT: number;
@@ -114,7 +114,7 @@ export class PicaChatPanel extends Panel {
             },
             false
         )
-        .setScale(zoom);
+            .setScale(zoom);
         this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.mChatBtn = this.scene.make
@@ -193,8 +193,8 @@ export class PicaChatPanel extends Panel {
             },
             false
         )
-        .setScale(zoom)
-        .setInteractive();
+            .setScale(zoom)
+            .setInteractive();
 
         this.mTileContainer.add([
             this.mTitleBg,
@@ -258,7 +258,7 @@ export class PicaChatPanel extends Panel {
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
     }
 
-    private onChatHandler() {}
+    private onChatHandler() { }
 
     private onDragHandler(pointer, dragX, dragY) {
         const height = this.height + (pointer.prevPosition.y - pointer.position.y);
@@ -270,7 +270,7 @@ export class PicaChatPanel extends Panel {
     }
 
     private onShowNavigateHandler() {
-      this.emit("showNavigate");
+        this.emit("showNavigate");
     }
 
     private onShowInputHanldler() {

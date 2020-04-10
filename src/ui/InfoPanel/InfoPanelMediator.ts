@@ -1,10 +1,10 @@
 import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
 import { MessageType } from "../../const/MessageType";
 import { InfoPanel } from "./InfoPanel";
 import { Tool } from "../../utils/tool";
+import { BasePanel } from "../components/BasePanel";
 
 export class InfoPanelMediator extends BaseMediator {
     public static NAME: string = "InfoPanelMediator";
@@ -14,7 +14,7 @@ export class InfoPanelMediator extends BaseMediator {
         this.world = world;
     }
 
-    getView(): IAbstractPanel {
+    getView(): BasePanel {
         return this.mView;
     }
 

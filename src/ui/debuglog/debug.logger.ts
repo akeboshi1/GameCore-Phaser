@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Background, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
@@ -8,7 +8,7 @@ import { DebugLoggerMediator } from "./debug.logger.mediator";
 import { IconBtn } from "../baseView/icon.btn";
 import { UIMediatorType } from "../ui.mediatorType";
 
-export class DebugLogger extends Panel {
+export class DebugLogger extends BasePanel {
     private mBgWidth: number;
     private mBgHeight: number;
     private mTimeTF: Phaser.GameObjects.Text;

@@ -1,14 +1,13 @@
-import { WorldService } from "../../../game/world.service";
-import RoundRectangle from "../../../../lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
-import TextArea from "../../../../lib/rexui/lib/ui/textarea/TextArea";
-import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { Panel } from "../../components/panel";
-import { NinePatchButton } from "../../components/ninepatch.button";
-import { Border, Url } from "../../../utils/resUtil";
-import { CheckButton } from "../../components/check.button";
-import BBCodeText from "../../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
-import { NinePatch } from "../../components/nine.patch";
-import { BaseChatPanel } from "../base.chat.panel";
+import { WorldService } from "../../game/world.service";
+import RoundRectangle from "../../../lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
+import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
+import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { NinePatchButton } from "../components/ninepatch.button";
+import { Border, Url } from "../../utils/resUtil";
+import { CheckButton } from "../components/check.button";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import { NinePatch } from "../components/nine.patch";
+import { BaseChatPanel } from "./base.chat.panel";
 
 export class ChatPanelPC extends BaseChatPanel {
     private mTextArea: TextArea;

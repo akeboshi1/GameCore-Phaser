@@ -1,6 +1,5 @@
 import { MessageType } from "../../../const/MessageType";
 import { BaseMediator } from "../../baseMediator";
-import { IAbstractPanel } from "../../abstractPanel";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
 import { IDragable } from "../idragable";
@@ -10,6 +9,7 @@ import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
 import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { UIType } from "../../ui.manager";
+import { BasePanel } from "../../components/BasePanel";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -45,7 +45,7 @@ export class BagMediator extends BaseMediator {
         if (this.mView) return this.mView.isShow();
     }
 
-    public getView(): IAbstractPanel {
+    public getView(): BasePanel {
         return this.mView;
     }
 
