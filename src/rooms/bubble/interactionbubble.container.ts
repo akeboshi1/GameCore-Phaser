@@ -32,5 +32,6 @@ export class InteractionBubbleContainer extends Phaser.GameObjects.Container {
         this.hide();
         if (this.mBubble) this.mBubble.destroy();
         this.mBubble = null;
+        super.destroy();
     }
 }

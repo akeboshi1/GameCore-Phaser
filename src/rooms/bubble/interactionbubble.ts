@@ -53,6 +53,7 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
         if (this.handler) this.handler.clear();
         this.mBubbleAni = null;
         this.handler = null;
+        super.destroy();
     }
 
     private createAnimation() {

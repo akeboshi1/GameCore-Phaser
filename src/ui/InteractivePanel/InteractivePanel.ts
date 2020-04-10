@@ -9,6 +9,7 @@ import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdete
 import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
+import { Tool } from "../../utils/tool";
 export class InteractivePanel extends Panel {
     private mNameCon: Phaser.GameObjects.Container;
     private mDescCon: Phaser.GameObjects.Container;
@@ -121,6 +122,11 @@ export class InteractivePanel extends Panel {
         super.show(param);
     }
 
+    public hide() {
+        this.removeListen();
+        super.hide();
+    }
+
     public update(param?: any) {
         this.show(param);
     }
@@ -174,32 +180,23 @@ export class InteractivePanel extends Panel {
         const textMask = this.mTextArea.childrenMap.text;
         textMask.x = -this.mBorder.width >> 1;
         textMask.y = -this.mBorder.height / 2;
-        textMask.resize(this.mBorder.width,this.mDescTF.displayHeight+2000);
+        textMask.resize(this.mBorder.width, this.mDescTF.displayHeight + 2000);
         // textMask.bottomChildOY = this.mDescTF.displayHeight + 20 * this.dpr * zoom;
         this.mTextArea.scrollToBottom();
         super.resize(wid, hei);
     }
 
     public addListen() {
-        this.mTextArea.childrenMap.child.setInteractive();
-        this.mNameCon.on("pointerup", this.nameConClick, this);
-        // this.mDescCon.on("pointerup", this.descConClick, this);
-        this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
-        this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
-        this.mRightFaceIcon.on("pointerup", this.midFaceClick, this);
+        this.mScene.input.on("pointerup", this.sceneUpHandler, this);
     }
 
     public removeListen() {
-        this.mTextArea.childrenMap.child.disableInteractive();
-        this.mNameCon.off("pointerup", this.nameConClick, this);
-        // this.mDescCon.off("pointerup", this.descConClick, this);
-        this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
-        this.mMidFaceIcon.off("pointerup", this.midFaceClick, this);
-        this.mRightFaceIcon.off("pointerup", this.midFaceClick, this);
+        this.mScene.input.off("pointerup", this.sceneUpHandler, this);
     }
 
     public destroy() {
         this.mInitialized = false;
+        this.removeListen();
         this.removeAllListeners();
         if (this.mNameCon) {
             this.mNameCon.destroy(true);
@@ -302,7 +299,7 @@ export class InteractivePanel extends Panel {
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
         // this.mDescCon.setInteractive();
-        this.mNameCon.setInteractive();
+        // this.mNameCon.setInteractive();
 
         super.init();
     }
@@ -310,6 +307,29 @@ export class InteractivePanel extends Panel {
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
         if (show) this.resize();
+    }
+
+    private sceneUpHandler(pointer: Phaser.Input.Pointer) {
+        if (Tool.checkPointerContains(this.mNameCon, pointer)) {
+            this.nameConClick(pointer);
+            return;
+        }
+        if (Tool.checkPointerContains(this.mDescCon, pointer)) {
+            this.descConClick(pointer);
+            return;
+        }
+        if (this.mLeftFaceIcon && Tool.checkPointerContains(this.mLeftFaceIcon, pointer)) {
+            this.leftFaceClick(pointer);
+            return;
+        }
+        if (this.mMidFaceIcon && Tool.checkPointerContains(this.mMidFaceIcon, pointer)) {
+            this.midFaceClick(pointer);
+            return;
+        }
+        if (this.mRightFaceIcon && Tool.checkPointerContains(this.mRightFaceIcon, pointer)) {
+            this.rightFaceClick(pointer);
+            return;
+        }
     }
 
     private refreshUIPos() {
@@ -380,6 +400,7 @@ export class InteractivePanel extends Panel {
     }
 
     private onLoadComplete() {
+        this.addListen();
         const size: Size = this.mWorld.getSize();
         const data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mData[0];
         const uiDisplay: op_gameconfig_01.IDisplay = data.display[0];
@@ -407,11 +428,11 @@ export class InteractivePanel extends Panel {
                 this.mLeftFaceIcon.scaleY = scaleY * scale;
                 this.mLeftFaceIcon.x = imgX + 200;
                 this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
-                this.mLeftFaceIcon.setInteractive();
+                // this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
-                this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
-                this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
+                // this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
+                // this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
@@ -431,8 +452,8 @@ export class InteractivePanel extends Panel {
                 this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
-                this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
-                this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
+                // this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
+                // this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
@@ -452,8 +473,8 @@ export class InteractivePanel extends Panel {
                 this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
-                this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
-                this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
+                // this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
+                // this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
                 break;
         }
         this.resize();
