@@ -50,6 +50,16 @@ export class PicaRoomListPanel extends BasePanel {
     this.mMyRoomDele.updateList(content);
   }
 
+  public addListen() {
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
+  }
+
+  public removeListen() {
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mSeachBtn.off("pointerup", this.onSeachHandler, this);
+  }
+
   destroy() {
     if (this.mScroller) this.mScroller.destroy();
     super.destroy();
@@ -151,11 +161,6 @@ export class PicaRoomListPanel extends BasePanel {
     };
     this.mScroller = new GameScroller(this.scene, this.mRoomContainer, config);
     checkbox.selectIndex(0);
-    this.addActionListener();
-  }
-  private addActionListener() {
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
   }
 
   private showRoomList() {

@@ -39,7 +39,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
         if (this.mPanel.parentContainer) {
             this.mPanel.parentContainer.remove(this.mPanel);
         }
-        this.mPanel.close();
+        this.mPanel.removeListen();
     }
 
     public updatePos(x: number, y: number) {

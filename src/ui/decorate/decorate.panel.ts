@@ -40,6 +40,58 @@ export class DecoratePanel extends BasePanel {
         this.setTween(false);
         if (this.mWorld) this.mScaleRatio = this.mWorld.scaleRatio;
     }
+    public show(param?: any) {
+        this.mData = param;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShowing) return;
+        if (this.configList && this.configList[0]) this.playSound(this.configList[0]);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShowing = true;
+        }
+    }
+
+    public addListen() {
+        if (this.mCancelBtn) this.mCancelBtn.on("pointerup", this.onCancelHandler, this);
+        if (this.mOkBtn) this.mOkBtn.on("pointerup", this.onAddHandler, this);
+        if (this.mRecycleBtn) this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
+        if (this.mTurnBtn) this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
+        if (this.mMoveBtn) this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
+        if (this.mRepeatBtn) this.mRepeatBtn.on("pointerup", this.onShowRepeatHandler, this);
+        if (this.mExtendBtn) this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
+        if (this.mMoveMenuContainer) {
+            this.mMoveMenuContainer.register();
+            this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
+        }
+        if (this.mRepeatMenuContainer) {
+            this.mRepeatMenuContainer.register();
+            this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
+            this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
+        }
+    }
+
+    public removeListen() {
+        if (this.mCancelBtn) this.mCancelBtn.off("pointerup", this.onCancelHandler, this);
+        if (this.mOkBtn) this.mOkBtn.off("pointerup", this.onAddHandler, this);
+        if (this.mRecycleBtn) this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
+        if (this.mTurnBtn) this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
+        if (this.mMoveBtn) this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
+        if (this.mRepeatBtn) this.mRepeatBtn.off("pointerup", this.onShowRepeatHandler, this);
+        if (this.mExtendBtn) this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
+        if (this.mMoveMenuContainer) {
+            this.mMoveMenuContainer.unRegister();
+            this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
+        }
+        if (this.mRepeatMenuContainer) {
+            this.mRepeatMenuContainer.unRegister();
+            this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
+            this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
+        }
+    }
 
     public setElement(ele: IElement) {
         this.mDisplayObject = ele;
@@ -52,8 +104,7 @@ export class DecoratePanel extends BasePanel {
         this.y = pos.y;
 
         this.updateArrowPos(ele);
-
-        this.register();
+        this.addListen();
     }
 
     public canPUt(val: boolean) {
@@ -71,16 +122,7 @@ export class DecoratePanel extends BasePanel {
     }
 
     public updatePos(x: number, y?: number, z?: number) {
-        this.setPosition(x * this.mScaleRatio, (y  + this.offset.y) * this.mScaleRatio, z);
-    }
-
-    public close() {
-        this.unregister();
-    }
-
-    public destroy() {
-        this.unregister();
-        super.destroy();
+        this.setPosition(x * this.mScaleRatio, (y + this.offset.y) * this.mScaleRatio, z);
     }
 
     protected preload() {
@@ -167,8 +209,8 @@ export class DecoratePanel extends BasePanel {
         list.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.width);
         let margin = mainMenuW / (list.length - 1) / zoom;
         for (let i = 1; i < list.length; i++) {
-            const preButton = <Phaser.GameObjects.Image> list[i - 1];
-            const button = <Phaser.GameObjects.Image> list[i];
+            const preButton = <Phaser.GameObjects.Image>list[i - 1];
+            const button = <Phaser.GameObjects.Image>list[i];
             button.x = preButton.width + preButton.x + margin;
         }
 
@@ -178,8 +220,8 @@ export class DecoratePanel extends BasePanel {
         subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.width);
         margin = mainMenuW / (subList.length - 1) / zoom;
         for (let i = 1; i < subList.length; i++) {
-            const preButton = <Phaser.GameObjects.Image> subList[i - 1];
-            const button = <Phaser.GameObjects.Image> subList[i];
+            const preButton = <Phaser.GameObjects.Image>subList[i - 1];
+            const button = <Phaser.GameObjects.Image>subList[i];
             button.x = preButton.width + preButton.x + margin;
         }
 
@@ -198,48 +240,48 @@ export class DecoratePanel extends BasePanel {
         this.setElement(this.mDisplayObject);
     }
 
-    protected register() {
-        if (!this.mInitialized) {
-            return;
-        }
-        this.mCancelBtn.on("pointerup", this.onCancelHandler, this);
-        this.mOkBtn.on("pointerup", this.onAddHandler, this);
-        this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
-        this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
-        this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
-        this.mRepeatBtn.on("pointerup", this.onShowRepeatHandler, this);
-        this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
-        this.mMoveMenuContainer.register();
-        this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
-        this.mRepeatMenuContainer.register();
-        this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
-        this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
-        // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
-        // this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
-        // this.mOkBtn.on("pointerup", this.onPutHandler, this);
-    }
+    // protected register() {
+    //     if (!this.mInitialized) {
+    //         return;
+    //     }
+    //     this.mCancelBtn.on("pointerup", this.onCancelHandler, this);
+    //     this.mOkBtn.on("pointerup", this.onAddHandler, this);
+    //     this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
+    //     this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
+    //     this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
+    //     this.mRepeatBtn.on("pointerup", this.onShowRepeatHandler, this);
+    //     this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
+    //     this.mMoveMenuContainer.register();
+    //     this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
+    //     this.mRepeatMenuContainer.register();
+    //     this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
+    //     this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
+    //     // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
+    //     // this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
+    //     // this.mOkBtn.on("pointerup", this.onPutHandler, this);
+    // }
 
-    protected unregister() {
-        if (!this.mInitialized) {
-            return;
-        }
-        this.mCancelBtn.off("pointerup", this.onCancelHandler, this);
-        this.mOkBtn.off("pointerup", this.onAddHandler, this);
-        this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
-        this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
-        this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
-        this.mRepeatBtn.off("pointerup", this.onShowRepeatHandler, this);
-        this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
-        this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
-        this.mMoveMenuContainer.unRegister();
-        this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
-        this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
-        this.mRepeatMenuContainer.unRegister();
+    // protected unregister() {
+    //     if (!this.mInitialized) {
+    //         return;
+    //     }
+    //     this.mCancelBtn.off("pointerup", this.onCancelHandler, this);
+    //     this.mOkBtn.off("pointerup", this.onAddHandler, this);
+    //     this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
+    //     this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
+    //     this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
+    //     this.mRepeatBtn.off("pointerup", this.onShowRepeatHandler, this);
+    //     this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
+    //     this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
+    //     this.mMoveMenuContainer.unRegister();
+    //     this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
+    //     this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
+    //     this.mRepeatMenuContainer.unRegister();
 
-        // this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
-        // this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
-        // this.mOkBtn.off("pointerup", this.onPutHandler, this);
-    }
+    //     // this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
+    //     // this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
+    //     // this.mOkBtn.off("pointerup", this.onPutHandler, this);
+    // }
 
     private onLeftUpHandler() {
         if (!this.mDisplayObject) {
@@ -264,7 +306,7 @@ export class DecoratePanel extends BasePanel {
 
     private onRightDownHandler() {
         const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
-        pos45.x  = pos45.x + 1;
+        pos45.x = pos45.x + 1;
         this.onMoveElement(pos45);
     }
 

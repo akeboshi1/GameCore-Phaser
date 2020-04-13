@@ -25,6 +25,26 @@ export class ItemPopCardPanel extends BasePanel {
     this.setTween(false);
   }
 
+  public addListen() {
+    this.mDetailDisplay.on("show", this.onShowHandler, this);
+    this.on("pointerup", this.onCloseHandler, this);
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mNickName.on("pointerup", this.onPointerNickNameHandler, this);
+    this.mNickName.on("pointerdown", this.onPointerNickNameDownHandler, this);
+    this.mDesText.on("pointerdown", this.onPointerDesDownHandler, this);
+    this.mDesText.on("pointerup", this.onPointerNickNameHandler, this);
+  }
+
+  public removeListen() {
+    this.mDetailDisplay.off("show", this.onShowHandler, this);
+    this.off("pointerup", this.onCloseHandler, this);
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mNickName.off("pointerup", this.onPointerNickNameHandler, this);
+    this.mNickName.off("pointerdown", this.onPointerNickNameDownHandler, this);
+    this.mDesText.off("pointerdown", this.onPointerDesDownHandler, this);
+    this.mDesText.off("pointerup", this.onPointerNickNameHandler, this);
+  }
+
   resize(w: number, h: number) {
     // const scale = this.scene.cameras.main.height / 1920;
     const zoom = this.mWorld.uiScaleNew;
@@ -146,7 +166,6 @@ export class ItemPopCardPanel extends BasePanel {
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.scale = this.dpr * 2;
-    this.mDetailDisplay.on("show", this.onShowHandler, this);
     // this.mDetailDisplay.y = -150;
 
     this.mCloseBtn = this.scene.make.image({
@@ -171,13 +190,6 @@ export class ItemPopCardPanel extends BasePanel {
     this.resize(0, 0);
 
     this.setProp();
-
-    this.on("pointerup", this.onCloseHandler, this);
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mNickName.on("pointerup", this.onPointerNickNameHandler, this);
-    this.mNickName.on("pointerdown", this.onPointerNickNameDownHandler, this);
-    this.mDesText.on("pointerdown", this.onPointerDesDownHandler, this);
-    this.mDesText.on("pointerup", this.onPointerNickNameHandler, this);
   }
 
   private onCloseHandler() {

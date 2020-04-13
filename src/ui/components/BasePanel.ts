@@ -26,7 +26,7 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(world.uiRatio || 1);
             this.scale = this.mWorld.uiScaleNew;
         }
-
+        this.setEnabled(true);
     }
 
     protected addResources(key: string, resource: any) {
