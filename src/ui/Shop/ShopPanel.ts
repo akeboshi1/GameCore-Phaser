@@ -61,6 +61,14 @@ export class ShopPanel extends BasePanel {
         super.destroy();
     }
 
+    public addListen() {
+        this.mClsBtn.on("pointerup", this.shopMedClose, this);
+    }
+
+    public removeListen() {
+        this.mClsBtn.off("pointerup", this.shopMedClose, this);
+    }
+
     protected preload() {
         if (!this.mScene) {
             return;
@@ -150,7 +158,6 @@ export class ShopPanel extends BasePanel {
         this.mClsBtn.x = (this.width >> 1) - 65;
         this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-        this.mClsBtn.on("pointerup", this.shopMedClose, this);
         this.add(this.mClsBtn);
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
 

@@ -65,6 +65,20 @@ export class FriendPanel extends BasePanel {
         this.add(this.mTitleTxt);
     }
 
+    public addListen() {
+        super.addListen();
+        this.mDownBtn.on("pointerup", this.downHandler, this);
+        this.mUpBtn.on("pointerup", this.upHandler, this);
+        this.mClsBtn.on("pointerup", this.hide, this);
+    }
+
+    public removeListen() {
+        super.removeListen();
+        this.mDownBtn.off("pointerup", this.downHandler, this);
+        this.mUpBtn.off("pointerup", this.upHandler, this);
+        this.mClsBtn.off("pointerup", this.hide, this);
+    }
+
     public show(param?: any) {
         const size: Size = this.mWorld.getSize();
         this.mData = param;
@@ -76,10 +90,10 @@ export class FriendPanel extends BasePanel {
     }
 
     public destroy() {
-        if (this.mBg) this.mBg.destroy(true);
-        if (this.mTitleTxt) this.mTitleTxt.destroy(true);
-        if (this.mUpBtn) this.mUpBtn.destroy(true);
-        if (this.mDownBtn) this.mDownBtn.destroy(true);
+        // if (this.mBg) this.mBg.destroy(true);
+        // if (this.mTitleTxt) this.mTitleTxt.destroy(true);
+        // if (this.mUpBtn) this.mUpBtn.destroy(true);
+        // if (this.mDownBtn) this.mDownBtn.destroy(true);
         if (this.mFriendList) {
             this.mFriendList.forEach((item: FriendItem) => {
                 if (item) {
@@ -88,12 +102,12 @@ export class FriendPanel extends BasePanel {
                 }
             });
         }
-        this.mIndex = 0;
-        this.mBg = null;
-        this.mTitleTxt = null;
-        this.mUpBtn = null;
-        this.mDownBtn = null;
-        this.mFriendList = null;
+        // this.mIndex = 0;
+        // this.mBg = null;
+        // this.mTitleTxt = null;
+        // this.mUpBtn = null;
+        // this.mDownBtn = null;
+        // this.mFriendList = null;
         super.destroy();
     }
 
@@ -164,8 +178,6 @@ export class FriendPanel extends BasePanel {
 
         this.mDownBtn.setInteractive();
         this.mUpBtn.setInteractive();
-        this.mDownBtn.on("pointerup", this.downHandler, this);
-        this.mUpBtn.on("pointerup", this.upHandler, this);
         const image = this.scene.make.image(undefined, false);
         image.setTexture((this.mWorld.roomManager.currentRoom.playerManager.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
         this.add(image);
@@ -181,7 +193,6 @@ export class FriendPanel extends BasePanel {
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-        this.mClsBtn.on("pointerup", this.hide, this);
         this.add(this.mClsBtn);
         super.init();
     }

@@ -129,6 +129,18 @@ export class FurniBagPanel extends BasePanel {
     }
   }
 
+  public addListen() {
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mSeachInput.on("seach", this.onSeachHandler, this);
+    this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
+  }
+
+  public removeListen() {
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mSeachInput.off("seach", this.onSeachHandler, this);
+    this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
+  }
+
   destroy() {
     if (this.mCategoryScroll) {
       this.mCategoryScroll.destroy();
@@ -283,9 +295,6 @@ export class FurniBagPanel extends BasePanel {
     this.add(this.mPropGrid.childrenMap.child);
     super.init();
 
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mSeachInput.on("seach", this.onSeachHandler, this);
-    this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
     this.emit("getCategories");
 
     this.resize(0, 0);

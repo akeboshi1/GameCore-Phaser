@@ -35,6 +35,17 @@ export class BottomBtnGroup extends BasePanel {
         super.show(param);
     }
 
+    public addListen() {
+        this.mChatContainer.on("pointerdown", this.chatHandler, this);
+        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+    }
+
+    public removeListen() {
+        this.mChatContainer.off("pointerdown", this.chatHandler, this);
+        this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.off("selected", this.onSelectedMicHandler, this);
+    }
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.scaleX = this.scaleY = this.mWorld.uiScale;
@@ -161,7 +172,6 @@ export class BottomBtnGroup extends BasePanel {
             this.marketBagHandler();
         });
 
-        this.mChatContainer.on("pointerdown", this.chatHandler, this);
         this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
         this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
         this.mVoiceBtn.y = size.height - this.height;
@@ -174,8 +184,6 @@ export class BottomBtnGroup extends BasePanel {
 
         this.mVoiceBtn.scaleX = this.mVoiceBtn.scaleY = 1.5;
         this.mMicBtn.scaleX = this.mMicBtn.scaleY = 1.5;
-        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
-        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
         this.resize();
         super.init();
     }

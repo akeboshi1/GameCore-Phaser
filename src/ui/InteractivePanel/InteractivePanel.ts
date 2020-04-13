@@ -37,6 +37,7 @@ export class InteractivePanel extends BasePanel {
     private mDisDelection: number = 10;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.setEnabled(false);
     }
     /**
      * 通過參數進行ui佈局
@@ -44,6 +45,7 @@ export class InteractivePanel extends BasePanel {
      * @param radioClick
      */
     public show(param?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
+        super.show(param);
         const size: Size = this.mWorld.getSize();
         this.mData = param;
         if (!this.mInitialized) {
@@ -75,17 +77,17 @@ export class InteractivePanel extends BasePanel {
             if (data.text.length > 0) {
                 const descData: op_gameconfig_01.IText = data.text[0];
                 this.mDescCon.setData("nodeID", descData.node.id);
-                this.mTextArea.appendText(descData.text);
+                this.mTextArea.setText(descData.text);
                 // this.mDescTF.text = descData.text;
-                this.mDescCon.off("pointerup", this.descConClick, this);
-                this.mDescCon.on("pointerup", this.descConClick, this);
+                // this.mDescCon.off("pointerup", this.descConClick, this);
+                // this.mDescCon.on("pointerup", this.descConClick, this);
                 if (data.text[1]) {
                     const nameData: op_gameconfig_01.IText = data.text[1];
                     this.mNameCon.setData("nodeID", nameData.node.id);
                     this.mNameTF.text = nameData.text;
                     this.mNameTF.x = - this.mNameTF.width >> 1;
-                    this.mNameCon.off("pointerup", this.nameConClick, this);
-                    this.mNameCon.on("pointerup", this.nameConClick, this);
+                    // this.mNameCon.off("pointerup", this.nameConClick, this);
+                    // this.mNameCon.on("pointerup", this.nameConClick, this);
                 }
             }
         }
@@ -119,11 +121,9 @@ export class InteractivePanel extends BasePanel {
         if (this.mShowing) {
             return;
         }
-        super.show(param);
     }
 
     public hide() {
-        this.removeListen();
         super.hide();
     }
 
@@ -153,17 +153,16 @@ export class InteractivePanel extends BasePanel {
         this.mDescCon.add(this.mTextArea);
         this.add(this.mNameCon);
         this.add(this.mDescCon);
+        this.setSize(width, height);
         if (this.mWorld.game.device.os.desktop) {
             this.y = size.height / 2 - 250;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
                 this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
-                this.setSize(this.mBg.width, this.mBg.height);
             } else {
                 this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
                 this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
-                this.setSize(this.mBg.width, this.mBg.height);
             }
             this.y = this.mBg.height * 1.5 * this.mWorld.uiScale;
         }
@@ -187,17 +186,17 @@ export class InteractivePanel extends BasePanel {
     }
 
     public addListen() {
-        this.mScene.input.on("pointerup", this.sceneUpHandler, this);
+        super.addListen();
+        this.on("panelClick", this.panelClick, this);
     }
 
     public removeListen() {
-        this.mScene.input.off("pointerup", this.sceneUpHandler, this);
+        super.removeListen();
+        this.off("panelClick", this.panelClick, this);
     }
 
     public destroy() {
         this.mInitialized = false;
-        this.removeListen();
-        this.removeAllListeners();
         if (this.mNameCon) {
             this.mNameCon.destroy(true);
         }
@@ -251,7 +250,7 @@ export class InteractivePanel extends BasePanel {
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
         this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
-        this.setSize(this.mBg.width, this.mBg.height);
+        this.setSize(width, height);
         this.mBorder = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
@@ -296,11 +295,14 @@ export class InteractivePanel extends BasePanel {
             text: this.mDescTF,
         })
             .layout();
+        // const bg1 = this.mScene.make.graphics(undefined, false);
+        // bg1.fillStyle(0xffcc00);
+        // bg1.fillRect(-this.mBg.width >> 1, -this.mBg.height >> 1, this.mBg.width, this.mBg.height);
+        // this.mDescCon.add(bg1);
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
         // this.mDescCon.setInteractive();
         // this.mNameCon.setInteractive();
-
         super.init();
     }
 
@@ -309,7 +311,7 @@ export class InteractivePanel extends BasePanel {
         if (show) this.resize();
     }
 
-    private sceneUpHandler(pointer: Phaser.Input.Pointer) {
+    private panelClick(pointer: Phaser.Input.Pointer) {
         if (Tool.checkPointerContains(this.mNameCon, pointer)) {
             this.nameConClick(pointer);
             return;
@@ -400,7 +402,6 @@ export class InteractivePanel extends BasePanel {
     }
 
     private onLoadComplete() {
-        this.addListen();
         const size: Size = this.mWorld.getSize();
         const data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mData[0];
         const uiDisplay: op_gameconfig_01.IDisplay = data.display[0];
@@ -428,7 +429,7 @@ export class InteractivePanel extends BasePanel {
                 this.mLeftFaceIcon.scaleY = scaleY * scale;
                 this.mLeftFaceIcon.x = imgX + 200;
                 this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
-                // this.mLeftFaceIcon.setInteractive();
+                this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
                 // this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
@@ -452,6 +453,7 @@ export class InteractivePanel extends BasePanel {
                 this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
+                this.mMidFaceIcon.setInteractive();
                 // this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
                 // this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
                 break;
@@ -473,6 +475,7 @@ export class InteractivePanel extends BasePanel {
                 this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
+                this.mRightFaceIcon.setInteractive();
                 // this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
                 // this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
                 break;

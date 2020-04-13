@@ -25,6 +25,14 @@ export class InfoPanel extends BasePanel {
         this.mWorld = worldService;
     }
 
+    public addListen() {
+        if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.closeHandler, this);
+    }
+
+    public removeListen() {
+        if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.closeHandler, this);
+    }
+
     resize(wid: number, hei: number) {
         if (!this.mInitialized) return;
         const size = this.mWorld.getSize();
@@ -53,7 +61,6 @@ export class InfoPanel extends BasePanel {
         super.show(param);
         if (this.mInitialized) {
             const size = this.mWorld.getSize();
-            this.addListen();
             this.setData("data", param);
             this.setInfo(param);
             this.resize(size.width, size.height);
@@ -61,7 +68,6 @@ export class InfoPanel extends BasePanel {
     }
 
     hide() {
-        this.removeListen();
         super.hide();
     }
 
@@ -188,21 +194,13 @@ export class InfoPanel extends BasePanel {
         this.setInfo(this.getData("data"));
     }
 
-    private addListen() {
-        if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.closeHandler, this);
-    }
-
-    private removeListen() {
-        if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.closeHandler, this);
-    }
-
     private closeHandler(pointer) {
-        if (this.checkPointerDelection(pointer)) {
+        if (this.checkPointerDis(pointer)) {
             this.hide();
         }
     }
 
-    private checkPointerDelection(pointer: Phaser.Input.Pointer) {
+    private checkPointerDis(pointer: Phaser.Input.Pointer) {
         if (!this.mWorld) return true;
         return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew ||
             Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew;

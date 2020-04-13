@@ -77,26 +77,26 @@ export class BagPanel extends BasePanel {
             this.bagSlotList.length = 0;
             this.bagSlotList = null;
         }
-        if (this.mClsBtn) {
-            this.mClsBtn.destroy();
-            this.mClsBtn = null;
-        }
-        if (this.mPreBtn) {
-            this.mPreBtn.destroy(true);
-            this.mPreBtn = null;
-        }
-        if (this.mNextBtn) {
-            this.mNextBtn.destroy(true);
-            this.mNextBtn = null;
-        }
-        if (this.mBorder) {
-            this.mBorder.destroy(true);
-            this.mBorder = null;
-        }
-        if (this.mBg) {
-            this.mBg.destroy(true);
-            this.mBg = null;
-        }
+        // if (this.mClsBtn) {
+        //     this.mClsBtn.destroy();
+        //     this.mClsBtn = null;
+        // }
+        // if (this.mPreBtn) {
+        //     this.mPreBtn.destroy(true);
+        //     this.mPreBtn = null;
+        // }
+        // if (this.mNextBtn) {
+        //     this.mNextBtn.destroy(true);
+        //     this.mNextBtn = null;
+        // }
+        // if (this.mBorder) {
+        //     this.mBorder.destroy(true);
+        //     this.mBorder = null;
+        // }
+        // if (this.mBg) {
+        //     this.mBg.destroy(true);
+        //     this.mBg = null;
+        // }
         // if (this.mCheckList) {
         //     this.mCheckList.length = 0;
         //     this.mCheckList = null;
@@ -122,6 +122,21 @@ export class BagPanel extends BasePanel {
 
     public setBlur() {
         if (this.mInputText) this.mInputText.setBlur();
+    }
+
+    public addListen() {
+        this.mInputText.on("focus", this.onFocusHandler, this);
+        this.mInputText.on("blur", this.onBlurHandler, this);
+        this.mNextBtn.on("pointerup", this.nextHandler, this);
+        this.mPreBtn.on("pointerup", this.preHandler, this);
+        this.mClsBtn.on("pointerup", this.closeHandler, this);
+    }
+    public removeListen() {
+        this.mInputText.off("focus", this.onFocusHandler, this);
+        this.mInputText.off("blur", this.onBlurHandler, this);
+        this.mNextBtn.off("pointerup", this.nextHandler, this);
+        this.mPreBtn.off("pointerup", this.preHandler, this);
+        this.mClsBtn.off("pointerup", this.closeHandler, this);
     }
 
     protected init() {
@@ -166,9 +181,7 @@ export class BagPanel extends BasePanel {
         })
             .resize(txtBg.width, txtBg.height)
             .setOrigin(0, 0)
-            .setStyle({ font: "bold 16px YaHei" })
-            .on("focus", this.onFocusHandler, this)
-            .on("blur", this.onBlurHandler, this);
+            .setStyle({ font: "bold 16px YaHei" });
         this.mInputText.x = txtBg.x - txtBg.width / 2;
         this.mInputText.y = txtBg.y - txtBg.height / 2;
         this.mInputText.setText(this.mBaseStr);
@@ -208,8 +221,6 @@ export class BagPanel extends BasePanel {
         this.add(this.mNextBtn);
         this.mNextBtn.setInteractive();
         this.mPreBtn.setInteractive();
-        this.mNextBtn.on("pointerup", this.nextHandler, this);
-        this.mPreBtn.on("pointerup", this.preHandler, this);
         this.mWidth = this.mBg.width;
         this.mHeight = this.mBg.height;
         this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
@@ -219,7 +230,6 @@ export class BagPanel extends BasePanel {
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-        this.mClsBtn.on("pointerup", this.closeHandler, this);
         this.add(this.mClsBtn);
         this.mInitialized = true;
         if (this.mDataList) {

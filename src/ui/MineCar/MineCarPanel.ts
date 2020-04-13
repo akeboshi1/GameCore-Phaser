@@ -47,11 +47,11 @@ export class MineCarPanel extends BasePanel {
 
   setCategories(subcategorys: op_def.IStrMap[]) {
     subcategorys = [
-      {key: "all", value: "全部"},
-      {key: "矿石", value: "矿石"},
-      {key: "宝石", value: "宝石"},
-      {key: "化石", value: "化石"},
-      {key: "杂物", value: "杂物"}];
+      { key: "all", value: "全部" },
+      { key: "矿石", value: "矿石" },
+      { key: "宝石", value: "宝石" },
+      { key: "化石", value: "化石" },
+      { key: "杂物", value: "杂物" }];
     const items = [];
     const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width;
     const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
@@ -69,12 +69,13 @@ export class MineCarPanel extends BasePanel {
     this.mCategorieContainer.add(items);
   }
 
-  register() {
-    if (!this.mInitialized) {
-      return;
-    }
+  addListen() {
     this.mCloseBtn.setInteractive();
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+  }
+
+  removeListen() {
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
   setProp() {
@@ -183,12 +184,10 @@ export class MineCarPanel extends BasePanel {
     this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mTips, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mHelpBtn]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
-    const items = new Array(50).fill({item: "", locked: true});
+    const items = new Array(50).fill({ item: "", locked: true });
     this.mPropGrid.setItems(items);
 
     this.setCategories([]);
-
-    this.register();
   }
 
   private onCloseHandler() {

@@ -31,18 +31,18 @@ export class StoragePanel extends BasePanel {
         super.update(param);
     }
     public destroy() {
-        if (this.mBg) {
-            this.mBg.destroy(true);
-            this.mBg = null;
-        }
-        if (this.mBorder) {
-            this.mBorder.destroy(true);
-            this.mBorder = null;
-        }
-        if (this.mClsBtn) {
-            this.mClsBtn.destroy();
-            this.mClsBtn = null;
-        }
+        // if (this.mBg) {
+        //     this.mBg.destroy(true);
+        //     this.mBg = null;
+        // }
+        // if (this.mBorder) {
+        //     this.mBorder.destroy(true);
+        //     this.mBorder = null;
+        // }
+        // if (this.mClsBtn) {
+        //     this.mClsBtn.destroy();
+        //     this.mClsBtn = null;
+        // }
         if (this.mBagItemSlotList) {
             const len: number = this.mBagItemSlotList.length;
             for (let i: number = 0; i < len; i++) {
@@ -55,6 +55,14 @@ export class StoragePanel extends BasePanel {
         }
         this.mWorld = null;
         super.destroy();
+    }
+
+    public addListen() {
+        this.mClsBtn.on("pointerup", this.hide, this);
+    }
+
+    public removeListen() {
+        this.mClsBtn.off("pointerup", this.hide, this);
     }
 
     protected init() {
@@ -104,7 +112,6 @@ export class StoragePanel extends BasePanel {
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-        this.mClsBtn.on("pointerup", this.hide, this);
         this.add(this.mClsBtn);
     }
 

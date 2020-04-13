@@ -19,6 +19,24 @@ export class DecorateControlPanel extends BasePanel {
         this.setTween(false);
     }
 
+    public addListen() {
+        this.mExitBtn.on("pointerup", this.onExitHandler, this);
+        this.mRecycleAllBtn.on("pointerup", this.onRecycleAllHandler, this);
+        this.mRedoBtn.on("pointerup", this.onRedoHandler, this);
+        this.mFurniBtn.on("pointerup", this.onShowFurniHandler, this);
+        this.mSaveBtn.on("pointerup", this.onSaveHandler, this);
+        this.mDoorBtn.on("pointerup", this.onGetDoorHandler, this);
+    }
+
+    public removeListen() {
+        this.mExitBtn.off("pointerup", this.onExitHandler, this);
+        this.mRecycleAllBtn.off("pointerup", this.onRecycleAllHandler, this);
+        this.mRedoBtn.off("pointerup", this.onRedoHandler, this);
+        this.mFurniBtn.off("pointerup", this.onShowFurniHandler, this);
+        this.mSaveBtn.off("pointerup", this.onSaveHandler, this);
+        this.mDoorBtn.off("pointerup", this.onGetDoorHandler, this);
+    }
+
     public resize(w: number, h: number) {
         this.setSize(w, 131 * this.dpr);
         // this.x = this.width * this.originX;
@@ -97,20 +115,8 @@ export class DecorateControlPanel extends BasePanel {
             }
             this.mTopBtns[i].y = 11 * this.dpr;
         }
-
-        this.addActionListener();
-
         this.resize(w, h);
         super.init();
-    }
-
-    private addActionListener() {
-        this.mExitBtn.on("pointerup", this.onExitHandler, this);
-        this.mRecycleAllBtn.on("pointerup", this.onRecycleAllHandler, this);
-        this.mRedoBtn.on("pointerup", this.onRedoHandler, this);
-        this.mFurniBtn.on("pointerup", this.onShowFurniHandler, this);
-        this.mSaveBtn.on("pointerup", this.onSaveHandler, this);
-        this.mDoorBtn.on("pointerup", this.onGetDoorHandler, this);
     }
 
     private onExitHandler() {

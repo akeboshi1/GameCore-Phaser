@@ -18,6 +18,7 @@ export class ChatPanelPC extends BaseChatPanel {
     private mPreHei: number = 0;
     private mPreWid: number = 0;
     private outPut: Phaser.GameObjects.Container;
+    private sendMsgBtn: NinePatchButton;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setTween(false);
@@ -63,16 +64,23 @@ export class ChatPanelPC extends BaseChatPanel {
         }
     }
 
+    public addListen() {
+        this.sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
+        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+        this.mInputText.on("focus", this.onFocusHandler, this);
+        this.mInputText.on("blur", this.onBlurHandler, this);
+    }
+
+    public removeListen() {
+        this.sendMsgBtn.off("pointerdown", this.onSendMsgHandler, this);
+        this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.off("selected", this.onSelectedMicHandler, this);
+        this.mInputText.off("focus", this.onFocusHandler, this);
+        this.mInputText.off("blur", this.onBlurHandler, this);
+    }
+
     public destroy() {
-        if (this.mTextArea) this.mTextArea.destroy();
-        if (this.mInputText) this.mInputText.destroy();
-        if (this.mVoiceBtn) this.mVoiceBtn.destroy();
-        if (this.mMicBtn) this.mMicBtn.destroy();
-        this.mTextArea = null;
-        this.mInputText = null;
-        this.mVoiceBtn = null;
-        this.mMicBtn = null;
-        this.mSendKey = null;
         super.destroy();
     }
 
@@ -92,7 +100,6 @@ export class ChatPanelPC extends BaseChatPanel {
 
     protected init() {
         if (this.mInitialized) return;
-        super.init();
         const size = this.mWorld.getSize();
         this.mWidth = 464;
         this.mHeight = 281;
@@ -179,23 +186,20 @@ export class ChatPanelPC extends BaseChatPanel {
         })
             .resize(360, 20)
             .setOrigin(0, 0)
-            .setStyle({ font: "bold 16px YaHei" })
-            .on("focus", this.onFocusHandler, this)
-            .on("blur", this.onBlurHandler, this);
+            .setStyle({ font: "bold 16px YaHei" });
         this.mInputText.x = 12 * this.mWorld.uiScale;
         this.mInputText.y = size.height - 40 * this.mWorld.uiScale;
         inputContainer.add(this.mInputText);
 
-        const sendMsgBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, "button", "", "发送", {
+        this.sendMsgBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, "button", "", "发送", {
             left: 4,
             top: 4,
             right: 4,
             bottom: 4
         });
-        sendMsgBtn.x = this.width - sendMsgBtn.width + 10 * this.mWorld.uiScale;
-        sendMsgBtn.y = size.height - sendMsgBtn.height;
-        sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
-        this.add(sendMsgBtn);
+        this.sendMsgBtn.x = this.width - this.sendMsgBtn.width + 10 * this.mWorld.uiScale;
+        this.sendMsgBtn.y = size.height - this.sendMsgBtn.height;
+        this.add(this.sendMsgBtn);
 
         this.mSendKey = this.mScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
@@ -209,9 +213,8 @@ export class ChatPanelPC extends BaseChatPanel {
         this.mMicBtn.y = size.height - this.height;
         this.add(this.mMicBtn);
 
-        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
-        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
         this.setLocation();
+        super.init();
     }
 
     private onSelectedVoiceHandler(val: boolean) {

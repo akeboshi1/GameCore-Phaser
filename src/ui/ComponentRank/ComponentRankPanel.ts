@@ -9,6 +9,14 @@ export class ComponentRankPanel extends BasicRankPanel {
         super(scene, worldService);
     }
 
+    public addListen() {
+        this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    }
+
+    public removeListen() {
+        this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    }
+
     resize(wid: number, hei: number) {
         if (!this.scene) return;
         const view = this.scene.cameras.main.worldView;
@@ -42,7 +50,6 @@ export class ComponentRankPanel extends BasicRankPanel {
         super.init();
         this.add(this.mCloseBtn);
         this.mCloseBtn.setInteractive();
-        this.mCloseBtn.once("pointerup", this.onCloseHandler, this);
         (this.mWorld.uiManager.getMediator(ComponentRankMediator.NAME) as ComponentRankMediator).resize();
         this.mCloseBtn.x = this.width - 18;
     }

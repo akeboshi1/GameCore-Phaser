@@ -30,19 +30,6 @@ export class PicaChatPanel extends BasePanel {
         this.mScale = this.mWorld.uiScaleNew;
     }
 
-    show() {
-        super.show();
-        if (this.mInitialized) {
-            this.addActionListener();
-        }
-    }
-
-    close() {
-        if (this.mInitialized) {
-            this.removeActionListener();
-        }
-    }
-
     resize(w: number, h: number) {
         const zoom = this.mScale;
         const width = this.scene.cameras.main.width;
@@ -77,6 +64,38 @@ export class PicaChatPanel extends BasePanel {
             this.mTextArea.appendText(val);
             this.mTextArea.scrollToBottom();
         }
+    }
+
+    public addListen() {
+        // this.mBackground.setInteractive();
+        this.mChatBtn.setInteractive();
+        this.mEmojiBtn.setInteractive();
+        this.mScrollBtn.setInteractive();
+        this.mNavigateBtn.setInteractive();
+        this.mTextArea.childrenMap.child.setInteractive();
+
+        this.scene.input.setDraggable(this.mScrollBtn, true);
+        this.mScrollBtn.on("drag", this.onDragHandler, this);
+        this.mChatBtn.on("pointerup", this.onChatHandler, this);
+        this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
+
+        this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
+    }
+
+    public removeListen() {
+        this.mBackground.disableInteractive();
+        this.mChatBtn.disableInteractive();
+        this.mEmojiBtn.disableInteractive();
+        this.mScrollBtn.disableInteractive();
+        this.mNavigateBtn.disableInteractive();
+        this.mTextArea.childrenMap.child.disableInteractive();
+
+        // this.scene.input.setDraggable(this.mScrollBtn, false);
+        this.mScrollBtn.off("drag", this.onDragHandler, this);
+        this.mChatBtn.off("pointerup", this.onChatHandler, this);
+        this.resize(this.width, this.height);
+
+        this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
     }
 
     protected preload() {
@@ -225,39 +244,6 @@ export class PicaChatPanel extends BasePanel {
         this.appendChat("[color=#66ffff][喇叭]。用户在游戏内游玩时，使用该道具，经验值收益为4倍增长，时间上限为4h[/color]\n");
         this.appendChat("[color=#ffff00]等级提升为6级[/color]\n");
     }
-
-    private addActionListener() {
-        // this.mBackground.setInteractive();
-        this.mChatBtn.setInteractive();
-        this.mEmojiBtn.setInteractive();
-        this.mScrollBtn.setInteractive();
-        this.mNavigateBtn.setInteractive();
-        this.mTextArea.childrenMap.child.setInteractive();
-
-        this.scene.input.setDraggable(this.mScrollBtn, true);
-        this.mScrollBtn.on("drag", this.onDragHandler, this);
-        this.mChatBtn.on("pointerup", this.onChatHandler, this);
-        this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
-
-        this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
-    }
-
-    private removeActionListener() {
-        this.mBackground.disableInteractive();
-        this.mChatBtn.disableInteractive();
-        this.mEmojiBtn.disableInteractive();
-        this.mScrollBtn.disableInteractive();
-        this.mNavigateBtn.disableInteractive();
-        this.mTextArea.childrenMap.child.disableInteractive();
-
-        // this.scene.input.setDraggable(this.mScrollBtn, false);
-        this.mScrollBtn.off("drag", this.onDragHandler, this);
-        this.mChatBtn.off("pointerup", this.onChatHandler, this);
-        this.resize(this.width, this.height);
-
-        this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
-    }
-
     private onChatHandler() { }
 
     private onDragHandler(pointer, dragX, dragY) {

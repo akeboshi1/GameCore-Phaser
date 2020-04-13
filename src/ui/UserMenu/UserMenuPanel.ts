@@ -22,14 +22,24 @@ export class UserMenuPanel extends BasePanel {
         this.addItem(param);
         this.x = this.scene.input.activePointer.x + 32;
         this.y = this.scene.input.activePointer.y + 32;
-        this.scene.input.on("gameobjectdown", this.onClickMenu, this);
+        // this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     }
 
     hide() {
-        this.scene.input.off("gameobjectdown", this.onClickMenu, this);
+        // this.scene.input.off("gameobjectdown", this.onClickMenu, this);
         this.removeInteractive();
         this.clear();
         super.hide();
+    }
+
+    public addListen() {
+        super.addListen();
+        this.on("panelClick", this.onClickMenu, this);
+    }
+
+    public removeListen() {
+        super.removeListen();
+        this.off("panelClick", this.onClickMenu, this);
     }
 
     setSize(width: number, height: number): this {

@@ -20,6 +20,16 @@ export class DebugLogger extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
+    public addListen() {
+        if (!this.mWorld.game.device.os.desktop) {
+            this.mClsBtn.on("pointerup", this.closeHandler, this);
+        }
+    }
+    public removeListen() {
+        if (!this.mWorld.game.device.os.desktop) {
+            this.mClsBtn.off("pointerup", this.closeHandler, this);
+        }
+    }
     public show(param?: any) {
         if (!this.mInitialized) {
             this.preload();
@@ -57,18 +67,18 @@ export class DebugLogger extends BasePanel {
         }
     }
     public destroy() {
-        if (this.mBackground) {
-            this.mBackground.destroy();
-        }
-        if (this.mDescTF) {
-            this.mDescTF.destroy();
-        }
-        this.mDescTxt = "";
-        this.mBackground = null;
-        this.mDescTF = null;
-        this.mBgWidth = 0;
-        this.mBgHeight = 0;
-        this.mDelay = 0;
+        // if (this.mBackground) {
+        //     this.mBackground.destroy();
+        // }
+        // if (this.mDescTF) {
+        //     this.mDescTF.destroy();
+        // }
+        // this.mDescTxt = "";
+        // this.mBackground = null;
+        // this.mDescTF = null;
+        // this.mBgWidth = 0;
+        // this.mBgHeight = 0;
+        // this.mDelay = 0;
         super.destroy();
     }
 
@@ -129,7 +139,6 @@ export class DebugLogger extends BasePanel {
             this.mClsBtn.x = this.width / 2 - 35;
             this.mClsBtn.y = -this.height / 2;
             this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-            this.mClsBtn.on("pointerup", this.closeHandler, this);
             this.add(this.mClsBtn);
         }
         super.init();

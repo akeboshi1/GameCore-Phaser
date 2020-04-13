@@ -10,15 +10,21 @@ export class ControlFPanel extends BasePanel {
         this.setTween(false);
     }
 
+    public addListen() {
+        super.addListen();
+        this.on("pointerdown", this.onMouseDownHandler, this);
+    }
+
+    public removeListen() {
+        this.removeListen();
+        this.off("pointerdown", this.onMouseDownHandler, this);
+    }
+
     show(param?: any) {
         super.show(param);
-        this.on("pointerdown", this.onMouseDownHandler, this);
-        this.on("pointerup", this.onMouseUpHandler, this);
     }
 
     hide() {
-        this.off("pointerdown", this.onMouseDownHandler, this);
-        this.off("pointerup", this.onMouseUpHandler, this);
         super.hide();
     }
 
