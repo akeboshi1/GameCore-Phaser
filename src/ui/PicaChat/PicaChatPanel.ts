@@ -65,6 +65,9 @@ export class PicaChatPanel extends BasePanel {
             this.mTextArea.scrollToBottom();
         }
     }
+    public hide() {
+        this.mShowing = false;
+    }
 
     public addListen() {
         // this.mBackground.setInteractive();
@@ -93,7 +96,7 @@ export class PicaChatPanel extends BasePanel {
         // this.scene.input.setDraggable(this.mScrollBtn, false);
         this.mScrollBtn.off("drag", this.onDragHandler, this);
         this.mChatBtn.off("pointerup", this.onChatHandler, this);
-        this.resize(this.width, this.height);
+        // this.resize(this.width, this.height);
 
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
     }

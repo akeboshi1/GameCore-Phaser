@@ -45,6 +45,10 @@ export class PicaNavigatePanel extends BasePanel {
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
+  public hide() {
+    this.mShowing = false;
+  }
+
   protected preload() {
     this.addAtlas(this.key, "pica_navigate/pica_navigate.png", "pica_navigate/pica_navigate.json");
     super.preload();

@@ -63,6 +63,7 @@ export class PicaChatMediator extends BaseMediator {
         const mediator = uiManager.getMediator(PicaNavigateMediator.name);
         if (mediator) {
             mediator.show();
+            this.mView.hide();
             this.mView.removeListen();
             this.layerManager.removeToUILayer(this.mView);
         }
