@@ -42,7 +42,7 @@
     "i18next-xhr-backend": "^3.2.2",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
     "phaser": "3.19.0",
-    "pixelpai_proto": "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#a53d6bbf4af169d83ef2e107b3ad405efced4ae8",
+    "pixelpai_proto": "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript",
     "simple-sha1": "^3.0.1"
   }
 }
