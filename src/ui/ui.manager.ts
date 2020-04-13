@@ -25,6 +25,7 @@ import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 import { MineSettleMediator } from "./Mine/Settle/MineSettleMediator";
+import { MineCarMediator } from "./MineCar/MineCarMediator";
 
 export const enum UIType {
     NoneUIType,
@@ -120,6 +121,7 @@ export class UiManager extends PacketHandler {
             if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
+            // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
 
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
