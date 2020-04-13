@@ -145,8 +145,8 @@ export class MineCarPanel extends BasePanel {
       x: 0,
       y: 16 * this.dpr,
       table: {
-        width: 190 * this.dpr * zoom,
-        height: 190 * this.dpr * zoom,
+        width: 70 * this.dpr * zoom,
+        height: 70 * this.dpr * zoom,
         columns: 5,
         cellWidth: capW,
         cellHeight: capH,

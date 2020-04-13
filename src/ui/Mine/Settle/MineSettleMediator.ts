@@ -2,7 +2,7 @@ import { BaseMediator } from "../../baseMediator";
 import { ILayerManager } from "../../layer.manager";
 import { WorldService } from "../../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
 
 export class MineSettleMediator extends BaseMediator {
@@ -32,7 +32,7 @@ export class MineSettleMediator extends BaseMediator {
     }
 
     isSceneUI() {
-        return false;
+        return true;
     }
 
     destroy() {
