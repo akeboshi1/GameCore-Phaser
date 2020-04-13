@@ -21,14 +21,10 @@ export class MineSettlePanel extends BasePanel {
         this.x = width / 2;
         this.y = height / 2;
         this.mPropGrid.x = this.x;
-        this.mPropGrid.y = this.y ;// + 16 * this.dpr;
+        this.mPropGrid.y = this.y;// + 16 * this.dpr;
         this.mPropGrid.layout();
-        const zoom = this.mWorld.uiScaleNew;
-        // const attributesMask = this.mPropGrid.childrenMap.table;
-        // attributesMask.x = -this.width / 2 + 30 * this.dpr * zoom;
-        // attributesMask.y = 5 * this.dpr * zoom;
-        // this.mPropContainer.x = -this.x;
-        // this.mPropContainer.y = -this.y; // + 8 * this.dpr;
+        this.mPropContainer.x = -this.x;
+        this.mPropContainer.y = -this.y; // + 8 * this.dpr;
         this.setSize(width, height);
     }
 
@@ -59,21 +55,21 @@ export class MineSettlePanel extends BasePanel {
         this.mPropGrid = new GridTable(this.scene, {
             x: 0,
             y: 0,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+           // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 260 * this.dpr,
                 height: 260 * this.dpr,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
-                reuseCellContainer: true,
+                // reuseCellContainer: true,
             },
             clamplChildOY: true,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new MineSettleItem(scene);
-                    this.add(cellContainer);
+                    this.mPropContainer.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item, this.dpr);
@@ -89,7 +85,6 @@ export class MineSettlePanel extends BasePanel {
                 this.onSelectItemHandler(data);
             }
         });
-        this.scene.add.existing(this.mPropGrid);
         this.confirmBtn = new NinePatchButton(this.scene, 0, 120 * this.dpr, 100 * this.dpr, 40 * this.dpr, this.key, "button", "存入背包", {
             left: 20,
             top: 20,
@@ -162,7 +157,8 @@ class MineSettleItem extends Phaser.GameObjects.Container {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false);
-        this.itemCount.setOrigin(0.5, 0);
+        this.itemCount.setOrigin(0, 0);
+        this.icon.setOrigin(0, 0);
         this.itemCount.setPosition(0, this.icon.height);
         this.add(this.icon);
         this.add(this.itemCount);
