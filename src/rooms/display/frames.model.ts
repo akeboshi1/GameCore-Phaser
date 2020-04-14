@@ -114,7 +114,7 @@ export class FramesModel implements IFramesModel {
 
     public getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined {
         const ani = this.getAnimations(aniName);
-        return ani.interactiveArea;
+        return ani ? ani.interactiveArea : undefined;
     }
 
     public getOriginPoint(aniName, flip: boolean = false): Phaser.Geom.Point {
