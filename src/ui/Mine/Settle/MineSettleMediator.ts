@@ -4,6 +4,7 @@ import { WorldService } from "../../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
+import { Logger } from "../../../utils/log";
 
 export class MineSettleMediator extends BaseMediator {
     private scene: Phaser.Scene;

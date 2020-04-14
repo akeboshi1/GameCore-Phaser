@@ -1,6 +1,6 @@
 import { Logger } from "../../utils/log";
-import { DragonbonesAnimation } from "../Animation/dragonbones.animation";
-import { FrameAnimation } from "../Animation/frame.animation";
+import { DragonbonesAnimation } from "../../rooms/Animation/dragonbones.animation";
+import { FrameAnimation } from "../../rooms/Animation/frame.animation";
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
 

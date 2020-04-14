@@ -1,54 +1,62 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IRoomService, Room } from "../room";
+import { Room } from "../../rooms/room";
 import { ConnectionService } from "../../net/connection.service";
 import { Logger } from "../../utils/log";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { InteractionBubbleContainer } from "./interactionbubble.container";
 import { Handler } from "../../Handler/Handler";
-import { IElement } from "../element/element";
+import { IElement } from "../../rooms/element/element";
+import { ILayerManager } from "../layer.manager";
+import { WorldService } from "../../game/world.service";
+import { Pos } from "../../utils/pos";
 
 export class InteractiveBubbleManager extends PacketHandler {
-    private mRoom: IRoomService;
     private map = new Map<string, InteractionBubbleContainer>();
     private mBubbleContainer: InteractionBubbleContainer;
-    constructor(mRoom: IRoomService) {
+    private uilayer: ILayerManager;
+    private scene: Phaser.Scene;
+    private mworld: WorldService;
+    constructor(layerMgr: ILayerManager, mworld: WorldService, scene: Phaser.Scene) {
         super();
-        this.mRoom = mRoom;
+        this.uilayer = layerMgr;
+        this.mworld = mworld;
+        this.scene = scene;
         this.connection.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, this.onInteractiveBubble);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORDL_REQ_CLIENT_REMOVE_INTERACTIVE_BUBBLE, this.onClearInteractiveBubble);
     }
 
     get connection(): ConnectionService {
-        if (this.mRoom) {
-            return this.mRoom.connection;
+        if (this.mworld) {
+            return this.mworld.connection;
         }
         Logger.getInstance().log("roomManager is undefined");
         return;
     }
 
     public destroy() {
-        for (const key in this.map) {
-            const bubble = this.map.get(key);
-            bubble.destroy();
+        if (this.map) {
+            for (const key in this.map) {
+                const bubble = this.map.get(key);
+                bubble.destroy();
+            }
+            this.map.clear();
         }
-        this.map.clear();
         this.map = null;
         this.mBubbleContainer = null;
-        this.mRoom = null;
+        this.scene = null;
+        this.uilayer = null;
+        this.mworld = null;
     }
 
     private onInteractiveBubble(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE = packet.content;
-        const room = this.mRoom as Room;
+        const room = this.mworld.roomManager.currentRoom;
         let element = room.elementManager.get(content.receiverId);
         if (!element) element = room.playerManager.get(content.receiverId);
         if (element) {
             this.showInteractionBubble(content, element);
-            Logger.getInstance().log("elementelementelementelementelementelementelementelementelementelement");
         }
-
-        Logger.getInstance().log("onInteractiveBubbleonInteractiveBubbleonInteractiveBubbleonInteractiveBubble");
     }
 
     private onClearInteractiveBubble(packet: PBpacket) {
@@ -68,11 +76,6 @@ export class InteractiveBubbleManager extends PacketHandler {
     }
 
     private showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, ele: IElement) {
-        const scene = this.mRoom.scene;
-        if (!scene) {
-            return;
-        }
-        if (!this.mRoom) return;
         content.display["resName"] = "gems";
         content.display.texturePath = "resources/test/columns";
         const key = content.display.texturePath;
@@ -80,27 +83,27 @@ export class InteractiveBubbleManager extends PacketHandler {
         if (this.map.has(key)) {
             this.mBubbleContainer = this.map.get(key);
         } else {
-            this.mBubbleContainer = new InteractionBubbleContainer(this.mRoom.scene);
+            this.mBubbleContainer = new InteractionBubbleContainer(this.scene);
             this.map.set(key, this.mBubbleContainer);
         }
         this.mBubbleContainer.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
-        const position = ele.getPosition();
+        const position = ele.getDisplay().getWorldTransformMatrix();
         if (position) {
-            const ration = this.mRoom.world.scaleRatio;
-            this.mBubbleContainer.setPosition(position.x * ration, (position.y - 100) * ration, position.z * ration);
+            const uiRatio = 0;// this.mworld.uiRatio;
+            Logger.getInstance().log(position.tx * uiRatio, (position.ty - 100) * uiRatio);
+            this.mBubbleContainer.setPosition(position.tx * uiRatio, (position.ty - 100) * uiRatio);
         }
-        this.mRoom.addToSceneUI(this.mBubbleContainer);
-        Logger.getInstance().log("reciver: ",content.id);
+        this.uilayer.addToDialogLayer(this.mBubbleContainer);
     }
 
     private onInteractiveBubbleHandler(data: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
-        const connection = this.mRoom.connection;
+        const connection = this.connection;
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE);
         const content: op_virtual_world.OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE = packet.content;
         content.id = data.id;
         //  content.receiverId = data.receiverId;
         connection.send(packet);
         Logger.getInstance().log("*******************onInteractiveBubbleHandler");
-        Logger.getInstance().log("click: ",content.id);
+        Logger.getInstance().log("click: ", content.id);
     }
 }
