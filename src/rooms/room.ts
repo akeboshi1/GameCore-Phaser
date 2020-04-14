@@ -641,14 +641,19 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
 
+        const step = moveData.step;
+        if (step >= pos.length) {
+            return;
+        }
+
         const playerPosition = player.getPosition();
         const position = op_def.PBPoint3f.create();
         position.x = playerPosition.x;
         position.y = playerPosition.y;
 
         const nextPosition = op_def.PBPoint3f.create();
-        nextPosition.x = pos[0].x;
-        nextPosition.y = pos[0].y;
+        nextPosition.x = pos[step].x;
+        nextPosition.y = pos[step].y;
 
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
         const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;

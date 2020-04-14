@@ -1,4 +1,4 @@
-import { Element, PlayerState } from "../element/element";
+import { Element, PlayerState, MovePath } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
@@ -76,6 +76,8 @@ export class Player extends Element {
             index++;
         }
         this.mMoveData.posPath = paths;
+        this.mMoveData.onCompleteParams = paths[paths.length - 1];
+        this.mMoveData.onComplete = this.mMovePathPointFinished;
         this._doMove();
     }
 
@@ -135,19 +137,55 @@ export class Player extends Element {
 
     protected onMoveStart() {
         this.changeState(PlayerState.WALK);
+        if (this.mMoveData) {
+            this.mMoveData.step = 0;
+        }
+        super.onMoveStart();
     }
 
     protected onMoveComplete() {
+        if (this.mMoveData && this.mMoveData.posPath) {
+            const complete = this.mMoveData.onComplete;
+            if (complete) {
+                complete.call(this, this.mMoveData.onCompleteParams);
+                delete this.mMoveData.onComplete;
+                delete this.mMoveData.onCompleteParams;
+            }
+        }
         super.onMoveComplete();
         this.changeState(PlayerState.IDLE);
     }
 
     protected onMovePathPointComplete(params) {
-        if (!this.mMoveData.posPath) {
+        if (!this.mMoveData) {
             return;
         }
-        const posPath = this.mMoveData.posPath;
-        posPath.shift();
+        this.mMoveData.step += 1;
+        // if (!this.mMoveData.posPath) {
+        //     return;
+        // }
+        // const posPath = this.mMoveData.posPath;
+        // posPath.shift();
+    }
+
+    protected mMovePathPointFinished(path: MovePath) {
+        if (!path || !this.mRoomService) {
+            return;
+        }
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = pkt.content;
+        const currentPoint = op_def.PBPoint3f.create();
+        currentPoint.x = this.mDisplay.x;
+        currentPoint.y = this.mDisplay.y;
+        currentPoint.z = this.mDisplay.z;
+
+        const targetPoint = op_def.PBPoint3f.create();
+        targetPoint.x = path.x;
+        targetPoint.y = path.y;
+        content.currentPoint = currentPoint;
+        content.lastTargetPoint = targetPoint;
+        content.timestemp = this.mRoomService.world.clock.unixTime;
+        this.mRoomService.connection.send(pkt);
     }
 
     protected get offsetY(): number {

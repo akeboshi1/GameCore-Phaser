@@ -86,6 +86,9 @@ export interface MoveData {
     tweenAnim?: Tweens.Tween;
     tweenLineAnim?: Tweens.Timeline;
     tweenLastUpdate?: number;
+    onCompleteParams?: any;
+    onComplete?: Function;
+    step?: number;
 }
 
 export interface MovePath {

@@ -161,6 +161,15 @@ export class Actor extends Player implements InputListener {
     }
 
     protected onMoveComplete() {
+        if (this.mMoveData && this.mMoveData.posPath) {
+            // TODO Player中也有这段逻辑，需要抽出来
+            const complete = this.mMoveData.onComplete;
+            if (complete) {
+                if (this.mMoveData.posPath.length >= this.mMoveData.step - 1) {
+                    complete.call(this, this.mMoveData.posPath[this.mMoveData.step - 1]);
+                }
+            }
+        }
         if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
