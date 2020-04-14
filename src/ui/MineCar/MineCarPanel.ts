@@ -22,6 +22,7 @@ export class MineCarPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
+    this.scale = 1;
   }
 
   resize(width: number, height: number) {
@@ -33,13 +34,12 @@ export class MineCarPanel extends BasePanel {
     this.mMask.fillStyle(0x000000, 0.6);
     this.mMask.fillRect(-width / 2, -height / 2, width, height);
     this.mMask.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
-    // this.mPanel.y = -
 
     this.mPropGrid.x = this.x;
-    this.mPropGrid.y = this.y + 16 * this.dpr;
+    this.mPropGrid.y = this.y + 16 * this.dpr * this.mWorld.uiScaleNew;
     this.mPropGrid.layout();
-    this.mPropContainer.x = -this.x;
-    this.mPropContainer.y = -this.y; // + 8 * this.dpr;
+    this.mPropContainer.x = -this.mPropGrid.x;
+    this.mPropContainer.y = -this.mPropGrid.y;
 
     this.setSize(width, height);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
@@ -53,13 +53,21 @@ export class MineCarPanel extends BasePanel {
       { key: "化石", value: "化石" },
       { key: "杂物", value: "杂物" }];
     const items = [];
-    const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width;
+    const zoom = this.mWorld.uiScaleNew;
+    const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
     const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
+    const style = {
+      fontFamily: Font.DEFULT_FONT,
+      fontSize: 8 * this.dpr * zoom,
+      color: "#566ddb"
+    };
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new Button(this.scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", subcategorys[i].value);
-      item.x = i * (item.width + gap * this.dpr) + item.width / 2;
-      item.y = (this.mCategorieContainer.height - item.height) / 2;
-      item.setTextColor("#566ddb");
+      item.setScale(zoom);
+      item.setTextStyle(style);
+      item.setFontStyle("bold");
+      item.x = i * (item.displayWidth + gap * this.dpr) + item.displayWidth / 2 - this.mCategorieContainer.width / 2;
+      item.y = (this.mCategorieContainer.height - item.displayHeight) / 2;
       items.push(item);
     }
 
@@ -97,57 +105,57 @@ export class MineCarPanel extends BasePanel {
   protected init() {
     this.mPanel = this.scene.make.container(undefined, false);
     this.mMask = this.scene.make.graphics(undefined, false);
+    const zoom = this.mWorld.uiScaleNew;
 
     const bg = this.scene.make.image({
       key: this.key,
       frame: "bg.png"
-    });
-    this.mPanel.setSize(bg.width, bg.height);
+    }).setScale(zoom);
+    this.mPanel.setSize(bg.displayWidth, bg.displayHeight);
 
     this.mCloseBtn = this.scene.make.image({
-      x: 110 * this.dpr,
-      y: -125 * this.dpr,
+      x: 110 * this.dpr * zoom,
+      y: -125 * this.dpr * zoom,
       key: this.key,
       frame: "close_btn.png"
-    }, false);
+    }, false).setScale(zoom);
 
     this.mCounter = this.scene.make.text({
-      x: -86 * this.dpr,
-      y: bg.height / 2 - 23 * this.dpr,
+      x: -86 * this.dpr * zoom,
+      y: bg.displayHeight / 2 - 23 * this.dpr * zoom,
       text: "25/50",
       style: {
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFFFF",
         fontSize: 14 * this.dpr
       }
-    }, false);
+    }, false).setScale(zoom);
 
-    this.mTips = new Tips(this.scene, this.key, this.dpr, this.scale);
-    this.mTips.x = 40 * this.dpr;// - this.mTips.width / 2;
-    this.mTips.y = -130 * this.dpr - this.mTips.height / 2;
+    this.mTips = new Tips(this.scene, this.key, this.dpr, zoom);
+    this.mTips.scale = zoom;
+    this.mTips.x = 40 * this.dpr * zoom;// - this.mTips.width / 2;
+    this.mTips.y = -130 * this.dpr * zoom - this.mTips.height / 2;
 
     this.mCategorieContainer = this.scene.make.container(undefined, false);
     const categoriesBg = this.scene.make.image({
       key: this.key,
       frame: "nav_bg.png"
-    });
-    categoriesBg.y = -111 * this.dpr + categoriesBg.height / 2;
-    this.mCategorieContainer.setSize(categoriesBg.width * this.scale, categoriesBg.height * this.scale);
-    this.mCategorieContainer.x = -categoriesBg.width / 2;
+    }).setScale(zoom);
+    categoriesBg.y = -111 * this.dpr * zoom + categoriesBg.height * zoom / 2;
+    this.mCategorieContainer.setSize(categoriesBg.displayWidth, categoriesBg.displayHeight);
+    // this.mCategorieContainer.x = -categoriesBg.width / 2;
     this.mCategorieContainer.y = categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
-    const capW = (propFrame.width + 4 * this.dpr);
-    const capH = (propFrame.height + 4 * this.dpr);
+    const capW = propFrame.width * zoom + 3 * this.dpr;
+    const capH = propFrame.height * zoom + 3 * this.dpr;
     const w = this.scene.cameras.main.width;
-    const zoom = this.scale;
+    const gridW = 190 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
-      x: 0,
-      y: 16 * this.dpr,
       table: {
-        width: 70 * this.dpr * zoom,
-        height: 70 * this.dpr * zoom,
+        width: gridW,
+        height: 190 * this.dpr * zoom,
         columns: 5,
         cellWidth: capW,
         cellHeight: capH,
@@ -158,7 +166,7 @@ export class MineCarPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new Item(scene, this.key, this.dpr);
+          cellContainer = new Item(scene, this.key, this.dpr, zoom);
           this.mPropContainer.add(cellContainer);
         }
         cellContainer.setData({ item });
@@ -178,7 +186,7 @@ export class MineCarPanel extends BasePanel {
       y: this.mCounter.y,
       key: this.key,
       frame: "help.png"
-    }, false).setOrigin(0);
+    }, false).setOrigin(0).setScale(zoom);
 
     this.add(this.mPanel);
     this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mTips, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mHelpBtn]);
@@ -207,23 +215,23 @@ class Item extends Phaser.GameObjects.Container {
   private mItem: DynamicImage;
   private mCounter: Phaser.GameObjects.Text;
   private mLockImg: Phaser.GameObjects.Image;
-  constructor(scene: Phaser.Scene, key: string, dpr: number) {
+  constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
     super(scene);
 
     const border = this.scene.make.image({
       key,
       frame: "item_boder.png"
-    }, false).setOrigin(0);
-    this.setSize(border.width, border.height);
+    }, false).setOrigin(0).setScale(zoom);
+    this.setSize(border.width * zoom, border.height * zoom);
 
     this.mItem = new DynamicImage(this.scene, 0, 0);
 
     this.mLockImg = this.scene.make.image({
-      x: border.width / 2,
-      y: border.height / 2,
+      x: border.width * zoom / 2,
+      y: border.height * zoom / 2,
       key,
       frame: "lock.png"
-    }, false);
+    }, false).setScale(zoom);
     this.add([border, this.mItem]);
   }
 

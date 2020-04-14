@@ -3,7 +3,7 @@ import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../utils/size";
 import { Url } from "../../../utils/resUtil";
 import { IconBtn, IBtnData } from "../icon.btn";
-import { DebugLoggerMediator } from "../../debuglog/debug.logger.mediator";
+import { DebugLoggerMediator } from "../../DebugLogger/DebugLoggerMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
 
 export class TopBtnGroup extends BasePanel {
@@ -164,7 +164,7 @@ export class TopBtnGroup extends BasePanel {
             this.mDebugBtn.setClick(() => {
                 let debugLogMed: DebugLoggerMediator = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
                 if (!debugLogMed) {
-                    this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mScene, this.mWorld));
+                    this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mWorld.uiManager.getUILayerManager(), this.mScene, this.mWorld));
                     debugLogMed = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
                 }
                 if (debugLogMed.isShow()) {

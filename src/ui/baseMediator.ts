@@ -6,7 +6,6 @@ import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstract
 
 export interface IMediator {
     readonly world: WorldService;
-    setUiScale(val: number);
     isSceneUI(): boolean;
     isShow(): boolean;
     showing(): boolean;
@@ -38,10 +37,6 @@ export class BaseMediator implements IMediator {
     }
 
     tweenView(show: boolean) {
-    }
-
-    setUiScale(value: number) {
-        if (this.mView) this.mView.scaleX = this.mView.scaleY = value;
     }
 
     setViewAdd(wid: number, hei: number) {
@@ -83,7 +78,7 @@ export class BaseMediator implements IMediator {
 
     show(param?: any): void {
         this.isShowing = true;
-        this.setUiScale(this.world.uiScale);
+        // this.setUiScale(this.world.uiScale);
     }
 
     update(param?: any): void {
@@ -111,6 +106,6 @@ export class BaseMediator implements IMediator {
     }
 
     protected scaleChange() {
-        this.setUiScale(this.world.uiScale);
+        // this.setUiScale(this.world.uiScale);
     }
 }
