@@ -1,4 +1,17 @@
+import { Pos } from "./pos";
+
 export class Tool {
+    /**
+     * scene之间坐标转换
+     * @param fromScene 当前所在scene
+     * @param pos 需要转换去scene上的position
+     */
+    public static getPosByScenes(fromScene: Phaser.Scene, pos: Pos): Pos {
+        const camera = fromScene.cameras.main;
+        const px = pos.x - camera.scrollX;
+        const py = pos.y - camera.scrollY;
+        return new Pos(px, py);
+    }
     /*
     * 两点之间距离公式
     */

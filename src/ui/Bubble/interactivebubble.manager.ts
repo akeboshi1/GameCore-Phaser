@@ -9,6 +9,8 @@ import { IElement } from "../../rooms/element/element";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { Pos } from "../../utils/pos";
+import { PlayScene } from "../../scenes/play";
+import { Tool } from "../../utils/tool";
 
 export class InteractiveBubbleManager extends PacketHandler {
     private map = new Map<string, InteractionBubbleContainer>();
@@ -89,9 +91,10 @@ export class InteractiveBubbleManager extends PacketHandler {
         this.mBubbleContainer.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
         const position = ele.getDisplay().getWorldTransformMatrix();
         if (position) {
-            const uiRatio = 0;// this.mworld.uiRatio;
-            Logger.getInstance().log(position.tx * uiRatio, (position.ty - 100) * uiRatio);
-            this.mBubbleContainer.setPosition(position.tx * uiRatio, (position.ty - 100) * uiRatio);
+            const uiRatio = 1;// this.mworld.uiRatio;
+            const playScene = this.mworld.game.scene.getScene(PlayScene.name);
+            const pos = Tool.getPosByScenes(playScene, new Pos(position.tx * uiRatio, (position.ty - 100) * uiRatio));
+            this.mBubbleContainer.setPosition(pos.x, pos.y); // position.tx * uiRatio, (position.ty - 100) * uiRatio);
         }
         this.uilayer.addToDialogLayer(this.mBubbleContainer);
     }
