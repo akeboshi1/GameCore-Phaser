@@ -6,7 +6,6 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../../components/BasePanel";
 import { NinePatch } from "../../components/nine.patch";
 import { NinePatchButton } from "../../components/ninepatch.button";
-import { Logger } from "../../../utils/log";
 export class MineSettlePanel extends BasePanel {
 
     private key: string = "mine_settle";
@@ -22,9 +21,9 @@ export class MineSettlePanel extends BasePanel {
         this.x = width / 2;
         this.y = height / 2;
         this.mPropGrid.x = this.x;
-        this.mPropGrid.y = this.y - 16 * this.dpr;
+        this.mPropGrid.y = this.y - 30 * this.dpr;
         this.mPropGrid.layout();
-        this.mPropContainer.x = -this.x;
+        this.mPropContainer.x = -this.x + 8 * this.dpr;
         this.mPropContainer.y = -this.y; // + 8 * this.dpr;
         this.setSize(width, height);
     }
@@ -49,22 +48,22 @@ export class MineSettlePanel extends BasePanel {
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
         this.mPropContainer = this.scene.make.container(undefined, false);
+        this.mPropContainer.setSize(300 * this.dpr, 210 * this.dpr);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
         const capW = (propFrame.width + 20 * this.dpr);
         const capH = (propFrame.height + 30 * this.dpr);
         this.mPropGrid = new GridTable(this.scene, {
             x: 0,
             y: 0,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+           // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 260 * this.dpr,
-                height: 200 * this.dpr,
+                height: 210 * this.dpr,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
             },
-            clamplChildOY: true,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -85,7 +84,7 @@ export class MineSettlePanel extends BasePanel {
                 this.onSelectItemHandler(data);
             }
         });
-        this.confirmBtn = new NinePatchButton(this.scene, 0, 120 * this.dpr, 100 * this.dpr, 40 * this.dpr, this.key, "button", "存入背包", {
+        this.confirmBtn = new NinePatchButton(this.scene, 0, 110 * this.dpr, 90 * this.dpr, 40 * this.dpr, this.key, "button", "存入背包", {
             left: 20,
             top: 20,
             right: 20,
@@ -119,11 +118,17 @@ export class MineSettlePanel extends BasePanel {
     }
 
     private onSelectItemHandler(data: op_client.ICountablePackageItem) {
-        Logger.getInstance().log("onSelectItemHandleronSelectItemHandleronSelectItemHandler", data.count);
     }
 
-    private onConfirmBtnClick() {
+    private onConfirmBtnClick(pointer: Phaser.Input.Pointer) {
+        if (!this.checkPointerDis(pointer)) return;
         this.hide();
+    }
+
+    private checkPointerDis(pointer: Phaser.Input.Pointer) {
+        if (!this.mWorld) return true;
+        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew &&
+            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew;
     }
 
     private testData(): op_client.CountablePackageItem[] {
@@ -169,12 +174,10 @@ class MineSettleItem extends Phaser.GameObjects.Container {
         this.itemCount.setFontSize(dpr * 14);
         this.itemCount.text = data.count + "";
         const url = data.display.texturePath;
-        Logger.getInstance().log("setItemData",data);
         this.icon.load(url, this, () => {
             this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
             this.icon.setPosition(0, 3 * this.dpr);
-            this.itemCount.setPosition(this.icon.width * 0.5, this.icon.x + this.icon.height + 6 * this.dpr);
-            Logger.getInstance().log("datadatadata",data);
+            this.itemCount.setPosition(this.icon.displayWidth * 0.5, this.icon.x + this.icon.displayHeight + 6 * this.dpr);
         });
     }
     public destroy() {

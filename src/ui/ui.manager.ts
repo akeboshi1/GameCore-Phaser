@@ -26,6 +26,7 @@ import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 import { MineSettleMediator } from "./Mine/Settle/MineSettleMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
+import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
 
 export const enum UIType {
     NoneUIType,
@@ -49,6 +50,7 @@ export class UiManager extends PacketHandler {
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
     private mInputTextFactory: InputTextFactory;
+    private interBubbleMgr: InteractiveBubbleManager;
     constructor(private worldService: WorldService) {
         super();
         this.mConnect = worldService.connection;
@@ -124,6 +126,7 @@ export class UiManager extends PacketHandler {
             // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
             this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, this.worldService));
+            this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService, scene);
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
             for (const tmp of this.mCache) {
