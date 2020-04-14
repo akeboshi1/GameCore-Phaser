@@ -73,6 +73,7 @@ export class Tool {
     }
 
     public static checkPointerContains(gameObject: any, pointer: Phaser.Input.Pointer): boolean {
+        if (!gameObject) return false;
         const left = -gameObject.width / 2;
         const right = gameObject.width / 2;
         const top = -gameObject.height / 2;
