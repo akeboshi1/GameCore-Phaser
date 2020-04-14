@@ -10,8 +10,8 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import { Font } from "../../utils/font";
 import { InfoPanelMediator } from "./InfoPanelMediator";
-import { Size } from "../../utils/size";
 
+const GetValue = Phaser.Utils.Objects.GetValue;
 export class InfoPanel extends BasePanel {
     private mActor: DynamicImage;
     private mCloseBtn: NinePatchButton;
@@ -88,8 +88,12 @@ export class InfoPanel extends BasePanel {
             }
         });
         const text: any[] = data.text;
-        this.mNameTextArea.setText(text[0].text);
-        this.mAttributesTextArea.setText(text[1].text);
+        if (text[0]) {
+            this.mNameTextArea.setText(this.checkValue(text[0]));
+        }
+        if (text[1]) {
+            this.mNameTextArea.setText(this.checkValue(text[1]));
+        }
     }
 
     destroy() {
@@ -213,5 +217,9 @@ export class InfoPanel extends BasePanel {
             return;
         }
         this.mActor.load(url);
+    }
+
+    private checkValue(data: any): any {
+        return GetValue(data, "text", "");
     }
 }

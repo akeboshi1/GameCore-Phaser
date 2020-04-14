@@ -546,9 +546,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onMoveStart() {
+        if (this.mDisplay) this.mDisplay.emit("startMove", this.scene);
     }
 
     protected onMoveComplete() {
+        if (this.mDisplay) this.mDisplay.emit("endMove", this.scene);
         // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
         this.stopMove();
     }
@@ -560,6 +562,7 @@ export class Element extends BlockObject implements IElement {
             this.setDepth(depth);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
+            if (this.mDisplay) this.mDisplay.emit("posChange", this.scene);
             if (this.mBlockable) {
                 this.roomService.updateBlockObject(this);
                 // this.roomService.addBlockObject()
