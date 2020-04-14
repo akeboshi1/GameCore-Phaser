@@ -48,6 +48,7 @@ export class MineSettlePanel extends BasePanel {
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
         this.mPropContainer = this.scene.make.container(undefined, false);
+        this.mPropContainer.setSize(300 * this.dpr, 210 * this.dpr);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
         const capW = (propFrame.width + 20 * this.dpr);
         const capH = (propFrame.height + 30 * this.dpr);
@@ -57,13 +58,12 @@ export class MineSettlePanel extends BasePanel {
            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 260 * this.dpr,
-                height: 200 * this.dpr,
+                height: 210 * this.dpr,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
             },
-            clamplChildOY: true,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -120,8 +120,15 @@ export class MineSettlePanel extends BasePanel {
     private onSelectItemHandler(data: op_client.ICountablePackageItem) {
     }
 
-    private onConfirmBtnClick() {
+    private onConfirmBtnClick(pointer: Phaser.Input.Pointer) {
+        if (!this.checkPointerDis(pointer)) return;
         this.hide();
+    }
+
+    private checkPointerDis(pointer: Phaser.Input.Pointer) {
+        if (!this.mWorld) return true;
+        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew &&
+            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew;
     }
 
     private testData(): op_client.CountablePackageItem[] {

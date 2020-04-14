@@ -88,8 +88,8 @@ export class InfoPanel extends BasePanel {
             }
         });
         const text: any[] = data.text;
-        this.mNameTextArea.appendText(text[0].text);
-        this.mAttributesTextArea.appendText(text[1].text);
+        this.mNameTextArea.setText(text[0].text);
+        this.mAttributesTextArea.setText(text[1].text);
     }
 
     destroy() {
