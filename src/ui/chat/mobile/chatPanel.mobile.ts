@@ -19,6 +19,20 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.setTween(false);
     }
 
+    public addListen() {
+        this.mSendBtn.on("pointerdown", this.onSendMsgHandler, this);
+        this.clickContainer.on("pointerdown", this.clickHandler, this);
+        this.mInputText.on("focus", this.onFocusHandler, this);
+        this.mInputText.on("blur", this.onBlurHandler, this);
+    }
+
+    public removeListen() {
+        this.mSendBtn.off("pointerdown", this.onSendMsgHandler, this);
+        this.clickContainer.off("pointerdown", this.clickHandler, this);
+        this.mInputText.off("focus", this.onFocusHandler, this);
+        this.mInputText.off("blur", this.onBlurHandler, this);
+    }
+
     public appendChat(val: string) {
         if (this.mTextArea) {
             this.mTextArea.appendText(val);
@@ -77,9 +91,9 @@ export class ChatPanelMobile extends BaseChatPanel {
             })
                 .resize(328, 26)
                 .setOrigin(0, 0)
-                .setStyle({ font: "bold 20px YaHei" })
-                .on("focus", this.onFocusHandler, this)
-                .on("blur", this.onBlurHandler, this);
+                .setStyle({ font: "bold 20px YaHei" });
+            // .on("focus", this.onFocusHandler, this)
+            // .on("blur", this.onBlurHandler, this);
         }
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.mWidth = size.width >> 1;
@@ -154,20 +168,20 @@ export class ChatPanelMobile extends BaseChatPanel {
     }
 
     public destroy() {
-        if (this.mSendBtn) this.mSendBtn.destroy(true);
-        if (this.mInputBg) this.mInputBg.destroy(true);
-        if (this.clickContainer) this.clickContainer.destroy(true);
-        if (this.arrow) this.arrow.destroy(true);
-        if (this.mBorder) this.mBorder.destroy(true);
-        if (this.mTextArea) this.mTextArea.destroy();
-        if (this.mInputText) this.mInputText.destroy();
-        this.mTextArea = null;
-        this.mInputText = null;
-        this.mSendBtn = null;
-        this.clickContainer = null;
-        this.arrow = null;
-        this.mBorder = null;
-        this.mInputBg = null;
+        // if (this.mSendBtn) this.mSendBtn.destroy(true);
+        // if (this.mInputBg) this.mInputBg.destroy(true);
+        // if (this.clickContainer) this.clickContainer.destroy(true);
+        // if (this.arrow) this.arrow.destroy(true);
+        // if (this.mBorder) this.mBorder.destroy(true);
+        // if (this.mTextArea) this.mTextArea.destroy();
+        // if (this.mInputText) this.mInputText.destroy();
+        // this.mTextArea = null;
+        // this.mInputText = null;
+        // this.mSendBtn = null;
+        // this.clickContainer = null;
+        // this.arrow = null;
+        // this.mBorder = null;
+        // this.mInputBg = null;
         super.destroy();
     }
 
@@ -279,7 +293,6 @@ export class ChatPanelMobile extends BaseChatPanel {
             .on("blur", this.onBlurHandler, this);
 
         this.mSendBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", WhiteButton.getConfig());
-        this.mSendBtn.on("pointerdown", this.onSendMsgHandler, this);
         this.add(this.mSendBtn);
 
         this.clickContainer = this.mScene.make.container(undefined, false);
@@ -290,7 +303,6 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.clickContainer.add(btnBg);
         this.clickContainer.add(this.arrow);
         this.clickContainer.setInteractive();
-        this.clickContainer.on("pointerdown", this.clickHandler, this);
         this.add(this.clickContainer);
         this.add(this.mInputText);
         this.setLocation();

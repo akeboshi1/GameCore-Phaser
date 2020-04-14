@@ -28,6 +28,14 @@ export class PicaMainUIPanel extends BasePanel {
         super.preload();
     }
 
+    addListen() {
+        this.mSceneName.on("pointerup", this.onEnterEditScene, this);
+    }
+
+    removeListen() {
+        this.mSceneName.off("pointerup", this.onEnterEditScene, this);
+    }
+
     init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
@@ -90,8 +98,6 @@ export class PicaMainUIPanel extends BasePanel {
         this.add(expProgress);
 
         this.resize(w, h);
-
-        this.mSceneName.on("pointerup", this.onEnterEditScene, this);
     }
 
     private onEnterEditScene() {

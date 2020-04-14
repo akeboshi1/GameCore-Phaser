@@ -14,6 +14,22 @@ export class RankPanel extends BasicRankPanel {
         super(scene, world);
     }
 
+    public addListen() {
+        if (!this.mWorld.game.device.os.desktop) {
+            this.mClsBtn.on("pointerup", this.closeHandler, this);
+        } else {
+            this.mZoonInBtn.on("pointerup", this.onZoomHandler, this);
+        }
+    }
+
+    public removeListen() {
+        if (!this.mWorld.game.device.os.desktop) {
+            this.mClsBtn.off("pointerup", this.closeHandler, this);
+        } else {
+            this.mZoonInBtn.off("pointerup", this.onZoomHandler, this);
+        }
+    }
+
     public resize(wid: number = 0, hei: number = 0) {
         if (!this.mWorld) {
             return;
@@ -67,7 +83,7 @@ export class RankPanel extends BasicRankPanel {
             this.mClsBtn.x = this.mWidth / 2 - 35;
             this.mClsBtn.y = -this.mHeight / 2;
             this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-            this.mClsBtn.on("pointerup", this.closeHandler, this);
+            // this.mClsBtn.on("pointerup", this.closeHandler, this);
             this.add(this.mClsBtn);
         } else {
             this.mZoonInBtn = this.scene.make.image({
@@ -78,7 +94,7 @@ export class RankPanel extends BasicRankPanel {
             }, false);
             this.add(this.mZoonInBtn);
             this.mZoonInBtn.setInteractive();
-            this.mZoonInBtn.on("pointerup", this.onZoomHandler, this);
+            // this.mZoonInBtn.on("pointerup", this.onZoomHandler, this);
         }
         this.resize();
     }

@@ -305,7 +305,8 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
-            this.setDepth(p.depth);
+            const depth = p.depth ? p.depth : 0;
+            this.setDepth(depth);
         }
         this.updateBlock();
     }
@@ -504,7 +505,8 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         room.addToSurface(this.mDisplay);
-        this.setDepth(this.model.pos.depth);
+        const depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        this.setDepth(depth);
     }
 
     protected setDepth(depth: number) {
@@ -525,7 +527,8 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) {
             this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
-            this.setDepth(this.model.pos.depth);
+            const depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            this.setDepth(depth);
             // this.mDisplay.showRefernceArea();
         }
     }
@@ -553,7 +556,8 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            this.setDepth(this.model.pos.depth);
+            const depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            this.setDepth(depth);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
             if (this.mBlockable) {

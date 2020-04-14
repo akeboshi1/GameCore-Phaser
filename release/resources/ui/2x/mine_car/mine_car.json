@@ -1,0 +1,195 @@
+{
+	"frames": {
+		"bg.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 447,
+				"h": 589
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 447,
+				"h": 589
+			},
+			"sourceSize": {
+				"w": 447,
+				"h": 589
+			}
+		},
+		"close_btn.png": {
+			"frame": {
+				"x": 450,
+				"y": 1,
+				"w": 49,
+				"h": 49
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 49,
+				"h": 49
+			},
+			"sourceSize": {
+				"w": 49,
+				"h": 49
+			}
+		},
+		"help.png": {
+			"frame": {
+				"x": 501,
+				"y": 1,
+				"w": 31,
+				"h": 32
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 32
+			}
+		},
+		"item_boder.png": {
+			"frame": {
+				"x": 501,
+				"y": 35,
+				"w": 73,
+				"h": 73
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 73,
+				"h": 73
+			},
+			"sourceSize": {
+				"w": 73,
+				"h": 73
+			}
+		},
+		"lock.png": {
+			"frame": {
+				"x": 534,
+				"y": 1,
+				"w": 24,
+				"h": 29
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 24,
+				"h": 29
+			},
+			"sourceSize": {
+				"w": 24,
+				"h": 29
+			}
+		},
+		"nav_bg.png": {
+			"frame": {
+				"x": 576,
+				"y": 1,
+				"w": 410,
+				"h": 50
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 410,
+				"h": 50
+			},
+			"sourceSize": {
+				"w": 410,
+				"h": 50
+			}
+		},
+		"nav_btn_down.png": {
+			"frame": {
+				"x": 576,
+				"y": 53,
+				"w": 73,
+				"h": 45
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 73,
+				"h": 45
+			},
+			"sourceSize": {
+				"w": 73,
+				"h": 45
+			}
+		},
+		"nav_btn_normal.png": {
+			"frame": {
+				"x": 651,
+				"y": 53,
+				"w": 73,
+				"h": 45
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 73,
+				"h": 45
+			},
+			"sourceSize": {
+				"w": 73,
+				"h": 45
+			}
+		},
+		"tips_bg.png": {
+			"frame": {
+				"x": 576,
+				"y": 100,
+				"w": 309,
+				"h": 116
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 309,
+				"h": 116
+			},
+			"sourceSize": {
+				"w": 309,
+				"h": 116
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 987,
+			"h": 591
+		},
+		"scale": "1"
+	}
+}

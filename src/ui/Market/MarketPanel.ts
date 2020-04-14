@@ -39,6 +39,18 @@ export class MarketPanel extends BasePanel {
     this.scale = 1;
   }
 
+  public addListen() {
+    this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
+    this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+  }
+
+  public removeListen() {
+    this.mSelectItem.off("buyItem", this.onBuyItemHandler, this);
+    this.mSelectItem.off("popItemCard", this.onPopItemCardHandler, this);
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+  }
+
   public resize(w: number, h: number) {
     // super.resize(w, h);
     const scale = this.scale;
@@ -253,11 +265,11 @@ export class MarketPanel extends BasePanel {
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
-        const  scene = cell.scene,
-              width = cell.width,
-              height = cell.height,
-              item = cell.item,
-              index = cell.index;
+        const scene = cell.scene,
+          width = cell.width,
+          height = cell.height,
+          item = cell.item,
+          index = cell.index;
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -296,8 +308,8 @@ export class MarketPanel extends BasePanel {
       scrollMode: 1,
       clamplChildOY: true,
       createCellContainerCallback: (cell, cellContainer) => {
-        const  scene = cell.scene,
-              item = cell.item;
+        const scene = cell.scene,
+          item = cell.item;
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -321,12 +333,6 @@ export class MarketPanel extends BasePanel {
     this.resize(0, 0);
 
     this.emit("getCategories");
-    this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
-    this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    // 多层容器嵌套必须把input的点击区域移到中间去，否则点击pointer会有坐标问题
-    // this.input.hitArea.x += this.width / 2;
-    // this.input.hitArea.y += this.height / 2;
   }
 
   protected setSelect() {

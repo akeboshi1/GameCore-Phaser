@@ -14,6 +14,7 @@ export class PicaMessageBoxPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
+    this.setEnabled(false);
   }
 
   show(param) {
@@ -72,6 +73,10 @@ export class PicaMessageBoxPanel extends BasePanel {
     super.resize(w, h);
 
     this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+  }
+
+  public hide() {
+    this.mShowing = false;
   }
 
   protected preload() {

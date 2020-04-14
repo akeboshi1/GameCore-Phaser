@@ -1918,14 +1918,14 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-"game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git":
-  version "1.2.116"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#b38bc2e56cb293abf0584fd499539fc0dd42f82e"
+"game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#master":
+  version "1.2.120"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#2b1489a35aabec250304666187048016d294708a"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
     lodash "^4.17.11"
-    pixelpai_proto "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript"
+    pixelpai_proto "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev"
     protobufjs "^6.8.8"
     treeify "^1.1.0"
 
@@ -3515,8 +3515,14 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript":
-  version "1.0.178"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#fefcb5e7310bb477cc293375ab304589e71652e1"
+  version "1.0.180"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#48db68e392cc952234223bf1e77edcad8daa811a"
+  dependencies:
+    protobufjs "^6.8.8"
+
+"pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
+  version "1.0.177"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#a53d6bbf4af169d83ef2e107b3ad405efced4ae8"
   dependencies:
     protobufjs "^6.8.8"
 

@@ -74,14 +74,14 @@ export class BagGroup extends BasePanel {
         });
     }
     public destroy() {
-        if (this.bagBtn) {
-            this.bagBtn.destroy(true);
-            this.bagBtn = null;
-        }
-        if (this.mBagBg) {
-            this.mBagBg.destroy(true);
-            this.mBagBg = null;
-        }
+        // if (this.bagBtn) {
+        //     this.bagBtn.destroy(true);
+        //     this.bagBtn = null;
+        // }
+        // if (this.mBagBg) {
+        //     this.mBagBg.destroy(true);
+        //     this.mBagBg = null;
+        // }
         if (this.bagSlotList) {
             this.bagSlotList.forEach((slot: ItemSlot) => {
                 if (slot) slot.destroy();
@@ -89,18 +89,18 @@ export class BagGroup extends BasePanel {
             this.bagSlotList.length = 0;
             this.bagSlotList = null;
         }
-        if (this.mSubScriptSprite) {
-            this.mSubScriptSprite.destroy(true);
-            this.mSubScriptSprite = null;
-        }
-        if (this.mBagSelect) {
-            this.mBagSelect.destroy(true);
-            this.mBagSelect = null;
-        }
-        if (this.mBagBtnCon) {
-            this.mBagBtnCon.destroy(true);
-            this.mBagBtnCon = null;
-        }
+        // if (this.mSubScriptSprite) {
+        //     this.mSubScriptSprite.destroy(true);
+        //     this.mSubScriptSprite = null;
+        // }
+        // if (this.mBagSelect) {
+        //     this.mBagSelect.destroy(true);
+        //     this.mBagSelect = null;
+        // }
+        // if (this.mBagBtnCon) {
+        //     this.mBagBtnCon.destroy(true);
+        //     this.mBagBtnCon = null;
+        // }
         this.mShowing = false;
         this.mWid = 0;
         this.mHei = 0;
@@ -111,6 +111,24 @@ export class BagGroup extends BasePanel {
         this.mScene = null;
         this.mWorld = null;
         super.destroy();
+    }
+
+    public addListen() {
+        if (this.bagBtn) {
+            this.bagBtn.setInteractive();
+            this.bagBtn.on("pointerdown", this.bagHandler, this);
+            this.bagBtn.on("pointerover", this.bagBtnOver, this);
+            this.bagBtn.on("pointerout", this.bagBtnOut, this);
+        }
+    }
+
+    public removeListen() {
+        if (this.bagBtn) {
+            this.bagBtn.disableInteractive();
+            this.bagBtn.off("pointerdown", this.bagHandler, this);
+            this.bagBtn.off("pointerover", this.bagBtnOver, this);
+            this.bagBtn.off("pointerout", this.bagBtnOut, this);
+        }
     }
 
     public setDataList(items: op_gameconfig.IItem[]) {
@@ -135,7 +153,7 @@ export class BagGroup extends BasePanel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any> this.mScene).rexUI.add.buttons({
+            this.buttons = (<any>this.mScene).rexUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,
@@ -190,10 +208,6 @@ export class BagGroup extends BasePanel {
         this.mBagBtnCon.setSize(56, 56);
         this.mBagBtnCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBagBg.width, this.mBagBg.height), Phaser.Geom.Rectangle.Contains);
         this.add(this.mBagBtnCon);
-        this.bagBtn.setInteractive();
-        this.bagBtn.on("pointerdown", this.bagHandler, this);
-        this.bagBtn.on("pointerover", this.bagBtnOver, this);
-        this.bagBtn.on("pointerout", this.bagBtnOut, this);
         this.initBagSlot();
         if (this.mWorld.roomManager.currentRoom && this.mWorld.roomManager.currentRoom.playerManager && this.mWorld.roomManager.currentRoom.playerManager.actor) {
             const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
