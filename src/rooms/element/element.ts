@@ -553,7 +553,7 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            this.setDepth(this.model.pos.depth);
+            this.setDepth(this.model.pos.depth || 0);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
             if (this.mBlockable) {
