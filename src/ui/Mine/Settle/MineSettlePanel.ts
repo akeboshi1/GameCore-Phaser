@@ -6,6 +6,7 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../../components/BasePanel";
 import { NinePatch } from "../../components/nine.patch";
 import { NinePatchButton } from "../../components/ninepatch.button";
+import { Logger } from "../../../utils/log";
 export class MineSettlePanel extends BasePanel {
 
     private key: string = "mine_settle";
@@ -21,7 +22,7 @@ export class MineSettlePanel extends BasePanel {
         this.x = width / 2;
         this.y = height / 2;
         this.mPropGrid.x = this.x;
-        this.mPropGrid.y = this.y;// + 16 * this.dpr;
+        this.mPropGrid.y = this.y - 16 * this.dpr;
         this.mPropGrid.layout();
         this.mPropContainer.x = -this.x;
         this.mPropContainer.y = -this.y; // + 8 * this.dpr;
@@ -34,7 +35,6 @@ export class MineSettlePanel extends BasePanel {
     }
 
     init() {
-        const zoom = this.mWorld.uiScaleNew;
         const bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.key, "bg", {
             left: 10,
             top: 10,
@@ -51,18 +51,18 @@ export class MineSettlePanel extends BasePanel {
         this.mPropContainer = this.scene.make.container(undefined, false);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
         const capW = (propFrame.width + 20 * this.dpr);
-        const capH = (propFrame.height + 20 * this.dpr);
+        const capH = (propFrame.height + 30 * this.dpr);
         this.mPropGrid = new GridTable(this.scene, {
             x: 0,
             y: 0,
-           // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 260 * this.dpr,
-                height: 260 * this.dpr,
+                height: 200 * this.dpr,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
-                // reuseCellContainer: true,
+                reuseCellContainer: true,
             },
             clamplChildOY: true,
             createCellContainerCallback: (cell, cellContainer) => {
@@ -93,7 +93,7 @@ export class MineSettlePanel extends BasePanel {
         });
         this.confirmBtn.setTextStyle({
             color: "#976400",
-            fontSize: 16 * this.dpr * zoom,
+            fontSize: 16 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
         this.confirmBtn.setInteractive();
@@ -119,7 +119,7 @@ export class MineSettlePanel extends BasePanel {
     }
 
     private onSelectItemHandler(data: op_client.ICountablePackageItem) {
-
+        Logger.getInstance().log("onSelectItemHandleronSelectItemHandleronSelectItemHandler", data.count);
     }
 
     private onConfirmBtnClick() {
@@ -157,7 +157,7 @@ class MineSettleItem extends Phaser.GameObjects.Container {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false);
-        this.itemCount.setOrigin(0, 0);
+        this.itemCount.setOrigin(0.5, 0);
         this.icon.setOrigin(0, 0);
         this.itemCount.setPosition(0, this.icon.height);
         this.add(this.icon);
@@ -169,9 +169,12 @@ class MineSettleItem extends Phaser.GameObjects.Container {
         this.itemCount.setFontSize(dpr * 14);
         this.itemCount.text = data.count + "";
         const url = data.display.texturePath;
+        Logger.getInstance().log("setItemData",data);
         this.icon.load(url, this, () => {
-            // this.itemCount.setPosition(0, 10 * dpr);
             this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
+            this.icon.setPosition(0, 3 * this.dpr);
+            this.itemCount.setPosition(this.icon.width * 0.5, this.icon.x + this.icon.height + 6 * this.dpr);
+            Logger.getInstance().log("datadatadata",data);
         });
     }
     public destroy() {
