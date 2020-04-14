@@ -76,7 +76,7 @@ export class Player extends Element {
             index++;
         }
         this.mMoveData.posPath = paths;
-        this.mMoveData.onCompleteParams = paths[paths.length - 1];
+        this.mMoveData.onCompleteParams = point;
         this.mMoveData.onComplete = this.mMovePathPointFinished;
         this._doMove();
     }
@@ -175,9 +175,10 @@ export class Player extends Element {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = pkt.content;
         const currentPoint = op_def.PBPoint3f.create();
-        currentPoint.x = this.mDisplay.x;
-        currentPoint.y = this.mDisplay.y;
-        currentPoint.z = this.mDisplay.z;
+        const pos = this.getPosition();
+        currentPoint.x = pos.x;
+        currentPoint.y = pos.y;
+        currentPoint.z = pos.z;
 
         const targetPoint = op_def.PBPoint3f.create();
         targetPoint.x = path.x;
