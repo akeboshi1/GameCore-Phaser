@@ -64,6 +64,7 @@ export class Sprite implements ISprite {
     protected mCurrentCollisionArea: number[][];
     protected mCurrentWalkableArea: number[][];
     protected mCurrentCollisionPoint: Phaser.Geom.Point;
+    protected mVersion: string;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -91,8 +92,8 @@ export class Sprite implements ISprite {
                 animations: {
                     defaultAnimationName: obj.currentAnimationName,
                     display: obj.display,
-                    animationData: anis
-                }
+                    animationData: anis,
+                },
             });
         }
         if (obj.sn) {
@@ -108,6 +109,10 @@ export class Sprite implements ISprite {
         this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.mDisplayBadgeCards = obj.displayBadgeCards;
         this.mNodeType = nodeType;
+
+        if (obj.version) {
+            this.mVersion = obj.version;
+        }
     }
 
     public toSprite(): op_client.ISprite {
@@ -122,11 +127,12 @@ export class Sprite implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel> this.displayInfo).toClient();
+            sprite.animations = (<FramesModel>this.displayInfo).toClient();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
         sprite.sn = this.sn;
+        sprite.version = this.mVersion;
         return sprite;
     }
 
@@ -337,7 +343,9 @@ export class Sprite implements ISprite {
         }
         // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
         if (animationName !== this.mCurrentAnimation.animationName) {
-            Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
+            Logger.getInstance().error(
+                `${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`
+            );
         }
     }
 

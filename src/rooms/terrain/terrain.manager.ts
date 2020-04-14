@@ -211,7 +211,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
-            const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
+            const displayInfo = this.roomService.world.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
                 return displayInfo;
@@ -221,7 +221,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     protected checkTerrainDisplay(sprite: ISprite) {
         if (!sprite.displayInfo) {
-            const palette = this.roomService.world.elementStorage.getPalette(sprite.bindID || sprite.id);
+            const palette = this.roomService.world.elementStorage.getTerrainPaletteByBindId(sprite.bindID);
             if (palette) {
                 sprite.displayInfo = palette;
             }
@@ -269,7 +269,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 // if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-                    // this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+                // this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
                 // }
             }
         }

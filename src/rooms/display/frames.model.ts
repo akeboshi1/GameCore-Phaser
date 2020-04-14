@@ -1,9 +1,10 @@
-import { op_gameconfig, op_def } from "pixelpai_proto";
+import { op_gameconfig, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
-import {Animation, IAnimationData} from "./animation";
+import { Animation, IAnimationData } from "./animation";
 import Helpers from "../../utils/helpers";
+import { ISprite, Sprite } from "../element/sprite";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -15,13 +16,14 @@ export interface IFramesModel {
     animations?: Map<string, IAnimationData>;
     animationName: string;
     package?: op_gameconfig.IPackage;
-    shops?: (op_gameconfig.IShop[] | null);
+    shops?: op_gameconfig.IShop[] | null;
     getAnimations(name: string): IAnimationData;
     existAnimation(aniName: string): boolean;
     getCollisionArea(aniName: string, flip: boolean): number[][];
     getWalkableArea(aniName: string, flip: boolean): number[][];
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
+    createSprite(x: number, y: number, z?: number): ISprite;
     destroy();
 }
 
@@ -126,7 +128,23 @@ export class FramesModel implements IFramesModel {
         }
     }
 
-    public getDirable() {
+    public getDirable() {}
+
+    public createSprite(x: number, y: number, z?: number): ISprite {
+        const spr = op_client.Sprite.create();
+
+        spr.display = this.display;
+        spr.currentAnimationName = this.animationName;
+        const point3f = op_def.PBPoint3f.create();
+        point3f.x = x;
+        point3f.y = y;
+        if (z) {
+            point3f.z = z;
+        }
+        spr.point3f = point3f;
+        spr.animations = this.toClient();
+
+        return new Sprite(spr);
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {
@@ -136,7 +154,7 @@ export class FramesModel implements IFramesModel {
         }
         this.display = {
             dataPath: display.dataPath,
-            texturePath: display.texturePath
+            texturePath: display.texturePath,
         };
         this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }

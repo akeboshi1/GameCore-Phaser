@@ -40,10 +40,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+            this.addHandlerFun(
+                op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN,
+                this.onClearBubbleHandler
+            );
+            this.addHandlerFun(
+                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION,
+                this.onChangeAnimation
+            );
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -97,11 +102,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.clear();
     }
 
-    protected addMap(sprite: ISprite) {
-    }
+    protected addMap(sprite: ISprite) {}
 
-    protected removeMap(sprite: ISprite) {
-    }
+    protected removeMap(sprite: ISprite) {}
 
     get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
         return this.mRoom.cameraService.camera;
@@ -189,7 +192,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
-            const displayInfo = this.roomService.world.elementStorage.getObject(sprite.bindID || sprite.id);
+            const displayInfo = this.roomService.world.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
                 return displayInfo;
@@ -304,7 +307,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const anis = content.changeAnimation;
         let ele = null;
         for (const ani of anis) {
-            ele = this.get((ani.id));
+            ele = this.get(ani.id);
             if (ele) {
                 ele.play(ani.animationName);
             }

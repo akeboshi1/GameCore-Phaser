@@ -1,12 +1,13 @@
-import {ElementManager} from "./element.manager";
+import { ElementManager } from "./element.manager";
 import { ISprite, Sprite } from "./sprite";
-import {PBpacket} from "net-socket-packet";
-import {op_editor, op_def, op_client} from "pixelpai_proto";
-import {Logger} from "../../utils/log";
-import {Pos} from "../../utils/pos";
+import { PBpacket } from "net-socket-packet";
+import { op_editor, op_def, op_client } from "pixelpai_proto";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
 import { Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
 import { EditorRoomService } from "../editor.room";
+import { DisplayObject } from "../display/display.object";
 
 export class EditorElementManager extends ElementManager {
     constructor(protected mRoom: EditorRoomService) {
@@ -14,7 +15,13 @@ export class EditorElementManager extends ElementManager {
         if (this.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE , this.onRemove);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
+
+            // NEW PROTO
+            this.addHandlerFun(
+                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS,
+                this.addSpritesWithLocs
+            );
         }
     }
 
@@ -58,19 +65,50 @@ export class EditorElementManager extends ElementManager {
             return;
         }
         let point: op_def.IPBPoint3f;
+        const displays = [];
+        let ele: Element = null;
         for (const obj of objs) {
             point = obj.point3f;
             if (point) {
-                this._add(new Sprite(obj));
+                ele = this._add(new Sprite(obj));
+                if (ele.getDisplay()) displays.push(ele.getDisplay());
             }
         }
+        this.mRoom.addToGround(displays);
+    }
+
+    protected addSpritesWithLocs(packet: PBpacket) {
+        if (!this.mRoom.layerManager) {
+            Logger.getInstance().error("layer manager does not exist");
+            return;
+        }
+
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
+        const locs = content.locs;
+        const nodeType = content.nodeType;
+
+        const displays: DisplayObject[] = [];
+        locs.forEach((loc) => {
+            let palette;
+            if (nodeType === op_def.NodeType.ElementNodeType) {
+                palette = this.mRoom.world.elementStorage.getTerrainPalette(loc.key);
+            } else {
+                palette = this.mRoom.world.elementStorage.getMossPalette(loc.key);
+            }
+            const ele = this._add(new Sprite(palette.createSprite(loc.x, loc.y)));
+            if (ele.getDisplay()) {
+                displays.push(ele.getDisplay());
+            }
+        });
+
+        this.mRoom.addToGround(displays);
     }
 
     protected _add(sprite: ISprite): Element {
         let ele = this.mElements.get(sprite.id);
         if (!ele) ele = new Element(sprite, this);
         ele.setBlockable(false);
-        ele.setRenderable(true);
+        // ele.setRenderable(true);
         ele.setInputEnable(InputEnable.Enable);
         // TODO udpate element
         this.mElements.set(ele.id || 0, ele);
@@ -108,7 +146,7 @@ export class EditorElementManager extends ElementManager {
             return;
         }
         const sprites = content.sprites;
-        for (const  sprite of sprites) {
+        for (const sprite of sprites) {
             this.trySync(sprite);
         }
     }
@@ -128,11 +166,9 @@ export class EditorElementManager extends ElementManager {
         }
     }
 
-    protected removeMap(sprite: ISprite) {
-    }
+    protected removeMap(sprite: ISprite) {}
 
-    protected addMap(sprite: ISprite) {
-    }
+    protected addMap(sprite: ISprite) {}
 
     get roomService(): EditorRoomService {
         return this.mRoom;
