@@ -66,7 +66,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private create() {
         this.bg = this.scene.make.image({ x: 0, y: -21 * this.dpr, key: this.key, frame: "bg1" });
         this.topbg = this.scene.make.image({ x: 0, y: -61 * this.dpr, key: this.key, frame: "topbg" });
-        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { color: "#976400", fontSize: 14 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#976400", fontSize: 14 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.bottombg = this.scene.make.image({ x: 0, y: 42 * this.dpr, key: this.key, frame: "bottombg" });
         this.equipName = this.scene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#976400", fontSize: 14 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.penetrationText = this.scene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#976400", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } });
@@ -167,7 +167,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         this.equipIcon.load(url, this, () => {
             this.equipIcon.setDisplaySize(22 * this.dpr, 22 * this.dpr);
             this.equipIcon.setPosition(15 * this.dpr, 0 * this.dpr);
-           // this.unlock.setPosition(15 * this.dpr, 0 * this.dpr);
+            // this.unlock.setPosition(15 * this.dpr, 0 * this.dpr);
         });
         const unlock = data["unlock"];
         this.isUnlock = unlock;

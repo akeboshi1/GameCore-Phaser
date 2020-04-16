@@ -13,7 +13,7 @@ import { PlayScene } from "../../scenes/play";
 import { Tool } from "../../utils/tool";
 
 export class InteractiveBubbleManager extends PacketHandler {
-    private map = new Map<string, InteractionBubbleContainer>();
+    private map = new Map<number, InteractionBubbleContainer>();
     private mBubbleContainer: InteractionBubbleContainer;
     private uilayer: ILayerManager;
     private scene: Phaser.Scene;
@@ -39,7 +39,7 @@ export class InteractiveBubbleManager extends PacketHandler {
     public destroy() {
         if (this.map) {
             for (const key in this.map) {
-                const bubble = this.map.get(key);
+                const bubble = this.map.get(Number(key));
                 bubble.destroy();
             }
             this.map.clear();
@@ -69,23 +69,23 @@ export class InteractiveBubbleManager extends PacketHandler {
     }
 
     private clearInteractionBubble(id: number) {
-        for (const key in this.map) {
-            const bubble = this.map.get(key);
-            if (bubble.id === id) {
-                bubble.hide();
-            }
+        if (this.map.has(id)) {
+            const bubble = this.map.get(id);
+            bubble.destroy();
+            this.map.delete(id);
         }
     }
 
     private showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, ele: IElement) {
         content.display["resName"] = "gems";
         content.display.texturePath = "resources/test/columns";
-        const key = content.display.texturePath;
+        const key = content.id;
         if (this.mBubbleContainer) this.mBubbleContainer.hide();
         if (this.map.has(key)) {
             this.mBubbleContainer = this.map.get(key);
         } else {
-            this.mBubbleContainer = new InteractionBubbleContainer(this.scene);
+            const dpr = Math.round(this.mworld.uiRatio || 1);
+            this.mBubbleContainer = new InteractionBubbleContainer(this.scene, dpr);
             this.map.set(key, this.mBubbleContainer);
         }
         this.mBubbleContainer.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
