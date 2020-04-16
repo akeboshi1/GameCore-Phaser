@@ -27,6 +27,7 @@ import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 import { MineSettleMediator } from "./Mine/Settle/MineSettleMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
 import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
+import { EquipUpgradeMediator } from "./EquipUpgrade/EquipUpgradeMediator";
 
 export const enum UIType {
     NoneUIType,
@@ -58,6 +59,7 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_MARKET, this.onEnableMarket);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE, this.openMineSettle);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
 
         this.mUILayerManager = new LayerManager();
@@ -125,7 +127,8 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
-            this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, this.worldService));
+            // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
+            this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
             this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService, scene);
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
@@ -493,5 +496,10 @@ export class UiManager extends PacketHandler {
             return;
         }
         this.mMedMap.forEach((med: IMediator) => med.hide());
+    }
+
+    private openMineSettle(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE = packge.content;
+        this.showMed("MineSettle", content);
     }
 }

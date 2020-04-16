@@ -6,6 +6,8 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../../components/BasePanel";
 import { NinePatch } from "../../components/nine.patch";
 import { NinePatchButton } from "../../components/ninepatch.button";
+import { Url } from "../../../utils/resUtil";
+import { Logger } from "../../../utils/log";
 export class MineSettlePanel extends BasePanel {
 
     private key: string = "mine_settle";
@@ -54,7 +56,7 @@ export class MineSettlePanel extends BasePanel {
         this.mPropGrid = new GridTable(this.scene, {
             x: 0,
             y: 0,
-           // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 260 * this.dpr,
                 height: 200 * this.dpr,
@@ -67,11 +69,11 @@ export class MineSettlePanel extends BasePanel {
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new MineSettleItem(scene);
+                    cellContainer = new MineSettleItem(scene, this.dpr);
                     this.mPropContainer.add(cellContainer);
                 }
                 cellContainer.setData({ item });
-                cellContainer.setItemData(item, this.dpr);
+                cellContainer.setItemData(item);
 
                 return cellContainer;
             },
@@ -101,12 +103,16 @@ export class MineSettlePanel extends BasePanel {
         this.add([bg, topline, bottomline, titleimage, tilteName, this.confirmBtn, this.mPropContainer]);
         super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
-        this.setMineSettlePacket(this.testData());
+        // this.setMineSettlePacket(this.testData());
+        const settleData = this.getData("settleData");
+        if (settleData) this.setMineSettlePacket(settleData);
     }
 
-    setMineSettlePacket(content: op_client.CountablePackageItem[]) {
-        this.mPropGrid.setItems(content);
-        this.mPropGrid.layout();
+    setMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
+        if (this.mInitialized) {
+            this.mPropGrid.setItems(content.items);
+            this.mPropGrid.layout();
+        }
     }
 
     destroy() {
@@ -121,7 +127,7 @@ export class MineSettlePanel extends BasePanel {
     }
 
     private onConfirmBtnClick() {
-        this.hide();
+        this.emit("hide");
     }
 
     private testData(): op_client.CountablePackageItem[] {
@@ -145,8 +151,9 @@ class MineSettleItem extends Phaser.GameObjects.Container {
     private itemCount: Phaser.GameObjects.Text;
     private icon: DynamicImage;
     private dpr: number;
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
+        this.dpr = dpr;
         this.icon = new DynamicImage(scene, 0, 0);
         this.itemCount = this.scene.make.text({
             text: "600",
@@ -157,16 +164,17 @@ class MineSettleItem extends Phaser.GameObjects.Container {
         }, false);
         this.itemCount.setOrigin(0.5, 0);
         this.icon.setOrigin(0, 0);
+        this.icon.setScale(this.dpr);
+        // this.icon.setSize(50, 50);
         this.itemCount.setPosition(0, this.icon.height);
         this.add(this.icon);
         this.add(this.itemCount);
     }
-    public setItemData(data: op_client.ICountablePackageItem, dpr: number) {
+    public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;
-        this.dpr = dpr;
-        this.itemCount.setFontSize(dpr * 14);
+        this.itemCount.setFontSize(this.dpr * 14);
         this.itemCount.text = data.count + "";
-        const url = data.display.texturePath;
+        const url = Url.getOsdRes(data.display.texturePath);
         this.icon.load(url, this, () => {
             this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
             this.icon.setPosition(0, 3 * this.dpr);
