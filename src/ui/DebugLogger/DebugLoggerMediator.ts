@@ -1,20 +1,16 @@
 import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { DebugLogger } from "./debug.logger";
+import { DebugLogger } from "./DebugLoggerPanel";
 import { UIType } from "../ui.manager";
-import { BasePanel } from "../components/BasePanel";
+import { ILayerManager } from "../layer.manager";
 
 export class DebugLoggerMediator extends BaseMediator {
     public static NAME: string = "DebugLoggerMediator";
     private mScene: Phaser.Scene;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    constructor(uiManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
         super(world);
         this.mUIType = UIType.BaseUIType;
         this.mScene = scene;
-    }
-
-    public isSceneUI(): boolean {
-        return true;
     }
 
     public resize() {
@@ -23,10 +19,6 @@ export class DebugLoggerMediator extends BaseMediator {
 
     public isShow(): boolean {
         return this.mView ? this.mView.isShow() : false;
-    }
-
-    public getView(): BasePanel {
-        return this.mView;
     }
 
     public show(param?: any) {

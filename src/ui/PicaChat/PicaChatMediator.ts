@@ -84,6 +84,9 @@ export class PicaChatMediator extends BaseMediator {
         if (!this.mChat) {
             return;
         }
+        if (val === "whosyourdaddy") {
+            this.world.uiManager.showMed("DebugLogger");
+        }
         this.mChat.sendMessage(val);
     }
 }

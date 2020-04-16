@@ -11,12 +11,10 @@ export class ControlFPanel extends BasePanel {
     }
 
     public addListen() {
-        super.addListen();
         this.on("pointerdown", this.onMouseDownHandler, this);
     }
 
     public removeListen() {
-        this.removeListen();
         this.off("pointerdown", this.onMouseDownHandler, this);
     }
 

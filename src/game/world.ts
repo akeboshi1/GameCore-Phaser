@@ -68,8 +68,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string = "";
 
+    /**
+     * 场景缩放系数（layermanager，缩放场景中容器大小）
+     */
     private mScaleRatio: number;
+    /**
+     * 判断加载几x资源
+     */
     private mUIRatio: number;
+    /**
+     * 面板缩放系数
+     */
     private mUIScale: number;
     private _isIOS = -1;
 
@@ -93,15 +102,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = config.width / this.DEFAULT_WIDTH;
-        const scaleH = config.height / this.DEFAULT_HEIGHT;
-        this.mUIScale = Math.min(scaleW, scaleH);
+        // const scaleH = config.height / this.DEFAULT_HEIGHT;
+        this.mUIScale = scaleW;
         // if (!config.scale_ratio) {
         // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
         // }
 
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
-        Url.RES_PATH= "./resources/";
+        Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
 
         this._newGame();
@@ -174,9 +183,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void {}
+    onDisConnected(connection?: SocketConnection): void { }
 
-    onError(reason: SocketConnectionError | undefined): void {}
+    onError(reason: SocketConnectionError | undefined): void { }
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -429,7 +438,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         for (const url of urls) {
             const sceneId = Tool.baseName(url);
             this.gameConfigUrls.set(sceneId, url);
-            if (url.split(sceneId).length  === 3) {
+            if (url.split(sceneId).length === 3) {
                 this.gameConfigUrl = url;
             }
         }
@@ -511,21 +520,21 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConnection.clearHeartBeat();
     }
 
-    private initUiScale() {
-        const width: number = this.mConfig.width;
-        const height: number = this.mConfig.height;
-        const baseWidth: number = this.mConfig.baseWidth;
-        const baseHeight: number = this.mConfig.baseHeight;
-        if (!this.mGame.device.os.desktop) {
-            if (width < height) {
-                this.mConfig.ui_scale = (width / baseHeight) * 2;
-                this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
-            } else if (width > height) {
-                this.mConfig.ui_scale = (width / baseWidth) * 2;
-                this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
-            }
-        }
-    }
+    // private initUiScale() {
+    //     const width: number = this.mConfig.width;
+    //     const height: number = this.mConfig.height;
+    //     const baseWidth: number = this.mConfig.baseWidth;
+    //     const baseHeight: number = this.mConfig.baseHeight;
+    //     if (!this.mGame.device.os.desktop) {
+    //         if (width < height) {
+    //             this.mConfig.ui_scale = (width / baseHeight) * 2;
+    //             this.mGame.scale.orientation = Phaser.Scale.Orientation.PORTRAIT;
+    //         } else if (width > height) {
+    //             this.mConfig.ui_scale = (width / baseWidth) * 2;
+    //             this.mGame.scale.orientation = Phaser.Scale.Orientation.LANDSCAPE;
+    //         }
+    //     }
+    // }
 
     private login() {
         if (!this.mGame.scene.getScene(LoginScene.name)) {
@@ -724,7 +733,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Object.assign(this.gameConfig, this.mConfig);
         this.mGame = new Game(this.gameConfig);
         this.mGame.input.mouse.capture = true;
-        this.initUiScale();
+        if (this.mGame.device.os.desktop) {
+            this.mUIScale = 1;
+        }
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();

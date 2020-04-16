@@ -11,6 +11,8 @@ import { InteractivePanelMediator } from "./InteractivePanelMediator";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import { Tool } from "../../utils/tool";
 export class InteractivePanel extends BasePanel {
+    private static baseWidth: number = 720;
+    private static baseHeight: number = 720;
     private mNameCon: Phaser.GameObjects.Container;
     private mDescCon: Phaser.GameObjects.Container;
     private mLeftFaceIcon: Phaser.GameObjects.Image;
@@ -38,6 +40,7 @@ export class InteractivePanel extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setEnabled(false);
+        this.setTween(false);
     }
     /**
      * 通過參數進行ui佈局
@@ -178,7 +181,7 @@ export class InteractivePanel extends BasePanel {
         this.mTextArea.setPosition(width / 2, this.y + this.mDescCon.y);
         const textMask = this.mTextArea.childrenMap.text;
         textMask.x = -this.mBorder.width >> 1;
-        textMask.y = -this.mBorder.height / 2;
+        textMask.y = -this.mBorder.height / 2 + 20 * this.dpr;
         textMask.resize(this.mBorder.width, this.mDescTF.displayHeight + 2000);
         // textMask.bottomChildOY = this.mDescTF.displayHeight + 20 * this.dpr * zoom;
         this.mTextArea.scrollToBottom();
@@ -352,38 +355,23 @@ export class InteractivePanel extends BasePanel {
         if (!this.mWorld.game.device.os.desktop) {
             const leftIconWid: number = this.mLeftFaceIcon.width * this.mWorld.uiScale;
             const leftIconHei: number = this.mLeftFaceIcon.height * this.mWorld.uiScale;
-            let leftScale: number = 1;
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                leftScale = leftIconWid > size.width * .5 ? size.width * .5 / leftIconWid : leftIconWid / size.width * .5;
-            } else {
-                leftScale = leftIconHei > size.height * .5 ? size.height * .5 / leftIconHei : leftIconHei / size.height * .5;
-            }
+            const leftScale: number = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, leftIconWid, leftIconHei);
             this.mLeftFaceIcon.scaleX = this.mLeftBaseScaleX * leftScale * .7;
             this.mLeftFaceIcon.scaleY = this.mLeftBaseScaleY * leftScale * .7;
             this.mLeftFaceIcon.x = this.mNameCon.x;
             this.mLeftFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
 
-            let midScale: number = 1;
             const midIconWid: number = this.mMidFaceIcon.width * this.mWorld.uiScale;
             const midIconHei: number = this.mMidFaceIcon.height * this.mWorld.uiScale;
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                midScale = midIconWid > size.width * .5 ? size.width * .5 / midIconWid : midIconWid / size.width * .5;
-            } else {
-                midScale = midIconHei > size.height * .5 ? size.height * .5 / midIconHei : midIconHei / size.height * .5;
-            }
+            const midScale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, midIconWid, midIconHei);
             this.mMidFaceIcon.scaleX = this.mMidBaseScaleX * midScale * .7;
             this.mMidFaceIcon.scaleY = this.mMidBaseScaleY * midScale * .7;
             this.mMidFaceIcon.x = 0;
             this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
 
-            let rightScale: number = 1;
             const rightIconWid: number = this.mRightFaceIcon.width * this.mWorld.uiScale;
             const rightIconHei: number = this.mRightFaceIcon.height * this.mWorld.uiScale;
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                rightScale = rightIconWid > size.width * .5 ? size.width * .5 / rightIconWid : rightIconWid / size.width * .5;
-            } else {
-                rightScale = rightIconHei > size.height * .5 ? size.height * .5 / rightIconHei : rightIconHei / size.height * .5;
-            }
+            const rightScale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, rightIconWid, rightIconHei);
             this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale * .7;
             this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale * .7;
             this.mRightFaceIcon.x = -this.mNameCon.x;
@@ -399,6 +387,10 @@ export class InteractivePanel extends BasePanel {
                 this.mRadio.y = this.mBg.height / 2 - this.mRadio.height;
             }
         }
+    }
+
+    private getScale(baseWid, baseHei, curWid, curHei): number {
+        return baseWid / curWid > baseHei / curHei ? baseWid / curWid : baseHei / curHei;
     }
 
     private onLoadComplete() {
@@ -418,13 +410,7 @@ export class InteractivePanel extends BasePanel {
                 this.mLeftFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mLeftBaseScaleX = scaleX;
                 this.mLeftBaseScaleY = scaleY;
-                if (!this.mWorld.game.device.os.desktop) {
-                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                        scale = this.mLeftFaceIcon.width > size.width * .5 ? size.width * .5 / this.mLeftFaceIcon.width : this.mLeftFaceIcon.width / size.width * .5;
-                    } else {
-                        scale = this.mLeftFaceIcon.height > size.height * .5 ? size.height * .5 / this.mLeftFaceIcon.height : this.mLeftFaceIcon.height / size.height * .5;
-                    }
-                }
+                scale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, this.mLeftFaceIcon.width, this.mLeftFaceIcon.height);
                 this.mLeftFaceIcon.scaleX = scaleX * scale;
                 this.mLeftFaceIcon.scaleY = scaleY * scale;
                 this.mLeftFaceIcon.x = imgX + 200;
@@ -440,13 +426,7 @@ export class InteractivePanel extends BasePanel {
                 this.mMidFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mMidBaseScaleX = scaleX;
                 this.mMidBaseScaleY = scaleY;
-                if (!this.mWorld.game.device.os.desktop) {
-                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                        scale = this.mMidFaceIcon.width > size.width * .5 ? size.width * .5 / this.mMidFaceIcon.width : this.mMidFaceIcon.width / size.width * .5;
-                    } else {
-                        scale = this.mMidFaceIcon.height > size.height * .5 ? size.height * .5 / this.mMidFaceIcon.height : this.mMidFaceIcon.height / size.height * .5;
-                    }
-                }
+                scale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, this.mMidFaceIcon.width, this.mMidFaceIcon.height);
                 this.mMidFaceIcon.scaleX = scaleX * scale;
                 this.mMidFaceIcon.scaleY = scaleY * scale;
                 this.mMidFaceIcon.x = 0;
@@ -462,13 +442,7 @@ export class InteractivePanel extends BasePanel {
                 this.mRightFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mRightBaseScaleX = scaleX;
                 this.mRightBaseScaleY = scaleY;
-                if (!this.mWorld.game.device.os.desktop) {
-                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                        scale = this.mRightFaceIcon.width > size.width * .5 ? size.width * .5 / this.mRightFaceIcon.width : this.mRightFaceIcon.width / size.width * .5;
-                    } else {
-                        scale = this.mRightFaceIcon.height > size.height * .5 ? size.height * .5 / this.mRightFaceIcon.height : this.mRightFaceIcon.height / size.height * .5;
-                    }
-                }
+                scale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, this.mRightFaceIcon.width, this.mRightFaceIcon.height);
                 this.mRightFaceIcon.scaleX = scaleX * scale;
                 this.mRightFaceIcon.scaleY = scaleY * scale;
                 this.mRightFaceIcon.x = 200;
