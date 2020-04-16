@@ -11,10 +11,10 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
     private content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE;
     private mRemoveDelay: any;
     private handler: Handler;
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
-        this.width = this.mWdith;
-        this.height = this.mHeight;
+        this.width = this.mWdith*dpr;
+        this.height = this.mHeight*dpr;
     }
 
     public setContentData(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler) {
@@ -23,9 +23,9 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
         this.handler = handler;
     }
 
-    public load(resName?: string, url?: string,jsonUrl?: string) {
+    public load(resName?: string, url?: string, jsonUrl?: string) {
         this.createAnimation();
-        this.mBubbleAni.load(resName, url,jsonUrl);
+        this.mBubbleAni.load(resName, url, jsonUrl);
         this.mBubbleAni.play();
     }
 

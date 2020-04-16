@@ -1,10 +1,9 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../../../game/world.service";
-import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../net/connection.service";
-import { Logger } from "../../../utils/log";
+import { WorldService } from "../../game/world.service";
+import { op_client } from "pixelpai_proto";
+import { ConnectionService } from "../../net/connection.service";
 
-export class MineSettle extends PacketHandler {
+export class EquipUpgrade extends PacketHandler {
     private readonly world: WorldService;
     private mEvent: Phaser.Events.EventEmitter;
     constructor(world: WorldService) {
@@ -16,7 +15,7 @@ export class MineSettle extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE, this.onMineSettlePackageHandler);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE, this.onMineSettlePackageHandler);
         }
     }
 
@@ -35,12 +34,6 @@ export class MineSettle extends PacketHandler {
         this.mEvent.off(event, fn, context);
     }
 
-    reqMineSettlePacket() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MINING_MODE_STORAGE_REWARD);
-        this.connection.send(packet);
-        Logger.getInstance().log("_OP_CLIENT_REQ_VIRTUAL_WORLD_MINING_MODE_STORAGE_REWARD", op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MINING_MODE_STORAGE_REWARD);
-    }
-
     destroy() {
         this.unregister();
         this.mEvent.destroy();
@@ -50,10 +43,5 @@ export class MineSettle extends PacketHandler {
         if (this.world) {
             return this.world.connection;
         }
-    }
-
-    private onMineSettlePackageHandler(packge: PBpacket) {
-        const content = packge.content;
-        this.mEvent.emit("minesettlepacket", content);
     }
 }

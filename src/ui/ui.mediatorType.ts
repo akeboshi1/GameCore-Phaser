@@ -19,4 +19,6 @@ export class UIMediatorType {
     public static Rank = "Rank";  // 排行榜
     public static VoteResult = "VoteResult"; // 投票界面
     public static Shop = "Shop";  // 内购商城
+    public static MineSettle = "MineSettle"; // 矿洞结算
+    public static EquipUpgrade = "EquipUpgrade"; // 装备升级
 }

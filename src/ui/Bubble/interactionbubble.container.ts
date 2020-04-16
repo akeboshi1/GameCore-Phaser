@@ -4,8 +4,10 @@ import { Handler } from "../../Handler/Handler";
 export class InteractionBubbleContainer extends Phaser.GameObjects.Container {
     public id: number;
     private mBubble: InteractionBubble;
-    constructor(scene: Phaser.Scene) {
+    private dpr: number;
+    constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
+        this.dpr = dpr;
     }
 
     public setBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler) {
@@ -14,7 +16,7 @@ export class InteractionBubbleContainer extends Phaser.GameObjects.Container {
         const resUrl = content.display.texturePath;
         const jsonUrl = content.display.dataPath;
         if (!this.mBubble) {
-            this.mBubble = new InteractionBubble(this.scene);
+            this.mBubble = new InteractionBubble(this.scene, this.dpr);
             this.mBubble.load(resName, resUrl, jsonUrl);
             this.add(this.mBubble);
         }

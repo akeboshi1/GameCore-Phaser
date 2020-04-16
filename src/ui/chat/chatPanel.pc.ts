@@ -65,19 +65,25 @@ export class ChatPanelPC extends BaseChatPanel {
     }
 
     public addListen() {
-        this.sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
-        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
-        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
-        this.mInputText.on("focus", this.onFocusHandler, this);
-        this.mInputText.on("blur", this.onBlurHandler, this);
+        if (!this.mInitialized) return;
+        if (this.sendMsgBtn) this.sendMsgBtn.on("pointerdown", this.onSendMsgHandler, this);
+        if (this.mVoiceBtn) this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
+        if (this.mMicBtn) this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+        if (this.mInputText) {
+            this.mInputText.on("focus", this.onFocusHandler, this);
+            this.mInputText.on("blur", this.onBlurHandler, this);
+        }
     }
 
     public removeListen() {
-        this.sendMsgBtn.off("pointerdown", this.onSendMsgHandler, this);
-        this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
-        this.mMicBtn.off("selected", this.onSelectedMicHandler, this);
-        this.mInputText.off("focus", this.onFocusHandler, this);
-        this.mInputText.off("blur", this.onBlurHandler, this);
+        if (!this.mInitialized) return;
+        if (this.sendMsgBtn) this.sendMsgBtn.off("pointerdown", this.onSendMsgHandler, this);
+        if (this.mVoiceBtn) this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
+        if (this.mMicBtn) this.mMicBtn.off("selected", this.onSelectedMicHandler, this);
+        if (this.mInputText) {
+            this.mInputText.off("focus", this.onFocusHandler, this);
+            this.mInputText.off("blur", this.onBlurHandler, this);
+        }
     }
 
     public destroy() {
