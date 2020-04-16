@@ -144,6 +144,12 @@ export class Player extends Element {
     }
 
     protected onMoveComplete() {
+        this.preMoveComplete();
+        super.onMoveComplete();
+        this.changeState(PlayerState.IDLE);
+    }
+
+    protected preMoveComplete() {
         if (this.mMoveData && this.mMoveData.posPath) {
             const complete = this.mMoveData.onComplete;
             if (complete) {
@@ -152,8 +158,6 @@ export class Player extends Element {
                 delete this.mMoveData.onCompleteParams;
             }
         }
-        super.onMoveComplete();
-        this.changeState(PlayerState.IDLE);
     }
 
     protected onMovePathPointComplete(params) {

@@ -251,11 +251,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // const close = new BackgroundManager(this, "close", this.mCameraService);
         }
         const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
-        // this.world.playSound({
-        //     urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
-        //     field: SoundField.Element,
-        //     soundConfig: { loop: true }
-        // });
+        this.world.playSound({
+            urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
+            field: SoundField.Element,
+            soundConfig: { loop: true }
+        });
 
         import(/*  */ "../module/template/main.js").then(({Template}) => {
             const tmp = new Template();

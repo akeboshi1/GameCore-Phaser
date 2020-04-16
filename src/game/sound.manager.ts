@@ -1,5 +1,8 @@
 import { Logger } from "../utils/log";
 import { IRoomService } from "../rooms/room";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_virtual_world, op_client } from "pixelpai_proto";
 
 export enum SoundField {
     Background,
@@ -14,10 +17,16 @@ export interface ISoundConfig {
     soundConfig?: Phaser.Types.Sound.SoundConfig;
 }
 
-export class SoundManager {
+export class SoundManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mSoundMap: Map<SoundField, Sound>;
-    constructor() {
+    constructor(world: WorldService) {
+        super();
+        const connection = world.connection;
+        if (connection) {
+            connection.addPacketListener(this);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL, this.onPlaySoundHandler);
+        }
     }
 
     changeRoom(room: IRoomService) {
@@ -116,6 +125,15 @@ export class SoundManager {
             this.mSoundMap.clear();
             this.mSoundMap = undefined;
         }
+    }
+
+    private onPlaySoundHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
+        // TODO
+        this.play({
+            urls: content.soundKey,
+            soundConfig: { loop: true }
+        });
     }
 }
 
