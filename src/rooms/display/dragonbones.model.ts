@@ -112,7 +112,9 @@ export class DragonbonesModel implements IDragonbonesModel {
                 flip = true;
                 dir = Direction.north_west;
                 break;
-            }
-        return { animationName: `${baseName}_${dir}`, flip };
+        }
+        let addName: string = "";
+        if ((dir >= Direction.north && dir < Direction.west) || dir > Direction.east && dir <= Direction.east_north) addName = "_back";
+        return { animationName: `${baseName}${addName}`, flip };
     }
 }

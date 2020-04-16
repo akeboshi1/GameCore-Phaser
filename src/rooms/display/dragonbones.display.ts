@@ -767,6 +767,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
                     { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
                 const checkID = 1;
+                // this.scene.add.existing(this.mDragonBonesRenderTexture);
                 for (let i: number = 0, len = frames.length; i < len; i++) {
                     // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
                     const name = frames[i];
@@ -796,7 +797,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 }
                 this.mDragonBonesRenderTexture.snapshot((snapshot: Phaser.Display.Color | HTMLImageElement) => {
                     if (snapshot instanceof HTMLImageElement) {
-                        const changeTexture = this.scene.game.textures.exists(renderTextureKey) ? this.scene.textures.get(renderTextureKey) : this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+                        const changeTexture: Phaser.Textures.Texture = this.scene.game.textures.exists(renderTextureKey) ? this.scene.textures.get(renderTextureKey) : this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
                         this.mArmatureDisplay.armature.replacedTexture = changeTexture;
                     }
                 });
