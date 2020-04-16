@@ -128,7 +128,7 @@ export class UiManager extends PacketHandler {
             // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
             // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
-            this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
+           // this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
             this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService, scene);
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
