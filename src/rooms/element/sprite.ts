@@ -64,6 +64,7 @@ export class Sprite implements ISprite {
     protected mCurrentCollisionArea: number[][];
     protected mCurrentWalkableArea: number[][];
     protected mCurrentCollisionPoint: Phaser.Geom.Point;
+    protected mRegisterAnimation: Map<string, string>;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -98,6 +99,7 @@ export class Sprite implements ISprite {
         if (obj.sn) {
             this.mSn = obj.sn;
         }
+        this.tryRegisterAnimation(obj.animationRegistrationMap);
         // if (obj.currentAnimationName) {
         //     Logger.getInstance().error(`${Sprite.name}: currentAnimationName is null, ${JSON.stringify(obj)}`);
         // }
@@ -293,6 +295,13 @@ export class Sprite implements ISprite {
         return false;
     }
 
+    get animationMap() {
+        if (!this.mRegisterAnimation) {
+            this.mRegisterAnimation = new Map();
+        }
+        return this.mRegisterAnimation;
+    }
+
     public get originCollisionPoint(): Phaser.Geom.Point {
         return this._originCollisionPoint;
     }
@@ -333,7 +342,12 @@ export class Sprite implements ISprite {
         if (!this.displayInfo) {
             return;
         }
-        const baseAniName = animationName.split(`_`)[0];
+        let baseAniName = animationName.split(`_`)[0];
+        if (this.mRegisterAnimation) {
+            if (this.mRegisterAnimation.has(baseAniName)) {
+                baseAniName = this.mRegisterAnimation.get(baseAniName);
+            }
+        }
         this.mCurrentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
         if (this.mCurrentCollisionArea) {
             this.setArea();
@@ -390,5 +404,15 @@ export class Sprite implements ISprite {
             // dirs = [1, 3, 5, 7];
         }
         return dirs;
+    }
+
+    private tryRegisterAnimation(anis: op_def.IStrPair[]) {
+        if (!anis || anis.length < 1) {
+            return;
+        }
+        this.mRegisterAnimation = new Map();
+        for (const ani of anis) {
+            this.mRegisterAnimation.set(ani.key, ani.value);
+        }
     }
 }
