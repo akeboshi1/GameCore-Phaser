@@ -49,7 +49,7 @@ export class MouseManager extends PacketHandler {
         } catch (e) {
         }
         room.scene.input.on("gameobjectdown", this.groundDown, this);
-        room.scene.input.on("gameobjectup", this.groundUp, this);
+        // room.scene.input.on("gameobjectup", this.groundUp, this);
         room.scene.input.on("pointerdown", this.pointerDownHandler, this);
         room.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.resume();

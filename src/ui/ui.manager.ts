@@ -24,7 +24,7 @@ import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
-import { MineSettleMediator } from "./Mine/Settle/MineSettleMediator";
+import { MineSettleMediator } from "./MineSettle/MineSettleMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
 import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
 import { EquipUpgradeMediator } from "./EquipUpgrade/EquipUpgradeMediator";
@@ -129,7 +129,7 @@ export class UiManager extends PacketHandler {
             // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
             // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
-            this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
             this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService, scene);
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
@@ -506,6 +506,6 @@ export class UiManager extends PacketHandler {
 
     private openEquipUpgrade(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
-        this.showMed("MineSettle", content);
+        this.showMed("EquipUpgrade", content);
     }
 }

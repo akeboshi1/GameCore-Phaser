@@ -21,6 +21,10 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private commonKey: string;
     private diamondIcon: Phaser.GameObjects.Image;
     private costNum: Phaser.GameObjects.Text;
+    private btnName: Phaser.GameObjects.Text;
+    private unlockCondition: Phaser.GameObjects.Text;
+    private haveEquiped: boolean = false;
+
     private curEquipItem: EquipItemCell;
     constructor(scene: Phaser.Scene, dpr: number, key: string, commonKey: string) {
         super(scene);
@@ -33,10 +37,19 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const name = data.equipmentType;
         const items = data.mineEquipments;
         this.titleName.text = name;
+        let index = 0;
+        for (const item of items) {
+            if (item.selected) {
+                this.haveEquiped = true;
+                break;
+            }
+            index++;
+        }
         this.gridTable.setItems(items);
         this.gridTable.layout();
+        if (this.haveEquiped)
+            this.gridTable.setT((index + 1) / items.length);
         this.setBgTexture(data["isblue"]);
-        this.onSelectItemHandler(this.gridTable.items[0]);
     }
 
     setTransPosition(x: number, y: number) {
@@ -50,11 +63,9 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
-        const item: EquipItemCell = this.gridTable.items[index];
-        item.setItemData(data, index);
-        if (this.curEquipItem === item) {
-            this.onSelectItemHandler(item);
-        }
+        this.gridTable.items[index] = data;
+        this.gridTable.refresh();
+        this.gridTable.setT((index + 1) / this.gridTable.items.length);
     }
 
     destroy() {
@@ -121,7 +132,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             },
             clamplChildOY: true,
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, item = cell.item;
+                const scene = cell.scene, item: op_client.IMiningEquipment = cell.item;
                 const index = cell.index;
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key);
@@ -129,6 +140,13 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item, index);
+                if (this.curEquipItem == null) {
+                    if (this.haveEquiped) {
+                        if (item.selected) this.onSelectItemHandler(cellContainer);
+                    } else {
+                        this.onSelectItemHandler(cellContainer);
+                    }
+                }
                 Logger.getInstance().log(item);
                 return cellContainer;
             },
@@ -151,8 +169,25 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.equipName.text = data.name;
         this.costNum.text = data.price + "";
         this.curEquipItem = cell;
-        if (data.qualified) this.unlockbtn.visible = true;
-        else this.unlockbtn.visible = false;
+        if (data.owned) this.unlockbtn.visible = false;
+        else this.unlockbtn.visible = true;
+        if (data.qualified) {
+            this.unlockCondition.visible = false;
+            this.unlockbtn.setInteractive();
+        } else if (!data.owned) {
+            this.unlockCondition.visible = true;
+            this.unlockCondition.text = data.conditionDisplayNames[0];
+            this.unlockbtn.removeInteractive();
+        }
+        if (data.price == null) {
+            this.costNum.visible = false;
+            this.diamondIcon.visible = false;
+            this.btnName.setPosition(0, 0 * this.dpr);
+        } else {
+            this.costNum.visible = true;
+            this.diamondIcon.visible = true;
+            this.btnName.setPosition(0, 6 * this.dpr);
+        }
         cell.setSelect(true);
         this.curEquipItem = cell;
         if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
@@ -162,15 +197,18 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     private createBtn() {
+        this.unlockCondition = this.scene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.unlockbtn = this.scene.make.container(undefined, false);
         const btnBg = this.scene.make.image({ x: 0, y: 0, key: this.commonKey, frame: "button" });
         this.diamondIcon = this.scene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
         this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        const btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.costNum.setStroke("#ffffff", 1);
-        btnName.setStroke("#8F4300", 1);
-        this.unlockbtn.setPosition(70 * this.dpr, 42 * this.dpr);
-        this.unlockbtn.add([btnBg, this.diamondIcon, this.costNum, btnName]);
+        this.btnName.setStroke("#8F4300", 1);
+        this.unlockCondition.setStroke("#000000", 1);
+        this.unlockbtn.setPosition(70 * this.dpr, 48 * this.dpr);
+        this.unlockbtn.setSize(btnBg.width, btnBg.height);
+        this.unlockbtn.add([this.unlockCondition, btnBg, this.diamondIcon, this.costNum, this.btnName]);
         this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
         this.add(this.unlockbtn);
     }
@@ -202,12 +240,13 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     public setItemData(data: op_client.IMiningEquipment, index: number) {
         this.itemData = data;
         this.index = index;
-        const url = data.display.texturePath;// "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.display.texturePath);// "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
-            this.equipIcon.setDisplaySize(22 * this.dpr, 22 * this.dpr);
+            // this.equipIcon.setScale(22 * this.dpr / this.equipIcon.width);
+            // this.equipIcon.setDisplaySize(22 * this.dpr, 22 * this.dpr);
             this.equipIcon.setPosition(15 * this.dpr, 0 * this.dpr);
         });
-        this.setEquiped(data.owned, data.selected);
+        this.setEquiped(data.selected, data.owned);
         this.setSelect(this.isSelect);
     }
 
@@ -225,6 +264,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         this.isUnlock = unlock;
         this.unlock.visible = false;
         if (isequiped) {
+            this.isUnlock = true;
             this.unlock.visible = true;
             this.unlock.setTexture(this.key, "ok");
         } else if (!this.isUnlock) {
