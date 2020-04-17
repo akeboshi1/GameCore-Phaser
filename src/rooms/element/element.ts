@@ -508,7 +508,10 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         room.addToSurface(this.mDisplay);
-        const depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        let depth = 0;
+        if (this.model && this.model.pos) {
+            depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
         this.setDepth(depth);
     }
 
@@ -530,7 +533,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) {
             this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
-            const depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            let depth = 0;
+            if (this.model && this.model.pos) {
+                depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            }
             this.setDepth(depth);
             // this.mDisplay.showRefernceArea();
         }
@@ -561,7 +567,10 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            const depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            let depth = 0;
+            if (this.model && this.model.pos) {
+                depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            }
             this.setDepth(depth);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();

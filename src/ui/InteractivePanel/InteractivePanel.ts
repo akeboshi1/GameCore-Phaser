@@ -39,7 +39,7 @@ export class InteractivePanel extends BasePanel {
     private mDisDelection: number = 10;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setEnabled(false);
+        // this.setEnabled(false);
         this.setTween(false);
     }
     /**
@@ -82,15 +82,15 @@ export class InteractivePanel extends BasePanel {
                 this.mDescCon.setData("nodeID", descData.node.id);
                 this.mTextArea.setText(descData.text);
                 // this.mDescTF.text = descData.text;
-                // this.mDescCon.off("pointerup", this.descConClick, this);
-                // this.mDescCon.on("pointerup", this.descConClick, this);
+                this.mDescCon.off("pointerup", this.descConClick, this);
+                this.mDescCon.on("pointerup", this.descConClick, this);
                 if (data.text[1]) {
                     const nameData: op_gameconfig_01.IText = data.text[1];
                     this.mNameCon.setData("nodeID", nameData.node.id);
                     this.mNameTF.text = nameData.text;
                     this.mNameTF.x = - this.mNameTF.width >> 1;
-                    // this.mNameCon.off("pointerup", this.nameConClick, this);
-                    // this.mNameCon.on("pointerup", this.nameConClick, this);
+                    this.mNameCon.off("pointerup", this.nameConClick, this);
+                    this.mNameCon.on("pointerup", this.nameConClick, this);
                 }
             }
         }
@@ -145,8 +145,8 @@ export class InteractivePanel extends BasePanel {
     public resize(wid: number = 0, hei: number = 0) {
         this.scaleX = this.scaleY = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
+        const width = this.mWorld.getSize().width;
+        const height = this.mWorld.getSize().height;
         const zoom = this.mWorld.uiScaleNew;
         this.mNameCon.add(this.mNameBg);
         this.mNameCon.add(this.mNameTF);
@@ -188,15 +188,15 @@ export class InteractivePanel extends BasePanel {
         super.resize(wid, hei);
     }
 
-    public addListen() {
-        super.addListen();
-        this.on("panelClick", this.panelClick, this);
-    }
+    // public addListen() {
+    // super.addListen();
+    // this.on("panelClick", this.panelClick, this);
+    // }
 
-    public removeListen() {
-        super.removeListen();
-        this.off("panelClick", this.panelClick, this);
-    }
+    // public removeListen() {
+    //     super.removeListen();
+    //     this.off("panelClick", this.panelClick, this);
+    // }
 
     public destroy() {
         this.mInitialized = false;
@@ -246,8 +246,8 @@ export class InteractivePanel extends BasePanel {
     }
 
     protected init() {
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
+        const width = this.mWorld.getSize().width;
+        const height = this.mWorld.getSize().height;
         const zoom: number = this.mWorld.uiScaleNew;
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mNameCon = this.mScene.make.container(undefined, false);
@@ -304,8 +304,8 @@ export class InteractivePanel extends BasePanel {
         // this.mDescCon.add(bg1);
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
-        // this.mDescCon.setInteractive();
-        // this.mNameCon.setInteractive();
+        this.mDescCon.setInteractive();
+        this.mNameCon.setInteractive();
         super.init();
     }
 
@@ -314,28 +314,28 @@ export class InteractivePanel extends BasePanel {
         if (show) this.resize();
     }
 
-    private panelClick(pointer: Phaser.Input.Pointer) {
-        if (Tool.checkPointerContains(this.mNameCon, pointer)) {
-            this.nameConClick(pointer);
-            return;
-        }
-        if (Tool.checkPointerContains(this.mDescCon, pointer)) {
-            this.descConClick(pointer);
-            return;
-        }
-        if (this.mLeftFaceIcon && Tool.checkPointerContains(this.mLeftFaceIcon, pointer)) {
-            this.leftFaceClick(pointer);
-            return;
-        }
-        if (this.mMidFaceIcon && Tool.checkPointerContains(this.mMidFaceIcon, pointer)) {
-            this.midFaceClick(pointer);
-            return;
-        }
-        if (this.mRightFaceIcon && Tool.checkPointerContains(this.mRightFaceIcon, pointer)) {
-            this.rightFaceClick(pointer);
-            return;
-        }
-    }
+    // private panelClick(pointer: Phaser.Input.Pointer) {
+    //     if (Tool.checkPointerContains(this.mNameCon, pointer)) {
+    //         this.nameConClick(pointer);
+    //         return;
+    //     }
+    //     if (Tool.checkPointerContains(this.mDescCon, pointer)) {
+    //         this.descConClick(pointer);
+    //         return;
+    //     }
+    //     if (this.mLeftFaceIcon && Tool.checkPointerContains(this.mLeftFaceIcon, pointer)) {
+    //         this.leftFaceClick(pointer);
+    //         return;
+    //     }
+    //     if (this.mMidFaceIcon && Tool.checkPointerContains(this.mMidFaceIcon, pointer)) {
+    //         this.midFaceClick(pointer);
+    //         return;
+    //     }
+    //     if (this.mRightFaceIcon && Tool.checkPointerContains(this.mRightFaceIcon, pointer)) {
+    //         this.rightFaceClick(pointer);
+    //         return;
+    //     }
+    // }
 
     private refreshUIPos() {
         const size: Size = this.mWorld.getSize();
@@ -351,7 +351,7 @@ export class InteractivePanel extends BasePanel {
         this.mNameTF.setWrapWidth(this.mBorder.width);
         this.mDescTF.setWrapWidth(this.mBorder.width - 10 * this.dpr * zoom);
         this.mNameTF.x = - this.mNameTF.width >> 1;
-
+        const desConWorldY: number = this.mDescCon.getWorldTransformMatrix().ty;
         if (!this.mWorld.game.device.os.desktop) {
             const leftIconWid: number = this.mLeftFaceIcon.width * this.mWorld.uiScale;
             const leftIconHei: number = this.mLeftFaceIcon.height * this.mWorld.uiScale;
@@ -359,7 +359,7 @@ export class InteractivePanel extends BasePanel {
             this.mLeftFaceIcon.scaleX = this.mLeftBaseScaleX * leftScale * .7;
             this.mLeftFaceIcon.scaleY = this.mLeftBaseScaleY * leftScale * .7;
             this.mLeftFaceIcon.x = this.mNameCon.x;
-            this.mLeftFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
+            this.mLeftFaceIcon.y = desConWorldY - this.mLeftFaceIcon.height / 2 - this.mDescCon.height / 2; // this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
 
             const midIconWid: number = this.mMidFaceIcon.width * this.mWorld.uiScale;
             const midIconHei: number = this.mMidFaceIcon.height * this.mWorld.uiScale;
@@ -367,7 +367,8 @@ export class InteractivePanel extends BasePanel {
             this.mMidFaceIcon.scaleX = this.mMidBaseScaleX * midScale * .7;
             this.mMidFaceIcon.scaleY = this.mMidBaseScaleY * midScale * .7;
             this.mMidFaceIcon.x = 0;
-            this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
+            this.mMidFaceIcon.y = desConWorldY - this.mMidFaceIcon.height / 2 - this.mDescCon.height / 2;
+            // this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
 
             const rightIconWid: number = this.mRightFaceIcon.width * this.mWorld.uiScale;
             const rightIconHei: number = this.mRightFaceIcon.height * this.mWorld.uiScale;
@@ -375,7 +376,8 @@ export class InteractivePanel extends BasePanel {
             this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale * .7;
             this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale * .7;
             this.mRightFaceIcon.x = -this.mNameCon.x;
-            this.mRightFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mRightFaceIcon.height * rightScale * .7 / 2;
+            this.mRightFaceIcon.y = desConWorldY - this.mRightFaceIcon.height / 2 - this.mDescCon.height / 2;
+            // this.mRightFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mRightFaceIcon.height * rightScale * .7 / 2;
         }
 
         if (this.mRadioCom) {
@@ -414,12 +416,13 @@ export class InteractivePanel extends BasePanel {
                 this.mLeftFaceIcon.scaleX = scaleX * scale;
                 this.mLeftFaceIcon.scaleY = scaleY * scale;
                 this.mLeftFaceIcon.x = imgX + 200;
-                this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
+                // this.mLeftFaceIcon.y = desConWorldY - this.mLeftFaceIcon.height / 2;
+                // this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
                 this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
-                // this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
-                // this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
+                this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
+                this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
@@ -430,12 +433,13 @@ export class InteractivePanel extends BasePanel {
                 this.mMidFaceIcon.scaleX = scaleX * scale;
                 this.mMidFaceIcon.scaleY = scaleY * scale;
                 this.mMidFaceIcon.x = 0;
-                this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
+                // this.mMidFaceIcon.y = desConWorldY - this.mMidFaceIcon.height / 2;
+                // this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
                 this.mMidFaceIcon.setInteractive();
-                // this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
-                // this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
+                this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
+                this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
@@ -446,12 +450,13 @@ export class InteractivePanel extends BasePanel {
                 this.mRightFaceIcon.scaleX = scaleX * scale;
                 this.mRightFaceIcon.scaleY = scaleY * scale;
                 this.mRightFaceIcon.x = 200;
-                this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
+                // this.mRightFaceIcon.y = desConWorldY - this.mRightFaceIcon.height / 2;
+                // this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
                 this.mRightFaceIcon.setInteractive();
-                // this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
-                // this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
+                this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
+                this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
                 break;
         }
         this.resize();
