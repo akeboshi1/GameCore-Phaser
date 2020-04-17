@@ -3,9 +3,10 @@ import { DragonbonesAnimation } from "../../rooms/Animation/dragonbones.animatio
 import { FrameAnimation } from "../../rooms/Animation/frame.animation";
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
+import { BubbleAnimation } from "../../rooms/Animation/bubble.animation";
 
 export class InteractionBubble extends Phaser.GameObjects.Container {
-    private mBubbleAni: DragonbonesAnimation | FrameAnimation;
+    private mBubbleAni: DragonbonesAnimation | FrameAnimation | BubbleAnimation;
     private mWdith: number = 60;
     private mHeight: number = 60;
     private content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE;
@@ -13,8 +14,8 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
     private handler: Handler;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
-        this.width = this.mWdith*dpr;
-        this.height = this.mHeight*dpr;
+        this.width = this.mWdith * dpr;
+        this.height = this.mHeight * dpr;
     }
 
     public setContentData(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler) {
@@ -58,7 +59,8 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
 
     private createAnimation() {
         // this.mBubbleAni = new DragonbonesAnimation(this.scene);
-        this.mBubbleAni = new FrameAnimation(this.scene);
+        // this.mBubbleAni = new FrameAnimation(this.scene);
+        this.mBubbleAni = new BubbleAnimation(this.scene);
         this.mBubbleAni.width = this.width;
         this.mBubbleAni.height = this.height;
         const POINTER_DOWN = Phaser.Input.Events.POINTER_DOWN;

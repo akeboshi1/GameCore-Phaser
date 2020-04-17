@@ -135,7 +135,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mElementStorage = new ElementStorage();
         this.mHttpService = new HttpService(this);
         this.mRoleManager = new RoleManager(this);
-        this.mSoundManager = new SoundManager();
+        this.mSoundManager = new SoundManager(this);
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();

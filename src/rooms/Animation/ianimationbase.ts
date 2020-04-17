@@ -6,7 +6,7 @@ export interface IAnimationBase {
     animUrlData: AnimationUrlData;
     loaded: boolean;
     loop: boolean;
-    load(resName: string, resUrl: string, jsonUrl?: string);
+    load(resName: string, resUrl: string, data?: string);
     play(aniName: string);
 }
 

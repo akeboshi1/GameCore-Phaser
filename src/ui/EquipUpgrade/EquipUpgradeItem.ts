@@ -3,6 +3,7 @@ import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
+import { op_client } from "pixelpai_proto";
 export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -28,12 +29,14 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.commonKey = commonKey;
         this.create();
     }
-    setEquipItems(data: any) {
-        const name = data["name"];
-        const items = data["items"];
+    setEquipItems(data: op_client.IMiningEquipmenetArray) {
+        const name = data.equipmentType;
+        const items = data.mineEquipments;
         this.titleName.text = name;
         this.gridTable.setItems(items);
         this.gridTable.layout();
+        this.setBgTexture(data["isblue"]);
+        this.onSelectItemHandler(this.gridTable.items[0]);
     }
 
     setTransPosition(x: number, y: number) {
@@ -44,6 +47,14 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.gridTable.x = posX;
         this.gridTable.y = posY;
         this.mScrollContainer.setPosition(-posX, -posY);
+    }
+
+    refreshEquipData(data: op_client.IMiningEquipment, index: number) {
+        const item: EquipItemCell = this.gridTable.items[index];
+        item.setItemData(data, index);
+        if (this.curEquipItem === item) {
+            this.onSelectItemHandler(item);
+        }
     }
 
     destroy() {
@@ -63,14 +74,27 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.curEquipItem = null;
     }
 
+    private setBgTexture(isblue: boolean) {
+        const topName = !isblue ? "topbg" : "topbg1";
+        const bottombg = !isblue ? "bottombg" : "bottombg1";
+        const fontColor = !isblue ? "#8F4300" : "#0867AE";
+        this.topbg.setTexture(this.key, topName);
+        this.bottombg.setTexture(this.key, bottombg);
+        this.titleName.setColor(fontColor).setStroke(fontColor, 1);
+        this.equipName.setColor(fontColor).setStroke(fontColor, 1);
+        this.penetrationText.setColor(fontColor).setStroke(fontColor, 1);
+
+    }
+
     private create() {
         this.bg = this.scene.make.image({ x: 0, y: -21 * this.dpr, key: this.key, frame: "bg1" });
         this.topbg = this.scene.make.image({ x: 0, y: -61 * this.dpr, key: this.key, frame: "topbg" });
-        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#976400", fontSize: 14 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } }).setOrigin(0.5, 0.5);
         this.bottombg = this.scene.make.image({ x: 0, y: 42 * this.dpr, key: this.key, frame: "bottombg" });
-        this.equipName = this.scene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#976400", fontSize: 14 * this.dpr, fontFamily: Font.DEFULT_FONT } });
-        this.penetrationText = this.scene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#976400", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } });
-        this.equipDes = this.scene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#976400", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
+        this.equipName = this.scene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } });
+        this.penetrationText = this.scene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#8F4300", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } });
+        this.equipDes = this.scene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
+        this.equipDes.setStroke("#000000", 1);
         this.add([this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes]);
         this.createBtn();
         this.createGridTable();
@@ -98,12 +122,13 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             clamplChildOY: true,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
+                const index = cell.index;
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key);
                     this.mScrollContainer.add(cellContainer);
                 }
                 cellContainer.setData({ item });
-                cellContainer.setItemData(item);
+                cellContainer.setItemData(item, index);
                 Logger.getInstance().log(item);
                 return cellContainer;
             },
@@ -119,34 +144,47 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
 
     private onSelectItemHandler(cell: EquipItemCell) {
         Logger.getInstance().log(cell.itemData);
+        if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
-        this.penetrationText.text = "穿透力:" + data["penetration"];
-        this.equipDes.text = data["des"];
-        this.equipName.text = data["name"];
-        this.costNum.text = data["cost"];
+        this.penetrationText.text = data.buffDisplayNames[0];
+        this.equipDes.text = data.description;
+        this.equipName.text = data.name;
+        this.costNum.text = data.price + "";
         this.curEquipItem = cell;
+        if (data.qualified) this.unlockbtn.visible = true;
+        else this.unlockbtn.visible = false;
+        cell.setSelect(true);
+        this.curEquipItem = cell;
+        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
     }
-
     private onUnlockEquipHandler() {
-
+        this.emit("reqActive", this.curEquipItem.itemData.id);
     }
 
     private createBtn() {
         this.unlockbtn = this.scene.make.container(undefined, false);
         const btnBg = this.scene.make.image({ x: 0, y: 0, key: this.commonKey, frame: "button" });
         this.diamondIcon = this.scene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
-        this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#976400", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        const btnName = this.scene.make.text({ x: 0, y: 4 * this.dpr, text: "立即解锁", style: { color: "#976400", fontSize: 14 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        const btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.costNum.setStroke("#ffffff", 1);
+        btnName.setStroke("#8F4300", 1);
         this.unlockbtn.setPosition(70 * this.dpr, 42 * this.dpr);
         this.unlockbtn.add([btnBg, this.diamondIcon, this.costNum, btnName]);
         this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
         this.add(this.unlockbtn);
     }
 
+    private getBoldFont(size: number) {
+        const font = `bold ${size}px Source Han Sans`;
+        return font;
+    }
+
 }
 
 class EquipItemCell extends Phaser.GameObjects.Container {
-    public itemData: any;
+    public itemData: op_client.IMiningEquipment;
+    public index: number = 0;
     private dpr: number;
     private key: string;
     private bg: Phaser.GameObjects.Image;
@@ -161,27 +199,38 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setItemData(data: any) {
+    public setItemData(data: op_client.IMiningEquipment, index: number) {
         this.itemData = data;
-        const url = "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
+        this.index = index;
+        const url = data.display.texturePath;// "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
             this.equipIcon.setDisplaySize(22 * this.dpr, 22 * this.dpr);
             this.equipIcon.setPosition(15 * this.dpr, 0 * this.dpr);
-            // this.unlock.setPosition(15 * this.dpr, 0 * this.dpr);
         });
-        const unlock = data["unlock"];
-        this.isUnlock = unlock;
-        this.setSelect(false);
+        this.setEquiped(data.owned, data.selected);
+        this.setSelect(this.isSelect);
     }
 
     public setSelect(isSelect: boolean) {
         this.isSelect = isSelect;
-        const unlock = this.isUnlock;
-        let bgName = "equipbg1";
-        if (this.isSelect) bgName = "equipbg";
-        else if (unlock) bgName = "equipbg2";
+        let bgName = "equipbg";
+        if (!isSelect) {
+            if (this.isUnlock) bgName = "equipbg2";
+            else bgName = "equipbg1";
+        }
         this.bg.setTexture(this.key, bgName);
-        this.unlock.setTexture(this.key, unlock ? "ok" : "lock");
+    }
+
+    private setEquiped(isequiped: boolean, unlock: boolean) {
+        this.isUnlock = unlock;
+        this.unlock.visible = false;
+        if (isequiped) {
+            this.unlock.visible = true;
+            this.unlock.setTexture(this.key, "ok");
+        } else if (!this.isUnlock) {
+            this.unlock.visible = true;
+            this.unlock.setTexture(this.key, "lock");
+        }
     }
 
     private create() {
