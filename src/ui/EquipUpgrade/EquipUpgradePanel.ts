@@ -51,10 +51,15 @@ export default class EquipUpgradePanel extends BasePanel {
         this.closeBtn.setInteractive();
         this.closeBtn.on("pointerup", this.OnClosePanel, this);
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
+        super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+        const upgradeData = this.getData("upgradeData");
+        if (upgradeData) this.setEquipDatas(upgradeData);
+        this.setInteractive();
     }
 
     setEquipDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
+        if (!this.mInitialized) return;
         this.content = content;
         const arr = content.mineEquipments; // this.getEuipDatas();// [content.minePicks, content.minePicks];
         const height = 175 * this.dpr;
@@ -62,7 +67,9 @@ export default class EquipUpgradePanel extends BasePanel {
         const cellHeight = 155 * this.dpr;
         this.resetPosition(this.bg.width, bgHeight);
         let posY: number = -bgHeight * 0.5 + 100 * this.dpr;
+        let index = 0;
         for (const value of arr) {
+            value["isblue"] = (index % 2 === 0 ? false : true);
             const item = new EquipUpgradeItem(this.scene, this.dpr, this.key, this.commonkey);
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
@@ -71,6 +78,7 @@ export default class EquipUpgradePanel extends BasePanel {
             item.setTransPosition(0, posY);
             this.equipItems.push(item);
             posY += cellHeight;
+            index++;
         }
     }
 
@@ -78,27 +86,35 @@ export default class EquipUpgradePanel extends BasePanel {
         let index = 0;
         for (const value of this.content.mineEquipments) {
             const item = this.equipItems[index];
+            let activeIndex = -1;
             // tslint:disable-next-line: prefer-for-of
             for (let i = 0; i < value.mineEquipments.length; i++) {
                 const data = value.mineEquipments[i];
                 if (data.id === equip.id) {
                     value.mineEquipments[i] = equip;
                     item.refreshEquipData(equip, i);
-                    break;
+                    activeIndex = i;
+                } else {
+                    if (data.selected) data.selected = false;
                 }
+            }
+            if (activeIndex >= 0) {
+                item.refreshEquipData(equip, activeIndex);
             }
             index++;
         }
     }
 
     destroy() {
-        for (const item of this.equipItems) {
-            item.destroy();
+        if (this.equipItems) {
+            for (const item of this.equipItems) {
+                item.destroy();
+            }
+            this.equipItems.length = 0;
         }
-        super.destroy();
-        this.equipItems.length = 0;
         this.equipItems = null;
         this.content = null;
+        super.destroy();
     }
 
     getEuipDatas() {

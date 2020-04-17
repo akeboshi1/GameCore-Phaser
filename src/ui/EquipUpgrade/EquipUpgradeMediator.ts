@@ -28,11 +28,12 @@ export class EquipUpgradeMediator extends BaseMediator {
         if (!this.equipUpgrade) {
             this.equipUpgrade = new EquipUpgrade(this.world);
             this.equipUpgrade.on("activeEquip", this.onActiveEquipment, this);
+            this.equipUpgrade.register();
         }
-        this.mView.show();
         this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
             this.onEquipUpgradePacket(this.mParam[0]);
+        this.mView.show();
     }
 
     isSceneUI() {
@@ -56,7 +57,7 @@ export class EquipUpgradeMediator extends BaseMediator {
 
     private onEquipUpgradePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
         const panel = this.mView as EquipUpgradePanel;
-        this.mView.setData("settleData", content);
+        panel.setData("upgradeData", content);
         panel.setEquipDatas(content);
     }
 

@@ -19,7 +19,7 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         }
 
         this.mUrl = value;
-        if (this.scene.cache.obj.exists(value)) {
+        if (this.scene.textures.exists(value)) {
             this.onLoadComplete(value);
         } else {
             this.scene.load.image(value, value);

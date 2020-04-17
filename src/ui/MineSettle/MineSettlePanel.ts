@@ -1,13 +1,13 @@
-import { WorldService } from "../../../game/world.service";
-import { Font } from "../../../utils/font";
-import { DynamicImage } from "../../components/dynamic.image";
-import GridTable from "../../../../lib/rexui/lib/ui/gridtable/GridTable";
+import { WorldService } from "../../game/world.service";
+import { Font } from "../../utils/font";
+import { DynamicImage } from "../components/dynamic.image";
+import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { op_client, op_gameconfig } from "pixelpai_proto";
-import { BasePanel } from "../../components/BasePanel";
-import { NinePatch } from "../../components/nine.patch";
-import { NinePatchButton } from "../../components/ninepatch.button";
-import { Url } from "../../../utils/resUtil";
-import { Logger } from "../../../utils/log";
+import { BasePanel } from "../components/BasePanel";
+import { NinePatch } from "../components/nine.patch";
+import { NinePatchButton } from "../components/ninepatch.button";
+import { Url } from "../../utils/resUtil";
+import { Logger } from "../../utils/log";
 export class MineSettlePanel extends BasePanel {
 
     private key: string = "mine_settle";
@@ -183,7 +183,8 @@ class MineSettleItem extends Phaser.GameObjects.Container {
         this.itemCount.text = data.count + "";
         const url = Url.getOsdRes(data.display.texturePath);
         this.icon.load(url, this, () => {
-            this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
+          ///  this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
+            this.icon.setScale(33 * this.dpr / this.icon.width);
             this.icon.setPosition(0, 3 * this.dpr);
             this.itemCount.setPosition(this.icon.displayWidth * 0.5, this.icon.x + this.icon.displayHeight + 6 * this.dpr);
         });
