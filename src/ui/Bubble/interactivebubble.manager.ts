@@ -11,6 +11,7 @@ import { WorldService } from "../../game/world.service";
 import { Pos } from "../../utils/pos";
 import { PlayScene } from "../../scenes/play";
 import { Tool } from "../../utils/tool";
+import { Url } from "../../utils/resUtil";
 
 export class InteractiveBubbleManager extends PacketHandler {
     private map = new Map<number, InteractionBubbleContainer>();
@@ -77,14 +78,15 @@ export class InteractiveBubbleManager extends PacketHandler {
     }
 
     private showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, ele: IElement) {
-        content.display["resName"] = "gems";
-        content.display.texturePath = "resources/test/columns";
+        const dpr = Math.round(this.mworld.uiRatio || 1);
+        content.display["resName"] = null;// "gems";
+        content.display.texturePath = Url.getUIRes(dpr, "bubble/bubblebg.png");// "resources/test/columns";
+        content.display.dataPath = Url.getUIRes(dpr, "bubble/tipsicon.png");// "resources/test/columns";
         const key = content.id;
         if (this.mBubbleContainer) this.mBubbleContainer.hide();
         if (this.map.has(key)) {
             this.mBubbleContainer = this.map.get(key);
         } else {
-            const dpr = Math.round(this.mworld.uiRatio || 1);
             this.mBubbleContainer = new InteractionBubbleContainer(this.scene, dpr);
             this.map.set(key, this.mBubbleContainer);
         }

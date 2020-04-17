@@ -1,8 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../../../game/world.service";
+import { WorldService } from "../../game/world.service";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../net/connection.service";
-import { Logger } from "../../../utils/log";
+import { ConnectionService } from "../../net/connection.service";
+import { Logger } from "../../utils/log";
 
 export class MineSettle extends PacketHandler {
     private readonly world: WorldService;

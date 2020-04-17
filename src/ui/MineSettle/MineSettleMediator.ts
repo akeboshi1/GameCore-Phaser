@@ -1,10 +1,10 @@
-import { BaseMediator } from "../../baseMediator";
-import { ILayerManager } from "../../layer.manager";
-import { WorldService } from "../../../game/world.service";
+import { BaseMediator } from "../baseMediator";
+import { ILayerManager } from "../layer.manager";
+import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
-import { Logger } from "../../../utils/log";
+import { Logger } from "../../utils/log";
 
 export class MineSettleMediator extends BaseMediator {
     private scene: Phaser.Scene;
@@ -29,11 +29,11 @@ export class MineSettleMediator extends BaseMediator {
             this.mineSettle.on("minesettlepacket", this.onMineSettlePacket, this);
             this.mineSettle.register();
         }
-        this.mView.show();
         this.layerMgr.addToUILayer(this.mView);
         if (!this.mParam || this.mParam.length === 0)
             this.mineSettle.reqMineSettlePacket();
         else this.onMineSettlePacket(this.mParam[0]);
+        this.mView.show();
     }
 
     isSceneUI() {
@@ -57,7 +57,7 @@ export class MineSettleMediator extends BaseMediator {
 
     private onMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
         const panel = this.mView as MineSettlePanel;
-        this.mView.setData("settleData", content);
+        panel.setData("settleData", content);
         panel.setMineSettlePacket(content);
     }
 

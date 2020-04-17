@@ -1,6 +1,7 @@
 import { InteractionBubble } from "./interactionbubble";
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
+import { Logger } from "../../utils/log";
 export class InteractionBubbleContainer extends Phaser.GameObjects.Container {
     public id: number;
     private mBubble: InteractionBubble;
