@@ -810,9 +810,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         const renderTexture = this.scene.textures.get(renderTextureKey);
         if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
             { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
-        const checkID = 1;
         this.mDragonBonesRenderTexture.clear();
-        this.scene.add.existing(this.mDragonBonesRenderTexture);
+        // this.scene.add.existing(this.mDragonBonesRenderTexture);
         for (let i: number = 0, len = frames.length; i < len; i++) {
             // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
             const name = frames[i];
@@ -836,8 +835,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                             this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
                             break;
                         } else {
-                            const texture = this.scene.textures.get(frameName);
-                            this.mDragonBonesRenderTexture.drawFrame(frameName, texture.firstFrame, dat.cutX, dat.cutY);
+                            const texture = this.scene.textures.get(partName);
+                            this.mDragonBonesRenderTexture.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);
                             break;
                         }
                     }
