@@ -231,25 +231,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
         //     // const close = new BackgroundManager(this, "close", this.mCameraService);
         // }
-        if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
-            this.mBackgrounds = [];
-            if (this.id === 926312429) {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
-                    key: "skybox/mine/mine",
-                    width: 1120,
-                    height: 684
-                }, this.mCameraService));
-            } else {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
-                    key: "skybox/bh/bh",
-                    width: 3400,
-                    height: 1900,
-                    gridW: 256,
-                    gridH: 256
-                }, this.mCameraService));
-            }
-            // const close = new BackgroundManager(this, "close", this.mCameraService);
-        }
+        this.addSkyBox();
         const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
         this.world.playSound({
             urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
@@ -411,6 +393,50 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mScene) {
         //   this.mScene = null;
         // }
+    }
+
+    protected addSkyBox() {
+        const gameid = this.mWorld.getConfig().game_id;
+        this.mBackgrounds = [];
+        if (gameid === "5e719a0a68196e416ecf7aad") {
+            if (this.id === 926312429) {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/mine/level_0",
+                    width: 1120,
+                    height: 684
+                }, this.mCameraService));
+            } else {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/bh/bh",
+                    width: 3400,
+                    height: 1900,
+                    gridW: 256,
+                    gridH: 256
+                }, this.mCameraService));
+            }
+            // const close = new BackgroundManager(this, "close", this.mCameraService);
+        } else if (gameid === "5e9a7dace87abc390c4b1b73") {
+            if (this.id === 926312429) {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/mine/level_0",
+                    width: 1120,
+                    height: 684
+                }, this.mCameraService));
+            } else  if (this.id === 395490295) {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/mine/level_1",
+                    width: 1360,
+                    height: 994
+                }, this.mCameraService));
+            } else {
+                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                    key: "skybox/mine/level_1",
+                    width: 1540,
+                    height: 969
+                }, this.mCameraService));
+            }
+
+        }
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {

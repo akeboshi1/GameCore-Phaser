@@ -806,10 +806,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         const frames = dragonBonesTexture.getFrameNames();
         // ==============重绘贴图方式
         // if (this.mLoadMap.size > 0) {
+        // }
         const renderTextureKey = "bones_" + this.mDisplayInfo.id;// "bones_" + this.mDisplayInfo.id;// "bones_human01";
+        const renderTexture = this.scene.textures.get(renderTextureKey);
         if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
             { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
-        const checkID = 1;
         this.mDragonBonesRenderTexture.clear();
         // this.scene.add.existing(this.mDragonBonesRenderTexture);
         for (let i: number = 0, len = frames.length; i < len; i++) {
@@ -822,14 +823,26 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
             const dat = dragonBonesTexture.get(name);
             const loadArr = this.mLoadMap.get(slotKey);
-            // if (!this.mDragonBonesRenderTexture.frames) this.mDragonBonesRenderTexture.frames = {};
             // 原始资源
             if (!loadArr) {
                 for (const obj of this.replaceArr) {
+                    // slot: AvatarSlotType.WeapBarm,
+                    // part: AvatarPartType.WeapBarm,
+                    // dir: 3,
+                    // skin: avater.farmWeapId,
+                    const tmpKey = obj.part.replace("#", obj.skin.toString()).replace("$", obj.dir.toString());
+                    const partName: string = ResUtils.getPartName(tmpKey);
+                    const frameName: string = "test resources/" + key;
                     const part: string = obj.slot.replace("$", obj.dir.toString());
                     if (part === slotKey) {
-                        this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
-                        break;
+                        if (dragonBonesTexture.frames[frameName]) {
+                            this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                            break;
+                        } else if (renderTexture && renderTexture.frames[frameName]) {
+                            this.mDragonBonesRenderTexture.drawFrame(renderTextureKey, frameName, dat.cutX, dat.cutY);
+                            break;
+                        }
+
                     }
                 }
                 // this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);

@@ -22,7 +22,9 @@ export class BlockManager {
     const worldView = this.mMainCamera.worldView;
     const viewPort = new Phaser.Geom.Rectangle(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2, worldView.width * 2, worldView.height * 2);
     for (const block of this.mGrids) {
-      block.checkCamera(viewPort.contains(block.x * this.world.scaleRatio, block.y * this.world.scaleRatio));
+      block.checkCamera(Phaser.Geom.Intersects.RectangleToRectangle(viewPort, block.rectangle));
+      // block.checkCamera(viewPort.contains(block.x * this.world.scaleRatio, block.y * this.world.scaleRatio));
+      // block.checkCamera(true);
     }
   }
 
@@ -50,8 +52,7 @@ export class BlockManager {
     this.mContainer.setScale(this.world.scaleRatio);
     for (let i = 0; i < len; i++) {
       const block = new Block(this.scene, this.mKey, i + 1);
-      block.x = i % this.mRows * this.mGridWidth;
-      block.y = Math.floor(i / this.mRows) * this.mGridHeight;
+      block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth, this.mGridHeight);
       this.mGrids[i] = block;
     }
     this.mContainer.add(this.mGrids);
@@ -63,17 +64,20 @@ class Block extends DynamicImage {
   private mInCamera: boolean = false;
   private mKey: string;
   private readonly mIndex: number = 0;
+  private mRectangle: Phaser.Geom.Rectangle;
   constructor(scene: Phaser.Scene, key: string, index: number) {
     super(scene, 0, 0);
     this.mKey = key;
     this.mIndex = index;
     this.setOrigin(0);
+    this.mRectangle = new Phaser.Geom.Rectangle(this.x, this.y, 1, 1);
   }
 
   checkCamera(val: boolean) {
     if (this.mInCamera !== val) {
       this.mInCamera = val;
       if (this.mLoaded) {
+        // TODO
         // this.setActive(val);
       } else {
         this.load(`${this.mKey}_${this.mIndex < 10 ? "0" : ""}${this.mIndex}.png`);
@@ -81,11 +85,22 @@ class Block extends DynamicImage {
     }
   }
 
+  setRectangle(x: number, y: number, width: number, height: number) {
+    this.x = x;
+    this.y = y;
+    this.mRectangle = new Phaser.Geom.Rectangle(x, y, width, height);
+  }
+
+  get rectangle(): Phaser.Geom.Rectangle {
+    return this.mRectangle;
+  }
+
   protected onLoadComplete(file) {
     super.onLoadComplete(file);
     if (this.texture) {
       this.mLoaded = true;
       this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+      this.mRectangle.setSize(this.width, this.height);
     }
   }
 }
