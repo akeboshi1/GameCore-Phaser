@@ -53,6 +53,7 @@ export interface IAvatar {
     blegBaseId?: (string | null);
     blegCostId?: (string | null);
     blegSpecId?: (string | null);
+    stalkerId?: (string | null);
 }
 
 export class DragonbonesModel implements IDragonbonesModel {

@@ -81,9 +81,11 @@ class Block extends DynamicImage {
     }
   }
 
-  protected onLoadComplete() {
-    super.onLoadComplete();
-    this.mLoaded = true;
-    this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+  protected onLoadComplete(file) {
+    super.onLoadComplete(file);
+    if (this.texture) {
+      this.mLoaded = true;
+      this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    }
   }
 }

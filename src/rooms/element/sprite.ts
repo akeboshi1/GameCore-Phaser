@@ -79,6 +79,14 @@ export class Sprite implements ISprite {
         if (obj.avatar) {
             this.mAvatar = { id: obj.avatar.id };
             this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
+            const attrs = obj.attrs;
+            if (attrs && attrs.length > 0) {
+                for (const att of attrs) {
+                    if (att.key === "minecart") {
+                        this.mAvatar.stalkerId = att.value;
+                    }
+                }
+            }
             this.mDisplayInfo = new DragonbonesModel(this);
         }
         if (obj.display) {
@@ -353,9 +361,9 @@ export class Sprite implements ISprite {
             this.setArea();
         }
         // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
-        if (animationName !== this.mCurrentAnimation.animationName) {
-            Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
-        }
+        // if (animationName !== this.mCurrentAnimation.animationName) {
+        //     Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
+        // }
     }
 
     private checkDirectionAnimation(baseAniName: string, dir: Direction) {

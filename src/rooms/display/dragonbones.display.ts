@@ -38,6 +38,7 @@ export enum AvatarSlotType {
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
+    Stalker = "stalker_$"
 }
 
 export enum AvatarPartType {
@@ -71,6 +72,7 @@ export enum AvatarPartType {
     WeapFarm = "weap_farm_#_$",
     ShldBarm = "shld_barm_#_$",
     WeapBarm = "weap_barm_#_$",
+    Stalker = "stalker_#_$",
 }
 
 /**
@@ -279,7 +281,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (this.mLoadMap && this.mLoadMap.size > 0) {
             this.startLoad();
         } else {
-            this.mArmatureDisplay.visible = true;
+            this.refreshAvatar();
         }
     }
 
@@ -719,6 +721,20 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 skin: avater.farmWeapId,
             });
         }
+        if (avater.stalkerId) {
+            this.replaceArr.push({
+                slot: AvatarSlotType.Stalker,
+                part: AvatarSlotType.Stalker,
+                dir: 3,
+                skin: AvatarSlotType.Stalker
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotType.Stalker,
+                part: AvatarSlotType.Stalker,
+                dir: 1,
+                skin: AvatarSlotType.Stalker
+            });
+        }
     }
 
     private replacePartDisplay(soltName: string, soltPart: string, soltDir: number, skin: number): void {
@@ -759,53 +775,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, totalComplete: integer, totalFailed: integer) => {
             if (!configList || !this.scene) return;
-            const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
-            const frames = dragonBonesTexture.getFrameNames();
-            // ==============重绘贴图方式
-            if (this.mLoadMap.size > 0) {
-                const renderTextureKey = "bones_" + this.mDisplayInfo.id;// "bones_" + this.mDisplayInfo.id;// "bones_human01";
-                if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
-                    { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
-                const checkID = 1;
-                this.mDragonBonesRenderTexture.clear();
-                // this.scene.add.existing(this.mDragonBonesRenderTexture);
-                for (let i: number = 0, len = frames.length; i < len; i++) {
-                    // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
-                    const name = frames[i];
-                    // =============龙骨part资源key 带图片资源名及方向
-                    const key = name.split("/")[1].split("_");
-                    // =============front || back单独也有格位
-                    const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[3] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
-                    const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
-                    const dat = dragonBonesTexture.get(name);
-                    const loadArr = this.mLoadMap.get(slotKey);
-                    // if (!this.mDragonBonesRenderTexture.frames) this.mDragonBonesRenderTexture.frames = {};
-                    // 原始资源
-                    if (!loadArr) {
-                        for (const obj of this.replaceArr) {
-                            const part: string = obj.slot.replace("$", obj.dir.toString());
-                            if (part === slotKey) {
-                                this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
-                                break;
-                            }
-                        }
-                        // this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
-                    } else {
-                        const drawTextureKey = loadArr[1] + "_png";
-                        const drawTexture = this.scene.game.textures.get(drawTextureKey);
-                        this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
-                    }
-                }
-                this.mDragonBonesRenderTexture.snapshotArea(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height, (snapshot: Phaser.Display.Color | HTMLImageElement) => {
-                    if (snapshot instanceof HTMLImageElement) {
-                        const changeTexture: Phaser.Textures.Texture = this.scene.game.textures.exists(renderTextureKey) ?
-                            this.scene.textures.get(renderTextureKey) : this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
-                        this.mArmatureDisplay.armature.replacedTexture = changeTexture;
-                    }
-                });
-            }
-
-            this.mArmatureDisplay.visible = true;
+            this.refreshAvatar();
             this.mLoadMap.clear();
         }, this);
 
@@ -823,6 +793,56 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         });
         this.scene.load.image(configList);
         this.scene.load.start();
+    }
+
+    private refreshAvatar() {
+        const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
+        const frames = dragonBonesTexture.getFrameNames();
+        // ==============重绘贴图方式
+        // if (this.mLoadMap.size > 0) {
+        const renderTextureKey = "bones_" + this.mDisplayInfo.id;// "bones_" + this.mDisplayInfo.id;// "bones_human01";
+        if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
+            { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
+        const checkID = 1;
+        this.mDragonBonesRenderTexture.clear();
+        // this.scene.add.existing(this.mDragonBonesRenderTexture);
+        for (let i: number = 0, len = frames.length; i < len; i++) {
+            // =============龙骨贴图资源frames里面的key "test resources/xxxxx"
+            const name = frames[i];
+            // =============龙骨part资源key 带图片资源名及方向
+            const key = name.split("/")[1].split("_");
+            // =============front || back单独也有格位
+            const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[3] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
+            const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
+            const dat = dragonBonesTexture.get(name);
+            const loadArr = this.mLoadMap.get(slotKey);
+            // if (!this.mDragonBonesRenderTexture.frames) this.mDragonBonesRenderTexture.frames = {};
+            // 原始资源
+            if (!loadArr) {
+                for (const obj of this.replaceArr) {
+                    const part: string = obj.slot.replace("$", obj.dir.toString());
+                    if (part === slotKey) {
+                        this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                        break;
+                    }
+                }
+                // this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+            } else {
+                const drawTextureKey = loadArr[1] + "_png";
+                const drawTexture = this.scene.game.textures.get(drawTextureKey);
+                this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
+            }
+        }
+        this.mDragonBonesRenderTexture.snapshotArea(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height, (snapshot: Phaser.Display.Color | HTMLImageElement) => {
+            if (snapshot instanceof HTMLImageElement) {
+                const changeTexture: Phaser.Textures.Texture = this.scene.game.textures.exists(renderTextureKey) ?
+                    this.scene.textures.get(renderTextureKey) : this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+                this.mArmatureDisplay.armature.replacedTexture = changeTexture;
+            }
+        });
+        // }
+
+        this.mArmatureDisplay.visible = true;
     }
 
     private clearFadeTween() {
