@@ -88,6 +88,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     protected mFadeTween: Phaser.Tweens.Tween;
     private mPreDirection: number;
     private replaceArr = [];
+    private mHasLoadMap: Map<string, any> = new Map();
     private mLoadMap: Map<string, any> = new Map();
     private mErrorLoadMap: Map<string, any> = new Map();
 
@@ -746,11 +747,16 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             const partName: string = ResUtils.getPartName(key);
             const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
-            if (!this.scene.textures.exists(partName) && !dragonBonesTexture.frames[frameName]) {
-                // ==============新资源需从外部加载，之后要重新打图集
-                this.mLoadMap.set(slot.name, [slot.name, key]);
+            if (!this.scene.textures.exists(partName)) {
+                if (!dragonBonesTexture.frames[frameName]) {
+                    // ==============新资源需从外部加载，之后要重新打图集
+                    this.mLoadMap.set(slot.name, [slot.name, key]);
+                } else {
+                    this.mHasLoadMap.set(key, this.scene.textures.get(partName));
+                }
             } else {
                 //     // ==============贴图集上的资源 / 单个替换资源
+                // this.mHasLoadMap.set(slot.name,this.scene.textures.exists(partName));
                 // let img: dragonBones.phaser.display.SlotImage;
                 // if (dragonBonesTexture.frames[frameName]) {// && this.scene.game.textures.exists(this.mDisplayInfo.id + "")) {
                 //     if (!this.scene.textures.exists(partName)) {

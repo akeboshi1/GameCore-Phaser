@@ -2259,9 +2259,9 @@ https-browserify@^1.0.0:
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
 
 i18next-browser-languagedetector@^4.0.1:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-4.1.0.tgz#16477c44f799e8f7d12313b075f6ab56d523688e"
-  integrity sha512-Ffsd/gpiJpsPRuLbhIB1RktHXNCuHRaMiKNZRwY5BwVthG9P+qg2WFL0ULpy/KW50+yNBSE4Y/gM5u8CmV5wdA==
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-4.0.2.tgz#eb02535cc5e57dd534fc60abeede05a3823a8551"
+  integrity sha512-AK4IZ3XST4HIKShgpB2gOFeDPrMOnZx56GLA6dGo/8rvkiczIlq05lV8w77c3ShEZxtTZeUVRI4Q/cBFFVXS/w==
   dependencies:
     "@babel/runtime" "^7.5.5"
 
@@ -3514,8 +3514,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript":
-  version "1.0.189"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#49fc4672b7e1a039abe94faf948d8e07ee4c1d8f"
+  version "1.0.188"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#5acc4cf44a17cc5866c5dec49189713753ddd9cd"
   dependencies:
     protobufjs "^6.8.8"
 

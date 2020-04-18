@@ -33,7 +33,7 @@ export default class EquipUpgradePanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "equip_upgrade/mine_eqpm.png", "equip_upgrade/mine_eqpm.json");
-        this.addAtlas(this.commonkey, "common/UI_base.png", "common/UI_base.json");
+        this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
         super.preload();
     }
     init() {

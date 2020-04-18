@@ -31,7 +31,7 @@ export class MineSettlePanel extends BasePanel {
     }
 
     preload() {
-        this.addAtlas(this.key, "minesettle/Settlement.png", "minesettle/Settlement.json");
+        this.addAtlas(this.key, "minesettle/settlement.png", "minesettle/settlement.json");
         super.preload();
     }
 
