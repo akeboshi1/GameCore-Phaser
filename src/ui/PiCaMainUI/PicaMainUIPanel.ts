@@ -2,6 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
+import { Logger } from "../../utils/log";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -29,10 +30,18 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     addListen() {
+        if (!this.mSceneName) {
+            Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
+            return;
+        }
         this.mSceneName.on("pointerup", this.onEnterEditScene, this);
     }
 
     removeListen() {
+        if (!this.mSceneName) {
+            Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
+            return;
+        }
         this.mSceneName.off("pointerup", this.onEnterEditScene, this);
     }
 

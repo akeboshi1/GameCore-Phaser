@@ -826,23 +826,19 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             // 原始资源
             if (!loadArr) {
                 for (const obj of this.replaceArr) {
-                    // slot: AvatarSlotType.WeapBarm,
-                    // part: AvatarPartType.WeapBarm,
-                    // dir: 3,
-                    // skin: avater.farmWeapId,
                     const tmpKey = obj.part.replace("#", obj.skin.toString()).replace("$", obj.dir.toString());
                     const partName: string = ResUtils.getPartName(tmpKey);
-                    const frameName: string = "test resources/" + key;
+                    const frameName: string = "test resources/" + tmpKey;
                     const part: string = obj.slot.replace("$", obj.dir.toString());
                     if (part === slotKey) {
                         if (dragonBonesTexture.frames[frameName]) {
                             this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
                             break;
-                        } else if (renderTexture && renderTexture.frames[frameName]) {
-                            this.mDragonBonesRenderTexture.drawFrame(renderTextureKey, frameName, dat.cutX, dat.cutY);
+                        } else {
+                            const texture = this.scene.textures.get(partName);
+                            this.mDragonBonesRenderTexture.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);
                             break;
                         }
-
                     }
                 }
                 // this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
