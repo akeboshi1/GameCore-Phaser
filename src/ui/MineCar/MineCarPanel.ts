@@ -191,7 +191,7 @@ export class MineCarPanel extends BasePanel {
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
 
-    const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.mData;
+    const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.data;
     const mineItem = minePackage.items || [];
     const limit = minePackage.limit || 0;
     const items = [];
