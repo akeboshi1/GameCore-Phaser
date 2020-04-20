@@ -3,7 +3,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world , op_def} from "pixelpai_proto";
 
-export class Chat extends PacketHandler {
+export class PicaChat extends PacketHandler {
   private readonly world: WorldService;
   private mEvent: Phaser.Events.EventEmitter;
   constructor($world: WorldService) {

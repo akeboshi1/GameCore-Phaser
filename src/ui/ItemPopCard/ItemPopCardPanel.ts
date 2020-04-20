@@ -26,6 +26,7 @@ export class ItemPopCardPanel extends BasePanel {
   }
 
   public addListen() {
+    if (!this.mInitialized) return;
     this.mDetailDisplay.on("show", this.onShowHandler, this);
     this.on("pointerup", this.onCloseHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
@@ -36,6 +37,7 @@ export class ItemPopCardPanel extends BasePanel {
   }
 
   public removeListen() {
+    if (!this.mInitialized) return;
     this.mDetailDisplay.off("show", this.onShowHandler, this);
     this.off("pointerup", this.onCloseHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
@@ -63,8 +65,6 @@ export class ItemPopCardPanel extends BasePanel {
     this.mCloseBtn.y = centerY + this.mCardContainer.height / 2 + 48 * this.dpr;
 
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
-
     // this.mDetailDisplay.scale = 1 / scale;
 
     // this.mCloseBtn.x = centerX;
@@ -185,7 +185,7 @@ export class ItemPopCardPanel extends BasePanel {
     this.add(this.mCardContainer);
     this.mCardContainer.add([this.mBorder, background, desBg, this.mDetailDisplay, nickNameBg, this.mNickName, this.mDesText, this.mSource]);
     this.add(this.mCloseBtn);
-
+    this.setInteractive();
     super.init();
     this.resize(0, 0);
 

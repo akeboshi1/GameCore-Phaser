@@ -9,16 +9,17 @@ export class LeftBtnGroup extends BasePanel {
     private mResKey: string;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.disInteractive();
     }
     public show(param?: any) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         super.show(param);
     }
 
     public resize() {
         this.x = this.width + 5 * this.mWorld.uiScale;
         this.y = this.height / 2 + 10 * this.mWorld.uiScale;
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
     }
 
     public destroy() {
@@ -35,7 +36,7 @@ export class LeftBtnGroup extends BasePanel {
         const baseX = this.width + 5 * this.mWorld.uiScale;
         const toX: number = show === true ? baseX : baseX - 50;
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Linear",
@@ -46,21 +47,27 @@ export class LeftBtnGroup extends BasePanel {
         });
     }
 
+    public addListen() {
+    }
+
+    public removeListen() {
+    }
+
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
         this.mResKey = "baseView";
-        this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+        this.scene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
         super.preload();
     }
 
     protected init() {
-        this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToUILayer(this.view);
         let hei: number = 0;
         // const btnResList: string[] = this.mCollapse === false ? ["btnGroup_expand.png", "btnGroup_expand.png", "btnGroup_collapse.png", "btnGroup_collapse.png"] : ["btnGroup_collapse.png", "btnGroup_collapse.png", "btnGroup_expand.png", "btnGroup_expand.png"];
         if (this.mWorld.getConfig().platform !== "app") {
-            this.mExpandBtn = new IconSelectBtn(this.mScene, this.mWorld, this.mResKey, ["btnGroup_expand.png", "btnGroup_collapse.png"], 1);
+            this.mExpandBtn = new IconSelectBtn(this.scene, this.mWorld, this.mResKey, ["btnGroup_expand.png", "btnGroup_collapse.png"], 1);
             this.add(this.mExpandBtn);
             this.mExpandBtn.setClick(() => {
                 if (!this.mCollapse) {

@@ -1,23 +1,25 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
 import { Logger } from "../../utils/log";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class MineSettleMediator extends BaseMediator {
     private scene: Phaser.Scene;
+    private world: WorldService;
     private layerMgr: ILayerManager;
     private mineSettle: MineSettle;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
-        super(worldService);
+        super();
         this.scene = scene;
         this.layerMgr = layerMgr;
+        this.world = worldService;
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.isShowing) {
+        if ((this.mView && this.mView.isShow()) || this.mShow) {
             return;
         }
         if (!this.mView) {
@@ -29,7 +31,7 @@ export class MineSettleMediator extends BaseMediator {
             this.mineSettle.on("minesettlepacket", this.onMineSettlePacket, this);
             this.mineSettle.register();
         }
-        this.layerMgr.addToUILayer(this.mView);
+        this.layerMgr.addToUILayer(this.mView.view);
         if (!this.mParam || this.mParam.length === 0)
             this.mineSettle.reqMineSettlePacket();
         else this.onMineSettlePacket(this.mParam[0]);

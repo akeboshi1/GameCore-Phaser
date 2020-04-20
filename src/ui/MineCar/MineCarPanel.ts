@@ -21,7 +21,6 @@ export class MineCarPanel extends BasePanel {
   private mTips: Tips;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.setTween(false);
     this.scale = 1;
   }
 
@@ -78,11 +77,12 @@ export class MineCarPanel extends BasePanel {
   }
 
   addListen() {
-    this.mCloseBtn.setInteractive();
+    if (!this.mInitialized) return;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
   removeListen() {
+    if (!this.mInitialized) return;
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -119,6 +119,7 @@ export class MineCarPanel extends BasePanel {
       key: this.key,
       frame: "close_btn.png"
     }, false).setScale(zoom);
+    this.mCloseBtn.setInteractive();
 
     this.mCounter = this.scene.make.text({
       x: -86 * this.dpr * zoom,

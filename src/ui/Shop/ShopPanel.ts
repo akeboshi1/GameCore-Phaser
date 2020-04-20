@@ -2,7 +2,6 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Url, Border, Background } from "../../utils/resUtil";
 import { ShopItemSlot } from "./shop.itemSlot";
-import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
@@ -37,7 +36,7 @@ export class ShopPanel extends BasePanel {
             }
         }
 
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
     }
 
     public setDataList(value: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE) {
@@ -62,10 +61,12 @@ export class ShopPanel extends BasePanel {
     }
 
     public addListen() {
+        if (!this.mInitialized) return;
         this.mClsBtn.on("pointerup", this.shopMedClose, this);
     }
 
     public removeListen() {
+        if (!this.mInitialized) return;
         this.mClsBtn.off("pointerup", this.shopMedClose, this);
     }
 
@@ -147,7 +148,7 @@ export class ShopPanel extends BasePanel {
         for (let i: number = 0; i < 20; i++) {
             tmpX = (i % 5) * 88 - this.mBg.width / 2 + 75;
             tmpY = Math.floor(i / 5) * 82 - this.mBg.height / 2 + 72;
-            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", "itemSelectFrame");
+            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this.view, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", "itemSelectFrame");
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
@@ -159,7 +160,7 @@ export class ShopPanel extends BasePanel {
         this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
         this.add(this.mClsBtn);
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
 
         // 异步加载过程中会导致数据过来，面板仍然没有加载完毕，所以缓存数据等ui加载完毕再做显示
         if (this.mShopData) {
@@ -170,7 +171,7 @@ export class ShopPanel extends BasePanel {
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) (this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator).resize();
+        if (show) this.mWorld.uiManager.getMediator(ShopMediator.NAME).resize();
     }
 
     private refreshDataList() {
@@ -188,7 +189,7 @@ export class ShopPanel extends BasePanel {
     }
 
     private shopMedClose() {
-        const med = this.mWorld.uiManager.getMediator(ShopMediator.NAME) as ShopMediator;
+        const med = this.mWorld.uiManager.getMediator(ShopMediator.NAME);
         med.hide();
     }
 }

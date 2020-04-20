@@ -7,9 +7,7 @@ import { BasePanel } from "../components/BasePanel";
 import { NinePatch } from "../components/nine.patch";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
-import { Logger } from "../../utils/log";
 export class MineSettlePanel extends BasePanel {
-
     private key: string = "mine_settle";
     private confirmBtn: NinePatchButton;
     private mPropGrid: GridTable;

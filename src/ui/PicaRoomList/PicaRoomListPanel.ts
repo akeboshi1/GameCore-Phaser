@@ -51,11 +51,13 @@ export class PicaRoomListPanel extends BasePanel {
   }
 
   public addListen() {
+    if (!this.mInitialized) return;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
   }
 
   public removeListen() {
+    if (!this.mInitialized) return;
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
     this.mSeachBtn.off("pointerup", this.onSeachHandler, this);
   }
@@ -136,7 +138,7 @@ export class PicaRoomListPanel extends BasePanel {
       }
     }, false).setOrigin(0.5);
 
-    this.add([background, this.mRoomContainer, this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
+    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText, this.mRoomDeleBtn, this.mMyRoomDeleBtn]);
     super.init();
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
@@ -321,11 +323,11 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
         if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
       }
     }
-    this.mContainer.setSize(this.mScroller.width, this.mHeight);
+    this.mContainer.setSize(this.mScroller.view.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (540 * this.mDpr / 2);
-    this.mScroller.setSize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    this.mScroller.setSize(this.mScroller.view.width, refreshHei, this.mScroller.bounds[0], refreshHei);
     // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScaleNew + (80 * this.mWorld.uiRatio / 2));
   }
 
@@ -409,11 +411,11 @@ class MyRoomDelegate extends RoomDelegate {
         if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
       }
     }
-    this.mContainer.setSize(this.mScroller.width, this.mHeight);
+    this.mContainer.setSize(this.mScroller.view.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
-    this.mScroller.setSize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    this.mScroller.setSize(this.mScroller.view.width, refreshHei, this.mScroller.bounds[0], refreshHei);
   }
 
   protected init() {

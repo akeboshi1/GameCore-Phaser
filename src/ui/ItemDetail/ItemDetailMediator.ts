@@ -1,21 +1,21 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { ItemDetail } from "./ItemDetail";
 import { ILayerManager } from "../layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { NinePatchButton } from "../components/ninepatch.button";
-import { UIType } from "../ui.manager";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class ItemDetailMediator extends BaseMediator {
-    readonly world: WorldService;
+    private world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
+        super();
         this.world = world;
         this.mScene = scene;
-        this.mUIType = UIType.TipsUIType;
+        this.mUIType = UIType.Tips;
         this.mLayerManager = layerManager;
     }
 
@@ -33,9 +33,9 @@ export class ItemDetailMediator extends BaseMediator {
         }
         this.mView = new ItemDetail(this.mScene, this.world);
         this.mView.show(param);
-        this.mLayerManager.addToToolTipsLayer(this.mView);
+        this.mLayerManager.addToToolTipsLayer(this.mView.view);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
-        this.isShowing = true;
+        this.mShow = true;
     }
     public update(param?: any): void {
         super.update(param);

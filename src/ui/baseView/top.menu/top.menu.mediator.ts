@@ -1,17 +1,20 @@
-import { BaseMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
 import { MessageType } from "../../../const/MessageType";
 import { TopMenuContainer } from "./top.menu.container";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { IBtnData } from "../icon.btn";
+import { BaseMediator } from "../../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class TopMenuMediator extends BaseMediator {
+  public static NAME: string = "TopMenuMediator";
   protected mView: TopMenuContainer;
   private readonly scene: Phaser.Scene;
+  private world: WorldService;
   constructor(scene: Phaser.Scene, world: WorldService) {
-    super(world);
+    super();
     this.scene = scene;
+    this.world = world;
     // this.mMenuPanel = new TopMenuContainer(scene, world);
     // this.onAddIconHandler({ key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"], iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1 });
   }

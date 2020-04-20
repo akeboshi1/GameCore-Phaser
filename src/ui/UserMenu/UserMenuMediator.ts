@@ -1,31 +1,31 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { UserMenuPanel } from "./UserMenuPanel";
 import { ILayerManager } from "../layer.manager";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
-import { UIType } from "../ui.manager";
 import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class UserMenuMediator extends BaseMediator {
-    readonly world: WorldService;
+    private world: WorldService;
     private mScene: Phaser.Scene;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
-        super(worldService);
+        super();
         this.world = worldService;
         this.mLayerManager = layerManager;
         this.mScene = scene;
-        this.mUIType = UIType.TipsUIType;
+        this.mUIType = UIType.Tips;
     }
 
     getView(): BasePanel {
-        return this.mView;
+        return this.mView.view;
     }
 
     hide(): void {
-        this.isShowing = false;
+        this.mShow = false;
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         if (this.mView) {
             this.mView.off("menuClick", this.onClickMenuHandler, this);
@@ -43,7 +43,7 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     resize() {
-        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView) this.mView.resize();
     }
 
     show(param?: any): void {
@@ -52,7 +52,7 @@ export class UserMenuMediator extends BaseMediator {
         }
         this.mView = new UserMenuPanel(this.mScene, this.world);
         this.mView.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToUILayer(this.mView.view);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         this.mView.on("menuClick", this.onClickMenuHandler, this);
         super.show(param);

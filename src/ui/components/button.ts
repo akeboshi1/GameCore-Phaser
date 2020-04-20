@@ -18,10 +18,10 @@ export class Button extends GameObjects.Container implements IButtonState {
     this.mBackground = scene.make.image({
       key,
       frame
-    }, false).setInteractive();
+    }, false);
     this.setSize(this.mBackground.width, this.mBackground.height);
     this.add(this.mBackground);
-
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
     if (text) {
       this.mText = this.scene.make.text(undefined, false)
         .setOrigin(0.5, 0.5)
@@ -29,8 +29,8 @@ export class Button extends GameObjects.Container implements IButtonState {
         .setSize(this.mBackground.width, this.mBackground.height);
       this.add(this.mText);
     }
-    this.mBackground.on("pointerup", this.onPointerUpHandler, this);
-    this.mBackground.on("pointerdown", this.onPointerDownHandler, this);
+    this.on("pointerup", this.onPointerUpHandler, this);
+    this.on("pointerdown", this.onPointerDownHandler, this);
   }
 
   changeNormal() {
@@ -73,9 +73,15 @@ export class Button extends GameObjects.Container implements IButtonState {
     }
   }
 
+  destroy() {
+    this.off("pointerup", this.onPointerUpHandler, this);
+    this.off("pointerdown", this.onPointerDownHandler, this);
+    super.destroy();
+  }
+
   private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
     if (Math.abs(pointer.downX - pointer.upX) < 30 && Math.abs(pointer.downY - pointer.upY) < 30) {
-        this.emit("click", pointer, this);
+      this.emit("click", pointer, this);
     }
     clearTimeout(this.mPressTime);
   }
@@ -83,6 +89,6 @@ export class Button extends GameObjects.Container implements IButtonState {
   private onPointerDownHandler() {
     this.mPressTime = setTimeout(() => {
       this.emit("hold", this);
-  }, this.mPressDelay);
+    }, this.mPressDelay);
   }
 }

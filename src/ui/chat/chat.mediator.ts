@@ -1,52 +1,35 @@
 import { WorldService } from "../../game/world.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
-import { IMediator } from "../baseMediator";
 import { IMessage } from "./message";
-import { World } from "../../game/world";
 import { ChatPanelPC } from "./chatPanel.pc";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
-import { UIType } from "../ui.manager";
 import { BasePanel } from "../components/BasePanel";
-export class ChatMediator extends PacketHandler implements IMediator {
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { Chat } from "./Chat";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+export class ChatMediator extends BaseMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
-    private mChatPanel: BaseChatPanel;
     private mGMEApi: WebGMEAPI;
     private mInRoom: boolean = false;
     private mQCLoudAuth: string;
     private mAllMessage: IMessage[] = [];
     private mMaxMessageNum = 50;
     private mScene: Phaser.Scene;
-    private mParam: any;
-    private mUIType: number;
-    private mAddWid: number = 0;
-    private mAddHei: number = 0;
+    private chat: Chat;
     constructor(world: WorldService, scene: Phaser.Scene) {
         super();
         this.world = world;
         this.mScene = scene;
-        this.mUIType = this.world.game.device.os.desktop ? UIType.BaseUIType : UIType.NormalUIType;
-        if (this.world.connection) {
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QCLOUD_GME_AUTHBUFFER, this.handleQCLoudGME);
-        }
-        this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
-    }
-
-    public setViewAdd(wid: number, hei: number) {
-        this.mAddWid = wid;
-        this.mAddHei = hei;
+        this.chat = new Chat(world);
+        this.mUIType = this.world.game.device.os.desktop ? UIType.Scene : UIType.Normal;
     }
 
     public getUIType(): number {
         return this.mUIType;
-    }
-
-    public setUiScale(value: number) {
-        this.mChatPanel.scaleX = this.mChatPanel.scaleY = value;
     }
 
     public enterRoom() {
@@ -76,20 +59,20 @@ export class ChatMediator extends PacketHandler implements IMediator {
         return true;
     }
 
+    public tweenView(show: boolean) {
+        if (!this.mView) return;
+        this.mView.tweenExpand(show);
+    }
+
     public getView(): BasePanel {
-        return this.mChatPanel;
+        return this.mView.view;
     }
 
     public isShow(): boolean {
-        if (!this.mChatPanel) {
+        if (!this.mView) {
             return false;
         }
-        return this.mChatPanel.isShow();
-    }
-
-    public tweenView(show: boolean) {
-        if (!this.mChatPanel) return;
-        this.mChatPanel.tweenView(show);
+        return this.mView.isShow();
     }
 
     public showing(): boolean {
@@ -97,43 +80,36 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public resize() {
-        if (this.mChatPanel) {
-            this.mChatPanel.setLocation();
+        const size = this.world.getSize();
+        if (this.mView) {
+            this.mView.resize(size.width, size.height);
         }
     }
 
     public show(param?: any) {
-        if (this.mChatPanel && this.mChatPanel.isShow()) {
+        if (this.mView && this.mView.isShow()) {
             return;
         }
-        this.world.connection.removePacketListener(this);
-        this.world.connection.addPacketListener(this);
         if (this.world.game.device.os.desktop) {
-            this.mChatPanel = new ChatPanelPC(this.mScene, this.world);
+            this.mView = new ChatPanelPC(this.mScene, this.world);
         } else {
-            this.mChatPanel = new ChatPanelMobile(this.mScene, this.world);
+            this.mView = new ChatPanelMobile(this.mScene, this.world);
             this.world.uiManager.checkUIState(ChatMediator.NAME, false);
         }
-        this.world.uiManager.getUILayerManager().addToUILayer(this.mChatPanel);
-        this.mChatPanel.on("sendChat", this.onSendChatHandler, this);
-        this.mChatPanel.on("selectedVoice", this.onSelectedVoiceHandler, this);
-        this.mChatPanel.on("selectedMic", this.onSelectedMicHandler, this);
-        this.mChatPanel.show();
-        this.setUiScale(this.world.uiScale);
+        this.world.uiManager.getUILayerManager().addToUILayer(this.mView.view);
+        this.addListen();
+        this.mView.show();
+        this.mView.setScale(this.world.uiScale);
     }
 
     public update(param?: any) {
-        this.mChatPanel.update(param);
+        this.mView.update(param);
         this.mParam = param;
     }
 
     public hide() {
-        this.world.connection.removePacketListener(this);
-        this.mChatPanel.off("sendChat", this.onSendChatHandler, this);
-        this.mChatPanel.off("selectedVoice", this.onSelectedVoiceHandler, this);
-        this.mChatPanel.off("selectedMic", this.onSelectedMicHandler, this);
-        this.mChatPanel.hide();
-        this.mChatPanel = null;
+        this.removeListen();
+        this.mView.hide();
         if (!this.world.game.device.os.desktop) this.world.uiManager.checkUIState(ChatMediator.NAME, true);
     }
 
@@ -146,14 +122,14 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     public destroy() {
-        if (this.mChatPanel) {
-            this.mChatPanel.destroy();
-            this.mChatPanel = null;
+        this.removeListen();
+        if (this.chat) {
+            this.chat.unregister();
+            this.chat = null;
         }
         if (this.mGMEApi) {
             this.mGMEApi = null;
         }
-        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
         this.mScene = null;
         this.world = null;
         this.mInRoom = false;
@@ -162,10 +138,25 @@ export class ChatMediator extends PacketHandler implements IMediator {
             if (message) message = null;
         });
         this.mAllMessage = null;
+        super.destroy();
     }
 
-    private scaleChange() {
-        this.setUiScale(this.world.uiScale);
+    private addListen() {
+        this.chat.on("characterChat", this.handleCharacterChat, this);
+        this.chat.on("QCLoundGME", this.handleQCLoudGME, this);
+        this.mView.on("sendChat", this.onSendChatHandler, this);
+        this.mView.on("selectedVoice", this.onSelectedVoiceHandler, this);
+        this.mView.on("selectedMic", this.onSelectedMicHandler, this);
+        this.chat.register();
+    }
+
+    private removeListen() {
+        this.chat.off("characterChat", this.handleCharacterChat, this);
+        this.chat.off("QCLoundGME", this.handleQCLoudGME, this);
+        this.mView.off("sendChat", this.onSendChatHandler, this);
+        this.mView.off("selectedVoice", this.onSelectedVoiceHandler, this);
+        this.mView.off("selectedMic", this.onSelectedMicHandler, this);
+        this.chat.unregister();
     }
 
     private initGME() {
@@ -203,21 +194,21 @@ export class ChatMediator extends PacketHandler implements IMediator {
     }
 
     private changeMessageChannel() {
-        if (!this.mChatPanel) return;
-        const showMessages = this.mAllMessage.filter((msg: IMessage) => msg.channel === this.mChatPanel.outChannel || msg.channel === op_def.ChatChannel.System || this.mChatPanel.outChannel === null);
+        if (!this.mView) return;
+        const showMessages = this.mAllMessage.filter((msg: IMessage) => msg.channel === (this.mView as BaseChatPanel).outChannel || msg.channel === op_def.ChatChannel.System || (this.mView as BaseChatPanel).outChannel === null);
         const len = showMessages.length;
         let message: IMessage = null;
         let wrapStr = "\n";
         for (let i = 0; i < len; i++) {
             message = showMessages[i];
             if (i === len - 1) wrapStr = "";
-            this.mChatPanel.appendChat(message.chat + wrapStr);
+            (this.mView as BaseChatPanel).appendChat(message.chat + wrapStr);
         }
     }
 
     private handleCharacterChat(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        if (!this.world || !this.world.emitter || !this.room || !this.mChatPanel) {
+        if (!this.world || !this.world.emitter || !this.room || !this.mView) {
             return;
         }
 
@@ -231,7 +222,7 @@ export class ChatMediator extends PacketHandler implements IMediator {
         const nickname = player ? `${player.model.nickname}:` : "";
         const color = content.chatSetting && content.chatSetting.textColor ? content.chatSetting.textColor : "#FFFFFF";
         this.appendMessage(this.mAllMessage, { chat: `[color=${color}]${nickname}:${content.chatContext}[/color]`, channel: content.chatChannel });
-        this.mChatPanel.appendChat(`[b][color=${color}]${nickname}${content.chatContext}[/color][/b]\n`);
+        (this.mView as BaseChatPanel).appendChat(`[b][color=${color}]${nickname}${content.chatContext}[/color][/b]\n`);
     }
 
     private onSendChatHandler(text: string) {

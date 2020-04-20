@@ -24,25 +24,7 @@ export class StoragePanel extends BasePanel {
         this.x = size.width + wid >> 1;
         this.y = size.height + hei - 200;
     }
-    public show(param: any) {
-        super.show(param);
-    }
-    public update(param: any) {
-        super.update(param);
-    }
     public destroy() {
-        // if (this.mBg) {
-        //     this.mBg.destroy(true);
-        //     this.mBg = null;
-        // }
-        // if (this.mBorder) {
-        //     this.mBorder.destroy(true);
-        //     this.mBorder = null;
-        // }
-        // if (this.mClsBtn) {
-        //     this.mClsBtn.destroy();
-        //     this.mClsBtn = null;
-        // }
         if (this.mBagItemSlotList) {
             const len: number = this.mBagItemSlotList.length;
             for (let i: number = 0; i < len; i++) {
@@ -75,15 +57,14 @@ export class StoragePanel extends BasePanel {
         this.mBorder.x = this.mBg.x;
         this.mBorder.y = this.mBg.y + 10;
         this.addAt(this.mBorder, 1);
-        this.mWidth = this.mBg.width;
-        this.mHeight = this.mBg.height;
-        const titleIcon: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
+        this.setSize(this.mBg.width, this.mBg.height);
+        const titleIcon: Phaser.GameObjects.Image = this.scene.make.image(undefined, false);
         titleIcon.setTexture(this.mResStr, "itemBagView_title.png");
         titleIcon.x = (-this.mBg.width >> 1) + 80;
         titleIcon.y = -this.mBg.height >> 1;
         this.add(titleIcon);
 
-        const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
+        const titleTF: Phaser.GameObjects.Text = this.scene.make.text(undefined, false);
         titleTF.setFontFamily("Tahoma");
         titleTF.setFontStyle("bold");
         titleTF.setFontSize(20);
@@ -100,37 +81,37 @@ export class StoragePanel extends BasePanel {
         for (let i: number = 0; i < 9; i++) {
             tmpX = i % 9 * 60 + 32 - 724 / 2;
             tmpY = Math.floor(i / 9) * 60 - 55;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
+            itemSlot = new ItemSlot(this.scene, this.mWorld, this.view, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
             itemSlot.createUI();
             this.mBagItemSlotList.push(itemSlot);
         }
 
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
+        this.mClsBtn = new IconBtn(this.scene, this.mWorld, {
             key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
             iconResKey: "", iconTexture: "", scale: 1, pngUrl: "ui/common/common_clsBtn.png", jsonUrl: "ui/common/common_clsBtn.json"
         });
-        this.mClsBtn.x = (this.mWidth >> 1) - 65;
-        this.mClsBtn.y = -this.mHeight >> 1;
+        this.mClsBtn.x = (this.width >> 1) - 65;
+        this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
         this.add(this.mClsBtn);
     }
 
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
         this.mResStr = "bagView";
         this.mResPng = "ui/bag/bagView.png";
         this.mResJson = "ui/bag/bagView.json";
-        this.mScene.load.image(Border.getName(), Border.getPNG());
-        this.mScene.load.image(Background.getName(), Background.getPNG());
-        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
-        this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        this.scene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.image(Background.getName(), Background.getPNG());
+        this.scene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
+        this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
         super.preload();
     }
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) (this.mWorld.uiManager.getMediator(StorageMediator.NAME) as StorageMediator).resize();
+        if (show) this.mWorld.uiManager.getMediator(StorageMediator.NAME).resize();
     }
 }

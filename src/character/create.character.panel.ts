@@ -8,7 +8,7 @@ export class CreateCharacterPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     const container = this.scene.add.container(0, 0);
-    container.add(this);
+    container.add(this.view);
   }
 
   preload() {
@@ -22,7 +22,7 @@ export class CreateCharacterPanel extends BasePanel {
 
   resize(wid: number, hei: number) {
     const size = this.mWorld.getSize();
-    this.scaleX = this.scaleY = this.mWorld.uiScale;
+    this.scale = this.mWorld.uiScale;
     this.foot.scaleX = this.foot.scaleY = .75;
     this.foot.x = (size.width - this.foot.width >> 1) * .75;
     this.foot.y = (size.height - this.foot.height >> 1) * .75;

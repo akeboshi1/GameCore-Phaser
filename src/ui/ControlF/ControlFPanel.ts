@@ -18,14 +18,6 @@ export class ControlFPanel extends BasePanel {
         this.off("pointerdown", this.onMouseDownHandler, this);
     }
 
-    show(param?: any) {
-        super.show(param);
-    }
-
-    hide() {
-        super.hide();
-    }
-
     resize(wid: number = 0, hei: number = 0) {
         if (!this.mScene) return;
         const worldView = this.mScene.cameras.main.worldView;

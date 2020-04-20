@@ -13,7 +13,6 @@ export class PicaMainUIPanel extends BasePanel {
     private mCounter: IconText;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
-        this.setTween(false);
     }
 
     resize(w: number, h: number) {
@@ -30,6 +29,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     addListen() {
+        if (!this.mInitialized) return;
         if (!this.mSceneName) {
             Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
             return;
@@ -38,6 +38,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     removeListen() {
+        if (!this.mInitialized) return;
         if (!this.mSceneName) {
             Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
             return;

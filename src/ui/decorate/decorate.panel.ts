@@ -46,12 +46,12 @@ export class DecoratePanel extends BasePanel {
             this.preload();
             return;
         }
-        if (this.mShowing) return;
+        if (this.mShow) return;
         if (this.configList && this.configList[0]) this.playSound(this.configList[0]);
         if (!this.mTweening && this.mTweenBoo) {
             this.showTween(true);
         } else {
-            this.mShowing = true;
+            this.mShow = true;
         }
     }
 
@@ -121,8 +121,10 @@ export class DecoratePanel extends BasePanel {
         }
     }
 
-    public updatePos(x: number, y?: number, z?: number) {
-        this.setPosition(x * this.mScaleRatio, (y + this.offset.y) * this.mScaleRatio, z);
+    public setPosition(x: number, y?: number, z?: number) {
+        this.x = x * this.mScaleRatio;
+        this.y = (y + this.offset.y) * this.mScaleRatio;
+        this.z = z || 0;
     }
 
     protected preload() {

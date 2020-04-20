@@ -24,7 +24,7 @@ export class RightMediator extends BaseFaceMediator {
     }
 
     public hide() {
-        this.isShowing = false;
+        this.mShow = false;
         this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
         this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
         if (this.mView) {

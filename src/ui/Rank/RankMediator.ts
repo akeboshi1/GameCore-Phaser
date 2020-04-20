@@ -1,21 +1,21 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { RankPanel } from "./RankPanel";
 import { ILayerManager } from "../layer.manager";
-import { UIType } from "../ui.manager";
 import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class RankMediator extends BaseMediator {
     public static NAME: string = "RankMediator";
-    readonly world: WorldService;
+    private world: WorldService;
     private mScene: Phaser.Scene;
     private mlayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
+        super();
         this.world = world;
         this.mScene = scene;
         this.mlayerManager = layerManager;
-        this.mUIType = this.world.game.device.os.desktop ? UIType.BaseUIType : UIType.NormalUIType;
+        this.mUIType = this.world.game.device.os.desktop ? UIType.Scene : UIType.Normal;
     }
 
     public tweenView(show: boolean) {
@@ -28,11 +28,11 @@ export class RankMediator extends BaseMediator {
     }
 
     getView(): BasePanel {
-        return this.mView;
+        return this.mView.view;
     }
 
     hide(): void {
-        this.isShowing = false;
+        this.mShow = false;
         if (this.mView) {
             this.mView.hide();
             this.mView = null;
@@ -51,7 +51,7 @@ export class RankMediator extends BaseMediator {
     }
 
     resize() {
-        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView) this.mView.resize();
     }
 
     show(param?: any): void {
@@ -59,7 +59,7 @@ export class RankMediator extends BaseMediator {
             return;
         }
         this.mView = new RankPanel(this.mScene, this.world);
-        this.mlayerManager.addToUILayer(this.mView);
+        this.mlayerManager.addToUILayer(this.mView.view);
         if (param && param.length > 0) {
             (this.mView as RankPanel).addItem(param[0]);
         }
@@ -79,8 +79,8 @@ export class RankMediator extends BaseMediator {
 
     destroy() {
         if (this.mView) {
-            if (this.mView.parentContainer) {
-                this.mView.parentContainer.remove(this.mView);
+            if (this.mView.view.parentContainer) {
+                this.mView.view.parentContainer.remove(this.mView);
             }
             this.mView.destroy();
             this.mView = null;

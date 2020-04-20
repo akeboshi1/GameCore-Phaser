@@ -1,15 +1,15 @@
 import { MessageType } from "../../../const/MessageType";
-import { BaseMediator } from "../../baseMediator";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
 import { IDragable } from "../idragable";
 import { IDropable } from "../idropable";
-import { op_gameconfig, op_client } from "pixelpai_proto";
+import { op_gameconfig } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
 import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { UIType } from "../../ui.manager";
-import { BasePanel } from "../../components/BasePanel";
+import { BaseMediator } from "../../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { IAbstractPanel } from "../../../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
+import { UIType } from "../../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
@@ -26,15 +26,15 @@ export class BagMediator extends BaseMediator {
     private mScene: Phaser.Scene;
     private mLayerManager;
     constructor(layerManager: ILayerManager, mworld: WorldService, scene: Phaser.Scene) {
-        super(mworld);
+        super();
         this.mLayerManager = layerManager;
         this.world = mworld;
         this.mScene = scene;
-        this.mUIType = UIType.NormalUIType;
+        this.mUIType = UIType.Normal;
     }
 
-    public resize() {
-        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
+    public resize(width, height) {
+        if (this.mView) this.mView.resize(width, height);
     }
 
     public isSceneUI(): boolean {
@@ -45,7 +45,7 @@ export class BagMediator extends BaseMediator {
         if (this.mView) return this.mView.isShow();
     }
 
-    public getView(): BasePanel {
+    public getView(): IAbstractPanel {
         return this.mView;
     }
 
@@ -66,7 +66,7 @@ export class BagMediator extends BaseMediator {
             this.world.roomManager.currentRoom.playerManager.actor.getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.playerManager.actor.package.id, 1, BagPanel.PageMaxCount);
         }
         this.mView.show(param);
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToUILayer(this.mView.view);
         this.world.uiManager.checkUIState(BagMediator.NAME, false);
         this.refrehView();
         super.show(param);

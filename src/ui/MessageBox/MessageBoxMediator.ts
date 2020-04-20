@@ -1,22 +1,22 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { MessageBoxView } from "./MessageBoxView";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { UIType } from "../ui.manager";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class MessageBoxMediator extends BaseMediator {
-    readonly world: WorldService;
+    private world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
+        super();
         this.world = world;
         this.mScene = scene;
         this.mLayerManager = layerManager;
-        this.mUIType = UIType.TipsUIType;
+        this.mUIType = UIType.Tips;
     }
 
     public isSceneUI(): boolean {
@@ -33,7 +33,7 @@ export class MessageBoxMediator extends BaseMediator {
         }
         this.mView = new MessageBoxView(this.mScene, this.world);
         this.mView.show(param);
-        this.mLayerManager.addToToolTipsLayer(this.mView);
+        this.mLayerManager.addToToolTipsLayer(this.mView.view);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         super.show(param);
     }
@@ -43,7 +43,7 @@ export class MessageBoxMediator extends BaseMediator {
     }
 
     public hide() {
-        this.isShowing = false;
+        this.mShow = false;
         this.mScene.input.off("gameobjectdown", this.onBtnHandler, this);
         if (this.mView) {
             this.mView.hide();

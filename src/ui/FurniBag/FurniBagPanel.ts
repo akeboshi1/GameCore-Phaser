@@ -39,7 +39,6 @@ export class FurniBagPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
-    this.setTween(false);
     this.scale = 1;
   }
 
@@ -130,12 +129,14 @@ export class FurniBagPanel extends BasePanel {
   }
 
   public addListen() {
+    if (!this.mInitialized) return;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mSeachInput.on("seach", this.onSeachHandler, this);
     this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
   }
 
   public removeListen() {
+    if (!this.mInitialized) return;
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
     this.mSeachInput.off("seach", this.onSeachHandler, this);
     this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);

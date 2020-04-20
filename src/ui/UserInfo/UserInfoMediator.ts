@@ -1,24 +1,24 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { UserInfoPanel } from "./UserInfoPanel";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class UserInfoMediator extends BaseMediator {
     public static NAME: string = "UserInfoMediator";
-    readonly world: WorldService;
+    private world: WorldService;
     constructor(private mLayerManager: ILayerManager, private mScene: Phaser.Scene, world: WorldService) {
-        super(world);
+        super();
         this.world = world;
     }
 
     getView(): BasePanel {
-        return this.mView;
+        return this.mView.view;
     }
 
     hide(): void {
-        this.isShowing = false;
+        this.mShow = false;
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         if (this.mView) {
             this.mView.hide();
@@ -36,7 +36,7 @@ export class UserInfoMediator extends BaseMediator {
     }
 
     resize() {
-        if (this.mView) this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView) this.mView.resize();
     }
 
     show(param?: any): void {
@@ -48,7 +48,7 @@ export class UserInfoMediator extends BaseMediator {
         }
         this.mView = new UserInfoPanel(this.mScene, this.world);
         this.mView.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToUILayer(this.mView.view);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         super.show(param);
     }

@@ -1,20 +1,22 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { DebugLogger } from "./DebugLoggerPanel";
-import { UIType } from "../ui.manager";
 import { ILayerManager } from "../layer.manager";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class DebugLoggerMediator extends BaseMediator {
     public static NAME: string = "DebugLoggerMediator";
     private mScene: Phaser.Scene;
+    private world: WorldService;
     constructor(uiManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
-        this.mUIType = UIType.BaseUIType;
+        super();
+        this.mUIType = UIType.Scene;
         this.mScene = scene;
+        this.world = world;
     }
 
     public resize() {
-        if (this.mView) return this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView) return this.mView.resize();
     }
 
     public isShow(): boolean {
@@ -31,7 +33,7 @@ export class DebugLoggerMediator extends BaseMediator {
     }
 
     public hide() {
-        this.isShowing = false;
+        this.mShow = false;
         if (this.mView) {
             this.mView.hide();
             this.mView = null;
