@@ -8,10 +8,6 @@ export class BottomMediator extends BaseFaceMediator {
         super(mWorld, scene);
     }
 
-    public tweenView(show: boolean) {
-        if (this.mView) (this.mView as BottomBtnGroup).tweenView(show);
-    }
-
     public show(param?: any) {
         if (this.mView && this.isShow()) {
             return;

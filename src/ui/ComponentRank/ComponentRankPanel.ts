@@ -38,15 +38,15 @@ export class ComponentRankPanel extends BasicRankPanel {
     }
 
     protected init() {
-        this.mCloseBtn = this.mScene.make.image({
+        this.mCloseBtn = this.scene.make.image({
             x: 0,
             y: 0,
             key: CloseButton.getName(),
             frame: "btn_normal"
         }, false);
         this.mCloseBtn.setTexture(CloseButton.getName(), "btn_normal");
-        this.mCloseBtn.x = (this.mWidth >> 1) - 65;
-        this.mCloseBtn.y = (-this.mHeight >> 1);
+        this.mCloseBtn.x = (this.width >> 1) - 65;
+        this.mCloseBtn.y = (-this.height >> 1);
         super.init();
         this.add(this.mCloseBtn);
         this.mCloseBtn.setInteractive();

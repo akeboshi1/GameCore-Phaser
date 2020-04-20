@@ -1,5 +1,4 @@
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { NinePatch } from "../components/nine.patch";
 import { LabelInput } from "../components/label.input";
 
 export class NumberCounter extends Phaser.GameObjects.Container {

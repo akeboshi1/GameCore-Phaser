@@ -42,11 +42,11 @@ export class ChatPanelMobile extends BaseChatPanel {
 
     public show(param?: any) {
         super.show(param);
-        this.tweenView(true);
+        this.tweenExpand(true);
     }
 
-    public setLocation(x?: number, y?: number) {
-        if (!this.mShowing) return;
+    public setPosition(x?: number, y?: number) {
+        if (!this.mShow) return;
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorld.getSize();
         let track;
@@ -55,23 +55,23 @@ export class ChatPanelMobile extends BaseChatPanel {
         if (this.mTextArea) {
             this.mTextArea.destroy();
             this.mTextArea = null;
-            text = new BBCodeText(this.mScene, 0, 0, "", {
+            text = new BBCodeText(this.scene, 0, 0, "", {
                 fontSize: "20px",
                 wrap: {
                     mode: "char",
-                    width: this.mWidth >> 1
+                    width: this.width >> 1
                 },
             });
 
-            track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", "", {
+            track = new NinePatchButton(this.scene, 0, 0, 4, 7, "track", "", "", {
                 left: 0,
                 top: 2,
                 right: 0,
                 bottom: 2
             });
-            // track.x = this.mWidth / 2;
+            // track.x = this.width / 2;
             // track.y = 8 * this.mWorld.uiScale;
-            thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", "", {
+            thumb = new NinePatchButton(this.scene, 0, 0, 20, 35, "button", "", "", {
                 left: 4,
                 top: 4,
                 right: 4,
@@ -84,7 +84,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         if (this.mInputText) {
             this.mInputText.destroy();
             this.mInputText = null;
-            this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
+            this.mInputText = new InputText(this.scene, 0, 0, 10, 10, {
                 type: "input",
                 fontSize: "20px",
                 color: "#808080"
@@ -96,21 +96,21 @@ export class ChatPanelMobile extends BaseChatPanel {
             // .on("blur", this.onBlurHandler, this);
         }
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            this.mWidth = size.width >> 1;
-            this.mHeight = size.height;
-            this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
+            this.width = size.width >> 1;
+            this.height = size.height;
+            this.mBorder.resize(this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale);
             this.x = 0;
             this.y = 0;
-            this.clickContainer.x = this.mWidth / this.mWorld.uiScale + this.clickContainer.width / 2;
-            this.clickContainer.y = this.mHeight / (this.mWorld.uiScale * 2);
+            this.clickContainer.x = this.width / this.mWorld.uiScale + this.clickContainer.width / 2;
+            this.clickContainer.y = this.height / (this.mWorld.uiScale * 2);
             this.clickContainer.rotation = Math.PI * .5;
             this.arrow.rotation = Math.PI * .5;
             this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
-            this.mTextArea = new TextArea(this.mScene, {
-                x: this.mWidth * .5 / this.mWorld.uiScale,
-                y: this.mHeight / 2,
+            this.mTextArea = new TextArea(this.scene, {
+                x: this.width * .5 / this.mWorld.uiScale,
+                y: this.height / 2,
                 textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
-                textHeight: this.mHeight,
+                textHeight: this.height,
                 text,
                 slider: {
                     track,
@@ -120,14 +120,14 @@ export class ChatPanelMobile extends BaseChatPanel {
             });
             this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
         } else {
-            this.mWidth = size.width;
-            this.mHeight = size.height / 2;
-            this.mBorder.resize(this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale);
+            this.width = size.width;
+            this.height = size.height / 2;
+            this.mBorder.resize(this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale);
             this.x = 0;
-            this.y = this.mHeight + 20 * this.mWorld.uiScale;
+            this.y = this.height + 20 * this.mWorld.uiScale;
             this.mInputBg.y = this.mBorder.height - this.mInputBg.height;
-            this.mTextArea = new TextArea(this.mScene, {
-                x: (this.mWidth - 15) / this.mWorld.uiScale >> 1,
+            this.mTextArea = new TextArea(this.scene, {
+                x: (this.width - 15) / this.mWorld.uiScale >> 1,
                 y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
                 textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
                 textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
@@ -137,7 +137,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                     thumb,
                 },
                 scroller: {
-                    bounds: [0, this.mHeight >> 1],
+                    bounds: [0, this.height >> 1],
                 },
                 clamplChildOY: true,
                 backDeceleration: true,
@@ -147,7 +147,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
             this.clickContainer.y = -this.clickContainer.height >> 1;
             const silder = this.mTextArea.getElement("slider");
-            silder.y = this.mHeight >> 1;
+            silder.y = this.height >> 1;
             this.clickContainer.rotation = Math.PI;
             this.arrow.rotation = Math.PI * 1.5;
             this.mInputText.setPosition(2, this.mInputBg.y - 6 * this.mWorld.uiScale);
@@ -155,15 +155,15 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.mTextArea.layout();
         this.add(this.mTextArea);
         this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
-        // this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        // this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
-        this.setSize(this.mWidth, this.mHeight);
+        this.setSize(this.width, this.height);
         // this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
         this.mInputBg.x = this.mInputBg.width >> 1;
         this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
         this.mSendBtn.y = this.mInputBg.y;
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         this.add(this.mInputText);
     }
 
@@ -185,9 +185,9 @@ export class ChatPanelMobile extends BaseChatPanel {
         super.destroy();
     }
 
-    public tweenView(show: boolean) {
+    public tweenExpand(show: boolean) {
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Linear",
@@ -196,29 +196,31 @@ export class ChatPanelMobile extends BaseChatPanel {
             },
             onComplete: (tween, targets, ship) => {
                 if (!show) this.hide();
+                this.addListen();
             },
         });
-        if (show) this.setLocation();
+        if (show) this.setPosition();
     }
 
     public hide() {
+        this.removeListen();
         super.hide();
     }
 
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
-        this.mScene.load.image("button", Url.getRes("ui/common/button.png"));
-        this.mScene.load.image("thumbTexture", Url.getRes("ui/common/common_thumb_texture.png"));
-        this.mScene.load.image("track", Url.getRes("ui/common/common_track.png"));
-        this.mScene.load.image("channelSelect", Url.getRes("ui/common/common_channelSelect.png"));
-        this.mScene.load.image("channelUnSelect", Url.getRes("ui/common/common_channelUnSelect.png"));
-        this.mScene.load.image("arrow", Url.getRes("ui/common/common_arrow.png"));
-        this.mScene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
-        this.mScene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.image("button", Url.getRes("ui/common/button.png"));
+        this.scene.load.image("thumbTexture", Url.getRes("ui/common/common_thumb_texture.png"));
+        this.scene.load.image("track", Url.getRes("ui/common/common_track.png"));
+        this.scene.load.image("channelSelect", Url.getRes("ui/common/common_channelSelect.png"));
+        this.scene.load.image("channelUnSelect", Url.getRes("ui/common/common_channelUnSelect.png"));
+        this.scene.load.image("arrow", Url.getRes("ui/common/common_arrow.png"));
+        this.scene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
+        this.scene.load.image(Border.getName(), Border.getPNG());
         this.scene.load.atlas(WhiteButton.getName(), WhiteButton.getPNG(), WhiteButton.getJSON());
-        this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
+        this.scene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
         super.preload();
     }
 
@@ -226,36 +228,36 @@ export class ChatPanelMobile extends BaseChatPanel {
         if (this.mInitialized) return;
         const size = this.mWorld.getSize();
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-            this.mWidth = size.width >> 1;
-            this.mHeight = size.height;
+            this.width = size.width >> 1;
+            this.height = size.height;
         } else {
-            this.mWidth = size.width;
-            this.mHeight = size.height >> 1;
+            this.width = size.width;
+            this.height = size.height >> 1;
         }
-        this.setSize(this.mWidth, this.mHeight);
+        this.setSize(this.width, this.height);
 
-        this.mBorder = new NinePatch(this.scene, 0, 0, this.mWidth / this.mWorld.uiScale, this.mHeight / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
         this.addAt(this.mBorder, 0);
 
-        const text = new BBCodeText(this.mScene, 0, 0, "", {
+        const text = new BBCodeText(this.scene, 0, 0, "", {
             fontSize: "20px",
             wrap: {
                 mode: "char",
-                width: this.mWidth >> 1
+                width: this.width >> 1
             },
         });
 
-        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", "", {
+        const track = new NinePatchButton(this.scene, 0, 0, 4, 7, "track", "", "", {
             left: 0,
             top: 2,
             right: 0,
             bottom: 2
         });
-        track.x = this.mWidth / 2;
+        track.x = this.width / 2;
         track.y = 8 * this.mWorld.uiScale;
-        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", "", {
+        const thumb = new NinePatchButton(this.scene, 0, 0, 20, 35, "button", "", "", {
             left: 4,
             top: 4,
             right: 4,
@@ -264,11 +266,11 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.add(text);
         this.add(track);
         this.add(thumb);
-        this.mTextArea = new TextArea(this.mScene, {
-            x: this.mWidth >> 1,
-            y: this.mHeight + 178 * this.mWorld.uiScale >> 1,
-            textWidth: this.mWidth,
-            textHeight: this.mHeight + 150 * this.mWorld.uiScale,
+        this.mTextArea = new TextArea(this.scene, {
+            x: this.width >> 1,
+            y: this.height + 178 * this.mWorld.uiScale >> 1,
+            textWidth: this.width,
+            textHeight: this.height + 150 * this.mWorld.uiScale,
             text,
             slider: {
                 track,
@@ -281,7 +283,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.mInputBg = new NinePatch(this.scene, 0, 0, 340, 30, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
         this.add(this.mInputBg);
 
-        this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
+        this.mInputText = new InputText(this.scene, 0, 0, 10, 10, {
             type: "input",
             fontSize: "20px",
             color: "#808080"
@@ -292,12 +294,12 @@ export class ChatPanelMobile extends BaseChatPanel {
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
 
-        this.mSendBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", WhiteButton.getConfig());
+        this.mSendBtn = new NinePatchButton(this.scene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", WhiteButton.getConfig());
         this.add(this.mSendBtn);
 
-        this.clickContainer = this.mScene.make.container(undefined, false);
+        this.clickContainer = this.scene.make.container(undefined, false);
         const btnBg = new NinePatch(this.scene, 0, 0, 53 / this.mWorld.uiScale, 30 / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
-        this.arrow = this.mScene.make.image(undefined, false);
+        this.arrow = this.scene.make.image(undefined, false);
         this.arrow.setTexture("arrow");
         this.clickContainer.setSize(btnBg.width + 4, btnBg.height + 10);
         this.clickContainer.add(btnBg);
@@ -305,12 +307,12 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.clickContainer.setInteractive();
         this.add(this.clickContainer);
         this.add(this.mInputText);
-        this.setLocation();
+        this.setPosition();
         super.init();
     }
 
     private clickHandler() {
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this.clickContainer,
             duration: 50,
             ease: "Linear",
@@ -322,7 +324,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             repeat: 0,
         });
         this.clickContainer.scaleX = this.clickContainer.scaleY = 1;
-        this.tweenView(false);
+        this.tweenExpand(false);
         this.mWorld.uiManager.baseFaceTween(true);
     }
 

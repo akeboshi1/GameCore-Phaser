@@ -30,6 +30,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   public addListen() {
+    if (!this.mInitialized) return;
     this.mMapBtn.on("pointerup", this.onShowMapHandler, this);
     this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
@@ -38,6 +39,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   public removeListen() {
+    if (!this.mInitialized) return;
     this.mMapBtn.off("pointerup", this.onShowMapHandler, this);
     this.mShopBtn.off("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
@@ -46,7 +48,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   public hide() {
-    this.mShowing = false;
+    this.mShow = false;
   }
 
   protected preload() {

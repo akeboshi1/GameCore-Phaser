@@ -31,7 +31,7 @@ export class FriendPanel extends BasePanel {
 
     public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
-        if (!this.mShowing) return;
+        if (!this.mShow) return;
         if (this.mWorld.game.device.os.desktop) {
             this.x = size.width + wid >> 1;
             this.y = size.height + hei >> 1;
@@ -51,7 +51,7 @@ export class FriendPanel extends BasePanel {
             }
         }
 
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         this.mUpBtn.y = (this.mUpBtn.height / 2 - this.mBg.height) / 2;
         this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
         this.mTitleTxt.x = (-this.mBg.width / 2 + 15);
@@ -154,7 +154,7 @@ export class FriendPanel extends BasePanel {
     }
 
     protected init() {
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
         const size: Size = this.mWorld.getSize();
 
         this.mBg = new NinePatch(this.scene, 0, 0, 600 / this.mWorld.uiScale, size.height * .5 * this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
@@ -202,7 +202,7 @@ export class FriendPanel extends BasePanel {
         this.mWorld.roomManager.currentRoom.playerManager.actor.getFriend().requestFriend((data: any[]) => {
             this.setDataList(data);
         });
-        if (show) (this.mWorld.uiManager.getMediator(FriendMediator.NAME) as FriendMediator).resize();
+        if (show) this.mWorld.uiManager.getMediator(FriendMediator.NAME).resize();
     }
 
     private downHandler() {
@@ -298,7 +298,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
         this.mScene = scene;
 
         const size: Size = this.mWorld.getSize();
-        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.width, 90, Border.getName(), null, Border.getConfig());
+        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.view.width, 90, Border.getName(), null, Border.getConfig());
         this.addAt(this.mBg, 0);
         this.setSize(this.mBg.width, this.mBg.height);
 
@@ -350,7 +350,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
 
     public resize() {
         if (this.mWorld.game.device.os.desktop) return;
-        this.mBg.resize(this.mPanel.width * .95, 90);
+        this.mBg.resize(this.mPanel.view.width * .95, 90);
         this.setSize(this.mBg.width, this.mBg.height);
         this.addAt(this.mBg, 0);
         this.refreshUIPos();

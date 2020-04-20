@@ -35,7 +35,7 @@ export class ItemDetail extends BasePanel {
             this.x = size.width - (this.width + this.mBtnWid) / 2 * this.mWorld.uiScale >> 1;
             this.y = size.height - this.height * this.mWorld.uiScale >> 1;
         }
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
     }
 
     public show(param?: any) {
@@ -44,7 +44,7 @@ export class ItemDetail extends BasePanel {
             this.preload();
             return;
         }
-        this.mShowing = true;
+        this.mShow = true;
         const data = this.mData[0];
         if (data.display.length > 0) {
             this.loadIcon(data.display[0]);
@@ -62,7 +62,7 @@ export class ItemDetail extends BasePanel {
             const preX: number = this.mWid + 50;
             for (let i: number = 0; i < len; i++) {
                 const btnData: op_gameconfig_01.IButton = data.button[i];
-                btn = new NinePatchButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, BlueButton.getName(), "", btnData.text, BlueButton.getConfig(), btnData);
+                btn = new NinePatchButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, BlueButton.getName(), BlueButton.getName(), btnData.text, BlueButton.getConfig(), btnData);
                 this.mBtnList.push(btn);
                 btn.x = preX;
                 btn.y = preY;
@@ -95,7 +95,7 @@ export class ItemDetail extends BasePanel {
     }
 
     public hide() {
-        this.removeInteractive();
+        this.disInteractive();
         super.hide();
     }
 

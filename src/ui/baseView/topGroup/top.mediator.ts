@@ -4,7 +4,6 @@ import { TopBtnGroup } from "./top.btn.group";
 import { RankMediator } from "../../Rank/RankMediator";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
-import { Alert } from "../../alert/alert";
 
 export class TopMediator extends BaseFaceMediator {
     public static NAME: string = "TopMediator";
@@ -88,7 +87,7 @@ export class TopMediator extends BaseFaceMediator {
     }
 
     public hide() {
-        this.isShowing = false;
+        this.mShow = false;
         if (this.refreshMedList) {
             this.refreshMedList.forEach((medName: string) => {
                 this.refreshBtn(medName, false);

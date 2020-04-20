@@ -1,4 +1,3 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { MarketPanel } from "./MarketPanel";
 import { ILayerManager } from "../layer.manager";
@@ -6,20 +5,23 @@ import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../const/MessageType";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class MarketMediator extends BaseMediator {
   protected mView: MarketPanel;
   private readonly scene: Phaser.Scene;
   private readonly layerManager: ILayerManager;
   private mMarket: Market;
+  private world: WorldService;
   constructor($layerManager: ILayerManager, $scene: Phaser.Scene, world: WorldService) {
-    super(world);
+    super();
     this.scene = $scene;
+    this.world = world;
     this.layerManager = $layerManager;
   }
 
   show(param?: any) {
-    if (this.mView && this.mView.isShow() || this.isShowing) {
+    if (this.mView && this.mView.isShow() || this.mShow) {
       return;
     }
     this.mMarket = new Market(this.world);
@@ -35,7 +37,7 @@ export class MarketMediator extends BaseMediator {
     this.mView.on("popItemCard", this.onPopItemCardHandler, this);
     this.mView.on("queryPropResource", this.onQueryPropresouceHandler, this);
     this.mView.show();
-    this.layerManager.addToUILayer(this.mView);
+    this.layerManager.addToUILayer(this.mView.view);
   }
 
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {

@@ -1,50 +1,34 @@
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { NoticePanel } from "./NoticePanel";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
-import { IMediator } from "../baseMediator";
-import { World } from "../../game/world";
-import { UIType } from "../ui.manager";
+import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { Notice } from "./Notice";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
-export class NoticeMediator extends PacketHandler implements IMediator {
+export class NoticeMediator extends BaseMediator {
     public static NAME: string = "NoticeMediator";
-    readonly world: WorldService;
-    private mNoticePanel: NoticePanel;
+    private world: WorldService;
     private mLayerManager: ILayerManager;
     private mScene: Phaser.Scene;
-    private mParam: any;
-    private mUIType: number;
-    private mAddWid: number = 0;
-    private mAddHei: number = 0;
+    private notice: Notice;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
         this.mLayerManager = layerManager;
         this.mScene = scene;
-        this.mUIType = UIType.TipsUIType;
-        const connect = worldService.connection;
-        if (connect) {
-            connect.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_NOTICE, this.noticeHandler);
-        }
-        // this.world.emitter.on(World.SCALE_CHANGE, this.scaleChange, this);
-        this.world.emitter.on(MessageType.SHOW_NOTICE, this.noticeHandler, this);
-    }
-
-    public setViewAdd(wid: number, hei: number) {
-        this.mAddWid = wid;
-        this.mAddHei = hei;
+        this.notice = new Notice(worldService);
+        this.mUIType = UIType.Tips;
     }
 
     public setUiScale(value: number) {
-        this.mNoticePanel.scaleX = this.mNoticePanel.scaleY = value;
+        this.mView.scale = value;
     }
 
     getView(): BasePanel {
-        return this.mNoticePanel;
+        return this.mView !== undefined ? this.mView.view : undefined;
     }
 
     getUIType(): number {
@@ -52,60 +36,42 @@ export class NoticeMediator extends PacketHandler implements IMediator {
     }
 
     hide(): void {
-        if (!this.mNoticePanel) return;
-        this.mNoticePanel.hide();
-        this.mNoticePanel = null;
+        if (!this.mView) return;
+        super.hide();
     }
 
     destroy() {
-        this.world.emitter.off(World.SCALE_CHANGE, this.scaleChange, this);
-        this.world.emitter.off(MessageType.SHOW_NOTICE, this.noticeHandler, this);
-        if (this.mNoticePanel) {
-            this.mNoticePanel.destroy();
-            this.mNoticePanel = null;
-        }
-        const connect = this.world.connection;
-        if (connect) {
-            connect.removePacketListener(this);
-        }
-        this.mScene = null;
-    }
-
-    isSceneUI(): boolean {
-        return false;
+        this.removeListen();
+        this.notice.unregister();
+        this.notice = null;
+        super.destroy();
     }
 
     isShow(): boolean {
-        return this.mNoticePanel.isShow();
-    }
-
-    showing(): boolean {
-        return false;
-    }
-
-    tweenView(show: boolean) {
+        return this.mView.isShow();
     }
 
     resize() {
-        if (!this.mNoticePanel) return;
-        this.mNoticePanel.resize(this.mAddWid, this.mAddHei);
+        if (!this.mView) return;
+        this.mView.resize();
     }
 
     show(param?: any): void {
-        if (this.mNoticePanel && this.mNoticePanel.isShow()) {
-            this.mNoticePanel.showNotice(param);
+        if (this.mView && this.mView.isShow()) {
+            (this.mView as NoticePanel).showNotice(param);
             return;
         }
-        this.mNoticePanel = new NoticePanel(this.mScene, this.world);
-        this.mNoticePanel.show(param);
-        this.mNoticePanel.showNotice(param);
-        this.mLayerManager.addToDialogLayer(this.mNoticePanel);
+        this.mView = new NoticePanel(this.mScene, this.world);
+        this.mView.show(param);
+        (this.mView as NoticePanel).showNotice(param);
+        this.mLayerManager.addToDialogLayer(this.mView.view);
+        this.addListen();
         // this.setUiScale(this.world.uiScale);
     }
 
     update(param?: any): void {
         this.mParam = param;
-        if (!this.mNoticePanel) return;
+        if (!this.mView) return;
     }
 
     setParam(param: any) {
@@ -116,8 +82,15 @@ export class NoticeMediator extends PacketHandler implements IMediator {
         return this.mParam;
     }
 
-    private scaleChange() {
-        this.setUiScale(this.world.uiScale);
+    private addListen() {
+        this.notice.on("showNotice", this.noticeHandler, this);
+        this.world.emitter.on(MessageType.SHOW_NOTICE, this.noticeHandler, this);
+        this.notice.register();
+    }
+
+    private removeListen() {
+        this.notice.off("showNotice", this.noticeHandler, this);
+        this.world.emitter.off(MessageType.SHOW_NOTICE, this.noticeHandler, this);
     }
 
     private noticeHandler(packet: PBpacket) {

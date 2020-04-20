@@ -3,7 +3,6 @@ import { Url } from "../../utils/resUtil";
 import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
 
 export class BasePanel extends Panel {
-    protected mShowing: boolean = false;
     protected mInitialized: boolean;
     protected mTweening: boolean = false;
     protected mScene: Phaser.Scene;
@@ -26,7 +25,7 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(world.uiRatio || 1);
             this.scale = this.mWorld.uiScaleNew;
         }
-        this.setEnabled(true);
+        this.setInteractive();
     }
 
     protected addResources(key: string, resource: any) {

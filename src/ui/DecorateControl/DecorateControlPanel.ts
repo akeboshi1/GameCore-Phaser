@@ -1,5 +1,5 @@
-import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
+import { BasePanel } from "../components/BasePanel";
 
 export class DecorateControlPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -16,10 +16,10 @@ export class DecorateControlPanel extends BasePanel {
 
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
-        this.setTween(false);
     }
 
     public addListen() {
+        if (!this.mInitialized) return;
         this.mExitBtn.on("pointerup", this.onExitHandler, this);
         this.mRecycleAllBtn.on("pointerup", this.onRecycleAllHandler, this);
         this.mRedoBtn.on("pointerup", this.onRedoHandler, this);
@@ -29,6 +29,7 @@ export class DecorateControlPanel extends BasePanel {
     }
 
     public removeListen() {
+        if (!this.mInitialized) return;
         this.mExitBtn.off("pointerup", this.onExitHandler, this);
         this.mRecycleAllBtn.off("pointerup", this.onRecycleAllHandler, this);
         this.mRedoBtn.off("pointerup", this.onRedoHandler, this);

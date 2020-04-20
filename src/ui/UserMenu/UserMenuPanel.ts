@@ -10,7 +10,7 @@ export class UserMenuPanel extends BasePanel {
     private mMenus: MenuItem[] = [];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.mWorld = world;
+        this.disInteractive();
     }
 
     show(param?: any) {
@@ -27,24 +27,23 @@ export class UserMenuPanel extends BasePanel {
 
     hide() {
         // this.scene.input.off("gameobjectdown", this.onClickMenu, this);
-        this.removeInteractive();
+        this.disInteractive();
         this.clear();
         super.hide();
     }
 
     public addListen() {
-        super.addListen();
-        this.on("panelClick", this.onClickMenu, this);
+        if (!this.mInitialized) return;
+        this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     }
 
     public removeListen() {
-        super.removeListen();
-        this.off("panelClick", this.onClickMenu, this);
+        if (!this.mInitialized) return;
+        this.scene.input.off("gameobjectdown", this.onClickMenu, this);
     }
 
     setSize(width: number, height: number): this {
         super.setSize(width, height);
-        this.setInteractive();
         if (this.mBackground) {
             this.mBackground.resize(width, height);
             // this.mBackground.x = this.mBackground.width * this.originX;

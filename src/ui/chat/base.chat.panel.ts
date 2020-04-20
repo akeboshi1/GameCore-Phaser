@@ -8,12 +8,6 @@ export class BaseChatPanel extends BasePanel {
     public appendChat(val: string) {
     }
 
-    public setLocation(x?: number, y?: number) {
-    }
-
-    public tweenView(show: boolean) {
-    }
-
     get outChannel(): number {
         return 0;
     }

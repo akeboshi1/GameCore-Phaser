@@ -1,4 +1,3 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { PicaRoomListPanel } from "./PicaRoomListPanel";
@@ -6,23 +5,26 @@ import { RoomList } from "./RoomList";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class PicaRoomListMediator extends BaseMediator {
   protected mView: PicaRoomListPanel;
   private scene: Phaser.Scene;
   private roomList: RoomList;
+  private world: WorldService;
   constructor(
     private layerManager: ILayerManager,
     scene: Phaser.Scene,
     worldService: WorldService
   ) {
-    super(worldService);
+    super();
+    this.world = worldService;
     this.scene = this.layerManager.scene;
   }
 
   show() {
-    if ((this.mView && this.mView.isShow()) || this.isShowing) {
-      this.layerManager.addToUILayer(this.mView);
+    if ((this.mView && this.mView.isShow()) || this.mShow) {
+      this.layerManager.addToUILayer(this.mView.view);
       return;
     }
     this.roomList = new RoomList(this.world);
@@ -38,7 +40,7 @@ export class PicaRoomListMediator extends BaseMediator {
     this.mView.on("getMyRoomList", this.onGetMyRoomListHandler, this);
     this.mView.on("enterRoom", this.onEnterRoomHandler, this);
     this.mView.show();
-    this.layerManager.addToUILayer(this.mView);
+    this.layerManager.addToUILayer(this.mView.view);
   }
 
   getView(): BasePanel {

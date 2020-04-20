@@ -1,33 +1,34 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { PicaMessageBoxPanel } from "./PicaMessageBoxPanel";
-import { Logger } from "../../utils/log";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class PicaMessageBoxMediator extends BaseMediator {
   private scene: Phaser.Scene;
+  private world: WorldService;
   constructor(
-      private layerManager: ILayerManager,
-      scene: Phaser.Scene,
-      worldService: WorldService
+    private layerManager: ILayerManager,
+    scene: Phaser.Scene,
+    worldService: WorldService
   ) {
-      super(worldService);
-      this.scene = this.layerManager.scene;
+    super();
+    this.world = worldService;
+    this.scene = this.layerManager.scene;
   }
 
   show(params?: any) {
     this.mParam = params;
-    if ((this.mView && this.mView.isShow()) || this.isShowing) {
-        return;
+    if ((this.mView && this.mView.isShow()) || this.mShow) {
+      return;
     }
     if (!this.mView) {
-        this.mView = new PicaMessageBoxPanel(this.scene, this.world);
-        this.mView.on("click", this.onClickHandler, this);
+      this.mView = new PicaMessageBoxPanel(this.scene, this.world);
+      this.mView.on("click", this.onClickHandler, this);
     }
     this.mView.show(params);
-    this.layerManager.addToDialogLayer(this.mView);
+    this.layerManager.addToDialogLayer(this.mView.view);
   }
 
   hide() {

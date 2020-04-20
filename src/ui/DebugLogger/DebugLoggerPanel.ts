@@ -40,7 +40,7 @@ export class DebugLogger extends BasePanel {
             this.preload();
             return;
         }
-        this.mShowing = true;
+        this.mShow = true;
         this.resize();
     }
 
@@ -81,7 +81,7 @@ export class DebugLogger extends BasePanel {
     }
 
     protected init() {
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
         const size: Size = this.mWorld.getSize();
         this.mBgWidth = 400;
         this.mBgHeight = size.height >> 1;

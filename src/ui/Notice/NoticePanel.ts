@@ -105,14 +105,14 @@ export class NoticePanel extends BasePanel {
     }
 
     private removeFromParent() {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
+        if (this.view.parentContainer) {
+            this.view.parentContainer.remove(this.view);
         }
         if (this.mTween) {
             this.mTween.stop();
             this.mTween.remove();
             this.mTween = null;
         }
-        this.mShowing = false;
+        this.mShow = false;
     }
 }

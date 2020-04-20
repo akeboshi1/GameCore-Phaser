@@ -10,6 +10,7 @@ import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import { Tool } from "../../utils/tool";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 export class InteractivePanel extends BasePanel {
     private static baseWidth: number = 720;
     private static baseHeight: number = 720;
@@ -55,8 +56,8 @@ export class InteractivePanel extends BasePanel {
             this.preload();
             return;
         }
-        this.mShowing = true;
-        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        this.mShow = true;
+        const med: BaseMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME);
         const data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mData[0];
         if (this.mLeftFaceIcon) this.mLeftFaceIcon.visible = false;
         if (this.mRightFaceIcon) this.mRightFaceIcon.visible = false;
@@ -112,7 +113,7 @@ export class InteractivePanel extends BasePanel {
                     },
                     clickCallBack: (itemData: ISelectCallItemData) => {
                         if (!itemData || !med) return;
-                        med.componentClick(itemData.data);
+                        (med as InteractivePanelMediator).componentClick(itemData.data);
                     }
                 });
                 this.radioComplete();
@@ -121,7 +122,7 @@ export class InteractivePanel extends BasePanel {
             this.mRadio.visible = true;
         }
         this.resize();
-        if (this.mShowing) {
+        if (this.mShow) {
             return;
         }
     }
@@ -143,7 +144,7 @@ export class InteractivePanel extends BasePanel {
     }
 
     public resize(wid: number = 0, hei: number = 0) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
         const width = this.mWorld.getSize().width;
         const height = this.mWorld.getSize().height;
@@ -249,7 +250,7 @@ export class InteractivePanel extends BasePanel {
         const width = this.mWorld.getSize().width;
         const height = this.mWorld.getSize().height;
         const zoom: number = this.mWorld.uiScaleNew;
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
         this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
