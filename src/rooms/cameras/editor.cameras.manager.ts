@@ -8,7 +8,10 @@ export class EditorCamerasManager extends CamerasManager {
             return;
         }
         const roomSize = this.mRoomService.roomSize;
-        this.mMain.setScroll((roomSize.sceneWidth - this.mMain.width >> 1), (roomSize.sceneHeight - this.mMain.height >> 1));
+        this.mMain.setScroll(
+            (roomSize.sceneWidth - this.mMain.width) >> 1,
+            (roomSize.sceneHeight - this.mMain.height) >> 1
+        );
         const cameraView = this.mMain.worldView;
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
@@ -32,6 +35,16 @@ export class EditorCamerasManager extends CamerasManager {
         // this.mMain.scrollY += y / this.zoom;
         // this.mCamera.setScroll(x, y);
 
+        // const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        // const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        // content.x = this.mMain.scrollX / this.zoom;
+        // content.y = this.mMain.scrollY / this.zoom;
+        // content.width = 0;
+        // content.height = 0;
+        // this.connection.send(pkt);
+    }
+
+    public syncCameraScroll() {
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
         content.x = this.mMain.scrollX / this.zoom;

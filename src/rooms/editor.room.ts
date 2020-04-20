@@ -1,24 +1,25 @@
-import {IPosition45Obj, Position45} from "../utils/position45";
-import {IRoomManager} from "./room.manager";
-import {PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_editor, op_virtual_world} from "pixelpai_proto";
-import {Logger} from "../utils/log";
-import {Brush, BrushEnum} from "../const/brush";
-import {IRoomService, Room} from "./room";
-import {LayerManager} from "./layer/layer.manager";
-import {ViewblockManager} from "./cameras/viewblock.manager";
-import {EditScene} from "../scenes/edit";
-import {MouseFollow} from "./editor/mouse.follow";
-import {FramesDisplay} from "./display/frames.display";
-import {TerrainDisplay} from "./display/terrain.display";
-import {SelectedElement} from "./editor/selected.element";
-import {DisplayObject} from "./display/display.object";
-import {Pos} from "../utils/pos";
-import {EditorElementManager} from "./element/editor.element.manager";
-import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
-import {ElementDisplay} from "./display/element.display";
+import { IPosition45Obj, Position45 } from "../utils/position45";
+import { IRoomManager } from "./room.manager";
+import { PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_editor, op_virtual_world } from "pixelpai_proto";
+import { Logger } from "../utils/log";
+import { Brush, BrushEnum } from "../const/brush";
+import { IRoomService, Room } from "./room";
+import { LayerManager } from "./layer/layer.manager";
+import { ViewblockManager } from "./cameras/viewblock.manager";
+import { EditScene } from "../scenes/edit";
+import { MouseFollow } from "./editor/mouse.follow";
+import { FramesDisplay } from "./display/frames.display";
+import { TerrainDisplay } from "./display/terrain.display";
+import { SelectedElement } from "./editor/selected.element";
+import { DisplayObject } from "./display/display.object";
+import { Pos } from "../utils/pos";
+import { EditorElementManager } from "./element/editor.element.manager";
+import { EditorTerrainManager } from "./terrain/editor.terrain.manager";
+import { ElementDisplay } from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
 import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
+import { EditorMossManager } from "./element/editor.moss.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -34,6 +35,7 @@ export interface EditorRoomService extends IRoomService {
 export class EditorRoom extends Room implements EditorRoomService {
     protected mTerrainManager: EditorTerrainManager;
     protected mElementManager: EditorElementManager;
+    protected editorMossManager: EditorMossManager;
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
@@ -81,8 +83,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             sceneHeight: (rows + cols) * (tileHeight / 2),
         };
 
-        this.mTerainManager = new EditorTerrainManager(this);
+        this.mTerrainManager = new EditorTerrainManager(this);
         this.mElementManager = new EditorElementManager(this);
+        this.editorMossManager = new EditorMossManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mCameraService = new EditorCamerasManager(this);
 
@@ -100,7 +103,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mCameraService.camera = camera;
         const zoom = this.world.scaleRatio;
         // mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
-        this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
+        this.mCameraService.setBounds(
+            -camera.width >> 1,
+            -camera.height >> 1,
+            this.mSize.sceneWidth * zoom + camera.width,
+            this.mSize.sceneHeight * zoom + camera.height
+        );
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         this.mCameraService.centerCameas();
@@ -121,6 +129,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mSelectedElementEffect) {
             this.mSelectedElementEffect.update();
+        }
+        if (this.mTerrainManager) {
+            this.mTerrainManager.update();
+        }
+        if (this.editorMossManager) {
+            this.editorMossManager.update();
         }
     }
 
@@ -177,6 +191,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             case BrushEnum.ERASER:
                 this.eraserElement();
                 break;
+            case BrushEnum.MOVE:
+                this.mCameraService.syncCameraScroll();
+                break;
         }
     }
 
@@ -203,7 +220,10 @@ export class EditorRoom extends Room implements EditorRoomService {
                 if (!this.mouseFollow) {
                     return;
                 }
-                const pos = this.mMouseFollow.transitionGrid(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
+                const pos = this.mMouseFollow.transitionGrid(
+                    pointer.worldX / this.mScaleRatio,
+                    pointer.worldY / this.mScaleRatio
+                );
                 if (pos) {
                     this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
                     this.mLayManager.depthSurfaceDirty = true;
@@ -216,7 +236,10 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private moveCameras(pointer) {
-        this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+        this.cameraService.offsetScroll(
+            pointer.prevPosition.x - pointer.position.x,
+            pointer.prevPosition.y - pointer.position.y
+        );
     }
 
     private createElement() {
@@ -233,16 +256,16 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private eraserElement() {
-        const terrainManager = <EditorTerrainManager> this.mTerainManager;
+        const terrainManager = <EditorTerrainManager>this.mTerrainManager;
         if (terrainManager) {
             const positions = this.mMouseFollow.getEaserPosition();
-            terrainManager.removeFormPositions(positions);
+            terrainManager.removeByPositions(positions);
         }
     }
 
     private onSetEditorModeHandler(packet: PBpacket) {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
-        this.mBrush.mode = <BrushEnum> mode.mode;
+        this.mBrush.mode = <BrushEnum>mode.mode;
         if (this.mMouseFollow) this.mMouseFollow.destroy();
         if (this.mBrush.mode !== BrushEnum.SELECT) {
             if (this.mSelectedElementEffect) {
@@ -325,7 +348,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mSelectedElementEffect) {
             this.mSelectedElementEffect = new SelectedElement(this.mScene, this.layerManager);
         }
-        this.mSelectedElementEffect.setElement(<FramesDisplay> com);
+        this.mSelectedElementEffect.setElement(<FramesDisplay>com);
         return com;
     }
 
@@ -351,8 +374,8 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.moveElement(event.keyCode);
                 break;
             // case 46:
-                // this.removeDisplay(this.mSelectedElementEffect.display);
-                // break;
+            // this.removeDisplay(this.mSelectedElementEffect.display);
+            // break;
         }
     }
 

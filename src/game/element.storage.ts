@@ -9,6 +9,7 @@ import {
     TerrainCollectionNode,
     SceneNode,
     AnimationDataNode,
+    MossNode,
 } from "game-capsule";
 import { Logger } from "../utils/log";
 import { op_def } from "pixelpai_proto";
@@ -17,6 +18,8 @@ import { MossCollectionNode } from "game-capsule/lib/configobjects/scene";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
+    updatePalette(palette: PaletteNode);
+    updateMoss(moss: MossNode);
     setSceneConfig(config: Lite);
     add(obj: IFramesModel | IDragonbonesModel): void;
     getDisplayModel(id: number): IFramesModel | IDragonbonesModel;
@@ -94,45 +97,48 @@ export class ElementStorage implements IElementStorage {
             }
         }
 
-        for (const peer of config.root.palette.peers) {
-            const { key, entity } = peer;
-            const terrain = entity as TerrainNode;
-            const terrainModel = this.terrainPalette.get(entity.id);
-            const terrainModelWithBindId = this.terrainPaletteWithBindId.get(entity.id);
-            if (!terrainModel && !terrainModelWithBindId) {
+        this.updatePalette(config.root.palette);
+        this.updateMoss(config.root.moss);
+    }
+
+    public updatePalette(palette: PaletteNode) {
+        for (const key of Array.from(palette.peersDict.keys())) {
+            const terrainPalette = palette.peersDict.get(key) as TerrainNode;
+            const terrainModel = this.terrainPalette.get(terrainPalette.id);
+            if (!terrainModel) {
                 const frameModel = new FramesModel({
-                    id: entity.id,
-                    sn: entity.sn,
+                    id: terrainPalette.id,
+                    sn: terrainPalette.sn,
                     animations: {
-                        defaultAnimationName: terrain.animations.defaultAnimationName,
-                        display: terrain.animations.display,
-                        animationData: terrain.animations.animationData.map(
+                        defaultAnimationName: terrainPalette.animations.defaultAnimationName,
+                        display: terrainPalette.animations.display,
+                        animationData: terrainPalette.animations.animationData.map(
                             (ani: AnimationDataNode) => new Animation(ani)
                         ),
                     },
                 });
                 this.terrainPalette.set(key, frameModel);
-                this.terrainPaletteWithBindId.set(entity.id, frameModel);
             }
         }
+    }
 
-        for (const peer of config.root.moss.peers) {
-            const { key, entity } = peer;
-            const element = entity as ElementNode;
-            const elementModel = this.mossPalette.get(entity.id);
+    public updateMoss(moss: MossNode) {
+        for (const peerKey of Array.from(moss.peersDict.keys())) {
+            const elementMoss = moss.peersDict.get(peerKey) as ElementNode;
+            const elementModel = this.mossPalette.get(elementMoss.id);
             if (!elementModel) {
                 const frameModel = new FramesModel({
-                    id: entity.id,
-                    sn: entity.sn,
+                    id: elementMoss.id,
+                    sn: elementMoss.sn,
                     animations: {
-                        defaultAnimationName: element.animations.defaultAnimationName,
-                        display: element.animations.display,
-                        animationData: element.animations.animationData.map(
+                        defaultAnimationName: elementMoss.animations.defaultAnimationName,
+                        display: elementMoss.animations.display,
+                        animationData: elementMoss.animations.animationData.map(
                             (ani: AnimationDataNode) => new Animation(ani)
                         ),
                     },
                 });
-                this.mossPalette.set(key, frameModel);
+                this.mossPalette.set(peerKey, frameModel);
             }
         }
     }
@@ -194,11 +200,15 @@ export class ElementStorage implements IElementStorage {
     }
 
     public getTerrainPalette(key: number) {
-        return this.terrainPalette.get(key);
+        if (this.terrainPalette.get(key)) {
+            return this.terrainPalette.get(key);
+        }
     }
 
     public getTerrainPaletteByBindId(id: number) {
-        return this.terrainPaletteWithBindId.get(id);
+        if (this.terrainPaletteWithBindId.get(id)) {
+            return this.terrainPaletteWithBindId.get(id);
+        }
     }
 
     public getMossCollection() {
@@ -206,6 +216,8 @@ export class ElementStorage implements IElementStorage {
     }
 
     public getMossPalette(id: number) {
-        return this.mossPalette.get(id);
+        if (this.mossPalette.get(id)) {
+            return this.mossPalette.get(id);
+        }
     }
 }

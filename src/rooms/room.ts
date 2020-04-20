@@ -104,7 +104,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mWorld: WorldService;
     protected mMap: Map;
     protected mID: number;
-    protected mTerainManager: TerrainManager;
+    protected mTerrainManager: TerrainManager;
     protected mElementManager: ElementManager;
     protected mPlayerManager: PlayerManager;
     protected mWallManager: WallManager;
@@ -128,9 +128,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mWorld) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
+                this.addHandlerFun(
+                    op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE,
+                    this.onEnableEditModeHandler
+                );
+                this.addHandlerFun(
+                    op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP,
+                    this.onShowMapTitle
+                );
+                this.addHandlerFun(
+                    op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH,
+                    this.onMovePathHandler
+                );
             }
         }
     }
@@ -149,14 +158,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileHeight: data.tileHeight,
             tileWidth: data.tileWidth,
             sceneWidth: (data.rows + data.cols) * (data.tileWidth / 2),
-            sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2)
+            sceneHeight: (data.rows + data.cols) * (data.tileHeight / 2),
         };
 
         this.mMiniSize = {
             cols: data.cols * 2,
             rows: data.rows * 2,
             tileWidth: data.tileWidth / 2,
-            tileHeight: data.tileHeight / 2
+            tileHeight: data.tileHeight / 2,
         };
         this.mMap = new Map(this.mWorld);
         this.mMap.setMapInfo(data);
@@ -164,7 +173,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
         this.mWorld.game.scene.start(LoadingScene.name, {
             world: this.world,
-            room: this
+            room: this,
         });
 
         this.mCameraService = new CamerasManager(this);
@@ -184,7 +193,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public completeLoad() {
         this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
-            room: this
+            room: this,
         });
     }
 
@@ -193,7 +202,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.layerManager.destroy();
         }
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
-        this.mTerainManager = new TerrainManager(this, this);
+        this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
         this.mWallManager = new WallManager(this);
@@ -204,7 +213,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mCameraService.camera = camera;
             // const zoom = Math.ceil(window.devicePixelRatio);
             // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
-            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * this.mScaleRatio + camera.width, this.mSize.sceneHeight * this.mScaleRatio + camera.height);
+            this.mCameraService.setBounds(
+                -camera.width >> 1,
+                -camera.height >> 1,
+                this.mSize.sceneWidth * this.mScaleRatio + camera.width,
+                this.mSize.sceneHeight * this.mScaleRatio + camera.height
+            );
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -240,7 +254,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.playSound({
             urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
             field: SoundField.Element,
-            soundConfig: { loop: true }
+            soundConfig: { loop: true },
         });
     }
 
@@ -368,7 +382,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public clear() {
         if (this.mLayManager) this.mLayManager.destroy();
-        if (this.mTerainManager) this.mTerainManager.destroy();
+        if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mPlayerManager) this.mPlayerManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
@@ -417,7 +431,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         if (!this.mCameraService.targetFollow) {
-            this.cameraService.offsetScroll(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+            this.cameraService.offsetScroll(
+                pointer.prevPosition.x - pointer.position.x,
+                pointer.prevPosition.y - pointer.position.y
+            );
         }
     }
 
@@ -430,7 +447,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     get terrainManager(): TerrainManager {
-        return this.mTerainManager || undefined;
+        return this.mTerrainManager || undefined;
     }
 
     get elementManager(): ElementManager {
@@ -640,7 +657,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private enterRoom() {
         this.mWorld.game.scene.run(PlayScene.name, {
-            room: this
+            room: this,
         });
     }
 }

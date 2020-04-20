@@ -101,7 +101,10 @@ export class LoginScene extends BasicScene {
         this.mInputBg_small.x = -105;
         this.mInputBg_small.y = 67;
 
-        this.mSizeTF = this.add.text(10, 50, "", { style: { color: "#000000" }, wordWrap: { width: 800, useAdvancedWrap: true } });
+        this.mSizeTF = this.add.text(10, 50, "", {
+            style: { color: "#000000" },
+            wordWrap: { width: 800, useAdvancedWrap: true },
+        });
         this.mSizeTF.setFontSize(20);
 
         this.mTabDic = new Map();
@@ -246,9 +249,20 @@ export class LoginScene extends BasicScene {
     }
 
     public update() {
-        const orientation: string = this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-        this.mSizeTF.text = "width:" + this.mWorld.getSize().width + "\n" + "height:" + this.mWorld.getSize().height + "\n" + "orientation:" + orientation
-            + "\n" + "devicePixelRatio:" + window.devicePixelRatio;
+        const orientation: string =
+            this.mWorld.getSize().width > this.mWorld.getSize().height ? "LANDSCAPE" : "PORTRAIT";
+        this.mSizeTF.text =
+            "width:" +
+            this.mWorld.getSize().width +
+            "\n" +
+            "height:" +
+            this.mWorld.getSize().height +
+            "\n" +
+            "orientation:" +
+            orientation +
+            "\n" +
+            "devicePixelRatio:" +
+            window.devicePixelRatio;
     }
 
     public awake() {
@@ -386,8 +400,8 @@ export class LoginScene extends BasicScene {
             duration: 50,
             ease: "Linear",
             props: {
-                scaleX: { value: .5 },
-                scaleY: { value: .5 },
+                scaleX: { value: 0.5 },
+                scaleY: { value: 0.5 },
             },
             yoyo: true,
             repeat: 0,
@@ -418,7 +432,11 @@ export class LoginScene extends BasicScene {
         const login = this;
         this.mWorld.httpService.login(login.mNameInputTxt.text, login.mPassWordInputTxt.text).then((response: any) => {
             if (response.code === 200 || response.code === 201) {
-                if (login.mNameInputTxt.text && login.mPassWordInputTxt.text) localStorage.setItem("account", JSON.stringify({ "account": login.mNameInputTxt.text, "password": login.mPassWordInputTxt.text }));
+                if (login.mNameInputTxt.text && login.mPassWordInputTxt.text)
+                    localStorage.setItem(
+                        "account",
+                        JSON.stringify({ account: login.mNameInputTxt.text, password: login.mPassWordInputTxt.text })
+                    );
                 login.mWorld.account.setAccount(response.data);
                 login.mCallBack(response.data);
             } else {
@@ -442,23 +460,25 @@ export class LoginScene extends BasicScene {
 
     private loginByPhoneCode() {
         const login = this;
-        this.mWorld.httpService.loginByPhoneCode(login.mNameInputTxt.text, login.mVerificationCodeTxt.text).then((response: any) => {
-            if (response.code === 200 || response.code === 201) {
-                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
-                login.mWorld.account.setAccount(response.data);
-                login.mCallBack(response.data);
-            } else {
-                const alert = new Alert(login.mWorld, login);
-                alert.show("登录失败");
-            }
-        });
+        this.mWorld.httpService
+            .loginByPhoneCode(login.mNameInputTxt.text, login.mVerificationCodeTxt.text)
+            .then((response: any) => {
+                if (response.code === 200 || response.code === 201) {
+                    localStorage.setItem("accountphone", JSON.stringify({ account: login.mNameInputTxt.text }));
+                    login.mWorld.account.setAccount(response.data);
+                    login.mCallBack(response.data);
+                } else {
+                    const alert = new Alert(login.mWorld, login);
+                    alert.show("登录失败");
+                }
+            });
     }
 
     private requestQuickLogin() {
         const login = this;
         this.mWorld.httpService.quickLogin().then((response: any) => {
             if (response.code === 200 || response.code === 201) {
-                localStorage.setItem("accountphone", JSON.stringify({ "account": login.mNameInputTxt.text }));
+                localStorage.setItem("accountphone", JSON.stringify({ account: login.mNameInputTxt.text }));
                 login.mWorld.account.setAccount(response.data);
                 login.mCallBack(response.data);
             } else {

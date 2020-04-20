@@ -21,7 +21,7 @@ import { GameMain, ILauncherConfig } from "../../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";
 import { load } from "../utils/http";
 import { Url, ResUtils } from "../utils/resUtil";
-import { Lite } from "game-capsule";
+import { Lite, Capsule, PaletteNode, MossNode } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
 import NinePatchPlugin from "../../lib/rexui/lib/plugins/ninepatch-plugin.js";
 import InputTextPlugin from "../../lib/rexui/lib/plugins/inputtext-plugin.js";
@@ -138,9 +138,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mConnection.startConnect(gateway);
         }
 
-        if (config.isEditor) {
-            this.createGame();
-        }
         document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
     }
 
@@ -150,7 +147,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.game && this.game.device.os.iOS) {
             window.scrollTo(0, 0);
         }
-    }
+    };
 
     get moveStyle(): number {
         return this.mMoveStyle;
@@ -158,6 +155,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     getConfig(): ILauncherConfig {
         return this.mConfig;
+    }
+
+    setGameConfig(config: Capsule) {
+        this.elementStorage.setGameConfig(config);
+    }
+
+    updatePalette(palette: PaletteNode) {
+        this.elementStorage.updatePalette(palette);
+    }
+
+    updateMoss(moss: MossNode) {
+        this.elementStorage.updateMoss(moss);
     }
 
     destroy(): void {
@@ -427,7 +436,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         for (const url of urls) {
             const sceneId = Tool.baseName(url);
             this.gameConfigUrls.set(sceneId, url);
-            if (url.split(sceneId).length  === 3) {
+            if (url.split(sceneId).length === 3) {
                 this.gameConfigUrl = url;
             }
         }
@@ -440,6 +449,43 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public loadSceneConfig(sceneId: string) {
         const url = this.getConfigUrl(sceneId);
         return this.loadGameConfig(url);
+    }
+
+    public createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
+        // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
+        this._newGame();
+        // this.mGame.scene.add(PlayScene.name, PlayScene);
+        this.mGame.scene.add(MainUIScene.name, MainUIScene);
+        this.mGame.scene.add(EditScene.name, EditScene);
+        // this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
+        this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
+        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
+            if (this.mGame.device.os.desktop) {
+                this.mInputManager = new KeyBoardManager(this, keyEvents);
+            } else {
+                this.mInputManager = new JoyStickManager(this, keyEvents);
+            }
+        } else {
+            if (this.mGame.device.os.desktop) {
+                this.mInputManager = new KeyBoardManager(this, keyEvents);
+            }
+        }
+        if (this.mInputManager) this.mInputManager.enable = false;
+        if (window.screen.width > window.screen.height) {
+            if (this.mConfig.width > this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        } else {
+            if (this.mConfig.width < this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        }
+
+        this.gameCreated();
     }
 
     private async _createAnotherGame(gameId, worldId) {
@@ -537,7 +583,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
                 loginScene.remove();
                 this.mGame.scene.start(LoadingScene.name, { world: this });
-            }
+            },
         });
     }
 
@@ -592,7 +638,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mAccount.setAccount({
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
-                    fingerprint: this.mConfig.token_fingerprint
+                    fingerprint: this.mConfig.token_fingerprint,
                 });
             }
             this.loginEnterWorld();
@@ -651,7 +697,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.createGame(content.keyEvents);
-                // Logger.getInstance().debug("created game suc");
+                Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {
                 Logger.getInstance().log(err);
@@ -671,53 +717,53 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             backgroundColor: 0x0,
             resolution: 1,
             fps: {
-                target: 30
+                target: 30,
             },
             dom: {
-                createContainer: true
+                createContainer: true,
             },
             plugins: {
                 global: [
                     {
                         key: "rexButton",
                         plugin: ButtonPlugin,
-                        start: true
+                        start: true,
                     },
                     {
                         key: "rexNinePatchPlugin",
                         plugin: NinePatchPlugin,
-                        start: true
+                        start: true,
                     },
                     {
                         key: "rexInputText",
                         plugin: InputTextPlugin,
-                        start: true
+                        start: true,
                     },
                     {
                         key: "rexBBCodeTextPlugin",
                         plugin: BBCodeTextPlugin,
-                        start: true
-                    }
+                        start: true,
+                    },
                 ],
                 scene: [
                     {
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-                        mapping: "dragonbone"
+                        mapping: "dragonbone",
                     },
-                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" }
-                ]
+                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
+                ],
             },
             render: {
                 pixelArt: false,
-                roundPixels: true
+                roundPixels: true,
             },
             scale: {
                 mode: Phaser.Scale.NONE,
                 width: this.mConfig.width * window.devicePixelRatio,
                 height: this.mConfig.height * window.devicePixelRatio,
-                zoom: 1 / window.devicePixelRatio
-            }
+                zoom: 1 / window.devicePixelRatio,
+            },
         };
         Object.assign(this.gameConfig, this.mConfig);
         this.mGame = new Game(this.gameConfig);
@@ -731,43 +777,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         // if (this.mCharacterManager) this.mCharacterManager.register();
         return this.mGame;
-    }
-
-    private createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
-        // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
-        this._newGame();
-        // this.mGame.scene.add(PlayScene.name, PlayScene);
-        this.mGame.scene.add(MainUIScene.name, MainUIScene);
-        this.mGame.scene.add(EditScene.name, EditScene);
-        // this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
-        this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
-            if (this.mGame.device.os.desktop) {
-                this.mInputManager = new KeyBoardManager(this, keyEvents);
-            } else {
-                this.mInputManager = new JoyStickManager(this, keyEvents);
-            }
-        } else {
-            if (this.mGame.device.os.desktop) {
-                this.mInputManager = new KeyBoardManager(this, keyEvents);
-            }
-        }
-        if (this.mInputManager) this.mInputManager.enable = false;
-        if (window.screen.width > window.screen.height) {
-            if (this.mConfig.width > this.mConfig.height) {
-                this.resize(this.mConfig.width, this.mConfig.height);
-            } else {
-                this.resize(this.mConfig.height, this.mConfig.width);
-            }
-        } else {
-            if (this.mConfig.width < this.mConfig.height) {
-                this.resize(this.mConfig.width, this.mConfig.height);
-            } else {
-                this.resize(this.mConfig.height, this.mConfig.width);
-            }
-        }
-
-        this.gameCreated();
     }
 
     private gameCreated() {

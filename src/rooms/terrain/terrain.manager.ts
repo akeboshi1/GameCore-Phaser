@@ -23,6 +23,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // ---- by 7
     protected mMap: number[][];
 
+    protected actionSpritesCache: Map<string, any> = new Map();
+
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
         this.mListener = listener;
@@ -100,7 +102,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const type = content.nodeType;
         const pf: op_def.IPacket = content.packet;
 
-        // this.mRoom.mCurRoom
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
@@ -123,40 +124,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         this.fetchDisplay(ids);
 
-        if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
-            this.mListener.onFullPacketReceived(type);
-        }
-    }
-
-    protected onAdd1(packet: PBpacket) {
-        this.mPacketFrameCount++;
-        if (!this.mGameConfig) {
-            // Logger.getInstance().error("gameconfig is undefined");
-            return;
-        }
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-        const sprites = content.sprites;
-        const type = content.nodeType;
-        const pf: op_def.IPacket = content.packet;
-
-        if (type !== op_def.NodeType.TerrainNodeType) {
-            return;
-        }
-        let point: op_def.IPBPoint3f;
-        const ids = [];
-        for (const sprite of sprites) {
-            point = sprite.point3f;
-            if (point) {
-                const s = new Sprite(sprite, type);
-                if (!s.displayInfo) {
-                    if (!this.checkDisplay(s)) {
-                        ids.push(s.id);
-                    }
-                }
-                this._add(s);
-            }
-        }
-        this.fetchDisplay(ids);
         if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
             this.mListener.onFullPacketReceived(type);
         }

@@ -140,9 +140,9 @@
   integrity sha512-Uo4chgKbnPNlxQwoFmYIwctkQVkMMmsAoGGU4JKwLuvBefF0pCq4FybNSnfkfRCpC7ZW7kttcC/TrRtAJsvGtg==
 
 "@types/node@^10.1.0":
-  version "10.17.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.18.tgz#ae364d97382aacdebf583fa4e7132af2dfe56a0c"
-  integrity sha512-DQ2hl/Jl3g33KuAUOcMrcAOtsbzb+y/ufakzAdeK9z/H/xsvkpbETZZbPNMIiQuk24f5ZRMCcZIViAwyFIiKmg==
+  version "10.17.20"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.20.tgz#e6d8b3631af1e59bbb4fda04926b078acdd3c2ef"
+  integrity sha512-XgDgo6W10SeGEAM0k7FosJpvLCynOTYns4Xk3J5HGrA+UI/bKZ30PGMzOP5Lh2zs4259I71FSYLAtjnx3qhObw==
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -3714,8 +3714,8 @@ pinkie@^2.0.0:
     protobufjs "^6.8.8"
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.180"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#493e1afb95cf3b9f044868651f5b189f59d4b9ac"
+  version "1.0.192"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#164fd7ba43264ecc572304b4234c1b08d65d2678"
   dependencies:
     protobufjs "^6.8.8"
 

@@ -21,6 +21,7 @@ export interface IElementManager {
     add(sprite: ISprite[]);
     remove(id: number): IElement;
     getElements(): IElement[];
+    update?();
     destroy();
 }
 
@@ -101,6 +102,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
     }
+
+    public updat() {}
 
     protected addMap(sprite: ISprite) {}
 

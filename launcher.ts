@@ -5,6 +5,7 @@
 import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
 import { ConnectionService } from "./src/net/connection.service";
+import { Capsule, PaletteNode, MossNode } from "game-capsule";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -40,6 +41,11 @@ export interface GameMain {
 
     startFullscreen(): void;
     stopFullscreen(): void;
+    createGame(): void;
+    setGameConfig(config: Capsule): void;
+    updatePalette(palette: PaletteNode): void;
+
+    updateMoss(moss: MossNode): void;
 
     destroy(): void;
 }
@@ -84,6 +90,7 @@ export class Launcher {
         if (config) {
             Object.assign(this.mConfig, config);
         }
+
         this.intervalId = setInterval(() => {
             const xhr = new XMLHttpRequest(); // TODO
             xhr.open("GET", "./package.json", true);
@@ -100,11 +107,14 @@ export class Launcher {
             xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./src/game/world")
-            .then((game) => {
-                this.world = new game.World(this.config, this.mCompleteFunc);
-                this.disableClick();
-            });
+        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
+            this.world = new game.World(this.config, this.mCompleteFunc);
+
+            if (config.isEditor) {
+                this.world.createGame();
+            }
+            this.disableClick();
+        });
     }
 
     public enableClick() {
@@ -132,6 +142,21 @@ export class Launcher {
         this.world.stopFullscreen();
     }
 
+    public setGameConfig(config: Capsule) {
+        if (!this.world) return;
+        this.world.setGameConfig(config);
+    }
+
+    public updatePalette(palette: PaletteNode) {
+        if (!this.world) return;
+        this.world.updatePalette(palette);
+    }
+
+    public updateMoss(moss: MossNode) {
+        if (!this.world) return;
+        this.world.updateMoss(moss);
+    }
+
     public registerReload(func: Function) {
         this.mReload = func;
     }
@@ -141,8 +166,7 @@ export class Launcher {
     }
 
     public onResize(width: number, height: number, ui_scale?: number) {
-        if (!this.world)
-            return;
+        if (!this.world) return;
         if (ui_scale) this.mConfig.ui_scale = ui_scale;
         this.world.resize(width, height);
         // if (width < height) {
@@ -153,8 +177,7 @@ export class Launcher {
     }
 
     public onOrientationChange(orientation: number, width: number, height: number) {
-        if (!this.world)
-            return;
+        if (!this.world) return;
         this.world.onOrientationChange(orientation, width, height);
     }
 

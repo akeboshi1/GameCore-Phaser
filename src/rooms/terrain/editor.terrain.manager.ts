@@ -7,14 +7,26 @@ import { Terrain } from "./terrain";
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
 import { IElement, InputEnable } from "../element/element";
+import { DisplayObject } from "../display/display.object";
 
 export class EditorTerrainManager extends TerrainManager {
+    private mEditorTerrains: Map<string, Terrain> = new Map();
     constructor(room: IRoomService, listener?: SpriteAddCompletedListener) {
         super(room, listener);
         if (this.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
+
+            // NEW PROTO
+            this.addHandlerFun(
+                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS,
+                this.addSpritesWithLocs
+            );
+            this.addHandlerFun(
+                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITES_WITH_LOCS,
+                this.removeSpritesWithLocs
+            );
         }
     }
 
@@ -36,52 +48,102 @@ export class EditorTerrainManager extends TerrainManager {
         this.connection.send(pkt);
     }
 
-    removeEditor(ids: number[]) {
-        if (!this.mTerrains) return;
-        ids.forEach((id) => this.tryRemove(id));
-
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
-        content.ids = ids;
+    callEditorDeleteTerrainsData(loc: Pos[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_TERRAINS);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_DELETE_TERRAINS = pkt.content;
+        content.locs = loc.map((item) => ({ x: item.x, y: item.y, z: item.z }));
         content.nodeType = op_def.NodeType.TerrainNodeType;
         this.connection.send(pkt);
     }
 
-    removeFormPositions(locations: Pos[]) {
-        const terrains = Array.from(this.mTerrains.values());
-        const ids = [];
+    removeByPositions(locations: Pos[]) {
         for (const pos of locations) {
-            const terrain = terrains.find((ter) => {
-                return pos.equal(ter.getPosition45());
+            const key = this.genTerrainLocKey(pos.x, pos.y);
+
+            this.actionSpritesCache.set(key, {
+                action: "DELETE",
+                loc: {
+                    x: pos.x,
+                    y: pos.y,
+                },
             });
-            if (terrain) {
-                ids.push(terrain.id);
-            }
         }
-        this.removeEditor(ids);
+
+        this.callEditorDeleteTerrainsData(locations);
     }
 
-    protected _add(sprite: ISprite) {
-        let terrain = this.mTerrains.get(sprite.id);
-        if (!terrain) {
-            terrain = new Terrain(sprite, this);
-            terrain.setBlockable(false);
-            terrain.setRenderable(true);
-        } else {
+    update() {
+        this.batchActionSprites();
+    }
+
+    protected addSpritesWithLocs(packet: PBpacket) {
+        if (!this.mRoom.layerManager) {
+            Logger.getInstance().error("layer manager does not exist");
             return;
         }
-        // TODO update terrain
-        // 根据x, y, z去重
-        const repeatTerrain = Array.from(this.mTerrains.values()).find((ter) => {
-            const pos = ter.getPosition();
-            return pos.x === sprite.pos.x && pos.y === sprite.pos.y && pos.z === sprite.pos.z;
-        });
 
-        if (repeatTerrain) {
-            this.mTerrains.delete(repeatTerrain.id);
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
+        const locs = content.locs;
+        const nodeType = content.nodeType;
+
+        if (nodeType !== op_def.NodeType.TerrainNodeType) {
+            return;
         }
-        this.mTerrains.set(terrain.id || 0, terrain);
-        // this.roomService.blocks.add(terrain);
+
+        for (const loc of locs) {
+            const locKey = this.genTerrainLocKey(loc.x, loc.y);
+            const key = `${locKey}#${loc.key}`;
+
+            this.actionSpritesCache.set(key, {
+                action: "ADD",
+                loc,
+            });
+        }
+    }
+
+    protected removeSpritesWithLocs(packet: PBpacket) {
+        if (!this.mRoom.layerManager) {
+            Logger.getInstance().error("layer manager does not exist");
+            return;
+        }
+
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
+        const locs = content.locs;
+        const nodeType = content.nodeType;
+
+        if (nodeType !== op_def.NodeType.TerrainNodeType) {
+            return;
+        }
+
+        for (const loc of locs) {
+            const locKey = this.genTerrainLocKey(loc.x, loc.y);
+            const key = `${locKey}#${loc.key}`;
+
+            this.actionSpritesCache.set(key, {
+                action: "DELETE",
+                loc,
+            });
+        }
+    }
+
+    protected _add(sprite: ISprite, paletteKey?: number) {
+        const terrainKey = this.genTerrainLocKey(sprite.pos.x, sprite.pos.y);
+
+        let terrain = this.mEditorTerrains.get(terrainKey);
+
+        if (terrain) {
+            return terrain;
+        }
+        terrain = new Terrain(sprite, this);
+        terrain.setBlockable(false);
+        terrain.setRenderable(true);
+
+        if (paletteKey) {
+            (terrain as any).paletteKey = paletteKey;
+        }
+
+        this.mEditorTerrains.set(terrainKey, terrain);
+        this.mTerrains.set(terrain.id, terrain);
         return terrain;
     }
 
@@ -93,7 +155,9 @@ export class EditorTerrainManager extends TerrainManager {
             return;
         }
         for (const id of ids) {
-            this.tryRemove(id);
+            const pos = this.mTerrains.get(id).getPosition();
+            const key = this.genTerrainLocKey(pos.x, pos.y);
+            this.tryRemove(key);
         }
     }
 
@@ -109,7 +173,8 @@ export class EditorTerrainManager extends TerrainManager {
     }
 
     protected trySync(sprite: op_client.ISprite) {
-        const terrain = this.mTerrains.get(sprite.id);
+        const key = this.genTerrainLocKey(sprite.point3f.x, sprite.point3f.y);
+        const terrain = this.mEditorTerrains.get(key);
         if (!terrain) {
             Logger.getInstance().log("can't find terrain", sprite);
             return;
@@ -120,16 +185,14 @@ export class EditorTerrainManager extends TerrainManager {
         }
     }
 
-    protected removeMap(sprite: ISprite) {
-    }
+    protected removeMap(sprite: ISprite) {}
 
-    protected addMap(sprite: ISprite) {
-    }
+    protected addMap(sprite: ISprite) {}
 
-    private tryRemove(id: number): Terrain {
-        const terrain = this.mTerrains.get(id);
+    private tryRemove(key: string): Terrain {
+        const terrain = this.mEditorTerrains.get(key);
         if (terrain) {
-            this.mTerrains.delete(id);
+            this.mEditorTerrains.delete(key);
             terrain.destroy();
             if (this.roomService) {
                 this.roomService.blocks.remove(terrain);
@@ -145,7 +208,7 @@ export class EditorTerrainManager extends TerrainManager {
         if (pos.x < 0 || pos.y < 0 || pos.x >= roomSize.cols || pos.y >= roomSize.rows) {
             return false;
         }
-        const terrains = Array.from(this.mTerrains.values());
+        const terrains = Array.from(this.mEditorTerrains.values());
         for (const ter of terrains) {
             const pos45 = ter.getPosition45();
             if (sprite.pos.equal(pos45)) {
@@ -158,5 +221,46 @@ export class EditorTerrainManager extends TerrainManager {
             }
         }
         return true;
+    }
+
+    private batchActionSprites() {
+        if (!Array.from(this.actionSpritesCache.keys()).length) {
+            return;
+        }
+        const batchLocsKeys = Array.from(this.actionSpritesCache.keys()).splice(0, 200);
+
+        const displays: DisplayObject[] = [];
+
+        for (const key of batchLocsKeys) {
+            const { action, loc } = this.actionSpritesCache.get(key);
+            this.actionSpritesCache.delete(key);
+
+            if (action === "ADD") {
+                const palette = this.mRoom.world.elementStorage.getTerrainPalette(loc.key);
+
+                if (!palette) {
+                    continue;
+                }
+                const ele = this._add(palette.createSprite(op_def.NodeType.TerrainNodeType, loc.x, loc.y), loc.key);
+                if (ele.getDisplay()) {
+                    displays.push(ele.getDisplay());
+                }
+                continue;
+            }
+
+            if (action === "DELETE") {
+                const locKey = this.genTerrainLocKey(loc.x, loc.y);
+                this.tryRemove(locKey);
+                continue;
+            }
+        }
+
+        if (displays.length > 0) {
+            this.mRoom.addToGround(displays);
+        }
+    }
+
+    private genTerrainLocKey(x, y) {
+        return `${x}_${y}`;
     }
 }

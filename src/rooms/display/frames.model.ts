@@ -23,7 +23,7 @@ export interface IFramesModel {
     getWalkableArea(aniName: string, flip: boolean): number[][];
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
-    createSprite(x: number, y: number, z?: number): ISprite;
+    createSprite(nodeType: op_def.NodeType, x: number, y: number, z?: number): Sprite;
     destroy();
 }
 
@@ -130,9 +130,10 @@ export class FramesModel implements IFramesModel {
 
     public getDirable() {}
 
-    public createSprite(x: number, y: number, z?: number): ISprite {
+    public createSprite(nodeType: op_def.NodeType, x: number, y: number, z?: number): Sprite {
         const spr = op_client.Sprite.create();
 
+        spr.id = Helpers.genId();
         spr.display = this.display;
         spr.currentAnimationName = this.animationName;
         const point3f = op_def.PBPoint3f.create();
@@ -144,7 +145,7 @@ export class FramesModel implements IFramesModel {
         spr.point3f = point3f;
         spr.animations = this.toClient();
 
-        return new Sprite(spr);
+        return new Sprite(spr, nodeType);
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {

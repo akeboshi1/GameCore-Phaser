@@ -60,8 +60,8 @@ export class EditorElementManager extends ElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
         const objs: op_client.ISprite[] | undefined = content.sprites;
         if (!objs) return;
-        const type = content.nodeType;
-        if (type !== NodeType.ElementNodeType && type !== NodeType.SpawnPointType) {
+        const nodeType = content.nodeType;
+        if (nodeType !== NodeType.ElementNodeType && nodeType !== NodeType.SpawnPointType) {
             return;
         }
         let point: op_def.IPBPoint3f;
@@ -70,11 +70,11 @@ export class EditorElementManager extends ElementManager {
         for (const obj of objs) {
             point = obj.point3f;
             if (point) {
-                ele = this._add(new Sprite(obj));
+                ele = this._add(new Sprite(obj, nodeType));
                 if (ele.getDisplay()) displays.push(ele.getDisplay());
             }
         }
-        this.mRoom.addToGround(displays);
+        this.mRoom.addToSurface(displays);
     }
 
     protected addSpritesWithLocs(packet: PBpacket) {
@@ -87,21 +87,24 @@ export class EditorElementManager extends ElementManager {
         const locs = content.locs;
         const nodeType = content.nodeType;
 
+        if (nodeType !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+
         const displays: DisplayObject[] = [];
         locs.forEach((loc) => {
-            let palette;
-            if (nodeType === op_def.NodeType.ElementNodeType) {
-                palette = this.mRoom.world.elementStorage.getTerrainPalette(loc.key);
-            } else {
-                palette = this.mRoom.world.elementStorage.getMossPalette(loc.key);
+            const palette = this.mRoom.world.elementStorage.getMossPalette(loc.key);
+
+            if (!palette) {
+                return;
             }
-            const ele = this._add(new Sprite(palette.createSprite(loc.x, loc.y)));
+            const ele = this._add(palette.createSprite(nodeType, loc.x, loc.y));
             if (ele.getDisplay()) {
                 displays.push(ele.getDisplay());
             }
         });
 
-        this.mRoom.addToGround(displays);
+        this.mRoom.addToSurface(displays);
     }
 
     protected _add(sprite: ISprite): Element {

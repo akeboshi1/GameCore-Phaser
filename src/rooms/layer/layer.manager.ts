@@ -4,7 +4,6 @@ import { GridLayer } from "./grid.layer";
 import { Logger } from "../../utils/log";
 
 export class LayerManager {
-
     // ================ 背景层
     /**
      * 背景层1(用于鼠标点击移动)
@@ -98,19 +97,25 @@ export class LayerManager {
     }
 
     public addToGround(ele: ElementDisplay | ElementDisplay[], index?: number) {
-        const tmp = [].concat(ele);
         if (index !== undefined) {
             this.mGroundLayer.addAt(ele, index);
         } else {
-            this.mGroundLayer.add(tmp);
+            if (Array.isArray(ele)) {
+                this.mGroundLayer.add(ele);
+            } else {
+                this.mGroundLayer.add([ele]);
+            }
         }
         // this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
         // Logger.log("terrain num: ", this.mGroundLayer.list.length);
     }
 
     public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
-        const tmp = [].concat(ele);
-        this.mSurfaceLayer.add(tmp);
+        if (Array.isArray(ele)) {
+            this.mSurfaceLayer.add(ele);
+        } else {
+            this.mSurfaceLayer.add([ele]);
+        }
         // Logger.log("surface num: ", this.mSurfaceLayer.list.length);
         // this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
     }
@@ -183,7 +188,7 @@ export class LayerManager {
                 if (depthA > depthB) {
                     return 1;
                 }
-                const angle: number = Math.atan2((displayA.sortY - displayB.sortY), (displayA.sortX - displayB.sortX));
+                const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
                 if (angle * (180 * Math.PI) >= 70) {
                     return 1;
                 }
