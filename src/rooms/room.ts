@@ -29,7 +29,7 @@ import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
-import { BackgroundManager } from "./sky.box/background.manager";
+import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { SoundManager, SoundField } from "../game/sound.manager";
 import { Url } from "../utils/resUtil";
 export interface SpriteAddCompletedListener {
@@ -116,7 +116,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
-    protected mBackgrounds: BackgroundManager[];
+    protected mBackgrounds: SkyBoxManager[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -400,13 +400,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBackgrounds = [];
         if (gameid === "5e719a0a68196e416ecf7aad") {
             if (this.id === 926312429) {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
                     key: "skybox/mine/level_0",
                     width: 1120,
                     height: 684
                 }, this.mCameraService));
             } else {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
                     key: "skybox/bh/bh",
                     width: 3400,
                     height: 1900,
@@ -417,19 +417,19 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // const close = new BackgroundManager(this, "close", this.mCameraService);
         } else if (gameid === "5e9a7dace87abc390c4b1b73") {
             if (this.id === 926312429) {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
                     key: "skybox/mine/level_0",
                     width: 1120,
                     height: 684
                 }, this.mCameraService));
             } else  if (this.id === 395490295) {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
                     key: "skybox/mine/level_1",
                     width: 1360,
                     height: 994
                 }, this.mCameraService));
             } else {
-                this.mBackgrounds.push(new BackgroundManager(this, "close", {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
                     key: "skybox/mine/level_1",
                     width: 1540,
                     height: 969

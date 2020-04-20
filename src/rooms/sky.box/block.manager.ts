@@ -20,7 +20,7 @@ export class BlockManager {
 
   check(time?: number, delta?: number) {
     const worldView = this.mMainCamera.worldView;
-    const viewPort = new Phaser.Geom.Rectangle(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2, worldView.width * 2, worldView.height * 2);
+    const viewPort = new Phaser.Geom.Rectangle(worldView.x, worldView.y, worldView.width, worldView.height);
     for (const block of this.mGrids) {
       block.checkCamera(Phaser.Geom.Intersects.RectangleToRectangle(viewPort, block.rectangle));
       // block.checkCamera(viewPort.contains(block.x * this.world.scaleRatio, block.y * this.world.scaleRatio));
@@ -52,7 +52,7 @@ export class BlockManager {
     this.mContainer.setScale(this.world.scaleRatio);
     for (let i = 0; i < len; i++) {
       const block = new Block(this.scene, this.mKey, i + 1);
-      block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth, this.mGridHeight);
+      block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth * this.world.scaleRatio, this.mGridHeight * this.world.scaleRatio);
       this.mGrids[i] = block;
     }
     this.mContainer.add(this.mGrids);
@@ -88,7 +88,7 @@ class Block extends DynamicImage {
   setRectangle(x: number, y: number, width: number, height: number) {
     this.x = x;
     this.y = y;
-    this.mRectangle = new Phaser.Geom.Rectangle(x, y, width, height);
+    this.mRectangle = new Phaser.Geom.Rectangle(x * this.originX, y * this.originY, width, height);
   }
 
   get rectangle(): Phaser.Geom.Rectangle {

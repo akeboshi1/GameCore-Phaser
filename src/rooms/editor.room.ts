@@ -19,7 +19,7 @@ import {EditorTerrainManager} from "./terrain/editor.terrain.manager";
 import {ElementDisplay} from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
 import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
-import { BackgroundManager } from "./sky.box/background.manager";
+import { SkyBoxManager } from "./sky.box/sky.box.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
