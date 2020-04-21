@@ -76,11 +76,11 @@ export default class EquipUpgradePanel extends BasePanel {
         const bgHeight = height * arr.length - (arr.length >= 2 ? 40 * (arr.length - 2) : 0);
         const cellHeight = 155 * this.dpr;
         this.resetPosition(this.bg.width, bgHeight);
-        let posY: number = -bgHeight * 0.5 + 100 * this.dpr;
+        let posY: number =  -bgHeight * 0.5 + 100 * this.dpr;
         let index = 0;
         for (const value of arr) {
             value["isblue"] = (index % 2 === 0 ? false : true);
-            const item = new EquipUpgradeItem(this.scene, this.dpr, this.key, this.commonkey);
+            const item = new EquipUpgradeItem(this.scene, this.dpr, this.scale, this.key, this.commonkey);
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
             this.add(item);

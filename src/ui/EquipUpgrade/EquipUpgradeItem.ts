@@ -26,9 +26,11 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private haveEquiped: boolean = false;
 
     private curEquipItem: EquipItemCell;
-    constructor(scene: Phaser.Scene, dpr: number, key: string, commonKey: string) {
+    private zoom: number;
+    constructor(scene: Phaser.Scene, dpr: number, zoom: number, key: string, commonKey: string) {
         super(scene);
         this.dpr = dpr;
+        this.zoom = zoom;
         this.key = key;
         this.commonKey = commonKey;
         this.create();
@@ -55,11 +57,11 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     setTransPosition(x: number, y: number) {
         this.setPosition(x, y);
         const w = this.scene.cameras.main.width, h = this.scene.cameras.main.height;
-        const posX = w * 0.5 + this.x + 0 * this.dpr;
-        const posY = h * 0.5 + this.y + -20 * this.dpr;
+        const posX = w * 0.5 + this.x * this.zoom;
+        const posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
         this.gridTable.x = posX;
         this.gridTable.y = posY;
-        this.mScrollContainer.setPosition(-posX, -posY);
+        this.mScrollContainer.setPosition(-posX + 10 * this.zoom * this.dpr, -posY);
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
@@ -114,18 +116,18 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
 
     private createGridTable() {
         this.mScrollContainer = this.scene.make.container(undefined, false);
-        this.mScrollContainer.setPosition(0, -2 * this.dpr);
+        this.mScrollContainer.setPosition(0, 0);
         const propFrame = this.scene.textures.getFrame(this.key, "equipbg");
-        const capW = (propFrame.width + 10 * this.dpr);
-        const capH = (propFrame.height + 30 * this.dpr);
+        const capW = (propFrame.width * this.zoom + 10 * this.dpr);
+        const capH = (propFrame.height * this.zoom + 30 * this.dpr);
         this.gridTable = new GridTable(this.scene, {
             x: 0,
             y: 0,
             scrollMode: 1,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
-                width: 260 * this.dpr,
-                height: 60 * this.dpr,
+                width: 260 * this.dpr * this.zoom,
+                height: 60 * this.dpr * this.zoom,
                 columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
@@ -136,7 +138,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 const scene = cell.scene, item: op_client.IMiningEquipment = cell.item;
                 const index = cell.index;
                 if (cellContainer === null) {
-                    cellContainer = new EquipItemCell(scene, this.dpr, this.key);
+                    cellContainer = new EquipItemCell(scene, this.dpr, this.key, this.zoom);
                     this.mScrollContainer.add(cellContainer);
                 }
                 cellContainer.setData({ item });
@@ -226,15 +228,17 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     public index: number = 0;
     private dpr: number;
     private key: string;
+    private zoom: number;
     private bg: Phaser.GameObjects.Image;
     private unlock: Phaser.GameObjects.Image;
     private equipIcon: DynamicImage;
     private isSelect: boolean = false;
     private isUnlock: boolean = false;
-    constructor(scene: Phaser.Scene, dpr: number, key: string) {
+    constructor(scene: Phaser.Scene, dpr: number, key: string, zoom: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
+        this.zoom = zoom;
         this.create();
     }
 
@@ -275,7 +279,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     }
 
     private create() {
-        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr, key: this.key, frame: "equipbg" }).setOrigin(0, 0);
+        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr, key: this.key, frame: "equipbg" }).setOrigin(0, 0).setScale(this.zoom);
         this.equipIcon = new DynamicImage(this.scene, 15 * this.dpr, 0 * this.dpr).setOrigin(0, 0);
         this.unlock = this.scene.make.image({ x: 30 * this.dpr, y: -10 * this.dpr, key: this.key, frame: "lock" }).setOrigin(0, 0);
         this.add([this.bg, this.equipIcon, this.unlock]);
