@@ -14,8 +14,9 @@ export class MineSettlePanel extends BasePanel {
     private mPropContainer: Phaser.GameObjects.Container;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setTween(false);
+        this.setInteractive();
     }
+
     resize(width: number, height: number) {
         super.resize(width, height);
         this.x = width / 2;
@@ -35,12 +36,14 @@ export class MineSettlePanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on("pointerup", this.onConfirmBtnClick, this);
+        this.view.setInteractive();
+        this.confirmBtn.on("click", this.onConfirmBtnClick, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on("pointerup", this.onConfirmBtnClick, this);
+        this.view.disableInteractive();
+        this.confirmBtn.on("click", this.onConfirmBtnClick, this);
     }
 
     preload() {
@@ -110,8 +113,6 @@ export class MineSettlePanel extends BasePanel {
             fontSize: 16 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        this.confirmBtn.setInteractive();
-
         this.add([bg, topline, bottomline, titleimage, tilteName, this.confirmBtn, this.mPropContainer]);
         super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
