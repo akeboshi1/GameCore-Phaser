@@ -727,13 +727,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 slot: AvatarSlotType.Stalker,
                 part: AvatarSlotType.Stalker,
                 dir: 3,
-                skin: AvatarSlotType.Stalker
+                skin: avater.stalkerId
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.Stalker,
                 part: AvatarSlotType.Stalker,
                 dir: 1,
-                skin: AvatarSlotType.Stalker
+                skin: avater.stalkerId
             });
         }
     }

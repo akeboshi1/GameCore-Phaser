@@ -212,7 +212,8 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.unlockbtn.setPosition(70 * this.dpr, 48 * this.dpr);
         this.unlockbtn.setSize(btnBg.width, btnBg.height);
         this.unlockbtn.add([this.unlockCondition, btnBg, this.diamondIcon, this.costNum, this.btnName]);
-        this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
+        btnBg.setInteractive();
+        btnBg.on("pointerup", this.onUnlockEquipHandler, this);
         this.add(this.unlockbtn);
     }
 
