@@ -64,6 +64,7 @@ export class FramesDisplay extends DisplayObject {
                 if (ani.frameName.length > 1) {
                     sprite.play(`${data.gene}_${animation.animationName}`);
                 } else {
+                    sprite.anims.stop();
                     sprite.setTexture(data.gene, ani.frameName[0]);
                 }
             } else {

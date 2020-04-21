@@ -46,19 +46,19 @@ export class MineCarPanel extends BasePanel {
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
-  setCategories(subcategorys: string[]) {
+  setCategories(subcategorys: op_def.IStrMap[]) {
     const items = [];
     const zoom = this.mWorld.uiScaleNew;
     const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
     // const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
-    const gap = 4 * this.dpr * zoom;
+    const gap = 4 * zoom;
     const style = {
       fontFamily: Font.DEFULT_FONT,
       fontSize: 8 * this.dpr * zoom,
       color: "#566ddb"
     };
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new Button(this.scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", subcategorys[i]);
+      const item = new Button(this.scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", subcategorys[i].value);
       item.setScale(zoom);
       item.setTextStyle(style);
       item.setFontStyle("bold");
