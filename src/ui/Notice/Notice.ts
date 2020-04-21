@@ -45,6 +45,6 @@ export class Notice extends PacketHandler {
         if (!packet || !packet.content) {
             return;
         }
-        this.mEvent.emit("showNotice", packet.content);
+        this.mEvent.emit("showNotice", packet);
     }
 }

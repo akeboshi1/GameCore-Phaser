@@ -10,7 +10,6 @@ export class NoticePanel extends BasePanel {
     private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setTween(false);
     }
 
     public show(param?: any) {
