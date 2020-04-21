@@ -21,6 +21,7 @@ export class NoticeMediator extends BaseMediator {
         this.mScene = scene;
         this.notice = new Notice(worldService);
         this.mUIType = UIType.Tips;
+        this.addListen();
     }
 
     public setUiScale(value: number) {
@@ -65,7 +66,6 @@ export class NoticeMediator extends BaseMediator {
         this.mView.show(param);
         (this.mView as NoticePanel).showNotice(param);
         this.mLayerManager.addToDialogLayer(this.mView.view);
-        this.addListen();
         // this.setUiScale(this.world.uiScale);
     }
 

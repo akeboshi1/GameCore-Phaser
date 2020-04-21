@@ -91,5 +91,6 @@ export class PicaRoomListMediator extends BaseMediator {
       return;
     }
     this.roomList.sendEnterRoom(roomID, passworld);
+    this.onCloseHandler();
   }
 }
