@@ -1,18 +1,14 @@
 import { IGroup } from "./IGroup";
 import { Handler } from "../../Handler/Handler";
 import { HandlerDispatcher } from "../../Handler/HandlerDispatcher";
-
-export interface IFollow {
-    follow: Function;
-    endFollow: Function;
-
-}
+import { GroupEventType, GroupType } from "./GroupManager";
 export class FollowGroup implements IGroup {
+
     public owner: any;
-    public childs: IFollow[];
+    public childs: any[];
     public data: any;
     public eventDisp: HandlerDispatcher;
-    public eventType: string = "eventType";
+    public groupType = GroupType.Follow;
     constructor() {
         this.eventDisp = new HandlerDispatcher();
         this.childs = [];
@@ -31,10 +27,11 @@ export class FollowGroup implements IGroup {
 
     public replaceOwner(owner: any) {
         this.owner = owner;
-        this.eventDisp.emitter("");
+        this.eventDisp.emitter(GroupEventType.REPLACE_TYPE, owner);
     }
 
-    public emitter(type: string, data?: any) {
+    public emitter(type?: string, data?: any) {
+        if (!type) type = GroupEventType.DEFAULT_TYPE;
         this.eventDisp.emitter(type, data);
     }
     public on(type: string, caller: any, method: Function, args?: any[]) {

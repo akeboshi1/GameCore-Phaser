@@ -725,13 +725,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (avater.stalkerId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.Stalker,
-                part: AvatarPartType.Stalker,
+                part: AvatarSlotType.Stalker,
                 dir: 3,
                 skin: avater.stalkerId
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.Stalker,
-                part: AvatarPartType.Stalker,
+                part: AvatarSlotType.Stalker,
                 dir: 1,
                 skin: avater.stalkerId
             });

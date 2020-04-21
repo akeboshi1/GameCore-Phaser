@@ -12,6 +12,9 @@ import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
 import { PlayerModel } from "./player.model";
+import { FollowGroup } from "../group/FollowGroup";
+import { GroupType } from "../group/GroupManager";
+import { FollowAction } from "../action/FollowAction";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -38,8 +41,19 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public createActor(playModel: PlayerModel) {
+    // public createActor(playModel: PlayerModel) {
+    //     this.mActor = new Actor(playModel, this);
+    //     if (sprite.attrs) {
+    //         for (const attr of sprite.attrs) {
+    //             this._addSimulate(sprite.id, attr);
+    //         }
+    //     }
+    // }
+
+    public createActor(actor: op_client.IActor) {
+        const playModel = new PlayerModel(actor);
         this.mActor = new Actor(playModel, this);
+        this._addSimulate(actor);
     }
 
     get actor(): Actor {
@@ -230,6 +244,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         for (const sprite of sprites) {
             this._add(new Sprite(sprite));
+            if (sprite.attrs) {
+                this._addSimulate(sprite);
+            }
         }
     }
 
@@ -239,6 +256,18 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
+    }
+
+    private _addSimulate(sprite: op_client.ISprite) {
+        let msprite = new op_client.Sprite();
+        msprite = Object.assign(msprite, sprite);
+        msprite.id = sprite.id + 100000;
+        this.roomService.elementManager.add([new Sprite(msprite)]);
+        const ele = this.roomService.elementManager.get(msprite.id);
+        const owner = this.get(sprite.id);
+        const group = (this.roomService as Room).groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
+        group.addChild(ele);
+        ele.ai.addAction(new FollowAction(group));
     }
 
     private addComplete(packet: PBpacket) {

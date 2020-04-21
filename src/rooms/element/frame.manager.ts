@@ -1,7 +1,7 @@
 import { Handler } from "../../Handler/Handler";
 import { IDispose } from "../action/IDispose";
 
-export class FrameManage implements IDispose {
+export class FrameManager implements IDispose {
 
     private handlers: Handler[] = [];
     public add(caller: any, method: Function, args?: any[]) {
