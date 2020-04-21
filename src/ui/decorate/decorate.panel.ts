@@ -47,7 +47,7 @@ export class DecoratePanel extends BasePanel {
             return;
         }
         if (this.mShow) return;
-        if (this.configList && this.configList[0]) this.playSound(this.configList[0]);
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
         if (!this.mTweening && this.mTweenBoo) {
             this.showTween(true);
         } else {

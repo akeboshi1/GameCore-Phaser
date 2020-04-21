@@ -1,5 +1,5 @@
-import { AIAction } from "./AIAction"
-import { Element } from "../rooms/element/element";
+import { AIAction } from "./AIAction";
+import { Element } from "../element/element";
 import { ActionGroup } from "./ActionGroup";
 
 export class AI extends AIAction {
@@ -34,8 +34,8 @@ export class AI extends AIAction {
         this.group.breakAction();
     }
 
-    public dispose() {
-        this.group.dispose();
+    public destroy() {
+        this.group.destroy();
         this.owner = null;
     }
 

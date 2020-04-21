@@ -99,7 +99,7 @@ export class ChatMediator extends BaseMediator {
         this.world.uiManager.getUILayerManager().addToUILayer(this.mView.view);
         this.addListen();
         this.mView.show();
-        this.mView.setScale(this.world.uiScale);
+        this.mView.scale=(this.world.uiScale);
     }
 
     public update(param?: any) {

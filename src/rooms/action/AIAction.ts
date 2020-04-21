@@ -1,5 +1,5 @@
 import { IDispose } from "./IDispose";
-import { Element } from "../rooms/element/element";
+import { Element } from "../element/element";
 import { ActionGroup } from "./ActionGroup";
 
 export abstract class AIAction implements IDispose {
@@ -16,7 +16,7 @@ export abstract class AIAction implements IDispose {
     }
     public abstract execute();
 
-    public dispose() {
+    public destroy() {
         this.owner = null;
         this.group = null;
     }

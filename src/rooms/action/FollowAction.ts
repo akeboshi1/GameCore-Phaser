@@ -1,6 +1,6 @@
 import { AIAction } from "./AIAction";
-import { Element, PlayerState } from "../rooms/element/element";
-import { Pos } from "../utils/pos";
+import { Element, PlayerState } from "../element/element";
+import { Pos } from "../../utils/pos";
 import { op_client, op_def } from "pixelpai_proto";
 
 export class FollowAction extends AIAction {
@@ -10,7 +10,7 @@ export class FollowAction extends AIAction {
     private movepath: Array<{ x: number, y: number }> = [];
     private moveData: op_client.MoveData = new op_client.MoveData();
     public execute() {
-        this.target.eleMgr.on("update", this.update, this);
+        this.target.eleMgr.frameMgr.add(this, this.update);
         this.moveData.moveObjectId = this.owner.id;
         this.moveData.destinationPoint3f = new op_def.PBPoint3f();
     }
@@ -29,9 +29,9 @@ export class FollowAction extends AIAction {
         }
     }
 
-    public dispose() {
-        super.dispose();
-        this.target.eleMgr.off("update", this.update, this);
+    public destroy() {
+        super.destroy();
+        this.target.eleMgr.frameMgr.remove(this, this.update);
         this.moveData = null;
         this.movepath.length = 0;
         this.movepath = null;

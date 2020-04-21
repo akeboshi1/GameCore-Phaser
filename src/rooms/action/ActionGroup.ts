@@ -1,5 +1,5 @@
 import { AIAction } from "./AIAction";
-import { Handler } from "../Handler/Handler";
+import { Handler } from "../../Handler/Handler";
 import { IDispose } from "./IDispose";
 
 export class ActionGroup implements IDispose {
@@ -14,7 +14,7 @@ export class ActionGroup implements IDispose {
 
     public nextAction() {
         if (this.current) {
-            this.current.dispose();
+            this.current.destroy();
             this.current = null;
         }
         if (this.list && this.list.length > 0) {
@@ -31,12 +31,12 @@ export class ActionGroup implements IDispose {
     public clear() {
         if (this.list) {
             for (const action of this.list) {
-                action.dispose();
+                action.destroy();
             }
             this.list.length = 0;
         }
         if (this.current) {
-            this.current.dispose();
+            this.current.destroy();
             this.current = null;
         }
 
@@ -44,7 +44,7 @@ export class ActionGroup implements IDispose {
 
     public stopCurrentAction() {
         if (this.current) {
-            this.current.dispose();
+            this.current.destroy();
             this.current = null;
         }
     }
@@ -61,20 +61,20 @@ export class ActionGroup implements IDispose {
 
     public breakAction() {
         for (const action of this.list) {
-            action.dispose();
+            action.destroy();
         }
         this.list.length = 0;
         if (this.current && this.current.isBreak) {
-            this.current.dispose();
+            this.current.destroy();
             this.current = null;
         }
     }
 
-    public dispose() {
+    public destroy() {
         this.clear();
         this.list = null;
         if (this.sleepAction) {
-            this.sleepAction.dispose();
+            this.sleepAction.destroy();
             this.sleepAction = null;
         }
         if (this.compHandler) {

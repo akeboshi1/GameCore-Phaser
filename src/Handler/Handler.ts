@@ -72,10 +72,8 @@ export class Handler {
         if (data == null)
             // tslint:disable-next-line: no-var-keyword
             var result = this.method.apply(this.caller, this.args);
-        /*[IF-FLASH]*/
         else if (!this.args && !(data instanceof Array)) result = this.method.call(this.caller, data);
         // tslint:disable-next-line: comment-format
-        //[IF-JS] else if (!args && !data.unshift) result= method.call(caller, data);
         else if (this.args) result = this.method.apply(this.caller, this.args.concat(data));
         else result = this.method.apply(this.caller, data);
         // tslint:disable-next-line: no-unused-expression

@@ -14,7 +14,7 @@ import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
 import { DisplayObject } from "../display/display.object";
-import { AI } from "../../action/AI";
+import { AI } from "../action/AI";
 export enum PlayerState {
     IDLE = "idle",
     WALK = "walk",

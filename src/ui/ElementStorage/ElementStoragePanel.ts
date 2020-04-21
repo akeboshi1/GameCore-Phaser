@@ -40,7 +40,7 @@ export class ElementStoragePanel extends BasePanel {
 
     resize(oriention?: number) {
         const size: Size = this.mWorld.getSize();
-        this.setScale(this.dpr);
+        this.scale=this.dpr;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.setSize(683 >> 1, 901 >> 1);
             this.x = size.width - (this.width * this.dpr) - 10;

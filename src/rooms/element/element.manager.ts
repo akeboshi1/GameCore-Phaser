@@ -11,6 +11,7 @@ import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
 import { Handler } from "../../Handler/Handler";
+import { FrameManage } from "./frame.manager";
 
 export interface IElementManager {
     hasAddComplete: boolean;
@@ -27,10 +28,10 @@ export interface IElementManager {
 
 export class ElementManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
+    public frameMgr: FrameManage;
     protected mElements: Map<number, Element> = new Map();
     protected mMap: number[][];
     private mGameConfig: IElementStorage;
-    private eventEmitter = new Phaser.Events.EventEmitter();
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -45,7 +46,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-
+            this.frameMgr = new FrameManage();
         }
         if (this.mRoom && this.mRoom.world) {
             this.mGameConfig = this.mRoom.world.elementStorage;
@@ -97,18 +98,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!this.mElements) return;
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
-    }
-
-    public on(event: string | symbol, fn: Function, context?: any) {
-        this.eventEmitter.on(event, fn, context);
-    }
-
-    public off(event: string | symbol, fn: Function, context?: any) {
-        this.eventEmitter.off(event, fn, context);
+        this.frameMgr.destroy();
     }
 
     public update(time: number, delta: number) {
-        this.eventEmitter.emit("update", time, delta);
+        
+        this.frameMgr.update(time, delta);
     }
 
     protected addMap(sprite: ISprite) {
@@ -194,7 +189,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // if (!ele) ele = new Element(sprite, this);
         if (addMap) this.addMap(sprite);
         this.mElements.set(ele.id || 0, ele);
-
         return ele;
     }
 
