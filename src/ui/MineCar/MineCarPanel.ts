@@ -58,6 +58,7 @@ export class MineCarPanel extends BasePanel {
   }
 
   public update(param?: any) {
+    this.data = param;
     super.update(param);
     if (this.mInitialized) {
       this.refreshData();
