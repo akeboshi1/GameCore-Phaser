@@ -43,6 +43,12 @@ export class Button extends GameObjects.Container implements IButtonState {
     }
   }
 
+  setFrame(frame: string) {
+    if (this.mBackground) {
+      this.mBackground.setFrame(frame);
+    }
+  }
+
   setText(val: string) {
     if (this.mText) {
       this.mText.setText(val);

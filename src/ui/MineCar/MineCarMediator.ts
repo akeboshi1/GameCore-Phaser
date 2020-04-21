@@ -3,7 +3,6 @@ import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { MineCar } from "./MineCar";
 import { op_client } from "pixelpai_proto";
-import { PBpacket } from "net-socket-packet";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class MineCarMediator extends BaseMediator {
@@ -19,6 +18,7 @@ export class MineCarMediator extends BaseMediator {
 
   show(param?: any) {
     if (this.mView && this.mView.isShow()) {
+        this.mView.update(param);
         return;
     }
     if (!this.mView) {
@@ -26,6 +26,7 @@ export class MineCarMediator extends BaseMediator {
     }
     this.mView.show(param);
     this.mView.on("close", this.onCloseHandler, this);
+    this.mView.on("discard", this.onDiscardHandler, this);
     this.layerManager.addToUILayer(this.mView.view);
   }
 
@@ -33,9 +34,15 @@ export class MineCarMediator extends BaseMediator {
     this.show(packet);
   }
 
+  private onDiscardHandler(items: any[]) {
+    if (this.mMineCar) {
+      this.mMineCar.discard(items);
+    }
+  }
+
   private onCloseHandler() {
     if (this.mView) {
-      this.mView.destroy();
+      this.mView.hide();
       this.mView = undefined;
     }
   }

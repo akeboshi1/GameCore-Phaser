@@ -12,7 +12,7 @@ export class CutInPanel extends BasePanel {
   }
 
   show(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[]) {
-    this.mData = param;
+    this.data = param;
     if (!this.mInitialized) {
       this.preload();
       return;

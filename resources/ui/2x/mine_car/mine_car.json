@@ -40,10 +40,30 @@
 				"h": 49
 			}
 		},
-		"help.png": {
+		"gray_btn.png": {
 			"frame": {
 				"x": 501,
 				"y": 1,
+				"w": 85,
+				"h": 36
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 85,
+				"h": 36
+			},
+			"sourceSize": {
+				"w": 85,
+				"h": 36
+			}
+		},
+		"help.png": {
+			"frame": {
+				"x": 501,
+				"y": 39,
 				"w": 31,
 				"h": 32
 			},
@@ -62,8 +82,8 @@
 		},
 		"item_boder.png": {
 			"frame": {
-				"x": 501,
-				"y": 35,
+				"x": 450,
+				"y": 73,
 				"w": 73,
 				"h": 73
 			},
@@ -83,7 +103,7 @@
 		"lock.png": {
 			"frame": {
 				"x": 534,
-				"y": 1,
+				"y": 39,
 				"w": 24,
 				"h": 29
 			},
@@ -102,7 +122,7 @@
 		},
 		"nav_bg.png": {
 			"frame": {
-				"x": 576,
+				"x": 588,
 				"y": 1,
 				"w": 410,
 				"h": 50
@@ -122,7 +142,7 @@
 		},
 		"nav_btn_down.png": {
 			"frame": {
-				"x": 576,
+				"x": 560,
 				"y": 53,
 				"w": 73,
 				"h": 45
@@ -142,7 +162,7 @@
 		},
 		"nav_btn_normal.png": {
 			"frame": {
-				"x": 651,
+				"x": 635,
 				"y": 53,
 				"w": 73,
 				"h": 45
@@ -160,9 +180,29 @@
 				"h": 45
 			}
 		},
+		"selected_icon.png": {
+			"frame": {
+				"x": 710,
+				"y": 53,
+				"w": 24,
+				"h": 24
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 24,
+				"h": 24
+			},
+			"sourceSize": {
+				"w": 24,
+				"h": 24
+			}
+		},
 		"tips_bg.png": {
 			"frame": {
-				"x": 576,
+				"x": 525,
 				"y": 100,
 				"w": 309,
 				"h": 116
@@ -179,6 +219,26 @@
 				"w": 309,
 				"h": 116
 			}
+		},
+		"yellow_btn.png": {
+			"frame": {
+				"x": 736,
+				"y": 53,
+				"w": 85,
+				"h": 36
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 85,
+				"h": 36
+			},
+			"sourceSize": {
+				"w": 85,
+				"h": 36
+			}
 		}
 	},
 	"meta": {
@@ -187,7 +247,7 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 987,
+			"w": 999,
 			"h": 591
 		},
 		"scale": "1"
