@@ -4,6 +4,7 @@ import { Font } from "../../utils/font";
 import { EquipUpgradeItem } from "./EquipUpgradeItem";
 import { NinePatch } from "../components/nine.patch";
 import { op_client } from "pixelpai_proto";
+import { Logger } from "../../utils/log";
 
 export default class EquipUpgradePanel extends BasePanel {
     private key = "equip_upgrade";
@@ -17,7 +18,6 @@ export default class EquipUpgradePanel extends BasePanel {
     private content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setTween(false);
     }
     resize(width: number, height: number) {
         super.resize(width, height);
@@ -28,7 +28,21 @@ export default class EquipUpgradePanel extends BasePanel {
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
         this.blackBg.fillRect(0, 0, width, height);
+    }
 
+    public show(param?: any) {
+        this.refreshData();
+        super.show(param);
+    }
+
+    public addListen() {
+        if (!this.mInitialized) return;
+        this.closeBtn.on("pointerup", this.OnClosePanel, this);
+    }
+
+    public removeListen() {
+        if (!this.mInitialized) return;
+        this.closeBtn.off("pointerup", this.OnClosePanel, this);
     }
 
     preload() {
@@ -49,13 +63,9 @@ export default class EquipUpgradePanel extends BasePanel {
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 8, y: posY + this.dpr * 8, key: this.commonkey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
-        this.closeBtn.on("pointerup", this.OnClosePanel, this);
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
         super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
-        const upgradeData = this.getData("upgradeData");
-        if (upgradeData) this.setEquipDatas(upgradeData);
-        this.setInteractive();
     }
 
     setEquipDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
@@ -136,6 +146,11 @@ export default class EquipUpgradePanel extends BasePanel {
             arr.push(obj);
         }
         return arr;
+    }
+
+    private refreshData() {
+        const upgradeData = this.getData("upgradeData");
+        if (upgradeData) this.setEquipDatas(upgradeData);
     }
 
     private resetPosition(width: number, height: number) {

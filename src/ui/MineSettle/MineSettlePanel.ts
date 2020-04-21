@@ -28,6 +28,21 @@ export class MineSettlePanel extends BasePanel {
         this.setSize(width, height);
     }
 
+    show(param?: any) {
+        super.show(param);
+        this.refreshData();
+    }
+
+    addListen() {
+        if (!this.mInitialized) return;
+        this.confirmBtn.on("pointerup", this.onConfirmBtnClick, this);
+    }
+
+    removeListen() {
+        if (!this.mInitialized) return;
+        this.confirmBtn.on("pointerup", this.onConfirmBtnClick, this);
+    }
+
     preload() {
         this.addAtlas(this.key, "minesettle/settlement.png", "minesettle/settlement.json");
         super.preload();
@@ -96,14 +111,11 @@ export class MineSettlePanel extends BasePanel {
             fontFamily: Font.DEFULT_FONT
         });
         this.confirmBtn.setInteractive();
-        this.confirmBtn.on("pointerup", this.onConfirmBtnClick, this);
 
         this.add([bg, topline, bottomline, titleimage, tilteName, this.confirmBtn, this.mPropContainer]);
         super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
         // this.setMineSettlePacket(this.testData());
-        const settleData = this.getData("settleData");
-        if (settleData) this.setMineSettlePacket(settleData);
     }
 
     setMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
@@ -119,6 +131,11 @@ export class MineSettlePanel extends BasePanel {
         this.mPropGrid = null;
         this.confirmBtn = null;
         super.destroy();
+    }
+
+    private refreshData() {
+        const settleData = this.getData("settleData");
+        if (settleData) this.setMineSettlePacket(settleData);
     }
 
     private onSelectItemHandler(data: op_client.ICountablePackageItem) {
@@ -181,7 +198,7 @@ class MineSettleItem extends Phaser.GameObjects.Container {
         this.itemCount.text = data.count + "";
         const url = Url.getOsdRes(data.display.texturePath);
         this.icon.load(url, this, () => {
-          ///  this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
+            ///  this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
             this.icon.setScale(33 * this.dpr / this.icon.width);
             this.icon.setPosition(0, 3 * this.dpr);
             this.itemCount.setPosition(this.icon.displayWidth * 0.5, this.icon.x + this.icon.displayHeight + 6 * this.dpr);

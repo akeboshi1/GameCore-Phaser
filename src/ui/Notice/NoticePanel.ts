@@ -18,6 +18,15 @@ export class NoticePanel extends BasePanel {
         this.setData("data", param);
         this.resize();
         this.scale = this.mWorld.uiRatio;
+        this.refreshData();
+    }
+
+    public addListen() {
+        if (!this.mInitialized) return;
+    }
+
+    public removeListen() {
+        if (!this.mInitialized) return;
     }
 
     public destroy() {
@@ -97,7 +106,9 @@ export class NoticePanel extends BasePanel {
             .setStroke("#000000", 1);
         this.add(this.mContentText);
         super.init();
+    }
 
+    private refreshData() {
         const data = this.getData("data");
         if (data) {
             this.showNotice(data);
