@@ -32,9 +32,8 @@ export class MineSettleMediator extends BaseMediator {
             this.mineSettle.register();
         }
         this.layerMgr.addToUILayer(this.mView.view);
-        if (!this.mParam || this.mParam.length === 0)
-            this.mineSettle.reqMineSettlePacket();
-        else this.onMineSettlePacket(this.mParam[0]);
+        if (this.mParam && this.mParam.length > 0)
+            this.onMineSettlePacket(this.mParam[0]);
         this.mView.show();
     }
 
@@ -54,6 +53,7 @@ export class MineSettleMediator extends BaseMediator {
     }
 
     private onHideMineSettle() {
+        this.mineSettle.reqMineSettlePacket();
         this.destroy();
     }
 

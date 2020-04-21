@@ -32,6 +32,8 @@ import { WallManager } from "./wall/wall.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { SoundManager, SoundField } from "../game/sound.manager";
 import { Url } from "../utils/resUtil";
+import { GroupManager } from "./group/GroupManager";
+import { FrameManager } from "./element/frame.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -109,6 +111,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mPlayerManager: PlayerManager;
     protected mWallManager: WallManager;
     protected mLayManager: LayerManager;
+    protected mGroupManager: GroupManager;
+    protected mFrameManager: FrameManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -199,6 +203,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mWallManager = new WallManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
+        this.mGroupManager = new GroupManager(this);
+        this.mFrameManager = new FrameManager();
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
@@ -210,7 +216,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
             }
         }
-        this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
+        // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
+        this.mPlayerManager.createActor(this.mActorData);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();
@@ -239,10 +246,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             soundConfig: { loop: true }
         });
 
-        import(/*  */ "../module/template/main.js").then(({Template}) => {
+        import(/*  */ "../module/template/main.js").then(({ Template }) => {
             const tmp = new Template();
             tmp.init(this.world);
-        //   Logger.getInstance().log("module: ", Template);
+            //   Logger.getInstance().log("module: ", Template);
         });
     }
 
@@ -357,6 +364,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBlocks.update(time, delta);
         // this.startCheckBlock();
         if (this.layerManager) this.layerManager.update(time, delta);
+        if (this.elementManager) this.elementManager.update(time, delta);
+        if (this.mFrameManager) this.frameManager.update(time, delta);
     }
 
     public updateClock(time: number, delta: number) {
@@ -422,7 +431,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     width: 1120,
                     height: 684
                 }, this.mCameraService));
-            } else  if (this.id === 395490295) {
+            } else if (this.id === 395490295) {
                 this.mBackgrounds.push(new SkyBoxManager(this, "close", {
                     key: "skybox/mine/level_1",
                     width: 1360,
@@ -493,6 +502,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get layerManager(): LayerManager {
         return this.mLayManager || undefined;
+    }
+
+    get groupManager(): GroupManager {
+        return this.mGroupManager || undefined;
+    }
+
+    get frameManager(): FrameManager {
+        return this.mFrameManager || undefined;
     }
 
     get cameraService(): ICameraService {
@@ -696,7 +713,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private enterRoom() {
         this.mWorld.game.scene.run(PlayScene.name, {
-            room: this
+            room: this,
         });
     }
 }
