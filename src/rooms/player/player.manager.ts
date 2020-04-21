@@ -259,15 +259,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private _addSimulate(sprite: op_client.ISprite) {
-        let msprite = new op_client.Sprite();
-        msprite = Object.assign(msprite, sprite);
-        msprite.id = sprite.id + 100000;
-        this.roomService.elementManager.add([new Sprite(msprite)]);
-        const ele = this.roomService.elementManager.get(msprite.id);
-        const owner = this.get(sprite.id);
-        const group = (this.roomService as Room).groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
-        group.addChild(ele);
-        ele.ai.addAction(new FollowAction(group));
+        // let msprite = new op_client.Sprite();
+        // msprite = Object.assign(msprite, sprite);
+        // msprite.id = sprite.id + 100000;
+        // this.roomService.elementManager.add([new Sprite(msprite)]);
+        // const ele = this.roomService.elementManager.get(msprite.id);
+        // const owner = this.get(sprite.id);
+        // const group = (this.roomService as Room).groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
+        // group.addChild(ele);
+        // ele.ai.addAction(new FollowAction(group));
     }
 
     private addComplete(packet: PBpacket) {
