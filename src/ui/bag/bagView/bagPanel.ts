@@ -31,8 +31,6 @@ export class BagPanel extends BasePanel {
     // private mInitalize: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.mScene = scene;
-        this.mWorld = world;
         this.bagSlotList = [];
         this.mCheckList = [];
     }
@@ -40,18 +38,18 @@ export class BagPanel extends BasePanel {
     public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width + wid >> 1;
-            this.y = size.height + hei >> 1;
+            this.x = size.width >> 1;
+            this.y = size.height >> 1;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                this.x = size.width + wid >> 1;
-                this.y = size.height + hei >> 1;
+                this.x = size.width >> 1;
+                this.y = size.height >> 1;
             } else {
-                this.x = size.width + wid >> 1;
-                this.y = size.height + hei - (this.height / 2) * this.mWorld.uiScale >> 1;
+                this.x = size.width >> 1;
+                this.y = size.height - (this.height / 2) * this.mWorld.uiScale >> 1;
             }
         }
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.uiScale;
     }
 
     public setDataList() {
@@ -62,7 +60,6 @@ export class BagPanel extends BasePanel {
             return;
         }
         this.checkChinese();
-        // this.refreshDataList();
     }
 
     public getPageNum(): number {
@@ -77,34 +74,6 @@ export class BagPanel extends BasePanel {
             this.bagSlotList.length = 0;
             this.bagSlotList = null;
         }
-        // if (this.mClsBtn) {
-        //     this.mClsBtn.destroy();
-        //     this.mClsBtn = null;
-        // }
-        // if (this.mPreBtn) {
-        //     this.mPreBtn.destroy(true);
-        //     this.mPreBtn = null;
-        // }
-        // if (this.mNextBtn) {
-        //     this.mNextBtn.destroy(true);
-        //     this.mNextBtn = null;
-        // }
-        // if (this.mBorder) {
-        //     this.mBorder.destroy(true);
-        //     this.mBorder = null;
-        // }
-        // if (this.mBg) {
-        //     this.mBg.destroy(true);
-        //     this.mBg = null;
-        // }
-        // if (this.mCheckList) {
-        //     this.mCheckList.length = 0;
-        //     this.mCheckList = null;
-        // }
-        // if (this.mDataList) {
-        //     this.mDataList.length = 0;
-        //     this.mDataList = null;
-        // }
         this.mWorld = null;
         this.mPageNum = 0;
         this.mPageIndex = 1;
@@ -116,8 +85,12 @@ export class BagPanel extends BasePanel {
     }
 
     public show(param?: any) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.uiScale;
         super.show(param);
+        if (this.mInitialized) {
+            this.mPreBtn.play("slipBtn");
+            this.mNextBtn.play("slipBtn");
+        }
     }
 
     public setBlur() {
@@ -125,6 +98,7 @@ export class BagPanel extends BasePanel {
     }
 
     public addListen() {
+        if (!this.mInitialized) return;
         this.mInputText.on("focus", this.onFocusHandler, this);
         this.mInputText.on("blur", this.onBlurHandler, this);
         this.mNextBtn.on("pointerup", this.nextHandler, this);
@@ -132,6 +106,7 @@ export class BagPanel extends BasePanel {
         this.mClsBtn.on("pointerup", this.closeHandler, this);
     }
     public removeListen() {
+        if (!this.mInitialized) return;
         this.mInputText.off("focus", this.onFocusHandler, this);
         this.mInputText.off("blur", this.onBlurHandler, this);
         this.mNextBtn.off("pointerup", this.nextHandler, this);
@@ -174,7 +149,7 @@ export class BagPanel extends BasePanel {
         const txtBg: NinePatch = new NinePatch(this.scene, this.mBorder.width / 4 + 5, -this.mBg.height / 2 + 65, this.mBorder.width / 2 - 40, 35, Border.getName(), null, Border.getConfig());
         this.add(txtBg);
 
-        this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
+        this.mInputText = new InputText(this.scene, 0, 0, 10, 10, {
             type: "input",
             fontSize: "14px",
             color: "#808080"
@@ -191,25 +166,22 @@ export class BagPanel extends BasePanel {
         for (let i: number = 0; i < BagPanel.PageMaxCount; i++) {
             tmpX = i % 8 * 60 - 210;
             tmpY = Math.floor(i / 8) * 60 - this.mBorder.height / 2 + this.mBorder.y + this.mBorder.height / 2 - 55;
-            itemSlot = new ItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "itemSelectFrame");
+            itemSlot = new ItemSlot(this.scene, this.mWorld, this.view, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "itemSelectFrame");
             itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
         }
-        this.mPreBtn = this.mScene.make.sprite(undefined, false);
-        this.mPreBtn.play("slipBtn");
+        this.mPreBtn = this.scene.make.sprite(undefined, false);
         this.mPreBtn.x = -this.mBg.width >> 1;
-        this.add(this.mPreBtn);
         // // ===============背包界面右翻按钮
-        this.mNextBtn = this.mScene.make.sprite(undefined, false);
-        this.mNextBtn.play("slipBtn");
+        this.mNextBtn = this.scene.make.sprite(undefined, false);
         this.mNextBtn.scaleX = -1;
         this.mNextBtn.x = this.mBg.width >> 1;
-        const titleCon: Phaser.GameObjects.Sprite = this.mScene.make.sprite(undefined, false);
+        const titleCon: Phaser.GameObjects.Sprite = this.scene.make.sprite(undefined, false);
         titleCon.setTexture(this.mResStr, "bagView_titleBtn.png");
         titleCon.x = (-this.mBg.width >> 1) + 50;
         titleCon.y = (-this.mBg.height >> 1);
         this.add(titleCon);
-        const titleTF: Phaser.GameObjects.Text = this.mScene.make.text(undefined, false);
+        const titleTF: Phaser.GameObjects.Text = this.scene.make.text(undefined, false);
 
         titleTF.setFontFamily("Tahoma");
         titleTF.setFontStyle("bold");
@@ -218,17 +190,18 @@ export class BagPanel extends BasePanel {
         titleTF.x = titleCon.x + titleCon.width - 10;
         titleTF.y = titleCon.y - (titleTF.height >> 1);
         this.add(titleTF);
+        this.add(this.mPreBtn);
         this.add(this.mNextBtn);
         this.mNextBtn.setInteractive();
         this.mPreBtn.setInteractive();
-        this.mWidth = this.mBg.width;
-        this.mHeight = this.mBg.height;
-        this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
+        this.width = this.mBg.width;
+        this.height = this.mBg.height;
+        this.mClsBtn = new IconBtn(this.scene, this.mWorld, {
             key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
             iconResKey: "", iconTexture: "", scale: 1, pngUrl: this.mResPng, jsonUrl: this.mResJson
         });
-        this.mClsBtn.x = (this.mWidth >> 1) - 65;
-        this.mClsBtn.y = -this.mHeight >> 1;
+        this.mClsBtn.x = (this.width >> 1) - 65;
+        this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
         this.add(this.mClsBtn);
         this.mInitialized = true;
@@ -236,28 +209,28 @@ export class BagPanel extends BasePanel {
             this.refreshDataList(this.mDataList);
         }
         this.setInteractive();
-        (this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator).resize();
+        (this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator).resize(this.width, this.height);
         super.init();
     }
 
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
         this.mResStr = "bagView";
         this.mResPng = "ui/bag/bagView.png";
         this.mResJson = "ui/bag/bagView.json";
-        this.mScene.load.atlas("itemChose", Url.getRes("ui/bag/itemChose.png"), Url.getRes("ui/bag/itemChose.json"));
-        this.mScene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
-        this.mScene.load.image(Border.getName(), Border.getPNG());
-        this.mScene.load.image(Background.getName(), Background.getPNG());
-        this.mScene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
-        this.mScene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        this.scene.load.atlas("itemChose", Url.getRes("ui/bag/itemChose.png"), Url.getRes("ui/bag/itemChose.json"));
+        this.scene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
+        this.scene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.image(Background.getName(), Background.getPNG());
+        this.scene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
+        this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
         super.preload();
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
-        const selectFramesObj: {} = this.mScene.textures.get("itemChose").frames;
+        const selectFramesObj: {} = this.scene.textures.get("itemChose").frames;
         const tmpSelectFrames: any[] = [];
         for (const key in selectFramesObj) {
             if (key === "__BASE") continue;
@@ -266,14 +239,14 @@ export class BagPanel extends BasePanel {
             tmpSelectFrames.push(key);
         }
         // 手动把json配置中的frames给予anims
-        this.mScene.anims.create({
+        this.scene.anims.create({
             key: "itemSelectFrame",
-            frames: this.mScene.anims.generateFrameNumbers("itemChose", { start: 0, end: 8, frames: tmpSelectFrames }),
+            frames: this.scene.anims.generateFrameNumbers("itemChose", { start: 0, end: 8, frames: tmpSelectFrames }),
             frameRate: 33,
             yoyo: true,
             repeat: -1
         });
-        const framesObj: {} = this.mScene.textures.get("slip").frames;
+        const framesObj: {} = this.scene.textures.get("slip").frames;
         const tmpFrames: any[] = [];
         for (const key in framesObj) {
             if (key === "__BASE") continue;
@@ -282,9 +255,9 @@ export class BagPanel extends BasePanel {
             tmpFrames.push(key);
         }
         // 手动把json配置中的frames给予anims
-        this.mScene.anims.create({
+        this.scene.anims.create({
             key: "slipBtn",
-            frames: this.mScene.anims.generateFrameNumbers("slip", { start: 0, end: 14, frames: tmpFrames }),
+            frames: this.scene.anims.generateFrameNumbers("slip", { start: 0, end: 14, frames: tmpFrames }),
             frameRate: 33,
             yoyo: true,
             repeat: -1
@@ -294,7 +267,7 @@ export class BagPanel extends BasePanel {
 
     protected tweenComplete(show: boolean) {
         super.tweenComplete(show);
-        if (show) (this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator).resize();
+        if (show) (this.mWorld.uiManager.getMediator(BagMediator.NAME) as BagMediator).resize(this.width, this.height);
     }
 
     private nextHandler(pointer, gameObject) {
@@ -318,7 +291,7 @@ export class BagPanel extends BasePanel {
     }
 
     private preNextBtnScaleHandler(gameObject: Phaser.GameObjects.Sprite, scaleX: number = 1) {
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: gameObject,
             duration: 50,
             ease: "Linear",

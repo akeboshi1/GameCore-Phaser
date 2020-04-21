@@ -7,6 +7,8 @@ import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { Button } from "../components/button";
 import { Logger } from "../../utils/log";
 import { CheckboxGroup } from "../components/checkbox.group";
+import { op_client, op_gameconfig } from "pixelpai_proto";
+import { Url } from "../../utils/resUtil";
 
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
@@ -21,7 +23,6 @@ export class MineCarPanel extends BasePanel {
   private mTips: Tips;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.setTween(false);
     this.scale = 1;
   }
 
@@ -39,30 +40,25 @@ export class MineCarPanel extends BasePanel {
     this.mPropGrid.y = this.y + 16 * this.dpr * this.mWorld.uiScaleNew;
     this.mPropGrid.layout();
     this.mPropContainer.x = -this.mPropGrid.x;
-    this.mPropContainer.y = -this.mPropGrid.y;
+    this.mPropContainer.y = -this.mPropGrid.y + 16 * this.dpr * this.mWorld.uiScaleNew;
 
     this.setSize(width, height);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
-  setCategories(subcategorys: op_def.IStrMap[]) {
-    subcategorys = [
-      { key: "all", value: "全部" },
-      { key: "矿石", value: "矿石" },
-      { key: "宝石", value: "宝石" },
-      { key: "化石", value: "化石" },
-      { key: "杂物", value: "杂物" }];
+  setCategories(subcategorys: string[]) {
     const items = [];
     const zoom = this.mWorld.uiScaleNew;
     const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
-    const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
+    // const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
+    const gap = 4 * this.dpr * zoom;
     const style = {
       fontFamily: Font.DEFULT_FONT,
       fontSize: 8 * this.dpr * zoom,
       color: "#566ddb"
     };
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new Button(this.scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", subcategorys[i].value);
+      const item = new Button(this.scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", subcategorys[i]);
       item.setScale(zoom);
       item.setTextStyle(style);
       item.setFontStyle("bold");
@@ -78,11 +74,12 @@ export class MineCarPanel extends BasePanel {
   }
 
   addListen() {
-    this.mCloseBtn.setInteractive();
+    if (!this.mInitialized) return;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
   removeListen() {
+    if (!this.mInitialized) return;
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -119,6 +116,7 @@ export class MineCarPanel extends BasePanel {
       key: this.key,
       frame: "close_btn.png"
     }, false).setScale(zoom);
+    this.mCloseBtn.setInteractive();
 
     this.mCounter = this.scene.make.text({
       x: -86 * this.dpr * zoom,
@@ -189,21 +187,46 @@ export class MineCarPanel extends BasePanel {
     }, false).setOrigin(0).setScale(zoom);
 
     this.add(this.mPanel);
-    this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mTips, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mHelpBtn]);
+    this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mHelpBtn]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
-    const items = new Array(50).fill({ item: "", locked: true });
+
+    const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.data;
+    const mineItem = minePackage.items || [];
+    const limit = minePackage.limit || 0;
+    const items = [];
+    let pkgItem: op_client.ICountablePackageItem = null;
+    let locked = false;
+    for (let i = 0; i < 50; i++) {
+      if (mineItem.length > i) {
+        pkgItem = mineItem[i];
+      } else {
+        pkgItem = null;
+      }
+      if (limit <= i) {
+        locked = true;
+      }
+      items[i] = { item: pkgItem, locked };
+    }
+
+    this.setCategories(minePackage.categories);
     this.mPropGrid.setItems(items);
 
-    this.setCategories([]);
   }
 
   private onCloseHandler() {
     this.emit("close");
   }
 
-  private onSelectItemHandler(item: Item) {
-
+  private onSelectItemHandler(prop: IPackageItem) {
+    if (prop.item) {
+      if (!this.mTips.parentContainer) {
+        this.mPanel.add(this.mTips);
+      }
+      this.mTips.setItem(prop.item);
+    } else {
+      this.mPanel.remove(this.mTips);
+    }
   }
 
   private onClickCategoryHandler() {
@@ -212,9 +235,10 @@ export class MineCarPanel extends BasePanel {
 }
 
 class Item extends Phaser.GameObjects.Container {
-  private mItem: DynamicImage;
+  private mItemImage: DynamicImage;
   private mCounter: Phaser.GameObjects.Text;
   private mLockImg: Phaser.GameObjects.Image;
+  private mItem: op_client.ICountablePackageItem;
   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
     super(scene);
 
@@ -224,7 +248,9 @@ class Item extends Phaser.GameObjects.Container {
     }, false).setOrigin(0).setScale(zoom);
     this.setSize(border.width * zoom, border.height * zoom);
 
-    this.mItem = new DynamicImage(this.scene, 0, 0);
+    this.mItemImage = new DynamicImage(this.scene, 0, 0);
+    this.mItemImage.setOrigin(0);
+    this.mItemImage.setScale(dpr * zoom);
 
     this.mLockImg = this.scene.make.image({
       x: border.width * zoom / 2,
@@ -232,7 +258,17 @@ class Item extends Phaser.GameObjects.Container {
       key,
       frame: "lock.png"
     }, false).setScale(zoom);
-    this.add([border, this.mItem]);
+
+    this.mCounter = this.scene.make.text({
+      x: border.displayWidth - 2 * dpr,
+      y: border.displayHeight - 1 * dpr,
+      style: {
+        fontFamily: Font.DEFULT_FONT,
+        fontSize: 11 * dpr * zoom,
+        color: "#6666cc"
+      }
+    }).setOrigin(1);
+    this.add(border);
   }
 
   setProp(data: any) {
@@ -241,37 +277,80 @@ class Item extends Phaser.GameObjects.Container {
     } else {
       this.remove(this.mLockImg);
     }
+    this.mItem = data.item;
+    if (!this.mItem) {
+      this.remove([this.mItemImage, this.mCounter]);
+      return;
+    }
+    if (this.mItem) {
+      this.mItemImage.load(Url.getOsdRes(this.mItem.display.texturePath), this, this.onLoadCompleteHandler);
+      this.add(this.mItemImage);
+      if (this.mItem.count > 1) {
+        this.mCounter.setText(this.mItem.count.toString());
+        this.add(this.mCounter);
+      }
+    }
   }
+
+  private onLoadCompleteHandler() {
+    if (this.mItemImage) {
+      this.mItemImage.x = this.width - this.mItemImage.displayWidth >> 1;
+      this.mItemImage.y = this.height - this.mItemImage.displayHeight >> 1;
+    }
+  }
+}
+
+interface IPackageItem {
+  item: op_client.ICountablePackageItem;
+  locked?: boolean;
 }
 
 class Tips extends Phaser.GameObjects.Container {
   private mName: Phaser.GameObjects.Text;
   private mDes: Phaser.GameObjects.Text;
+  private mDpr: number;
   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
     super(scene);
+    this.mDpr = dpr;
     const bg = this.scene.make.image({
       key,
       frame: "tips_bg.png"
     }, false);
     this.mName = this.scene.make.text({
+      x: -bg.width * zoom / 2 + 6 * dpr * zoom,
+      y: -bg.height * zoom / 2 + 6 * dpr * zoom,
       style: {
         fontFamily: Font.DEFULT_FONT,
         fontSize: 14 * dpr,
-        colof: "#2d3a56"
+        color: "#000000"
       }
     }, false);
     this.mDes = this.scene.make.text({
+      x: this.mName.x,
       style: {
         fontFamily: Font.DEFULT_FONT,
         fontSize: 14 * dpr,
-        color: "#4e4b4b"
+        color: "#000000"
       }
-    }, false);
+    }, false).setOrigin(0, 1);
     this.add([bg, this.mName, this.mDes]);
     this.setSize(bg.width * zoom, bg.height * zoom);
   }
 
-  setItem() {
-
+  setItem(item: op_client.ICountablePackageItem) {
+    const tmpY = this.y;
+    const tmpAlpha = this.alpha;
+    this.y = tmpY + 100 * this.mDpr;
+    this.alpha = 0;
+    this.scene.tweens.add({
+      targets: this,
+      props: {
+        alpha: tmpAlpha,
+        y: tmpY
+      },
+      duration: 100
+    });
+    this.mName.setText(item.shortName || item.name);
+    this.mDes.setText(item.des);
   }
 }

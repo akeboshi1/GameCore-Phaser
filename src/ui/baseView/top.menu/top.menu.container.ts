@@ -2,7 +2,6 @@ import { BasePanel } from "../../components/BasePanel";
 import { IconBtn, IBtnData } from "../icon.btn";
 import { WorldService } from "../../../game/world.service";
 import { Url } from "../../../utils/resUtil";
-import { Logger } from "../../../utils/log";
 
 export class TopMenuContainer extends BasePanel {
   private readonly maxNum = 3;
@@ -25,14 +24,14 @@ export class TopMenuContainer extends BasePanel {
 
   show() {
     if (this.mWorld) {
-      this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
+      this.mWorld.uiManager.getUILayerManager().addToUILayer(this.view);
     }
     super.show();
   }
 
   hide() {
-    if (this.parentContainer) {
-      this.parentContainer.remove(this);
+    if (this.view && this.view.parentContainer) {
+      this.view.parentContainer.remove(this);
     }
   }
 
@@ -74,7 +73,7 @@ export class TopMenuContainer extends BasePanel {
   }
 
   preload() {
-    this.mScene.load.atlas("baseView", Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+    this.scene.load.atlas("baseView", Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
     super.preload();
   }
 

@@ -33,19 +33,20 @@ export class MarketPanel extends BasePanel {
   private mPropGrid: GridTable;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.setTween(false);
     this.mSubTabs = [];
     this.mTabs = [];
     this.scale = 1;
   }
 
   public addListen() {
+    if (!this.mInitialized) return;
     this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
   public removeListen() {
+    if (!this.mInitialized) return;
     this.mSelectItem.off("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.off("popItemCard", this.onPopItemCardHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);

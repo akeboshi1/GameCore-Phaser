@@ -5,15 +5,14 @@ import { Url } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
 import { BlockManager } from "./block.manager";
 import { Room, IRoomService } from "../room";
-import { Cameras } from "phaser";
 
-export interface IBackgroundManager {
+export interface ISkyBoxManager {
   readonly world: WorldService;
   startPlay(scene: Phaser.Scene): void;
   update(time?: number, delta?: number): void;
 }
 
-export interface IBackgroundConfig {
+export interface ISkyBoxConfig {
   key: string;
   width: number;
   height: number;
@@ -21,7 +20,7 @@ export interface IBackgroundConfig {
   gridH?: number;
 }
 
-export class BackgroundManager {
+export class SkyBoxManager {
   private mWorld: WorldService;
   private mRoom: IRoomService;
   private mScene: Phaser.Scene;
@@ -30,8 +29,8 @@ export class BackgroundManager {
   private mBackground: BlockManager;
   private mType: string;
   private mTime: number = 0;
-  private mConfig: IBackgroundConfig;
-  constructor(room: Room, type: string, config: IBackgroundConfig, camerasManager: ICameraService) {
+  private mConfig: ISkyBoxConfig;
+  constructor(room: Room, type: string, config: ISkyBoxConfig, camerasManager: ICameraService) {
     this.mWorld = room.world;
     this.mRoom = room;
     this.mType = type;
@@ -40,7 +39,7 @@ export class BackgroundManager {
     this.mCameras = camerasManager;
     const playScene = room.scene;
     if (!playScene) {
-      Logger.getInstance().fatal(`${BackgroundManager.name} scene does not exist`);
+      Logger.getInstance().fatal(`${SkyBoxManager.name} scene does not exist`);
       return;
     }
     this.mWorld.game.scene.add(SkyBoxScene.name + `_${type}`, SkyBoxScene, false);

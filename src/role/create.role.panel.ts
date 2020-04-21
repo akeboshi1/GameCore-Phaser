@@ -33,7 +33,7 @@ export class CreateRolePanel extends BasePanel {
     super(scene, world);
     this.setTween(false);
     const container = this.scene.add.container(0, 0);
-    container.add(this);
+    container.add(this.view);
     scene.scale.on("resize", this.onResize, this);
     // container.scale = 1 / this.mWorld.uiScale;
   }

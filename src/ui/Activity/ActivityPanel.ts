@@ -5,7 +5,6 @@ export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
-        this.setTween(false);
     }
 
     resize(w: number, h: number) {
@@ -13,7 +12,6 @@ export class ActivityPanel extends BasePanel {
         const height = this.scene.cameras.main.height;
         this.x = width - 40 * this.dpr;
         this.y = 150 * this.dpr;
-        super.resize(width, height);
     }
 
     protected preload() {

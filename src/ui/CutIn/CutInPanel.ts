@@ -14,17 +14,23 @@ export class CutInPanel extends BasePanel {
   show(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[]) {
     this.mData = param;
     if (!this.mInitialized) {
-        this.preload();
-        return;
+      this.preload();
+      return;
     }
-    if (param.length < 1) return;
-    const text = param[0].text;
-    if (this.mName) {
-      this.mName.setText(text[0].text);
+    // if (!param || param.length < 1) return;
+    if (param && param.length > 0) {
+      const text = param[0].text;
+      if (this.mName) {
+        this.mName.setText(text[0].text);
+      }
+    } else {
+      if (this.mName) {
+        this.mName.setText("???");
+      }
     }
     const width = this.scene.cameras.main.width;
     this.x = width + this.width / 2;
-    this.alpha = 0;
+    // this.view.alpha = 0;
     const _x = this.scene.cameras.main.width / 2;
     this.scene.tweens.timeline({
       targets: this,
@@ -33,7 +39,7 @@ export class CutInPanel extends BasePanel {
         x: _x,
         alpha: 1,
         ease: "Sine.easeInOut"
-      },{
+      }, {
         delay: 2000,
         y: this.y - 10 * this.dpr,
         alpha: 0
@@ -71,8 +77,8 @@ export class CutInPanel extends BasePanel {
     this.mName.setStroke("#000000", 1 * this.dpr);
     this.add([background, this.mName]);
     super.init();
-
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+    this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
   }
 
 }

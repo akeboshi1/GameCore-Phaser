@@ -15,6 +15,7 @@ export class RankPanel extends BasicRankPanel {
     }
 
     public addListen() {
+        if (!this.mInitialized) return;
         if (!this.mWorld.game.device.os.desktop) {
             this.mClsBtn.on("pointerup", this.closeHandler, this);
         } else {
@@ -23,6 +24,7 @@ export class RankPanel extends BasicRankPanel {
     }
 
     public removeListen() {
+        if (!this.mInitialized) return;
         if (!this.mWorld.game.device.os.desktop) {
             this.mClsBtn.off("pointerup", this.closeHandler, this);
         } else {
@@ -36,8 +38,8 @@ export class RankPanel extends BasicRankPanel {
         }
         const size = this.mWorld.getSize();
         if (this.mWorld.game.device.os.desktop) {
-            this.x = size.width - this.mWidth / 2;
-            this.y = this.mHeight / 2 + 10;
+            this.x = size.width - this.width / 2;
+            this.y = this.height / 2 + 10;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.x = size.width + wid >> 1;
@@ -47,15 +49,15 @@ export class RankPanel extends BasicRankPanel {
                 this.y = size.height + hei >> 1;
             }
         }
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
     }
 
     public tweenView(show: boolean) {
-        if (!this.mScene) return;
-        const baseY: number = this.mHeight / 2 + 10;
+        if (!this.scene) return;
+        const baseY: number = this.height / 2 + 10;
         const toY: number = show === true ? baseY : baseY - 300;
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Cubic.Out",
@@ -76,19 +78,19 @@ export class RankPanel extends BasicRankPanel {
     protected init() {
         super.init();
         if (!this.mWorld.game.device.os.desktop) {
-            this.mClsBtn = new IconBtn(this.mScene, this.mWorld, {
+            this.mClsBtn = new IconBtn(this.scene, this.mWorld, {
                 key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
                 iconResKey: "", iconTexture: "", scale: 1, pngUrl: "ui/common/common_clsBtn.png", jsonUrl: "ui/common/common_clsBtn.json"
             });
-            this.mClsBtn.x = this.mWidth / 2 - 35;
-            this.mClsBtn.y = -this.mHeight / 2;
+            this.mClsBtn.x = this.width / 2 - 35;
+            this.mClsBtn.y = -this.height / 2;
             this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
             // this.mClsBtn.on("pointerup", this.closeHandler, this);
             this.add(this.mClsBtn);
         } else {
             this.mZoonInBtn = this.scene.make.image({
                 x: 0,
-                y: this.mHeight / 2 - 10,
+                y: this.height / 2 - 10,
                 key: "rank_atlas",
                 frame: "arrow.png"
             }, false);
@@ -121,15 +123,16 @@ export class RankPanel extends BasicRankPanel {
             return;
         }
         this.mCurrentIndex = value;
-        const h = this.mCurrentIndex === 1 ? 30 : this.mHeight;
-        const zoonBtnY: number = this.mCurrentIndex === 1 ? -this.mHeight / 2 + 20 : this.mHeight / 2 - 10;
-        const bgY: number = this.mCurrentIndex === 1 ? -this.mHeight / 2 + 15 : 0;
+        const h = this.mCurrentIndex === 1 ? 30 : this.height;
+        const zoonBtnY: number = this.mCurrentIndex === 1 ? -this.height / 2 + 20 : this.height / 2 - 10;
+        const bgY: number = this.mCurrentIndex === 1 ? -this.height / 2 + 15 : 0;
         this.mBackground.resize(328, h);
         this.mZoonInBtn.angle = this.mCurrentIndex === 1 ? 180 : 0;
         if (h > 300) {
-            this.add(this.mContentContainer);
+            if (this.container.parentContainer)
+                this.add(this.mChildContainer);
         } else {
-            this.remove(this.mContentContainer);
+            this.remove(this.mChildContainer);
         }
         // this.mBackground.x = this.mBackground.width >> 1;
         // this.mBackground.y = this.mBackground.height >> 1;

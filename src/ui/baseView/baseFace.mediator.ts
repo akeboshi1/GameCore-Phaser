@@ -1,27 +1,28 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { UIType } from "../ui.manager";
-import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { Size } from "../../utils/size";
+import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+
 /**
  * 场景UImediator
  */
 export class BaseFaceMediator extends BaseMediator {
     protected mScene: Phaser.Scene;
-    constructor(mWorld: WorldService, scene: Phaser.Scene) {
-        super(mWorld);
+    protected world: WorldService;
+    constructor(world: WorldService, scene: Phaser.Scene) {
+        super();
         this.mScene = scene;
-        this.mUIType = UIType.BaseUIType;
+        this.world = world;
+        this.mUIType = UIType.Scene;
     }
 
-    public getView(): BasePanel {
+    public getView(): Panel {
         return this.mView;
     }
 
     public isSceneUI(): boolean {
         return true;
-    }
-
-    public tweenView(show: boolean) {
     }
 
     public isShow(): boolean {
@@ -30,16 +31,19 @@ export class BaseFaceMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView) return this.mView.resize(this.mAddWid, this.mAddHei);
+        const size: Size = this.world.getSize();
+        const view = this.getView();
+        if (this.mView && view.isShow()) {
+            return this.mView.resize(size.width, size.height);
+        }
     }
 
     public hide() {
-        this.isShowing = false;
-        if (this.mView) this.mView = null;
+        this.mShow = false;
+        if (this.mView) this.mView.hide();
     }
 
     public destroy() {
-        if (this.mView) this.mView.destroy();
         super.destroy();
     }
 }

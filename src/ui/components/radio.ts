@@ -152,7 +152,7 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
         this.mSelectBG.visible = false;
         this.setSize(wid, hei);
 
-        this.setInteractive();
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
         this.addListen();
 
         this.mArrow = scene.make.image(undefined, false);
@@ -187,7 +187,7 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
-        this.removeAllListeners();
+        this.removeListen();
         this.mText.destroy(true);
         this.mSelectBG.destroy(true);
         this.mArrow.destroy(true);

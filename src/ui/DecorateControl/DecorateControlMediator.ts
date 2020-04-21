@@ -1,4 +1,3 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { DecorateControlPanel } from "./DecorateControlPanel";
 import { ILayerManager } from "../layer.manager";
@@ -6,11 +5,15 @@ import { ConnectionService } from "../../net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class DecorateControlMediator extends BaseMediator {
+    public static NAME: string = "DecorateControlMediator";
     protected mView: DecorateControlPanel;
+    private world: WorldService;
     constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, world: WorldService) {
-        super(world);
+        super();
+        this.world = world;
         if (world) {
             world.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.onSelectedDecorateHandler, this);
             world.emitter.on(MessageType.CANCEL_DECORATE_ELEMENT, this.onCancelDecorateHandler, this);
@@ -18,7 +21,7 @@ export class DecorateControlMediator extends BaseMediator {
     }
 
     show() {
-        if (this.mView && this.mView.isShow() || this.isShowing) {
+        if (this.mView && this.mView.isShow() || this.mShow) {
             return;
         }
         if (!this.mView) {
@@ -26,7 +29,7 @@ export class DecorateControlMediator extends BaseMediator {
         }
         this.addActionListener();
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView);
+        this.layerManager.addToUILayer(this.mView.view);
     }
 
     destroy() {
@@ -45,8 +48,8 @@ export class DecorateControlMediator extends BaseMediator {
         if (!this.mView) {
             return;
         }
-        if (this.mView.parentContainer) {
-            this.mView.parentContainer.remove(this.mView);
+        if (this.mView.view.parentContainer) {
+            this.mView.view.parentContainer.remove(this.mView);
         }
     }
 
@@ -54,14 +57,14 @@ export class DecorateControlMediator extends BaseMediator {
         if (!this.mView) {
             return;
         }
-        this.layerManager.addToUILayer(this.mView);
+        this.layerManager.addToUILayer(this.mView.view);
     }
 
     private addActionListener() {
         if (!this.mView) {
             return;
         }
-        this.mView.on("exit",  this.onExitHandler, this);
+        this.mView.on("exit", this.onExitHandler, this);
         this.mView.on("recycleAll", this.onRecycleAllHandler, this);
         this.mView.on("redo", this.onRedoHandler, this);
         this.mView.on("showFurni", this.onShowFurniHandler, this);

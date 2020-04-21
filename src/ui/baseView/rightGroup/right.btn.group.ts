@@ -17,10 +17,9 @@ export class RightBtnGroup extends BasePanel {
     // private handBg: Phaser.GameObjects.Image;
     private mBagSlotList: ItemSlot[];
     private mResKey: string;
-    private mOrientation: number;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.mWorld = world;
+        this.disInteractive();
     }
 
     public show(param?: any) {
@@ -31,8 +30,8 @@ export class RightBtnGroup extends BasePanel {
         const size: Size = this.mWorld.getSize();
         this.refreshSlot();
         const bottomMed = this.mWorld.uiManager.getMediator(BottomMediator.NAME) as BottomMediator;
-        const padHei: number = !bottomMed ? this.height / 2 : bottomMed.getView().height;
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        const padHei: number = !bottomMed ? this.height / 2 : bottomMed.getView().view.height;
+        this.scale = this.mWorld.uiScale;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             const mPackage: op_gameconfig.IPackage = this.mWorld.roomManager.currentRoom.playerManager.actor.package;
             this.y = size.height - (this.height) * this.mWorld.uiScale;
@@ -87,7 +86,7 @@ export class RightBtnGroup extends BasePanel {
         }
         const toX: number = show === true ? baseX : baseX + this.width;
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Linear",
@@ -152,15 +151,15 @@ export class RightBtnGroup extends BasePanel {
 
     protected preload() {
         this.mResKey = "baseView";
-        this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+        this.scene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
         super.preload();
     }
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToUILayer(this.view);
         this.mBtnY = 0;
-        this.handBtn = new IconBtn(this.mScene, this.mWorld, {
+        this.handBtn = new IconBtn(this.scene, this.mWorld, {
             key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_bg.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_hand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
@@ -192,7 +191,7 @@ export class RightBtnGroup extends BasePanel {
         const posX: number = 0;
         const posY: number = 0;
         for (let i: number = 0; i < len; i++) {
-            const itemSlot: ItemSlot = new ItemSlot(this.mScene, this.mWorld, this, posX, posY, this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"), "btnGroup_bg.png");
+            const itemSlot: ItemSlot = new ItemSlot(this.scene, this.mWorld, this.view, posX, posY, this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"), "btnGroup_bg.png");
             itemSlot.createUI();
             itemSlot.getBg().scaleX = itemSlot.getBg().scaleY = 0.8;
             itemSlot.getIcon().scaleX = itemSlot.getIcon().scaleY = 1.2;

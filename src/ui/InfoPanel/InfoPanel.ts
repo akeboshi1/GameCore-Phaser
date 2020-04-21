@@ -26,10 +26,12 @@ export class InfoPanel extends BasePanel {
     }
 
     public addListen() {
+        if(!this.mInitialized)return;
         if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.closeHandler, this);
     }
 
     public removeListen() {
+        if(!this.mInitialized)return;
         if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.closeHandler, this);
     }
 
@@ -57,7 +59,7 @@ export class InfoPanel extends BasePanel {
     }
 
     show(param?: any) {
-        if (this.mShowing) return;
+        if (this.mShow) return;
         super.show(param);
         if (this.mInitialized) {
             const size = this.mWorld.getSize();
@@ -73,26 +75,28 @@ export class InfoPanel extends BasePanel {
 
     setInfo(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
         if (!this.mInitialized || !data) return;
-        if (data.actors.length === 0) {
-            return;
-        }
-        const actor = data.actors[0];
-        this.mWorld.httpService.userDetail(actor.platformId).then((response) => {
-            if (response.code === 200) {
-                const resData = response.data;
-                if (resData) {
-                    this.mActor.load(Url.getOsdRes(`show/${resData.username}.png`), this, undefined, this.loadDefaultAvatar);
-                    // this.mNickName.setText(resData.nickname);
-                    // this.mLv.setText(resData.level);
-                }
+        if (data.actors) {
+            if (data.actors.length === 0) {
+                return;
             }
-        });
+            const actor = data.actors[0];
+            this.mWorld.httpService.userDetail(actor.platformId).then((response) => {
+                if (response.code === 200) {
+                    const resData = response.data;
+                    if (resData) {
+                        this.mActor.load(Url.getOsdRes(`show/${resData.username}.png`), this, undefined, this.loadDefaultAvatar);
+                        // this.mNickName.setText(resData.nickname);
+                        // this.mLv.setText(resData.level);
+                    }
+                }
+            });
+        }
         const text: any[] = data.text;
         if (text[0]) {
             this.mNameTextArea.setText(this.checkValue(text[0]));
         }
         if (text[1]) {
-            this.mNameTextArea.setText(this.checkValue(text[1]));
+            this.mAttributesTextArea.setText(this.checkValue(text[1]));
         }
     }
 
@@ -188,7 +192,7 @@ export class InfoPanel extends BasePanel {
 
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
         this.mActor.scale = 2;
-        (this.mWorld.uiManager.getMediator(InfoPanelMediator.NAME) as InfoPanelMediator).resize();
+        this.mWorld.uiManager.getMediator(InfoPanelMediator.NAME).resize();
         this.add([background, border,
             this.mNameBBCodeText, this.mAttributesBBCodeText, this.mCloseBtn, this.mActor]);
         // this.mAttributesTextArea, this.mAttributesBBCodeText,this.mNameTextArea, this.mNameTextArea,

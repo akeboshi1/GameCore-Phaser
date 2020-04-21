@@ -1,22 +1,24 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import EquipUpgradePanel from "./EquipUpgradePanel";
 import { WorldService } from "../../game/world.service";
 import { EquipUpgrade } from "./EquipUpgrade";
 import { op_client } from "pixelpai_proto";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class EquipUpgradeMediator extends BaseMediator {
     private scene: Phaser.Scene;
     private layerMgr: ILayerManager;
     private equipUpgrade: EquipUpgrade;
+    private world: WorldService;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
-        super(worldService);
+        super();
         this.scene = scene;
         this.layerMgr = layerMgr;
+        this.world = worldService;
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.isShowing) {
+        if ((this.mView && this.mView.isShow()) || this.mShow) {
             return;
         }
         if (!this.mView) {
@@ -30,7 +32,7 @@ export class EquipUpgradeMediator extends BaseMediator {
             this.equipUpgrade.on("activeEquip", this.onActiveEquipment, this);
             this.equipUpgrade.register();
         }
-        this.layerMgr.addToUILayer(this.mView);
+        this.layerMgr.addToUILayer(this.mView.view);
         if (this.mParam && this.mParam.length > 0)
             this.onEquipUpgradePacket(this.mParam[0]);
         this.mView.show();

@@ -23,7 +23,6 @@ export class MenuItem extends NinePatchButton {
             });
             this.add(this.mArrow);
             this.mBackground = new NinePatch(this.scene, 0, 0, 0, 0, Border.getName(), null, Border.getConfig());
-            this.mChild.add(this.mBackground);
         }
 
         this.mChild.add(menu);
@@ -32,6 +31,8 @@ export class MenuItem extends NinePatchButton {
         this.mBackground.resize(74, this.mMenus.length * 32);
         this.mBackground.x = this.mBackground.width;
         this.mBackground.y = this.mBackground.height / 2 - 32 / 2;
+        this.mChild.addAt(this.mBackground, 0);
+        this.mChild.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBackground.width, this.mBackground.height), Phaser.Geom.Rectangle.Contains);
     }
 
     public show() {
@@ -43,7 +44,7 @@ export class MenuItem extends NinePatchButton {
             const len: number = this.mMenus.length;
             for (let i: number = 0; i < len; i++) {
                 let item: MenuItem = this.mMenus[i];
-                if (item) continue;
+                if (!item) continue;
                 item.destroy(true);
                 item = null;
             }

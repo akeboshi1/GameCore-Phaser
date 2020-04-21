@@ -21,7 +21,6 @@ export class ChatPanelPC extends BaseChatPanel {
     private sendMsgBtn: NinePatchButton;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setTween(false);
     }
 
     public appendChat(val: string) {
@@ -31,12 +30,12 @@ export class ChatPanelPC extends BaseChatPanel {
         }
     }
 
-    public tweenView(show: boolean) {
-        if (!this.mScene) return;
+    public tweenExpand(show: boolean) {
+        if (!this.scene) return;
         const baseX: number = 0;
         const toX: number = show === true ? baseX : baseX - 200;
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Cubic.Out",
@@ -47,11 +46,10 @@ export class ChatPanelPC extends BaseChatPanel {
         });
     }
 
-    public setLocation(x?: number, y?: number) {
+    public setPosition(x?: number, y?: number) {
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorld.getSize();
-        this.x = 0;
-        this.y = size.height - this.mPreHei;
+        super.setPosition(0, size.height - this.mPreHei);
         if (this.mTextArea) {
             // this.mTextArea.childrenMap.child.setMinSize(width, (h - 16 * this.dpr) * zoom);
             // this.mTextArea.layout();
@@ -76,6 +74,7 @@ export class ChatPanelPC extends BaseChatPanel {
     }
 
     public removeListen() {
+        super.removeListen();
         if (!this.mInitialized) return;
         if (this.sendMsgBtn) this.sendMsgBtn.off("pointerdown", this.onSendMsgHandler, this);
         if (this.mVoiceBtn) this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
@@ -91,40 +90,38 @@ export class ChatPanelPC extends BaseChatPanel {
     }
 
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
-        this.mScene.load.image("button", Url.getRes("ui/common/button.png"));
-        this.mScene.load.image("thumbTexture", Url.getRes("ui/common/common_thumb_texture.png"));
-        this.mScene.load.image("track", Url.getRes("ui/common/common_track.png"));
-        this.mScene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
-        // this.mScene.load.image("chat_border_bg", Url.getRes("ui/chat/bg.png"));
-        this.mScene.load.image(Border.getName(), Border.getPNG());
-        this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
+        this.scene.load.image("button", Url.getRes("ui/common/button.png"));
+        this.scene.load.image("thumbTexture", Url.getRes("ui/common/common_thumb_texture.png"));
+        this.scene.load.image("track", Url.getRes("ui/common/common_track.png"));
+        this.scene.load.image("chat_input_bg", Url.getRes("ui/chat/input_bg.png"));
+        // this.scene.load.image("chat_border_bg", Url.getRes("ui/chat/bg.png"));
+        this.scene.load.image(Border.getName(), Border.getPNG());
+        this.scene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
         super.preload();
     }
 
     protected init() {
         if (this.mInitialized) return;
         const size = this.mWorld.getSize();
-        this.mWidth = 464;
-        this.mHeight = 281;
         this.mPreHei = size.height;
         this.mPreWid = size.width;
-        this.setSize(this.mWidth, this.mHeight);
+        this.setSize(464, 281);
 
         const border = new NinePatch(this.scene, 0, 0, this.width, this.height, Border.getName(), null, Border.getConfig());
         border.x = 4 * this.mWorld.uiScale + border.width * border.originX;
         border.y = size.height - 260 * this.mWorld.uiScale + border.height * border.originY;
         this.add(border);
 
-        this.outPut = this.mScene.make.container(undefined, false);
+        this.outPut = this.scene.make.container(undefined, false);
         this.add(this.outPut);
 
-        const background = new RoundRectangle(this.mScene, 0, 0, 2, 2, 3, 0x808080, 0.5);
+        const background = new RoundRectangle(this.scene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         this.outPut.add(background);
 
-        const track = new NinePatchButton(this.mScene, 0, 0, 4, 7, "track", "", "", {
+        const track = new NinePatchButton(this.scene, 0, 0, 4, 7, "track", "", "", {
             left: 0,
             top: 2,
             right: 0,
@@ -134,7 +131,7 @@ export class ChatPanelPC extends BaseChatPanel {
         track.y = 10 * this.mWorld.uiScale;
         this.outPut.add(track);
 
-        const text = new BBCodeText(this.mScene, 0, 0, "", {
+        const text = new BBCodeText(this.scene, 0, 0, "", {
             fontSize: "14px",
             wrap: {
                 mode: "char",
@@ -143,13 +140,13 @@ export class ChatPanelPC extends BaseChatPanel {
         });
         this.outPut.add(text);
 
-        const thumb = new NinePatchButton(this.mScene, 0, 0, 20, 35, "button", "", "", {
+        const thumb = new NinePatchButton(this.scene, 0, 0, 20, 35, "button", "", "", {
             left: 4,
             top: 4,
             right: 4,
             bottom: 4
         });
-        // const indicator = new NinePatchButton(this.mScene, 0, 0, 8, 10, "thumbTexture", "", {
+        // const indicator = new NinePatchButton(this.scene, 0, 0, 8, 10, "thumbTexture", "", {
         //     left: 0,
         //     top: 0,
         //     right: 0,
@@ -157,7 +154,7 @@ export class ChatPanelPC extends BaseChatPanel {
         // });
         this.outPut.add(thumb);
         // this.outPut.add(indicator);
-        this.mTextArea = new TextArea(this.mScene, {
+        this.mTextArea = new TextArea(this.scene, {
             x: 230 * this.mWorld.uiScale,
             y: size.height - 155 * this.mWorld.uiScale,
             textWidth: 430,
@@ -178,14 +175,14 @@ export class ChatPanelPC extends BaseChatPanel {
             // tracks.x += 150;
         }
 
-        const inputContainer = this.mScene.make.container(undefined, false);
+        const inputContainer = this.scene.make.container(undefined, false);
         this.add(inputContainer);
         const inputBg = new NinePatch(this.scene, 0, 0, 370, 32, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
         inputBg.x = 8 * this.mWorld.uiScale + inputBg.width * inputBg.originX;
         inputBg.y = size.height - 46 * this.mWorld.uiScale + inputBg.height * inputBg.originY;
         inputContainer.add(inputBg);
 
-        this.mInputText = new InputText(this.mScene, 0, 0, 10, 10, {
+        this.mInputText = new InputText(this.scene, 0, 0, 10, 10, {
             type: "input",
             fontSize: "14px",
             color: "#808080"
@@ -197,7 +194,7 @@ export class ChatPanelPC extends BaseChatPanel {
         this.mInputText.y = size.height - 40 * this.mWorld.uiScale;
         inputContainer.add(this.mInputText);
 
-        this.sendMsgBtn = new NinePatchButton(this.mScene, 0, 0, 60, 30, "button", "", "发送", {
+        this.sendMsgBtn = new NinePatchButton(this.scene, 0, 0, 60, 30, "button", "", "发送", {
             left: 4,
             top: 4,
             right: 4,
@@ -207,19 +204,19 @@ export class ChatPanelPC extends BaseChatPanel {
         this.sendMsgBtn.y = size.height - this.sendMsgBtn.height;
         this.add(this.sendMsgBtn);
 
-        this.mSendKey = this.mScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+        this.mSendKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
-        this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
+        this.mVoiceBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
         this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
         this.mVoiceBtn.y = size.height - this.height;
         this.add(this.mVoiceBtn);
 
-        this.mMicBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        this.mMicBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
         this.mMicBtn.x = this.width - 20 * this.mWorld.uiScale;
         this.mMicBtn.y = size.height - this.height;
         this.add(this.mMicBtn);
 
-        this.setLocation();
+        this.setPosition();
         super.init();
     }
 
@@ -252,7 +249,6 @@ export class ChatPanelPC extends BaseChatPanel {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        // this.mWorld.inputManager.enable = false;
         if (this.mSendKey) {
             this.mSendKey.on("down", this.onDownEnter, this);
         }
@@ -262,7 +258,6 @@ export class ChatPanelPC extends BaseChatPanel {
         if (!this.mWorld || !this.mWorld.inputManager) {
             return;
         }
-        // this.mWorld.inputManager.enable = true;
         if (this.mSendKey) {
             this.mSendKey.off("down", this.onDownEnter, this);
         }

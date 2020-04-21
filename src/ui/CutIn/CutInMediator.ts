@@ -1,11 +1,13 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { CutInPanel } from "./CutInPanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class CutInMediator extends BaseMediator {
+  private world: WorldService;
   constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, world: WorldService) {
-    super(world);
+    super();
+    this.world = world;
   }
 
   show(param?: any) {
@@ -15,7 +17,7 @@ export class CutInMediator extends BaseMediator {
     this.mView = new CutInPanel(this.scene, this.world);
     this.mView.once("close", this.onCloseHandler, this);
     this.mView.show(param);
-    this.layerManager.addToToolTipsLayer(this.mView);
+    // this.layerManager.addToToolTipsLayer(this.mView.view);
   }
 
   private onCloseHandler() {

@@ -1,23 +1,23 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
-import { PicaNavigateMediator } from "../PicaNavigate/PicaNavigateMediator";
 import { FurniBagPanel } from "./FurniBagPanel";
 import { FurniBag } from "./FurniBag";
-import { op_virtual_world, op_client, op_def } from "pixelpai_proto";
-import { PBpacket } from "net-socket-packet";
+import { op_client, op_def } from "pixelpai_proto";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class FurniBagMediator extends BaseMediator {
     protected mView: FurniBagPanel;
     private scene: Phaser.Scene;
     private mFurniBag: FurniBag;
     private mScneType: op_def.SceneTypeEnum;
+    private world: WorldService;
     constructor(
         private layerManager: ILayerManager,
         scene: Phaser.Scene,
         worldService: WorldService
     ) {
-        super(worldService);
+        super();
+        this.world = worldService;
         this.scene = this.layerManager.scene;
         if (this.world && this.world.roomManager && this.world.roomManager.currentRoom) {
             this.mScneType = this.world.roomManager.currentRoom.sceneType;
@@ -27,8 +27,8 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.isShowing) {
-            this.layerManager.addToUILayer(this.mView);
+        if ((this.mView && this.mView.isShow()) || this.mShow) {
+            this.layerManager.addToUILayer(this.mView.view);
             return;
         }
 
@@ -49,7 +49,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mView.on("addFurniToScene", this.onAddFurniHandler, this);
         }
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView);
+        this.layerManager.addToUILayer(this.mView.view);
     }
 
     destroy() {
