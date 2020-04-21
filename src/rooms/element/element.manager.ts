@@ -10,6 +10,7 @@ import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+import { Handler } from "../../Handler/Handler";
 
 export interface IElementManager {
     hasAddComplete: boolean;
@@ -29,6 +30,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected mElements: Map<number, Element> = new Map();
     protected mMap: number[][];
     private mGameConfig: IElementStorage;
+    private eventEmitter = new Phaser.Events.EventEmitter();
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -95,6 +97,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!this.mElements) return;
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
+    }
+
+    public on(event: string | symbol, fn: Function, context?: any) {
+        this.eventEmitter.on(event, fn, context);
+    }
+
+    public off(event: string | symbol, fn: Function, context?: any) {
+        this.eventEmitter.off(event, fn, context);
+    }
+
+    public update(time: number, delta: number) {
+        this.eventEmitter.emit("update", time, delta);
     }
 
     protected addMap(sprite: ISprite) {

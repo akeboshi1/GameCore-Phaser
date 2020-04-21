@@ -1,4 +1,4 @@
-import { IElementManager } from "./element.manager";
+import { IElementManager, ElementManager } from "./element.manager";
 import { IFramesModel } from "../display/frames.model";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
@@ -14,6 +14,7 @@ import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
 import { DisplayObject } from "../display/display.object";
+import { AI } from "../../action/AI";
 export enum PlayerState {
     IDLE = "idle",
     WALK = "walk",
@@ -135,6 +136,14 @@ export class Element extends BlockObject implements IElement {
             return this.mElementManager.scene;
         }
     }
+    get ai(): AI {
+        return this.mAi;
+    }
+    get eleMgr(): ElementManager {
+        if (this.mElementManager) {
+            return this.mElementManager as ElementManager;
+        }
+    }
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
@@ -144,11 +153,14 @@ export class Element extends BlockObject implements IElement {
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mShopEntity: ShopEntity;
+    //  protected concomitants: Element[];
+    protected mAi: AI;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
+        this.mAi = new AI(this);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -380,6 +392,27 @@ export class Element extends BlockObject implements IElement {
         this.mDisplay.setAlpha(val);
     }
 
+    // public setConcomitant(ele: Element, isFollow: boolean = true) {
+    //     if (!this.concomitants) this.concomitants = [];
+    //     if (this.concomitants.indexOf(ele) !== -1) {
+    //         this.concomitants.push(ele);
+    //         if (isFollow)
+    //             this.mDisplay.add(ele.mDisplay);
+    //     }
+
+    // }
+
+    // public removeConcomitant(ele: Element, destroy: boolean = true) {
+    //     if (this.concomitants) {
+    //         const index = this.concomitants.indexOf(ele);
+    //         if (index !== -1) {
+    //             this.concomitants.slice(index, 1);
+    //             if (destroy)
+    //                 ele.destroy();
+    //         }
+    //     }
+    // }
+
     public destroy() {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();
@@ -402,6 +435,13 @@ export class Element extends BlockObject implements IElement {
             this.mShopEntity.destroy();
             this.mShopEntity = null;
         }
+        // if (this.concomitants) {
+        //     for (const ele of this.concomitants) {
+        //         ele.destroy();
+        //     }
+        //     this.concomitants.length = 0;
+        //     this.concomitants = null;
+        // }
         super.destroy();
     }
 

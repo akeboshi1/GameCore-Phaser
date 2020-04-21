@@ -67,7 +67,7 @@ export class Player extends Element {
                 onStart: (tween, target, params) => {
                     this.onCheckDirection(params);
                 },
-                onCompleteParams: {duration, index},
+                onCompleteParams: { duration, index },
                 onComplete: (tween, targets, params) => {
                     this.onMovePathPointComplete(params);
                 }
@@ -126,9 +126,9 @@ export class Player extends Element {
         // 重叠
         if (params > 90) {
             this.setDirection(3);
-        } else  if (params >= 0) {
+        } else if (params >= 0) {
             this.setDirection(5);
-        } else  if (params >= -90) {
+        } else if (params >= -90) {
             this.setDirection(7);
         } else {
             this.setDirection(1);
