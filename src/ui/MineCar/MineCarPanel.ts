@@ -46,10 +46,17 @@ export class MineCarPanel extends BasePanel {
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
+  public show(param?: any) {
+    super.show(param);
+    if (this.mInitialized) {
+      this.refreshData();
+    }
+  }
+
   setCategories(subcategorys: op_def.IStrMap[]) {
     const items = [];
     const zoom = this.mWorld.uiScaleNew;
-    const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
+    // const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
     // const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
     const gap = 4 * zoom;
     const style = {
@@ -191,6 +198,9 @@ export class MineCarPanel extends BasePanel {
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
 
+  }
+
+  private refreshData() {
     const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.data;
     const mineItem = minePackage.items || [];
     const limit = minePackage.limit || 0;
@@ -211,7 +221,6 @@ export class MineCarPanel extends BasePanel {
 
     this.setCategories(minePackage.categories);
     this.mPropGrid.setItems(items);
-
   }
 
   private onCloseHandler() {

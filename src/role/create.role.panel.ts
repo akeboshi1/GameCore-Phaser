@@ -253,6 +253,11 @@ export class CreateRolePanel extends BasePanel {
     }
   }
 
+  destroy() {
+    if (this.scene) this.scene.scale.off("resize", this.onResize, this);
+    super.destroy();
+  }
+
   private onRandomNameHandler() {
     this.emit("randomName");
     this.inputText.setBlur();

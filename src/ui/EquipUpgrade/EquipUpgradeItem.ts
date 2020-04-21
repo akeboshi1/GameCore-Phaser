@@ -69,6 +69,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     destroy() {
+        if (this.unlockbtn) this.unlockbtn.off("pointerup", this.onUnlockEquipHandler, this);
         super.destroy();
         if (this.gridTable) this.gridTable.destroy();
         this.bg = null;
@@ -107,8 +108,8 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.equipDes = this.scene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
         this.equipDes.setStroke("#000000", 1);
         this.add([this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes]);
-        this.createBtn();
         this.createGridTable();
+        this.createBtn();
     }
 
     private createGridTable() {
@@ -147,7 +148,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                         this.onSelectItemHandler(cellContainer);
                     }
                 }
-                Logger.getInstance().log(item);
+                // Logger.getInstance().log(item);
                 return cellContainer;
             },
         });
@@ -161,7 +162,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     private onSelectItemHandler(cell: EquipItemCell) {
-        Logger.getInstance().log(cell.itemData);
+        // Logger.getInstance().log(cell.itemData);
         if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
         this.penetrationText.text = data.buffDisplayNames[0];
@@ -177,7 +178,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         } else if (!data.owned) {
             this.unlockCondition.visible = true;
             this.unlockCondition.text = data.conditionDisplayNames[0];
-            this.unlockbtn.removeInteractive();
+            this.unlockbtn.disableInteractive();
         }
         if (data.price == null) {
             this.costNum.visible = false;

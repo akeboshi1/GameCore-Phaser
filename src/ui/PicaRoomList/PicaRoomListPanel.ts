@@ -21,7 +21,6 @@ export class PicaRoomListPanel extends BasePanel {
   private mScroller: GameScroller;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.setTween(false);
     this.scale = 1;
   }
 
