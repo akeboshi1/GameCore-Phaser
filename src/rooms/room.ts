@@ -32,6 +32,7 @@ import { WallManager } from "./wall/wall.manager";
 import { BackgroundManager } from "./sky.box/background.manager";
 import { SoundManager, SoundField } from "../game/sound.manager";
 import { Url } from "../utils/resUtil";
+import { EditorMossManager } from "./element/editor.moss.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }

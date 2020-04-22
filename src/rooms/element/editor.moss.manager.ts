@@ -1,23 +1,21 @@
-import { ElementManager } from "./element.manager";
-import { ISprite, Sprite } from "./sprite";
+import { ElementManager, Task } from "./element.manager";
 import { PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
-import { Element, InputEnable } from "./element";
-import NodeType = op_def.NodeType;
 import { EditorRoomService } from "../editor.room";
-import { DisplayObject } from "../display/display.object";
+import { SelectedElement } from "../editor/selected.element";
+import Helpers from "../../utils/helpers";
 
 export class EditorMossManager extends ElementManager {
-    private taskQueue: Map<string, any> = new Map();
-    private editorMosses: Map<string, any> = new Map();
+    private taskQueue: Map<number, Task> = new Map();
+    private editorMosses: Map<number, any> = new Map();
     constructor(protected mRoom: EditorRoomService) {
         super(mRoom);
         if (this.connection) {
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_MOSSES, this.addMosses);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_MOSSES, this.removeMosses);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_MOSSES, this.removeMosses);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_MOSSES, this.handleAddMosses);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_MOSSES, this.handleDeleteMosses);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_MOSSES, this.handleUpdateMosses);
         }
     }
 
@@ -25,72 +23,117 @@ export class EditorMossManager extends ElementManager {
         this.batchActionSprites();
     }
 
-    protected addMosses(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_MOSSES = packet.content;
+    public addMosses(coorData) {
+        const placeLocs = [];
+        const { locs, key } = coorData;
+        for (const loc of locs) {
+            const id = Helpers.genId();
+            const placeLoc: Partial<op_def.IMossMetaData> = {
+                x: loc.x,
+                y: loc.y,
+                z: loc.z,
+                key,
+                id,
+            };
+            this.taskQueue.set(id, {
+                action: "ADD",
+                loc: placeLoc,
+            });
+
+            placeLocs.push(placeLoc);
+        }
+
+        this.reqEditorCreateMossData(placeLocs);
+    }
+
+    reqEditorCreateMossData(locs: op_def.IMossMetaData[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_MOSSES);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_MOSSES = pkt.content;
+        content.locs = locs;
+        this.connection.send(pkt);
+    }
+
+    public updateMosses(elements: SelectedElement[]) {
+        const updateLocs = [];
+        for (const element of elements) {
+            const sprite = element.display.element.model.toSprite();
+
+            const originLoc = this.editorMosses.get(sprite.id);
+            const loc: op_def.IMossMetaData = {
+                x: sprite.point3f.x,
+                y: sprite.point3f.y,
+                z: sprite.point3f.z,
+                id: sprite.id,
+                dir: sprite.direction,
+                key: originLoc.key,
+            };
+            this.taskQueue.set(sprite.id, {
+                action: "UPDATE",
+                loc,
+            });
+
+            updateLocs.push(loc);
+        }
+
+        this.reqEditorUpdateMossData(updateLocs);
+    }
+
+    reqEditorUpdateMossData(locs: op_def.IMossMetaData[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_SYNC_MOSSES);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_SYNC_MOSSES = pkt.content;
+        content.locs = locs;
+        this.connection.send(pkt);
+    }
+
+    protected handleAddMosses(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_MOSSES = packet.content;
         const locs = content.locs;
 
         for (const loc of locs) {
-            const locKey = this.genLocKey(loc.x, loc.y);
-            const key = `${locKey}#${loc.key}`;
-            this.taskQueue.set(key, {
+            this.taskQueue.set(loc.id, {
                 action: "ADD",
                 loc,
             });
         }
     }
 
-    protected removeMosses(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_MOSSES = packet.content;
+    protected handleDeleteMosses(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_DELETE_MOSSES = packet.content;
         const locs = content.locs;
 
         for (const loc of locs) {
-            const locKey = this.genLocKey(loc.x, loc.y);
-            const key = `${locKey}#${loc.key}`;
-
-            this.taskQueue.set(key, {
+            this.taskQueue.set(loc.id, {
                 action: "DELETE",
                 loc,
             });
         }
     }
 
-    protected syncMosses(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_MOSSES = packet.content;
+    protected handleUpdateMosses(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_MOSSES = packet.content;
         const locs = content.locs;
 
         for (const loc of locs) {
-            const locKey = this.genLocKey(loc.x, loc.y);
-            const key = `${locKey}#${loc.key}`;
-
-            this.taskQueue.set(key, {
-                action: "SYNC",
+            this.taskQueue.set(loc.id, {
+                action: "UPDATE",
                 loc,
             });
         }
     }
 
-    protected createMoss(sprite: ISprite): Element {
-        const mossKey = this.genLocKey(sprite.pos.x, sprite.pos.y);
+    // protected syncMosses(packet: PBpacket) {
+    //     const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_MOSSES = packet.content;
+    //     const locs = content.locs;
 
-        let moss = this.editorMosses.get(mossKey);
+    //     for (const loc of locs) {
+    //         const locId = this.genLocId(loc.x, loc.y);
 
-        if (moss) return moss;
-
-        moss = new Element(sprite, this);
-        moss.setBlockable(false);
-        moss.setInputEnable(InputEnable.Enable);
-        this.editorMosses.set(mossKey, moss);
-        return moss;
-    }
-
-    protected tryRemove(id) {
-        const moss = this.editorMosses.get(id);
-        if (moss) {
-            this.editorMosses.delete(id);
-            moss.destroy();
-            return moss;
-        }
-    }
+    //         this.taskQueue.set(locId, {
+    //             action: "UPDATE",
+    //             loc,
+    //         });
+    //     }
+    // }
 
     protected trySync(sprite: op_client.ISprite) {
         const element = this.mElements.get(sprite.id);
@@ -113,38 +156,39 @@ export class EditorMossManager extends ElementManager {
         }
         const batchTasksKeys = Array.from(this.taskQueue.keys()).splice(0, 200);
 
-        const displays: DisplayObject[] = [];
-
         for (const key of batchTasksKeys) {
             const { action, loc } = this.taskQueue.get(key);
             this.taskQueue.delete(key);
 
             if (action === "ADD") {
                 const moss = this.mRoom.world.elementStorage.getMossPalette(loc.key);
-                if (!moss) {
-                    return;
-                }
+                if (!moss) continue;
 
-                const ele = this.createMoss(moss.createSprite(op_def.NodeType.ElementNodeType, loc.x, loc.y));
-                if (ele.getDisplay()) {
-                    displays.push(ele.getDisplay());
-                }
-                continue;
+                const sprite = moss.createSprite({
+                    ...loc,
+                    nodeType: op_def.NodeType.ElementNodeType,
+                    isMoss: true,
+                });
+                this.editorMosses.set(loc.id, loc);
+                this.mRoom.spritePool.push("mosses", loc.id.toString(), sprite, this);
+            } else if (action === "DELETE") {
+                this.editorMosses.delete(loc.id);
+                this.mRoom.spritePool.remove("mosses", loc.id.toString());
+            } else if (action === "UPDATE") {
+                const moss = this.mRoom.world.elementStorage.getMossPalette(loc.key);
+                if (!moss) continue;
+                const sprite = moss.createSprite({
+                    ...loc,
+                    nodeType: op_def.NodeType.ElementNodeType,
+                    isMoss: true,
+                });
+                this.editorMosses.set(loc.id, loc);
+                this.mRoom.spritePool.update("mosses", loc.id.toString(), sprite);
             }
-
-            if (action === "DELETE") {
-                const locKey = this.genLocKey(loc.x, loc.y);
-                this.tryRemove(locKey);
-                continue;
-            }
-        }
-
-        if (displays.length > 0) {
-            this.mRoom.addToSurface(displays);
         }
     }
 
-    private genLocKey(x: number, y: number) {
+    private genLocId(x: number, y: number) {
         return `${x}_${y}`;
     }
 

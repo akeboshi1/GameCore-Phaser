@@ -23,8 +23,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // ---- by 7
     protected mMap: number[][];
 
-    protected actionSpritesCache: Map<string, any> = new Map();
-
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
         this.mListener = listener;

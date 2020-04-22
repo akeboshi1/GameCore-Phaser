@@ -28,7 +28,7 @@ export class Terrain extends BlockObject implements IElement {
         if (!val) {
             return;
         }
-        this.load(<IFramesModel> this.mModel.displayInfo);
+        this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
         if (!this.mDisplay) {
@@ -70,7 +70,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public getDirection(): number {
-        return (this.mDisplayInfo && this.mDisplayInfo.avatarDir) ? this.mDisplayInfo.avatarDir : 3;
+        return this.mDisplayInfo && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
     }
 
     public setPosition(p: Pos) {
@@ -84,11 +84,9 @@ export class Terrain extends BlockObject implements IElement {
         return this.mDisplay;
     }
 
-    public showNickname() {
-    }
+    public showNickname() {}
 
-    public showEffected() {
-    }
+    public showEffected() {}
 
     public toSprite(): op_client.ISprite {
         const sprite = op_client.Sprite.create();
@@ -101,11 +99,11 @@ export class Terrain extends BlockObject implements IElement {
         return sprite;
     }
 
-    public turn() { }
+    public turn() {}
 
-    public setAlpha(val: number) { }
+    public setAlpha(val: number) {}
 
-    public scaleTween() { }
+    public scaleTween() {}
 
     public destroy() {
         if (this.mBlockable && this.mDisplay) {

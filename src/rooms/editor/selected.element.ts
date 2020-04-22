@@ -1,9 +1,9 @@
-import {FramesDisplay} from "../display/frames.display";
-import {DragonbonesDisplay} from "../display/dragonbones.display";
-import {DynamicImage} from "../../ui/components/dynamic.image";
-import {LayerManager} from "../layer/layer.manager";
+import { FramesDisplay } from "../display/frames.display";
+import { DragonbonesDisplay } from "../display/dragonbones.display";
+import { DynamicImage } from "../../ui/components/dynamic.image";
+import { LayerManager } from "../layer/layer.manager";
 import { Url } from "../../utils/resUtil";
-import {Logger} from "../../utils/log";
+import { Logger } from "../../utils/log";
 import { ISprite } from "../element/sprite";
 
 export class SelectedElement {
@@ -99,5 +99,9 @@ export class SelectedElement {
      */
     get selecting(): boolean {
         return this.mSelecting;
+    }
+
+    get sprite() {
+        return this.mSprite;
     }
 }

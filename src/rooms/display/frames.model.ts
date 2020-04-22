@@ -23,7 +23,7 @@ export interface IFramesModel {
     getWalkableArea(aniName: string, flip: boolean): number[][];
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
-    createSprite(nodeType: op_def.NodeType, x: number, y: number, z?: number): Sprite;
+    createSprite(properties: object): Sprite;
     destroy();
 }
 
@@ -130,10 +130,23 @@ export class FramesModel implements IFramesModel {
 
     public getDirable() {}
 
-    public createSprite(nodeType: op_def.NodeType, x: number, y: number, z?: number): Sprite {
+    public createSprite(properties: {
+        nodeType: op_def.NodeType;
+        x: number;
+        y: number;
+        z: number;
+        id?: number;
+        dir?: number;
+        isMoss?: boolean;
+    }): Sprite {
+        const { nodeType, x, y, z, id, dir, isMoss } = properties;
         const spr = op_client.Sprite.create();
 
-        spr.id = Helpers.genId();
+        if (id) {
+            spr.id = id;
+        } else {
+            spr.id = Helpers.genId();
+        }
         spr.display = this.display;
         spr.currentAnimationName = this.animationName;
         const point3f = op_def.PBPoint3f.create();
@@ -144,6 +157,13 @@ export class FramesModel implements IFramesModel {
         }
         spr.point3f = point3f;
         spr.animations = this.toClient();
+        if (dir) {
+            spr.direction = dir;
+        }
+
+        if (isMoss !== undefined) {
+            spr.isMoss = isMoss;
+        }
 
         return new Sprite(spr, nodeType);
     }

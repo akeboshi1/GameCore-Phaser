@@ -8,7 +8,7 @@ import { AnimationData } from "../element/sprite";
 export enum DisplayField {
     BACKEND = 1,
     STAGE,
-    FRONTEND
+    FRONTEND,
 }
 
 /**
@@ -17,7 +17,10 @@ export enum DisplayField {
 export class FramesDisplay extends DisplayObject {
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
-    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
+    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<
+        DisplayField,
+        Phaser.GameObjects.Sprite | Phaser.GameObjects.Image
+    >();
     protected mHasAnimation: boolean = false;
     protected mScaleTween: Phaser.Tweens.Tween;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
@@ -31,7 +34,10 @@ export class FramesDisplay extends DisplayObject {
         field = !field ? DisplayField.STAGE : field;
         const data = displayInfo;
         if (!data || !data.gene) return;
-        if (this.mSprites.get(field)) return;
+        const currentDisplay = this.mDisplayDatas.get(field);
+        if (currentDisplay && currentDisplay.gene === displayInfo.gene) {
+            return;
+        }
         this.mDisplayDatas.set(field, data);
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field);
@@ -47,7 +53,6 @@ export class FramesDisplay extends DisplayObject {
             this.scene.textures.on(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
             this.scene.load.start();
         }
-
     }
 
     public play(animation: AnimationData, field?: DisplayField) {
@@ -76,7 +81,9 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public fadeIn(callback?: () => void) {
-        if (this.mAlpha === 0) { return; }
+        if (this.mAlpha === 0) {
+            return;
+        }
         this.alpha = 0;
         this.clearFadeTween();
         this.mFadeTween = this.scene.tweens.add({
@@ -85,7 +92,7 @@ export class FramesDisplay extends DisplayObject {
             duration: 1200,
             onComplete: () => {
                 if (callback) callback();
-            }
+            },
         });
     }
 
@@ -97,7 +104,7 @@ export class FramesDisplay extends DisplayObject {
             duration: 1200,
             onComplete: () => {
                 if (callback) callback();
-            }
+            },
         });
     }
 
@@ -122,11 +129,15 @@ export class FramesDisplay extends DisplayObject {
                     // this.mScaleTween.destroy();
                     this.mScaleTween = undefined;
                 }
-            }
+            },
         });
     }
 
-    public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
+    public setInteractive(
+        shape?: Phaser.Types.Input.InputConfiguration | any,
+        callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void,
+        dropZone?: boolean
+    ): this {
         // super.setInteractive(shape, callback, dropZone);
         this.mSprites.forEach((sprite) => {
             sprite.setInteractive({ pixelPerfect: true });
@@ -241,14 +252,14 @@ export class FramesDisplay extends DisplayObject {
                 // sprite.setTexture(data.gene);
             }
             this.mSprites.set(field, sprite);
-            this.play({ animationName: data.animationName, flip: false }, field);
-            sprite.x = this.baseLoc.x + sprite.width / 2;
-            sprite.y = this.baseLoc.y + sprite.height / 2;
-            if (this.mAntial) {
-                sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-            }
-            this.addAt(sprite, field);
         }
+        this.play({ animationName: data.animationName, flip: false }, field);
+        sprite.x = this.baseLoc.x + sprite.width / 2;
+        sprite.y = this.baseLoc.y + sprite.height / 2;
+        if (this.mAntial) {
+            sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        }
+        this.addAt(sprite, field);
         // sprite.setInteractive({ pixelPerfect: true });
         this.setData("id", data.id);
 

@@ -10,29 +10,29 @@ import { EditorRoomService } from "../editor.room";
 import { DisplayObject } from "../display/display.object";
 
 export class EditorElementManager extends ElementManager {
+    private mossTaskQueue: Map<string, any> = new Map();
+    private taskQueue: Map<number, any> = new Map();
+    private editorMosses: Map<string, any> = new Map();
     constructor(protected mRoom: EditorRoomService) {
         super(mRoom);
         if (this.connection) {
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.onAdd);
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.onSync);
-            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
-
-            // NEW PROTO
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS,
-                this.addSpritesWithLocs
-            );
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.handleCreateElements);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.handleSyncElements);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE, this.handleDeleteElements);
         }
     }
 
-    add(sprites: ISprite[]) {
-        if (!sprites && sprites.length === 0) {
-            return;
-        }
+    update() {}
+
+    addElements(sprites: ISprite[]) {
         for (const sprite of sprites) {
             this._add(sprite);
         }
 
+        this.callEditorCreateElementData(sprites);
+    }
+
+    callEditorCreateElementData(sprites: ISprite[]) {
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_CREATE_SPRITE);
         const content: op_editor.OP_CLIENT_REQ_EDITOR_CREATE_SPRITE = pkt.content;
         content.nodeType = sprites[0].nodeType;
@@ -52,7 +52,7 @@ export class EditorElementManager extends ElementManager {
         return ele;
     }
 
-    protected onAdd(packet: PBpacket) {
+    protected handleCreateElements(packet: PBpacket) {
         if (!this.mRoom.layerManager) {
             Logger.getInstance().error("layer manager does not exist");
             return;
@@ -77,44 +77,12 @@ export class EditorElementManager extends ElementManager {
         this.mRoom.addToSurface(displays);
     }
 
-    protected addSpritesWithLocs(packet: PBpacket) {
-        if (!this.mRoom.layerManager) {
-            Logger.getInstance().error("layer manager does not exist");
-            return;
-        }
-
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
-        const locs = content.locs;
-        const nodeType = content.nodeType;
-
-        if (nodeType !== op_def.NodeType.ElementNodeType) {
-            return;
-        }
-
-        const displays: DisplayObject[] = [];
-        locs.forEach((loc) => {
-            const palette = this.mRoom.world.elementStorage.getMossPalette(loc.key);
-
-            if (!palette) {
-                return;
-            }
-            const ele = this._add(palette.createSprite(nodeType, loc.x, loc.y));
-            if (ele.getDisplay()) {
-                displays.push(ele.getDisplay());
-            }
-        });
-
-        this.mRoom.addToSurface(displays);
-    }
-
     protected _add(sprite: ISprite): Element {
         let ele = this.mElements.get(sprite.id);
         if (!ele) ele = new Element(sprite, this);
         ele.setBlockable(false);
-        // ele.setRenderable(true);
         ele.setInputEnable(InputEnable.Enable);
-        // TODO udpate element
-        this.mElements.set(ele.id || 0, ele);
+        this.mElements.set(ele.id, ele);
         return ele;
     }
 
@@ -130,7 +98,7 @@ export class EditorElementManager extends ElementManager {
         }
     }
 
-    protected onRemove(packet: PBpacket) {
+    protected handleDeleteElements(packet: PBpacket) {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = packet.content;
         const type: number = content.nodeType;
         const ids: number[] = content.ids;
@@ -143,7 +111,7 @@ export class EditorElementManager extends ElementManager {
         this.roomService.removeSelected();
     }
 
-    protected onSync(packet: PBpacket) {
+    protected handleSyncElements(packet: PBpacket) {
         const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.ElementNodeType) {
             return;
@@ -168,10 +136,6 @@ export class EditorElementManager extends ElementManager {
             element.setDirection(sprite.direction);
         }
     }
-
-    protected removeMap(sprite: ISprite) {}
-
-    protected addMap(sprite: ISprite) {}
 
     get roomService(): EditorRoomService {
         return this.mRoom;

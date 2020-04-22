@@ -18,17 +18,18 @@ export interface IBlockObject {
     setBlockable(val: boolean): this;
 }
 export abstract class BlockObject implements IBlockObject {
+    public isUsed = false;
     protected mDisplay?: ElementDisplay;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = true;
     protected mModel: ISprite;
     protected mInputEnable: InputEnable = InputEnable.Diasble;
     constructor(protected mRoomService: IRoomService) {
+        this.isUsed = true;
     }
 
-    public setRenderable(isRenderable: boolean, delay?: number) {
+    public setRenderable(isRenderable: boolean, delay: number = 0) {
         if (this.mRenderable !== isRenderable) {
-            delay = delay ? delay : 0;
             this.mRenderable = isRenderable;
             if (isRenderable) {
                 this.addDisplay();
@@ -61,7 +62,7 @@ export abstract class BlockObject implements IBlockObject {
     public getPosition45(): Pos {
         const pos = this.getPosition();
         if (!pos) return new Pos();
-        return this.mRoomService .transformTo45(pos);
+        return this.mRoomService.transformTo45(pos);
     }
 
     public getRenderable() {
@@ -85,22 +86,22 @@ export abstract class BlockObject implements IBlockObject {
 
     public setInputEnable(val: InputEnable) {
         // if (this.mInputEnable !== val) {
-            this.mInputEnable = val;
-            if (this.mDisplay) {
-                switch (val) {
-                    case InputEnable.Interactive:
-                        if (this.mModel && this.mModel.hasInteractive) {
-                            this.mDisplay.setInteractive();
-                        }
-                        break;
-                    case InputEnable.Enable:
+        this.mInputEnable = val;
+        if (this.mDisplay) {
+            switch (val) {
+                case InputEnable.Interactive:
+                    if (this.mModel && this.mModel.hasInteractive) {
                         this.mDisplay.setInteractive();
-                        break;
-                    default:
-                        this.mDisplay.disableInteractive();
-                        break;
-                }
+                    }
+                    break;
+                case InputEnable.Enable:
+                    this.mDisplay.setInteractive();
+                    break;
+                default:
+                    this.mDisplay.disableInteractive();
+                    break;
             }
+        }
         // }
     }
 
@@ -125,8 +126,11 @@ export abstract class BlockObject implements IBlockObject {
         }
     }
 
-    protected addDisplay() {
+    public clear() {
+        this.isUsed = false;
     }
+
+    protected addDisplay() {}
 
     protected removeDisplay() {
         if (!this.mDisplay) {

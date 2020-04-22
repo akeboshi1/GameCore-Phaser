@@ -21,8 +21,12 @@ export interface IElementManager {
     add(sprite: ISprite[]);
     remove(id: number): IElement;
     getElements(): IElement[];
-    update?();
     destroy();
+}
+
+export interface Task {
+    action: string;
+    loc: Partial<op_def.IMossMetaData>;
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
@@ -102,8 +106,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
     }
-
-    public updat() {}
 
     protected addMap(sprite: ISprite) {}
 

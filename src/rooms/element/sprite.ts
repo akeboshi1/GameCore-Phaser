@@ -30,6 +30,7 @@ export interface ISprite {
     pos: Pos;
     bindID: number;
     sn: string;
+    isMoss?: boolean;
 
     newID();
     setPosition(x: number, y: number);
@@ -65,6 +66,7 @@ export class Sprite implements ISprite {
     protected mCurrentWalkableArea: number[][];
     protected mCurrentCollisionPoint: Phaser.Geom.Point;
     protected mVersion: string;
+    protected mIsMoss: boolean;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
@@ -112,6 +114,10 @@ export class Sprite implements ISprite {
 
         if (obj.version) {
             this.mVersion = obj.version;
+        }
+
+        if (obj.isMoss !== undefined) {
+            this.isMoss = obj.isMoss;
         }
     }
 
@@ -256,6 +262,14 @@ export class Sprite implements ISprite {
     set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
         if (this.currentAnimationName) this.mDisplayInfo.animationName = this.currentAnimationName;
+    }
+
+    get isMoss() {
+        return this.mIsMoss;
+    }
+
+    set isMoss(val: boolean) {
+        this.mIsMoss = val;
     }
 
     get nodeType(): NodeType {

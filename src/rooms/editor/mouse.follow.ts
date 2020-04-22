@@ -18,6 +18,8 @@ export class MouseFollow {
     private mSprite: ISprite;
     private mAlignGrid: boolean;
     private mScaleRatio: number = 1;
+    private _isMoss: boolean;
+    private _key: number;
 
     /**
      * 笔触大小
@@ -35,6 +37,8 @@ export class MouseFollow {
             this.mDisplay = null;
         }
         this.mNodeType = content.nodeType;
+        this.isMoss = content.isMoss;
+        this.key = content.key;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(this.mScene, this.mRoomService);
         const size = this.mNodeType === NodeType.TerrainNodeType ? this.mSize : 1;
@@ -63,6 +67,11 @@ export class MouseFollow {
 
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.mScene.input.on("wheel", this.onWheelHandler, this);
+    }
+
+    createTerrainsOrMossesData() {
+        const locs = this.mDisplay.displays.map((display) => this.getPosition(display.x, display.y));
+        return { locs, key: this.key };
     }
 
     createSprites(): ISprite[] {
@@ -164,11 +173,17 @@ export class MouseFollow {
 
     private getPosition(rows: number = 0, cols: number = 0) {
         if (this.mNodeType === op_def.NodeType.TerrainNodeType) {
-            const pos45 = this.mRoomService.transformTo45(new Pos(this.mDisplay.x / this.mScaleRatio + rows, this.mDisplay.y / this.mScaleRatio + cols));
+            const pos45 = this.mRoomService.transformTo45(
+                new Pos(this.mDisplay.x / this.mScaleRatio + rows, this.mDisplay.y / this.mScaleRatio + cols)
+            );
             return pos45;
         }
         // TODO 多个物件仅支持地块
-        const pos = new Pos(this.mDisplay.x / this.mScaleRatio + rows, this.mDisplay.y / this.mScaleRatio + cols, this.mDisplay.z);
+        const pos = new Pos(
+            this.mDisplay.x / this.mScaleRatio + rows,
+            this.mDisplay.y / this.mScaleRatio + cols,
+            this.mDisplay.z
+        );
         return pos;
     }
 
@@ -223,11 +238,27 @@ export class MouseFollow {
         if (val < 1) {
             val = 1;
         }
-        if (val > 10) {
-            val = 10;
+        if (val > 20) {
+            val = 20;
         }
         this.mSize = val;
         this.mDisplay.setDisplay(this.mSprite, this.mSize);
+    }
+
+    get isMoss() {
+        return this._isMoss;
+    }
+
+    set isMoss(val: boolean) {
+        this._isMoss = val;
+    }
+
+    get key() {
+        return this._key;
+    }
+
+    set key(val: number) {
+        this._key = val;
     }
 }
 
@@ -249,7 +280,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         if (!sprite) {
             return;
         }
-        const frame = <IFramesModel> sprite.displayInfo;
+        const frame = <IFramesModel>sprite.displayInfo;
         this.mNodeType = sprite.nodeType;
         let frameDisplay: FramesDisplay;
         const { tileWidth, tileHeight } = this.mRoomService.roomSize;
@@ -259,10 +290,10 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
             rows: size,
             cols: size,
             sceneWidth: (size + size) * (tileWidth / 2),
-            sceneHeight: (size + size) * (tileHeight / 2)
+            sceneHeight: (size + size) * (tileHeight / 2),
         };
 
-        this.mOffset.x = -(this.mTileSize.sceneWidth / 2 * this.mScaleRatio);
+        this.mOffset.x = -((this.mTileSize.sceneWidth / 2) * this.mScaleRatio);
         this.mOffset.y = -((this.mTileSize.sceneHeight / this.mScaleRatio - (size % 2 === 0 ? 0 : tileHeight)) / 2);
 
         for (let i = 0; i < size; i++) {
@@ -289,7 +320,6 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     }
 
     setLocation(x: number, y: number) {
-        // return super.setPosition(x + this.mOffset.x, y + this.mOffset.y);
         this.x = x + this.mOffset.x;
         this.y = y + this.mOffset.y;
         return this;
@@ -347,7 +377,7 @@ class EraserArea extends MouseDisplayContainer {
             rows: size,
             cols: size,
             sceneWidth: (size + size) * (tileWidth / 2),
-            sceneHeight: (size + size) * (tileHeight / 2)
+            sceneHeight: (size + size) * (tileHeight / 2),
         };
 
         this.mOffset.x = -(this.mTileSize.sceneWidth / 2);
