@@ -106,7 +106,7 @@ export class PicaMainUIPanel extends BasePanel {
 
         const expProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
         this.add(expProgress);
-
+        super.init();
         this.resize(w, h);
     }
 

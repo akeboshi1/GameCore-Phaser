@@ -25,9 +25,12 @@ export class MineCarPanel extends BasePanel {
   private mAllItem: IPackageItem[];
   private mFilterItem: IPackageItem[];
   private mLimit: number;
+  private mCheckBox: CheckboxGroup;
+  private categoriesBg;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
+    this.disInteractive();
   }
 
   resize(width: number, height: number) {
@@ -52,29 +55,23 @@ export class MineCarPanel extends BasePanel {
 
   public show(param?: any) {
     super.show(param);
-    if (this.mInitialized) {
+    if (this.mInitialized && !this.mPreLoad) {
       this.refreshData();
     }
   }
 
   public update(param?: any) {
-    this.data = param;
     super.update(param);
-    if (this.mInitialized) {
+    if (this.mInitialized && this.mShow) {
       this.refreshData();
     }
   }
 
   setCategories(subcategorys: op_def.IStrMap[]) {
     this.mCategorieContainer.removeAll(true);
-    // subcategorys.unshift({
-    //   key: "all",
-    //   value: "全部"
-    // });
+    this.mCategorieContainer.setSize(this.categoriesBg.width, this.categoriesBg.height);
     const items = [];
     const zoom = this.mWorld.uiScaleNew;
-    // const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
-    // const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
     const gap = 4 * zoom;
     const style = {
       fontFamily: Font.DEFULT_FONT,
@@ -91,13 +88,14 @@ export class MineCarPanel extends BasePanel {
       item.y = (this.mCategorieContainer.height - item.displayHeight) / 2;
       items.push(item);
     }
-
-    const checkbox = new CheckboxGroup();
-    checkbox.appendItemAll(items);
-    checkbox.on("selected", this.onClickCategoryHandler, this);
+    if (this.mCheckBox) {
+      this.mCheckBox.reset();
+      this.mCheckBox.off("selected", this.onClickCategoryHandler, this);
+    }
+    this.mCheckBox.on("selected", this.onClickCategoryHandler, this);
+    this.mCheckBox.appendItemAll(items);
     this.mCategorieContainer.add(items);
-    checkbox.selectIndex(0);
-    // this.onSelectedCategory(subcategorys[0].key);
+    this.mCheckBox.selectIndex(0);
   }
 
   addListen() {
@@ -119,6 +117,9 @@ export class MineCarPanel extends BasePanel {
   destroy() {
     if (this.mPropGrid) {
       this.mPropGrid.destroy();
+    }
+    if (this.mCheckBox) {
+      this.mCheckBox.destroy();
     }
     super.destroy();
   }
@@ -165,23 +166,23 @@ export class MineCarPanel extends BasePanel {
 
     this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
     this.mDiscardBtn.x = (bg.width - this.mDiscardBtn.width) / 2,
-    this.mDiscardBtn.y = (bg.height - this.mDiscardBtn.height) / 2,
-    this.mDiscardBtn.setTextStyle({
-      color: "##996600",
-      fontFamily: Font.DEFULT_FONT,
-      fontSize: 10 * this.dpr * zoom
-    });
+      this.mDiscardBtn.y = (bg.height - this.mDiscardBtn.height) / 2,
+      this.mDiscardBtn.setTextStyle({
+        color: "##996600",
+        fontFamily: Font.DEFULT_FONT,
+        fontSize: 10 * this.dpr * zoom
+      });
     this.mDiscardBtn.switchState(DiscardEnum.Discard);
 
     this.mCategorieContainer = this.scene.make.container(undefined, false);
-    const categoriesBg = this.scene.make.image({
+    this.categoriesBg = this.scene.make.image({
       key: this.key,
       frame: "nav_bg.png"
     }).setScale(zoom);
-    categoriesBg.y = -111 * this.dpr * zoom + categoriesBg.height * zoom / 2;
-    this.mCategorieContainer.setSize(categoriesBg.displayWidth, categoriesBg.displayHeight);
+    this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
+    this.mCategorieContainer.setSize(this.categoriesBg.displayWidth, this.categoriesBg.displayHeight);
     // this.mCategorieContainer.x = -categoriesBg.width / 2;
-    this.mCategorieContainer.y = categoriesBg.y;
+    this.mCategorieContainer.y = this.categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
@@ -218,9 +219,9 @@ export class MineCarPanel extends BasePanel {
       this.onSelectItemHandler(cell);
       // }
     });
-
+    this.mCheckBox = new CheckboxGroup();
     this.add(this.mPanel);
-    this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
+    this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mCounter, this.categoriesBg, this.mPropContainer, this.mCategorieContainer, this.mDiscardBtn]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
   }
@@ -230,24 +231,12 @@ export class MineCarPanel extends BasePanel {
     const mineItem = minePackage.items || [];
     const limit = minePackage.limit || 0;
     this.mLimit = minePackage.limit || 0;
-    const items = [];
-    // let pkgItem: op_client.ICountablePackageItem = null;
-    const locked = false;
     this.mAllItem = [];
     for (const item of mineItem) {
       this.mAllItem.push({ item });
     }
-    // for (let i = 0; i < limit; i++) {
-    //   if (mineItem.length > i) {
-    //     pkgItem = mineItem[i];
-    //   } else {
-    //     pkgItem = null;
-    //   }
-    //   items[i] = { item: pkgItem, locked };
-    // }
     this.mCounter.setText(`${mineItem.length}/${limit}`);
     this.setCategories(minePackage.categories);
-    // this.mPropGrid.setItems(items);
   }
 
   private onCloseHandler() {
@@ -270,10 +259,6 @@ export class MineCarPanel extends BasePanel {
       this.mFilterItem.push({ item: null });
     }
     this.mPropGrid.setItems(this.mFilterItem);
-  }
-
-  private fillCell() {
-
   }
 
   private onSelectItemHandler(packageItem: PackageItem) {
@@ -461,6 +446,7 @@ class Tips extends Phaser.GameObjects.Container {
   }
 
   setItem(item: op_client.ICountablePackageItem) {
+    if (!item) return;
     const tmpY = this.y;
     const tmpAlpha = this.alpha;
     this.y = tmpY + 100 * this.mDpr;
@@ -489,7 +475,7 @@ class DiscardButton extends Button {
       return;
     }
     this.mState = val;
-    switch(val) {
+    switch (val) {
       case DiscardEnum.Cancel:
         this.setText("取消");
         this.setFrame("gray_btn.png");

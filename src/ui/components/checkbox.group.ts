@@ -24,7 +24,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
 
   public removeItem(item: IButtonState): this {
     this.mList = this.mList.filter((button) => button !== item);
-    item.off("click", this.onGameObjectUpHandler, this);
+    item.removeAllListeners();
     return this;
   }
 
@@ -51,6 +51,23 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     item.changeDown();
     this.emit("selected", item, this.mPrevButton);
     this.mPrevButton = item;
+  }
+
+  public reset() {
+    if (this.mList) {
+      this.mList.forEach((item) => {
+        this.removeItem(item);
+      });
+    }
+  }
+
+  public destroy() {
+    if (this.mList) {
+      this.mList.forEach((item) => {
+        this.removeItem(item);
+        item.destroy();
+      });
+    }
   }
 
   private onGameObjectUpHandler(pointer, gameobject: NinePatchButton) {

@@ -17,10 +17,10 @@ export class MineCarMediator extends BaseMediator {
   }
 
   show(param?: any) {
-    if (this.mView && this.mView.isShow()) {
-        this.mView.update(param);
-        return;
+    if (this.mShow) {
+      return;
     }
+    super.show(param);
     if (!this.mView) {
       this.mView = new MineCarPanel(this.scene, this.world);
     }
@@ -29,9 +29,25 @@ export class MineCarMediator extends BaseMediator {
     this.mView.on("discard", this.onDiscardHandler, this);
     this.layerManager.addToUILayer(this.mView.view);
   }
+  update(param?: any) {
+    if (!this.mView) {
+      this.show(param);
+      return;
+    }
+    super.update(param);
+  }
+  destroy() {
+    this.mShow = false;
+    if (this.mMineCar) {
+      this.mMineCar.off("query", this.onQueryHandler, this);
+      this.mMineCar.unregister();
+      this.mMineCar = null;
+    }
+    super.destroy();
+  }
 
   private onQueryHandler(packet: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE) {
-    this.show(packet);
+    this.update(packet);
   }
 
   private onDiscardHandler(items: any[]) {
@@ -45,5 +61,6 @@ export class MineCarMediator extends BaseMediator {
       this.mView.hide();
       this.mView = undefined;
     }
+    this.mShow = false;
   }
 }
