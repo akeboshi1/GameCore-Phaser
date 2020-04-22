@@ -53,7 +53,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public createActor(actor: op_client.IActor) {
         const playModel = new PlayerModel(actor);
         this.mActor = new Actor(playModel, this);
-        this._addSimulate(actor);
     }
 
     get actor(): Actor {
@@ -74,6 +73,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (player) {
             this.mPlayerMap.delete(id);
             player.destroy();
+            this.roomService.elementManager.remove(id + 100000);
         }
     }
 
@@ -200,6 +200,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(sprite.id);
             if (player) {
                 player.model = new Sprite(sprite);
+                if (sprite.attrs) {
+                    this._addSimulate(sprite);
+                }
             }
         }
     }
@@ -244,9 +247,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         for (const sprite of sprites) {
             this._add(new Sprite(sprite));
-            if (sprite.attrs) {
-                this._addSimulate(sprite);
-            }
+            this._addSimulate(sprite);
         }
     }
 
@@ -259,15 +260,58 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private _addSimulate(sprite: op_client.ISprite) {
-        // let msprite = new op_client.Sprite();
-        // msprite = Object.assign(msprite, sprite);
-        // msprite.id = sprite.id + 100000;
-        // this.roomService.elementManager.add([new Sprite(msprite)]);
-        // const ele = this.roomService.elementManager.get(msprite.id);
-        // const owner = this.get(sprite.id);
-        // const group = (this.roomService as Room).groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
-        // group.addChild(ele);
-        // ele.ai.addAction(new FollowAction(group));
+        let haveCar = false;
+        const attrs = sprite.attrs;
+        if (attrs && attrs.length > 0) {
+            for (const att of attrs) {
+                if (att.key === "minecart") {
+                    haveCar = true;
+                }
+            }
+        }
+        if (!haveCar) return;
+        const content = this.createSimulateSprite();
+        const msprite = content.sprites[0];
+        msprite.id = sprite.id + 100000;
+        let ele = this.roomService.elementManager.get(msprite.id);
+        if (!ele) {
+            this.roomService.elementManager.add([new Sprite(msprite)]);
+            ele = this.roomService.elementManager.get(msprite.id);
+
+        }
+        const owner = this.get(sprite.id);
+        ele.setPosition(owner.getPosition());
+        const groupMgr = (this.roomService as Room).groupManager;
+        let group = groupMgr.getGroup(owner, GroupType.Follow);
+        if (!group) group = (this.roomService as Room).groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
+        group.addChild(ele);
+        ele.ai.addAction(new FollowAction(group));
+    }
+
+    private createSimulateSprite() {
+        const content = new op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE();
+        content.sprites = [];
+        const sprite = new op_client.Sprite();
+        sprite.id = 1875435445;
+        sprite.point3f = new op_def.PBPoint3f();
+        sprite.point3f.x = 750; sprite.point3f.y = 300; sprite.currentAnimationName = "idle";
+        sprite.direction = op_def.Direction.LOWER_LEFT;
+        sprite.nickname = "矿车"; sprite.opacity = 100;
+        sprite.animations = [{
+            id: 816174882, name: "idle", frameRate: 5, walkableArea: "0,0,0&0,0,0&0,0,0",
+            collisionArea: "1,1,1&1,1,1&1,1,1", loop: true, originPoint: [3, 3], baseLoc: "-36,-71", frameName: ["矿车.png"]
+        }];
+        sprite.display = {
+            dataPath: "pixelpai/ElementNode/5e900aa69a2fb36bb110be40/1/5e900aa69a2fb36bb110be40.json",
+            texturePath: "pixelpai/ElementNode/5e900aa69a2fb36bb110be40/1/5e900aa69a2fb36bb110be40.png"
+        };
+        content.sprites.push(sprite);
+        content.nodeType = op_def.NodeType.ElementNodeType;
+        content.packet = {
+            currentFrame: 1,
+            totalFrame: 1
+        };
+        return content;
     }
 
     private addComplete(packet: PBpacket) {

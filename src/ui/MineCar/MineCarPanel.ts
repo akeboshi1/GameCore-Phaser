@@ -23,6 +23,8 @@ export class MineCarPanel extends BasePanel {
   private mAllItem: IPackageItem[];
   private mFilterItem: IPackageItem[];
   private mLimit: number;
+  private mCheckBox: CheckboxGroup;
+  private categoriesBg: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -51,29 +53,23 @@ export class MineCarPanel extends BasePanel {
 
   public show(param?: any) {
     super.show(param);
-    if (this.mInitialized) {
+    if (this.mInitialized && !this.mPreLoad) {
       this.refreshData();
     }
   }
 
   public update(param?: any) {
-    this.data = param;
     super.update(param);
-    if (this.mInitialized) {
+    if (this.mInitialized && this.mShow) {
       this.refreshData();
     }
   }
 
   setCategories(subcategorys: op_def.IStrMap[]) {
     this.mCategorieContainer.removeAll(true);
-    // subcategorys.unshift({
-    //   key: "all",
-    //   value: "全部"
-    // });
+    // this.mCategorieContainer.setSize(this.categoriesBg.width, this.categoriesBg.height);
     const items = [];
     const zoom = this.mWorld.uiScaleNew;
-    // const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png").width * zoom;
-    // const gap = (this.mCategorieContainer.width - frame / 2 - subcategorys.length * frame) / ((subcategorys.length - 1));
     const gap = 4 * zoom;
     const style = {
       fontFamily: Font.DEFULT_FONT,
@@ -90,13 +86,14 @@ export class MineCarPanel extends BasePanel {
       item.y = (this.mCategorieContainer.height - item.displayHeight) / 2;
       items.push(item);
     }
-
-    const checkbox = new CheckboxGroup();
-    checkbox.appendItemAll(items);
-    checkbox.on("selected", this.onClickCategoryHandler, this);
+    if (this.mCheckBox) {
+      this.mCheckBox.reset();
+      this.mCheckBox.off("selected", this.onClickCategoryHandler, this);
+    }
+    this.mCheckBox.on("selected", this.onClickCategoryHandler, this);
+    this.mCheckBox.appendItemAll(items);
     this.mCategorieContainer.add(items);
-    checkbox.selectIndex(0);
-    // this.onSelectedCategory(subcategorys[0].key);
+    this.mCheckBox.selectIndex(0);
   }
 
   addListen() {
@@ -192,14 +189,14 @@ export class MineCarPanel extends BasePanel {
     this.mDiscardBtn.changeState(DiscardEnum.Discard);
 
     this.mCategorieContainer = this.scene.make.container(undefined, false);
-    const categoriesBg = this.scene.make.image({
+    this.categoriesBg = this.scene.make.image({
       key: this.key,
       frame: "nav_bg.png"
     }).setScale(zoom);
-    categoriesBg.y = -111 * this.dpr * zoom + categoriesBg.height * zoom / 2;
-    this.mCategorieContainer.setSize(categoriesBg.displayWidth, categoriesBg.displayHeight);
+    this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
+    this.mCategorieContainer.setSize(this.categoriesBg.displayWidth, this.categoriesBg.displayHeight);
     // this.mCategorieContainer.x = -categoriesBg.width / 2;
-    this.mCategorieContainer.y = categoriesBg.y;
+    this.mCategorieContainer.y = this.categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
@@ -236,9 +233,9 @@ export class MineCarPanel extends BasePanel {
       this.onSelectItemHandler(cell);
       // }
     });
-
+    this.mCheckBox = new CheckboxGroup();
     this.add(this.mPanel);
-    this.mPanel.add([this.mMask, bg, carIcon, this.mCloseBtn, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
+    this.mPanel.add([this.mMask, bg, carIcon, this.mCloseBtn, this.mCounter, this.categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
   }
@@ -500,7 +497,7 @@ class DiscardButton extends Button {
       return;
     }
     this.mState = val;
-    switch(val) {
+    switch (val) {
       case DiscardEnum.Cancel:
         this.setText("取消");
         this.setFrame("gray_btn.png");

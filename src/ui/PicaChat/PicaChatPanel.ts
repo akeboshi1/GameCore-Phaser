@@ -25,6 +25,7 @@ export class PicaChatPanel extends BasePanel {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
+        this.disInteractive();
     }
 
     resize(w: number, h: number) {
@@ -32,20 +33,20 @@ export class PicaChatPanel extends BasePanel {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         const frame = this.scene.textures.getFrame(this.key, "title_bg.png");
-        const scaleRatio = (width / frame.width) * zoom;
+        const scaleRatio = width / frame.width;
         this.mTitleBg.scaleX = scaleRatio;
         this.mTitleBg.x = width / 2 / zoom;
 
-        this.y = height - this.height * this.scale;
+        this.y = height - this.height * zoom;
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
-        this.mBackground.fillRect(0, 0, w, h);
- // this.mBackground.setInteractive();
+        this.mBackground.fillRect(0, 0, width, height);
+        // this.mBackground.setInteractive();
 
-        this.mNavigateBtn.x = width - this.mNavigateBtn.width / 2 - 5 * this.dpr * zoom;
+        this.mNavigateBtn.x = width - this.mNavigateBtn.width - 2 * this.dpr * zoom;
         this.mNavigateBtn.y = h - this.mNavigateBtn.height / 2 - 5 * this.dpr * zoom;
 
-        this.mScrollBtn.x = width - this.mScrollBtn.displayWidth / 2 - 2 * this.dpr * zoom;
+        this.mScrollBtn.x = width - this.mScrollBtn.width - 2 * this.dpr * zoom;
 
         this.mTextArea.childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
         this.mTextArea.layout();
@@ -76,8 +77,8 @@ export class PicaChatPanel extends BasePanel {
         this.mNavigateBtn.setInteractive();
         this.mTextArea.childrenMap.child.setInteractive();
 
-        this.scene.input.setDraggable(this.mScrollBtn, true);
         this.mScrollBtn.on("drag", this.onDragHandler, this);
+        this.scene.input.setDraggable(this.mScrollBtn, true);
         this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
     }
@@ -121,8 +122,7 @@ export class PicaChatPanel extends BasePanel {
                 },
                 false
             )
-            .setScale(zoom)
-            .setInteractive();
+            .setScale(zoom);
 
         this.mTitleBg = this.scene.make.image(
             {
@@ -143,8 +143,7 @@ export class PicaChatPanel extends BasePanel {
                 },
                 false
             )
-            .setScale(zoom)
-            .setInteractive();
+            .setScale(zoom);
 
         this.mHornBtn = this.scene.make
             .image(
@@ -155,8 +154,7 @@ export class PicaChatPanel extends BasePanel {
                 },
                 false
             )
-            .setScale(zoom)
-            .setInteractive();
+            .setScale(zoom);
 
         this.mEmojiBtn = this.scene.make
             .image(
@@ -167,8 +165,7 @@ export class PicaChatPanel extends BasePanel {
                 },
                 false
             )
-            .setScale(zoom)
-            .setInteractive();
+            .setScale(zoom);
         this.mChatBtn.y = -this.mChatBtn.height / 2 + this.mTitleBg.height;
         this.mHornBtn.y = -this.mHornBtn.height / 2 + this.mTitleBg.height;
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
@@ -210,8 +207,7 @@ export class PicaChatPanel extends BasePanel {
             },
             false
         )
-            .setScale(zoom)
-            .setInteractive();
+            .setScale(zoom);
 
         this.mTileContainer.add([
             this.mTitleBg,
