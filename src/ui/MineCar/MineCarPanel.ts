@@ -5,10 +5,9 @@ import { DynamicImage } from "../components/dynamic.image";
 import { BasePanel } from "../components/BasePanel";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { Button } from "../components/button";
-import { Logger } from "../../utils/log";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
-import { Url, ResUtils } from "../../utils/resUtil";
+import { Url } from "../../utils/resUtil";
 
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
@@ -21,13 +20,13 @@ export class MineCarPanel extends BasePanel {
   private mCategorieContainer: Phaser.GameObjects.Container;
   private mTips: Tips;
   private mDiscardBtn: DiscardButton;
-  private mDiscardMode: boolean = false;
   private mAllItem: IPackageItem[];
   private mFilterItem: IPackageItem[];
   private mLimit: number;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
+    this.disInteractive();
   }
 
   resize(width: number, height: number) {
@@ -120,6 +119,12 @@ export class MineCarPanel extends BasePanel {
     if (this.mPropGrid) {
       this.mPropGrid.destroy();
     }
+    if (this.mPanel) {
+      this.mPanel.removeAll(true);
+    }
+    if (this.mCategorieContainer) {
+      this.mCategorieContainer.removeAll(true);
+    }
     super.destroy();
   }
 
@@ -139,13 +144,22 @@ export class MineCarPanel extends BasePanel {
     }).setScale(zoom);
     this.mPanel.setSize(bg.displayWidth, bg.displayHeight);
 
+    const carIcon = this.scene.make.image({
+      key: this.key,
+      frame: "car_icon.png"
+    }, false).setScale(zoom);
+    carIcon.x = -(bg.width - carIcon.width) * zoom / 2 + 28 * this.dpr * zoom;
+    carIcon.y = -(bg.height - carIcon.height / 2) * zoom / 2 + 10 * this.dpr * zoom;
+
     this.mCloseBtn = this.scene.make.image({
-      x: 110 * this.dpr * zoom,
-      y: -125 * this.dpr * zoom,
+      // x: 110 * this.dpr * zoom,
+      // y: -125 * this.dpr * zoom,
       key: this.key,
       frame: "close_btn.png"
     }, false).setScale(zoom);
     this.mCloseBtn.setInteractive();
+    this.mCloseBtn.x = bg.width * zoom / 2;
+    this.mCloseBtn.y = -(bg.height - this.mCloseBtn.height) * zoom / 2 + 10 * this.dpr * zoom;
 
     this.mCounter = this.scene.make.text({
       x: -86 * this.dpr * zoom,
@@ -154,24 +168,28 @@ export class MineCarPanel extends BasePanel {
       style: {
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFFFF",
-        fontSize: 14 * this.dpr
+        fontSize: 10 * this.dpr * zoom
       }
-    }, false).setScale(zoom);
+    }, false);
+    this.mCounter.x = -bg.width / 2 + 17 * this.dpr * zoom;
+    this.mCounter.y = bg.height / 2 - 18 * this.dpr * zoom;
+    this.mCounter.setFontStyle("bold");
 
     this.mTips = new Tips(this.scene, this.key, this.dpr, zoom);
     this.mTips.scale = zoom;
     this.mTips.x = 40 * this.dpr * zoom;// - this.mTips.width / 2;
-    this.mTips.y = -130 * this.dpr * zoom - this.mTips.height / 2;
+    this.mTips.y = -(bg.height + this.mTips.height) * zoom / 2 + 15 * this.dpr * zoom;
 
     this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
-    this.mDiscardBtn.x = (bg.width - this.mDiscardBtn.width) / 2,
-    this.mDiscardBtn.y = (bg.height - this.mDiscardBtn.height) / 2,
+    this.mDiscardBtn.setScale(zoom);
+    this.mDiscardBtn.x = (bg.width - this.mDiscardBtn.width) * zoom / 2 - 17 * this.dpr * zoom,
+    this.mDiscardBtn.y = (bg.height - this.mDiscardBtn.height) * zoom / 2 - 10 * this.dpr * zoom,
     this.mDiscardBtn.setTextStyle({
       color: "##996600",
       fontFamily: Font.DEFULT_FONT,
       fontSize: 10 * this.dpr * zoom
     });
-    this.mDiscardBtn.switchState(DiscardEnum.Discard);
+    this.mDiscardBtn.changeState(DiscardEnum.Discard);
 
     this.mCategorieContainer = this.scene.make.container(undefined, false);
     const categoriesBg = this.scene.make.image({
@@ -188,11 +206,11 @@ export class MineCarPanel extends BasePanel {
     const capW = propFrame.width * zoom + 3 * this.dpr;
     const capH = propFrame.height * zoom + 3 * this.dpr;
     const w = this.scene.cameras.main.width;
-    const gridW = 190 * this.dpr * zoom;
+    const gridW = 224 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
       table: {
         width: gridW,
-        height: 190 * this.dpr * zoom,
+        height: 268 * this.dpr * zoom,
         columns: 5,
         cellWidth: capW,
         cellHeight: capH,
@@ -220,7 +238,7 @@ export class MineCarPanel extends BasePanel {
     });
 
     this.add(this.mPanel);
-    this.mPanel.add([this.mMask, bg, this.mCloseBtn, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
+    this.mPanel.add([this.mMask, bg, carIcon, this.mCloseBtn, this.mCounter, categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
   }
@@ -228,26 +246,15 @@ export class MineCarPanel extends BasePanel {
   private refreshData() {
     const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.data;
     const mineItem = minePackage.items || [];
-    const limit = minePackage.limit || 0;
     this.mLimit = minePackage.limit || 0;
-    const items = [];
-    // let pkgItem: op_client.ICountablePackageItem = null;
-    const locked = false;
     this.mAllItem = [];
     for (const item of mineItem) {
       this.mAllItem.push({ item });
     }
-    // for (let i = 0; i < limit; i++) {
-    //   if (mineItem.length > i) {
-    //     pkgItem = mineItem[i];
-    //   } else {
-    //     pkgItem = null;
-    //   }
-    //   items[i] = { item: pkgItem, locked };
-    // }
-    this.mCounter.setText(`${mineItem.length}/${limit}`);
+
+    this.mDiscardBtn.changeState(DiscardEnum.Discard);
+    this.mCounter.setText(`${mineItem.length}/${this.mLimit}`);
     this.setCategories(minePackage.categories);
-    // this.mPropGrid.setItems(items);
   }
 
   private onCloseHandler() {
@@ -272,12 +279,8 @@ export class MineCarPanel extends BasePanel {
     this.mPropGrid.setItems(this.mFilterItem);
   }
 
-  private fillCell() {
-
-  }
-
   private onSelectItemHandler(packageItem: PackageItem) {
-    if (this.mDiscardMode) {
+    if (this.mDiscardBtn && this.mDiscardBtn.buttonState !== DiscardEnum.Discard) {
       packageItem.switchSelect();
       this.checkMode();
       return;
@@ -305,11 +308,11 @@ export class MineCarPanel extends BasePanel {
     }
     for (const item of this.mAllItem) {
       if (item.selected) {
-        this.mDiscardBtn.switchState(DiscardEnum.Sutmit);
+        this.mDiscardBtn.changeState(DiscardEnum.Sutmit);
         return;
       }
     }
-    this.mDiscardBtn.switchState(DiscardEnum.Cancel);
+    this.mDiscardBtn.changeState(DiscardEnum.Cancel);
   }
 
   private onDiscardSelectedItem() {
@@ -327,18 +330,16 @@ export class MineCarPanel extends BasePanel {
   }
 
   private enterDiscardMode() {
-    // TODO
     const state = this.mDiscardBtn.buttonState;
     if (state === DiscardEnum.Discard) {
-      this.mDiscardMode = true;
-      this.mDiscardBtn.switchState(DiscardEnum.Cancel);
-    } else if (state === DiscardEnum.Sutmit) {
-      this.mDiscardMode = false;
-      this.onDiscardSelectedItem();
-      this.mDiscardBtn.switchState(DiscardEnum.Discard);
+      this.mDiscardBtn.changeState(DiscardEnum.Cancel);
+      this.mFilterItem.map((item) => item.selectVisible = true);
+      this.mPropGrid.setItems(this.mFilterItem);
     } else {
-      this.mDiscardMode = false;
-      this.mDiscardBtn.switchState(DiscardEnum.Discard);
+      if (state === DiscardEnum.Sutmit) {
+        this.onDiscardSelectedItem();
+      }
+      this.mDiscardBtn.changeState(DiscardEnum.Discard);
     }
   }
 }
@@ -367,14 +368,15 @@ class PackageItem extends Phaser.GameObjects.Container {
       y: border.displayHeight - 1 * dpr,
       style: {
         fontFamily: Font.DEFULT_FONT,
-        fontSize: 11 * dpr * zoom,
-        color: "#6666cc"
+        fontSize: 8 * dpr * zoom,
+        color: "#566DDB"
       }
     }).setOrigin(1);
+    this.mCounter.setFontStyle("bold");
 
     this.mSelectedIcon = this.scene.make.image({
       key,
-      frame: "selected_icon.png"
+      frame: "icon_normal.png"
     }, false);
     this.mSelectedIcon.x = border.width - 3 * dpr - this.mSelectedIcon.width / 2;
     this.mSelectedIcon.y = 3 * dpr + this.mSelectedIcon.height / 2;
@@ -395,6 +397,11 @@ class PackageItem extends Phaser.GameObjects.Container {
         this.mCounter.setText(packageItem.count.toString());
         this.add(this.mCounter);
       }
+      if (this.mItem.selectVisible) {
+        this.add(this.mSelectedIcon);
+      } else {
+        this.remove(this.mSelectedIcon);
+      }
     }
   }
 
@@ -404,9 +411,9 @@ class PackageItem extends Phaser.GameObjects.Container {
     }
     this.mItem.selected = !this.mItem.selected;
     if (this.mItem.selected) {
-      this.add(this.mSelectedIcon);
+      this.mSelectedIcon.setFrame("icon_selected.png");
     } else {
-      this.remove(this.mSelectedIcon);
+      this.mSelectedIcon.setFrame("icon_normal.png");
     }
   }
 
@@ -425,7 +432,7 @@ class PackageItem extends Phaser.GameObjects.Container {
 interface IPackageItem {
   item: op_client.ICountablePackageItem;
   selected?: boolean;
-  locked?: boolean;
+  selectVisible?: boolean;
 }
 
 class Tips extends Phaser.GameObjects.Container {
@@ -461,9 +468,12 @@ class Tips extends Phaser.GameObjects.Container {
   }
 
   setItem(item: op_client.ICountablePackageItem) {
+    if (!item) {
+      return;
+    }
     const tmpY = this.y;
     const tmpAlpha = this.alpha;
-    this.y = tmpY + 100 * this.mDpr;
+    this.y = tmpY + 50 * this.mDpr;
     this.alpha = 0;
     this.scene.tweens.add({
       targets: this,
@@ -471,7 +481,8 @@ class Tips extends Phaser.GameObjects.Container {
         alpha: tmpAlpha,
         y: tmpY
       },
-      duration: 100
+      duration: 200,
+      ease: Phaser.Math.Easing.Elastic.Out
     });
     this.mName.setText(item.shortName || item.name);
     this.mDes.setText(item.des);
@@ -484,7 +495,7 @@ class DiscardButton extends Button {
     super(scene, key, frame, downFrame, text);
   }
 
-  switchState(val: DiscardEnum) {
+  changeState(val: DiscardEnum) {
     if (this.mState === val) {
       return;
     }
