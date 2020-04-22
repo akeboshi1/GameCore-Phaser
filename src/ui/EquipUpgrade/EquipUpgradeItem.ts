@@ -124,7 +124,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             x: 0,
             y: 0,
             scrollMode: 1,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 260 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,

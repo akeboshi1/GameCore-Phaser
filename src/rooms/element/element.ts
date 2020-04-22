@@ -155,7 +155,7 @@ export class Element extends BlockObject implements IElement {
     protected mShopEntity: ShopEntity;
     //  protected concomitants: Element[];
     protected mAi: AI;
-
+    protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -280,16 +280,31 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.arrivalTime = movePath.timestemp;
+        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
         const paths = [];
+        let angle = null;
         let point = null;
-        const now = this.mElementManager.roomService.now();
+        let now = this.mElementManager.roomService.now();
+        let duration = 0;
+        let index = 0;
         for (const path of movePath.path) {
             point = path.point3f;
+            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+            }
+            now += duration;
+            duration = path.timestemp - now;
             paths.push({
                 x: point.x,
                 y: point.y,
-                duration: path.timestemp - now
+                duration,
+                onStartParams: angle,
+                onStart: (tween, target, params) => {
+                    this.onCheckDirection(params);
+                }
             });
+            lastPos = new Pos(point.x, point.y);
+            index++;
         }
         this.mMoveData.posPath = paths;
         this._doMove();
@@ -619,6 +634,32 @@ export class Element extends BlockObject implements IElement {
                 this.roomService.updateBlockObject(this);
                 // this.roomService.addBlockObject()
             }
+        }
+    }
+
+    protected get offsetY(): number {
+        if (this.mOffsetY === undefined) {
+            if (!this.mElementManager || !this.mElementManager.roomService || !this.mElementManager.roomService.roomSize) {
+                return 0;
+            }
+            // this.mOffsetY = 0;
+            this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
+        }
+        return this.mOffsetY;
+    }
+
+    protected onCheckDirection(params: any) {
+        if (typeof params !== "number") {
+            return;
+        }
+        if (params > 90) {
+            this.setDirection(3);
+        } else if (params >= 0) {
+            this.setDirection(5);
+        } else if (params >= -90) {
+            this.setDirection(7);
+        } else {
+            this.setDirection(1);
         }
     }
 }

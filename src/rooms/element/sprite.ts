@@ -30,7 +30,6 @@ export interface ISprite {
     pos: Pos;
     bindID: number;
     sn: string;
-
     newID();
     setPosition(x: number, y: number);
     turn(): ISprite;
@@ -70,6 +69,8 @@ export class Sprite implements ISprite {
 
     protected _originCollisionPoint: Phaser.Geom.Point;
 
+    protected mAttrs: op_def.IStrPair[];
+
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         this.mID = obj.id;
         if (obj.point3f) {
@@ -79,14 +80,14 @@ export class Sprite implements ISprite {
         if (obj.avatar) {
             this.mAvatar = { id: obj.avatar.id };
             this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
-            const attrs = obj.attrs;
-            if (attrs && attrs.length > 0) {
-                for (const att of attrs) {
-                    if (att.key === "minecart") {
-                        this.mAvatar.stalkerId = att.value;
-                    }
-                }
-            }
+            this.mAttrs = obj.attrs;
+            // if (attrs && attrs.length > 0) {
+            //     for (const att of attrs) {
+            //         if (att.key === "minecart") {
+            //             this.mAvatar.stalkerId = att.value;
+            //         }
+            //     }
+            // }
             this.mDisplayInfo = new DragonbonesModel(this);
         }
         if (obj.display) {
@@ -132,7 +133,7 @@ export class Sprite implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel> this.displayInfo).toClient();
+            sprite.animations = (<FramesModel>this.displayInfo).toClient();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
@@ -316,6 +317,10 @@ export class Sprite implements ISprite {
 
     public get originWalkPoint(): Phaser.Geom.Point {
         return this._originWalkPoint;
+    }
+
+    public get attrs() {
+        return this.mAttrs;
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
