@@ -27,6 +27,8 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
 
     private curEquipItem: EquipItemCell;
     private zoom: number;
+    private cellWidth: number = 0;
+    private cellHeight: number = 0;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number, key: string, commonKey: string) {
         super(scene);
         this.dpr = dpr;
@@ -61,7 +63,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
         this.gridTable.x = posX;
         this.gridTable.y = posY;
-        this.mScrollContainer.setPosition(-posX + 10 * this.zoom * this.dpr, -posY);
+        this.mScrollContainer.setPosition(-posX + this.cellWidth, -posY);
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
@@ -118,8 +120,10 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.mScrollContainer = this.scene.make.container(undefined, false);
         this.mScrollContainer.setPosition(0, 0);
         const propFrame = this.scene.textures.getFrame(this.key, "equipbg");
-        const capW = (propFrame.width * this.zoom + 10 * this.dpr);
-        const capH = (propFrame.height * this.zoom + 30 * this.dpr);
+        const capW = (propFrame.width + 10 * this.dpr * this.zoom);
+        const capH = (propFrame.height + 30 * this.dpr * this.zoom);
+        this.cellWidth = capW;
+        this.cellHeight = capH;
         this.gridTable = new GridTable(this.scene, {
             x: 0,
             y: 0,
@@ -140,7 +144,9 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key, this.zoom);
                     this.mScrollContainer.add(cellContainer);
+                    cellContainer.setChildPosition();
                 }
+                cellContainer.setSize(capW, capH);
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item, index);
                 if (this.curEquipItem == null) {
@@ -248,9 +254,10 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         this.index = index;
         const url = Url.getOsdRes(data.display.texturePath);// "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
-            // this.equipIcon.setScale(22 * this.dpr / this.equipIcon.width);
-            // this.equipIcon.setDisplaySize(22 * this.dpr, 22 * this.dpr);
-            this.equipIcon.setPosition(15 * this.dpr, 0 * this.dpr);
+            // this.equipIcon.setDisplaySize(22 * this.dpr * this.zoom, 22 * this.dpr * this.zoom);
+            const x = - this.equipIcon.width * 0.5;
+            const y = 0 * this.dpr * this.zoom;
+            this.equipIcon.setPosition(x, y);
         });
         this.setEquiped(data.selected, data.owned);
         this.setSelect(this.isSelect);
@@ -264,6 +271,21 @@ class EquipItemCell extends Phaser.GameObjects.Container {
             else bgName = "equipbg1";
         }
         this.bg.setTexture(this.key, bgName);
+    }
+
+    public setChildPosition() {
+        const halfWidth = this.width * 0.5;
+        const halfHeight = this.height * 0.5;
+        let x = - this.bg.width * 0.5;
+        let y = -10 * this.dpr * this.zoom;
+        this.bg.setPosition(x, y);
+        x = - this.equipIcon.width * 0.5;
+        y = -10 * this.dpr * this.zoom;
+        this.equipIcon.setPosition(x, y);
+        x = - this.unlock.width * 0.5 + 30 * this.dpr * this.zoom;
+        y = -10 * this.dpr * this.zoom;
+        this.unlock.setPosition(x, y);
+
     }
 
     private setEquiped(isequiped: boolean, unlock: boolean) {
@@ -280,9 +302,9 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     }
 
     private create() {
-        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr, key: this.key, frame: "equipbg" }).setOrigin(0, 0).setScale(this.zoom);
-        this.equipIcon = new DynamicImage(this.scene, 15 * this.dpr, 0 * this.dpr).setOrigin(0, 0);
-        this.unlock = this.scene.make.image({ x: 30 * this.dpr, y: -10 * this.dpr, key: this.key, frame: "lock" }).setOrigin(0, 0);
+        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr * this.zoom, key: this.key, frame: "equipbg" }).setOrigin(0, 0).setScale(this.zoom);
+        this.equipIcon = new DynamicImage(this.scene, 15 * this.dpr * this.zoom, 0 * this.dpr * this.zoom).setOrigin(0, 0);
+        this.unlock = this.scene.make.image({ x: 30 * this.dpr * this.zoom, y: -10 * this.dpr * this.zoom, key: this.key, frame: "lock" }).setOrigin(0, 0);
         this.add([this.bg, this.equipIcon, this.unlock]);
     }
 }
