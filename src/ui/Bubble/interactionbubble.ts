@@ -72,6 +72,7 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
     }
     private removeDelay() {
         this.mRemoveDelay = setTimeout(() => {
+            if (this.handler) this.handler.runWith(this.content.id);
             this.hide();
         }, this.content.duration);
     }

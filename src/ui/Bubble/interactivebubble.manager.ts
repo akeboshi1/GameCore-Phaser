@@ -44,7 +44,7 @@ export class InteractiveBubbleManager extends PacketHandler {
         if (this.map) {
             for (const key in this.map) {
                 const bubble = this.map.get(Number(key));
-                bubble.destroy();
+                if (bubble) bubble.destroy();
             }
             this.map.clear();
         }
@@ -113,7 +113,11 @@ export class InteractiveBubbleManager extends PacketHandler {
         }
     }
 
-    private onInteractiveBubbleHandler(data: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
+    private onInteractiveBubbleHandler(data: any) {
+        if (typeof data === "number") {
+            this.clearInteractionBubble(data);
+            return;
+        }
         const connection = this.connection;
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE);
         const content: op_virtual_world.OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE = packet.content;
