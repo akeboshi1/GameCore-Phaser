@@ -1,5 +1,4 @@
 import { IGroup } from "./IGroup";
-import { Handler } from "../../Handler/Handler";
 import { HandlerDispatcher } from "../../Handler/HandlerDispatcher";
 import { GroupEventType, GroupType } from "./GroupManager";
 export class FollowGroup implements IGroup {

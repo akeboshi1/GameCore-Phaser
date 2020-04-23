@@ -57,7 +57,7 @@ export class MainUIScene extends BasicScene {
     this.timeOutCancelMap[id] = true;
   }
 
-  public update() {
+  public update(time: number, delta: number) {
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
     // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +
