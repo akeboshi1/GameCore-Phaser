@@ -13,8 +13,8 @@ import { EditorRoomService } from "../editor.room";
 export class EditorTerrainManager extends TerrainManager {
     protected taskQueue: Map<string, any> = new Map();
     private mEditorTerrains: Map<string, number> = new Map();
-    constructor(room: EditorRoomService, listener?: SpriteAddCompletedListener) {
-        super(room, listener);
+    constructor(protected mRoom: EditorRoomService, listener?: SpriteAddCompletedListener) {
+        super(mRoom, listener);
         if (this.connection) {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_SPRITES_WITH_LOCS, this.handleAddTerrains);
             this.addHandlerFun(
@@ -171,10 +171,10 @@ export class EditorTerrainManager extends TerrainManager {
                     y: loc.y,
                 });
                 this.mEditorTerrains.set(locId, loc.key);
-                (this.mRoom as EditorRoomService).spritePool.push("terrains", locId, sprite, this);
+                this.mRoom.displayObjectPool.push("terrains", locId, sprite, this);
             } else if (action === "DELETE") {
                 this.mEditorTerrains.delete(locId);
-                (this.mRoom as EditorRoomService).spritePool.remove("terrains", locId);
+                this.mRoom.displayObjectPool.remove("terrains", locId);
             } else if (action === "UPDATE") {
                 const palette = this.mRoom.world.elementStorage.getTerrainPalette(loc.key);
                 if (!palette) continue;
@@ -185,7 +185,7 @@ export class EditorTerrainManager extends TerrainManager {
                     y: loc.y,
                 });
                 this.mEditorTerrains.set(locId, loc.key);
-                (this.mRoom as EditorRoomService).spritePool.update("terrains", locId, sprite);
+                this.mRoom.displayObjectPool.update("terrains", locId, sprite);
             }
         }
     }

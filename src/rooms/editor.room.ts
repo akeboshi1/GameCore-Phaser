@@ -20,12 +20,12 @@ import { ElementDisplay } from "./display/element.display";
 import { DragonbonesDisplay } from "./display/dragonbones.display";
 import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
-import { SpritePool } from "./sprite.pool";
+import { DisplayObjectPool } from "./display-object.pool";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
     readonly miniSize: IPosition45Obj;
-    spritePool: SpritePool;
+    displayObjectPool: DisplayObjectPool;
 
     transformToMini45(p: Pos): Pos;
 
@@ -35,7 +35,7 @@ export interface EditorRoomService extends IRoomService {
 }
 
 export class EditorRoom extends Room implements EditorRoomService {
-    public spritePool: SpritePool;
+    public displayObjectPool: DisplayObjectPool;
     protected editorTerrainManager: EditorTerrainManager;
     protected editorElementManager: EditorElementManager;
     protected editorMossManager: EditorMossManager;
@@ -91,7 +91,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.editorElementManager = new EditorElementManager(this);
         this.editorMossManager = new EditorMossManager(this);
         this.mCameraService = new EditorCamerasManager(this);
-        this.spritePool = new SpritePool();
+        this.displayObjectPool = new DisplayObjectPool();
 
         this.mWorld.game.scene.start(EditScene.name, { room: this });
     }
@@ -135,8 +135,8 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (this.editorElementManager) {
             this.editorElementManager.destroy();
         }
-        if (this.spritePool) {
-            this.spritePool.destroy();
+        if (this.displayObjectPool) {
+            this.displayObjectPool.destroy();
         }
         super.destroy();
     }
@@ -217,7 +217,9 @@ export class EditorRoom extends Room implements EditorRoomService {
                         if (this.mSelectedElementEffect.sprite.isMoss) {
                             this.editorMossManager.updateMosses([this.mSelectedElementEffect]);
                         } else {
-                            this.syncSprite(this.mSelectedElementEffect.display);
+                            const sprite = (this.mSelectedElementEffect
+                                .display as ElementDisplay).element.model.toSprite();
+                            this.editorElementManager.updateElements([sprite]);
                         }
                     }
                     this.mSelectedElementEffect.selecting = false;
@@ -358,12 +360,18 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     private onFetchSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_FETCH_SPRITE = packet.content;
-        const ids = content.ids;
-        if (ids.length > 0) {
-            const ele = this.elementManager.get(ids[0]);
-            if (ele) {
-                this.selectedElement(ele.getDisplay());
-            }
+        const { ids, nodeType } = content;
+
+        const map = {
+            [op_def.NodeType.ElementNodeType]: "elements",
+            [op_def.NodeType.MossCollectionType]: "mosses",
+        };
+
+        for (const id of ids) {
+            const poolName = map[nodeType];
+            const pool = this.displayObjectPool.getPool(poolName);
+            const displayObj = pool.get(id.toString());
+            this.selectedElement(displayObj.getDisplay());
         }
     }
 
@@ -412,16 +420,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         }
         this.mSelectedElementEffect.setElement(<FramesDisplay>com);
         return com;
-    }
-
-    private syncSprite(object: ElementDisplay) {
-        if (!object) return;
-        const ele = object.element;
-        if (!ele || !ele.model) return;
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_SYNC_SPRITE);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_SYNC_SPRITE = pkt.content;
-        content.sprites = [ele.model.toSprite()];
-        this.connection.send(pkt);
     }
 
     private onKeyDownHandler(event) {

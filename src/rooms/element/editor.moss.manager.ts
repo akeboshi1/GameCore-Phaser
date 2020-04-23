@@ -121,35 +121,6 @@ export class EditorMossManager extends ElementManager {
         }
     }
 
-    // protected syncMosses(packet: PBpacket) {
-    //     const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_MOSSES = packet.content;
-    //     const locs = content.locs;
-
-    //     for (const loc of locs) {
-    //         const locId = this.genLocId(loc.x, loc.y);
-
-    //         this.taskQueue.set(locId, {
-    //             action: "UPDATE",
-    //             loc,
-    //         });
-    //     }
-    // }
-
-    protected trySync(sprite: op_client.ISprite) {
-        const element = this.mElements.get(sprite.id);
-        if (!element) {
-            Logger.getInstance().log("can't find element", sprite);
-            return;
-        }
-        const point = sprite.point3f;
-        if (point) {
-            element.setPosition(new Pos(point.x, point.y, point.z));
-        }
-        if (sprite.direction) {
-            element.setDirection(sprite.direction);
-        }
-    }
-
     private batchActionSprites() {
         if (!Array.from(this.taskQueue.keys()).length) {
             return;
@@ -170,10 +141,10 @@ export class EditorMossManager extends ElementManager {
                     isMoss: true,
                 });
                 this.editorMosses.set(loc.id, loc);
-                this.mRoom.spritePool.push("mosses", loc.id.toString(), sprite, this);
+                this.mRoom.displayObjectPool.push("mosses", loc.id.toString(), sprite, this);
             } else if (action === "DELETE") {
                 this.editorMosses.delete(loc.id);
-                this.mRoom.spritePool.remove("mosses", loc.id.toString());
+                this.mRoom.displayObjectPool.remove("mosses", loc.id.toString());
             } else if (action === "UPDATE") {
                 const moss = this.mRoom.world.elementStorage.getMossPalette(loc.key);
                 if (!moss) continue;
@@ -183,16 +154,8 @@ export class EditorMossManager extends ElementManager {
                     isMoss: true,
                 });
                 this.editorMosses.set(loc.id, loc);
-                this.mRoom.spritePool.update("mosses", loc.id.toString(), sprite);
+                this.mRoom.displayObjectPool.update("mosses", loc.id.toString(), sprite);
             }
         }
-    }
-
-    private genLocId(x: number, y: number) {
-        return `${x}_${y}`;
-    }
-
-    get roomService(): EditorRoomService {
-        return this.mRoom;
     }
 }

@@ -3,7 +3,7 @@ import { Element, InputEnable } from "./element/element";
 import { op_client } from "pixelpai_proto";
 import { ISprite } from "./element/sprite";
 
-export class SpritePool {
+export class DisplayObjectPool {
     private terrains = new Map();
     private mosses = new Map();
     private elements = new Map();
@@ -16,7 +16,11 @@ export class SpritePool {
 
     constructor() {}
 
-    push(poolName: string, locId: string, sprite: ISprite, manager: any) {
+    getPool(poolName: string) {
+        return this[poolName];
+    }
+
+    push(poolName: string, id: string, sprite: ISprite, manager: any) {
         const pool = this[poolName];
 
         const obj: Terrain | Element = new this.POOLOBJECTCONFIG[poolName](sprite, manager);
@@ -25,24 +29,24 @@ export class SpritePool {
         if (obj instanceof Element) {
             obj.setInputEnable(InputEnable.Enable);
         }
-        pool.set(locId, obj);
+        pool.set(id, obj);
     }
 
-    remove(poolName: string, locId: string) {
-        const obj = this[poolName].get(locId);
+    remove(poolName: string, id: string) {
+        const obj = this[poolName].get(id);
 
         if (obj) {
             obj.isUsed = false;
             obj.destroy();
         }
 
-        this[poolName].delete(locId);
+        this[poolName].delete(id);
     }
 
-    update(poolName: string, locId: string, newSprite: ISprite) {
+    update(poolName: string, id: string, newSprite: ISprite) {
         const pool = this[poolName];
 
-        const obj = pool.get(locId);
+        const obj = pool.get(id);
 
         if (obj) {
             obj.isUsed = true;
