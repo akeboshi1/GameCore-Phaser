@@ -34,7 +34,7 @@ export class MineCarPanel extends BasePanel {
   resize(width: number, height: number) {
     super.resize(width, height);
     this.x = width / 2;
-    this.y = height / 2;
+    this.y = 107 * this.dpr + this.mPanel.height / 2;
 
     this.mMask.clear();
     this.mMask.fillStyle(0x000000, 0.6);
@@ -42,10 +42,10 @@ export class MineCarPanel extends BasePanel {
     this.mMask.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mPropGrid.x = this.x;
-    this.mPropGrid.y = this.y + 16 * this.dpr * this.mWorld.uiScaleNew;
+    this.mPropGrid.y = this.y + 14 * this.dpr * this.mWorld.uiScaleNew;
     this.mPropGrid.layout();
     this.mPropContainer.x = -this.mPropGrid.x;
-    this.mPropContainer.y = -this.mPropGrid.y + 16 * this.dpr * this.mWorld.uiScaleNew;
+    this.mPropContainer.y = -this.mPropGrid.y + 14 * this.dpr * this.mWorld.uiScaleNew;
 
     this.setSize(width, height);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
@@ -193,15 +193,16 @@ export class MineCarPanel extends BasePanel {
       key: this.key,
       frame: "nav_bg.png"
     }).setScale(zoom);
-    this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
+    // this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
+    this.categoriesBg.y = -(bg.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr * zoom;
     this.mCategorieContainer.setSize(this.categoriesBg.displayWidth, this.categoriesBg.displayHeight);
     // this.mCategorieContainer.x = -categoriesBg.width / 2;
     this.mCategorieContainer.y = this.categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
-    const capW = propFrame.width * zoom + 3 * this.dpr;
-    const capH = propFrame.height * zoom + 3 * this.dpr;
+    const capW = propFrame.width * zoom + 4 * this.dpr;
+    const capH = propFrame.height * zoom + 4 * this.dpr;
     const w = this.scene.cameras.main.width;
     const gridW = 224 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
@@ -243,7 +244,7 @@ export class MineCarPanel extends BasePanel {
   private refreshData() {
     const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.data;
     const mineItem = minePackage.items || [];
-    this.mLimit = minePackage.limit || 0;
+    this.mLimit = 300 || 0;
     this.mAllItem = [];
     for (const item of mineItem) {
       this.mAllItem.push({ item });
@@ -259,8 +260,6 @@ export class MineCarPanel extends BasePanel {
   }
 
   private onSelectedCategory(category: string) {
-    // TODO 多语言未适配 全部可能是个其他语言
-    // this.mFilterItem = this.mAllItem.filter((item) => item.item.category === ca || ca === "全部");
     this.mFilterItem = [];
     let pkgItem = null;
     for (const item of this.mAllItem) {
