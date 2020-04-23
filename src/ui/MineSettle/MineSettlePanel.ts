@@ -24,8 +24,8 @@ export class MineSettlePanel extends BasePanel {
         this.mPropGrid.x = this.x;
         this.mPropGrid.y = this.y - 30 * this.dpr;
         this.mPropGrid.layout();
-        this.mPropContainer.x = -this.x + 8 * this.dpr;
-        this.mPropContainer.y = -this.y; // + 8 * this.dpr;
+        this.mPropContainer.x = - this.mPropGrid.x + 8 * this.dpr;
+        this.mPropContainer.y = -this.mPropGrid.y; // + 8 * this.dpr;
         this.setSize(width, height);
     }
 

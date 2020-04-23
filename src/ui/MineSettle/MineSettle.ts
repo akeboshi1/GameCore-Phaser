@@ -38,7 +38,6 @@ export class MineSettle extends PacketHandler {
     reqMineSettlePacket() {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MINING_MODE_STORAGE_REWARD);
         this.connection.send(packet);
-        Logger.getInstance().log("_OP_CLIENT_REQ_VIRTUAL_WORLD_MINING_MODE_STORAGE_REWARD", op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MINING_MODE_STORAGE_REWARD);
     }
 
     destroy() {
