@@ -285,7 +285,7 @@ export class FurniBagPanel extends BasePanel {
         // }
         return cellContainer;
       },
-    });
+    }).layout();
     this.mPropGrid.on("cell.1tap", (cell) => {
       const item = cell.getData("item");
       if (item) {
