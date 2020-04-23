@@ -144,26 +144,26 @@
 			"frame": {
 				"x": 1408,
 				"y": 1,
-				"w": 999,
-				"h": 121
+				"w": 960,
+				"h": 117
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 999,
-				"h": 121
+				"w": 960,
+				"h": 117
 			},
 			"sourceSize": {
-				"w": 999,
-				"h": 121
+				"w": 960,
+				"h": 117
 			}
 		},
 		"nav_btn_down.png": {
 			"frame": {
 				"x": 1408,
-				"y": 124,
+				"y": 120,
 				"w": 189,
 				"h": 107
 			},
@@ -183,7 +183,7 @@
 		"nav_btn_normal.png": {
 			"frame": {
 				"x": 1599,
-				"y": 124,
+				"y": 120,
 				"w": 189,
 				"h": 107
 			},
@@ -198,32 +198,12 @@
 			"sourceSize": {
 				"w": 189,
 				"h": 107
-			}
-		},
-		"selected_icon.png": {
-			"frame": {
-				"x": 1317,
-				"y": 1,
-				"w": 35,
-				"h": 35
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 35,
-				"h": 35
-			},
-			"sourceSize": {
-				"w": 35,
-				"h": 35
 			}
 		},
 		"tips_bg.png": {
 			"frame": {
 				"x": 1790,
-				"y": 124,
+				"y": 120,
 				"w": 592,
 				"h": 220
 			},
@@ -243,7 +223,7 @@
 		"yellow_btn.png": {
 			"frame": {
 				"x": 1202,
-				"y": 346,
+				"y": 342,
 				"w": 259,
 				"h": 106
 			},
@@ -267,7 +247,7 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 2408,
+			"w": 2383,
 			"h": 1574
 		},
 		"scale": "1"

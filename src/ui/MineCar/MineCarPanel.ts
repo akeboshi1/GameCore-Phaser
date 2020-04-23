@@ -34,7 +34,7 @@ export class MineCarPanel extends BasePanel {
   resize(width: number, height: number) {
     super.resize(width, height);
     this.x = width / 2;
-    this.y = height / 2;
+    this.y = 107 * this.dpr * this.mWorld.uiScaleNew + this.mPanel.height / 2;
 
     this.mMask.clear();
     this.mMask.fillStyle(0x000000, 0.6);
@@ -42,10 +42,10 @@ export class MineCarPanel extends BasePanel {
     this.mMask.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mPropGrid.x = this.x;
-    this.mPropGrid.y = this.y + 16 * this.dpr * this.mWorld.uiScaleNew;
+    this.mPropGrid.y = this.y + 14 * this.dpr * this.mWorld.uiScaleNew;
     this.mPropGrid.layout();
     this.mPropContainer.x = -this.mPropGrid.x;
-    this.mPropContainer.y = -this.mPropGrid.y + 16 * this.dpr * this.mWorld.uiScaleNew;
+    this.mPropContainer.y = -this.mPropGrid.y + 14 * this.dpr * this.mWorld.uiScaleNew;
 
     this.setSize(width, height);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
@@ -97,7 +97,7 @@ export class MineCarPanel extends BasePanel {
   }
 
   addListen() {
-    if (!this.mInitialized) return;
+    if (!this.mInitialized) return ;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mDiscardBtn.on("click", this.enterDiscardMode, this);
   }
@@ -159,17 +159,15 @@ export class MineCarPanel extends BasePanel {
     this.mCloseBtn.y = -(bg.height - this.mCloseBtn.height) * zoom / 2 + 10 * this.dpr * zoom;
 
     this.mCounter = this.scene.make.text({
-      x: -86 * this.dpr * zoom,
-      y: bg.displayHeight / 2 - 23 * this.dpr * zoom,
       text: "25/50",
       style: {
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFFFF",
-        fontSize: 10 * this.dpr * zoom
+        fontSize: 12 * this.dpr * zoom
       }
     }, false);
-    this.mCounter.x = -bg.width / 2 + 17 * this.dpr * zoom;
-    this.mCounter.y = bg.height / 2 - 18 * this.dpr * zoom;
+    this.mCounter.x = -bg.displayWidth / 2 + 17 * this.dpr * zoom;
+    this.mCounter.y = bg.displayHeight / 2 - 18 * this.dpr * zoom - this.mCounter.height;
     this.mCounter.setFontStyle("bold");
 
     this.mTips = new Tips(this.scene, this.key, this.dpr, zoom);
@@ -193,15 +191,16 @@ export class MineCarPanel extends BasePanel {
       key: this.key,
       frame: "nav_bg.png"
     }).setScale(zoom);
-    this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
+    // this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
+    this.categoriesBg.y = -(bg.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr * zoom;
     this.mCategorieContainer.setSize(this.categoriesBg.displayWidth, this.categoriesBg.displayHeight);
     // this.mCategorieContainer.x = -categoriesBg.width / 2;
     this.mCategorieContainer.y = this.categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
-    const capW = propFrame.width * zoom + 3 * this.dpr;
-    const capH = propFrame.height * zoom + 3 * this.dpr;
+    const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
+    const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     const w = this.scene.cameras.main.width;
     const gridW = 224 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
@@ -259,8 +258,6 @@ export class MineCarPanel extends BasePanel {
   }
 
   private onSelectedCategory(category: string) {
-    // TODO 多语言未适配 全部可能是个其他语言
-    // this.mFilterItem = this.mAllItem.filter((item) => item.item.category === ca || ca === "全部");
     this.mFilterItem = [];
     let pkgItem = null;
     for (const item of this.mAllItem) {

@@ -137,7 +137,7 @@ export class MarketPanel extends BasePanel {
     this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
     this.mSubCategorisScroll.layout();
 
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom; // + this.mPropGrid.height / 2;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom;
     this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
     group.on("selected", this.onSelectCategoryHandler, this);
@@ -323,6 +323,7 @@ export class MarketPanel extends BasePanel {
         return cellContainer;
       },
     });
+    this.mPropGrid.layout();
     this.mPropGrid.on("cell.1tap", (cell) => {
       const data = cell.getData("item");
       if (data) {
