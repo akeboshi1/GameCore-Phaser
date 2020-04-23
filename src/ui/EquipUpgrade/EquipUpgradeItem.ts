@@ -63,7 +63,8 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
         this.gridTable.x = posX;
         this.gridTable.y = posY;
-        this.mScrollContainer.setPosition(-posX + this.cellWidth, -posY);
+        this.gridTable.layout();
+        this.mScrollContainer.setPosition(-this.gridTable.x + 42 * this.dpr * this.zoom, -this.gridTable.y);
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
