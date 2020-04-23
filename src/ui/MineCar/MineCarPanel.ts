@@ -34,7 +34,7 @@ export class MineCarPanel extends BasePanel {
   resize(width: number, height: number) {
     super.resize(width, height);
     this.x = width / 2;
-    this.y = 107 * this.dpr + this.mPanel.height / 2;
+    this.y = 107 * this.dpr * this.mWorld.uiScaleNew + this.mPanel.height / 2;
 
     this.mMask.clear();
     this.mMask.fillStyle(0x000000, 0.6);
@@ -159,17 +159,15 @@ export class MineCarPanel extends BasePanel {
     this.mCloseBtn.y = -(bg.height - this.mCloseBtn.height) * zoom / 2 + 10 * this.dpr * zoom;
 
     this.mCounter = this.scene.make.text({
-      x: -86 * this.dpr * zoom,
-      y: bg.displayHeight / 2 - 23 * this.dpr * zoom,
       text: "25/50",
       style: {
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFFFF",
-        fontSize: 10 * this.dpr * zoom
+        fontSize: 12 * this.dpr * zoom
       }
     }, false);
-    this.mCounter.x = -bg.width / 2 + 17 * this.dpr * zoom;
-    this.mCounter.y = bg.height / 2 - 18 * this.dpr * zoom;
+    this.mCounter.x = -bg.displayWidth / 2 + 17 * this.dpr * zoom;
+    this.mCounter.y = bg.displayHeight / 2 - 18 * this.dpr * zoom - this.mCounter.height;
     this.mCounter.setFontStyle("bold");
 
     this.mTips = new Tips(this.scene, this.key, this.dpr, zoom);
@@ -201,8 +199,8 @@ export class MineCarPanel extends BasePanel {
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
-    const capW = propFrame.width * zoom + 4 * this.dpr;
-    const capH = propFrame.height * zoom + 4 * this.dpr;
+    const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
+    const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     const w = this.scene.cameras.main.width;
     const gridW = 224 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
@@ -244,7 +242,7 @@ export class MineCarPanel extends BasePanel {
   private refreshData() {
     const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.data;
     const mineItem = minePackage.items || [];
-    this.mLimit = 300 || 0;
+    this.mLimit = minePackage.limit || 0;
     this.mAllItem = [];
     for (const item of mineItem) {
       this.mAllItem.push({ item });
