@@ -8,6 +8,8 @@ import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
+import { AlertView } from "../components/alert.view";
+import { Logger } from "../../utils/log";
 
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
@@ -237,6 +239,14 @@ export class MineCarPanel extends BasePanel {
     this.mPanel.add([this.mMask, bg, carIcon, this.mCloseBtn, this.mCounter, this.categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+
+    const alert = new AlertView(this.scene, this.mWorld).show({
+      text: "是否要丢弃？",
+      title: "丢弃",
+      callback: () => {
+        Logger.getInstance().log("sadflsdfjlk");
+      }
+    });
   }
 
   private refreshData() {
@@ -362,7 +372,7 @@ class PackageItem extends Phaser.GameObjects.Container {
       y: border.displayHeight - 1 * dpr,
       style: {
         fontFamily: Font.DEFULT_FONT,
-        fontSize: 8 * dpr * zoom,
+        fontSize: 9 * dpr * zoom,
         color: "#566DDB"
       }
     }).setOrigin(1);
@@ -441,11 +451,11 @@ class Tips extends Phaser.GameObjects.Container {
       frame: "tips_bg.png"
     }, false);
     this.mName = this.scene.make.text({
-      x: -bg.width * zoom / 2 + 6 * dpr * zoom,
-      y: -bg.height * zoom / 2 + 6 * dpr * zoom,
+      x: -bg.width / 2 + 12 * dpr * zoom,
+      y: -bg.height / 2 + 5 * dpr * zoom,
       style: {
         fontFamily: Font.DEFULT_FONT,
-        fontSize: 14 * dpr,
+        fontSize: 10 * dpr * zoom,
         color: "#000000"
       }
     }, false);
@@ -453,7 +463,7 @@ class Tips extends Phaser.GameObjects.Container {
       x: this.mName.x,
       style: {
         fontFamily: Font.DEFULT_FONT,
-        fontSize: 14 * dpr,
+        fontSize: 10 * dpr * zoom,
         color: "#000000"
       }
     }, false).setOrigin(0, 1);

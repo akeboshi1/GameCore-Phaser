@@ -38,7 +38,6 @@ export enum AvatarSlotType {
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
-    Stalker = "stalker_$"
 }
 
 export enum AvatarPartType {
@@ -72,7 +71,6 @@ export enum AvatarPartType {
     WeapFarm = "weap_farm_#_$",
     ShldBarm = "shld_barm_#_$",
     WeapBarm = "weap_barm_#_$",
-    Stalker = "stalker_#_$",
 }
 
 /**
@@ -720,20 +718,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 part: AvatarPartType.WeapBarm,
                 dir: 1,
                 skin: avater.farmWeapId,
-            });
-        }
-        if (avater.stalkerId) {
-            this.replaceArr.push({
-                slot: AvatarSlotType.Stalker,
-                part: AvatarSlotType.Stalker,
-                dir: 3,
-                skin: avater.stalkerId
-            });
-            this.replaceArr.push({
-                slot: AvatarSlotType.Stalker,
-                part: AvatarSlotType.Stalker,
-                dir: 1,
-                skin: avater.stalkerId
             });
         }
     }
