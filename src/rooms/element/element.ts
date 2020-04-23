@@ -645,7 +645,7 @@ export class Element extends BlockObject implements IElement {
             // this.mOffsetY = 0;
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
-        return this.mOffsetY;
+        return 0; // this.mOffsetY;
     }
 
     protected onCheckDirection(params: any) {
