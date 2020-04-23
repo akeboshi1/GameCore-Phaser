@@ -40,13 +40,12 @@ export class PicaChatPanel extends BasePanel {
         this.y = height - this.height * zoom;
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
-        this.mBackground.fillRect(0, 0, width, height);
+        this.mBackground.fillRect(0, 0, width / zoom, height);
         // this.mBackground.setInteractive();
-
-        this.mNavigateBtn.x = width - this.mNavigateBtn.width - 2 * this.dpr * zoom;
+        this.mNavigateBtn.x = width / zoom - this.mNavigateBtn.width / 2 - 2 * this.dpr * zoom;
         this.mNavigateBtn.y = h - this.mNavigateBtn.height / 2 - 5 * this.dpr * zoom;
 
-        this.mScrollBtn.x = width - this.mScrollBtn.width - 2 * this.dpr * zoom;
+        this.mScrollBtn.x = width / zoom - this.mScrollBtn.width / 2 - 2 * this.dpr * zoom;
 
         this.mTextArea.childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
         this.mTextArea.layout();
@@ -171,7 +170,7 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
 
         this.mOutputText = new BBCodeText(this.mScene, 0, 0, "", {
-            fontSize: 14 * this.dpr * zoom + "px",
+            fontSize: 14 * this.dpr / zoom + "px",
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
             strokeThickness: 1 * this.dpr * zoom,

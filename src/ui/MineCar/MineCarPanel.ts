@@ -97,7 +97,7 @@ export class MineCarPanel extends BasePanel {
   }
 
   addListen() {
-    if (!this.mInitialized) return;
+    if (!this.mInitialized) return ;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mDiscardBtn.on("click", this.enterDiscardMode, this);
   }
