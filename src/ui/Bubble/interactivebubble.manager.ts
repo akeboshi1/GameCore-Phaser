@@ -1,5 +1,4 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Room } from "../../rooms/room";
 import { ConnectionService } from "../../net/connection.service";
 import { Logger } from "../../utils/log";
 import { op_client, op_virtual_world } from "pixelpai_proto";
@@ -12,18 +11,22 @@ import { Pos } from "../../utils/pos";
 import { PlayScene } from "../../scenes/play";
 import { Tool } from "../../utils/tool";
 import { Url } from "../../utils/resUtil";
+import { Room } from "../../rooms/room";
 
 export class InteractiveBubbleManager extends PacketHandler {
     private map = new Map<number, InteractionBubbleContainer>();
-    private mBubbleContainer: InteractionBubbleContainer;
+    private mBubble: InteractionBubbleContainer;
     private uilayer: ILayerManager;
     private scene: Phaser.Scene;
     private mworld: WorldService;
+    private mCurRoom: Room;
     constructor(layerMgr: ILayerManager, mworld: WorldService, scene: Phaser.Scene) {
         super();
         this.uilayer = layerMgr;
         this.mworld = mworld;
         this.scene = scene;
+        this.mCurRoom = this.mworld.roomManager.currentRoom;
+        this.mCurRoom.frameManager.add(this, this.update);
         this.connection.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, this.onInteractiveBubble);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORDL_REQ_CLIENT_REMOVE_INTERACTIVE_BUBBLE, this.onClearInteractiveBubble);
@@ -41,12 +44,13 @@ export class InteractiveBubbleManager extends PacketHandler {
         if (this.map) {
             for (const key in this.map) {
                 const bubble = this.map.get(Number(key));
-                bubble.destroy();
+                if (bubble) bubble.destroy();
             }
             this.map.clear();
         }
+        if (this.mCurRoom) this.mCurRoom.frameManager.remove(this, this.update);
         this.map = null;
-        this.mBubbleContainer = null;
+        this.mBubble = null;
         this.scene = null;
         this.uilayer = null;
         this.mworld = null;
@@ -54,9 +58,9 @@ export class InteractiveBubbleManager extends PacketHandler {
 
     private onInteractiveBubble(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE = packet.content;
-        const room = this.mworld.roomManager.currentRoom;
-        let element = room.elementManager.get(content.receiverId);
-        if (!element) element = room.playerManager.get(content.receiverId);
+        this.mCurRoom = this.mworld.roomManager.currentRoom;
+        let element = this.mCurRoom.elementManager.get(content.receiverId);
+        if (!element) element = this.mCurRoom.playerManager.get(content.receiverId);
         if (element) {
             this.showInteractionBubble(content, element);
         }
@@ -83,25 +87,37 @@ export class InteractiveBubbleManager extends PacketHandler {
         content.display.texturePath = Url.getUIRes(dpr, "bubble/bubblebg.png");// "resources/test/columns";
         content.display.dataPath = Url.getUIRes(dpr, "bubble/tipsicon.png");// "resources/test/columns";
         const key = content.id;
-        if (this.mBubbleContainer) this.mBubbleContainer.hide();
+        if (this.mBubble) this.mBubble.hide();
         if (this.map.has(key)) {
-            this.mBubbleContainer = this.map.get(key);
+            this.mBubble = this.map.get(key);
         } else {
-            this.mBubbleContainer = new InteractionBubbleContainer(this.scene, dpr);
-            this.map.set(key, this.mBubbleContainer);
+            this.mBubble = new InteractionBubbleContainer(this.scene, dpr);
+            this.map.set(key, this.mBubble);
         }
-        this.mBubbleContainer.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
-        const position = ele.getDisplay().getWorldTransformMatrix();
-        if (position) {
-            const uiRatio = 1;// this.mworld.uiRatio;
-            const playScene = this.mworld.game.scene.getScene(PlayScene.name);
-            const pos = Tool.getPosByScenes(playScene, new Pos(position.tx * uiRatio, (position.ty - 100) * uiRatio));
-            this.mBubbleContainer.setPosition(pos.x, pos.y); // position.tx * uiRatio, (position.ty - 100) * uiRatio);
-        }
-        this.uilayer.addToDialogLayer(this.mBubbleContainer);
+        this.mBubble.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
+        const playScene = this.mworld.game.scene.getScene(PlayScene.name);
+        this.updateBublePos(ele, playScene);
+        this.mBubble.setFollow(ele, playScene, (obj) => {
+            this.updateBublePos(ele, obj.scene);
+        });
+        this.mBubble.show = true;
+        this.uilayer.addToDialogLayer(this.mBubble.view);
     }
 
-    private onInteractiveBubbleHandler(data: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
+    private updateBublePos(gameObject: any, scene: Phaser.Scene) {
+        const uiRatio = 1; // this.mworld.uiRatio;
+        const position = gameObject.getDisplay().getWorldTransformMatrix();
+        if (position) {
+            const pos = Tool.getPosByScenes(scene, new Pos(position.tx * uiRatio, (position.ty - 100) * uiRatio));
+            this.mBubble.setPosition(pos.x, pos.y);
+        }
+    }
+
+    private onInteractiveBubbleHandler(data: any) {
+        if (typeof data === "number") {
+            this.clearInteractionBubble(data);
+            return;
+        }
         const connection = this.connection;
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE);
         const content: op_virtual_world.OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE = packet.content;
@@ -110,5 +126,12 @@ export class InteractiveBubbleManager extends PacketHandler {
         connection.send(packet);
         Logger.getInstance().log("*******************onInteractiveBubbleHandler");
         Logger.getInstance().log("click: ", content.id);
+    }
+
+    private update() {
+        if (!this.map) return;
+        this.map.forEach((bubble) => {
+            if (bubble && bubble.show) bubble.updatePos();
+        });
     }
 }

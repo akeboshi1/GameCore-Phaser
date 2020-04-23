@@ -1,14 +1,31 @@
 import { InteractionBubble } from "./interactionbubble";
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
-import { Logger } from "../../utils/log";
-export class InteractionBubbleContainer extends Phaser.GameObjects.Container {
+import { BaseUI } from "../../../lib/rexui/lib/ui/baseUI/BaseUI";
+export class InteractionBubbleContainer extends BaseUI {
     public id: number;
     private mBubble: InteractionBubble;
-    private dpr: number;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
-        this.dpr = dpr;
+    }
+
+    public set show(value: boolean) {
+        this.mShow = value;
+    }
+
+    public get show(): boolean {
+        return this.mShow;
+    }
+
+    public hide() {
+        this.mShow = false;
+        if (this.parentContainer) {
+            (this.parentContainer as Phaser.GameObjects.Container).remove(this.view);
+        }
+    }
+
+    public setFollow(gameObject: any, fromScene: Phaser.Scene, posFunc?: Function) {
+        super.setFollow(gameObject, fromScene, posFunc);
     }
 
     public setBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler) {
@@ -26,11 +43,6 @@ export class InteractionBubbleContainer extends Phaser.GameObjects.Container {
         return this.mBubble;
     }
 
-    public hide() {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
-    }
     public destroy() {
         this.hide();
         if (this.mBubble) this.mBubble.destroy();

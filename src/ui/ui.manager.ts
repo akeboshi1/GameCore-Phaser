@@ -32,10 +32,12 @@ import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 // export const enum UIType {
 //     NoneUIType,
-//     BaseUIType,
-//     NormalUIType,
-//     TipsUIType,
-//     MonopolyUIType, // 独占ui
+// Scene, // 场景内常驻ui
+// Normal, // 普通功能ui
+// Pop, // 弹出型ui
+// Tips, // tips型ui
+// Monopoly, // 独占型ui
+// Activity, // 热发布活动类型ui，便于单独刷新活动ui
 // }
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;
@@ -46,8 +48,10 @@ export class UiManager extends PacketHandler {
     private mNoneUIMap: Map<string, any> = new Map();
     private mSceneUIMap: Map<string, any> = new Map();
     private mNormalUIMap: Map<string, any> = new Map();
+    private mPopUIMap: Map<string, any> = new Map();
     private mTipUIMap: Map<string, any> = new Map();
     private mMonopolyUIMap: Map<string, any> = new Map();
+    private mActivityUIMap: Map<string, any> = new Map();
     private mCacheUI: Function;
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
@@ -66,10 +70,6 @@ export class UiManager extends PacketHandler {
 
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
-    }
-
-    public update() {
-
     }
 
     public getInputTextFactory(): InputTextFactory {
@@ -292,6 +292,12 @@ export class UiManager extends PacketHandler {
                 break;
             case UIType.Tips:
                 map = this.mTipUIMap;
+                break;
+            case UIType.Pop:
+                map = this.mPopUIMap;
+                break;
+            case UIType.Activity:
+                map = this.mActivityUIMap;
                 break;
         }
         map.set(medName, mediator);
