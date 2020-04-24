@@ -1,12 +1,12 @@
-import { Panel } from "../../components/panel";
+import { BasePanel } from "../../components/BasePanel";
 import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../utils/size";
 import { Url } from "../../../utils/resUtil";
 import { IconBtn, IBtnData } from "../icon.btn";
-import { DebugLoggerMediator } from "../../debuglog/debug.logger.mediator";
+import { DebugLoggerMediator } from "../../DebugLogger/DebugLoggerMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
 
-export class TopBtnGroup extends Panel {
+export class TopBtnGroup extends BasePanel {
     // private mWid: number = 0;
     private mBtnPad: number = 10;
     private mBtnX: number = 0;
@@ -23,10 +23,11 @@ export class TopBtnGroup extends Panel {
     private mOrientation: number = Phaser.Scale.Orientation.LANDSCAPE;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.disInteractive();
     }
 
     public show(param?: any) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         super.show(param);
     }
 
@@ -34,7 +35,7 @@ export class TopBtnGroup extends Panel {
         const size: Size = this.mWorld.getSize();
         this.x = size.width - 50 * this.mWorld.uiScale;
         this.y = this.height / 2 + 10 * this.mWorld.uiScale;
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
     }
 
     public destroy() {
@@ -67,11 +68,11 @@ export class TopBtnGroup extends Panel {
     }
 
     public tweenView(show: boolean) {
-        if (!this.mScene) return;
+        if (!this.scene) return;
         const baseY: number = this.height / 2 + 10 * this.mWorld.uiScale;
         const toY: number = show === true ? baseY : baseY - 50;
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Cubic.Out",
@@ -88,7 +89,7 @@ export class TopBtnGroup extends Panel {
             this.mAddBtnDataList.push(data);
             return;
         }
-        const btn: IconBtn = new IconBtn(this.mScene, this.mWorld, data);
+        const btn: IconBtn = new IconBtn(this.scene, this.mWorld, data);
         this.mBtnList.push(btn);
         this.btnRefreshPos();
     }
@@ -114,21 +115,21 @@ export class TopBtnGroup extends Panel {
     }
 
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
         this.mResKey = "baseView";
-        this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+        this.scene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
         super.preload();
     }
 
     protected init() {
         let hei: number = 0;
         let wid: number = 0;
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
         this.mBtnList = [];
         this.mBtnX = 0;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, {
+        this.mTurnBtn = new IconBtn(this.scene, this.mWorld, {
             key: UIMediatorType.Turn_Btn_Top, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
@@ -139,7 +140,7 @@ export class TopBtnGroup extends Panel {
         this.mBtnX += -this.mTurnBtn.width - this.mBtnPad;
         hei += this.mTurnBtn.height / 2 + 20;
         if (!this.mWorld.game.device.os.desktop) {
-            this.mReturnBtn = new IconBtn(this.mScene, this.mWorld, {
+            this.mReturnBtn = new IconBtn(this.scene, this.mWorld, {
                 key: UIMediatorType.App_Back, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
                 iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
             });
@@ -149,7 +150,7 @@ export class TopBtnGroup extends Panel {
             wid += this.mReturnBtn.width + this.mBtnPad;
             this.add(this.mReturnBtn);
             this.mBtnX += -this.mReturnBtn.width - this.mBtnPad;
-            this.mDebugBtn = new IconBtn(this.mScene, this.mWorld, {
+            this.mDebugBtn = new IconBtn(this.scene, this.mWorld, {
                 key: DebugLoggerMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_blue_normal.png", "btnGroup_blue_light.png", "btnGroup_blue_select.png"],
                 iconResKey: this.mResKey, iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
             });
@@ -164,7 +165,7 @@ export class TopBtnGroup extends Panel {
             this.mDebugBtn.setClick(() => {
                 let debugLogMed: DebugLoggerMediator = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
                 if (!debugLogMed) {
-                    this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mScene, this.mWorld));
+                    this.mWorld.uiManager.setMediator(DebugLoggerMediator.NAME, new DebugLoggerMediator(this.mWorld.uiManager.getUILayerManager(), this.scene, this.mWorld));
                     debugLogMed = this.mWorld.uiManager.getMediator(DebugLoggerMediator.NAME) as DebugLoggerMediator;
                 }
                 if (debugLogMed.isShow()) {
@@ -208,7 +209,7 @@ export class TopBtnGroup extends Panel {
             const toX: number = this.mExpandBoo ? btn.getPos().x : this.mTurnBtn.width >> 1;
             const toAlpha: number = this.mExpandBoo ? 1 : 0;
             const easeType: string = this.mExpandBoo ? "Sine.easeIn" : "Sine.easeOut";
-            this.mScene.tweens.add({
+            this.scene.tweens.add({
                 targets: btn,
                 duration: 300,
                 ease: easeType,

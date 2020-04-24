@@ -1,15 +1,17 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { FriendPanel } from "./friend.panel";
-import { UIType } from "../ui.manager";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class FriendMediator extends BaseMediator {
     public static NAME: string = "FriendMediator";
     private mScene: Phaser.Scene;
+    private world: WorldService;
     constructor(scene: Phaser.Scene, world: WorldService) {
-        super(world);
-        this.mUIType = UIType.NormalUIType;
+        super();
+        this.mUIType = UIType.Normal;
         this.mScene = scene;
+        this.world = world;
     }
 
     public isShow(): boolean {
@@ -22,7 +24,7 @@ export class FriendMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView) return this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView) return this.mView.resize();
     }
 
     public show(param?: any) {
@@ -36,7 +38,7 @@ export class FriendMediator extends BaseMediator {
     }
 
     public hide() {
-        this.isShowing = false;
+        this.mShow = false;
         if (this.mView) this.mView = null;
     }
 

@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
@@ -11,7 +11,7 @@ import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 
-export class MarketPanel extends Panel {
+export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
@@ -33,10 +33,23 @@ export class MarketPanel extends Panel {
   private mPropGrid: GridTable;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.setTween(false);
     this.mSubTabs = [];
     this.mTabs = [];
     this.scale = 1;
+  }
+
+  public addListen() {
+    if (!this.mInitialized) return;
+    this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
+    this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+  }
+
+  public removeListen() {
+    if (!this.mInitialized) return;
+    this.mSelectItem.off("buyItem", this.onBuyItemHandler, this);
+    this.mSelectItem.off("popItemCard", this.onPopItemCardHandler, this);
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
   public resize(w: number, h: number) {
@@ -124,7 +137,7 @@ export class MarketPanel extends Panel {
     this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
     this.mSubCategorisScroll.layout();
 
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom; // + this.mPropGrid.height / 2;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom;
     this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
     group.on("selected", this.onSelectCategoryHandler, this);
@@ -253,11 +266,11 @@ export class MarketPanel extends Panel {
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
-        const  scene = cell.scene,
-              width = cell.width,
-              height = cell.height,
-              item = cell.item,
-              index = cell.index;
+        const scene = cell.scene,
+          width = cell.width,
+          height = cell.height,
+          item = cell.item,
+          index = cell.index;
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -296,8 +309,8 @@ export class MarketPanel extends Panel {
       scrollMode: 1,
       clamplChildOY: true,
       createCellContainerCallback: (cell, cellContainer) => {
-        const  scene = cell.scene,
-              item = cell.item;
+        const scene = cell.scene,
+          item = cell.item;
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
           // cellContainer.width = capW;
@@ -310,6 +323,7 @@ export class MarketPanel extends Panel {
         return cellContainer;
       },
     });
+    this.mPropGrid.layout();
     this.mPropGrid.on("cell.1tap", (cell) => {
       const data = cell.getData("item");
       if (data) {
@@ -321,12 +335,6 @@ export class MarketPanel extends Panel {
     this.resize(0, 0);
 
     this.emit("getCategories");
-    this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
-    this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    // 多层容器嵌套必须把input的点击区域移到中间去，否则点击pointer会有坐标问题
-    // this.input.hitArea.x += this.width / 2;
-    // this.input.hitArea.y += this.height / 2;
   }
 
   protected setSelect() {

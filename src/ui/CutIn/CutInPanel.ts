@@ -1,10 +1,10 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
 
-export class CutInPanel extends Panel {
+export class CutInPanel extends BasePanel {
   private readonly key = "cut_in";
   private mName: Phaser.GameObjects.Text;
   constructor(scene: Phaser.Scene, world: WorldService) {
@@ -12,19 +12,25 @@ export class CutInPanel extends Panel {
   }
 
   show(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[]) {
-    this.mData = param;
+    this.data = param;
     if (!this.mInitialized) {
-        this.preload();
-        return;
+      this.preload();
+      return;
     }
-    if (param.length < 1) return;
-    const text = param[0].text;
-    if (this.mName) {
-      this.mName.setText(text[0].text);
+    // if (!param || param.length < 1) return;
+    if (param && param.length > 0) {
+      const text = param[0].text;
+      if (this.mName) {
+        this.mName.setText(text[0].text);
+      }
+    } else {
+      if (this.mName) {
+        this.mName.setText("???");
+      }
     }
     const width = this.scene.cameras.main.width;
     this.x = width + this.width / 2;
-    this.alpha = 0;
+    // this.view.alpha = 0;
     const _x = this.scene.cameras.main.width / 2;
     this.scene.tweens.timeline({
       targets: this,
@@ -33,7 +39,7 @@ export class CutInPanel extends Panel {
         x: _x,
         alpha: 1,
         ease: "Sine.easeInOut"
-      },{
+      }, {
         delay: 2000,
         y: this.y - 10 * this.dpr,
         alpha: 0
@@ -71,8 +77,8 @@ export class CutInPanel extends Panel {
     this.mName.setStroke("#000000", 1 * this.dpr);
     this.add([background, this.mName]);
     super.init();
-
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+    this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
   }
 
 }

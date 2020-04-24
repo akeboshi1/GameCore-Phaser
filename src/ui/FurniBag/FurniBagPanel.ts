@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
@@ -9,12 +9,10 @@ import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
-import { Logger } from "../../utils/log";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
-import { Size } from "../../utils/size";
 
-export class FurniBagPanel extends Panel {
+export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
   private seachKey: string = "key.seach";
   private mTiltle: Phaser.GameObjects.Text;
@@ -29,7 +27,6 @@ export class FurniBagPanel extends Panel {
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
   private mSelectedFurni: op_client.ICountablePackageItem;
-  // private mCategoryScroll: GridTable;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: op_def.IStrMap;
   private mPropGrid: GridTable;
@@ -42,7 +39,6 @@ export class FurniBagPanel extends Panel {
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
-    this.setTween(false);
     this.scale = 1;
   }
 
@@ -58,7 +54,6 @@ export class FurniBagPanel extends Panel {
     this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
-    // this.mCategoriesBar.y = this.mShelfContainer.y;
 
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
@@ -103,45 +98,9 @@ export class FurniBagPanel extends Panel {
       items[i] = item;
     }
     if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
-    // this.mCategoryScroll.setInteractiveObject(items);
-    // this.mCategoryScroll = new GridTable(this.scene, {
-    //   x: this.width / 2,
-    //   y: this.mShelfContainer.y + (41 * this.dpr * zoom + capH) / 2,
-    //   // y: 0,
-    //   table: {
-    //     width: this.width - 18 * this.dpr * zoom,
-    //     height: capH,
-    //     cellWidth: capW,
-    //     cellHeight: capH,
-    //     reuseCellContainer: true
-    //   },
-    //   scrollMode: 1,
-    //   createCellContainerCallback: (cell, cellContainer) => {
-    //     const  scene = cell.scene,
-    //           item = cell.item;
-    //     if (cellContainer === null) {
-    //       cellContainer = new TextButton(scene, this.dpr, zoom);
-    //       this.mCategeoriesContainer.add(cellContainer);
-    //     }
-    //     cellContainer.setText(item.value);
-    //     cellContainer.setSize(capW, capH);
-    //     cellContainer.setData({ item });
-    //     if (!this.mPreCategoryBtn && item.key !== this.seachKey) {
-    //       this.onSelectSubCategoryHandler(cellContainer);
-    //     }
-    //     return cellContainer;
-    //   },
-    //   items: subcategorys
-    // })
-    // .layout();
-    // this.mCategoryScroll.on("cell.1tap", (cell, index) => {
-    //   this.onSelectSubCategoryHandler(cell);
-    // });
-
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
     this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
     this.mPropGrid.layout();
-    // this.add(this.mCategoryScroll.childrenMap.child);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
@@ -167,6 +126,20 @@ export class FurniBagPanel extends Panel {
     } else {
       // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
     }
+  }
+
+  public addListen() {
+    if (!this.mInitialized) return;
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mSeachInput.on("seach", this.onSeachHandler, this);
+    this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
+  }
+
+  public removeListen() {
+    if (!this.mInitialized) return;
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mSeachInput.off("seach", this.onSeachHandler, this);
+    this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
   }
 
   destroy() {
@@ -312,7 +285,7 @@ export class FurniBagPanel extends Panel {
         // }
         return cellContainer;
       },
-    });
+    }).layout();
     this.mPropGrid.on("cell.1tap", (cell) => {
       const item = cell.getData("item");
       if (item) {
@@ -323,9 +296,6 @@ export class FurniBagPanel extends Panel {
     this.add(this.mPropGrid.childrenMap.child);
     super.init();
 
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mSeachInput.on("seach", this.onSeachHandler, this);
-    this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
     this.emit("getCategories");
 
     this.resize(0, 0);

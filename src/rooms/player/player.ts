@@ -1,10 +1,11 @@
-import { Element, PlayerState } from "../element/element";
+import { Element, PlayerState, MovePath } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
+import { Logger } from "../../utils/log";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -66,7 +67,7 @@ export class Player extends Element {
                 onStart: (tween, target, params) => {
                     this.onCheckDirection(params);
                 },
-                onCompleteParams: {duration, index},
+                onCompleteParams: { duration, index },
                 onComplete: (tween, targets, params) => {
                     this.onMovePathPointComplete(params);
                 }
@@ -75,13 +76,19 @@ export class Player extends Element {
             index++;
         }
         this.mMoveData.posPath = paths;
+        this.mMoveData.onCompleteParams = point;
+        this.mMoveData.onComplete = this.mMovePathPointFinished;
         this._doMove();
     }
 
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
-            if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
+            this.mModel.direction = dir;
+            // if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
+            if (this.mDisplay) {
+                this.mDisplay.play(this.mModel.currentAnimation);
+            }
         }
     }
 
@@ -90,10 +97,14 @@ export class Player extends Element {
             return;
         }
         if (this.mCurState === val) return;
-        if (!val) val = PlayerState.IDLE;
+        // if (!val) val = PlayerState.IDLE;
+        if (!val) {
+            val = PlayerState.IDLE;
+        }
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
-            (this.mDisplay as DragonbonesDisplay).play({ animationName: val, flip: false });
+            this.mModel.currentAnimationName = this.mCurState;
+            (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }
 
@@ -115,9 +126,9 @@ export class Player extends Element {
         // 重叠
         if (params > 90) {
             this.setDirection(3);
-        } else  if (params >= 0) {
+        } else if (params >= 0) {
             this.setDirection(5);
-        } else  if (params >= -90) {
+        } else if (params >= -90) {
             this.setDirection(7);
         } else {
             this.setDirection(1);
@@ -126,19 +137,60 @@ export class Player extends Element {
 
     protected onMoveStart() {
         this.changeState(PlayerState.WALK);
+        if (this.mMoveData) {
+            this.mMoveData.step = 0;
+        }
+        super.onMoveStart();
     }
 
     protected onMoveComplete() {
+        this.preMoveComplete();
         super.onMoveComplete();
         this.changeState(PlayerState.IDLE);
     }
 
+    protected preMoveComplete() {
+        if (this.mMoveData && this.mMoveData.posPath) {
+            const complete = this.mMoveData.onComplete;
+            if (complete) {
+                complete.call(this, this.mMoveData.onCompleteParams);
+                delete this.mMoveData.onComplete;
+                delete this.mMoveData.onCompleteParams;
+            }
+        }
+    }
+
     protected onMovePathPointComplete(params) {
-        if (!this.mMoveData.posPath) {
+        if (!this.mMoveData) {
             return;
         }
-        const posPath = this.mMoveData.posPath;
-        posPath.shift();
+        this.mMoveData.step += 1;
+        // if (!this.mMoveData.posPath) {
+        //     return;
+        // }
+        // const posPath = this.mMoveData.posPath;
+        // posPath.shift();
+    }
+
+    protected mMovePathPointFinished(path: MovePath) {
+        if (!path || !this.mRoomService) {
+            return;
+        }
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = pkt.content;
+        const currentPoint = op_def.PBPoint3f.create();
+        const pos = this.getPosition();
+        currentPoint.x = pos.x;
+        currentPoint.y = pos.y;
+        currentPoint.z = pos.z;
+
+        const targetPoint = op_def.PBPoint3f.create();
+        targetPoint.x = path.x;
+        targetPoint.y = path.y;
+        content.currentPoint = currentPoint;
+        content.lastTargetPoint = targetPoint;
+        content.timestemp = this.mRoomService.world.clock.unixTime;
+        this.mRoomService.connection.send(pkt);
     }
 
     protected get offsetY(): number {

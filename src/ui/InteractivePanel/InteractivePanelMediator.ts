@@ -1,19 +1,21 @@
-import { BaseMediator } from "../baseMediator";
-import { IAbstractPanel } from "../abstractPanel";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { InteractivePanel } from "./InteractivePanel";
-import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
 
 export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";
-    public world: WorldService;
     private mScene: Phaser.Scene;
+    private world: WorldService;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
-        this.mUIType = UIType.MonopolyUIType;
+        super();
+        this.mUIType = UIType.Monopoly;
         this.mScene = scene;
+        this.world = world;
     }
 
     public isShow(): boolean {
@@ -26,10 +28,10 @@ export class InteractivePanelMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView && this.mView.isShow) return this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView && this.mView.isShow) return this.mView.resize();
     }
 
-    public getView(): IAbstractPanel {
+    public getView(): Panel {
         return this.mView;
     }
 
@@ -50,7 +52,7 @@ export class InteractivePanelMediator extends BaseMediator {
     }
 
     public hide() {
-        this.isShowing = false;
+        this.mShow = false;
         if (this.mView) {
             this.mView.hide();
             this.mView = null;

@@ -10,7 +10,6 @@ import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
-
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -106,6 +105,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
     }
+
+    public update(time: number, delta: number) {}
 
     protected addMap(sprite: ISprite) {}
 
@@ -295,7 +296,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             element.showBubble(content.context, content.chatsetting);
         }
     }
-
     private onClearBubbleHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
         const element = this.get(content.receiverid);

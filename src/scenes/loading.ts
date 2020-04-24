@@ -23,7 +23,9 @@ export class LoadingScene extends BasicScene {
     if (this.mWorld) {
       dpr = this.mWorld.uiRatio || 2;
     }
-    this.load.image("loading_bg", Url.getUIRes(dpr, "loading/loading_bg.jpg"));
+    if (this.game.device.os.desktop === false) {
+      this.load.image("loading_bg", Url.getUIRes(dpr, "loading/loading_bg.jpg"));
+    }
     this.load.atlas("loading", Url.getUIRes(dpr, "loading/loading.png"), Url.getUIRes(dpr, "loading/loading.json"));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
     // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
@@ -75,8 +77,10 @@ export class LoadingScene extends BasicScene {
       yoyo: false,
       repeat: -1
     });
-    this.bg = this.add.image(width / 2, height / 2, "loading_bg");
-    this.bg.scale = this.mWorld.uiScaleNew;
+    if (this.textures.exists("loading_bg")) {
+      this.bg = this.add.image(width / 2, height / 2, "loading_bg");
+      this.bg.scale = this.mWorld.uiScaleNew;
+    }
     this.lo = this.add.sprite(0, 0, "loading");
     this.lo.setScale(this.mWorld.uiScaleNew);
     this.scale.on("resize", this.checkSize, this);

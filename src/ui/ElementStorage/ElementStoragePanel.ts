@@ -1,19 +1,15 @@
-import {Panel} from "../components/panel";
-import {NinePatch} from "../components/nine.patch";
-import {Background, Border, Url} from "../../utils/resUtil";
-import {Size} from "../../utils/size";
-import {WorldService} from "../../game/world.service";
+import { BasePanel } from "../components/BasePanel";
+import { NinePatch } from "../components/nine.patch";
+import { Background, Border, Url } from "../../utils/resUtil";
+import { Size } from "../../utils/size";
+import { WorldService } from "../../game/world.service";
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatchButton } from "../components/ninepatch.button";
-import { CheckboxGroup } from "../components/checkbox.group";
-import { Logger } from "../../utils/log";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";
-import { IconBtn } from "../baseView/icon.btn";
-import { UIMediatorType } from "../ui.mediatorType";
 import { ElementStorageMediator } from "./ElementStorageMediator";
 
-export class ElementStoragePanel extends Panel {
+export class ElementStoragePanel extends BasePanel {
     private mBackground: NinePatch;
     private mBorder: NinePatch;
     private mSearchInput: InputText;
@@ -44,7 +40,7 @@ export class ElementStoragePanel extends Panel {
 
     resize(oriention?: number) {
         const size: Size = this.mWorld.getSize();
-        this.setScale(this.dpr);
+        this.scale = this.dpr;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.setSize(683 >> 1, 901 >> 1);
             this.x = size.width - (this.width * this.dpr) - 10;
@@ -117,6 +113,33 @@ export class ElementStoragePanel extends Panel {
         // this.scaleX = this.scaleY = 5;
     }
 
+    public addListen() {
+        super.addListen();
+        if (this.mBackground) this.mBackground.on("pointerout", this.onPointerOutHandler, this);
+        if (this.mDragBtn) this.mDragBtn.on("pointerup", this.switchExpand, this);
+        if (this.mPrePageBtn) this.mPrePageBtn.on("pointerup", this.onPrePageHandler, this);
+        if (this.mNextPageBtn) this.mNextPageBtn.on("pointerup", this.onNextPageHandler, this);
+        if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+        if (this.scene) {
+            this.scene.input.on("dragstart", this.onDragStartHandler, this);
+            this.scene.input.on("dragend", this.onDragEndHandler, this);
+            this.scene.input.on("drag", this.onDragHandler, this);
+        }
+    }
+
+    public removeListen() {
+        super.removeListen();
+        if (this.mBackground) this.mBackground.off("pointerout", this.onPointerOutHandler, this);
+        if (this.mDragBtn) this.mDragBtn.off("pointerup", this.switchExpand, this);
+        if (this.mPrePageBtn) this.mPrePageBtn.off("pointerup", this.onPrePageHandler, this);
+        if (this.mNextPageBtn) this.mNextPageBtn.off("pointerup", this.onNextPageHandler, this);
+        if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+        if (this.scene) {
+            this.scene.input.off("dragstart", this.onDragStartHandler, this);
+            this.scene.input.off("dragend", this.onDragEndHandler, this);
+            this.scene.input.off("drag", this.onDragHandler, this);
+        }
+    }
     public setProps(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE) {
         const items = data.items;
         this.clearItem();
@@ -137,7 +160,7 @@ export class ElementStoragePanel extends Panel {
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             props = { x: size.width - (this.width * this.dpr) - 10 };
         } else {
-            props = {y: size.height - this.height * this.dpr - 10};
+            props = { y: size.height - this.height * this.dpr - 10 };
         }
         this.scene.tweens.add({
             targets: this,
@@ -195,10 +218,9 @@ export class ElementStoragePanel extends Panel {
         this.mBackground = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
         this.mBorder = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, Border.getConfig());
         // this.mBackground.setInteractive();
-        this.mBackground.on("pointerout", this.onPointerOutHandler, this);
 
         // TODO 多语言配置
-        this.mSearchInput = new InputText(this.scene, 40 + 105, 40,  210, 26,  {
+        this.mSearchInput = new InputText(this.scene, 40 + 105, 40, 210, 26, {
             type: "input",
             fontSize: "14px",
             color: "#808080",
@@ -213,7 +235,6 @@ export class ElementStoragePanel extends Panel {
         };
 
         this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器", config);
-        this.mDragBtn.on("pointerup", this.switchExpand, this);
 
         // this.mTabs = [];
 
@@ -230,13 +251,10 @@ export class ElementStoragePanel extends Panel {
             key: "slip"
         }, false);
         this.mPrePageBtn.setInteractive();
-        this.mPrePageBtn.on("pointerup", this.onPrePageHandler, this);
-
         this.mNextPageBtn = this.scene.make.sprite({
             key: "slip"
         }, false).setFlipX(true);
         this.mNextPageBtn.setInteractive();
-        this.mNextPageBtn.on("pointerup", this.onNextPageHandler, this);
 
         this.mProps = [];
 
@@ -259,15 +277,9 @@ export class ElementStoragePanel extends Panel {
             key: "clsBtn",
             frame: "btn_normal"
         }, false).setInteractive().setScale(2);
-        this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
         this.add(this.mCloseBtn);
         super.init();
         this.resize();
-
-        this.scene.input.on("dragstart", this.onDragStartHandler, this);
-        this.scene.input.on("dragend", this.onDragEndHandler, this);
-        this.scene.input.on("drag", this.onDragHandler, this);
-
         this.expand();
     }
 

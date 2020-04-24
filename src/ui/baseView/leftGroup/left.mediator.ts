@@ -7,9 +7,6 @@ export class LeftMediator extends BaseFaceMediator {
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
         super(mWorld, scene);
     }
-    public tweenView(show: boolean) {
-        if (this.mView) (this.mView as LeftBtnGroup).tweenView(show);
-    }
 
     public show(param?: any) {
         if (this.mView && this.isShow()) {

@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { Button } from "../components/button";
@@ -9,7 +9,7 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 import { Logger } from "../../utils/log";
 
-export class PicaRoomListPanel extends Panel {
+export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";
   private mCloseBtn: Phaser.GameObjects.Image;
   private mRoomDeleBtn: Button;
@@ -21,7 +21,6 @@ export class PicaRoomListPanel extends Panel {
   private mScroller: GameScroller;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.setTween(false);
     this.scale = 1;
   }
 
@@ -48,6 +47,18 @@ export class PicaRoomListPanel extends Panel {
       return;
     }
     this.mMyRoomDele.updateList(content);
+  }
+
+  public addListen() {
+    if (!this.mInitialized) return;
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
+  }
+
+  public removeListen() {
+    if (!this.mInitialized) return;
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mSeachBtn.off("pointerup", this.onSeachHandler, this);
   }
 
   destroy() {
@@ -126,7 +137,7 @@ export class PicaRoomListPanel extends Panel {
       }
     }, false).setOrigin(0.5);
 
-    this.add([background, this.mRoomContainer, this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
+    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText, this.mRoomDeleBtn, this.mMyRoomDeleBtn]);
     super.init();
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
@@ -151,11 +162,6 @@ export class PicaRoomListPanel extends Panel {
     };
     this.mScroller = new GameScroller(this.scene, this.mRoomContainer, config);
     checkbox.selectIndex(0);
-    this.addActionListener();
-  }
-  private addActionListener() {
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
   }
 
   private showRoomList() {
@@ -188,6 +194,7 @@ export class PicaRoomListPanel extends Panel {
     if (!(gameobject instanceof Button)) {
       return;
     }
+    this.mRoomContainer.removeAll(false);
     switch (gameobject) {
       case this.mRoomDeleBtn:
         this.showRoomList();
@@ -220,7 +227,6 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   protected mScroller: GameScroller;
   protected activity: Phaser.GameObjects.Image;
   protected mContainer: Phaser.GameObjects.Container;
-  protected mShow: boolean = false;
   protected mKey: string;
   protected mWorld: WorldService;
   protected mHeight: number = 0;
@@ -260,15 +266,15 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   }
 
   addToContainer() {
-    this.mShow = true;
+    // this.mContainer.visible = this.mShow;
     this.addListen();
     this.refreshPos();
   }
 
   removeFromContainer() {
-    this.mShow = false;
     this.removeListen();
-    this.mContainer.removeAll(false);
+    // this.mContainer.visible = this.mShow;
+    // this.mContainer.removeAll(false);
     if (this.mPopularityRoom) this.mPopularityRoom.clear();
     if (this.mPlayerRoom) this.mPlayerRoom.clear();
   }
@@ -297,20 +303,30 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       this.mHeight += hei;
       this.refreshPos();
     });
-    this.mShow = true;
   }
 
   protected refreshPos() {
-    if (this.activity) this.mContainer.add(this.activity);
-    if (this.mPopularityRoom.showList) this.mContainer.add(this.mPopularityRoom.showList);
-    if (this.mPopularityRoom.roomList) this.mContainer.add(this.mPopularityRoom.roomList);
-    if (this.mPlayerRoom.showList) this.mContainer.add(this.mPlayerRoom.showList);
-    if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
-    this.mContainer.setSize(this.mScroller.width, this.mHeight);
+    if (this.activity) {
+      this.activity.setTexture(this.mKey, "activity_title.png");
+      this.mContainer.add(this.activity);
+    }
+    if (this.mPopularityRoom) {
+      if (this.mPopularityRoom.showList) {
+        this.mContainer.add(this.mPopularityRoom.showList);
+        if (this.mPopularityRoom.roomList) this.mContainer.add(this.mPopularityRoom.roomList);
+      }
+    }
+    if (this.mPlayerRoom) {
+      if (this.mPlayerRoom.showList) {
+        this.mContainer.add(this.mPlayerRoom.showList);
+        if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
+      }
+    }
+    this.mContainer.setSize(this.mScroller.view.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (540 * this.mDpr / 2);
-    this.mScroller.setSize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    this.mScroller.setSize(this.mScroller.view.width, refreshHei, this.mScroller.bounds[0], refreshHei);
     // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScaleNew + (80 * this.mWorld.uiRatio / 2));
   }
 
@@ -341,8 +357,20 @@ class MyRoomDelegate extends RoomDelegate {
   removeListen() {
     this.mMyRoom.off("enterRoom", this.onEnterRoomHandler, this);
     this.mMyHistory.off("enterRoom", this.onEnterRoomHandler, this);
+  }
+
+  addToContainer() {
+    // this.mContainer.visible = this.mShow;
+    this.addListen();
+    this.refreshPos();
+  }
+
+  removeFromContainer() {
+    this.removeListen();
+    // this.mContainer.visible = this.mShow;
     if (this.mMyRoom) this.mMyRoom.clear();
     if (this.mMyHistory) this.mMyHistory.clear();
+    // this.mContainer.removeAll(false);
   }
 
   updateList(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
@@ -366,16 +394,27 @@ class MyRoomDelegate extends RoomDelegate {
   }
 
   protected refreshPos() {
-    if (this.activity) this.mContainer.add(this.activity);
-    if (this.mMyRoom.showList) this.mContainer.add(this.mMyRoom.showList);
-    if (this.mMyRoom.roomList) this.mContainer.add(this.mMyRoom.roomList);
-    if (this.mMyHistory.showList) this.mContainer.add(this.mMyHistory.showList);
-    if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
-    this.mContainer.setSize(this.mScroller.width, this.mHeight);
+    if (this.activity) {
+      this.activity.setTexture(this.mKey, "activity_title.png");
+      this.mContainer.add(this.activity);
+    }
+    if (this.mMyRoom) {
+      if (this.mMyRoom.showList) {
+        this.mContainer.add(this.mMyRoom.showList);
+        if (this.mMyRoom.roomList) this.mContainer.add(this.mMyRoom.roomList);
+      }
+    }
+    if (this.mMyHistory) {
+      if (this.mMyHistory.showList) {
+        this.mContainer.add(this.mMyHistory.showList);
+        if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
+      }
+    }
+    this.mContainer.setSize(this.mScroller.view.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
-    this.mScroller.setSize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    this.mScroller.setSize(this.mScroller.view.width, refreshHei, this.mScroller.bounds[0], refreshHei);
   }
 
   protected init() {
@@ -405,6 +444,7 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   protected mShowList: any[];
   protected mRooms: RoomItem[];
   protected mKey: string;
+  protected mIconFrame: string;
   protected mDpr: number;
   protected mScene: Phaser.Scene;
   protected mPad: number;
@@ -414,6 +454,7 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   protected mHeight: number = 0;
   protected icon: Phaser.GameObjects.Image;
   protected text: Phaser.GameObjects.Text;
+  protected mLabel: string;
   /**
    *
    * @param scene
@@ -433,6 +474,8 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     this.mDpr = dpr;
     this.mPad = pad;
     this.mOrientaction = scrollMode;
+    this.mIconFrame = iconFrame;
+    this.mLabel = label;
     this.icon = scene.make.image({
       key,
       frame: iconFrame
@@ -454,8 +497,8 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     this.mHeight = this.icon.height;
     this.mAddCallBack = addCallBack;
     this.mRooms = [];
-    this.mShowList.push(this.icon);
-    this.mShowList.push(this.text);
+    // this.mShowList.push(this.icon);
+    // this.mShowList.push(this.text);
   }
 
   get showList(): any[] {
@@ -467,6 +510,19 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
 
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0) {
     // this.clear();
+    this.icon = this.mScene.make.image({
+      key: this.mKey,
+      frame: this.mIconFrame
+    }, false);
+    this.text = this.mScene.make.text({
+      text: this.mLabel,
+      style: {
+        color: "#ffcc33",
+        fontSize: 16 * this.mDpr,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0, 0.5);
+    this.text.setStroke("#663300", 2 * this.mDpr);
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
     this.text.x = this.mOrientaction ? this.icon.x + this.icon.width / 2 + 4 * this.mDpr + pad : this.icon.x + this.icon.width / 2 + 4 * this.mDpr;
@@ -513,6 +569,8 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     for (const show of this.mShowList) {
       show.destroy();
     }
+    this.icon.destroy();
+    this.text.destroy();
     this.mShowList.length = 0;
     this.mRooms.length = 0;
   }
@@ -525,6 +583,19 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
 class MyRoomZoon extends RoomZoon {
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0) {
     // this.clear();
+    this.icon = this.mScene.make.image({
+      key: this.mKey,
+      frame: this.mIconFrame
+    }, false);
+    this.text = this.mScene.make.text({
+      text: this.mLabel,
+      style: {
+        color: "#ffcc33",
+        fontSize: 16 * this.mDpr,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0, 0.5);
+    this.text.setStroke("#663300", 2 * this.mDpr);
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
     this.text.x = this.mOrientaction ? this.icon.x + this.icon.width / 2 + 4 * this.mDpr + pad : this.icon.x + this.icon.width / 2 + 4 * this.mDpr;
@@ -555,6 +626,19 @@ class MyRoomZoon extends RoomZoon {
 class PopularRoomZoon extends RoomZoon {
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0): number {
     // this.clear();
+    this.icon = this.mScene.make.image({
+      key: this.mKey,
+      frame: this.mIconFrame
+    }, false);
+    this.text = this.mScene.make.text({
+      text: this.mLabel,
+      style: {
+        color: "#ffcc33",
+        fontSize: 16 * this.mDpr,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0, 0.5);
+    this.text.setStroke("#663300", 2 * this.mDpr);
     this.icon.x = this.mOrientaction ? -254 * this.mDpr / 2 + pad : -254 * this.mDpr / 2;
     this.icon.y = this.mOrientaction ? 0 : pad;
     this.text.x = this.mOrientaction ? this.icon.x + this.icon.width / 2 + 4 * this.mDpr + pad : this.icon.x + this.icon.width / 2 + 4 * this.mDpr;

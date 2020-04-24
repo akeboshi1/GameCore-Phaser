@@ -1,4 +1,17 @@
+import { Pos } from "./pos";
+
 export class Tool {
+    /**
+     * scene之间坐标转换
+     * @param fromScene 当前所在scene
+     * @param pos 需要转换去scene上的position
+     */
+    public static getPosByScenes(fromScene: Phaser.Scene, pos: Pos): Pos {
+        const camera = fromScene.cameras.main;
+        const px = pos.x - camera.scrollX;
+        const py = pos.y - camera.scrollY;
+        return new Pos(px, py);
+    }
     /*
     * 两点之间距离公式
     */
@@ -57,6 +70,24 @@ export class Tool {
             }
         });
         return checkBoo;
+    }
+
+    public static checkPointerContains(gameObject: any, pointer: Phaser.Input.Pointer): boolean {
+        if (!gameObject) return false;
+        const left = -gameObject.width / 2;
+        const right = gameObject.width / 2;
+        const top = -gameObject.height / 2;
+        const bottom = gameObject.height / 2;
+        if (pointer) {
+            const worldMatrix: Phaser.GameObjects.Components.TransformMatrix = gameObject.getWorldTransformMatrix();
+            const x: number = pointer.x - worldMatrix.tx - gameObject.x;
+            const y: number = pointer.y - worldMatrix.ty - gameObject.y;
+            if (left <= x && right >= x && top <= y && bottom >= y) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     public static baseName(str) {

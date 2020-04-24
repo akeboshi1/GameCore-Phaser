@@ -1,5 +1,8 @@
 import { Logger } from "../utils/log";
 import { IRoomService } from "../rooms/room";
+import { WorldService } from "./world.service";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_virtual_world, op_client } from "pixelpai_proto";
 
 export enum SoundField {
     Background,
@@ -14,14 +17,22 @@ export interface ISoundConfig {
     soundConfig?: Phaser.Types.Sound.SoundConfig;
 }
 
-export class SoundManager {
+export class SoundManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mSoundMap: Map<SoundField, Sound>;
-    constructor() {
+    constructor(world: WorldService) {
+        super();
+        const connection = world.connection;
+        if (connection) {
+            connection.addPacketListener(this);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL, this.onPlaySoundHandler);
+        }
     }
 
     changeRoom(room: IRoomService) {
-        this.destroy();
+        if (this.mSoundMap) {
+            this.mSoundMap.clear();
+        }
         this.mSoundMap = new Map();
         this.mScene = room.scene;
     }
@@ -45,7 +56,67 @@ export class SoundManager {
             sound = new Sound(this.mScene);
             this.mSoundMap.set(field, sound);
         }
-        this.mSoundMap.get(field).play(key, config.urls, config.soundConfig);
+        sound.play(key, config.urls, config.soundConfig);
+    }
+
+    stop(field: SoundField) {
+        if (!this.mScene) {
+            Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't stop`);
+            return;
+        }
+        const sound = this.mSoundMap.get(field);
+        if (!sound) {
+            return;
+        }
+        sound.stop();
+    }
+
+    pause(field: SoundField) {
+        if (!this.mScene) {
+            Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't pause`);
+            return;
+        }
+        const sound = this.mSoundMap.get(field);
+        if (!sound) {
+            return;
+        }
+        sound.pause();
+    }
+
+    resumes(field: SoundField) {
+        if (!this.mScene) {
+            Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't resume`);
+            return;
+        }
+        const sound = this.mSoundMap.get(field);
+        if (!sound) {
+            return;
+        }
+        sound.resume();
+    }
+
+    stopAll() {
+        if (!this.mScene) {
+            Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't stopAll`);
+            return;
+        }
+        this.mSoundMap.forEach((sound) => { if (sound) sound.stop(); });
+    }
+
+    pauseAll() {
+        if (!this.mScene) {
+            Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't pauseAll`);
+            return;
+        }
+        this.mSoundMap.forEach((sound) => { if (sound) sound.pause(); });
+    }
+
+    resume() {
+        if (!this.mScene) {
+            Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't resumeAll`);
+            return;
+        }
+        this.mSoundMap.forEach((sound) => { if (sound) sound.resume(); });
     }
 
     destroy() {
@@ -55,6 +126,15 @@ export class SoundManager {
             this.mSoundMap = undefined;
         }
     }
+
+    private onPlaySoundHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
+        // TODO
+        this.play({
+            urls: content.soundKey,
+            soundConfig: { loop: true }
+        });
+    }
 }
 
 class Sound {
@@ -63,11 +143,16 @@ class Sound {
     constructor(private scene: Phaser.Scene) {
     }
 
+    sound(): Phaser.Sound.BaseSound {
+        return this.mSound;
+    }
+
     play(key: string, urls?: string | string[], soundConfig?: Phaser.Types.Sound.SoundConfig) {
         if (!this.scene) {
             return;
         }
         if (this.mSound && this.mSound.key === key) {
+            if (this.mSound.isPlaying) return;
             this.mSound.play();
             return;
         }
@@ -81,8 +166,42 @@ class Sound {
         }
     }
 
+    pause() {
+        if (!this.scene) {
+            return;
+        }
+        if (this.mSound) {
+            if (this.mSound.isPaused) return;
+            this.mSound.pause();
+            return;
+        }
+    }
+
+    stop() {
+        if (!this.scene) {
+            return;
+        }
+        if (this.mSound) {
+            if (!this.mSound.isPlaying) return;
+            this.mSound.stop();
+            return;
+        }
+    }
+
+    resume() {
+        if (!this.scene) {
+            return;
+        }
+        if (this.mSound) {
+            if (!this.mSound.isPaused) return;
+            this.mSound.resume();
+            return;
+        }
+    }
+
     destroy() {
         if (this.mSound) {
+            this.mSound.stop();
             this.mSound.destroy();
             this.mSound = undefined;
         }
@@ -94,6 +213,7 @@ class Sound {
 
     private startPlay() {
         if (this.mSound) {
+            this.mSound.stop();
             this.mSound.destroy();
         }
         this.mSound = this.scene.sound.add(this.mKey);

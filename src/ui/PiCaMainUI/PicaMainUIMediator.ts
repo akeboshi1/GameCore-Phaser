@@ -1,17 +1,20 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { PicaMainUIPanel } from "./PicaMainUIPanel";
 import { op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class PicaMainUIMediator extends BaseMediator {
+    public static NAME: string = "PicaMainUIMediator";
+    private world: WorldService;
     constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, worldService: WorldService) {
-        super(worldService);
+        super();
+        this.world = worldService;
     }
 
     show() {
-        if (this.mView && this.mView.isShow() || this.isShowing) {
+        if (this.mView && this.mView.isShow() || this.mShow) {
             return;
         }
         if (!this.mView) {
@@ -19,7 +22,7 @@ export class PicaMainUIMediator extends BaseMediator {
         }
         this.mView.show();
         this.mView.on("enterEdit", this.onEnterEditSceneHandler, this);
-        this.layerManager.addToUILayer(this.mView);
+        this.layerManager.addToUILayer(this.mView.view);
     }
 
     isSceneUI() {

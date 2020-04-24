@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Border, Url, Background } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
@@ -15,7 +15,7 @@ export interface IFriendIcon {
     res: string;
     name: string;
 }
-export class FriendPanel extends Panel {
+export class FriendPanel extends BasePanel {
     public static count: number = 4;
     private mBg: NinePatch;
     private mUpBtn: Phaser.GameObjects.Sprite;
@@ -31,7 +31,7 @@ export class FriendPanel extends Panel {
 
     public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
-        if (!this.mShowing) return;
+        if (!this.mShow) return;
         if (this.mWorld.game.device.os.desktop) {
             this.x = size.width + wid >> 1;
             this.y = size.height + hei >> 1;
@@ -51,7 +51,7 @@ export class FriendPanel extends Panel {
             }
         }
 
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         this.mUpBtn.y = (this.mUpBtn.height / 2 - this.mBg.height) / 2;
         this.mDownBtn.y = (this.mBg.height - this.mDownBtn.height / 2) / 2;
         this.mTitleTxt.x = (-this.mBg.width / 2 + 15);
@@ -65,6 +65,20 @@ export class FriendPanel extends Panel {
         this.add(this.mTitleTxt);
     }
 
+    public addListen() {
+        super.addListen();
+        this.mDownBtn.on("pointerup", this.downHandler, this);
+        this.mUpBtn.on("pointerup", this.upHandler, this);
+        this.mClsBtn.on("pointerup", this.hide, this);
+    }
+
+    public removeListen() {
+        super.removeListen();
+        this.mDownBtn.off("pointerup", this.downHandler, this);
+        this.mUpBtn.off("pointerup", this.upHandler, this);
+        this.mClsBtn.off("pointerup", this.hide, this);
+    }
+
     public show(param?: any) {
         const size: Size = this.mWorld.getSize();
         this.mData = param;
@@ -76,10 +90,10 @@ export class FriendPanel extends Panel {
     }
 
     public destroy() {
-        if (this.mBg) this.mBg.destroy(true);
-        if (this.mTitleTxt) this.mTitleTxt.destroy(true);
-        if (this.mUpBtn) this.mUpBtn.destroy(true);
-        if (this.mDownBtn) this.mDownBtn.destroy(true);
+        // if (this.mBg) this.mBg.destroy(true);
+        // if (this.mTitleTxt) this.mTitleTxt.destroy(true);
+        // if (this.mUpBtn) this.mUpBtn.destroy(true);
+        // if (this.mDownBtn) this.mDownBtn.destroy(true);
         if (this.mFriendList) {
             this.mFriendList.forEach((item: FriendItem) => {
                 if (item) {
@@ -88,12 +102,12 @@ export class FriendPanel extends Panel {
                 }
             });
         }
-        this.mIndex = 0;
-        this.mBg = null;
-        this.mTitleTxt = null;
-        this.mUpBtn = null;
-        this.mDownBtn = null;
-        this.mFriendList = null;
+        // this.mIndex = 0;
+        // this.mBg = null;
+        // this.mTitleTxt = null;
+        // this.mUpBtn = null;
+        // this.mDownBtn = null;
+        // this.mFriendList = null;
         super.destroy();
     }
 
@@ -140,7 +154,7 @@ export class FriendPanel extends Panel {
     }
 
     protected init() {
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
         const size: Size = this.mWorld.getSize();
 
         this.mBg = new NinePatch(this.scene, 0, 0, 600 / this.mWorld.uiScale, size.height * .5 * this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
@@ -164,8 +178,6 @@ export class FriendPanel extends Panel {
 
         this.mDownBtn.setInteractive();
         this.mUpBtn.setInteractive();
-        this.mDownBtn.on("pointerup", this.downHandler, this);
-        this.mUpBtn.on("pointerup", this.upHandler, this);
         const image = this.scene.make.image(undefined, false);
         image.setTexture((this.mWorld.roomManager.currentRoom.playerManager.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
         this.add(image);
@@ -181,7 +193,6 @@ export class FriendPanel extends Panel {
         this.mClsBtn.x = (this.mWidth >> 1) - 65;
         this.mClsBtn.y = -this.mHeight >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
-        this.mClsBtn.on("pointerup", this.hide, this);
         this.add(this.mClsBtn);
         super.init();
     }
@@ -191,7 +202,7 @@ export class FriendPanel extends Panel {
         this.mWorld.roomManager.currentRoom.playerManager.actor.getFriend().requestFriend((data: any[]) => {
             this.setDataList(data);
         });
-        if (show) (this.mWorld.uiManager.getMediator(FriendMediator.NAME) as FriendMediator).resize();
+        if (show) this.mWorld.uiManager.getMediator(FriendMediator.NAME).resize();
     }
 
     private downHandler() {
@@ -287,7 +298,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
         this.mScene = scene;
 
         const size: Size = this.mWorld.getSize();
-        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.width, 90, Border.getName(), null, Border.getConfig());
+        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.view.width, 90, Border.getName(), null, Border.getConfig());
         this.addAt(this.mBg, 0);
         this.setSize(this.mBg.width, this.mBg.height);
 
@@ -339,7 +350,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
 
     public resize() {
         if (this.mWorld.game.device.os.desktop) return;
-        this.mBg.resize(this.mPanel.width * .95, 90);
+        this.mBg.resize(this.mPanel.view.width * .95, 90);
         this.setSize(this.mBg.width, this.mBg.height);
         this.addAt(this.mBg, 0);
         this.refreshUIPos();

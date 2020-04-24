@@ -1,16 +1,13 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Url } from "../../utils/resUtil";
-import { DynamicImage } from "../components/dynamic.image";
 import { i18n } from "../../i18n";
 import * as copy from "copy-text-to-clipboard";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { op_client } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
-import { PBpacket } from "net-socket-packet";
 import { Font } from "../../utils/font";
 
-export class ItemPopCardPanel extends Panel {
+export class ItemPopCardPanel extends BasePanel {
   private readonly key = "item_pop_card";
   private mCardContainer: Phaser.GameObjects.Container;
   private mNickName: Phaser.GameObjects.Text;
@@ -26,6 +23,28 @@ export class ItemPopCardPanel extends Panel {
   constructor(scene: Phaser.Scene, worldService: WorldService) {
     super(scene, worldService);
     this.setTween(false);
+  }
+
+  public addListen() {
+    if (!this.mInitialized) return;
+    this.mDetailDisplay.on("show", this.onShowHandler, this);
+    this.on("pointerup", this.onCloseHandler, this);
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mNickName.on("pointerup", this.onPointerNickNameHandler, this);
+    this.mNickName.on("pointerdown", this.onPointerNickNameDownHandler, this);
+    this.mDesText.on("pointerdown", this.onPointerDesDownHandler, this);
+    this.mDesText.on("pointerup", this.onPointerNickNameHandler, this);
+  }
+
+  public removeListen() {
+    if (!this.mInitialized) return;
+    this.mDetailDisplay.off("show", this.onShowHandler, this);
+    this.off("pointerup", this.onCloseHandler, this);
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mNickName.off("pointerup", this.onPointerNickNameHandler, this);
+    this.mNickName.off("pointerdown", this.onPointerNickNameDownHandler, this);
+    this.mDesText.off("pointerdown", this.onPointerDesDownHandler, this);
+    this.mDesText.off("pointerup", this.onPointerNickNameHandler, this);
   }
 
   resize(w: number, h: number) {
@@ -46,8 +65,6 @@ export class ItemPopCardPanel extends Panel {
     this.mCloseBtn.y = centerY + this.mCardContainer.height / 2 + 48 * this.dpr;
 
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
-
     // this.mDetailDisplay.scale = 1 / scale;
 
     // this.mCloseBtn.x = centerX;
@@ -149,7 +166,6 @@ export class ItemPopCardPanel extends Panel {
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.scale = this.dpr * 2;
-    this.mDetailDisplay.on("show", this.onShowHandler, this);
     // this.mDetailDisplay.y = -150;
 
     this.mCloseBtn = this.scene.make.image({
@@ -169,18 +185,11 @@ export class ItemPopCardPanel extends Panel {
     this.add(this.mCardContainer);
     this.mCardContainer.add([this.mBorder, background, desBg, this.mDetailDisplay, nickNameBg, this.mNickName, this.mDesText, this.mSource]);
     this.add(this.mCloseBtn);
-
+    this.setInteractive();
     super.init();
     this.resize(0, 0);
 
     this.setProp();
-
-    this.on("pointerup", this.onCloseHandler, this);
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mNickName.on("pointerup", this.onPointerNickNameHandler, this);
-    this.mNickName.on("pointerdown", this.onPointerNickNameDownHandler, this);
-    this.mDesText.on("pointerdown", this.onPointerDesDownHandler, this);
-    this.mDesText.on("pointerup", this.onPointerNickNameHandler, this);
   }
 
   private onCloseHandler() {

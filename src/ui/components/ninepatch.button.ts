@@ -29,7 +29,7 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
         this.add(this.mLabel);
 
         // this.setSize(this.mNingBg.width, this.mNingBg.height);
-        this.setInteractive();
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         this.on("pointerdown", this.onPointerDown, this);
         this.on("pointerup", this.onPointerUp, this);
         // this.on("pointerout", this.changeNormal, this);

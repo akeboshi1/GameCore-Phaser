@@ -67,10 +67,13 @@ export class Sprite implements ISprite {
     protected mCurrentCollisionPoint: Phaser.Geom.Point;
     protected mVersion: string;
     protected mIsMoss: boolean;
+    protected mRegisterAnimation: Map<string, string>;
 
     protected _originWalkPoint: Phaser.Geom.Point;
 
     protected _originCollisionPoint: Phaser.Geom.Point;
+
+    protected mAttrs: op_def.IStrPair[];
 
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         this.mID = obj.id;
@@ -81,6 +84,14 @@ export class Sprite implements ISprite {
         if (obj.avatar) {
             this.mAvatar = { id: obj.avatar.id };
             this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
+            this.mAttrs = obj.attrs;
+            // if (attrs && attrs.length > 0) {
+            //     for (const att of attrs) {
+            //         if (att.key === "minecart") {
+            //             this.mAvatar.stalkerId = att.value;
+            //         }
+            //     }
+            // }
             this.mDisplayInfo = new DragonbonesModel(this);
         }
         if (obj.display) {
@@ -101,6 +112,7 @@ export class Sprite implements ISprite {
         if (obj.sn) {
             this.mSn = obj.sn;
         }
+        this.tryRegisterAnimation(obj.animationRegistrationMap);
         // if (obj.currentAnimationName) {
         //     Logger.getInstance().error(`${Sprite.name}: currentAnimationName is null, ${JSON.stringify(obj)}`);
         // }
@@ -313,12 +325,23 @@ export class Sprite implements ISprite {
         return false;
     }
 
+    get animationMap() {
+        if (!this.mRegisterAnimation) {
+            this.mRegisterAnimation = new Map();
+        }
+        return this.mRegisterAnimation;
+    }
+
     public get originCollisionPoint(): Phaser.Geom.Point {
         return this._originCollisionPoint;
     }
 
     public get originWalkPoint(): Phaser.Geom.Point {
         return this._originWalkPoint;
+    }
+
+    public get attrs() {
+        return this.mAttrs;
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
@@ -350,17 +373,23 @@ export class Sprite implements ISprite {
     }
 
     private setAnimationData(animationName: string, direction: Direction) {
-        const baseAniName = animationName.split(`_`)[0];
-        this.mCurrentAnimation = this.findAnimation(baseAniName, direction);
+        if (!this.displayInfo) {
+            return;
+        }
+        let baseAniName = animationName.split(`_`)[0];
+        if (this.mRegisterAnimation) {
+            if (this.mRegisterAnimation.has(baseAniName)) {
+                baseAniName = this.mRegisterAnimation.get(baseAniName);
+            }
+        }
+        this.mCurrentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
         if (this.mCurrentCollisionArea) {
             this.setArea();
         }
         // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
-        if (animationName !== this.mCurrentAnimation.animationName) {
-            Logger.getInstance().error(
-                `${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`
-            );
-        }
+        // if (animationName !== this.mCurrentAnimation.animationName) {
+        //     Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
+        // }
     }
 
     private checkDirectionAnimation(baseAniName: string, dir: Direction) {
@@ -369,45 +398,6 @@ export class Sprite implements ISprite {
             return aniName;
         }
         return null;
-    }
-
-    private findAnimation(baseName: string, dir: Direction): AnimationData {
-        let animationName = this.checkDirectionAnimation(baseName, dir);
-        let flip = false;
-        if (animationName) {
-            return { animationName, flip };
-        }
-        switch (dir) {
-            case Direction.west_south:
-            case Direction.east_north:
-                animationName = this.getDefaultAnimation(baseName);
-                break;
-            case Direction.south_east:
-                animationName = this.getDefaultAnimation(baseName);
-                flip = true;
-                break;
-            case Direction.north_west:
-                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
-                if (animationName === null) {
-                    animationName = this.getDefaultAnimation(baseName);
-                }
-                flip = true;
-                break;
-        }
-        return { animationName, flip };
-    }
-
-    private getDefaultAnimation(baseName: string) {
-        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
-        if (animationName === null) {
-            if (this.mDisplayInfo.existAnimation(baseName)) {
-                animationName = baseName;
-            } else {
-                Logger.getInstance().warn(`${Sprite.name}: can't find animation ${baseName}`);
-                animationName = "idle";
-            }
-        }
-        return animationName;
     }
 
     private setArea() {
@@ -448,5 +438,15 @@ export class Sprite implements ISprite {
             // dirs = [1, 3, 5, 7];
         }
         return dirs;
+    }
+
+    private tryRegisterAnimation(anis: op_def.IStrPair[]) {
+        if (!anis || anis.length < 1) {
+            return;
+        }
+        this.mRegisterAnimation = new Map();
+        for (const ani of anis) {
+            this.mRegisterAnimation.set(ani.key, ani.value);
+        }
     }
 }

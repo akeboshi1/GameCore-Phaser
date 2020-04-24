@@ -1,10 +1,10 @@
 import { BaseFaceMediator } from "../baseFace.mediator";
 import { WorldService } from "../../../game/world.service";
-import { UIType } from "../../ui.manager";
 import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
 import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagGroup } from "./bag.group";
+import { UIType } from "../../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 /**
  * 背包场景UI，带背包slot，pc端用
@@ -13,7 +13,7 @@ export class BagGroupMediator extends BaseFaceMediator {
     public static NAME: string = "BagGroupMediator";
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
         super(mWorld, scene);
-        this.mUIType = UIType.BaseUIType;
+        this.mUIType = UIType.Scene;
     }
     public isSceneUI(): boolean {
         return true;
@@ -32,9 +32,7 @@ export class BagGroupMediator extends BaseFaceMediator {
         const size: Size = this.world.getSize();
         this.mView = new BagGroup(this.mScene, this.world, (size.width >> 1) - 29, size.height - 50);
         this.mView.show(param);
-        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
-        this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
-        this.world.emitter.on(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
+        this.addListen();
         super.show(param);
     }
 
@@ -43,14 +41,24 @@ export class BagGroupMediator extends BaseFaceMediator {
     }
 
     public hide() {
-        this.isShowing = false;
-        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
-        this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
-        this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
+        this.mShow = false;
+        this.removeListen();
         if (this.mView) {
             this.mView.hide();
             this.mView = null;
         }
+    }
+
+    private addListen() {
+        this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+        this.world.emitter.on(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.on(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
+    }
+
+    private removeListen() {
+        this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackAge, this);
+        this.world.emitter.off(MessageType.UPDATED_CHARACTER_PACKAGE, this.heroItemChange, this);
+        this.world.emitter.off(MessageType.PACKAGE_ITEM_ADD, this.heroItemChange, this);
     }
 
     private heroItemChange() {

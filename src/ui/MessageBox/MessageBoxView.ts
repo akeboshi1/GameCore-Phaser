@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url, Border, BlueButton } from "../../utils/resUtil";
@@ -6,7 +6,7 @@ import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { op_client } from "pixelpai_proto";
-export class MessageBoxView extends Panel {
+export class MessageBoxView extends BasePanel {
     private mTxt: BBCodeText;
     private mButtons: NinePatchButton[];
     constructor(scene: Phaser.Scene, world: WorldService) {

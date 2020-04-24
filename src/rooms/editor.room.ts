@@ -21,6 +21,7 @@ import { DragonbonesDisplay } from "./display/dragonbones.display";
 import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
 import { DisplayObjectPool } from "./display-object.pool";
+import { SkyBoxManager } from "./sky.box/sky.box.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -100,9 +101,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
         this.mLayManager = new LayerManager(this);
         this.mLayManager.drawGrid(this);
-        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
-        this.mScene.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
         const camera = this.scene.cameras.main;
         this.mCameraService.camera = camera;
         const zoom = this.world.scaleRatio;
@@ -120,6 +119,8 @@ export class EditorRoom extends Room implements EditorRoomService {
         //     this.mCameraService.syncToEditor();
         // }, 10);
         this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
+
+        this.addSkyBox();
     }
 
     public destroy() {
@@ -189,26 +190,36 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.off("gameout", this.onGameOutHandler, this);
     }
 
+    protected addGameObjectDownHandler() {
+        this.mScene.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
+    }
+
+    protected addPointerDownHandler() {
+        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+    }
+
     protected onPointerDownHandler() {
         this.addPointerMoveHandler();
+
+        const nodeType = this.mouseFollow.nodeType;
+
+        if (this.mouseFollow.key) {
+            if (nodeType === op_def.NodeType.TerrainNodeType) {
+                if (!this.world.elementStorage.getTerrainPalette(this.mouseFollow.key)) {
+                    this.reqEditorSyncPaletteOrMoss(this.mouseFollow.key, this.mouseFollow.nodeType);
+                }
+            } else if (nodeType === op_def.NodeType.ElementNodeType) {
+                if (!this.world.elementStorage.getMossPalette(this.mouseFollow.key)) {
+                    this.reqEditorSyncPaletteOrMoss(this.mouseFollow.key, this.mouseFollow.nodeType);
+                }
+            }
+        }
     }
 
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.removePointerMoveHandler();
         switch (this.brush.mode) {
             case BrushEnum.BRUSH:
-                const nodeType = this.mouseFollow.nodeType;
-                if (this.mouseFollow.key) {
-                    if (nodeType === op_def.NodeType.TerrainNodeType) {
-                        if (!this.world.elementStorage.getTerrainPalette(this.mouseFollow.key)) {
-                            this.reqEditorSyncPaletteOrMoss(this.mouseFollow.key, this.mouseFollow.nodeType);
-                        }
-                    } else if (nodeType === op_def.NodeType.ElementNodeType) {
-                        if (!this.world.elementStorage.getMossPalette(this.mouseFollow.key)) {
-                            this.reqEditorSyncPaletteOrMoss(this.mouseFollow.key, this.mouseFollow.nodeType);
-                        }
-                    }
-                }
                 this.createElements();
                 break;
             case BrushEnum.SELECT:
@@ -315,18 +326,23 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private eraserTerrains() {
-        const terrainManager = <EditorTerrainManager>this.mTerrainManager;
-        if (terrainManager) {
-            const positions = this.mMouseFollow.getEaserPosition();
-            terrainManager.removeTerrains(positions);
-        }
+        const positions = this.mMouseFollow.getEaserPosition();
+        this.editorTerrainManager.removeTerrains(positions);
     }
 
     private onSetEditorModeHandler(packet: PBpacket) {
         const mode: op_client.IOP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE = packet.content;
         this.mBrush.mode = <BrushEnum>mode.mode;
         if (this.mMouseFollow) this.mMouseFollow.destroy();
+
+        if (this.mBrush.mode === BrushEnum.SELECT) {
+            this.removePointerMoveHandler();
+            this.addGameObjectDownHandler();
+        }
+
         if (this.mBrush.mode !== BrushEnum.SELECT) {
+            this.addPointerDownHandler();
+
             if (this.mSelectedElementEffect) {
                 this.mSelectedElementEffect.destroy();
                 this.mSelectedElementEffect = null;
@@ -338,6 +354,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             }
             this.mMouseFollow.showEraserArea();
         }
+
         this.layerManager.setSurfaceInteractive(this.mBrush.mode !== BrushEnum.ERASER);
     }
 
@@ -389,22 +406,14 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private onGameobjectDownHandler(pointer, gameobject) {
-        this.removePointerMoveHandler();
         const com = gameobject.parentContainer;
         if (!com) {
             return;
         }
-        switch (this.mBrush.mode) {
-            case BrushEnum.SELECT:
-                const selected = this.selectedElement(com);
-                if (selected) {
-                    this.sendFetch(
-                        [selected.element.id],
-                        op_def.NodeType.ElementNodeType,
-                        selected.element.model.isMoss
-                    );
-                }
-                break;
+
+        const selected = this.selectedElement(com);
+        if (selected) {
+            this.sendFetch([selected.element.id], op_def.NodeType.ElementNodeType, selected.element.model.isMoss);
         }
     }
 
@@ -433,9 +442,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             case 40:
                 this.moveElement(event.keyCode);
                 break;
-            // case 46:
-            // this.removeDisplay(this.mSelectedElementEffect.display);
-            // break;
+            case 46:
+                this.removeDisplay(this.mSelectedElementEffect);
+                break;
         }
     }
 
@@ -477,5 +486,16 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.mMouseFollow = new MouseFollow(this.mScene, this);
         }
         return this.mMouseFollow;
+    }
+
+    private removeDisplay(element: SelectedElement) {
+       
+        if (element.sprite.isMoss) {
+
+            this.editorMossManager.remove(element.sprite.id);
+        } else {
+            this.editorElementManager.remove(element.sprite.id)
+        }
+            this.removeSelected();
     }
 }

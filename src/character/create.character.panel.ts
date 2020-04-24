@@ -1,14 +1,14 @@
-import { Panel } from "../ui/components/panel";
+import {BasePanel } from "../ui/components/BasePanel";
 import { WorldService } from "../game/world.service";
-import { ResUtils, Url } from "../utils/resUtil";
+import { Url } from "../utils/resUtil";
 
-export class CreateCharacterPanel extends Panel {
+export class CreateCharacterPanel extends BasePanel {
   private readonly key = "createCharacter";
   private foot;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     const container = this.scene.add.container(0, 0);
-    container.add(this);
+    container.add(this.view);
   }
 
   preload() {
@@ -22,7 +22,7 @@ export class CreateCharacterPanel extends Panel {
 
   resize(wid: number, hei: number) {
     const size = this.mWorld.getSize();
-    this.scaleX = this.scaleY = this.mWorld.uiScale;
+    this.scale = this.mWorld.uiScale;
     this.foot.scaleX = this.foot.scaleY = .75;
     this.foot.x = (size.width - this.foot.width >> 1) * .75;
     this.foot.y = (size.height - this.foot.height >> 1) * .75;

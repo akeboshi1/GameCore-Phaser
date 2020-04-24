@@ -1,4 +1,4 @@
-import { Panel } from "../../components/panel";
+import { BasePanel } from "../../components/BasePanel";
 import { WorldService } from "../../../game/world.service";
 import { Url } from "../../../utils/resUtil";
 import { IconBtn } from "../icon.btn";
@@ -10,7 +10,8 @@ import { CheckButton } from "../../components/check.button";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { RightMediator } from "../rightGroup/right.mediator";
 import { ElementStorageMediator } from "../../ElementStorage/ElementStorageMediator";
-export class BottomBtnGroup extends Panel {
+import { BaseMediator } from "../../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+export class BottomBtnGroup extends BasePanel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
     private mChatBg: Phaser.GameObjects.Image;
@@ -23,21 +24,32 @@ export class BottomBtnGroup extends Panel {
     private mMicBtn: CheckButton;
     private mBtnList: IconBtn[];
     private mExpandBoo: boolean = false;
-    private mWid: number = 0;
-    private mHei: number = 0;
+    private tmpWid: number = 0;
+    private tmpHei: number = 0;
     // private mOrientation: Phaser.Scale.Orientation;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.mWorld = world;
+        this.disInteractive();
     }
 
     public show(param?: any) {
         super.show(param);
     }
 
+    public addListen() {
+        this.mChatContainer.on("pointerdown", this.chatHandler, this);
+        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+    }
+
+    public removeListen() {
+        this.mChatContainer.off("pointerdown", this.chatHandler, this);
+        this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
+        this.mMicBtn.off("selected", this.onSelectedMicHandler, this);
+    }
     public resize() {
         const size: Size = this.mWorld.getSize();
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.x = size.width >> 1;
             this.mVoiceBtn.x = this.mVoiceBtn.width * this.mMicBtn.scaleX - this.mChatContainer.width / 2;
@@ -72,7 +84,7 @@ export class BottomBtnGroup extends Panel {
         const baseY: number = size.height - 120 * this.mWorld.uiScale;
         const toY: number = show === true ? baseY : baseY + 50;
         const toAlpha: number = show === true ? 1 : 0;
-        this.mScene.tweens.add({
+        this.scene.tweens.add({
             targets: this,
             duration: 200,
             ease: "Linear",
@@ -84,26 +96,26 @@ export class BottomBtnGroup extends Panel {
     }
 
     protected preload() {
-        if (!this.mScene) {
+        if (!this.scene) {
             return;
         }
         this.mResKey = "baseView";
-        this.mScene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
-        this.mScene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+        this.scene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
+        this.scene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
         super.preload();
     }
 
     protected init() {
         this.mBtnList = [];
         const size: Size = this.mWorld.getSize();
-        this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToUILayer(this.view);
         const chatBgWidth: number = 430;
         const chatBgHeight: number = 230;
-        this.mChatContainer = this.mScene.make.container(undefined, false);
-        this.mChatBg = this.mScene.make.image(undefined, false);
+        this.mChatContainer = this.scene.make.container(undefined, false);
+        this.mChatBg = this.scene.make.image(undefined, false);
         this.mChatBg.setTexture(this.mResKey, "btnGroup_chatBg.png");
         this.mChatContainer.addAt(this.mChatBg, 0);
-        this.mChatText = this.mScene.make.text({
+        this.mChatText = this.scene.make.text({
             width: chatBgWidth,
             height: chatBgHeight,
             style: { font: "bold YaHei", color: "#666666", fontSize: Math.floor(30 * this.mWorld.uiScale), wordWrap: { width: 430, useAdvancedWrap: true } }
@@ -115,27 +127,26 @@ export class BottomBtnGroup extends Panel {
         this.mChatText.y = -this.mChatContainer.height >> 1;
         this.mChatContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, chatBgWidth, chatBgHeight), Phaser.Geom.Rectangle.Contains);
         this.add(this.mChatContainer);
-        this.mWid += this.mChatContainer.width;
-        this.mHei += this.mChatContainer.height;
-        this.mTurnBtn = new IconBtn(this.mScene, this.mWorld, {
+        this.tmpWid += this.mChatContainer.width;
+        this.tmpHei += this.mChatContainer.height;
+        this.mTurnBtn = new IconBtn(this.scene, this.mWorld, {
             key: UIMediatorType.Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
-        this.mTurnBtn.x = (this.mWid >> 1) + 30;
-        this.mTurnBtn.y = this.mHei - this.mTurnBtn.height >> 1;
+        this.mTurnBtn.x = (this.tmpWid >> 1) + 30;
+        this.mTurnBtn.y = this.tmpHei - this.mTurnBtn.height >> 1;
         this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
         this.add(this.mTurnBtn);
 
-        this.mBagBtn = new IconBtn(this.mScene, this.mWorld, {
+        this.mBagBtn = new IconBtn(this.scene, this.mWorld, {
             key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
         this.mBagBtn.x = this.mTurnBtn.x;
         this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
         this.mBagBtn.setPos(this.mBagBtn.x, this.mBagBtn.y);
-        this.mWid += this.mBagBtn.width + 30;
+        this.tmpWid += this.mBagBtn.width + 30;
         this.add(this.mBagBtn);
-        this.setSize(this.mWid, this.mHei);
         this.mBtnList.push(this.mBagBtn);
         this.mTurnBtn.setClick(() => {
             this.turnHandler();
@@ -145,37 +156,35 @@ export class BottomBtnGroup extends Panel {
             this.bagHandler();
         });
 
-        this.mMarketBag = new IconBtn(this.mScene, this.mWorld, {
+        this.mMarketBag = new IconBtn(this.scene, this.mWorld, {
             key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
         this.mMarketBag.x = this.mTurnBtn.x;
         this.mMarketBag.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 60 - this.mMarketBag.height / 2;
         this.mMarketBag.setPos(this.mMarketBag.x, this.mBagBtn.y);
-        this.mWid += this.mMarketBag.width + 30;
+        this.tmpWid += this.mMarketBag.width + 30;
         this.add(this.mMarketBag);
-        this.setSize(this.mWid, this.mHei);
+        this.setSize(this.tmpWid, this.tmpHei);
         this.mBtnList.push(this.mMarketBag);
 
         this.mMarketBag.setClick(() => {
             this.marketBagHandler();
         });
 
-        this.mChatContainer.on("pointerdown", this.chatHandler, this);
-        this.mVoiceBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
+        this.mVoiceBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
         this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
         this.mVoiceBtn.y = size.height - this.height;
         this.add(this.mVoiceBtn);
 
-        this.mMicBtn = new CheckButton(this.mScene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        this.mMicBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
         this.mMicBtn.x = this.width - 20 * this.mWorld.uiScale;
         this.mMicBtn.y = size.height - this.height;
         this.add(this.mMicBtn);
 
         this.mVoiceBtn.scaleX = this.mVoiceBtn.scaleY = 1.5;
         this.mMicBtn.scaleX = this.mMicBtn.scaleY = 1.5;
-        this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
-        this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+        this.setSize(this.tmpWid, this.tmpHei);
         this.resize();
         super.init();
     }
@@ -211,7 +220,7 @@ export class BottomBtnGroup extends Panel {
         if (this.mChatContainer && this.mChatContainer.parentContainer) {
             const toScaleX: number = this.mExpandBoo ? 1 : 0;
             const toScaleY: number = this.mExpandBoo ? 1 : 0;
-            this.mScene.tweens.add({
+            this.scene.tweens.add({
                 targets: this.mChatContainer,
                 duration: 300,
                 ease: easeType,
@@ -226,7 +235,6 @@ export class BottomBtnGroup extends Panel {
             return;
         }
         const len: number = this.mBtnList.length;
-        const size: Size = this.mWorld.getSize();
         const rightMediator = this.mWorld.uiManager.getMediator(RightMediator.NAME) as RightMediator;
         let rightBtnGroup;
         if (rightMediator) {
@@ -234,10 +242,10 @@ export class BottomBtnGroup extends Panel {
         }
         for (let i: number = 0; i < len; i++) {
             const btn: IconBtn = this.mBtnList[i];
-            const angle: number = (90 * (i + 2) / -180) * Math.PI;
+            // const angle: number = (90 * (i + 2) / -180) * Math.PI;
             const toX: number = this.mExpandBoo ? btn.getPos().x : this.mChatContainer.width / 2 - Math.abs(btn.getPos().y) - 20;
             const toY: number = this.mExpandBoo ? btn.getPos().y : this.mTurnBtn.y;
-            this.mScene.tweens.add({
+            this.scene.tweens.add({
                 targets: btn,
                 duration: 300,
                 ease: easeType,
@@ -249,9 +257,9 @@ export class BottomBtnGroup extends Panel {
                     if (i === len - 1) {
                         this.mExpandBoo = !this.mExpandBoo;
                         if (!this.mExpandBoo) {
-                            this.setSize(this.mWid, this.mHei);
+                            this.setSize(this.tmpWid, this.tmpHei);
                         } else {
-                            this.setSize(this.mWid, btn.height * 2);
+                            this.setSize(this.tmpWid, btn.height * 2);
                         }
                         if (rightMediator) {
                             if (this.mWorld.inputManager) {
@@ -271,7 +279,7 @@ export class BottomBtnGroup extends Panel {
         // ======================show chatView
         let chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
         if (chatMed === undefined) {
-            chatMed = new ChatMediator(this.mWorld, this.mScene);
+            chatMed = new ChatMediator(this.mWorld, this.scene);
             this.mWorld.uiManager.setMediator(ChatMediator.NAME, chatMed);
         }
         const showBoo = chatMed.isShow();
@@ -294,7 +302,7 @@ export class BottomBtnGroup extends Panel {
         // test code
         let mediator = this.mWorld.uiManager.getMediator(ElementStorageMediator.name);
         if (!mediator) {
-            mediator = new ElementStorageMediator(this.mWorld.uiManager.getUILayerManager(), this.scene, this.mWorld);
+            mediator = new ElementStorageMediator(this.mWorld.uiManager.getUILayerManager(), this.scene, this.mWorld)as BaseMediator;
             this.mWorld.uiManager.setMediator(ElementStorageMediator.name, mediator);
         }
         if (mediator.isShow()) {

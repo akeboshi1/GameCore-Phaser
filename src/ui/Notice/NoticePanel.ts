@@ -1,16 +1,15 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { Border } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { WorldService } from "../../game/world.service";
 
-export class NoticePanel extends Panel {
+export class NoticePanel extends BasePanel {
     private mContentText: Phaser.GameObjects.Text;
     private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setTween(false);
     }
 
     public show(param?: any) {
@@ -18,6 +17,15 @@ export class NoticePanel extends Panel {
         this.setData("data", param);
         this.resize();
         this.scale = this.mWorld.uiRatio;
+        this.refreshData();
+    }
+
+    public addListen() {
+        if (!this.mInitialized) return;
+    }
+
+    public removeListen() {
+        if (!this.mInitialized) return;
     }
 
     public destroy() {
@@ -63,11 +71,6 @@ export class NoticePanel extends Panel {
         this.mContentText.x = -(this.mContentText.width >> 1);
         this.mContentText.y = -(this.mContentText.height >> 1);
 
-        // this.mTween = this.scene.tweens.add({
-        //     targets: this,
-        //     alpha: 1,
-        //     duration: 200
-        // });
         this.mTween = this.scene.tweens.add({
             targets: this,
             alpha: 0,
@@ -102,7 +105,9 @@ export class NoticePanel extends Panel {
             .setStroke("#000000", 1);
         this.add(this.mContentText);
         super.init();
+    }
 
+    private refreshData() {
         const data = this.getData("data");
         if (data) {
             this.showNotice(data);
@@ -110,14 +115,14 @@ export class NoticePanel extends Panel {
     }
 
     private removeFromParent() {
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
+        if (this.view.parentContainer) {
+            this.view.parentContainer.remove(this.view);
         }
         if (this.mTween) {
             this.mTween.stop();
             this.mTween.remove();
             this.mTween = null;
         }
-        this.mShowing = false;
+        this.mShow = false;
     }
 }

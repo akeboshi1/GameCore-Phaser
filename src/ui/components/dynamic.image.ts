@@ -19,8 +19,8 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         }
 
         this.mUrl = value;
-        if (this.scene.cache.obj.exists(value)) {
-            this.onLoadComplete();
+        if (this.scene.textures.exists(value)) {
+            this.onLoadComplete(value);
         } else {
             this.scene.load.image(value, value);
             this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
@@ -34,22 +34,24 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         this.mLoadContext = null;
         this.mLoadErrorCallback = null;
         this.mUrl = "";
-        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
-        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
-        super.destroy(fromScene);
-    }
-
-    protected onLoadComplete(file?: Phaser.Loader.File) {
-        if (file && file.key === this.mUrl) {
+        if (this.scene) {
             this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
             this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
         }
-        this.setTexture(this.mUrl);
-        if (this.mLoadCompleteCallbak) {
-            const cb: Function = this.mLoadCompleteCallbak;
-            this.mLoadCompleteCallbak = null;
-            cb.call(this.mLoadContext);
-            this.mLoadContext = null;
+        super.destroy(fromScene);
+    }
+
+    protected onLoadComplete(file?: string) {
+        if (file === this.mUrl) {
+            this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
+            this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
+            this.setTexture(this.mUrl);
+            if (this.mLoadCompleteCallbak) {
+                const cb: Function = this.mLoadCompleteCallbak;
+                this.mLoadCompleteCallbak = null;
+                cb.call(this.mLoadContext);
+                this.mLoadContext = null;
+            }
         }
     }
 

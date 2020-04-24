@@ -161,6 +161,7 @@ export class Actor extends Player implements InputListener {
     }
 
     protected onMoveComplete() {
+        this.preMoveComplete();
         if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;

@@ -6,6 +6,7 @@ import { IRoomService, Room } from "../rooms/room";
 import { MessageType } from "../const/MessageType";
 import { FramesDisplay } from "../rooms/display/frames.display";
 import { Element } from "../rooms/element/element";
+import { Logger } from "../utils/log";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -48,7 +49,7 @@ export class MouseManager extends PacketHandler {
         } catch (e) {
         }
         room.scene.input.on("gameobjectdown", this.groundDown, this);
-        room.scene.input.on("gameobjectup", this.groundUp, this);
+        // room.scene.input.on("gameobjectup", this.groundUp, this);
         room.scene.input.on("pointerdown", this.pointerDownHandler, this);
         room.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.resume();
@@ -159,7 +160,7 @@ export class MouseManager extends PacketHandler {
     private pointerDownHandler(pointer, gameobject) {
         if (this.worldService) {
             if (this.worldService.emitter) {
-                this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK);
+                this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK, pointer);
             }
         }
         this.onUpdate(pointer, this.mGameObject);

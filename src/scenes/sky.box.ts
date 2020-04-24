@@ -1,9 +1,9 @@
 import { BasicScene } from "./basic.scene";
 import { PlayCamera } from "../rooms/cameras/play.camera";
-import { IBackgroundManager } from "../rooms/sky.box/background.manager";
+import { ISkyBoxManager } from "../rooms/sky.box/sky.box.manager";
 
 export class SkyBoxScene extends BasicScene {
-  private mRoom: IBackgroundManager;
+  private mRoom: ISkyBoxManager;
   constructor() {
     super({});
   }

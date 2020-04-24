@@ -1,16 +1,16 @@
-import { BaseMediator } from "../baseMediator";
 import { WorldService } from "../../game/world.service";
-import { IAbstractPanel } from "../abstractPanel";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
-import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class ShopMediator extends BaseMediator {
     public static NAME: string = "ShopMediator";
-    public world: WorldService;
+    private world: WorldService;
     private readonly _perPage = 50;
     private _curPage: number;
     private fetching: boolean;
@@ -18,11 +18,11 @@ export class ShopMediator extends BaseMediator {
     private mScene: Phaser.Scene;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
+        super();
         this.world = world;
         this.mScene = scene;
         this.mLayerManager = layerManager;
-        this.mUIType = UIType.NormalUIType;
+        this.mUIType = UIType.Normal;
     }
 
     public isSceneUI(): boolean {
@@ -30,15 +30,15 @@ export class ShopMediator extends BaseMediator {
     }
 
     public resize() {
-        if (this.mView) return this.mView.resize(this.mAddWid, this.mAddHei);
+        if (this.mView) return this.mView.resize();
     }
 
-    public getView(): IAbstractPanel {
-        return this.mView;
+    public getView(): BasePanel {
+        return this.mView.view;
     }
 
     public show(param?: any) {
-        if (this.mView && this.mView.isShow() || this.isShowing) {
+        if (this.mView && this.mView.isShow() || this.mShow) {
             return;
         }
         this.mView = new ShopPanel(this.mScene, this.world);
@@ -46,7 +46,7 @@ export class ShopMediator extends BaseMediator {
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToUILayer(this.mView.view);
         this.world.uiManager.checkUIState(ShopMediator.NAME, false);
         super.show(param);
     }
@@ -57,7 +57,7 @@ export class ShopMediator extends BaseMediator {
 
     public hide() {
         if (!this.mView) return;
-        this.isShowing = false;
+        this.mShow = false;
         this.world.emitter.off(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.off(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.mView.hide();

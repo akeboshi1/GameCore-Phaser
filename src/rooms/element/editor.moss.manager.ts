@@ -85,6 +85,27 @@ export class EditorMossManager extends ElementManager {
         this.connection.send(pkt);
     }
 
+    public deleteMosses(ids: number[]) {
+        const deleteLocs = [];
+        for (const id of ids) {
+            const loc = this.editorMosses.get(id);
+            deleteLocs.push(loc);
+            this.taskQueue.set(id, {
+                action: "DELETE",
+                loc,
+            });
+        }
+
+        this.reqEditorDeleteMossData(deleteLocs);
+    }
+
+    reqEditorDeleteMossData(locs: op_def.IMossMetaData[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_MOSSES);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_DELETE_MOSSES = pkt.content;
+        content.locs = locs;
+        this.connection.send(pkt);
+    }
+
     protected handleAddMosses(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_MOSSES = packet.content;
         const locs = content.locs;

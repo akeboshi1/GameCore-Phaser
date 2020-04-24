@@ -1,20 +1,20 @@
-import { BaseMediator } from "../baseMediator";
-import { IAbstractPanel } from "../abstractPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { ControlFPanel } from "./ControlFPanel";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { PlayerState } from "../../rooms/element/element";
-import { UIType } from "../ui.manager";
+import { BasePanel } from "../components/BasePanel";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 export class ControlFMediator extends BaseMediator {
     public static NAME: string = "ControlFMediator";
-    readonly world: WorldService;
+    private world: WorldService;
     private mScene: Phaser.Scene;
     private mLayerManager: ILayerManager;
     constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService) {
-        super(world);
-        this.mUIType = UIType.TipsUIType;
+        super();
+        this.mUIType = UIType.Tips;
         this.mScene = scene;
         this.mLayerManager = layerManager;
         this.world = world;
@@ -24,12 +24,12 @@ export class ControlFMediator extends BaseMediator {
         return "";
     }
 
-    getView(): IAbstractPanel {
+    getView(): BasePanel {
         return undefined;
     }
 
     hide(): void {
-        this.isShowing = false;
+        this.mShow = false;
         if (this.mView && this.mView.isShow()) {
             if (!this.world.roomManager.currentRoom || !this.world.roomManager.currentRoom.playerManager.actor ||
                 this.world.roomManager.currentRoom.playerManager.actor.getState() === PlayerState.WALK) {
@@ -51,16 +51,16 @@ export class ControlFMediator extends BaseMediator {
 
     resize() {
         if (!this.mView) return;
-        this.mView.resize(this.mAddWid, this.mAddHei);
+        this.mView.resize();
     }
 
     show(param?: any): void {
-        if (this.mView && this.mView.isShow() || this.isShowing) {
+        if (this.mView && this.mView.isShow() || this.mShow) {
             return;
         }
         this.mView = new ControlFPanel(this.mScene, this.world);
         this.mView.on("control", this.handControlF, this);
-        this.mLayerManager.addToUILayer(this.mView);
+        this.mLayerManager.addToUILayer(this.mView.view);
         this.mView.show(param);
         super.show(param);
     }

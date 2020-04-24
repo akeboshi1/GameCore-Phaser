@@ -1,11 +1,11 @@
-import { IElementManager } from "./element.manager";
+import { IElementManager, ElementManager } from "./element.manager";
 import { IFramesModel } from "../display/frames.model";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
@@ -14,7 +14,7 @@ import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
 import { DisplayObject } from "../display/display.object";
-
+import { AI } from "../action/AI";
 export enum PlayerState {
     IDLE = "idle",
     WALK = "walk",
@@ -87,6 +87,9 @@ export interface MoveData {
     tweenAnim?: Tweens.Tween;
     tweenLineAnim?: Tweens.Timeline;
     tweenLastUpdate?: number;
+    onCompleteParams?: any;
+    onComplete?: Function;
+    step?: number;
 }
 
 export interface MovePath {
@@ -133,6 +136,14 @@ export class Element extends BlockObject implements IElement {
             return this.mElementManager.scene;
         }
     }
+    get ai(): AI {
+        return this.mAi;
+    }
+    get eleMgr(): ElementManager {
+        if (this.mElementManager) {
+            return this.mElementManager as ElementManager;
+        }
+    }
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
@@ -142,11 +153,14 @@ export class Element extends BlockObject implements IElement {
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mShopEntity: ShopEntity;
-
+    //  protected concomitants: Element[];
+    protected mAi: AI;
+    protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
+        this.mAi = new AI(this);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -266,16 +280,31 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.arrivalTime = movePath.timestemp;
+        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
         const paths = [];
+        let angle = null;
         let point = null;
-        const now = this.mElementManager.roomService.now();
+        let now = this.mElementManager.roomService.now();
+        let duration = 0;
+        let index = 0;
         for (const path of movePath.path) {
             point = path.point3f;
+            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+            }
+            now += duration;
+            duration = path.timestemp - now;
             paths.push({
                 x: point.x,
                 y: point.y,
-                duration: path.timestemp - now
+                duration,
+                onStartParams: angle,
+                onStart: (tween, target, params) => {
+                    this.onCheckDirection(params);
+                }
             });
+            lastPos = new Pos(point.x, point.y);
+            index++;
         }
         this.mMoveData.posPath = paths;
         this._doMove();
@@ -306,7 +335,8 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
-            this.setDepth(p.depth);
+            const depth = p.depth ? p.depth : 0;
+            this.setDepth(depth);
         }
         this.updateBlock();
     }
@@ -327,7 +357,6 @@ export class Element extends BlockObject implements IElement {
         this.updateBubble();
         this.roomService.addToSceneUI(this.mBubble);
     }
-
     public clearBubble() {
         if (!this.mBubble) {
             return;
@@ -335,7 +364,6 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.destroy();
         this.mBubble = null;
     }
-
     public showNickName() {
         if (this.mDisplay && this.model) {
             this.mDisplay.showNickname(this.model.nickname);
@@ -379,6 +407,27 @@ export class Element extends BlockObject implements IElement {
         this.mDisplay.setAlpha(val);
     }
 
+    // public setConcomitant(ele: Element, isFollow: boolean = true) {
+    //     if (!this.concomitants) this.concomitants = [];
+    //     if (this.concomitants.indexOf(ele) !== -1) {
+    //         this.concomitants.push(ele);
+    //         if (isFollow)
+    //             this.mDisplay.add(ele.mDisplay);
+    //     }
+
+    // }
+
+    // public removeConcomitant(ele: Element, destroy: boolean = true) {
+    //     if (this.concomitants) {
+    //         const index = this.concomitants.indexOf(ele);
+    //         if (index !== -1) {
+    //             this.concomitants.slice(index, 1);
+    //             if (destroy)
+    //                 ele.destroy();
+    //         }
+    //     }
+    // }
+
     public destroy() {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();
@@ -401,7 +450,13 @@ export class Element extends BlockObject implements IElement {
             this.mShopEntity.destroy();
             this.mShopEntity = null;
         }
-
+        // if (this.concomitants) {
+        //     for (const ele of this.concomitants) {
+        //         ele.destroy();
+        //     }
+        //     this.concomitants.length = 0;
+        //     this.concomitants = null;
+        // }
         super.destroy();
     }
 
@@ -508,7 +563,11 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         room.addToSurface(this.mDisplay);
-        this.setDepth(this.model.pos.depth);
+        let depth = 0;
+        if (this.model && this.model.pos) {
+            depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
+        this.setDepth(depth);
     }
 
     protected setDepth(depth: number) {
@@ -529,7 +588,11 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplay) {
             this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
-            this.setDepth(this.model.pos.depth);
+            let depth = 0;
+            if (this.model && this.model.pos) {
+                depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            }
+            this.setDepth(depth);
             // this.mDisplay.showRefernceArea();
         }
     }
@@ -547,9 +610,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onMoveStart() {
+        if (this.mDisplay) this.mDisplay.emit("startMove", this.scene);
     }
 
     protected onMoveComplete() {
+        if (this.mDisplay) this.mDisplay.emit("endMove", this.scene);
         // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
         this.stopMove();
     }
@@ -557,13 +622,44 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            this.setDepth(this.model.pos.depth);
+            let depth = 0;
+            if (this.model && this.model.pos) {
+                depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            }
+            this.setDepth(depth);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
+            if (this.mDisplay) this.mDisplay.emit("posChange", this.scene);
             if (this.mBlockable) {
                 this.roomService.updateBlockObject(this);
                 // this.roomService.addBlockObject()
             }
+        }
+    }
+
+    protected get offsetY(): number {
+        if (this.mOffsetY === undefined) {
+            if (!this.mElementManager || !this.mElementManager.roomService || !this.mElementManager.roomService.roomSize) {
+                return 0;
+            }
+            // this.mOffsetY = 0;
+            this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
+        }
+        return 0; // this.mOffsetY;
+    }
+
+    protected onCheckDirection(params: any) {
+        if (typeof params !== "number") {
+            return;
+        }
+        if (params > 90) {
+            this.setDirection(3);
+        } else if (params >= 0) {
+            this.setDirection(5);
+        } else if (params >= -90) {
+            this.setDirection(7);
+        } else {
+            this.setDirection(1);
         }
     }
 }

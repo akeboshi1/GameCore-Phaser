@@ -2,7 +2,6 @@
 import { Room } from "../rooms/room";
 import { JoyStickManager } from "../game/joystick.manager";
 import { Size } from "../utils/size";
-import { DebugLoggerMediator } from "../ui/debuglog/debug.logger.mediator";
 import { Font } from "../utils/font";
 import { BasicScene } from "./basic.scene";
 
@@ -13,7 +12,6 @@ export class MainUIScene extends BasicScene {
   private timeOutTimeMap = {};
   private fps: Phaser.GameObjects.Text;
   private sizeTF: Phaser.GameObjects.Text;
-  private mDebugLoger: DebugLoggerMediator;
   private mRoom: Room;
   constructor() {
     super({ key: MainUIScene.name });
@@ -59,7 +57,7 @@ export class MainUIScene extends BasicScene {
     this.timeOutCancelMap[id] = true;
   }
 
-  public update() {
+  public update(time: number, delta: number) {
     this.fps.setText(this.game.loop.actualFps.toFixed());
     // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
     // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +

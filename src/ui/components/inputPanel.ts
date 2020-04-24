@@ -1,4 +1,3 @@
-import { Panel } from "./panel";
 import { InputTextField, InputTextFieldEvent } from "./inputTextFactory";
 import { WorldService } from "../../game/world.service";
 

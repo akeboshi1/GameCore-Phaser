@@ -29,10 +29,10 @@ import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
-import { BackgroundManager } from "./sky.box/background.manager";
+import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { SoundManager, SoundField } from "../game/sound.manager";
-import { Url } from "../utils/resUtil";
-import { EditorMossManager } from "./element/editor.moss.manager";
+import { GroupManager } from "./group/GroupManager";
+import { FrameManager } from "./element/frame.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -110,6 +110,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mPlayerManager: PlayerManager;
     protected mWallManager: WallManager;
     protected mLayManager: LayerManager;
+    protected mGroupManager: GroupManager;
+    protected mFrameManager: FrameManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -117,7 +119,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
-    protected mBackgrounds: BackgroundManager[];
+    protected mBackgrounds: SkyBoxManager[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -190,7 +192,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // TODO: Unload loading-scene
     }
 
-    public startLoad() {}
+    public startLoad() { }
 
     public completeLoad() {
         this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
@@ -209,17 +211,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mWallManager = new WallManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mLayManager = new LayerManager(this);
+        this.mGroupManager = new GroupManager(this);
+        this.mFrameManager = new FrameManager();
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            // const zoom = Math.ceil(window.devicePixelRatio);
-            // this.mCameraService.setBounds(0, 0, this.mSize.sceneWidth, this.mSize.sceneHeight);
-            this.mCameraService.setBounds(
-                -camera.width >> 1,
-                -camera.height >> 1,
-                this.mSize.sceneWidth * this.mScaleRatio + camera.width,
-                this.mSize.sceneHeight * this.mScaleRatio + camera.height
-            );
+            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * this.mScaleRatio + camera.width, this.mSize.sceneHeight * this.mScaleRatio + camera.height);
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -227,8 +224,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
             }
         }
-        this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        // this.mActor = new Actor(, this.mPlayerManager);
+        // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
+        this.mPlayerManager.createActor(this.mActorData);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();
@@ -238,24 +235,29 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) {
             this.cameraService.syncCamera();
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-            // this.mCameraService.syncCameraScroll();
         }
 
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
-        // const close = new CloseShot(this.world, this.mCameraService);
-        if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
-            this.mBackgrounds = [];
-            this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
-            // const close = new BackgroundManager(this, "close", this.mCameraService);
-        }
+        // if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
+        //     this.mBackgrounds = [];
+        //     this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
+        //     // const close = new BackgroundManager(this, "close", this.mCameraService);
+        // }
+        this.addSkyBox();
         const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
         this.world.playSound({
-            urls: Url.getRes(`sound/${list[Math.floor(Math.random() * list.length)]}`),
+            urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
             field: SoundField.Element,
             soundConfig: { loop: true },
+        });
+
+        import(/*  */ "../module/template/main.js").then(({ Template }) => {
+            const tmp = new Template();
+            tmp.init(this.world);
+            //   Logger.getInstance().log("module: ", Template);
         });
     }
 
@@ -370,6 +372,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBlocks.update(time, delta);
         // this.startCheckBlock();
         if (this.layerManager) this.layerManager.update(time, delta);
+        if (this.elementManager) this.elementManager.update(time, delta);
+        if (this.mFrameManager) this.frameManager.update(time, delta);
     }
 
     public updateClock(time: number, delta: number) {
@@ -406,6 +410,50 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mScene) {
         //   this.mScene = null;
         // }
+    }
+
+    protected addSkyBox() {
+        const gameid = this.mWorld.getConfig().game_id;
+        this.mBackgrounds = [];
+        if (gameid === "5e719a0a68196e416ecf7aad") {
+            if (this.id === 926312429) {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+                    key: "skybox/mine/level_0",
+                    width: 1120,
+                    height: 684
+                }, this.mCameraService));
+            } else {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+                    key: "skybox/bh/bh",
+                    width: 3400,
+                    height: 1900,
+                    gridW: 256,
+                    gridH: 256
+                }, this.mCameraService));
+            }
+            // const close = new BackgroundManager(this, "close", this.mCameraService);
+        } else if (gameid === "5e9a7dace87abc390c4b1b73") {
+            if (this.id === 926312429) {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+                    key: "skybox/mine/level_0",
+                    width: 1120,
+                    height: 684
+                }, this.mCameraService));
+            } else if (this.id === 395490295) {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+                    key: "skybox/mine/level_1",
+                    width: 1360,
+                    height: 994
+                }, this.mCameraService));
+            } else {
+                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+                    key: "skybox/mine/level_1",
+                    width: 1540,
+                    height: 969
+                }, this.mCameraService));
+            }
+
+        }
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -465,6 +513,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get layerManager(): LayerManager {
         return this.mLayManager || undefined;
+    }
+
+    get groupManager(): GroupManager {
+        return this.mGroupManager || undefined;
+    }
+
+    get frameManager(): FrameManager {
+        return this.mFrameManager || undefined;
     }
 
     get cameraService(): ICameraService {
@@ -572,6 +628,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         fall.show(status);
         fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         this.addToSceneUI(fall);
+        // test
+        // const content = new op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE();
+        // content.duration = 2000;
+        // this.playerManager.actor.showInteractionBubble(content);
     }
 
     private onMovePathHandler(packet: PBpacket) {
@@ -635,14 +695,19 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
 
+        const step = moveData.step;
+        if (step >= pos.length) {
+            return;
+        }
+
         const playerPosition = player.getPosition();
         const position = op_def.PBPoint3f.create();
         position.x = playerPosition.x;
         position.y = playerPosition.y;
 
         const nextPosition = op_def.PBPoint3f.create();
-        nextPosition.x = pos[0].x;
-        nextPosition.y = pos[0].y;
+        nextPosition.x = pos[step].x;
+        nextPosition.y = pos[step].y;
 
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
         const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
@@ -652,6 +717,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.connection.send(packet);
     }
 
+    // Move through the location returned by the server
     private onTapHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
         this.move(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio, gameObject);
     }

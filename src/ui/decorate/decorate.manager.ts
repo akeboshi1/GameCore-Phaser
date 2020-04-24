@@ -1,5 +1,5 @@
-import {DecoratePanel} from "./decorate.panel";
-import {LayerManager} from "../../rooms/layer/layer.manager";
+import { DecoratePanel } from "./decorate.panel";
+import { LayerManager } from "../../rooms/layer/layer.manager";
 import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { Pos } from "../../utils/pos";
@@ -14,7 +14,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
     private mRoomService: IRoomService;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
         super();
-        this.mPanel = new DecoratePanel(scene, <DecorateRoom> roomService);
+        this.mPanel = new DecoratePanel(scene, <DecorateRoom>roomService);
         this.mPanel.on("moveElement", this.onMoveElementHandler, this);
         this.mPanel.on("addSprite", this.onAddSpriteHandler, this);
         this.mPanel.on("addSingleSprite", this.onAddSingleSprtieHandle, this);
@@ -24,7 +24,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
 
     public setElement(ele: IElement) {
         this.mPanel.setElement(ele);
-        this.mLayerManager.addToSceneToUI(this.mPanel);
+        this.mLayerManager.addToSceneToUI(this.mPanel.view);
         this.mPanel.show();
     }
 
@@ -36,17 +36,17 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
 
     public remove() {
         // TODO panel只有destroy。需要封装个仅移除的方法
-        if (this.mPanel.parentContainer) {
-            this.mPanel.parentContainer.remove(this.mPanel);
+        if (this.mPanel.view.parentContainer) {
+            this.mPanel.view.parentContainer.remove(this.mPanel);
         }
-        this.mPanel.close();
+        this.mPanel.removeListen();
     }
 
     public updatePos(x: number, y: number) {
         if (!this.mPanel) {
             return;
         }
-        this.mPanel.updatePos(x, y);
+        this.mPanel.setPosition(x, y);
     }
 
     public destroy() {

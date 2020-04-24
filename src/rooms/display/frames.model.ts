@@ -1,10 +1,11 @@
 import { op_gameconfig, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
-import { AnimationDataNode } from "game-capsule/lib/configobjects";
 import * as sha1 from "simple-sha1";
 import { Animation, IAnimationData } from "./animation";
 import Helpers from "../../utils/helpers";
 import { ISprite, Sprite } from "../element/sprite";
+import { Direction } from "../element/element";
+import { AnimationData } from "../element/sprite";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -24,6 +25,7 @@ export interface IFramesModel {
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
     createSprite(properties: object): Sprite;
+    findAnimation(baseName: string, dir: Direction): AnimationData;
     destroy();
 }
 
@@ -114,7 +116,7 @@ export class FramesModel implements IFramesModel {
 
     public getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined {
         const ani = this.getAnimations(aniName);
-        return ani.interactiveArea;
+        return ani ? ani.interactiveArea : undefined;
     }
 
     public getOriginPoint(aniName, flip: boolean = false): Phaser.Geom.Point {
@@ -168,6 +170,32 @@ export class FramesModel implements IFramesModel {
         return new Sprite(spr, nodeType);
     }
 
+    public findAnimation(baseName: string, dir: Direction): AnimationData {
+        let animationName = this.checkDirectionAnimation(baseName, dir);
+        let flip = false;
+        if (animationName) {
+            return { animationName, flip };
+        }
+        switch (dir) {
+            case Direction.west_south:
+            case Direction.east_north:
+                animationName = this.getDefaultAnimation(baseName);
+                break;
+            case Direction.south_east:
+                animationName = this.getDefaultAnimation(baseName);
+                flip = true;
+                break;
+            case Direction.north_west:
+                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
+                if (animationName === null) {
+                    animationName = this.getDefaultAnimation(baseName);
+                }
+                flip = true;
+                break;
+        }
+        return { animationName, flip };
+    }
+
     private setDisplay(display: op_gameconfig.IDisplay) {
         if (!display) {
             Logger.getInstance().error(`${this.type} display does not exist`);
@@ -204,5 +232,26 @@ export class FramesModel implements IFramesModel {
             // this.animations.set(aniData.name + "_1", aniData);
             // this.animations.set(aniData.name + "_5", aniData);
         }
+    }
+
+    private checkDirectionAnimation(baseAniName: string, dir: Direction) {
+        const aniName = `${baseAniName}_${dir}`;
+        if (this.existAnimation(aniName)) {
+            return aniName;
+        }
+        return null;
+    }
+
+    private getDefaultAnimation(baseName: string) {
+        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
+        if (animationName === null) {
+            if (this.existAnimation(baseName)) {
+                animationName = baseName;
+            } else {
+                Logger.getInstance().warn(`${FramesModel.name}: can't find animation ${baseName}`);
+                animationName = "idle";
+            }
+        }
+        return animationName;
     }
 }

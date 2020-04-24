@@ -1,10 +1,10 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
 
-export class PicaMainUIPanel extends Panel {
+export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
     private mCoinValue: ValueContainer;
     private mDiamondValue: ValueContainer;
@@ -13,7 +13,6 @@ export class PicaMainUIPanel extends Panel {
     private mCounter: IconText;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
-        this.setTween(false);
     }
 
     resize(w: number, h: number) {
@@ -27,6 +26,24 @@ export class PicaMainUIPanel extends Panel {
     preload() {
         this.addAtlas(this.key, "main_ui/main_ui.png", "main_ui/main_ui.json");
         super.preload();
+    }
+
+    addListen() {
+        if (!this.mInitialized) return;
+        if (!this.mSceneName) {
+            Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
+            return;
+        }
+        this.mSceneName.on("pointerup", this.onEnterEditScene, this);
+    }
+
+    removeListen() {
+        if (!this.mInitialized) return;
+        if (!this.mSceneName) {
+            Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
+            return;
+        }
+        this.mSceneName.off("pointerup", this.onEnterEditScene, this);
     }
 
     init() {
@@ -69,7 +86,7 @@ export class PicaMainUIPanel extends Panel {
             bottom: frame.height - 1 - 3 * this.dpr
 
         });
-        strengthValue.setProgress(ninePatch,  this.scale);
+        strengthValue.setProgress(ninePatch, this.scale);
         this.add(strengthValue);
         strengthValue.setValue(1000, 1000);
 
@@ -77,7 +94,7 @@ export class PicaMainUIPanel extends Panel {
         const healthValue = new ProgressValue(this.scene, this.key, "health_con.png", this.dpr);
         healthValue.x = 150 * this.dpr;
         healthValue.y = 27 * this.dpr;
-        const healthNinePatch =  new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress.png", {
+        const healthNinePatch = new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress.png", {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
             right: frame.width - 2 - 8 * this.dpr,
@@ -89,10 +106,8 @@ export class PicaMainUIPanel extends Panel {
 
         const expProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
         this.add(expProgress);
-
+        super.init();
         this.resize(w, h);
-
-        this.mSceneName.on("pointerup", this.onEnterEditScene, this);
     }
 
     private onEnterEditScene() {

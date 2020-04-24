@@ -1,16 +1,16 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { BlackButton, Border, TransparentButton, Url } from "../../utils/resUtil";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
 import { WorldService } from "../../game/world.service";
 import { NinePatch } from "../components/nine.patch";
 
-export class UserMenuPanel extends Panel {
+export class UserMenuPanel extends BasePanel {
     private mBackground: NinePatch;
     private mMenus: MenuItem[] = [];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.mWorld = world;
+        this.disInteractive();
     }
 
     show(param?: any) {
@@ -22,19 +22,28 @@ export class UserMenuPanel extends Panel {
         this.addItem(param);
         this.x = this.scene.input.activePointer.x + 32;
         this.y = this.scene.input.activePointer.y + 32;
-        this.scene.input.on("gameobjectdown", this.onClickMenu, this);
+        // this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     }
 
     hide() {
-        this.scene.input.off("gameobjectdown", this.onClickMenu, this);
-        this.removeInteractive();
+        // this.scene.input.off("gameobjectdown", this.onClickMenu, this);
+        this.disInteractive();
         this.clear();
         super.hide();
     }
 
+    public addListen() {
+        if (!this.mInitialized) return;
+        this.scene.input.on("gameobjectdown", this.onClickMenu, this);
+    }
+
+    public removeListen() {
+        if (!this.mInitialized) return;
+        this.scene.input.off("gameobjectdown", this.onClickMenu, this);
+    }
+
     setSize(width: number, height: number): this {
         super.setSize(width, height);
-        this.setInteractive();
         if (this.mBackground) {
             this.mBackground.resize(width, height);
             // this.mBackground.x = this.mBackground.width * this.originX;

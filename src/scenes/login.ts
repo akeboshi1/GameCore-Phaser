@@ -1,6 +1,6 @@
 import { ConnectionService } from "../net/connection.service";
 import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { Alert } from "../ui/alert/alert";
+import { PopUpTextUI } from "../ui/alert/PopUpTextUI";
 import { WorldService } from "../game/world.service";
 import { ComboBox, IComboboxRes, ISelectCallUI, ISelectCallItemData } from "../ui/components/comboBox";
 import { Logger } from "../utils/log";
@@ -440,7 +440,7 @@ export class LoginScene extends BasicScene {
                 login.mWorld.account.setAccount(response.data);
                 login.mCallBack(response.data);
             } else {
-                const alert = new Alert(login.mWorld, login);
+                const alert = new PopUpTextUI(login.mWorld, login);
                 alert.show("账号密码错误");
             }
         });
@@ -452,7 +452,7 @@ export class LoginScene extends BasicScene {
             if (response.code === 200) {
                 login.mVerificationCodeTxt.setText(response.data);
             } else {
-                const alert = new Alert(login.mWorld, login);
+                const alert = new PopUpTextUI(login.mWorld, login);
                 alert.show("验证码获取失败");
             }
         });
@@ -468,7 +468,7 @@ export class LoginScene extends BasicScene {
                     login.mWorld.account.setAccount(response.data);
                     login.mCallBack(response.data);
                 } else {
-                    const alert = new Alert(login.mWorld, login);
+                    const alert = new PopUpTextUI(login.mWorld, login);
                     alert.show("登录失败");
                 }
             });
@@ -482,7 +482,7 @@ export class LoginScene extends BasicScene {
                 login.mWorld.account.setAccount(response.data);
                 login.mCallBack(response.data);
             } else {
-                const alert = new Alert(login.mWorld, login);
+                const alert = new PopUpTextUI(login.mWorld, login);
                 alert.show("登录失败");
             }
         });

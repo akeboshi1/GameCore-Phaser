@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { Url, Background, Border } from "../../utils/resUtil";
@@ -8,7 +8,12 @@ import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
 import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
-export class InteractivePanel extends Panel {
+import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
+import { Tool } from "../../utils/tool";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+export class InteractivePanel extends BasePanel {
+    private static baseWidth: number = 720;
+    private static baseHeight: number = 720;
     private mNameCon: Phaser.GameObjects.Container;
     private mDescCon: Phaser.GameObjects.Container;
     private mLeftFaceIcon: Phaser.GameObjects.Image;
@@ -31,9 +36,12 @@ export class InteractivePanel extends Panel {
     private mMidBaseScaleY: number = 1;
     private mRightBaseScaleX: number = 1;
     private mRightBaseScaleY: number = 1;
-
+    private mTextArea: TextArea;
+    private mDisDelection: number = 10;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        // this.setEnabled(false);
+        this.setTween(false);
     }
     /**
      * 通過參數進行ui佈局
@@ -41,14 +49,15 @@ export class InteractivePanel extends Panel {
      * @param radioClick
      */
     public show(param?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
+        super.show(param);
         const size: Size = this.mWorld.getSize();
         this.mData = param;
         if (!this.mInitialized) {
             this.preload();
             return;
         }
-        this.mShowing = true;
-        const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
+        this.mShow = true;
+        const med: BaseMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME);
         const data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mData[0];
         if (this.mLeftFaceIcon) this.mLeftFaceIcon.visible = false;
         if (this.mRightFaceIcon) this.mRightFaceIcon.visible = false;
@@ -72,16 +81,17 @@ export class InteractivePanel extends Panel {
             if (data.text.length > 0) {
                 const descData: op_gameconfig_01.IText = data.text[0];
                 this.mDescCon.setData("nodeID", descData.node.id);
-                this.mDescTF.text = descData.text;
-                this.mDescCon.off("pointerdown", this.descConClick, this);
-                this.mDescCon.on("pointerdown", this.descConClick, this);
+                this.mTextArea.setText(descData.text);
+                // this.mDescTF.text = descData.text;
+                this.mDescCon.off("pointerup", this.descConClick, this);
+                this.mDescCon.on("pointerup", this.descConClick, this);
                 if (data.text[1]) {
                     const nameData: op_gameconfig_01.IText = data.text[1];
                     this.mNameCon.setData("nodeID", nameData.node.id);
                     this.mNameTF.text = nameData.text;
                     this.mNameTF.x = - this.mNameTF.width >> 1;
-                    this.mNameCon.off("pointerdown", this.nameConClick, this);
-                    this.mNameCon.on("pointerdown", this.nameConClick, this);
+                    this.mNameCon.off("pointerup", this.nameConClick, this);
+                    this.mNameCon.on("pointerup", this.nameConClick, this);
                 }
             }
         }
@@ -103,7 +113,7 @@ export class InteractivePanel extends Panel {
                     },
                     clickCallBack: (itemData: ISelectCallItemData) => {
                         if (!itemData || !med) return;
-                        med.componentClick(itemData.data);
+                        (med as InteractivePanelMediator).componentClick(itemData.data);
                     }
                 });
                 this.radioComplete();
@@ -112,10 +122,13 @@ export class InteractivePanel extends Panel {
             this.mRadio.visible = true;
         }
         this.resize();
-        if (this.mShowing) {
+        if (this.mShow) {
             return;
         }
-        super.show(param);
+    }
+
+    public hide() {
+        super.hide();
     }
 
     public update(param?: any) {
@@ -131,56 +144,63 @@ export class InteractivePanel extends Panel {
     }
 
     public resize(wid: number = 0, hei: number = 0) {
-        this.scaleX = this.scaleY = this.mWorld.uiScale;
+        this.scale = this.mWorld.uiScale;
         const size: Size = this.mWorld.getSize();
+        const width = this.mWorld.getSize().width;
+        const height = this.mWorld.getSize().height;
+        const zoom = this.mWorld.uiScaleNew;
         this.mNameCon.add(this.mNameBg);
         this.mNameCon.add(this.mNameTF);
         this.mDescCon.add(this.mBg);
         this.mDescCon.add(this.mBorder);
         this.mDescCon.add(this.mDescTF);
+        this.mDescCon.add(this.mTextArea);
         this.add(this.mNameCon);
         this.add(this.mDescCon);
+        this.setSize(width, height);
         if (this.mWorld.game.device.os.desktop) {
             this.y = size.height / 2 - 250;
         } else {
             if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
                 this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
                 this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
-                this.setSize(this.mBg.width, this.mBg.height);
             } else {
                 this.mBg.resize((size.width - 10) / this.mWorld.uiScale, size.height * .5 / this.mWorld.uiScale);
                 this.mBorder.resize((size.width - 20) / this.mWorld.uiScale, (size.height * .5 - 20) / this.mWorld.uiScale);
-                this.setSize(this.mBg.width, this.mBg.height);
             }
             this.y = this.mBg.height * 1.5 * this.mWorld.uiScale;
         }
+        // this.y = 0;
 
         this.x = size.width >> 1;
         this.refreshUIPos();
         if (this.mRadio) {
             this.add(this.mRadio);
         }
+        this.mTextArea.childrenMap.child.setMinSize(this.mBorder.width - 10 * this.dpr * zoom, this.mBorder.height - 3 * this.dpr * zoom);
+        this.mTextArea.layout();
+        this.mTextArea.setPosition(width / 2, this.y + this.mDescCon.y);
+        const textMask = this.mTextArea.childrenMap.text;
+        textMask.x = -this.mBorder.width >> 1;
+        textMask.y = -this.mBorder.height / 2 + 20 * this.dpr;
+        textMask.resize(this.mBorder.width, this.mDescTF.displayHeight + 2000);
+        // textMask.bottomChildOY = this.mDescTF.displayHeight + 20 * this.dpr * zoom;
+        this.mTextArea.scrollToBottom();
+        super.resize(wid, hei);
     }
 
-    public addListen() {
-        this.mNameCon.on("pointerdown", this.nameConClick, this);
-        this.mDescCon.on("pointerdown", this.descConClick, this);
-        this.mLeftFaceIcon.on("pointerdown", this.leftFaceClick, this);
-        this.mMidFaceIcon.on("pointerdown", this.midFaceClick, this);
-        this.mRightFaceIcon.on("pointerdown", this.midFaceClick, this);
-    }
+    // public addListen() {
+    // super.addListen();
+    // this.on("panelClick", this.panelClick, this);
+    // }
 
-    public removeListen() {
-        this.mNameCon.off("pointerdown", this.nameConClick, this);
-        this.mDescCon.off("pointerdown", this.descConClick, this);
-        this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
-        this.mMidFaceIcon.off("pointerdown", this.midFaceClick, this);
-        this.mRightFaceIcon.off("pointerdown", this.midFaceClick, this);
-    }
+    // public removeListen() {
+    //     super.removeListen();
+    //     this.off("panelClick", this.panelClick, this);
+    // }
 
     public destroy() {
         this.mInitialized = false;
-        this.removeAllListeners();
         if (this.mNameCon) {
             this.mNameCon.destroy(true);
         }
@@ -227,12 +247,14 @@ export class InteractivePanel extends Panel {
     }
 
     protected init() {
+        const width = this.mWorld.getSize().width;
+        const height = this.mWorld.getSize().height;
         const zoom: number = this.mWorld.uiScaleNew;
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
         this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
-        this.setSize(this.mBg.width, this.mBg.height);
+        this.setSize(width, height);
         this.mBorder = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
@@ -249,27 +271,42 @@ export class InteractivePanel extends Panel {
 
         this.mNameBg = this.mScene.make.image(undefined, false);
         this.mNameBg.setTexture("juqing", "juqing_name.png");
-
         this.mDescTF = new BBCodeText(this.mScene, 0, 0, "", {
+            // width: this.mBorder.width - 20 * this.dpr * zoom,
             fontSize: "20px",
-            align: Phaser.Display.Align.LEFT_CENTER,
-            space: {
-                top: 10 * this.dpr * zoom,
-                bottom: 10 * this.dpr * zoom,
-                left: 10 * this.dpr * zoom,
-                right: 10 * this.dpr * zoom,
+            halign: "left",
+            textMask: false,
+            padding: {
+                top: 0,
+                bottom: 0,
+                left: 8 * this.dpr * zoom,
+                right: 3 * this.dpr * zoom,
             },
             wrap: {
-                mode: "char",
-                width: this.mBorder.width
+                mode: "character",
+                width: this.mBorder.width - 12 * this.dpr * zoom,
             },
         });
+
+        this.mTextArea = new TextArea(this.mScene, {
+            x: width / 2,
+            y: this.mBorder.y + this.mBorder.height / 2 + 80 * this.dpr * zoom,
+            width: this.mBorder.width,
+            height: this.mBorder.height - 20 * this.dpr * zoom,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            textWidth: this.mBorder.width - 12 * this.dpr * zoom,
+            textHeight: 0,
+            text: this.mDescTF,
+        })
+            .layout();
+        // const bg1 = this.mScene.make.graphics(undefined, false);
+        // bg1.fillStyle(0xffcc00);
+        // bg1.fillRect(-this.mBg.width >> 1, -this.mBg.height >> 1, this.mBg.width, this.mBg.height);
+        // this.mDescCon.add(bg1);
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
-
         this.mDescCon.setInteractive();
         this.mNameCon.setInteractive();
-
         super.init();
     }
 
@@ -278,60 +315,70 @@ export class InteractivePanel extends Panel {
         if (show) this.resize();
     }
 
+    // private panelClick(pointer: Phaser.Input.Pointer) {
+    //     if (Tool.checkPointerContains(this.mNameCon, pointer)) {
+    //         this.nameConClick(pointer);
+    //         return;
+    //     }
+    //     if (Tool.checkPointerContains(this.mDescCon, pointer)) {
+    //         this.descConClick(pointer);
+    //         return;
+    //     }
+    //     if (this.mLeftFaceIcon && Tool.checkPointerContains(this.mLeftFaceIcon, pointer)) {
+    //         this.leftFaceClick(pointer);
+    //         return;
+    //     }
+    //     if (this.mMidFaceIcon && Tool.checkPointerContains(this.mMidFaceIcon, pointer)) {
+    //         this.midFaceClick(pointer);
+    //         return;
+    //     }
+    //     if (this.mRightFaceIcon && Tool.checkPointerContains(this.mRightFaceIcon, pointer)) {
+    //         this.rightFaceClick(pointer);
+    //         return;
+    //     }
+    // }
+
     private refreshUIPos() {
         const size: Size = this.mWorld.getSize();
+        const zoom = this.mWorld.uiScaleNew;
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
         this.mNameTF.y = -8 * this.mWorld.uiScale;
-        this.mDescTF.x = -this.mBorder.width / 2;
-        this.mDescTF.y = -this.mBorder.height / 2;
+        // this.mDescTF.x = -this.mBorder.width / 2;
+        // this.mDescTF.y = -this.mBorder.height / 2;
         this.mDescCon.y = this.mWorld.game.device.os.desktop ? size.height / 2 + 80 : 0;
         this.mNameCon.x = 150 - this.mDescCon.width / 2;
         this.mNameCon.y = this.mDescCon.y - this.mDescCon.height / 2 - this.mNameCon.height / 2 - 10;
         this.mNameTF.setWrapWidth(this.mBorder.width);
-        this.mDescTF.setWrapWidth(this.mBorder.width);
-
+        this.mDescTF.setWrapWidth(this.mBorder.width - 10 * this.dpr * zoom);
         this.mNameTF.x = - this.mNameTF.width >> 1;
-
+        const desConWorldY: number = this.mDescCon.getWorldTransformMatrix().ty;
         if (!this.mWorld.game.device.os.desktop) {
             const leftIconWid: number = this.mLeftFaceIcon.width * this.mWorld.uiScale;
             const leftIconHei: number = this.mLeftFaceIcon.height * this.mWorld.uiScale;
-            let leftScale: number = 1;
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                leftScale = leftIconWid > size.width * .5 ? size.width * .5 / leftIconWid : leftIconWid / size.width * .5;
-            } else {
-                leftScale = leftIconHei > size.height * .5 ? size.height * .5 / leftIconHei : leftIconHei / size.height * .5;
-            }
+            const leftScale: number = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, leftIconWid, leftIconHei);
             this.mLeftFaceIcon.scaleX = this.mLeftBaseScaleX * leftScale * .7;
             this.mLeftFaceIcon.scaleY = this.mLeftBaseScaleY * leftScale * .7;
             this.mLeftFaceIcon.x = this.mNameCon.x;
-            this.mLeftFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
+            this.mLeftFaceIcon.y = desConWorldY - this.mLeftFaceIcon.height / 2 - this.mDescCon.height / 2; // this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
 
-            let midScale: number = 1;
             const midIconWid: number = this.mMidFaceIcon.width * this.mWorld.uiScale;
             const midIconHei: number = this.mMidFaceIcon.height * this.mWorld.uiScale;
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                midScale = midIconWid > size.width * .5 ? size.width * .5 / midIconWid : midIconWid / size.width * .5;
-            } else {
-                midScale = midIconHei > size.height * .5 ? size.height * .5 / midIconHei : midIconHei / size.height * .5;
-            }
+            const midScale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, midIconWid, midIconHei);
             this.mMidFaceIcon.scaleX = this.mMidBaseScaleX * midScale * .7;
             this.mMidFaceIcon.scaleY = this.mMidBaseScaleY * midScale * .7;
             this.mMidFaceIcon.x = 0;
-            this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
+            this.mMidFaceIcon.y = desConWorldY - this.mMidFaceIcon.height / 2 - this.mDescCon.height / 2;
+            // this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
 
-            let rightScale: number = 1;
             const rightIconWid: number = this.mRightFaceIcon.width * this.mWorld.uiScale;
             const rightIconHei: number = this.mRightFaceIcon.height * this.mWorld.uiScale;
-            if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                rightScale = rightIconWid > size.width * .5 ? size.width * .5 / rightIconWid : rightIconWid / size.width * .5;
-            } else {
-                rightScale = rightIconHei > size.height * .5 ? size.height * .5 / rightIconHei : rightIconHei / size.height * .5;
-            }
+            const rightScale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, rightIconWid, rightIconHei);
             this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale * .7;
             this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale * .7;
             this.mRightFaceIcon.x = -this.mNameCon.x;
-            this.mRightFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mRightFaceIcon.height * rightScale * .7 / 2;
+            this.mRightFaceIcon.y = desConWorldY - this.mRightFaceIcon.height / 2 - this.mDescCon.height / 2;
+            // this.mRightFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mRightFaceIcon.height * rightScale * .7 / 2;
         }
 
         if (this.mRadioCom) {
@@ -343,6 +390,10 @@ export class InteractivePanel extends Panel {
                 this.mRadio.y = this.mBg.height / 2 - this.mRadio.height;
             }
         }
+    }
+
+    private getScale(baseWid, baseHei, curWid, curHei): number {
+        return baseWid / curWid > baseHei / curHei ? baseWid / curWid : baseHei / curHei;
     }
 
     private onLoadComplete() {
@@ -362,97 +413,94 @@ export class InteractivePanel extends Panel {
                 this.mLeftFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mLeftBaseScaleX = scaleX;
                 this.mLeftBaseScaleY = scaleY;
-                if (!this.mWorld.game.device.os.desktop) {
-                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                        scale = this.mLeftFaceIcon.width > size.width * .5 ? size.width * .5 / this.mLeftFaceIcon.width : this.mLeftFaceIcon.width / size.width * .5;
-                    } else {
-                        scale = this.mLeftFaceIcon.height > size.height * .5 ? size.height * .5 / this.mLeftFaceIcon.height : this.mLeftFaceIcon.height / size.height * .5;
-                    }
-                }
+                scale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, this.mLeftFaceIcon.width, this.mLeftFaceIcon.height);
                 this.mLeftFaceIcon.scaleX = scaleX * scale;
                 this.mLeftFaceIcon.scaleY = scaleY * scale;
                 this.mLeftFaceIcon.x = imgX + 200;
-                this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
+                // this.mLeftFaceIcon.y = desConWorldY - this.mLeftFaceIcon.height / 2;
+                // this.mLeftFaceIcon.y = imgY + this.mLeftFaceIcon.height / 4;
                 this.mLeftFaceIcon.setInteractive();
                 this.addAt(this.mLeftFaceIcon, 0);
                 this.mLeftFaceIcon.visible = true;
-                this.mLeftFaceIcon.off("pointerdown", this.leftFaceClick, this);
-                this.mLeftFaceIcon.on("pointerdown", this.leftFaceClick, this);
+                this.mLeftFaceIcon.off("pointerup", this.leftFaceClick, this);
+                this.mLeftFaceIcon.on("pointerup", this.leftFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_CENTER:
                 this.mMidFaceIcon.setTexture(url);
                 this.mMidFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mMidBaseScaleX = scaleX;
                 this.mMidBaseScaleY = scaleY;
-                if (!this.mWorld.game.device.os.desktop) {
-                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                        scale = this.mMidFaceIcon.width > size.width * .5 ? size.width * .5 / this.mMidFaceIcon.width : this.mMidFaceIcon.width / size.width * .5;
-                    } else {
-                        scale = this.mMidFaceIcon.height > size.height * .5 ? size.height * .5 / this.mMidFaceIcon.height : this.mMidFaceIcon.height / size.height * .5;
-                    }
-                }
+                scale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, this.mMidFaceIcon.width, this.mMidFaceIcon.height);
                 this.mMidFaceIcon.scaleX = scaleX * scale;
                 this.mMidFaceIcon.scaleY = scaleY * scale;
                 this.mMidFaceIcon.x = 0;
-                this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
+                // this.mMidFaceIcon.y = desConWorldY - this.mMidFaceIcon.height / 2;
+                // this.mMidFaceIcon.y = imgY + this.mMidFaceIcon.height / 4;
                 this.addAt(this.mMidFaceIcon, 0);
                 this.mMidFaceIcon.visible = true;
-                this.mLeftFaceIcon.off("pointerdown", this.midFaceClick, this);
-                this.mMidFaceIcon.on("pointerdown", this.midFaceClick, this);
+                this.mMidFaceIcon.setInteractive();
+                this.mLeftFaceIcon.off("pointerup", this.midFaceClick, this);
+                this.mMidFaceIcon.on("pointerup", this.midFaceClick, this);
                 break;
             case op_def.HorizontalAlignment.HORIZONTAL_RIGHT:
                 this.mRightFaceIcon.setTexture(url);
                 this.mRightFaceIcon.setData("nodeID", uiDisplay.node.id);
                 this.mRightBaseScaleX = scaleX;
                 this.mRightBaseScaleY = scaleY;
-                if (!this.mWorld.game.device.os.desktop) {
-                    if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
-                        scale = this.mRightFaceIcon.width > size.width * .5 ? size.width * .5 / this.mRightFaceIcon.width : this.mRightFaceIcon.width / size.width * .5;
-                    } else {
-                        scale = this.mRightFaceIcon.height > size.height * .5 ? size.height * .5 / this.mRightFaceIcon.height : this.mRightFaceIcon.height / size.height * .5;
-                    }
-                }
+                scale = this.getScale(InteractivePanel.baseWidth, InteractivePanel.baseHeight, this.mRightFaceIcon.width, this.mRightFaceIcon.height);
                 this.mRightFaceIcon.scaleX = scaleX * scale;
                 this.mRightFaceIcon.scaleY = scaleY * scale;
                 this.mRightFaceIcon.x = 200;
-                this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
+                // this.mRightFaceIcon.y = desConWorldY - this.mRightFaceIcon.height / 2;
+                // this.mRightFaceIcon.y = imgY + this.mRightFaceIcon.height / 4;
                 this.addAt(this.mRightFaceIcon, 0);
                 this.mRightFaceIcon.visible = true;
-                this.mRightFaceIcon.off("pointerdown", this.rightFaceClick, this);
-                this.mRightFaceIcon.on("pointerdown", this.rightFaceClick, this);
+                this.mRightFaceIcon.setInteractive();
+                this.mRightFaceIcon.off("pointerup", this.rightFaceClick, this);
+                this.mRightFaceIcon.on("pointerup", this.rightFaceClick, this);
                 break;
         }
         this.resize();
     }
 
-    private rightFaceClick() {
+    private rightFaceClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!med) return;
         med.componentClick(this.mRightFaceIcon.getData("nodeID"));
     }
 
-    private midFaceClick() {
+    private midFaceClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!med) return;
         med.componentClick(this.mMidFaceIcon.getData("nodeID"));
     }
 
-    private leftFaceClick() {
+    private leftFaceClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!med) return;
         med.componentClick(this.mLeftFaceIcon.getData("nodeID"));
     }
 
-    private descConClick() {
+    private descConClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!this.mDescCon.getData("nodeID") || !med) return;
         med.componentClick(this.mDescCon.getData("nodeID"));
     }
 
-    private nameConClick() {
+    private nameConClick(pointer) {
+        if (!this.checkPointer(pointer)) return;
         const med: InteractivePanelMediator = this.mWorld.uiManager.getMediator(InteractivePanelMediator.NAME) as InteractivePanelMediator;
         if (!this.mNameCon.getData("nodeID") || !med) return;
         med.componentClick(this.mNameCon.getData("nodeID"));
+    }
+
+    private checkPointer(pointer: Phaser.Input.Pointer): boolean {
+        return Math.abs(pointer.downX - pointer.upX) < this.mDisDelection &&
+            Math.abs(pointer.downY - pointer.upY) < this.mDisDelection;
     }
 
     private onLoadError(file: Phaser.Loader.File) {
@@ -462,8 +510,8 @@ export class InteractivePanel extends Panel {
         this.mRadioCom = true;
         const size: Size = this.mWorld.getSize();
         if (!this.mRadio) return;
-        // this.mRadio.x = 220;
-        // this.mRadio.y = this.mDescCon.height + 200;
+        this.mRadio.x = 220;
+        this.mRadio.y = this.mDescCon.height + 200;
         this.resize();
     }
 }

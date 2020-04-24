@@ -1,4 +1,4 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
 import { Background, Border, Url, BlueButton } from "../../utils/resUtil";
 import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
@@ -8,7 +8,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
 import { UserInfoMediator } from "./UserInfoMediator";
 
-export class UserInfoPanel extends Panel {
+export class UserInfoPanel extends BasePanel {
     private mActor: DynamicImage;
     private mBadgeImages: DynamicImage[] = [];
     private mNickName: Phaser.GameObjects.Text;
@@ -163,7 +163,7 @@ export class UserInfoPanel extends Panel {
         });
         this.add(this.mLv);
 
-        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "", "关注", BlueButton.getConfig());
+        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), BlueButton.getName(), "关注", BlueButton.getConfig());
         this.mFollwerBtn.x = 258 + (this.mFollwerBtn.width >> 1);
         this.mFollwerBtn.y = 145 + (this.mFollwerBtn.height >> 1);
         this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });
@@ -172,7 +172,7 @@ export class UserInfoPanel extends Panel {
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
         this.mActor.scale = 2;
         this.add(this.mActor);
-        (this.mWorld.uiManager.getMediator(UserInfoMediator.NAME) as UserInfoMediator).resize();
+        this.mWorld.uiManager.getMediator(UserInfoMediator.NAME).resize();
         super.init();
 
         this.setInfo(this.getData("data"));

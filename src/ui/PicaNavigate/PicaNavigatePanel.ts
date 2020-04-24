@@ -1,7 +1,7 @@
-import { Panel } from "../components/panel";
+import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 
-export class PicaNavigatePanel extends Panel {
+export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private mBackground: Phaser.GameObjects.Image;
   private mMapBtn: Phaser.GameObjects.Image;
@@ -12,19 +12,6 @@ export class PicaNavigatePanel extends Panel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
-  }
-
-  show() {
-    super.show();
-    if (this.mInitialized) {
-      this.addActionListener();
-    }
-  }
-
-  close() {
-    if (this.mInitialized) {
-      this.removeActionListener();
-    }
   }
 
   resize(w: number, h: number) {
@@ -40,6 +27,28 @@ export class PicaNavigatePanel extends Panel {
 
     this.y = height - this.height / 2 * this.scale;
     super.resize(w, h);
+  }
+
+  public addListen() {
+    if (!this.mInitialized) return;
+    this.mMapBtn.on("pointerup", this.onShowMapHandler, this);
+    this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
+    this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
+    this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
+    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+  }
+
+  public removeListen() {
+    if (!this.mInitialized) return;
+    this.mMapBtn.off("pointerup", this.onShowMapHandler, this);
+    this.mShopBtn.off("pointerup", this.onShowShopHandler, this);
+    this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
+    this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
+    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+  }
+
+  public hide() {
+    this.mShow = false;
   }
 
   protected preload() {
@@ -72,22 +81,6 @@ export class PicaNavigatePanel extends Panel {
       key,
       frame
     }, false);
-  }
-
-  private addActionListener() {
-    this.mMapBtn.on("pointerup", this.onShowMapHandler, this);
-    this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
-    this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
-    this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-  }
-
-  private removeActionListener() {
-    this.mMapBtn.off("pointerup", this.onShowMapHandler, this);
-    this.mShopBtn.off("pointerup", this.onShowShopHandler, this);
-    this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
-    this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
-    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
   private onShowMapHandler() {

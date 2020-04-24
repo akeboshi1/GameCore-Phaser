@@ -1,13 +1,17 @@
 
-import { IAbstractPanel } from "./abstractPanel";
 import { Tweens } from "phaser";
+import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
 
 export class LoadingView implements IAbstractPanel {
+    public id: number;
+    public UIType: number;
     private mShowing: boolean = false;
     private mTween: Tweens.Tween;
     private mBg: Phaser.GameObjects.Sprite;
     constructor(private mScene: Phaser.Scene) {
         this.createPanel();
+    }
+    public setFollow(gameObject: any, fromScene: Phaser.Scene, callBack?: Function) {
     }
     public isShow(): boolean {
         return this.mShowing;
@@ -33,7 +37,7 @@ export class LoadingView implements IAbstractPanel {
         }
     }
 
-    public tweenView(show: boolean) {
+    public tweenExpand(show: boolean) {
     }
 
     public resize() {

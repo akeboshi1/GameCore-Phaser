@@ -12,6 +12,9 @@ import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
 import { PlayerModel } from "./player.model";
+import { FollowGroup } from "../group/FollowGroup";
+import { GroupType } from "../group/GroupManager";
+import { FollowAction } from "../action/FollowAction";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -38,7 +41,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public createActor(playModel: PlayerModel) {
+    // public createActor(playModel: PlayerModel) {
+    //     this.mActor = new Actor(playModel, this);
+    //     if (sprite.attrs) {
+    //         for (const attr of sprite.attrs) {
+    //             this._addSimulate(sprite.id, attr);
+    //         }
+    //     }
+    // }
+
+    public createActor(actor: op_client.IActor) {
+        const playModel = new PlayerModel(actor);
         this.mActor = new Actor(playModel, this);
     }
 
@@ -60,6 +73,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (player) {
             this.mPlayerMap.delete(id);
             player.destroy();
+            this.roomService.elementManager.remove(id + 100000);
         }
     }
 
@@ -186,6 +200,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(sprite.id);
             if (player) {
                 player.model = new Sprite(sprite);
+                if (sprite.attrs) {
+                    this._addSimulate(sprite);
+                }
             }
         }
     }
@@ -230,6 +247,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         for (const sprite of sprites) {
             this._add(new Sprite(sprite));
+            this._addSimulate(sprite);
         }
     }
 
@@ -239,6 +257,61 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
+    }
+
+    private _addSimulate(sprite: op_client.ISprite) {
+        let haveCar = false;
+        const attrs = sprite.attrs;
+        if (attrs && attrs.length > 0) {
+            for (const att of attrs) {
+                if (att.key === "minecart") {
+                    haveCar = true;
+                }
+            }
+        }
+        if (!haveCar) return;
+        const content = this.createSimulateSprite();
+        const msprite = content.sprites[0];
+        msprite.id = sprite.id + 100000;
+        let ele = this.roomService.elementManager.get(msprite.id);
+        if (!ele) {
+            this.roomService.elementManager.add([new Sprite(msprite)]);
+            ele = this.roomService.elementManager.get(msprite.id);
+
+        }
+        const owner = this.get(sprite.id);
+        ele.setPosition(owner.getPosition());
+        const groupMgr = (this.roomService as Room).groupManager;
+        let group = groupMgr.getGroup(owner, GroupType.Follow);
+        if (!group) group = (this.roomService as Room).groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
+        group.addChild(ele);
+        ele.ai.addAction(new FollowAction(group));
+    }
+
+    private createSimulateSprite() {
+        const content = new op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE();
+        content.sprites = [];
+        const sprite = new op_client.Sprite();
+        sprite.id = 1875435445;
+        sprite.point3f = new op_def.PBPoint3f();
+        sprite.point3f.x = 750; sprite.point3f.y = 300; sprite.currentAnimationName = "idle";
+        sprite.direction = op_def.Direction.LOWER_LEFT;
+        sprite.nickname = "矿车"; sprite.opacity = 100;
+        sprite.animations = [{
+            id: 816174882, name: "idle", frameRate: 5, walkableArea: "0,0,0&0,0,0&0,0,0",
+            collisionArea: "1,1,1&1,1,1&1,1,1", loop: true, originPoint: [3, 3], baseLoc: "-36,-71", frameName: ["矿车.png"]
+        }];
+        sprite.display = {
+            dataPath: "pixelpai/ElementNode/5e900aa69a2fb36bb110be40/1/5e900aa69a2fb36bb110be40.json",
+            texturePath: "pixelpai/ElementNode/5e900aa69a2fb36bb110be40/1/5e900aa69a2fb36bb110be40.png"
+        };
+        content.sprites.push(sprite);
+        content.nodeType = op_def.NodeType.ElementNodeType;
+        content.packet = {
+            currentFrame: 1,
+            totalFrame: 1
+        };
+        return content;
     }
 
     private addComplete(packet: PBpacket) {

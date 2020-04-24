@@ -1,32 +1,35 @@
-import { BaseMediator } from "../baseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { PicaChatPanel } from "./PicaChatPanel";
 import { PicaNavigateMediator } from "../PicaNavigate/PicaNavigateMediator";
-import { Chat } from "./Chat";
+import { PicaChat } from "./PicaChat";
 import { op_client } from "pixelpai_proto";
+import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class PicaChatMediator extends BaseMediator {
+    public static NAME: string = "PicaChatMediator";
     protected mView: PicaChatPanel;
     private scene: Phaser.Scene;
-    private mChat: Chat;
+    private mChat: PicaChat;
+    private world: WorldService;
     constructor(
         private layerManager: ILayerManager,
         scene: Phaser.Scene,
         worldService: WorldService
     ) {
-        super(worldService);
+        super();
+        this.world = worldService;
         this.scene = this.layerManager.scene;
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.isShowing) {
+        if ((this.mView && this.mView.isShow()) || this.mShow) {
             this.mView.show();
-            this.layerManager.addToUILayer(this.mView);
+            this.layerManager.addToUILayer(this.mView.view);
             return;
         }
         if (!this.mChat) {
-            this.mChat = new Chat(this.world);
+            this.mChat = new PicaChat(this.world);
             this.mChat.on("chat", this.onChatHandler, this);
             this.mChat.register();
         }
@@ -36,7 +39,7 @@ export class PicaChatMediator extends BaseMediator {
             this.mView.on("chat", this.onSendChatHandler, this);
         }
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView);
+        this.layerManager.addToUILayer(this.mView.view);
     }
 
     isSceneUI() {
@@ -47,10 +50,6 @@ export class PicaChatMediator extends BaseMediator {
         if (this.mChat) {
             this.mChat.destroy();
             this.mChat = undefined;
-        }
-        if (this.mView) {
-            this.mView.destroy();
-            this.mView = undefined;
         }
         super.destroy();
     }
@@ -63,8 +62,9 @@ export class PicaChatMediator extends BaseMediator {
         const mediator = uiManager.getMediator(PicaNavigateMediator.name);
         if (mediator) {
             mediator.show();
-            this.mView.close();
-            this.layerManager.removeToUILayer(this.mView);
+            this.mView.hide();
+            this.mView.removeListen();
+            this.layerManager.removeToUILayer(this.mView.view);
         }
     }
 
@@ -82,6 +82,9 @@ export class PicaChatMediator extends BaseMediator {
     private onSendChatHandler(val: string) {
         if (!this.mChat) {
             return;
+        }
+        if (val === "whosyourdaddy") {
+            this.world.uiManager.showMed("DebugLogger");
         }
         this.mChat.sendMessage(val);
     }
