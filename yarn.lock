@@ -3714,8 +3714,8 @@ pinkie@^2.0.0:
     protobufjs "^6.8.8"
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.206"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#4efc0dc2d7e1da6341a412faecdd2a23a175ccd4"
+  version "1.0.207"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#4cfe97632683d2d621e1a620bf4ac2ea33f8b22a"
   dependencies:
     protobufjs "^6.8.8"
 

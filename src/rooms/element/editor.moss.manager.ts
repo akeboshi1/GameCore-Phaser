@@ -99,14 +99,16 @@ export class EditorMossManager extends ElementManager {
 
     protected handleDeleteMosses(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_DELETE_MOSSES = packet.content;
-        const locs = content.locs;
+        const ids = content.ids;
 
-        for (const loc of locs) {
-            this.taskQueue.set(loc.id, {
+        for (const id of ids) {
+            this.taskQueue.set(id, {
                 action: "DELETE",
-                loc,
+                loc: this.editorMosses.get(id),
             });
         }
+
+        this.roomService.removeSelected();
     }
 
     protected handleUpdateMosses(packet: PBpacket) {
@@ -143,8 +145,10 @@ export class EditorMossManager extends ElementManager {
                 this.editorMosses.set(loc.id, loc);
                 this.mRoom.displayObjectPool.push("mosses", loc.id.toString(), sprite, this);
             } else if (action === "DELETE") {
-                this.editorMosses.delete(loc.id);
-                this.mRoom.displayObjectPool.remove("mosses", loc.id.toString());
+                if (loc) {
+                    this.editorMosses.delete(loc.id);
+                    this.mRoom.displayObjectPool.remove("mosses", loc.id.toString());
+                }
             } else if (action === "UPDATE") {
                 const moss = this.mRoom.world.elementStorage.getMossPalette(loc.key);
                 if (!moss) continue;
@@ -157,5 +161,9 @@ export class EditorMossManager extends ElementManager {
                 this.mRoom.displayObjectPool.update("mosses", loc.id.toString(), sprite);
             }
         }
+    }
+
+    get roomService(): EditorRoomService {
+        return this.mRoom;
     }
 }

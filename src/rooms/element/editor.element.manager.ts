@@ -114,6 +114,8 @@ export class EditorElementManager extends ElementManager {
                 sprite: { id },
             });
         }
+
+        this.roomService.removeSelected();
     }
 
     protected handleSyncElements(packet: PBpacket) {
@@ -187,5 +189,9 @@ export class EditorElementManager extends ElementManager {
                 this.mRoom.displayObjectPool.update("elements", sprite.id.toString(), sprite);
             }
         }
+    }
+
+    get roomService(): EditorRoomService {
+        return this.mRoom;
     }
 }
