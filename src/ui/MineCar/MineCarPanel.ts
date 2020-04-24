@@ -200,16 +200,16 @@ export class MineCarPanel extends BasePanel {
     this.mCategorieContainer.y = this.categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
-    const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
+    const propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
     const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
     const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     const w = this.scene.cameras.main.width;
-    const gridW = 224 * this.dpr * zoom;
+    const gridW = 236 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
       table: {
         width: gridW,
-        height: 268 * this.dpr * zoom,
-        columns: 5,
+        height: 295 * this.dpr * zoom,
+        columns: 4,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
@@ -240,13 +240,6 @@ export class MineCarPanel extends BasePanel {
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
 
-    const alert = new AlertView(this.scene, this.mWorld).show({
-      text: "是否要丢弃？",
-      title: "丢弃",
-      callback: () => {
-        Logger.getInstance().log("sadflsdfjlk");
-      }
-    });
   }
 
   private refreshData() {
@@ -325,25 +318,38 @@ export class MineCarPanel extends BasePanel {
     }
     // const selected = this.mAllItem.filter((item) => item.selected);
     const selected = [];
+    let label = "";
     for (const item of this.mAllItem) {
       if (item.item && item.selected) {
         selected.push(item.item);
+        label += `${item.item.name}*${item.item.count}`;
       }
     }
-    this.emit("discard", selected);
+
+    new AlertView(this.scene, this.mWorld).show({
+      text: `您确定要丢弃 [color=#0157BC]${label}[/color] 吗？`,
+      title: "丢弃",
+      callback: () => {
+        this.emit("discard", selected);
+      }
+    });
   }
 
   private enterDiscardMode() {
     const state = this.mDiscardBtn.buttonState;
+    let visible = false;
     if (state === DiscardEnum.Discard) {
       this.mDiscardBtn.changeState(DiscardEnum.Cancel);
-      this.mFilterItem.map((item) => item.selectVisible = true);
-      this.mPropGrid.setItems(this.mFilterItem);
+      visible = true;
     } else {
       if (state === DiscardEnum.Sutmit) {
         this.onDiscardSelectedItem();
       }
       this.mDiscardBtn.changeState(DiscardEnum.Discard);
+    }
+    if (this.mFilterItem.length > 0 && this.mFilterItem[0].selectVisible !== visible) {
+      this.mFilterItem.map((item) => item.selectVisible = visible);
+      this.mPropGrid.setItems(this.mFilterItem);
     }
   }
 }
@@ -359,7 +365,7 @@ class PackageItem extends Phaser.GameObjects.Container {
 
     const border = this.scene.make.image({
       key,
-      frame: "item_boder.png"
+      frame: "item_border.png"
     }, false).setOrigin(0).setScale(zoom);
     this.setSize(border.width * zoom, border.height * zoom);
 
@@ -382,8 +388,8 @@ class PackageItem extends Phaser.GameObjects.Container {
       key,
       frame: "icon_normal.png"
     }, false);
-    this.mSelectedIcon.x = border.width - 3 * dpr - this.mSelectedIcon.width / 2;
-    this.mSelectedIcon.y = 3 * dpr + this.mSelectedIcon.height / 2;
+    this.mSelectedIcon.x = border.width * zoom - 2 * dpr - this.mSelectedIcon.width * zoom / 2;
+    this.mSelectedIcon.y = 2 * dpr + this.mSelectedIcon.height * zoom / 2;
     this.add(border);
   }
 

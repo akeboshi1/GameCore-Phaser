@@ -36,6 +36,7 @@ export class AlertView extends BasePanel {
     }
 
     protected init() {
+        const zoom = this.mWorld.uiScaleNew || 1;
         const bg = this.scene.make.image({
             key: this.key,
             frame: "bg.png"
@@ -51,14 +52,14 @@ export class AlertView extends BasePanel {
             text: "丢弃",
             style: {
                 fontFamily: Font.DEFULT_FONT,
-                fontSize: 10 * this.dpr,
+                fontSize: 8 * this.dpr * zoom,
                 color: "#905B06"
             }
         }, false).setOrigin(0.5);
         this.mTitleLabel.y = title.y;
 
         this.mContent = new BBCodeText(this.scene, 0, -11 * this.dpr, "", {
-            fontSize: 9 * this.dpr + "px",
+            fontSize: 9 * this.dpr * zoom + "px",
             fontFamily: Font.DEFULT_FONT,
             color: "#0",
             wrap: {
@@ -70,12 +71,20 @@ export class AlertView extends BasePanel {
         this.mContent.setText("[color=#FF0000]里卡多flashed分肤是的肌肤是路径[/color]");
 
         this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, "确定");
-        this.mOkBtn.setTextColor("#905B06");
+        this.mOkBtn.setTextStyle({
+            color: "#905B06",
+            fontFamily: Font.DEFULT_FONT,
+            fontSize: 8 * this.dpr * zoom
+        });
         this.mOkBtn.x = (bg.width - this.mOkBtn.width) / 2 - 20 * this.dpr;
         this.mOkBtn.y = (bg.height - this.mOkBtn.height) / 2 - 11 * this.dpr;
         this.mOkBtn.on("click", this.onOkHandler, this);
 
         this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, "取消");
+        this.mCancelBtn.setTextStyle({
+            fontFamily: Font.DEFULT_FONT,
+            fontSize: 8 * this.dpr * zoom
+        });
         this.mCancelBtn.x = -(bg.width - this.mCancelBtn.width) / 2 + 20 * this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
         this.mCancelBtn.on("click", this.onCancelHandler, this);
@@ -91,6 +100,7 @@ export class AlertView extends BasePanel {
         if (callback) {
             callback.call(this.data.content);
         }
+        this.onCancelHandler();
     }
 
     private onCancelHandler() {
