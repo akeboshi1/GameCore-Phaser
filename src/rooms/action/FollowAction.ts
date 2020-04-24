@@ -16,7 +16,7 @@ export class FollowAction extends AIAction {
     private intervalCounter: number = 0;
     private duration: number = 0;
     private tempPath: Array<{ x: number, y: number, duration: number }>;
-    private offset: number =20;
+    private offset: number = 20;
     constructor(group: IGroup) {
         super();
         this.followgroup = (group as FollowGroup);
@@ -51,13 +51,8 @@ export class FollowAction extends AIAction {
             let duration = 0;
             const now = this.owner.roomService.now();
             const path = this.tempPath.splice(0, this.tempPath.length - 3);
-            // let offset: number = 0;
-            // let lastpos: any;
             for (const tempPos of path) {
                 duration += tempPos.duration;
-                // if (lastpos && lastpos.y > tempPos.y) {
-                //     offset = 4;
-                // } else offset = 0;
                 const point = new op_client.MovePoint();
                 point.point3f = new op_def.PBPoint3f();
                 point.point3f.x = tempPos.x;
