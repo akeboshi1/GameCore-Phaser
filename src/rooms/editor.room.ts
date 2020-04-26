@@ -101,7 +101,6 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
         this.mLayManager = new LayerManager(this);
         this.mLayManager.drawGrid(this);
-        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         const camera = this.scene.cameras.main;
         this.mCameraService.camera = camera;
         const zoom = this.world.scaleRatio;
@@ -115,9 +114,11 @@ export class EditorRoom extends Room implements EditorRoomService {
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         this.mCameraService.centerCameas();
-        // setTimeout(() => {
-        //     this.mCameraService.syncToEditor();
-        // }, 10);
+
+        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
+        this.mScene.input.on("gameout", this.onGameOutHandler, this);
         this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
 
         this.addSkyBox();
@@ -182,25 +183,42 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     protected addPointerMoveHandler() {
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.on("gameout", this.onGameOutHandler, this);
     }
 
     protected removePointerMoveHandler() {
         this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameout", this.onGameOutHandler, this);
-    }
-
-    protected addGameObjectDownHandler() {
-        this.mScene.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
     }
 
     protected addPointerDownHandler() {
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
     }
+    protected removePointerDownHandler() {
+        this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
+    }
+
+    protected addPointerUpHandler() {
+        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+    }
+    protected removePointerUpHandler() {
+        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
+    }
+
+    protected addGameObjectDownHandler() {
+        this.mScene.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
+    }
+    protected removeGameObjectDownHandler() {
+        this.mScene.input.off("gameobjectdown", this.onGameobjectDownHandler, this);
+    }
+
+    protected addKeydownHandler() {
+        this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
+    }
+
+    protected removeKeydownHandler() {
+        this.mScene.input.keyboard.off("keydown", this.onKeyDownHandler, this);
+    }
 
     protected onPointerDownHandler() {
-        this.addPointerMoveHandler();
-
         const nodeType = this.mouseFollow.nodeType;
 
         if (this.mouseFollow.key) {
@@ -214,6 +232,8 @@ export class EditorRoom extends Room implements EditorRoomService {
                 }
             }
         }
+
+        this.addPointerMoveHandler();
     }
 
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
@@ -322,6 +342,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             } else {
                 this.editorElementManager.addElements(sprites);
             }
+        } else if (this.mMouseFollow.nodeType === op_def.NodeType.SpawnPointType) {
+            const sprites = this.mMouseFollow.createSprites();
+            this.editorElementManager.addElements(sprites);
         }
     }
 
@@ -335,19 +358,21 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mBrush.mode = <BrushEnum>mode.mode;
         if (this.mMouseFollow) this.mMouseFollow.destroy();
 
-        if (this.mBrush.mode === BrushEnum.SELECT) {
-            this.removePointerMoveHandler();
-            this.addGameObjectDownHandler();
-        }
-
         if (this.mBrush.mode !== BrushEnum.SELECT) {
-            this.addPointerDownHandler();
-
             if (this.mSelectedElementEffect) {
                 this.mSelectedElementEffect.destroy();
                 this.mSelectedElementEffect = null;
             }
         }
+
+        if (this.mBrush.mode === BrushEnum.MOVE) {
+            this.removeGameObjectDownHandler();
+        }
+
+        if (this.mBrush.mode === BrushEnum.SELECT) {
+            this.addGameObjectDownHandler();
+        }
+
         if (this.mBrush.mode === BrushEnum.ERASER) {
             if (!this.mMouseFollow) {
                 this.mMouseFollow = new MouseFollow(this.mScene, this);
@@ -388,7 +413,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             const poolName = map[nodeType];
             const pool = this.displayObjectPool.getPool(poolName);
             const displayObj = pool.get(id.toString());
-            this.selectedElement(displayObj.getDisplay());
+            if (displayObj) {
+                this.selectedElement(displayObj.getDisplay());
+            }
         }
     }
 
@@ -442,6 +469,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             case 40:
                 this.moveElement(event.keyCode);
                 break;
+            case 8:
             case 46:
                 this.removeDisplay(this.mSelectedElementEffect);
                 break;
@@ -489,13 +517,11 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private removeDisplay(element: SelectedElement) {
-       
         if (element.sprite.isMoss) {
-
-            this.editorMossManager.remove(element.sprite.id);
+            this.editorMossManager.deleteMosses([element.sprite.id]);
         } else {
-            this.editorElementManager.remove(element.sprite.id)
+            this.editorElementManager.deleteElements([element.sprite.id]);
         }
-            this.removeSelected();
+        this.removeSelected();
     }
 }

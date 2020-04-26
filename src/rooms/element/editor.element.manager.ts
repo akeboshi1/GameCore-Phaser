@@ -28,7 +28,7 @@ export class EditorElementManager extends ElementManager {
         for (const sprite of sprites) {
             this.taskQueue.set(sprite.id, {
                 action: "ADD",
-                sprite: new Sprite(sprite),
+                sprite,
             });
         }
 
@@ -65,6 +65,25 @@ export class EditorElementManager extends ElementManager {
     //     }
     //     return ele;
     // }
+    deleteElements(ids: number[]) {
+        for (const id of ids) {
+            this.taskQueue.set(id, {
+                action: "DELETE",
+                sprite: { id },
+            });
+        }
+
+        this.callEditorDeleteElementData(ids);
+    }
+
+    callEditorDeleteElementData(ids: number[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
+        const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
+        content.ids = ids;
+        content.nodeType = op_def.NodeType.ElementNodeType;
+
+        this.connection.send(pkt);
+    }
 
     protected handleCreateElements(packet: PBpacket) {
         if (!this.mRoom.layerManager) {
