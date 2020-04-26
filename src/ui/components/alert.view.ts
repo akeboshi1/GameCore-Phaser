@@ -20,8 +20,9 @@ export class AlertView extends BasePanel {
         super.show(config);
         if (this.mInitialized) {
             this.mWorld.uiManager.getUILayerManager().addToDialogLayer(this.container);
-            this.x = this.scene.cameras.main.width / 2;
-            this.y = this.scene.cameras.main.height / 2;
+            const { ox, oy } = config;
+            this.x = this.scene.cameras.main.width / 2 + (ox || 0);
+            this.y = this.scene.cameras.main.height / 2 + (oy || 0);
 
             this.mContent.setText(config.text);
             if (config.title) {
@@ -118,4 +119,6 @@ export interface IAlertConfig {
     title?: string;
     callback: Function;
     content?: any;
+    ox?: number;
+    oy?: number;
 }

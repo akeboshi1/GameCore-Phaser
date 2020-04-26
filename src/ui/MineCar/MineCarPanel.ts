@@ -333,6 +333,7 @@ export class MineCarPanel extends BasePanel {
     new AlertView(this.scene, this.mWorld).show({
       text: `您确定要丢弃 [color=#0157BC]${label}[/color] 吗？`,
       title: "丢弃",
+      oy: -80 * this.dpr * this.mWorld.uiScaleNew,
       callback: () => {
         this.emit("discard", selected);
       }
