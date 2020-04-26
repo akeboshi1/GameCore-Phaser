@@ -322,16 +322,16 @@ export class MineCarPanel extends BasePanel {
     }
     // const selected = this.mAllItem.filter((item) => item.selected);
     const selected = [];
-    let label = "";
+    const label = [];
     for (const item of this.mAllItem) {
       if (item.item && item.selected) {
         selected.push(item.item);
-        label += `${item.item.name}*${item.item.count}`;
+        label.push(`${item.item.name}*${item.item.count}`);
       }
     }
 
     new AlertView(this.scene, this.mWorld).show({
-      text: `您确定要丢弃 [color=#0157BC]${label}[/color] 吗？`,
+      text: `您确定要丢弃 [color=#0157BC]${label.join("、")}[/color] 吗？`,
       title: "丢弃",
       oy: -80 * this.dpr * this.mWorld.uiScaleNew,
       callback: () => {
