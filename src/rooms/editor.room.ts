@@ -365,12 +365,11 @@ export class EditorRoom extends Room implements EditorRoomService {
             }
         }
 
-        if (this.mBrush.mode === BrushEnum.MOVE) {
-            this.removeGameObjectDownHandler();
-        }
-
         if (this.mBrush.mode === BrushEnum.SELECT) {
+            this.removeGameObjectDownHandler();
             this.addGameObjectDownHandler();
+        } else {
+            this.removeGameObjectDownHandler();
         }
 
         if (this.mBrush.mode === BrushEnum.ERASER) {
@@ -405,6 +404,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         const { ids, nodeType } = content;
 
         const map = {
+            [op_def.NodeType.SpawnPointType]: "elements",
             [op_def.NodeType.ElementNodeType]: "elements",
             [op_def.NodeType.MossCollectionType]: "mosses",
         };
