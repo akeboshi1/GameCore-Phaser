@@ -49,6 +49,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             }
             index++;
         }
+
         this.gridTable.setItems(items);
         this.gridTable.layout();
         if (this.haveEquiped)
@@ -64,13 +65,13 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.gridTable.x = posX;
         this.gridTable.y = posY;
         this.gridTable.layout();
-        this.mScrollContainer.setPosition(-this.gridTable.x + 42 * this.dpr * this.zoom, -this.gridTable.y);
+        this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
-        this.gridTable.refresh();
-        this.gridTable.setT((index + 1) / this.gridTable.items.length);
+        // this.gridTable.refresh();
+        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
         this.onSelectItemHandler(this.curEquipItem);
     }
 
@@ -130,16 +131,18 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             x: 0,
             y: 0,
             scrollMode: 1,
-          //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
-                width: 260 * this.dpr * this.zoom,
+                width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,
                 columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                dpr: this.dpr,
+                zoom: this.zoom,
             },
-            clamplChildOY: true,
+            clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item: op_client.IMiningEquipment = cell.item;
                 const index = cell.index;
@@ -279,7 +282,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         let y = -10 * this.dpr * this.zoom;
         this.bg.setPosition(x, y);
         x = - this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;
-        y = 2* this.dpr * this.zoom;
+        y = 2 * this.dpr * this.zoom;
         this.equipIcon.setPosition(x, y);
         x = - this.unlock.width * 0.5 + 20 * this.dpr * this.zoom;
         y = -8 * this.dpr * this.zoom;
