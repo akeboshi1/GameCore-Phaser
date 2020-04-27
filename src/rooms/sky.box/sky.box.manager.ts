@@ -1,10 +1,11 @@
 import { WorldService } from "../../game/world.service";
 import { SkyBoxScene } from "../../scenes/sky.box";
-import { ICameraService } from "../cameras/cameras.manager";
+import { ICameraService, CamerasManager } from "../cameras/cameras.manager";
 import { Url } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
 import { BlockManager } from "./block.manager";
 import { Room, IRoomService } from "../room";
+import { IScenery } from "./scenery";
 
 export interface ISkyBoxManager {
   readonly world: WorldService;
@@ -27,46 +28,49 @@ export class SkyBoxManager {
   private mCameras: ICameraService;
   private mKey: string;
   private mBackground: BlockManager;
-  private mType: string;
-  private mTime: number = 0;
-  private mConfig: ISkyBoxConfig;
-  constructor(room: Room, type: string, config: ISkyBoxConfig, camerasManager: ICameraService) {
+  private mSceneName: string;
+  private mLastTime: number = 0;
+  // private mConfig: ISkyBoxConfig;
+  private mScenety: IScenery;
+  constructor(room: Room, scenery: IScenery, camerasManager: ICameraService) {
     this.mWorld = room.world;
     this.mRoom = room;
-    this.mType = type;
-    this.mConfig = config;
-    this.mKey = config.key;
+    this.mScenety = scenery;
+    // this.mType = type;
+    // this.mConfig = config;
+    // this.mKey = config.key;
     this.mCameras = camerasManager;
     const playScene = room.scene;
     if (!playScene) {
       Logger.getInstance().fatal(`${SkyBoxManager.name} scene does not exist`);
       return;
     }
-    this.mWorld.game.scene.add(SkyBoxScene.name + `_${type}`, SkyBoxScene, false);
-    playScene.scene.launch(SkyBoxScene.name + `_${type}`, this);
+    this.mSceneName = SkyBoxScene.name + `_${scenery.id}`;
+    this.mWorld.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    playScene.scene.launch(this.mSceneName, this);
   }
 
   startPlay(scene: Phaser.Scene) {
     this.mScene = scene;
-    const key = Url.getRes(this.mKey);
-    this.mBackground = new BlockManager(this.mScene, this.mCameras.camera, key, this.mWorld);
-    // this.mBackground.setSize(3400, 1900, 256, 256);
-    this.mBackground.setSize(this.mConfig.width, this.mConfig.height, this.mConfig.gridW, this.mConfig.gridH);
+    // const key = Url.getRes(this.mKey);
+    this.mBackground = new BlockManager(this.mScene, this.mCameras.camera, this.mScenety.uris, this.mWorld);
+    this.mBackground.setSize(this.mScenety.width, this.mScenety.height);
+    // this.mBackground.setSize(this.mConfig.width, this.mConfig.height, this.mConfig.gridW, this.mConfig.gridH);
     this.initCamera();
   }
 
   update(time?: number, delta?: number) {
-    if (time - this.mTime < 1000) {
+    if (time - this.mLastTime < 1000) {
       return;
     }
-    this.mTime = time;
+    this.mLastTime = time;
     this.mBackground.check(time, delta);
     // this.mBackground.setScroll(camera.scrollX, camera.scrollY);
   }
 
   destroy() {
     if (this.mWorld && this.mWorld.game) {
-      this.mWorld.game.scene.remove(SkyBoxScene.name + `_${this.mType}`);
+      this.mWorld.game.scene.remove(this.mSceneName);
     }
     if (this.mBackground) {
       this.mBackground.destroy();
@@ -78,8 +82,8 @@ export class SkyBoxManager {
 
     if (this.mCameras) {
       const main = this.mCameras.camera;
-      const imageWidth = this.mConfig.width;
-      const imageHeight = this.mConfig.height;
+      const imageWidth = this.mScenety.width;
+      const imageHeight = this.mScenety.height;
       const size = this.mRoom.roomSize;
       if (imageWidth > size.sceneWidth) {
         // main.setBounds(0, 0, imageWidth, imageHeight);

@@ -9,6 +9,7 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
+import { RoomZoon } from "../PicaRoomList/PicaRoomListPanel";
 
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
@@ -333,7 +334,7 @@ export class MineCarPanel extends BasePanel {
     new AlertView(this.scene, this.mWorld).show({
       text: `您确定要丢弃 [color=#0157BC]${label.join("、")}[/color] 吗？`,
       title: "丢弃",
-      oy: -80 * this.dpr * this.mWorld.uiScaleNew,
+      oy: 302 * this.dpr * this.mWorld.uiScaleNew,
       callback: () => {
         this.emit("discard", selected);
       }

@@ -4,7 +4,7 @@ import { PlayerManager } from "./player/player.manager";
 import { LayerManager } from "./layer/layer.manager";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ConnectionService } from "../net/connection.service";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world, op_gameconfig_01 } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
@@ -17,7 +17,6 @@ import { LoadingScene } from "../scenes/loading";
 import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
-import { PlayerModel } from "./player/player.model";
 import { Element } from "./element/element";
 import { IBlockObject } from "./cameras/block.object";
 import { Size } from "../utils/size";
@@ -30,9 +29,10 @@ import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
-import { SoundManager, SoundField } from "../game/sound.manager";
+import { SoundField } from "../game/sound.manager";
 import { GroupManager } from "./group/GroupManager";
 import { FrameManager } from "./element/frame.manager";
+import { Scenery } from "./sky.box/scenery";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -246,7 +246,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
         //     // const close = new BackgroundManager(this, "close", this.mCameraService);
         // }
-        this.addSkyBox();
+        // this.addSkyBox();
         const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
         this.world.playSound({
             urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
@@ -412,48 +412,49 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
     }
 
-    protected addSkyBox() {
+    protected addSkyBox(scenery: op_gameconfig_01.IScenery) {
         const gameid = this.mWorld.getConfig().game_id;
         this.mBackgrounds = [];
-        if (gameid === "5e719a0a68196e416ecf7aad") {
-            if (this.id === 926312429) {
-                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-                    key: "skybox/mine/level_0",
-                    width: 1120,
-                    height: 684
-                }, this.mCameraService));
-            } else {
-                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-                    key: "skybox/bh/bh",
-                    width: 3400,
-                    height: 1900,
-                    gridW: 256,
-                    gridH: 256
-                }, this.mCameraService));
-            }
-            // const close = new BackgroundManager(this, "close", this.mCameraService);
-        } else if (gameid === "5e9a7dace87abc390c4b1b73") {
-            if (this.id === 926312429) {
-                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-                    key: "skybox/mine/level_0",
-                    width: 1120,
-                    height: 684
-                }, this.mCameraService));
-            } else if (this.id === 395490295) {
-                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-                    key: "skybox/mine/level_1",
-                    width: 1360,
-                    height: 994
-                }, this.mCameraService));
-            } else {
-                this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-                    key: "skybox/mine/level_1",
-                    width: 1540,
-                    height: 969
-                }, this.mCameraService));
-            }
+        this.mBackgrounds.push(new SkyBoxManager(this, new Scenery(scenery), this.mCameraService));
+        // if (gameid === "5e719a0a68196e416ecf7aad") {
+        //     if (this.id === 926312429) {
+        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+        //             key: "skybox/mine/level_0",
+        //             width: 1120,
+        //             height: 684
+        //         }, this.mCameraService));
+        //     } else {
+        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+        //             key: "skybox/bh/bh",
+        //             width: 3400,
+        //             height: 1900,
+        //             gridW: 256,
+        //             gridH: 256
+        //         }, this.mCameraService));
+        //     }
+        //     // const close = new BackgroundManager(this, "close", this.mCameraService);
+        // } else if (gameid === "5e9a7dace87abc390c4b1b73") {
+        //     if (this.id === 926312429) {
+        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+        //             key: "skybox/mine/level_0",
+        //             width: 1120,
+        //             height: 684
+        //         }, this.mCameraService));
+        //     } else if (this.id === 395490295) {
+        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+        //             key: "skybox/mine/level_1",
+        //             width: 1360,
+        //             height: 994
+        //         }, this.mCameraService));
+        //     } else {
+        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
+        //             key: "skybox/mine/level_1",
+        //             width: 1540,
+        //             height: 969
+        //         }, this.mCameraService));
+        //     }
 
-        }
+        // }
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -628,6 +629,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         fall.show(status);
         fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         this.addToSceneUI(fall);
+
         // test
         // const content = new op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE();
         // content.duration = 2000;
