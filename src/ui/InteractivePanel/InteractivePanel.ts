@@ -360,7 +360,7 @@ export class InteractivePanel extends BasePanel {
             this.mLeftFaceIcon.scaleX = this.mLeftBaseScaleX * leftScale * .7;
             this.mLeftFaceIcon.scaleY = this.mLeftBaseScaleY * leftScale * .7;
             this.mLeftFaceIcon.x = this.mNameCon.x;
-            this.mLeftFaceIcon.y = desConWorldY - this.mLeftFaceIcon.height / 2 - this.mDescCon.height / 2; // this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
+            this.mLeftFaceIcon.y = this.mNameTF.y - this.mLeftFaceIcon.height; // desConWorldY - this.mLeftFaceIcon.height / 2 - this.mDescCon.height / 2; // this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mLeftFaceIcon.height * leftScale * .7 / 2;
 
             const midIconWid: number = this.mMidFaceIcon.width * this.mWorld.uiScale;
             const midIconHei: number = this.mMidFaceIcon.height * this.mWorld.uiScale;
@@ -368,7 +368,7 @@ export class InteractivePanel extends BasePanel {
             this.mMidFaceIcon.scaleX = this.mMidBaseScaleX * midScale * .7;
             this.mMidFaceIcon.scaleY = this.mMidBaseScaleY * midScale * .7;
             this.mMidFaceIcon.x = 0;
-            this.mMidFaceIcon.y = desConWorldY - this.mMidFaceIcon.height / 2 - this.mDescCon.height / 2;
+            this.mMidFaceIcon.y = this.mNameTF.y - this.mMidFaceIcon.height;
             // this.mMidFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mMidFaceIcon.height * midScale * .7 / 2;
 
             const rightIconWid: number = this.mRightFaceIcon.width * this.mWorld.uiScale;
@@ -377,7 +377,7 @@ export class InteractivePanel extends BasePanel {
             this.mRightFaceIcon.scaleX = this.mRightBaseScaleX * rightScale * .7;
             this.mRightFaceIcon.scaleY = this.mRightBaseScaleY * rightScale * .7;
             this.mRightFaceIcon.x = -this.mNameCon.x;
-            this.mRightFaceIcon.y = desConWorldY - this.mRightFaceIcon.height / 2 - this.mDescCon.height / 2;
+            this.mRightFaceIcon.y = this.mNameTF.y - this.mRightFaceIcon.height;
             // this.mRightFaceIcon.y = this.mNameCon.y + this.mNameCon.height / 2 + 10 - this.mRightFaceIcon.height * rightScale * .7 / 2;
         }
 
@@ -508,7 +508,6 @@ export class InteractivePanel extends BasePanel {
 
     private radioComplete() {
         this.mRadioCom = true;
-        const size: Size = this.mWorld.getSize();
         if (!this.mRadio) return;
         this.mRadio.x = 220;
         this.mRadio.y = this.mDescCon.height + 200;

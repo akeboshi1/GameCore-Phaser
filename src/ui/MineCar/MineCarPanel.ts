@@ -9,7 +9,6 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
-import { Logger } from "../../utils/log";
 
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
@@ -27,6 +26,7 @@ export class MineCarPanel extends BasePanel {
   private mLimit: number;
   private mCheckBox: CheckboxGroup;
   private categoriesBg: Phaser.GameObjects.Image;
+  private mTableContainer: Phaser.GameObjects.Container;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -39,10 +39,12 @@ export class MineCarPanel extends BasePanel {
     this.y = 107 * this.dpr * this.mWorld.uiScaleNew + this.mPanel.height / 2;
 
     this.mMask.clear();
-    this.mMask.fillStyle(0x000000, 0.6);
-    this.mMask.fillRect(-width / 2, -height / 2, width, height);
-    this.mMask.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
+    this.mMask.fillStyle(0x0, 0.6);
+    this.mMask.fillRect(-this.x, -this.y, width, height);
+    this.mMask.setInteractive(new Phaser.Geom.Rectangle(-this.x, -this.y, width, height), Phaser.Geom.Rectangle.Contains);
 
+    this.mTableContainer.x = -this.x;
+    this.mTableContainer.y = -this.y;
     this.mPropGrid.x = this.x;
     this.mPropGrid.y = this.y + 14 * this.dpr * this.mWorld.uiScaleNew;
     this.mPropGrid.layout();
@@ -134,6 +136,7 @@ export class MineCarPanel extends BasePanel {
 
   protected init() {
     this.mPanel = this.scene.make.container(undefined, false);
+    this.mTableContainer = this.scene.make.container(undefined, false);
     this.mMask = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScaleNew;
 
@@ -200,16 +203,16 @@ export class MineCarPanel extends BasePanel {
     this.mCategorieContainer.y = this.categoriesBg.y;
 
     this.mPropContainer = this.scene.make.container(undefined, false);
-    const propFrame = this.scene.textures.getFrame(this.key, "item_boder.png");
+    const propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
     const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
     const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     const w = this.scene.cameras.main.width;
-    const gridW = 224 * this.dpr * zoom;
+    const gridW = 236 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
       table: {
         width: gridW,
-        height: 268 * this.dpr * zoom,
-        columns: 5,
+        height: 295 * this.dpr * zoom,
+        columns: 4,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
@@ -235,18 +238,12 @@ export class MineCarPanel extends BasePanel {
       // }
     });
     this.mCheckBox = new CheckboxGroup();
-    this.add(this.mPanel);
+    this.add([this.mPanel, this.mTableContainer]);
     this.mPanel.add([this.mMask, bg, carIcon, this.mCloseBtn, this.mCounter, this.categoriesBg, this.mCategorieContainer, this.mPropContainer, this.mDiscardBtn]);
+    this.mTableContainer.add(this.mPropGrid.getElement("table"));
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
 
-    const alert = new AlertView(this.scene, this.mWorld).show({
-      text: "是否要丢弃？",
-      title: "丢弃",
-      callback: () => {
-        Logger.getInstance().log("sadflsdfjlk");
-      }
-    });
   }
 
   private refreshData() {
@@ -325,25 +322,42 @@ export class MineCarPanel extends BasePanel {
     }
     // const selected = this.mAllItem.filter((item) => item.selected);
     const selected = [];
+    const label = [];
     for (const item of this.mAllItem) {
       if (item.item && item.selected) {
         selected.push(item.item);
+        label.push(`${item.item.name}*${item.item.count}`);
       }
     }
-    this.emit("discard", selected);
+
+    new AlertView(this.scene, this.mWorld).show({
+      text: `您确定要丢弃 [color=#0157BC]${label.join("、")}[/color] 吗？`,
+      title: "丢弃",
+      oy: -80 * this.dpr * this.mWorld.uiScaleNew,
+      callback: () => {
+        this.emit("discard", selected);
+      }
+    });
   }
 
   private enterDiscardMode() {
     const state = this.mDiscardBtn.buttonState;
+    let visible = false;
     if (state === DiscardEnum.Discard) {
       this.mDiscardBtn.changeState(DiscardEnum.Cancel);
-      this.mFilterItem.map((item) => item.selectVisible = true);
-      this.mPropGrid.setItems(this.mFilterItem);
+      visible = true;
     } else {
       if (state === DiscardEnum.Sutmit) {
         this.onDiscardSelectedItem();
       }
       this.mDiscardBtn.changeState(DiscardEnum.Discard);
+    }
+    if (this.mFilterItem.length > 0 && this.mFilterItem[0].selectVisible !== visible) {
+      this.mFilterItem.map((item) => {
+        item.selectVisible = visible;
+        item.selected = false;
+      });
+      this.mPropGrid.setItems(this.mFilterItem);
     }
   }
 }
@@ -359,7 +373,7 @@ class PackageItem extends Phaser.GameObjects.Container {
 
     const border = this.scene.make.image({
       key,
-      frame: "item_boder.png"
+      frame: "item_border.png"
     }, false).setOrigin(0).setScale(zoom);
     this.setSize(border.width * zoom, border.height * zoom);
 
@@ -382,8 +396,8 @@ class PackageItem extends Phaser.GameObjects.Container {
       key,
       frame: "icon_normal.png"
     }, false);
-    this.mSelectedIcon.x = border.width - 3 * dpr - this.mSelectedIcon.width / 2;
-    this.mSelectedIcon.y = 3 * dpr + this.mSelectedIcon.height / 2;
+    this.mSelectedIcon.x = border.width * zoom - 2 * dpr - this.mSelectedIcon.width * zoom / 2;
+    this.mSelectedIcon.y = 2 * dpr + this.mSelectedIcon.height * zoom / 2;
     this.add(border);
   }
 
@@ -406,6 +420,7 @@ class PackageItem extends Phaser.GameObjects.Container {
       } else {
         this.remove(this.mSelectedIcon);
       }
+      this.setSelected();
     }
   }
 
@@ -414,11 +429,7 @@ class PackageItem extends Phaser.GameObjects.Container {
       return;
     }
     this.mItem.selected = !this.mItem.selected;
-    if (this.mItem.selected) {
-      this.mSelectedIcon.setFrame("icon_selected.png");
-    } else {
-      this.mSelectedIcon.setFrame("icon_normal.png");
-    }
+    this.setSelected();
   }
 
   get item(): IPackageItem {
@@ -429,6 +440,14 @@ class PackageItem extends Phaser.GameObjects.Container {
     if (this.mItemImage) {
       this.mItemImage.x = this.width - this.mItemImage.displayWidth >> 1;
       this.mItemImage.y = this.height - this.mItemImage.displayHeight >> 1;
+    }
+  }
+
+  private setSelected() {
+    if (this.mItem.selected) {
+      this.mSelectedIcon.setFrame("icon_selected.png");
+    } else {
+      this.mSelectedIcon.setFrame("icon_normal.png");
     }
   }
 }

@@ -29,6 +29,7 @@ export class MineCarMediator extends BaseMediator {
     this.mView.on("discard", this.onDiscardHandler, this);
     this.layerManager.addToUILayer(this.mView.view);
   }
+
   update(param?: any) {
     if (!this.mView) {
       this.show(param);
@@ -36,11 +37,13 @@ export class MineCarMediator extends BaseMediator {
     }
     super.update(param);
   }
+
   destroy() {
     this.mShow = false;
     if (this.mMineCar) {
       this.mMineCar.off("query", this.onQueryHandler, this);
       this.mMineCar.unregister();
+      this.mMineCar.destroy();
       this.mMineCar = null;
     }
     super.destroy();
