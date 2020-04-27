@@ -59,6 +59,7 @@ export class EquipUpgradeMediator extends BaseMediator {
 
     private onEquipUpgradePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
         const panel = this.mView as EquipUpgradePanel;
+        if (!panel) return;
         panel.setData("upgradeData", content);
         panel.setEquipDatas(content);
     }
@@ -71,11 +72,11 @@ export class EquipUpgradeMediator extends BaseMediator {
     }
 
     private onReqEquipedEquipment(id: string) {
-        this.equipUpgrade.reqEquipedEquipment(id);
+        if (this.equipUpgrade) this.equipUpgrade.reqEquipedEquipment(id);
     }
 
     private onReqActiveEquipment(id: string) {
-        this.equipUpgrade.reqActiveEquipment(id);
+        if (this.equipUpgrade) this.equipUpgrade.reqActiveEquipment(id);
     }
 
 }
