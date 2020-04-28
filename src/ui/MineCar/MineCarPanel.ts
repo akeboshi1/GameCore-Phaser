@@ -9,8 +9,6 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
-import { RoomZoon } from "../PicaRoomList/PicaRoomListPanel";
-
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   private mPanel: Phaser.GameObjects.Container;
@@ -28,6 +26,7 @@ export class MineCarPanel extends BasePanel {
   private mCheckBox: CheckboxGroup;
   private categoriesBg: Phaser.GameObjects.Image;
   private mTableContainer: Phaser.GameObjects.Container;
+  private cellHeight: number = 0;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -102,7 +101,7 @@ export class MineCarPanel extends BasePanel {
   }
 
   addListen() {
-    if (!this.mInitialized) return ;
+    if (!this.mInitialized) return;
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mDiscardBtn.on("click", this.enterDiscardMode, this);
   }
@@ -184,12 +183,12 @@ export class MineCarPanel extends BasePanel {
     this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
     this.mDiscardBtn.setScale(zoom);
     this.mDiscardBtn.x = (bg.width - this.mDiscardBtn.width) * zoom / 2 - 17 * this.dpr * zoom,
-    this.mDiscardBtn.y = (bg.height - this.mDiscardBtn.height) * zoom / 2 - 10 * this.dpr * zoom,
-    this.mDiscardBtn.setTextStyle({
-      color: "##996600",
-      fontFamily: Font.DEFULT_FONT,
-      fontSize: 10 * this.dpr * zoom
-    });
+      this.mDiscardBtn.y = (bg.height - this.mDiscardBtn.height) * zoom / 2 - 10 * this.dpr * zoom,
+      this.mDiscardBtn.setTextStyle({
+        color: "##996600",
+        fontFamily: Font.DEFULT_FONT,
+        fontSize: 10 * this.dpr * zoom
+      });
     this.mDiscardBtn.changeState(DiscardEnum.Discard);
 
     this.mCategorieContainer = this.scene.make.container(undefined, false);
@@ -207,6 +206,7 @@ export class MineCarPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
     const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
     const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
+    this.cellHeight = capH;
     const w = this.scene.cameras.main.width;
     const gridW = 236 * this.dpr * zoom;
     this.mPropGrid = new GridTable(this.scene, {
@@ -218,7 +218,7 @@ export class MineCarPanel extends BasePanel {
         cellHeight: capH,
         reuseCellContainer: true,
       },
-      clamplChildOY: true,
+      clamplChildOY: false,
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;

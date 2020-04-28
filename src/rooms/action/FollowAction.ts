@@ -4,6 +4,8 @@ import { op_client, op_def } from "pixelpai_proto";
 import { IGroup } from "../group/IGroup";
 import { FollowGroup } from "../group/FollowGroup";
 import { Room } from "../room";
+import { Pos } from "../../utils/pos";
+import { Logger } from "../../utils/log";
 
 export class FollowAction extends AIAction {
 
@@ -12,11 +14,11 @@ export class FollowAction extends AIAction {
     }
     private followgroup: FollowGroup;
     private movePath: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH;
-    private timeCounter: number = 0;
-    private intervalCounter: number = 0;
-    private duration: number = 0;
-    private tempPath: Array<{ x: number, y: number, duration: number }>;
+    private tempPath: Array<{ x: number, y: number, len: number, angle: number }>;
+    private tempPos = new Pos();
+    private distance: number = 50;
     private offset: number = 20;
+    private tempdis: number = 0;
     constructor(group: IGroup) {
         super();
         this.followgroup = (group as FollowGroup);
@@ -28,45 +30,47 @@ export class FollowAction extends AIAction {
         const room = (this.target.roomService as Room);
         room.frameManager.add(this, this.update);
         this.movePath.id = this.owner.id;
+        this.setStartPosition();
     }
 
     public update(time: number, delta: number) {
+        let canMove: boolean = false;
         if (this.target.getState() === PlayerState.WALK) {
-            this.duration += delta;
-            if (this.intervalCounter > 6) {
-                this.intervalCounter = 0;
-                const pos = this.target.getPosition();
-                const tempos = {
-                    x: pos.x,
-                    y: pos.y,
-                    duration: this.duration
-                };
-                this.tempPath.push(tempos);
-                this.duration = 0;
+            const pos = this.target.getPosition();
+            const tempos = {
+                x: pos.x,
+                y: pos.y,
+                len: 0,
+                angle: 0
+            };
+            if (this.tempPath.length > 0) {
+                const lastpos = this.tempPath[this.tempPath.length - 1];
+                lastpos.angle = this.getAngle(lastpos, tempos);
+                const len = this.getLength(tempos, lastpos);
+                lastpos.len = len;
+                this.tempdis += len;
+                if (this.tempdis > this.distance) {
+                    canMove = true;
+                    if (this.tempdis > this.distance + 5) {
+                        this.tempdis -= this.tempPath.splice(0, 1)[0].len;
+                    }
+                    this.tempdis -= this.tempPath[0].len;
+                }
             }
-            this.intervalCounter++;
-            this.timeCounter++;
+            this.tempPath.push(tempos);
+        } else {
+            if (this.tempdis > this.distance) {
+                canMove = true;
+                this.tempdis -= this.tempPath[0].len;
+            }
         }
-        if (this.timeCounter > 20) {
-            let duration = 0;
-            const now = this.owner.roomService.now();
-            const path = this.tempPath.splice(0, this.tempPath.length - 3);
-            for (const tempPos of path) {
-                duration += tempPos.duration;
-                const point = new op_client.MovePoint();
-                point.point3f = new op_def.PBPoint3f();
-                point.point3f.x = tempPos.x;
-                point.point3f.y = tempPos.y + this.offset;
-                point.timestemp = now + duration;
-                this.movePath.path.push(point);
-                // lastpos = tempPos;
+        if (canMove) {
+            const point = this.tempPath.splice(0, 1)[0];
+            if (point) {
+                this.tempPos.x = point.x;
+                this.tempPos.y = point.y + this.offset;
+                this.owner.movePosition(this.tempPos, point.angle);
             }
-            this.movePath.timestemp = now + duration;
-            this.owner.movePath(this.movePath);
-            this.timeCounter = 0;
-            this.movePath.path.length = 0;
-            this.movePath.timestemp = 0;
-            path.length = 0;
         }
     }
 
@@ -76,5 +80,45 @@ export class FollowAction extends AIAction {
         room.frameManager.remove(this, this.update);
         this.movePath.path.length = 0;
         this.followgroup = null;
+    }
+
+    private getAngle(point1: any, point2: any) {
+        if (!(point1.y === point2.y && point1.x === point2.x)) {
+            const angle = Math.atan2(point2.y - point1.y, point2.x - point1.x) * (180 / Math.PI);
+            return angle;
+        }
+        return null;
+    }
+    private getLength(point1: any, point2: any) {
+        const x = (point1.x - point2.x);
+        const y = (point1.y - point2.y);
+        const len = Math.sqrt(x * x + y * y);
+        return len;
+    }
+    private setStartPosition() {
+        const pos = this.owner.getPosition();
+        pos.y += this.offset;
+        pos.x -= this.distance;
+        this.owner.setPosition(pos);
+        let dis = this.distance;
+        const interdis = 2;
+        const hy = pos.y - this.offset;
+        while (dis > 0) {
+            dis -= interdis;
+            const tempos = {
+                x: pos.x +(this.distance-dis),
+                y: hy,
+                len: 0,
+                angle: 0
+            };
+            if (this.tempPath.length > 0) {
+                const lastpos = this.tempPath[this.tempPath.length - 1];
+                lastpos.angle = this.getAngle(lastpos, tempos);
+                const len = this.getLength(tempos, lastpos);
+                lastpos.len = len;
+                this.tempdis += len;
+            }
+            this.tempPath.push(tempos);
+        }
     }
 }

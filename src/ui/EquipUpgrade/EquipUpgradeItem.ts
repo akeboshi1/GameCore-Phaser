@@ -1,9 +1,9 @@
 import { Font } from "../../utils/font";
-import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url } from "../../utils/resUtil";
-import { Logger } from "../../utils/log";
 import { op_client } from "pixelpai_proto";
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -12,7 +12,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private titleName: Phaser.GameObjects.Text;
     private equipName: Phaser.GameObjects.Text;
     private penetrationText: Phaser.GameObjects.Text;
-    private gridTable: GridTable;
+    private gridTable: GameGridTable;
     private mScrollContainer: Phaser.GameObjects.Container;
     private equipDes: Phaser.GameObjects.Text;
 
@@ -70,9 +70,9 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
-        // this.gridTable.refresh();
+        this.gridTable.refresh();
         // this.gridTable.setT((index + 1) / this.gridTable.items.length);
-        this.onSelectItemHandler(this.curEquipItem);
+        this.updateEquipItem(this.curEquipItem);
     }
 
     destroy() {
@@ -127,11 +127,9 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const capH = (propFrame.height + 30 * this.dpr * this.zoom);
         this.cellWidth = capW;
         this.cellHeight = capH;
-        this.gridTable = new GridTable(this.scene, {
-            x: 0,
-            y: 0,
+        const config: GridTableConfig = {
             scrollMode: 1,
-            //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,
@@ -139,8 +137,6 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                dpr: this.dpr,
-                zoom: this.zoom,
             },
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
@@ -163,11 +159,12 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 }
                 // Logger.getInstance().log(item);
                 return cellContainer;
-            },
-        });
-
+            }
+        };
+        this.gridTable = new GameGridTable(this.scene, config);
         this.gridTable.layout();
-        this.gridTable.on("cell.1tap", (cell) => {
+        this.gridTable.addListen();
+        this.gridTable.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
 
@@ -178,11 +175,17 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         // Logger.getInstance().log(cell.itemData);
         if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
+        this.updateEquipItem(cell);
+        this.curEquipItem = cell;
+        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
+    }
+
+    private updateEquipItem(cell: EquipItemCell) {
+        const data = cell.itemData;
         this.penetrationText.text = data.buffDisplayNames[0];
         this.equipDes.text = data.description;
         this.equipName.text = data.name;
         this.costNum.text = data.price + "";
-        this.curEquipItem = cell;
         if (data.owned) this.unlockbtn.visible = false;
         else this.unlockbtn.visible = true;
         if (data.qualified) {
@@ -203,8 +206,6 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             this.btnName.setPosition(0, 6 * this.dpr);
         }
         cell.setSelect(true);
-        this.curEquipItem = cell;
-        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
     }
     private onUnlockEquipHandler() {
         this.emit("reqActive", this.curEquipItem.itemData.id);

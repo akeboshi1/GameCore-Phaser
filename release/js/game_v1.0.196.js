@@ -1837,6 +1837,39 @@ var Font = /** @class */ (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Pos; });
+var Pos = /** @class */ (function () {
+    function Pos(x, y, z, depth) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+        this.depth = depth | 0;
+    }
+    Pos.prototype.add = function (x, y, z) {
+        this.x += x;
+        this.x += y;
+        this.z += z ? z : 0;
+        return this;
+    };
+    Pos.prototype.equal = function (p) {
+        return p.x === this.x && p.y === this.y && p.z === this.z && p.depth === this.depth;
+    };
+    Pos.prototype.toString = function () {
+        return "Pos >> x: " + this.x + ", y: " + this.y + ", z: " + this.z + ", depth: " + this.depth;
+    };
+    Pos.prototype.toPoint = function () {
+        return new Phaser.Geom.Point(this.x, this.y);
+    };
+    return Pos;
+}());
+
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MessageType; });
 /**
  * 系统消息定义
@@ -1916,39 +1949,6 @@ var MessageType = /** @class */ (function () {
     MessageType.SHOW_UI = "showUI";
     MessageType.SHOW_NOTICE = "showNotice";
     return MessageType;
-}());
-
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Pos; });
-var Pos = /** @class */ (function () {
-    function Pos(x, y, z, depth) {
-        this.x = x || 0;
-        this.y = y || 0;
-        this.z = z || 0;
-        this.depth = depth | 0;
-    }
-    Pos.prototype.add = function (x, y, z) {
-        this.x += x;
-        this.x += y;
-        this.z += z ? z : 0;
-        return this;
-    };
-    Pos.prototype.equal = function (p) {
-        return p.x === this.x && p.y === this.y && p.z === this.z && p.depth === this.depth;
-    };
-    Pos.prototype.toString = function () {
-        return "Pos >> x: " + this.x + ", y: " + this.y + ", z: " + this.z + ", depth: " + this.depth;
-    };
-    Pos.prototype.toPoint = function () {
-        return new Phaser.Geom.Point(this.x, this.y);
-    };
-    return Pos;
 }());
 
 
@@ -2409,7 +2409,7 @@ var protocols = __webpack_require__(3);
 var log = __webpack_require__(9);
 
 // EXTERNAL MODULE: ./src/utils/pos.ts
-var utils_pos = __webpack_require__(13);
+var utils_pos = __webpack_require__(12);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/block.object.ts
 var block_object = __webpack_require__(99);
@@ -2647,7 +2647,7 @@ var ShopModel = /** @class */ (function () {
 
 
 // EXTERNAL MODULE: ./src/const/MessageType.ts
-var MessageType = __webpack_require__(12);
+var MessageType = __webpack_require__(13);
 
 // CONCATENATED MODULE: ./src/rooms/element/shop/shop.entity.ts
 var shop_entity_extends = (undefined && undefined.__extends) || (function () {
@@ -3062,6 +3062,18 @@ var element_Element = /** @class */ (function (_super) {
             }];
         this._doMove();
     };
+    Element.prototype.movePosition = function (pos, angel) {
+        if (!this.mElementManager) {
+            return;
+        }
+        if (!this.mDisplay) {
+            return;
+        }
+        if (!pos.depth)
+            pos.depth = this.getDepth();
+        this.setPosition(pos);
+        this.onCheckDirection(angel);
+    };
     Element.prototype.movePath = function (movePath) {
         var _this = this;
         if (!this.mElementManager) {
@@ -3213,6 +3225,13 @@ var element_Element = /** @class */ (function (_super) {
     //         }
     //     }
     // }
+    Element.prototype.getDepth = function () {
+        var depth = 0;
+        if (this.model && this.model.pos) {
+            depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
+        return depth;
+    };
     Element.prototype.destroy = function () {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();
@@ -4059,7 +4078,7 @@ class BBCodeText_BBCodeText extends Text["a" /* default */] {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Sprite; });
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _display_dragonbones_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(102);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
@@ -4519,7 +4538,7 @@ var Sprite = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IconBtn", function() { return IconBtn; });
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4839,7 +4858,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DragType", function() { return DragType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DropType", function() { return DropType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagMediator", function() { return BagMediator; });
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
 /* harmony import */ var _bagPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(137);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
@@ -6390,7 +6409,7 @@ Object.assign(
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Position45; });
-/* harmony import */ var _pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 
 var Position45 = /** @class */ (function () {
     function Position45() {
@@ -6637,7 +6656,7 @@ var i18n = i18next__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"];
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(212);
+var Scrollable = __webpack_require__(211);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
 var GetScrollMode = __webpack_require__(76);
@@ -6928,6 +6947,8 @@ class Table_Table {
         this.setDefaultCellWidth(Table_GetValue(o, 'cellWidth', 30));
         this.initCells(Table_GetValue(o, 'cellsCount', 0));
         this.setColumnCount(Table_GetValue(o, 'columns', 1));
+        this.zoom = Table_GetValue(o, 'zoom', 1);
+        this.dpr = Table_GetValue(o, 'dpr', 1);
         return this;
     }
 
@@ -7102,7 +7123,7 @@ class Table_Table {
     rowIndexToHeight(start, end) {
         // defaultCellHeightMode
         if (this.defaultCellHeightMode) {
-            return (end - start + 1) * this.defaultCellHeight;
+            return (end - start + 1) * this.defaultCellHeight * this.zoom;
         }
 
         var h, sum = 0;
@@ -7115,7 +7136,7 @@ class Table_Table {
     }
 
     colIndexToWidth(start, end) {
-        return (end - start + 1) * this.defaultCellWidth;
+        return (end - start + 1) * this.defaultCellWidth * this.zoom;
     };
 
     getRowHeight(rowIdx) {
@@ -7754,7 +7775,6 @@ const Container = ContainerLite["a" /* default */];
 const Components = Phaser.GameObjects.Components;
 const Set = Phaser.Structs.Set;
 const GridTable_GetValue = Phaser.Utils.Objects.GetValue;
-
 class GridTable_GridTable extends Container {
     constructor(scene, x, y, width, height, config) {
         if (config === undefined) {
@@ -7762,8 +7782,8 @@ class GridTable_GridTable extends Container {
         }
         super(scene, x, y, width, height);
         this.type = 'rexGridTable';
-        this._tableOX = 0;
-        this._tableOY = 0;
+        this._tableOX = GridTable_GetValue(config, 'tableOX', 0);
+        this._tableOY = GridTable_GetValue(config, 'tableOY', 0);
         this.visibleCells = new Set();
         this.preVisibleCells = new Set();
         this.visibleStartX = null;
@@ -7778,7 +7798,6 @@ class GridTable_GridTable extends Container {
 
         var reuseCellContainer = GridTable_GetValue(config, 'reuseCellContainer', false);
         this.cellContainersPool = (reuseCellContainer) ? scene.add.group() : undefined;
-
         var callback = GridTable_GetValue(config, 'cellVisibleCallback', null);
         if (callback !== null) {
             var scope = GridTable_GetValue(config, 'cellVisibleCallbackScope', undefined);
@@ -8054,16 +8073,16 @@ class GridTable_GridTable extends Container {
         }
     }
 
-    resize (width, height) {
+    resize(width, height) {
         if ((this.width === width) && (this.height === height)) {
             return this;
         }
-    
+
         super.resize(width, height);
         if (this.cellsMask) {
             Object(ResizeGameObject["a" /* default */])(Object(MaskToGameObject["a" /* default */])(this.cellsMask), width, height);
         }
-    
+
         if (this.expandCellSize) {
             this.table.setDefaultCellWidth(this.instWidth / this.table.colCount);
         }
@@ -8331,7 +8350,6 @@ var SetItems = function (items) {
 
 
 const gridtable_GridTable_GetValue = Phaser.Utils.Objects.GetValue;
-
 class gridtable_GridTable_GridTable extends Scrollable["a" /* default */] {
     constructor(scene, config) {
         if (config === undefined) {
@@ -8360,7 +8378,6 @@ class gridtable_GridTable_GridTable extends Scrollable["a" /* default */] {
         }
         // Inject properties for scrollable interface
         gridtable_InjectProperties(table);
-
         // Fill config of scrollable
         config.type = 'rexGridTable';
         config.child = {
@@ -8387,6 +8404,16 @@ class gridtable_GridTable_GridTable extends Scrollable["a" /* default */] {
             input_TableSetInteractive.call(this, table, tableConfig);
         }
         this.setItems(gridtable_GridTable_GetValue(config, 'items', []));
+    }
+
+    set tableOX(ox) {
+        const table = this.getElement("table");
+        if (table) table.tableOX(ox);
+    }
+
+    set tableOY(oy) {
+        const table = this.getElement("table");
+        if (table) table.tableOY(oy);
     }
 
     setCreateCellContainerCallback(callback, scope) {
@@ -8959,7 +8986,7 @@ const PROPORTIONMODE = {
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(212);
+var Scrollable = __webpack_require__(211);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/textblock/TextBlock.js + 11 modules
 var TextBlock = __webpack_require__(285);
@@ -9829,7 +9856,7 @@ var DragDropIcon = /** @class */ (function (_super) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Tool; });
-/* harmony import */ var _pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 
 var Tool = /** @class */ (function () {
     function Tool() {
@@ -10126,11 +10153,9 @@ var CheckboxGroup = /** @class */ (function (_super) {
                 item.destroy();
             });
         }
+        _super.prototype.destroy.call(this);
     };
     CheckboxGroup.prototype.onGameObjectUpHandler = function (pointer, gameobject) {
-        if (this.mPrevButton) {
-            // this.mPrevButton.setFrame("")
-        }
         this.select(gameobject);
     };
     return CheckboxGroup;
@@ -10468,7 +10493,7 @@ var LoadingScene = /** @class */ (function (_super) {
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(21);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(12);
 /* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(25);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -11950,7 +11975,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RightMediator", function() { return RightMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
 /* harmony import */ var _right_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(140);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -12061,7 +12086,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementStorageMediator", function() { return ElementStorageMediator; });
 /* harmony import */ var _ElementStoragePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(142);
 /* harmony import */ var _ElementStorate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(144);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
@@ -15598,7 +15623,7 @@ var DynamicSprite = /** @class */ (function (_super) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BlockObject; });
 /* harmony import */ var _element_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
 
 
 var BlockObject = /** @class */ (function () {
@@ -17216,9 +17241,9 @@ var DecorateManager = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DecoratePanel", function() { return DecoratePanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
 /* harmony import */ var _utils_position45__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(40);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(13);
 /* harmony import */ var _rooms_element_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(21);
 /* harmony import */ var _components_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(41);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -17878,7 +17903,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _baseView_bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(84);
 /* harmony import */ var _baseView_bagGroup_bag_group_mediator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(148);
 /* harmony import */ var _baseView_top_menu_top_menu_mediator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(150);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(13);
 /* harmony import */ var _components_inputTextFactory__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(87);
 /* harmony import */ var _DecorateControl_DecorateControlMediator__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(152);
 /* harmony import */ var _PiCaMainUI_PicaMainUIMediator__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(154);
@@ -19502,7 +19527,7 @@ var LayerManager = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoticeMediator", function() { return NoticeMediator; });
 /* harmony import */ var _NoticePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(135);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 /* harmony import */ var _Notice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(136);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(17);
@@ -21794,7 +21819,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22038,7 +22063,7 @@ var LeftBtnGroup = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IconSelectBtn", function() { return IconSelectBtn; });
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22155,7 +22180,7 @@ var IconSelectBtn = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagGroupMediator", function() { return BagGroupMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
 /* harmony import */ var _bag_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(149);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -22522,7 +22547,7 @@ var BagGroup = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopMenuMediator", function() { return TopMenuMediator; });
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
 /* harmony import */ var _top_menu_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(151);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_2__);
@@ -22759,7 +22784,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -24151,6 +24176,7 @@ var MineCarPanel = /** @class */ (function (_super) {
     function MineCarPanel(scene, world) {
         var _this = _super.call(this, scene, world) || this;
         _this.key = "mine_car";
+        _this.cellHeight = 0;
         _this.scale = 1;
         _this.disInteractive();
         return _this;
@@ -24310,6 +24336,7 @@ var MineCarPanel = /** @class */ (function (_super) {
         var propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
         var capW = propFrame.width * zoom + 4 * this.dpr * zoom;
         var capH = propFrame.height * zoom + 4 * this.dpr * zoom;
+        this.cellHeight = capH;
         var w = this.scene.cameras.main.width;
         var gridW = 236 * this.dpr * zoom;
         this.mPropGrid = new _lib_rexui_lib_ui_gridtable_GridTable__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"](this.scene, {
@@ -24321,7 +24348,7 @@ var MineCarPanel = /** @class */ (function (_super) {
                 cellHeight: capH,
                 reuseCellContainer: true,
             },
-            clamplChildOY: true,
+            clamplChildOY: false,
             createCellContainerCallback: function (cell, cellContainer) {
                 var scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -25045,7 +25072,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _interactionbubble_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(168);
 /* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(109);
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12);
 /* harmony import */ var _scenes_play__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(73);
 /* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(62);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(5);
@@ -25205,7 +25232,7 @@ var InteractiveBubbleManager = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractionBubbleContainer", function() { return InteractionBubbleContainer; });
-/* harmony import */ var _interactionbubble__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(213);
+/* harmony import */ var _interactionbubble__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(212);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(108);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -25836,319 +25863,9 @@ var EquipUpgrade = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EquipUpgradeItem", function() { return EquipUpgradeItem; });
-/* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(11);
-/* harmony import */ var _lib_rexui_lib_ui_gridtable_GridTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(49);
-/* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(19);
-/* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-var EquipUpgradeItem = /** @class */ (function (_super) {
-    __extends(EquipUpgradeItem, _super);
-    function EquipUpgradeItem(scene, dpr, zoom, key, commonKey) {
-        var _this = _super.call(this, scene) || this;
-        _this.haveEquiped = false;
-        _this.cellWidth = 0;
-        _this.cellHeight = 0;
-        _this.dpr = dpr;
-        _this.zoom = zoom;
-        _this.key = key;
-        _this.commonKey = commonKey;
-        _this.create();
-        return _this;
-    }
-    EquipUpgradeItem.prototype.setEquipItems = function (data) {
-        var name = data.equipmentType;
-        var items = data.mineEquipments;
-        this.titleName.text = name;
-        var index = 0;
-        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
-            var item = items_1[_i];
-            if (item.selected) {
-                this.haveEquiped = true;
-                break;
-            }
-            index++;
-        }
-        this.gridTable.setItems(items);
-        this.gridTable.layout();
-        if (this.haveEquiped)
-            this.gridTable.setT((index + 1) / items.length);
-        this.setBgTexture(data["isblue"]);
-    };
-    EquipUpgradeItem.prototype.setTransPosition = function (x, y) {
-        this.setPosition(x, y);
-        var w = this.scene.cameras.main.width, h = this.scene.cameras.main.height;
-        var posX = w * 0.5 + this.x * this.zoom;
-        var posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
-        this.gridTable.x = posX;
-        this.gridTable.y = posY;
-        this.gridTable.layout();
-        this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
-    };
-    EquipUpgradeItem.prototype.refreshEquipData = function (data, index) {
-        this.gridTable.items[index] = data;
-        // this.gridTable.refresh();
-        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
-        this.onSelectItemHandler(this.curEquipItem);
-    };
-    EquipUpgradeItem.prototype.destroy = function () {
-        if (this.unlockbtn)
-            this.unlockbtn.off("pointerup", this.onUnlockEquipHandler, this);
-        _super.prototype.destroy.call(this);
-        if (this.gridTable)
-            this.gridTable.destroy();
-        this.bg = null;
-        this.topbg = null;
-        this.bottombg = null;
-        this.gridTable = null;
-        this.titleName = null;
-        this.equipName = null;
-        this.penetrationText = null;
-        this.equipDes = null;
-        this.unlockbtn = null;
-        this.costNum = null;
-        this.diamondIcon = null;
-        this.curEquipItem = null;
-    };
-    EquipUpgradeItem.prototype.setBgTexture = function (isblue) {
-        var topName = !isblue ? "topbg" : "topbg1";
-        var bottombg = !isblue ? "bottombg" : "bottombg1";
-        var fontColor = !isblue ? "#8F4300" : "#0867AE";
-        this.topbg.setTexture(this.key, topName);
-        this.bottombg.setTexture(this.key, bottombg);
-        this.titleName.setColor(fontColor).setStroke(fontColor, 1);
-        this.equipName.setColor(fontColor).setStroke(fontColor, 1);
-        this.penetrationText.setColor(fontColor).setStroke(fontColor, 1);
-    };
-    EquipUpgradeItem.prototype.create = function () {
-        this.bg = this.scene.make.image({ x: 0, y: -21 * this.dpr, key: this.key, frame: "bg1" });
-        this.topbg = this.scene.make.image({ x: 0, y: -61 * this.dpr, key: this.key, frame: "topbg" });
-        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } }).setOrigin(0.5, 0.5);
-        this.bottombg = this.scene.make.image({ x: 0, y: 42 * this.dpr, key: this.key, frame: "bottombg" });
-        this.equipName = this.scene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } });
-        this.penetrationText = this.scene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#8F4300", fontSize: 12 * this.dpr, fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_0__[/* Font */ "a"].DEFULT_FONT } });
-        this.equipDes = this.scene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_0__[/* Font */ "a"].DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
-        this.equipDes.setStroke("#000000", 1);
-        this.add([this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes]);
-        this.createGridTable();
-        this.createBtn();
-    };
-    EquipUpgradeItem.prototype.createGridTable = function () {
-        var _this = this;
-        this.mScrollContainer = this.scene.make.container(undefined, false);
-        this.mScrollContainer.setPosition(0, 0);
-        var propFrame = this.scene.textures.getFrame(this.key, "equipbg");
-        var capW = (propFrame.width + 10 * this.dpr * this.zoom);
-        var capH = (propFrame.height + 30 * this.dpr * this.zoom);
-        this.cellWidth = capW;
-        this.cellHeight = capH;
-        this.gridTable = new _lib_rexui_lib_ui_gridtable_GridTable__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"](this.scene, {
-            x: 0,
-            y: 0,
-            scrollMode: 1,
-            //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
-            table: {
-                width: 245 * this.dpr * this.zoom,
-                height: 60 * this.dpr * this.zoom,
-                columns: 1,
-                cellWidth: capW,
-                cellHeight: capH,
-                reuseCellContainer: true,
-                dpr: this.dpr,
-                zoom: this.zoom,
-            },
-            clamplChildOY: false,
-            createCellContainerCallback: function (cell, cellContainer) {
-                var scene = cell.scene, item = cell.item;
-                var index = cell.index;
-                if (cellContainer === null) {
-                    cellContainer = new EquipItemCell(scene, _this.dpr, _this.key, _this.zoom);
-                    _this.mScrollContainer.add(cellContainer);
-                    cellContainer.setChildPosition();
-                }
-                cellContainer.setSize(capW, capH);
-                cellContainer.setData({ item: item });
-                cellContainer.setItemData(item, index);
-                if (_this.curEquipItem == null) {
-                    if (_this.haveEquiped) {
-                        if (item.selected)
-                            _this.onSelectItemHandler(cellContainer);
-                    }
-                    else {
-                        _this.onSelectItemHandler(cellContainer);
-                    }
-                }
-                // Logger.getInstance().log(item);
-                return cellContainer;
-            },
-        });
-        this.gridTable.layout();
-        this.gridTable.on("cell.1tap", function (cell) {
-            _this.onSelectItemHandler(cell);
-        });
-        this.add(this.mScrollContainer);
-    };
-    EquipUpgradeItem.prototype.onSelectItemHandler = function (cell) {
-        // Logger.getInstance().log(cell.itemData);
-        if (this.curEquipItem)
-            this.curEquipItem.setSelect(false);
-        var data = cell.itemData;
-        this.penetrationText.text = data.buffDisplayNames[0];
-        this.equipDes.text = data.description;
-        this.equipName.text = data.name;
-        this.costNum.text = data.price + "";
-        this.curEquipItem = cell;
-        if (data.owned)
-            this.unlockbtn.visible = false;
-        else
-            this.unlockbtn.visible = true;
-        if (data.qualified) {
-            this.unlockCondition.visible = false;
-            this.unlockbtn.setInteractive();
-        }
-        else if (!data.owned) {
-            this.unlockCondition.visible = true;
-            this.unlockCondition.text = data.conditionDisplayNames[0];
-            this.unlockbtn.disableInteractive();
-        }
-        if (data.price == null) {
-            this.costNum.visible = false;
-            this.diamondIcon.visible = false;
-            this.btnName.setPosition(0, 0 * this.dpr);
-        }
-        else {
-            this.costNum.visible = true;
-            this.diamondIcon.visible = true;
-            this.btnName.setPosition(0, 6 * this.dpr);
-        }
-        cell.setSelect(true);
-        this.curEquipItem = cell;
-        if (data.owned && !data.selected)
-            this.emit("reqEquiped", data.id);
-    };
-    EquipUpgradeItem.prototype.onUnlockEquipHandler = function () {
-        this.emit("reqActive", this.curEquipItem.itemData.id);
-    };
-    EquipUpgradeItem.prototype.createBtn = function () {
-        this.unlockCondition = this.scene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_0__[/* Font */ "a"].DEFULT_FONT } }).setOrigin(0.5, 0.5);
-        this.unlockbtn = this.scene.make.container(undefined, false);
-        var btnBg = this.scene.make.image({ x: 0, y: 0, key: this.commonKey, frame: "button" });
-        this.diamondIcon = this.scene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
-        this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_0__[/* Font */ "a"].DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_0__[/* Font */ "a"].DEFULT_FONT } }).setOrigin(0.5, 0.5);
-        this.costNum.setStroke("#ffffff", 1);
-        this.btnName.setStroke("#8F4300", 1);
-        this.unlockCondition.setStroke("#000000", 1);
-        this.unlockbtn.setPosition(70 * this.dpr, 48 * this.dpr);
-        this.unlockbtn.setSize(btnBg.width, btnBg.height);
-        this.unlockbtn.add([this.unlockCondition, btnBg, this.diamondIcon, this.costNum, this.btnName]);
-        this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
-        this.add(this.unlockbtn);
-    };
-    EquipUpgradeItem.prototype.getBoldFont = function (size) {
-        var font = "bold " + size + "px Source Han Sans";
-        return font;
-    };
-    return EquipUpgradeItem;
-}(Phaser.GameObjects.Container));
-
-var EquipItemCell = /** @class */ (function (_super) {
-    __extends(EquipItemCell, _super);
-    function EquipItemCell(scene, dpr, key, zoom) {
-        var _this = _super.call(this, scene) || this;
-        _this.index = 0;
-        _this.isSelect = false;
-        _this.isUnlock = false;
-        _this.dpr = dpr;
-        _this.key = key;
-        _this.zoom = zoom;
-        _this.create();
-        return _this;
-    }
-    EquipItemCell.prototype.setItemData = function (data, index) {
-        var _this = this;
-        this.itemData = data;
-        this.index = index;
-        var url = _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* Url */ "h"].getOsdRes(data.display.texturePath); // "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
-        this.equipIcon.load(url, this, function () {
-            // this.equipIcon.setDisplaySize(22 * this.dpr * this.zoom, 22 * this.dpr * this.zoom);
-            var x = -_this.equipIcon.width * 0.5 + 2 * _this.dpr * _this.zoom;
-            var y = 2 * _this.dpr * _this.zoom;
-            _this.equipIcon.setPosition(x, y);
-        });
-        this.setEquiped(data.selected, data.owned);
-        this.setSelect(this.isSelect);
-    };
-    EquipItemCell.prototype.setSelect = function (isSelect) {
-        this.isSelect = isSelect;
-        var bgName = "equipbg";
-        if (!isSelect) {
-            if (this.isUnlock)
-                bgName = "equipbg2";
-            else
-                bgName = "equipbg1";
-        }
-        this.bg.setTexture(this.key, bgName);
-    };
-    EquipItemCell.prototype.setChildPosition = function () {
-        var x = -this.bg.width * 0.5;
-        var y = -10 * this.dpr * this.zoom;
-        this.bg.setPosition(x, y);
-        x = -this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;
-        y = 2 * this.dpr * this.zoom;
-        this.equipIcon.setPosition(x, y);
-        x = -this.unlock.width * 0.5 + 20 * this.dpr * this.zoom;
-        y = -8 * this.dpr * this.zoom;
-        this.unlock.setPosition(x, y);
-    };
-    EquipItemCell.prototype.setEquiped = function (isequiped, unlock) {
-        this.isUnlock = unlock;
-        this.unlock.visible = false;
-        if (isequiped) {
-            this.isUnlock = true;
-            this.unlock.visible = true;
-            this.unlock.setTexture(this.key, "ok");
-        }
-        else if (!this.isUnlock) {
-            this.unlock.visible = true;
-            this.unlock.setTexture(this.key, "lock");
-        }
-    };
-    EquipItemCell.prototype.create = function () {
-        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr * this.zoom, key: this.key, frame: "equipbg" }).setOrigin(0, 0).setScale(this.zoom);
-        this.equipIcon = new _components_dynamic_image__WEBPACK_IMPORTED_MODULE_2__["DynamicImage"](this.scene, 15 * this.dpr * this.zoom, 0 * this.dpr * this.zoom).setOrigin(0, 0);
-        this.unlock = this.scene.make.image({ x: 30 * this.dpr * this.zoom, y: -10 * this.dpr * this.zoom, key: this.key, frame: "lock" }).setOrigin(0, 0);
-        this.add([this.bg, this.equipIcon, this.unlock]);
-    };
-    return EquipItemCell;
-}(Phaser.GameObjects.Container));
-
-
-/***/ }),
-/* 175 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(11);
-/* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(174);
+/* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(215);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(15);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -26331,7 +26048,7 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 176 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26486,7 +26203,7 @@ var FurniBag = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 177 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27105,10 +26822,10 @@ var Item = /** @class */ (function (_super) {
 
 
 /***/ }),
+/* 177 */,
 /* 178 */,
 /* 179 */,
-/* 180 */,
-/* 181 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27122,7 +26839,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(5);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(37);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(11);
-/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(182);
+/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(181);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27350,14 +27067,14 @@ var InfoPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 182 */
+/* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoPanelMediator", function() { return InfoPanelMediator; });
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _InfoPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(181);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _InfoPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(180);
 /* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(62);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -27442,7 +27159,7 @@ var InfoPanelMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 183 */
+/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27455,7 +27172,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbocdetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
-/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(184);
+/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(183);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(51);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -27964,13 +27681,13 @@ var InteractivePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 184 */
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractivePanelMediator", function() { return InteractivePanelMediator; });
-/* harmony import */ var _InteractivePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(183);
+/* harmony import */ var _InteractivePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(182);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -28052,7 +27769,7 @@ var InteractivePanelMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 185 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28237,7 +27954,7 @@ var ItemDetail = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 186 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28248,7 +27965,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(386);
 /* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _Market_DetailDisplay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(65);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(13);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(11);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -28483,13 +28200,13 @@ var ItemPopCardPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 187 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementDetail", function() { return ElementDetail; });
-/* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(188);
+/* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(187);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
@@ -28766,13 +28483,13 @@ var ElementDetail = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 188 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NumberCounter", function() { return NumberCounter; });
-/* harmony import */ var _components_label_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(189);
+/* harmony import */ var _components_label_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(188);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28935,7 +28652,7 @@ var NumberCounter = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 189 */
+/* 188 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29054,7 +28771,7 @@ var LabelInput = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 190 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29166,19 +28883,19 @@ var Market = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 191 */
+/* 190 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarketPanel", function() { return MarketPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
-/* harmony import */ var _ElementDetail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(187);
+/* harmony import */ var _ElementDetail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(186);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(48);
 /* harmony import */ var _components_checkbox_group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(64);
 /* harmony import */ var _TextButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(92);
-/* harmony import */ var _item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(192);
-/* harmony import */ var _components_tab_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(193);
+/* harmony import */ var _item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(191);
+/* harmony import */ var _components_tab_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(192);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(11);
 /* harmony import */ var _lib_rexui_lib_ui_gridtable_GridTable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(49);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -29552,7 +29269,7 @@ var MarketPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 192 */
+/* 191 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29670,7 +29387,7 @@ var MarketItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 193 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29705,7 +29422,7 @@ var TabButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 194 */
+/* 193 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29839,7 +29556,7 @@ var MessageBoxView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 195 */
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29918,7 +29635,7 @@ var MineSettle = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 196 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30158,7 +29875,7 @@ var MineSettleItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 197 */
+/* 196 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30309,7 +30026,7 @@ var PicaMessageBoxPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 198 */
+/* 197 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31131,7 +30848,7 @@ var PopularRoomItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 199 */
+/* 198 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31223,18 +30940,18 @@ var RoomList = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 200 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShopMediator", function() { return ShopMediator; });
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ShopPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(201);
+/* harmony import */ var _ShopPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(200);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -31396,7 +31113,7 @@ var ShopMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 201 */
+/* 200 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31405,7 +31122,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var _shop_itemSlot__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(216);
-/* harmony import */ var _ShopMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(200);
+/* harmony import */ var _ShopMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(199);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(15);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(26);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(27);
@@ -31610,14 +31327,14 @@ var ShopPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 202 */
+/* 201 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserInfoMediator", function() { return UserInfoMediator; });
-/* harmony import */ var _UserInfoPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(203);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
+/* harmony import */ var _UserInfoPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(202);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -31698,7 +31415,7 @@ var UserInfoMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 203 */
+/* 202 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31710,7 +31427,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(37);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(11);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(18);
-/* harmony import */ var _UserInfoMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(202);
+/* harmony import */ var _UserInfoMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(201);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -31931,7 +31648,7 @@ var UserInfoPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 204 */
+/* 203 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32023,7 +31740,7 @@ var MenuItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 205 */
+/* 204 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32031,7 +31748,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserMenuPanel", function() { return UserMenuPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(204);
+/* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(203);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(15);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -32210,7 +31927,7 @@ var UserMenuPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 206 */
+/* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32282,13 +31999,13 @@ var PopUpTextUI = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 207 */
+/* 206 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StorageMediator", function() { return StorageMediator; });
-/* harmony import */ var _storagePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(208);
+/* harmony import */ var _storagePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(207);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -32361,7 +32078,7 @@ var StorageMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 208 */
+/* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32371,7 +32088,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(15);
-/* harmony import */ var _storageMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(207);
+/* harmony import */ var _storageMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(206);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(27);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(6);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -32495,7 +32212,7 @@ var StoragePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 209 */
+/* 208 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32764,7 +32481,7 @@ var TopBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 210 */
+/* 209 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33028,7 +32745,7 @@ var SelectCallItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 211 */
+/* 210 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33812,7 +33529,7 @@ const ORIENTATIONMODE = {
 /* harmony default export */ var scroller_Scroller = __webpack_exports__["a"] = (Scroller_Scroller);
 
 /***/ }),
-/* 212 */
+/* 211 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33827,7 +33544,7 @@ var GetScrollMode = __webpack_require__(76);
 var Slider = __webpack_require__(287);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/scroller/Scroller.js + 5 modules
-var Scroller = __webpack_require__(211);
+var Scroller = __webpack_require__(210);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/scroller.js
 
@@ -33960,7 +33677,6 @@ var UpdateController = function () {
 
 
 const Scrollable_GetValue = Phaser.Utils.Objects.GetValue;
-
 class Scrollable_Scrollable extends Sizer["a" /* default */] {
     constructor(scene, config) {
         if (config === undefined) {
@@ -34202,7 +33918,7 @@ Object.assign(
 /* harmony default export */ var scrollable_Scrollable = __webpack_exports__["a"] = (Scrollable_Scrollable);
 
 /***/ }),
-/* 213 */
+/* 212 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34407,7 +34123,7 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 214 */
+/* 213 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34416,7 +34132,7 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ layer_manager_LayerManager; });
 
 // EXTERNAL MODULE: ./src/utils/pos.ts
-var pos = __webpack_require__(13);
+var pos = __webpack_require__(12);
 
 // CONCATENATED MODULE: ./src/rooms/layer/grid.layer.ts
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -34663,7 +34379,7 @@ var layer_manager_LayerManager = /** @class */ (function () {
 
 
 /***/ }),
-/* 215 */
+/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34710,7 +34426,7 @@ var Rectangle45 = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/utils/pos.ts
-var utils_pos = __webpack_require__(13);
+var utils_pos = __webpack_require__(12);
 
 // CONCATENATED MODULE: ./src/rooms/cameras/cameras.manager.ts
 var cameras_manager_extends = (undefined && undefined.__extends) || (function () {
@@ -34966,6 +34682,435 @@ var cameras_manager_CamerasManager = /** @class */ (function (_super) {
     return CamerasManager;
 }(dist["PacketHandler"]));
 
+
+
+/***/ }),
+/* 215 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "EquipUpgradeItem", function() { return /* binding */ EquipUpgradeItem_EquipUpgradeItem; });
+
+// EXTERNAL MODULE: ./src/utils/font.ts
+var font = __webpack_require__(11);
+
+// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
+var dynamic_image = __webpack_require__(19);
+
+// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
+var resUtil = __webpack_require__(5);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js + 31 modules
+var GridTable = __webpack_require__(49);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/GameGridTable.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var GameGridTable_GameGridTable = /** @class */ (function (_super) {
+    __extends(GameGridTable, _super);
+    function GameGridTable(scene, config) {
+        var _this = _super.call(this) || this;
+        _this.mGridTable = new GridTable["a" /* default */](scene, config);
+        _this.mConfig = config;
+        _this.addListen();
+        return _this;
+    }
+    Object.defineProperty(GameGridTable.prototype, "gridTable", {
+        get: function () {
+            return this.mGridTable;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameGridTable.prototype, "items", {
+        get: function () {
+            if (!this.mGridTable)
+                return null;
+            return this.mGridTable.items;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GameGridTable.prototype.setItems = function (items) {
+        if (this.mGridTable)
+            this.mGridTable.setItems(items);
+    };
+    GameGridTable.prototype.setT = function (value) {
+        if (this.mGridTable)
+            this.mGridTable.setT(value);
+    };
+    GameGridTable.prototype.addListen = function () {
+        if (this.mGridTable) {
+            this.mGridTable.on("cell.1tap", this.cellTapHandler, this);
+        }
+    };
+    GameGridTable.prototype.removeListen = function () {
+        if (this.mGridTable) {
+            this.mGridTable.off("cell.1tap", this.cellTapHandler, this);
+        }
+    };
+    Object.defineProperty(GameGridTable.prototype, "x", {
+        get: function () {
+            if (!this.mGridTable)
+                return 0;
+            return this.mGridTable.x;
+        },
+        set: function (value) {
+            if (this.mGridTable)
+                this.mGridTable.x = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameGridTable.prototype, "y", {
+        get: function () {
+            if (!this.mGridTable)
+                return 0;
+            return this.mGridTable.y;
+        },
+        set: function (value) {
+            if (this.mGridTable)
+                this.mGridTable.y = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GameGridTable.prototype.refresh = function () {
+        if (this.mGridTable)
+            this.mGridTable.refresh();
+    };
+    GameGridTable.prototype.layout = function () {
+        if (this.mGridTable)
+            this.mGridTable.layout();
+    };
+    GameGridTable.prototype.destroy = function () {
+        if (this.mGridTable) {
+            this.removeListen();
+            this.mGridTable.destroy();
+        }
+    };
+    GameGridTable.prototype.cellTapHandler = function (cell) {
+        this.emit("cellTap", cell);
+    };
+    return GameGridTable;
+}(Phaser.Events.EventEmitter));
+
+
+// CONCATENATED MODULE: ./src/ui/EquipUpgrade/EquipUpgradeItem.ts
+var EquipUpgradeItem_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+var EquipUpgradeItem_EquipUpgradeItem = /** @class */ (function (_super) {
+    EquipUpgradeItem_extends(EquipUpgradeItem, _super);
+    function EquipUpgradeItem(scene, dpr, zoom, key, commonKey) {
+        var _this = _super.call(this, scene) || this;
+        _this.haveEquiped = false;
+        _this.cellWidth = 0;
+        _this.cellHeight = 0;
+        _this.dpr = dpr;
+        _this.zoom = zoom;
+        _this.key = key;
+        _this.commonKey = commonKey;
+        _this.create();
+        return _this;
+    }
+    EquipUpgradeItem.prototype.setEquipItems = function (data) {
+        var name = data.equipmentType;
+        var items = data.mineEquipments;
+        this.titleName.text = name;
+        var index = 0;
+        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+            var item = items_1[_i];
+            if (item.selected) {
+                this.haveEquiped = true;
+                break;
+            }
+            index++;
+        }
+        this.gridTable.setItems(items);
+        this.gridTable.layout();
+        if (this.haveEquiped)
+            this.gridTable.setT((index + 1) / items.length);
+        this.setBgTexture(data["isblue"]);
+    };
+    EquipUpgradeItem.prototype.setTransPosition = function (x, y) {
+        this.setPosition(x, y);
+        var w = this.scene.cameras.main.width, h = this.scene.cameras.main.height;
+        var posX = w * 0.5 + this.x * this.zoom;
+        var posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
+        this.gridTable.x = posX;
+        this.gridTable.y = posY;
+        this.gridTable.layout();
+        this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
+    };
+    EquipUpgradeItem.prototype.refreshEquipData = function (data, index) {
+        this.gridTable.items[index] = data;
+        this.gridTable.refresh();
+        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
+        this.updateEquipItem(this.curEquipItem);
+    };
+    EquipUpgradeItem.prototype.destroy = function () {
+        if (this.unlockbtn)
+            this.unlockbtn.off("pointerup", this.onUnlockEquipHandler, this);
+        _super.prototype.destroy.call(this);
+        if (this.gridTable)
+            this.gridTable.destroy();
+        this.bg = null;
+        this.topbg = null;
+        this.bottombg = null;
+        this.gridTable = null;
+        this.titleName = null;
+        this.equipName = null;
+        this.penetrationText = null;
+        this.equipDes = null;
+        this.unlockbtn = null;
+        this.costNum = null;
+        this.diamondIcon = null;
+        this.curEquipItem = null;
+    };
+    EquipUpgradeItem.prototype.setBgTexture = function (isblue) {
+        var topName = !isblue ? "topbg" : "topbg1";
+        var bottombg = !isblue ? "bottombg" : "bottombg1";
+        var fontColor = !isblue ? "#8F4300" : "#0867AE";
+        this.topbg.setTexture(this.key, topName);
+        this.bottombg.setTexture(this.key, bottombg);
+        this.titleName.setColor(fontColor).setStroke(fontColor, 1);
+        this.equipName.setColor(fontColor).setStroke(fontColor, 1);
+        this.penetrationText.setColor(fontColor).setStroke(fontColor, 1);
+    };
+    EquipUpgradeItem.prototype.create = function () {
+        this.bg = this.scene.make.image({ x: 0, y: -21 * this.dpr, key: this.key, frame: "bg1" });
+        this.topbg = this.scene.make.image({ x: 0, y: -61 * this.dpr, key: this.key, frame: "topbg" });
+        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } }).setOrigin(0.5, 0.5);
+        this.bottombg = this.scene.make.image({ x: 0, y: 42 * this.dpr, key: this.key, frame: "bottombg" });
+        this.equipName = this.scene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } });
+        this.penetrationText = this.scene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#8F4300", fontSize: 12 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } });
+        this.equipDes = this.scene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
+        this.equipDes.setStroke("#000000", 1);
+        this.add([this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes]);
+        this.createGridTable();
+        this.createBtn();
+    };
+    EquipUpgradeItem.prototype.createGridTable = function () {
+        var _this = this;
+        this.mScrollContainer = this.scene.make.container(undefined, false);
+        this.mScrollContainer.setPosition(0, 0);
+        var propFrame = this.scene.textures.getFrame(this.key, "equipbg");
+        var capW = (propFrame.width + 10 * this.dpr * this.zoom);
+        var capH = (propFrame.height + 30 * this.dpr * this.zoom);
+        this.cellWidth = capW;
+        this.cellHeight = capH;
+        var config = {
+            scrollMode: 1,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            table: {
+                width: 245 * this.dpr * this.zoom,
+                height: 60 * this.dpr * this.zoom,
+                columns: 1,
+                cellWidth: capW,
+                cellHeight: capH,
+                reuseCellContainer: true,
+            },
+            clamplChildOY: false,
+            createCellContainerCallback: function (cell, cellContainer) {
+                var scene = cell.scene, item = cell.item;
+                var index = cell.index;
+                if (cellContainer === null) {
+                    cellContainer = new EquipUpgradeItem_EquipItemCell(scene, _this.dpr, _this.key, _this.zoom);
+                    _this.mScrollContainer.add(cellContainer);
+                    cellContainer.setChildPosition();
+                }
+                cellContainer.setSize(capW, capH);
+                cellContainer.setData({ item: item });
+                cellContainer.setItemData(item, index);
+                if (_this.curEquipItem == null) {
+                    if (_this.haveEquiped) {
+                        if (item.selected)
+                            _this.onSelectItemHandler(cellContainer);
+                    }
+                    else {
+                        _this.onSelectItemHandler(cellContainer);
+                    }
+                }
+                // Logger.getInstance().log(item);
+                return cellContainer;
+            }
+        };
+        this.gridTable = new GameGridTable_GameGridTable(this.scene, config);
+        this.gridTable.layout();
+        this.gridTable.addListen();
+        this.gridTable.on("cellTap", function (cell) {
+            _this.onSelectItemHandler(cell);
+        });
+        this.add(this.mScrollContainer);
+    };
+    EquipUpgradeItem.prototype.onSelectItemHandler = function (cell) {
+        // Logger.getInstance().log(cell.itemData);
+        if (this.curEquipItem)
+            this.curEquipItem.setSelect(false);
+        var data = cell.itemData;
+        this.updateEquipItem(cell);
+        this.curEquipItem = cell;
+        if (data.owned && !data.selected)
+            this.emit("reqEquiped", data.id);
+    };
+    EquipUpgradeItem.prototype.updateEquipItem = function (cell) {
+        var data = cell.itemData;
+        this.penetrationText.text = data.buffDisplayNames[0];
+        this.equipDes.text = data.description;
+        this.equipName.text = data.name;
+        this.costNum.text = data.price + "";
+        if (data.owned)
+            this.unlockbtn.visible = false;
+        else
+            this.unlockbtn.visible = true;
+        if (data.qualified) {
+            this.unlockCondition.visible = false;
+            this.unlockbtn.setInteractive();
+        }
+        else if (!data.owned) {
+            this.unlockCondition.visible = true;
+            this.unlockCondition.text = data.conditionDisplayNames[0];
+            this.unlockbtn.disableInteractive();
+        }
+        if (data.price == null) {
+            this.costNum.visible = false;
+            this.diamondIcon.visible = false;
+            this.btnName.setPosition(0, 0 * this.dpr);
+        }
+        else {
+            this.costNum.visible = true;
+            this.diamondIcon.visible = true;
+            this.btnName.setPosition(0, 6 * this.dpr);
+        }
+        cell.setSelect(true);
+    };
+    EquipUpgradeItem.prototype.onUnlockEquipHandler = function () {
+        this.emit("reqActive", this.curEquipItem.itemData.id);
+    };
+    EquipUpgradeItem.prototype.createBtn = function () {
+        this.unlockCondition = this.scene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.unlockbtn = this.scene.make.container(undefined, false);
+        var btnBg = this.scene.make.image({ x: 0, y: 0, key: this.commonKey, frame: "button" });
+        this.diamondIcon = this.scene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
+        this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.costNum.setStroke("#ffffff", 1);
+        this.btnName.setStroke("#8F4300", 1);
+        this.unlockCondition.setStroke("#000000", 1);
+        this.unlockbtn.setPosition(70 * this.dpr, 48 * this.dpr);
+        this.unlockbtn.setSize(btnBg.width, btnBg.height);
+        this.unlockbtn.add([this.unlockCondition, btnBg, this.diamondIcon, this.costNum, this.btnName]);
+        this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
+        this.add(this.unlockbtn);
+    };
+    EquipUpgradeItem.prototype.getBoldFont = function (size) {
+        var font = "bold " + size + "px Source Han Sans";
+        return font;
+    };
+    return EquipUpgradeItem;
+}(Phaser.GameObjects.Container));
+
+var EquipUpgradeItem_EquipItemCell = /** @class */ (function (_super) {
+    EquipUpgradeItem_extends(EquipItemCell, _super);
+    function EquipItemCell(scene, dpr, key, zoom) {
+        var _this = _super.call(this, scene) || this;
+        _this.index = 0;
+        _this.isSelect = false;
+        _this.isUnlock = false;
+        _this.dpr = dpr;
+        _this.key = key;
+        _this.zoom = zoom;
+        _this.create();
+        return _this;
+    }
+    EquipItemCell.prototype.setItemData = function (data, index) {
+        var _this = this;
+        this.itemData = data;
+        this.index = index;
+        var url = resUtil["h" /* Url */].getOsdRes(data.display.texturePath); // "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
+        this.equipIcon.load(url, this, function () {
+            // this.equipIcon.setDisplaySize(22 * this.dpr * this.zoom, 22 * this.dpr * this.zoom);
+            var x = -_this.equipIcon.width * 0.5 + 2 * _this.dpr * _this.zoom;
+            var y = 2 * _this.dpr * _this.zoom;
+            _this.equipIcon.setPosition(x, y);
+        });
+        this.setEquiped(data.selected, data.owned);
+        this.setSelect(this.isSelect);
+    };
+    EquipItemCell.prototype.setSelect = function (isSelect) {
+        this.isSelect = isSelect;
+        var bgName = "equipbg";
+        if (!isSelect) {
+            if (this.isUnlock)
+                bgName = "equipbg2";
+            else
+                bgName = "equipbg1";
+        }
+        this.bg.setTexture(this.key, bgName);
+    };
+    EquipItemCell.prototype.setChildPosition = function () {
+        var x = -this.bg.width * 0.5;
+        var y = -10 * this.dpr * this.zoom;
+        this.bg.setPosition(x, y);
+        x = -this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;
+        y = 2 * this.dpr * this.zoom;
+        this.equipIcon.setPosition(x, y);
+        x = -this.unlock.width * 0.5 + 20 * this.dpr * this.zoom;
+        y = -8 * this.dpr * this.zoom;
+        this.unlock.setPosition(x, y);
+    };
+    EquipItemCell.prototype.setEquiped = function (isequiped, unlock) {
+        this.isUnlock = unlock;
+        this.unlock.visible = false;
+        if (isequiped) {
+            this.isUnlock = true;
+            this.unlock.visible = true;
+            this.unlock.setTexture(this.key, "ok");
+        }
+        else if (!this.isUnlock) {
+            this.unlock.visible = true;
+            this.unlock.setTexture(this.key, "lock");
+        }
+    };
+    EquipItemCell.prototype.create = function () {
+        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr * this.zoom, key: this.key, frame: "equipbg" }).setOrigin(0, 0).setScale(this.zoom);
+        this.equipIcon = new dynamic_image["DynamicImage"](this.scene, 15 * this.dpr * this.zoom, 0 * this.dpr * this.zoom).setOrigin(0, 0);
+        this.unlock = this.scene.make.image({ x: 30 * this.dpr * this.zoom, y: -10 * this.dpr * this.zoom, key: this.key, frame: "lock" }).setOrigin(0, 0);
+        this.add([this.bg, this.equipIcon, this.unlock]);
+    };
+    return EquipItemCell;
+}(Phaser.GameObjects.Container));
 
 
 /***/ }),
@@ -35855,7 +36000,7 @@ const WRAPMODE = {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReferenceArea; });
-/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _utils_position45__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(40);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37141,7 +37286,7 @@ var DragManager = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EquipUpgradeMediator", function() { return EquipUpgradeMediator; });
-/* harmony import */ var _EquipUpgradePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(175);
+/* harmony import */ var _EquipUpgradePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(174);
 /* harmony import */ var _EquipUpgrade__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(173);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -37238,8 +37383,8 @@ var EquipUpgradeMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FurniBagMediator", function() { return FurniBagMediator; });
-/* harmony import */ var _FurniBagPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(177);
-/* harmony import */ var _FurniBag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(176);
+/* harmony import */ var _FurniBagPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(176);
+/* harmony import */ var _FurniBag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(175);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
@@ -37364,7 +37509,7 @@ var FurniBagMediator = /** @class */ (function (_super) {
 "use strict";
 /* unused harmony export ScrollerEvent */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameScroller; });
-/* harmony import */ var _plugins_input_scroller_Scroller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(211);
+/* harmony import */ var _plugins_input_scroller_Scroller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(210);
 /* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(108);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37552,7 +37697,7 @@ var GameScroller = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemDetailMediator", function() { return ItemDetailMediator; });
-/* harmony import */ var _ItemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(185);
+/* harmony import */ var _ItemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(184);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
@@ -37644,7 +37789,7 @@ var ItemDetailMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemPopCardMediator", function() { return ItemPopCardMediator; });
-/* harmony import */ var _ItemPopCardPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(186);
+/* harmony import */ var _ItemPopCardPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(185);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37695,9 +37840,9 @@ var ItemPopCardMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarketMediator", function() { return MarketMediator; });
-/* harmony import */ var _MarketPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(191);
-/* harmony import */ var _Market__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(190);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(12);
+/* harmony import */ var _MarketPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(190);
+/* harmony import */ var _Market__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(189);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37802,7 +37947,7 @@ var MarketMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageBoxMediator", function() { return MessageBoxMediator; });
-/* harmony import */ var _MessageBoxView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(194);
+/* harmony import */ var _MessageBoxView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(193);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
@@ -37898,8 +38043,8 @@ var MessageBoxMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MineSettleMediator", function() { return MineSettleMediator; });
-/* harmony import */ var _MineSettlePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(196);
-/* harmony import */ var _MineSettle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(195);
+/* harmony import */ var _MineSettlePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(195);
+/* harmony import */ var _MineSettle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(194);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37978,7 +38123,7 @@ var MineSettleMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaMessageBoxMediator", function() { return PicaMessageBoxMediator; });
-/* harmony import */ var _PicaMessageBoxPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(197);
+/* harmony import */ var _PicaMessageBoxPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(196);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
@@ -38049,8 +38194,8 @@ var PicaMessageBoxMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaRoomListMediator", function() { return PicaRoomListMediator; });
-/* harmony import */ var _PicaRoomListPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(198);
-/* harmony import */ var _RoomList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(199);
+/* harmony import */ var _PicaRoomListPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(197);
+/* harmony import */ var _RoomList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(198);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -38202,12 +38347,12 @@ var AwardItem = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserMenuMediator", function() { return UserMenuMediator; });
-/* harmony import */ var _UserMenuPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(205);
+/* harmony import */ var _UserMenuPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(204);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -38352,7 +38497,7 @@ var UserMenuMediator = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopMediator", function() { return TopMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
-/* harmony import */ var _top_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(209);
+/* harmony import */ var _top_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(208);
 /* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(63);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_3__);
@@ -38715,7 +38860,7 @@ var MessageBtn = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrollerContainer", function() { return ScrollerContainer; });
-/* harmony import */ var _lib_rexui_lib_plugins_input_scroller_Scroller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(211);
+/* harmony import */ var _lib_rexui_lib_plugins_input_scroller_Scroller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(210);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -42217,10 +42362,10 @@ __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding *
 var viewblock_manager = __webpack_require__(291);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/cameras.manager.ts + 1 modules
-var cameras_manager = __webpack_require__(215);
+var cameras_manager = __webpack_require__(214);
 
 // EXTERNAL MODULE: ./src/rooms/layer/layer.manager.ts + 1 modules
-var layer_manager = __webpack_require__(214);
+var layer_manager = __webpack_require__(213);
 
 // EXTERNAL MODULE: ./src/utils/position45.ts
 var position45 = __webpack_require__(40);
@@ -42229,7 +42374,7 @@ var position45 = __webpack_require__(40);
 var protocols = __webpack_require__(3);
 
 // EXTERNAL MODULE: ./src/utils/pos.ts
-var utils_pos = __webpack_require__(13);
+var utils_pos = __webpack_require__(12);
 
 // EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
 var dist = __webpack_require__(4);
@@ -42399,7 +42544,7 @@ var decorate_element_manager_DecorateElementManager = /** @class */ (function (_
 
 
 // EXTERNAL MODULE: ./src/const/MessageType.ts
-var MessageType = __webpack_require__(12);
+var MessageType = __webpack_require__(13);
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.manager.ts
 var terrain_manager = __webpack_require__(110);
@@ -61176,7 +61321,7 @@ var Connection = /** @class */ (function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/eff296089bfac0dd32e5.networker.js");
+  return new Worker(__webpack_require__.p + "js/7963cf5c9d964365caed.networker.js");
 };
 
 /***/ }),
@@ -61184,7 +61329,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/7501b560e043cc801f37.heartbeatworker.js");
+  return new Worker(__webpack_require__.p + "js/1d553e60aca1a0e2cf92.heartbeatworker.js");
 };
 
 /***/ }),
@@ -61547,7 +61692,7 @@ var KeyBoardManager = /** @class */ (function (_super) {
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(12);
+/* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var _rooms_display_frames_display__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(71);
 /* harmony import */ var _rooms_element_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(21);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -63601,10 +63746,10 @@ var map = {
 	"./Activity/ActivityMediator.ts": 156,
 	"./Activity/ActivityPanel": 157,
 	"./Activity/ActivityPanel.ts": 157,
-	"./Bubble/interactionbubble": 213,
+	"./Bubble/interactionbubble": 212,
 	"./Bubble/interactionbubble.container": 168,
 	"./Bubble/interactionbubble.container.ts": 168,
-	"./Bubble/interactionbubble.ts": 213,
+	"./Bubble/interactionbubble.ts": 212,
 	"./Bubble/interactivebubble.manager": 167,
 	"./Bubble/interactivebubble.manager.ts": 167,
 	"./ComponentRank/ComponentRankMediator": 169,
@@ -63639,66 +63784,66 @@ var map = {
 	"./ElementStorage/item/Item.ts": 143,
 	"./EquipUpgrade/EquipUpgrade": 173,
 	"./EquipUpgrade/EquipUpgrade.ts": 173,
-	"./EquipUpgrade/EquipUpgradeItem": 174,
-	"./EquipUpgrade/EquipUpgradeItem.ts": 174,
+	"./EquipUpgrade/EquipUpgradeItem": 215,
+	"./EquipUpgrade/EquipUpgradeItem.ts": 215,
 	"./EquipUpgrade/EquipUpgradeMediator": 256,
 	"./EquipUpgrade/EquipUpgradeMediator.ts": 256,
-	"./EquipUpgrade/EquipUpgradePanel": 175,
-	"./EquipUpgrade/EquipUpgradePanel.ts": 175,
-	"./FurniBag/FurniBag": 176,
-	"./FurniBag/FurniBag.ts": 176,
+	"./EquipUpgrade/EquipUpgradePanel": 174,
+	"./EquipUpgrade/EquipUpgradePanel.ts": 174,
+	"./FurniBag/FurniBag": 175,
+	"./FurniBag/FurniBag.ts": 175,
 	"./FurniBag/FurniBagMediator": 257,
 	"./FurniBag/FurniBagMediator.ts": 257,
-	"./FurniBag/FurniBagPanel": 177,
-	"./FurniBag/FurniBagPanel.ts": 177,
-	"./InfoPanel/InfoPanel": 181,
-	"./InfoPanel/InfoPanel.ts": 181,
-	"./InfoPanel/InfoPanelMediator": 182,
-	"./InfoPanel/InfoPanelMediator.ts": 182,
-	"./InteractivePanel/InteractivePanel": 183,
-	"./InteractivePanel/InteractivePanel.ts": 183,
-	"./InteractivePanel/InteractivePanelMediator": 184,
-	"./InteractivePanel/InteractivePanelMediator.ts": 184,
-	"./ItemDetail/ItemDetail": 185,
-	"./ItemDetail/ItemDetail.ts": 185,
+	"./FurniBag/FurniBagPanel": 176,
+	"./FurniBag/FurniBagPanel.ts": 176,
+	"./InfoPanel/InfoPanel": 180,
+	"./InfoPanel/InfoPanel.ts": 180,
+	"./InfoPanel/InfoPanelMediator": 181,
+	"./InfoPanel/InfoPanelMediator.ts": 181,
+	"./InteractivePanel/InteractivePanel": 182,
+	"./InteractivePanel/InteractivePanel.ts": 182,
+	"./InteractivePanel/InteractivePanelMediator": 183,
+	"./InteractivePanel/InteractivePanelMediator.ts": 183,
+	"./ItemDetail/ItemDetail": 184,
+	"./ItemDetail/ItemDetail.ts": 184,
 	"./ItemDetail/ItemDetailMediator": 260,
 	"./ItemDetail/ItemDetailMediator.ts": 260,
 	"./ItemPopCard/ItemPopCardMediator": 261,
 	"./ItemPopCard/ItemPopCardMediator.ts": 261,
-	"./ItemPopCard/ItemPopCardPanel": 186,
-	"./ItemPopCard/ItemPopCardPanel.ts": 186,
+	"./ItemPopCard/ItemPopCardPanel": 185,
+	"./ItemPopCard/ItemPopCardPanel.ts": 185,
 	"./Market/DetailDisplay": 65,
 	"./Market/DetailDisplay.ts": 65,
-	"./Market/ElementDetail": 187,
-	"./Market/ElementDetail.ts": 187,
-	"./Market/Market": 190,
-	"./Market/Market.ts": 190,
+	"./Market/ElementDetail": 186,
+	"./Market/ElementDetail.ts": 186,
+	"./Market/Market": 189,
+	"./Market/Market.ts": 189,
 	"./Market/MarketMediator": 262,
 	"./Market/MarketMediator.ts": 262,
-	"./Market/MarketPanel": 191,
-	"./Market/MarketPanel.ts": 191,
-	"./Market/NumberCounter": 188,
-	"./Market/NumberCounter.ts": 188,
+	"./Market/MarketPanel": 190,
+	"./Market/MarketPanel.ts": 190,
+	"./Market/NumberCounter": 187,
+	"./Market/NumberCounter.ts": 187,
 	"./Market/TextButton": 92,
 	"./Market/TextButton.ts": 92,
-	"./Market/item": 192,
-	"./Market/item.ts": 192,
+	"./Market/item": 191,
+	"./Market/item.ts": 191,
 	"./MessageBox/MessageBoxMediator": 263,
 	"./MessageBox/MessageBoxMediator.ts": 263,
-	"./MessageBox/MessageBoxView": 194,
-	"./MessageBox/MessageBoxView.ts": 194,
+	"./MessageBox/MessageBoxView": 193,
+	"./MessageBox/MessageBoxView.ts": 193,
 	"./MineCar/MineCar": 166,
 	"./MineCar/MineCar.ts": 166,
 	"./MineCar/MineCarMediator": 161,
 	"./MineCar/MineCarMediator.ts": 161,
 	"./MineCar/MineCarPanel": 162,
 	"./MineCar/MineCarPanel.ts": 162,
-	"./MineSettle/MineSettle": 195,
-	"./MineSettle/MineSettle.ts": 195,
+	"./MineSettle/MineSettle": 194,
+	"./MineSettle/MineSettle.ts": 194,
 	"./MineSettle/MineSettleMediator": 264,
 	"./MineSettle/MineSettleMediator.ts": 264,
-	"./MineSettle/MineSettlePanel": 196,
-	"./MineSettle/MineSettlePanel.ts": 196,
+	"./MineSettle/MineSettlePanel": 195,
+	"./MineSettle/MineSettlePanel.ts": 195,
 	"./Notice/Notice": 136,
 	"./Notice/Notice.ts": 136,
 	"./Notice/NoticeMediator": 134,
@@ -63717,18 +63862,18 @@ var map = {
 	"./PicaChat/PicaChatPanel.ts": 158,
 	"./PicaMessageBox/PicaMessageBoxMediator": 265,
 	"./PicaMessageBox/PicaMessageBoxMediator.ts": 265,
-	"./PicaMessageBox/PicaMessageBoxPanel": 197,
-	"./PicaMessageBox/PicaMessageBoxPanel.ts": 197,
+	"./PicaMessageBox/PicaMessageBoxPanel": 196,
+	"./PicaMessageBox/PicaMessageBoxPanel.ts": 196,
 	"./PicaNavigate/PicaNavigateMediator": 90,
 	"./PicaNavigate/PicaNavigateMediator.ts": 90,
 	"./PicaNavigate/PicaNavigatePanel": 159,
 	"./PicaNavigate/PicaNavigatePanel.ts": 159,
 	"./PicaRoomList/PicaRoomListMediator": 266,
 	"./PicaRoomList/PicaRoomListMediator.ts": 266,
-	"./PicaRoomList/PicaRoomListPanel": 198,
-	"./PicaRoomList/PicaRoomListPanel.ts": 198,
-	"./PicaRoomList/RoomList": 199,
-	"./PicaRoomList/RoomList.ts": 199,
+	"./PicaRoomList/PicaRoomListPanel": 197,
+	"./PicaRoomList/PicaRoomListPanel.ts": 197,
+	"./PicaRoomList/RoomList": 198,
+	"./PicaRoomList/RoomList.ts": 198,
 	"./Rank/BasicRankPanel": 82,
 	"./Rank/BasicRankPanel.ts": 82,
 	"./Rank/RankMediator": 63,
@@ -63739,24 +63884,24 @@ var map = {
 	"./ReAwardTips/ReAwardTipsMediator.ts": 267,
 	"./ReAwardTips/ReAwardTipsPanel": 268,
 	"./ReAwardTips/ReAwardTipsPanel.ts": 268,
-	"./Shop/ShopMediator": 200,
-	"./Shop/ShopMediator.ts": 200,
-	"./Shop/ShopPanel": 201,
-	"./Shop/ShopPanel.ts": 201,
+	"./Shop/ShopMediator": 199,
+	"./Shop/ShopMediator.ts": 199,
+	"./Shop/ShopPanel": 200,
+	"./Shop/ShopPanel.ts": 200,
 	"./Shop/shop.itemSlot": 216,
 	"./Shop/shop.itemSlot.ts": 216,
-	"./UserInfo/UserInfoMediator": 202,
-	"./UserInfo/UserInfoMediator.ts": 202,
-	"./UserInfo/UserInfoPanel": 203,
-	"./UserInfo/UserInfoPanel.ts": 203,
-	"./UserMenu/MenuItem": 204,
-	"./UserMenu/MenuItem.ts": 204,
+	"./UserInfo/UserInfoMediator": 201,
+	"./UserInfo/UserInfoMediator.ts": 201,
+	"./UserInfo/UserInfoPanel": 202,
+	"./UserInfo/UserInfoPanel.ts": 202,
+	"./UserMenu/MenuItem": 203,
+	"./UserMenu/MenuItem.ts": 203,
 	"./UserMenu/UserMenuMediator": 269,
 	"./UserMenu/UserMenuMediator.ts": 269,
-	"./UserMenu/UserMenuPanel": 205,
-	"./UserMenu/UserMenuPanel.ts": 205,
-	"./alert/PopUpTextUI": 206,
-	"./alert/PopUpTextUI.ts": 206,
+	"./UserMenu/UserMenuPanel": 204,
+	"./UserMenu/UserMenuPanel.ts": 204,
+	"./alert/PopUpTextUI": 205,
+	"./alert/PopUpTextUI.ts": 205,
 	"./bag/IListItemRender": 270,
 	"./bag/IListItemRender.ts": 270,
 	"./bag/bagView/bagMediator": 33,
@@ -63775,10 +63920,10 @@ var map = {
 	"./bag/idropable.ts": 274,
 	"./bag/item.slot": 34,
 	"./bag/item.slot.ts": 34,
-	"./bag/storage/storageMediator": 207,
-	"./bag/storage/storageMediator.ts": 207,
-	"./bag/storage/storagePanel": 208,
-	"./bag/storage/storagePanel.ts": 208,
+	"./bag/storage/storageMediator": 206,
+	"./bag/storage/storageMediator.ts": 206,
+	"./bag/storage/storagePanel": 207,
+	"./bag/storage/storagePanel.ts": 207,
 	"./baseView/bagGroup/bag.group": 149,
 	"./baseView/bagGroup/bag.group.mediator": 148,
 	"./baseView/bagGroup/bag.group.mediator.ts": 148,
@@ -63805,8 +63950,8 @@ var map = {
 	"./baseView/top.menu/top.menu.container.ts": 151,
 	"./baseView/top.menu/top.menu.mediator": 150,
 	"./baseView/top.menu/top.menu.mediator.ts": 150,
-	"./baseView/topGroup/top.btn.group": 209,
-	"./baseView/topGroup/top.btn.group.ts": 209,
+	"./baseView/topGroup/top.btn.group": 208,
+	"./baseView/topGroup/top.btn.group.ts": 208,
 	"./baseView/topGroup/top.mediator": 275,
 	"./baseView/topGroup/top.mediator.ts": 275,
 	"./chat/Chat": 132,
@@ -63831,8 +63976,8 @@ var map = {
 	"./components/check.button.ts": 78,
 	"./components/checkbox.group": 64,
 	"./components/checkbox.group.ts": 64,
-	"./components/comboBox": 210,
-	"./components/comboBox.ts": 210,
+	"./components/comboBox": 209,
+	"./components/comboBox.ts": 209,
 	"./components/dynamic.image": 19,
 	"./components/dynamic.image.ts": 19,
 	"./components/dynamic.ninepatch": 100,
@@ -63847,8 +63992,8 @@ var map = {
 	"./components/inputTextFactory.ts": 87,
 	"./components/interface/IButtonState": 278,
 	"./components/interface/IButtonState.ts": 278,
-	"./components/label.input": 189,
-	"./components/label.input.ts": 189,
+	"./components/label.input": 188,
+	"./components/label.input.ts": 188,
 	"./components/message.box": 279,
 	"./components/message.box.ts": 279,
 	"./components/nine.patch": 15,
@@ -63863,8 +64008,8 @@ var map = {
 	"./components/scroller.ts": 280,
 	"./components/scroller.view": 281,
 	"./components/scroller.view.ts": 281,
-	"./components/tab.button": 193,
-	"./components/tab.button.ts": 193,
+	"./components/tab.button": 192,
+	"./components/tab.button.ts": 192,
 	"./decorate/decorate.manager": 112,
 	"./decorate/decorate.manager.ts": 112,
 	"./decorate/decorate.panel": 113,
@@ -63917,8 +64062,8 @@ webpackContext.id = 383;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginScene; });
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
-/* harmony import */ var _ui_alert_PopUpTextUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(206);
-/* harmony import */ var _ui_components_comboBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(210);
+/* harmony import */ var _ui_alert_PopUpTextUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(205);
+/* harmony import */ var _ui_components_comboBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(209);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 /* harmony import */ var _utils_size__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(96);
 /* harmony import */ var _basic_scene__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30);
@@ -67357,7 +67502,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.ScrollableBlock', scr
 
 /* harmony default export */ var scrollableblock_Factory = (scrollableblock_ScrollableBlock);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(212);
+var Scrollable = __webpack_require__(211);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
 var GetScrollMode = __webpack_require__(76);
@@ -68721,13 +68866,13 @@ var protocols = __webpack_require__(3);
 var log = __webpack_require__(9);
 
 // EXTERNAL MODULE: ./src/utils/pos.ts
-var utils_pos = __webpack_require__(13);
+var utils_pos = __webpack_require__(12);
 
 // EXTERNAL MODULE: ./src/rooms/element/sprite.ts
 var element_sprite = __webpack_require__(25);
 
 // EXTERNAL MODULE: ./src/const/MessageType.ts
-var MessageType = __webpack_require__(12);
+var MessageType = __webpack_require__(13);
 
 // EXTERNAL MODULE: ./src/rooms/element/element.ts + 6 modules
 var element_element = __webpack_require__(21);
@@ -69689,14 +69834,15 @@ var FollowAction_extends = (undefined && undefined.__extends) || (function () {
 
 
 
+
 var FollowAction_FollowAction = /** @class */ (function (_super) {
     FollowAction_extends(FollowAction, _super);
     function FollowAction(group) {
         var _this = _super.call(this) || this;
-        _this.timeCounter = 0;
-        _this.intervalCounter = 0;
-        _this.duration = 0;
+        _this.tempPos = new utils_pos["a" /* Pos */]();
+        _this.distance = 50;
         _this.offset = 20;
+        _this.tempdis = 0;
         _this.followgroup = group;
         _this.movePath = new protocols["op_client"].OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH();
         _this.movePath.path = [];
@@ -69714,45 +69860,47 @@ var FollowAction_FollowAction = /** @class */ (function (_super) {
         var room = this.target.roomService;
         room.frameManager.add(this, this.update);
         this.movePath.id = this.owner.id;
+        this.setStartPosition();
     };
     FollowAction.prototype.update = function (time, delta) {
+        var canMove = false;
         if (this.target.getState() === element_element["d" /* PlayerState */].WALK) {
-            this.duration += delta;
-            if (this.intervalCounter > 6) {
-                this.intervalCounter = 0;
-                var pos = this.target.getPosition();
-                var tempos = {
-                    x: pos.x,
-                    y: pos.y,
-                    duration: this.duration
-                };
-                this.tempPath.push(tempos);
-                this.duration = 0;
+            var pos = this.target.getPosition();
+            var tempos = {
+                x: pos.x,
+                y: pos.y,
+                len: 0,
+                angle: 0
+            };
+            if (this.tempPath.length > 0) {
+                var lastpos = this.tempPath[this.tempPath.length - 1];
+                lastpos.angle = this.getAngle(lastpos, tempos);
+                var len = this.getLength(tempos, lastpos);
+                lastpos.len = len;
+                this.tempdis += len;
+                if (this.tempdis > this.distance) {
+                    canMove = true;
+                    if (this.tempdis > this.distance + 5) {
+                        this.tempdis -= this.tempPath.splice(0, 1)[0].len;
+                    }
+                    this.tempdis -= this.tempPath[0].len;
+                }
             }
-            this.intervalCounter++;
-            this.timeCounter++;
+            this.tempPath.push(tempos);
         }
-        if (this.timeCounter > 20) {
-            var duration = 0;
-            var now = this.owner.roomService.now();
-            var path = this.tempPath.splice(0, this.tempPath.length - 3);
-            for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
-                var tempPos = path_1[_i];
-                duration += tempPos.duration;
-                var point = new protocols["op_client"].MovePoint();
-                point.point3f = new protocols["op_def"].PBPoint3f();
-                point.point3f.x = tempPos.x;
-                point.point3f.y = tempPos.y + this.offset;
-                point.timestemp = now + duration;
-                this.movePath.path.push(point);
-                // lastpos = tempPos;
+        else {
+            if (this.tempdis > this.distance) {
+                canMove = true;
+                this.tempdis -= this.tempPath[0].len;
             }
-            this.movePath.timestemp = now + duration;
-            this.owner.movePath(this.movePath);
-            this.timeCounter = 0;
-            this.movePath.path.length = 0;
-            this.movePath.timestemp = 0;
-            path.length = 0;
+        }
+        if (canMove) {
+            var point = this.tempPath.splice(0, 1)[0];
+            if (point) {
+                this.tempPos.x = point.x;
+                this.tempPos.y = point.y + this.offset;
+                this.owner.movePosition(this.tempPos, point.angle);
+            }
         }
     };
     FollowAction.prototype.destroy = function () {
@@ -69761,6 +69909,45 @@ var FollowAction_FollowAction = /** @class */ (function (_super) {
         room.frameManager.remove(this, this.update);
         this.movePath.path.length = 0;
         this.followgroup = null;
+    };
+    FollowAction.prototype.getAngle = function (point1, point2) {
+        if (!(point1.y === point2.y && point1.x === point2.x)) {
+            var angle = Math.atan2(point2.y - point1.y, point2.x - point1.x) * (180 / Math.PI);
+            return angle;
+        }
+        return null;
+    };
+    FollowAction.prototype.getLength = function (point1, point2) {
+        var x = (point1.x - point2.x);
+        var y = (point1.y - point2.y);
+        var len = Math.sqrt(x * x + y * y);
+        return len;
+    };
+    FollowAction.prototype.setStartPosition = function () {
+        var pos = this.owner.getPosition();
+        pos.y += this.offset;
+        pos.x -= this.distance;
+        this.owner.setPosition(pos);
+        var dis = this.distance;
+        var interdis = 2;
+        var hy = pos.y - this.offset;
+        while (dis > 0) {
+            dis -= interdis;
+            var tempos = {
+                x: pos.x + (this.distance - dis),
+                y: hy,
+                len: 0,
+                angle: 0
+            };
+            if (this.tempPath.length > 0) {
+                var lastpos = this.tempPath[this.tempPath.length - 1];
+                lastpos.angle = this.getAngle(lastpos, tempos);
+                var len = this.getLength(tempos, lastpos);
+                lastpos.len = len;
+                this.tempdis += len;
+            }
+            this.tempPath.push(tempos);
+        }
     };
     return FollowAction;
 }(AIAction["a" /* AIAction */]));
@@ -70371,7 +70558,7 @@ var player_manager_PlayerManager = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/layer/layer.manager.ts + 1 modules
-var layer_manager = __webpack_require__(214);
+var layer_manager = __webpack_require__(213);
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.manager.ts
 var terrain_manager = __webpack_require__(110);
@@ -70380,7 +70567,7 @@ var terrain_manager = __webpack_require__(110);
 var position45 = __webpack_require__(40);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/cameras.manager.ts + 1 modules
-var cameras_manager = __webpack_require__(215);
+var cameras_manager = __webpack_require__(214);
 
 // EXTERNAL MODULE: ./src/scenes/play.ts
 var play = __webpack_require__(73);
