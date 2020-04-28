@@ -129,7 +129,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.cellHeight = capH;
         const config: GridTableConfig = {
             scrollMode: 1,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,

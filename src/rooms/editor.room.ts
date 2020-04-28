@@ -121,7 +121,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.on("gameout", this.onGameOutHandler, this);
         this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
 
-        this.addSkyBox();
+       // this.addSkyBox();
     }
 
     public destroy() {
