@@ -9,13 +9,13 @@ export class BlockManager {
   private mGridWidth: number;
   private mGridHeight: number;
   private mGrids: Block[];
-  private mKey: string;
+  private mUris: string[][];
   private mMainCamera: Phaser.Cameras.Scene2D.Camera;
   private mScaleRatio: number;
-  constructor(private scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera, key: string, private world: WorldService) {
+  constructor(private scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera, uris: string[][], private world: WorldService) {
     this.mGrids = [];
     this.mMainCamera = camera;
-    this.mKey = key;
+    this.mUris = uris;
     this.mScaleRatio = this.world.scaleRatio;
   }
 
@@ -45,13 +45,22 @@ export class BlockManager {
 
   private initBlock() {
     this.mGrids.length = 0;
-    const len = this.mRows * this.mCols;
+    // const len = this.mUris.length * this.mUris[0].length;
     this.mContainer = this.scene.add.container(0, 0);
     this.mContainer.setScale(this.world.scaleRatio);
+    // for (let i = 0; i < len; i++) {
+    //   const block = new Block(this.scene, this.mKey, i + 1);
+    //   block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
+    //   this.mGrids[i] = block;
+    // }
+    const len = this.mUris.length;
     for (let i = 0; i < len; i++) {
-      const block = new Block(this.scene, this.mKey, i + 1);
-      block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
-      this.mGrids[i] = block;
+      const l = this.mUris[i].length;
+      for (let j = 0; j < l; j++) {
+        const block = new Block(this.scene, this.mUris[i][j]);
+        // block
+        this.mGrids.push(block);
+      }
     }
     this.mContainer.add(this.mGrids);
   }
@@ -61,12 +70,10 @@ class Block extends DynamicImage {
   private mLoaded: boolean = false;
   private mInCamera: boolean = false;
   private mKey: string;
-  private readonly mIndex: number = 0;
   private mRectangle: Phaser.Geom.Rectangle;
-  constructor(scene: Phaser.Scene, key: string, index: number) {
+  constructor(scene: Phaser.Scene, key: string) {
     super(scene, 0, 0);
     this.mKey = key;
-    this.mIndex = index;
     this.setOrigin(0);
     // this.mRectangle = new Phaser.Geom.Rectangle(this.x, this.y, 1, 1);
   }
@@ -78,7 +85,7 @@ class Block extends DynamicImage {
         // TODO
         // this.setActive(val);
       } else {
-        this.load(`${this.mKey}_${this.mIndex < 10 ? "0" : ""}${this.mIndex}.png`);
+        this.load(this.mKey);
       }
     }
   }
