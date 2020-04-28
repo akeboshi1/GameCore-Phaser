@@ -71,8 +71,8 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
         this.gridTable.refresh();
-        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
-        // this.onSelectItemHandler(this.curEquipItem);
+        this.gridTable.setT((index + 1) / this.gridTable.items.length);
+        this.updateEquipItem(this.curEquipItem);
     }
 
     destroy() {
@@ -175,11 +175,17 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         // Logger.getInstance().log(cell.itemData);
         if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
+        this.updateEquipItem(cell);
+        this.curEquipItem = cell;
+        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
+    }
+
+    private updateEquipItem(cell: EquipItemCell) {
+        const data = cell.itemData;
         this.penetrationText.text = data.buffDisplayNames[0];
         this.equipDes.text = data.description;
         this.equipName.text = data.name;
         this.costNum.text = data.price + "";
-        this.curEquipItem = cell;
         if (data.owned) this.unlockbtn.visible = false;
         else this.unlockbtn.visible = true;
         if (data.qualified) {
@@ -200,8 +206,6 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             this.btnName.setPosition(0, 6 * this.dpr);
         }
         cell.setSelect(true);
-        this.curEquipItem = cell;
-        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
     }
     private onUnlockEquipHandler() {
         this.emit("reqActive", this.curEquipItem.itemData.id);
