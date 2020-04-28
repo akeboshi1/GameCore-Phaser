@@ -22,6 +22,7 @@ import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
 import { DisplayObjectPool } from "./display-object.pool";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
+import { EditorSkyBoxManager } from "./sky.box/editor.sky.box.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -40,6 +41,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     protected editorTerrainManager: EditorTerrainManager;
     protected editorElementManager: EditorElementManager;
     protected editorMossManager: EditorMossManager;
+    protected editorSkyboxManager: EditorSkyBoxManager;
 
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
@@ -91,6 +93,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.editorTerrainManager = new EditorTerrainManager(this);
         this.editorElementManager = new EditorElementManager(this);
         this.editorMossManager = new EditorMossManager(this);
+        this.editorSkyboxManager = new EditorSkyBoxManager(this);
         this.mCameraService = new EditorCamerasManager(this);
         this.displayObjectPool = new DisplayObjectPool();
 
@@ -121,7 +124,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mScene.input.on("gameout", this.onGameOutHandler, this);
         this.mScene.input.keyboard.on("keydown", this.onKeyDownHandler, this);
 
-        this.addSkyBox();
+        // this.addSkyBox();
     }
 
     public destroy() {
@@ -417,6 +420,10 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.selectedElement(displayObj.getDisplay());
             }
         }
+
+        if (this.editorSkyboxManager) {
+            this.editorSkyboxManager.removeSelect();
+        }
     }
 
     private sendFetch(ids: number[], nodetype: op_def.NodeType, isMoss?: boolean) {
@@ -459,6 +466,9 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private onKeyDownHandler(event) {
+        if (this.editorSkyboxManager) {
+            this.editorSkyboxManager.onMove(event.keyCode);
+        }
         if (!this.mSelectedElementEffect) {
             return;
         }
@@ -467,6 +477,10 @@ export class EditorRoom extends Room implements EditorRoomService {
             case 38:
             case 39:
             case 40:
+            case 65:
+            case 87:
+            case 83:
+            case 68:
                 this.moveElement(event.keyCode);
                 break;
             case 8:

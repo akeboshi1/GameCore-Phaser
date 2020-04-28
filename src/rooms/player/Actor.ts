@@ -43,7 +43,7 @@ export class Actor extends Player implements InputListener {
             if (roomService && roomService.cameraService) {
                 const pos = sprite.pos;
                 const size = this.mElementManager.scene.scale;
-                roomService.cameraService.setScroll(pos.x * roomService.world.scaleRatio - size.width / 2, pos.y * roomService.world.scaleRatio - size.height / 2);
+                // roomService.cameraService.setScroll(pos.x * roomService.world.scaleRatio - size.width / 2, pos.y * roomService.world.scaleRatio - size.height / 2);
                 roomService.cameraService.syncCameraScroll();
             }
         }

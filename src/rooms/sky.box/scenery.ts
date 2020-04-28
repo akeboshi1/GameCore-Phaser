@@ -1,5 +1,6 @@
-import { op_gameconfig_01 } from "pixelpai_proto";
+import { op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
+import { SceneryNode } from "game-capsule";
 
 export interface IScenery {
     readonly id: number;
@@ -9,7 +10,7 @@ export interface IScenery {
     readonly uris: string[][];
     readonly speed: number;
     readonly fit: Fit;
-    readonly offset: Phaser.Geom.Point;
+    readonly offset: op_def.IPBPoint2f;
 }
 
 export class Scenery implements IScenery {
@@ -20,17 +21,23 @@ export class Scenery implements IScenery {
     private mUris: string[][];
     private mSpeed: number;
     private mFit: Fit;
-    private mOffset: Phaser.Geom.Point;
-    constructor(scenery: op_gameconfig_01.IScenery) {
-        this.mID = scenery.node.id;
+    private mOffset: op_def.IPBPoint2f;
+    constructor(scenery: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SCENERY) {
+        this.mID = scenery.id;
         this.mDepth = scenery.depth;
         this.mUris = [];
-        const uris = scenery.uris.value || [];
-        if (!scenery.uris || uris.length < 1) {
+        let uris = null;
+        if (Array.isArray(scenery.uris)) {
+            uris = scenery.uris;
+        } else {
+            uris = scenery.uris.value;
+        }
+
+        if (uris.length < 1) {
             Logger.getInstance().fatal(`${Scenery.name}: scenery uris is empty`);
         }
         for (let i = 0; i < uris.length; i++) {
-            const val = uris[i].value || [];
+            const val = uris[i].value || uris;
             this.mUris[i] = new Array(val.length);
             for (let j = 0; j < val.length; j++) {
                 this.mUris[i][j] = val[j];
@@ -46,8 +53,7 @@ export class Scenery implements IScenery {
         this.mWidth = scenery.width;
         this.mHeight = scenery.height;
         this.mFit = scenery.fit;
-        const {x, y} = scenery.offset || { x: 0, y: 0 };
-        this.mOffset = new Phaser.Geom.Point(x, y);
+        this.mOffset = scenery.offset || { x: 0, y: 0 };
     }
 
     get width(): number {
@@ -66,7 +72,7 @@ export class Scenery implements IScenery {
         return this.mDepth;
     }
 
-    get offset(): Phaser.Geom.Point {
+    get offset(): op_def.IPBPoint2f {
         return this.mOffset;
     }
 

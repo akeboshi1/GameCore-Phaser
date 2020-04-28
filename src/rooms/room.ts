@@ -32,7 +32,7 @@ import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { SoundField } from "../game/sound.manager";
 import { GroupManager } from "./group/GroupManager";
 import { FrameManager } from "./element/frame.manager";
-import { Scenery } from "./sky.box/scenery";
+import { Scenery, IScenery } from "./sky.box/scenery";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -112,6 +112,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mLayManager: LayerManager;
     protected mGroupManager: GroupManager;
     protected mFrameManager: FrameManager;
+    protected mSkyboxManager: SkyBoxManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -119,7 +120,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
-    protected mBackgrounds: SkyBoxManager[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -213,6 +213,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mLayManager = new LayerManager(this);
         this.mGroupManager = new GroupManager(this);
         this.mFrameManager = new FrameManager();
+        this.mSkyboxManager = new SkyBoxManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
@@ -253,6 +254,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             field: SoundField.Element,
             soundConfig: { loop: true },
         });
+
+        const scenerys = this.world.elementStorage.getScenerys();
+        if (scenerys) {
+            for (const scenery of scenerys) {
+                this.addSkyBox(scenery);
+            }
+        }
 
         import(/*  */ "../module/template/main.js").then(({ Template }) => {
             const tmp = new Template();
@@ -391,6 +399,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mPlayerManager) this.mPlayerManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
+        if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         if (this.mActorData) {
             this.mActorData = null;
         }
@@ -402,59 +411,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) this.connection.removePacketListener(this);
         this.mWorld.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
-        if (this.mBackgrounds) {
-            for (const background of this.mBackgrounds) {
-                background.destroy();
-            }
-        }
         // if (this.mScene) {
         //   this.mScene = null;
         // }
     }
 
-    protected addSkyBox(scenery: op_gameconfig_01.IScenery) {
-        const gameid = this.mWorld.getConfig().game_id;
-        this.mBackgrounds = [];
-        this.mBackgrounds.push(new SkyBoxManager(this, new Scenery(scenery), this.mCameraService));
-        // if (gameid === "5e719a0a68196e416ecf7aad") {
-        //     if (this.id === 926312429) {
-        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-        //             key: "skybox/mine/level_0",
-        //             width: 1120,
-        //             height: 684
-        //         }, this.mCameraService));
-        //     } else {
-        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-        //             key: "skybox/bh/bh",
-        //             width: 3400,
-        //             height: 1900,
-        //             gridW: 256,
-        //             gridH: 256
-        //         }, this.mCameraService));
-        //     }
-        //     // const close = new BackgroundManager(this, "close", this.mCameraService);
-        // } else if (gameid === "5e9a7dace87abc390c4b1b73") {
-        //     if (this.id === 926312429) {
-        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-        //             key: "skybox/mine/level_0",
-        //             width: 1120,
-        //             height: 684
-        //         }, this.mCameraService));
-        //     } else if (this.id === 395490295) {
-        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-        //             key: "skybox/mine/level_1",
-        //             width: 1360,
-        //             height: 994
-        //         }, this.mCameraService));
-        //     } else {
-        //         this.mBackgrounds.push(new SkyBoxManager(this, "close", {
-        //             key: "skybox/mine/level_1",
-        //             width: 1540,
-        //             height: 969
-        //         }, this.mCameraService));
-        //     }
-
-        // }
+    protected addSkyBox(scenery: IScenery) {
+        this.mSkyboxManager.add(scenery);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {

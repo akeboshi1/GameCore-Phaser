@@ -3,18 +3,19 @@ import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbone
 import {
     Lite,
     ElementNode,
-    SpawnPointNode,
     TerrainNode,
     PaletteNode,
     TerrainCollectionNode,
     SceneNode,
     AnimationDataNode,
     MossNode,
+    SceneryNode,
 } from "game-capsule";
 import { Logger } from "../utils/log";
 import { op_def } from "pixelpai_proto";
 import { Animation } from "../rooms/display/animation";
 import { MossCollectionNode } from "game-capsule/lib/configobjects/scene";
+import { IScenery } from "../rooms/sky.box/scenery";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
@@ -27,6 +28,7 @@ export interface IElementStorage {
     getTerrainPalette(key: number): IFramesModel;
     getTerrainPaletteByBindId(id: number): IFramesModel;
     getMossPalette(key: number): IFramesModel;
+    getScenerys(): IScenery[];
     on(event: string | symbol, fn: Function, context?: any);
     off(event: string | symbol, fn: Function, context?: any);
 }
@@ -45,6 +47,7 @@ export class ElementStorage implements IElementStorage {
     private mossPalette = new Map<number, FramesModel>();
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
+    private _scenerys: IScenery[];
 
     private event: Phaser.Events.EventEmitter;
 
@@ -180,6 +183,12 @@ export class ElementStorage implements IElementStorage {
 
         this._terrainCollection = sceneNode.terrainCollection;
         this._mossCollection = sceneNode.mossCollection;
+        this._scenerys = sceneNode.getScenerys();
+        // const scenerys = sceneNode.getScenerys();
+        // this._scenerys = [];
+        // for (const scenery of scenerys) {
+        //     this._scenerys.push(scenery);
+        // }
     }
 
     public add(obj: FramesModel | DragonbonesModel) {
@@ -219,5 +228,9 @@ export class ElementStorage implements IElementStorage {
         if (this.mossPalette.get(id)) {
             return this.mossPalette.get(id);
         }
+    }
+
+    public getScenerys(): IScenery[] {
+        return this._scenerys;
     }
 }

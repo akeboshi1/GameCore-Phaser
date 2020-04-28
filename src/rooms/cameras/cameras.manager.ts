@@ -147,6 +147,9 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         if (index === -1) {
             this.mCameras.push(camera);
         }
+        if (this.mTarget) {
+            camera.startFollow(this.mTarget);
+        }
     }
 
     public removeCamera(camera: Phaser.Cameras.Scene2D.Camera) {
