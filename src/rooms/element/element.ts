@@ -268,6 +268,19 @@ export class Element extends BlockObject implements IElement {
         this._doMove();
     }
 
+    public movePosition(pos: Pos, angel: number) {
+        if (!this.mElementManager) {
+            return;
+        }
+        if (!this.mDisplay) {
+            return;
+        }
+
+        if (!pos.depth) pos.depth = this.getDepth();
+        this.setPosition(pos);
+        this.setDirection(angel);
+    }
+
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
         if (!this.mElementManager) {
             return;
@@ -427,6 +440,14 @@ export class Element extends BlockObject implements IElement {
     //         }
     //     }
     // }
+
+    public getDepth() {
+        let depth = 0;
+        if (this.model && this.model.pos) {
+            depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
+        return depth;
+    }
 
     public destroy() {
         if (this.mMoveData && this.mMoveData.tweenAnim) {
