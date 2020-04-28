@@ -278,7 +278,7 @@ export class Element extends BlockObject implements IElement {
 
         if (!pos.depth) pos.depth = this.getDepth();
         this.setPosition(pos);
-        this.setDirection(angel);
+        this.onCheckDirection(angel);
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
