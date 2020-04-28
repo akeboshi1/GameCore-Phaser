@@ -469,10 +469,10 @@ export class EditorRoom extends Room implements EditorRoomService {
             case 40:
                 this.moveElement(event.keyCode);
                 break;
-            case 8:
-            case 46:
-                this.removeDisplay(this.mSelectedElementEffect);
-                break;
+            // case 8:
+            // case 46:
+            //     this.removeDisplay(this.mSelectedElementEffect);
+            //     break;
         }
     }
 
