@@ -71,7 +71,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
         this.gridTable.refresh();
-        this.gridTable.setT((index + 1) / this.gridTable.items.length);
+        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
         this.updateEquipItem(this.curEquipItem);
     }
 
