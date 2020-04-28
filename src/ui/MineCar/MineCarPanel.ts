@@ -9,8 +9,6 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
-import { RoomZoon } from "../PicaRoomList/PicaRoomListPanel";
-
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   private mPanel: Phaser.GameObjects.Container;

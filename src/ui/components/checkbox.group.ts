@@ -68,12 +68,10 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
         item.destroy();
       });
     }
+    super.destroy();
   }
 
   private onGameObjectUpHandler(pointer, gameobject: NinePatchButton) {
-    if (this.mPrevButton) {
-      // this.mPrevButton.setFrame("")
-    }
     this.select(gameobject);
   }
 }
