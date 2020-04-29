@@ -124,8 +124,6 @@ export class InteractiveBubbleManager extends PacketHandler {
         content.id = data.id;
         //  content.receiverId = data.receiverId;
         connection.send(packet);
-        Logger.getInstance().log("*******************onInteractiveBubbleHandler");
-        Logger.getInstance().log("click: ", content.id);
     }
 
     private update() {

@@ -5,7 +5,6 @@ import { DynamicImage } from "../components/dynamic.image";
 import { BasePanel } from "../components/BasePanel";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { Button } from "../components/button";
-import { CheckboxGroup } from "../components/checkbox.group";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
@@ -23,10 +22,10 @@ export class MineCarPanel extends BasePanel {
     private mAllItem: IPackageItem[];
     private mFilterItem: IPackageItem[];
     private mLimit: number;
-    private mCheckBox: CheckboxGroup;
     private categoriesBg: Phaser.GameObjects.Image;
     private mTableContainer: Phaser.GameObjects.Container;
-    private cellHeight: number = 0;
+    private mCategoryTable: GridTable;
+    private mPreSelectedCategorie: Button;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.scale = 1;
@@ -54,6 +53,12 @@ export class MineCarPanel extends BasePanel {
         this.mPropContainer.x = -this.mPropGrid.x;
         this.mPropContainer.y = -this.mPropGrid.y + 14 * this.dpr * this.mWorld.uiScaleNew;
 
+        this.mCategoryTable.x = this.x;
+        this.mCategoryTable.y = 160 * this.dpr * this.mWorld.uiScaleNew;
+        this.mCategoryTable.layout();
+        this.mCategorieContainer.x = -this.mCategoryTable.x;
+        this.mCategorieContainer.y = -this.mCategoryTable.y - this.mPanel.height / 2 + 57 * this.dpr * this.mWorld.uiScaleNew;
+
         this.setSize(width, height);
         // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     }
@@ -73,41 +78,7 @@ export class MineCarPanel extends BasePanel {
     }
 
     setCategories(subcategorys: op_def.IStrPair[]) {
-        this.mCategorieContainer.removeAll(true);
-        // this.mCategorieContainer.setSize(this.categoriesBg.width, this.categoriesBg.height);
-        const items = [];
-        const zoom = this.mWorld.uiScaleNew;
-        const gap = 4 * zoom;
-        const style = {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 8 * this.dpr * zoom,
-            color: "#566ddb",
-        };
-        for (let i = 0; i < subcategorys.length; i++) {
-            const item = new Button(
-                this.scene,
-                this.key,
-                "nav_btn_normal.png",
-                "nav_btn_down.png",
-                subcategorys[i].value
-            );
-            item.setScale(zoom);
-            item.setTextStyle(style);
-            item.setFontStyle("bold");
-            item.setData("data", subcategorys[i]);
-            item.x =
-                i * (item.displayWidth + gap * this.dpr) + item.displayWidth / 2 - this.mCategorieContainer.width / 2;
-            item.y = (this.mCategorieContainer.height - item.displayHeight) / 2;
-            items.push(item);
-        }
-        if (this.mCheckBox) {
-            this.mCheckBox.reset();
-            this.mCheckBox.off("selected", this.onClickCategoryHandler, this);
-        }
-        this.mCheckBox.on("selected", this.onClickCategoryHandler, this);
-        this.mCheckBox.appendItemAll(items);
-        this.mCategorieContainer.add(items);
-        this.mCheckBox.selectIndex(0);
+        this.mCategoryTable.setItems(subcategorys);
     }
 
     addListen() {
@@ -133,6 +104,9 @@ export class MineCarPanel extends BasePanel {
         }
         if (this.mCategorieContainer) {
             this.mCategorieContainer.removeAll(true);
+        }
+        if (this.mCategoryTable) {
+            this.mCategoryTable.destroy();
         }
         super.destroy();
     }
@@ -223,15 +197,12 @@ export class MineCarPanel extends BasePanel {
             .setScale(zoom);
         // this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
         this.categoriesBg.y = -(bg.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr * zoom;
-        this.mCategorieContainer.setSize(this.categoriesBg.displayWidth, this.categoriesBg.displayHeight);
-        // this.mCategorieContainer.x = -categoriesBg.width / 2;
-        this.mCategorieContainer.y = this.categoriesBg.y;
 
         this.mPropContainer = this.scene.make.container(undefined, false);
         const propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
         const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
         const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
-        this.cellHeight = capH;
+        // this.cellHeight = capH;
         const w = this.scene.cameras.main.width;
         const gridW = 236 * this.dpr * zoom;
         this.mPropGrid = new GridTable(this.scene, {
@@ -263,7 +234,43 @@ export class MineCarPanel extends BasePanel {
             this.onSelectItemHandler(cell);
             // }
         });
-        this.mCheckBox = new CheckboxGroup();
+
+        const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
+        this.mCategoryTable = new GridTable(this.scene, {
+            width: gridW,
+            height: this.categoriesBg.displayHeight,
+            table: {
+                width: gridW,
+                height: this.categoriesBg.displayHeight,
+                cellWidth: (frame.width + 4 * this.dpr) * zoom,
+                cellHeight: (29 * this.dpr) * zoom,
+                reuseCellContainer: true,
+            },
+            scrollMode: 1,
+            createCellContainerCallback: (cell, cellContainer) => {
+                const scene = cell.scene,
+                    item = cell.item;
+                if (cellContainer === null) {
+                    cellContainer = new CategorieButton(scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", "1");
+                    cellContainer.setTextStyle({
+                        fontFamily: Font.DEFULT_FONT,
+                        fontSize: 10 * this.dpr * zoom,
+                        color: "#566ddb",
+                    });
+                    cellContainer.setFontStyle("bold");
+                    this.mCategorieContainer.add(cellContainer);
+                }
+                cellContainer.setText(item.value);
+                cellContainer.setData("data", item);
+                if (!this.mPreSelectedCategorie) {
+                    this.onClickCategoryHandler(cellContainer);
+                }
+                return cellContainer;
+            }
+        });
+        this.mCategoryTable.on("cell.1tap", (cell) => {
+            this.onClickCategoryHandler(cell);
+        });
         this.add([this.mPanel, this.mTableContainer]);
         this.mPanel.add([
             this.mMask,
@@ -276,7 +283,8 @@ export class MineCarPanel extends BasePanel {
             this.mPropContainer,
             this.mDiscardBtn,
         ]);
-        this.mTableContainer.add(this.mPropGrid.getElement("table"));
+        this.mCategoryTable.layout();
+        this.mTableContainer.add([this.mCategoryTable.getElement("table"), this.mPropGrid.getElement("table")]);
         super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
     }
@@ -335,6 +343,11 @@ export class MineCarPanel extends BasePanel {
         const data = item.getData("data");
         if (data) {
             this.onSelectedCategory(data.key);
+            if (this.mPreSelectedCategorie) {
+                this.mPreSelectedCategorie.changeNormal();
+            }
+            item.changeDown();
+            this.mPreSelectedCategorie = item;
         }
     }
 
@@ -376,6 +389,9 @@ export class MineCarPanel extends BasePanel {
     }
 
     private enterDiscardMode() {
+        if (!this.mFilterItem) {
+            return;
+        }
         const state = this.mDiscardBtn.buttonState;
         let visible = false;
         if (state === DiscardEnum.Discard) {
@@ -605,4 +621,14 @@ enum DiscardEnum {
     Discard,
     Cancel,
     Sutmit,
+}
+
+class CategorieButton extends Button {
+    constructor(scene: Phaser.Scene, key: string, frame?: string, downFrame?: string, text?: string) {
+        super(scene, key, frame, downFrame, text);
+        this.mBackground.setOrigin(0);
+        if (this.mText) {
+            this.mText.setPosition(this.mBackground.width / 2, this.mBackground.height / 2);
+        }
+    }
 }
