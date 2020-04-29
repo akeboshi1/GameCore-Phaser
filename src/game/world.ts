@@ -158,7 +158,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.game && this.game.device.os.iOS) {
             window.scrollTo(0, 0);
         }
-    };
+    }
 
     get moveStyle(): number {
         return this.mMoveStyle;

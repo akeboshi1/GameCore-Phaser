@@ -1,9 +1,9 @@
 import { Font } from "../../utils/font";
-import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url } from "../../utils/resUtil";
-import { Logger } from "../../utils/log";
 import { op_client } from "pixelpai_proto";
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -12,7 +12,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private titleName: Phaser.GameObjects.Text;
     private equipName: Phaser.GameObjects.Text;
     private penetrationText: Phaser.GameObjects.Text;
-    private gridTable: GridTable;
+    private gridTable: GameGridTable;
     private mScrollContainer: Phaser.GameObjects.Container;
     private equipDes: Phaser.GameObjects.Text;
 
@@ -49,6 +49,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             }
             index++;
         }
+
         this.gridTable.setItems(items);
         this.gridTable.layout();
         if (this.haveEquiped)
@@ -64,13 +65,14 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.gridTable.x = posX;
         this.gridTable.y = posY;
         this.gridTable.layout();
-        this.mScrollContainer.setPosition(-this.gridTable.x + 42 * this.dpr * this.zoom, -this.gridTable.y);
+        this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
         this.gridTable.refresh();
-        this.gridTable.setT((index + 1) / this.gridTable.items.length);
+        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
+        this.updateEquipItem(this.curEquipItem);
     }
 
     destroy() {
@@ -125,20 +127,18 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const capH = (propFrame.height + 30 * this.dpr * this.zoom);
         this.cellWidth = capW;
         this.cellHeight = capH;
-        this.gridTable = new GridTable(this.scene, {
-            x: 0,
-            y: 0,
+        const config: GridTableConfig = {
             scrollMode: 1,
-          //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
-                width: 260 * this.dpr * this.zoom,
+                width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,
                 columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
             },
-            clamplChildOY: true,
+            clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item: op_client.IMiningEquipment = cell.item;
                 const index = cell.index;
@@ -159,11 +159,12 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 }
                 // Logger.getInstance().log(item);
                 return cellContainer;
-            },
-        });
-
+            }
+        };
+        this.gridTable = new GameGridTable(this.scene, config);
         this.gridTable.layout();
-        this.gridTable.on("cell.1tap", (cell) => {
+        this.gridTable.addListen();
+        this.gridTable.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
 
@@ -174,11 +175,17 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         // Logger.getInstance().log(cell.itemData);
         if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
+        this.updateEquipItem(cell);
+        this.curEquipItem = cell;
+        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
+    }
+
+    private updateEquipItem(cell: EquipItemCell) {
+        const data = cell.itemData;
         this.penetrationText.text = data.buffDisplayNames[0];
         this.equipDes.text = data.description;
         this.equipName.text = data.name;
         this.costNum.text = data.price + "";
-        this.curEquipItem = cell;
         if (data.owned) this.unlockbtn.visible = false;
         else this.unlockbtn.visible = true;
         if (data.qualified) {
@@ -199,8 +206,6 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             this.btnName.setPosition(0, 6 * this.dpr);
         }
         cell.setSelect(true);
-        this.curEquipItem = cell;
-        if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
     }
     private onUnlockEquipHandler() {
         this.emit("reqActive", this.curEquipItem.itemData.id);
@@ -219,8 +224,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.unlockbtn.setPosition(70 * this.dpr, 48 * this.dpr);
         this.unlockbtn.setSize(btnBg.width, btnBg.height);
         this.unlockbtn.add([this.unlockCondition, btnBg, this.diamondIcon, this.costNum, this.btnName]);
-        btnBg.setInteractive();
-        btnBg.on("pointerup", this.onUnlockEquipHandler, this);
+        this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
         this.add(this.unlockbtn);
     }
 
@@ -279,7 +283,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         let y = -10 * this.dpr * this.zoom;
         this.bg.setPosition(x, y);
         x = - this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;
-        y = 2* this.dpr * this.zoom;
+        y = 2 * this.dpr * this.zoom;
         this.equipIcon.setPosition(x, y);
         x = - this.unlock.width * 0.5 + 20 * this.dpr * this.zoom;
         y = -8 * this.dpr * this.zoom;
