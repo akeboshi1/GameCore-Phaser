@@ -96,11 +96,6 @@ export class BlockManager implements IBlockManager {
     this.clear();
     this.mContainer = this.scene.add.container(0, 0);
     this.mContainer.setScale(this.mWorld.scaleRatio);
-    // for (let i = 0; i < len; i++) {
-    //   const block = new Block(this.scene, this.mKey, i + 1);
-    //   block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
-    //   this.mGrids[i] = block;
-    // }
     const len = this.mUris.length;
     for (let i = 0; i < len; i++) {
       const l = this.mUris[i].length;
