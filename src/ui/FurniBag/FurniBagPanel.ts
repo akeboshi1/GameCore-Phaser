@@ -11,10 +11,10 @@ import { Url } from "../../utils/resUtil";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
-import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { NinePatch } from "../components/nine.patch";
 import { Handler } from "../../Handler/Handler";
+import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -494,7 +494,7 @@ export class FurniBagPanel extends BasePanel {
     const zoom = this.mWorld.uiScaleNew;
     let allRadiu = 0;
     for (const btn of this.topBtns) {
-      allRadiu += btn.width;
+      allRadiu += btn.displayWidth;
     }
     allRadiu /= 2;
     let offsetX: number = width * 0.5 - allRadiu;
@@ -507,16 +507,16 @@ export class FurniBagPanel extends BasePanel {
           fontSize: 12 * this.dpr * zoom,
           color: "#2B4BB5"
         });
-        posY = btn.height * 0.5;
+        posY = btn.displayHeight * 0.5;
       } else {
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
           fontSize: 16 * this.dpr * zoom,
           color: "#8B5603"
         });
-        posY = btn.height * 0.5 + 2 * this.dpr * zoom;
+        posY = btn.displayHeight * 0.5 + 2 * this.dpr * zoom;
       }
-      const radiu = btn.width * 0.5;
+      const radiu = btn.displayWidth * 0.5;
       btn.x = offsetX + radiu;
       btn.y = posY;
       offsetX += radiu * 2 + 4 * this.dpr * zoom;
@@ -969,7 +969,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
       fontSize: 16 * dpr * zoom,
       fontFamily: Font.DEFULT_FONT
     });
-    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
+    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, priceBg, this.pricText, countBg, this.itemCountText, minusBtn.view, addBtn.view, cancelBtn, confirmBtn]);
     minusBtn.on("click", this.onMinusBtnHandler, this);
     addBtn.on("click", this.onAddBtnHandler, this);
     cancelBtn.on("click", this.onCancelBtnHandler, this);
