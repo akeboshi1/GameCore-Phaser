@@ -307,7 +307,9 @@ export class FurniBagPanel extends BasePanel {
     }
     this.topCheckBox.appendItemAll(this.topBtns);
     this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
-    this.add(this.topBtns);
+    this.topBtns.forEach((btn) => {
+      this.add(btn.view);
+    });
     if (this.mEnableEdit) {
       const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
       this.topCheckBox.selectIndex(index);
