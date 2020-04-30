@@ -23,6 +23,8 @@
   },
   "furni_bag": {
     "add": "放 置",
-    "furni": "家具"
+    "furni": "家具",
+    "Props":"道具",
+    "decorate":"装饰"
   }
 }

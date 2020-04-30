@@ -1,28 +1,8 @@
 {
 	"frames": {
-		"页签bg-2x.png": {
-			"frame": {
-				"x": 1,
-				"y": 1,
-				"w": 2,
-				"h": 91
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 2,
-				"h": 91
-			},
-			"sourceSize": {
-				"w": 2,
-				"h": 91
-			}
-		},
 		"back_arrow.png": {
 			"frame": {
-				"x": 5,
+				"x": 1,
 				"y": 1,
 				"w": 29,
 				"h": 52
@@ -42,7 +22,7 @@
 		},
 		"bg.png": {
 			"frame": {
-				"x": 36,
+				"x": 32,
 				"y": 1,
 				"w": 620,
 				"h": 625
@@ -62,8 +42,8 @@
 		},
 		"des_bg.png": {
 			"frame": {
-				"x": 1,
-				"y": 628,
+				"x": 654,
+				"y": 1,
 				"w": 42,
 				"h": 42
 			},
@@ -82,7 +62,7 @@
 		},
 		"ghost.png": {
 			"frame": {
-				"x": 658,
+				"x": 698,
 				"y": 1,
 				"w": 75,
 				"h": 109
@@ -100,10 +80,50 @@
 				"h": 109
 			}
 		},
+		"grid_bg.png": {
+			"frame": {
+				"x": 654,
+				"y": 112,
+				"w": 112,
+				"h": 112
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 112,
+				"h": 112
+			},
+			"sourceSize": {
+				"w": 112,
+				"h": 112
+			}
+		},
+		"grid_choose.png": {
+			"frame": {
+				"x": 654,
+				"y": 226,
+				"w": 120,
+				"h": 120
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 120,
+				"h": 120
+			},
+			"sourceSize": {
+				"w": 120,
+				"h": 120
+			}
+		},
 		"prop_bg.png": {
 			"frame": {
-				"x": 45,
-				"y": 628,
+				"x": 654,
+				"y": 348,
 				"w": 99,
 				"h": 99
 			},
@@ -122,7 +142,7 @@
 		},
 		"seach_bg.png": {
 			"frame": {
-				"x": 146,
+				"x": 1,
 				"y": 628,
 				"w": 289,
 				"h": 65
@@ -142,8 +162,8 @@
 		},
 		"seach_down.png": {
 			"frame": {
-				"x": 658,
-				"y": 112,
+				"x": 654,
+				"y": 449,
 				"w": 41,
 				"h": 43
 			},
@@ -162,8 +182,8 @@
 		},
 		"seach_normal.png": {
 			"frame": {
-				"x": 701,
-				"y": 112,
+				"x": 697,
+				"y": 449,
 				"w": 45,
 				"h": 47
 			},
@@ -180,10 +200,50 @@
 				"h": 47
 			}
 		},
-		"yellow_btn_down": {
+		"tab_down.png": {
 			"frame": {
-				"x": 658,
-				"y": 161,
+				"x": 292,
+				"y": 628,
+				"w": 208,
+				"h": 76
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 208,
+				"h": 76
+			},
+			"sourceSize": {
+				"w": 208,
+				"h": 76
+			}
+		},
+		"tab_normal.png": {
+			"frame": {
+				"x": 502,
+				"y": 628,
+				"w": 135,
+				"h": 61
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 135,
+				"h": 61
+			},
+			"sourceSize": {
+				"w": 135,
+				"h": 61
+			}
+		},
+		"yellow_btn_down.png": {
+			"frame": {
+				"x": 654,
+				"y": 498,
 				"w": 64,
 				"h": 63
 			},
@@ -200,10 +260,10 @@
 				"h": 63
 			}
 		},
-		"yellow_btn_normal": {
+		"yellow_btn_normal.png": {
 			"frame": {
-				"x": 658,
-				"y": 226,
+				"x": 720,
+				"y": 498,
 				"w": 64,
 				"h": 63
 			},
@@ -222,8 +282,8 @@
 		},
 		"yellow_btn_over.png": {
 			"frame": {
-				"x": 658,
-				"y": 291,
+				"x": 654,
+				"y": 563,
 				"w": 64,
 				"h": 63
 			},
@@ -247,8 +307,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 747,
-			"h": 728
+			"w": 785,
+			"h": 705
 		},
 		"scale": "1"
 	}

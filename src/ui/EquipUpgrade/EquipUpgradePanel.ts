@@ -138,7 +138,7 @@ export default class EquipUpgradePanel extends BasePanel {
                 const item = {};
                 item["name"] = "矿镐" + j;
                 item["penetration"] = 10 + j;
-                item["des"] = "文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述文字描述";
+                item["des"] = "describle";
                 item["cost"] = 100 * j;
                 item["unlock"] = false;
                 obj["items"].push(item);

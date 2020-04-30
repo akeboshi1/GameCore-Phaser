@@ -3,6 +3,8 @@ import { Font } from "../../utils/font";
 
 export class TextButton extends Phaser.GameObjects.Container implements IButtonState {
   private mText: Phaser.GameObjects.Text;
+  private normalColor: string = "#FFFFFF";
+  private changeColor: string = "#0099cc";
   constructor(scene: Phaser.Scene, dpr: number, scale: number = 1, text?: string, x?: number, y?: number) {
     super(scene, x, y);
     this.mText = this.scene.make.text({
@@ -29,12 +31,20 @@ export class TextButton extends Phaser.GameObjects.Container implements IButtonS
     this.mText.setStyle(style);
   }
 
+  setNormalColor(color: string) {
+    this.normalColor = color;
+  }
+
+  setChangeColor(color: string) {
+    this.changeColor = color;
+  }
+
   changeDown() {
-    this.mText.setFill("#0099cc");
+    this.mText.setFill(this.changeColor);
   }
 
   changeNormal() {
-    this.mText.setFill("#FFFFFF");
+    this.mText.setFill(this.normalColor);
   }
 
   private onPointerUpHandler(pointer) {

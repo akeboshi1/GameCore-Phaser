@@ -30,7 +30,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   loadAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
-    if (!this.mDragonboneDisplay)  {
+    if (!this.mDragonboneDisplay) {
       this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, undefined);
     }
     if (this.mImage) {
@@ -45,6 +45,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
 
   loadUrl(url: string) {
     this.mUrl = url;
+    if (this.mDisplay) this.mDisplay = null;
     if (this.mDragonboneDisplay) {
       this.mDragonboneDisplay.destroy();
     }

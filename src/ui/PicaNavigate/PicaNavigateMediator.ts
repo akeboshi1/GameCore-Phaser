@@ -51,11 +51,13 @@ export class PicaNavigateMediator extends BaseMediator {
     }
   }
 
-  private onShowPanelHandler(panel: string) {
+  private onShowPanelHandler(panel: string, data?: any) {
     if (!panel || !this.world) {
       return;
     }
     const uiManager = this.world.uiManager;
-    uiManager.showMed(panel);
+    if (data)
+      uiManager.showMed(panel, data);
+    else uiManager.showMed(panel);
   }
 }

@@ -69,7 +69,7 @@ export class MineCarPanel extends BasePanel {
     }
   }
 
-  setCategories(subcategorys: op_def.IStrMap[]) {
+  setCategories(subcategorys: op_def.IStrPair[]) {
     this.mCategorieContainer.removeAll(true);
     // this.mCategorieContainer.setSize(this.categoriesBg.width, this.categoriesBg.height);
     const items = [];

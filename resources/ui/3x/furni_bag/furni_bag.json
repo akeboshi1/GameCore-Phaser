@@ -62,8 +62,8 @@
 		},
 		"ghost.png": {
 			"frame": {
-				"x": 981,
-				"y": 71,
+				"x": 1,
+				"y": 940,
 				"w": 75,
 				"h": 109
 			},
@@ -80,10 +80,50 @@
 				"h": 109
 			}
 		},
+		"grid_bg.png": {
+			"frame": {
+				"x": 1056,
+				"y": 1,
+				"w": 168,
+				"h": 168
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 168,
+				"h": 168
+			},
+			"sourceSize": {
+				"w": 168,
+				"h": 168
+			}
+		},
+		"grid_choose.png": {
+			"frame": {
+				"x": 981,
+				"y": 171,
+				"w": 180,
+				"h": 180
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 180,
+				"h": 180
+			},
+			"sourceSize": {
+				"w": 180,
+				"h": 180
+			}
+		},
 		"prop_bg.png": {
 			"frame": {
-				"x": 1058,
-				"y": 1,
+				"x": 981,
+				"y": 353,
 				"w": 148,
 				"h": 148
 			},
@@ -102,7 +142,7 @@
 		},
 		"seach_bg.png": {
 			"frame": {
-				"x": 1,
+				"x": 78,
 				"y": 940,
 				"w": 434,
 				"h": 97
@@ -122,8 +162,8 @@
 		},
 		"seach_down.png": {
 			"frame": {
-				"x": 1058,
-				"y": 151,
+				"x": 1163,
+				"y": 171,
 				"w": 61,
 				"h": 65
 			},
@@ -142,8 +182,8 @@
 		},
 		"seach_normal.png": {
 			"frame": {
-				"x": 1121,
-				"y": 151,
+				"x": 1131,
+				"y": 353,
 				"w": 67,
 				"h": 71
 			},
@@ -160,10 +200,50 @@
 				"h": 71
 			}
 		},
-		"yellow_btn_down": {
+		"tab_down.png": {
+			"frame": {
+				"x": 514,
+				"y": 940,
+				"w": 312,
+				"h": 113
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 312,
+				"h": 113
+			},
+			"sourceSize": {
+				"w": 312,
+				"h": 113
+			}
+		},
+		"tab_normal.png": {
 			"frame": {
 				"x": 981,
-				"y": 224,
+				"y": 503,
+				"w": 202,
+				"h": 91
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 202,
+				"h": 91
+			},
+			"sourceSize": {
+				"w": 202,
+				"h": 91
+			}
+		},
+		"yellow_btn_down.png": {
+			"frame": {
+				"x": 981,
+				"y": 596,
 				"w": 98,
 				"h": 95
 			},
@@ -180,10 +260,10 @@
 				"h": 95
 			}
 		},
-		"yellow_btn_normal": {
+		"yellow_btn_normal.png": {
 			"frame": {
 				"x": 1081,
-				"y": 224,
+				"y": 596,
 				"w": 98,
 				"h": 95
 			},
@@ -203,7 +283,7 @@
 		"yellow_btn_over.png": {
 			"frame": {
 				"x": 981,
-				"y": 321,
+				"y": 693,
 				"w": 98,
 				"h": 95
 			},
@@ -227,8 +307,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1207,
-			"h": 1038
+			"w": 1225,
+			"h": 1054
 		},
 		"scale": "1"
 	}

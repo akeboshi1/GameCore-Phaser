@@ -80,10 +80,50 @@
 				"h": 109
 			}
 		},
-		"prop_bg.png": {
+		"grid_bg.png": {
 			"frame": {
 				"x": 1402,
 				"y": 1,
+				"w": 224,
+				"h": 224
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 224
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 224
+			}
+		},
+		"grid_choose.png": {
+			"frame": {
+				"x": 1306,
+				"y": 227,
+				"w": 240,
+				"h": 240
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 240,
+				"h": 240
+			},
+			"sourceSize": {
+				"w": 240,
+				"h": 240
+			}
+		},
+		"prop_bg.png": {
+			"frame": {
+				"x": 1306,
+				"y": 469,
 				"w": 197,
 				"h": 197
 			},
@@ -122,8 +162,8 @@
 		},
 		"seach_down.png": {
 			"frame": {
-				"x": 1383,
-				"y": 200,
+				"x": 1548,
+				"y": 227,
 				"w": 81,
 				"h": 86
 			},
@@ -142,8 +182,8 @@
 		},
 		"seach_normal.png": {
 			"frame": {
-				"x": 1466,
-				"y": 200,
+				"x": 1505,
+				"y": 469,
 				"w": 89,
 				"h": 94
 			},
@@ -160,10 +200,50 @@
 				"h": 94
 			}
 		},
-		"yellow_btn_down": {
+		"tab_down.png": {
+			"frame": {
+				"x": 581,
+				"y": 1253,
+				"w": 416,
+				"h": 151
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 416,
+				"h": 151
+			},
+			"sourceSize": {
+				"w": 416,
+				"h": 151
+			}
+		},
+		"tab_normal.png": {
 			"frame": {
 				"x": 1306,
-				"y": 296,
+				"y": 668,
+				"w": 269,
+				"h": 121
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 269,
+				"h": 121
+			},
+			"sourceSize": {
+				"w": 269,
+				"h": 121
+			}
+		},
+		"yellow_btn_down.png": {
+			"frame": {
+				"x": 1306,
+				"y": 791,
 				"w": 151,
 				"h": 148
 			},
@@ -180,10 +260,10 @@
 				"h": 148
 			}
 		},
-		"yellow_btn_normal": {
+		"yellow_btn_normal.png": {
 			"frame": {
 				"x": 1459,
-				"y": 296,
+				"y": 791,
 				"w": 151,
 				"h": 148
 			},
@@ -203,7 +283,7 @@
 		"yellow_btn_over.png": {
 			"frame": {
 				"x": 1306,
-				"y": 446,
+				"y": 941,
 				"w": 151,
 				"h": 148
 			},
@@ -227,8 +307,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1611,
-			"h": 1383
+			"w": 1630,
+			"h": 1405
 		},
 		"scale": "1"
 	}

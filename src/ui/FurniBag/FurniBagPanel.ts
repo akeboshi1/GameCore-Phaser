@@ -11,12 +11,17 @@ import { Url } from "../../utils/resUtil";
 import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
+import { Button } from "../components/button";
+import { CheckboxGroup } from "../components/checkbox.group";
+import { NinePatch } from "../components/nine.patch";
+import { DropType } from "../bag/bagView/bagMediator";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
+  private commonkey = "common_key";
   private seachKey: string = "key.seach";
-  private mTiltle: Phaser.GameObjects.Text;
   private mCloseBtn: Phaser.GameObjects.Image;
+  private topCheckBox: CheckboxGroup;
   private mBackground: Phaser.GameObjects.Graphics;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mShelfContainer: Phaser.GameObjects.Container;
@@ -26,16 +31,21 @@ export class FurniBagPanel extends BasePanel {
   private mAdd: NinePatchButton;
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
-  private mSelectedFurni: op_client.ICountablePackageItem;
+  private mSelectedItem: op_client.ICountablePackageItem;
   private mPreCategoryBtn: TextButton;
-  private mSelectedCategeories: op_def.IStrMap;
+  private mSelectedCategeories: op_def.IStrPair;
   private mPropGrid: GridTable;
   private mCategoryScroll: GameScroller;
+  private sellBtn: NinePatchButton;
+  private useBtn: NinePatchButton;
+  private arrangeBtn: NinePatchButton;
 
   private mDetailBubble: DetailBubble;
+  private itemPopPanel: ItemsPopPanel;
   private mSceneType: op_def.SceneTypeEnum;
   private mEnableEdit: boolean = false;
   private mInputBoo: boolean = false;
+  private categoryType: op_def.EditModePackageCategory;
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
@@ -68,18 +78,17 @@ export class FurniBagPanel extends BasePanel {
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.displayHeight / 2 + 48 * this.dpr * zoom;
 
-    this.mTiltle.x = width / 2;
+    //  this.mTiltle.x = width / 2;
 
     this.mAdd.x = width - this.mAdd.width / 2 - 20 * this.dpr;
     this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr * zoom;
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
-
     this.setSize(width, height);
   }
 
-  setCategories(subcategorys: op_def.IStrMap[]) {
+  setCategories(subcategorys: op_def.IStrPair[]) {
     subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
@@ -88,6 +97,10 @@ export class FurniBagPanel extends BasePanel {
     const capH = 41 * this.dpr * zoom;
     const items = [];
     this.mCategoryScroll.clearInteractiveObject();
+    for (const item of this.mCategeoriesContainer.list) {
+      item.destroy();
+    }
+    this.mCategeoriesContainer.list.length = 0;
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW, 0);
       item.y = capH - item.text.height >> 1;
@@ -104,7 +117,7 @@ export class FurniBagPanel extends BasePanel {
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
-    this.mSelectedFurni = null;
+    this.mSelectedItem = null;
     if (!props) {
       return;
     }
@@ -133,6 +146,9 @@ export class FurniBagPanel extends BasePanel {
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mSeachInput.on("seach", this.onSeachHandler, this);
     this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
+    this.sellBtn.on("pointerup", this.onSellBtnHandler, this);
+    this.useBtn.on("pointerup", this.onUseBtnHandler, this);
+    this.arrangeBtn.on("pointerup", this.onArrangeBtnHandler, this);
   }
 
   public removeListen() {
@@ -140,6 +156,9 @@ export class FurniBagPanel extends BasePanel {
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
     this.mSeachInput.off("seach", this.onSeachHandler, this);
     this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
+    this.sellBtn.off("pointerup", this.onSellBtnHandler, this);
+    this.useBtn.off("pointerup", this.onUseBtnHandler, this);
+    this.arrangeBtn.off("pointerup", this.onArrangeBtnHandler, this);
   }
 
   destroy() {
@@ -154,6 +173,7 @@ export class FurniBagPanel extends BasePanel {
 
   protected preload() {
     this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
+    this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
     super.preload();
   }
 
@@ -185,15 +205,6 @@ export class FurniBagPanel extends BasePanel {
       y: 30 * this.dpr
     }).setScale(zoom).setInteractive();
 
-    this.mTiltle = this.scene.make.text({
-      text: i18n.t("furni_bag.furni"),
-      y: 30 * this.dpr * zoom,
-      style: {
-        fontSize: 36 * this.dpr * zoom,
-        fontFamily: Font.DEFULT_FONT
-      }
-    }).setOrigin(0.5);
-
     const frame = this.scene.textures.getFrame(this.key, "yellow_btn_normal");
     this.mAdd = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
       left: 14 * this.dpr,
@@ -209,6 +220,46 @@ export class FurniBagPanel extends BasePanel {
     this.mAdd.setFontStyle("bold");
     // this.mAdd.on("pointerup", this.onBuyHandler, this);
 
+    this.sellBtn = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
+      left: 14 * this.dpr,
+      top: 14 * this.dpr,
+      right: frame.width - 2 - 14 * this.dpr,
+      bottom: frame.height - 2 - 14 * this.dpr
+    });
+    this.sellBtn.setTextStyle({
+      color: "#976400",
+      fontSize: 16 * this.dpr * zoom,
+      fontFamily: Font.DEFULT_FONT
+    });
+    this.sellBtn.setFontStyle("bold");
+
+    this.useBtn = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
+      left: 14 * this.dpr,
+      top: 14 * this.dpr,
+      right: frame.width - 2 - 14 * this.dpr,
+      bottom: frame.height - 2 - 14 * this.dpr
+    });
+    this.useBtn.setTextStyle({
+      color: "#976400",
+      fontSize: 16 * this.dpr * zoom,
+      fontFamily: Font.DEFULT_FONT
+    });
+    this.useBtn.setFontStyle("bold");
+
+    this.arrangeBtn = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
+      left: 14 * this.dpr,
+      top: 14 * this.dpr,
+      right: frame.width - 2 - 14 * this.dpr,
+      bottom: frame.height - 2 - 14 * this.dpr
+    });
+    this.arrangeBtn.setTextStyle({
+      color: "#976400",
+      fontSize: 16 * this.dpr * zoom,
+      fontFamily: Font.DEFULT_FONT
+    });
+    this.arrangeBtn.setFontStyle("bold");
+    this.add([this.sellBtn, this.useBtn, this.arrangeBtn]);
+
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.setTexture(this.key, "ghost.png");
     this.mDetailDisplay.setNearest();
@@ -221,7 +272,7 @@ export class FurniBagPanel extends BasePanel {
     this.mSeachInput = new SeachInput(this.scene, this.mWorld, this.key, this.dpr);
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
-    this.add([this.mBackground, this.mBg, this.mTiltle, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
+    this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
     this.mShelfContainer.add([this.mCategoriesBar, this.mPropsContainer]);
     // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
@@ -229,6 +280,45 @@ export class FurniBagPanel extends BasePanel {
     }
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
       this.add(this.mAdd);
+    }
+
+    const topCapW = 56 * this.dpr * zoom;
+    const topCapH = 41 * this.dpr * zoom;
+    const topPosY = 30 * this.dpr * zoom;
+    const topStyle = {
+      fontFamily: Font.DEFULT_FONT,
+      fontSize: 20 * this.dpr * zoom,
+      color: "#FFFFFF"
+    };
+    this.topCheckBox = new CheckboxGroup();
+    const topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
+    const topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
+    if (!this.mEnableEdit) {
+      const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+      topCategorys.splice(index, 1);
+      topBtnTexts.splice(index, 1);
+    }
+    const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
+    const topBtns = [];
+    for (const key in topCategorys) {
+      const index = Number(key);
+      const category = topCategorys[index];
+      const button = new Button(this.scene, this.key, "prop_bg.png", "yellow_btn_down", topBtnTexts[index]);
+      button.setTextStyle(topStyle);
+      button.setData("data", category);
+      button.setSize(topCapW, topCapH);
+      button.y = topPosY;
+      button.x = topPosX + topCapW * index;
+      topBtns.push(button);
+    }
+    this.topCheckBox.appendItemAll(topBtns);
+    this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
+    this.add(topBtns);
+    if (this.mEnableEdit) {
+      const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+      this.topCheckBox.selectIndex(index);
+    } else {
+      this.topCheckBox.selectIndex(0);
     }
 
     const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
@@ -295,10 +385,8 @@ export class FurniBagPanel extends BasePanel {
     // this.add(this.mPropGrid);
     this.add(this.mPropGrid.childrenMap.child);
     super.init();
-
-    this.emit("getCategories");
-
-    this.resize(0, 0);
+    if (this)
+      this.resize(0, 0);
   }
 
   private refreshPos(value: number) {
@@ -315,7 +403,9 @@ export class FurniBagPanel extends BasePanel {
     if (!prop) {
       return;
     }
-    this.mSelectedFurni = prop;
+    this.mSelectedItem = prop;
+    const url = Url.getOsdRes(prop.display.texturePath);
+    this.mDetailDisplay.loadUrl(url);
     this.emit("queryPropResource", prop);
     this.mDetailBubble.setProp(prop);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
@@ -334,7 +424,7 @@ export class FurniBagPanel extends BasePanel {
     if (!(gameobject instanceof TextButton)) {
       return;
     }
-    const category: op_def.IStrMap = gameobject.getData("item");
+    const category: op_def.IStrPair = gameobject.getData("item");
     if (category) {
       if (this.mPreCategoryBtn) {
         this.mPreCategoryBtn.changeNormal();
@@ -374,10 +464,34 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private onAddFurniToSceneHandler() {
-    if (!this.mSelectedFurni) {
+    if (!this.mSelectedItem) {
       return;
     }
-    this.emit("addFurniToScene", this.mSelectedFurni.id);
+    this.emit("addFurniToScene", this.mSelectedItem.id);
+  }
+
+  private onTopCategoryHandler(item: Button) {
+    const categoryType = item.getData("data");
+    if (categoryType) {
+      this.onSelectedCategory(categoryType);
+    }
+  }
+
+  private onSelectedCategory(categoryType: number) {
+    this.categoryType = categoryType;
+    this.emit("getCategories", categoryType);
+  }
+
+  private onSellBtnHandler() {
+
+  }
+
+  private onUseBtnHandler() {
+
+  }
+
+  private onArrangeBtnHandler() {
+
   }
 
   private showSeach(parent: TextButton) {
@@ -503,6 +617,7 @@ class SeachInput extends Phaser.GameObjects.Container {
 class DetailBubble extends Phaser.GameObjects.Container {
   private mDetailBubble: Phaser.GameObjects.Graphics;
   private mNickName: Phaser.GameObjects.Text;
+  private mPriceText: Phaser.GameObjects.Text;
   private mDesText: Phaser.GameObjects.Text;
   private mSource: Phaser.GameObjects.Text;
   private dpr: number;
@@ -528,9 +643,30 @@ class DetailBubble extends Phaser.GameObjects.Container {
       }
     });
 
+    this.mPriceText = this.scene.make.text({
+      x: 7 * this.dpr,
+      y: 28 * this.dpr,
+      text: "不可交易",
+      style: {
+        fontSize: 10 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT,
+        color: "#DC143C",
+        align: "center"
+      }
+    });
+    this.mSource = this.scene.make.text({
+      x: 8 * dpr,
+      y: 47 * dpr,
+      text: "可通过商城购物获得",
+      style: {
+        fontSize: 10 * dpr * zoom,
+        fontFamily: Font.DEFULT_FONT,
+      }
+    }, false);
+
     this.mDesText = this.scene.make.text({
       x: 8 * dpr,
-      y: 56 * dpr,
+      y: 66 * dpr,
       style: {
         color: "#32347b",
         fontSize: 10 * dpr * zoom,
@@ -542,26 +678,37 @@ class DetailBubble extends Phaser.GameObjects.Container {
       }
     }, false);
 
-    this.mSource = this.scene.make.text({
-      x: 8 * dpr,
-      y: 38 * dpr,
-      text: "可通过商城购物获得",
-      style: {
-        fontSize: 10 * dpr * zoom,
-        fontFamily: Font.DEFULT_FONT,
-      }
-    }, false);
-    this.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource]);
+    this.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource, this.mPriceText]);
     this.setSize(bubbleW, bubbleH);
   }
 
   setProp(prop: op_client.ICountablePackageItem): this {
     this.mNickName.setText(prop.shortName || prop.name);
-    this.mDesText.setText(prop.des);
+    let posY = 9 * this.dpr;
+    const offsetY = 21 * this.dpr;
+    // this.mDesText.setText(prop.des);
+    if (prop["price"]) {
+      posY += offsetY;
+      this.mPriceText.y = posY;
+      this.mPriceText.setText(`可售卖：${prop["price"]}`);
+    } else {
+      posY += offsetY;
+      this.mPriceText.y = posY;
+      this.mPriceText.setText(`不可交易`);
+    }
     if (prop.source) {
       this.mSource.setText(`来源： ${prop.source}`);
+      posY += offsetY;
+      this.mSource.y = posY;
     } else {
       this.mSource.setText("");
+    }
+    if (prop.des) {
+      posY += offsetY;
+      this.mDesText.setText(prop.des);
+      this.mDesText.y = posY;
+    } else {
+      this.mDesText.setText("");
     }
     this.resize();
     return this;
@@ -599,7 +746,7 @@ class Item extends Phaser.GameObjects.Container {
 
     this.mCounter = scene.make.text({
       x: background.width - 4 * dpr,
-      y: background.height - 4 * dpr,
+      y: background.height + 8 * dpr,
       style: {
         fontSize: 12 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
@@ -643,4 +790,128 @@ class Item extends Phaser.GameObjects.Container {
   private onSelectedHandler() {
     this.emit("select", this.mProp);
   }
+}
+// this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
+//   top: 40,
+//   bottom: 40
+// });
+class ItemsPopPanel extends Phaser.GameObjects.Container {
+  public itemCount: number = 1;
+  private itemName: Phaser.GameObjects.Text;
+  private icon: DynamicImage;
+  private pricText: Phaser.GameObjects.Text;
+  private minusBtn: Button;
+  private addBtn: Button;
+  private itemCountText: Phaser.GameObjects.Text;
+  private itemData: op_client.ICountablePackageItem;
+
+  constructor(scene: Phaser.Scene, x: number, y: number, key: string, commonKey: string, dpr: number, zoom: number = 1) {
+    super(scene, x, y);
+    const bg = new NinePatch(this.scene, 0, 0, 285 * dpr * zoom, 330 * dpr * zoom, commonKey, "bg", {
+      top: 40,
+      bottom: 40
+    });
+    const posY = -bg.height * 0.5 * zoom;
+    const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "titlebg" });
+    const titleName = scene.make.text({
+      x: 0,
+      y: posY,
+      style: {
+        color: "#8F4300",
+        fontSize: 15 * dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0.5);
+    this.itemName = scene.make.text({
+      x: 0,
+      y: posY + 40 * dpr * zoom,
+      style: {
+        color: "#000000",
+        fontSize: 15 * dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0.5);
+    const iconOffset: number = -51 * dpr * zoom;
+    const iconBg = this.scene.make.image({ x: 0, y: iconOffset, key, frame: "titlebg" });
+    this.icon = new DynamicImage(this.scene, 0, iconOffset);
+    const priceOffset: number = 23 * dpr * zoom;
+    const priceBg = this.scene.make.image({ x: 0, y: priceOffset, key, frame: "titlebg" });
+    this.pricText = scene.make.text({
+      x: 0,
+      y: priceOffset,
+      style: {
+        color: "#FFFFFF",
+        fontSize: 15 * dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0.5);
+    const countOffsetY = 65 * dpr * zoom;
+    const countOffsetX = -58 * dpr * zoom;
+    const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key, frame: "titlebg" });
+    this.itemCountText = scene.make.text({
+      x: 0,
+      y: countOffsetY,
+      style: {
+        color: "#FFFFFF",
+        fontSize: 15 * dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }, false).setOrigin(0.5);
+    const minusBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down");
+    const addBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down");
+    minusBtn.x = countOffsetX; minusBtn.y = countOffsetY;
+    addBtn.x = -countOffsetX; addBtn.y = countOffsetY;
+    const cancelBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down", "取消");
+    const confirmBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down", "确定");
+    cancelBtn.setTextColor("#FFFFFF");
+    confirmBtn.setTextColor("#FFFFFF");
+
+    const bottomOffsetY = bg.height * 0.5 - 30.5 * dpr * zoom;
+    const bottomOffsetX = -65.5 * dpr * zoom;
+    cancelBtn.x = bottomOffsetX; cancelBtn.y = bottomOffsetX;
+    confirmBtn.x = -bottomOffsetX; confirmBtn.y = bottomOffsetY;
+    this.add([bg, titlebg, titleName, this.itemName, iconBg, this.icon, priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
+    minusBtn.on("click", this.onMinusBtnHandler, this);
+    addBtn.on("click", this.onAddBtnHandler, this);
+    cancelBtn.on("click", this.onCancelBtnHandler, this);
+    confirmBtn.on("click", this.onConfirmBtnHandler, this);
+  }
+
+  public setProp(prop: op_client.ICountablePackageItem) {
+    this.itemData = prop;
+    this.icon.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+    this.itemName.text = prop.name || prop.shortName;
+    this.pricText.text = prop["price"] * this.itemCount + "  银币";
+  }
+
+  private onMinusBtnHandler() {
+    if (this.itemCount === 1) return;
+    this.itemCount--;
+    this.itemCountText.text = this.itemCount + "";
+    this.pricText.text = this.itemData["price"] * this.itemCount + "  银币";
+  }
+
+  private onAddBtnHandler() {
+    if (this.itemCount === this.itemData.count) return;
+    this.itemCount++;
+    this.itemCountText.text = this.itemCount + "";
+    this.pricText.text = this.itemData["price"] * this.itemCount + "  银币";
+  }
+
+  private onCancelBtnHandler() {
+    this.visible = false;
+  }
+
+  private onConfirmBtnHandler() {
+
+  }
+  private onPropLoadCompleteHandler() {
+    if (this.icon && this.icon.texture) {
+      const texture = this.icon.texture;
+      if (texture) {
+        texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+      }
+    }
+  }
+
 }

@@ -71,7 +71,7 @@ export class FurniBagMediator extends BaseMediator {
         this.destroy();
     }
 
-    private onPackageCategoryHandler(subcategory: op_def.IStrMap[]) {
+    private onPackageCategoryHandler(subcategory: op_def.IStrPair[]) {
         if (!this.mView) {
             return;
         }
@@ -82,9 +82,9 @@ export class FurniBagMediator extends BaseMediator {
         this.mView.setSelectedResource(content);
     }
 
-    private onGetCategoriesHandler() {
+    private onGetCategoriesHandler(categoryType: number) {
         if (this.mFurniBag) {
-            this.mFurniBag.getCategories();
+            this.mFurniBag.getCategories(categoryType);
         }
     }
 

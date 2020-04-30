@@ -21,6 +21,8 @@
   },
   "furni_bag": {
     "add": "Add",
-    "furni": "Furniture"
+    "furni": "Furniture",
+    "Props":"Prop",
+    "decorate":"Decorations"
   }
 }
