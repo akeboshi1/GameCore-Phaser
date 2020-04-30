@@ -22,7 +22,13 @@
   "furni_bag": {
     "add": "Add",
     "furni": "Furniture",
-    "Props":"Prop",
-    "decorate":"Decorations"
+    "Props": "Prop",
+    "decorate": "Decorations",
+    "sold": "Sold",
+    "use": "Use"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }

@@ -75,19 +75,34 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
 
     public changeNormal() {
         const frame = this.mFrame ? this.mFrame : this.mKey;
-        this.setFrame(`${frame}_normal`);
+        const normal = `${frame}_normal`;
+        this.setFrame(normal);
     }
 
     public changeDown() {
         // this.scale = 0.9;
         const frame = this.mFrame ? this.mFrame : this.mKey;
-        this.setFrame(`${frame}_down`);
+        let down = `${frame}_down`;
+        if (!this.isExists(down)) {
+            down = `${frame}_normal`;
+        }
+        this.setFrame(down);
     }
 
     protected changeOver() {
         // this.setTexture()
         const frame = this.mFrame ? this.mFrame : this.mKey;
-        this.setFrame(`${frame}_over`);
+        let over = `${frame}_over`;
+        if (!this.isExists(over)) {
+            over = `${frame}_normal`;
+        }
+        this.setFrame(over);
+    }
+
+    protected isExists(frame: string) {
+        const originTexture = this.scene.textures.get(this.mKey);
+        if (originTexture && originTexture.has(frame)) return true;
+        return false;
     }
 
     protected onPointerDown(pointer) {

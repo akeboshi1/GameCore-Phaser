@@ -4,6 +4,7 @@ import { Url } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { NinePatch } from "../components/nine.patch";
 export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -214,7 +215,12 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private createBtn() {
         this.unlockCondition = this.scene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.unlockbtn = this.scene.make.container(undefined, false);
-        const btnBg = this.scene.make.image({ x: 0, y: 0, key: this.commonKey, frame: "button" });
+        const btnBg = new NinePatch(this.scene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", {
+            left: 12 * this.dpr * this.zoom,
+            top: 12 * this.dpr * this.zoom,
+            right: 12 * this.dpr * this.zoom,
+            bottom: 12 * this.dpr * this.zoom
+        });
         this.diamondIcon = this.scene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
         this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
@@ -257,7 +263,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     public setItemData(data: op_client.IMiningEquipment, index: number) {
         this.itemData = data;
         this.index = index;
-        const url = Url.getOsdRes(data.display.texturePath);// "resources/test/test_equip.png";// Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.display.texturePath);// "resources/test/test_equip";// Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
             // this.equipIcon.setDisplaySize(22 * this.dpr * this.zoom, 22 * this.dpr * this.zoom);
             const x = - this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;

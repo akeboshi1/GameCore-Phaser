@@ -14,7 +14,6 @@ import { InputPanel } from "../components/input.panel";
 import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { NinePatch } from "../components/nine.patch";
-import { DropType } from "../bag/bagView/bagMediator";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -38,7 +37,7 @@ export class FurniBagPanel extends BasePanel {
   private mCategoryScroll: GameScroller;
   private sellBtn: NinePatchButton;
   private useBtn: NinePatchButton;
-  private arrangeBtn: NinePatchButton;
+  private topBtns: Button[] = [];
 
   private mDetailBubble: DetailBubble;
   private itemPopPanel: ItemsPopPanel;
@@ -76,7 +75,7 @@ export class FurniBagPanel extends BasePanel {
     this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
 
     this.mBg.x = width / 2;
-    this.mBg.y = this.mBg.displayHeight / 2 + 48 * this.dpr * zoom;
+    this.mBg.y = this.mBg.displayHeight / 2 + 10 * this.dpr * zoom;
 
     //  this.mTiltle.x = width / 2;
 
@@ -148,7 +147,6 @@ export class FurniBagPanel extends BasePanel {
     this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
     this.sellBtn.on("pointerup", this.onSellBtnHandler, this);
     this.useBtn.on("pointerup", this.onUseBtnHandler, this);
-    this.arrangeBtn.on("pointerup", this.onArrangeBtnHandler, this);
   }
 
   public removeListen() {
@@ -158,7 +156,6 @@ export class FurniBagPanel extends BasePanel {
     this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
     this.sellBtn.off("pointerup", this.onSellBtnHandler, this);
     this.useBtn.off("pointerup", this.onUseBtnHandler, this);
-    this.arrangeBtn.off("pointerup", this.onArrangeBtnHandler, this);
   }
 
   destroy() {
@@ -185,7 +182,7 @@ export class FurniBagPanel extends BasePanel {
 
     this.mBg = this.scene.make.image({
       key: this.key,
-      frame: "bg.png"
+      frame: "bg"
     }, false).setScale(zoom);
 
     this.mShelfContainer = this.scene.make.container(undefined, false);
@@ -197,71 +194,55 @@ export class FurniBagPanel extends BasePanel {
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
-
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
-      frame: "back_arrow.png",
+      frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
     }).setScale(zoom).setInteractive();
-
-    const frame = this.scene.textures.getFrame(this.key, "yellow_btn_normal");
-    this.mAdd = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
-      left: 14 * this.dpr,
-      top: 14 * this.dpr,
-      right: frame.width - 2 - 14 * this.dpr,
-      bottom: frame.height - 2 - 14 * this.dpr
+    const btnPosX = width * 0.5;
+    const btnPosY = height * 0.5 - 25 * this.dpr * zoom;
+    this.mAdd = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), {
+      left: 12 * this.dpr * zoom,
+      top: 12 * this.dpr * zoom,
+      right: 12 * this.dpr * zoom,
+      bottom: 12 * this.dpr * zoom
     });
     this.mAdd.setTextStyle({
-      color: "#976400",
+      color: "#996600",
       fontSize: 16 * this.dpr * zoom,
       fontFamily: Font.DEFULT_FONT
     });
     this.mAdd.setFontStyle("bold");
-    // this.mAdd.on("pointerup", this.onBuyHandler, this);
 
-    this.sellBtn = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
-      left: 14 * this.dpr,
-      top: 14 * this.dpr,
-      right: frame.width - 2 - 14 * this.dpr,
-      bottom: frame.height - 2 - 14 * this.dpr
+    this.sellBtn = new NinePatchButton(this.scene, btnPosX, btnPosY, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), {
+      left: 12 * this.dpr * zoom,
+      top: 12 * this.dpr * zoom,
+      right: 12 * this.dpr * zoom,
+      bottom: 12 * this.dpr * zoom
     });
     this.sellBtn.setTextStyle({
-      color: "#976400",
+      color: "#FFFFFF",
       fontSize: 16 * this.dpr * zoom,
       fontFamily: Font.DEFULT_FONT
     });
     this.sellBtn.setFontStyle("bold");
 
-    this.useBtn = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
-      left: 14 * this.dpr,
-      top: 14 * this.dpr,
-      right: frame.width - 2 - 14 * this.dpr,
-      bottom: frame.height - 2 - 14 * this.dpr
+    this.useBtn = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), {
+      left: 12 * this.dpr * zoom,
+      top: 12 * this.dpr * zoom,
+      right: 12 * this.dpr * zoom,
+      bottom: 12 * this.dpr * zoom
     });
     this.useBtn.setTextStyle({
-      color: "#976400",
+      color: "#996600",
       fontSize: 16 * this.dpr * zoom,
       fontFamily: Font.DEFULT_FONT
     });
     this.useBtn.setFontStyle("bold");
 
-    this.arrangeBtn = new NinePatchButton(this.scene, 0, 0, 80 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "yellow_btn", i18n.t("furni_bag.add"), {
-      left: 14 * this.dpr,
-      top: 14 * this.dpr,
-      right: frame.width - 2 - 14 * this.dpr,
-      bottom: frame.height - 2 - 14 * this.dpr
-    });
-    this.arrangeBtn.setTextStyle({
-      color: "#976400",
-      fontSize: 16 * this.dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    this.arrangeBtn.setFontStyle("bold");
-    this.add([this.sellBtn, this.useBtn, this.arrangeBtn]);
-
     this.mDetailDisplay = new DetailDisplay(this.scene);
-    this.mDetailDisplay.setTexture(this.key, "ghost.png");
+    this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
 
@@ -273,6 +254,7 @@ export class FurniBagPanel extends BasePanel {
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
     this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
+    this.add([this.sellBtn, this.useBtn]);
     this.mShelfContainer.add([this.mCategoriesBar, this.mPropsContainer]);
     // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
@@ -281,9 +263,8 @@ export class FurniBagPanel extends BasePanel {
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
       this.add(this.mAdd);
     }
-
-    const topCapW = 56 * this.dpr * zoom;
-    const topCapH = 41 * this.dpr * zoom;
+    const topCapW = 67 * this.dpr * zoom;
+    const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
     const topStyle = {
       fontFamily: Font.DEFULT_FONT,
@@ -299,21 +280,20 @@ export class FurniBagPanel extends BasePanel {
       topBtnTexts.splice(index, 1);
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
-    const topBtns = [];
     for (const key in topCategorys) {
       const index = Number(key);
       const category = topCategorys[index];
-      const button = new Button(this.scene, this.key, "prop_bg.png", "yellow_btn_down", topBtnTexts[index]);
+      const button = new Button(this.scene, this.key, "tab_normal", "tab_down", topBtnTexts[index]);
       button.setTextStyle(topStyle);
       button.setData("data", category);
       button.setSize(topCapW, topCapH);
       button.y = topPosY;
       button.x = topPosX + topCapW * index;
-      topBtns.push(button);
+      this.topBtns.push(button);
     }
-    this.topCheckBox.appendItemAll(topBtns);
+    this.topCheckBox.appendItemAll(this.topBtns);
     this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
-    this.add(topBtns);
+    this.add(this.topBtns);
     if (this.mEnableEdit) {
       const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
       this.topCheckBox.selectIndex(index);
@@ -342,7 +322,7 @@ export class FurniBagPanel extends BasePanel {
       }
     });
 
-    const propFrame = this.scene.textures.getFrame(this.key, "prop_bg.png");
+    const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
     this.mPropGrid = new GridTable(this.scene, {
@@ -474,6 +454,54 @@ export class FurniBagPanel extends BasePanel {
     const categoryType = item.getData("data");
     if (categoryType) {
       this.onSelectedCategory(categoryType);
+      if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
+        this.sellBtn.visible = false;
+        this.useBtn.visible = false;
+        this.mAdd.visible = true;
+      } else {
+        this.sellBtn.visible = true;
+        this.useBtn.visible = true;
+        this.mAdd.visible = false;
+      }
+    }
+    this.layoutTopBtn(item);
+  }
+
+  private layoutTopBtn(button: Button) {
+    const width = this.scene.cameras.main.width;
+    const zoom = this.mWorld.uiScaleNew;
+    const normalWidth = 67 * this.dpr * zoom;
+    const normalHeight = 30 * this.dpr * zoom;
+    const selectWidth = 104 * this.dpr * zoom;
+    const selectHeight = 38 * this.dpr * zoom;
+    const allRadiu = ((this.topBtns.length - 1) * (normalWidth) + selectWidth) / 2;
+    let offsetX: number = width * 0.5 - allRadiu;
+
+    for (const btn of this.topBtns) {
+      let radiu = 0;
+      let posY = 0;
+      if (btn !== button) {
+        btn.setSize(normalWidth, normalHeight);
+        btn.setTextStyle({
+          fontFamily: Font.DEFULT_FONT,
+          fontSize: 12 * this.dpr * zoom,
+          color: "#2B4BB5"
+        });
+        radiu = normalWidth * 0.5;
+        posY = normalHeight * 0.5;
+      } else {
+        btn.setSize(selectWidth, selectHeight);
+        btn.setTextStyle({
+          fontFamily: Font.DEFULT_FONT,
+          fontSize: 16 * this.dpr * zoom,
+          color: "#8B5603"
+        });
+        radiu = selectWidth * 0.5;
+        posY = selectHeight * 0.5 + 1 * this.dpr * zoom;
+      }
+      btn.x = offsetX + radiu;
+      btn.y = posY;
+      offsetX += radiu * 2;
     }
   }
 
@@ -483,15 +511,23 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private onSellBtnHandler() {
-
+    this.popItemsPopPanle();
+    this.itemPopPanel.setProp(this.mSelectedItem, 0);
   }
 
   private onUseBtnHandler() {
-
+    this.popItemsPopPanle();
+    this.itemPopPanel.setProp(this.mSelectedItem, 1);
   }
 
-  private onArrangeBtnHandler() {
-
+  private popItemsPopPanle() {
+    const zoom = this.mWorld.uiScaleNew;
+    const width = this.scene.cameras.main.width;
+    const height = this.scene.cameras.main.height;
+    if (!this.itemPopPanel) {
+      this.itemPopPanel = new ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
+    }
+    this.add(this.itemPopPanel);
   }
 
   private showSeach(parent: TextButton) {
@@ -550,7 +586,7 @@ class SeachInput extends Phaser.GameObjects.Container {
 
     const bg = scene.make.image({
       key,
-      frame: "seach_bg.png"
+      frame: "seach_bg"
     }, false).setOrigin(0, 0.5);
 
     // this.mLabelInput = new LabelInput(this.scene, {
@@ -573,7 +609,7 @@ class SeachInput extends Phaser.GameObjects.Container {
 
     this.mSeachBtn = scene.make.image({
       key,
-      frame: "seach_normal.png"
+      frame: "seach_normal"
     }, false).setData("type", "seachBtn");
     this.mSeachBtn.x = bg.displayWidth - this.mSeachBtn.width / 2 - 4 * dpr,
       this.add([bg, this.mLabelInput, this.mSeachBtn]);
@@ -738,7 +774,7 @@ class Item extends Phaser.GameObjects.Container {
 
     const background = scene.make.image({
       key,
-      frame: "prop_bg.png"
+      frame: "prop_bg"
     }, false).setOrigin(0).setScale(zoom);
 
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
@@ -791,37 +827,42 @@ class Item extends Phaser.GameObjects.Container {
     this.emit("select", this.mProp);
   }
 }
-// this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
-//   top: 40,
-//   bottom: 40
-// });
+
 class ItemsPopPanel extends Phaser.GameObjects.Container {
   public itemCount: number = 1;
   private itemName: Phaser.GameObjects.Text;
+  private titleName: Phaser.GameObjects.Text;
   private icon: DynamicImage;
   private pricText: Phaser.GameObjects.Text;
-  private minusBtn: Button;
-  private addBtn: Button;
   private itemCountText: Phaser.GameObjects.Text;
   private itemData: op_client.ICountablePackageItem;
+  private popState: number = 0;  // 0 卖出 1 使用
+  private blackBg: Phaser.GameObjects.Graphics;
 
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, commonKey: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
-    const bg = new NinePatch(this.scene, 0, 0, 285 * dpr * zoom, 330 * dpr * zoom, commonKey, "bg", {
+    const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", {
       top: 40,
       bottom: 40
     });
-    const posY = -bg.height * 0.5 * zoom;
-    const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "titlebg" });
-    const titleName = scene.make.text({
+    this.blackBg = this.scene.make.graphics(undefined, false);
+    this.blackBg.clear();
+    this.blackBg.fillStyle(0, 0.5);
+    this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
+    this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
+    const posY = -bg.height * 0.5 + 3 * dpr * zoom;
+    const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "title" });
+    this.titleName = scene.make.text({
       x: 0,
-      y: posY,
+      y: posY + 3 * dpr * zoom,
+      text: "售出",
       style: {
-        color: "#8F4300",
+        color: "#905B06",
         fontSize: 15 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
+    this.titleName.setFontStyle("bold");
     this.itemName = scene.make.text({
       x: 0,
       y: posY + 40 * dpr * zoom,
@@ -831,11 +872,12 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
-    const iconOffset: number = -51 * dpr * zoom;
-    const iconBg = this.scene.make.image({ x: 0, y: iconOffset, key, frame: "titlebg" });
+    const iconOffset: number = -56 * dpr * zoom;
+    const iconBg = this.scene.make.image({ x: 0, y: iconOffset, key, frame: "sell_bg" });
     this.icon = new DynamicImage(this.scene, 0, iconOffset);
-    const priceOffset: number = 23 * dpr * zoom;
-    const priceBg = this.scene.make.image({ x: 0, y: priceOffset, key, frame: "titlebg" });
+    this.icon.scale = dpr * zoom;
+    const priceOffset: number = 10 * dpr * zoom;
+    const priceBg = this.scene.make.image({ x: 0, y: priceOffset, key: commonKey, frame: "price_bg" });
     this.pricText = scene.make.text({
       x: 0,
       y: priceOffset,
@@ -845,65 +887,92 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
-    const countOffsetY = 65 * dpr * zoom;
+    const countOffsetY = 50 * dpr * zoom;
     const countOffsetX = -58 * dpr * zoom;
-    const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key, frame: "titlebg" });
+    const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
     this.itemCountText = scene.make.text({
       x: 0,
       y: countOffsetY,
       style: {
-        color: "#FFFFFF",
+        color: "#0771AC",
         fontSize: 15 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
-    const minusBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down");
-    const addBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down");
+    const minusBtn = new Button(this.scene, commonKey, "reduce", "reduce");
+    const addBtn = new Button(this.scene, commonKey, "increase", "increase");
     minusBtn.x = countOffsetX; minusBtn.y = countOffsetY;
     addBtn.x = -countOffsetX; addBtn.y = countOffsetY;
-    const cancelBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down", "取消");
-    const confirmBtn = new Button(this.scene, key, "prop_bg.png", "yellow_btn_down", "确定");
-    cancelBtn.setTextColor("#FFFFFF");
-    confirmBtn.setTextColor("#FFFFFF");
 
-    const bottomOffsetY = bg.height * 0.5 - 30.5 * dpr * zoom;
-    const bottomOffsetX = -65.5 * dpr * zoom;
-    cancelBtn.x = bottomOffsetX; cancelBtn.y = bottomOffsetX;
-    confirmBtn.x = -bottomOffsetX; confirmBtn.y = bottomOffsetY;
-    this.add([bg, titlebg, titleName, this.itemName, iconBg, this.icon, priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
+    const bottomOffsetY = bg.height * 0.5 - 50 * dpr * zoom;
+    const bottomOffsetX = -66 * dpr * zoom;
+    const cancelBtn = new NinePatchButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n.t("common.cancel"), {
+      left: 12 * dpr * zoom,
+      top: 12 * dpr * zoom,
+      right: 12 * dpr * zoom,
+      bottom: 12 * dpr * zoom
+    });
+    const confirmBtn = new NinePatchButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n.t("common.confirm"), {
+      left: 12 * dpr * zoom,
+      top: 12 * dpr * zoom,
+      right: 12 * dpr * zoom,
+      bottom: 12 * dpr * zoom
+    });
+    cancelBtn.setTextStyle({
+      color: "#FFFFFF",
+      fontSize: 16 * dpr * zoom,
+      fontFamily: Font.DEFULT_FONT
+    });
+    confirmBtn.setTextStyle({
+      color: "#976400",
+      fontSize: 16 * dpr * zoom,
+      fontFamily: Font.DEFULT_FONT
+    });
+    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
     minusBtn.on("click", this.onMinusBtnHandler, this);
     addBtn.on("click", this.onAddBtnHandler, this);
     cancelBtn.on("click", this.onCancelBtnHandler, this);
     confirmBtn.on("click", this.onConfirmBtnHandler, this);
   }
 
-  public setProp(prop: op_client.ICountablePackageItem) {
+  public setProp(prop: op_client.ICountablePackageItem, stated: number) {
     this.itemData = prop;
     this.icon.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     this.itemName.text = prop.name || prop.shortName;
     this.pricText.text = prop["price"] * this.itemCount + "  银币";
+    this.itemCountText.text = this.itemCount + "";
+    this.popState = stated;
+    if (stated === 0) {
+      this.titleName.text = i18n.t("furni_bag.sold");
+    } else {
+      this.titleName.text = i18n.t("furni_bag.use");
+    }
+
   }
 
   private onMinusBtnHandler() {
     if (this.itemCount === 1) return;
     this.itemCount--;
-    this.itemCountText.text = this.itemCount + "";
-    this.pricText.text = this.itemData["price"] * this.itemCount + "  银币";
+    this.updateData();
   }
 
   private onAddBtnHandler() {
     if (this.itemCount === this.itemData.count) return;
     this.itemCount++;
+    this.updateData();
+  }
+
+  private updateData() {
     this.itemCountText.text = this.itemCount + "";
     this.pricText.text = this.itemData["price"] * this.itemCount + "  银币";
   }
 
   private onCancelBtnHandler() {
-    this.visible = false;
+    if (this.parentContainer) this.parentContainer.remove(this);
   }
 
   private onConfirmBtnHandler() {
-
+    if (this.parentContainer) this.parentContainer.remove(this);
   }
   private onPropLoadCompleteHandler() {
     if (this.icon && this.icon.texture) {
