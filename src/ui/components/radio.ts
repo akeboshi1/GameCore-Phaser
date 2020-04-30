@@ -1,7 +1,7 @@
 import { ISelectCallItemData, ISelectCallUI } from "./comboBox";
 import { NinePatch } from "./nine.patch";
 import { Background } from "../../utils/resUtil";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 export interface IRadioResConfig {
     wid: number;
     hei: number;

@@ -2,7 +2,7 @@ import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { op_client } from "pixelpai_proto";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url, Border, Background, BlueButton } from "../../utils/resUtil";

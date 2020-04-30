@@ -1,17 +1,17 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
-import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { NinePatch } from "../components/nine.patch";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
     private confirmBtn: NinePatchButton;
-    private mPropGrid: GridTable;
-    private mPropContainer: Phaser.GameObjects.Container;
+    private mPropGrid: GameGridTable;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.setInteractive();
@@ -21,11 +21,7 @@ export class MineSettlePanel extends BasePanel {
         super.resize(width, height);
         this.x = width / 2;
         this.y = height / 2;
-        this.mPropGrid.x = this.x;
-        this.mPropGrid.y = this.y - 30 * this.dpr;
-        this.mPropGrid.layout();
-        this.mPropContainer.x = - this.mPropGrid.x + 8 * this.dpr;
-        this.mPropContainer.y = -this.mPropGrid.y; // + 8 * this.dpr;
+        this.mPropGrid.refreshPos(this.x, this.y - 30 * this.dpr, -this.x + 16 * this.dpr, -this.y + 30 * this.dpr);
         this.setSize(width, height);
     }
 
@@ -65,17 +61,17 @@ export class MineSettlePanel extends BasePanel {
             x: 0, y: -158 * this.dpr, text: "获得物品",
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
-        this.mPropContainer = this.scene.make.container(undefined, false);
-        this.mPropContainer.setSize(300 * this.dpr, 210 * this.dpr);
+        // this.mPropContainer = this.scene.make.container(undefined, false);
+        // this.mPropContainer.setSize(300 * this.dpr, 210 * this.dpr);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
         const capW = (propFrame.width + 20 * this.dpr);
         const capH = (propFrame.height + 30 * this.dpr);
-        this.mPropGrid = new GridTable(this.scene, {
+        const config: GridTableConfig = {
             x: 0,
             y: 0,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
-                width: 260 * this.dpr,
+                width: 300 * this.dpr,
                 height: 210 * this.dpr,
                 columns: 5,
                 cellWidth: capW,
@@ -86,17 +82,17 @@ export class MineSettlePanel extends BasePanel {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new MineSettleItem(scene, this.dpr);
-                    this.mPropContainer.add(cellContainer);
+                    this.mPropGrid.cellParentCon.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
 
                 return cellContainer;
             },
-        });
-
+        };
+        this.mPropGrid = new GameGridTable(this.scene, config);
         this.mPropGrid.layout();
-        this.mPropGrid.on("cell.1tap", (cell) => {
+        this.mPropGrid.on("cellTap", (cell) => {
             const data = cell.itemData;
             if (data) {
                 this.onSelectItemHandler(data);
@@ -113,9 +109,9 @@ export class MineSettlePanel extends BasePanel {
             fontSize: 16 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        this.add([bg, topline, bottomline, titleimage, tilteName, this.confirmBtn, this.mPropContainer]);
-        super.init();
+        this.add([bg, topline, bottomline, titleimage, tilteName, this.confirmBtn, this.mPropGrid.cellParentCon]);
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+        super.init();
         // this.setMineSettlePacket(this.testData());
     }
 

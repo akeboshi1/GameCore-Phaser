@@ -4,7 +4,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { Url, Border, BlueButton } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
 import { NinePatch } from "../components/nine.patch";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { op_client } from "pixelpai_proto";
 export class MessageBoxView extends BasePanel {
     private mTxt: BBCodeText;
