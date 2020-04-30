@@ -1,7 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
 

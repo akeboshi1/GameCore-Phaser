@@ -43,6 +43,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mView.on("queryPropResource", this.onQueryPropResourceHandler, this);
             this.mView.on("seachPackage", this.onSeachPackageHandler, this);
             this.mView.on("addFurniToScene", this.onAddFurniHandler, this);
+            this.mView.on("sellProps", this.onSellPropsHandler, this);
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView.view);
@@ -80,9 +81,9 @@ export class FurniBagMediator extends BaseMediator {
         this.mView.setSelectedResource(content);
     }
 
-    private onGetCategoriesHandler() {
+    private onGetCategoriesHandler(categoryType: number) {
         if (this.mFurniBag) {
-            this.mFurniBag.getCategories();
+            this.mFurniBag.getCategories(categoryType);
         }
     }
 
@@ -109,5 +110,9 @@ export class FurniBagMediator extends BaseMediator {
             this.mFurniBag.addFurniToScene(id);
         }
         this.destroy();
+    }
+
+    private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
+        this.mFurniBag.sellProps(prop, count, category);
     }
 }
