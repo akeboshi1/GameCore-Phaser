@@ -57,6 +57,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_FOLLOW, this.onMouseFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE, this.onMouseFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FETCH_SPRITE, this.onFetchSpriteHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FETCH_SCENERY, this.onFetchSceneryHandler);
         }
     }
 
@@ -282,23 +283,10 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.moveCameras(pointer);
                 break;
             case BrushEnum.SELECT:
-                if (!this.mSelectedElementEffect) {
-                    return;
+                if (this.editorSkyboxManager) {
+                    this.editorSkyboxManager.move(pointer);
                 }
-                if (!this.mSelectedElementEffect.selecting) {
-                    return;
-                }
-                if (!this.mouseFollow) {
-                    return;
-                }
-                const pos = this.mMouseFollow.transitionGrid(
-                    pointer.worldX / this.mScaleRatio,
-                    pointer.worldY / this.mScaleRatio
-                );
-                if (pos) {
-                    this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
-                    this.mLayManager.depthSurfaceDirty = true;
-                }
+                this.moveElement(pointer);
                 break;
             case BrushEnum.ERASER:
                 this.eraserTerrains();
@@ -381,6 +369,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             }
             this.mMouseFollow.showEraserArea();
         }
+        if (this.editorSkyboxManager) {
+            this.editorSkyboxManager.removeSelect();
+        }
 
         this.layerManager.setSurfaceInteractive(this.mBrush.mode !== BrushEnum.ERASER);
     }
@@ -420,10 +411,6 @@ export class EditorRoom extends Room implements EditorRoomService {
                 this.selectedElement(displayObj.getDisplay());
             }
         }
-
-        if (this.editorSkyboxManager) {
-            this.editorSkyboxManager.removeSelect();
-        }
     }
 
     private sendFetch(ids: number[], nodetype: op_def.NodeType, isMoss?: boolean) {
@@ -437,6 +424,18 @@ export class EditorRoom extends Room implements EditorRoomService {
         content.nodeType = nodetype;
         this.connection.send(pkt);
         Logger.getInstance().log("fetch sprite", content);
+    }
+
+    private onFetchSceneryHandler(packet: PBpacket) {
+        if (this.mSelectedElementEffect) {
+            this.mSelectedElementEffect.destroy();
+            this.mSelectedElementEffect = null;
+        }
+        if (!this.editorSkyboxManager) {
+            return;
+        }
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_FETCH_SCENERY = packet.content;
+        this.editorSkyboxManager.fetch(content.id);
     }
 
     private onGameobjectDownHandler(pointer, gameobject) {
@@ -462,12 +461,15 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.mSelectedElementEffect = new SelectedElement(this.mScene, this.layerManager);
         }
         this.mSelectedElementEffect.setElement(<FramesDisplay>com);
+        if (this.editorSkyboxManager) {
+            this.editorSkyboxManager.removeSelect();
+        }
         return com;
     }
 
     private onKeyDownHandler(event) {
         if (this.editorSkyboxManager) {
-            this.editorSkyboxManager.onMove(event.keyCode);
+            this.editorSkyboxManager.keyboardMove(event.keyCode);
         }
         if (!this.mSelectedElementEffect) {
             return;
@@ -481,16 +483,16 @@ export class EditorRoom extends Room implements EditorRoomService {
             case 87:
             case 83:
             case 68:
-                this.moveElement(event.keyCode);
+                this.keyboardMoveElement(event.keyCode);
                 break;
-            case 8:
-            case 46:
-                this.removeDisplay(this.mSelectedElementEffect);
-                break;
+            // case 8:
+            // case 46:
+            //     this.removeDisplay(this.mSelectedElementEffect);
+            //     break;
         }
     }
 
-    private moveElement(keyCode: number) {
+    private keyboardMoveElement(keyCode: number) {
         const display = this.mSelectedElementEffect.display;
         if (!display) {
             return;
@@ -513,6 +515,26 @@ export class EditorRoom extends Room implements EditorRoomService {
         display.setPosition(pos.x, pos.y, pos.z);
         // TOOD 通过统一接口设置depth
         this.layerManager.depthSurfaceDirty = true;
+    }
+
+    private moveElement(pointer: Phaser.Input.Pointer) {
+        if (!this.mSelectedElementEffect) {
+            return;
+        }
+        if (!this.mSelectedElementEffect.selecting) {
+            return;
+        }
+        if (!this.mouseFollow) {
+            return;
+        }
+        const pos = this.mMouseFollow.transitionGrid(
+            pointer.worldX / this.mScaleRatio,
+            pointer.worldY / this.mScaleRatio
+        );
+        if (pos) {
+            this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
+            this.mLayManager.depthSurfaceDirty = true;
+        }
     }
 
     get brush(): Brush {

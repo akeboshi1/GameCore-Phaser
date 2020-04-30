@@ -11,11 +11,7 @@ export class FurniBagMediator extends BaseMediator {
     private mFurniBag: FurniBag;
     private mScneType: op_def.SceneTypeEnum;
     private world: WorldService;
-    constructor(
-        private layerManager: ILayerManager,
-        scene: Phaser.Scene,
-        worldService: WorldService
-    ) {
+    constructor(private layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
         this.scene = this.layerManager.scene;
@@ -78,7 +74,9 @@ export class FurniBagMediator extends BaseMediator {
         this.mView.setCategories(subcategory);
     }
 
-    private onQueryCommodityResourceHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
+    private onQueryCommodityResourceHandler(
+        content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
+    ) {
         this.mView.setSelectedResource(content);
     }
 
