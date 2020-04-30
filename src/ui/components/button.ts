@@ -2,13 +2,13 @@ import { GameObjects } from "phaser";
 import { IButtonState } from "./interface/IButtonState";
 
 export class Button extends GameObjects.Container implements IButtonState {
-  private mBackground: Phaser.GameObjects.Image;
-  private mPressDelay = 1000;
-  private mPressTime: any;
-  private mKey: string;
-  private mFrame: string;
-  private mDownFrame: string;
-  private mText: Phaser.GameObjects.Text;
+  protected mBackground: Phaser.GameObjects.Image;
+  protected mPressDelay = 1000;
+  protected mPressTime: any;
+  protected mKey: string;
+  protected mFrame: string;
+  protected mDownFrame: string;
+  protected mText: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene, key: string, frame?: string, downFrame?: string, text?: string) {
     super(scene);

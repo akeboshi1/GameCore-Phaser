@@ -267,10 +267,7 @@ export class MarketPanel extends BasePanel {
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
-          width = cell.width,
-          height = cell.height,
-          item = cell.item,
-          index = cell.index;
+          item = cell.item;
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
