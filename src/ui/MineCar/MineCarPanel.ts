@@ -252,6 +252,7 @@ export class MineCarPanel extends BasePanel {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new CategorieButton(scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", "1");
+                    cellContainer.setScale(zoom);
                     cellContainer.setTextStyle({
                         fontFamily: Font.DEFULT_FONT,
                         fontSize: 10 * this.dpr * zoom,
@@ -300,7 +301,7 @@ export class MineCarPanel extends BasePanel {
 
         this.mDiscardBtn.changeState(DiscardEnum.Discard);
         this.mCounter.setText(`${mineItem.length}/${this.mLimit}`);
-        this.setCategories(minePackage.categories);
+        this.setCategories(minePackage.subcategories);
     }
 
     private onCloseHandler() {
@@ -355,7 +356,7 @@ export class MineCarPanel extends BasePanel {
         if (!this.mAllItem || this.mAllItem.length < 1) {
             return;
         }
-        for (const item of this.mAllItem) {
+        for (const item of this.mFilterItem) {
             if (item.selected) {
                 this.mDiscardBtn.changeState(DiscardEnum.Sutmit);
                 return;
