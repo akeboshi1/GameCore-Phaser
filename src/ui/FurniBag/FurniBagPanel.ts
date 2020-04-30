@@ -530,12 +530,14 @@ export class FurniBagPanel extends BasePanel {
 
   private onSellBtnHandler() {
     this.popItemsPopPanle();
-    this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
+    if (this.mSelectedItemData)
+      this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
   }
 
   private onUseBtnHandler() {
     this.popItemsPopPanle();
-    this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
+    if (this.mSelectedItemData)
+      this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
   }
 
   private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
