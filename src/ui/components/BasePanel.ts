@@ -30,6 +30,10 @@ export class BasePanel extends Panel {
 
     protected addResources(key: string, resource: any) {
         super.addResources(key, resource);
-        if (resource.data) this.scene.load.atlas(key, Url.getUIRes(resource.dpr, resource.texture), Url.getUIRes(resource.dpr, resource.data));
+        if (resource.type) {
+            if (this.scene.load[resource.type]) {
+                this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture), Url.getUIRes(resource.dpr, resource.data));
+            }
+        }
     }
 }
