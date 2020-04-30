@@ -14,6 +14,7 @@ import { InputPanel } from "../components/input.panel";
 import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { NinePatch } from "../components/nine.patch";
+import { Handler } from "../../Handler/Handler";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -30,7 +31,8 @@ export class FurniBagPanel extends BasePanel {
   private mAdd: NinePatchButton;
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
-  private mSelectedItem: op_client.ICountablePackageItem;
+  private mSelectedItemData: op_client.ICountablePackageItem;
+  private mSelectItem: Item;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: op_def.IStrPair;
   private mPropGrid: GridTable;
@@ -79,8 +81,14 @@ export class FurniBagPanel extends BasePanel {
 
     //  this.mTiltle.x = width / 2;
 
-    this.mAdd.x = width - this.mAdd.width / 2 - 20 * this.dpr;
+    this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
     this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr * zoom;
+
+    this.useBtn.x = this.mAdd.x;
+    this.useBtn.y = this.mAdd.y;
+
+    this.sellBtn.x = this.mAdd.x - this.sellBtn.width - 10 * this.dpr;
+    this.sellBtn.y = this.mAdd.y;
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
@@ -101,13 +109,15 @@ export class FurniBagPanel extends BasePanel {
     }
     this.mCategeoriesContainer.list.length = 0;
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW, 0);
+      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
       item.y = capH - item.text.height >> 1;
       item.setData("item", subcategorys[i]);
       this.mCategeoriesContainer.add(item);
       item.setSize(capW, capH);
       this.mCategoryScroll.setInteractiveObject(item);
       items[i] = item;
+      item.setFontSize(17 * this.dpr * zoom);
+      item.setFontStyle("bold");
     }
     if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
@@ -116,7 +126,8 @@ export class FurniBagPanel extends BasePanel {
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
-    this.mSelectedItem = null;
+    this.mSelectedItemData = null;
+    this.mSelectItem = null;
     if (!props) {
       return;
     }
@@ -127,7 +138,7 @@ export class FurniBagPanel extends BasePanel {
 
     this.mPropGrid.setItems(props);
 
-    this.setSelectedItem(props[0]);
+    // this.setSelectedItem(props[0]);
   }
 
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
@@ -200,9 +211,11 @@ export class FurniBagPanel extends BasePanel {
       x: 21 * this.dpr,
       y: 30 * this.dpr
     }).setScale(zoom).setInteractive();
-    const btnPosX = width * 0.5;
-    const btnPosY = height * 0.5 - 25 * this.dpr * zoom;
-    this.mAdd = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), {
+    const btnwidth = 90 * this.dpr * zoom;
+    const btnHeight = 40 * this.dpr * zoom;
+    const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
+    const btnPosY = this.mShelfContainer.y - 25 * this.dpr * zoom;
+    this.mAdd = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), {
       left: 12 * this.dpr * zoom,
       top: 12 * this.dpr * zoom,
       right: 12 * this.dpr * zoom,
@@ -215,7 +228,7 @@ export class FurniBagPanel extends BasePanel {
     });
     this.mAdd.setFontStyle("bold");
 
-    this.sellBtn = new NinePatchButton(this.scene, btnPosX, btnPosY, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), {
+    this.sellBtn = new NinePatchButton(this.scene, btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), {
       left: 12 * this.dpr * zoom,
       top: 12 * this.dpr * zoom,
       right: 12 * this.dpr * zoom,
@@ -228,7 +241,7 @@ export class FurniBagPanel extends BasePanel {
     });
     this.sellBtn.setFontStyle("bold");
 
-    this.useBtn = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), {
+    this.useBtn = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), {
       left: 12 * this.dpr * zoom,
       top: 12 * this.dpr * zoom,
       right: 12 * this.dpr * zoom,
@@ -287,6 +300,7 @@ export class FurniBagPanel extends BasePanel {
       button.setTextStyle(topStyle);
       button.setData("data", category);
       button.setSize(topCapW, topCapH);
+      button.setFontStyle("bold");
       button.y = topPosY;
       button.x = topPosX + topCapW * index;
       this.topBtns.push(button);
@@ -329,7 +343,7 @@ export class FurniBagPanel extends BasePanel {
       x: w / 2,
       y: 1050 + (41 * this.dpr * zoom) / 2,
       table: {
-        width: w - 20 * this.dpr * zoom,
+        width: w - 10 * this.dpr * zoom,
         height: 224 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
@@ -353,13 +367,15 @@ export class FurniBagPanel extends BasePanel {
         // if (!this.mPreCategoryBtn) {
         //   this.onSelectSubCategoryHandler(cellContainer);
         // }
+        if (this.mSelectItem === null) {
+          this.onSelectItemHandler(cellContainer);
+        }
         return cellContainer;
       },
     }).layout();
     this.mPropGrid.on("cell.1tap", (cell) => {
-      const item = cell.getData("item");
-      if (item) {
-        this.onSelectItemHandler(item);
+      if (cell) {
+        this.onSelectItemHandler(cell);
       }
     });
     // this.add(this.mPropGrid);
@@ -383,7 +399,7 @@ export class FurniBagPanel extends BasePanel {
     if (!prop) {
       return;
     }
-    this.mSelectedItem = prop;
+    this.mSelectedItemData = prop;
     const url = Url.getOsdRes(prop.display.texturePath);
     this.mDetailDisplay.loadUrl(url);
     this.emit("queryPropResource", prop);
@@ -433,8 +449,14 @@ export class FurniBagPanel extends BasePanel {
     this.emit("close");
   }
 
-  private onSelectItemHandler(prop: op_client.ICountablePackageItem) {
-    this.setSelectedItem(prop);
+  private onSelectItemHandler(cell: Item) {
+    const item: op_client.ICountablePackageItem = cell.getData("item");
+    if (item) {
+      if (this.mSelectItem) this.mSelectItem.isSelect = false;
+      this.mSelectItem = cell;
+      this.mSelectItem.isSelect = true;
+      this.setSelectedItem(item);
+    }
   }
 
   private onSeachHandler(val: string) {
@@ -444,10 +466,10 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private onAddFurniToSceneHandler() {
-    if (!this.mSelectedItem) {
+    if (!this.mSelectedItemData) {
       return;
     }
-    this.emit("addFurniToScene", this.mSelectedItem.id);
+    this.emit("addFurniToScene", this.mSelectedItemData.id);
   }
 
   private onTopCategoryHandler(item: Button) {
@@ -470,38 +492,34 @@ export class FurniBagPanel extends BasePanel {
   private layoutTopBtn(button: Button) {
     const width = this.scene.cameras.main.width;
     const zoom = this.mWorld.uiScaleNew;
-    const normalWidth = 67 * this.dpr * zoom;
-    const normalHeight = 30 * this.dpr * zoom;
-    const selectWidth = 104 * this.dpr * zoom;
-    const selectHeight = 38 * this.dpr * zoom;
-    const allRadiu = ((this.topBtns.length - 1) * (normalWidth) + selectWidth) / 2;
+    let allRadiu = 0;
+    for (const btn of this.topBtns) {
+      allRadiu += btn.width;
+    }
+    allRadiu /= 2;
     let offsetX: number = width * 0.5 - allRadiu;
 
     for (const btn of this.topBtns) {
-      let radiu = 0;
       let posY = 0;
       if (btn !== button) {
-        btn.setSize(normalWidth, normalHeight);
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
           fontSize: 12 * this.dpr * zoom,
           color: "#2B4BB5"
         });
-        radiu = normalWidth * 0.5;
-        posY = normalHeight * 0.5;
+        posY = btn.height * 0.5;
       } else {
-        btn.setSize(selectWidth, selectHeight);
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
           fontSize: 16 * this.dpr * zoom,
           color: "#8B5603"
         });
-        radiu = selectWidth * 0.5;
-        posY = selectHeight * 0.5 + 1 * this.dpr * zoom;
+        posY = btn.height * 0.5 + 2 * this.dpr * zoom;
       }
+      const radiu = btn.width * 0.5;
       btn.x = offsetX + radiu;
       btn.y = posY;
-      offsetX += radiu * 2;
+      offsetX += radiu * 2 + 4 * this.dpr * zoom;
     }
   }
 
@@ -512,12 +530,21 @@ export class FurniBagPanel extends BasePanel {
 
   private onSellBtnHandler() {
     this.popItemsPopPanle();
-    this.itemPopPanel.setProp(this.mSelectedItem, 0);
+    this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
   }
 
   private onUseBtnHandler() {
     this.popItemsPopPanle();
-    this.itemPopPanel.setProp(this.mSelectedItem, 1);
+    this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
+  }
+
+  private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
+
+    this.emit("sellProps", prop, count, category);
+  }
+
+  private onUsePropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
+
   }
 
   private popItemsPopPanle() {
@@ -556,13 +583,14 @@ export class FurniBagPanel extends BasePanel {
     const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
+    const offset = 10 * this.dpr * zoom;
     for (let i = 0; i < list.length; i++) {
       const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>list[i];
       if (i > 0) {
         preBtn = <Phaser.GameObjects.Container>list[i - 1];
         item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
       } else {
-        item.x = 0;
+        item.x = offset;
       }
     }
     const inputWid: number = inputBoo ? 200 * this.dpr * zoom : 0;
@@ -661,7 +689,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     super(scene);
     this.dpr = dpr;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
-    const bubbleW = 110 * dpr * zoom;
+    const bubbleW = 100 * dpr * zoom;
     const bubbleH = 96 * dpr * zoom;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
     this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
@@ -723,10 +751,10 @@ class DetailBubble extends Phaser.GameObjects.Container {
     let posY = 9 * this.dpr;
     const offsetY = 21 * this.dpr;
     // this.mDesText.setText(prop.des);
-    if (prop["price"]) {
+    if (prop.sellingPrice) {
       posY += offsetY;
       this.mPriceText.y = posY;
-      this.mPriceText.setText(`可售卖：${prop["price"]}`);
+      this.mPriceText.setText(`可售卖：${prop.sellingPrice.price}`);
     } else {
       posY += offsetY;
       this.mPriceText.y = posY;
@@ -766,30 +794,36 @@ class DetailBubble extends Phaser.GameObjects.Container {
 }
 
 class Item extends Phaser.GameObjects.Container {
+  private mProp: op_client.ICountablePackageItem;
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
-  private mProp: op_client.ICountablePackageItem;
+  private selectbg: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
 
     const background = scene.make.image({
       key,
-      frame: "prop_bg"
+      frame: "grid_bg"
     }, false).setOrigin(0).setScale(zoom);
+
+    this.selectbg = scene.make.image({
+      key,
+      frame: "grid_choose"
+    }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
 
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
     this.mPropImage.scale = dpr * zoom;
 
     this.mCounter = scene.make.text({
-      x: background.width - 4 * dpr,
-      y: background.height + 8 * dpr,
+      x: background.displayWidth - 4 * dpr,
+      y: background.displayHeight + 2 * dpr,
       style: {
         fontSize: 12 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
-    this.add([background]);
-
+    this.add([background, this.selectbg]);
+    this.isSelect = false;
     this.setSize(background.displayWidth, background.displayHeight);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.displayWidth, background.displayHeight), Phaser.Geom.Rectangle.Contains);
     // this.on("pointerup", this.onSelectedHandler, this);
@@ -797,6 +831,7 @@ class Item extends Phaser.GameObjects.Container {
 
   setProp(prop: op_client.ICountablePackageItem) {
     this.mProp = prop;
+    this.isSelect = false;
     if (!prop) {
       // this.mPropImage.setFrame("");
       this.mCounter.setText("");
@@ -823,6 +858,10 @@ class Item extends Phaser.GameObjects.Container {
     }
   }
 
+  public set isSelect(value) {
+    this.selectbg.visible = value;
+  }
+
   private onSelectedHandler() {
     this.emit("select", this.mProp);
   }
@@ -838,6 +877,8 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
   private itemData: op_client.ICountablePackageItem;
   private popState: number = 0;  // 0 卖出 1 使用
   private blackBg: Phaser.GameObjects.Graphics;
+  private handler: Handler;
+  private category: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, commonKey: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
@@ -935,11 +976,11 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     confirmBtn.on("click", this.onConfirmBtnHandler, this);
   }
 
-  public setProp(prop: op_client.ICountablePackageItem, stated: number) {
+  public setProp(prop: op_client.ICountablePackageItem, stated: number, category: number, handler: Handler) {
     this.itemData = prop;
     this.icon.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     this.itemName.text = prop.name || prop.shortName;
-    this.pricText.text = prop["price"] * this.itemCount + "  银币";
+    this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
     this.itemCountText.text = this.itemCount + "";
     this.popState = stated;
     if (stated === 0) {
@@ -947,7 +988,8 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     } else {
       this.titleName.text = i18n.t("furni_bag.use");
     }
-
+    this.handler = handler;
+    this.category = category;
   }
 
   private onMinusBtnHandler() {
@@ -973,6 +1015,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
 
   private onConfirmBtnHandler() {
     if (this.parentContainer) this.parentContainer.remove(this);
+    if (this.handler) this.handler.runWith([this.itemData, this.itemCount, this.category]);
   }
   private onPropLoadCompleteHandler() {
     if (this.icon && this.icon.texture) {

@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
-import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def, op_gameconfig } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
 
 export class FurniBag extends PacketHandler {
@@ -43,7 +43,7 @@ export class FurniBag extends PacketHandler {
   getCategories(categoryType: number) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PACKAGE_CATEGORIES);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
-    content.category =categoryType;// op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE;
+    content.category = categoryType;
     this.connection.send(packet);
     this.categoryType = categoryType;
   }
@@ -82,6 +82,15 @@ export class FurniBag extends PacketHandler {
 
   seachPackage(seach: string, category: string) {
     this.queryPackage(category, seach);
+  }
+
+  sellProps(prop: op_client.CountablePackageItem, count: number, category: number) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM = packet.content;
+    content.category = category;
+    content.items = [prop];
+    content.totalPrice = prop.sellingPrice;
+    this.connection.send(packet);
   }
 
   destroy() {

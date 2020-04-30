@@ -49,7 +49,7 @@ export class MineCar extends PacketHandler {
 
   private onQueryMinePackageHandler(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = packet.content;
-    if (content && content.categories) content.categories.unshift({key: "all", value: "全部"});
+    if (content && content.subcategories) content.subcategories.unshift({key: "all", value: "全部"});
     this.mEvent.emit("query", packet.content);
   }
 

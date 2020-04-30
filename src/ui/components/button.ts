@@ -35,11 +35,15 @@ export class Button extends GameObjects.Container implements IButtonState {
 
   changeNormal() {
     this.mBackground.setFrame(this.mFrame);
+    this.setSize(this.mBackground.width, this.mBackground.height);
+    this.mText.setSize(this.mBackground.width, this.mBackground.height);
   }
 
   changeDown() {
     if (this.mDownFrame) {
       this.mBackground.setFrame(this.mDownFrame);
+      this.setSize(this.mBackground.width, this.mBackground.height);
+      this.mText.setSize(this.mBackground.width, this.mBackground.height);
     }
   }
 

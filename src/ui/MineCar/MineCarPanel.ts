@@ -300,7 +300,7 @@ export class MineCarPanel extends BasePanel {
 
         this.mDiscardBtn.changeState(DiscardEnum.Discard);
         this.mCounter.setText(`${mineItem.length}/${this.mLimit}`);
-        this.setCategories(minePackage.categories);
+        this.setCategories(minePackage.subcategories);
     }
 
     private onCloseHandler() {
