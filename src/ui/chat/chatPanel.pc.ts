@@ -5,7 +5,7 @@ import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/Inpu
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Border, Url } from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { NinePatch } from "../components/nine.patch";
 import { BaseChatPanel } from "./base.chat.panel";
 

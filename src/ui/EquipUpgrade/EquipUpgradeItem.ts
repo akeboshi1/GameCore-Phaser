@@ -13,9 +13,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private equipName: Phaser.GameObjects.Text;
     private penetrationText: Phaser.GameObjects.Text;
     private gridTable: GameGridTable;
-    private mScrollContainer: Phaser.GameObjects.Container;
     private equipDes: Phaser.GameObjects.Text;
-
     private dpr: number;
     private key: string;
     private commonKey: string;
@@ -24,7 +22,6 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private btnName: Phaser.GameObjects.Text;
     private unlockCondition: Phaser.GameObjects.Text;
     private haveEquiped: boolean = false;
-
     private curEquipItem: EquipItemCell;
     private zoom: number;
     private cellWidth: number = 0;
@@ -51,7 +48,6 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         }
 
         this.gridTable.setItems(items);
-        this.gridTable.layout();
         if (this.haveEquiped)
             this.gridTable.setT((index + 1) / items.length);
         this.setBgTexture(data["isblue"]);
@@ -62,10 +58,11 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const w = this.scene.cameras.main.width, h = this.scene.cameras.main.height;
         const posX = w * 0.5 + this.x * this.zoom;
         const posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
-        this.gridTable.x = posX;
-        this.gridTable.y = posY;
-        this.gridTable.layout();
-        this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
+        this.gridTable.refreshPos(posX, posY, -posX + this.cellWidth / 2 * this.zoom, -posY);
+        // this.gridTable.x = posX;
+        // this.gridTable.y = posY;
+        // this.gridTable.layout();
+        // this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
     }
 
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
@@ -120,8 +117,8 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     private createGridTable() {
-        this.mScrollContainer = this.scene.make.container(undefined, false);
-        this.mScrollContainer.setPosition(0, 0);
+        // this.mScrollContainer = this.scene.make.container(undefined, false);
+        // this.mScrollContainer.setPosition(0, 0);
         const propFrame = this.scene.textures.getFrame(this.key, "equipbg");
         const capW = (propFrame.width + 10 * this.dpr * this.zoom);
         const capH = (propFrame.height + 30 * this.dpr * this.zoom);
@@ -144,7 +141,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 const index = cell.index;
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key, this.zoom);
-                    this.mScrollContainer.add(cellContainer);
+                    this.gridTable.cellParentCon.add(cellContainer);
                     cellContainer.setChildPosition();
                 }
                 cellContainer.setSize(capW, capH);
@@ -163,12 +160,11 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         };
         this.gridTable = new GameGridTable(this.scene, config);
         this.gridTable.layout();
-        this.gridTable.addListen();
         this.gridTable.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-
-        this.add(this.mScrollContainer);
+        this.gridTable.addListen();
+        this.add(this.gridTable.cellParentCon);
     }
 
     private onSelectItemHandler(cell: EquipItemCell) {

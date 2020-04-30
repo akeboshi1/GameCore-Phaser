@@ -8,9 +8,10 @@ import { op_client, op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
-import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 
 export class FurniBagPanel extends BasePanel {
     private key: string = "furni_bag";
@@ -29,7 +30,7 @@ export class FurniBagPanel extends BasePanel {
     private mSelectedFurni: op_client.ICountablePackageItem;
     private mPreCategoryBtn: TextButton;
     private mSelectedCategeories: op_def.IStrPair;
-    private mPropGrid: GridTable;
+    private mPropGrid: GameGridTable;
     private mCategoryScroll: GameScroller;
 
     private mDetailBubble: DetailBubble;
@@ -284,7 +285,7 @@ export class FurniBagPanel extends BasePanel {
         const propFrame = this.scene.textures.getFrame(this.key, "prop_bg.png");
         const capW = (propFrame.width + 10 * this.dpr) * zoom;
         const capH = (propFrame.height + 10 * this.dpr) * zoom;
-        this.mPropGrid = new GridTable(this.scene, {
+        const config: GridTableConfig = {
             x: w / 2,
             y: 1050 + (41 * this.dpr * zoom) / 2,
             table: {
@@ -314,8 +315,10 @@ export class FurniBagPanel extends BasePanel {
                 // }
                 return cellContainer;
             },
-        }).layout();
-        this.mPropGrid.on("cell.1tap", (cell) => {
+        };
+        this.mPropGrid = new GameGridTable(this.scene, config);
+        this.mPropGrid.layout();
+        this.mPropGrid.on("cellTap", (cell) => {
             const item = cell.getData("item");
             if (item) {
                 this.onSelectItemHandler(item);

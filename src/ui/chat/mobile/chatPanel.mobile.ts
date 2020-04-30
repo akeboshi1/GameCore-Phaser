@@ -4,7 +4,7 @@ import TextArea from "../../../../lib/rexui/lib/ui/textarea/TextArea.js";
 import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js";
 import { Url, Border, WhiteButton } from "../../../utils/resUtil";
 import { NinePatch } from "../../components/nine.patch";
-import BBCodeText from "../../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { NinePatchButton } from "../../components/ninepatch.button";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;
