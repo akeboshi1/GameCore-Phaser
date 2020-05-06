@@ -88,8 +88,11 @@ export class FurniBag extends PacketHandler {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM = packet.content;
     content.category = category;
-    content.items = [prop];
-    content.totalPrice = prop.sellingPrice;
+    const item = op_client.CountablePackageItem.create(prop);
+    item.count = count;
+    content.items = [item];
+    content.totalPrice = item.sellingPrice;
+    content.totalPrice.price *= count;
     this.connection.send(packet);
   }
 
