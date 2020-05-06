@@ -30,6 +30,13 @@ export class PicaMainUIMediator extends BaseMediator {
         this.layerManager.addToUILayer(this.mView.view);
     }
 
+    destroy() {
+        if (this.mainUI) {
+            this.mainUI.destroy();
+        }
+        super.destroy();
+    }
+
     private onEnterEditSceneHandler() {
         if (this.mainUI) {
             this.mainUI.sendEnterDecorate();

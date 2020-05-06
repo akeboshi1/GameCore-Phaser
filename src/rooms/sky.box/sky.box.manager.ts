@@ -46,7 +46,7 @@ export class SkyBoxManager extends PacketHandler {
         connection.removePacketListener(this);
       }
     }
-    this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy);
+    this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy());
   }
 
   // private initCamera() {
