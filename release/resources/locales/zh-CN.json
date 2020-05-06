@@ -24,6 +24,13 @@
   "furni_bag": {
     "add": "放 置",
     "furni": "家具",
-    "items":"道具"
+    "Props": "道具",
+    "decorate": "装饰",
+    "sold": "售出",
+    "use": "使用"
+  },
+  "common": {
+    "cancel": "取消",
+    "confirm": "确定"
   }
 }
