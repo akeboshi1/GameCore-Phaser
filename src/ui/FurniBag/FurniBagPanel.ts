@@ -15,6 +15,7 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { NinePatch } from "../components/nine.patch";
 import { Handler } from "../../Handler/Handler";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -39,7 +40,7 @@ export class FurniBagPanel extends BasePanel {
   private mCategoryScroll: GameScroller;
   private sellBtn: NinePatchButton;
   private useBtn: NinePatchButton;
-  private topBtns: Button[] = [];
+  private topBtns: TabButton[] = [];
 
   private mDetailBubble: DetailBubble;
   private itemPopPanel: ItemsPopPanel;
@@ -115,6 +116,7 @@ export class FurniBagPanel extends BasePanel {
       this.mCategeoriesContainer.add(item);
       item.setSize(capW, capH);
       this.mCategoryScroll.setInteractiveObject(item);
+
       items[i] = item;
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
@@ -123,6 +125,7 @@ export class FurniBagPanel extends BasePanel {
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
     this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
     this.mPropGrid.layout();
+    this.updateCategeoriesLoc(false);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
@@ -296,7 +299,7 @@ export class FurniBagPanel extends BasePanel {
     for (const key in topCategorys) {
       const index = Number(key);
       const category = topCategorys[index];
-      const button = new Button(this.scene, this.key, "tab_normal", "tab_down", topBtnTexts[index]);
+      const button = new TabButton(this.scene, this.key, "tab_normal", "tab_down", topBtnTexts[index]);
       button.setTextStyle(topStyle);
       button.setData("data", category);
       button.setSize(topCapW, topCapH);
@@ -327,7 +330,7 @@ export class FurniBagPanel extends BasePanel {
       value: w / 2,
       orientation: 1,
       bounds: [
-        -w / 2,
+        -w / 4,
         w / 2
       ],
       valuechangeCallback: (newValue) => {
@@ -877,6 +880,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
   private titleName: Phaser.GameObjects.Text;
   private icon: DynamicImage;
   private pricText: Phaser.GameObjects.Text;
+  private priceBg: Phaser.GameObjects.Image;
   private itemCountText: Phaser.GameObjects.Text;
   private itemData: op_client.ICountablePackageItem;
   private popState: number = 0;  // 0 卖出 1 使用
@@ -922,7 +926,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.icon = new DynamicImage(this.scene, 0, iconOffset);
     this.icon.scale = dpr * zoom;
     const priceOffset: number = 10 * dpr * zoom;
-    const priceBg = this.scene.make.image({ x: 0, y: priceOffset, key: commonKey, frame: "price_bg" });
+    this.priceBg = this.scene.make.image({ x: 0, y: priceOffset, key: commonKey, frame: "price_bg" });
     this.pricText = scene.make.text({
       x: 0,
       y: priceOffset,
@@ -973,15 +977,16 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
       fontSize: 16 * dpr * zoom,
       fontFamily: Font.DEFULT_FONT
     });
-    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, priceBg, this.pricText, countBg, this.itemCountText, minusBtn.view, addBtn.view, cancelBtn, confirmBtn]);
-    minusBtn.on("click", this.onMinusBtnHandler, this);
-    addBtn.on("click", this.onAddBtnHandler, this);
+    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, this.priceBg, this.pricText, countBg, this.itemCountText, minusBtn.view, addBtn.view, cancelBtn, confirmBtn]);
+    minusBtn.on("Tap", this.onMinusBtnHandler, this);
+    addBtn.on("Tap", this.onAddBtnHandler, this);
     cancelBtn.on("click", this.onCancelBtnHandler, this);
     confirmBtn.on("click", this.onConfirmBtnHandler, this);
   }
 
   public setProp(prop: op_client.ICountablePackageItem, stated: number, category: number, handler: Handler) {
     this.itemData = prop;
+    this.itemCount = 1;
     this.icon.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     this.itemName.text = prop.name || prop.shortName;
     this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
@@ -989,8 +994,12 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.popState = stated;
     if (stated === 0) {
       this.titleName.text = i18n.t("furni_bag.sold");
+      this.pricText.visible = true;
+      this.priceBg.visible = true;
     } else {
       this.titleName.text = i18n.t("furni_bag.use");
+      this.pricText.visible = false;
+      this.priceBg.visible = false;
     }
     this.handler = handler;
     this.category = category;

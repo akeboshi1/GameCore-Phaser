@@ -49,7 +49,6 @@ export class ReAwardTipsPanel extends BasePanel {
             return;
         }
         for (const item of this.showingList) {
-            
         }
         // TODO 使用对象池创建
         const award = new AwardItem(this.scene, this.key, this.dpr, this.scale);
