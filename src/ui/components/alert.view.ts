@@ -69,7 +69,7 @@ export class AlertView extends BasePanel {
             }
         });
         this.mContent.setOrigin(0.5, 0.5);
-        this.mContent.setText("[color=#FF0000]里卡多flashed分肤是的肌肤是路径[/color]");
+        this.mContent.setText("[color=#FF0000][/color]");
 
         this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, "确定");
         this.mOkBtn.setTextStyle({

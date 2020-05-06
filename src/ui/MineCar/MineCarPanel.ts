@@ -290,12 +290,12 @@ export class MineCarPanel extends BasePanel {
     this.emit("close");
   }
 
-  private onSelectedCategory(category: string) {
+  private onSelectedCategory(subcategory: string) {
     this.mFilterItem = [];
     let pkgItem = null;
     for (const item of this.mAllItem) {
       pkgItem = item.item;
-      if (pkgItem && (pkgItem.category === category || category === "all")) {
+      if (pkgItem && (pkgItem.subcategory === subcategory || subcategory === "all")) {
         this.mFilterItem.push(item);
       }
     }
