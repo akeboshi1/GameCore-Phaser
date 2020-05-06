@@ -410,6 +410,8 @@ export class FurniBagPanel extends BasePanel {
     this.emit("queryPropResource", prop);
     this.mDetailBubble.setProp(prop);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.sellBtn.enable = prop.recyclable;
+    this.useBtn.enable = prop.executable;
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
