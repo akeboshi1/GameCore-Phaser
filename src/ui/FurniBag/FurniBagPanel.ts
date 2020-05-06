@@ -847,6 +847,9 @@ class Item extends Phaser.GameObjects.Container {
     if (prop.count > 1) {
       this.mCounter.setText(prop.count.toString());
       this.add(this.mCounter);
+    } else {
+      if (this.mCounter.parentContainer)
+        this.remove(this.mCounter);
     }
   }
 
