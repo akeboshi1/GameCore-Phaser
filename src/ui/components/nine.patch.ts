@@ -90,6 +90,10 @@ export class NinePatch extends Phaser.GameObjects.Container {
         return this.first && (this.first as Phaser.GameObjects.Image).isTinted;
     }
 
+    public clearTint() {
+        this.each((patch: Phaser.GameObjects.Image) => patch.clearTint());
+    }
+
     private createPatches(): void {
         // The positions we want from the base texture
         const textureXs: number[] = [0, this.config.left, this.originFrame.width - this.config.right, this.originFrame.width];
