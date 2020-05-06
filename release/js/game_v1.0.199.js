@@ -998,15 +998,15 @@ var resUtil_Url = /** @class */ (function () {
     }
     Url.getRes = function (value) {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
-        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65537"}).BUNDLE_RESOURCES_ROOT) {
-            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65537"}).BUNDLE_RESOURCES_ROOT
+        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT) {
+            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT
                 + value;
         }
         return Url.RES_PATH + value;
     };
     Url.getUIRes = function (dpr, value) {
-        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65537"}).BUNDLE_RESOURCES_ROOT) {
-            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65537"}).BUNDLE_RESOURCES_ROOT
+        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT) {
+            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT
                 + dpr + "x" + value;
         }
         return Url.RESUI_PATH + (dpr + "x/" + value);
