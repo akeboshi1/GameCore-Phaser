@@ -23,6 +23,7 @@
   },
   "furni_bag": {
     "add": "放 置",
-    "furni": "家具"
+    "furni": "家具",
+    "items":"道具"
   }
 }

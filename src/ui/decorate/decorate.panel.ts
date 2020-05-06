@@ -5,7 +5,7 @@ import { DecorateRoom } from "../../rooms/decorate.room";
 import { MessageType } from "../../const/MessageType";
 import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
-import { Button } from "../components/button";
+import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
@@ -566,7 +566,7 @@ export class DecoratePanel extends BasePanel {
 }
 
 class MoveMenu extends Phaser.GameObjects.Container {
-    private mBtns: Button[];
+    private mBtns: any[];
     private mArrow1: Button;
     private mArrow3: Button;
     private mArrow5: Button;
@@ -596,11 +596,15 @@ class MoveMenu extends Phaser.GameObjects.Container {
         //     key,
         //     frame: "arrow_7.png"
         // }, false).setInteractive().setData("dir", 7);
-        this.mArrow1 = new Button(this.scene, key, "arrow_1.png").setData("dir", Direction.north_west);
-        this.mArrow3 = new Button(this.scene, key, "arrow_3.png").setData("dir", Direction.west_south);
-        this.mArrow5 = new Button(this.scene, key, "arrow_5.png").setData("dir", Direction.south_east);
-        this.mArrow7 = new Button(this.scene, key, "arrow_7.png").setData("dir", Direction.east_north);
-        this.mBtns = [this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7];
+        this.mArrow1 = new Button(this.scene, key, "arrow_1.png");
+        this.mArrow1.setData("dir", Direction.north_west);
+        this.mArrow3 = new Button(this.scene, key, "arrow_3.png");
+        this.mArrow3.setData("dir", Direction.west_south);
+        this.mArrow5 = new Button(this.scene, key, "arrow_5.png");
+        this.mArrow5.setData("dir", Direction.south_east);
+        this.mArrow7 = new Button(this.scene, key, "arrow_7.png");
+        this.mArrow7.setData("dir", Direction.east_north);
+        this.mBtns = [this.mArrow1.view, this.mArrow3.view, this.mArrow5.view, this.mArrow7.view];
         this.add(bg);
         this.add(this.mBtns);
 

@@ -1,5 +1,4 @@
-import { NinePatchButton } from "./ninepatch.button";
-import { IButtonState } from "./interface/IButtonState";
+import { IButtonState } from "../../../lib/rexui/lib/ui/interface/button/IButtonState";
 
 export class CheckboxGroup extends Phaser.Events.EventEmitter {
   private mList: IButtonState[] = [];
@@ -10,14 +9,14 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
 
   public appendItem(item: IButtonState): this {
     this.mList.push(item);
-    item.on("click", this.onGameObjectUpHandler, this);
+    item.on("Tap", this.onGameObjectUpHandler, this);
     return this;
   }
 
   public appendItemAll(items: IButtonState[]): this {
     this.mList = this.mList.concat(items);
     for (const item of items) {
-      item.on("click", this.onGameObjectUpHandler, this);
+      item.on("Tap", this.onGameObjectUpHandler, this);
     }
     return this;
   }
@@ -71,7 +70,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     super.destroy();
   }
 
-  private onGameObjectUpHandler(pointer, gameobject: NinePatchButton) {
+  private onGameObjectUpHandler(pointer, gameobject: any) {
     this.select(gameobject);
   }
 }

@@ -1,8 +1,8 @@
 import { BasePanel } from "./BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Button } from "./button";
 import { Font } from "../../utils/font";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";
@@ -69,7 +69,7 @@ export class AlertView extends BasePanel {
             }
         });
         this.mContent.setOrigin(0.5, 0.5);
-        this.mContent.setText("[color=#FF0000]里卡多flashed分肤是的肌肤是路径[/color]");
+        this.mContent.setText("[color=#FF0000][/color]");
 
         this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, "确定");
         this.mOkBtn.setTextStyle({
@@ -77,8 +77,8 @@ export class AlertView extends BasePanel {
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mOkBtn.x = (bg.width - this.mOkBtn.width) / 2 - 33 * this.dpr;
-        this.mOkBtn.y = (bg.height - this.mOkBtn.height) / 2 - 16 * this.dpr;
+        this.mOkBtn.x = (bg.width - this.mOkBtn.displayWidth) / 2 - 33 * this.dpr;
+        this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
         this.mOkBtn.on("click", this.onOkHandler, this);
 
         this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, "取消");
@@ -86,7 +86,7 @@ export class AlertView extends BasePanel {
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mCancelBtn.x = -(bg.width - this.mCancelBtn.width) / 2 + 33 * this.dpr;
+        this.mCancelBtn.x = -(bg.width - this.mCancelBtn.displayWidth) / 2 + 33 * this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
         this.mCancelBtn.on("click", this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);

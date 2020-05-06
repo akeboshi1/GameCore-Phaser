@@ -1,6 +1,6 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-
+import { op_def } from "pixelpai_proto";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private mBackground: Phaser.GameObjects.Image;
@@ -99,7 +99,6 @@ export class PicaNavigatePanel extends BasePanel {
   private onShowFamilyHandler() {
     this.emit("showPanel", "");
   }
-
   private onCloseHandler() {
     this.emit("close");
   }

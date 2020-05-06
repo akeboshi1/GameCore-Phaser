@@ -9,8 +9,8 @@ import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
 import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
-import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
-
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
@@ -27,10 +27,10 @@ export class MarketPanel extends BasePanel {
   private mShelfContainer: Phaser.GameObjects.Container;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mShelfBackground: Phaser.GameObjects.Graphics;
-  private mSubCategorisScroll: GridTable;
+  private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];
   private mPreSubCategoris: TextButton;
-  private mPropGrid: GridTable;
+  private mPropGrid: GameGridTable;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.mSubTabs = [];
@@ -252,11 +252,11 @@ export class MarketPanel extends BasePanel {
 
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
-    this.mSubCategorisScroll = new GridTable(this.scene, {
+    const config: GridTableConfig = {
       x: w / 2,
       // y: 0,
-      width: w,
-      height: capH,
+      // width: w,
+      // height: capH,
       table: {
         width: w,
         height: capH,
@@ -272,7 +272,7 @@ export class MarketPanel extends BasePanel {
           cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
           // cellContainer.height = capH;
-          this.add(cellContainer);
+          if (this.mSubCategorisScroll.cellParentCon) this.mSubCategorisScroll.cellParentCon.add(cellContainer);
         }
         cellContainer.setText(item.value);
         // cellContainer.setSize(width, height);
@@ -282,16 +282,17 @@ export class MarketPanel extends BasePanel {
         }
         return cellContainer;
       },
-    });
-    this.mSubCategorisScroll.on("cell.1tap", (cell, index) => {
+    };
+    this.mSubCategorisScroll = new GameGridTable(this.scene, config);
+    this.mSubCategorisScroll.on("cellTap", (cell, index) => {
       this.onSelectSubCategoryHandler(cell);
     });
-    this.add(this.mSubCategorisScroll.childrenMap.child);
+    this.add(this.mSubCategorisScroll.cellParentCon);
 
     const propFrame = this.scene.textures.getFrame(this.key, "border.png");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
-    this.mPropGrid = new GridTable(this.scene, {
+    const propGridConfig: GridTableConfig = {
       x: w / 2,
       y: 1050 + (41 * this.dpr * zoom) / 2,
       // y: 0,
@@ -312,22 +313,23 @@ export class MarketPanel extends BasePanel {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
           // cellContainer.width = capW;
           // cellContainer.height = capH;
-          this.add(cellContainer);
+          if (this.mPropGrid.cellParentCon) this.mPropGrid.cellParentCon.add(cellContainer);
         }
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
         return cellContainer;
       },
-    });
+    };
+    this.mPropGrid = new GameGridTable(this.scene, propGridConfig);
     this.mPropGrid.layout();
-    this.mPropGrid.on("cell.1tap", (cell) => {
+    this.mPropGrid.on("cellTap", (cell) => {
       const data = cell.getData("item");
       if (data) {
         this.onSelectItemHandler(data);
       }
     });
-    this.add(this.mPropGrid.childrenMap.child);
+    this.add(this.mPropGrid.cellParentCon);
 
     this.resize(0, 0);
 

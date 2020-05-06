@@ -1,13 +1,13 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { Button } from "../components/button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 import { Logger } from "../../utils/log";
+import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 
 export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";
@@ -88,7 +88,7 @@ export class PicaRoomListPanel extends BasePanel {
 
     this.mRoomDeleBtn = new Button(this.scene, this.key, "checkbox_normal", "checkbox_down", i18n.t("room_list.visit"));
     this.mRoomDeleBtn.x = -54 * this.dpr;
-    this.mRoomDeleBtn.y = -this.height / 2 + this.mRoomDeleBtn.height / 2 - 4 * this.dpr;
+    this.mRoomDeleBtn.y = -this.height / 2 + this.mRoomDeleBtn.displayHeight / 2 - 4 * this.dpr;
     this.mRoomDeleBtn.setTextStyle({
       color: "#3333cc",
       fontFamily: Font.DEFULT_FONT,
@@ -137,7 +137,7 @@ export class PicaRoomListPanel extends BasePanel {
       }
     }, false).setOrigin(0.5);
 
-    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText, this.mRoomDeleBtn, this.mMyRoomDeleBtn]);
+    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText, this.mRoomDeleBtn.view, this.mMyRoomDeleBtn.view]);
     super.init();
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;

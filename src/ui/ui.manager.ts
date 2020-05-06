@@ -7,7 +7,6 @@ import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
 import { FriendMediator } from "./friend/friend.mediator";
-import { ElementStorageMediator } from "./ElementStorage/ElementStorageMediator";
 import { RankMediator } from "./Rank/RankMediator";
 import { Size } from "../utils/size";
 import { RightMediator } from "./baseView/rightGroup/right.mediator";
@@ -22,13 +21,12 @@ import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
-import { MineSettleMediator } from "./MineSettle/MineSettleMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
 import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
-import { EquipUpgradeMediator } from "./EquipUpgrade/EquipUpgradeMediator";
 import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -132,7 +130,8 @@ export class UiManager extends PacketHandler {
             if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
-            // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
+            this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
+                        // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
             // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));

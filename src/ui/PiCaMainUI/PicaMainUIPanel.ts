@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
+import { op_client } from "pixelpai_proto";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -11,8 +12,17 @@ export class PicaMainUIPanel extends BasePanel {
     private mSceneName: IconText;
     private mSceneType: IconText;
     private mCounter: IconText;
+    private mStrengthValue: ProgressValue;
+    private mExpProgress: ExpProgress;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
+    }
+
+    show(param?: any) {
+        super.show(param);
+        if (this.mInitialized) {
+            this.update(param);
+        }
     }
 
     resize(w: number, h: number) {
@@ -46,15 +56,29 @@ export class PicaMainUIPanel extends BasePanel {
         this.mSceneName.off("pointerup", this.onEnterEditScene, this);
     }
 
+    update(param: any) {
+        if (!param) {
+            return;
+        }
+        const info: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = param;
+        this.mExpProgress.setLv(info.level);
+        this.mCoinValue.setText(info.coin.toString());
+        this.mDiamondValue.setText(info.diamond.toString());
+        const energy = info.energy;
+        if (energy) {
+            this.mStrengthValue.setValue(energy.currentValue, energy.max);
+        } else {
+            this.mStrengthValue.setValue(0, 100);
+        }
+    }
+
     init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
         this.mCoinValue = new ValueContainer(this.scene, this.key, "coin.png", this.dpr);
         this.mCoinValue.y = 28 * this.dpr;
-        this.mCoinValue.setText("34234211231233");
         this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond.png", this.dpr);
         this.mDiamondValue.y = 68 * this.dpr;
-        this.mDiamondValue.setText("2334234");
 
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon.png", "setting_icon.png", this.dpr);
         this.mSceneName.setText("皮卡小镇");
@@ -75,37 +99,37 @@ export class PicaMainUIPanel extends BasePanel {
         this.mCounter.setColor("#27f6ff");
         this.add([this.mCoinValue, this.mDiamondValue, this.mSceneName, this.mSceneType, this.mCounter]);
 
-        let frame = this.scene.textures.getFrame(this.key, "strength_progress.png");
-        const strengthValue = new ProgressValue(this.scene, this.key, "strength_icon.png", this.dpr);
-        strengthValue.x = 50 * this.dpr;
-        strengthValue.y = 27 * this.dpr;
-        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, strengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress.png", {
+        const frame = this.scene.textures.getFrame(this.key, "strength_progress.png");
+        this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon.png", this.dpr);
+        this.mStrengthValue.x = 50 * this.dpr;
+        this.mStrengthValue.y = 27 * this.dpr;
+        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress.png", {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
             right: frame.width - 2 - 8 * this.dpr,
             bottom: frame.height - 1 - 3 * this.dpr
 
         });
-        strengthValue.setProgress(ninePatch, this.scale);
-        this.add(strengthValue);
-        strengthValue.setValue(1000, 1000);
+        this.mStrengthValue.setProgress(ninePatch, this.scale);
+        this.add(this.mStrengthValue);
+        this.mStrengthValue.setValue(1000, 1000);
 
-        frame = this.scene.textures.getFrame(this.key, "health_progress.png");
-        const healthValue = new ProgressValue(this.scene, this.key, "health_con.png", this.dpr);
-        healthValue.x = 150 * this.dpr;
-        healthValue.y = 27 * this.dpr;
-        const healthNinePatch = new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress.png", {
-            left: 8 * this.dpr,
-            top: 3 * this.dpr,
-            right: frame.width - 2 - 8 * this.dpr,
-            bottom: frame.height - 1 - 3 * this.dpr
-        });
-        healthValue.setProgress(healthNinePatch, this.scale);
-        this.add(healthValue);
-        healthValue.setValue(200, 1000);
+        // frame = this.scene.textures.getFrame(this.key, "health_progress.png");
+        // const healthValue = new ProgressValue(this.scene, this.key, "health_con.png", this.dpr);
+        // healthValue.x = 150 * this.dpr;
+        // healthValue.y = 27 * this.dpr;
+        // const healthNinePatch = new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress.png", {
+        //     left: 8 * this.dpr,
+        //     top: 3 * this.dpr,
+        //     right: frame.width - 2 - 8 * this.dpr,
+        //     bottom: frame.height - 1 - 3 * this.dpr
+        // });
+        // healthValue.setProgress(healthNinePatch, this.scale);
+        // this.add(healthValue);
+        // healthValue.setValue(200, 1000);
 
-        const expProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
-        this.add(expProgress);
+        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
+        this.add(this.mExpProgress);
         super.init();
         this.resize(w, h);
     }
@@ -249,7 +273,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
             bottom: frame.height - 1 - 5 * dpr
         });
         this.mProgressBar.setProgress(progres, this.x, this.y, scale);
-        this.mProgressBar.setRatio(0.6);
+        this.mProgressBar.setRatio(0.5);
 
         this.mCurrentLv = scene.make.text({
             text: "Lv. 57",
@@ -271,6 +295,11 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.mNextLv.setStroke("#000000", 1 * dpr);
 
         this.add([this.mProgressBar, this.mCurrentLv, this.mNextLv]);
+    }
+
+    public setLv(val: number) {
+        this.mCurrentLv.setText(val.toString());
+        this.mNextLv.setText((val + 1).toString());
     }
 }
 
@@ -357,7 +386,7 @@ class ProgressBar extends Phaser.GameObjects.Container {
 
         this.mMaskGraphics = this.scene.make.graphics(undefined, false);
         this.mMaskGraphics.fillStyle(0xFF9900);
-        this.mMaskGraphics.fillRoundedRect(0, progress.y * this.mScale - progress.height * this.mScale / 2, this.width * this.mScale, progress.height * this.mScale, 10);
+        this.mMaskGraphics.fillRoundedRect(0, progress.y * this.mScale - progress.height * this.mScale / 2, this.width, progress.height, 10);
         this.add(this.mProgress);
         this.mProgress.mask = new Phaser.Display.Masks.GeometryMask(this.scene, this.mMaskGraphics);
         this.mMaskGraphics.x = offsetX * scale;
@@ -368,7 +397,7 @@ class ProgressBar extends Phaser.GameObjects.Container {
         if (!this.mMaskGraphics) {
             return;
         }
-        this.mMaskGraphics.x = ((this.width * ratio) - this.width + this.offsetX) * this.mScale;
+        this.mMaskGraphics.x = ((this.width * ratio) - this.width + this.offsetX);
         // setInterval(() => {
         //     this.mMaskGraphics.x += 1 * this.dpr;
         // }, 100);

@@ -5,7 +5,7 @@ import { Url, Background, Border } from "../../utils/resUtil";
 import { NinePatch } from "../components/nine.patch";
 import { Radio } from "../components/radio";
 import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbocdetext/BBCodeText.js";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { ISelectCallItemData } from "../components/comboBox";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
 import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";

@@ -1,41 +1,49 @@
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { PicaMainUIPanel } from "./PicaMainUIPanel";
-import { op_virtual_world } from "pixelpai_proto";
-import { PBpacket } from "net-socket-packet";
+import { op_client } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { PicaMainUI } from "./PicaMainUI";
+import { Logger } from "../../utils/log";
 
 export class PicaMainUIMediator extends BaseMediator {
     public static NAME: string = "PicaMainUIMediator";
     private world: WorldService;
+    private mainUI: PicaMainUI;
     constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
+        this.mainUI = new PicaMainUI(worldService);
+        this.mainUI.on("update", this.onUpdateHandler, this);
     }
 
-    show() {
+    show(param?: any) {
         if (this.mView && this.mView.isShow() || this.mShow) {
+            this.update(param);
             return;
         }
         if (!this.mView) {
             this.mView = new PicaMainUIPanel(this.scene, this.world);
         }
-        this.mView.show();
+        this.mView.show(param);
         this.mView.on("enterEdit", this.onEnterEditSceneHandler, this);
         this.layerManager.addToUILayer(this.mView.view);
     }
 
-    isSceneUI() {
-        return true;
+    destroy() {
+        if (this.mainUI) {
+            this.mainUI.destroy();
+        }
+        super.destroy();
     }
 
     private onEnterEditSceneHandler() {
-        if (!this.world || !this.world.roomManager || !this.world.roomManager.currentRoom) {
-            return;
+        if (this.mainUI) {
+            this.mainUI.sendEnterDecorate();
         }
-        if (this.world.roomManager.currentRoom.enableEdit) {
-            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER);
-            this.world.connection.send(packet);
-        }
+    }
+
+    private onUpdateHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+        this.show(content);
     }
 }
