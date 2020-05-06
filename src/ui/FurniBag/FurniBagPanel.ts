@@ -1021,7 +1021,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
 
   private updateData() {
     this.itemCountText.text = this.itemCount + "";
-    this.pricText.text = this.itemData["price"] * this.itemCount + "  银币";
+    this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
   }
 
   private onCancelBtnHandler() {
