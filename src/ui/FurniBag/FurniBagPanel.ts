@@ -129,7 +129,6 @@ export class FurniBagPanel extends BasePanel {
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
-    this.mSelectedItemData = null;
     this.mSelectItem = null;
     if (!props) {
       return;
@@ -140,8 +139,8 @@ export class FurniBagPanel extends BasePanel {
     }
 
     this.mPropGrid.setItems(props);
-
-    // this.setSelectedItem(props[0]);
+    if (this.mSelectItem)
+      this.onSelectItemHandler(this.mSelectItem);
   }
 
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
@@ -362,17 +361,13 @@ export class FurniBagPanel extends BasePanel {
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
-          // cellContainer.width = capW;
-          // cellContainer.height = capH;
           this.add(cellContainer);
         }
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
-        // if (!this.mPreCategoryBtn) {
-        //   this.onSelectSubCategoryHandler(cellContainer);
-        // }
-        if (this.mSelectItem === null) {
+        if (this.mSelectItem === null) this.mSelectItem = cellContainer;
+        if (item && (this.mSelectedItemData === undefined || this.mSelectedItemData.id === item.id)) {
           this.onSelectItemHandler(cellContainer);
         }
         return cellContainer;
