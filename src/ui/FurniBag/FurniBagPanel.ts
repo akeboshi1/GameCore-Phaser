@@ -149,6 +149,7 @@ export class FurniBagPanel extends BasePanel {
     else {
       this.sellBtn.enable = false;
       this.useBtn.enable = false;
+      this.mAdd.enable = false;
     }
   }
 
@@ -278,15 +279,15 @@ export class FurniBagPanel extends BasePanel {
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
     this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
-    this.add([this.sellBtn, this.useBtn]);
+    this.add([this.sellBtn, this.useBtn, this.mAdd]);
     this.mShelfContainer.add(this.mCategoriesBar);
     // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
-    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
-      this.add(this.mAdd);
-    }
+    // if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
+    //   this.add(this.mAdd);
+    // }
     const topCapW = 67 * this.dpr * zoom;
     const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
@@ -299,9 +300,9 @@ export class FurniBagPanel extends BasePanel {
     const topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
     const topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
     if (!this.mEnableEdit) {
-      const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-      topCategorys.splice(index, 1);
-      topBtnTexts.splice(index, 1);
+      // const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+      // topCategorys.splice(index, 1);
+      // topBtnTexts.splice(index, 1);
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
     for (const key in topCategorys) {
@@ -418,6 +419,7 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
+    this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -490,7 +492,7 @@ export class FurniBagPanel extends BasePanel {
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
-        this.sellBtn.visible = false;
+        this.sellBtn.visible = true;
         this.useBtn.visible = false;
         this.mAdd.visible = true;
       } else {
