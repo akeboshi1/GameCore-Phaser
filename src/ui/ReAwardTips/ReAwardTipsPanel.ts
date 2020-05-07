@@ -81,7 +81,6 @@ class AwardItem extends Phaser.GameObjects.Container {
     private mLabel: Phaser.GameObjects.Text;
     private mScaleRatio: number;
     private closeDelay: any;
-    private mDestroyed: boolean;
     constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
         this.mBg = this.scene.make.image({
@@ -150,7 +149,6 @@ class AwardItem extends Phaser.GameObjects.Container {
             ease: "Linear",
             duration: 300,
             onComplete: () => {
-                this.mDestroyed = true;
                 this.destroy();
             }
         });
