@@ -61,14 +61,16 @@ export class PicaMainUIPanel extends BasePanel {
             return;
         }
         const info: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = param;
-        this.mExpProgress.setLv(info.level);
-        this.mCoinValue.setText(info.coin.toString());
-        this.mDiamondValue.setText(info.diamond.toString());
-        const energy = info.energy;
-        if (energy) {
-            this.mStrengthValue.setValue(energy.currentValue, energy.max);
-        } else {
-            this.mStrengthValue.setValue(0, 100);
+        if (info.hasOwnProperty("level")) this.mExpProgress.setLv(info.level);
+        if (info.hasOwnProperty("coin")) this.mCoinValue.setText(info.coin.toString());
+        if (info.hasOwnProperty("diamond")) this.mDiamondValue.setText(info.diamond.toString());
+        if (info.hasOwnProperty("energy")) {
+            const energy = info.energy;
+            if (energy) {
+                this.mStrengthValue.setValue(energy.currentValue, energy.max);
+            } else {
+                this.mStrengthValue.setValue(0, 100);
+            }
         }
     }
 
@@ -163,7 +165,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
         }, false);
 
         this.mText = this.scene.make.text({
-            text: "349343",
+            text: "0",
             width: bg.width,
             height: bg.height,
             style: {
@@ -337,7 +339,7 @@ class ProgressValue extends ValueContainer {
         this.mProgress.y = 4 * dpr;
 
         this.mText = this.scene.make.text({
-            text: "349343",
+            text: "0",
             width: bg.width,
             height: bg.height,
             style: {

@@ -4,7 +4,6 @@ import { PicaMainUIPanel } from "./PicaMainUIPanel";
 import { op_client } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicaMainUI } from "./PicaMainUI";
-import { Logger } from "../../utils/log";
 
 export class PicaMainUIMediator extends BaseMediator {
     public static NAME: string = "PicaMainUIMediator";

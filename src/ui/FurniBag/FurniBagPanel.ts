@@ -8,7 +8,6 @@ import { op_client, op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
-import GridTable from "../../../lib/rexui/lib/ui/gridtable/GridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
@@ -16,6 +15,8 @@ import { NinePatch } from "../components/nine.patch";
 import { Handler } from "../../Handler/Handler";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -27,7 +28,7 @@ export class FurniBagPanel extends BasePanel {
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mCategeoriesContainer: Phaser.GameObjects.Container;
-  private mPropsContainer: Phaser.GameObjects.Container;
+  // private mPropsContainer: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
   private mAdd: NinePatchButton;
   private mBg: Phaser.GameObjects.Image;
@@ -36,7 +37,7 @@ export class FurniBagPanel extends BasePanel {
   private mSelectItem: Item;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: op_def.IStrPair;
-  private mPropGrid: GridTable;
+  private mPropGrid: GameGridTable;
   private mCategoryScroll: GameScroller;
   private sellBtn: NinePatchButton;
   private useBtn: NinePatchButton;
@@ -63,7 +64,7 @@ export class FurniBagPanel extends BasePanel {
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
 
-    this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
+    this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
 
@@ -73,12 +74,13 @@ export class FurniBagPanel extends BasePanel {
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
     this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
+    this.mCategeoriesContainer.y = this.mShelfContainer.y;
     this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
 
-    this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
+    // this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
 
     this.mBg.x = width / 2;
-    this.mBg.y = this.mBg.displayHeight / 2 + 10 * this.dpr * zoom;
+    this.mBg.y = this.mBg.height / 2 + 10 * this.dpr * zoom;
 
     //  this.mTiltle.x = width / 2;
 
@@ -93,6 +95,9 @@ export class FurniBagPanel extends BasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 150 * this.dpr * zoom, 21 * this.dpr, -this.y + 20 * this.dpr);
+    // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
+    this.mPropGrid.layout();
     this.setSize(width, height);
   }
 
@@ -123,7 +128,7 @@ export class FurniBagPanel extends BasePanel {
     }
     if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 155 * this.dpr * zoom, 22 * this.dpr, -this.y + 30 * this.dpr);
     this.mPropGrid.layout();
     this.updateCategeoriesLoc(false);
   }
@@ -141,6 +146,10 @@ export class FurniBagPanel extends BasePanel {
     this.mPropGrid.setItems(props);
     if (this.mSelectItem)
       this.onSelectItemHandler(this.mSelectItem);
+    else {
+      this.sellBtn.enable = false;
+      this.useBtn.enable = false;
+    }
   }
 
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
@@ -199,9 +208,9 @@ export class FurniBagPanel extends BasePanel {
     }, false).setScale(zoom);
 
     this.mShelfContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
+    this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
-    this.mPropsContainer = this.scene.make.container(undefined, false);
+    // this.mPropsContainer = this.scene.make.container(undefined, false);
     this.mCategeoriesContainer = this.scene.make.container(undefined, false);
     this.mCategeoriesContainer.y = this.mShelfContainer.y;
 
@@ -270,7 +279,7 @@ export class FurniBagPanel extends BasePanel {
 
     this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
     this.add([this.sellBtn, this.useBtn]);
-    this.mShelfContainer.add([this.mCategoriesBar, this.mPropsContainer]);
+    this.mShelfContainer.add(this.mCategoriesBar);
     // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
@@ -343,25 +352,26 @@ export class FurniBagPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
-    this.mPropGrid = new GridTable(this.scene, {
-      x: w / 2,
-      y: 1050 + (41 * this.dpr * zoom) / 2,
+    const tableConfig: GridTableConfig = {
+      x: 0,
+      y: 0,
       table: {
         width: w - 10 * this.dpr * zoom,
-        height: 224 * this.dpr * zoom,
+        height: 270 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
       },
       scrollMode: 1,
-      clamplChildOY: true,
+      clamplChildOY: false,
+      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
-          this.add(cellContainer);
+          this.mPropGrid.cellParentCon.add(cellContainer);
         }
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
@@ -372,17 +382,18 @@ export class FurniBagPanel extends BasePanel {
         }
         return cellContainer;
       },
-    }).layout();
-    this.mPropGrid.on("cell.1tap", (cell) => {
+    };
+    this.mPropGrid = new GameGridTable(this.scene, tableConfig);
+    this.mPropGrid.layout();
+    this.mPropGrid.on("cellTap", (cell) => {
       if (cell) {
         this.onSelectItemHandler(cell);
       }
     });
     // this.add(this.mPropGrid);
-    this.add(this.mPropGrid.childrenMap.child);
+    this.add(this.mPropGrid.cellParentCon);
+    this.resize(0, 0);
     super.init();
-    if (this)
-      this.resize(0, 0);
   }
 
   private refreshPos(value: number) {
@@ -847,6 +858,9 @@ class Item extends Phaser.GameObjects.Container {
     if (prop.count > 1) {
       this.mCounter.setText(prop.count.toString());
       this.add(this.mCounter);
+    } else {
+      if (this.mCounter.parentContainer)
+        this.remove(this.mCounter);
     }
   }
 

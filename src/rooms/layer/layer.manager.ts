@@ -82,7 +82,7 @@ export class LayerManager {
         this.mTileLayer = new GridLayer(this.mScene).setScale(zoom);
         this.mScene.sys.displayList.add(this.mTileLayer);
 
-        this.mMiddleLayer = this.mScene.add.container(0, 0);
+        this.mMiddleLayer = this.mScene.add.container(0, 0).setScale(zoom);
 
         this.mSurfaceLayer = this.mScene.add.container(0, 0).setScale(zoom);
 

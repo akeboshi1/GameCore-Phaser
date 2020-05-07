@@ -16,7 +16,7 @@ export class ReAwardTipsPanel extends BasePanel {
     public show() {
         super.show();
         if (this.mInitialized) {
-            this.showAward();
+            if (this.showingList.length === 0) this.showAward();
         }
     }
 
@@ -38,24 +38,32 @@ export class ReAwardTipsPanel extends BasePanel {
     protected init() {
         super.init();
 
-        this.y = 220 * this.dpr;
+        this.y = 250 * this.dpr;
     }
 
     private showAward() {
         if (this.mTips.length < 1) {
             return;
         }
-        if (this.showingList.length > 4) {
+        if (this.showingList.length >= 3) {
             return;
         }
         for (const item of this.showingList) {
+            // item.y -= 30 * this.dpr;
+            item.beUp();
         }
         // TODO 使用对象池创建
         const award = new AwardItem(this.scene, this.key, this.dpr, this.scale);
         award.once("destroy", this.onDestroyHanlder, this);
+        award.once("show", this.onAwardItemShowHandler, this);
         award.setProp(this.mTips.pop());
+        // award.y = -(this.showingList.length * 30 * this.dpr);
         this.add(award);
         this.showingList.push(award);
+    }
+
+    private onAwardItemShowHandler() {
+        this.showAward();
     }
 
     private onDestroyHanlder(item) {
@@ -72,6 +80,8 @@ class AwardItem extends Phaser.GameObjects.Container {
     private mImage: DynamicImage;
     private mLabel: Phaser.GameObjects.Text;
     private mScaleRatio: number;
+    private closeDelay: any;
+    private mDestroyed: boolean;
     constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
         this.mBg = this.scene.make.image({
@@ -107,35 +117,60 @@ class AwardItem extends Phaser.GameObjects.Container {
             this.mImage.load(Url.getOsdRes(award.display.texturePath));
         }
         this.mLabel.setText(award.text);
-        this.beTween();
+        this.showTween();
     }
 
-    beTween() {
+    showTween() {
         this.scene.tweens.add({
             targets: this,
             props: {
                 x: `+=${this.width * 0.3}`
             },
             ease: "Bounce.easeOut",
-            duration: 200
+            onComplete: () => {
+                this.emit("show");
+                this.closeDelay = setTimeout(() => {
+                    this.closeTween();
+                }, 1000);
+            },
+            duration: 300
         });
-
-        setTimeout(() => {
-            this.closeTween();
-        }, 1000);
     }
 
     closeTween() {
+        if (!this.scene) {
+            return;
+        }
+        this.scene.tweens.add({
+            targets: this,
+            props: {
+                y: `-=${50 * this.mScaleRatio}`,
+                alpha: "0"
+            },
+            ease: "Linear",
+            duration: 300,
+            onComplete: () => {
+                this.mDestroyed = true;
+                this.destroy();
+            }
+        });
+    }
+
+    beUp() {
+        clearTimeout(this.closeDelay);
         this.scene.tweens.add({
             targets: this,
             props: {
                 y: `-=${50 * this.mScaleRatio}`
             },
             ease: "Linear",
-            duration: 200,
+            duration: 300,
             onComplete: () => {
-                this.destroy();
+                this.closeDelay = setTimeout(() => {
+                    this.closeTween();
+                }, 1000);
             }
         });
+
     }
 }
