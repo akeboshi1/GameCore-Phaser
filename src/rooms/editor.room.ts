@@ -144,6 +144,9 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (this.displayObjectPool) {
             this.displayObjectPool.destroy();
         }
+        if (this.editorSkyboxManager) {
+            this.editorSkyboxManager.destroy();
+        }
         super.destroy();
     }
 

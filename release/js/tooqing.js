@@ -238,12 +238,12 @@ var Launcher = /** @class */ (function () {
         this.maxWidth = 1920;
         this.maxHeight = 1080;
         this.mConfig = {
-            auth_token: Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).auth_token,
-            token_expire: Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).token_expire,
-            token_fingerprint: Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).token_fingerprint,
+            auth_token: Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).auth_token,
+            token_expire: Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).token_expire,
+            token_fingerprint: Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).token_fingerprint,
             server_addr: undefined,
-            game_id: "5e9a7dace87abc390c4b1b73",
-            virtual_world_id: "65541",
+            game_id: "5e5dc4d80681ad5557b4d7a6",
+            virtual_world_id: "0",
             // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
             width: this.minWidth,
             height: this.minHeight,

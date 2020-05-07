@@ -16,36 +16,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _net_connection__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(328);
-/* harmony import */ var _scenes_loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(67);
+/* harmony import */ var _scenes_loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(68);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(9);
-/* harmony import */ var _rooms_room_manager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(398);
-/* harmony import */ var _keyboard_manager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(333);
-/* harmony import */ var _mouse_manager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(334);
-/* harmony import */ var _scenes_main_ui__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(235);
-/* harmony import */ var _joystick_manager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(335);
-/* harmony import */ var _element_storage__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(336);
-/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(337);
+/* harmony import */ var _rooms_room_manager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(399);
+/* harmony import */ var _keyboard_manager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(334);
+/* harmony import */ var _mouse_manager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(335);
+/* harmony import */ var _scenes_main_ui__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(233);
+/* harmony import */ var _joystick_manager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(336);
+/* harmony import */ var _element_storage__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(337);
+/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(338);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(5);
-/* harmony import */ var game_capsule__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(338);
+/* harmony import */ var game_capsule__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(339);
 /* harmony import */ var game_capsule__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(game_capsule__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var _ui_ui_manager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(121);
-/* harmony import */ var _lib_rexui_lib_plugins_ninepatch_plugin_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(401);
+/* harmony import */ var _ui_ui_manager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_plugins_ninepatch_plugin_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(403);
 /* harmony import */ var _lib_rexui_lib_plugins_inputtext_plugin_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(402);
-/* harmony import */ var _lib_rexui_lib_plugins_bbcodetext_plugin_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(403);
-/* harmony import */ var _lib_rexui_lib_plugins_button_plugin_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(404);
-/* harmony import */ var _lib_rexui_lib_ui_ui_plugin_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(397);
-/* harmony import */ var _scenes_login__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(390);
-/* harmony import */ var _account__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(391);
-/* harmony import */ var _net_http_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(392);
-/* harmony import */ var _scenes_gamepause__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(393);
-/* harmony import */ var _scenes_edit__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(238);
-/* harmony import */ var _rooms_clock__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(405);
-/* harmony import */ var _role_role_manager__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(400);
+/* harmony import */ var _lib_rexui_lib_plugins_bbcodetext_plugin_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(404);
+/* harmony import */ var _lib_rexui_lib_plugins_button_plugin_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(405);
+/* harmony import */ var _lib_rexui_lib_ui_ui_plugin_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(398);
+/* harmony import */ var _scenes_login__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(391);
+/* harmony import */ var _account__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(392);
+/* harmony import */ var _net_http_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(393);
+/* harmony import */ var _scenes_gamepause__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(394);
+/* harmony import */ var _scenes_edit__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(236);
+/* harmony import */ var _rooms_clock__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(406);
+/* harmony import */ var _role_role_manager__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(401);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(48);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(394);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(395);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_30___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_30__);
-/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(61);
-/* harmony import */ var _sound_manager__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(237);
+/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(62);
+/* harmony import */ var _sound_manager__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(235);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -199,7 +199,7 @@ var World = /** @class */ (function (_super) {
         // this.mCharacterManager.register();
         _this.mRoomMamager.addPackListener();
         _this.mUiManager.addPackListener();
-        var gateway = _this.mConfig.server_addr || Object({"host":"172.18.0.103","port":12100,"secure":false});
+        var gateway = _this.mConfig.server_addr || Object({"host":"115.182.75.99","port":22100,"secure":false});
         if (gateway) {
             // connect to game server.
             _this.mConnection.startConnect(gateway);
@@ -605,7 +605,7 @@ var World = /** @class */ (function (_super) {
                         this.mConfig.game_id = gameId;
                         this.mConfig.virtual_world_id = worldId;
                         this.mConnection.addPacketListener(this);
-                        gateway = this.mConfig.server_addr || Object({"host":"172.18.0.103","port":12100,"secure":false});
+                        gateway = this.mConfig.server_addr || Object({"host":"115.182.75.99","port":22100,"secure":false});
                         if (gateway) {
                             // connect to game server.
                             this.mConnection.startConnect(gateway);
@@ -998,15 +998,15 @@ var resUtil_Url = /** @class */ (function () {
     }
     Url.getRes = function (value) {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
-        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT) {
-            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT
+        if (Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT) {
+            return Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT
                 + value;
         }
         return Url.RES_PATH + value;
     };
     Url.getUIRes = function (dpr, value) {
-        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT) {
-            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT
+        if (Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT) {
+            return Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"115.182.75.99","port":22100,"secure":false}),"game_id":"5e5dc4d80681ad5557b4d7a6","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT
                 + dpr + "x" + value;
         }
         return Url.RESUI_PATH + (dpr + "x/" + value);
@@ -1242,10 +1242,10 @@ __webpack_require__.d(__webpack_exports__, "BasePanel", function() { return /* b
 var resUtil = __webpack_require__(5);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tool/Tool.ts
-var Tool = __webpack_require__(233);
+var Tool = __webpack_require__(231);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
-var BaseUI = __webpack_require__(71);
+var BaseUI = __webpack_require__(72);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/panel/Panel.ts
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -1979,7 +1979,7 @@ var MessageType = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NinePatch", function() { return NinePatch; });
-/* harmony import */ var _patches_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(128);
+/* harmony import */ var _patches_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(127);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2170,7 +2170,167 @@ var GetDisplayHeight = function (gameObject) {
 
 
 /***/ }),
-/* 16 */,
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const pixelpai_proto_1 = __webpack_require__(3);
+const metadata_1 = __webpack_require__(239);
+const constants_1 = __webpack_require__(56);
+const helpers_1 = __webpack_require__(28);
+class BaseConfigObject extends metadata_1.default {
+    constructor(cap, parent) {
+        super(cap);
+        this._fork = false;
+        this.parentObject = parent;
+        this.type = constants_1.default.NODE_T.indexOf(this.className);
+    }
+    renewId(theNewId) {
+        const oldId = this.id;
+        const newId = theNewId || helpers_1.default.genId();
+        const children_ids = [];
+        for (const child of this.children) {
+            children_ids.push(child.id);
+        }
+        this.unlink(); // 需要把老的数据删除
+        this.id = newId;
+        this.cap.removeObjectById(oldId);
+        if (!this.cap.getObject(this.id)) {
+            this.cap.addObject(this);
+        }
+        // I am new!!
+        for (const id of children_ids) {
+            const obj = this.cap.getObject(id);
+            if (obj) {
+                obj.parent = newId;
+                obj.renewId();
+            }
+        }
+    }
+    copyId(id) {
+        this.id = id;
+    }
+    // a candy
+    get children() {
+        return this.cap.getChildrenList(this.id);
+    }
+    get isFork() {
+        return this._fork;
+    }
+    set isFork(val) {
+        this._fork = val;
+    }
+    ignore() {
+        for (const child of this.children) {
+            child.ignore();
+        }
+    }
+    preSerialize() {
+        // Do nothing here.
+    }
+    serialize(container) {
+        //1-0. if ignore serialize return
+        if (this.cap.ignoreList.get(this.id))
+            return;
+        // 1-1. choose my box.
+        const arr = this.findMyContainer(container);
+        // 1-2. jump into the box.
+        arr.push(this.createProtocolObject());
+    }
+    deserialize(data) {
+        if (!data) {
+            return;
+        }
+        if (data.hasOwnProperty("node")) {
+            const node = data["node"];
+            // node is an Object
+            if (node) {
+                this.setNode(node);
+            }
+        }
+        if (data.version) {
+            this.version = data.version;
+        }
+        if (data.isMoss) {
+            this.isMoss = data.isMoss;
+        }
+        this.cap.addObject(this);
+    }
+    findMyContainer(game) {
+        throw new Error(`Subclass must override this method! BaseConfigObject::findMyContainer`);
+    }
+    createProtocolObject() {
+        throw new Error(`Subclass must override this method! BaseConfigObject::createProtocolObject`);
+    }
+    appendNode(object) {
+        // do nothing. but check.
+        if (object.parent !== this.id) {
+            throw new Error(`${this.className}.appendNode(): I am not parent of Object[${object.className}.${object.id}].`);
+        }
+    }
+    removeNode(object) {
+        // do nothing. but check.
+        if (object.parent !== this.id) {
+            throw new Error(`${this.className}.removeNode(): I am not parent of Object[${object.className}.${object.id}].`);
+        }
+    }
+    link() {
+        const p = this.parentObject;
+        if (p) {
+            p.appendNode(this);
+        }
+    }
+    unlink() {
+        const p = this.parentObject;
+        if (p) {
+            p.removeNode(this);
+        }
+    }
+    destroy() {
+        // remove my children
+        for (const child of this.children) {
+            if (child)
+                child.destroy();
+        }
+        //  remove myself from index
+        this.cap.removeObject(this);
+        //  destroy metadata
+        super.destroy();
+    }
+    // 获取基因序列，判断2个复合对象是否是同族。子类请扩展此方法
+    // 在克隆时判断是否要分叉。
+    // 在还原是判断是否要将一个Fork对象还原成本体。
+    geneSequence() {
+        return this.className;
+    }
+    // 从另一个ConfigObject对象上复制成员
+    // 此方法被Capsule.clone()方法调用，有成员属性的Node必须重写
+    duplicate(src) {
+        // 复制节点元数据
+        this.name = src.name;
+    }
+}
+exports.BaseConfigObject = BaseConfigObject;
+class EntityNode extends BaseConfigObject {
+    findMyContainer(game) {
+        if (!Array.isArray(game.entity)) {
+            game.entity = [];
+        }
+        return game.entity;
+    }
+    createProtocolObject() {
+        const ele = pixelpai_proto_1.op_gameconfig_01.Entity.create();
+        ele.node = this.makeNode();
+        ele.version = this.version;
+        return ele;
+    }
+}
+exports.EntityNode = EntityNode;
+//# sourceMappingURL=config_object.js.map
+
+/***/ }),
 /* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2451,9 +2611,9 @@ __webpack_require__.d(__webpack_exports__, "b", function() { return /* binding *
 var dragonbones_display = __webpack_require__(99);
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.display.ts
-var frames_display = __webpack_require__(69);
+var frames_display = __webpack_require__(70);
 
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(3);
 
 // EXTERNAL MODULE: ./src/utils/log.ts
@@ -2754,7 +2914,7 @@ var shop_entity_ShopEntity = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/action/AIAction.ts
-var AIAction = __webpack_require__(231);
+var AIAction = __webpack_require__(229);
 
 // CONCATENATED MODULE: ./src/rooms/action/ActionGroup.ts
 var ActionGroup = /** @class */ (function () {
@@ -3525,278 +3685,11 @@ var element_Element = /** @class */ (function (_super) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/input/StopPropagationTouchEvents.js
-var StopPropagationTouchEvents = function (element) {
-    // Don't propagate touch/mouse events to parent(game canvas)
-    element.addEventListener("touchstart", callback, false);
-    element.addEventListener("touchmove", callback, false);
-    element.addEventListener("touchend", callback, false);
-    element.addEventListener("mousedown", callback, false);
-    element.addEventListener("mouseup", callback, false);
-    element.addEventListener("mousemove", callback, false);
-}
-
-var callback = function (e) {
-    e.stopPropagation();
-}
-/* harmony default export */ var input_StopPropagationTouchEvents = (StopPropagationTouchEvents);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js
-
-
-const DOMElement = Phaser.GameObjects.DOMElement;
-const IsPlainObject = Phaser.Utils.Objects.IsPlainObject;
-const GetValue = Phaser.Utils.Objects.GetValue;
-
-class InputText_InputText extends DOMElement {
-    constructor(scene, x, y, width, height, config) {
-        if (IsPlainObject(x)) {
-            config = x;
-            x = GetValue(config, 'x', 0);
-            y = GetValue(config, 'y', 0);
-            width = GetValue(config, 'width', undefined);
-            height = GetValue(config, 'height', undefined);
-        } else if (IsPlainObject(width)) {
-            config = width;
-            width = GetValue(config, 'width', undefined);
-            height = GetValue(config, 'height', undefined);
-        }
-
-        if (config === undefined) {
-            config = {};
-        }
-        var autoRound = scene.scale.autoRound;
-        if (width !== undefined) {
-            if (autoRound) {
-                width = Math.floor(width);
-            }
-            config.width = width + 'px';
-        }
-        if (height !== undefined) {
-            if (autoRound) {
-                height = Math.floor(height);
-            }
-            config.height = height + 'px';
-        }
-
-        var element;
-        var textType = GetValue(config, 'type', 'text');
-        if (textType === 'textarea') {
-            element = document.createElement("textarea");
-            element.style.resize = 'none';
-        } else {
-            element = document.createElement("input");
-            element.type = textType;
-        }
-
-        // Apply registed style properties
-        var elemProp, elemPropValue;
-        for (var key in ElementProperties) {
-            elemProp = ElementProperties[key];
-            elemPropValue = GetValue(config, key, elemProp[1]);
-            if (elemPropValue !== undefined) {
-                element[elemProp[0]] = elemPropValue;
-            }
-        }
-
-        var style = GetValue(config, 'style', undefined);
-        if (style === undefined) {
-            style = {};
-        }
-        // Apply registed style properties
-        var styleProp, stylePropValue;
-        for (var key in StyleProperties) {
-            styleProp = StyleProperties[key];
-            stylePropValue = GetValue(config, key, styleProp[1]);
-            if (stylePropValue !== undefined) {
-                style[styleProp[0]] = stylePropValue;
-            }
-        }
-        // Apply other style properties
-        var elementStyle = element.style;
-        for (var key in config) {
-            if ((key in ElementProperties) || (key in StyleProperties)) {
-                continue;
-            } else if (key in elementStyle) {
-                style[key] = config[key];
-            }
-        }
-        style['box-sizing'] = 'border-box';
-        super(scene, x, y, element, style);
-        this.type = 'rexInputText';
-
-        // Apply events
-        for (let eventName in ElementEvents) { // Note: Don't use `var` here
-            this.node[ElementEvents[eventName]] = (function () {
-                this.emit(eventName, this);
-            }).bind(this);
-        }
-
-        // Don't propagate touch/mouse events to parent(game canvas)
-        input_StopPropagationTouchEvents(this.node);
-    }
-
-    resize(width, height) {
-        var style = this.node.style;
-        style.width = width + 'px';
-        style.height = height + 'px';
-        this.updateSize();
-        return this;
-    }
-
-    get text() {
-        return this.node.value;
-    }
-
-    set text(value) {
-        this.node.value = value;
-    }
-
-    setText(value) { // Override
-        this.text = value;
-        return this;
-    }
-
-    selectText() {
-        this.node.select();
-        return this;
-    }
-
-    get placeholder() {
-        return this.node.placeholder;
-    }
-
-    set placeholder(value) {
-        this.node.placeholder = value;
-    }
-
-    setPlaceholder(value) {
-        this.placeholder = value;
-        return this;
-    }
-
-    get tooltip() {
-        return this.node.title;
-    }
-
-    set tooltip(value) {
-        this.node.title = value;
-    }
-
-    setTooltip(value) {
-        this.tooltip = value;
-        return this;
-    }
-
-    setTextChangedCallback(callback) {
-        this.onTextChanged = callback;
-        return this;
-    }
-
-    get readOnly() {
-        return this.node.readOnly;
-    }
-
-    set readOnly(value) {
-        this.node.readOnly = value;
-    }
-
-    setReadOnly(value) {
-        if (value === undefined) {
-            value = true;
-        }
-        this.readOnly = value;
-        return this;
-    }
-
-    get spellCheck() {
-        return this.node.spellcheck;
-    }
-
-    set spellCheck(value) {
-        this.node.spellcheck = value;
-    }
-
-    setSpellCheck(value) {
-        this.spellCheck = value;
-        return this;
-    }
-
-    setStyle(key, value) {
-        this.node.style[key] = value;
-        return this;
-    }
-
-    getStyle(key) {
-        return this.node.style[key];
-    }
-
-    scrollToBottom() {
-        this.node.scrollTop = this.node.scrollHeight;
-        return this;
-    }
-
-    setEnabled(enabled) {
-        if (enabled === undefined) {
-            enabled = true;
-        }
-        this.node.disabled = !enabled;
-        return this;
-    }
-
-    setBlur() {
-        this.node.blur();
-        return this;
-    }
-
-    setFocus() {
-        this.node.focus();
-        return this;
-    }
-}
-
-const ElementProperties = {
-    id: ['id', undefined],
-    text: ['value', undefined],
-    placeholder: ['placeholder', undefined],
-    tooltip: ['title', undefined],
-    readOnly: ['readonly', false],
-    spellCheck: ['spellcheck', false],
-    autoComplete: ['autocomplete', 'off'],
-};
-
-const StyleProperties = {
-    align: ['textAlign', undefined],
-    width: ['width', undefined],
-    height: ['height', undefined],
-    fontFamily: ['fontFamily', undefined],
-    fontSize: ['font-size', undefined],
-    color: ['color', '#ffffff'],
-    backgroundColor: ['backgroundColor', 'transparent'],
-    borderColor: ['borderColor', 'transparent'],
-    outline: ['outline', 'none'],
-};
-
-const ElementEvents = {
-    textchange: 'oninput',
-    click: 'onclick',
-    dblclick: 'ondblclick',
-    focus: 'onfocus',
-    blur: 'onblur',
-};
-
-/* harmony default export */ var inputtext_InputText = __webpack_exports__["a"] = (InputText_InputText);
-
-/***/ }),
-/* 23 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/Text.js + 10 modules
 var Text = __webpack_require__(289);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules
-var TextStyle = __webpack_require__(222);
+var TextStyle = __webpack_require__(217);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/bbcodetext/Parser.js
 
@@ -4123,6 +4016,273 @@ class BBCodeText_BBCodeText extends Text["a" /* default */] {
 /* harmony default export */ var bbcodetext_BBCodeText = __webpack_exports__["a"] = (BBCodeText_BBCodeText);
 
 /***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/input/StopPropagationTouchEvents.js
+var StopPropagationTouchEvents = function (element) {
+    // Don't propagate touch/mouse events to parent(game canvas)
+    element.addEventListener("touchstart", callback, false);
+    element.addEventListener("touchmove", callback, false);
+    element.addEventListener("touchend", callback, false);
+    element.addEventListener("mousedown", callback, false);
+    element.addEventListener("mouseup", callback, false);
+    element.addEventListener("mousemove", callback, false);
+}
+
+var callback = function (e) {
+    e.stopPropagation();
+}
+/* harmony default export */ var input_StopPropagationTouchEvents = (StopPropagationTouchEvents);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js
+
+
+const DOMElement = Phaser.GameObjects.DOMElement;
+const IsPlainObject = Phaser.Utils.Objects.IsPlainObject;
+const GetValue = Phaser.Utils.Objects.GetValue;
+
+class InputText_InputText extends DOMElement {
+    constructor(scene, x, y, width, height, config) {
+        if (IsPlainObject(x)) {
+            config = x;
+            x = GetValue(config, 'x', 0);
+            y = GetValue(config, 'y', 0);
+            width = GetValue(config, 'width', undefined);
+            height = GetValue(config, 'height', undefined);
+        } else if (IsPlainObject(width)) {
+            config = width;
+            width = GetValue(config, 'width', undefined);
+            height = GetValue(config, 'height', undefined);
+        }
+
+        if (config === undefined) {
+            config = {};
+        }
+        var autoRound = scene.scale.autoRound;
+        if (width !== undefined) {
+            if (autoRound) {
+                width = Math.floor(width);
+            }
+            config.width = width + 'px';
+        }
+        if (height !== undefined) {
+            if (autoRound) {
+                height = Math.floor(height);
+            }
+            config.height = height + 'px';
+        }
+
+        var element;
+        var textType = GetValue(config, 'type', 'text');
+        if (textType === 'textarea') {
+            element = document.createElement("textarea");
+            element.style.resize = 'none';
+        } else {
+            element = document.createElement("input");
+            element.type = textType;
+        }
+
+        // Apply registed style properties
+        var elemProp, elemPropValue;
+        for (var key in ElementProperties) {
+            elemProp = ElementProperties[key];
+            elemPropValue = GetValue(config, key, elemProp[1]);
+            if (elemPropValue !== undefined) {
+                element[elemProp[0]] = elemPropValue;
+            }
+        }
+
+        var style = GetValue(config, 'style', undefined);
+        if (style === undefined) {
+            style = {};
+        }
+        // Apply registed style properties
+        var styleProp, stylePropValue;
+        for (var key in StyleProperties) {
+            styleProp = StyleProperties[key];
+            stylePropValue = GetValue(config, key, styleProp[1]);
+            if (stylePropValue !== undefined) {
+                style[styleProp[0]] = stylePropValue;
+            }
+        }
+        // Apply other style properties
+        var elementStyle = element.style;
+        for (var key in config) {
+            if ((key in ElementProperties) || (key in StyleProperties)) {
+                continue;
+            } else if (key in elementStyle) {
+                style[key] = config[key];
+            }
+        }
+        style['box-sizing'] = 'border-box';
+        super(scene, x, y, element, style);
+        this.type = 'rexInputText';
+
+        // Apply events
+        for (let eventName in ElementEvents) { // Note: Don't use `var` here
+            this.node[ElementEvents[eventName]] = (function () {
+                this.emit(eventName, this);
+            }).bind(this);
+        }
+
+        // Don't propagate touch/mouse events to parent(game canvas)
+        input_StopPropagationTouchEvents(this.node);
+    }
+
+    resize(width, height) {
+        var style = this.node.style;
+        style.width = width + 'px';
+        style.height = height + 'px';
+        this.updateSize();
+        return this;
+    }
+
+    get text() {
+        return this.node.value;
+    }
+
+    set text(value) {
+        this.node.value = value;
+    }
+
+    setText(value) { // Override
+        this.text = value;
+        return this;
+    }
+
+    selectText() {
+        this.node.select();
+        return this;
+    }
+
+    get placeholder() {
+        return this.node.placeholder;
+    }
+
+    set placeholder(value) {
+        this.node.placeholder = value;
+    }
+
+    setPlaceholder(value) {
+        this.placeholder = value;
+        return this;
+    }
+
+    get tooltip() {
+        return this.node.title;
+    }
+
+    set tooltip(value) {
+        this.node.title = value;
+    }
+
+    setTooltip(value) {
+        this.tooltip = value;
+        return this;
+    }
+
+    setTextChangedCallback(callback) {
+        this.onTextChanged = callback;
+        return this;
+    }
+
+    get readOnly() {
+        return this.node.readOnly;
+    }
+
+    set readOnly(value) {
+        this.node.readOnly = value;
+    }
+
+    setReadOnly(value) {
+        if (value === undefined) {
+            value = true;
+        }
+        this.readOnly = value;
+        return this;
+    }
+
+    get spellCheck() {
+        return this.node.spellcheck;
+    }
+
+    set spellCheck(value) {
+        this.node.spellcheck = value;
+    }
+
+    setSpellCheck(value) {
+        this.spellCheck = value;
+        return this;
+    }
+
+    setStyle(key, value) {
+        this.node.style[key] = value;
+        return this;
+    }
+
+    getStyle(key) {
+        return this.node.style[key];
+    }
+
+    scrollToBottom() {
+        this.node.scrollTop = this.node.scrollHeight;
+        return this;
+    }
+
+    setEnabled(enabled) {
+        if (enabled === undefined) {
+            enabled = true;
+        }
+        this.node.disabled = !enabled;
+        return this;
+    }
+
+    setBlur() {
+        this.node.blur();
+        return this;
+    }
+
+    setFocus() {
+        this.node.focus();
+        return this;
+    }
+}
+
+const ElementProperties = {
+    id: ['id', undefined],
+    text: ['value', undefined],
+    placeholder: ['placeholder', undefined],
+    tooltip: ['title', undefined],
+    readOnly: ['readonly', false],
+    spellCheck: ['spellcheck', false],
+    autoComplete: ['autocomplete', 'off'],
+};
+
+const StyleProperties = {
+    align: ['textAlign', undefined],
+    width: ['width', undefined],
+    height: ['height', undefined],
+    fontFamily: ['fontFamily', undefined],
+    fontSize: ['font-size', undefined],
+    color: ['color', '#ffffff'],
+    backgroundColor: ['backgroundColor', 'transparent'],
+    borderColor: ['borderColor', 'transparent'],
+    outline: ['outline', 'none'],
+};
+
+const ElementEvents = {
+    textchange: 'oninput',
+    click: 'onclick',
+    dblclick: 'ondblclick',
+    focus: 'onfocus',
+    blur: 'onblur',
+};
+
+/* harmony default export */ var inputtext_InputText = __webpack_exports__["a"] = (InputText_InputText);
+
+/***/ }),
 /* 24 */,
 /* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -4133,8 +4293,8 @@ class BBCodeText_BBCodeText extends Text["a" /* default */] {
 /* harmony import */ var _display_dragonbones_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _display_frames_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(70);
-/* harmony import */ var _display_animation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(107);
+/* harmony import */ var _display_frames_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(71);
+/* harmony import */ var _display_animation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(106);
 /* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(105);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(9);
 /* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(21);
@@ -4776,7 +4936,82 @@ var UIMediatorType = /** @class */ (function () {
 
 
 /***/ }),
-/* 28 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const CryptoJS = __webpack_require__(343);
+const Chance = __webpack_require__(240);
+const constants_1 = __webpack_require__(56);
+class Helpers {
+    static genId() {
+        return new Chance().natural({
+            min: 10000,
+            max: constants_1.default.MAX_ID,
+        });
+    }
+    static getClassName(instanceObj) {
+        return instanceObj.constructor.name;
+    }
+    // return hex encode of string hashed by sha1.
+    static sha1(s) {
+        return CryptoJS.enc.Hex.stringify(CryptoJS.SHA1(s));
+    }
+    static pointToString(p) {
+        return `${p.x},${p.y}`;
+    }
+    static flipArray(source) {
+        const array = [...source];
+        const result = [];
+        if (array.length > 0) {
+            const len = array[0].length;
+            for (let i = 0; i < len; i++) {
+                result[i] = [];
+                for (let j = 0; j < array.length; j++) {
+                    result[i].push(array[j][i]);
+                }
+            }
+        }
+        return result;
+    }
+    static arrayToString(array, fristJoin, lastJoin) {
+        const tmp = [];
+        for (const ary of array) {
+            tmp.push(ary.join(fristJoin));
+        }
+        return tmp.join(lastJoin);
+    }
+    static stringToArray(string, fristJoin, lastJoin) {
+        const tmp = string.split(lastJoin);
+        const result = [];
+        for (const ary of tmp) {
+            const tmpAry = ary.split(fristJoin);
+            result.push(tmpAry.map((value) => parseInt(value)));
+        }
+        return result;
+    }
+    static getSnAndVersion(dataPath) {
+        let sn = "";
+        let ver = "1";
+        const reg = new RegExp(/.*\/(Terrain|Element)Node\/([a-f\d]{24})\/(\d+)\/[a-f\d]{24}\.json/);
+        const ret = dataPath.match(reg);
+        if (ret) {
+            ver = ret[2];
+            sn = ret[1];
+        }
+        return [sn, ver];
+    }
+    static getElementSn(sn, version = "1") {
+        return `${sn}#${version}`;
+    }
+}
+Helpers.ID_VOL = 900000;
+exports.default = Helpers;
+//# sourceMappingURL=helpers.js.map
+
+/***/ }),
 /* 29 */,
 /* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -4911,8 +5146,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagMediator", function() { return BagMediator; });
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
-/* harmony import */ var _bagPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(137);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
+/* harmony import */ var _bagPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(136);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -5076,11 +5311,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemSlot", function() { return ItemSlot; });
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _dragDropIcon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(60);
+/* harmony import */ var _dragDropIcon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(61);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
-/* harmony import */ var _tips_toolTip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(80);
+/* harmony import */ var _tips_toolTip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(81);
 
 
 
@@ -6236,7 +6471,7 @@ Object.assign(
 var EventEmitterMethods = __webpack_require__(32);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/GetValue.js
-var GetValue = __webpack_require__(258);
+var GetValue = __webpack_require__(257);
 var GetValue_default = /*#__PURE__*/__webpack_require__.n(GetValue);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/logic/fsm/FSM.js
@@ -6486,8 +6721,8 @@ var Position45 = /** @class */ (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ButtonState; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Button; });
-/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
-/* harmony import */ var _interface_event_MouseEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(239);
+/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(72);
+/* harmony import */ var _interface_event_MouseEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(237);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6691,7 +6926,7 @@ var NOOP = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _IsSceneObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(254);
+/* harmony import */ var _IsSceneObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(253);
 
 
 var GetSceneObject = function (object) {
@@ -6764,9 +6999,9 @@ var CONST = {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return initLocales; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return i18n; });
-/* harmony import */ var i18next__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(399);
-/* harmony import */ var i18next_xhr_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(387);
-/* harmony import */ var i18next_browser_languagedetector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(388);
+/* harmony import */ var i18next__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(400);
+/* harmony import */ var i18next_xhr_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(388);
+/* harmony import */ var i18next_browser_languagedetector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(389);
 
 
 
@@ -6993,7 +7228,7 @@ var GetExpandedChildHeight = function (parent, child) {
 var ResizeGameObject = __webpack_require__(46);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/actions/GlobZone.js
-var GlobZone = __webpack_require__(57);
+var GlobZone = __webpack_require__(58);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/align/align/in/QuickSet.js + 23 modules
 var QuickSet = __webpack_require__(36);
@@ -7141,7 +7376,7 @@ var LayoutInitChild = function () {
     _layoutInit: _layoutInit,
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetBoundsConfig.js
-var GetBoundsConfig = __webpack_require__(127);
+var GetBoundsConfig = __webpack_require__(126);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/OrientationConst.js
 /* harmony default export */ var OrientationConst = ({
@@ -7155,7 +7390,7 @@ var GetBoundsConfig = __webpack_require__(127);
     'top-to-bottom': 1
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/AlignConst.js
-var AlignConst = __webpack_require__(124);
+var AlignConst = __webpack_require__(123);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/Space.js
 var Space = function (scene) {
@@ -7333,7 +7568,7 @@ const PROPORTIONMODE = {
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(216);
+var Scrollable = __webpack_require__(214);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/textblock/TextBlock.js + 11 modules
 var TextBlock = __webpack_require__(288);
@@ -7450,7 +7685,8 @@ Object.assign(
 /***/ }),
 /* 51 */,
 /* 52 */,
-/* 53 */
+/* 53 */,
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7460,7 +7696,7 @@ Object.assign(
 /* harmony import */ var _ui_components_dynamic_sprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(100);
 /* harmony import */ var _ui_components_dynamic_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
-/* harmony import */ var _editor_reference_area__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(230);
+/* harmony import */ var _editor_reference_area__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(228);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -7733,9 +7969,199 @@ var DisplayObject = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 54 */,
-/* 55 */,
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const game_1 = __webpack_require__(342);
+exports.GameNode = game_1.default;
+exports.SettingsNode = game_1.SettingsNode;
+exports.PaletteNode = game_1.PaletteNode;
+exports.AssetsNode = game_1.AssetsNode;
+exports.MossNode = game_1.MossNode;
+const element_1 = __webpack_require__(116);
+exports.ElementNode = element_1.default;
+const location_1 = __webpack_require__(117);
+exports.LocationNode = location_1.default;
+const animations_1 = __webpack_require__(118);
+exports.AnimationsNode = animations_1.default;
+exports.AnimationDataNode = animations_1.AnimationDataNode;
+const display_1 = __webpack_require__(243);
+exports.DisplayNode = display_1.default;
+const avatar_1 = __webpack_require__(245);
+exports.AvatarNode = avatar_1.default;
+const movable_1 = __webpack_require__(367);
+exports.MovableNode = movable_1.default;
+const attribute_1 = __webpack_require__(244);
+exports.AttributeNode = attribute_1.default;
+const func_1 = __webpack_require__(368);
+exports.FunctionNode = func_1.default;
+const event_1 = __webpack_require__(369);
+exports.EventNode = event_1.default;
+const ui_1 = __webpack_require__(370);
+exports.UINode = ui_1.default;
+exports.ButtonNode = ui_1.ButtonNode;
+exports.TextNode = ui_1.TextNode;
+const timer_1 = __webpack_require__(371);
+exports.TimerNode = timer_1.default;
+const spawnpoint_1 = __webpack_require__(372);
+exports.SpawnPointNode = spawnpoint_1.default;
+const access_1 = __webpack_require__(246);
+exports.AccessNode = access_1.AccessNode;
+const scene_1 = __webpack_require__(247);
+exports.SceneNode = scene_1.default;
+exports.MapSizeNode = scene_1.MapSizeNode;
+exports.TerrainCollectionNode = scene_1.TerrainCollectionNode;
+exports.MossCollectionNode = scene_1.MossCollectionNode;
+const fork_1 = __webpack_require__(373);
+exports.ForkNode = fork_1.default;
+const package_1 = __webpack_require__(119);
+exports.PackageNode = package_1.default;
+exports.PackageItemNode = package_1.PackageItemNode;
+const config_object_1 = __webpack_require__(16);
+exports.BaseConfigObject = config_object_1.BaseConfigObject;
+const metadata_1 = __webpack_require__(239);
+exports.Metadata = metadata_1.default;
+const character_1 = __webpack_require__(248);
+exports.CharacterNode = character_1.default;
+exports.CampNode = character_1.CampNode;
+const terrain_1 = __webpack_require__(115);
+exports.TerrainNode = terrain_1.TerrainNode;
+const shop_1 = __webpack_require__(249);
+exports.ShopNode = shop_1.default;
+exports.ShopItemNode = shop_1.ShopItemNode;
+exports.CommodityNode = shop_1.CommodityNode;
+const scenery_1 = __webpack_require__(250);
+exports.SceneryNode = scenery_1.default;
+//# sourceMappingURL=index.js.map
+
+/***/ }),
 /* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const pixelpai_proto_1 = __webpack_require__(3);
+const NodeType = pixelpai_proto_1.op_def.NodeType;
+class Constants {
+}
+Constants.MAX_ID = Math.pow(2, 31);
+Constants.NODE_T = [
+    null,
+    `GameNode`,
+    `SceneNode`,
+    `ElementNode`,
+    `TerrainNode`,
+    `CharacterNode`,
+    `LocationNode`,
+    `MovableNode`,
+    `DisplayNode`,
+    `AttributeNode`,
+    `FunctionNode`,
+    `AnimationsNode`,
+    `EventNode`,
+    `MapSizeNode`,
+    `UINode`,
+    `TimerNode`,
+    `PackageNode`,
+    `PackageItemNode`,
+    `AvatarNode`,
+    `SettingsNode`,
+    `CampNode`,
+    `MutexNode`,
+    `AnimationDataNode`,
+    `ForkNode`,
+    `ButtonNode`,
+    `TextNode`,
+    `AccessNode`,
+    `SpawnPointNode`,
+    `CommodityNode`,
+    `ShopNode`,
+    `PaletteNode`,
+    `TerrainCollectionNode`,
+    `AssetsNode`,
+    `MossNode`,
+    `MossCollectionNode`,
+    `SceneryNode`,
+];
+Constants.NODE_T_CN_Map = {
+    GameNode: "游戏",
+    SceneNode: "场景",
+    ElementNode: "物件",
+    TerrainNode: "地块",
+    CharacterNode: "角色",
+    LocationNode: "位置",
+    MovableNode: "可移动",
+    DisplayNode: "显示",
+    AttributeNode: "属性",
+    FunctionNode: "方法",
+    AnimationsNode: "动画",
+    EventNode: "事件",
+    MapSizeNode: "场景尺寸",
+    UINode: "交互显示",
+    TimerNode: "计时器",
+    PackageNode: "背包",
+    PackageItemNode: "背包道具",
+    AvatarNode: "装扮",
+    SettingsNode: "游戏设置",
+    CampNode: "阵营",
+    MutexNode: "互斥",
+    AnimationDataNode: "动画数据",
+    ForkNode: "备份节点",
+    ButtonNode: "按钮",
+    TextNode: "文字",
+    AccessNode: "传送点",
+    SpawnPointNode: "出生点",
+    ShopNode: "内购商城",
+    CommodityNode: "商品",
+    AssetsNode: "资源仓库",
+    SceneryNode: "天空盒",
+};
+Constants.NODETYPEMAP = {
+    [NodeType.GameNodeType]: "GameNode",
+    [NodeType.SceneNodeType]: "SceneNode",
+    [NodeType.ElementNodeType]: `ElementNode`,
+    [NodeType.TerrainNodeType]: `TerrainNode`,
+    [NodeType.CharacterNodeType]: `CharacterNode`,
+    [NodeType.LocationType]: `LocationNode`,
+    [NodeType.MovableType]: `MovableNode`,
+    [NodeType.DisplayType]: `DisplayNode`,
+    [NodeType.AttributeType]: `AttributeNode`,
+    [NodeType.FunctionType]: `FunctionNode`,
+    [NodeType.AnimationsType]: `AnimationsNode`,
+    [NodeType.EventType]: `EventNode`,
+    [NodeType.MapSizeType]: `MapSizeNode`,
+    [NodeType.UIType]: `UINode`,
+    [NodeType.TimerType]: `TimerNode`,
+    [NodeType.PackageType]: `PackageNode`,
+    [NodeType.PackageItemType]: `PackageItemNode`,
+    [NodeType.AvatarType]: `AvatarNode`,
+    [NodeType.SettingsType]: `SettingsNode`,
+    [NodeType.CampType]: `CampNode`,
+    [NodeType.MutexType]: `MutexNode`,
+    [NodeType.AnimationDataType]: `AnimationDataNode`,
+    [NodeType.ForkType]: `ForkNode`,
+    [NodeType.ButtonType]: `ButtonNode`,
+    [NodeType.TextType]: `TextNode`,
+    [NodeType.AccessType]: `AccessNode`,
+    [NodeType.SpawnPointType]: `SpawnPointNode`,
+    [NodeType.CommodityType]: `CommodityNode`,
+    [NodeType.ShopType]: "ShopNode",
+    [NodeType.PaletteType]: "PaletteNode",
+    [NodeType.TerrainCollectionType]: "TerrainCollectionNode",
+    [NodeType.AssetsType]: "AssetsNode",
+    [NodeType.MossType]: "MossNode",
+    [NodeType.MossCollectionType]: "MossCollectionNode",
+    [NodeType.SceneryType]: "SceneryNode",
+};
+exports.default = Constants;
+//# sourceMappingURL=constants.js.map
+
+/***/ }),
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7746,10 +8172,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
-/* harmony import */ var _chatPanel_pc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(122);
-/* harmony import */ var _mobile_chatPanel_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(131);
+/* harmony import */ var _chatPanel_pc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(121);
+/* harmony import */ var _mobile_chatPanel_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(130);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
-/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(132);
+/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(131);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -8037,7 +8463,7 @@ var ChatMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8056,7 +8482,7 @@ globZone.setOrigin(0);
 /* harmony default export */ __webpack_exports__["a"] = (globZone);
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8067,7 +8493,7 @@ var IsGameObject = function (object) {
 /* harmony default export */ __webpack_exports__["a"] = (IsGameObject);
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8088,7 +8514,7 @@ var WaitComplete = function (eventEmitter) {
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8198,7 +8624,7 @@ var DragDropIcon = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8312,13 +8738,13 @@ var Tool = /** @class */ (function () {
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RankMediator", function() { return RankMediator; });
-/* harmony import */ var _RankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(139);
+/* harmony import */ var _RankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(138);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -8417,7 +8843,149 @@ var RankMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameGridTable; });
+/* harmony import */ var _GridTable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(286);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var GameGridTable = /** @class */ (function (_super) {
+    __extends(GameGridTable, _super);
+    function GameGridTable(scene, config) {
+        var _this = _super.call(this) || this;
+        _this.mCellParentCon = scene.make.container(undefined, false);
+        _this.mGridTable = new _GridTable_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"](scene, config);
+        _this.mConfig = config;
+        _this.addListen();
+        return _this;
+    }
+    Object.defineProperty(GameGridTable.prototype, "gridTable", {
+        get: function () {
+            return this.mGridTable;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameGridTable.prototype, "childrenMap", {
+        get: function () {
+            if (this.mGridTable)
+                return this.mGridTable.childrenMap;
+            return undefined;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameGridTable.prototype, "cellParentCon", {
+        get: function () {
+            return this.mCellParentCon;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameGridTable.prototype, "items", {
+        get: function () {
+            if (!this.mGridTable)
+                return null;
+            return this.mGridTable.items;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GameGridTable.prototype.setItems = function (items) {
+        if (this.mGridTable) {
+            this.mGridTable.setItems(items);
+            this.mGridTable.layout();
+        }
+    };
+    GameGridTable.prototype.setT = function (value) {
+        if (this.mGridTable)
+            this.mGridTable.setT(value);
+    };
+    GameGridTable.prototype.addListen = function () {
+        if (this.mGridTable) {
+            this.mGridTable.on("cell.1tap", this.cellTapHandler, this);
+        }
+    };
+    GameGridTable.prototype.removeListen = function () {
+        if (this.mGridTable) {
+            this.mGridTable.off("cell.1tap", this.cellTapHandler, this);
+        }
+    };
+    Object.defineProperty(GameGridTable.prototype, "x", {
+        get: function () {
+            if (!this.mGridTable)
+                return 0;
+            return this.mGridTable.x;
+        },
+        set: function (value) {
+            if (this.mGridTable)
+                this.mGridTable.x = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameGridTable.prototype, "y", {
+        get: function () {
+            if (!this.mGridTable)
+                return 0;
+            return this.mGridTable.y;
+        },
+        set: function (value) {
+            if (this.mGridTable)
+                this.mGridTable.y = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GameGridTable.prototype.refresh = function () {
+        if (this.mGridTable)
+            this.mGridTable.refresh();
+    };
+    GameGridTable.prototype.layout = function () {
+        if (this.mGridTable)
+            this.mGridTable.layout();
+    };
+    GameGridTable.prototype.refreshPos = function (x, y, conx, cony) {
+        if (!this.mGridTable)
+            return;
+        this.mGridTable.x = x;
+        this.mGridTable.y = y;
+        this.mGridTable.layout();
+        if (this.cellParentCon)
+            this.cellParentCon.setPosition(conx, cony);
+    };
+    GameGridTable.prototype.destroy = function () {
+        if (this.mGridTable) {
+            this.removeListen();
+            this.mGridTable.destroy();
+        }
+        if (this.cellParentCon)
+            this.cellParentCon.destroy();
+    };
+    GameGridTable.prototype.cellTapHandler = function (cell) {
+        this.emit("cellTap", cell);
+    };
+    return GameGridTable;
+}(Phaser.Events.EventEmitter));
+
+
+
+/***/ }),
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8545,7 +9113,7 @@ var DetailDisplay = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8639,7 +9207,7 @@ var CheckboxGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8682,8 +9250,7 @@ class Stack {
 /* harmony default export */ var pool = __webpack_exports__["a"] = (struct_Stack);
 
 /***/ }),
-/* 66 */,
-/* 67 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8830,7 +9397,7 @@ var LoadingScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9159,14 +9726,14 @@ var ElementManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export DisplayField */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FramesDisplay; });
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
-/* harmony import */ var _display_object__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
+/* harmony import */ var _display_object__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(54);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -9467,7 +10034,7 @@ var FramesDisplay = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9686,12 +10253,12 @@ var FramesModel = /** @class */ (function () {
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BaseUI; });
-/* harmony import */ var _tool_Tool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
+/* harmony import */ var _tool_Tool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(231);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -10024,7 +10591,7 @@ var BaseUI = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10138,14 +10705,14 @@ var Handler = /** @class */ (function () {
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PlayScene; });
-/* harmony import */ var _main_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(235);
+/* harmony import */ var _main_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
 /* harmony import */ var _basic_scene__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30);
-/* harmony import */ var _rooms_cameras_play_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(236);
+/* harmony import */ var _rooms_cameras_play_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(234);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -10221,13 +10788,13 @@ var PlayScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 74 */,
 /* 75 */,
-/* 76 */
+/* 76 */,
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _ScrollModeConst_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(257);
+/* harmony import */ var _ScrollModeConst_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(256);
 
 
 const GetValue = Phaser.Utils.Objects.GetValue;
@@ -10245,7 +10812,7 @@ var GetScrollMode = function (config, key) {
 /* harmony default export */ __webpack_exports__["a"] = (GetScrollMode);
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10338,7 +10905,7 @@ const SHAPEMODE = {
 /* harmony default export */ __webpack_exports__["a"] = (DefaultMask);
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10392,7 +10959,7 @@ var CheckButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10433,13 +11000,13 @@ var BaseChatPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolTip", function() { return ToolTip; });
-/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(61);
+/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(62);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -10544,13 +11111,13 @@ var ToolTip = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FriendMediator", function() { return FriendMediator; });
-/* harmony import */ var _friend_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(138);
+/* harmony import */ var _friend_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(137);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -10614,7 +11181,7 @@ var FriendMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10767,14 +11334,14 @@ var BasicRankPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RightMediator", function() { return RightMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
-/* harmony import */ var _right_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(140);
+/* harmony import */ var _right_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(139);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -10835,14 +11402,14 @@ var RightMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BottomMediator", function() { return BottomMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
-/* harmony import */ var _bottom_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(141);
+/* harmony import */ var _bottom_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(140);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -10878,14 +11445,14 @@ var BottomMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementStorageMediator", function() { return ElementStorageMediator; });
-/* harmony import */ var _ElementStoragePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(142);
-/* harmony import */ var _ElementStorate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(144);
+/* harmony import */ var _ElementStoragePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(141);
+/* harmony import */ var _ElementStorate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(143);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_3__);
@@ -11011,7 +11578,7 @@ var ElementStorageMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11020,7 +11587,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadioItemRender", function() { return RadioItemRender; });
 /* harmony import */ var _nine_patch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -11236,7 +11803,7 @@ var RadioItemRender = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11244,7 +11811,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputTextFactory", function() { return InputTextFactory; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputTextFieldEvent", function() { return InputTextFieldEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputTextField", function() { return InputTextField; });
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -11455,15 +12022,15 @@ var InputTextField = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaChatMediator", function() { return PicaChatMediator; });
-/* harmony import */ var _PicaChatPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(159);
-/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(90);
-/* harmony import */ var _PicaChat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(161);
+/* harmony import */ var _PicaChatPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(158);
+/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(91);
+/* harmony import */ var _PicaChat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(160);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -11559,7 +12126,7 @@ var PicaChatMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11615,14 +12182,14 @@ var InputPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaNavigateMediator", function() { return PicaNavigateMediator; });
-/* harmony import */ var _PicaNavigatePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(160);
-/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(88);
+/* harmony import */ var _PicaNavigatePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(159);
+/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(89);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -11696,155 +12263,13 @@ var PicaNavigateMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 91 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameGridTable; });
-/* harmony import */ var _GridTable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(214);
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-var GameGridTable = /** @class */ (function (_super) {
-    __extends(GameGridTable, _super);
-    function GameGridTable(scene, config) {
-        var _this = _super.call(this) || this;
-        _this.mCellParentCon = scene.make.container(undefined, false);
-        _this.mGridTable = new _GridTable_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"](scene, config);
-        _this.mConfig = config;
-        _this.addListen();
-        return _this;
-    }
-    Object.defineProperty(GameGridTable.prototype, "gridTable", {
-        get: function () {
-            return this.mGridTable;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GameGridTable.prototype, "childrenMap", {
-        get: function () {
-            if (this.mGridTable)
-                return this.mGridTable.childrenMap;
-            return undefined;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GameGridTable.prototype, "cellParentCon", {
-        get: function () {
-            return this.mCellParentCon;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GameGridTable.prototype, "items", {
-        get: function () {
-            if (!this.mGridTable)
-                return null;
-            return this.mGridTable.items;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    GameGridTable.prototype.setItems = function (items) {
-        if (this.mGridTable) {
-            this.mGridTable.setItems(items);
-            this.mGridTable.layout();
-        }
-    };
-    GameGridTable.prototype.setT = function (value) {
-        if (this.mGridTable)
-            this.mGridTable.setT(value);
-    };
-    GameGridTable.prototype.addListen = function () {
-        if (this.mGridTable) {
-            this.mGridTable.on("cell.1tap", this.cellTapHandler, this);
-        }
-    };
-    GameGridTable.prototype.removeListen = function () {
-        if (this.mGridTable) {
-            this.mGridTable.off("cell.1tap", this.cellTapHandler, this);
-        }
-    };
-    Object.defineProperty(GameGridTable.prototype, "x", {
-        get: function () {
-            if (!this.mGridTable)
-                return 0;
-            return this.mGridTable.x;
-        },
-        set: function (value) {
-            if (this.mGridTable)
-                this.mGridTable.x = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GameGridTable.prototype, "y", {
-        get: function () {
-            if (!this.mGridTable)
-                return 0;
-            return this.mGridTable.y;
-        },
-        set: function (value) {
-            if (this.mGridTable)
-                this.mGridTable.y = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    GameGridTable.prototype.refresh = function () {
-        if (this.mGridTable)
-            this.mGridTable.refresh();
-    };
-    GameGridTable.prototype.layout = function () {
-        if (this.mGridTable)
-            this.mGridTable.layout();
-    };
-    GameGridTable.prototype.refreshPos = function (x, y, conx, cony) {
-        if (!this.mGridTable)
-            return;
-        this.mGridTable.x = x;
-        this.mGridTable.y = y;
-        this.mGridTable.layout();
-        if (this.cellParentCon)
-            this.cellParentCon.setPosition(conx, cony);
-    };
-    GameGridTable.prototype.destroy = function () {
-        if (this.mGridTable) {
-            this.removeListen();
-            this.mGridTable.destroy();
-        }
-        if (this.cellParentCon)
-            this.cellParentCon.destroy();
-    };
-    GameGridTable.prototype.cellTapHandler = function (cell) {
-        this.emit("cellTap", cell);
-    };
-    return GameGridTable;
-}(Phaser.Events.EventEmitter));
-
-
-
-/***/ }),
 /* 92 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DebugLoggerMediator", function() { return DebugLoggerMediator; });
-/* harmony import */ var _DebugLoggerPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(176);
+/* harmony import */ var _DebugLoggerPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(175);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -11990,13 +12415,13 @@ var TextButton = /** @class */ (function (_super) {
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/container/Container.js
-var Container = __webpack_require__(252);
+var Container = __webpack_require__(251);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetSizerConfig.js
-var GetSizerConfig = __webpack_require__(123);
+var GetSizerConfig = __webpack_require__(122);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/defaultbounds/GetDefaultBounds.js
-var GetDefaultBounds = __webpack_require__(253);
+var GetDefaultBounds = __webpack_require__(252);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/PushIntoBounds.js
 
@@ -12015,10 +12440,10 @@ var PushIntoBounds = function (bounds) {
 
 /* harmony default export */ var basesizer_PushIntoBounds = (PushIntoBounds);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/AlignConst.js
-var AlignConst = __webpack_require__(124);
+var AlignConst = __webpack_require__(123);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/actions/GlobZone.js
-var GlobZone = __webpack_require__(57);
+var GlobZone = __webpack_require__(58);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/align/align/in/QuickSet.js + 23 modules
 var QuickSet = __webpack_require__(36);
@@ -12440,7 +12865,7 @@ var SetAnchor = function (config) {
 
 /* harmony default export */ var basesizer_SetAnchor = (SetAnchor);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/tween/TweenBase.js
-var TweenBase = __webpack_require__(125);
+var TweenBase = __webpack_require__(124);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/behaviors/scale/Scale.js
 
@@ -12650,7 +13075,7 @@ var scale_down_destroy_defaultConfig = {}; // reuse this config
 
 /* harmony default export */ var scale_down_destroy = (ScaleDownDestroy);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/promise/WaitEvent.js
-var WaitEvent = __webpack_require__(59);
+var WaitEvent = __webpack_require__(60);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/ScaleMethods.js
 
@@ -12943,7 +13368,7 @@ const FadeMethods_GetValue = Phaser.Utils.Objects.GetValue;
     }
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/input/IsPointerInBounds.js
-var IsPointerInBounds = __webpack_require__(255);
+var IsPointerInBounds = __webpack_require__(254);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/IsInTouching.js
 
@@ -12952,7 +13377,7 @@ var IsPointerInBounds = __webpack_require__(255);
     return Object(IsPointerInBounds["a" /* default */])(this, pointer);
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetParentSizer.js
-var GetParentSizer = __webpack_require__(126);
+var GetParentSizer = __webpack_require__(125);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/GetParentSizer.js
 
@@ -12961,7 +13386,7 @@ var GetParentSizer = __webpack_require__(126);
     return Object(GetParentSizer["a" /* default */])(this);
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetTopmostSizer.js
-var GetTopmostSizer = __webpack_require__(256);
+var GetTopmostSizer = __webpack_require__(255);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/GetTopmostSizer.js
 
@@ -13671,7 +14096,7 @@ var Size = /** @class */ (function (_super) {
 /* unused harmony export AvatarPartType */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DragonbonesDisplay; });
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
-/* harmony import */ var _display_object__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
+/* harmony import */ var _display_object__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(54);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14852,7 +15277,7 @@ var DragonbonesModel = /** @class */ (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var chance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(106);
+/* harmony import */ var chance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(333);
 /* harmony import */ var chance__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(chance__WEBPACK_IMPORTED_MODULE_0__);
 var __spreadArrays = (undefined && undefined.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
@@ -14895,8 +15320,7 @@ var Helpers = /** @class */ (function () {
 
 
 /***/ }),
-/* 106 */,
-/* 107 */
+/* 106 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15064,13 +15488,13 @@ var Animation = /** @class */ (function () {
 
 
 /***/ }),
-/* 108 */
+/* 107 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ControlFMediator", function() { return ControlFMediator; });
-/* harmony import */ var _ControlFPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(109);
+/* harmony import */ var _ControlFPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(108);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
@@ -15183,7 +15607,7 @@ var ControlFMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15273,7 +15697,7 @@ var ControlFPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15282,7 +15706,7 @@ var ControlFPanel = /** @class */ (function (_super) {
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _terrain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(234);
+/* harmony import */ var _terrain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(232);
 /* harmony import */ var _element_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -15570,12 +15994,12 @@ var TerrainManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TerrainDisplay; });
-/* harmony import */ var _frames_display__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(69);
+/* harmony import */ var _frames_display__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(70);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -15636,13 +16060,13 @@ var TerrainDisplay = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DecorateManager", function() { return DecorateManager; });
-/* harmony import */ var _decorate_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(113);
+/* harmony import */ var _decorate_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(112);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
@@ -15757,7 +16181,7 @@ var DecorateManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16402,14 +16826,1197 @@ var MoveMenu = /** @class */ (function (_super) {
 
 
 /***/ }),
+/* 113 */,
 /* 114 */,
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const element_1 = __webpack_require__(116);
+class TerrainNode extends element_1.default {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "地形";
+    }
+    // TODO; 生成op_client协议对象
+    convertToClientTerrain() {
+        const ele = super.convertToClientElement();
+        const { dir } = ele, rest = __rest(ele, ["dir"]);
+        return rest;
+    }
+}
+exports.TerrainNode = TerrainNode;
+//# sourceMappingURL=terrain.js.map
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const pixelpai_proto_1 = __webpack_require__(3);
+const location_1 = __webpack_require__(117);
+const animations_1 = __webpack_require__(118);
+const config_object_1 = __webpack_require__(16);
+const helpers_1 = __webpack_require__(28);
+// Element is a simple Entity =)
+class ElementNode extends config_object_1.EntityNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "物件";
+    }
+    get animations() {
+        if (!this._animations) {
+            this._animations = this.cap.add.animations(this);
+        }
+        return this._animations;
+    }
+    get location() {
+        if (!this._location) {
+            this._location = this.cap.add.location(this);
+        }
+        return this._location;
+    }
+    appendNode(object) {
+        try {
+            super.appendNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof location_1.default) {
+            this._location = object;
+        }
+        if (object instanceof animations_1.default) {
+            this._animations = object;
+        }
+    }
+    removeNode(object) {
+        try {
+            super.removeNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof location_1.default) {
+            this._location = undefined;
+        }
+        if (object instanceof animations_1.default) {
+            this._animations = undefined;
+        }
+    }
+    getSnAndVersion() {
+        let sn = "";
+        let ver = "1";
+        const reg1 = new RegExp(/.*\/.*\/([a-f\d]{24})\/(\d+)\/[a-f\d]{24}\.json/);
+        const ret = this.animations.display.dataPath.match(reg1);
+        if (ret) {
+            ver = ret[2];
+            sn = ret[1];
+        }
+        if (this.sn) {
+            sn = this.sn;
+        }
+        if (this.version &&
+            !Number.isNaN(parseInt(ver)) &&
+            parseInt(this.version) > parseInt(ver)) {
+            ver = this.version;
+        }
+        return [sn, ver];
+    }
+    getSnKey() {
+        const [sn, ver] = this.getSnAndVersion();
+        return `${sn}#${ver}`;
+    }
+    judgeIsMoss() {
+        let isMoss = false;
+        if (this.isMoss !== undefined) {
+            isMoss = this.isMoss;
+        }
+        if (this._animations) {
+            const interactiveAreas = this._animations.animationData.reduce((ret, cur) => ret.concat(cur.interactiveArea), []);
+            if (interactiveAreas.length > 0) {
+                isMoss = false;
+            }
+            else {
+                isMoss = true;
+            }
+        }
+        if (this.children && this.children.length > 0) {
+            if (this.children
+                .map((node) => node.type)
+                .filter((type) => {
+                return (type !== pixelpai_proto_1.op_def.NodeType.LocationType &&
+                    type !== pixelpai_proto_1.op_def.NodeType.AnimationsType);
+            }).length > 0) {
+                isMoss = false;
+            }
+        }
+        return isMoss;
+    }
+    setToMoss(val) {
+        this.isMoss = val;
+    }
+    importSprite(sprite) {
+        this.cap.removeObject(this);
+        this.id = sprite.id;
+        this.name = sprite.nickname || this.name;
+        const point = sprite.point3f;
+        if (point) {
+            if (this.location) {
+                this.location.destroy();
+            }
+            this._location = this._cap.add.location(this);
+            this._location.x = point.x;
+            this._location.y = point.y;
+            this._location.z = point.z || 0;
+        }
+        if (sprite.animations) {
+            if (this.animations) {
+                this.animations.destroy();
+            }
+            this._animations = this._cap.add.animations(this);
+            this._animations.importSprite(sprite);
+        }
+        this.cap.addObject(this);
+        return this;
+    }
+    syncSprite(sprite) {
+        const point = sprite.point3f;
+        if (point) {
+            this.location.x = point.x;
+            this.location.y = point.y;
+            this.location.z = point.z || 0;
+        }
+        this.animations.syncSprite(sprite);
+        return this;
+    }
+    convertToSprite() {
+        const sprite = pixelpai_proto_1.op_client.Sprite.create();
+        sprite.id = this.id;
+        sprite.nickname = this.name;
+        const point3 = pixelpai_proto_1.op_def.PBPoint3f.create();
+        point3.x = this.location.x;
+        point3.y = this.location.y;
+        point3.z = this.location.z;
+        sprite.point3f = point3;
+        sprite.sn = this.sn;
+        if (this.version) {
+            sprite.version = this.version;
+        }
+        else {
+            sprite.version = this.getSnAndVersion()[1];
+        }
+        if (this._animations) {
+            sprite.currentAnimationName = this._animations.defaultAnimationName;
+            sprite.direction = this._animations.dir || 3;
+            if (this._animations.animationData) {
+                if (this._animations.dir)
+                    sprite.direction = this._animations.dir;
+            }
+            const display = this._animations.display;
+            if (display) {
+                sprite.display = pixelpai_proto_1.op_gameconfig.Display.create();
+                sprite.display.dataPath = display.dataPath;
+                sprite.display.texturePath = display.texturePath;
+            }
+            const animations = this._animations.animationData;
+            sprite.animations = [];
+            for (const aniData of animations) {
+                sprite.animations.push(aniData.convertToClientObject(this._animations.scale));
+            }
+        }
+        return sprite;
+    }
+    convertToClientElement() {
+        const ele = pixelpai_proto_1.op_client.Element.create();
+        ele.id = this.id;
+        ele.type = pixelpai_proto_1.op_def.NodeType[this.type];
+        if (this.location) {
+            const { x, y, z } = this.location;
+            ele.x = x;
+            ele.y = y;
+            if (z) {
+                ele.z = z;
+            }
+        }
+        if (this._animations) {
+            ele.animationName = this._animations.defaultAnimationName;
+            ele.scale = this._animations.scale || false;
+            if (this._animations.animationData) {
+                if (this._animations.dir)
+                    ele.dir = this._animations.dir;
+            }
+            if (this._animations.display) {
+                ele.display = pixelpai_proto_1.op_gameconfig.Display.create();
+                ele.display.dataPath = this.animations.display.dataPath;
+                ele.display.texturePath = this.animations.display.texturePath;
+            }
+            const animations = this._animations.animationData;
+            ele.animations = [];
+            for (const aniData of animations) {
+                ele.animations.push(aniData.convertToClientObject(this._animations.scale));
+            }
+        }
+        return ele;
+    }
+    geneSequence() {
+        let gene = super.geneSequence();
+        gene += this.parent;
+        if (this._location)
+            gene += this._location.geneSequence();
+        if (this._animations)
+            gene += this._animations.geneSequence();
+        const children = this.cap.getChildrenList(this.id);
+        for (const child of children) {
+            if (child instanceof config_object_1.BaseConfigObject) {
+                gene += child.geneSequence();
+            }
+        }
+        return helpers_1.default.sha1(gene);
+    }
+    preSerialize() {
+        const gen = this.geneSequence();
+        const origin_id = this.cap.families.get(gen);
+        if (origin_id) {
+            // 已经有源对象存在于此Capsule容器中了, 将本节点和源对象相同的子节点忽略掉。
+            for (const child of this.children) {
+                child.ignore();
+            }
+            this._fork = true;
+        }
+        else {
+            this.cap.families.set(gen, this.id);
+            this._fork = false;
+        }
+        // if (!this.animations || this.animations.animationData.length < 1) {
+        //     console.warn(
+        //         `${this.name} data error, has been deleted. sn: ${this.sn}`
+        //     );
+        //     this.cap.removeObject(this);
+        // }
+    }
+    // 物件重构父类的序列化方法
+    // 和普通节点不同的是，同族的物件需要被分叉为ForkNode，存入IGame.
+    createProtocolObject() {
+        const ele = pixelpai_proto_1.op_gameconfig_01.Entity.create();
+        ele.node = this.makeNode();
+        ele.version = this.getSnAndVersion()[1];
+        if (this.isMoss !== undefined) {
+            ele.isMoss = this.isMoss;
+        }
+        const origin_id = this.cap.families.get(this.geneSequence());
+        if (this._fork) {
+            const origin_id = this.cap.families.get(this.geneSequence());
+            if (!origin_id)
+                return;
+            // 已经有源对象存在于此Capsule容器中了
+            // 现在本对象要存为ForkNode了
+            // 改type
+            ele.node.type = pixelpai_proto_1.op_def.NodeType.ForkType;
+            // 把Fork的parent设置为源对象id
+            ele.node.Parent = origin_id;
+        }
+        return ele;
+    }
+}
+exports.default = ElementNode;
+//# sourceMappingURL=element.js.map
+
+/***/ }),
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class LocationNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._x = 0;
+        this._y = 0;
+        this._z = 0;
+        this.name = "位置";
+    }
+    ignore() { }
+    get properties() {
+        return {
+            x: this._x,
+            y: this._y,
+            z: this._z,
+        };
+    }
+    get x() {
+        return this._x;
+    }
+    set x(x) {
+        this._x = x;
+    }
+    get y() {
+        return this._y;
+    }
+    set y(y) {
+        this._y = y;
+    }
+    get z() {
+        return this._z;
+    }
+    set z(z) {
+        this._z = z;
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.loc)) {
+            game.loc = [];
+        }
+        return game.loc;
+    }
+    createProtocolObject() {
+        const location = pixelpai_proto_1.op_gameconfig_01.Location.create();
+        location.node = this.makeNode();
+        location.x = this._x;
+        location.y = this._y;
+        return location;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const location = data;
+        this._x = location.x;
+        this._y = location.y;
+    }
+    // NOTE!! That LocationNode is not a gene options, cause object's location is always different.
+    geneSequence() {
+        // ignore the genetic characteristics.
+        return "";
+    }
+    duplicate(src) {
+        super.duplicate(src);
+        if (src instanceof LocationNode) {
+            this._x = src.x;
+            this._y = src.y;
+            this._z = src.z;
+        }
+    }
+}
+exports.default = LocationNode;
+//# sourceMappingURL=location.js.map
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const helpers_1 = __webpack_require__(28);
+const pixelpai_proto_1 = __webpack_require__(3);
+const display_1 = __webpack_require__(243);
+class AnimationsNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._defaultAnimation = "idle";
+        this._data_map = new Map();
+        this._images = new Map();
+        this._editorToolType = 0;
+        this.name = "动画";
+    }
+    get properties() {
+        return {
+            dir: this._dir,
+            defaultAnimation: this._defaultAnimation,
+        };
+    }
+    ignore() {
+        super.ignore();
+        this.cap.ignoreList.set(this.id, this.id);
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.animations)) {
+            game.animations = [];
+        }
+        return game.animations;
+    }
+    createProtocolObject() {
+        const animations = pixelpai_proto_1.op_gameconfig_01.Animations.create();
+        animations.node = super.makeNode();
+        animations.dir = this._dir;
+        animations.defaultAnimation = this._defaultAnimation;
+        animations.scale = this._scale;
+        return animations;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const as = data;
+        // deserialize other properties
+        this._defaultAnimation = as.defaultAnimation;
+        this._scale = as.scale;
+        this._dir = this._scale ? 5 : as.dir || 3;
+    }
+    importSprite(sprite) {
+        const display = sprite.display;
+        if (display) {
+            this.setDisplayPath(display.texturePath || "", display.dataPath || "");
+        }
+        if (sprite.direction) {
+            this.dir = sprite.direction;
+        }
+        const animations = sprite.animations;
+        if (animations && animations.length > 0) {
+            for (const animation of animations) {
+                const aniData = this._cap.add.animationdata(this, animation.name);
+                if (aniData)
+                    aniData.importAnimation(animation);
+            }
+            this.defaultAnimationName =
+                sprite.currentAnimationName || animations[0].name;
+        }
+    }
+    syncSprite(sprite) {
+        if (sprite.direction) {
+            this.dir = sprite.direction;
+        }
+    }
+    addAnimationData(ani) {
+        this._data_map.set(ani.id, ani);
+    }
+    removeAnimationData(ani) {
+        this._data_map.delete(ani.id);
+    }
+    setDisplayPath(texturePath, dataPath) {
+        const display = this.display;
+        display.texturePath = texturePath;
+        display.dataPath = dataPath;
+    }
+    get dir() {
+        return this._dir;
+    }
+    set dir(val) {
+        this._dir = val;
+    }
+    get display() {
+        return this._display || this.cap.add.display(this);
+    }
+    get animationData() {
+        return Array.from(this._data_map.values());
+    }
+    get defaultAnimationName() {
+        return this._defaultAnimation;
+    }
+    set defaultAnimationName(val) {
+        this._defaultAnimation = val;
+    }
+    get editorToolType() {
+        return this._editorToolType;
+    }
+    set editorToolType(value) {
+        this._editorToolType = value;
+    }
+    get thumbBuffer() {
+        return this._thumbBuffer;
+    }
+    set thumbBuffer(buffer) {
+        this._thumbBuffer = buffer;
+    }
+    setImages(images) {
+        this._images.clear();
+        for (const image of images) {
+            this.addImage(image);
+        }
+    }
+    addImage(image) {
+        if (image.name === "blank") {
+            image.isBlank = true;
+        }
+        this._images.set(image.name, image);
+    }
+    getImage(name) {
+        return this._images.get(name);
+    }
+    removeImage(image) {
+        this._images.delete(image.name);
+        const animationDatas = this.animationDataList;
+        for (const animationData of animationDatas) {
+            animationData.removeFrameByName(image.name);
+        }
+    }
+    updateFrameDataImage() {
+        const animations = this.animationDataList;
+        for (const animationData of animations) {
+            const frameData = animationData.frameData;
+            if (frameData) {
+                for (const frame of frameData) {
+                    frame.image = this.getImage(frame.name);
+                }
+            }
+        }
+        if (animations.length > 0)
+            this.setSelectedAnimation(animations[0].id);
+    }
+    horizontalFlip() {
+        if (this.dir === 3 || this.dir === 5) {
+            this.dir = this.dir === 3 ? 5 : 3;
+        }
+        // 旧数据支持
+        this._scale = this.dir === 3 ? false : true;
+    }
+    static Flip(dir = 3) {
+        const dict = {
+            3: 5,
+            5: 3,
+        };
+        return dict[dir];
+    }
+    get scale() {
+        return this._scale;
+    }
+    get images() {
+        return Array.from(this._images.values());
+    }
+    setSelectedAnimation(id) {
+        this._selectedAnimationID = id;
+    }
+    get animationDataList() {
+        // TODO
+        return Array.from(this._data_map.values());
+    }
+    getSelectedAnimation() {
+        if (this._selectedAnimationID) {
+            return this._data_map.get(this._selectedAnimationID);
+        }
+        return;
+    }
+    appendNode(object) {
+        try {
+            super.appendNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof AnimationDataNode) {
+            this.addAnimationData(object);
+        }
+        if (object instanceof display_1.default) {
+            this._display = object;
+        }
+    }
+    removeNode(object) {
+        try {
+            super.removeNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof AnimationDataNode) {
+            this.removeAnimationData(object);
+        }
+        if (object instanceof display_1.default) {
+            this._display = undefined;
+        }
+    }
+    // by 7 这是啥？？
+    geneSelfSequence() {
+        let gene = `${this.defaultAnimationName}`;
+        if (this._scale)
+            gene += this._scale.toString();
+        return gene;
+    }
+    geneSequence() {
+        let gene = `${this.defaultAnimationName}`;
+        if (this._display)
+            gene += this._display.geneSequence();
+        if (this._scale)
+            gene += this._scale.toString();
+        if (this._dir)
+            gene += this._dir.toString();
+        const animations = this.animationDataList.sort();
+        if (animations.length > 0) {
+            for (const animationData of animations) {
+                gene += animationData.geneSequence();
+            }
+        }
+        return gene;
+    }
+    duplicate(src) {
+        super.duplicate(src);
+        if (src instanceof AnimationsNode) {
+            this._defaultAnimation = src.defaultAnimationName;
+            this._dir = src.dir;
+            this._scale = src.scale;
+        }
+    }
+    checkSameName(name) {
+        const animationDatas = this.animationData;
+        for (const animation of animationDatas) {
+            if (animation.name === name) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+exports.default = AnimationsNode;
+class AnimationDataNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.areaRows = 51;
+        this.areaCols = 51;
+        this.centerPoint = {
+            x: this.areaRows >> 1,
+            y: this.areaCols >> 1,
+        };
+        this._frameRate = 5;
+        this._frameName = [];
+        this._loop = true;
+        this._baseLoc = { x: 0, y: 0 };
+        this._frameData = [];
+        // TODO: DELETE THIS
+        this._playing = false;
+        this.name = "序列帧数据";
+    }
+    ignore() {
+        super.ignore();
+        this.cap.ignoreList.set(this.id, this.id);
+    }
+    get properties() {
+        return {
+            frameRate: this._frameRate,
+            frameName: this._frameName,
+            loop: this._loop,
+            baseLoc: `${this._baseLoc.x},${this._baseLoc.y}`,
+            originPoint: this.collisionOriginPoint,
+            frameData: this._frameData,
+            selectedFrame: this._selectedFrame,
+            playing: this._playing,
+            basicWalkableArea: this._basicWalkableArea,
+            basicCollisionArea: this._basicCollisionArea,
+        };
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.animationdatas)) {
+            game.animationdatas = [];
+        }
+        return game.animationdatas;
+    }
+    createProtocolObject() {
+        const anim = pixelpai_proto_1.op_gameconfig_01.AnimationData.create();
+        anim.node = super.makeNode();
+        anim.baseLoc = `${this._baseLoc.x},${this._baseLoc.y}`;
+        anim.frameName = this._frameName;
+        anim.loop = this._loop;
+        anim.frameRate = this._frameRate;
+        if (this._collisionArea) {
+            anim.collisionArea = helpers_1.default.arrayToString(this._collisionArea, ",", "&");
+        }
+        if (this._walkableArea) {
+            anim.walkableArea = helpers_1.default.arrayToString(this._walkableArea, ",", "&");
+        }
+        if (this._collisionOriginPoint) {
+            const p = this._collisionOriginPoint;
+            anim.originPoint = [p.y, p.x];
+        }
+        if (this._interactiveArea) {
+            let point = null;
+            const points = [];
+            for (const area of this._interactiveArea) {
+                point = pixelpai_proto_1.op_def.PBPoint2i.create();
+                point.x = area.x;
+                point.y = area.y;
+                points.push(point);
+            }
+            anim.interactiveArea = points;
+        }
+        return anim;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._frameRate = obj.frameRate;
+        this._frameName = obj.frameName || [];
+        this._loop = obj.loop || false;
+        if (obj.originPoint) {
+            this._collisionOriginPoint = {
+                x: obj.originPoint[1],
+                y: obj.originPoint[0],
+            };
+            this._walkableOriginPoint = {
+                x: obj.originPoint[1],
+                y: obj.originPoint[0],
+            };
+        }
+        if (obj.baseLoc) {
+            const baseLocAry = obj.baseLoc.split(",");
+            this._baseLoc = {
+                x: parseInt(baseLocAry[0]),
+                y: parseInt(baseLocAry[1]),
+            };
+        }
+        if (obj.walkableArea) {
+            this._walkableArea = helpers_1.default.stringToArray(obj.walkableArea, ",", "&");
+            this._basicWalkableArea = this.initlizeBasicArea();
+            this.originalArea(this._basicWalkableArea, this._walkableArea, this._collisionOriginPoint);
+        }
+        if (obj.collisionArea) {
+            this._collisionArea = helpers_1.default.stringToArray(obj.collisionArea, ",", "&");
+            this._basicCollisionArea = this.initlizeBasicArea();
+            this.originalArea(this._basicCollisionArea, this._collisionArea, this._collisionOriginPoint);
+        }
+        const interactiveArea = obj.interactiveArea;
+        if (interactiveArea) {
+            const area = this.interactiveArea;
+            for (const point of interactiveArea) {
+                area.push(point);
+            }
+        }
+        for (let i = 0; i < this._frameName.length; i++) {
+            this.frameData[i] = { name: this._frameName[i], image: undefined };
+        }
+    }
+    cutBaseArea() {
+        if (this._basicCollisionArea) {
+            this._collisionArea = [];
+            this._collisionOriginPoint = Object.assign({}, this.centerPoint);
+            this._collisionArea = this.filterArea(this._basicCollisionArea, this._collisionOriginPoint);
+        }
+        if (this._basicWalkableArea) {
+            this._walkableArea = [];
+            this._walkableArea = this.filterArea(this.basicWalkableArea);
+        }
+    }
+    importAnimation(ani) {
+        this.name = ani.name;
+        this.frameName = ani.frameName || [];
+        this.frameRate = ani.frameRate;
+        this.loop = !!ani.loop;
+        const baseLoc = ani.baseLoc;
+        if (baseLoc) {
+            const tmpBaseLoc = baseLoc.split(",");
+            this.baseLoc = {
+                x: parseInt(tmpBaseLoc[0], 10),
+                y: parseInt(tmpBaseLoc[1], 10),
+            };
+        }
+        const originPoint = ani.originPoint;
+        if (originPoint) {
+            this.originPoint = { x: originPoint[1], y: originPoint[0] };
+        }
+        if (ani.walkableArea) {
+            this._walkableArea = helpers_1.default.stringToArray(ani.walkableArea, ",", "&");
+            // this._basicWalkableArea = this.initlizeBasicArea();
+            // this.originalArea(
+            //     this._basicWalkableArea,
+            //     this._walkableArea,
+            //     this._collisionOriginPoint
+            // );
+        }
+        if (ani.collisionArea) {
+            this._collisionArea = helpers_1.default.stringToArray(ani.collisionArea, ",", "&");
+            // this._basicCollisionArea = this.initlizeBasicArea();
+            // this.originalArea(
+            //     this._basicCollisionArea,
+            //     this._collisionArea,
+            //     this._collisionOriginPoint
+            // );
+        }
+        const interactiveArea = ani.interactiveArea;
+        if (interactiveArea) {
+            this.interactiveArea = [];
+            for (const point of interactiveArea) {
+                this.interactiveArea.push(point);
+            }
+        }
+    }
+    get originPoint() {
+        if (!this._collisionOriginPoint) {
+            this._collisionOriginPoint = { x: 0, y: 0 };
+        }
+        return this._collisionOriginPoint;
+    }
+    set originPoint(value) {
+        this._collisionOriginPoint = value;
+    }
+    get frameRate() {
+        return this._frameRate;
+    }
+    set frameRate(value) {
+        this._frameRate = value;
+    }
+    get loop() {
+        return this._loop;
+    }
+    set loop(value) {
+        this._loop = value;
+    }
+    get baseLoc() {
+        return this._baseLoc;
+    }
+    set baseLoc(value) {
+        this._baseLoc = value;
+    }
+    get frameData() {
+        return this._frameData;
+    }
+    addFrame(frame) {
+        this._frameData.push(frame);
+    }
+    addFrameAt(frame, index) {
+        if (index < 0) {
+            index = 0;
+        }
+        if (index > this._frameData.length) {
+            index = this._frameData.length;
+        }
+        this._frameData.splice(index, 0, frame);
+    }
+    removeFrame(frame) {
+        let index = this._frameData.indexOf(frame);
+        if (index > -1) {
+            this._frameData.splice(index, 1);
+        }
+    }
+    removeFrameByName(name) {
+        this._frameData = this.frameData.filter((frame) => frame.name !== name);
+    }
+    clearFrameData() {
+        this._frameData.length = 0;
+    }
+    set selectedFrame(val) {
+        this._selectedFrame = val;
+    }
+    get selectedFrame() {
+        return this._selectedFrame;
+    }
+    get playing() {
+        return this._playing;
+    }
+    set playing(val) {
+        this._playing = val;
+    }
+    get basicCollisionArea() {
+        if (!this._basicCollisionArea ||
+            this._basicCollisionArea.length === 0) {
+            this._basicCollisionArea = this.initlizeBasicArea();
+        }
+        return this._basicCollisionArea;
+    }
+    setBasicCollisionArea(row, col, value) {
+        if (row < 0 || row > this.areaRows || col < 0 || col > this.areaCols) {
+            return;
+        }
+        if (!this._basicCollisionArea) {
+            return;
+        }
+        this._basicCollisionArea[row][col] = value;
+    }
+    get basicWalkableArea() {
+        if (!this._basicWalkableArea || this._basicWalkableArea.length === 0) {
+            this._basicWalkableArea = this.initlizeBasicArea();
+        }
+        return this._basicWalkableArea;
+    }
+    get interactiveArea() {
+        if (!this._interactiveArea) {
+            this._interactiveArea = [];
+        }
+        return this._interactiveArea;
+    }
+    set interactiveArea(val) {
+        this._interactiveArea = val;
+    }
+    get frameName() {
+        return this._frameName;
+    }
+    set frameName(value) {
+        this._frameName = value;
+    }
+    get collisionArea() {
+        return this._collisionArea;
+    }
+    set collisionArea(ary) {
+        this._collisionArea = ary;
+    }
+    get walkableArea() {
+        return this._walkableArea;
+    }
+    set walkableArea(ary) {
+        this._walkableArea = ary;
+    }
+    get collisionOriginPoint() {
+        return this._collisionOriginPoint;
+    }
+    get walkableOriginPoint() {
+        return this._walkableOriginPoint;
+    }
+    setBasicWalkableArea(row, col, value) {
+        if (row < 0 || row > this.areaRows || col < 0 || col > this.areaCols) {
+            return;
+        }
+        if (!this._basicWalkableArea) {
+            return;
+        }
+        this._basicWalkableArea[row][col] = value;
+    }
+    convertToClientObject(scale) {
+        const ani = pixelpai_proto_1.op_gameconfig.Animation.create();
+        ani.id = this.id;
+        ani.name = this.name;
+        ani.frameRate = this._frameRate;
+        ani.loop = this._loop || false;
+        ani.frameName = this._frameName || [];
+        ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
+        ani.walkOriginPoint = [this.originPoint.y, this.originPoint.x];
+        ani.originPoint = [this.originPoint.y, this.originPoint.x];
+        ani.interactiveArea = this.interactiveArea;
+        if (this._walkableArea) {
+            ani.walkableArea = helpers_1.default.arrayToString(this._walkableArea, ",", "&");
+        }
+        else {
+            ani.walkableArea = "";
+        }
+        if (this._collisionArea) {
+            ani.collisionArea = helpers_1.default.arrayToString(this._collisionArea, ",", "&");
+        }
+        else {
+            ani.collisionArea = "";
+        }
+        return ani;
+    }
+    geneSequence() {
+        let gene = `${this.name}${this._frameRate}${this._frameName.join("")}`;
+        gene += JSON.stringify(this.baseLoc);
+        gene += JSON.stringify(this.originPoint);
+        if (this._collisionArea) {
+            gene += JSON.stringify(this._collisionArea);
+        }
+        if (this._walkableArea) {
+            gene += JSON.stringify(this._walkableArea);
+        }
+        return gene;
+    }
+    filterArea(sourceArea, originPoint) {
+        const area = [...sourceArea];
+        this.removeHeadRows(area, originPoint);
+        this.removeHeadCols(area, originPoint);
+        this.removeTailRows(area);
+        this.removeTailCols(area);
+        return area;
+    }
+    originalArea(area, filterAry, originPoint) {
+        if (!area || !filterAry)
+            return;
+        originPoint = originPoint || { x: 0, y: 0 };
+        const startX = this.centerPoint.x - originPoint.x;
+        const startY = this.centerPoint.y - originPoint.y;
+        for (let i = 0; i < filterAry.length; i++) {
+            for (let j = 0; j < filterAry[0].length; j++) {
+                if (area.length > i + startX && area[i].length > j + startY)
+                    area[i + startX][j + startY] = filterAry[i][j];
+            }
+        }
+    }
+    removeHeadRows(ary, originPoint) {
+        // from begin to center row.
+        let startIndedx = 0;
+        if (this._collisionArea &&
+            this._collisionArea.length &&
+            this._collisionOriginPoint) {
+            startIndedx = this.centerPoint.x - this._collisionOriginPoint.x;
+            ary.splice(0, startIndedx);
+            return;
+        }
+        const tmpArr = ary.slice(startIndedx, this.centerPoint.x), len = tmpArr.length;
+        for (let i = 0; i < len; ++i) {
+            const row = tmpArr[i];
+            const idx = row.find((num) => num > 0);
+            if (idx) {
+                return;
+            }
+            else {
+                ary.shift();
+                if (originPoint)
+                    originPoint.x -= 1;
+            }
+        }
+    }
+    removeTailRows(ary) {
+        // from center to end row
+        let endIndex = 0;
+        if (this._collisionArea && this._collisionArea.length > 0) {
+            endIndex = this._collisionArea.length - 1;
+        }
+        const tmpArr = ary.slice(1), len = tmpArr.length;
+        for (let i = len - 1; i >= endIndex; i--) {
+            const row = tmpArr[i];
+            const idx = row.find((num) => num > 0);
+            if (idx && endIndex === 0) {
+                return;
+            }
+            else {
+                ary.pop();
+                // Note cut tail does not change the origin point
+            }
+        }
+    }
+    removeHeadCols(ary, originPoint) {
+        let edge = -1;
+        if (this._collisionArea &&
+            this._collisionArea.length &&
+            this._collisionOriginPoint) {
+            edge = this.centerPoint.y - this._collisionOriginPoint.y;
+        }
+        if (edge < 1) {
+            for (let row = 0; row < ary.length; ++row) {
+                const rowArr = ary[row];
+                const idx = rowArr.findIndex((num) => num > 0);
+                if (idx > -1 && idx < this.centerPoint.x) {
+                    if (edge < 0) {
+                        edge = idx;
+                    }
+                    edge = Math.min(edge, idx);
+                }
+            }
+        }
+        if (edge < 0 || edge === NaN) {
+            edge = this.centerPoint.x;
+        }
+        // do the cut
+        if (edge > -1) {
+            for (let row = 0; row < ary.length; ++row) {
+                // 0 0 0 0 E * * * * * ...
+                //         ^ > > > > >
+                ary[row] = ary[row].slice(edge);
+            }
+            if (originPoint)
+                originPoint.y -= edge;
+        }
+    }
+    removeTailCols(ary) {
+        let edge = 0;
+        if (this._collisionArea && this._collisionArea.length > 0) {
+            edge = this._collisionArea[0].length;
+        }
+        else {
+            for (let row = 0; row < ary.length; ++row) {
+                const rowArr = ary[row];
+                let idx = rowArr
+                    .slice()
+                    .reverse()
+                    .findIndex((val) => {
+                    return val > 0;
+                });
+                if (idx > -1) {
+                    idx = rowArr.length - idx;
+                    edge = Math.max(edge, idx);
+                }
+            }
+        }
+        if (edge < 1) {
+            edge = 1;
+        }
+        // do the cut
+        if (ary[0].length > edge) {
+            for (let row = 0; row < ary.length; ++row) {
+                // ... * * * * * E 0 0 0
+                //     < < < < < ^
+                ary[row] = ary[row].slice(0, edge);
+            }
+            // Note cut tail does not change the origin point
+        }
+    }
+    initlizeBasicArea() {
+        const result = [];
+        for (let i = 0; i < this.areaRows; i++) {
+            result[i] = [];
+            for (let j = 0; j < this.areaCols; j++) {
+                result[i][j] = 0;
+            }
+        }
+        return result;
+    }
+    duplicate(src) {
+        super.duplicate(src);
+        if (src instanceof AnimationDataNode) {
+            this._loop = src.loop;
+            this._baseLoc = src.baseLoc;
+            this._frameName = src.frameName;
+            this._frameRate = src.frameRate;
+            this._collisionArea = src.collisionArea;
+            this._collisionOriginPoint = src.collisionOriginPoint;
+            this._walkableArea = src.walkableArea;
+            this._walkableOriginPoint = src.walkableOriginPoint;
+            this._interactiveArea = src.interactiveArea;
+        }
+    }
+}
+exports.AnimationDataNode = AnimationDataNode;
+//# sourceMappingURL=animations.js.map
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const access_1 = __webpack_require__(246);
+const pixelpai_proto_1 = __webpack_require__(3);
+var NodeType = pixelpai_proto_1.op_def.NodeType;
+class PackageNode extends config_object_1.EntityNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._items = [];
+        this.name = "背包";
+    }
+    ignore() { }
+    appendNode(obj) {
+        try {
+            super.appendNode(obj);
+        }
+        catch (e) { }
+        if (obj instanceof access_1.AccessNode) {
+            this._access = obj;
+        }
+        if (obj.type === NodeType.PackageItemType) {
+            this._items.push(obj);
+        }
+    }
+    removeNode(object) {
+        super.removeNode(object);
+        if (object instanceof access_1.AccessNode) {
+            this._access = undefined;
+        }
+        if (object instanceof access_1.AccessNode) {
+            // TODO delete
+        }
+    }
+}
+exports.default = PackageNode;
+class PackageItemNode extends config_object_1.EntityNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "道具";
+    }
+    ignore() { }
+}
+exports.PackageItemNode = PackageItemNode;
+//# sourceMappingURL=package.js.map
+
+/***/ }),
+/* 120 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16419,29 +18026,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(56);
-/* harmony import */ var _layer_manager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(133);
-/* harmony import */ var _Notice_NoticeMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(134);
+/* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(57);
+/* harmony import */ var _layer_manager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(132);
+/* harmony import */ var _Notice_NoticeMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(133);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(33);
-/* harmony import */ var _friend_friend_mediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(81);
-/* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(62);
-/* harmony import */ var _baseView_rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(83);
-/* harmony import */ var _baseView_leftGroup_left_mediator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(145);
-/* harmony import */ var _baseView_bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(84);
-/* harmony import */ var _baseView_bagGroup_bag_group_mediator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(148);
-/* harmony import */ var _baseView_top_menu_top_menu_mediator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(150);
+/* harmony import */ var _friend_friend_mediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(82);
+/* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(63);
+/* harmony import */ var _baseView_rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(84);
+/* harmony import */ var _baseView_leftGroup_left_mediator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(144);
+/* harmony import */ var _baseView_bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(85);
+/* harmony import */ var _baseView_bagGroup_bag_group_mediator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(147);
+/* harmony import */ var _baseView_top_menu_top_menu_mediator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(149);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(13);
-/* harmony import */ var _components_inputTextFactory__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(87);
-/* harmony import */ var _DecorateControl_DecorateControlMediator__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(152);
-/* harmony import */ var _PiCaMainUI_PicaMainUIMediator__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(154);
-/* harmony import */ var _Activity_ActivityMediator__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(157);
-/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(88);
-/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(90);
-/* harmony import */ var _MineCar_MineCarMediator__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(162);
-/* harmony import */ var _Bubble_interactivebubble_manager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(168);
+/* harmony import */ var _components_inputTextFactory__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(88);
+/* harmony import */ var _DecorateControl_DecorateControlMediator__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(151);
+/* harmony import */ var _PiCaMainUI_PicaMainUIMediator__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(153);
+/* harmony import */ var _Activity_ActivityMediator__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(156);
+/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(89);
+/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(91);
+/* harmony import */ var _MineCar_MineCarMediator__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(161);
+/* harmony import */ var _Bubble_interactivebubble_manager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(167);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(27);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(17);
-/* harmony import */ var _ReAwardTips_ReAwardTipsMediator__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(170);
+/* harmony import */ var _ReAwardTips_ReAwardTipsMediator__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(169);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -16764,7 +18371,7 @@ var UiManager = /** @class */ (function (_super) {
         var mediator = this.mMedMap.get(className);
         if (!mediator) {
             var path = "./" + type + "/" + type + "Mediator";
-            var ns = __webpack_require__(386)("./" + type + "/" + className);
+            var ns = __webpack_require__(387)("./" + type + "/" + className);
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
             if (!mediator) {
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
@@ -16975,7 +18582,7 @@ var UiManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 122 */
+/* 121 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16983,13 +18590,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChatPanelPC", function() { return ChatPanelPC; });
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_shape_roundrectangle_RoundRectangle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(293);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(50);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5);
-/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(23);
+/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(79);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(22);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
-/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(79);
+/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(80);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17258,7 +18865,7 @@ var ChatPanelPC = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 123 */
+/* 122 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17271,7 +18878,7 @@ var GetSizerConfig = function (gameObject) {
 /* harmony default export */ __webpack_exports__["a"] = (GetSizerConfig);
 
 /***/ }),
-/* 124 */
+/* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17295,14 +18902,14 @@ const ALIGN = Phaser.Display.Align;
 });
 
 /***/ }),
-/* 125 */
+/* 124 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var _eventemitter_EventEmitterMethods_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(32);
 /* harmony import */ var _system_GetSceneObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(45);
-/* harmony import */ var _system_IsGameObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(58);
-/* harmony import */ var _system_IsSceneObject_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(254);
+/* harmony import */ var _system_IsGameObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(59);
+/* harmony import */ var _system_IsSceneObject_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(253);
 
 
 
@@ -17409,11 +19016,11 @@ Object.assign(
 /* harmony default export */ __webpack_exports__["a"] = (TweenBase);
 
 /***/ }),
-/* 126 */
+/* 125 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _GetSizerConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(123);
+/* harmony import */ var _GetSizerConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(122);
 
 
 var GetParentSizer = function (gameObject) {
@@ -17423,7 +19030,7 @@ var GetParentSizer = function (gameObject) {
 /* harmony default export */ __webpack_exports__["a"] = (GetParentSizer);
 
 /***/ }),
-/* 127 */
+/* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17448,7 +19055,7 @@ var GetBoundsConfig = function (config, out) {
 /* harmony default export */ __webpack_exports__["a"] = (GetBoundsConfig);
 
 /***/ }),
-/* 128 */
+/* 127 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17464,11 +19071,11 @@ var normalizePatchesConfig = function (config) {
 
 
 /***/ }),
-/* 129 */
+/* 128 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _Clear_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(130);
+/* harmony import */ var _Clear_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(129);
 
 
 /**
@@ -17504,7 +19111,7 @@ var Clone = function (obj, out) {
 
 
 /***/ }),
-/* 130 */
+/* 129 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17520,18 +19127,18 @@ var Clear = function (obj) {
 /* harmony default export */ __webpack_exports__["a"] = (Clear);
 
 /***/ }),
-/* 131 */
+/* 130 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChatPanelMobile", function() { return ChatPanelMobile; });
-/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79);
+/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(80);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(50);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(14);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(22);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(19);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -17888,7 +19495,7 @@ var ChatPanelMobile = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 132 */
+/* 131 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17964,7 +19571,7 @@ var Chat = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 133 */
+/* 132 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18050,16 +19657,16 @@ var LayerManager = /** @class */ (function () {
 
 
 /***/ }),
-/* 134 */
+/* 133 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoticeMediator", function() { return NoticeMediator; });
-/* harmony import */ var _NoticePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(135);
+/* harmony import */ var _NoticePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(134);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
-/* harmony import */ var _Notice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(136);
+/* harmony import */ var _Notice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(135);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -18163,7 +19770,7 @@ var NoticeMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 135 */
+/* 134 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18309,7 +19916,7 @@ var NoticePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 136 */
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18382,7 +19989,7 @@ var Notice = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 137 */
+/* 136 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18393,8 +20000,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
 /* harmony import */ var _bagMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(33);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(14);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(22);
-/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(61);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
+/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(62);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(26);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(27);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(6);
@@ -18760,7 +20367,7 @@ var BagPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 138 */
+/* 137 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18775,7 +20382,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(96);
 /* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(phaser__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(26);
-/* harmony import */ var _friend_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(81);
+/* harmony import */ var _friend_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(82);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(27);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -19165,15 +20772,15 @@ var FriendItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 139 */
+/* 138 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RankPanel", function() { return RankPanel; });
-/* harmony import */ var _BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(82);
+/* harmony import */ var _BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(83);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(26);
-/* harmony import */ var _RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(62);
+/* harmony import */ var _RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(63);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(27);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -19338,7 +20945,7 @@ var RankPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 140 */
+/* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19353,7 +20960,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(33);
-/* harmony import */ var _bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(84);
+/* harmony import */ var _bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(85);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19568,7 +21175,7 @@ var RightBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 141 */
+/* 140 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19578,11 +21185,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var _icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(27);
-/* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(56);
-/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78);
+/* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(57);
+/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(79);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(33);
-/* harmony import */ var _rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(83);
-/* harmony import */ var _ElementStorage_ElementStorageMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(85);
+/* harmony import */ var _rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(84);
+/* harmony import */ var _ElementStorage_ElementStorageMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(86);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19894,7 +21501,7 @@ var BottomBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 142 */
+/* 141 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19903,10 +21510,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(19);
-/* harmony import */ var _item_Item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(143);
-/* harmony import */ var _ElementStorageMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(85);
+/* harmony import */ var _item_Item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(142);
+/* harmony import */ var _ElementStorageMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(86);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20243,7 +21850,7 @@ var ElementStoragePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 143 */
+/* 142 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20339,7 +21946,7 @@ var Item = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 144 */
+/* 143 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20437,14 +22044,14 @@ var ElementStorage = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 145 */
+/* 144 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LeftMediator", function() { return LeftMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
-/* harmony import */ var _left_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(146);
+/* harmony import */ var _left_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(145);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20480,7 +22087,7 @@ var LeftMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 146 */
+/* 145 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20488,7 +22095,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LeftBtnGroup", function() { return LeftBtnGroup; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _icon_select_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(147);
+/* harmony import */ var _icon_select_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(146);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20587,7 +22194,7 @@ var LeftBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 147 */
+/* 146 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20703,7 +22310,7 @@ var IconSelectBtn = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 148 */
+/* 147 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20711,7 +22318,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagGroupMediator", function() { return BagGroupMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
-/* harmony import */ var _bag_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(149);
+/* harmony import */ var _bag_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(148);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -20804,7 +22411,7 @@ var BagGroupMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 149 */
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20812,8 +22419,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagGroup", function() { return BagGroup; });
 /* harmony import */ var _bag_item_slot__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(34);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(86);
-/* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(56);
+/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(87);
+/* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(57);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(33);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -21071,14 +22678,14 @@ var BagGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 150 */
+/* 149 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopMenuMediator", function() { return TopMenuMediator; });
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
-/* harmony import */ var _top_menu_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(151);
+/* harmony import */ var _top_menu_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(150);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(3);
@@ -21177,7 +22784,7 @@ var TopMenuMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 151 */
+/* 150 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21303,13 +22910,13 @@ var TopMenuContainer = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 152 */
+/* 151 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DecorateControlMediator", function() { return DecorateControlMediator; });
-/* harmony import */ var _DecorateControlPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(153);
+/* harmony import */ var _DecorateControlPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(152);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
@@ -21455,7 +23062,7 @@ var DecorateControlMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 153 */
+/* 152 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21597,15 +23204,15 @@ var DecorateControlPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 154 */
+/* 153 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaMainUIMediator", function() { return PicaMainUIMediator; });
-/* harmony import */ var _PicaMainUIPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(155);
+/* harmony import */ var _PicaMainUIPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(154);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var _PicaMainUI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(156);
+/* harmony import */ var _PicaMainUI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(155);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21666,7 +23273,7 @@ var PicaMainUIMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 155 */
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22058,7 +23665,7 @@ var ProgressBar = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 156 */
+/* 155 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22137,13 +23744,13 @@ var PicaMainUI = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 157 */
+/* 156 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivityMediator", function() { return ActivityMediator; });
-/* harmony import */ var _ActivityPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(158);
+/* harmony import */ var _ActivityPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(157);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -22192,7 +23799,7 @@ var ActivityMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 158 */
+/* 157 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22257,7 +23864,7 @@ var ActivityPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 159 */
+/* 158 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22265,9 +23872,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaChatPanel", function() { return PicaChatPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(50);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(10);
-/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(89);
+/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(90);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22495,7 +24102,7 @@ var PicaChatPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 160 */
+/* 159 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22606,7 +24213,7 @@ var PicaNavigatePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 161 */
+/* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22687,14 +24294,14 @@ var PicaChat = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 162 */
+/* 161 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MineCarMediator", function() { return MineCarMediator; });
-/* harmony import */ var _MineCarPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(163);
-/* harmony import */ var _MineCar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(167);
+/* harmony import */ var _MineCarPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(162);
+/* harmony import */ var _MineCar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(166);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -22775,7 +24382,7 @@ var MineCarMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 163 */
+/* 162 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22785,8 +24392,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
-/* harmony import */ var _components_alert_view__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(164);
-/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(91);
+/* harmony import */ var _components_alert_view__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(163);
+/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(64);
 /* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(41);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -23370,7 +24977,7 @@ var CategorieButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 164 */
+/* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23378,7 +24985,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AlertView", function() { return AlertView; });
 /* harmony import */ var _BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
 /* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(41);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -23498,7 +25105,7 @@ var AlertView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 165 */
+/* 164 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23508,7 +25115,7 @@ var MaskToGameObject = function (mask) {
 /* harmony default export */ __webpack_exports__["a"] = (MaskToGameObject);
 
 /***/ }),
-/* 166 */
+/* 165 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23677,7 +25284,7 @@ const CLICKMODE = {
 /* harmony default export */ __webpack_exports__["a"] = (Button);
 
 /***/ }),
-/* 167 */
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23760,7 +25367,7 @@ var MineCar = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 168 */
+/* 167 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23771,11 +25378,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _interactionbubble_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(169);
-/* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(72);
+/* harmony import */ var _interactionbubble_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(168);
+/* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(73);
 /* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12);
-/* harmony import */ var _scenes_play__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(73);
-/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(61);
+/* harmony import */ var _scenes_play__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(74);
+/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(62);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(5);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -23925,14 +25532,14 @@ var InteractiveBubbleManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 169 */
+/* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractionBubbleContainer", function() { return InteractionBubbleContainer; });
-/* harmony import */ var _interactionbubble__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(217);
-/* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(71);
+/* harmony import */ var _interactionbubble__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(215);
+/* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23999,15 +25606,15 @@ var InteractionBubbleContainer = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 170 */
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReAwardTipsMediator", function() { return ReAwardTipsMediator; });
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
-/* harmony import */ var _ReAwardTip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(171);
-/* harmony import */ var _ReAwardTipsPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(172);
+/* harmony import */ var _ReAwardTip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(170);
+/* harmony import */ var _ReAwardTipsPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(171);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24060,7 +25667,7 @@ var ReAwardTipsMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 171 */
+/* 170 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24133,7 +25740,7 @@ var ReAwardTips = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 172 */
+/* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24320,13 +25927,13 @@ var AwardItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 173 */
+/* 172 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComponentRankMediator", function() { return ComponentRankMediator; });
-/* harmony import */ var _ComponentRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(174);
+/* harmony import */ var _ComponentRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(173);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -24411,15 +26018,15 @@ var ComponentRankMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 174 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComponentRankPanel", function() { return ComponentRankPanel; });
-/* harmony import */ var _Rank_BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(82);
+/* harmony import */ var _Rank_BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(83);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _ComponentRankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(173);
+/* harmony import */ var _ComponentRankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(172);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24495,7 +26102,7 @@ var ComponentRankPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 175 */
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24600,7 +26207,7 @@ var CutInPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 176 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24791,7 +26398,7 @@ var DebugLogger = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 177 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24878,7 +26485,7 @@ var EquipUpgrade = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 178 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24887,7 +26494,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(10);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
-/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(91);
+/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(64);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(14);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -25196,14 +26803,14 @@ var EquipItemCell = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 179 */
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
-/* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(178);
+/* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(177);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -25386,7 +26993,7 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 180 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25553,10 +27160,10 @@ var FurniBag = /** @class */ (function (_super) {
 
 
 /***/ }),
+/* 180 */,
 /* 181 */,
 /* 182 */,
-/* 183 */,
-/* 184 */
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25565,12 +27172,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(50);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(19);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(5);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(37);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(10);
-/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(185);
+/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(184);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -25798,15 +27405,15 @@ var InfoPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 185 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoPanelMediator", function() { return InfoPanelMediator; });
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
-/* harmony import */ var _InfoPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(184);
-/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(61);
+/* harmony import */ var _InfoPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(183);
+/* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(62);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -25890,7 +27497,7 @@ var InfoPanelMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 186 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25899,11 +27506,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(14);
-/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(86);
+/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(87);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
-/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(187);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(22);
+/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(186);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(50);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -26412,13 +28019,13 @@ var InteractivePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 187 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractivePanelMediator", function() { return InteractivePanelMediator; });
-/* harmony import */ var _InteractivePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(186);
+/* harmony import */ var _InteractivePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(185);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -26500,7 +28107,7 @@ var InteractivePanelMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 188 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26508,7 +28115,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemDetail", function() { return ItemDetail; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _bag_dragDropIcon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(60);
+/* harmony import */ var _bag_dragDropIcon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(61);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -26685,7 +28292,7 @@ var ItemDetail = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 189 */
+/* 188 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26693,9 +28300,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemPopCardPanel", function() { return ItemPopCardPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(48);
-/* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(389);
+/* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(390);
 /* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Market_DetailDisplay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(63);
+/* harmony import */ var _Market_DetailDisplay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(65);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(13);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -26931,18 +28538,18 @@ var ItemPopCardPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 190 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementDetail", function() { return ElementDetail; });
-/* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(191);
+/* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(190);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(19);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(48);
-/* harmony import */ var _DetailDisplay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(63);
+/* harmony import */ var _DetailDisplay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(65);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -27214,13 +28821,13 @@ var ElementDetail = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 191 */
+/* 190 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NumberCounter", function() { return NumberCounter; });
-/* harmony import */ var _components_label_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(192);
+/* harmony import */ var _components_label_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(191);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27383,13 +28990,13 @@ var NumberCounter = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 192 */
+/* 191 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LabelInput", function() { return LabelInput; });
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -27502,7 +29109,7 @@ var LabelInput = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 193 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27614,21 +29221,21 @@ var Market = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 194 */
+/* 193 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarketPanel", function() { return MarketPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
-/* harmony import */ var _ElementDetail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(190);
+/* harmony import */ var _ElementDetail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(189);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(48);
-/* harmony import */ var _components_checkbox_group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(64);
+/* harmony import */ var _components_checkbox_group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(66);
 /* harmony import */ var _TextButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(93);
-/* harmony import */ var _item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(195);
-/* harmony import */ var _components_tab_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(196);
+/* harmony import */ var _item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(194);
+/* harmony import */ var _components_tab_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(195);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(10);
-/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(91);
+/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(64);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28004,7 +29611,7 @@ var MarketPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 195 */
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28122,7 +29729,7 @@ var MarketItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 196 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28157,7 +29764,7 @@ var TabButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 197 */
+/* 196 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28167,7 +29774,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(19);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28291,7 +29898,7 @@ var MessageBoxView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 198 */
+/* 197 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28370,7 +29977,7 @@ var MineSettle = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 199 */
+/* 198 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28384,7 +29991,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(14);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(19);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(5);
-/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(91);
+/* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(64);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28607,7 +30214,7 @@ var MineSettleItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 200 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28617,7 +30224,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(10);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28758,7 +30365,7 @@ var PicaMessageBoxPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 201 */
+/* 200 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28768,11 +30375,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RoomZoon", function() { return RoomZoon; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
-/* harmony import */ var _components_checkbox_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(64);
+/* harmony import */ var _components_checkbox_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(66);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(48);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _lib_rexui_lib_ui_scroller_Scroller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(265);
+/* harmony import */ var _lib_rexui_lib_ui_scroller_Scroller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(264);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(9);
 /* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(41);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -29580,7 +31187,7 @@ var PopularRoomItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 202 */
+/* 201 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29672,7 +31279,7 @@ var RoomList = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 203 */
+/* 202 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29683,7 +31290,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ShopPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(204);
+/* harmony import */ var _ShopPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(203);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -29845,7 +31452,7 @@ var ShopMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 204 */
+/* 203 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29853,8 +31460,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShopPanel", function() { return ShopPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _shop_itemSlot__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(221);
-/* harmony import */ var _ShopMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(203);
+/* harmony import */ var _shop_itemSlot__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(219);
+/* harmony import */ var _ShopMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(202);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(14);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(26);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(27);
@@ -30059,13 +31666,13 @@ var ShopPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 205 */
+/* 204 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserInfoMediator", function() { return UserInfoMediator; });
-/* harmony import */ var _UserInfoPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(206);
+/* harmony import */ var _UserInfoPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(205);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -30147,7 +31754,7 @@ var UserInfoMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 206 */
+/* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30159,7 +31766,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(37);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(10);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(19);
-/* harmony import */ var _UserInfoMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(205);
+/* harmony import */ var _UserInfoMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(204);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -30380,7 +31987,7 @@ var UserInfoPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 207 */
+/* 206 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30472,7 +32079,7 @@ var MenuItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 208 */
+/* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30480,7 +32087,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserMenuPanel", function() { return UserMenuPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(207);
+/* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(206);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -30659,7 +32266,7 @@ var UserMenuPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 209 */
+/* 208 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30731,13 +32338,13 @@ var PopUpTextUI = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 210 */
+/* 209 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StorageMediator", function() { return StorageMediator; });
-/* harmony import */ var _storagePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(211);
+/* harmony import */ var _storagePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(210);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -30810,7 +32417,7 @@ var StorageMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 211 */
+/* 210 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30820,7 +32427,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
-/* harmony import */ var _storageMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(210);
+/* harmony import */ var _storageMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(209);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(27);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(6);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -30944,7 +32551,7 @@ var StoragePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 212 */
+/* 211 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31213,7 +32820,7 @@ var TopBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 213 */
+/* 212 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31477,1796 +33084,7 @@ var SelectCallItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 214 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(216);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
-var GetScrollMode = __webpack_require__(76);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/containerlite/ContainerLite.js + 13 modules
-var ContainerLite = __webpack_require__(287);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/GetValue.js
-var GetValue = __webpack_require__(258);
-var GetValue_default = /*#__PURE__*/__webpack_require__.n(GetValue);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clear.js
-var Clear = __webpack_require__(130);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clone.js
-var Clone = __webpack_require__(129);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/data/DataMethods.js
-
-
-
-
-/* harmony default export */ var DataMethods = ({
-    enableData() {
-        if (this.data === undefined) {
-            this.data = {};
-        }
-        return this;
-    },
-
-    getData(key, defaultValue) {
-        this.enableData();
-        return (key === undefined) ? this.data : GetValue_default()(this.data, key, defaultValue);
-    },
-
-    setData(key, value) {
-        this.enableData();
-        this.data[key] = value;
-        return this;
-    },
-
-    incData(key, inc, defaultValue) {
-        if (defaultValue === undefined) {
-            defaultValue = 0;
-        }
-        this.enableData();
-        this.setData(key, this.getData(key, defaultValue) + inc);
-        return this;
-    },
-
-    mulData(key, mul, defaultValue) {
-        if (defaultValue === undefined) {
-            defaultValue = 0;
-        }
-        this.enableData();
-        this.setData(key, this.getData(key, defaultValue) * mul);
-        return this;
-    },
-
-    clearData() {
-        if (this.data) {
-            Object(Clear["a" /* default */])(this.data);
-        }
-        return this;
-    },
-
-    resetData(data) {
-        this.clearData();
-
-        if (data) {
-            this.enableData();
-            for (var key in data) {
-                this.data[key] = data[key];
-            }
-        }
-        return this;
-    },
-
-    cloneData() {
-        if (this.data) {
-            return Object(Clone["a" /* default */])(this.data);
-        } else {
-            return {};
-        }
-    }
-});
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/Cell.js
-
-
-class Cell {
-    constructor(parent, config) {
-        this.container = null;
-        this.setParent(parent);
-        this._deltaHeight = 0;
-        // this.resetFromJSON(config);
-    }
-
-    setParent(parent) {
-        this.parent = parent; // parent: table
-        this.parentContainer = parent.getParentContainer();
-    }
-
-    // resetFromJSON(o) {
-    //     return this;
-    // }
-
-    destroy(fromScene) {
-        if (fromScene === undefined) {
-            fromScene = false;
-        }
-
-        if (!fromScene) {
-            var table = this.parent;
-            if (this.deltaHeight !== 0) {
-                table.nonZeroDeltaHeightCount--;
-            }
-            this.destroyContainer();
-        }
-
-        this.data = undefined;
-        this.container = null;
-        this.parent = undefined;
-        this.parentContainer = undefined;
-    }
-
-    get table() {
-        return this.parent;
-    }
-
-    get scrollMode() {
-        return this.parentContainer.scrollMode;
-    }
-
-    get colIndx() {
-        return this.parent.cellIndxeToColIndex(this.index);
-    }
-
-    get rowIndx() {
-        return this.parent.cellIndxeToRowIndex(this.index);
-    }
-
-    getContainer() {
-        return this.container;
-    }
-
-    setContainer(container) {
-        if (!container) {
-            this.destroyContainer();
-            return this;
-        }
-
-        if (this.container) {
-            this.container.destroy();
-        }
-        this.container = container;
-        this.parentContainer.add(container);
-        return this;
-    }
-
-    destroyContainer() {
-        if (this.container) {
-            this.container.destroy();
-            this.container = null;
-        }
-        return this;
-    }
-
-    popContainer() {
-        if (this.container) {
-            var container = this.container;
-            this.container = null;
-            this.parentContainer.remove(container);
-            return container;
-        } else {
-            return null;
-        }
-    }
-
-    setXY(x, y) {
-        if (this.container) {
-            this.parentContainer.setChildLocalPosition(this.container, x, y);
-        }
-        return this;
-    }
-
-    get deltaHeight() {
-        return this._deltaHeight;
-    }
-
-    set deltaHeight(deltaHeight) {
-        if (deltaHeight == null) {
-            deltaHeight = 0;
-        }
-        var table = this.parent;
-        if ((this._deltaHeight === 0) && (deltaHeight !== 0)) {
-            table.nonZeroDeltaHeightCount++;
-        } else if ((this._deltaHeight !== 0) && (deltaHeight === 0)) {
-            table.nonZeroDeltaHeightCount--;
-        }
-
-        this._deltaHeight = deltaHeight;
-    }
-
-    setDeltaHeight(deltaHeight) {
-        this.deltaHeight = deltaHeight;
-        return this;
-    }
-
-    get height() {
-        if (this.scrollMode === 0) {
-            return this.deltaHeight + this.parent.defaultCellHeight;
-        } else {
-            return this.parent.defaultCellWidth;
-        }
-    }
-
-    set height(height) {
-        // Only worked when scrollMode is 0
-        if (this.scrollMode === 1) {
-            return;
-        }
-        this.setDeltaHeight(height - this.parent.defaultCellHeight);
-    }
-
-    setHeight(height) {
-        // Only worked when scrollMode is 0
-        this.height = height;
-        return this;
-    }
-
-    get width() {
-        if (this.scrollMode === 0) {
-            return this.parent.defaultCellWidth;
-        } else {
-            return this.deltaHeight + this.parent.defaultCellHeight;
-        }
-    }
-
-    set width(width) {
-        // Only worked when scrollMode is 1
-        if (this.scrollMode === 0) {
-            return;
-        }
-        this.setDeltaHeight(width - this.parent.defaultCellHeight);
-    }
-
-    setWidth(width) {
-        this.width = width;
-        return this;
-    }
-
-    get scene() {
-        return this.parentContainer.scene;
-    }
-};
-
-
-Object.assign(
-    Cell.prototype,
-    DataMethods
-);
-
-
-/* harmony default export */ var gridtable_Cell = (Cell);
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/pool.js + 1 modules
-var pool = __webpack_require__(65);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/Table.js
-
-
-
-const Table_GetValue = Phaser.Utils.Objects.GetValue;
-const SpliceOne = Phaser.Utils.Array.SpliceOne;
-
-class Table_Table {
-    constructor(parent, config) {
-        this.parent = parent; // parent: GridTable game object (Container)
-        this.cells = [];
-        this.cellPool = new pool["a" /* default */]();
-        this.resetFromJSON(config);
-    }
-
-    resetFromJSON(o) {
-        this.colCount = undefined;
-        this._nonZeroDeltaHeightCount = 0;
-        this.resetTotalRowsHeight();
-        this.setDefaultCellHeight(Table_GetValue(o, 'cellHeight', 30));
-        this.setDefaultCellWidth(Table_GetValue(o, 'cellWidth', 30));
-        this.initCells(Table_GetValue(o, 'cellsCount', 0));
-        this.setColumnCount(Table_GetValue(o, 'columns', 1));
-        this.zoom = Table_GetValue(o, 'zoom', 1);
-        this.dpr = Table_GetValue(o, 'dpr', 1);
-        return this;
-    }
-
-    destroy(fromScene) {
-        for (var i = 0, cnt = this.cells.length; i < cnt; i++) {
-            this.freeCell(this.cells[i], fromScene);
-        }
-        this.cellPool.destroy();
-        this.cells = undefined;
-        this.parent = undefined;
-    }
-
-    get nonZeroDeltaHeightCount() {
-        return this._nonZeroDeltaHeightCount;
-    }
-
-    set nonZeroDeltaHeightCount(count) {
-        if (this._nonZeroDeltaHeightCount === count) {
-            return;
-        }
-        this._nonZeroDeltaHeightCount = count;
-        this.resetTotalRowsHeight();
-    }
-
-    get defaultCellHeightMode() {
-        return (this.nonZeroDeltaHeightCount === 0);
-    }
-
-    setDefaultCellHeight(height) {
-        this.defaultCellHeight = height;
-        return this;
-    }
-
-    setDefaultCellWidth(width) {
-        this.defaultCellWidth = width;
-        return this;
-    }
-
-    initCells(size) {
-        var cells = this.cells;
-        cells.length = size;
-        for (var i = 0; i < size; i++) {
-            cells[i] = null;
-        }
-        return this;
-    }
-
-    insertNewCells(cellIdx, count) {
-        var cells = this.cells;
-        if (cellIdx === cells.length) {
-            // append at end of array
-            var endIdx = cellIdx + count;
-            cells.legth = endIdx;
-            for (var i = cellIdx; i < endIdx; i++) {
-                cells[i] = null;
-            }
-        } else {
-            var newCells = [];
-            newCells.length = count;
-            for (var i = 0; i < count; i++) {
-                newCells[i] = null;
-            }
-            this.cells.splice(cellIdx, 0, ...newCells);
-        }
-
-        this.resetTotalRowsHeight();
-        return this;
-    }
-
-    removeCells(cellIdx, count) {
-        var endIdx = cellIdx + count;
-        for (var i = cellIdx; i < endIdx; i++) {
-            this.freeCell(i);
-        }
-
-        if (endIdx === this.cells.length) {
-            // remove until end of array
-            this.cells.length = cellIdx;
-        } else {
-            if (count === 1) {
-                SpliceOne(this.cells, cellIdx);
-            } else {
-                this.cells.splice(cellIdx, count);
-            }
-            this.buildCellIndex(cellIdx);
-        }
-
-        this.resetTotalRowsHeight();
-        return this;
-    }
-
-    setColumnCount(cnt) {
-        this.colCount = cnt;
-        this.resetTotalRowsHeight();
-        return this;
-    }
-
-    get rowCount() {
-        return Math.ceil(this.cells.length / this.colCount);
-    }
-
-    get cellsCount() {
-        return this.cells.length;
-    }
-
-    isValidCellIdx(idx) {
-        return ((idx >= 0) && (idx < this.cells.length));
-    }
-
-    heightToRowIndex(height, isCeil) {
-        // defaultCellHeightMode
-        if (this.defaultCellHeightMode) {
-            var rowIdx = height / this.defaultCellHeight;
-            if (isCeil) {
-                rowIdx = Math.ceil(rowIdx);
-            } else {
-                rowIdx = Math.floor(rowIdx);
-            }
-
-            return rowIdx;
-        }
-
-        // count cell height one by one
-        var rowCount = this.rowCount;
-        var remainder = height,
-            isValidIdx;
-        var cell, rowHeight, rowIdx = 0;
-
-        while (1) {
-            rowHeight = this.getRowHeight(rowIdx);
-            remainder -= rowHeight;
-
-            isValidIdx = (rowIdx >= 0) && (rowIdx < rowCount);
-            if ((remainder > 0) && isValidIdx) {
-                rowIdx += 1;
-            } else if (remainder === 0) {
-                return rowIdx;
-            } else {
-                if (isCeil) {
-                    var preRowIdx = rowIdx;
-                    rowIdx += 1;
-                    isValidIdx = (rowIdx >= 0) && (rowIdx < rowCount);
-
-                    if (!isValidIdx)
-                        rowIdx = preRowIdx;
-                }
-
-                return rowIdx;
-            }
-        }
-
-    }
-
-    widthToColIndex(width, isCeil) {
-        var colIdx = width / this.defaultCellWidth;
-        if (isCeil) {
-            colIdx = Math.ceil(colIdx);
-        } else {
-            colIdx = Math.floor(colIdx);
-        }
-
-        return colIdx;
-    }
-
-    colRowToCellIndex(colIdx, rowIdx) {
-        if (colIdx >= this.colCount) {
-            return null;
-        }
-        return (rowIdx * this.colCount) + colIdx;
-    }
-
-    rowIndexToHeight(start, end) {
-        // defaultCellHeightMode
-        if (this.defaultCellHeightMode) {
-            return (end - start + 1) * this.defaultCellHeight * this.zoom;
-        }
-
-        var h, sum = 0;
-        for (var i = start; i <= end; i++) {
-            h = this.getRowHeight(i);
-            sum += h;
-        }
-
-        return sum;
-    }
-
-    colIndexToWidth(start, end) {
-        return (end - start + 1) * this.defaultCellWidth * this.zoom;
-    };
-
-    getRowHeight(rowIdx) {
-        var cnt = this.colCount;
-        // single column
-        if (cnt <= 1) {
-            return this.getCellHeight(this.colRowToCellIndex(0, rowIdx));
-        }
-
-        // multiple columns, get the maximum height
-        var maxHeight = 0,
-            cellHeight;
-        for (var i = 0; i < cnt; i++) {
-            cellHeight = this.getCellHeight(this.colRowToCellIndex(i, rowIdx));
-            if (maxHeight < cellHeight)
-                maxHeight = cellHeight;
-        }
-        return maxHeight;
-    }
-
-    getColWidth(idx) {
-        return this.defaultCellWidth;
-    }
-
-    getCellHeight(cellIdx) {
-        if (!this.isValidCellIdx(cellIdx)) {
-            return 0;
-        }
-
-        var cellHeight;
-        if (this.defaultCellHeightMode)
-            cellHeight = this.defaultCellHeight;
-        else {
-            var cell = this.getCell(cellIdx, false);
-            var deltaHeight = (cell) ? cell.deltaHeight : 0;
-            cellHeight = this.defaultCellHeight + deltaHeight;
-        }
-
-        return cellHeight;
-    }
-
-    resetTotalRowsHeight() {
-        this._totalRowsHeight = null;
-    }
-
-    get totalRowsHeight() {
-        if (this._totalRowsHeight === null) {
-            this._totalRowsHeight = this.rowIndexToHeight(0, this.rowCount - 1);
-        }
-
-        return this._totalRowsHeight;
-    }
-
-    get totalColumnWidth() {
-        return this.colCount * this.defaultCellWidth;
-    }
-
-    cellIndxeToColIndex(cellIdx) {
-        return cellIdx % this.colCount;
-    }
-
-    cellIndxeToRowIndex(cellIdx) {
-        return Math.floor(cellIdx / this.colCount);
-    }
-
-    getCell(cellIdx, createNewCell) {
-        if (!this.isValidCellIdx(cellIdx)) {
-            return null;
-        }
-
-        if (createNewCell === undefined) {
-            createNewCell = true;
-        }
-        if ((this.cells[cellIdx] === null) && createNewCell) {
-            var cell = this.newCell(cellIdx);
-            this.cells[cellIdx] = cell;
-        }
-
-        return this.cells[cellIdx];
-    }
-
-    newCell(cellIdx) {
-        var cell = this.cellPool.pop();
-        if (cell === null) {
-            cell = new gridtable_Cell(this);
-        } else {
-            cell.setParent(this);
-        }
-        cell.index = cellIdx;
-
-        return cell;
-    }
-
-    buildCellIndex(startIdx) {
-        if (startIdx === undefined) {
-            startIdx = 0;
-        }
-        var cells = this.cells,
-            cell;
-        for (var i = startIdx, len = cells.length; i < len; i++) {
-            cell = cells[i];
-            if (cell) {
-                cell.index = i;
-            }
-        }
-        return this;
-    }
-
-    getParentContainer() {
-        return this.parent;
-    }
-
-    freeCell(cell, fromScene) {
-        if (typeof (cell) === 'number') {
-            cell = this.cells[cell];
-        }
-
-        if (!cell) {
-            return this;
-        }
-
-        cell.destroy(fromScene);
-        if (!fromScene) {
-            this.cellPool.push(cell);
-        }
-        return this;
-    }
-}
-
-/* harmony default export */ var gridtable_Table = (Table_Table);
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(77);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/size/ResizeGameObject.js
-var ResizeGameObject = __webpack_require__(46);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/MaskToGameObject.js
-var MaskToGameObject = __webpack_require__(165);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetTableOY.js
-var SetTableOY = function (oy) {
-    var table = this.table;
-    var topTableOY = this.topTableOY;
-    var bottomTableOY = this.bottomTableOY;
-    var tableOYExceedTop = (oy > this.topTableOY);
-    var tableOYExeceedBottom = (oy < this.bottomTableOY);
-    if (this.clampTableOXYMode) {
-        var rowCount = table.rowCount;
-        var visibleRowCount = table.heightToRowIndex(this.instHeight, true);
-
-        // less then 1 page            
-        if (rowCount < visibleRowCount) {
-            oy = 0;
-        } else if (tableOYExceedTop) {
-            oy = topTableOY
-        } else if (tableOYExeceedBottom) {
-            oy = bottomTableOY;
-        }
-    }
-
-    if (this._tableOY !== oy) {
-        this._tableOY = oy;
-    }
-
-
-    if (tableOYExceedTop) {
-        if (!this.execeedTopState) {
-            this.emit('execeedtop', this, oy, topTableOY);
-        }
-    }
-    this.execeedTopState = tableOYExceedTop;
-
-    if (tableOYExeceedBottom) {
-        if (!this.execeedBottomState) {
-            this.emit('execeedbottom', this, oy, bottomTableOY);
-        }
-    }
-    this.execeedBottomState = tableOYExeceedBottom;
-    return this;
-}
-
-/* harmony default export */ var methods_SetTableOY = (SetTableOY);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetTableOX.js
-var SetTableOX = function (ox) {
-    var table = this.table;
-    var leftTableOX = this.leftTableOX;
-    var rightTableOX = this.rightTableOX;
-    var tableOXExeceedLeft = (ox > this.leftTableOX);
-    var tableOXExeceedRight = (ox < this.rightTableOX);
-    if (this.clampTableOXYMode) {
-        var colCount = table.colCount;
-        var visibleColCount = table.widthToColIndex(this.instWidth, true);
-
-        // less then 1 page            
-        if (colCount < visibleColCount) {
-            ox = 0;
-        } else if (tableOXExeceedLeft) {
-            ox = leftTableOX
-        } else {
-            // var tableVisibleWidth = this.tableVisibleWidth;
-            if (tableOXExeceedRight)
-                ox = rightTableOX;
-        }
-    }
-
-    if (this._tableOX !== ox) {
-        this._tableOX = ox;
-    }
-
-    if (tableOXExeceedLeft) {
-        if (!this.execeedLeftState) {
-            this.emit('execeedleft', this, ox, leftTableOX);
-        }
-    }
-    this.execeedLeftState = tableOXExeceedLeft;
-
-    if (tableOXExeceedRight) {
-        if (!this.execeedRightState) {
-            this.emit('execeedright', this, ox, rightTableOX);
-        }
-    }
-    this.execeedRightState = tableOXExeceedRight;
-    return this;
-}
-
-/* harmony default export */ var methods_SetTableOX = (SetTableOX);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/HideCell.js
-var HideCell = function (cell) {
-    // Option: pop container of cell by cell.popContainer() under this event 
-    this.emit('cellinvisible', cell);
-
-    if (this.cellContainersPool) {
-        var cellContainer = cell.popContainer(); // null if already been removed
-        if (cellContainer) {
-            this.cellContainersPool.killAndHide(cellContainer);
-        }
-    }
-
-    cell.destroyContainer(); // Destroy container of cell
-}
-
-/* harmony default export */ var updatetable_HideCell = (HideCell);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/HideCells.js
-
-
-var HideCells = function () {
-    var preList = this.preVisibleCells;
-    var curList = this.visibleCells;
-    preList.iterate(function (cell) {
-        if (!curList.contains(cell)) {
-            updatetable_HideCell.call(this, cell);
-        }
-    }, this);
-}
-
-/* harmony default export */ var updatetable_HideCells = (HideCells);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/ShowCell.js
-var ShowCell = function (cell) {
-    // Attach container to cell by cell.setContainer(container) under this event
-    var reusedCellContainer = null;
-    if (this.cellContainersPool) {
-        reusedCellContainer = this.cellContainersPool.getFirstDead();
-        if (reusedCellContainer !== null) { // Reuse this game object
-            reusedCellContainer.setActive(true).setVisible(true);
-        }
-    }
-
-    this.emit('cellvisible', cell, reusedCellContainer);
-
-    if (this.cellContainersPool) {
-        var cellContainer = cell.getContainer();
-        if (cellContainer) {
-            if (reusedCellContainer === null) {
-                this.cellContainersPool.add(cellContainer); // New cell container, add to pool
-            } else if (reusedCellContainer !== cellContainer) {
-                // Why reusedCellContainer is not equal to cellContainer?
-                this.cellContainersPool.add(cellContainer); // New cell container, add to pool
-                this.cellContainersPool.killAndHide(reusedCellContainer); // Unused cell container, put back to pool
-            }
-        } else { // No cell container added
-            if (reusedCellContainer !== null) {
-                this.cellContainersPool.killAndHide(reusedCellContainer); // Unused cell container, put back to pool
-            }
-        }
-    }
-}
-
-/* harmony default export */ var updatetable_ShowCell = (ShowCell);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/ShowCells.js
-
-
-var ShowCells = function () {
-    if (this.cellsCount === 0) {
-        return;
-    }
-    var table = this.table;
-    var rowIdx = table.heightToRowIndex(-this.tableOY);
-    if (rowIdx < 0) {
-        rowIdx = 0;
-    }
-
-    var colIdx = table.widthToColIndex(-this.tableOX);
-    if (colIdx < 0) {
-        colIdx = 0;
-    }
-
-    var cellIdx = table.colRowToCellIndex(colIdx, rowIdx);
-    var bottomBound = this.bottomBound;
-    var rightBound = this.rightBound;
-    var lastIdx = table.cellsCount - 1;
-    var lastColIdx = table.colCount - 1;
-
-    var cellTLX0 = GetCellTLX.call(this, colIdx),
-        cellTLX = cellTLX0;
-    var cellTLY = GetCellTLY.call(this, rowIdx);
-    this.visibleStartY = null;
-    this.visibleEndY = null;
-    this.visibleStartX = null;
-    this.visibleEndX = null;
-    this.lastVisibleCellIdx = null;
-    while ((cellTLY < bottomBound) && (cellIdx <= lastIdx)) {
-        if (this.table.isValidCellIdx(cellIdx)) {
-            if (this.visibleStartY === null) {
-                this.visibleStartY = rowIdx;
-                this.visibleEndY = rowIdx;
-            }
-            if (this.visibleStartX === null) {
-                this.visibleStartX = colIdx;
-                this.visibleEndX = colIdx;
-            }
-
-            if (this.lastVisibleCellIdx === null) {
-                this.lastVisibleCellIdx = cellIdx;
-            }
-
-            if (this.visibleEndY < rowIdx) {
-                this.visibleEndY = rowIdx;
-            }
-
-            if (this.visibleEndX < colIdx) {
-                this.visibleEndX = colIdx;
-            }
-
-            if (this.lastVisibleCellIdx < cellIdx) {
-                this.lastVisibleCellIdx = cellIdx;
-            }
-
-            var cell = table.getCell(cellIdx, true);
-            this.visibleCells.set(cell);
-            if (!this.preVisibleCells.contains(cell)) {
-                updatetable_ShowCell.call(this, cell);
-            }
-            if (this.scrollMode === 0) {
-                cell.setXY(cellTLX, cellTLY);
-            } else {
-                cell.setXY(cellTLY, cellTLX);
-            }
-        }
-
-        if ((cellTLX < rightBound) && (colIdx < lastColIdx)) {
-            cellTLX += table.getColWidth(colIdx);
-            colIdx += 1;
-        } else {
-            cellTLX = cellTLX0;
-            cellTLY += table.getRowHeight(rowIdx);
-
-            colIdx = this.visibleStartX;
-            rowIdx += 1;
-        }
-
-        cellIdx = table.colRowToCellIndex(colIdx, rowIdx);
-    }
-}
-
-var GetCellTLX = function (colIdx) {
-    var ox = (this.scrollMode === 0) ? this.topLeftX : this.topLeftY;
-    var x = this.tableOX + this.table.colIndexToWidth(0, colIdx - 1) + ox;
-    return x;
-}
-
-var GetCellTLY = function (rowIdx) {
-    var oy = (this.scrollMode === 0) ? this.topLeftY : this.topLeftX;
-    var y = this.tableOY + this.table.rowIndexToHeight(0, rowIdx - 1) + oy;
-    return y;
-}
-
-/* harmony default export */ var updatetable_ShowCells = (ShowCells);
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/containerlite/MaskChildren.js
-var MaskChildren = __webpack_require__(259);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/MaskCells.js
-
-
-var MaskCells = function () {
-    var children = [];
-    var cells = this.visibleCells.entries, container;
-    for (var i = 0, cnt = cells.length; i < cnt; i++) {
-        container = cells[i].getContainer();
-        if (container) {
-            if (container.isRexContainerLite) { // ContainerLite
-                container.getAllChildren(children);
-            } else { // Others
-                children.push(container);
-            }
-        }
-    }
-    Object(MaskChildren["a" /* default */])(this, this.cellsMask, children);
-}
-
-/* harmony default export */ var updatetable_MaskCells = (MaskCells);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/UpdateTable.js
-
-
-
-
-var UpdateTable = function (refresh) {
-    if (refresh === undefined) {
-        refresh = false;
-    }
-    if (refresh) {
-        ClearVisibleCellIndexes.call(this);
-        updatetable_HideCells.call(this);
-    }
-    ClearVisibleCellIndexes.call(this);
-    updatetable_ShowCells.call(this);
-    updatetable_HideCells.call(this);
-    updatetable_MaskCells.call(this);
-    return this;
-}
-
-var ClearVisibleCellIndexes = function () {
-    var tmp = this.preVisibleCells;
-    this.preVisibleCells = this.visibleCells;
-    this.visibleCells = tmp;
-    this.visibleCells.clear();
-}
-
-/* harmony default export */ var updatetable_UpdateTable = (UpdateTable);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/IsCellVisible.js
-var IsCellVisible = function (cellIdx) {
-    var cell = this.table.getCell(cellIdx, false);
-    return cell && this.visibleCells.contains(cell);
-}
-
-/* harmony default export */ var methods_IsCellVisible = (IsCellVisible);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/PointerToCell.js
-var PointerToCellIndex = function (x, y) {
-    y -= (this.y + this.topLeftY);
-    x -= (this.x + this.topLeftX);
-    var offsetTableOY = this.tableOY - ((this.scrollMode === 0) ? y : x);
-    var offsetTableOX = this.tableOX - ((this.scrollMode === 0) ? x : y);
-
-    var table = this.table;
-    var rowIdx = table.heightToRowIndex(-offsetTableOY);
-    var colIdx = table.widthToColIndex(-offsetTableOX);
-    var cellIdx = table.colRowToCellIndex(colIdx, rowIdx);
-    if (cellIdx === null) {
-        return null;
-    }
-    if (!this.isCellVisible(cellIdx)) {
-        return null;
-    }
-    return cellIdx;
-}
-
-var PointerToCellContainer = function (x, y) {
-    var cellIdx = PointerToCellIndex.call(this, x, y);
-    if (cellIdx === null) {
-        return undefined;
-    }
-    return this.getCellContainer(cellIdx);
-}
-
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/EachCell.js
-// For when you know this Set will be modified during the iteration
-var EachVisibleCell = function (callback, scope) {
-    this.visibleCells.each(callback, scope);
-    return this;
-}
-
-// For when you absolutely know this Set won't be modified during the iteration
-var IterateVisibleCell = function (callback, scope) {
-    this.visibleCells.iterate(callback, scope);
-    return this;
-}
-
-var EachCell = function (callback, scope) {
-    this.table.cells.slice().forEach(callback, scope);
-    return this;
-}
-
-var IterateCell = function (callback, scope) {
-    this.table.cells.forEach(callback, scope);
-    return this;
-}
-
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetCellsCount.js
-var SetCellsCount = function (count) {
-    var cellsCount = this.cellsCount;
-    if (cellsCount === count) {
-        return this;
-    }
-
-    if (cellsCount > count) {
-        this.removeCells(count, cellsCount - count);
-    } else { // cellsCount < count
-        this.insertNewCells(cellsCount, count - cellsCount);
-    }
-    return this;
-}
-
-/* harmony default export */ var methods_SetCellsCount = (SetCellsCount);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/InsertNewCells.js
-const Clamp = Phaser.Math.Clamp;
-
-var InsertNewCells = function (cellIdx, count) {
-    if (typeof (cellIdx) === 'object') {
-        cellIdx = cellIdx.index;
-    }
-    if (count === undefined) {
-        count = 1;
-    }
-    if (count <= 0) {
-        return this;
-    }
-    cellIdx = Clamp(cellIdx, 0, this.cellsCount);
-    this.table.insertNewCells(cellIdx, count);
-    return this;
-}
-
-/* harmony default export */ var methods_InsertNewCells = (InsertNewCells);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/RemoveCells.js
-
-
-var RemoveCells = function (cellIdx, count) {
-    if (typeof (cellIdx) === 'object') {
-        cellIdx = cellIdx.index;
-    }
-    if (count === undefined) {
-        count = 1;
-    }
-    if (cellIdx < 0) {
-        count += cellIdx;
-        cellIdx = 0;
-    }
-    if (count <= 0) {
-        return this;
-    }
-    // out-of-range
-    if (cellIdx > this.cellsCount) {
-        return this;
-    }
-
-    if (cellIdx <= this.lastVisibleCellIdx) {
-        var preList = this.preVisibleCells;
-        var curList = this.visibleCells;
-        var cell;
-        for (var i = cellIdx, endIdx = cellIdx + count; i < endIdx; i++) {
-            cell = this.getCell(i, false);
-            if (cell) {
-                if (curList.contains(cell)) {
-                    updatetable_HideCell.call(this, cell);
-                    curList.delete(cell);
-                }
-                preList.delete(cell);
-            }
-        }
-    }
-
-    this.table.removeCells(cellIdx, count);
-    return this;
-}
-
-/* harmony default export */ var methods_RemoveCells = (RemoveCells);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetColumnCount.js
-var SetColumnCount = function (count) {
-    if (this.table.colCount === count) {
-        return this;
-    }
-    this.table.setColumnCount(count);
-    return this;
-}
-
-/* harmony default export */ var methods_SetColumnCount = (SetColumnCount);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetGridSize.js
-var SetGridSize = function (colCount, rowCount) {
-    this.setCellsCount(colCount * rowCount);
-    this.table.setColumnCount(colCount);
-    return this;
-}
-
-/* harmony default export */ var methods_SetGridSize = (SetGridSize);
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/Methods.js
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* harmony default export */ var Methods = ({
-    setTableOY: methods_SetTableOY,
-    setTableOX: methods_SetTableOX,
-    updateTable: updatetable_UpdateTable,
-    isCellVisible: methods_IsCellVisible,
-    pointerToCellIndex: PointerToCellIndex,
-    pointerToCellContainer: PointerToCellContainer,
-    eachVisibleCell: EachVisibleCell,
-    iterateVisibleCell: IterateVisibleCell,
-    eachCell: EachCell,
-    iterateCell: IterateCell,
-
-    setCellsCount: methods_SetCellsCount,
-    insertNewCells: methods_InsertNewCells,
-    removeCells: methods_RemoveCells,
-    setColumnCount: methods_SetColumnCount,
-    setGridSize: methods_SetGridSize
-});
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/GridTable.js
-
-
-
-
-
-
-
-const Container = ContainerLite["a" /* default */];
-const Components = Phaser.GameObjects.Components;
-const Set = Phaser.Structs.Set;
-const GridTable_GetValue = Phaser.Utils.Objects.GetValue;
-class GridTable_GridTable extends Container {
-    constructor(scene, x, y, width, height, config) {
-        if (config === undefined) {
-            config = {};
-        }
-        super(scene, x, y, width, height);
-        this.type = 'rexGridTable';
-        this._tableOX = GridTable_GetValue(config, 'tableOX', 0);
-        this._tableOY = GridTable_GetValue(config, 'tableOY', 0);
-        this.visibleCells = new Set();
-        this.preVisibleCells = new Set();
-        this.visibleStartX = null;
-        this.visibleEndX = null;
-        this.visibleStartY = null;
-        this.visibleEndY = null;
-        this.lastVisibleCellIdx = null;
-        this.execeedTopState = false;
-        this.execeedBottomState = false;
-        this.execeedLeftState = false;
-        this.execeedRightState = false;
-
-        var reuseCellContainer = GridTable_GetValue(config, 'reuseCellContainer', false);
-        this.cellContainersPool = (reuseCellContainer) ? scene.add.group() : undefined;
-        var callback = GridTable_GetValue(config, 'cellVisibleCallback', null);
-        if (callback !== null) {
-            var scope = GridTable_GetValue(config, 'cellVisibleCallbackScope', undefined);
-            this.on('cellvisible', callback, scope);
-        }
-        callback = GridTable_GetValue(config, 'cellInvisibleCallback', null);
-        if (callback !== null) {
-            var scope = GridTable_GetValue(config, 'cellInvisibleCallbackScope', undefined);
-            this.on('cellinvisible', callback, scope);
-        }
-
-        this.cellsMask = undefined;
-        this.setCellsMask(GridTable_GetValue(config, 'mask', true));
-
-        this.setScrollMode(GridTable_GetValue(config, 'scrollMode', 0));
-        this.setClampMode(GridTable_GetValue(config, 'clamplTableOXY', true));
-
-        // Pre-process cell size
-        if (this.scrollMode === 0) { // scroll y
-            var cellWidth = GridTable_GetValue(config, 'cellWidth', undefined);
-            this.expandCellSize = (cellWidth === undefined);
-            if (cellWidth === undefined) {
-                var columns = GridTable_GetValue(config, 'columns', 1);
-                config.cellWidth = this.width / columns;
-            }
-        } else { // scroll x
-            // Swap cell width and cell height
-            var cellWidth = GridTable_GetValue(config, 'cellHeight', undefined);
-            var cellHeight = GridTable_GetValue(config, 'cellWidth', undefined);
-            this.expandCellSize = (cellWidth === undefined);
-            config.cellWidth = cellWidth;
-            config.cellHeight = cellHeight;
-        }
-        this.table = new gridtable_Table(this, config);
-
-        this.updateTable();
-    }
-
-    destroy(fromScene) {
-        //  This Game Object has already been destroyed
-        if (!this.scene) {
-            return;
-        }
-
-        this.table.destroy(fromScene);
-        this.table = undefined;
-        if (this.cellContainersPool) {
-            this.cellContainersPool.destroy(true);
-            this.cellContainersPool = undefined;
-        }
-        super.destroy(fromScene);
-    }
-
-    setScrollMode(mode) {
-        if (typeof (mode) === 'string') {
-            mode = SCROLLMODE[mode.toLowerCase()];
-        }
-        this.scrollMode = mode;
-        return this;
-    }
-
-    setClampMode(mode) {
-        this.clampTableOXYMode = mode;
-        return this;
-    }
-
-    get tableOY() {
-        return this._tableOY;
-    }
-
-    get tableOX() {
-        return this._tableOX;
-    }
-
-    set tableOY(oy) {
-        this.setTableOY(oy).updateTable();
-    }
-
-    set tableOX(ox) {
-        this.setTableOX(ox).updateTable();
-    }
-
-    setTableOXY(ox, oy) {
-        this.setTableOY(oy).setTableOX(ox);
-        return this;
-    }
-
-    addTableOY(dy) {
-        this.setTableOY(this.tableOY + dy);
-        return this;
-    }
-
-    addTableOX(dx) {
-        this.setTableOX(this.tableOX + dx);
-        return this;
-    }
-
-    addTableOXY(dx, dy) {
-        this.addTableOY(dy).addTableOX(dx);
-        return this;
-    }
-
-    setTableOYByPercentage(percentage) {
-        this.setTableOY(-this.tableVisibleHeight * percentage);
-        return this;
-    }
-
-    getTableOYPercentage() {
-        var tableVisibleHeight = this.tableVisibleHeight;
-        if (tableVisibleHeight === 0) {
-            return 0;
-        }
-        return (this.tableOY / -tableVisibleHeight);
-    }
-
-    set t(value) {
-        this.setTableOYByPercentage(value).updateTable();
-    }
-
-    get t() {
-        return this.getTableOYPercentage();
-    }
-
-    getCell(cellIdx) {
-        return this.table.getCell(cellIdx, true);
-    }
-
-    getCellContainer(cellIdx) {
-        var cell = this.table.getCell(cellIdx, false);
-        var container;
-        if (cell) {
-            container = cell.getContainer();
-        }
-        return container;
-    }
-
-    get cellsCount() {
-        return this.table.cellsCount;
-    }
-
-    get columnCount() {
-        return this.table.colCount;
-    }
-
-    setCellHeight(cellIdx, height) {
-        var cell;
-        if (typeof (cellIdx) === 'number') {
-            cell = this.table.getCell(cellIdx, true);
-        } else {
-            cell = cellIdx;
-        }
-        cell.height = height; // Only worked when scrollMode is 0
-        return this;
-    }
-
-    setCellWidth(cellIdx, width) {
-        var cell;
-        if (typeof (cellIdx) === 'number') {
-            cell = this.table.getCell(cellIdx, true);
-        } else {
-            cell = cellIdx;
-        }
-        cell.width = width; // Only worked when scrollMode is 1
-        return this;
-    }
-
-    setCellsMask(maskConfig) {
-        var maskEnable, maskPadding;
-        if (maskConfig === true) {
-            maskEnable = true;
-            maskPadding = 0;
-        } else if (maskConfig === false) {
-            maskEnable = false;
-        } else {
-            maskEnable = GridTable_GetValue(maskConfig, 'mask', true);
-            maskPadding = GridTable_GetValue(maskConfig, 'padding', 0);
-        }
-        if (maskEnable) {
-            var maskGameObject = new DefaultMask["a" /* default */](this, 0, maskPadding);
-            this.cellsMask = maskGameObject.createGeometryMask();
-            this.add(maskGameObject);
-        }
-
-        return this;
-    }
-
-    get instHeight() {
-        return (this.scrollMode === 0) ? this.height : this.width;
-    }
-
-    get instWidth() {
-        return (this.scrollMode === 0) ? this.width : this.height;
-    }
-
-    get tableHeight() {
-        return this.table.totalRowsHeight;
-    }
-
-    get tableWidth() {
-        return this.table.totalColumnWidth;
-    }
-
-    get topTableOY() {
-        return 0;
-    }
-
-    get bottomTableOY() {
-        return -this.tableVisibleHeight;
-    }
-
-    get leftTableOX() {
-        return 0;
-    }
-
-    get rightTableOX() {
-        return -this.tableVisibleWidth;
-    }
-
-    get tableVisibleHeight() {
-        var h;
-        var tableHeight = this.tableHeight;
-        var instHeight = this.instHeight;
-        if (tableHeight > instHeight) {
-            h = tableHeight - instHeight;
-        } else {
-            h = 0;
-        }
-
-        return h;
-    }
-
-    get tableVisibleWidth() {
-        var w;
-        var tableWidth = this.tableWidth;
-        var instWidth = this.instWidth;
-        if (tableWidth > instWidth) {
-            w = tableWidth - instWidth;
-        } else {
-            w = 0;
-        }
-        return w;
-    };
-
-    get bottomLeftY() {
-        return -(this.displayHeight * this.originY) + this.displayHeight;
-    }
-
-    get topRightX() {
-        return -(this.displayWidth * this.originX) + this.displayWidth;
-    }
-
-    get topLeftX() {
-        return -(this.displayWidth * this.originX);
-    }
-
-    get topLeftY() {
-        return -(this.displayHeight * this.originY)
-    }
-
-    get bottomBound() {
-        if (this.scrollMode === 0) {
-            return this.bottomLeftY;
-        } else {
-            return this.topRightX;
-        }
-    }
-
-    get rightBound() {
-        if (this.scrollMode === 0) {
-            return this.topRightX;
-        } else {
-            return this.bottomLeftY;
-        }
-    }
-
-    resize(width, height) {
-        if ((this.width === width) && (this.height === height)) {
-            return this;
-        }
-
-        super.resize(width, height);
-        if (this.cellsMask) {
-            Object(ResizeGameObject["a" /* default */])(Object(MaskToGameObject["a" /* default */])(this.cellsMask), width, height);
-        }
-
-        if (this.expandCellSize) {
-            this.table.setDefaultCellWidth(this.instWidth / this.table.colCount);
-        }
-        this.updateTable(true);
-        return this;
-    }
-};
-
-// mixin
-Object.assign(
-    GridTable_GridTable.prototype,
-    Components.GetBounds,
-    Methods
-);
-
-const SCROLLMODE = {
-    v: 0,
-    vertical: 0,
-    h: 1,
-    horizontal: 1
-};
-
-/* harmony default export */ var gridtable_GridTable = (GridTable_GridTable);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/InjectProperties.js
-var InjectProperties = function (table) {
-    Object.defineProperty(table, 'childOY', {
-        configurable: true,
-        get: function () {
-            return table.tableOY;
-        },
-        set: function (value) {
-            table.tableOY = value;
-        }
-    });
-    Object.defineProperty(table, 'topChildOY', {
-        get: function () {
-            return table.topTableOY;
-        }
-    });
-    Object.defineProperty(table, 'bottomChildOY', {
-        get: function () {
-            return table.bottomTableOY;
-        }
-    });
-};
-/* harmony default export */ var gridtable_InjectProperties = (InjectProperties);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/TableOnCellVisible.js
-var TableOnCellVisible = function (table) {
-    table.on('cellvisible', function (cell, cellContainer) {
-        var callback = this.createCellContainerCallback;
-        var scope = this.createCellContainerCallbackScope;
-        cell.item = this.items[cell.index];
-        var cellContainer;
-        if (scope) {
-            cellContainer = callback.call(scope, cell, cellContainer);
-        } else {
-            cellContainer = callback(cell, cellContainer);
-        }
-        if (cellContainer) {
-            if (cellContainer.setOrigin) {
-                cellContainer.setOrigin(0);
-            }
-            if (cellContainer.isRexSizer) {
-                cellContainer.layout(); // Use original size
-            }
-        }
-
-        cell.item = undefined;
-        cell.setContainer(cellContainer);
-    }, this);
-}
-/* harmony default export */ var gridtable_TableOnCellVisible = (TableOnCellVisible);
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
-var Button = __webpack_require__(166);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/EmitCellEvent.js
-var EmitCellEvent = function (eventEmitter, eventName, table, x, y) {
-    var cellIndex;
-    if (y === undefined) {
-        cellIndex = x;
-    } else {
-        cellIndex = table.pointerToCellIndex(x, y);
-    }
-    if ((cellIndex === null) || (cellIndex === undefined)) {
-        return;
-    }
-    var cellContainer = table.getCellContainer(cellIndex);
-    eventEmitter.emit(eventName, cellContainer, cellIndex);
-}
-
-/* harmony default export */ var input_EmitCellEvent = (EmitCellEvent);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/ClickCell.js
-
-
-
-var ClickCell = function (table, tableConfig) {
-    table._click = new Button["a" /* default */](table, {
-        threshold: 10
-    });
-    table._click.on('click', function (button, gameObject, pointer) {
-        input_EmitCellEvent(this.eventEmitter, 'cell.click', gameObject, pointer.x, pointer.y);
-    }, this);
-};
-
-/* harmony default export */ var input_ClickCell = (ClickCell);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/OverCell.js
-
-
-var OverCell = function (table, tableConfig) {
-    table
-        .on('pointermove', OnMove, this)
-        .on('pointerover', OnMove, this)
-        .on('pointerup', OnOut, this)
-        .on('pointerout', OnOut, this);
-}
-
-var OnMove = function (pointer) {
-    if (pointer.isDown) {
-        return;
-    }
-    var table = this.childrenMap.child;
-    var cellIndex = table.pointerToCellIndex(pointer.x, pointer.y);
-    if (cellIndex === this._lastOverCellIndex) {
-        return;
-    }
-
-    var preCellIndex = this._lastOverCellIndex;
-    this._lastOverCellIndex = cellIndex;
-    input_EmitCellEvent(this.eventEmitter, 'cell.out', table, preCellIndex);
-    input_EmitCellEvent(this.eventEmitter, 'cell.over', table, cellIndex);
-}
-
-var OnOut = function () {
-    var table = this.childrenMap.child;
-    var cellIndxe = this._lastOverCellIndex;
-    this._lastOverCellIndex = undefined;
-    input_EmitCellEvent(this.eventEmitter, 'cell.out', table, cellIndxe);
-}
-
-/* harmony default export */ var input_OverCell = (OverCell);
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/tap/Tap.js + 1 modules
-var Tap = __webpack_require__(295);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/TapCell.js
-
-
-
-const TapCell_GetValue = Phaser.Utils.Objects.GetValue;
-
-var TapCell = function (table, tableConfig) {
-    var tapConfig = TapCell_GetValue(tableConfig, 'press', undefined);
-    table._tap = new Tap["a" /* default */](table, tapConfig);
-    table._tap
-        .on('tap', function (tap) {
-            var eventName = `cell.${tap.tapsCount}tap`
-            input_EmitCellEvent(this.eventEmitter, eventName, tap.gameObject, tap.x, tap.y);
-        }, this)
-};
-
-/* harmony default export */ var input_TapCell = (TapCell);
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/press/Press.js + 1 modules
-var Press = __webpack_require__(296);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/PressCell.js
-
-
-
-const PressCell_GetValue = Phaser.Utils.Objects.GetValue;
-
-var PressCell = function (table, tableConfig) {
-    var pressConfig = PressCell_GetValue(tableConfig, 'press', undefined);
-    table._press = new Press["a" /* default */](table, pressConfig);
-    table._press
-        .on('pressstart', function (press) {
-            var cellIndex = table.pointerToCellIndex(press.x, press.y);
-            press._cellIndex = cellIndex;
-            input_EmitCellEvent(this.eventEmitter, 'cell.pressstart', table, cellIndex);
-        }, this)
-        .on('pressend', function (press) {
-            var cellIndex = press._cellIndex;
-            press._cellIndex = undefined;
-            input_EmitCellEvent(this.eventEmitter, 'cell.pressend', table, cellIndex);
-        }, this)
-};
-
-/* harmony default export */ var input_PressCell = (PressCell);
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/swipe/Swipe.js + 4 modules
-var Swipe = __webpack_require__(292);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/SwipeCell.js
-
-
-
-const SwipeCell_GetValue = Phaser.Utils.Objects.GetValue;
-
-var SwipeCell = function (table, tableConfig) {
-    var swipeConfig = SwipeCell_GetValue(tableConfig, 'swipe', undefined);
-    if (swipeConfig === undefined) {
-        swipeConfig = {};
-    }
-    swipeConfig.dir = '4dir';
-    table._swipe = new Swipe["a" /* default */](table, swipeConfig);
-    table._swipe
-        .on('swipe', function (swipe) {
-            var isValidSwipe = (table.scrollMode === 0) ? (swipe.left || swipe.right) : (swipe.up || swipe.down);
-            if (isValidSwipe) {
-                var cellIndex = table.pointerToCellIndex(swipe.x, swipe.y);
-                var dirName =
-                    (swipe.left) ? 'left' :
-                        (swipe.right) ? 'right' :
-                            (swipe.up) ? 'up' :
-                                'down';
-                input_EmitCellEvent(this.eventEmitter, `cell.swipe${dirName}`, table, cellIndex);
-            }
-        }, this)
-};
-
-/* harmony default export */ var input_SwipeCell = (SwipeCell);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/TableSetInteractive.js
-
-
-
-
-
-
-var TableSetInteractive = function (table, tableConfig) {
-    table.setInteractive();
-
-    input_ClickCell.call(this, table, tableConfig);
-    input_OverCell.call(this, table, tableConfig);
-    input_TapCell.call(this, table, tableConfig);
-    input_PressCell.call(this, table, tableConfig);
-    input_SwipeCell.call(this, table, tableConfig);
-}
-
-/* harmony default export */ var input_TableSetInteractive = (TableSetInteractive);
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/NOOP.js
-var NOOP = __webpack_require__(44);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/SetItems.js
-var SetItems = function (items) {
-    if (items === undefined) {
-        this.items.length = 0;
-    } else {
-        this.items = items;
-    }
-
-    var table = this.childrenMap.child;
-    table.setCellsCount(this.items.length);
-    table.updateTable(true);
-
-    this.resizeController();
-    return this;
-}
-
-/* harmony default export */ var gridtable_SetItems = (SetItems);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js
-
-
-
-
-
-
-
-
-
-const gridtable_GridTable_GetValue = Phaser.Utils.Objects.GetValue;
-class gridtable_GridTable_GridTable extends Scrollable["a" /* default */] {
-    constructor(scene, config) {
-        if (config === undefined) {
-            config = {};
-        }
-
-        // Create grid table core
-        var scrollMode = Object(GetScrollMode["a" /* default */])(config);
-        var tableConfig = gridtable_GridTable_GetValue(config, 'table', undefined)
-        if (tableConfig === undefined) {
-            tableConfig = {};
-        }
-        tableConfig.scrollMode = scrollMode;
-        tableConfig.clamplTableOXY = gridtable_GridTable_GetValue(config, 'clamplChildOY', false);
-        var tableWidth = gridtable_GridTable_GetValue(tableConfig, 'width', undefined);
-        var tableHeight = gridtable_GridTable_GetValue(tableConfig, 'height', undefined);
-        var table = new gridtable_GridTable(scene, 0, 0, tableWidth, tableHeight, tableConfig);
-        scene.add.existing(table); // Important: Add to display list for touch detecting
-        var proportion, expand;
-        if (scrollMode === 0) {
-            proportion = (tableWidth === undefined) ? 1 : 0;
-            expand = (tableHeight === undefined);
-        } else {
-            proportion = (tableHeight === undefined) ? 1 : 0;
-            expand = (tableWidth === undefined);
-        }
-        // Inject properties for scrollable interface
-        gridtable_InjectProperties(table);
-        // Fill config of scrollable
-        config.type = 'rexGridTable';
-        config.child = {
-            gameObject: table,
-            proportion: proportion,
-            expand: expand,
-        };
-        var spaceConfig = gridtable_GridTable_GetValue(config, 'space', undefined);
-        if (spaceConfig) {
-            spaceConfig.child = spaceConfig.table;
-        }
-        super(scene, config);
-
-        this.addChildrenMap('table', table);
-
-        this.eventEmitter = gridtable_GridTable_GetValue(config, 'eventEmitter', this);
-        var callback = gridtable_GridTable_GetValue(config, 'createCellContainerCallback', NOOP["a" /* default */]);
-        var scope = gridtable_GridTable_GetValue(config, 'createCellContainerCallbackScope', undefined);
-        this.setCreateCellContainerCallback(callback, scope);
-
-        gridtable_TableOnCellVisible.call(this, table);
-
-        if (gridtable_GridTable_GetValue(tableConfig, 'interactive', true)) {
-            input_TableSetInteractive.call(this, table, tableConfig);
-        }
-        this.setItems(gridtable_GridTable_GetValue(config, 'items', []));
-    }
-
-    set tableOX(ox) {
-        const table = this.getElement("table");
-        if (table) table.tableOX(ox);
-    }
-
-    set tableOY(oy) {
-        const table = this.getElement("table");
-        if (table) table.tableOY(oy);
-    }
-
-    setCreateCellContainerCallback(callback, scope) {
-        this.createCellContainerCallback = callback;
-        this.createCellContainerCallbackScope = scope;
-        return this;
-    }
-
-    refresh() {
-        this.setItems(this.items);
-        return this;
-    }
-}
-
-var methods = {
-    setItems: gridtable_SetItems
-}
-Object.assign(
-    gridtable_GridTable_GridTable.prototype,
-    methods
-);
-
-/* harmony default export */ var ui_gridtable_GridTable = __webpack_exports__["a"] = (gridtable_GridTable_GridTable);
-
-/***/ }),
-/* 215 */
+/* 213 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34050,7 +33868,7 @@ const ORIENTATIONMODE = {
 /* harmony default export */ var scroller_Scroller = __webpack_exports__["a"] = (Scroller_Scroller);
 
 /***/ }),
-/* 216 */
+/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34059,13 +33877,13 @@ const ORIENTATIONMODE = {
 var Sizer = __webpack_require__(49);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
-var GetScrollMode = __webpack_require__(76);
+var GetScrollMode = __webpack_require__(77);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/slider/Slider.js + 9 modules
 var Slider = __webpack_require__(290);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/scroller/Scroller.js + 5 modules
-var Scroller = __webpack_require__(215);
+var Scroller = __webpack_require__(213);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/scroller.js
 
@@ -34439,7 +34257,7 @@ Object.assign(
 /* harmony default export */ var scrollable_Scrollable = __webpack_exports__["a"] = (Scrollable_Scrollable);
 
 /***/ }),
-/* 217 */
+/* 215 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34644,7 +34462,7 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 218 */
+/* 216 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34900,1622 +34718,7 @@ var layer_manager_LayerManager = /** @class */ (function () {
 
 
 /***/ }),
-/* 219 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ cameras_manager_CamerasManager; });
-
-// EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
-var dist = __webpack_require__(4);
-
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
-var protocols = __webpack_require__(3);
-
-// EXTERNAL MODULE: ./src/utils/log.ts
-var log = __webpack_require__(9);
-
-// CONCATENATED MODULE: ./src/utils/rectangle45.ts
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var Rectangle = Phaser.Geom.Rectangle;
-var Rectangle45 = /** @class */ (function (_super) {
-    __extends(Rectangle45, _super);
-    function Rectangle45(row, col, endRow, endCol) {
-        var _this = _super.call(this, row, col, endRow, endCol) || this;
-        _this.row = row;
-        _this.col = col;
-        _this.endRow = endRow;
-        _this.endCol = endCol;
-        return _this;
-    }
-    return Rectangle45;
-}(Rectangle));
-
-
-// EXTERNAL MODULE: ./src/utils/pos.ts
-var utils_pos = __webpack_require__(12);
-
-// CONCATENATED MODULE: ./src/rooms/cameras/cameras.manager.ts
-var cameras_manager_extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-
-var cameras_manager_CamerasManager = /** @class */ (function (_super) {
-    cameras_manager_extends(CamerasManager, _super);
-    function CamerasManager(mRoomService) {
-        var _this = _super.call(this) || this;
-        _this.mRoomService = mRoomService;
-        _this.MINI_VIEW_SIZE = 30;
-        _this.VIEW_PORT_SIZE = 30;
-        _this.viewPort = new Phaser.Geom.Rectangle();
-        _this.miniViewPort = new Phaser.Geom.Rectangle();
-        _this.zoom = 1;
-        if (_this.mRoomService && _this.mRoomService.world) {
-            _this.zoom = _this.mRoomService.world.scaleRatio;
-        }
-        _this.mCameras = [];
-        return _this;
-        // this.zoom = this.mRoomService.world.scaleRatio;
-    }
-    CamerasManager.prototype.getViewPort = function () {
-        if (!this.mMain)
-            return;
-        var worldView = this.mMain.worldView;
-        // const out = new Phaser.Geom.Rectangle(worldView.x, worldView.y, worldView.width, worldView.height);
-        // out.x -= out.width >> 1;
-        // out.y -= out.height >> 1;
-        // out.width *= 2;
-        // out.height *= 2;
-        // out.x -= 200;
-        // out.y -= 200;
-        // out.width += 400;
-        // out.height += 400;
-        // this.viewPort.setPosition(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2);
-        this.viewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.viewPort.width >> 1);
-        this.viewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.viewPort.height >> 1);
-        return this.viewPort;
-    };
-    CamerasManager.prototype.getMiniViewPort = function () {
-        if (!this.mMain)
-            return;
-        var worldView = this.mMain.worldView;
-        this.miniViewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.miniViewPort.width >> 1);
-        this.miniViewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.miniViewPort.height >> 1);
-        var pos = this.mRoomService.transformTo45(new utils_pos["a" /* Pos */](this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
-        return new Rectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
-    };
-    Object.defineProperty(CamerasManager.prototype, "camera", {
-        get: function () {
-            return this.mMain;
-        },
-        set: function (camera) {
-            this.mMain = camera;
-            this.addCamera(camera);
-            this.setViewPortSize();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    CamerasManager.prototype.resize = function (width, height) {
-        this.resetCameraSize(width, height);
-    };
-    CamerasManager.prototype.setScroll = function (x, y) {
-        if (!this.mMain) {
-            return;
-        }
-        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
-            var camera = _a[_i];
-            camera.setScroll(x, y);
-        }
-        // this.mMain.setScroll(x, y);
-    };
-    CamerasManager.prototype.offsetScroll = function (x, y) {
-        if (!this.mMain) {
-            return;
-        }
-        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
-            var camera = _a[_i];
-            camera.scrollX += x / this.camera.zoom;
-            camera.scrollY += y / this.camera.zoom;
-        }
-        this.moving = true;
-        // this.mCamera.setScroll(x, y);
-    };
-    CamerasManager.prototype.startFollow = function (target) {
-        this.mTarget = target;
-        if (this.mMain && target) {
-            for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
-                var camera = _a[_i];
-                camera.startFollow(target);
-            }
-            // this.mMain.startFollow(target);
-        }
-    };
-    CamerasManager.prototype.stopFollow = function () {
-        this.mTarget = null;
-        if (this.mMain) {
-            for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
-                var camera = _a[_i];
-                camera.stopFollow();
-            }
-            // this.mMain.stopFollow();
-        }
-    };
-    CamerasManager.prototype.addCamera = function (camera) {
-        var index = this.mCameras.indexOf(camera);
-        if (index === -1) {
-            this.mCameras.push(camera);
-        }
-        if (this.mTarget) {
-            camera.startFollow(this.mTarget);
-        }
-    };
-    CamerasManager.prototype.removeCamera = function (camera) {
-        var index = this.mCameras.indexOf(camera);
-        if (index > -1) {
-            this.mCameras.splice(index, 1);
-        }
-    };
-    CamerasManager.prototype.setBounds = function (x, y, width, height, centerOn) {
-        if (!this.mMain) {
-            log["a" /* Logger */].getInstance().error("camera does not exist");
-            return;
-        }
-        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
-            var camera = _a[_i];
-            camera.setBounds(x, y, width, height, centerOn);
-        }
-        // this.mMain.setBounds(x, y, width, height, centerOn);
-    };
-    CamerasManager.prototype.setPosition = function (x, y) {
-        if (!this.mMain) {
-            return;
-        }
-        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
-            var camera = _a[_i];
-            camera.setPosition(x, y);
-        }
-        // this.mMain.setPosition(x, y);
-    };
-    CamerasManager.prototype.syncToEditor = function () {
-        if (!this.mMain) {
-            return;
-        }
-        var cameraView = this.mMain.worldView;
-        var pkt = new dist["PBpacket"](protocols["op_editor"].OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
-        var content = pkt.content;
-        content.x = cameraView.x;
-        content.y = cameraView.y;
-        content.width = cameraView.width;
-        content.height = cameraView.height;
-        this.connection.send(pkt);
-    };
-    CamerasManager.prototype.centerCameas = function () {
-    };
-    CamerasManager.prototype.syncCamera = function () {
-        if (!this.mMain) {
-            return;
-        }
-        var packet = new dist["PBpacket"](protocols["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
-        var size = packet.content;
-        size.width = this.mMain.width / this.mMain.zoom;
-        size.height = this.mMain.height / this.mMain.zoom;
-        this.connection.send(packet);
-    };
-    CamerasManager.prototype.syncCameraScroll = function () {
-        if (!this.mMain) {
-            return;
-        }
-        var pkt = new dist["PBpacket"](protocols["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
-        var content = pkt.content;
-        var pos = protocols["op_def"].PBPoint3f.create();
-        pos.x = this.mMain.scrollX / Math.ceil(window.devicePixelRatio);
-        pos.y = this.mMain.scrollY / Math.ceil(window.devicePixelRatio);
-        content.pos = pos;
-        this.connection.send(pkt);
-    };
-    CamerasManager.prototype.scrollTargetPoint = function (x, y) {
-        if (!this.mMain) {
-            return;
-        }
-        this.setScroll(x * this.mRoomService.world.scaleRatio - this.mMain.width / 2, y * this.mRoomService.world.scaleRatio - this.mMain.height / 2);
-    };
-    CamerasManager.prototype.resetCameraSize = function (width, height) {
-        if (!this.connection) {
-            log["a" /* Logger */].getInstance().error("connection is undefined");
-            return;
-        }
-        this.syncCamera();
-    };
-    CamerasManager.prototype.setViewPortSize = function () {
-        if (!this.mMain) {
-            log["a" /* Logger */].getInstance().error("camera does not exist");
-            return;
-        }
-        var size = this.mRoomService.roomSize;
-        if (!size) {
-            log["a" /* Logger */].getInstance().error("room size does not exist");
-            return;
-        }
-        var viewW = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileWidth / 2);
-        var viewH = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileHeight / 2);
-        this.viewPort.setSize(viewW, viewH);
-        var miniViewW = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileWidth / 2);
-        var miniviewH = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileHeight / 2);
-        this.miniViewPort.setSize(miniViewW, miniviewH);
-    };
-    Object.defineProperty(CamerasManager.prototype, "connection", {
-        get: function () {
-            if (!this.mRoomService) {
-                log["a" /* Logger */].getInstance().error("room service is undefined");
-                return;
-            }
-            return this.mRoomService.connection;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CamerasManager.prototype, "moving", {
-        get: function () {
-            return this.mMoving;
-        },
-        set: function (val) {
-            this.mMoving = val;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CamerasManager.prototype, "targetFollow", {
-        get: function () {
-            return this.mTarget;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return CamerasManager;
-}(dist["PacketHandler"]));
-
-
-
-/***/ }),
-/* 220 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "FurniBagPanel", function() { return /* binding */ FurniBagPanel_FurniBagPanel; });
-
-// EXTERNAL MODULE: ./src/ui/components/BasePanel.ts + 1 modules
-var BasePanel = __webpack_require__(6);
-
-// EXTERNAL MODULE: ./src/ui/components/ninepatch.button.ts
-var ninepatch_button = __webpack_require__(19);
-
-// EXTERNAL MODULE: ./src/i18n.ts
-var i18n = __webpack_require__(48);
-
-// EXTERNAL MODULE: ./src/ui/Market/DetailDisplay.ts
-var DetailDisplay = __webpack_require__(63);
-
-// EXTERNAL MODULE: ./src/utils/font.ts
-var font = __webpack_require__(10);
-
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
-var protocols = __webpack_require__(3);
-
-// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
-var dynamic_image = __webpack_require__(18);
-
-// EXTERNAL MODULE: ./src/ui/Market/TextButton.ts
-var TextButton = __webpack_require__(93);
-
-// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
-var resUtil = __webpack_require__(5);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js + 31 modules
-var GridTable = __webpack_require__(214);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/scroller/Scroller.ts
-var Scroller = __webpack_require__(265);
-
-// EXTERNAL MODULE: ./src/ui/components/input.panel.ts
-var input_panel = __webpack_require__(89);
-
-// EXTERNAL MODULE: ./src/ui/components/checkbox.group.ts
-var checkbox_group = __webpack_require__(64);
-
-// EXTERNAL MODULE: ./src/ui/components/nine.patch.ts
-var nine_patch = __webpack_require__(14);
-
-// EXTERNAL MODULE: ./src/Handler/Handler.ts
-var Handler = __webpack_require__(72);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/button/Button.ts
-var Button = __webpack_require__(41);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/interface/event/MouseEvent.ts
-var MouseEvent = __webpack_require__(239);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/tab/TabButton.ts
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-var TabButton_TabButton = /** @class */ (function (_super) {
-    __extends(TabButton, _super);
-    function TabButton(scene, key, frame, downFrame, text, music) {
-        var _this = _super.call(this, scene, key, frame, downFrame, text, music) || this;
-        _this.mSelected = false;
-        return _this;
-    }
-    Object.defineProperty(TabButton.prototype, "selected", {
-        get: function () {
-            return this.mSelected;
-        },
-        set: function (value) {
-            this.mSelected = value;
-            var buttonState = value ? Button["b" /* ButtonState */].Select : Button["b" /* ButtonState */].Normal;
-            this.buttonStateChange(buttonState);
-            this.emit("selectChange", value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    TabButton.prototype.destroy = function () {
-        this.selected = false;
-        _super.prototype.destroy.call(this);
-    };
-    TabButton.prototype.onPointerUpHandler = function (pointer) {
-        if (!this.interactiveBoo) {
-            if (this.soundGroup && this.soundGroup.disabled)
-                this.playSound(this.soundGroup.disabled);
-            return;
-        }
-        if (!this.mIsMove || (Date.now() - this.mDownTime > this.mPressTime)) {
-            if (Math.abs(pointer.downX - pointer.upX) < 30 && Math.abs(pointer.downY - pointer.upY) < 30) {
-                if (this.soundGroup && this.soundGroup.up)
-                    this.playSound(this.soundGroup.up);
-                this.emit(MouseEvent["a" /* MouseEvent */].Tap, pointer, this);
-                this.selected = true;
-            }
-        }
-        clearTimeout(this.mPressDelay);
-        this.mIsMove = false;
-        this.mDownTime = 0;
-    };
-    TabButton.prototype.onPointerDownHandler = function (pointer) {
-        var _this = this;
-        if (!this.interactiveBoo) {
-            if (this.soundGroup && this.soundGroup.disabled)
-                this.playSound(this.soundGroup.disabled);
-            return;
-        }
-        if (this.soundGroup && this.soundGroup.down)
-            this.playSound(this.soundGroup.down);
-        this.mDownTime = Date.now();
-        this.mPressTime = setTimeout(function () {
-            _this.emit(MouseEvent["a" /* MouseEvent */].Hold, _this);
-        }, this.mPressTime);
-        this.emit(MouseEvent["a" /* MouseEvent */].Down, this);
-    };
-    return TabButton;
-}(Button["a" /* Button */]));
-
-
-// CONCATENATED MODULE: ./src/ui/FurniBag/FurniBagPanel.ts
-var FurniBagPanel_extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var FurniBagPanel_FurniBagPanel = /** @class */ (function (_super) {
-    FurniBagPanel_extends(FurniBagPanel, _super);
-    function FurniBagPanel(scene, world, sceneType) {
-        var _this = _super.call(this, scene, world) || this;
-        _this.key = "furni_bag";
-        _this.commonkey = "common_key";
-        _this.seachKey = "key.seach";
-        _this.topBtns = [];
-        _this.mEnableEdit = false;
-        _this.mInputBoo = false;
-        _this.mSceneType = sceneType;
-        _this.scale = 1;
-        return _this;
-    }
-    FurniBagPanel.prototype.resize = function (w, h) {
-        var width = this.scene.cameras.main.width / this.scale;
-        var height = this.scene.cameras.main.height / this.scale;
-        _super.prototype.resize.call(this, width, height);
-        var zoom = this.mWorld.uiScaleNew;
-        this.mBackground.clear();
-        this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
-        this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
-        this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
-        this.mShelfContainer.y = height - this.mShelfContainer.height;
-        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
-        this.mCategoriesBar.clear();
-        this.mCategoriesBar.fillStyle(0x33ccff);
-        this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
-        this.mCategoriesBar.fillStyle(0x00cccc);
-        this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
-        this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
-        this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
-        this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
-        this.mBg.x = width / 2;
-        this.mBg.y = this.mBg.displayHeight / 2 + 10 * this.dpr * zoom;
-        //  this.mTiltle.x = width / 2;
-        this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
-        this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr * zoom;
-        this.useBtn.x = this.mAdd.x;
-        this.useBtn.y = this.mAdd.y;
-        this.sellBtn.x = this.mAdd.x - this.sellBtn.width - 10 * this.dpr;
-        this.sellBtn.y = this.mAdd.y;
-        this.mDetailDisplay.x = width / 2;
-        this.mDetailDisplay.y = this.mBg.y;
-        this.setSize(width, height);
-    };
-    FurniBagPanel.prototype.setCategories = function (subcategorys) {
-        subcategorys.unshift({ key: this.seachKey, value: "搜索" });
-        this.mPreCategoryBtn = null;
-        this.mSelectedCategeories = null;
-        var zoom = this.mWorld.uiScaleNew;
-        var capW = 56 * this.dpr * zoom;
-        var capH = 41 * this.dpr * zoom;
-        var items = [];
-        this.mCategoryScroll.clearInteractiveObject();
-        for (var _i = 0, _a = this.mCategeoriesContainer.list; _i < _a.length; _i++) {
-            var item = _a[_i];
-            item.destroy();
-        }
-        this.mCategeoriesContainer.list.length = 0;
-        for (var i = 0; i < subcategorys.length; i++) {
-            var item = new TextButton["TextButton"](this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
-            item.y = capH - item.text.height >> 1;
-            item.setData("item", subcategorys[i]);
-            this.mCategeoriesContainer.add(item);
-            item.setSize(capW, capH);
-            this.mCategoryScroll.setInteractiveObject(item);
-            items[i] = item;
-            item.setFontSize(17 * this.dpr * zoom);
-            item.setFontStyle("bold");
-        }
-        if (items.length > 1)
-            this.onSelectSubCategoryHandler(items[1]);
-        this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-        this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
-        this.mPropGrid.layout();
-        this.updateCategeoriesLoc(false);
-    };
-    FurniBagPanel.prototype.setProp = function (props) {
-        this.mSelectItem = null;
-        if (!props) {
-            return;
-        }
-        var len = props.length;
-        if (len < 24) {
-            props = props.concat(new Array(24 - len));
-        }
-        this.mPropGrid.setItems(props);
-        if (this.mSelectItem)
-            this.onSelectItemHandler(this.mSelectItem);
-    };
-    FurniBagPanel.prototype.setSelectedResource = function (content) {
-        if (content.display) {
-            this.mDetailDisplay.loadDisplay(content);
-        }
-        else if (content.avatar) {
-            this.mDetailDisplay.loadAvatar(content);
-        }
-        else {
-            // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
-        }
-    };
-    FurniBagPanel.prototype.addListen = function () {
-        if (!this.mInitialized)
-            return;
-        this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-        this.mSeachInput.on("seach", this.onSeachHandler, this);
-        this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
-        this.sellBtn.on("pointerup", this.onSellBtnHandler, this);
-        this.useBtn.on("pointerup", this.onUseBtnHandler, this);
-    };
-    FurniBagPanel.prototype.removeListen = function () {
-        if (!this.mInitialized)
-            return;
-        this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
-        this.mSeachInput.off("seach", this.onSeachHandler, this);
-        this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
-        this.sellBtn.off("pointerup", this.onSellBtnHandler, this);
-        this.useBtn.off("pointerup", this.onUseBtnHandler, this);
-    };
-    FurniBagPanel.prototype.destroy = function () {
-        if (this.mCategoryScroll) {
-            this.mCategoryScroll.destroy();
-        }
-        if (this.mPropGrid) {
-            this.mPropGrid.destroy();
-        }
-        _super.prototype.destroy.call(this);
-    };
-    FurniBagPanel.prototype.preload = function () {
-        this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
-        this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
-        _super.prototype.preload.call(this);
-    };
-    FurniBagPanel.prototype.init = function () {
-        var _this = this;
-        var width = this.scene.cameras.main.width;
-        var height = this.scene.cameras.main.height;
-        this.mBackground = this.scene.make.graphics(undefined, false);
-        var zoom = this.mWorld.uiScaleNew;
-        this.mBg = this.scene.make.image({
-            key: this.key,
-            frame: "bg"
-        }, false).setScale(zoom);
-        this.mShelfContainer = this.scene.make.container(undefined, false);
-        this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
-        this.mShelfContainer.y = height - this.mShelfContainer.height;
-        this.mPropsContainer = this.scene.make.container(undefined, false);
-        this.mCategeoriesContainer = this.scene.make.container(undefined, false);
-        this.mCategeoriesContainer.y = this.mShelfContainer.y;
-        this.mCategoriesBar = this.scene.make.graphics(undefined, false);
-        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
-        this.mCloseBtn = this.scene.make.image({
-            key: this.key,
-            frame: "back_arrow",
-            x: 21 * this.dpr,
-            y: 30 * this.dpr
-        }).setScale(zoom).setInteractive();
-        var btnwidth = 90 * this.dpr * zoom;
-        var btnHeight = 40 * this.dpr * zoom;
-        var btnPosX = width - btnwidth / 2 - 20 * this.dpr;
-        var btnPosY = this.mShelfContainer.y - 25 * this.dpr * zoom;
-        this.mAdd = new ninepatch_button["NinePatchButton"](this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n["a" /* i18n */].t("furni_bag.add"), {
-            left: 12 * this.dpr * zoom,
-            top: 12 * this.dpr * zoom,
-            right: 12 * this.dpr * zoom,
-            bottom: 12 * this.dpr * zoom
-        });
-        this.mAdd.setTextStyle({
-            color: "#996600",
-            fontSize: 16 * this.dpr * zoom,
-            fontFamily: font["a" /* Font */].DEFULT_FONT
-        });
-        this.mAdd.setFontStyle("bold");
-        this.sellBtn = new ninepatch_button["NinePatchButton"](this.scene, btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n["a" /* i18n */].t("furni_bag.sold"), {
-            left: 12 * this.dpr * zoom,
-            top: 12 * this.dpr * zoom,
-            right: 12 * this.dpr * zoom,
-            bottom: 12 * this.dpr * zoom
-        });
-        this.sellBtn.setTextStyle({
-            color: "#FFFFFF",
-            fontSize: 16 * this.dpr * zoom,
-            fontFamily: font["a" /* Font */].DEFULT_FONT
-        });
-        this.sellBtn.setFontStyle("bold");
-        this.useBtn = new ninepatch_button["NinePatchButton"](this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n["a" /* i18n */].t("furni_bag.use"), {
-            left: 12 * this.dpr * zoom,
-            top: 12 * this.dpr * zoom,
-            right: 12 * this.dpr * zoom,
-            bottom: 12 * this.dpr * zoom
-        });
-        this.useBtn.setTextStyle({
-            color: "#996600",
-            fontSize: 16 * this.dpr * zoom,
-            fontFamily: font["a" /* Font */].DEFULT_FONT
-        });
-        this.useBtn.setFontStyle("bold");
-        this.mDetailDisplay = new DetailDisplay["DetailDisplay"](this.scene);
-        this.mDetailDisplay.setTexture(this.key, "ghost");
-        this.mDetailDisplay.setNearest();
-        this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
-        this.mDetailBubble = new FurniBagPanel_DetailBubble(this.scene, this.key, this.dpr, zoom);
-        this.mDetailBubble.x = 10 * this.dpr;
-        this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
-        this.mSeachInput = new FurniBagPanel_SeachInput(this.scene, this.mWorld, this.key, this.dpr);
-        // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
-        this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
-        this.add([this.sellBtn, this.useBtn]);
-        this.mShelfContainer.add([this.mCategoriesBar, this.mPropsContainer]);
-        // this.mCategeoriesContainer.add([this.mCategoriesBar]);
-        if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
-            this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
-        }
-        if (this.mSceneType === protocols["op_def"].SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
-            this.add(this.mAdd);
-        }
-        var topCapW = 67 * this.dpr * zoom;
-        var topCapH = 30 * this.dpr * zoom;
-        var topPosY = 30 * this.dpr * zoom;
-        var topStyle = {
-            fontFamily: font["a" /* Font */].DEFULT_FONT,
-            fontSize: 20 * this.dpr * zoom,
-            color: "#FFFFFF"
-        };
-        this.topCheckBox = new checkbox_group["CheckboxGroup"]();
-        var topCategorys = [protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
-        var topBtnTexts = [i18n["a" /* i18n */].t("furni_bag.Props"), i18n["a" /* i18n */].t("furni_bag.furni"), i18n["a" /* i18n */].t("furni_bag.decorate")];
-        if (!this.mEnableEdit) {
-            var index = topCategorys.indexOf(protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-            topCategorys.splice(index, 1);
-            topBtnTexts.splice(index, 1);
-        }
-        var topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
-        for (var key in topCategorys) {
-            var index = Number(key);
-            var category = topCategorys[index];
-            var button = new TabButton_TabButton(this.scene, this.key, "tab_normal", "tab_down", topBtnTexts[index]);
-            button.setTextStyle(topStyle);
-            button.setData("data", category);
-            button.setSize(topCapW, topCapH);
-            button.setFontStyle("bold");
-            button.y = topPosY;
-            button.x = topPosX + topCapW * index;
-            this.topBtns.push(button);
-        }
-        this.topCheckBox.appendItemAll(this.topBtns);
-        this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
-        this.topBtns.forEach(function (btn) {
-            _this.add(btn.view);
-        });
-        if (this.mEnableEdit) {
-            var index = topCategorys.indexOf(protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-            this.topCheckBox.selectIndex(index);
-        }
-        else {
-            this.topCheckBox.selectIndex(0);
-        }
-        var inputWid = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-        var w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
-        this.mCategoryScroll = new Scroller["a" /* GameScroller */](this.scene, this.mCategeoriesContainer, {
-            x: 0,
-            y: this.mCategeoriesContainer.y,
-            width: w,
-            height: 41 * this.dpr * zoom,
-            value: w / 2,
-            orientation: 1,
-            bounds: [
-                -w / 4,
-                w / 2
-            ],
-            valuechangeCallback: function (newValue) {
-                _this.refreshPos(newValue);
-            },
-            cellupCallBack: function (gameobject) {
-                _this.onSelectSubCategoryHandler(gameobject);
-            }
-        });
-        var propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
-        var capW = (propFrame.width + 10 * this.dpr) * zoom;
-        var capH = (propFrame.height + 10 * this.dpr) * zoom;
-        this.mPropGrid = new GridTable["a" /* default */](this.scene, {
-            x: w / 2,
-            y: 1050 + (41 * this.dpr * zoom) / 2,
-            table: {
-                width: w - 10 * this.dpr * zoom,
-                height: 224 * this.dpr * zoom,
-                columns: 4,
-                cellWidth: capW,
-                cellHeight: capH,
-                reuseCellContainer: true,
-            },
-            scrollMode: 1,
-            clamplChildOY: true,
-            createCellContainerCallback: function (cell, cellContainer) {
-                var scene = cell.scene, item = cell.item;
-                if (cellContainer === null) {
-                    cellContainer = new FurniBagPanel_Item(scene, 0, 0, _this.key, _this.dpr, zoom);
-                    _this.add(cellContainer);
-                }
-                // cellContainer.setSize(width, height);
-                cellContainer.setData({ item: item });
-                cellContainer.setProp(item);
-                if (_this.mSelectItem === null)
-                    _this.mSelectItem = cellContainer;
-                if (item && (_this.mSelectedItemData === undefined || _this.mSelectedItemData.id === item.id)) {
-                    _this.onSelectItemHandler(cellContainer);
-                }
-                return cellContainer;
-            },
-        }).layout();
-        this.mPropGrid.on("cell.1tap", function (cell) {
-            if (cell) {
-                _this.onSelectItemHandler(cell);
-            }
-        });
-        // this.add(this.mPropGrid);
-        this.add(this.mPropGrid.childrenMap.child);
-        _super.prototype.init.call(this);
-        if (this)
-            this.resize(0, 0);
-    };
-    FurniBagPanel.prototype.refreshPos = function (value) {
-        if (!this.scene) {
-            return;
-        }
-        var zoom = this.mWorld.uiScaleNew;
-        var inputWid = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-        var w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
-        this.mCategeoriesContainer.x = value - w / 2;
-    };
-    FurniBagPanel.prototype.setSelectedItem = function (prop) {
-        if (!prop) {
-            return;
-        }
-        this.mSelectedItemData = prop;
-        var url = resUtil["h" /* Url */].getOsdRes(prop.display.texturePath);
-        this.mDetailDisplay.loadUrl(url);
-        this.emit("queryPropResource", prop);
-        this.mDetailBubble.setProp(prop);
-        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
-        this.sellBtn.enable = prop.recyclable;
-        this.useBtn.enable = prop.executable;
-    };
-    FurniBagPanel.prototype.onSelectSubCategoryHandler = function (gameobject) {
-        var type = gameobject.getData("type");
-        if (type) {
-            if (type === "seachBtn") {
-                this.onSeachHandler(this.mSeachInput.seachText);
-            }
-            else if (type === "label") {
-                this.mSeachInput.showInputPanel();
-            }
-            return;
-        }
-        if (!(gameobject instanceof TextButton["TextButton"])) {
-            return;
-        }
-        var category = gameobject.getData("item");
-        if (category) {
-            if (this.mPreCategoryBtn) {
-                this.mPreCategoryBtn.changeNormal();
-            }
-            gameobject.changeDown();
-            var key = category.key;
-            if (key === this.seachKey) {
-                // gameobject.setSize(100 * this.dpr * this.mWorld.uiScaleNew, gameobject.height);
-                this.showSeach(gameobject);
-            }
-            else {
-                if (this.mPreCategoryBtn) {
-                    var preBtn = this.mPreCategoryBtn.getData("item");
-                    key = preBtn.key;
-                    if (key === this.seachKey) {
-                        this.closeSeach(gameobject);
-                    }
-                }
-                this.mSelectedCategeories = category;
-                this.emit("queryPackage", category.key);
-            }
-            this.mPreCategoryBtn = gameobject;
-        }
-    };
-    FurniBagPanel.prototype.onCloseHandler = function () {
-        this.emit("close");
-    };
-    FurniBagPanel.prototype.onSelectItemHandler = function (cell) {
-        var item = cell.getData("item");
-        if (item) {
-            if (this.mSelectItem)
-                this.mSelectItem.isSelect = false;
-            this.mSelectItem = cell;
-            this.mSelectItem.isSelect = true;
-            this.setSelectedItem(item);
-        }
-    };
-    FurniBagPanel.prototype.onSeachHandler = function (val) {
-        if (this.mSelectedCategeories && val.length > 0) {
-            this.emit("seachPackage", val, this.mSelectedCategeories.key);
-        }
-    };
-    FurniBagPanel.prototype.onAddFurniToSceneHandler = function () {
-        if (!this.mSelectedItemData) {
-            return;
-        }
-        this.emit("addFurniToScene", this.mSelectedItemData.id);
-    };
-    FurniBagPanel.prototype.onTopCategoryHandler = function (item) {
-        var categoryType = item.getData("data");
-        if (categoryType) {
-            this.onSelectedCategory(categoryType);
-            if (categoryType === protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
-                this.sellBtn.visible = false;
-                this.useBtn.visible = false;
-                this.mAdd.visible = true;
-            }
-            else {
-                this.sellBtn.visible = true;
-                this.useBtn.visible = true;
-                this.mAdd.visible = false;
-            }
-        }
-        this.layoutTopBtn(item);
-    };
-    FurniBagPanel.prototype.layoutTopBtn = function (button) {
-        var width = this.scene.cameras.main.width;
-        var zoom = this.mWorld.uiScaleNew;
-        var allRadiu = 0;
-        for (var _i = 0, _a = this.topBtns; _i < _a.length; _i++) {
-            var btn = _a[_i];
-            allRadiu += btn.displayWidth;
-        }
-        allRadiu /= 2;
-        var offsetX = width * 0.5 - allRadiu;
-        for (var _b = 0, _c = this.topBtns; _b < _c.length; _b++) {
-            var btn = _c[_b];
-            var posY = 0;
-            if (btn !== button) {
-                btn.setTextStyle({
-                    fontFamily: font["a" /* Font */].DEFULT_FONT,
-                    fontSize: 12 * this.dpr * zoom,
-                    color: "#2B4BB5"
-                });
-                posY = btn.displayHeight * 0.5;
-            }
-            else {
-                btn.setTextStyle({
-                    fontFamily: font["a" /* Font */].DEFULT_FONT,
-                    fontSize: 16 * this.dpr * zoom,
-                    color: "#8B5603"
-                });
-                posY = btn.displayHeight * 0.5 + 2 * this.dpr * zoom;
-            }
-            var radiu = btn.displayWidth * 0.5;
-            btn.x = offsetX + radiu;
-            btn.y = posY;
-            offsetX += radiu * 2 + 4 * this.dpr * zoom;
-        }
-    };
-    FurniBagPanel.prototype.onSelectedCategory = function (categoryType) {
-        this.categoryType = categoryType;
-        this.emit("getCategories", categoryType);
-    };
-    FurniBagPanel.prototype.onSellBtnHandler = function () {
-        this.popItemsPopPanle();
-        if (this.mSelectedItemData)
-            this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler["a" /* Handler */](this, this.onSellPropsHandler));
-    };
-    FurniBagPanel.prototype.onUseBtnHandler = function () {
-        this.popItemsPopPanle();
-        if (this.mSelectedItemData)
-            this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler["a" /* Handler */](this, this.onUsePropsHandler));
-    };
-    FurniBagPanel.prototype.onSellPropsHandler = function (prop, count, category) {
-        this.emit("sellProps", prop, count, category);
-    };
-    FurniBagPanel.prototype.onUsePropsHandler = function (prop, count, category) {
-    };
-    FurniBagPanel.prototype.popItemsPopPanle = function () {
-        var zoom = this.mWorld.uiScaleNew;
-        var width = this.scene.cameras.main.width;
-        var height = this.scene.cameras.main.height;
-        if (!this.itemPopPanel) {
-            this.itemPopPanel = new FurniBagPanel_ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
-        }
-        this.add(this.itemPopPanel);
-    };
-    FurniBagPanel.prototype.showSeach = function (parent) {
-        // const cellTable = this.mCategoryScroll.childrenMap.child;
-        // cellTable.setCellWidth(0, this.mSeachInput.x + this.mSeachInput.width / 2);
-        // cellTable.updateTable(true);
-        this.mCategeoriesContainer.addAt(this.mSeachInput, 1);
-        this.mCategoryScroll.setInteractiveObject(this.mSeachInput.seachBtn);
-        this.mCategoryScroll.setInteractiveObject(this.mSeachInput.label);
-        this.updateCategeoriesLoc(true);
-    };
-    FurniBagPanel.prototype.closeSeach = function (parent) {
-        // const cellTable = this.mCategoryScroll.childrenMap.child;
-        // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
-        // cellTable.updateTable(true);
-        this.mCategeoriesContainer.remove(this.mSeachInput);
-        this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.seachBtn);
-        this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.label);
-        this.updateCategeoriesLoc(false);
-    };
-    FurniBagPanel.prototype.updateCategeoriesLoc = function (inputBoo) {
-        var list = this.mCategeoriesContainer.list;
-        var zoom = this.mWorld.uiScaleNew;
-        var w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
-        var h = 41 * this.dpr * zoom;
-        var preBtn = null;
-        var offset = 10 * this.dpr * zoom;
-        for (var i = 0; i < list.length; i++) {
-            var item = list[i];
-            if (i > 0) {
-                preBtn = list[i - 1];
-                item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
-            }
-            else {
-                item.x = offset;
-            }
-        }
-        var inputWid = inputBoo ? 200 * this.dpr * zoom : 0;
-        var updateWid = w + inputWid;
-        this.mCategoryScroll.setSize(updateWid, h, -w / 2 - inputWid, w / 2);
-    };
-    Object.defineProperty(FurniBagPanel.prototype, "enableEdit", {
-        get: function () {
-            return this.mEnableEdit;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return FurniBagPanel;
-}(BasePanel["BasePanel"]));
-
-var FurniBagPanel_SeachInput = /** @class */ (function (_super) {
-    FurniBagPanel_extends(SeachInput, _super);
-    function SeachInput(scene, world, key, dpr) {
-        var _this = _super.call(this, scene) || this;
-        _this.mWorldService = world;
-        var bg = scene.make.image({
-            key: key,
-            frame: "seach_bg"
-        }, false).setOrigin(0, 0.5);
-        // this.mLabelInput = new LabelInput(this.scene, {
-        //   x: -10 * dpr,
-        //   y: 0,
-        //   width: 160,
-        //   height: 60,
-        //   fontSize: 14 * dpr + "px",
-        //   color: "#666666",
-        // });
-        _this.mLabelInput = _this.scene.make.text({
-            x: 10 * dpr,
-            width: bg.displayWidth,
-            height: bg.displayHeight,
-            style: {
-                fontFamily: font["a" /* Font */].DEFULT_FONT,
-                fontSize: 14 * dpr
-            }
-        }, false).setData("type", "label").setOrigin(0, 0.5);
-        _this.mSeachBtn = scene.make.image({
-            key: key,
-            frame: "seach_normal"
-        }, false).setData("type", "seachBtn");
-        _this.mSeachBtn.x = bg.displayWidth - _this.mSeachBtn.width / 2 - 4 * dpr,
-            _this.add([bg, _this.mLabelInput, _this.mSeachBtn]);
-        _this.setSize(bg.displayWidth + 20 * dpr, bg.displayHeight);
-        return _this;
-        // this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
-    }
-    // private onSeachHandler() {
-    //   if (!this.mLabelInput.text) {
-    //     return;
-    //   }
-    //   this.emit("seach", this.mLabelInput.text);
-    // }
-    SeachInput.prototype.showInputPanel = function () {
-        if (this.mInputText) {
-            return;
-        }
-        this.mInputText = new input_panel["InputPanel"](this.scene, this.mWorldService, this.mLabelInput.text);
-        this.mInputText.once("close", this.sendChat, this);
-    };
-    SeachInput.prototype.sendChat = function (val) {
-        this.mLabelInput.setText(val);
-    };
-    Object.defineProperty(SeachInput.prototype, "seachBtn", {
-        get: function () {
-            return this.mSeachBtn;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SeachInput.prototype, "label", {
-        get: function () {
-            return this.mLabelInput;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SeachInput.prototype, "seachText", {
-        get: function () {
-            return this.mLabelInput.text;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return SeachInput;
-}(Phaser.GameObjects.Container));
-var FurniBagPanel_DetailBubble = /** @class */ (function (_super) {
-    FurniBagPanel_extends(DetailBubble, _super);
-    function DetailBubble(scene, key, dpr, zoom) {
-        if (zoom === void 0) { zoom = 1; }
-        var _this = _super.call(this, scene) || this;
-        _this.dpr = dpr;
-        _this.mDetailBubble = _this.scene.make.graphics(undefined, false);
-        var bubbleW = 100 * dpr * zoom;
-        var bubbleH = 96 * dpr * zoom;
-        _this.mDetailBubble = _this.scene.make.graphics(undefined, false);
-        _this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
-        _this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
-        _this.mNickName = _this.scene.make.text({
-            x: 7 * _this.dpr,
-            y: 9 * _this.dpr,
-            text: "背包里空空如也",
-            style: {
-                fontSize: 12 * _this.dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT,
-                color: "#FFFF00",
-                align: "center"
-            }
-        });
-        _this.mPriceText = _this.scene.make.text({
-            x: 7 * _this.dpr,
-            y: 28 * _this.dpr,
-            text: "不可交易",
-            style: {
-                fontSize: 10 * _this.dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT,
-                color: "#DC143C",
-                align: "center"
-            }
-        });
-        _this.mSource = _this.scene.make.text({
-            x: 8 * dpr,
-            y: 47 * dpr,
-            text: "可通过商城购物获得",
-            style: {
-                fontSize: 10 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT,
-            }
-        }, false);
-        _this.mDesText = _this.scene.make.text({
-            x: 8 * dpr,
-            y: 66 * dpr,
-            style: {
-                color: "#32347b",
-                fontSize: 10 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT,
-                wordWrap: {
-                    width: 90 * dpr,
-                    useAdvancedWrap: true
-                }
-            }
-        }, false);
-        _this.add([_this.mDetailBubble, _this.mNickName, _this.mDesText, _this.mSource, _this.mPriceText]);
-        _this.setSize(bubbleW, bubbleH);
-        return _this;
-    }
-    DetailBubble.prototype.setProp = function (prop) {
-        this.mNickName.setText(prop.shortName || prop.name);
-        var posY = 9 * this.dpr;
-        var offsetY = 21 * this.dpr;
-        // this.mDesText.setText(prop.des);
-        if (prop.sellingPrice) {
-            posY += offsetY;
-            this.mPriceText.y = posY;
-            this.mPriceText.setText("\u53EF\u552E\u5356\uFF1A" + prop.sellingPrice.price);
-        }
-        else {
-            posY += offsetY;
-            this.mPriceText.y = posY;
-            this.mPriceText.setText("\u4E0D\u53EF\u4EA4\u6613");
-        }
-        if (prop.source) {
-            this.mSource.setText("\u6765\u6E90\uFF1A " + prop.source);
-            posY += offsetY;
-            this.mSource.y = posY;
-        }
-        else {
-            this.mSource.setText("");
-        }
-        if (prop.des) {
-            posY += offsetY;
-            this.mDesText.setText(prop.des);
-            this.mDesText.y = posY;
-        }
-        else {
-            this.mDesText.setText("");
-        }
-        this.resize();
-        return this;
-    };
-    DetailBubble.prototype.resize = function (w, h) {
-        if (w === undefined)
-            w = this.width;
-        var bubbleH = this.mDesText.height + 60 * this.dpr;
-        if (w === this.width && bubbleH === this.height) {
-            return;
-        }
-        this.mDetailBubble.clear();
-        this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
-        this.mDetailBubble.fillRoundedRect(0, 0, w, bubbleH);
-        this.setSize(w, bubbleH);
-        // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
-    };
-    return DetailBubble;
-}(Phaser.GameObjects.Container));
-var FurniBagPanel_Item = /** @class */ (function (_super) {
-    FurniBagPanel_extends(Item, _super);
-    function Item(scene, x, y, key, dpr, zoom) {
-        if (zoom === void 0) { zoom = 1; }
-        var _this = _super.call(this, scene, x, y) || this;
-        var background = scene.make.image({
-            key: key,
-            frame: "grid_bg"
-        }, false).setOrigin(0).setScale(zoom);
-        _this.selectbg = scene.make.image({
-            key: key,
-            frame: "grid_choose"
-        }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
-        _this.mPropImage = new dynamic_image["DynamicImage"](_this.scene, 0, 0);
-        _this.mPropImage.scale = dpr * zoom;
-        _this.mCounter = scene.make.text({
-            x: background.displayWidth - 4 * dpr,
-            y: background.displayHeight + 2 * dpr,
-            style: {
-                fontSize: 12 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT
-            }
-        }, false).setOrigin(1);
-        _this.add([background, _this.selectbg]);
-        _this.isSelect = false;
-        _this.setSize(background.displayWidth, background.displayHeight);
-        return _this;
-        // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.displayWidth, background.displayHeight), Phaser.Geom.Rectangle.Contains);
-        // this.on("pointerup", this.onSelectedHandler, this);
-    }
-    Item.prototype.setProp = function (prop) {
-        this.mProp = prop;
-        this.isSelect = false;
-        if (!prop) {
-            // this.mPropImage.setFrame("");
-            this.mCounter.setText("");
-            this.remove(this.mPropImage);
-            return;
-        }
-        this.mPropImage.load(resUtil["h" /* Url */].getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
-        this.add(this.mPropImage);
-        if (prop.count > 1) {
-            this.mCounter.setText(prop.count.toString());
-            this.add(this.mCounter);
-        }
-        else {
-            if (this.mCounter.parentContainer)
-                this.remove(this.mCounter);
-        }
-    };
-    Item.prototype.onPropLoadCompleteHandler = function () {
-        if (this.mPropImage && this.mPropImage.texture) {
-            var texture = this.mPropImage.texture;
-            // this.mPropImage.setPosition((this.mPropImage.displayWidth) / 2, (this.mPropImage.displayHeight) / 2);
-            this.mPropImage.x = this.width / 2;
-            this.mPropImage.y = this.height / 2;
-            if (texture) {
-                texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-            }
-        }
-    };
-    Object.defineProperty(Item.prototype, "isSelect", {
-        set: function (value) {
-            this.selectbg.visible = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Item.prototype.onSelectedHandler = function () {
-        this.emit("select", this.mProp);
-    };
-    return Item;
-}(Phaser.GameObjects.Container));
-var FurniBagPanel_ItemsPopPanel = /** @class */ (function (_super) {
-    FurniBagPanel_extends(ItemsPopPanel, _super);
-    function ItemsPopPanel(scene, x, y, key, commonKey, dpr, zoom) {
-        if (zoom === void 0) { zoom = 1; }
-        var _this = _super.call(this, scene, x, y) || this;
-        _this.itemCount = 1;
-        _this.popState = 0; // 0 卖出 1 使用
-        var bg = new nine_patch["NinePatch"](_this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", {
-            top: 40,
-            bottom: 40
-        });
-        _this.blackBg = _this.scene.make.graphics(undefined, false);
-        _this.blackBg.clear();
-        _this.blackBg.fillStyle(0, 0.5);
-        _this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
-        _this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
-        var posY = -bg.height * 0.5 + 3 * dpr * zoom;
-        var titlebg = _this.scene.make.image({ x: 0, y: posY, key: key, frame: "title" });
-        _this.titleName = scene.make.text({
-            x: 0,
-            y: posY + 3 * dpr * zoom,
-            text: "售出",
-            style: {
-                color: "#905B06",
-                fontSize: 15 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT
-            }
-        }, false).setOrigin(0.5);
-        _this.titleName.setFontStyle("bold");
-        _this.itemName = scene.make.text({
-            x: 0,
-            y: posY + 40 * dpr * zoom,
-            style: {
-                color: "#000000",
-                fontSize: 15 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT
-            }
-        }, false).setOrigin(0.5);
-        var iconOffset = -56 * dpr * zoom;
-        var iconBg = _this.scene.make.image({ x: 0, y: iconOffset, key: key, frame: "sell_bg" });
-        _this.icon = new dynamic_image["DynamicImage"](_this.scene, 0, iconOffset);
-        _this.icon.scale = dpr * zoom;
-        var priceOffset = 10 * dpr * zoom;
-        _this.priceBg = _this.scene.make.image({ x: 0, y: priceOffset, key: commonKey, frame: "price_bg" });
-        _this.pricText = scene.make.text({
-            x: 0,
-            y: priceOffset,
-            style: {
-                color: "#FFFFFF",
-                fontSize: 15 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT
-            }
-        }, false).setOrigin(0.5);
-        var countOffsetY = 50 * dpr * zoom;
-        var countOffsetX = -58 * dpr * zoom;
-        var countBg = _this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
-        _this.itemCountText = scene.make.text({
-            x: 0,
-            y: countOffsetY,
-            style: {
-                color: "#0771AC",
-                fontSize: 15 * dpr * zoom,
-                fontFamily: font["a" /* Font */].DEFULT_FONT
-            }
-        }, false).setOrigin(0.5);
-        var minusBtn = new Button["a" /* Button */](_this.scene, commonKey, "reduce", "reduce");
-        var addBtn = new Button["a" /* Button */](_this.scene, commonKey, "increase", "increase");
-        minusBtn.x = countOffsetX;
-        minusBtn.y = countOffsetY;
-        addBtn.x = -countOffsetX;
-        addBtn.y = countOffsetY;
-        var bottomOffsetY = bg.height * 0.5 - 50 * dpr * zoom;
-        var bottomOffsetX = -66 * dpr * zoom;
-        var cancelBtn = new ninepatch_button["NinePatchButton"](_this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n["a" /* i18n */].t("common.cancel"), {
-            left: 12 * dpr * zoom,
-            top: 12 * dpr * zoom,
-            right: 12 * dpr * zoom,
-            bottom: 12 * dpr * zoom
-        });
-        var confirmBtn = new ninepatch_button["NinePatchButton"](_this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n["a" /* i18n */].t("common.confirm"), {
-            left: 12 * dpr * zoom,
-            top: 12 * dpr * zoom,
-            right: 12 * dpr * zoom,
-            bottom: 12 * dpr * zoom
-        });
-        cancelBtn.setTextStyle({
-            color: "#FFFFFF",
-            fontSize: 16 * dpr * zoom,
-            fontFamily: font["a" /* Font */].DEFULT_FONT
-        });
-        confirmBtn.setTextStyle({
-            color: "#976400",
-            fontSize: 16 * dpr * zoom,
-            fontFamily: font["a" /* Font */].DEFULT_FONT
-        });
-        _this.add([_this.blackBg, bg, titlebg, _this.titleName, _this.itemName, iconBg, _this.icon, _this.priceBg, _this.pricText, countBg, _this.itemCountText, minusBtn.view, addBtn.view, cancelBtn, confirmBtn]);
-        minusBtn.on("Tap", _this.onMinusBtnHandler, _this);
-        addBtn.on("Tap", _this.onAddBtnHandler, _this);
-        cancelBtn.on("click", _this.onCancelBtnHandler, _this);
-        confirmBtn.on("click", _this.onConfirmBtnHandler, _this);
-        return _this;
-    }
-    ItemsPopPanel.prototype.setProp = function (prop, stated, category, handler) {
-        this.itemData = prop;
-        this.itemCount = 1;
-        this.icon.load(resUtil["h" /* Url */].getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
-        this.itemName.text = prop.name || prop.shortName;
-        this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
-        this.itemCountText.text = this.itemCount + "";
-        this.popState = stated;
-        if (stated === 0) {
-            this.titleName.text = i18n["a" /* i18n */].t("furni_bag.sold");
-            this.pricText.visible = true;
-            this.priceBg.visible = true;
-        }
-        else {
-            this.titleName.text = i18n["a" /* i18n */].t("furni_bag.use");
-            this.pricText.visible = false;
-            this.priceBg.visible = false;
-        }
-        this.handler = handler;
-        this.category = category;
-    };
-    ItemsPopPanel.prototype.onMinusBtnHandler = function () {
-        if (this.itemCount === 1)
-            return;
-        this.itemCount--;
-        this.updateData();
-    };
-    ItemsPopPanel.prototype.onAddBtnHandler = function () {
-        if (this.itemCount === this.itemData.count)
-            return;
-        this.itemCount++;
-        this.updateData();
-    };
-    ItemsPopPanel.prototype.updateData = function () {
-        this.itemCountText.text = this.itemCount + "";
-        this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
-    };
-    ItemsPopPanel.prototype.onCancelBtnHandler = function () {
-        if (this.parentContainer)
-            this.parentContainer.remove(this);
-    };
-    ItemsPopPanel.prototype.onConfirmBtnHandler = function () {
-        if (this.parentContainer)
-            this.parentContainer.remove(this);
-        if (this.handler)
-            this.handler.runWith([this.itemData, this.itemCount, this.category]);
-    };
-    ItemsPopPanel.prototype.onPropLoadCompleteHandler = function () {
-        if (this.icon && this.icon.texture) {
-            var texture = this.icon.texture;
-            if (texture) {
-                texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-            }
-        }
-    };
-    return ItemsPopPanel;
-}(Phaser.GameObjects.Container));
-
-
-/***/ }),
-/* 221 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "ShopItemSlot", function() { return /* binding */ shop_itemSlot_ShopItemSlot; });
-
-// EXTERNAL MODULE: ./src/ui/bag/item.slot.ts
-var item_slot = __webpack_require__(34);
-
-// EXTERNAL MODULE: ./src/ui/bag/dragDropIcon.ts
-var dragDropIcon = __webpack_require__(60);
-
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
-var protocols = __webpack_require__(3);
-
-// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
-var resUtil = __webpack_require__(5);
-
-// CONCATENATED MODULE: ./src/const/res.const.ts
-
-var res_const_UI;
-(function (UI) {
-    var TuDing18 = /** @class */ (function () {
-        function TuDing18() {
-        }
-        TuDing18.getName = function () {
-            return "ui_moneyIcon_tuding_18_png";
-        };
-        TuDing18.getPNG = function () {
-            return resUtil["h" /* Url */].getRes("ui/moneyIcon/tuding_18.png");
-        };
-        return TuDing18;
-    }());
-    UI.TuDing18 = TuDing18;
-})(res_const_UI || (res_const_UI = {}));
-
-// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
-var dynamic_image = __webpack_require__(18);
-
-// EXTERNAL MODULE: ./src/ui/tips/toolTip.ts
-var toolTip = __webpack_require__(80);
-
-// EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
-var dist = __webpack_require__(4);
-
-// CONCATENATED MODULE: ./src/ui/Shop/shop.itemSlot.ts
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-
-
-
-
-var shop_itemSlot_ShopItemSlot = /** @class */ (function (_super) {
-    __extends(ShopItemSlot, _super);
-    function ShopItemSlot(scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes, subscriptRes) {
-        return _super.call(this, scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes) || this;
-    }
-    ShopItemSlot.prototype.shopDataChange = function (val, packID) {
-        if (!val)
-            return;
-        this.mPackageID = packID;
-        _super.prototype.dataChange.call(this, val);
-        var prices = val.price;
-        var priceLen = prices.length;
-        for (var i = 0; i < priceLen; i++) {
-            var png = void 0;
-            var key = void 0;
-            if (prices[i].coinType === protocols["op_def"].CoinType.TU_DING_COIN) {
-                key = res_const_UI.TuDing18.getName();
-                png = res_const_UI.TuDing18.getPNG();
-            }
-            this.makeCoin(prices[i], i * 20 + 30);
-        }
-    };
-    ShopItemSlot.prototype.destroy = function () {
-        if (this.moneyIcon) {
-            this.moneyIcon.destroy(true);
-            this.moneyIcon = null;
-        }
-        _super.prototype.destroy.call(this);
-    };
-    ShopItemSlot.prototype.makeCoin = function (price, y) {
-        var png;
-        var key;
-        if (price.coinType === protocols["op_def"].CoinType.TU_DING_COIN) {
-            key = res_const_UI.TuDing18.getName();
-            png = res_const_UI.TuDing18.getPNG();
-        }
-        // const moneyIcon = this.mScene.make.image(undefined, false);
-        this.moneyIcon = new dynamic_image["DynamicImage"](this.mScene, 0, 0);
-        this.moneyIcon.x = (-this.mWid >> 1) + 15;
-        this.moneyIcon.y = y;
-        this.toolTipCon.add(this.moneyIcon);
-        this.moneyIcon.load(png);
-        var priceText = this.mScene.make.text(undefined, false);
-        priceText.setFontFamily("Tahoma");
-        // priceText.setFontStyle("bold");
-        priceText.setFontSize(15);
-        priceText.x = -this.mWid / 2 + this.moneyIcon.width + 20;
-        priceText.y = y - 9;
-        this.toolTipCon.add(priceText);
-        priceText.setText(price.price.toString());
-    };
-    ShopItemSlot.prototype.onLoadCompleteHandler = function () {
-        this.mWid = 80;
-        this.mHei = 88;
-        this.itemBG = this.mScene.make.sprite(undefined, false);
-        this.itemBG.setTexture(this.mResStr, this.mResSlot);
-        this.itemBG.y = -10;
-        this.toolTipCon.setSize(this.mWid, this.mHei);
-        this.toolTipCon.addAt(this.itemBG, 0);
-        this.mIcon = new dragDropIcon["DragDropIcon"](this.mScene, 0, -10);
-        this.toolTipCon.addAt(this.mIcon, 1);
-        if (this.mSubScriptRes) {
-            this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
-            this.mSubScriptSprite.setTexture(this.mResStr, this.mSubScriptRes);
-            this.mSubScriptSprite.x = this.mSubScriptSprite.width - this.itemBG.width >> 1;
-            this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
-            // this.con.addAt(this.mSubScriptSprite, 2);
-        }
-        if (this.isTipBoo) {
-            this.toolTip = new toolTip["ToolTip"](this.mScene, "itemSlotTip", resUtil["h" /* Url */].getRes("ui/toolTip/toolTip.json"), resUtil["h" /* Url */].getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
-        }
-        this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
-        this.toolTipCon.on("pointerover", this.overHandler, this);
-        this.toolTipCon.on("pointerout", this.outHandler, this);
-        this.toolTipCon.on("pointerdown", this.downHandler, this);
-        this.toolTipCon.on("pointerup", this.outHandler, this);
-        this.minitialize = true;
-        if (this.mData) {
-            this.dataChange(this.mData);
-        }
-        this.mSelectSprite = this.mScene.make.sprite(undefined, false);
-        this.createTexture(this.mWid, this.mHei);
-    };
-    ShopItemSlot.prototype.overHandler = function (pointer) {
-        _super.prototype.overHandler.call(this, pointer);
-        this.mSelectSprite.y -= 10;
-    };
-    ShopItemSlot.prototype.downHandler = function (pointer) {
-        if (!this.mData)
-            return;
-        var pkt = new dist["PBpacket"](protocols["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
-        var content = pkt.content;
-        content.uiId = this.mPackageID;
-        content.componentId = this.mData.id;
-        this.mWorld.connection.send(pkt);
-    };
-    ShopItemSlot.prototype.outHandler = function (pointer) {
-        _super.prototype.outHandler.call(this, pointer);
-    };
-    ShopItemSlot.prototype.createTexture = function (wid, hei) {
-        var COLOR_BG = 0xAAA9A9;
-        var COLOR_LINE = 0xAAA9A9;
-        var bgGraphics = this.mScene.add.graphics();
-        bgGraphics.fillStyle(COLOR_BG, .3);
-        bgGraphics.fillRoundedRect(0, 0, wid, hei, 5);
-        bgGraphics.generateTexture("selectBg", wid, hei);
-        bgGraphics.clear();
-    };
-    return ShopItemSlot;
-}(item_slot["ItemSlot"]));
-
-
-
-/***/ }),
-/* 222 */
+/* 217 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37204,14 +35407,1639 @@ const WRAPMODE = {
 /* harmony default export */ var textstyle_TextStyle = __webpack_exports__["a"] = (TextStyle_TextStyle);
 
 /***/ }),
+/* 218 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ cameras_manager_CamerasManager; });
+
+// EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
+var dist = __webpack_require__(4);
+
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
+var protocols = __webpack_require__(3);
+
+// EXTERNAL MODULE: ./src/utils/log.ts
+var log = __webpack_require__(9);
+
+// CONCATENATED MODULE: ./src/utils/rectangle45.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var Rectangle = Phaser.Geom.Rectangle;
+var Rectangle45 = /** @class */ (function (_super) {
+    __extends(Rectangle45, _super);
+    function Rectangle45(row, col, endRow, endCol) {
+        var _this = _super.call(this, row, col, endRow, endCol) || this;
+        _this.row = row;
+        _this.col = col;
+        _this.endRow = endRow;
+        _this.endCol = endCol;
+        return _this;
+    }
+    return Rectangle45;
+}(Rectangle));
+
+
+// EXTERNAL MODULE: ./src/utils/pos.ts
+var utils_pos = __webpack_require__(12);
+
+// CONCATENATED MODULE: ./src/rooms/cameras/cameras.manager.ts
+var cameras_manager_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+var cameras_manager_CamerasManager = /** @class */ (function (_super) {
+    cameras_manager_extends(CamerasManager, _super);
+    function CamerasManager(mRoomService) {
+        var _this = _super.call(this) || this;
+        _this.mRoomService = mRoomService;
+        _this.MINI_VIEW_SIZE = 30;
+        _this.VIEW_PORT_SIZE = 30;
+        _this.viewPort = new Phaser.Geom.Rectangle();
+        _this.miniViewPort = new Phaser.Geom.Rectangle();
+        _this.zoom = 1;
+        if (_this.mRoomService && _this.mRoomService.world) {
+            _this.zoom = _this.mRoomService.world.scaleRatio;
+        }
+        _this.mCameras = [];
+        return _this;
+        // this.zoom = this.mRoomService.world.scaleRatio;
+    }
+    CamerasManager.prototype.getViewPort = function () {
+        if (!this.mMain)
+            return;
+        var worldView = this.mMain.worldView;
+        // const out = new Phaser.Geom.Rectangle(worldView.x, worldView.y, worldView.width, worldView.height);
+        // out.x -= out.width >> 1;
+        // out.y -= out.height >> 1;
+        // out.width *= 2;
+        // out.height *= 2;
+        // out.x -= 200;
+        // out.y -= 200;
+        // out.width += 400;
+        // out.height += 400;
+        // this.viewPort.setPosition(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2);
+        this.viewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.viewPort.width >> 1);
+        this.viewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.viewPort.height >> 1);
+        return this.viewPort;
+    };
+    CamerasManager.prototype.getMiniViewPort = function () {
+        if (!this.mMain)
+            return;
+        var worldView = this.mMain.worldView;
+        this.miniViewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.miniViewPort.width >> 1);
+        this.miniViewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.miniViewPort.height >> 1);
+        var pos = this.mRoomService.transformTo45(new utils_pos["a" /* Pos */](this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
+        return new Rectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
+    };
+    Object.defineProperty(CamerasManager.prototype, "camera", {
+        get: function () {
+            return this.mMain;
+        },
+        set: function (camera) {
+            this.mMain = camera;
+            this.addCamera(camera);
+            this.setViewPortSize();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    CamerasManager.prototype.resize = function (width, height) {
+        this.resetCameraSize(width, height);
+    };
+    CamerasManager.prototype.setScroll = function (x, y) {
+        if (!this.mMain) {
+            return;
+        }
+        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
+            var camera = _a[_i];
+            camera.setScroll(x, y);
+        }
+        // this.mMain.setScroll(x, y);
+    };
+    CamerasManager.prototype.offsetScroll = function (x, y) {
+        if (!this.mMain) {
+            return;
+        }
+        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
+            var camera = _a[_i];
+            camera.scrollX += x / this.camera.zoom;
+            camera.scrollY += y / this.camera.zoom;
+        }
+        this.moving = true;
+        // this.mCamera.setScroll(x, y);
+    };
+    CamerasManager.prototype.startFollow = function (target) {
+        this.mTarget = target;
+        if (this.mMain && target) {
+            for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
+                var camera = _a[_i];
+                camera.startFollow(target);
+            }
+            // this.mMain.startFollow(target);
+        }
+    };
+    CamerasManager.prototype.stopFollow = function () {
+        this.mTarget = null;
+        if (this.mMain) {
+            for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
+                var camera = _a[_i];
+                camera.stopFollow();
+            }
+            // this.mMain.stopFollow();
+        }
+    };
+    CamerasManager.prototype.addCamera = function (camera) {
+        var index = this.mCameras.indexOf(camera);
+        if (index === -1) {
+            this.mCameras.push(camera);
+        }
+        if (this.mTarget) {
+            camera.startFollow(this.mTarget);
+        }
+    };
+    CamerasManager.prototype.removeCamera = function (camera) {
+        var index = this.mCameras.indexOf(camera);
+        if (index > -1) {
+            this.mCameras.splice(index, 1);
+        }
+    };
+    CamerasManager.prototype.setBounds = function (x, y, width, height, centerOn) {
+        if (!this.mMain) {
+            log["a" /* Logger */].getInstance().error("camera does not exist");
+            return;
+        }
+        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
+            var camera = _a[_i];
+            camera.setBounds(x, y, width, height, centerOn);
+        }
+        // this.mMain.setBounds(x, y, width, height, centerOn);
+    };
+    CamerasManager.prototype.setPosition = function (x, y) {
+        if (!this.mMain) {
+            return;
+        }
+        for (var _i = 0, _a = this.mCameras; _i < _a.length; _i++) {
+            var camera = _a[_i];
+            camera.setPosition(x, y);
+        }
+        // this.mMain.setPosition(x, y);
+    };
+    CamerasManager.prototype.syncToEditor = function () {
+        if (!this.mMain) {
+            return;
+        }
+        var cameraView = this.mMain.worldView;
+        var pkt = new dist["PBpacket"](protocols["op_editor"].OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        var content = pkt.content;
+        content.x = cameraView.x;
+        content.y = cameraView.y;
+        content.width = cameraView.width;
+        content.height = cameraView.height;
+        this.connection.send(pkt);
+    };
+    CamerasManager.prototype.centerCameas = function () {
+    };
+    CamerasManager.prototype.syncCamera = function () {
+        if (!this.mMain) {
+            return;
+        }
+        var packet = new dist["PBpacket"](protocols["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+        var size = packet.content;
+        size.width = this.mMain.width / this.mMain.zoom;
+        size.height = this.mMain.height / this.mMain.zoom;
+        this.connection.send(packet);
+    };
+    CamerasManager.prototype.syncCameraScroll = function () {
+        if (!this.mMain) {
+            return;
+        }
+        var pkt = new dist["PBpacket"](protocols["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
+        var content = pkt.content;
+        var pos = protocols["op_def"].PBPoint3f.create();
+        pos.x = this.mMain.scrollX / Math.ceil(window.devicePixelRatio);
+        pos.y = this.mMain.scrollY / Math.ceil(window.devicePixelRatio);
+        content.pos = pos;
+        this.connection.send(pkt);
+    };
+    CamerasManager.prototype.scrollTargetPoint = function (x, y) {
+        if (!this.mMain) {
+            return;
+        }
+        this.setScroll(x * this.mRoomService.world.scaleRatio - this.mMain.width / 2, y * this.mRoomService.world.scaleRatio - this.mMain.height / 2);
+    };
+    CamerasManager.prototype.resetCameraSize = function (width, height) {
+        if (!this.connection) {
+            log["a" /* Logger */].getInstance().error("connection is undefined");
+            return;
+        }
+        this.syncCamera();
+    };
+    CamerasManager.prototype.setViewPortSize = function () {
+        if (!this.mMain) {
+            log["a" /* Logger */].getInstance().error("camera does not exist");
+            return;
+        }
+        var size = this.mRoomService.roomSize;
+        if (!size) {
+            log["a" /* Logger */].getInstance().error("room size does not exist");
+            return;
+        }
+        var viewW = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileWidth / 2);
+        var viewH = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileHeight / 2);
+        this.viewPort.setSize(viewW, viewH);
+        var miniViewW = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileWidth / 2);
+        var miniviewH = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileHeight / 2);
+        this.miniViewPort.setSize(miniViewW, miniviewH);
+    };
+    Object.defineProperty(CamerasManager.prototype, "connection", {
+        get: function () {
+            if (!this.mRoomService) {
+                log["a" /* Logger */].getInstance().error("room service is undefined");
+                return;
+            }
+            return this.mRoomService.connection;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CamerasManager.prototype, "moving", {
+        get: function () {
+            return this.mMoving;
+        },
+        set: function (val) {
+            this.mMoving = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CamerasManager.prototype, "targetFollow", {
+        get: function () {
+            return this.mTarget;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return CamerasManager;
+}(dist["PacketHandler"]));
+
+
+
+/***/ }),
+/* 219 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "ShopItemSlot", function() { return /* binding */ shop_itemSlot_ShopItemSlot; });
+
+// EXTERNAL MODULE: ./src/ui/bag/item.slot.ts
+var item_slot = __webpack_require__(34);
+
+// EXTERNAL MODULE: ./src/ui/bag/dragDropIcon.ts
+var dragDropIcon = __webpack_require__(61);
+
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
+var protocols = __webpack_require__(3);
+
+// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
+var resUtil = __webpack_require__(5);
+
+// CONCATENATED MODULE: ./src/const/res.const.ts
+
+var res_const_UI;
+(function (UI) {
+    var TuDing18 = /** @class */ (function () {
+        function TuDing18() {
+        }
+        TuDing18.getName = function () {
+            return "ui_moneyIcon_tuding_18_png";
+        };
+        TuDing18.getPNG = function () {
+            return resUtil["h" /* Url */].getRes("ui/moneyIcon/tuding_18.png");
+        };
+        return TuDing18;
+    }());
+    UI.TuDing18 = TuDing18;
+})(res_const_UI || (res_const_UI = {}));
+
+// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
+var dynamic_image = __webpack_require__(18);
+
+// EXTERNAL MODULE: ./src/ui/tips/toolTip.ts
+var toolTip = __webpack_require__(81);
+
+// EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
+var dist = __webpack_require__(4);
+
+// CONCATENATED MODULE: ./src/ui/Shop/shop.itemSlot.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+
+
+var shop_itemSlot_ShopItemSlot = /** @class */ (function (_super) {
+    __extends(ShopItemSlot, _super);
+    function ShopItemSlot(scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes, subscriptRes) {
+        return _super.call(this, scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes) || this;
+    }
+    ShopItemSlot.prototype.shopDataChange = function (val, packID) {
+        if (!val)
+            return;
+        this.mPackageID = packID;
+        _super.prototype.dataChange.call(this, val);
+        var prices = val.price;
+        var priceLen = prices.length;
+        for (var i = 0; i < priceLen; i++) {
+            var png = void 0;
+            var key = void 0;
+            if (prices[i].coinType === protocols["op_def"].CoinType.TU_DING_COIN) {
+                key = res_const_UI.TuDing18.getName();
+                png = res_const_UI.TuDing18.getPNG();
+            }
+            this.makeCoin(prices[i], i * 20 + 30);
+        }
+    };
+    ShopItemSlot.prototype.destroy = function () {
+        if (this.moneyIcon) {
+            this.moneyIcon.destroy(true);
+            this.moneyIcon = null;
+        }
+        _super.prototype.destroy.call(this);
+    };
+    ShopItemSlot.prototype.makeCoin = function (price, y) {
+        var png;
+        var key;
+        if (price.coinType === protocols["op_def"].CoinType.TU_DING_COIN) {
+            key = res_const_UI.TuDing18.getName();
+            png = res_const_UI.TuDing18.getPNG();
+        }
+        // const moneyIcon = this.mScene.make.image(undefined, false);
+        this.moneyIcon = new dynamic_image["DynamicImage"](this.mScene, 0, 0);
+        this.moneyIcon.x = (-this.mWid >> 1) + 15;
+        this.moneyIcon.y = y;
+        this.toolTipCon.add(this.moneyIcon);
+        this.moneyIcon.load(png);
+        var priceText = this.mScene.make.text(undefined, false);
+        priceText.setFontFamily("Tahoma");
+        // priceText.setFontStyle("bold");
+        priceText.setFontSize(15);
+        priceText.x = -this.mWid / 2 + this.moneyIcon.width + 20;
+        priceText.y = y - 9;
+        this.toolTipCon.add(priceText);
+        priceText.setText(price.price.toString());
+    };
+    ShopItemSlot.prototype.onLoadCompleteHandler = function () {
+        this.mWid = 80;
+        this.mHei = 88;
+        this.itemBG = this.mScene.make.sprite(undefined, false);
+        this.itemBG.setTexture(this.mResStr, this.mResSlot);
+        this.itemBG.y = -10;
+        this.toolTipCon.setSize(this.mWid, this.mHei);
+        this.toolTipCon.addAt(this.itemBG, 0);
+        this.mIcon = new dragDropIcon["DragDropIcon"](this.mScene, 0, -10);
+        this.toolTipCon.addAt(this.mIcon, 1);
+        if (this.mSubScriptRes) {
+            this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
+            this.mSubScriptSprite.setTexture(this.mResStr, this.mSubScriptRes);
+            this.mSubScriptSprite.x = this.mSubScriptSprite.width - this.itemBG.width >> 1;
+            this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
+            // this.con.addAt(this.mSubScriptSprite, 2);
+        }
+        if (this.isTipBoo) {
+            this.toolTip = new toolTip["ToolTip"](this.mScene, "itemSlotTip", resUtil["h" /* Url */].getRes("ui/toolTip/toolTip.json"), resUtil["h" /* Url */].getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
+        }
+        this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
+        this.toolTipCon.on("pointerover", this.overHandler, this);
+        this.toolTipCon.on("pointerout", this.outHandler, this);
+        this.toolTipCon.on("pointerdown", this.downHandler, this);
+        this.toolTipCon.on("pointerup", this.outHandler, this);
+        this.minitialize = true;
+        if (this.mData) {
+            this.dataChange(this.mData);
+        }
+        this.mSelectSprite = this.mScene.make.sprite(undefined, false);
+        this.createTexture(this.mWid, this.mHei);
+    };
+    ShopItemSlot.prototype.overHandler = function (pointer) {
+        _super.prototype.overHandler.call(this, pointer);
+        this.mSelectSprite.y -= 10;
+    };
+    ShopItemSlot.prototype.downHandler = function (pointer) {
+        if (!this.mData)
+            return;
+        var pkt = new dist["PBpacket"](protocols["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        var content = pkt.content;
+        content.uiId = this.mPackageID;
+        content.componentId = this.mData.id;
+        this.mWorld.connection.send(pkt);
+    };
+    ShopItemSlot.prototype.outHandler = function (pointer) {
+        _super.prototype.outHandler.call(this, pointer);
+    };
+    ShopItemSlot.prototype.createTexture = function (wid, hei) {
+        var COLOR_BG = 0xAAA9A9;
+        var COLOR_LINE = 0xAAA9A9;
+        var bgGraphics = this.mScene.add.graphics();
+        bgGraphics.fillStyle(COLOR_BG, .3);
+        bgGraphics.fillRoundedRect(0, 0, wid, hei, 5);
+        bgGraphics.generateTexture("selectBg", wid, hei);
+        bgGraphics.clear();
+    };
+    return ShopItemSlot;
+}(item_slot["ItemSlot"]));
+
+
+
+/***/ }),
+/* 220 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "FurniBagPanel", function() { return /* binding */ FurniBagPanel_FurniBagPanel; });
+
+// EXTERNAL MODULE: ./src/ui/components/BasePanel.ts + 1 modules
+var BasePanel = __webpack_require__(6);
+
+// EXTERNAL MODULE: ./src/ui/components/ninepatch.button.ts
+var ninepatch_button = __webpack_require__(19);
+
+// EXTERNAL MODULE: ./src/i18n.ts
+var i18n = __webpack_require__(48);
+
+// EXTERNAL MODULE: ./src/ui/Market/DetailDisplay.ts
+var DetailDisplay = __webpack_require__(65);
+
+// EXTERNAL MODULE: ./src/utils/font.ts
+var font = __webpack_require__(10);
+
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
+var protocols = __webpack_require__(3);
+
+// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
+var dynamic_image = __webpack_require__(18);
+
+// EXTERNAL MODULE: ./src/ui/Market/TextButton.ts
+var TextButton = __webpack_require__(93);
+
+// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
+var resUtil = __webpack_require__(5);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/scroller/Scroller.ts
+var Scroller = __webpack_require__(264);
+
+// EXTERNAL MODULE: ./src/ui/components/input.panel.ts
+var input_panel = __webpack_require__(90);
+
+// EXTERNAL MODULE: ./src/ui/components/checkbox.group.ts
+var checkbox_group = __webpack_require__(66);
+
+// EXTERNAL MODULE: ./src/ui/components/nine.patch.ts
+var nine_patch = __webpack_require__(14);
+
+// EXTERNAL MODULE: ./src/Handler/Handler.ts
+var Handler = __webpack_require__(73);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/button/Button.ts
+var Button = __webpack_require__(41);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/interface/event/MouseEvent.ts
+var MouseEvent = __webpack_require__(237);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/tab/TabButton.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var TabButton_TabButton = /** @class */ (function (_super) {
+    __extends(TabButton, _super);
+    function TabButton(scene, key, frame, downFrame, text, music) {
+        var _this = _super.call(this, scene, key, frame, downFrame, text, music) || this;
+        _this.mSelected = false;
+        return _this;
+    }
+    Object.defineProperty(TabButton.prototype, "selected", {
+        get: function () {
+            return this.mSelected;
+        },
+        set: function (value) {
+            this.mSelected = value;
+            var buttonState = value ? Button["b" /* ButtonState */].Select : Button["b" /* ButtonState */].Normal;
+            this.buttonStateChange(buttonState);
+            this.emit("selectChange", value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TabButton.prototype.destroy = function () {
+        this.selected = false;
+        _super.prototype.destroy.call(this);
+    };
+    TabButton.prototype.onPointerUpHandler = function (pointer) {
+        if (!this.interactiveBoo) {
+            if (this.soundGroup && this.soundGroup.disabled)
+                this.playSound(this.soundGroup.disabled);
+            return;
+        }
+        if (!this.mIsMove || (Date.now() - this.mDownTime > this.mPressTime)) {
+            if (Math.abs(pointer.downX - pointer.upX) < 30 && Math.abs(pointer.downY - pointer.upY) < 30) {
+                if (this.soundGroup && this.soundGroup.up)
+                    this.playSound(this.soundGroup.up);
+                this.emit(MouseEvent["a" /* MouseEvent */].Tap, pointer, this);
+                this.selected = true;
+            }
+        }
+        clearTimeout(this.mPressDelay);
+        this.mIsMove = false;
+        this.mDownTime = 0;
+    };
+    TabButton.prototype.onPointerDownHandler = function (pointer) {
+        var _this = this;
+        if (!this.interactiveBoo) {
+            if (this.soundGroup && this.soundGroup.disabled)
+                this.playSound(this.soundGroup.disabled);
+            return;
+        }
+        if (this.soundGroup && this.soundGroup.down)
+            this.playSound(this.soundGroup.down);
+        this.mDownTime = Date.now();
+        this.mPressTime = setTimeout(function () {
+            _this.emit(MouseEvent["a" /* MouseEvent */].Hold, _this);
+        }, this.mPressTime);
+        this.emit(MouseEvent["a" /* MouseEvent */].Down, this);
+    };
+    return TabButton;
+}(Button["a" /* Button */]));
+
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GameGridTable.ts
+var GameGridTable = __webpack_require__(64);
+
+// CONCATENATED MODULE: ./src/ui/FurniBag/FurniBagPanel.ts
+var FurniBagPanel_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var FurniBagPanel_FurniBagPanel = /** @class */ (function (_super) {
+    FurniBagPanel_extends(FurniBagPanel, _super);
+    function FurniBagPanel(scene, world, sceneType) {
+        var _this = _super.call(this, scene, world) || this;
+        _this.key = "furni_bag";
+        _this.commonkey = "common_key";
+        _this.seachKey = "key.seach";
+        _this.topBtns = [];
+        _this.mEnableEdit = false;
+        _this.mInputBoo = false;
+        _this.mSceneType = sceneType;
+        _this.scale = 1;
+        return _this;
+    }
+    FurniBagPanel.prototype.resize = function (w, h) {
+        var width = this.scene.cameras.main.width / this.scale;
+        var height = this.scene.cameras.main.height / this.scale;
+        _super.prototype.resize.call(this, width, height);
+        var zoom = this.mWorld.uiScaleNew;
+        this.mBackground.clear();
+        this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+        this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
+        this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
+        this.mShelfContainer.y = height - this.mShelfContainer.height;
+        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
+        this.mCategoriesBar.clear();
+        this.mCategoriesBar.fillStyle(0x33ccff);
+        this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
+        this.mCategoriesBar.fillStyle(0x00cccc);
+        this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
+        this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
+        this.mCategeoriesContainer.y = this.mShelfContainer.y;
+        this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
+        // this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
+        this.mBg.x = width / 2;
+        this.mBg.y = this.mBg.height / 2 + 10 * this.dpr * zoom;
+        //  this.mTiltle.x = width / 2;
+        this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
+        this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr * zoom;
+        this.useBtn.x = this.mAdd.x;
+        this.useBtn.y = this.mAdd.y;
+        this.sellBtn.x = this.mAdd.x - this.sellBtn.width - 10 * this.dpr;
+        this.sellBtn.y = this.mAdd.y;
+        this.mDetailDisplay.x = width / 2;
+        this.mDetailDisplay.y = this.mBg.y;
+        this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 150 * this.dpr * zoom, 21 * this.dpr, -this.y + 20 * this.dpr);
+        // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
+        this.mPropGrid.layout();
+        this.setSize(width, height);
+    };
+    FurniBagPanel.prototype.setCategories = function (subcategorys) {
+        subcategorys.unshift({ key: this.seachKey, value: "搜索" });
+        this.mPreCategoryBtn = null;
+        this.mSelectedCategeories = null;
+        var zoom = this.mWorld.uiScaleNew;
+        var capW = 56 * this.dpr * zoom;
+        var capH = 41 * this.dpr * zoom;
+        var items = [];
+        this.mCategoryScroll.clearInteractiveObject();
+        for (var _i = 0, _a = this.mCategeoriesContainer.list; _i < _a.length; _i++) {
+            var item = _a[_i];
+            item.destroy();
+        }
+        this.mCategeoriesContainer.list.length = 0;
+        for (var i = 0; i < subcategorys.length; i++) {
+            var item = new TextButton["TextButton"](this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
+            item.y = capH - item.text.height >> 1;
+            item.setData("item", subcategorys[i]);
+            this.mCategeoriesContainer.add(item);
+            item.setSize(capW, capH);
+            this.mCategoryScroll.setInteractiveObject(item);
+            items[i] = item;
+            item.setFontSize(17 * this.dpr * zoom);
+            item.setFontStyle("bold");
+        }
+        if (items.length > 1)
+            this.onSelectSubCategoryHandler(items[1]);
+        this.mSeachInput.x = capW + this.mSeachInput.width / 2;
+        this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 155 * this.dpr * zoom, 22 * this.dpr, -this.y + 30 * this.dpr);
+        this.mPropGrid.layout();
+        this.updateCategeoriesLoc(false);
+    };
+    FurniBagPanel.prototype.setProp = function (props) {
+        this.mSelectItem = null;
+        if (!props) {
+            return;
+        }
+        var len = props.length;
+        if (len < 24) {
+            props = props.concat(new Array(24 - len));
+        }
+        this.mPropGrid.setItems(props);
+        if (this.mSelectItem)
+            this.onSelectItemHandler(this.mSelectItem);
+        else {
+            this.sellBtn.enable = false;
+            this.useBtn.enable = false;
+        }
+    };
+    FurniBagPanel.prototype.setSelectedResource = function (content) {
+        if (content.display) {
+            this.mDetailDisplay.loadDisplay(content);
+        }
+        else if (content.avatar) {
+            this.mDetailDisplay.loadAvatar(content);
+        }
+        else {
+            // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
+        }
+    };
+    FurniBagPanel.prototype.addListen = function () {
+        if (!this.mInitialized)
+            return;
+        this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+        this.mSeachInput.on("seach", this.onSeachHandler, this);
+        this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
+        this.sellBtn.on("pointerup", this.onSellBtnHandler, this);
+        this.useBtn.on("pointerup", this.onUseBtnHandler, this);
+    };
+    FurniBagPanel.prototype.removeListen = function () {
+        if (!this.mInitialized)
+            return;
+        this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+        this.mSeachInput.off("seach", this.onSeachHandler, this);
+        this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
+        this.sellBtn.off("pointerup", this.onSellBtnHandler, this);
+        this.useBtn.off("pointerup", this.onUseBtnHandler, this);
+    };
+    FurniBagPanel.prototype.destroy = function () {
+        if (this.mCategoryScroll) {
+            this.mCategoryScroll.destroy();
+        }
+        if (this.mPropGrid) {
+            this.mPropGrid.destroy();
+        }
+        _super.prototype.destroy.call(this);
+    };
+    FurniBagPanel.prototype.preload = function () {
+        this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
+        this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
+        _super.prototype.preload.call(this);
+    };
+    FurniBagPanel.prototype.init = function () {
+        var _this = this;
+        var width = this.scene.cameras.main.width;
+        var height = this.scene.cameras.main.height;
+        this.mBackground = this.scene.make.graphics(undefined, false);
+        var zoom = this.mWorld.uiScaleNew;
+        this.mBg = this.scene.make.image({
+            key: this.key,
+            frame: "bg"
+        }, false).setScale(zoom);
+        this.mShelfContainer = this.scene.make.container(undefined, false);
+        this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
+        this.mShelfContainer.y = height - this.mShelfContainer.height;
+        // this.mPropsContainer = this.scene.make.container(undefined, false);
+        this.mCategeoriesContainer = this.scene.make.container(undefined, false);
+        this.mCategeoriesContainer.y = this.mShelfContainer.y;
+        this.mCategoriesBar = this.scene.make.graphics(undefined, false);
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+        this.mCloseBtn = this.scene.make.image({
+            key: this.key,
+            frame: "back_arrow",
+            x: 21 * this.dpr,
+            y: 30 * this.dpr
+        }).setScale(zoom).setInteractive();
+        var btnwidth = 90 * this.dpr * zoom;
+        var btnHeight = 40 * this.dpr * zoom;
+        var btnPosX = width - btnwidth / 2 - 20 * this.dpr;
+        var btnPosY = this.mShelfContainer.y - 25 * this.dpr * zoom;
+        this.mAdd = new ninepatch_button["NinePatchButton"](this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n["a" /* i18n */].t("furni_bag.add"), {
+            left: 12 * this.dpr * zoom,
+            top: 12 * this.dpr * zoom,
+            right: 12 * this.dpr * zoom,
+            bottom: 12 * this.dpr * zoom
+        });
+        this.mAdd.setTextStyle({
+            color: "#996600",
+            fontSize: 16 * this.dpr * zoom,
+            fontFamily: font["a" /* Font */].DEFULT_FONT
+        });
+        this.mAdd.setFontStyle("bold");
+        this.sellBtn = new ninepatch_button["NinePatchButton"](this.scene, btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n["a" /* i18n */].t("furni_bag.sold"), {
+            left: 12 * this.dpr * zoom,
+            top: 12 * this.dpr * zoom,
+            right: 12 * this.dpr * zoom,
+            bottom: 12 * this.dpr * zoom
+        });
+        this.sellBtn.setTextStyle({
+            color: "#FFFFFF",
+            fontSize: 16 * this.dpr * zoom,
+            fontFamily: font["a" /* Font */].DEFULT_FONT
+        });
+        this.sellBtn.setFontStyle("bold");
+        this.useBtn = new ninepatch_button["NinePatchButton"](this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n["a" /* i18n */].t("furni_bag.use"), {
+            left: 12 * this.dpr * zoom,
+            top: 12 * this.dpr * zoom,
+            right: 12 * this.dpr * zoom,
+            bottom: 12 * this.dpr * zoom
+        });
+        this.useBtn.setTextStyle({
+            color: "#996600",
+            fontSize: 16 * this.dpr * zoom,
+            fontFamily: font["a" /* Font */].DEFULT_FONT
+        });
+        this.useBtn.setFontStyle("bold");
+        this.mDetailDisplay = new DetailDisplay["DetailDisplay"](this.scene);
+        this.mDetailDisplay.setTexture(this.key, "ghost");
+        this.mDetailDisplay.setNearest();
+        this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
+        this.mDetailBubble = new FurniBagPanel_DetailBubble(this.scene, this.key, this.dpr, zoom);
+        this.mDetailBubble.x = 10 * this.dpr;
+        this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
+        this.mSeachInput = new FurniBagPanel_SeachInput(this.scene, this.mWorld, this.key, this.dpr);
+        // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
+        this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
+        this.add([this.sellBtn, this.useBtn]);
+        this.mShelfContainer.add(this.mCategoriesBar);
+        // this.mCategeoriesContainer.add([this.mCategoriesBar]);
+        if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
+            this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
+        }
+        if (this.mSceneType === protocols["op_def"].SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
+            this.add(this.mAdd);
+        }
+        var topCapW = 67 * this.dpr * zoom;
+        var topCapH = 30 * this.dpr * zoom;
+        var topPosY = 30 * this.dpr * zoom;
+        var topStyle = {
+            fontFamily: font["a" /* Font */].DEFULT_FONT,
+            fontSize: 20 * this.dpr * zoom,
+            color: "#FFFFFF"
+        };
+        this.topCheckBox = new checkbox_group["CheckboxGroup"]();
+        var topCategorys = [protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
+        var topBtnTexts = [i18n["a" /* i18n */].t("furni_bag.Props"), i18n["a" /* i18n */].t("furni_bag.furni"), i18n["a" /* i18n */].t("furni_bag.decorate")];
+        if (!this.mEnableEdit) {
+            var index = topCategorys.indexOf(protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+            topCategorys.splice(index, 1);
+            topBtnTexts.splice(index, 1);
+        }
+        var topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
+        for (var key in topCategorys) {
+            var index = Number(key);
+            var category = topCategorys[index];
+            var button = new TabButton_TabButton(this.scene, this.key, "tab_normal", "tab_down", topBtnTexts[index]);
+            button.setTextStyle(topStyle);
+            button.setData("data", category);
+            button.setSize(topCapW, topCapH);
+            button.setFontStyle("bold");
+            button.y = topPosY;
+            button.x = topPosX + topCapW * index;
+            this.topBtns.push(button);
+        }
+        this.topCheckBox.appendItemAll(this.topBtns);
+        this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
+        this.topBtns.forEach(function (btn) {
+            _this.add(btn.view);
+        });
+        if (this.mEnableEdit) {
+            var index = topCategorys.indexOf(protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+            this.topCheckBox.selectIndex(index);
+        }
+        else {
+            this.topCheckBox.selectIndex(0);
+        }
+        var inputWid = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+        var w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+        this.mCategoryScroll = new Scroller["a" /* GameScroller */](this.scene, this.mCategeoriesContainer, {
+            x: 0,
+            y: this.mCategeoriesContainer.y,
+            width: w,
+            height: 41 * this.dpr * zoom,
+            value: w / 2,
+            orientation: 1,
+            bounds: [
+                -w / 4,
+                w / 2
+            ],
+            valuechangeCallback: function (newValue) {
+                _this.refreshPos(newValue);
+            },
+            cellupCallBack: function (gameobject) {
+                _this.onSelectSubCategoryHandler(gameobject);
+            }
+        });
+        var propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
+        var capW = (propFrame.width + 10 * this.dpr) * zoom;
+        var capH = (propFrame.height + 10 * this.dpr) * zoom;
+        var tableConfig = {
+            x: 0,
+            y: 0,
+            table: {
+                width: w - 10 * this.dpr * zoom,
+                height: 270 * this.dpr * zoom,
+                columns: 4,
+                cellWidth: capW,
+                cellHeight: capH,
+                reuseCellContainer: true,
+            },
+            scrollMode: 1,
+            clamplChildOY: false,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            createCellContainerCallback: function (cell, cellContainer) {
+                var scene = cell.scene, item = cell.item;
+                if (cellContainer === null) {
+                    cellContainer = new FurniBagPanel_Item(scene, 0, 0, _this.key, _this.dpr, zoom);
+                    _this.mPropGrid.cellParentCon.add(cellContainer);
+                }
+                // cellContainer.setSize(width, height);
+                cellContainer.setData({ item: item });
+                cellContainer.setProp(item);
+                if (_this.mSelectItem === null)
+                    _this.mSelectItem = cellContainer;
+                if (item && (_this.mSelectedItemData === undefined || _this.mSelectedItemData.id === item.id)) {
+                    _this.onSelectItemHandler(cellContainer);
+                }
+                return cellContainer;
+            },
+        };
+        this.mPropGrid = new GameGridTable["a" /* GameGridTable */](this.scene, tableConfig);
+        this.mPropGrid.layout();
+        this.mPropGrid.on("cellTap", function (cell) {
+            if (cell) {
+                _this.onSelectItemHandler(cell);
+            }
+        });
+        // this.add(this.mPropGrid);
+        this.add(this.mPropGrid.cellParentCon);
+        this.resize(0, 0);
+        _super.prototype.init.call(this);
+    };
+    FurniBagPanel.prototype.refreshPos = function (value) {
+        if (!this.scene) {
+            return;
+        }
+        var zoom = this.mWorld.uiScaleNew;
+        var inputWid = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+        var w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+        this.mCategeoriesContainer.x = value - w / 2;
+    };
+    FurniBagPanel.prototype.setSelectedItem = function (prop) {
+        if (!prop) {
+            return;
+        }
+        this.mSelectedItemData = prop;
+        var url = resUtil["h" /* Url */].getOsdRes(prop.display.texturePath);
+        this.mDetailDisplay.loadUrl(url);
+        this.emit("queryPropResource", prop);
+        this.mDetailBubble.setProp(prop);
+        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+        this.sellBtn.enable = prop.recyclable;
+        this.useBtn.enable = prop.executable;
+    };
+    FurniBagPanel.prototype.onSelectSubCategoryHandler = function (gameobject) {
+        var type = gameobject.getData("type");
+        if (type) {
+            if (type === "seachBtn") {
+                this.onSeachHandler(this.mSeachInput.seachText);
+            }
+            else if (type === "label") {
+                this.mSeachInput.showInputPanel();
+            }
+            return;
+        }
+        if (!(gameobject instanceof TextButton["TextButton"])) {
+            return;
+        }
+        var category = gameobject.getData("item");
+        if (category) {
+            if (this.mPreCategoryBtn) {
+                this.mPreCategoryBtn.changeNormal();
+            }
+            gameobject.changeDown();
+            var key = category.key;
+            if (key === this.seachKey) {
+                // gameobject.setSize(100 * this.dpr * this.mWorld.uiScaleNew, gameobject.height);
+                this.showSeach(gameobject);
+            }
+            else {
+                if (this.mPreCategoryBtn) {
+                    var preBtn = this.mPreCategoryBtn.getData("item");
+                    key = preBtn.key;
+                    if (key === this.seachKey) {
+                        this.closeSeach(gameobject);
+                    }
+                }
+                this.mSelectedCategeories = category;
+                this.emit("queryPackage", category.key);
+            }
+            this.mPreCategoryBtn = gameobject;
+        }
+    };
+    FurniBagPanel.prototype.onCloseHandler = function () {
+        this.emit("close");
+    };
+    FurniBagPanel.prototype.onSelectItemHandler = function (cell) {
+        var item = cell.getData("item");
+        if (item) {
+            if (this.mSelectItem)
+                this.mSelectItem.isSelect = false;
+            this.mSelectItem = cell;
+            this.mSelectItem.isSelect = true;
+            this.setSelectedItem(item);
+        }
+    };
+    FurniBagPanel.prototype.onSeachHandler = function (val) {
+        if (this.mSelectedCategeories && val.length > 0) {
+            this.emit("seachPackage", val, this.mSelectedCategeories.key);
+        }
+    };
+    FurniBagPanel.prototype.onAddFurniToSceneHandler = function () {
+        if (!this.mSelectedItemData) {
+            return;
+        }
+        this.emit("addFurniToScene", this.mSelectedItemData.id);
+    };
+    FurniBagPanel.prototype.onTopCategoryHandler = function (item) {
+        var categoryType = item.getData("data");
+        if (categoryType) {
+            this.onSelectedCategory(categoryType);
+            if (categoryType === protocols["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
+                this.sellBtn.visible = false;
+                this.useBtn.visible = false;
+                this.mAdd.visible = true;
+            }
+            else {
+                this.sellBtn.visible = true;
+                this.useBtn.visible = true;
+                this.mAdd.visible = false;
+            }
+        }
+        this.layoutTopBtn(item);
+    };
+    FurniBagPanel.prototype.layoutTopBtn = function (button) {
+        var width = this.scene.cameras.main.width;
+        var zoom = this.mWorld.uiScaleNew;
+        var allRadiu = 0;
+        for (var _i = 0, _a = this.topBtns; _i < _a.length; _i++) {
+            var btn = _a[_i];
+            allRadiu += btn.displayWidth;
+        }
+        allRadiu /= 2;
+        var offsetX = width * 0.5 - allRadiu;
+        for (var _b = 0, _c = this.topBtns; _b < _c.length; _b++) {
+            var btn = _c[_b];
+            var posY = 0;
+            if (btn !== button) {
+                btn.setTextStyle({
+                    fontFamily: font["a" /* Font */].DEFULT_FONT,
+                    fontSize: 12 * this.dpr * zoom,
+                    color: "#2B4BB5"
+                });
+                posY = btn.displayHeight * 0.5;
+            }
+            else {
+                btn.setTextStyle({
+                    fontFamily: font["a" /* Font */].DEFULT_FONT,
+                    fontSize: 16 * this.dpr * zoom,
+                    color: "#8B5603"
+                });
+                posY = btn.displayHeight * 0.5 + 2 * this.dpr * zoom;
+            }
+            var radiu = btn.displayWidth * 0.5;
+            btn.x = offsetX + radiu;
+            btn.y = posY;
+            offsetX += radiu * 2 + 4 * this.dpr * zoom;
+        }
+    };
+    FurniBagPanel.prototype.onSelectedCategory = function (categoryType) {
+        this.categoryType = categoryType;
+        this.emit("getCategories", categoryType);
+    };
+    FurniBagPanel.prototype.onSellBtnHandler = function () {
+        this.popItemsPopPanle();
+        if (this.mSelectedItemData)
+            this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler["a" /* Handler */](this, this.onSellPropsHandler));
+    };
+    FurniBagPanel.prototype.onUseBtnHandler = function () {
+        this.popItemsPopPanle();
+        if (this.mSelectedItemData)
+            this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler["a" /* Handler */](this, this.onUsePropsHandler));
+    };
+    FurniBagPanel.prototype.onSellPropsHandler = function (prop, count, category) {
+        this.emit("sellProps", prop, count, category);
+    };
+    FurniBagPanel.prototype.onUsePropsHandler = function (prop, count, category) {
+    };
+    FurniBagPanel.prototype.popItemsPopPanle = function () {
+        var zoom = this.mWorld.uiScaleNew;
+        var width = this.scene.cameras.main.width;
+        var height = this.scene.cameras.main.height;
+        if (!this.itemPopPanel) {
+            this.itemPopPanel = new FurniBagPanel_ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
+        }
+        this.add(this.itemPopPanel);
+    };
+    FurniBagPanel.prototype.showSeach = function (parent) {
+        // const cellTable = this.mCategoryScroll.childrenMap.child;
+        // cellTable.setCellWidth(0, this.mSeachInput.x + this.mSeachInput.width / 2);
+        // cellTable.updateTable(true);
+        this.mCategeoriesContainer.addAt(this.mSeachInput, 1);
+        this.mCategoryScroll.setInteractiveObject(this.mSeachInput.seachBtn);
+        this.mCategoryScroll.setInteractiveObject(this.mSeachInput.label);
+        this.updateCategeoriesLoc(true);
+    };
+    FurniBagPanel.prototype.closeSeach = function (parent) {
+        // const cellTable = this.mCategoryScroll.childrenMap.child;
+        // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
+        // cellTable.updateTable(true);
+        this.mCategeoriesContainer.remove(this.mSeachInput);
+        this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.seachBtn);
+        this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.label);
+        this.updateCategeoriesLoc(false);
+    };
+    FurniBagPanel.prototype.updateCategeoriesLoc = function (inputBoo) {
+        var list = this.mCategeoriesContainer.list;
+        var zoom = this.mWorld.uiScaleNew;
+        var w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
+        var h = 41 * this.dpr * zoom;
+        var preBtn = null;
+        var offset = 10 * this.dpr * zoom;
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            if (i > 0) {
+                preBtn = list[i - 1];
+                item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
+            }
+            else {
+                item.x = offset;
+            }
+        }
+        var inputWid = inputBoo ? 200 * this.dpr * zoom : 0;
+        var updateWid = w + inputWid;
+        this.mCategoryScroll.setSize(updateWid, h, -w / 2 - inputWid, w / 2);
+    };
+    Object.defineProperty(FurniBagPanel.prototype, "enableEdit", {
+        get: function () {
+            return this.mEnableEdit;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return FurniBagPanel;
+}(BasePanel["BasePanel"]));
+
+var FurniBagPanel_SeachInput = /** @class */ (function (_super) {
+    FurniBagPanel_extends(SeachInput, _super);
+    function SeachInput(scene, world, key, dpr) {
+        var _this = _super.call(this, scene) || this;
+        _this.mWorldService = world;
+        var bg = scene.make.image({
+            key: key,
+            frame: "seach_bg"
+        }, false).setOrigin(0, 0.5);
+        // this.mLabelInput = new LabelInput(this.scene, {
+        //   x: -10 * dpr,
+        //   y: 0,
+        //   width: 160,
+        //   height: 60,
+        //   fontSize: 14 * dpr + "px",
+        //   color: "#666666",
+        // });
+        _this.mLabelInput = _this.scene.make.text({
+            x: 10 * dpr,
+            width: bg.displayWidth,
+            height: bg.displayHeight,
+            style: {
+                fontFamily: font["a" /* Font */].DEFULT_FONT,
+                fontSize: 14 * dpr
+            }
+        }, false).setData("type", "label").setOrigin(0, 0.5);
+        _this.mSeachBtn = scene.make.image({
+            key: key,
+            frame: "seach_normal"
+        }, false).setData("type", "seachBtn");
+        _this.mSeachBtn.x = bg.displayWidth - _this.mSeachBtn.width / 2 - 4 * dpr,
+            _this.add([bg, _this.mLabelInput, _this.mSeachBtn]);
+        _this.setSize(bg.displayWidth + 20 * dpr, bg.displayHeight);
+        return _this;
+        // this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
+    }
+    // private onSeachHandler() {
+    //   if (!this.mLabelInput.text) {
+    //     return;
+    //   }
+    //   this.emit("seach", this.mLabelInput.text);
+    // }
+    SeachInput.prototype.showInputPanel = function () {
+        if (this.mInputText) {
+            return;
+        }
+        this.mInputText = new input_panel["InputPanel"](this.scene, this.mWorldService, this.mLabelInput.text);
+        this.mInputText.once("close", this.sendChat, this);
+    };
+    SeachInput.prototype.sendChat = function (val) {
+        this.mLabelInput.setText(val);
+    };
+    Object.defineProperty(SeachInput.prototype, "seachBtn", {
+        get: function () {
+            return this.mSeachBtn;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SeachInput.prototype, "label", {
+        get: function () {
+            return this.mLabelInput;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SeachInput.prototype, "seachText", {
+        get: function () {
+            return this.mLabelInput.text;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return SeachInput;
+}(Phaser.GameObjects.Container));
+var FurniBagPanel_DetailBubble = /** @class */ (function (_super) {
+    FurniBagPanel_extends(DetailBubble, _super);
+    function DetailBubble(scene, key, dpr, zoom) {
+        if (zoom === void 0) { zoom = 1; }
+        var _this = _super.call(this, scene) || this;
+        _this.dpr = dpr;
+        _this.mDetailBubble = _this.scene.make.graphics(undefined, false);
+        var bubbleW = 100 * dpr * zoom;
+        var bubbleH = 96 * dpr * zoom;
+        _this.mDetailBubble = _this.scene.make.graphics(undefined, false);
+        _this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
+        _this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
+        _this.mNickName = _this.scene.make.text({
+            x: 7 * _this.dpr,
+            y: 9 * _this.dpr,
+            text: "背包里空空如也",
+            style: {
+                fontSize: 12 * _this.dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT,
+                color: "#FFFF00",
+                align: "center"
+            }
+        });
+        _this.mPriceText = _this.scene.make.text({
+            x: 7 * _this.dpr,
+            y: 28 * _this.dpr,
+            text: "不可交易",
+            style: {
+                fontSize: 10 * _this.dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT,
+                color: "#DC143C",
+                align: "center"
+            }
+        });
+        _this.mSource = _this.scene.make.text({
+            x: 8 * dpr,
+            y: 47 * dpr,
+            text: "可通过商城购物获得",
+            style: {
+                fontSize: 10 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT,
+            }
+        }, false);
+        _this.mDesText = _this.scene.make.text({
+            x: 8 * dpr,
+            y: 66 * dpr,
+            style: {
+                color: "#32347b",
+                fontSize: 10 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT,
+                wordWrap: {
+                    width: 90 * dpr,
+                    useAdvancedWrap: true
+                }
+            }
+        }, false);
+        _this.add([_this.mDetailBubble, _this.mNickName, _this.mDesText, _this.mSource, _this.mPriceText]);
+        _this.setSize(bubbleW, bubbleH);
+        return _this;
+    }
+    DetailBubble.prototype.setProp = function (prop) {
+        this.mNickName.setText(prop.shortName || prop.name);
+        var posY = 9 * this.dpr;
+        var offsetY = 21 * this.dpr;
+        // this.mDesText.setText(prop.des);
+        if (prop.sellingPrice) {
+            posY += offsetY;
+            this.mPriceText.y = posY;
+            this.mPriceText.setText("\u53EF\u552E\u5356\uFF1A" + prop.sellingPrice.price);
+        }
+        else {
+            posY += offsetY;
+            this.mPriceText.y = posY;
+            this.mPriceText.setText("\u4E0D\u53EF\u4EA4\u6613");
+        }
+        if (prop.source) {
+            this.mSource.setText("\u6765\u6E90\uFF1A " + prop.source);
+            posY += offsetY;
+            this.mSource.y = posY;
+        }
+        else {
+            this.mSource.setText("");
+        }
+        if (prop.des) {
+            posY += offsetY;
+            this.mDesText.setText(prop.des);
+            this.mDesText.y = posY;
+        }
+        else {
+            this.mDesText.setText("");
+        }
+        this.resize();
+        return this;
+    };
+    DetailBubble.prototype.resize = function (w, h) {
+        if (w === undefined)
+            w = this.width;
+        var bubbleH = this.mDesText.height + 60 * this.dpr;
+        if (w === this.width && bubbleH === this.height) {
+            return;
+        }
+        this.mDetailBubble.clear();
+        this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
+        this.mDetailBubble.fillRoundedRect(0, 0, w, bubbleH);
+        this.setSize(w, bubbleH);
+        // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
+    };
+    return DetailBubble;
+}(Phaser.GameObjects.Container));
+var FurniBagPanel_Item = /** @class */ (function (_super) {
+    FurniBagPanel_extends(Item, _super);
+    function Item(scene, x, y, key, dpr, zoom) {
+        if (zoom === void 0) { zoom = 1; }
+        var _this = _super.call(this, scene, x, y) || this;
+        var background = scene.make.image({
+            key: key,
+            frame: "grid_bg"
+        }, false).setOrigin(0).setScale(zoom);
+        _this.selectbg = scene.make.image({
+            key: key,
+            frame: "grid_choose"
+        }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
+        _this.mPropImage = new dynamic_image["DynamicImage"](_this.scene, 0, 0);
+        _this.mPropImage.scale = dpr * zoom;
+        _this.mCounter = scene.make.text({
+            x: background.displayWidth - 4 * dpr,
+            y: background.displayHeight + 2 * dpr,
+            style: {
+                fontSize: 12 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT
+            }
+        }, false).setOrigin(1);
+        _this.add([background, _this.selectbg]);
+        _this.isSelect = false;
+        _this.setSize(background.displayWidth, background.displayHeight);
+        return _this;
+        // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.displayWidth, background.displayHeight), Phaser.Geom.Rectangle.Contains);
+        // this.on("pointerup", this.onSelectedHandler, this);
+    }
+    Item.prototype.setProp = function (prop) {
+        this.mProp = prop;
+        this.isSelect = false;
+        if (!prop) {
+            // this.mPropImage.setFrame("");
+            this.mCounter.setText("");
+            this.remove(this.mPropImage);
+            return;
+        }
+        this.mPropImage.load(resUtil["h" /* Url */].getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+        this.add(this.mPropImage);
+        if (prop.count > 1) {
+            this.mCounter.setText(prop.count.toString());
+            this.add(this.mCounter);
+        }
+        else {
+            if (this.mCounter.parentContainer)
+                this.remove(this.mCounter);
+        }
+    };
+    Item.prototype.onPropLoadCompleteHandler = function () {
+        if (this.mPropImage && this.mPropImage.texture) {
+            var texture = this.mPropImage.texture;
+            // this.mPropImage.setPosition((this.mPropImage.displayWidth) / 2, (this.mPropImage.displayHeight) / 2);
+            this.mPropImage.x = this.width / 2;
+            this.mPropImage.y = this.height / 2;
+            if (texture) {
+                texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+            }
+        }
+    };
+    Object.defineProperty(Item.prototype, "isSelect", {
+        set: function (value) {
+            this.selectbg.visible = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Item.prototype.onSelectedHandler = function () {
+        this.emit("select", this.mProp);
+    };
+    return Item;
+}(Phaser.GameObjects.Container));
+var FurniBagPanel_ItemsPopPanel = /** @class */ (function (_super) {
+    FurniBagPanel_extends(ItemsPopPanel, _super);
+    function ItemsPopPanel(scene, x, y, key, commonKey, dpr, zoom) {
+        if (zoom === void 0) { zoom = 1; }
+        var _this = _super.call(this, scene, x, y) || this;
+        _this.itemCount = 1;
+        _this.popState = 0; // 0 卖出 1 使用
+        var bg = new nine_patch["NinePatch"](_this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", {
+            top: 40,
+            bottom: 40
+        });
+        _this.blackBg = _this.scene.make.graphics(undefined, false);
+        _this.blackBg.clear();
+        _this.blackBg.fillStyle(0, 0.5);
+        _this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
+        _this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
+        var posY = -bg.height * 0.5 + 3 * dpr * zoom;
+        var titlebg = _this.scene.make.image({ x: 0, y: posY, key: key, frame: "title" });
+        _this.titleName = scene.make.text({
+            x: 0,
+            y: posY + 3 * dpr * zoom,
+            text: "售出",
+            style: {
+                color: "#905B06",
+                fontSize: 15 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT
+            }
+        }, false).setOrigin(0.5);
+        _this.titleName.setFontStyle("bold");
+        _this.itemName = scene.make.text({
+            x: 0,
+            y: posY + 40 * dpr * zoom,
+            style: {
+                color: "#000000",
+                fontSize: 15 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT
+            }
+        }, false).setOrigin(0.5);
+        var iconOffset = -56 * dpr * zoom;
+        var iconBg = _this.scene.make.image({ x: 0, y: iconOffset, key: key, frame: "sell_bg" });
+        _this.icon = new dynamic_image["DynamicImage"](_this.scene, 0, iconOffset);
+        _this.icon.scale = dpr * zoom;
+        var priceOffset = 10 * dpr * zoom;
+        _this.priceBg = _this.scene.make.image({ x: 0, y: priceOffset, key: commonKey, frame: "price_bg" });
+        _this.pricText = scene.make.text({
+            x: 0,
+            y: priceOffset,
+            style: {
+                color: "#FFFFFF",
+                fontSize: 15 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT
+            }
+        }, false).setOrigin(0.5);
+        var countOffsetY = 50 * dpr * zoom;
+        var countOffsetX = -58 * dpr * zoom;
+        var countBg = _this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
+        _this.itemCountText = scene.make.text({
+            x: 0,
+            y: countOffsetY,
+            style: {
+                color: "#0771AC",
+                fontSize: 15 * dpr * zoom,
+                fontFamily: font["a" /* Font */].DEFULT_FONT
+            }
+        }, false).setOrigin(0.5);
+        var minusBtn = new Button["a" /* Button */](_this.scene, commonKey, "reduce", "reduce");
+        var addBtn = new Button["a" /* Button */](_this.scene, commonKey, "increase", "increase");
+        minusBtn.x = countOffsetX;
+        minusBtn.y = countOffsetY;
+        addBtn.x = -countOffsetX;
+        addBtn.y = countOffsetY;
+        var bottomOffsetY = bg.height * 0.5 - 50 * dpr * zoom;
+        var bottomOffsetX = -66 * dpr * zoom;
+        var cancelBtn = new ninepatch_button["NinePatchButton"](_this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n["a" /* i18n */].t("common.cancel"), {
+            left: 12 * dpr * zoom,
+            top: 12 * dpr * zoom,
+            right: 12 * dpr * zoom,
+            bottom: 12 * dpr * zoom
+        });
+        var confirmBtn = new ninepatch_button["NinePatchButton"](_this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n["a" /* i18n */].t("common.confirm"), {
+            left: 12 * dpr * zoom,
+            top: 12 * dpr * zoom,
+            right: 12 * dpr * zoom,
+            bottom: 12 * dpr * zoom
+        });
+        cancelBtn.setTextStyle({
+            color: "#FFFFFF",
+            fontSize: 16 * dpr * zoom,
+            fontFamily: font["a" /* Font */].DEFULT_FONT
+        });
+        confirmBtn.setTextStyle({
+            color: "#976400",
+            fontSize: 16 * dpr * zoom,
+            fontFamily: font["a" /* Font */].DEFULT_FONT
+        });
+        _this.add([_this.blackBg, bg, titlebg, _this.titleName, _this.itemName, iconBg, _this.icon, _this.priceBg, _this.pricText, countBg, _this.itemCountText, minusBtn.view, addBtn.view, cancelBtn, confirmBtn]);
+        minusBtn.on("Tap", _this.onMinusBtnHandler, _this);
+        addBtn.on("Tap", _this.onAddBtnHandler, _this);
+        cancelBtn.on("click", _this.onCancelBtnHandler, _this);
+        confirmBtn.on("click", _this.onConfirmBtnHandler, _this);
+        return _this;
+    }
+    ItemsPopPanel.prototype.setProp = function (prop, stated, category, handler) {
+        this.itemData = prop;
+        this.itemCount = 1;
+        this.icon.load(resUtil["h" /* Url */].getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+        this.itemName.text = prop.name || prop.shortName;
+        this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
+        this.itemCountText.text = this.itemCount + "";
+        this.popState = stated;
+        if (stated === 0) {
+            this.titleName.text = i18n["a" /* i18n */].t("furni_bag.sold");
+            this.pricText.visible = true;
+            this.priceBg.visible = true;
+        }
+        else {
+            this.titleName.text = i18n["a" /* i18n */].t("furni_bag.use");
+            this.pricText.visible = false;
+            this.priceBg.visible = false;
+        }
+        this.handler = handler;
+        this.category = category;
+    };
+    ItemsPopPanel.prototype.onMinusBtnHandler = function () {
+        if (this.itemCount === 1)
+            return;
+        this.itemCount--;
+        this.updateData();
+    };
+    ItemsPopPanel.prototype.onAddBtnHandler = function () {
+        if (this.itemCount === this.itemData.count)
+            return;
+        this.itemCount++;
+        this.updateData();
+    };
+    ItemsPopPanel.prototype.updateData = function () {
+        this.itemCountText.text = this.itemCount + "";
+        this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
+    };
+    ItemsPopPanel.prototype.onCancelBtnHandler = function () {
+        if (this.parentContainer)
+            this.parentContainer.remove(this);
+    };
+    ItemsPopPanel.prototype.onConfirmBtnHandler = function () {
+        if (this.parentContainer)
+            this.parentContainer.remove(this);
+        if (this.handler)
+            this.handler.runWith([this.itemData, this.itemCount, this.category]);
+    };
+    ItemsPopPanel.prototype.onPropLoadCompleteHandler = function () {
+        if (this.icon && this.icon.texture) {
+            var texture = this.icon.texture;
+            if (texture) {
+                texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+            }
+        }
+    };
+    return ItemsPopPanel;
+}(Phaser.GameObjects.Container));
+
+
+/***/ }),
+/* 221 */,
+/* 222 */,
 /* 223 */,
 /* 224 */,
 /* 225 */,
 /* 226 */,
 /* 227 */,
-/* 228 */,
-/* 229 */,
-/* 230 */
+/* 228 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37299,7 +37127,7 @@ var ReferenceArea = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 231 */
+/* 229 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37325,8 +37153,8 @@ var AIAction = /** @class */ (function () {
 
 
 /***/ }),
-/* 232 */,
-/* 233 */
+/* 230 */,
+/* 231 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37396,13 +37224,13 @@ var Tool = /** @class */ (function () {
 
 
 /***/ }),
-/* 234 */
+/* 232 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Terrain; });
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
-/* harmony import */ var _display_terrain_display__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(111);
+/* harmony import */ var _display_terrain_display__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(110);
 /* harmony import */ var _cameras_block_object__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(101);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_3__);
@@ -37629,7 +37457,7 @@ var Terrain = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 235 */
+/* 233 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37723,7 +37551,7 @@ var MainUIScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 236 */
+/* 234 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37854,7 +37682,7 @@ var PlayCamera = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 237 */
+/* 235 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38086,12 +37914,12 @@ var Sound = /** @class */ (function () {
 
 
 /***/ }),
-/* 238 */
+/* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditScene; });
-/* harmony import */ var _play__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(73);
+/* harmony import */ var _play__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(74);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -38122,7 +37950,7 @@ var EditScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 239 */
+/* 237 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38143,19 +37971,1926 @@ var MouseEvent;
 
 
 /***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const _ = __webpack_require__(75);
+const config_object_factory_1 = __webpack_require__(341);
+const pixelpai_proto_1 = __webpack_require__(3);
+const children_index_1 = __webpack_require__(374);
+const ConfigObjects = __webpack_require__(55);
+const configobjects_1 = __webpack_require__(55);
+const constants_1 = __webpack_require__(56);
+const treeify = __webpack_require__(375);
+var Game = pixelpai_proto_1.op_gameconfig_01.Game;
+var NodeType = pixelpai_proto_1.op_def.NodeType;
+class Capsule extends children_index_1.default {
+    constructor() {
+        super();
+        // 缓存同族对象的源对象。
+        // 源对象指具有相同基因序列的第一个ConfigObject。
+        this._families = new Map();
+        this._ignore_serialize = new Map();
+        // initialize the factory.
+        this.add = new config_object_factory_1.default(this);
+        // initialize the only game node.
+        this._root = new configobjects_1.GameNode(this);
+    }
+    resetPreprocessedData() {
+        this._families = new Map();
+        this._ignore_serialize = new Map();
+    }
+    get families() {
+        return this._families;
+    }
+    get ignoreList() {
+        return this._ignore_serialize;
+    }
+    serialize() {
+        if (!this._root)
+            throw new Error(`Capsule::serialize() Error: Empty root node, aka GameNode.`);
+        const game = (this._bin_conf = Game.create());
+        // 1. serialize root node also known as GameNode first.
+        this._root.serialize(game);
+        // 2-1. pre-serialize
+        this.resetPreprocessedData();
+        this._objects.forEach((object) => {
+            object.preSerialize();
+        });
+        // 2-2. serialize all other objects.
+        this._objects.forEach((object) => {
+            if (!this._ignore_serialize.get(object.id))
+                object.serialize(game);
+        });
+        // 3. return binConfig buffer.
+        const buffer = Game.encode(this._bin_conf).finish();
+        return buffer;
+    }
+    serializeScene() {
+        if (!this._root)
+            throw new Error(`Capsule::serialize() Error: Empty root node, aka GameNode.`);
+        const game = (this._bin_conf = Game.create());
+        // 1. serialize root node also known as GameNode first.
+        this._root.serialize(game);
+        // 2-1. pre-serialize
+        this.resetPreprocessedData();
+        this._objects.forEach((object) => {
+            if (object.parent === this._root.id) {
+                object.preSerialize();
+            }
+        });
+        // 2-2. serialize all other objects.
+        this._objects.forEach((object) => {
+            if (object.parent === this._root.id) {
+                if (!this._ignore_serialize.get(object.id))
+                    object.serialize(game);
+            }
+        });
+        // 3. return binConfig buffer.
+        const buffer = Game.encode(this._bin_conf).finish();
+        return buffer;
+    }
+    serializeRoot() {
+        if (!this._root)
+            throw new Error(`Capsule::serialize() Error: Empty root node, aka GameNode.`);
+        const game = (this._bin_conf = Game.create());
+        this._root.serialize(game);
+        this.resetPreprocessedData();
+        const needSerializeObjs = Array.from(this._objects.values()).filter((object) => {
+            return (object.type !== pixelpai_proto_1.op_def.NodeType.SceneNodeType &&
+                object.parent === this._root.id &&
+                !this._ignore_serialize.get(object.id));
+        });
+        this.iterateSerialize(needSerializeObjs, game);
+        this._terrain_objects.forEach((object) => {
+            object.preSerialize();
+        });
+        this._terrain_objects.forEach((object) => {
+            if (!this._ignore_serialize.get(object.id))
+                object.serialize(game);
+        });
+        this._element_objects.forEach((object) => object.preSerialize());
+        this._element_objects.forEach((object) => {
+            if (!this._ignore_serialize.get(object.id)) {
+                object.serialize(game);
+            }
+        });
+        const buffer = Game.encode(this._bin_conf).finish();
+        return buffer;
+    }
+    iterateSerialize(objs, game) {
+        for (const obj of objs) {
+            obj.serialize(game);
+            if (obj.children && obj.children.length > 0) {
+                this.iterateSerialize(obj.children, game);
+            }
+        }
+    }
+    deserialize(buffer) {
+        const message = Game.decode(buffer);
+        const obj = Game.toObject(message);
+        const delayDeserialize = [];
+        // 1. deserialize game
+        this._root.deserialize(message);
+        this._root.preDeserializePalettes(message);
+        // 2-1. deserialize other objects.
+        for (const key of Object.keys(obj)) {
+            if (key === "scenes") {
+                continue;
+            }
+            if (key === "terrain") {
+                this.doDeserialize(obj[key]);
+            }
+            if (key === "mossList") {
+                this.doDeserialize(obj[key]);
+            }
+            const arr = obj[key];
+            if (Array.isArray(arr)) {
+                for (let proto of arr) {
+                    const nodeType = proto.node.type;
+                    if (nodeType == NodeType.ForkType) {
+                        // Fork 节点放到最后反序列化，确保他的parent先被加到树中。
+                        delayDeserialize.push(proto);
+                    }
+                    else {
+                        this.doDeserialize(proto);
+                    }
+                }
+            }
+        }
+        // 2-2. deserialize all Fork objects
+        for (const proto of delayDeserialize) {
+            this.doDeserialize(proto);
+        }
+        // 2-3. Link all ConfigObjects
+        this._objects.forEach((object) => {
+            object.link();
+        });
+        this._root.deserializePalettes(message);
+    }
+    doDeserialize(protocolObj) {
+        if (protocolObj.hasOwnProperty("node")) {
+            const nodeType = protocolObj["node"].type;
+            const nodeConstructor = constants_1.default.NODE_T[nodeType] || "";
+            if (ConfigObjects.hasOwnProperty(nodeConstructor)) {
+                // @ts-ignore
+                const node = new ConfigObjects[nodeConstructor](this);
+                node.deserialize(protocolObj);
+            }
+        }
+    }
+    get root() {
+        return this._root;
+    }
+    getObjectBySN(sn) {
+        for (const object of this.objectsList) {
+            if (sn === object.sn) {
+                return object;
+            }
+        }
+        return;
+    }
+    getAllChildrenIds(node) {
+        let ret = [];
+        const walkTree = (tree) => {
+            if (tree.children && tree.children.length > 0) {
+                for (let child of tree.children) {
+                    ret.push(child.id);
+                    walkTree(child);
+                }
+            }
+        };
+        walkTree(node);
+        return ret;
+    }
+    // 在保存到我的素材功能中，导入的是展开的节点，这时需要将存在父子关系的objects去重
+    deduplicateNodes(nodes) {
+        let nodesMap = {};
+        for (let node of nodes) {
+            node.ids = this.getAllChildrenIds(node);
+            nodesMap[node.id] = node;
+        }
+        for (let node of nodes) {
+            for (let id of node.ids) {
+                if (nodesMap[id]) {
+                    delete nodesMap[id];
+                }
+            }
+        }
+        return Object.values(nodesMap);
+    }
+    emptyObjectCap(objects) {
+        objects.forEach((obj) => {
+            obj.cap.families.clear();
+            if (obj.children && obj.children.length > 0) {
+                this.emptyObjectCap(obj.children);
+            }
+        });
+    }
+    // 从当前的Capsule中导出Nodes
+    export(objects) {
+        objects = this.deduplicateNodes(objects);
+        this.emptyObjectCap(objects);
+        const newCap = new Capsule();
+        const travel = (node, parent) => {
+            const newNode = _.clone(node);
+            if (parent)
+                newNode.parent = parent;
+            newCap.addObject(newNode);
+            for (const child of node.children) {
+                travel(child);
+            }
+        };
+        for (const object of objects) {
+            travel(object, newCap.root.id);
+        }
+        return newCap;
+    }
+    importScene(src) {
+        for (const obj of src.objectsList) {
+            if (obj.parent === src.root.id) {
+                obj.parent = this.root.id;
+            }
+            obj.cap = this;
+            this.addObject(obj);
+        }
+    }
+    // 从外部Capsule中导入Nodes
+    import(src, newId, disTarget, returnAll = false) {
+        const sourceCapsule = new Capsule();
+        sourceCapsule.deserialize(src.serialize());
+        for (const obj of sourceCapsule.objectsList) {
+            if (obj.parent === sourceCapsule.root.id) {
+                obj.parent = (disTarget || this.root).id;
+                obj.renewId(newId);
+            }
+            obj.cap = this;
+            this.addObject(obj);
+        }
+        // 给我一个父节点对象，如果不给我将挂载到GameNode上
+        // const parentObj: IConfigObject = disTarget || this.root;
+        // for (const obj of sourceCapsule.objectsList) {
+        //     // 如果obj的parent === src.root.id
+        //     // 把它改为新的parent
+        //     if (obj.parent === sourceCapsule.root.id) {
+        //         obj.parent = parentObj.id;
+        //     }
+        //     obj.cap = this;
+        //     this.addObject(obj);
+        // }
+        // 将顶级节点导出
+        const importList = this.walkTopLevelNode(sourceCapsule.root.children, returnAll);
+        return importList;
+    }
+    walkTopLevelNode(nodes, returnAll = false) {
+        let ret = [];
+        for (const node of nodes) {
+            ret.push(node.id);
+            if (node.children && node.children.length) {
+                if (returnAll) {
+                    this.walkTopLevelNode(node.children, returnAll);
+                }
+                else {
+                    continue;
+                }
+            }
+        }
+        return ret;
+    }
+    // 用于在同一个Capsule中克隆ConfigObject
+    // 将会获得一个新的Node，如果此Node有子节点会同样克隆子节点
+    clone(src_id, parent, cloneFork = false) {
+        const origin = this.getObject(src_id);
+        if (!origin) {
+            console.error(`Origin object[${src_id}] does not exist.`);
+            return;
+        }
+        // @ts-ignore
+        const dolly = new ConfigObjects[origin.className](this);
+        dolly.parentObject = parent;
+        dolly.duplicate(origin);
+        this.addObject(dolly);
+        // 遍历克隆对象的子节点，克隆
+        for (const child of origin.children) {
+            if (child instanceof configobjects_1.ForkNode && !cloneFork)
+                continue;
+            const son = this.clone(child.id, dolly);
+            if (son)
+                son.link();
+        }
+        return dolly;
+    }
+    inspect() {
+        const self = this;
+        const printTree = function (id) {
+            const obj = self.getObject(id);
+            if (!obj) {
+                return;
+            }
+            let out = {};
+            for (const child of obj.children) {
+                out[`${child.className}[${child.id}]`] = printTree(child.id);
+            }
+            return out;
+        };
+        const cap = {};
+        cap[`${self.root.className}[${self.root.id}]`] = printTree(self.root.id);
+        console.log(`Capsule`);
+        console.log(treeify.asTree(cap, true, true));
+    }
+}
+exports.default = Capsule;
+//# sourceMappingURL=capsule.js.map
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const Chance = __webpack_require__(240);
+const constants_1 = __webpack_require__(56);
+const helpers_1 = __webpack_require__(28);
+const chance = new Chance();
+class Metadata {
+    constructor(cap) {
+        this._id = helpers_1.default.genId();
+        this._parent = 0;
+        this._sn = "";
+        this._version = "1";
+        this._type = 0;
+        this._cap = cap;
+        this._name = `Object-${this.id}`;
+    }
+    get type() {
+        return this._type;
+    }
+    set type(t) {
+        this._type = t;
+    }
+    get cap() {
+        return this._cap;
+    }
+    set cap(cap) {
+        this._cap = cap;
+    }
+    get metaData() {
+        return {
+            id: this._id,
+            name: this._name,
+            Parent: this._parent,
+            sn: this._sn,
+            type: this.type,
+        };
+    }
+    get className() {
+        return helpers_1.default.getClassName(this);
+    }
+    get id() {
+        return this._id;
+    }
+    set id(id) {
+        this._id = id;
+    }
+    get name() {
+        return this._name;
+    }
+    set name(n) {
+        this._name = n;
+    }
+    get parent() {
+        return this._parent;
+    }
+    set parent(p) {
+        this._parent = p;
+    }
+    get parentObject() {
+        if (this.parent) {
+            return this.cap.getObject(this.parent);
+        }
+        return;
+    }
+    set parentObject(p) {
+        if (p) {
+            this.parent = p.id;
+        }
+    }
+    get sn() {
+        return this._sn;
+    }
+    set sn(sn) {
+        this._sn = sn;
+    }
+    get version() {
+        return this._version;
+    }
+    set version(val) {
+        this._version = val;
+    }
+    get isMoss() {
+        return this._is_moss;
+    }
+    set isMoss(val) {
+        this._is_moss = val;
+    }
+    get nodeType() {
+        if (constants_1.default.NODETYPEMAP[this.type]) {
+            return this.type;
+        }
+        else {
+            throw new Error(`This Config object does not match any of type list in NodeType!`);
+        }
+    }
+    makeNode() {
+        const self = this;
+        return new (class {
+            constructor() {
+                this.LockParent = null;
+                this.Parent = self.parent;
+                this.id = self.id;
+                this.name = self.name;
+                this.sn = self.sn;
+                this.type = self.nodeType;
+            }
+        })();
+    }
+    setNode(n) {
+        if (n.hasOwnProperty("Parent"))
+            this._parent = n.Parent;
+        if (n.hasOwnProperty("id"))
+            this._id = n.id;
+        this._sn = n.sn || "";
+        if (n.hasOwnProperty("name"))
+            this._name = n.name;
+    }
+    destroy() {
+        // Do nothing.
+    }
+}
+exports.default = Metadata;
+//# sourceMappingURL=metadata.js.map
+
+/***/ }),
 /* 240 */,
 /* 241 */,
 /* 242 */,
-/* 243 */,
-/* 244 */,
-/* 245 */,
-/* 246 */,
-/* 247 */,
-/* 248 */,
-/* 249 */,
-/* 250 */,
-/* 251 */,
-/* 252 */
+/* 243 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+const helpers_1 = __webpack_require__(28);
+class DisplayNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._texturePath = "";
+        this._dataPath = "";
+        this.name = "显示元件";
+    }
+    ignore() {
+        super.ignore();
+        this.cap.ignoreList.set(this.id, this.id);
+    }
+    get properties() {
+        return {
+            texturePath: this._texturePath,
+            dataPath: this._dataPath,
+        };
+    }
+    findMyContainer(game) {
+        if (!game.display) {
+            game.display = [];
+        }
+        return game.display;
+    }
+    createProtocolObject() {
+        const display = pixelpai_proto_1.op_gameconfig_01.Display.create();
+        display.node = this.makeNode();
+        display.texturePath = this._texturePath;
+        display.dataPath = this._dataPath;
+        return display;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const as = data;
+        // deserialize other properties
+        this._dataPath = as.dataPath || "";
+        this._texturePath = as.texturePath || "";
+    }
+    get texturePath() {
+        return this._texturePath;
+    }
+    set texturePath(value) {
+        this._texturePath = value;
+    }
+    get dataPath() {
+        return this._dataPath;
+    }
+    set dataPath(value) {
+        this._dataPath = value;
+    }
+    set dataJSON(value) {
+        this._dataJSON = value;
+    }
+    get dataJSON() {
+        return this._dataJSON;
+    }
+    set textureBuffer(texture) {
+        this._textureBuffer = texture;
+    }
+    get textureBuffer() {
+        return this._textureBuffer;
+    }
+    geneSequence() {
+        return helpers_1.default.sha1(this._dataPath + "&" + this._texturePath);
+    }
+    duplicate(src) {
+        super.duplicate(src);
+        if (src instanceof DisplayNode) {
+            this._dataPath = src.dataPath;
+            this._texturePath = src.texturePath;
+        }
+    }
+}
+exports.default = DisplayNode;
+//# sourceMappingURL=display.js.map
+
+/***/ }),
+/* 244 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+const _ = __webpack_require__(75);
+class AttributeNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._key = "";
+        this.name = "自定义属性";
+    }
+    get key() {
+        return this._key;
+    }
+    set key(k) {
+        this._key = k;
+    }
+    set basicTypeVal(v) {
+        // if (_.isBoolean(v)) {
+        //     this._boolVal = v;
+        // }
+        // if (_.isNumber(v)) {
+        //     this._intVal = v;
+        // }
+        // if (_.isString(v)) {
+        //     this._strVal = v;
+        // }
+        if (typeof v === "boolean") {
+            this._boolVal = v;
+        }
+        if (typeof v === "number") {
+            this._intVal = v;
+        }
+        if (typeof v === "string") {
+            this._strVal = v;
+        }
+    }
+    get basicTypeVal() {
+        if (_.isUndefined(this._boolVal))
+            return this._boolVal;
+        if (_.isUndefined(this._intVal))
+            return this._intVal;
+        if (_.isUndefined(this._strVal))
+            return this._strVal;
+        return;
+    }
+    get intVal() {
+        return this._intVal;
+    }
+    set intVal(m) {
+        this._intVal = m;
+    }
+    get strVal() {
+        return this._strVal;
+    }
+    set strVal(m) {
+        this._strVal = m;
+    }
+    get boolVal() {
+        return this._boolVal;
+    }
+    set boolVal(m) {
+        this._boolVal = m;
+    }
+    get media() {
+        return this._media;
+    }
+    set media(m) {
+        this._media = m;
+    }
+    get title() {
+        return this._title;
+    }
+    set title(val) {
+        this._title = val;
+    }
+    get description() {
+        return this._description;
+    }
+    set description(val) {
+        this._description = val;
+    }
+    get properties() {
+        return {
+            key: this._key,
+            intVal: this._intVal,
+            strVal: this._strVal,
+            boolVal: this._boolVal,
+            media: this._media,
+            description: this._description,
+        };
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.attr)) {
+            game.attr = [];
+        }
+        return game.attr;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Attribute.create();
+        obj.node = this.makeNode();
+        obj.key = this._key;
+        obj.intVal = this._intVal;
+        obj.strVal = this._strVal;
+        obj.boolVal = this._boolVal;
+        obj.media = this._media;
+        obj.description = this._description;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._key = obj.key;
+        if (obj.hasOwnProperty("intVal") && typeof obj.intVal === "number") {
+            this._intVal = obj.intVal;
+        }
+        else {
+            this._intVal = undefined;
+        }
+        if (obj.hasOwnProperty("strVal") && typeof obj.strVal === "string") {
+            this._strVal = obj.strVal;
+        }
+        else {
+            this._strVal = undefined;
+        }
+        if (obj.hasOwnProperty("boolVal") && typeof obj.boolVal === "boolean") {
+            this._boolVal = obj.boolVal;
+        }
+        else {
+            this._boolVal = undefined;
+        }
+        if (obj.hasOwnProperty("media") && typeof obj.media === "string") {
+            this._media = obj.media;
+        }
+        else {
+            this._media = undefined;
+        }
+        this._description = obj.description;
+    }
+    geneSequence() {
+        // edit by 7, 不要把值也纳入到基因算法中，attribute在序列化的时候不要ignore
+        // Only attribute key name is a genetic characteristics
+        return "" + this._key;
+    }
+    duplicate(src) {
+        super.duplicate(src);
+        if (src instanceof AttributeNode) {
+            this._key = src.key;
+            const basic = src.basicTypeVal;
+            // if (_.isNumber(basic)) this._intVal = basic;
+            // if (_.isString(basic)) this._strVal = basic;
+            // if (_.isBoolean(basic)) this._boolVal = basic;
+            this.basicTypeVal = basic;
+            const media = src.media;
+            if (media)
+                this._media = media;
+            if (src.description)
+                this._description = src.description;
+        }
+    }
+}
+exports.default = AttributeNode;
+//# sourceMappingURL=attribute.js.map
+
+/***/ }),
+/* 245 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+const _ = __webpack_require__(75);
+class AvatarNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        // 缓存
+        this._sets = [];
+        // {部件slot名：avatarSet}
+        this._parts = {};
+        this._dir = AvatarDirEnum.Front;
+        this._animations = ["idle", "walk", "sit", "run", "jump", "attack"];
+        this._curAnimationIndex = 0;
+        this._dbName = "bones_human01";
+        this._armatureName = "Armature";
+        this._dircy = false;
+        this.name = "变装";
+        this._backMap = {};
+        this._backMap["head_hair"] = ["head_hair", "head_back"];
+        this._backMap["body_cost"] = ["body_cost", "body_dres"];
+        this.defaultCostume();
+    }
+    // 将一组AvatatSet整合到一起形成一个完整的Avatar，并保存到self._parts里
+    merge(newSets) {
+        // 解决替换发型，后发分层存在的问题
+        for (let i = 0; i < newSets.length; i++) {
+            for (const key in this._backMap) {
+                if (this._backMap.hasOwnProperty(key)) {
+                    const parts = newSets[i].parts;
+                    for (const part of parts) {
+                        if (part === key) {
+                            _.remove(this._sets, n => {
+                                return part === key;
+                            });
+                            this._parts = _.omit(this._parts, this._backMap[key]);
+                        }
+                    }
+                }
+            }
+        }
+        this._sets = this._sets.concat(newSets);
+        for (const set of this._sets) {
+            for (const part of set.parts) {
+                this._parts[part] = set;
+            }
+        }
+        this._dircy = true;
+    }
+    // 获取整个avatar的部件标签对应的部件id
+    get parts() {
+        return this._parts;
+    }
+    // 获取整个avatar的部件标签对应的资源相对路径
+    resources(dir) {
+        const res = [];
+        const parts = this._parts;
+        for (const key in parts) {
+            if (parts.hasOwnProperty(key)) {
+                let set = parts[key];
+                if (!set.hasOwnProperty("localImages")) {
+                    // eyes mous 没有背面素材
+                    if (dir === 1 && key === "head_eyes") {
+                        // Do nothing
+                    }
+                    else if (dir === 1 && key === "head_mous") {
+                        // Do nothing
+                    }
+                    else if (key === "head_back") {
+                        res.push(this.relativeUri("head_hair", set.id, dir, "back"));
+                    }
+                    else if (key === "body_dres") {
+                        res.push(this.relativeUri("body_cost", set.id, dir, "dres"));
+                    }
+                    else {
+                        res.push(this.relativeUri(key, set.id, dir));
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    // 从部件ID转换为资源相对路径
+    relativeUri(part, id, dir, layer) {
+        if (layer) {
+            return `/avatar/part/${part}_${id}_${dir}_${layer}.png`;
+        }
+        return `/avatar/part/${part}_${id}_${dir}.png`;
+    }
+    // 返回自己应该去的容器数值，在Igame里的数值。如果没有初始化一个空数值。
+    // Used by super.serialize()
+    findMyContainer(game) {
+        if (!Array.isArray(game.avatar)) {
+            game.avatar = [];
+        }
+        return game.avatar;
+    }
+    // 创建protobuf 对象用来序列化。
+    // Used by super.serialize()
+    createProtocolObject() {
+        const avatar = pixelpai_proto_1.op_gameconfig_01.Avatar.create();
+        avatar.node = this.makeNode();
+        avatar.defaultDir = this._dir;
+        // assign more properties to avatar
+        const reg = /[_]\w/;
+        for (const partName in this.parts) {
+            const part = partName.replace(reg, s => {
+                return s.length > 1 ? s[1].toUpperCase() : s;
+            }) + "Id";
+            avatar[part] = this.parts[partName].id;
+        }
+        return avatar;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const avatar = data;
+        // deserialize other properties
+        this._dir = avatar.defaultDir;
+        if (avatar.backboneId)
+            this._parts["head_eyes"] = {
+                id: avatar.backboneId,
+                parts: ["head_eyes"],
+            };
+        if (avatar.barmBaseId)
+            this._parts["barm_base"] = {
+                id: avatar.barmBaseId,
+                parts: ["barm_base"],
+            };
+        if (avatar.barmCostId)
+            this._parts["barm_cost"] = {
+                id: avatar.barmCostId,
+                parts: ["barm_cost"],
+            };
+        if (avatar.barmShldId)
+            this._parts["barm_shld"] = {
+                id: avatar.barmShldId,
+                parts: ["barm_shld"],
+            };
+        if (avatar.barmSpecId)
+            this._parts["barm_spec"] = {
+                id: avatar.barmSpecId,
+                parts: ["barm_spec"],
+            };
+        if (avatar.barmWeapId)
+            this._parts["barm_weap"] = {
+                id: avatar.barmWeapId,
+                parts: ["barm_weap"],
+            };
+        if (avatar.blegBaseId)
+            this._parts["bleg_base"] = {
+                id: avatar.blegBaseId,
+                parts: ["bleg_base"],
+            };
+        if (avatar.blegCostId)
+            this._parts["bleg_cost"] = {
+                id: avatar.blegCostId,
+                parts: ["bleg_cost"],
+            };
+        if (avatar.blegSpecId)
+            this._parts["bleg_spec"] = {
+                id: avatar.blegSpecId,
+                parts: ["bleg_spec"],
+            };
+        if (avatar.bodyBaseId)
+            this._parts["body_base"] = {
+                id: avatar.bodyBaseId,
+                parts: ["body_base"],
+            };
+        if (avatar.bodyCostId)
+            this._parts["body_cost"] = {
+                id: avatar.bodyCostId,
+                parts: ["body_cost"],
+            };
+        if (avatar.bodyDresId)
+            this._parts["body_dres"] = {
+                id: avatar.bodyDresId,
+                parts: ["body_dres"],
+            };
+        if (avatar.bodySpecId)
+            this._parts["body_spec"] = {
+                id: avatar.bodySpecId,
+                parts: ["body_spec"],
+            };
+        if (avatar.bodyTailId)
+            this._parts["body_tail"] = {
+                id: avatar.bodyTailId,
+                parts: ["body_tail"],
+            };
+        if (avatar.bodyWingId)
+            this._parts["body_wing"] = {
+                id: avatar.bodyWingId,
+                parts: ["body_wing"],
+            };
+        if (avatar.farmBaseId)
+            this._parts["farm_base"] = {
+                id: avatar.farmBaseId,
+                parts: ["farm_base"],
+            };
+        if (avatar.farmCostId)
+            this._parts["farm_cost"] = {
+                id: avatar.farmCostId,
+                parts: ["farm_cost"],
+            };
+        if (avatar.farmShldId)
+            this._parts["farm_shld"] = {
+                id: avatar.farmShldId,
+                parts: ["farm_shld"],
+            };
+        if (avatar.farmWeapId)
+            this._parts["farm_weap"] = {
+                id: avatar.farmWeapId,
+                parts: ["farm_weap"],
+            };
+        if (avatar.flegBaseId)
+            this._parts["fleg_base"] = {
+                id: avatar.flegBaseId,
+                parts: ["fleg_base"],
+            };
+        if (avatar.flegCostId)
+            this._parts["fleg_cost"] = {
+                id: avatar.flegCostId,
+                parts: ["fleg_cost"],
+            };
+        if (avatar.flegSpecId)
+            this._parts["fleg_spec"] = {
+                id: avatar.flegSpecId,
+                parts: ["fleg_spec"],
+            };
+        if (avatar.headBackId)
+            this._parts["head_back"] = {
+                id: avatar.headBackId,
+                parts: ["head_back"],
+            };
+        if (avatar.headBaseId)
+            this._parts["head_base"] = {
+                id: avatar.headBaseId,
+                parts: ["head_base"],
+            };
+        if (avatar.headEyesId)
+            this._parts["head_eyes"] = {
+                id: avatar.headEyesId,
+                parts: ["head_eyes"],
+            };
+        if (avatar.headHairId)
+            this._parts["head_hair"] = {
+                id: avatar.headHairId,
+                parts: ["head_hair"],
+            };
+        if (avatar.headHatsId)
+            this._parts["head_hats"] = {
+                id: avatar.headHatsId,
+                parts: ["head_hats"],
+            };
+        if (avatar.headMaskId)
+            this._parts["head_mask"] = {
+                id: avatar.headMaskId,
+                parts: ["head_mask"],
+            };
+        if (avatar.headMousId)
+            this._parts["head_mous"] = {
+                id: avatar.headMousId,
+                parts: ["head_mous"],
+            };
+        if (avatar.headSpecId)
+            this._parts["head_spec"] = {
+                id: avatar.headSpecId,
+                parts: ["head_spec"],
+            };
+    }
+    clearParts() {
+        this._parts = {};
+        this._sets.length = 0;
+        this.defaultCostume();
+        this._dircy = true;
+    }
+    set dir(value) {
+        this._dir = value;
+        this._dircy = true;
+    }
+    get dir() {
+        return this._dir;
+    }
+    set dirty(value) {
+        this._dircy = value;
+    }
+    get dirty() {
+        return this._dircy;
+    }
+    set curAnimationIndex(val) {
+        if (val < 0 || val >= this._animations.length) {
+            val = 0;
+        }
+        this._curAnimationIndex = val;
+        this._dircy = true;
+    }
+    get curAnimationIndex() {
+        return this._curAnimationIndex;
+    }
+    set armatureName(val) {
+        this._armatureName = val;
+    }
+    get armatureName() {
+        return this._armatureName;
+    }
+    set dbName(val) {
+        this._dbName = val;
+    }
+    get dbName() {
+        return this._dbName;
+    }
+    getCurAnimation(dir) {
+        return `${this._animations[this._curAnimationIndex]}_${dir ? dir : this._dir}`;
+    }
+    defaultCostume() {
+        const defaulAvatar = [
+            { id: "0001", parts: ["head_base"] },
+            { id: "5cd28238fb073710972a73c2", parts: ["head_hair"] },
+            { id: "5cd28238fb073710972a73c2", parts: ["head_eyes"] },
+            { id: "5cd28238fb073710972a73c2", parts: ["head_mous"] },
+            { id: "0001", parts: ["body_base"] },
+            { id: "5cd28238fb073710972a73c2", parts: ["body_cost"] },
+            { id: "0001", parts: ["farm_base"] },
+            { id: "0001", parts: ["barm_base"] },
+            { id: "0001", parts: ["fleg_base"] },
+            { id: "0001", parts: ["bleg_base"] },
+            { id: "0001", parts: ["farm_base"] },
+        ];
+        this.merge(defaulAvatar);
+    }
+}
+exports.default = AvatarNode;
+var AvatarDirEnum;
+(function (AvatarDirEnum) {
+    AvatarDirEnum[AvatarDirEnum["Back"] = 1] = "Back";
+    AvatarDirEnum[AvatarDirEnum["Front"] = 3] = "Front";
+})(AvatarDirEnum = exports.AvatarDirEnum || (exports.AvatarDirEnum = {}));
+//# sourceMappingURL=avatar.js.map
+
+/***/ }),
+/* 246 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class AccessNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._access = 1;
+        this.name = "权限";
+    }
+    get properties() {
+        return {
+            access: this._access,
+        };
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.access)) {
+            game.access = [];
+        }
+        return game.access;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Access.create();
+        obj.node = this.makeNode();
+        obj.access = this._access;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._access = obj.access;
+    }
+}
+exports.AccessNode = AccessNode;
+//# sourceMappingURL=access.js.map
+
+/***/ }),
+/* 247 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const _ = __webpack_require__(75);
+const pixelpai_proto_1 = __webpack_require__(3);
+const helpers_1 = __webpack_require__(28);
+class SceneNode extends config_object_1.EntityNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._elements = new Map();
+        this._terrains = new Map();
+        this._characters = new Map();
+        this._spawnpoints = new Map();
+        this._scenerys = new Map();
+        this.name = "场景";
+    }
+    get properties() {
+        return {};
+    }
+    get size() {
+        return this._map_size;
+    }
+    get terrainCollection() {
+        return this._terrain_collection;
+    }
+    set terrainCollection(node) {
+        if (node) {
+            this._terrain_collection = node;
+        }
+    }
+    get mossCollection() {
+        return this._moss_collection;
+    }
+    set mossCollection(node) {
+        if (node) {
+            this._moss_collection = node;
+        }
+    }
+    // 将旧的地块数据转化为新的二维数组结构
+    convertOldTerrainData() {
+        if (!this._terrain_collection) {
+            this._terrain_collection = new TerrainCollectionNode(this._cap, this);
+            if (this._map_size) {
+                this._terrain_collection.initTerrainCollection(this._map_size.rows, this._map_size.cols);
+            }
+        }
+        if (Array.from(this._terrains.values()).length > 0) {
+            this._terrain_collection.convertTerrainNodes(Array.from(this._terrains.values()));
+        }
+    }
+    converElementsToMoss() {
+        if (!this._moss_collection) {
+            this._moss_collection = new MossCollectionNode(this._cap, this);
+        }
+        this._moss_collection.convertElementLikeMossInScene();
+    }
+    appendNode(object) {
+        try {
+            super.appendNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        switch (object.type) {
+            case pixelpai_proto_1.op_def.NodeType.ElementNodeType:
+                this._elements.set(object.id, object);
+                break;
+            case pixelpai_proto_1.op_def.NodeType.TerrainNodeType:
+                this._terrains.set(object.id, object);
+                break;
+            case pixelpai_proto_1.op_def.NodeType.CharacterNodeType:
+                this._characters.set(object.id, object);
+                break;
+            case pixelpai_proto_1.op_def.NodeType.SpawnPointType:
+                this._spawnpoints.set(object.id, object);
+                if (!!this._cap.root.settings.spawnpoint === false) {
+                    this._cap.root.settings.spawnpoint = object.id;
+                }
+                break;
+            case pixelpai_proto_1.op_def.NodeType.TerrainCollectionType:
+                this._terrain_collection = object;
+                break;
+            case pixelpai_proto_1.op_def.NodeType.MossCollectionType:
+                this._moss_collection = object;
+                break;
+            case pixelpai_proto_1.op_def.NodeType.SceneryType:
+                this._scenerys.set(object.id, object);
+                break;
+        }
+        if (object instanceof MapSizeNode) {
+            this._map_size = object;
+        }
+    }
+    removeNode(object) {
+        try {
+            super.removeNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof MapSizeNode) {
+            this._map_size = undefined;
+        }
+        switch (object.type) {
+            case pixelpai_proto_1.op_def.NodeType.ElementNodeType:
+                this._elements.delete(object.id);
+                break;
+            case pixelpai_proto_1.op_def.NodeType.TerrainNodeType:
+                this._terrains.delete(object.id);
+                break;
+            case pixelpai_proto_1.op_def.NodeType.CharacterNodeType:
+                this._characters.delete(object.id);
+                break;
+            case pixelpai_proto_1.op_def.NodeType.SpawnPointType:
+                this._spawnpoints.delete(object.id);
+                if (this._cap.root.settings.spawnpoint === object.id) {
+                    this._cap.root.settings.spawnpoint = 0;
+                }
+                break;
+        }
+    }
+    getElements() {
+        return Array.from(this._elements.values());
+    }
+    getTerrains() {
+        return Array.from(this._terrains.values());
+    }
+    getCharacterNode() {
+        return Array.from(this._characters.values());
+    }
+    getSpawnPointNode() {
+        return Array.from(this._spawnpoints.values());
+    }
+    getScenerys() {
+        return Array.from(this._scenerys.values());
+    }
+    convertToClientScene() {
+        const scene = pixelpai_proto_1.op_client.Scene.create();
+        scene.id = this.id;
+        if (this._map_size) {
+            scene.cols = this._map_size.cols;
+            scene.rows = this._map_size.rows;
+            scene.tileWidth = this._map_size.tileWidth;
+            scene.tileHeight = this._map_size.tileHeight;
+        }
+        if (this._elements) {
+            scene.elements = [];
+            this._elements.forEach((element) => {
+                scene.elements.push(element.convertToClientElement());
+            });
+        }
+        if (this._terrains) {
+            scene.terrains = [];
+            this._terrains.forEach((terrain) => {
+                scene.terrains.push(terrain.convertToClientTerrain());
+            });
+        }
+        if (this._spawnpoints) {
+            if (!scene.elements)
+                scene.elements = [];
+            this._spawnpoints.forEach((spawnPoint) => {
+                // TODO 05242019 by 7
+                scene.elements.push(spawnPoint.convertToClientElement());
+            });
+        }
+        return scene;
+    }
+    serialize(container) {
+        super.serialize(container);
+        if (this._terrain_collection) {
+            this._terrain_collection.serialize(container);
+        }
+        if (this._moss_collection) {
+            this._moss_collection.serialize(container);
+        }
+    }
+}
+exports.default = SceneNode;
+class MapSizeNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._cols = 0;
+        this._rows = 0;
+        this._tileWidth = 60;
+        this._tileHeight = 30;
+    }
+    get properties() {
+        return {
+            cols: this._cols,
+            rows: this._rows,
+            tileWidth: this._tileWidth,
+            tileHeight: this._tileHeight,
+        };
+    }
+    get rows() {
+        return this._rows;
+    }
+    set rows(n) {
+        this._rows = n;
+    }
+    get cols() {
+        return this._cols;
+    }
+    set cols(n) {
+        this._cols = n;
+    }
+    get tileWidth() {
+        return this._tileWidth;
+    }
+    set tileWidth(val) {
+        this._tileWidth = val;
+    }
+    get tileHeight() {
+        return this._tileHeight;
+    }
+    set tileHeight(val) {
+        this._tileHeight = val;
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.mapSize)) {
+            game.mapSize = [];
+        }
+        return game.mapSize;
+    }
+    createProtocolObject() {
+        const ms = pixelpai_proto_1.op_gameconfig_01.MapSize.create();
+        ms.node = this.makeNode();
+        ms.cols = this._cols;
+        ms.rows = this._rows;
+        ms.tileWidth = this._tileWidth;
+        ms.tileHeight = this._tileHeight;
+        return ms;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const ms = data;
+        // deserialize other properties
+        this._rows = ms.rows;
+        this._cols = ms.cols;
+        this._tileWidth = ms.tileWidth;
+        this._tileHeight = ms.tileHeight;
+    }
+}
+exports.MapSizeNode = MapSizeNode;
+class TerrainCollectionNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._data = [];
+    }
+    // 场景返回二维数组
+    get data() {
+        return this._data;
+    }
+    initTerrainCollection(rows, cols) {
+        this._data = [];
+        for (let i = 0; i < cols; i++) {
+            let row = new Array(rows).fill(0);
+            this._data.push(row);
+        }
+    }
+    convertTerrainNodes(terrains) {
+        if (terrains.length > 0) {
+            for (const terrain of terrains) {
+                const snKey = terrain.getSnKey();
+                const key = this.cap.root.palette.getPaletteKeyBySn(snKey);
+                const loc = terrain.convertToSprite();
+                if (!key) {
+                    this.cap.root.palette.addToPalette(terrain);
+                }
+                else {
+                    terrain.destroy();
+                }
+                if (loc.point3f) {
+                    const { x, y, z } = loc.point3f;
+                    const key = this.cap.root.palette.getPaletteKeyBySn(snKey);
+                    if (this._data.length > x && this._data[x].length > y) {
+                        this._data[x][y] = key;
+                    }
+                }
+            }
+        }
+    }
+    // 如果场景调整，需要将二维数组调整
+    adjustTerrainsArray() {
+        if (this.parentObject.size) {
+            const { rows, cols } = this.parentObject
+                .size;
+            let newArr = [];
+            for (let i = 0; i < cols; i++) {
+                let row = new Array(rows).fill(0);
+                if (!this._data[i]) {
+                    newArr.push(row);
+                }
+                else {
+                    for (let j = 0; j < rows; j++) {
+                        if (this._data[i][j]) {
+                            row[j] = this._data[i][j];
+                        }
+                    }
+                    newArr.push(row);
+                }
+            }
+            this._data = newArr;
+        }
+    }
+    drawTerrains(locs, key) {
+        for (const loc of locs) {
+            const { x, y, z } = loc;
+            this._data[x][y] = key;
+        }
+    }
+    eraseTerrains(locs) {
+        for (const loc of locs) {
+            const { x, y } = loc;
+            if (x < 0 || y < 0) {
+                continue;
+            }
+            if (!this._data[x])
+                continue;
+            if (!this._data[x][y])
+                continue;
+            this._data[x][y] = 0;
+        }
+    }
+    createProtocolObject() {
+        const tc = pixelpai_proto_1.op_gameconfig_01.TerrainCollection.create();
+        tc.node = this.makeNode();
+        tc.data = pixelpai_proto_1.op_def.IntArrays.create();
+        for (let i = 0; i < this._data.length; i++) {
+            const row = this._data[i];
+            let rowData = pixelpai_proto_1.op_def.IntArray.create();
+            for (let j = 0; j < row.length; j++) {
+                rowData.value.push(row[j]);
+            }
+            if (tc.data.value) {
+                tc.data.value.push(rowData);
+            }
+        }
+        return tc;
+    }
+    serialize(container) {
+        container.terrain = this.createProtocolObject();
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const tc = data;
+        if (tc.data.value) {
+            for (let i = 0; i < tc.data.value.length; i++) {
+                const row = tc.data.value[i];
+                if (row.value) {
+                    this._data.push(row.value);
+                }
+                else {
+                    continue;
+                }
+            }
+        }
+    }
+}
+exports.TerrainCollectionNode = TerrainCollectionNode;
+class MossCollectionNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._data = [];
+        this._data_map = new Map();
+    }
+    get data() {
+        return this._data;
+    }
+    get dataMap() {
+        return this._data_map;
+    }
+    placeMosses(locs) {
+        for (const loc of locs) {
+            if (!this._data_map.get(loc.id)) {
+                this._data_map.set(loc.id, loc);
+            }
+        }
+    }
+    updateMosses(locs) {
+        for (const loc of locs) {
+            if (this._data_map.get(loc.id)) {
+                this._data_map.set(loc.id, loc);
+            }
+        }
+    }
+    removeMosses(ids) {
+        for (const id of ids) {
+            this._data_map.delete(id);
+        }
+    }
+    getMoss(id) {
+        return this._data_map.get(id);
+    }
+    convertElementLikeMossInScene() {
+        const elements = this._cap.getChildrenList(this.parent);
+        const mossElements = elements
+            .filter((ele) => ele.type === pixelpai_proto_1.op_def.NodeType.ElementNodeType &&
+            ele.judgeIsMoss())
+            .map((ele) => {
+            ele.elementSn = `${ele.sn}#${ele.version}`;
+            return ele;
+        });
+        const group = _.groupBy(mossElements, "elementSn");
+        let needAppendToMossPalette = [];
+        for (const key of Object.keys(group)) {
+            const sameMosses = group[key];
+            const originMoss = sameMosses.find((moss) => !moss.isFork);
+            if (originMoss) {
+                needAppendToMossPalette.push(originMoss);
+            }
+            else {
+                needAppendToMossPalette.push(sameMosses.pop());
+            }
+        }
+        for (const palette of needAppendToMossPalette) {
+            palette.unlink();
+            palette.parent = 0;
+            this._cap.root.moss.addToPalette(palette);
+            this._cap.removeObjectById(palette.id);
+        }
+        const appendPaletteIds = needAppendToMossPalette.map((ele) => ele.id);
+        for (const element of elements) {
+            if (element.type === pixelpai_proto_1.op_def.NodeType.ElementNodeType) {
+                if (element.judgeIsMoss()) {
+                    const [sn, ver] = element.getSnAndVersion();
+                    const elementSn = helpers_1.default.getElementSn(sn, ver);
+                    let key = this._cap.root.moss.getPaletteKeyBySn(elementSn);
+                    if (!key)
+                        continue;
+                    const loc = {
+                        key,
+                        x: element.location.x,
+                        y: element.location.y,
+                        z: element.location.z,
+                        dir: element.animations.dir,
+                        id: element.id,
+                    };
+                    this._data_map.set(element.id, loc);
+                    if (appendPaletteIds.indexOf(element.id) < 0) {
+                        element.destroy();
+                    }
+                }
+            }
+        }
+    }
+    createProtocolObject() {
+        const mossCollection = pixelpai_proto_1.op_gameconfig_01.MossCollection.create();
+        mossCollection.node = this.makeNode();
+        mossCollection.data = pixelpai_proto_1.op_def.LocationMap.create();
+        for (const key of Array.from(this._data_map.keys())) {
+            const loc = this._data_map.get(key);
+            const val = pixelpai_proto_1.op_def.MossMetaData.create(loc);
+            if (mossCollection.data.locations) {
+                mossCollection.data.locations.push(val);
+            }
+        }
+        return mossCollection;
+    }
+    serialize(container) {
+        container.mossList = this.createProtocolObject();
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const mc = data;
+        if (mc.data.locations) {
+            mc.data.locations.forEach((loc) => {
+                const location = pixelpai_proto_1.op_def.MossMetaData.create(loc);
+                this._data.push(location);
+                this._data_map.set(location.id, location);
+            });
+        }
+    }
+}
+exports.MossCollectionNode = MossCollectionNode;
+//# sourceMappingURL=scene.js.map
+
+/***/ }),
+/* 248 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+const avatar_1 = __webpack_require__(245);
+class CharacterNode extends config_object_1.EntityNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "游戏角色";
+    }
+    get camp() {
+        return this._camp || this.cap.add.camp(1, this);
+    }
+    appendNode(object) {
+        try {
+            super.appendNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof CampNode) {
+            this._camp = object;
+        }
+        if (object instanceof avatar_1.default) {
+            this._avatar = object;
+        }
+    }
+    removeNode(object) {
+        try {
+            super.removeNode(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (object instanceof CampNode) {
+            this._camp = undefined;
+        }
+        if (object instanceof avatar_1.default) {
+            this._avatar = undefined;
+        }
+    }
+}
+exports.default = CharacterNode;
+class CampNode extends config_object_1.BaseConfigObject {
+    get properties() {
+        return {
+            maxNumber: this._maxNumber,
+        };
+    }
+    get maxPlayers() {
+        return this._maxNumber || 0;
+    }
+    set maxPlayers(n) {
+        this._maxNumber = n;
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.camp)) {
+            game.camp = [];
+        }
+        return game.camp;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Camp.create();
+        obj.node = this.makeNode();
+        obj.maxNumber = this._maxNumber || 0;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        if (obj.maxNumber)
+            this._maxNumber = obj.maxNumber;
+    }
+}
+exports.CampNode = CampNode;
+//# sourceMappingURL=character.js.map
+
+/***/ }),
+/* 249 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+var NodeType = pixelpai_proto_1.op_def.NodeType;
+const package_1 = __webpack_require__(119);
+class ShopNode extends config_object_1.EntityNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._items = [];
+        this.name = "内购商城";
+    }
+    ignore() { }
+    appendNode(obj) {
+        try {
+            super.appendNode(obj);
+        }
+        catch (e) { }
+        if (obj.type === NodeType.PackageItemType) {
+            this._items.push(obj);
+        }
+    }
+}
+exports.default = ShopNode;
+class ShopItemNode extends package_1.PackageItemNode {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "内购道具";
+        this.type = pixelpai_proto_1.op_def.NodeType.PackageItemType;
+    }
+    appendNode(obj) {
+        try {
+            super.appendNode(obj);
+        }
+        catch (e) {
+            if (obj.type === NodeType.CommodityType) {
+                this._commodity = obj;
+            }
+        }
+    }
+}
+exports.ShopItemNode = ShopItemNode;
+class CommodityNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._price = 100;
+        this._des = "";
+        this._coinType = pixelpai_proto_1.op_def.CoinType.TU_DING_COIN;
+        this.name = "售价";
+    }
+    get properties() {
+        return {
+            price: this.price,
+            description: this.description,
+        };
+    }
+    findMyContainer(game) {
+        if (!game.commodities) {
+            game.commodities = [];
+        }
+        return game.commodities;
+    }
+    createProtocolObject() {
+        const commodity = pixelpai_proto_1.op_gameconfig_01.Commodity.create();
+        commodity.node = this.makeNode();
+        commodity.description = this._des;
+        commodity.coinType = this._coinType;
+        commodity.price = this._price;
+        return commodity;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const as = data;
+        // deserialize other properties
+        this._price = as.price || 100;
+        this._des = as.description || "";
+        this._coinType = as.coinType || pixelpai_proto_1.op_def.CoinType.TU_DING_COIN;
+    }
+    set price(val) {
+        if (this.coinType === pixelpai_proto_1.op_def.CoinType.TU_DING_COIN) {
+            if (val < 10 || val > 99999) {
+                throw new Error("图钉有效价格在10-99999");
+            }
+        }
+        this._price = val;
+    }
+    get price() {
+        return this._price;
+    }
+    set description(val) {
+        this._des = val;
+    }
+    get description() {
+        return this._des;
+    }
+    get coinType() {
+        return this._coinType;
+    }
+}
+exports.CommodityNode = CommodityNode;
+//# sourceMappingURL=shop.js.map
+
+/***/ }),
+/* 250 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class SceneryNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._uris = [];
+        this._depth = 1;
+        this._fit = 1;
+        this.name = "天空盒";
+        this.offset = pixelpai_proto_1.op_def.PBPoint2f.create();
+        this.offset.x = 0;
+        this.offset.y = 0;
+    }
+    get width() {
+        return this._width;
+    }
+    set width(val) {
+        this._width = val;
+    }
+    get height() {
+        return this._height;
+    }
+    set height(val) {
+        this._height = val;
+    }
+    get uris() {
+        return this._uris;
+    }
+    set uris(val) {
+        this._uris = val;
+    }
+    get depth() {
+        return this._depth;
+    }
+    set depth(val) {
+        this._depth = val;
+    }
+    get offset() {
+        return this._offset;
+    }
+    set offset(val) {
+        this._offset = val;
+    }
+    get speed() {
+        return this._speed;
+    }
+    set speed(val) {
+        this._speed = val;
+    }
+    get fit() {
+        return this._fit;
+    }
+    set fit(val) {
+        this._fit = val;
+    }
+    get properties() {
+        return {
+            uris: this.uris,
+            depth: this.depth,
+            offset: this.offset,
+            speed: this.speed,
+            fit: this.fit,
+            width: this.width,
+            height: this.height,
+        };
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.seneries)) {
+            game.seneries = [];
+        }
+        return game.seneries;
+    }
+    createProtocolObject() {
+        const scenery = pixelpai_proto_1.op_gameconfig_01.Scenery.create();
+        scenery.node = this.makeNode();
+        const uris = pixelpai_proto_1.op_def.StrArrays.create();
+        for (const row of this.uris) {
+            const uriRow = pixelpai_proto_1.op_def.StrArray.create();
+            for (const uri of row) {
+                uriRow.value.push(uri);
+            }
+            uris.value.push(uriRow);
+        }
+        scenery.uris = uris;
+        scenery.depth = this.depth;
+        if (this.offset) {
+            const offset = pixelpai_proto_1.op_def.PBPoint2f.create();
+            offset.x = this.offset.x;
+            offset.y = this.offset.y;
+            scenery.offset = offset;
+        }
+        scenery.speed = this.speed;
+        scenery.fit = this.fit;
+        scenery.width = this.width;
+        scenery.height = this.height;
+        return scenery;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const scenery = data;
+        if (scenery.uris.value) {
+            for (const row of scenery.uris.value) {
+                let uriRow = [];
+                if (row.value) {
+                    for (const uri of row.value) {
+                        uriRow.push(uri);
+                    }
+                    this.uris.push(uriRow);
+                }
+            }
+        }
+        this.depth = scenery.depth;
+        if (scenery.offset) {
+            this.offset = pixelpai_proto_1.op_def.PBPoint2f.create();
+            this.offset.x = scenery.offset.x;
+            this.offset.y = scenery.offset.y;
+        }
+        else {
+            this.offset = pixelpai_proto_1.op_def.PBPoint2f.create();
+            this.offset.x = 0;
+            this.offset.y = 0;
+        }
+        this.speed = scenery.speed;
+        this.fit = scenery.fit;
+        if (scenery.width) {
+            this.width = scenery.width;
+        }
+        if (scenery.height) {
+            this.height = scenery.height;
+        }
+    }
+}
+exports.default = SceneryNode;
+//# sourceMappingURL=scenery.js.map
+
+/***/ }),
+/* 251 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38164,7 +39899,7 @@ var MouseEvent;
 /* harmony default export */ __webpack_exports__["a"] = (_plugins_gameobjects_containerlite_ContainerLite_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 
 /***/ }),
-/* 253 */
+/* 252 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38185,7 +39920,7 @@ var GlobRectangle;
 /* harmony default export */ __webpack_exports__["a"] = (GetDefaultBounds);
 
 /***/ }),
-/* 254 */
+/* 253 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38196,7 +39931,7 @@ var IsSceneObject = function (object) {
 /* harmony default export */ __webpack_exports__["a"] = (IsSceneObject);
 
 /***/ }),
-/* 255 */
+/* 254 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38246,11 +39981,11 @@ var globRect = undefined;
 /* harmony default export */ __webpack_exports__["a"] = (IsPointerInBounds);
 
 /***/ }),
-/* 256 */
+/* 255 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _GetParentSizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(126);
+/* harmony import */ var _GetParentSizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(125);
 
 
 var GetTopmostSizer = function (gameObject) {
@@ -38265,7 +40000,7 @@ var GetTopmostSizer = function (gameObject) {
 /* harmony default export */ __webpack_exports__["a"] = (GetTopmostSizer);
 
 /***/ }),
-/* 257 */
+/* 256 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38277,7 +40012,7 @@ var GetTopmostSizer = function (gameObject) {
 });
 
 /***/ }),
-/* 258 */
+/* 257 */
 /***/ (function(module, exports) {
 
 /**
@@ -38348,11 +40083,11 @@ module.exports = GetValue;
 
 
 /***/ }),
-/* 259 */
+/* 258 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _utils_mask_MaskToGameObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(165);
+/* harmony import */ var _utils_mask_MaskToGameObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(164);
 
 
 const Intersects = Phaser.Geom.Intersects.RectangleToRectangle;
@@ -38446,13 +40181,13 @@ var showNone = function (child, mask) {
 /* harmony default export */ __webpack_exports__["a"] = (MaskChildren);
 
 /***/ }),
-/* 260 */
+/* 259 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CutInMediator", function() { return CutInMediator; });
-/* harmony import */ var _CutInPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(175);
+/* harmony import */ var _CutInPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(174);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -38499,7 +40234,7 @@ var CutInMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 261 */
+/* 260 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38517,14 +40252,14 @@ var DragManager = /** @class */ (function () {
 
 
 /***/ }),
-/* 262 */
+/* 261 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EquipUpgradeMediator", function() { return EquipUpgradeMediator; });
-/* harmony import */ var _EquipUpgradePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(179);
-/* harmony import */ var _EquipUpgrade__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(177);
+/* harmony import */ var _EquipUpgradePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(178);
+/* harmony import */ var _EquipUpgrade__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(176);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -38614,14 +40349,14 @@ var EquipUpgradeMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 263 */
+/* 262 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FurniBagMediator", function() { return FurniBagMediator; });
 /* harmony import */ var _FurniBagPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(220);
-/* harmony import */ var _FurniBag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(180);
+/* harmony import */ var _FurniBag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(179);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
@@ -38743,15 +40478,15 @@ var FurniBagMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 264 */,
-/* 265 */
+/* 263 */,
+/* 264 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export ScrollerEvent */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameScroller; });
-/* harmony import */ var _plugins_input_scroller_Scroller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(215);
-/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(71);
+/* harmony import */ var _plugins_input_scroller_Scroller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(213);
+/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -38932,13 +40667,13 @@ var GameScroller = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 266 */
+/* 265 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemDetailMediator", function() { return ItemDetailMediator; });
-/* harmony import */ var _ItemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(188);
+/* harmony import */ var _ItemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(187);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
@@ -39024,13 +40759,13 @@ var ItemDetailMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 267 */
+/* 266 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemPopCardMediator", function() { return ItemPopCardMediator; });
-/* harmony import */ var _ItemPopCardPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(189);
+/* harmony import */ var _ItemPopCardPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(188);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -39075,14 +40810,14 @@ var ItemPopCardMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 268 */
+/* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarketMediator", function() { return MarketMediator; });
-/* harmony import */ var _MarketPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(194);
-/* harmony import */ var _Market__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(193);
+/* harmony import */ var _MarketPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(193);
+/* harmony import */ var _Market__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(192);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -39182,13 +40917,13 @@ var MarketMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 269 */
+/* 268 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageBoxMediator", function() { return MessageBoxMediator; });
-/* harmony import */ var _MessageBoxView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(197);
+/* harmony import */ var _MessageBoxView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(196);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(19);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
@@ -39278,14 +41013,14 @@ var MessageBoxMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 270 */
+/* 269 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MineSettleMediator", function() { return MineSettleMediator; });
-/* harmony import */ var _MineSettlePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(199);
-/* harmony import */ var _MineSettle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(198);
+/* harmony import */ var _MineSettlePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(198);
+/* harmony import */ var _MineSettle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(197);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -39358,13 +41093,13 @@ var MineSettleMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 271 */
+/* 270 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaMessageBoxMediator", function() { return PicaMessageBoxMediator; });
-/* harmony import */ var _PicaMessageBoxPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(200);
+/* harmony import */ var _PicaMessageBoxPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(199);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
@@ -39429,14 +41164,14 @@ var PicaMessageBoxMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 272 */
+/* 271 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaRoomListMediator", function() { return PicaRoomListMediator; });
-/* harmony import */ var _PicaRoomListPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(201);
-/* harmony import */ var _RoomList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(202);
+/* harmony import */ var _PicaRoomListPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(200);
+/* harmony import */ var _RoomList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(201);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -39534,13 +41269,13 @@ var PicaRoomListMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 273 */
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserMenuMediator", function() { return UserMenuMediator; });
-/* harmony import */ var _UserMenuPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(208);
+/* harmony import */ var _UserMenuPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(207);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
@@ -39653,6 +41388,12 @@ var UserMenuMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
+/* 273 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
 /* 274 */
 /***/ (function(module, exports) {
 
@@ -39678,20 +41419,14 @@ var UserMenuMediator = /** @class */ (function (_super) {
 
 /***/ }),
 /* 278 */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-/* 279 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopMediator", function() { return TopMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
-/* harmony import */ var _top_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(212);
-/* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(62);
+/* harmony import */ var _top_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(211);
+/* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(63);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
@@ -39834,19 +41569,19 @@ var TopMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 280 */
+/* 279 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 281 */
+/* 280 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputPanel", function() { return InputPanel; });
-/* harmony import */ var _inputTextFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(87);
+/* harmony import */ var _inputTextFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(88);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -39903,7 +41638,7 @@ var InputPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 282 */
+/* 281 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40041,13 +41776,13 @@ var MessageBtn = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 283 */
+/* 282 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrollerContainer", function() { return ScrollerContainer; });
-/* harmony import */ var _lib_rexui_lib_plugins_input_scroller_Scroller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(215);
+/* harmony import */ var _lib_rexui_lib_plugins_input_scroller_Scroller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(213);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -40094,7 +41829,7 @@ var ScrollerContainer = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 284 */
+/* 283 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40202,7 +41937,7 @@ var SrollerView = /** @class */ (function () {
 
 
 /***/ }),
-/* 285 */
+/* 284 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40258,10 +41993,1799 @@ var LoadingView = /** @class */ (function () {
 
 
 /***/ }),
-/* 286 */
+/* 285 */
 /***/ (function(module, exports) {
 
 
+
+/***/ }),
+/* 286 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
+var Scrollable = __webpack_require__(214);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
+var GetScrollMode = __webpack_require__(77);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/containerlite/ContainerLite.js + 13 modules
+var ContainerLite = __webpack_require__(287);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/GetValue.js
+var GetValue = __webpack_require__(257);
+var GetValue_default = /*#__PURE__*/__webpack_require__.n(GetValue);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clear.js
+var Clear = __webpack_require__(129);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clone.js
+var Clone = __webpack_require__(128);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/data/DataMethods.js
+
+
+
+
+/* harmony default export */ var DataMethods = ({
+    enableData() {
+        if (this.data === undefined) {
+            this.data = {};
+        }
+        return this;
+    },
+
+    getData(key, defaultValue) {
+        this.enableData();
+        return (key === undefined) ? this.data : GetValue_default()(this.data, key, defaultValue);
+    },
+
+    setData(key, value) {
+        this.enableData();
+        this.data[key] = value;
+        return this;
+    },
+
+    incData(key, inc, defaultValue) {
+        if (defaultValue === undefined) {
+            defaultValue = 0;
+        }
+        this.enableData();
+        this.setData(key, this.getData(key, defaultValue) + inc);
+        return this;
+    },
+
+    mulData(key, mul, defaultValue) {
+        if (defaultValue === undefined) {
+            defaultValue = 0;
+        }
+        this.enableData();
+        this.setData(key, this.getData(key, defaultValue) * mul);
+        return this;
+    },
+
+    clearData() {
+        if (this.data) {
+            Object(Clear["a" /* default */])(this.data);
+        }
+        return this;
+    },
+
+    resetData(data) {
+        this.clearData();
+
+        if (data) {
+            this.enableData();
+            for (var key in data) {
+                this.data[key] = data[key];
+            }
+        }
+        return this;
+    },
+
+    cloneData() {
+        if (this.data) {
+            return Object(Clone["a" /* default */])(this.data);
+        } else {
+            return {};
+        }
+    }
+});
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/Cell.js
+
+
+class Cell {
+    constructor(parent, config) {
+        this.container = null;
+        this.setParent(parent);
+        this._deltaHeight = 0;
+        // this.resetFromJSON(config);
+    }
+
+    setParent(parent) {
+        this.parent = parent; // parent: table
+        this.parentContainer = parent.getParentContainer();
+    }
+
+    // resetFromJSON(o) {
+    //     return this;
+    // }
+
+    destroy(fromScene) {
+        if (fromScene === undefined) {
+            fromScene = false;
+        }
+
+        if (!fromScene) {
+            var table = this.parent;
+            if (this.deltaHeight !== 0) {
+                table.nonZeroDeltaHeightCount--;
+            }
+            this.destroyContainer();
+        }
+
+        this.data = undefined;
+        this.container = null;
+        this.parent = undefined;
+        this.parentContainer = undefined;
+    }
+
+    get table() {
+        return this.parent;
+    }
+
+    get scrollMode() {
+        return this.parentContainer.scrollMode;
+    }
+
+    get colIndx() {
+        return this.parent.cellIndxeToColIndex(this.index);
+    }
+
+    get rowIndx() {
+        return this.parent.cellIndxeToRowIndex(this.index);
+    }
+
+    getContainer() {
+        return this.container;
+    }
+
+    setContainer(container) {
+        if (!container) {
+            this.destroyContainer();
+            return this;
+        }
+
+        if (this.container) {
+            this.container.destroy();
+        }
+        this.container = container;
+        this.parentContainer.add(container);
+        return this;
+    }
+
+    destroyContainer() {
+        if (this.container) {
+            this.container.destroy();
+            this.container = null;
+        }
+        return this;
+    }
+
+    popContainer() {
+        if (this.container) {
+            var container = this.container;
+            this.container = null;
+            this.parentContainer.remove(container);
+            return container;
+        } else {
+            return null;
+        }
+    }
+
+    setXY(x, y) {
+        if (this.container) {
+            this.parentContainer.setChildLocalPosition(this.container, x, y);
+        }
+        return this;
+    }
+
+    get deltaHeight() {
+        return this._deltaHeight;
+    }
+
+    set deltaHeight(deltaHeight) {
+        if (deltaHeight == null) {
+            deltaHeight = 0;
+        }
+        var table = this.parent;
+        if ((this._deltaHeight === 0) && (deltaHeight !== 0)) {
+            table.nonZeroDeltaHeightCount++;
+        } else if ((this._deltaHeight !== 0) && (deltaHeight === 0)) {
+            table.nonZeroDeltaHeightCount--;
+        }
+
+        this._deltaHeight = deltaHeight;
+    }
+
+    setDeltaHeight(deltaHeight) {
+        this.deltaHeight = deltaHeight;
+        return this;
+    }
+
+    get height() {
+        if (this.scrollMode === 0) {
+            return this.deltaHeight + this.parent.defaultCellHeight;
+        } else {
+            return this.parent.defaultCellWidth;
+        }
+    }
+
+    set height(height) {
+        // Only worked when scrollMode is 0
+        if (this.scrollMode === 1) {
+            return;
+        }
+        this.setDeltaHeight(height - this.parent.defaultCellHeight);
+    }
+
+    setHeight(height) {
+        // Only worked when scrollMode is 0
+        this.height = height;
+        return this;
+    }
+
+    get width() {
+        if (this.scrollMode === 0) {
+            return this.parent.defaultCellWidth;
+        } else {
+            return this.deltaHeight + this.parent.defaultCellHeight;
+        }
+    }
+
+    set width(width) {
+        // Only worked when scrollMode is 1
+        if (this.scrollMode === 0) {
+            return;
+        }
+        this.setDeltaHeight(width - this.parent.defaultCellHeight);
+    }
+
+    setWidth(width) {
+        this.width = width;
+        return this;
+    }
+
+    get scene() {
+        return this.parentContainer.scene;
+    }
+};
+
+
+Object.assign(
+    Cell.prototype,
+    DataMethods
+);
+
+
+/* harmony default export */ var gridtable_Cell = (Cell);
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/pool.js + 1 modules
+var pool = __webpack_require__(67);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/Table.js
+
+
+
+const Table_GetValue = Phaser.Utils.Objects.GetValue;
+const SpliceOne = Phaser.Utils.Array.SpliceOne;
+
+class Table_Table {
+    constructor(parent, config) {
+        this.parent = parent; // parent: GridTable game object (Container)
+        this.cells = [];
+        this.cellPool = new pool["a" /* default */]();
+        this.resetFromJSON(config);
+    }
+
+    resetFromJSON(o) {
+        this.colCount = undefined;
+        this._nonZeroDeltaHeightCount = 0;
+        this.resetTotalRowsHeight();
+        this.setDefaultCellHeight(Table_GetValue(o, 'cellHeight', 30));
+        this.setDefaultCellWidth(Table_GetValue(o, 'cellWidth', 30));
+        this.initCells(Table_GetValue(o, 'cellsCount', 0));
+        this.setColumnCount(Table_GetValue(o, 'columns', 1));
+        this.zoom = Table_GetValue(o, 'zoom', 1);
+        this.dpr = Table_GetValue(o, 'dpr', 1);
+        return this;
+    }
+
+    destroy(fromScene) {
+        for (var i = 0, cnt = this.cells.length; i < cnt; i++) {
+            this.freeCell(this.cells[i], fromScene);
+        }
+        this.cellPool.destroy();
+        this.cells = undefined;
+        this.parent = undefined;
+    }
+
+    get nonZeroDeltaHeightCount() {
+        return this._nonZeroDeltaHeightCount;
+    }
+
+    set nonZeroDeltaHeightCount(count) {
+        if (this._nonZeroDeltaHeightCount === count) {
+            return;
+        }
+        this._nonZeroDeltaHeightCount = count;
+        this.resetTotalRowsHeight();
+    }
+
+    get defaultCellHeightMode() {
+        return (this.nonZeroDeltaHeightCount === 0);
+    }
+
+    setDefaultCellHeight(height) {
+        this.defaultCellHeight = height;
+        return this;
+    }
+
+    setDefaultCellWidth(width) {
+        this.defaultCellWidth = width;
+        return this;
+    }
+
+    initCells(size) {
+        var cells = this.cells;
+        cells.length = size;
+        for (var i = 0; i < size; i++) {
+            cells[i] = null;
+        }
+        return this;
+    }
+
+    insertNewCells(cellIdx, count) {
+        var cells = this.cells;
+        if (cellIdx === cells.length) {
+            // append at end of array
+            var endIdx = cellIdx + count;
+            cells.legth = endIdx;
+            for (var i = cellIdx; i < endIdx; i++) {
+                cells[i] = null;
+            }
+        } else {
+            var newCells = [];
+            newCells.length = count;
+            for (var i = 0; i < count; i++) {
+                newCells[i] = null;
+            }
+            this.cells.splice(cellIdx, 0, ...newCells);
+        }
+
+        this.resetTotalRowsHeight();
+        return this;
+    }
+
+    removeCells(cellIdx, count) {
+        var endIdx = cellIdx + count;
+        for (var i = cellIdx; i < endIdx; i++) {
+            this.freeCell(i);
+        }
+
+        if (endIdx === this.cells.length) {
+            // remove until end of array
+            this.cells.length = cellIdx;
+        } else {
+            if (count === 1) {
+                SpliceOne(this.cells, cellIdx);
+            } else {
+                this.cells.splice(cellIdx, count);
+            }
+            this.buildCellIndex(cellIdx);
+        }
+
+        this.resetTotalRowsHeight();
+        return this;
+    }
+
+    setColumnCount(cnt) {
+        this.colCount = cnt;
+        this.resetTotalRowsHeight();
+        return this;
+    }
+
+    get rowCount() {
+        return Math.ceil(this.cells.length / this.colCount);
+    }
+
+    get cellsCount() {
+        return this.cells.length;
+    }
+
+    isValidCellIdx(idx) {
+        return ((idx >= 0) && (idx < this.cells.length));
+    }
+
+    heightToRowIndex(height, isCeil) {
+        // defaultCellHeightMode
+        if (this.defaultCellHeightMode) {
+            var rowIdx = height / this.defaultCellHeight;
+            if (isCeil) {
+                rowIdx = Math.ceil(rowIdx);
+            } else {
+                rowIdx = Math.floor(rowIdx);
+            }
+
+            return rowIdx;
+        }
+
+        // count cell height one by one
+        var rowCount = this.rowCount;
+        var remainder = height,
+            isValidIdx;
+        var cell, rowHeight, rowIdx = 0;
+
+        while (1) {
+            rowHeight = this.getRowHeight(rowIdx);
+            remainder -= rowHeight;
+
+            isValidIdx = (rowIdx >= 0) && (rowIdx < rowCount);
+            if ((remainder > 0) && isValidIdx) {
+                rowIdx += 1;
+            } else if (remainder === 0) {
+                return rowIdx;
+            } else {
+                if (isCeil) {
+                    var preRowIdx = rowIdx;
+                    rowIdx += 1;
+                    isValidIdx = (rowIdx >= 0) && (rowIdx < rowCount);
+
+                    if (!isValidIdx)
+                        rowIdx = preRowIdx;
+                }
+
+                return rowIdx;
+            }
+        }
+
+    }
+
+    widthToColIndex(width, isCeil) {
+        var colIdx = width / this.defaultCellWidth;
+        if (isCeil) {
+            colIdx = Math.ceil(colIdx);
+        } else {
+            colIdx = Math.floor(colIdx);
+        }
+
+        return colIdx;
+    }
+
+    colRowToCellIndex(colIdx, rowIdx) {
+        if (colIdx >= this.colCount) {
+            return null;
+        }
+        return (rowIdx * this.colCount) + colIdx;
+    }
+
+    rowIndexToHeight(start, end) {
+        // defaultCellHeightMode
+        if (this.defaultCellHeightMode) {
+            return (end - start + 1) * this.defaultCellHeight * this.zoom;
+        }
+
+        var h, sum = 0;
+        for (var i = start; i <= end; i++) {
+            h = this.getRowHeight(i);
+            sum += h;
+        }
+
+        return sum;
+    }
+
+    colIndexToWidth(start, end) {
+        return (end - start + 1) * this.defaultCellWidth * this.zoom;
+    };
+
+    getRowHeight(rowIdx) {
+        var cnt = this.colCount;
+        // single column
+        if (cnt <= 1) {
+            return this.getCellHeight(this.colRowToCellIndex(0, rowIdx));
+        }
+
+        // multiple columns, get the maximum height
+        var maxHeight = 0,
+            cellHeight;
+        for (var i = 0; i < cnt; i++) {
+            cellHeight = this.getCellHeight(this.colRowToCellIndex(i, rowIdx));
+            if (maxHeight < cellHeight)
+                maxHeight = cellHeight;
+        }
+        return maxHeight;
+    }
+
+    getColWidth(idx) {
+        return this.defaultCellWidth;
+    }
+
+    getCellHeight(cellIdx) {
+        if (!this.isValidCellIdx(cellIdx)) {
+            return 0;
+        }
+
+        var cellHeight;
+        if (this.defaultCellHeightMode)
+            cellHeight = this.defaultCellHeight;
+        else {
+            var cell = this.getCell(cellIdx, false);
+            var deltaHeight = (cell) ? cell.deltaHeight : 0;
+            cellHeight = this.defaultCellHeight + deltaHeight;
+        }
+
+        return cellHeight;
+    }
+
+    resetTotalRowsHeight() {
+        this._totalRowsHeight = null;
+    }
+
+    get totalRowsHeight() {
+        if (this._totalRowsHeight === null) {
+            this._totalRowsHeight = this.rowIndexToHeight(0, this.rowCount - 1);
+        }
+
+        return this._totalRowsHeight;
+    }
+
+    get totalColumnWidth() {
+        return this.colCount * this.defaultCellWidth;
+    }
+
+    cellIndxeToColIndex(cellIdx) {
+        return cellIdx % this.colCount;
+    }
+
+    cellIndxeToRowIndex(cellIdx) {
+        return Math.floor(cellIdx / this.colCount);
+    }
+
+    getCell(cellIdx, createNewCell) {
+        if (!this.isValidCellIdx(cellIdx)) {
+            return null;
+        }
+
+        if (createNewCell === undefined) {
+            createNewCell = true;
+        }
+        if ((this.cells[cellIdx] === null) && createNewCell) {
+            var cell = this.newCell(cellIdx);
+            this.cells[cellIdx] = cell;
+        }
+
+        return this.cells[cellIdx];
+    }
+
+    newCell(cellIdx) {
+        var cell = this.cellPool.pop();
+        if (cell === null) {
+            cell = new gridtable_Cell(this);
+        } else {
+            cell.setParent(this);
+        }
+        cell.index = cellIdx;
+
+        return cell;
+    }
+
+    buildCellIndex(startIdx) {
+        if (startIdx === undefined) {
+            startIdx = 0;
+        }
+        var cells = this.cells,
+            cell;
+        for (var i = startIdx, len = cells.length; i < len; i++) {
+            cell = cells[i];
+            if (cell) {
+                cell.index = i;
+            }
+        }
+        return this;
+    }
+
+    getParentContainer() {
+        return this.parent;
+    }
+
+    freeCell(cell, fromScene) {
+        if (typeof (cell) === 'number') {
+            cell = this.cells[cell];
+        }
+
+        if (!cell) {
+            return this;
+        }
+
+        cell.destroy(fromScene);
+        if (!fromScene) {
+            this.cellPool.push(cell);
+        }
+        return this;
+    }
+}
+
+/* harmony default export */ var gridtable_Table = (Table_Table);
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
+var DefaultMask = __webpack_require__(78);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/size/ResizeGameObject.js
+var ResizeGameObject = __webpack_require__(46);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/MaskToGameObject.js
+var MaskToGameObject = __webpack_require__(164);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetTableOY.js
+var SetTableOY = function (oy) {
+    var table = this.table;
+    var topTableOY = this.topTableOY;
+    var bottomTableOY = this.bottomTableOY;
+    var tableOYExceedTop = (oy > this.topTableOY);
+    var tableOYExeceedBottom = (oy < this.bottomTableOY);
+    if (this.clampTableOXYMode) {
+        var rowCount = table.rowCount;
+        var visibleRowCount = table.heightToRowIndex(this.instHeight, true);
+
+        // less then 1 page            
+        if (rowCount < visibleRowCount) {
+            oy = 0;
+        } else if (tableOYExceedTop) {
+            oy = topTableOY
+        } else if (tableOYExeceedBottom) {
+            oy = bottomTableOY;
+        }
+    }
+
+    if (this._tableOY !== oy) {
+        this._tableOY = oy;
+    }
+
+
+    if (tableOYExceedTop) {
+        if (!this.execeedTopState) {
+            this.emit('execeedtop', this, oy, topTableOY);
+        }
+    }
+    this.execeedTopState = tableOYExceedTop;
+
+    if (tableOYExeceedBottom) {
+        if (!this.execeedBottomState) {
+            this.emit('execeedbottom', this, oy, bottomTableOY);
+        }
+    }
+    this.execeedBottomState = tableOYExeceedBottom;
+    return this;
+}
+
+/* harmony default export */ var methods_SetTableOY = (SetTableOY);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetTableOX.js
+var SetTableOX = function (ox) {
+    var table = this.table;
+    var leftTableOX = this.leftTableOX;
+    var rightTableOX = this.rightTableOX;
+    var tableOXExeceedLeft = (ox > this.leftTableOX);
+    var tableOXExeceedRight = (ox < this.rightTableOX);
+    if (this.clampTableOXYMode) {
+        var colCount = table.colCount;
+        var visibleColCount = table.widthToColIndex(this.instWidth, true);
+
+        // less then 1 page            
+        if (colCount < visibleColCount) {
+            ox = 0;
+        } else if (tableOXExeceedLeft) {
+            ox = leftTableOX
+        } else {
+            // var tableVisibleWidth = this.tableVisibleWidth;
+            if (tableOXExeceedRight)
+                ox = rightTableOX;
+        }
+    }
+
+    if (this._tableOX !== ox) {
+        this._tableOX = ox;
+    }
+
+    if (tableOXExeceedLeft) {
+        if (!this.execeedLeftState) {
+            this.emit('execeedleft', this, ox, leftTableOX);
+        }
+    }
+    this.execeedLeftState = tableOXExeceedLeft;
+
+    if (tableOXExeceedRight) {
+        if (!this.execeedRightState) {
+            this.emit('execeedright', this, ox, rightTableOX);
+        }
+    }
+    this.execeedRightState = tableOXExeceedRight;
+    return this;
+}
+
+/* harmony default export */ var methods_SetTableOX = (SetTableOX);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/HideCell.js
+var HideCell = function (cell) {
+    // Option: pop container of cell by cell.popContainer() under this event 
+    this.emit('cellinvisible', cell);
+
+    if (this.cellContainersPool) {
+        var cellContainer = cell.popContainer(); // null if already been removed
+        if (cellContainer) {
+            this.cellContainersPool.killAndHide(cellContainer);
+        }
+    }
+
+    cell.destroyContainer(); // Destroy container of cell
+}
+
+/* harmony default export */ var updatetable_HideCell = (HideCell);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/HideCells.js
+
+
+var HideCells = function () {
+    var preList = this.preVisibleCells;
+    var curList = this.visibleCells;
+    preList.iterate(function (cell) {
+        if (!curList.contains(cell)) {
+            updatetable_HideCell.call(this, cell);
+        }
+    }, this);
+}
+
+/* harmony default export */ var updatetable_HideCells = (HideCells);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/ShowCell.js
+var ShowCell = function (cell) {
+    // Attach container to cell by cell.setContainer(container) under this event
+    var reusedCellContainer = null;
+    if (this.cellContainersPool) {
+        reusedCellContainer = this.cellContainersPool.getFirstDead();
+        if (reusedCellContainer !== null) { // Reuse this game object
+            reusedCellContainer.setActive(true).setVisible(true);
+        }
+    }
+
+    this.emit('cellvisible', cell, reusedCellContainer);
+
+    if (this.cellContainersPool) {
+        var cellContainer = cell.getContainer();
+        if (cellContainer) {
+            if (reusedCellContainer === null) {
+                this.cellContainersPool.add(cellContainer); // New cell container, add to pool
+            } else if (reusedCellContainer !== cellContainer) {
+                // Why reusedCellContainer is not equal to cellContainer?
+                this.cellContainersPool.add(cellContainer); // New cell container, add to pool
+                this.cellContainersPool.killAndHide(reusedCellContainer); // Unused cell container, put back to pool
+            }
+        } else { // No cell container added
+            if (reusedCellContainer !== null) {
+                this.cellContainersPool.killAndHide(reusedCellContainer); // Unused cell container, put back to pool
+            }
+        }
+    }
+}
+
+/* harmony default export */ var updatetable_ShowCell = (ShowCell);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/ShowCells.js
+
+
+var ShowCells = function () {
+    if (this.cellsCount === 0) {
+        return;
+    }
+    var table = this.table;
+    var rowIdx = table.heightToRowIndex(-this.tableOY);
+    if (rowIdx < 0) {
+        rowIdx = 0;
+    }
+
+    var colIdx = table.widthToColIndex(-this.tableOX);
+    if (colIdx < 0) {
+        colIdx = 0;
+    }
+
+    var cellIdx = table.colRowToCellIndex(colIdx, rowIdx);
+    var bottomBound = this.bottomBound;
+    var rightBound = this.rightBound;
+    var lastIdx = table.cellsCount - 1;
+    var lastColIdx = table.colCount - 1;
+
+    var cellTLX0 = GetCellTLX.call(this, colIdx),
+        cellTLX = cellTLX0;
+    var cellTLY = GetCellTLY.call(this, rowIdx);
+    this.visibleStartY = null;
+    this.visibleEndY = null;
+    this.visibleStartX = null;
+    this.visibleEndX = null;
+    this.lastVisibleCellIdx = null;
+    while ((cellTLY < bottomBound) && (cellIdx <= lastIdx)) {
+        if (this.table.isValidCellIdx(cellIdx)) {
+            if (this.visibleStartY === null) {
+                this.visibleStartY = rowIdx;
+                this.visibleEndY = rowIdx;
+            }
+            if (this.visibleStartX === null) {
+                this.visibleStartX = colIdx;
+                this.visibleEndX = colIdx;
+            }
+
+            if (this.lastVisibleCellIdx === null) {
+                this.lastVisibleCellIdx = cellIdx;
+            }
+
+            if (this.visibleEndY < rowIdx) {
+                this.visibleEndY = rowIdx;
+            }
+
+            if (this.visibleEndX < colIdx) {
+                this.visibleEndX = colIdx;
+            }
+
+            if (this.lastVisibleCellIdx < cellIdx) {
+                this.lastVisibleCellIdx = cellIdx;
+            }
+
+            var cell = table.getCell(cellIdx, true);
+            this.visibleCells.set(cell);
+            if (!this.preVisibleCells.contains(cell)) {
+                updatetable_ShowCell.call(this, cell);
+            }
+            if (this.scrollMode === 0) {
+                cell.setXY(cellTLX, cellTLY);
+            } else {
+                cell.setXY(cellTLY, cellTLX);
+            }
+        }
+
+        if ((cellTLX < rightBound) && (colIdx < lastColIdx)) {
+            cellTLX += table.getColWidth(colIdx);
+            colIdx += 1;
+        } else {
+            cellTLX = cellTLX0;
+            cellTLY += table.getRowHeight(rowIdx);
+
+            colIdx = this.visibleStartX;
+            rowIdx += 1;
+        }
+
+        cellIdx = table.colRowToCellIndex(colIdx, rowIdx);
+    }
+}
+
+var GetCellTLX = function (colIdx) {
+    var ox = (this.scrollMode === 0) ? this.topLeftX : this.topLeftY;
+    var x = this.tableOX + this.table.colIndexToWidth(0, colIdx - 1) + ox;
+    return x;
+}
+
+var GetCellTLY = function (rowIdx) {
+    var oy = (this.scrollMode === 0) ? this.topLeftY : this.topLeftX;
+    var y = this.tableOY + this.table.rowIndexToHeight(0, rowIdx - 1) + oy;
+    return y;
+}
+
+/* harmony default export */ var updatetable_ShowCells = (ShowCells);
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/containerlite/MaskChildren.js
+var MaskChildren = __webpack_require__(258);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/MaskCells.js
+
+
+var MaskCells = function () {
+    var children = [];
+    var cells = this.visibleCells.entries, container;
+    for (var i = 0, cnt = cells.length; i < cnt; i++) {
+        container = cells[i].getContainer();
+        if (container) {
+            if (container.isRexContainerLite) { // ContainerLite
+                container.getAllChildren(children);
+            } else { // Others
+                children.push(container);
+            }
+        }
+    }
+    Object(MaskChildren["a" /* default */])(this, this.cellsMask, children);
+}
+
+/* harmony default export */ var updatetable_MaskCells = (MaskCells);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/updatetable/UpdateTable.js
+
+
+
+
+var UpdateTable = function (refresh) {
+    if (refresh === undefined) {
+        refresh = false;
+    }
+    if (refresh) {
+        ClearVisibleCellIndexes.call(this);
+        updatetable_HideCells.call(this);
+    }
+    ClearVisibleCellIndexes.call(this);
+    updatetable_ShowCells.call(this);
+    updatetable_HideCells.call(this);
+    updatetable_MaskCells.call(this);
+    return this;
+}
+
+var ClearVisibleCellIndexes = function () {
+    var tmp = this.preVisibleCells;
+    this.preVisibleCells = this.visibleCells;
+    this.visibleCells = tmp;
+    this.visibleCells.clear();
+}
+
+/* harmony default export */ var updatetable_UpdateTable = (UpdateTable);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/IsCellVisible.js
+var IsCellVisible = function (cellIdx) {
+    var cell = this.table.getCell(cellIdx, false);
+    return cell && this.visibleCells.contains(cell);
+}
+
+/* harmony default export */ var methods_IsCellVisible = (IsCellVisible);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/PointerToCell.js
+var PointerToCellIndex = function (x, y) {
+    y -= (this.y + this.topLeftY);
+    x -= (this.x + this.topLeftX);
+    var offsetTableOY = this.tableOY - ((this.scrollMode === 0) ? y : x);
+    var offsetTableOX = this.tableOX - ((this.scrollMode === 0) ? x : y);
+
+    var table = this.table;
+    var rowIdx = table.heightToRowIndex(-offsetTableOY);
+    var colIdx = table.widthToColIndex(-offsetTableOX);
+    var cellIdx = table.colRowToCellIndex(colIdx, rowIdx);
+    if (cellIdx === null) {
+        return null;
+    }
+    if (!this.isCellVisible(cellIdx)) {
+        return null;
+    }
+    return cellIdx;
+}
+
+var PointerToCellContainer = function (x, y) {
+    var cellIdx = PointerToCellIndex.call(this, x, y);
+    if (cellIdx === null) {
+        return undefined;
+    }
+    return this.getCellContainer(cellIdx);
+}
+
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/EachCell.js
+// For when you know this Set will be modified during the iteration
+var EachVisibleCell = function (callback, scope) {
+    this.visibleCells.each(callback, scope);
+    return this;
+}
+
+// For when you absolutely know this Set won't be modified during the iteration
+var IterateVisibleCell = function (callback, scope) {
+    this.visibleCells.iterate(callback, scope);
+    return this;
+}
+
+var EachCell = function (callback, scope) {
+    this.table.cells.slice().forEach(callback, scope);
+    return this;
+}
+
+var IterateCell = function (callback, scope) {
+    this.table.cells.forEach(callback, scope);
+    return this;
+}
+
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetCellsCount.js
+var SetCellsCount = function (count) {
+    var cellsCount = this.cellsCount;
+    if (cellsCount === count) {
+        return this;
+    }
+
+    if (cellsCount > count) {
+        this.removeCells(count, cellsCount - count);
+    } else { // cellsCount < count
+        this.insertNewCells(cellsCount, count - cellsCount);
+    }
+    return this;
+}
+
+/* harmony default export */ var methods_SetCellsCount = (SetCellsCount);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/InsertNewCells.js
+const Clamp = Phaser.Math.Clamp;
+
+var InsertNewCells = function (cellIdx, count) {
+    if (typeof (cellIdx) === 'object') {
+        cellIdx = cellIdx.index;
+    }
+    if (count === undefined) {
+        count = 1;
+    }
+    if (count <= 0) {
+        return this;
+    }
+    cellIdx = Clamp(cellIdx, 0, this.cellsCount);
+    this.table.insertNewCells(cellIdx, count);
+    return this;
+}
+
+/* harmony default export */ var methods_InsertNewCells = (InsertNewCells);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/RemoveCells.js
+
+
+var RemoveCells = function (cellIdx, count) {
+    if (typeof (cellIdx) === 'object') {
+        cellIdx = cellIdx.index;
+    }
+    if (count === undefined) {
+        count = 1;
+    }
+    if (cellIdx < 0) {
+        count += cellIdx;
+        cellIdx = 0;
+    }
+    if (count <= 0) {
+        return this;
+    }
+    // out-of-range
+    if (cellIdx > this.cellsCount) {
+        return this;
+    }
+
+    if (cellIdx <= this.lastVisibleCellIdx) {
+        var preList = this.preVisibleCells;
+        var curList = this.visibleCells;
+        var cell;
+        for (var i = cellIdx, endIdx = cellIdx + count; i < endIdx; i++) {
+            cell = this.getCell(i, false);
+            if (cell) {
+                if (curList.contains(cell)) {
+                    updatetable_HideCell.call(this, cell);
+                    curList.delete(cell);
+                }
+                preList.delete(cell);
+            }
+        }
+    }
+
+    this.table.removeCells(cellIdx, count);
+    return this;
+}
+
+/* harmony default export */ var methods_RemoveCells = (RemoveCells);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetColumnCount.js
+var SetColumnCount = function (count) {
+    if (this.table.colCount === count) {
+        return this;
+    }
+    this.table.setColumnCount(count);
+    return this;
+}
+
+/* harmony default export */ var methods_SetColumnCount = (SetColumnCount);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetGridSize.js
+var SetGridSize = function (colCount, rowCount) {
+    this.setCellsCount(colCount * rowCount);
+    this.table.setColumnCount(colCount);
+    return this;
+}
+
+/* harmony default export */ var methods_SetGridSize = (SetGridSize);
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/Methods.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ var Methods = ({
+    setTableOY: methods_SetTableOY,
+    setTableOX: methods_SetTableOX,
+    updateTable: updatetable_UpdateTable,
+    isCellVisible: methods_IsCellVisible,
+    pointerToCellIndex: PointerToCellIndex,
+    pointerToCellContainer: PointerToCellContainer,
+    eachVisibleCell: EachVisibleCell,
+    iterateVisibleCell: IterateVisibleCell,
+    eachCell: EachCell,
+    iterateCell: IterateCell,
+
+    setCellsCount: methods_SetCellsCount,
+    insertNewCells: methods_InsertNewCells,
+    removeCells: methods_RemoveCells,
+    setColumnCount: methods_SetColumnCount,
+    setGridSize: methods_SetGridSize
+});
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/GridTable.js
+
+
+
+
+
+
+
+const Container = ContainerLite["a" /* default */];
+const Components = Phaser.GameObjects.Components;
+const Set = Phaser.Structs.Set;
+const GridTable_GetValue = Phaser.Utils.Objects.GetValue;
+class GridTable_GridTable extends Container {
+    constructor(scene, x, y, width, height, config) {
+        if (config === undefined) {
+            config = {};
+        }
+        super(scene, x, y, width, height);
+        this.type = 'rexGridTable';
+        this._tableOX = GridTable_GetValue(config, 'tableOX', 0);
+        this._tableOY = GridTable_GetValue(config, 'tableOY', 0);
+        this.visibleCells = new Set();
+        this.preVisibleCells = new Set();
+        this.visibleStartX = null;
+        this.visibleEndX = null;
+        this.visibleStartY = null;
+        this.visibleEndY = null;
+        this.lastVisibleCellIdx = null;
+        this.execeedTopState = false;
+        this.execeedBottomState = false;
+        this.execeedLeftState = false;
+        this.execeedRightState = false;
+
+        var reuseCellContainer = GridTable_GetValue(config, 'reuseCellContainer', false);
+        this.cellContainersPool = (reuseCellContainer) ? scene.add.group() : undefined;
+        var callback = GridTable_GetValue(config, 'cellVisibleCallback', null);
+        if (callback !== null) {
+            var scope = GridTable_GetValue(config, 'cellVisibleCallbackScope', undefined);
+            this.on('cellvisible', callback, scope);
+        }
+        callback = GridTable_GetValue(config, 'cellInvisibleCallback', null);
+        if (callback !== null) {
+            var scope = GridTable_GetValue(config, 'cellInvisibleCallbackScope', undefined);
+            this.on('cellinvisible', callback, scope);
+        }
+
+        this.cellsMask = undefined;
+        this.setCellsMask(GridTable_GetValue(config, 'mask', true));
+
+        this.setScrollMode(GridTable_GetValue(config, 'scrollMode', 0));
+        this.setClampMode(GridTable_GetValue(config, 'clamplTableOXY', true));
+
+        // Pre-process cell size
+        if (this.scrollMode === 0) { // scroll y
+            var cellWidth = GridTable_GetValue(config, 'cellWidth', undefined);
+            this.expandCellSize = (cellWidth === undefined);
+            if (cellWidth === undefined) {
+                var columns = GridTable_GetValue(config, 'columns', 1);
+                config.cellWidth = this.width / columns;
+            }
+        } else { // scroll x
+            // Swap cell width and cell height
+            var cellWidth = GridTable_GetValue(config, 'cellHeight', undefined);
+            var cellHeight = GridTable_GetValue(config, 'cellWidth', undefined);
+            this.expandCellSize = (cellWidth === undefined);
+            config.cellWidth = cellWidth;
+            config.cellHeight = cellHeight;
+        }
+        this.table = new gridtable_Table(this, config);
+
+        this.updateTable();
+    }
+
+    destroy(fromScene) {
+        //  This Game Object has already been destroyed
+        if (!this.scene) {
+            return;
+        }
+
+        this.table.destroy(fromScene);
+        this.table = undefined;
+        if (this.cellContainersPool) {
+            this.cellContainersPool.destroy(true);
+            this.cellContainersPool = undefined;
+        }
+        super.destroy(fromScene);
+    }
+
+    setScrollMode(mode) {
+        if (typeof (mode) === 'string') {
+            mode = SCROLLMODE[mode.toLowerCase()];
+        }
+        this.scrollMode = mode;
+        return this;
+    }
+
+    setClampMode(mode) {
+        this.clampTableOXYMode = mode;
+        return this;
+    }
+
+    get tableOY() {
+        return this._tableOY;
+    }
+
+    get tableOX() {
+        return this._tableOX;
+    }
+
+    set tableOY(oy) {
+        this.setTableOY(oy).updateTable();
+    }
+
+    set tableOX(ox) {
+        this.setTableOX(ox).updateTable();
+    }
+
+    setTableOXY(ox, oy) {
+        this.setTableOY(oy).setTableOX(ox);
+        return this;
+    }
+
+    addTableOY(dy) {
+        this.setTableOY(this.tableOY + dy);
+        return this;
+    }
+
+    addTableOX(dx) {
+        this.setTableOX(this.tableOX + dx);
+        return this;
+    }
+
+    addTableOXY(dx, dy) {
+        this.addTableOY(dy).addTableOX(dx);
+        return this;
+    }
+
+    setTableOYByPercentage(percentage) {
+        this.setTableOY(-this.tableVisibleHeight * percentage);
+        return this;
+    }
+
+    getTableOYPercentage() {
+        var tableVisibleHeight = this.tableVisibleHeight;
+        if (tableVisibleHeight === 0) {
+            return 0;
+        }
+        return (this.tableOY / -tableVisibleHeight);
+    }
+
+    set t(value) {
+        this.setTableOYByPercentage(value).updateTable();
+    }
+
+    get t() {
+        return this.getTableOYPercentage();
+    }
+
+    getCell(cellIdx) {
+        return this.table.getCell(cellIdx, true);
+    }
+
+    getCellContainer(cellIdx) {
+        var cell = this.table.getCell(cellIdx, false);
+        var container;
+        if (cell) {
+            container = cell.getContainer();
+        }
+        return container;
+    }
+
+    get cellsCount() {
+        return this.table.cellsCount;
+    }
+
+    get columnCount() {
+        return this.table.colCount;
+    }
+
+    setCellHeight(cellIdx, height) {
+        var cell;
+        if (typeof (cellIdx) === 'number') {
+            cell = this.table.getCell(cellIdx, true);
+        } else {
+            cell = cellIdx;
+        }
+        cell.height = height; // Only worked when scrollMode is 0
+        return this;
+    }
+
+    setCellWidth(cellIdx, width) {
+        var cell;
+        if (typeof (cellIdx) === 'number') {
+            cell = this.table.getCell(cellIdx, true);
+        } else {
+            cell = cellIdx;
+        }
+        cell.width = width; // Only worked when scrollMode is 1
+        return this;
+    }
+
+    setCellsMask(maskConfig) {
+        var maskEnable, maskPadding;
+        if (maskConfig === true) {
+            maskEnable = true;
+            maskPadding = 0;
+        } else if (maskConfig === false) {
+            maskEnable = false;
+        } else {
+            maskEnable = GridTable_GetValue(maskConfig, 'mask', true);
+            maskPadding = GridTable_GetValue(maskConfig, 'padding', 0);
+        }
+        if (maskEnable) {
+            var maskGameObject = new DefaultMask["a" /* default */](this, 0, maskPadding);
+            this.cellsMask = maskGameObject.createGeometryMask();
+            this.add(maskGameObject);
+        }
+
+        return this;
+    }
+
+    get instHeight() {
+        return (this.scrollMode === 0) ? this.height : this.width;
+    }
+
+    get instWidth() {
+        return (this.scrollMode === 0) ? this.width : this.height;
+    }
+
+    get tableHeight() {
+        return this.table.totalRowsHeight;
+    }
+
+    get tableWidth() {
+        return this.table.totalColumnWidth;
+    }
+
+    get topTableOY() {
+        return 0;
+    }
+
+    get bottomTableOY() {
+        return -this.tableVisibleHeight;
+    }
+
+    get leftTableOX() {
+        return 0;
+    }
+
+    get rightTableOX() {
+        return -this.tableVisibleWidth;
+    }
+
+    get tableVisibleHeight() {
+        var h;
+        var tableHeight = this.tableHeight;
+        var instHeight = this.instHeight;
+        if (tableHeight > instHeight) {
+            h = tableHeight - instHeight;
+        } else {
+            h = 0;
+        }
+
+        return h;
+    }
+
+    get tableVisibleWidth() {
+        var w;
+        var tableWidth = this.tableWidth;
+        var instWidth = this.instWidth;
+        if (tableWidth > instWidth) {
+            w = tableWidth - instWidth;
+        } else {
+            w = 0;
+        }
+        return w;
+    };
+
+    get bottomLeftY() {
+        return -(this.displayHeight * this.originY) + this.displayHeight;
+    }
+
+    get topRightX() {
+        return -(this.displayWidth * this.originX) + this.displayWidth;
+    }
+
+    get topLeftX() {
+        return -(this.displayWidth * this.originX);
+    }
+
+    get topLeftY() {
+        return -(this.displayHeight * this.originY)
+    }
+
+    get bottomBound() {
+        if (this.scrollMode === 0) {
+            return this.bottomLeftY;
+        } else {
+            return this.topRightX;
+        }
+    }
+
+    get rightBound() {
+        if (this.scrollMode === 0) {
+            return this.topRightX;
+        } else {
+            return this.bottomLeftY;
+        }
+    }
+
+    resize(width, height) {
+        if ((this.width === width) && (this.height === height)) {
+            return this;
+        }
+
+        super.resize(width, height);
+        if (this.cellsMask) {
+            Object(ResizeGameObject["a" /* default */])(Object(MaskToGameObject["a" /* default */])(this.cellsMask), width, height);
+        }
+
+        if (this.expandCellSize) {
+            this.table.setDefaultCellWidth(this.instWidth / this.table.colCount);
+        }
+        this.updateTable(true);
+        return this;
+    }
+};
+
+// mixin
+Object.assign(
+    GridTable_GridTable.prototype,
+    Components.GetBounds,
+    Methods
+);
+
+const SCROLLMODE = {
+    v: 0,
+    vertical: 0,
+    h: 1,
+    horizontal: 1
+};
+
+/* harmony default export */ var gridtable_GridTable = (GridTable_GridTable);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/InjectProperties.js
+var InjectProperties = function (table) {
+    Object.defineProperty(table, 'childOY', {
+        configurable: true,
+        get: function () {
+            return table.tableOY;
+        },
+        set: function (value) {
+            table.tableOY = value;
+        }
+    });
+    Object.defineProperty(table, 'topChildOY', {
+        get: function () {
+            return table.topTableOY;
+        }
+    });
+    Object.defineProperty(table, 'bottomChildOY', {
+        get: function () {
+            return table.bottomTableOY;
+        }
+    });
+};
+/* harmony default export */ var gridtable_InjectProperties = (InjectProperties);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/TableOnCellVisible.js
+var TableOnCellVisible = function (table) {
+    table.on('cellvisible', function (cell, cellContainer) {
+        var callback = this.createCellContainerCallback;
+        var scope = this.createCellContainerCallbackScope;
+        cell.item = this.items[cell.index];
+        var cellContainer;
+        if (scope) {
+            cellContainer = callback.call(scope, cell, cellContainer);
+        } else {
+            cellContainer = callback(cell, cellContainer);
+        }
+        if (cellContainer) {
+            if (cellContainer.setOrigin) {
+                cellContainer.setOrigin(0);
+            }
+            if (cellContainer.isRexSizer) {
+                cellContainer.layout(); // Use original size
+            }
+        }
+
+        cell.item = undefined;
+        cell.setContainer(cellContainer);
+    }, this);
+}
+/* harmony default export */ var gridtable_TableOnCellVisible = (TableOnCellVisible);
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
+var Button = __webpack_require__(165);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/EmitCellEvent.js
+var EmitCellEvent = function (eventEmitter, eventName, table, x, y) {
+    var cellIndex;
+    if (y === undefined) {
+        cellIndex = x;
+    } else {
+        cellIndex = table.pointerToCellIndex(x, y);
+    }
+    if ((cellIndex === null) || (cellIndex === undefined)) {
+        return;
+    }
+    var cellContainer = table.getCellContainer(cellIndex);
+    eventEmitter.emit(eventName, cellContainer, cellIndex);
+}
+
+/* harmony default export */ var input_EmitCellEvent = (EmitCellEvent);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/ClickCell.js
+
+
+
+var ClickCell = function (table, tableConfig) {
+    table._click = new Button["a" /* default */](table, {
+        threshold: 10
+    });
+    table._click.on('click', function (button, gameObject, pointer) {
+        input_EmitCellEvent(this.eventEmitter, 'cell.click', gameObject, pointer.x, pointer.y);
+    }, this);
+};
+
+/* harmony default export */ var input_ClickCell = (ClickCell);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/OverCell.js
+
+
+var OverCell = function (table, tableConfig) {
+    table
+        .on('pointermove', OnMove, this)
+        .on('pointerover', OnMove, this)
+        .on('pointerup', OnOut, this)
+        .on('pointerout', OnOut, this);
+}
+
+var OnMove = function (pointer) {
+    if (pointer.isDown) {
+        return;
+    }
+    var table = this.childrenMap.child;
+    var cellIndex = table.pointerToCellIndex(pointer.x, pointer.y);
+    if (cellIndex === this._lastOverCellIndex) {
+        return;
+    }
+
+    var preCellIndex = this._lastOverCellIndex;
+    this._lastOverCellIndex = cellIndex;
+    input_EmitCellEvent(this.eventEmitter, 'cell.out', table, preCellIndex);
+    input_EmitCellEvent(this.eventEmitter, 'cell.over', table, cellIndex);
+}
+
+var OnOut = function () {
+    var table = this.childrenMap.child;
+    var cellIndxe = this._lastOverCellIndex;
+    this._lastOverCellIndex = undefined;
+    input_EmitCellEvent(this.eventEmitter, 'cell.out', table, cellIndxe);
+}
+
+/* harmony default export */ var input_OverCell = (OverCell);
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/tap/Tap.js + 1 modules
+var Tap = __webpack_require__(295);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/TapCell.js
+
+
+
+const TapCell_GetValue = Phaser.Utils.Objects.GetValue;
+
+var TapCell = function (table, tableConfig) {
+    var tapConfig = TapCell_GetValue(tableConfig, 'press', undefined);
+    table._tap = new Tap["a" /* default */](table, tapConfig);
+    table._tap
+        .on('tap', function (tap) {
+            var eventName = `cell.${tap.tapsCount}tap`
+            input_EmitCellEvent(this.eventEmitter, eventName, tap.gameObject, tap.x, tap.y);
+        }, this)
+};
+
+/* harmony default export */ var input_TapCell = (TapCell);
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/press/Press.js + 1 modules
+var Press = __webpack_require__(294);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/PressCell.js
+
+
+
+const PressCell_GetValue = Phaser.Utils.Objects.GetValue;
+
+var PressCell = function (table, tableConfig) {
+    var pressConfig = PressCell_GetValue(tableConfig, 'press', undefined);
+    table._press = new Press["a" /* default */](table, pressConfig);
+    table._press
+        .on('pressstart', function (press) {
+            var cellIndex = table.pointerToCellIndex(press.x, press.y);
+            press._cellIndex = cellIndex;
+            input_EmitCellEvent(this.eventEmitter, 'cell.pressstart', table, cellIndex);
+        }, this)
+        .on('pressend', function (press) {
+            var cellIndex = press._cellIndex;
+            press._cellIndex = undefined;
+            input_EmitCellEvent(this.eventEmitter, 'cell.pressend', table, cellIndex);
+        }, this)
+};
+
+/* harmony default export */ var input_PressCell = (PressCell);
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/swipe/Swipe.js + 4 modules
+var Swipe = __webpack_require__(292);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/SwipeCell.js
+
+
+
+const SwipeCell_GetValue = Phaser.Utils.Objects.GetValue;
+
+var SwipeCell = function (table, tableConfig) {
+    var swipeConfig = SwipeCell_GetValue(tableConfig, 'swipe', undefined);
+    if (swipeConfig === undefined) {
+        swipeConfig = {};
+    }
+    swipeConfig.dir = '4dir';
+    table._swipe = new Swipe["a" /* default */](table, swipeConfig);
+    table._swipe
+        .on('swipe', function (swipe) {
+            var isValidSwipe = (table.scrollMode === 0) ? (swipe.left || swipe.right) : (swipe.up || swipe.down);
+            if (isValidSwipe) {
+                var cellIndex = table.pointerToCellIndex(swipe.x, swipe.y);
+                var dirName =
+                    (swipe.left) ? 'left' :
+                        (swipe.right) ? 'right' :
+                            (swipe.up) ? 'up' :
+                                'down';
+                input_EmitCellEvent(this.eventEmitter, `cell.swipe${dirName}`, table, cellIndex);
+            }
+        }, this)
+};
+
+/* harmony default export */ var input_SwipeCell = (SwipeCell);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/TableSetInteractive.js
+
+
+
+
+
+
+var TableSetInteractive = function (table, tableConfig) {
+    table.setInteractive();
+
+    input_ClickCell.call(this, table, tableConfig);
+    input_OverCell.call(this, table, tableConfig);
+    input_TapCell.call(this, table, tableConfig);
+    input_PressCell.call(this, table, tableConfig);
+    input_SwipeCell.call(this, table, tableConfig);
+}
+
+/* harmony default export */ var input_TableSetInteractive = (TableSetInteractive);
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/NOOP.js
+var NOOP = __webpack_require__(44);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/SetItems.js
+var SetItems = function (items) {
+    if (items === undefined) {
+        this.items.length = 0;
+    } else {
+        this.items = items;
+    }
+
+    var table = this.childrenMap.child;
+    table.setCellsCount(this.items.length);
+    table.updateTable(true);
+
+    this.resizeController();
+    return this;
+}
+
+/* harmony default export */ var gridtable_SetItems = (SetItems);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js
+
+
+
+
+
+
+
+
+
+const gridtable_GridTable_GetValue = Phaser.Utils.Objects.GetValue;
+class gridtable_GridTable_GridTable extends Scrollable["a" /* default */] {
+    constructor(scene, config) {
+        if (config === undefined) {
+            config = {};
+        }
+
+        // Create grid table core
+        var scrollMode = Object(GetScrollMode["a" /* default */])(config);
+        var tableConfig = gridtable_GridTable_GetValue(config, 'table', undefined)
+        if (tableConfig === undefined) {
+            tableConfig = {};
+        }
+        tableConfig.scrollMode = scrollMode;
+        tableConfig.clamplTableOXY = gridtable_GridTable_GetValue(config, 'clamplChildOY', false);
+        var tableWidth = gridtable_GridTable_GetValue(tableConfig, 'width', undefined);
+        var tableHeight = gridtable_GridTable_GetValue(tableConfig, 'height', undefined);
+        var table = new gridtable_GridTable(scene, 0, 0, tableWidth, tableHeight, tableConfig);
+        scene.add.existing(table); // Important: Add to display list for touch detecting
+        var proportion, expand;
+        if (scrollMode === 0) {
+            proportion = (tableWidth === undefined) ? 1 : 0;
+            expand = (tableHeight === undefined);
+        } else {
+            proportion = (tableHeight === undefined) ? 1 : 0;
+            expand = (tableWidth === undefined);
+        }
+        // Inject properties for scrollable interface
+        gridtable_InjectProperties(table);
+        // Fill config of scrollable
+        config.type = 'rexGridTable';
+        config.child = {
+            gameObject: table,
+            proportion: proportion,
+            expand: expand,
+        };
+        var spaceConfig = gridtable_GridTable_GetValue(config, 'space', undefined);
+        if (spaceConfig) {
+            spaceConfig.child = spaceConfig.table;
+        }
+        super(scene, config);
+
+        this.addChildrenMap('table', table);
+
+        this.eventEmitter = gridtable_GridTable_GetValue(config, 'eventEmitter', this);
+        var callback = gridtable_GridTable_GetValue(config, 'createCellContainerCallback', NOOP["a" /* default */]);
+        var scope = gridtable_GridTable_GetValue(config, 'createCellContainerCallbackScope', undefined);
+        this.setCreateCellContainerCallback(callback, scope);
+
+        gridtable_TableOnCellVisible.call(this, table);
+
+        if (gridtable_GridTable_GetValue(tableConfig, 'interactive', true)) {
+            input_TableSetInteractive.call(this, table, tableConfig);
+        }
+        this.setItems(gridtable_GridTable_GetValue(config, 'items', []));
+    }
+
+    set tableOX(ox) {
+        const table = this.getElement("table");
+        if (table) table.tableOX(ox);
+    }
+
+    set tableOY(oy) {
+        const table = this.getElement("table");
+        if (table) table.tableOY(oy);
+    }
+
+    setCreateCellContainerCallback(callback, scope) {
+        this.createCellContainerCallback = callback;
+        this.createCellContainerCallbackScope = scope;
+        return this;
+    }
+
+    refresh() {
+        this.setItems(this.items);
+        return this;
+    }
+}
+
+var methods = {
+    setItems: gridtable_SetItems
+}
+Object.assign(
+    gridtable_GridTable_GridTable.prototype,
+    methods
+);
+
+/* harmony default export */ var ui_gridtable_GridTable = __webpack_exports__["a"] = (gridtable_GridTable_GridTable);
 
 /***/ }),
 /* 287 */
@@ -41005,7 +44529,7 @@ Object.assign(
 var BaseSizer = __webpack_require__(94);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetBoundsConfig.js
-var GetBoundsConfig = __webpack_require__(127);
+var GetBoundsConfig = __webpack_require__(126);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/text/IsTextGameObject.js
 const TextKlass = Phaser.GameObjects.Text;
@@ -41016,7 +44540,7 @@ var IsTextGameObject = function (gameObject) {
 
 /* harmony default export */ var text_IsTextGameObject = (IsTextGameObject);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(77);
+var DefaultMask = __webpack_require__(78);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/textblock/SetTextObject.js
 
@@ -41151,7 +44675,7 @@ var ResizeText = function (textObject, width, height) {
 
 /* harmony default export */ var textblock_ResizeText = (ResizeText);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/actions/GlobZone.js
-var GlobZone = __webpack_require__(57);
+var GlobZone = __webpack_require__(58);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/align/align/in/QuickSet.js + 23 modules
 var QuickSet = __webpack_require__(36);
@@ -41454,11 +44978,11 @@ Object.assign(
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/render/WebGLRenderer.js
-var WebGLRenderer = __webpack_require__(384);
+var WebGLRenderer = __webpack_require__(385);
 var WebGLRenderer_default = /*#__PURE__*/__webpack_require__.n(WebGLRenderer);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/render/CanvasRenderer.js
-var CanvasRenderer = __webpack_require__(385);
+var CanvasRenderer = __webpack_require__(386);
 var CanvasRenderer_default = /*#__PURE__*/__webpack_require__.n(CanvasRenderer);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/NOOP.js
@@ -41486,7 +45010,7 @@ if (true) {
 
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules
-var TextStyle = __webpack_require__(222);
+var TextStyle = __webpack_require__(217);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/canvastext/DrawMethods.js
 /* harmony default export */ var DrawMethods = ({
@@ -41673,7 +45197,7 @@ var TextStyle = __webpack_require__(222);
 
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/pool.js + 1 modules
-var pool = __webpack_require__(65);
+var pool = __webpack_require__(67);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/const.js
 var textbase_const = __webpack_require__(47);
@@ -41755,7 +45279,7 @@ class Pen {
 
 /* harmony default export */ var penmanger_Pen = (Pen);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clone.js
-var Clone = __webpack_require__(129);
+var Clone = __webpack_require__(128);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/penmanger/PenManager.js
 
@@ -43546,18 +47070,18 @@ Object.assign(
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ decorate_room_DecorateRoom; });
 
 // EXTERNAL MODULE: ./src/rooms/cameras/viewblock.manager.ts + 1 modules
-var viewblock_manager = __webpack_require__(294);
+var viewblock_manager = __webpack_require__(296);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/cameras.manager.ts + 1 modules
-var cameras_manager = __webpack_require__(219);
+var cameras_manager = __webpack_require__(218);
 
 // EXTERNAL MODULE: ./src/rooms/layer/layer.manager.ts + 1 modules
-var layer_manager = __webpack_require__(218);
+var layer_manager = __webpack_require__(216);
 
 // EXTERNAL MODULE: ./src/utils/position45.ts
 var position45 = __webpack_require__(40);
 
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(3);
 
 // EXTERNAL MODULE: ./src/utils/pos.ts
@@ -43567,22 +47091,22 @@ var utils_pos = __webpack_require__(12);
 var dist = __webpack_require__(4);
 
 // EXTERNAL MODULE: ./src/scenes/loading.ts
-var loading = __webpack_require__(67);
+var loading = __webpack_require__(68);
 
 // EXTERNAL MODULE: ./src/scenes/play.ts
-var play = __webpack_require__(73);
+var play = __webpack_require__(74);
 
 // EXTERNAL MODULE: ./src/utils/log.ts
 var log = __webpack_require__(9);
 
 // EXTERNAL MODULE: ./src/rooms/display/display.object.ts
-var display_object = __webpack_require__(53);
+var display_object = __webpack_require__(54);
 
 // EXTERNAL MODULE: ./src/rooms/display/terrain.display.ts
-var terrain_display = __webpack_require__(111);
+var terrain_display = __webpack_require__(110);
 
 // EXTERNAL MODULE: ./src/rooms/element/element.manager.ts
-var element_manager = __webpack_require__(68);
+var element_manager = __webpack_require__(69);
 
 // EXTERNAL MODULE: ./src/rooms/element/sprite.ts
 var element_sprite = __webpack_require__(25);
@@ -43734,7 +47258,7 @@ var decorate_element_manager_DecorateElementManager = /** @class */ (function (_
 var MessageType = __webpack_require__(13);
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.manager.ts
-var terrain_manager = __webpack_require__(110);
+var terrain_manager = __webpack_require__(109);
 
 // CONCATENATED MODULE: ./src/rooms/terrain/decorate.terrain.manager.ts
 var decorate_terrain_manager_extends = (undefined && undefined.__extends) || (function () {
@@ -43845,10 +47369,10 @@ var decorate_terrain_manager_DecorateTerrainManager = /** @class */ (function (_
 
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.model.ts
-var frames_model = __webpack_require__(70);
+var frames_model = __webpack_require__(71);
 
 // EXTERNAL MODULE: ./src/rooms/display/animation.ts
-var display_animation = __webpack_require__(107);
+var display_animation = __webpack_require__(106);
 
 // CONCATENATED MODULE: ./src/rooms/decorate/spawn.point.ts
 
@@ -43950,7 +47474,7 @@ var spawn_point_SpawnPoint = /** @class */ (function () {
 
 
 // EXTERNAL MODULE: ./src/ui/decorate/decorate.manager.ts
-var decorate_manager = __webpack_require__(112);
+var decorate_manager = __webpack_require__(111);
 
 // CONCATENATED MODULE: ./src/rooms/decorate/selector.element.ts
 
@@ -45182,7 +48706,7 @@ var LineTo = function (x, y, out) {
 
 /* harmony default export */ var utils_LineTo = (LineTo);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/math/DegToRad.js
-var DegToRad = __webpack_require__(376);
+var DegToRad = __webpack_require__(377);
 var DegToRad_default = /*#__PURE__*/__webpack_require__.n(DegToRad);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/shape/utils/ArcTo.js
@@ -45209,15 +48733,15 @@ var ArcTo = function (centerX, centerY, radiusX, radiusY, startAngle, endAngle, 
 }
 /* harmony default export */ var utils_ArcTo = (ArcTo);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/geom/polygon/Earcut.js
-var Earcut = __webpack_require__(377);
+var Earcut = __webpack_require__(378);
 var Earcut_default = /*#__PURE__*/__webpack_require__.n(Earcut);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/render/WebGLRenderer.js
-var WebGLRenderer = __webpack_require__(378);
+var WebGLRenderer = __webpack_require__(379);
 var WebGLRenderer_default = /*#__PURE__*/__webpack_require__.n(WebGLRenderer);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/render/CanvasRenderer.js
-var CanvasRenderer = __webpack_require__(381);
+var CanvasRenderer = __webpack_require__(382);
 var CanvasRenderer_default = /*#__PURE__*/__webpack_require__.n(CanvasRenderer);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/NOOP.js
@@ -45444,175 +48968,122 @@ Object.assign(
 
 "use strict";
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ viewblock_manager_ViewblockManager; });
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js + 1 modules
+var OnePointerTracer = __webpack_require__(95);
 
-// CONCATENATED MODULE: ./src/rooms/cameras/viewblock.ts
-/**
- * 显示区域
- */
-var Viewblock = /** @class */ (function () {
-    function Viewblock(mRect, index) {
-        this.mRect = mRect;
-        // private mElements: IElement[] = [];
-        this.mElements = new Map();
-        this.mIndex = index;
-    }
-    Viewblock.prototype.add = function (element, miniViewPort) {
-        // this.mElements.push(element);
-        this.mElements.set(element.id, element);
-        if (!miniViewPort) {
-            return;
-        }
-        var pos = element.getPosition45();
-        element.setRenderable(miniViewPort.contains(pos.x, pos.y) && this.mInCamera);
-    };
-    Viewblock.prototype.remove = function (ele) {
-        // const index = this.mElements.indexOf(ele);
-        // if (index !== -1) {
-        //     this.mElements.splice(index, 1);
-        //     return true;
-        // }
-        return this.mElements.delete(ele.id);
-    };
-    // tick running... powered by manager.
-    Viewblock.prototype.check = function (bound, miniViewPort) {
-        if (!bound)
-            return;
-        var newStat = Phaser.Geom.Intersects.RectangleToRectangle(bound, this.rectangle);
-        // if (this.mInCamera !== newStat) {
-        //     for (const e of this.mElements) {
-        //         根据情况看是否需要提前加载
-        //         e.setRenderable(newStat);
-        //     }
-        // }
-        if (!miniViewPort)
-            return;
-        if (this.mInCamera) {
-            // for (const ele of this.mElements) {
-            //     const pos = ele.getPosition45();
-            //     ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1000);
-            // }
-            this.mElements.forEach(function (ele) {
-                var pos = ele.getPosition45();
-                ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 0);
-            });
-        }
-        this.mInCamera = newStat;
-    };
-    Viewblock.prototype.getElement = function (id) {
-        return this.mElements.get(id);
-    };
-    Object.defineProperty(Viewblock.prototype, "rectangle", {
-        get: function () {
-            return this.mRect || undefined;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Viewblock.prototype, "inCamera", {
-        get: function () {
-            return this.mInCamera;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Viewblock;
-}());
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/fsm.js + 1 modules
+var fsm = __webpack_require__(38);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/input/gestures/press/Press.js
 
 
-// CONCATENATED MODULE: ./src/rooms/cameras/viewblock.manager.ts
 
-var viewblock_manager_ViewblockManager = /** @class */ (function () {
-    function ViewblockManager(cameras) {
-        this.mBlocks = [];
-        this.mDelay = 0;
-        this.mCameras = cameras;
-    }
-    ViewblockManager.prototype.add = function (e) {
-        if (!this.mCameras)
-            return false;
-        var miniView = this.mCameras.getMiniViewPort();
-        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
-            var block = _a[_i];
-            var rect = block.rectangle;
-            var ePos = e.getPosition();
-            if (!ePos)
-                return;
-            if (rect.contains(ePos.x, ePos.y)) {
-                block.add(e, miniView);
-                return;
-            }
-        }
-    };
-    ViewblockManager.prototype.remove = function (e) {
-        if (!e)
-            return;
-        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
-            var block = _a[_i];
-            if (block.remove(e)) {
-                return;
-            }
-        }
-    };
-    ViewblockManager.prototype.check = function (e) {
-        if (!e)
-            return;
-        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
-            var block = _a[_i];
-            if (block.inCamera) {
-                var rect = block.rectangle;
-                var pos = e.getPosition();
-                if (rect.contains(pos.x, pos.y)) {
-                    if (!block.getElement(e.id)) {
-                        this.remove(e);
-                        block.add(e);
+const GetValue = Phaser.Utils.Objects.GetValue;
+
+class Press_Press extends OnePointerTracer["a" /* default */] {
+    constructor(gameObject, config) {
+        super(gameObject, config);
+
+        var self = this;
+        var stateConfig = {
+            states: {
+                IDLE: {
+                    enter: function () {
+                        self.x = 0;
+                        self.y = 0;
+                        self.worldX = 0;
+                        self.worldY = 0;
+                    },
+                    exit: function () {
+                        var pointer = self.lastPointer;
+                        self.x = pointer.x;
+                        self.y = pointer.y;
+                        self.worldX = pointer.worldX;
+                        self.worldY = pointer.worldY;
                     }
-                    return;
+                },
+                BEGIN: {
+                    enter: function () {
+                        self.start();
+                    },
+                    exit: function () {
+                        self.stop();
+                    }
+                },
+                RECOGNIZED: {
+                    enter: function () {
+                        self.emit('pressstart', self, self.gameObject, self.lastPointer);
+                    },
+                    exit: function () {
+                        self.emit('pressend', self, self.gameObject, self.lastPointer);
+                    }
                 }
-            }
+            },
+            init: function () {
+                this.state = IDLE;
+            },
+            eventEmitter: false,
         }
-    };
-    ViewblockManager.prototype.int = function (size) {
-        if (!size) {
+        this.setRecongizedStateObject(new fsm["a" /* default */](stateConfig));
+    }
+
+    resetFromJSON(o) {
+        super.resetFromJSON(o);
+        this.setDragThreshold(GetValue(o, 'threshold', 9));
+        this.setMinHoldTime(GetValue(o, 'time', 251));
+        return this;
+    }
+
+    onDragStart() {
+        this.state = (this.holdTime === 0) ? RECOGNIZED : BEGIN;
+    }
+
+    onDragEnd() {
+        this.state = IDLE;
+    }
+
+    onDrag() {
+        if (this.state === IDLE) {
             return;
         }
-        this.mBlocks = [];
-        var colSize = 10;
-        var viewW = (colSize + colSize) * (size.tileWidth / 2);
-        var viewH = (colSize + colSize) * (size.tileHeight / 2);
-        var blockW = size.sceneWidth / viewW;
-        var blockH = size.sceneHeight / viewH;
-        var index = 0;
-        for (var i = 0; i < blockW; i++) {
-            for (var j = 0; j < blockH; j++) {
-                var block = new Viewblock(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH), index++);
-                this.mBlocks.push(block);
-                // this.layerManager.addToAtmosphere(block.drawBoard(this.scene));
+
+        if (this.pointer.getDistance() > this.dragThreshold) {
+            this.state = IDLE;
+        }
+    }
+
+    preUpdate(time, delta) {
+        if (this.state === BEGIN) {
+            var holdTime = time - this.pointer.downTime;
+            if (holdTime >= this.holdTime) {
+                this.state = RECOGNIZED;
             }
         }
-    };
-    ViewblockManager.prototype.update = function (time, delta) {
-        if (!this.mCameras)
-            return;
-        // if (time - this.mDelay < 3000) {
-        //     return;
-        // }
-        this.mDelay = time;
-        var bound = this.mCameras.getViewPort();
-        var miniViewPort = this.mCameras.getMiniViewPort();
-        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
-            var block = _a[_i];
-            block.check(bound, miniViewPort);
-        }
-    };
-    ViewblockManager.prototype.destroy = function () {
-        this.mDelay = 0;
-    };
-    return ViewblockManager;
-}());
+    }
 
+    get isPressed() {
+        return (this.state === RECOGNIZED);
+    }
 
+    setDragThreshold(distance) {
+        this.dragThreshold = distance;
+        return this;
+    }
+
+    setMinHoldTime(time) {
+        this.holdTime = time; // ms
+        return this;
+    }
+}
+
+const IDLE = 'IDLE';
+const BEGIN = 'BEGIN';
+const RECOGNIZED = 'RECOGNIZED';
+
+/* harmony default export */ var press_Press = (Press_Press);
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/press/Press.js
+
+/* harmony default export */ var ui_press_Press = __webpack_exports__["a"] = (press_Press);
 
 /***/ }),
 /* 295 */
@@ -45829,122 +49300,175 @@ const RECOGNIZED = 'RECOGNIZED';
 
 "use strict";
 
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js + 1 modules
-var OnePointerTracer = __webpack_require__(95);
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ viewblock_manager_ViewblockManager; });
 
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/fsm.js + 1 modules
-var fsm = __webpack_require__(38);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/input/gestures/press/Press.js
-
-
-
-const GetValue = Phaser.Utils.Objects.GetValue;
-
-class Press_Press extends OnePointerTracer["a" /* default */] {
-    constructor(gameObject, config) {
-        super(gameObject, config);
-
-        var self = this;
-        var stateConfig = {
-            states: {
-                IDLE: {
-                    enter: function () {
-                        self.x = 0;
-                        self.y = 0;
-                        self.worldX = 0;
-                        self.worldY = 0;
-                    },
-                    exit: function () {
-                        var pointer = self.lastPointer;
-                        self.x = pointer.x;
-                        self.y = pointer.y;
-                        self.worldX = pointer.worldX;
-                        self.worldY = pointer.worldY;
-                    }
-                },
-                BEGIN: {
-                    enter: function () {
-                        self.start();
-                    },
-                    exit: function () {
-                        self.stop();
-                    }
-                },
-                RECOGNIZED: {
-                    enter: function () {
-                        self.emit('pressstart', self, self.gameObject, self.lastPointer);
-                    },
-                    exit: function () {
-                        self.emit('pressend', self, self.gameObject, self.lastPointer);
-                    }
-                }
-            },
-            init: function () {
-                this.state = IDLE;
-            },
-            eventEmitter: false,
-        }
-        this.setRecongizedStateObject(new fsm["a" /* default */](stateConfig));
+// CONCATENATED MODULE: ./src/rooms/cameras/viewblock.ts
+/**
+ * 显示区域
+ */
+var Viewblock = /** @class */ (function () {
+    function Viewblock(mRect, index) {
+        this.mRect = mRect;
+        // private mElements: IElement[] = [];
+        this.mElements = new Map();
+        this.mIndex = index;
     }
-
-    resetFromJSON(o) {
-        super.resetFromJSON(o);
-        this.setDragThreshold(GetValue(o, 'threshold', 9));
-        this.setMinHoldTime(GetValue(o, 'time', 251));
-        return this;
-    }
-
-    onDragStart() {
-        this.state = (this.holdTime === 0) ? RECOGNIZED : BEGIN;
-    }
-
-    onDragEnd() {
-        this.state = IDLE;
-    }
-
-    onDrag() {
-        if (this.state === IDLE) {
+    Viewblock.prototype.add = function (element, miniViewPort) {
+        // this.mElements.push(element);
+        this.mElements.set(element.id, element);
+        if (!miniViewPort) {
             return;
         }
-
-        if (this.pointer.getDistance() > this.dragThreshold) {
-            this.state = IDLE;
+        var pos = element.getPosition45();
+        element.setRenderable(miniViewPort.contains(pos.x, pos.y) && this.mInCamera);
+    };
+    Viewblock.prototype.remove = function (ele) {
+        // const index = this.mElements.indexOf(ele);
+        // if (index !== -1) {
+        //     this.mElements.splice(index, 1);
+        //     return true;
+        // }
+        return this.mElements.delete(ele.id);
+    };
+    // tick running... powered by manager.
+    Viewblock.prototype.check = function (bound, miniViewPort) {
+        if (!bound)
+            return;
+        var newStat = Phaser.Geom.Intersects.RectangleToRectangle(bound, this.rectangle);
+        // if (this.mInCamera !== newStat) {
+        //     for (const e of this.mElements) {
+        //         根据情况看是否需要提前加载
+        //         e.setRenderable(newStat);
+        //     }
+        // }
+        if (!miniViewPort)
+            return;
+        if (this.mInCamera) {
+            // for (const ele of this.mElements) {
+            //     const pos = ele.getPosition45();
+            //     ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1000);
+            // }
+            this.mElements.forEach(function (ele) {
+                var pos = ele.getPosition45();
+                ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 0);
+            });
         }
-    }
+        this.mInCamera = newStat;
+    };
+    Viewblock.prototype.getElement = function (id) {
+        return this.mElements.get(id);
+    };
+    Object.defineProperty(Viewblock.prototype, "rectangle", {
+        get: function () {
+            return this.mRect || undefined;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Viewblock.prototype, "inCamera", {
+        get: function () {
+            return this.mInCamera;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Viewblock;
+}());
 
-    preUpdate(time, delta) {
-        if (this.state === BEGIN) {
-            var holdTime = time - this.pointer.downTime;
-            if (holdTime >= this.holdTime) {
-                this.state = RECOGNIZED;
+
+// CONCATENATED MODULE: ./src/rooms/cameras/viewblock.manager.ts
+
+var viewblock_manager_ViewblockManager = /** @class */ (function () {
+    function ViewblockManager(cameras) {
+        this.mBlocks = [];
+        this.mDelay = 0;
+        this.mCameras = cameras;
+    }
+    ViewblockManager.prototype.add = function (e) {
+        if (!this.mCameras)
+            return false;
+        var miniView = this.mCameras.getMiniViewPort();
+        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
+            var block = _a[_i];
+            var rect = block.rectangle;
+            var ePos = e.getPosition();
+            if (!ePos)
+                return;
+            if (rect.contains(ePos.x, ePos.y)) {
+                block.add(e, miniView);
+                return;
             }
         }
-    }
+    };
+    ViewblockManager.prototype.remove = function (e) {
+        if (!e)
+            return;
+        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
+            var block = _a[_i];
+            if (block.remove(e)) {
+                return;
+            }
+        }
+    };
+    ViewblockManager.prototype.check = function (e) {
+        if (!e)
+            return;
+        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
+            var block = _a[_i];
+            if (block.inCamera) {
+                var rect = block.rectangle;
+                var pos = e.getPosition();
+                if (rect.contains(pos.x, pos.y)) {
+                    if (!block.getElement(e.id)) {
+                        this.remove(e);
+                        block.add(e);
+                    }
+                    return;
+                }
+            }
+        }
+    };
+    ViewblockManager.prototype.int = function (size) {
+        if (!size) {
+            return;
+        }
+        this.mBlocks = [];
+        var colSize = 10;
+        var viewW = (colSize + colSize) * (size.tileWidth / 2);
+        var viewH = (colSize + colSize) * (size.tileHeight / 2);
+        var blockW = size.sceneWidth / viewW;
+        var blockH = size.sceneHeight / viewH;
+        var index = 0;
+        for (var i = 0; i < blockW; i++) {
+            for (var j = 0; j < blockH; j++) {
+                var block = new Viewblock(new Phaser.Geom.Rectangle(i * viewW, j * viewH, viewW, viewH), index++);
+                this.mBlocks.push(block);
+                // this.layerManager.addToAtmosphere(block.drawBoard(this.scene));
+            }
+        }
+    };
+    ViewblockManager.prototype.update = function (time, delta) {
+        if (!this.mCameras)
+            return;
+        // if (time - this.mDelay < 3000) {
+        //     return;
+        // }
+        this.mDelay = time;
+        var bound = this.mCameras.getViewPort();
+        var miniViewPort = this.mCameras.getMiniViewPort();
+        for (var _i = 0, _a = this.mBlocks; _i < _a.length; _i++) {
+            var block = _a[_i];
+            block.check(bound, miniViewPort);
+        }
+    };
+    ViewblockManager.prototype.destroy = function () {
+        this.mDelay = 0;
+    };
+    return ViewblockManager;
+}());
 
-    get isPressed() {
-        return (this.state === RECOGNIZED);
-    }
 
-    setDragThreshold(distance) {
-        this.dragThreshold = distance;
-        return this;
-    }
-
-    setMinHoldTime(time) {
-        this.holdTime = time; // ms
-        return this;
-    }
-}
-
-const IDLE = 'IDLE';
-const BEGIN = 'BEGIN';
-const RECOGNIZED = 'RECOGNIZED';
-
-/* harmony default export */ var press_Press = (Press_Press);
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/press/Press.js
-
-/* harmony default export */ var ui_press_Press = __webpack_exports__["a"] = (press_Press);
 
 /***/ }),
 /* 297 */,
@@ -62321,7 +65845,7 @@ var dragonBones;
 "use strict";
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var buffer___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(66);
+/* harmony import */ var buffer___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
 /* harmony import */ var buffer___WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(buffer___WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
 /* harmony import */ var worker_loader_name_js_hash_name_js_networker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(329);
@@ -62508,7 +66032,7 @@ var Connection = /** @class */ (function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/635a774b31b5ec346e33.networker.js");
+  return new Worker(__webpack_require__.p + "js/a11e449e7de6a5f54edd.networker.js");
 };
 
 /***/ }),
@@ -62516,13 +66040,14 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/1d553e60aca1a0e2cf92.heartbeatworker.js");
+  return new Worker(__webpack_require__.p + "js/b3e50e8857f42ba0353b.heartbeatworker.js");
 };
 
 /***/ }),
 /* 331 */,
 /* 332 */,
-/* 333 */
+/* 333 */,
+/* 334 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62869,7 +66394,7 @@ var KeyBoardManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62880,7 +66405,7 @@ var KeyBoardManager = /** @class */ (function (_super) {
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
-/* harmony import */ var _rooms_display_frames_display__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(69);
+/* harmony import */ var _rooms_display_frames_display__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(70);
 /* harmony import */ var _rooms_element_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(21);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -63059,7 +66584,7 @@ var MouseManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -63476,16 +67001,16 @@ var JoyStick = /** @class */ (function () {
 
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ElementStorage; });
-/* harmony import */ var _rooms_display_frames_model__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(70);
+/* harmony import */ var _rooms_display_frames_model__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _rooms_display_animation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(107);
+/* harmony import */ var _rooms_display_animation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
 
 
 
@@ -63668,7 +67193,7 @@ var ElementStorage = /** @class */ (function () {
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -63697,7 +67222,7 @@ function checkIsFriend(uids) {
             "X-Pixelpai-TK": ""
         }
     };
-    return fetch("http://172.18.0.100:17170/" + "/user/check_followed", data);
+    return fetch("https://api-dev.tooqing.com/" + "/user/check_followed", data);
 }
 function get(input, init) {
     return fetch(input, init);
@@ -63705,11 +67230,684 @@ function get(input, init) {
 
 
 /***/ }),
-/* 338 */,
-/* 339 */,
+/* 339 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+const capsule_1 = __webpack_require__(238);
+exports.Capsule = capsule_1.default;
+const constants_1 = __webpack_require__(56);
+exports.Constants = constants_1.default;
+const lite_1 = __webpack_require__(376);
+exports.Lite = lite_1.default;
+const helpers_1 = __webpack_require__(28);
+exports.Helpers = helpers_1.default;
+__export(__webpack_require__(55));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
 /* 340 */,
-/* 341 */,
-/* 342 */,
+/* 341 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const configobjects_1 = __webpack_require__(55);
+const scene_1 = __webpack_require__(247);
+const character_1 = __webpack_require__(248);
+const terrain_1 = __webpack_require__(115);
+const package_1 = __webpack_require__(119);
+const location_1 = __webpack_require__(117);
+const shop_1 = __webpack_require__(249);
+const scenery_1 = __webpack_require__(250);
+class ConfigObjectFactory {
+    constructor(_cap) {
+        this._cap = _cap;
+    }
+    element(parent) {
+        const parentNode = parent || this._cap.root;
+        const entity = new configobjects_1.ElementNode(this._cap, parentNode);
+        this._cap.addObject(entity);
+        return entity;
+    }
+    spawnpoint(parent) {
+        const parentNode = parent || this._cap.root;
+        const spawnpoint = new configobjects_1.SpawnPointNode(this._cap, parentNode);
+        this._cap.addObject(spawnpoint);
+        return spawnpoint;
+    }
+    terrain(parent) {
+        const parentNode = parent || this._cap.root;
+        const t = new terrain_1.TerrainNode(this._cap, parentNode);
+        this._cap.addObject(t);
+        return t;
+    }
+    attr(parent) {
+        const attr = new configobjects_1.AttributeNode(this._cap, parent);
+        this._cap.addObject(attr);
+        return attr;
+    }
+    func(parent) {
+        const func = new configobjects_1.FunctionNode(this._cap, parent);
+        this._cap.addObject(func);
+        return func;
+    }
+    event(parent) {
+        const event = new configobjects_1.EventNode(this._cap, parent);
+        this._cap.addObject(event);
+        return event;
+    }
+    ui(parent) {
+        const ui = new configobjects_1.UINode(this._cap, parent);
+        this._cap.addObject(ui);
+        return ui;
+    }
+    // now time we only link timer to the game object.
+    timer(parent) {
+        const timer = new configobjects_1.TimerNode(this._cap, parent);
+        this._cap.addObject(timer);
+        return timer;
+    }
+    scene(rows, cols, name) {
+        const scene = new scene_1.default(this._cap, this._cap.root);
+        if (name) {
+            scene.name = name;
+        }
+        this._cap.addObject(scene);
+        const size = new configobjects_1.MapSizeNode(this._cap, scene);
+        size.rows = rows;
+        size.cols = cols;
+        this._cap.addObject(size);
+        const tc = new scene_1.TerrainCollectionNode(this._cap, scene);
+        tc.initTerrainCollection(rows, cols);
+        this._cap.addObject(tc);
+        const mc = new scene_1.MossCollectionNode(this._cap, scene);
+        this._cap.addObject(mc);
+        return scene;
+    }
+    scenery(parent) {
+        const scenery = new scenery_1.default(this._cap, parent);
+        this._cap.addObject(scenery);
+        return scenery;
+    }
+    character() {
+        const c = new character_1.default(this._cap, this._cap.root);
+        this._cap.addObject(c);
+        const camp = this.camp(1, c);
+        this._cap.addObject(camp);
+        const avatar = new configobjects_1.AvatarNode(this._cap, c);
+        this._cap.addObject(avatar);
+        return c;
+    }
+    camp(max_players, parent) {
+        const ca = new configobjects_1.CampNode(this._cap, parent);
+        ca.maxPlayers = max_players;
+        this._cap.addObject(ca);
+        return ca;
+    }
+    package(parent) {
+        const pkg = new package_1.default(this._cap, parent);
+        this._cap.addObject(pkg);
+        return pkg;
+    }
+    packageItem(parent) {
+        const pkgItem = new package_1.PackageItemNode(this._cap, parent);
+        this._cap.addObject(pkgItem);
+        return pkgItem;
+    }
+    animationdata(parent, name) {
+        if (!parent) {
+            return;
+        }
+        if (name && parent.checkSameName(name)) {
+            throw Error("重复的动画名称");
+        }
+        const ani = new configobjects_1.AnimationDataNode(this._cap, parent);
+        if (name)
+            ani.name = name;
+        this._cap.addObject(ani);
+        return ani;
+    }
+    animations(parent) {
+        const ani = new configobjects_1.AnimationsNode(this._cap, parent);
+        this._cap.addObject(ani);
+        return ani;
+    }
+    location(parent) {
+        const lo = new location_1.default(this._cap, parent);
+        this._cap.addObject(lo);
+        return lo;
+    }
+    display(parent) {
+        const display = new configobjects_1.DisplayNode(this._cap, parent);
+        this._cap.addObject(display);
+        return display;
+    }
+    shop(parent) {
+        const pkg = new shop_1.default(this._cap, parent);
+        this._cap.addObject(pkg);
+        return pkg;
+    }
+    shopItem(parent) {
+        const item = new shop_1.ShopItemNode(this._cap, parent);
+        this._cap.addObject(item);
+        return item;
+    }
+    commodity(parent) {
+        const com = new shop_1.CommodityNode(this._cap, parent);
+        this._cap.addObject(com);
+        return com;
+    }
+}
+exports.default = ConfigObjectFactory;
+//# sourceMappingURL=config_object_factory.js.map
+
+/***/ }),
+/* 342 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+const terrain_1 = __webpack_require__(115);
+const attribute_1 = __webpack_require__(244);
+const element_1 = __webpack_require__(116);
+const helpers_1 = __webpack_require__(28);
+class GameNode extends config_object_1.BaseConfigObject {
+    constructor(cap) {
+        super(cap);
+        this._scenes = [];
+        // Game node is the only TOP node in a Capsule.
+        this.parent = 0;
+        this._settings = new SettingsNode(cap, this);
+        this._palette = new PaletteNode(cap, this);
+        this._moss = new MossNode(cap, this);
+        this._assets = new AssetsNode(cap, this);
+    }
+    get properties() {
+        return {};
+    }
+    get settings() {
+        return this._settings;
+    }
+    get palette() {
+        return this._palette;
+    }
+    get moss() {
+        return this._moss;
+    }
+    get assets() {
+        return this._assets;
+    }
+    get scenes() {
+        return this._scenes;
+    }
+    set scenes(val) {
+        if (val) {
+            this._scenes = val;
+        }
+    }
+    serialize(container) {
+        // DO NOT INVOKE super.serialize()
+        // serialize Metadata.
+        container.node = this.makeNode();
+        if (!container.node.name) {
+            container.node.name = "Game";
+        }
+        // serialize Settings
+        this._settings.serialize(container);
+        this._palette.serialize(container);
+        this._assets.serialize(container);
+        this._moss.serialize(container);
+        this.serializeScenes(container);
+    }
+    serializeScenes(container) {
+        container.scenes = this.cap.root.children
+            .filter((node) => node.type === pixelpai_proto_1.op_def.NodeType.SceneNodeType)
+            .map((node) => {
+            return {
+                id: node.id,
+                name: node.name,
+            };
+        });
+    }
+    deserialize(container) {
+        // DO NOT INVOKE super.deserialize()
+        // deserialize Metadata
+        this.setNode(container.node);
+        this._settings.deserialize(container);
+        this._assets.deserialize(container);
+        this.scenes = container.scenes;
+    }
+    preDeserializePalettes(container) {
+        this._palette.preDeserialize(container);
+        this._moss.preDeserizlize(container);
+    }
+    deserializePalettes(container) {
+        this._palette.deserialize();
+        this._moss.deserialize();
+    }
+}
+exports.default = GameNode;
+class SettingsNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._spawn_point = 0;
+        this._max_number = 10;
+        this._sceneid = 0;
+    }
+    get spawnpoint() {
+        return this._spawn_point;
+    }
+    set spawnpoint(id) {
+        this._spawn_point = id;
+    }
+    get maxNumber() {
+        return this._max_number;
+    }
+    set maxNumber(v) {
+        if (v) {
+            this._max_number = v;
+        }
+    }
+    set sceneid(v) {
+        if (v) {
+            this._sceneid = v;
+        }
+    }
+    get sceneid() {
+        return this._sceneid;
+    }
+    get properties() {
+        return {
+            sceneid: this._sceneid,
+            spawnpoint: this._spawn_point,
+            maxNumber: this._max_number,
+        };
+    }
+    serialize(container) {
+        const self = this;
+        container.settings = pixelpai_proto_1.op_gameconfig_01.Settings.create();
+        container.settings.node = self.makeNode();
+        if (self.maxNumber) {
+            container.settings.maxNumber = self.maxNumber;
+        }
+        else {
+            container.settings.maxNumber = null;
+        }
+        if (self.sceneid) {
+            container.settings.sceneid = self.sceneid;
+        }
+        if (self.spawnpoint) {
+            container.settings.spawnpointid = self.spawnpoint;
+        }
+    }
+    deserialize(container) {
+        const settings = container.settings;
+        if (settings) {
+            this.setNode(settings.node);
+            if (settings.sceneid) {
+                this._sceneid = settings.sceneid;
+            }
+            this._spawn_point = settings.spawnpointid;
+            if (settings.maxNumber) {
+                this._max_number = settings.maxNumber;
+            }
+            else {
+                this._max_number = null;
+            }
+        }
+    }
+}
+exports.SettingsNode = SettingsNode;
+class PaletteNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._peers = [];
+        this._peersDict = new Map();
+        this._sn_peers = new Map();
+    }
+    get peers() {
+        return this._peers;
+    }
+    set peers(value) {
+        this._peers = value;
+    }
+    get peersDict() {
+        return this._peersDict;
+    }
+    get snPeers() {
+        return this._sn_peers;
+    }
+    getPaletteKeyBySn(sn) {
+        return this._sn_peers.get(sn);
+    }
+    addSnPalette(sn, key) {
+        this._sn_peers.set(sn, key);
+    }
+    convertPaletteOfSnKey() {
+        for (const peer of this.peers) {
+            if (peer.entity) {
+                this._sn_peers.set(`${peer.entity.node.sn}#${peer.entity.version}`, peer.key);
+            }
+        }
+    }
+    getTerrainPaletteKeyBySn(sn) {
+        return this._sn_peers.get(sn);
+    }
+    convertToPeerDict() {
+        for (const peer of this.peers) {
+            if (peer.entity) {
+                const id = peer.entity.node.id;
+                const terrain = this._cap.getObject(id);
+                this._peersDict.set(peer.key, terrain);
+            }
+        }
+    }
+    convertToPeers() {
+        const existKeys = [];
+        for (const node of this._cap.root.children.filter((node) => node.type === pixelpai_proto_1.op_def.NodeType.SceneNodeType)) {
+            const scene = node;
+            if (scene.terrainCollection) {
+                for (let row of scene.terrainCollection.data) {
+                    for (let key of row) {
+                        if (existKeys.indexOf(key) < 0 && key > 0) {
+                            existKeys.push(key);
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        let ret = [];
+        for (const key of Array.from(this._peersDict.keys())) {
+            if (existKeys.indexOf(key) < 0)
+                continue;
+            const terrain = this._peersDict.get(key);
+            if (terrain) {
+                ret.push({
+                    key,
+                    entity: terrain.createProtocolObject(),
+                });
+                this.cap.addTerrainMaterial(terrain.animations);
+                this.cap.addTerrainMaterial(terrain.animations.display);
+                for (const ani of terrain.animations.animationData) {
+                    this.cap.addTerrainMaterial(ani);
+                }
+            }
+        }
+        return ret;
+    }
+    addToPalette(terrain) {
+        const [sn, ver] = terrain.getSnAndVersion();
+        const snKey = `${sn}#${ver}`;
+        const nextKey = this.getNextKey(terrain);
+        this.addPeer(nextKey, terrain);
+        this.addSnPalette(snKey, nextKey);
+        if (!this._cap.getTerrainMaterial(terrain.id)) {
+            this._cap.addTerrainMaterial(terrain);
+        }
+        return nextKey;
+    }
+    getNextKey(terrain) {
+        const [sn, ver] = terrain.getSnAndVersion();
+        const snKey = `${sn}#${ver}`;
+        if (this.snPeers.get(snKey)) {
+            return this.snPeers.get(snKey);
+        }
+        const keys = Array.from(this.peersDict.keys());
+        let nextKey = 1;
+        if (keys.length > 0) {
+            const maxKey = Math.max(...keys);
+            nextKey = maxKey + 1;
+        }
+        return nextKey;
+    }
+    addPeer(key, entity) {
+        this._peersDict.set(key, entity);
+    }
+    getPeer(key) {
+        return this._peersDict.get(key);
+    }
+    getPeerThroughBindId(bindId) {
+        const peer = Array.from(this._peersDict.values()).find((terrain) => {
+            return terrain.id === bindId;
+        });
+        return peer;
+    }
+    removePeer(key) {
+        this._peersDict.delete(key);
+    }
+    updatePeer(key, entity) {
+        this._peersDict.set(key, entity.createProtocolObject());
+    }
+    serialize(container) {
+        const peers = this.convertToPeers();
+        if (peers && peers.length > 0) {
+            container.palette = pixelpai_proto_1.op_gameconfig_01.Palette.create();
+            container.palette.node = this.makeNode();
+            container.palette.node.name = "PaletteNode";
+            container.palette.node.Parent = this._cap.root.id;
+            container.palette.peers = peers;
+        }
+    }
+    preDeserialize(container) {
+        if (container.palette && container.palette.peers) {
+            this.setNode(container.palette.node);
+            this.peers = container.palette.peers;
+            for (const peer of this.peers) {
+                const terrainNode = new terrain_1.TerrainNode(this._cap);
+                terrainNode.deserialize(peer.entity);
+                this._cap.addObject(terrainNode);
+            }
+        }
+    }
+    deserialize() {
+        this.convertToPeerDict();
+        this.convertPaletteOfSnKey();
+    }
+}
+exports.PaletteNode = PaletteNode;
+class AssetsNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._items = [];
+        this._itemsDict = new Map();
+        this.name = "资源仓库";
+    }
+    get items() {
+        return this._items;
+    }
+    convertToItemsDict() {
+        for (const item of this.items) {
+            this._itemsDict.set(item.id, item);
+        }
+    }
+    convertToItems() {
+        return Array.from(this._itemsDict.values()).map((item) => item.createProtocolObject());
+    }
+    addAssets(node) {
+        this._itemsDict.set(node.id, node);
+        this._cap.addObject(node);
+    }
+    deleteAsset(id) {
+        this._itemsDict.delete(id);
+        this._cap.removeObjectById(id);
+    }
+    updateAsset(node) {
+        this._itemsDict.set(node.id, node);
+    }
+    getAsset(id) {
+        return this._itemsDict.get(id);
+    }
+    getAssetList() {
+        return Array.from(this._itemsDict.values());
+    }
+    serialize(container) {
+        // for (const item of Array.from(this._itemsDict.values())) {
+        //     this._cap.removeObjectById(item.id);
+        // }
+        container.assets = pixelpai_proto_1.op_gameconfig_01.Assets.create();
+        container.assets.node = this.makeNode();
+        container.assets.node.Parent = this._cap.root.id;
+        container.assets.items = this.convertToItems();
+    }
+    deserialize(container) {
+        if (container.assets) {
+            this.setNode(container.assets.node);
+            for (const item of container.assets.items) {
+                const attrNode = new attribute_1.default(this._cap);
+                attrNode.deserialize(item);
+                this.children.push(attrNode);
+                this._items.push(attrNode);
+            }
+            this.convertToItemsDict();
+        }
+    }
+}
+exports.AssetsNode = AssetsNode;
+class MossNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._peers = [];
+        this._peersDict = new Map();
+        this._sn_peers = new Map();
+    }
+    get peers() {
+        return this._peers;
+    }
+    set peers(value) {
+        this._peers = value;
+    }
+    get peersDict() {
+        return this._peersDict;
+    }
+    get snPeers() {
+        return this._sn_peers;
+    }
+    getPaletteKeyBySn(sn) {
+        return this._sn_peers.get(sn);
+    }
+    addSnPalette(elementSn, nextKey) {
+        this._sn_peers.set(elementSn, nextKey);
+    }
+    convertToPeerDict() {
+        for (const peer of this.peers) {
+            if (peer.entity) {
+                const id = peer.entity.node.id;
+                const element = this._cap.getObject(id);
+                this._peersDict.set(peer.key, element);
+            }
+        }
+    }
+    convertPaletteOfSnKey() {
+        for (let peer of this._peers) {
+            if (peer.entity) {
+                this._sn_peers.set(helpers_1.default.getElementSn(peer.entity.node.sn, peer.entity.version), peer.key);
+            }
+        }
+    }
+    getElementPaletteKeyBySn(sn) {
+        return this._sn_peers.get(sn);
+    }
+    convertToPeers() {
+        let pairs = [];
+        for (const key of Array.from(this._peersDict.keys())) {
+            const element = this._peersDict.get(key);
+            element.isFork = false;
+            if (element) {
+                pairs.push({
+                    key,
+                    entity: element.createProtocolObject(),
+                });
+                this.cap.addElementMaterial(element.animations);
+                this.cap.addElementMaterial(element.animations.display);
+                for (const ani of element.animations.animationData) {
+                    this.cap.addElementMaterial(ani);
+                }
+            }
+        }
+        return pairs;
+    }
+    addToPalette(element) {
+        const [sn, ver] = element.getSnAndVersion();
+        const elementSn = helpers_1.default.getElementSn(sn, ver);
+        const nextKey = this.getNextKey(element);
+        this._peersDict.set(nextKey, element);
+        this.addSnPalette(elementSn, nextKey);
+        if (!this._cap.getElementMaterial(element.id)) {
+            this._cap.addElementMaterial(element);
+        }
+        return nextKey;
+    }
+    getNextKey(element) {
+        const [sn, ver] = element.getSnAndVersion();
+        const elementSn = helpers_1.default.getElementSn(sn, ver);
+        if (this.snPeers.get(elementSn)) {
+            return this.snPeers.get(elementSn);
+        }
+        const keys = Array.from(this.peersDict.keys());
+        let nextKey = 1;
+        if (keys.length > 0) {
+            const maxKey = Math.max(...keys);
+            nextKey = maxKey + 1;
+        }
+        return nextKey;
+    }
+    getPeer(key) {
+        return this._peersDict.get(key);
+    }
+    getPeerThroughBindId(bindId) {
+        return Array.from(this._peersDict.values()).find((element) => {
+            return element.id === bindId;
+        });
+    }
+    removePeer(key) {
+        this._peersDict.delete(key);
+    }
+    updatePeer(key, entity) {
+        this._peersDict.set(key, entity.createProtocolObject());
+    }
+    serialize(container) {
+        const peers = this.convertToPeers();
+        if (peers && peers.length > 0) {
+            container.moss = pixelpai_proto_1.op_gameconfig_01.Moss.create();
+            container.moss.node = this.makeNode();
+            container.moss.node.name = "MossNode";
+            container.moss.node.Parent = this._cap.root.id;
+            container.moss.peers = peers;
+        }
+    }
+    preDeserizlize(container) {
+        if (container.moss && container.moss.peers) {
+            this.setNode(container.moss.node);
+            this.peers = container.moss.peers;
+            for (const peer of this.peers) {
+                const ele = new element_1.default(this._cap);
+                ele.deserialize(peer.entity);
+                this._cap.addObject(ele);
+            }
+        }
+    }
+    deserialize() {
+        this.convertPaletteOfSnKey();
+        this.convertToPeerDict();
+    }
+}
+exports.MossNode = MossNode;
+//# sourceMappingURL=game.js.map
+
+/***/ }),
 /* 343 */,
 /* 344 */,
 /* 345 */,
@@ -63734,16 +67932,703 @@ function get(input, init) {
 /* 364 */,
 /* 365 */,
 /* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
+/* 367 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class MovableNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._dir = 0;
+        this._angle = 0;
+        this._speed = 0;
+    }
+    get properties() {
+        return {
+            dir: this._dir,
+            angle: this._angle,
+            speed: this._speed,
+        };
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.movable)) {
+            game.movable = [];
+        }
+        return game.movable;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Movable.create();
+        obj.node = this.makeNode();
+        if (this._dir)
+            obj.dir = this._dir;
+        if (this._angle)
+            obj.angle = this._angle;
+        if (this._speed)
+            obj.speed = this._speed;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        if (obj.dir)
+            this._dir = obj.dir;
+        if (obj.angle)
+            this._angle = obj.angle;
+        if (obj.speed)
+            this._speed = obj.speed;
+    }
+}
+exports.default = MovableNode;
+//# sourceMappingURL=movable.js.map
+
+/***/ }),
+/* 368 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class FunctionNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._fileName = "";
+        this._funcName = "";
+        this.name = "脚本";
+        this.newFileName();
+    }
+    newFileName() {
+        this.fileName = `${this.id}-t=${new Date().getTime()}.lua`;
+    }
+    get properties() {
+        return {
+            fileName: this._fileName,
+            funcName: this._funcName,
+        };
+    }
+    idToFilenmae() {
+        return `${this.id}?t=${new Date().getTime()}.lua`;
+    }
+    filenameToId() {
+        const index = this.fileName.indexOf("-t=");
+        if (index > -1) {
+            return parseInt(this.fileName.substring(0, index), 10);
+        }
+        return 0;
+    }
+    get fileName() {
+        return this._fileName;
+    }
+    set fileName(val) {
+        this._fileName = val;
+    }
+    get funcName() {
+        return this._funcName;
+    }
+    set funcName(val) {
+        this._funcName = val;
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.func)) {
+            game.func = [];
+        }
+        return game.func;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Function.create();
+        obj.node = this.makeNode();
+        obj.fileName = this._fileName;
+        obj.funcName = this._funcName;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._fileName = obj.fileName;
+        this._funcName = obj.funcName;
+    }
+    duplicate(src) {
+        // by 7
+        // super.duplicate(src);
+        // if (src instanceof FunctionNode) {
+        //     this._fileName = src.fileName;
+        //     this._funcName = src.funcName;
+        //     this._version = src.version;
+        // }
+    }
+}
+exports.default = FunctionNode;
+//# sourceMappingURL=func.js.map
+
+/***/ }),
+/* 369 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+var GameEvent = pixelpai_proto_1.op_def.GameEvent;
+class EventNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._eventName = GameEvent.onElementActive;
+        this.name = "事件";
+    }
+    get properties() {
+        return {
+            eventName: this._eventName,
+        };
+    }
+    set eventName(val) {
+        if (typeof val === "string") {
+            this._eventName = parseInt(val);
+        }
+        else {
+            this._eventName = val;
+        }
+    }
+    get eventName() {
+        return this._eventName;
+    }
+    // geneSequence(): string {
+    //     return this.name + this._eventName;
+    // }
+    findMyContainer(game) {
+        if (!Array.isArray(game.event)) {
+            game.event = [];
+        }
+        return game.event;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Event.create();
+        obj.node = this.makeNode();
+        obj.eventName = this._eventName;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._eventName = obj.eventName;
+    }
+}
+exports.default = EventNode;
+//# sourceMappingURL=event.js.map
+
+/***/ }),
+/* 370 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class UINode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "界面";
+    }
+    get properties() {
+        return {
+            text: this._text,
+        };
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.ui)) {
+            game.ui = [];
+        }
+        return game.ui;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.UI.create();
+        obj.node = this.makeNode();
+        obj.text = this._text;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._text = obj.text;
+    }
+}
+exports.default = UINode;
+class TextNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._text = "";
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.text)) {
+            game.text = [];
+        }
+        return game.text;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Text.create();
+        obj.node = this.makeNode();
+        obj.text = this._text;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._text = obj.text;
+    }
+}
+exports.TextNode = TextNode;
+class ButtonNode extends config_object_1.BaseConfigObject {
+    constructor() {
+        super(...arguments);
+        this._text = "";
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.button)) {
+            game.button = [];
+        }
+        return game.button;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Button.create();
+        obj.node = this.makeNode();
+        obj.text = this._text;
+        if (this._tips)
+            obj.tips = this._tips;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._text = obj.text;
+        if (obj.tips)
+            this._tips = obj.tips;
+    }
+}
+exports.ButtonNode = ButtonNode;
+//# sourceMappingURL=ui.js.map
+
+/***/ }),
+/* 371 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+class TimerNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this._timeout = 0;
+        this._interval = 0;
+        this.name = "计时器";
+    }
+    get properties() {
+        return {
+            timeout: this._timeout,
+            interval: this._interval,
+        };
+    }
+    set timeout(val) {
+        this._timeout = val;
+    }
+    get timeout() {
+        return this._timeout;
+    }
+    set interval(val) {
+        this._interval = val;
+    }
+    get interval() {
+        return this._interval;
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.timer)) {
+            game.timer = [];
+        }
+        return game.timer;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.Timer.create();
+        obj.node = this.makeNode();
+        obj.timeout = this._timeout;
+        obj.interval = this._interval;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this._timeout = obj.timeout;
+        this._interval = obj.interval;
+    }
+}
+exports.default = TimerNode;
+//# sourceMappingURL=timer.js.map
+
+/***/ }),
+/* 372 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const pixelpai_proto_1 = __webpack_require__(3);
+const helpers_1 = __webpack_require__(28);
+var NodeType = pixelpai_proto_1.op_def.NodeType;
+class SpawnPointNode extends config_object_1.BaseConfigObject {
+    constructor(cap, parent) {
+        super(cap, parent);
+        this.name = "出生点";
+    }
+    findMyContainer(game) {
+        if (!Array.isArray(game.spawnpoint)) {
+            game.spawnpoint = [];
+        }
+        return game.spawnpoint;
+    }
+    createProtocolObject() {
+        const obj = pixelpai_proto_1.op_gameconfig_01.SpawnPoint.create();
+        obj.node = this.makeNode();
+        // 这个location是个错误，但是我们将错就错。
+        // 注意： 千万别把这个location当node加入到 capsule的objects map中。它是成员，不是节点。
+        if (this._loc)
+            obj.loc = this._loc;
+        return obj;
+    }
+    deserialize(data) {
+        super.deserialize(data);
+        const obj = data;
+        this.location.node = obj.loc.node;
+        this.location.x = obj.loc.x;
+        this.location.y = obj.loc.y;
+        this.location.z = obj.loc.z;
+    }
+    convertToClientElement() {
+        const ele = pixelpai_proto_1.op_client.Element.create();
+        ele.id = this.id;
+        ele.type = "ElementNodeType";
+        ele.display = this.display;
+        ele.animations = [this.animation];
+        ele.animationName = this.animation.name;
+        if (this._loc) {
+            ele.x = this._loc.x;
+            ele.y = this._loc.y;
+        }
+        return ele;
+    }
+    importSprite(sprite) {
+        this.cap.removeObject(this);
+        this.id = sprite.id;
+        this.name = sprite.nickname || this.name;
+        const point = sprite.point3f;
+        if (point) {
+            this.location.x = point.x;
+            this.location.y = point.y;
+            this.location.z = point.z || 0;
+        }
+        this.cap.addObject(this);
+        return this;
+    }
+    syncSprite(sprite) {
+        const point = sprite.point3f;
+        if (point) {
+            this.location.x = point.x;
+            this.location.y = point.y;
+            this.location.z = point.z || 0;
+        }
+        // this.animations.syncSprite(sprite);
+        return this;
+    }
+    convertToSprite() {
+        const spriet = pixelpai_proto_1.op_client.Sprite.create();
+        spriet.id = this.id;
+        spriet.nickname = this.name;
+        const point3 = pixelpai_proto_1.op_def.PBPoint3f.create();
+        point3.x = this.location.x;
+        point3.y = this.location.y;
+        point3.z = this.location.z;
+        spriet.point3f = point3;
+        spriet.display = this.display;
+        spriet.animations = [this.animation];
+        spriet.currentAnimationName = this.animation.name;
+        spriet.direction = 3;
+        return spriet;
+    }
+    get display() {
+        if (!this._display) {
+            this._display = pixelpai_proto_1.op_gameconfig.Display.create();
+            this._display.texturePath =
+                "pixelpai/SpawnPointNode/5cc42f6417553727db1d2bba/1/5cc42f6417553727db1d2bba.png";
+            this._display.dataPath =
+                "pixelpai/SpawnPointNode/5cc42f6417553727db1d2bba/1/5cc42f6417553727db1d2bba.json";
+        }
+        return this._display;
+    }
+    get animation() {
+        if (!this._animation) {
+            this._animation = pixelpai_proto_1.op_gameconfig.Animation.create();
+            this._animation.id = 10000;
+            this._animation.name = "idle";
+            this._animation.frameRate = 5;
+            this._animation.collisionArea = "1,1&1,1";
+            this._animation.loop = true;
+            this._animation.baseLoc = "-30,-30";
+            this._animation.originPoint = [0, 0];
+            this._animation.frameName = ["switch_0027_3_01.png"];
+        }
+        return this._animation;
+    }
+    get location() {
+        if (!this._loc) {
+            this._loc = pixelpai_proto_1.op_gameconfig_01.Location.create();
+            // this._loc.node = this.makeNode();
+            const nd = (this._loc.node = pixelpai_proto_1.op_gameconfig_01.Node.create());
+            nd.id = helpers_1.default.genId();
+            nd.name = "位置";
+            nd.Parent = this.id;
+            nd.type = NodeType.LocationType;
+        }
+        return this._loc;
+    }
+}
+exports.default = SpawnPointNode;
+//# sourceMappingURL=spawnpoint.js.map
+
+/***/ }),
+/* 373 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_object_1 = __webpack_require__(16);
+const animations_1 = __webpack_require__(118);
+const ConfigObjects = __webpack_require__(55);
+class ForkNode extends config_object_1.EntityNode {
+    deserialize(data) {
+        if (!data || !data.hasOwnProperty("node")) {
+            return;
+        }
+        const node = data["node"];
+        const parent = node.Parent;
+        let entity;
+        // 在反序列化时已经将Fork最后反序列化，确保了Fork的父节点已经在Tree上
+        // 这里先获取父节点的公有属性节点 AnimationsNode EventNode
+        const origin = this.cap.getObject(parent);
+        if (!origin) {
+            // 数据有误
+            console.error(`${this.className}: My parent[${this.parent}] does not exist.`);
+            return;
+        }
+        const nodeConstructor = origin.className || "";
+        if (ConfigObjects.hasOwnProperty(nodeConstructor)) {
+            // @ts-ignore
+            entity = new ConfigObjects[nodeConstructor](this.cap);
+            if (entity) {
+                entity.isFork = true;
+                entity.parent = origin.parent;
+                data.node.Parent = origin.parent;
+                entity.deserialize(data);
+                entity.link();
+            }
+        }
+        if (entity && origin) {
+            // 把fork原本的children 挂到新的对象上
+            for (const child of origin.children) {
+                // Fork 在反序列的时候其他类型的Node 都已经加到树里了，包括Fork自己的Children
+                // 克隆Fork上的子节点到新的对象上。
+                if (child instanceof animations_1.default) {
+                    this.cap.clone(child.id, entity);
+                }
+                // if (child instanceof EventNode) {
+                //     this.cap.clone(child.id, entity);
+                // }
+                // if (child instanceof AttributeNode) {
+                //     this.cap.clone(child.id, entity);
+                // }
+                // if (child instanceof TimerNode) {
+                //     this.cap.clone(child.id, entity);
+                // }
+            }
+            this.parent = origin.parent;
+        }
+    }
+}
+exports.default = ForkNode;
+//# sourceMappingURL=fork.js.map
+
+/***/ }),
+/* 374 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class ChildrenIndex {
+    constructor() {
+        this._objects = new Map();
+        this._terrain_objects = new Map();
+        this._element_objects = new Map();
+        this._branch_cache = new Map();
+    }
+    getChildrenList(parent) {
+        // const arr = Array.from<IConfigObject>(this._objects.values());
+        const branch = this._branch_cache.get(parent);
+        if (branch) {
+            return Array.from(branch.values());
+            // return Array.from(branch.values()).filter(
+            //     (o: IConfigObject) => parent === o.parent
+            // );
+        }
+        return [];
+    }
+    addTerrainMaterial(obj) {
+        if (!obj) {
+            throw new Error("Empty Object.");
+        }
+        this._terrain_objects.set(obj.id, obj);
+    }
+    addElementMaterial(obj) {
+        if (!obj) {
+            throw new Error("Empty Object.");
+        }
+        this._element_objects.set(obj.id, obj);
+    }
+    addObject(obj) {
+        if (!obj) {
+            throw new Error(`Empty Object.`);
+        }
+        // add to this._objects
+        this._objects.set(obj.id, obj);
+        // link to parent.
+        // 如果是fork则不需要link到parent node
+        if (!obj.isFork) {
+            obj.link();
+        }
+        // add to cache
+        if (!this._branch_cache.has(obj.parent)) {
+            this._branch_cache.set(obj.parent, new Map());
+        }
+        const branch = this._branch_cache.get(obj.parent);
+        if (branch)
+            branch.set(obj.id, obj);
+    }
+    removeObject(obj) {
+        if (!obj) {
+            throw new Error(`Empty Object.`);
+        }
+        // 1. remove object from parent as member property.
+        obj.unlink();
+        // 2. remove object from tree.
+        this._objects.delete(obj.id);
+        // 3. remove from cache
+        const branch = this._branch_cache.get(obj.parent);
+        if (branch) {
+            branch.delete(obj.id);
+        }
+    }
+    removeObjectById(id) {
+        this._objects.delete(id);
+    }
+    setObject(id, node) {
+        this._objects.set(id, node);
+    }
+    getObject(childOrParentId) {
+        return this._objects.get(childOrParentId);
+    }
+    getElementMaterial(id) {
+        return this._element_objects.get(id);
+    }
+    getTerrainMaterial(id) {
+        return this._terrain_objects.get(id);
+    }
+    get objectsList() {
+        return Array.from(this._objects.values());
+    }
+}
+exports.default = ChildrenIndex;
+//# sourceMappingURL=children_index.js.map
+
+/***/ }),
 /* 375 */,
 /* 376 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const capsule_1 = __webpack_require__(238);
+const pixelpai_proto_1 = __webpack_require__(3);
+var Game = pixelpai_proto_1.op_gameconfig_01.Game;
+var NodeType = pixelpai_proto_1.op_def.NodeType;
+const WHITE_LIST = [
+    NodeType.SceneNodeType,
+    NodeType.ElementNodeType,
+    NodeType.TerrainNodeType,
+    NodeType.PackageItemType,
+    NodeType.ForkType,
+    NodeType.CharacterNodeType,
+    NodeType.AvatarType,
+    NodeType.AnimationsType,
+    NodeType.AnimationDataType,
+    NodeType.DisplayType,
+    NodeType.TerrainCollectionType,
+    NodeType.MossCollectionType,
+    NodeType.SceneryType
+];
+// Lite is another entry of game-capsule,
+// its a readonly minimal Client-use controller.
+class Lite extends capsule_1.default {
+    constructor() {
+        super();
+    }
+    deserialize(buffer) {
+        const message = Game.decode(buffer);
+        const delayDeserialize = [];
+        // 1. deserialize game
+        this._root.deserialize(message);
+        this._root.preDeserializePalettes(message);
+        // 2-1. deserialize other objects.
+        let tmp = [];
+        const arr = tmp.concat(message.entity, message.animations, message.animationdatas, message.avatar, message.display, message.terrain, message.mossList, message.seneries);
+        for (let proto of arr) {
+            if (!proto)
+                continue;
+            const nodeType = proto.node.type;
+            if (nodeType && WHITE_LIST.indexOf(nodeType) !== -1)
+                if (nodeType == NodeType.ForkType) {
+                    // Fork 节点放到最后反序列化，确保他的parent先被加到树中。
+                    delayDeserialize.push(proto);
+                }
+                else {
+                    this.doDeserialize(proto);
+                }
+        }
+        // 2-2. deserialize all Fork objects
+        for (const proto of delayDeserialize) {
+            this.doDeserialize(proto);
+        }
+        // 2-3. Link all ConfigObjects
+        this._objects.forEach((object) => {
+            object.link();
+        });
+        this._root.deserializePalettes(message);
+    }
+    serialize() {
+        throw new Error("don't serialize");
+    }
+}
+exports.default = Lite;
+//# sourceMappingURL=lite.js.map
+
+/***/ }),
+/* 377 */
 /***/ (function(module, exports) {
 
 /**
@@ -63773,7 +68658,7 @@ module.exports = DegToRad;
 
 
 /***/ }),
-/* 377 */
+/* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64455,7 +69340,7 @@ earcut.flatten = function (data) {
 
 
 /***/ }),
-/* 378 */
+/* 379 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64464,8 +69349,8 @@ earcut.flatten = function (data) {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var FillPathWebGL = __webpack_require__(379);
-var StrokePathWebGL = __webpack_require__(380);
+var FillPathWebGL = __webpack_require__(380);
+var StrokePathWebGL = __webpack_require__(381);
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -64533,7 +69418,7 @@ module.exports = PolygonWebGLRenderer;
 
 
 /***/ }),
-/* 379 */
+/* 380 */
 /***/ (function(module, exports) {
 
 /**
@@ -64597,7 +69482,7 @@ module.exports = FillPathWebGL;
 
 
 /***/ }),
-/* 380 */
+/* 381 */
 /***/ (function(module, exports) {
 
 /**
@@ -64672,7 +69557,7 @@ module.exports = StrokePathWebGL;
 
 
 /***/ }),
-/* 381 */
+/* 382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64681,8 +69566,8 @@ module.exports = StrokePathWebGL;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var FillStyleCanvas = __webpack_require__(382);
-var LineStyleCanvas = __webpack_require__(383);
+var FillStyleCanvas = __webpack_require__(383);
+var LineStyleCanvas = __webpack_require__(384);
 var SetTransform = Phaser.Renderer.Canvas.SetTransform;
 
 /**
@@ -64751,7 +69636,7 @@ module.exports = PolygonCanvasRenderer;
 
 
 /***/ }),
-/* 382 */
+/* 383 */
 /***/ (function(module, exports) {
 
 /**
@@ -64788,7 +69673,7 @@ module.exports = FillStyleCanvas;
 
 
 /***/ }),
-/* 383 */
+/* 384 */
 /***/ (function(module, exports) {
 
 /**
@@ -64826,7 +69711,7 @@ module.exports = LineStyleCanvas;
 
 
 /***/ }),
-/* 384 */
+/* 385 */
 /***/ (function(module, exports) {
 
 /**
@@ -64889,7 +69774,7 @@ module.exports = TextWebGLRenderer;
 
 
 /***/ }),
-/* 385 */
+/* 386 */
 /***/ (function(module, exports) {
 
 /**
@@ -64925,296 +69810,296 @@ module.exports = TextCanvasRenderer;
 
 
 /***/ }),
-/* 386 */
+/* 387 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Activity/ActivityMediator": 157,
-	"./Activity/ActivityMediator.ts": 157,
-	"./Activity/ActivityPanel": 158,
-	"./Activity/ActivityPanel.ts": 158,
-	"./Bubble/interactionbubble": 217,
-	"./Bubble/interactionbubble.container": 169,
-	"./Bubble/interactionbubble.container.ts": 169,
-	"./Bubble/interactionbubble.ts": 217,
-	"./Bubble/interactivebubble.manager": 168,
-	"./Bubble/interactivebubble.manager.ts": 168,
-	"./ComponentRank/ComponentRankMediator": 173,
-	"./ComponentRank/ComponentRankMediator.ts": 173,
-	"./ComponentRank/ComponentRankPanel": 174,
-	"./ComponentRank/ComponentRankPanel.ts": 174,
-	"./ControlF/ControlFMediator": 108,
-	"./ControlF/ControlFMediator.ts": 108,
-	"./ControlF/ControlFPanel": 109,
-	"./ControlF/ControlFPanel.ts": 109,
-	"./CutIn/CutInMediator": 260,
-	"./CutIn/CutInMediator.ts": 260,
-	"./CutIn/CutInPanel": 175,
-	"./CutIn/CutInPanel.ts": 175,
+	"./Activity/ActivityMediator": 156,
+	"./Activity/ActivityMediator.ts": 156,
+	"./Activity/ActivityPanel": 157,
+	"./Activity/ActivityPanel.ts": 157,
+	"./Bubble/interactionbubble": 215,
+	"./Bubble/interactionbubble.container": 168,
+	"./Bubble/interactionbubble.container.ts": 168,
+	"./Bubble/interactionbubble.ts": 215,
+	"./Bubble/interactivebubble.manager": 167,
+	"./Bubble/interactivebubble.manager.ts": 167,
+	"./ComponentRank/ComponentRankMediator": 172,
+	"./ComponentRank/ComponentRankMediator.ts": 172,
+	"./ComponentRank/ComponentRankPanel": 173,
+	"./ComponentRank/ComponentRankPanel.ts": 173,
+	"./ControlF/ControlFMediator": 107,
+	"./ControlF/ControlFMediator.ts": 107,
+	"./ControlF/ControlFPanel": 108,
+	"./ControlF/ControlFPanel.ts": 108,
+	"./CutIn/CutInMediator": 259,
+	"./CutIn/CutInMediator.ts": 259,
+	"./CutIn/CutInPanel": 174,
+	"./CutIn/CutInPanel.ts": 174,
 	"./DebugLogger/DebugLoggerMediator": 92,
 	"./DebugLogger/DebugLoggerMediator.ts": 92,
-	"./DebugLogger/DebugLoggerPanel": 176,
-	"./DebugLogger/DebugLoggerPanel.ts": 176,
-	"./DecorateControl/DecorateControlMediator": 152,
-	"./DecorateControl/DecorateControlMediator.ts": 152,
-	"./DecorateControl/DecorateControlPanel": 153,
-	"./DecorateControl/DecorateControlPanel.ts": 153,
-	"./ElementStorage/DragManager": 261,
-	"./ElementStorage/DragManager.ts": 261,
-	"./ElementStorage/ElementStorageMediator": 85,
-	"./ElementStorage/ElementStorageMediator.ts": 85,
-	"./ElementStorage/ElementStoragePanel": 142,
-	"./ElementStorage/ElementStoragePanel.ts": 142,
-	"./ElementStorage/ElementStorate": 144,
-	"./ElementStorage/ElementStorate.ts": 144,
-	"./ElementStorage/item/Item": 143,
-	"./ElementStorage/item/Item.ts": 143,
-	"./EquipUpgrade/EquipUpgrade": 177,
-	"./EquipUpgrade/EquipUpgrade.ts": 177,
-	"./EquipUpgrade/EquipUpgradeItem": 178,
-	"./EquipUpgrade/EquipUpgradeItem.ts": 178,
-	"./EquipUpgrade/EquipUpgradeMediator": 262,
-	"./EquipUpgrade/EquipUpgradeMediator.ts": 262,
-	"./EquipUpgrade/EquipUpgradePanel": 179,
-	"./EquipUpgrade/EquipUpgradePanel.ts": 179,
-	"./FurniBag/FurniBag": 180,
-	"./FurniBag/FurniBag.ts": 180,
-	"./FurniBag/FurniBagMediator": 263,
-	"./FurniBag/FurniBagMediator.ts": 263,
+	"./DebugLogger/DebugLoggerPanel": 175,
+	"./DebugLogger/DebugLoggerPanel.ts": 175,
+	"./DecorateControl/DecorateControlMediator": 151,
+	"./DecorateControl/DecorateControlMediator.ts": 151,
+	"./DecorateControl/DecorateControlPanel": 152,
+	"./DecorateControl/DecorateControlPanel.ts": 152,
+	"./ElementStorage/DragManager": 260,
+	"./ElementStorage/DragManager.ts": 260,
+	"./ElementStorage/ElementStorageMediator": 86,
+	"./ElementStorage/ElementStorageMediator.ts": 86,
+	"./ElementStorage/ElementStoragePanel": 141,
+	"./ElementStorage/ElementStoragePanel.ts": 141,
+	"./ElementStorage/ElementStorate": 143,
+	"./ElementStorage/ElementStorate.ts": 143,
+	"./ElementStorage/item/Item": 142,
+	"./ElementStorage/item/Item.ts": 142,
+	"./EquipUpgrade/EquipUpgrade": 176,
+	"./EquipUpgrade/EquipUpgrade.ts": 176,
+	"./EquipUpgrade/EquipUpgradeItem": 177,
+	"./EquipUpgrade/EquipUpgradeItem.ts": 177,
+	"./EquipUpgrade/EquipUpgradeMediator": 261,
+	"./EquipUpgrade/EquipUpgradeMediator.ts": 261,
+	"./EquipUpgrade/EquipUpgradePanel": 178,
+	"./EquipUpgrade/EquipUpgradePanel.ts": 178,
+	"./FurniBag/FurniBag": 179,
+	"./FurniBag/FurniBag.ts": 179,
+	"./FurniBag/FurniBagMediator": 262,
+	"./FurniBag/FurniBagMediator.ts": 262,
 	"./FurniBag/FurniBagPanel": 220,
 	"./FurniBag/FurniBagPanel.ts": 220,
-	"./InfoPanel/InfoPanel": 184,
-	"./InfoPanel/InfoPanel.ts": 184,
-	"./InfoPanel/InfoPanelMediator": 185,
-	"./InfoPanel/InfoPanelMediator.ts": 185,
-	"./InteractivePanel/InteractivePanel": 186,
-	"./InteractivePanel/InteractivePanel.ts": 186,
-	"./InteractivePanel/InteractivePanelMediator": 187,
-	"./InteractivePanel/InteractivePanelMediator.ts": 187,
-	"./ItemDetail/ItemDetail": 188,
-	"./ItemDetail/ItemDetail.ts": 188,
-	"./ItemDetail/ItemDetailMediator": 266,
-	"./ItemDetail/ItemDetailMediator.ts": 266,
-	"./ItemPopCard/ItemPopCardMediator": 267,
-	"./ItemPopCard/ItemPopCardMediator.ts": 267,
-	"./ItemPopCard/ItemPopCardPanel": 189,
-	"./ItemPopCard/ItemPopCardPanel.ts": 189,
-	"./Market/DetailDisplay": 63,
-	"./Market/DetailDisplay.ts": 63,
-	"./Market/ElementDetail": 190,
-	"./Market/ElementDetail.ts": 190,
-	"./Market/Market": 193,
-	"./Market/Market.ts": 193,
-	"./Market/MarketMediator": 268,
-	"./Market/MarketMediator.ts": 268,
-	"./Market/MarketPanel": 194,
-	"./Market/MarketPanel.ts": 194,
-	"./Market/NumberCounter": 191,
-	"./Market/NumberCounter.ts": 191,
+	"./InfoPanel/InfoPanel": 183,
+	"./InfoPanel/InfoPanel.ts": 183,
+	"./InfoPanel/InfoPanelMediator": 184,
+	"./InfoPanel/InfoPanelMediator.ts": 184,
+	"./InteractivePanel/InteractivePanel": 185,
+	"./InteractivePanel/InteractivePanel.ts": 185,
+	"./InteractivePanel/InteractivePanelMediator": 186,
+	"./InteractivePanel/InteractivePanelMediator.ts": 186,
+	"./ItemDetail/ItemDetail": 187,
+	"./ItemDetail/ItemDetail.ts": 187,
+	"./ItemDetail/ItemDetailMediator": 265,
+	"./ItemDetail/ItemDetailMediator.ts": 265,
+	"./ItemPopCard/ItemPopCardMediator": 266,
+	"./ItemPopCard/ItemPopCardMediator.ts": 266,
+	"./ItemPopCard/ItemPopCardPanel": 188,
+	"./ItemPopCard/ItemPopCardPanel.ts": 188,
+	"./Market/DetailDisplay": 65,
+	"./Market/DetailDisplay.ts": 65,
+	"./Market/ElementDetail": 189,
+	"./Market/ElementDetail.ts": 189,
+	"./Market/Market": 192,
+	"./Market/Market.ts": 192,
+	"./Market/MarketMediator": 267,
+	"./Market/MarketMediator.ts": 267,
+	"./Market/MarketPanel": 193,
+	"./Market/MarketPanel.ts": 193,
+	"./Market/NumberCounter": 190,
+	"./Market/NumberCounter.ts": 190,
 	"./Market/TextButton": 93,
 	"./Market/TextButton.ts": 93,
-	"./Market/item": 195,
-	"./Market/item.ts": 195,
-	"./MessageBox/MessageBoxMediator": 269,
-	"./MessageBox/MessageBoxMediator.ts": 269,
-	"./MessageBox/MessageBoxView": 197,
-	"./MessageBox/MessageBoxView.ts": 197,
-	"./MineCar/MineCar": 167,
-	"./MineCar/MineCar.ts": 167,
-	"./MineCar/MineCarMediator": 162,
-	"./MineCar/MineCarMediator.ts": 162,
-	"./MineCar/MineCarPanel": 163,
-	"./MineCar/MineCarPanel.ts": 163,
-	"./MineSettle/MineSettle": 198,
-	"./MineSettle/MineSettle.ts": 198,
-	"./MineSettle/MineSettleMediator": 270,
-	"./MineSettle/MineSettleMediator.ts": 270,
-	"./MineSettle/MineSettlePanel": 199,
-	"./MineSettle/MineSettlePanel.ts": 199,
-	"./Notice/Notice": 136,
-	"./Notice/Notice.ts": 136,
-	"./Notice/NoticeMediator": 134,
-	"./Notice/NoticeMediator.ts": 134,
-	"./Notice/NoticePanel": 135,
-	"./Notice/NoticePanel.ts": 135,
-	"./PiCaMainUI/PicaMainUI": 156,
-	"./PiCaMainUI/PicaMainUI.ts": 156,
-	"./PiCaMainUI/PicaMainUIMediator": 154,
-	"./PiCaMainUI/PicaMainUIMediator.ts": 154,
-	"./PiCaMainUI/PicaMainUIPanel": 155,
-	"./PiCaMainUI/PicaMainUIPanel.ts": 155,
-	"./PicaChat/PicaChat": 161,
-	"./PicaChat/PicaChat.ts": 161,
-	"./PicaChat/PicaChatMediator": 88,
-	"./PicaChat/PicaChatMediator.ts": 88,
-	"./PicaChat/PicaChatPanel": 159,
-	"./PicaChat/PicaChatPanel.ts": 159,
-	"./PicaMessageBox/PicaMessageBoxMediator": 271,
-	"./PicaMessageBox/PicaMessageBoxMediator.ts": 271,
-	"./PicaMessageBox/PicaMessageBoxPanel": 200,
-	"./PicaMessageBox/PicaMessageBoxPanel.ts": 200,
-	"./PicaNavigate/PicaNavigateMediator": 90,
-	"./PicaNavigate/PicaNavigateMediator.ts": 90,
-	"./PicaNavigate/PicaNavigatePanel": 160,
-	"./PicaNavigate/PicaNavigatePanel.ts": 160,
-	"./PicaRoomList/PicaRoomListMediator": 272,
-	"./PicaRoomList/PicaRoomListMediator.ts": 272,
-	"./PicaRoomList/PicaRoomListPanel": 201,
-	"./PicaRoomList/PicaRoomListPanel.ts": 201,
-	"./PicaRoomList/RoomList": 202,
-	"./PicaRoomList/RoomList.ts": 202,
-	"./Rank/BasicRankPanel": 82,
-	"./Rank/BasicRankPanel.ts": 82,
-	"./Rank/RankMediator": 62,
-	"./Rank/RankMediator.ts": 62,
-	"./Rank/RankPanel": 139,
-	"./Rank/RankPanel.ts": 139,
-	"./ReAwardTips/ReAwardTip": 171,
-	"./ReAwardTips/ReAwardTip.ts": 171,
-	"./ReAwardTips/ReAwardTipsMediator": 170,
-	"./ReAwardTips/ReAwardTipsMediator.ts": 170,
-	"./ReAwardTips/ReAwardTipsPanel": 172,
-	"./ReAwardTips/ReAwardTipsPanel.ts": 172,
-	"./Shop/ShopMediator": 203,
-	"./Shop/ShopMediator.ts": 203,
-	"./Shop/ShopPanel": 204,
-	"./Shop/ShopPanel.ts": 204,
-	"./Shop/shop.itemSlot": 221,
-	"./Shop/shop.itemSlot.ts": 221,
-	"./UserInfo/UserInfoMediator": 205,
-	"./UserInfo/UserInfoMediator.ts": 205,
-	"./UserInfo/UserInfoPanel": 206,
-	"./UserInfo/UserInfoPanel.ts": 206,
-	"./UserMenu/MenuItem": 207,
-	"./UserMenu/MenuItem.ts": 207,
-	"./UserMenu/UserMenuMediator": 273,
-	"./UserMenu/UserMenuMediator.ts": 273,
-	"./UserMenu/UserMenuPanel": 208,
-	"./UserMenu/UserMenuPanel.ts": 208,
-	"./alert/PopUpTextUI": 209,
-	"./alert/PopUpTextUI.ts": 209,
-	"./bag/IListItemRender": 274,
-	"./bag/IListItemRender.ts": 274,
+	"./Market/item": 194,
+	"./Market/item.ts": 194,
+	"./MessageBox/MessageBoxMediator": 268,
+	"./MessageBox/MessageBoxMediator.ts": 268,
+	"./MessageBox/MessageBoxView": 196,
+	"./MessageBox/MessageBoxView.ts": 196,
+	"./MineCar/MineCar": 166,
+	"./MineCar/MineCar.ts": 166,
+	"./MineCar/MineCarMediator": 161,
+	"./MineCar/MineCarMediator.ts": 161,
+	"./MineCar/MineCarPanel": 162,
+	"./MineCar/MineCarPanel.ts": 162,
+	"./MineSettle/MineSettle": 197,
+	"./MineSettle/MineSettle.ts": 197,
+	"./MineSettle/MineSettleMediator": 269,
+	"./MineSettle/MineSettleMediator.ts": 269,
+	"./MineSettle/MineSettlePanel": 198,
+	"./MineSettle/MineSettlePanel.ts": 198,
+	"./Notice/Notice": 135,
+	"./Notice/Notice.ts": 135,
+	"./Notice/NoticeMediator": 133,
+	"./Notice/NoticeMediator.ts": 133,
+	"./Notice/NoticePanel": 134,
+	"./Notice/NoticePanel.ts": 134,
+	"./PiCaMainUI/PicaMainUI": 155,
+	"./PiCaMainUI/PicaMainUI.ts": 155,
+	"./PiCaMainUI/PicaMainUIMediator": 153,
+	"./PiCaMainUI/PicaMainUIMediator.ts": 153,
+	"./PiCaMainUI/PicaMainUIPanel": 154,
+	"./PiCaMainUI/PicaMainUIPanel.ts": 154,
+	"./PicaChat/PicaChat": 160,
+	"./PicaChat/PicaChat.ts": 160,
+	"./PicaChat/PicaChatMediator": 89,
+	"./PicaChat/PicaChatMediator.ts": 89,
+	"./PicaChat/PicaChatPanel": 158,
+	"./PicaChat/PicaChatPanel.ts": 158,
+	"./PicaMessageBox/PicaMessageBoxMediator": 270,
+	"./PicaMessageBox/PicaMessageBoxMediator.ts": 270,
+	"./PicaMessageBox/PicaMessageBoxPanel": 199,
+	"./PicaMessageBox/PicaMessageBoxPanel.ts": 199,
+	"./PicaNavigate/PicaNavigateMediator": 91,
+	"./PicaNavigate/PicaNavigateMediator.ts": 91,
+	"./PicaNavigate/PicaNavigatePanel": 159,
+	"./PicaNavigate/PicaNavigatePanel.ts": 159,
+	"./PicaRoomList/PicaRoomListMediator": 271,
+	"./PicaRoomList/PicaRoomListMediator.ts": 271,
+	"./PicaRoomList/PicaRoomListPanel": 200,
+	"./PicaRoomList/PicaRoomListPanel.ts": 200,
+	"./PicaRoomList/RoomList": 201,
+	"./PicaRoomList/RoomList.ts": 201,
+	"./Rank/BasicRankPanel": 83,
+	"./Rank/BasicRankPanel.ts": 83,
+	"./Rank/RankMediator": 63,
+	"./Rank/RankMediator.ts": 63,
+	"./Rank/RankPanel": 138,
+	"./Rank/RankPanel.ts": 138,
+	"./ReAwardTips/ReAwardTip": 170,
+	"./ReAwardTips/ReAwardTip.ts": 170,
+	"./ReAwardTips/ReAwardTipsMediator": 169,
+	"./ReAwardTips/ReAwardTipsMediator.ts": 169,
+	"./ReAwardTips/ReAwardTipsPanel": 171,
+	"./ReAwardTips/ReAwardTipsPanel.ts": 171,
+	"./Shop/ShopMediator": 202,
+	"./Shop/ShopMediator.ts": 202,
+	"./Shop/ShopPanel": 203,
+	"./Shop/ShopPanel.ts": 203,
+	"./Shop/shop.itemSlot": 219,
+	"./Shop/shop.itemSlot.ts": 219,
+	"./UserInfo/UserInfoMediator": 204,
+	"./UserInfo/UserInfoMediator.ts": 204,
+	"./UserInfo/UserInfoPanel": 205,
+	"./UserInfo/UserInfoPanel.ts": 205,
+	"./UserMenu/MenuItem": 206,
+	"./UserMenu/MenuItem.ts": 206,
+	"./UserMenu/UserMenuMediator": 272,
+	"./UserMenu/UserMenuMediator.ts": 272,
+	"./UserMenu/UserMenuPanel": 207,
+	"./UserMenu/UserMenuPanel.ts": 207,
+	"./alert/PopUpTextUI": 208,
+	"./alert/PopUpTextUI.ts": 208,
+	"./bag/IListItemRender": 273,
+	"./bag/IListItemRender.ts": 273,
 	"./bag/bagView/bagMediator": 33,
 	"./bag/bagView/bagMediator.ts": 33,
-	"./bag/bagView/bagPanel": 137,
-	"./bag/bagView/bagPanel.ts": 137,
-	"./bag/basebag": 275,
-	"./bag/basebag.ts": 275,
-	"./bag/baseitem": 276,
-	"./bag/baseitem.ts": 276,
-	"./bag/dragDropIcon": 60,
-	"./bag/dragDropIcon.ts": 60,
-	"./bag/idragable": 277,
-	"./bag/idragable.ts": 277,
-	"./bag/idropable": 278,
-	"./bag/idropable.ts": 278,
+	"./bag/bagView/bagPanel": 136,
+	"./bag/bagView/bagPanel.ts": 136,
+	"./bag/basebag": 274,
+	"./bag/basebag.ts": 274,
+	"./bag/baseitem": 275,
+	"./bag/baseitem.ts": 275,
+	"./bag/dragDropIcon": 61,
+	"./bag/dragDropIcon.ts": 61,
+	"./bag/idragable": 276,
+	"./bag/idragable.ts": 276,
+	"./bag/idropable": 277,
+	"./bag/idropable.ts": 277,
 	"./bag/item.slot": 34,
 	"./bag/item.slot.ts": 34,
-	"./bag/storage/storageMediator": 210,
-	"./bag/storage/storageMediator.ts": 210,
-	"./bag/storage/storagePanel": 211,
-	"./bag/storage/storagePanel.ts": 211,
-	"./baseView/bagGroup/bag.group": 149,
-	"./baseView/bagGroup/bag.group.mediator": 148,
-	"./baseView/bagGroup/bag.group.mediator.ts": 148,
-	"./baseView/bagGroup/bag.group.ts": 149,
+	"./bag/storage/storageMediator": 209,
+	"./bag/storage/storageMediator.ts": 209,
+	"./bag/storage/storagePanel": 210,
+	"./bag/storage/storagePanel.ts": 210,
+	"./baseView/bagGroup/bag.group": 148,
+	"./baseView/bagGroup/bag.group.mediator": 147,
+	"./baseView/bagGroup/bag.group.mediator.ts": 147,
+	"./baseView/bagGroup/bag.group.ts": 148,
 	"./baseView/baseFace.mediator": 35,
 	"./baseView/baseFace.mediator.ts": 35,
-	"./baseView/bottomGroup/bottom.btn.group": 141,
-	"./baseView/bottomGroup/bottom.btn.group.ts": 141,
-	"./baseView/bottomGroup/bottom.mediator": 84,
-	"./baseView/bottomGroup/bottom.mediator.ts": 84,
+	"./baseView/bottomGroup/bottom.btn.group": 140,
+	"./baseView/bottomGroup/bottom.btn.group.ts": 140,
+	"./baseView/bottomGroup/bottom.mediator": 85,
+	"./baseView/bottomGroup/bottom.mediator.ts": 85,
 	"./baseView/icon.btn": 26,
 	"./baseView/icon.btn.ts": 26,
-	"./baseView/icon.select.btn": 147,
-	"./baseView/icon.select.btn.ts": 147,
-	"./baseView/leftGroup/left.btn.group": 146,
-	"./baseView/leftGroup/left.btn.group.ts": 146,
-	"./baseView/leftGroup/left.mediator": 145,
-	"./baseView/leftGroup/left.mediator.ts": 145,
-	"./baseView/rightGroup/right.btn.group": 140,
-	"./baseView/rightGroup/right.btn.group.ts": 140,
-	"./baseView/rightGroup/right.mediator": 83,
-	"./baseView/rightGroup/right.mediator.ts": 83,
-	"./baseView/top.menu/top.menu.container": 151,
-	"./baseView/top.menu/top.menu.container.ts": 151,
-	"./baseView/top.menu/top.menu.mediator": 150,
-	"./baseView/top.menu/top.menu.mediator.ts": 150,
-	"./baseView/topGroup/top.btn.group": 212,
-	"./baseView/topGroup/top.btn.group.ts": 212,
-	"./baseView/topGroup/top.mediator": 279,
-	"./baseView/topGroup/top.mediator.ts": 279,
-	"./chat/Chat": 132,
-	"./chat/Chat.ts": 132,
-	"./chat/base.chat.panel": 79,
-	"./chat/base.chat.panel.ts": 79,
-	"./chat/chat.mediator": 56,
-	"./chat/chat.mediator.ts": 56,
-	"./chat/chatPanel.pc": 122,
-	"./chat/chatPanel.pc.ts": 122,
-	"./chat/message": 280,
-	"./chat/message.ts": 280,
-	"./chat/mobile/chatPanel.mobile": 131,
-	"./chat/mobile/chatPanel.mobile.ts": 131,
+	"./baseView/icon.select.btn": 146,
+	"./baseView/icon.select.btn.ts": 146,
+	"./baseView/leftGroup/left.btn.group": 145,
+	"./baseView/leftGroup/left.btn.group.ts": 145,
+	"./baseView/leftGroup/left.mediator": 144,
+	"./baseView/leftGroup/left.mediator.ts": 144,
+	"./baseView/rightGroup/right.btn.group": 139,
+	"./baseView/rightGroup/right.btn.group.ts": 139,
+	"./baseView/rightGroup/right.mediator": 84,
+	"./baseView/rightGroup/right.mediator.ts": 84,
+	"./baseView/top.menu/top.menu.container": 150,
+	"./baseView/top.menu/top.menu.container.ts": 150,
+	"./baseView/top.menu/top.menu.mediator": 149,
+	"./baseView/top.menu/top.menu.mediator.ts": 149,
+	"./baseView/topGroup/top.btn.group": 211,
+	"./baseView/topGroup/top.btn.group.ts": 211,
+	"./baseView/topGroup/top.mediator": 278,
+	"./baseView/topGroup/top.mediator.ts": 278,
+	"./chat/Chat": 131,
+	"./chat/Chat.ts": 131,
+	"./chat/base.chat.panel": 80,
+	"./chat/base.chat.panel.ts": 80,
+	"./chat/chat.mediator": 57,
+	"./chat/chat.mediator.ts": 57,
+	"./chat/chatPanel.pc": 121,
+	"./chat/chatPanel.pc.ts": 121,
+	"./chat/message": 279,
+	"./chat/message.ts": 279,
+	"./chat/mobile/chatPanel.mobile": 130,
+	"./chat/mobile/chatPanel.mobile.ts": 130,
 	"./components/BasePanel": 6,
 	"./components/BasePanel.ts": 6,
-	"./components/alert.view": 164,
-	"./components/alert.view.ts": 164,
-	"./components/check.button": 78,
-	"./components/check.button.ts": 78,
-	"./components/checkbox.group": 64,
-	"./components/checkbox.group.ts": 64,
-	"./components/comboBox": 213,
-	"./components/comboBox.ts": 213,
+	"./components/alert.view": 163,
+	"./components/alert.view.ts": 163,
+	"./components/check.button": 79,
+	"./components/check.button.ts": 79,
+	"./components/checkbox.group": 66,
+	"./components/checkbox.group.ts": 66,
+	"./components/comboBox": 212,
+	"./components/comboBox.ts": 212,
 	"./components/dynamic.image": 18,
 	"./components/dynamic.image.ts": 18,
 	"./components/dynamic.ninepatch": 102,
 	"./components/dynamic.ninepatch.ts": 102,
 	"./components/dynamic.sprite": 100,
 	"./components/dynamic.sprite.ts": 100,
-	"./components/input.panel": 89,
-	"./components/input.panel.ts": 89,
-	"./components/inputPanel": 281,
-	"./components/inputPanel.ts": 281,
-	"./components/inputTextFactory": 87,
-	"./components/inputTextFactory.ts": 87,
-	"./components/label.input": 192,
-	"./components/label.input.ts": 192,
-	"./components/message.box": 282,
-	"./components/message.box.ts": 282,
+	"./components/input.panel": 90,
+	"./components/input.panel.ts": 90,
+	"./components/inputPanel": 280,
+	"./components/inputPanel.ts": 280,
+	"./components/inputTextFactory": 88,
+	"./components/inputTextFactory.ts": 88,
+	"./components/label.input": 191,
+	"./components/label.input.ts": 191,
+	"./components/message.box": 281,
+	"./components/message.box.ts": 281,
 	"./components/nine.patch": 14,
 	"./components/nine.patch.ts": 14,
 	"./components/ninepatch.button": 19,
 	"./components/ninepatch.button.ts": 19,
-	"./components/patches.config": 128,
-	"./components/patches.config.ts": 128,
-	"./components/radio": 86,
-	"./components/radio.ts": 86,
-	"./components/scroller": 283,
-	"./components/scroller.ts": 283,
-	"./components/scroller.view": 284,
-	"./components/scroller.view.ts": 284,
-	"./components/tab.button": 196,
-	"./components/tab.button.ts": 196,
-	"./decorate/decorate.manager": 112,
-	"./decorate/decorate.manager.ts": 112,
-	"./decorate/decorate.panel": 113,
-	"./decorate/decorate.panel.ts": 113,
-	"./friend/friend.mediator": 81,
-	"./friend/friend.mediator.ts": 81,
-	"./friend/friend.panel": 138,
-	"./friend/friend.panel.ts": 138,
-	"./layer.manager": 133,
-	"./layer.manager.ts": 133,
-	"./loadview": 285,
-	"./loadview.ts": 285,
-	"./tips/itoolTip": 286,
-	"./tips/itoolTip.ts": 286,
-	"./tips/toolTip": 80,
-	"./tips/toolTip.ts": 80,
-	"./ui.manager": 121,
-	"./ui.manager.ts": 121,
+	"./components/patches.config": 127,
+	"./components/patches.config.ts": 127,
+	"./components/radio": 87,
+	"./components/radio.ts": 87,
+	"./components/scroller": 282,
+	"./components/scroller.ts": 282,
+	"./components/scroller.view": 283,
+	"./components/scroller.view.ts": 283,
+	"./components/tab.button": 195,
+	"./components/tab.button.ts": 195,
+	"./decorate/decorate.manager": 111,
+	"./decorate/decorate.manager.ts": 111,
+	"./decorate/decorate.panel": 112,
+	"./decorate/decorate.panel.ts": 112,
+	"./friend/friend.mediator": 82,
+	"./friend/friend.mediator.ts": 82,
+	"./friend/friend.panel": 137,
+	"./friend/friend.panel.ts": 137,
+	"./layer.manager": 132,
+	"./layer.manager.ts": 132,
+	"./loadview": 284,
+	"./loadview.ts": 284,
+	"./tips/itoolTip": 285,
+	"./tips/itoolTip.ts": 285,
+	"./tips/toolTip": 81,
+	"./tips/toolTip.ts": 81,
+	"./ui.manager": 120,
+	"./ui.manager.ts": 120,
 	"./ui.mediatorType": 27,
 	"./ui.mediatorType.ts": 27
 };
@@ -65237,20 +70122,20 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 386;
+webpackContext.id = 387;
 
 /***/ }),
-/* 387 */,
 /* 388 */,
 /* 389 */,
-/* 390 */
+/* 390 */,
+/* 391 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginScene; });
-/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
-/* harmony import */ var _ui_alert_PopUpTextUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(209);
-/* harmony import */ var _ui_components_comboBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(213);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
+/* harmony import */ var _ui_alert_PopUpTextUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(208);
+/* harmony import */ var _ui_components_comboBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(212);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 /* harmony import */ var _utils_size__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(98);
 /* harmony import */ var _basic_scene__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30);
@@ -65697,7 +70582,7 @@ var LoginScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 391 */
+/* 392 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65729,7 +70614,7 @@ var Account = /** @class */ (function () {
 
 
 /***/ }),
-/* 392 */
+/* 393 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65765,7 +70650,7 @@ var HttpService = /** @class */ (function () {
      * @param password
      */
     HttpService.prototype.login = function (account, password) {
-        return fetch("" + "http://172.18.0.100:17170/" + "account/signin", {
+        return fetch("" + "https://api-dev.tooqing.com/" + "account/signin", {
             body: JSON.stringify({ account: account, password: password }),
             method: "POST",
             headers: {
@@ -65778,7 +70663,7 @@ var HttpService = /** @class */ (function () {
      * @param name
      */
     HttpService.prototype.requestPhoneCode = function (phone) {
-        return fetch("" + "http://172.18.0.100:17170/" + "account/sms_code", {
+        return fetch("" + "https://api-dev.tooqing.com/" + "account/sms_code", {
             body: JSON.stringify({ phone: phone }),
             method: "POST",
             headers: {
@@ -65787,7 +70672,7 @@ var HttpService = /** @class */ (function () {
         }).then(function (response) { return response.json(); });
     };
     HttpService.prototype.loginByPhoneCode = function (phone, code) {
-        return fetch("" + "http://172.18.0.100:17170/" + "account/phone_signin", {
+        return fetch("" + "https://api-dev.tooqing.com/" + "account/phone_signin", {
             body: JSON.stringify({ phone: phone, code: code }),
             method: "POST",
             headers: {
@@ -65796,7 +70681,7 @@ var HttpService = /** @class */ (function () {
         }).then(function (response) { return response.json(); });
     };
     HttpService.prototype.quickLogin = function () {
-        return fetch("" + "http://172.18.0.100:17170/" + "account/quick_signin", {
+        return fetch("" + "https://api-dev.tooqing.com/" + "account/quick_signin", {
             method: "POST",
         }).then(function (response) { return response.json(); });
     };
@@ -65837,7 +70722,7 @@ var HttpService = /** @class */ (function () {
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch("" + "http://172.18.0.100:17170/" + uri, data).then(function (response) { return response.json(); });
+        return fetch("" + "https://api-dev.tooqing.com/" + uri, data).then(function (response) { return response.json(); });
     };
     HttpService.prototype.get = function (uri) {
         var account = this.mWorld.account;
@@ -65853,7 +70738,7 @@ var HttpService = /** @class */ (function () {
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch("" + "http://172.18.0.100:17170/" + uri, data).then(function (response) { return response.json(); });
+        return fetch("" + "https://api-dev.tooqing.com/" + uri, data).then(function (response) { return response.json(); });
     };
     return HttpService;
 }());
@@ -65861,7 +70746,7 @@ var HttpService = /** @class */ (function () {
 
 
 /***/ }),
-/* 393 */
+/* 394 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65943,10 +70828,10 @@ var GamePauseScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 394 */,
 /* 395 */,
 /* 396 */,
-/* 397 */
+/* 397 */,
+/* 398 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65986,7 +70871,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.RoundRectangle', roun
 
 /* harmony default export */ var Factory = (roundrectangle_RoundRectangle);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js + 1 modules
-var BBCodeText = __webpack_require__(23);
+var BBCodeText = __webpack_require__(22);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/bbcodetext/BBCodeText.js
 
@@ -66009,7 +70894,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.BBCodeText', bbcodete
 var Text = __webpack_require__(289);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules
-var TextStyle = __webpack_require__(222);
+var TextStyle = __webpack_require__(217);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/tagtext/Parser.js
 
@@ -66353,7 +71238,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.TagText', ui_tagtext_
 
 /* harmony default export */ var tagtext_Factory = (ui_tagtext_TagText);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/container/Container.js
-var Container = __webpack_require__(252);
+var Container = __webpack_require__(251);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/container/Factory.js
 
@@ -66983,7 +71868,7 @@ var GetExpandedChildHeight = function (child, rowHeight) {
 var ResizeGameObject = __webpack_require__(46);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/actions/GlobZone.js
-var GlobZone = __webpack_require__(57);
+var GlobZone = __webpack_require__(58);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/align/align/in/QuickSet.js + 23 modules
 var QuickSet = __webpack_require__(36);
@@ -67118,10 +72003,10 @@ var LayoutInitChild = function () {
     _layoutInit: _layoutInit,
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetBoundsConfig.js
-var GetBoundsConfig = __webpack_require__(127);
+var GetBoundsConfig = __webpack_require__(126);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/AlignConst.js
-var AlignConst = __webpack_require__(124);
+var AlignConst = __webpack_require__(123);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridsizer/GridSizer.js
 
@@ -67340,7 +72225,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.GridSizer', gridsizer
 
 /* harmony default export */ var gridsizer_Factory = (gridsizer_GridSizer);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(77);
+var DefaultMask = __webpack_require__(78);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/AddChildMask.js
 
@@ -67578,7 +72463,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Label', label_Label);
 
 /* harmony default export */ var label_Factory = (label_Label);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
-var Button = __webpack_require__(166);
+var Button = __webpack_require__(165);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/buttons/ButtonSetInteractive.js
 
@@ -67629,7 +72514,7 @@ var FireEvent = function (eventName, button, pointer, event) {
 
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetSizerConfig.js
-var GetSizerConfig = __webpack_require__(123);
+var GetSizerConfig = __webpack_require__(122);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/Hide.js
 
@@ -67951,7 +72836,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Slider', Slider["a" /
 
 /* harmony default export */ var slider_Factory = (Slider["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js + 31 modules
-var GridTable = __webpack_require__(214);
+var GridTable = __webpack_require__(286);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/Factory.js
 
@@ -68081,7 +72966,7 @@ var CreateButtons = function (scene, items, callback, scope) {
 
 /* harmony default export */ var menu_CreateButtons = (CreateButtons);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/defaultbounds/GetDefaultBounds.js
-var GetDefaultBounds = __webpack_require__(253);
+var GetDefaultBounds = __webpack_require__(252);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/menu/MenuSetInteractive.js
 var MenuSetInteractive = function (menu) {
@@ -68395,7 +73280,7 @@ var GetChildrenHeight_GetChildrenHeight = function () {
 
 /* harmony default export */ var scrollableblock_GetChildrenHeight = (GetChildrenHeight_GetChildrenHeight);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/containerlite/MaskChildren.js
-var MaskChildren = __webpack_require__(259);
+var MaskChildren = __webpack_require__(258);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollableblock/ResetChildPosition.js
 
@@ -68415,7 +73300,7 @@ var ResetChildPosition = function () {
 
 /* harmony default export */ var scrollableblock_ResetChildPosition = (ResetChildPosition);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/MaskToGameObject.js
-var MaskToGameObject = __webpack_require__(165);
+var MaskToGameObject = __webpack_require__(164);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollableblock/Layout.js
 
@@ -68483,7 +73368,7 @@ var Layout_Layout = function (parent, newWidth, newHeight) {
     layout: scrollableblock_Layout,
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/ScrollModeConst.js
-var ScrollModeConst = __webpack_require__(257);
+var ScrollModeConst = __webpack_require__(256);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollableblock/ScrollableBlock.js
 
@@ -68689,10 +73574,10 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.ScrollableBlock', scr
 
 /* harmony default export */ var scrollableblock_Factory = (scrollableblock_ScrollableBlock);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(216);
+var Scrollable = __webpack_require__(214);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
-var GetScrollMode = __webpack_require__(76);
+var GetScrollMode = __webpack_require__(77);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollablepanel/ScrollablePanel.js
 
@@ -68762,7 +73647,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.ScrollablePanel', scr
 var Tap = __webpack_require__(295);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/system/IsGameObject.js
-var IsGameObject = __webpack_require__(58);
+var IsGameObject = __webpack_require__(59);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/tap/Factory.js
 
@@ -68782,7 +73667,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Tap', Tap["a" /* defa
 
 /* harmony default export */ var tap_Factory = (Tap["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/press/Press.js + 1 modules
-var Press = __webpack_require__(296);
+var Press = __webpack_require__(294);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/press/Factory.js
 
@@ -68949,7 +73834,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Pan', ui_pan_Pan);
 var EventEmitterMethods = __webpack_require__(32);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clear.js
-var Clear = __webpack_require__(130);
+var Clear = __webpack_require__(129);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/input/gestures/twopointerstracer/TwoPointersTracer.js
 
@@ -69541,7 +74426,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Rotate', ui_rotate_Ro
 
 /* harmony default export */ var rotate_Factory = (ui_rotate_Rotate);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/tween/TweenBase.js
-var TweenBase = __webpack_require__(125);
+var TweenBase = __webpack_require__(124);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/behaviors/flip/GetFaceUpdatingCallback.js
 const GetFaceUpdatingCallback_IsPlainObject = Phaser.Utils.Objects.IsPlainObject;
@@ -69734,19 +74619,19 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Flip', ui_flip_Flip);
 
 /* harmony default export */ var flip_Factory = (ui_flip_Flip);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetParentSizer.js
-var GetParentSizer = __webpack_require__(126);
+var GetParentSizer = __webpack_require__(125);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetTopmostSizer.js
-var GetTopmostSizer = __webpack_require__(256);
+var GetTopmostSizer = __webpack_require__(255);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/input/IsPointerInBounds.js
-var IsPointerInBounds = __webpack_require__(255);
+var IsPointerInBounds = __webpack_require__(254);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/system/GetSceneObject.js
 var GetSceneObject = __webpack_require__(45);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js + 1 modules
-var InputText = __webpack_require__(22);
+var InputText = __webpack_require__(23);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/behaviors/textedit/CreateInputText.js
 
@@ -69948,7 +74833,7 @@ var Edit = function (gameObject, config, onCloseCallback) {
 
 /* harmony default export */ var textedit_Edit = (Edit);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/promise/WaitEvent.js
-var WaitEvent = __webpack_require__(59);
+var WaitEvent = __webpack_require__(60);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/WaitEvent.js
 
@@ -70032,7 +74917,7 @@ Object.assign(
 /* harmony default export */ var ui_plugin = __webpack_exports__["a"] = (ui_plugin_UIPlugin);
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70041,12 +74926,12 @@ Object.assign(
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ room_manager_RoomManager; });
 
 // EXTERNAL MODULE: ./src/rooms/element/element.manager.ts
-var element_manager = __webpack_require__(68);
+var element_manager = __webpack_require__(69);
 
 // EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
 var dist = __webpack_require__(4);
 
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(3);
 
 // EXTERNAL MODULE: ./src/utils/log.ts
@@ -70437,7 +75322,7 @@ var Friend = /** @class */ (function () {
 
 
 // EXTERNAL MODULE: ./src/ui/ControlF/ControlFMediator.ts
-var ControlFMediator = __webpack_require__(108);
+var ControlFMediator = __webpack_require__(107);
 
 // CONCATENATED MODULE: ./src/rooms/player/Actor.ts
 var Actor_extends = (undefined && undefined.__extends) || (function () {
@@ -70725,7 +75610,7 @@ var player_model_PlayerModel = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/Handler/Handler.ts
-var Handler = __webpack_require__(72);
+var Handler = __webpack_require__(73);
 
 // CONCATENATED MODULE: ./src/Handler/HandlerDispatcher.ts
 var HandlerDispatcher_extends = (undefined && undefined.__extends) || (function () {
@@ -71002,7 +75887,7 @@ var GroupEventType;
 })(GroupEventType || (GroupEventType = {}));
 
 // EXTERNAL MODULE: ./src/rooms/action/AIAction.ts
-var AIAction = __webpack_require__(231);
+var AIAction = __webpack_require__(229);
 
 // CONCATENATED MODULE: ./src/rooms/action/FollowAction.ts
 var FollowAction_extends = (undefined && undefined.__extends) || (function () {
@@ -71745,28 +76630,28 @@ var player_manager_PlayerManager = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/layer/layer.manager.ts + 1 modules
-var layer_manager = __webpack_require__(218);
+var layer_manager = __webpack_require__(216);
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.manager.ts
-var terrain_manager = __webpack_require__(110);
+var terrain_manager = __webpack_require__(109);
 
 // EXTERNAL MODULE: ./src/utils/position45.ts
 var position45 = __webpack_require__(40);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/cameras.manager.ts + 1 modules
-var cameras_manager = __webpack_require__(219);
+var cameras_manager = __webpack_require__(218);
 
 // EXTERNAL MODULE: ./src/scenes/play.ts
-var play = __webpack_require__(73);
+var play = __webpack_require__(74);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/viewblock.manager.ts + 1 modules
-var viewblock_manager = __webpack_require__(294);
+var viewblock_manager = __webpack_require__(296);
 
 // EXTERNAL MODULE: ./src/scenes/loading.ts
-var loading = __webpack_require__(67);
+var loading = __webpack_require__(68);
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.model.ts
-var frames_model = __webpack_require__(70);
+var frames_model = __webpack_require__(71);
 
 // CONCATENATED MODULE: ./src/rooms/map/map.model.ts
 
@@ -72012,10 +76897,10 @@ var map_Map = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/display/display.object.ts
-var display_object = __webpack_require__(53);
+var display_object = __webpack_require__(54);
 
 // EXTERNAL MODULE: ./src/rooms/editor/reference.area.ts
-var reference_area = __webpack_require__(230);
+var reference_area = __webpack_require__(228);
 
 // EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
 var resUtil = __webpack_require__(5);
@@ -72558,7 +77443,7 @@ var dynamic_image = __webpack_require__(18);
 var basic_scene = __webpack_require__(30);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/play.camera.ts
-var play_camera = __webpack_require__(236);
+var play_camera = __webpack_require__(234);
 
 // CONCATENATED MODULE: ./src/scenes/sky.box.ts
 var sky_box_extends = (undefined && undefined.__extends) || (function () {
@@ -72835,7 +77720,7 @@ var sky_box_manager_SkyBoxManager = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/game/sound.manager.ts
-var sound_manager = __webpack_require__(237);
+var sound_manager = __webpack_require__(235);
 
 // CONCATENATED MODULE: ./src/rooms/element/frame.manager.ts
 
@@ -73043,7 +77928,7 @@ var room_Room = /** @class */ (function (_super) {
                 this.addSkyBox(scenery);
             }
         }
-        __webpack_require__.e(/* import() */ 3).then(__webpack_require__.t.bind(null, 406, 7)).then(function (_a) {
+        __webpack_require__.e(/* import() */ 3).then(__webpack_require__.t.bind(null, 407, 7)).then(function (_a) {
             var Template = _a.Template;
             var tmp = new Template();
             tmp.init(_this.world);
@@ -73525,10 +78410,10 @@ var Brush = /** @class */ (function () {
 
 
 // EXTERNAL MODULE: ./src/scenes/edit.ts
-var edit = __webpack_require__(238);
+var edit = __webpack_require__(236);
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.display.ts
-var frames_display = __webpack_require__(69);
+var frames_display = __webpack_require__(70);
 
 // CONCATENATED MODULE: ./src/rooms/editor/mouse.follow.ts
 var mouse_follow_extends = (undefined && undefined.__extends) || (function () {
@@ -73944,7 +78829,7 @@ var mouse_follow_EraserArea = /** @class */ (function (_super) {
 }(mouse_follow_MouseDisplayContainer));
 
 // EXTERNAL MODULE: ./src/rooms/display/terrain.display.ts
-var terrain_display = __webpack_require__(111);
+var terrain_display = __webpack_require__(110);
 
 // CONCATENATED MODULE: ./src/rooms/editor/selected.element.ts
 
@@ -74741,7 +79626,7 @@ var editor_moss_manager_EditorMossManager = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.ts
-var terrain_terrain = __webpack_require__(234);
+var terrain_terrain = __webpack_require__(232);
 
 // CONCATENATED MODULE: ./src/rooms/display-object.pool.ts
 
@@ -75139,6 +80024,9 @@ var editor_room_EditorRoom = /** @class */ (function (_super) {
         }
         if (this.displayObjectPool) {
             this.displayObjectPool.destroy();
+        }
+        if (this.editorSkyboxManager) {
+            this.editorSkyboxManager.destroy();
         }
         _super.prototype.destroy.call(this);
     };
@@ -75735,8 +80623,8 @@ var room_manager_RoomManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 399 */,
-/* 400 */
+/* 400 */,
+/* 401 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -75748,7 +80636,7 @@ __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding *
 var dist = __webpack_require__(4);
 
 // EXTERNAL MODULE: ./src/scenes/loading.ts
-var loading = __webpack_require__(67);
+var loading = __webpack_require__(68);
 
 // EXTERNAL MODULE: ./src/scenes/basic.scene.ts
 var basic_scene = __webpack_require__(30);
@@ -75796,7 +80684,7 @@ var BasePanel = __webpack_require__(6);
 var ninepatch_button = __webpack_require__(19);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js + 1 modules
-var InputText = __webpack_require__(22);
+var InputText = __webpack_require__(23);
 
 // EXTERNAL MODULE: ./src/ui/components/nine.patch.ts
 var nine_patch = __webpack_require__(14);
@@ -76073,7 +80961,7 @@ var create_role_panel_CreateRolePanel = /** @class */ (function (_super) {
 }(BasePanel["BasePanel"]));
 
 
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(3);
 
 // CONCATENATED MODULE: ./src/role/create.role.ts
@@ -76223,71 +81111,13 @@ var role_manager_RoleManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 401 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch.js + 8 modules
-var NinePatch = __webpack_require__(37);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/ninepatch/Factory.js
-
-
-/* harmony default export */ var Factory = (function (x, y, width, height, key, baseFrame, columns, rows, config) {
-    var gameObject = new NinePatch["a" /* default */](this.scene, x, y, width, height, key, baseFrame, columns, rows, config);
-    this.scene.add.existing(gameObject);
-    return gameObject;
-});
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/ninepatch/Creator.js
-
-
-const BuildGameObject = Phaser.GameObjects.BuildGameObject;
-
-/* harmony default export */ var Creator = (function (config, addToScene) {
-    if (addToScene !== undefined) {
-        config.add = addToScene;
-    }
-    var gameObject = new NinePatch["a" /* default */](this.scene, config);
-    BuildGameObject(this.scene, gameObject, config);
-    return gameObject;
-});;
-// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/SetValue.js
-var SetValue = __webpack_require__(11);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/plugins/ninepatch-plugin.js
-
-
-
-
-
-class ninepatch_plugin_NinePatchPlugin extends Phaser.Plugins.BasePlugin {
-
-    constructor(pluginManager) {
-        super(pluginManager);
-
-        //  Register our new Game Object type
-        pluginManager.registerGameObject('rexNinePatch', Factory, Creator);
-    }
-
-    start() {
-        var eventEmitter = this.game.events;
-        eventEmitter.on('destroy', this.destroy, this);
-    }
-}
-
-Object(SetValue["a" /* default */])(window, 'RexPlugins.GameObjects.NinePatch', NinePatch["a" /* default */]);
-
-/* harmony default export */ var ninepatch_plugin = __webpack_exports__["a"] = (ninepatch_plugin_NinePatchPlugin);
-
-/***/ }),
 /* 402 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js + 1 modules
-var InputText = __webpack_require__(22);
+var InputText = __webpack_require__(23);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/inputtext/Factory.js
 
@@ -76347,8 +81177,66 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.GameObjects.InputText', 
 
 "use strict";
 
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch.js + 8 modules
+var NinePatch = __webpack_require__(37);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/ninepatch/Factory.js
+
+
+/* harmony default export */ var Factory = (function (x, y, width, height, key, baseFrame, columns, rows, config) {
+    var gameObject = new NinePatch["a" /* default */](this.scene, x, y, width, height, key, baseFrame, columns, rows, config);
+    this.scene.add.existing(gameObject);
+    return gameObject;
+});
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/ninepatch/Creator.js
+
+
+const BuildGameObject = Phaser.GameObjects.BuildGameObject;
+
+/* harmony default export */ var Creator = (function (config, addToScene) {
+    if (addToScene !== undefined) {
+        config.add = addToScene;
+    }
+    var gameObject = new NinePatch["a" /* default */](this.scene, config);
+    BuildGameObject(this.scene, gameObject, config);
+    return gameObject;
+});;
+// EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/SetValue.js
+var SetValue = __webpack_require__(11);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/plugins/ninepatch-plugin.js
+
+
+
+
+
+class ninepatch_plugin_NinePatchPlugin extends Phaser.Plugins.BasePlugin {
+
+    constructor(pluginManager) {
+        super(pluginManager);
+
+        //  Register our new Game Object type
+        pluginManager.registerGameObject('rexNinePatch', Factory, Creator);
+    }
+
+    start() {
+        var eventEmitter = this.game.events;
+        eventEmitter.on('destroy', this.destroy, this);
+    }
+}
+
+Object(SetValue["a" /* default */])(window, 'RexPlugins.GameObjects.NinePatch', NinePatch["a" /* default */]);
+
+/* harmony default export */ var ninepatch_plugin = __webpack_exports__["a"] = (ninepatch_plugin_NinePatchPlugin);
+
+/***/ }),
+/* 404 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js + 1 modules
-var BBCodeText = __webpack_require__(23);
+var BBCodeText = __webpack_require__(22);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/bbcodetext/Factory.js
 
@@ -76441,13 +81329,13 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.GameObjects.BBCodeText',
 /* harmony default export */ var bbcodetext_plugin = __webpack_exports__["a"] = (bbcodetext_plugin_BBCodeTextPlugin);
 
 /***/ }),
-/* 404 */
+/* 405 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
-var Button = __webpack_require__(166);
+var Button = __webpack_require__(165);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/button.js
 
@@ -76475,7 +81363,7 @@ class button_plugin_ButtonPlugin extends Phaser.Plugins.BasePlugin {
 /* harmony default export */ var button_plugin = __webpack_exports__["a"] = (button_plugin_ButtonPlugin);
 
 /***/ }),
-/* 405 */
+/* 406 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76486,7 +81374,7 @@ __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding *
 // EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
 var dist = __webpack_require__(4);
 
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
+// EXTERNAL MODULE: ../game-capsule/node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(3);
 
 // CONCATENATED MODULE: ./src/utils/algorithm.ts
