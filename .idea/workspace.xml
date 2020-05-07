@@ -1,262 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="">
+    <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
+      <change afterPath="$PROJECT_DIR$/src/scenes/create.player.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/manager/KeyboardMod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/common/manager/KeyboardMod.ts" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/states/boot.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Game.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/states/preloader.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/states/game.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="24" column="31" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/manager/LayerManager.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
-              <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/manager/TickManager.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="882">
-              <caret line="44" column="11" selection-start-line="44" selection-start-column="11" selection-end-line="44" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Scene/SceneModule.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/base/layout/base/Layout.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="756">
-              <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/common/manager/KeyboardMod.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="74" selection-start-line="74" selection-end-line="74" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/GameConfig.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#60#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="FavoritesManager">
+    <favorites_list name="game-core" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/Assets.ts" />
-        <option value="$PROJECT_DIR$/base/ds/flow/BasicFlow.ts" />
-        <option value="$PROJECT_DIR$/common/manager/KeyboardMod.ts" />
-      </list>
+  <component name="Git.Update.Project.Info.Tabs.Properties">
+    <option name="COLUMN_WIDTH">
+      <map>
+        <entry key="2" value="135" />
+        <entry key="3" value="207" />
+      </map>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="984" />
-    <option name="y" value="40" />
-    <option name="width" value="1576" />
-    <option name="height" value="1289" />
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="component" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="component" type="462c0819:PsiDirectoryNode" />
-              <item name="button" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="ds" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="ds" type="462c0819:PsiDirectoryNode" />
-              <item name="flow" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="layout" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="layout" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="base" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="interfaces" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="manager" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="Scene" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="game-core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="game-core" type="462c0819:PsiDirectoryNode" />
-              <item name="states" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+  <component name="ProjectId" id="1ORojSuavQoq9JYUjCfGHzArLNU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/pixelpai_proto/protocols.d.ts&#10;true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../game-editor-v2" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -265,7 +56,26 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="ts.external.directory.path" value="C:\Users\Seven\AppData\Local\JetBrains\Toolbox\apps\WebStorm\ch-0\191.6183.63\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="ts.rename.search.for.js.occurrences" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\PixelPai\game-core\src\rooms" />
+      <recent name="E:\PixelPai\game-core\src\ui" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms" />
+      <recent name="C:\Users\Seven\git\game-core\src\utils" />
+      <recent name="C:\Users\Seven\git\game-core\src\rooms\cameras" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/config" />
+      <recent name="C:\Users\Seven\git\game-core\config" />
+      <recent name="C:\Users\Seven\git\game-core\src\net" />
+      <recent name="C:\Users\Seven\git\game-core\net" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -278,6 +88,31 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="build:dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JavaScript Debug.dev-Cheome" />
+      <item itemvalue="npm.dev" />
+      <item itemvalue="npm.build:dev" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.build:dev" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -296,187 +131,487 @@
       <workItem from="1554267108669" duration="74000" />
       <workItem from="1554270995460" duration="2066000" />
       <workItem from="1554341791542" duration="625000" />
-      <workItem from="1554715223781" duration="113000" />
+      <workItem from="1554715223781" duration="869000" />
+      <workItem from="1557822325156" duration="651000" />
+      <workItem from="1562133673210" duration="3393000" />
+      <workItem from="1562221911270" duration="2203000" />
+      <workItem from="1562294132209" duration="2717000" />
+      <workItem from="1562378857187" duration="14479000" />
+      <workItem from="1562835981428" duration="3221000" />
+      <workItem from="1563429954166" duration="11845000" />
+      <workItem from="1563772349272" duration="604000" />
+      <workItem from="1563949910946" duration="4996000" />
+      <workItem from="1564380592158" duration="2694000" />
+      <workItem from="1564409638251" duration="2650000" />
+      <workItem from="1564477729270" duration="674000" />
+      <workItem from="1564631527223" duration="6541000" />
+      <workItem from="1564809075933" duration="10148000" />
+      <workItem from="1564970083630" duration="1630000" />
+      <workItem from="1564980046684" duration="2637000" />
+      <workItem from="1565235464091" duration="714000" />
+      <workItem from="1565236208510" duration="525000" />
+      <workItem from="1565364784221" duration="6097000" />
+      <workItem from="1565420950324" duration="8548000" />
+      <workItem from="1565668797502" duration="7642000" />
+      <workItem from="1565698316895" duration="6986000" />
+      <workItem from="1565933463638" duration="1584000" />
+      <workItem from="1566195347910" duration="3997000" />
+      <workItem from="1566210781753" duration="14640000" />
+      <workItem from="1566907507305" duration="44695000" />
+      <workItem from="1567128848939" duration="2985000" />
+      <workItem from="1567407895193" duration="807000" />
+      <workItem from="1567478675060" duration="262000" />
+      <workItem from="1567478962416" duration="2515000" />
+      <workItem from="1567562861757" duration="13274000" />
+      <workItem from="1567751255567" duration="4221000" />
+      <workItem from="1567766395281" duration="543000" />
+      <workItem from="1567766962609" duration="2806000" />
+      <workItem from="1567825722564" duration="11022000" />
+      <workItem from="1568001669375" duration="4984000" />
+      <workItem from="1568011754231" duration="1110000" />
+      <workItem from="1568014154330" duration="183000" />
+      <workItem from="1568014434021" duration="60000" />
+      <workItem from="1568014515647" duration="103000" />
+      <workItem from="1568014640474" duration="1593000" />
+      <workItem from="1568166572125" duration="420000" />
+      <workItem from="1568169900485" duration="13125000" />
+      <workItem from="1568191348183" duration="4894000" />
+      <workItem from="1568608042628" duration="13357000" />
+      <workItem from="1568684263829" duration="9442000" />
+      <workItem from="1569822411121" duration="24399000" />
+      <workItem from="1570523032170" duration="36283000" />
+      <workItem from="1572837842157" duration="158004000" />
+      <workItem from="1573565297283" duration="2280000" />
+      <workItem from="1573606738221" duration="39369000" />
+      <workItem from="1573823097555" duration="5074000" />
+      <workItem from="1574039467681" duration="5802000" />
+      <workItem from="1574826545576" duration="6370000" />
+      <workItem from="1576051405429" duration="11451000" />
+      <workItem from="1576721350798" duration="16786000" />
+      <workItem from="1579141016555" duration="1117000" />
     </task>
+    <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <created>1567132047108</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1567132047108</updated>
+    </task>
+    <task id="LOCAL-00002" summary="修改 room 里的结构，和display里结构">
+      <created>1567230011160</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1567230011160</updated>
+    </task>
+    <task id="LOCAL-00003" summary="M room">
+      <created>1567230937584</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1567230937584</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Package.json">
+      <created>1567671897799</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1567671897799</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Package.json">
+      <created>1567754586414</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1567754586414</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix clock sync">
+      <created>1567829074624</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1567829074624</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix clock sync">
+      <created>1567836919279</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1567836919279</updated>
+    </task>
+    <task id="LOCAL-00008" summary="M launcher">
+      <created>1568015707771</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1568015707771</updated>
+    </task>
+    <task id="LOCAL-00009" summary="M gameconfig">
+      <created>1568084467657</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1568084467657</updated>
+    </task>
+    <task id="LOCAL-00010" summary="M webpack">
+      <created>1568113497554</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1568113497554</updated>
+    </task>
+    <task id="LOCAL-00011" summary="A version.js">
+      <created>1568113526140</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1568113526140</updated>
+    </task>
+    <task id="LOCAL-00012" summary="A GameMain">
+      <created>1568172062099</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1568172062099</updated>
+    </task>
+    <task id="LOCAL-00013" summary="A element">
+      <created>1568183815090</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1568183815090</updated>
+    </task>
+    <task id="LOCAL-00014" summary="A TODO">
+      <created>1568191919273</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1568191919273</updated>
+    </task>
+    <task id="LOCAL-00015" summary="调整地块和时钟同步顺序进行（原：并发执行）">
+      <created>1568629639999</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1568629639999</updated>
+    </task>
+    <task id="LOCAL-00016" summary="调整地块和时钟同步顺序进行（原：并发执行） Fixed">
+      <created>1568630516720</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1568630516720</updated>
+    </task>
+    <task id="LOCAL-00017" summary="去除页面滚动条，游戏大小自适应网页大小">
+      <created>1568685136986</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1568685136986</updated>
+    </task>
+    <task id="LOCAL-00018" summary="使用bbcodetext替换text">
+      <created>1569673577409</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1569673577409</updated>
+    </task>
+    <task id="LOCAL-00019" summary="物件选择&#10;更新dragonbones">
+      <created>1569843811969</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1569843811969</updated>
+    </task>
+    <task id="LOCAL-00020" summary="ui 结构修改">
+      <created>1570612166637</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1570612166637</updated>
+    </task>
+    <task id="LOCAL-00021" summary="隐藏NPC绑定的物件">
+      <created>1570631723456</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1570631723456</updated>
+    </task>
+    <task id="LOCAL-00022" summary="notice and controlF">
+      <created>1570710779702</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1570710779702</updated>
+    </task>
+    <task id="LOCAL-00023" summary="排行榜优化">
+      <created>1570715427160</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1570715427160</updated>
+    </task>
+    <task id="LOCAL-00024" summary="add terser plugin keep classname">
+      <created>1570781542064</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1570781542064</updated>
+    </task>
+    <task id="LOCAL-00025" summary="显示、隐藏网格&#10;笔触设定&#10;镜头拖动">
+      <created>1572007987111</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1572007987111</updated>
+    </task>
+    <task id="LOCAL-00026" summary="解析animation">
+      <created>1572089227356</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1572089227356</updated>
+    </task>
+    <task id="LOCAL-00027" summary="remove element">
+      <created>1572580595566</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1572580595566</updated>
+    </task>
+    <task id="LOCAL-00028" summary="sync sprite">
+      <created>1572593189160</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1572593189160</updated>
+    </task>
+    <task id="LOCAL-00029" summary="按下移动删除地块">
+      <created>1572685417354</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1572685417370</updated>
+    </task>
+    <task id="LOCAL-00030" summary="add release">
+      <created>1572945659146</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1572945659146</updated>
+    </task>
+    <task id="LOCAL-00031" summary="#63 #64">
+      <created>1573045125770</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1573045125770</updated>
+    </task>
+    <task id="LOCAL-00032" summary="铺设地块">
+      <created>1573206162029</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1573206162029</updated>
+    </task>
+    <task id="LOCAL-00033" summary="排序">
+      <created>1573206656401</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1573206656401</updated>
+    </task>
+    <task id="LOCAL-00034" summary="绘制地块设置大小">
+      <created>1573480356310</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1573480356310</updated>
+    </task>
+    <task id="LOCAL-00035" summary="编辑器删除对象">
+      <created>1573552690411</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1573552690411</updated>
+    </task>
+    <task id="LOCAL-00036" summary="修复物件吸附位置Bug">
+      <created>1573565850423</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1573565850423</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fixed bug">
+      <created>1573611556267</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1573611556267</updated>
+    </task>
+    <task id="LOCAL-00038" summary="sync sprite">
+      <created>1573623762295</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1573623762295</updated>
+    </task>
+    <task id="LOCAL-00039" summary="id生成规则">
+      <created>1573625116083</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1573625116083</updated>
+    </task>
+    <task id="LOCAL-00040" summary="sprite to client.sprite">
+      <created>1573632438584</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1573632438584</updated>
+    </task>
+    <task id="LOCAL-00041" summary="v1.0.7">
+      <created>1573637977890</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1573637977890</updated>
+    </task>
+    <task id="LOCAL-00042" summary="移动对象，移动同步改成鼠标松开同步">
+      <created>1573699922136</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1573699922136</updated>
+    </task>
+    <task id="LOCAL-00043" summary="v1.0.8">
+      <created>1573700881769</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1573700881769</updated>
+    </task>
+    <task id="LOCAL-00044" summary="橡皮擦工具禁用surface Interactive，不擦除该层对象">
+      <created>1573827754657</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1573827754657</updated>
+    </task>
+    <task id="LOCAL-00045" summary="merge">
+      <created>1574317284510</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1574317284510</updated>
+    </task>
+    <task id="LOCAL-00046" summary="fix bug">
+      <created>1574342269552</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1574342269552</updated>
+    </task>
+    <task id="LOCAL-00047" summary="修复rows cols不一致的情况下地图地块位置问题">
+      <created>1574406653420</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1574406653420</updated>
+    </task>
+    <task id="LOCAL-00048" summary="fixed bug">
+      <created>1574836945579</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1574836945580</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fixed bug game-editor#362">
+      <created>1574844592915</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1574844592915</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5789000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="984" y="40" width="1576" height="1289" extended-state="0" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27563685" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3298969" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="TypeScript" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.3160763" />
-      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Assets.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="33" column="51" selection-start-line="33" selection-start-column="51" selection-end-line="33" selection-end-column="51" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/ds/UniqueLinkList.ts">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/ds/QuadTreeTest.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/module/interfaces/IModule.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/module/core/Module.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="5" column="35" lean-forward="true" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/ds/flow/BasicFlow.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/BasicViewElement.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/manager/LayoutManager.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/states/boot.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Game.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/states/preloader.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/states/game.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="24" column="31" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/manager/TickManager.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="44" column="11" selection-start-line="44" selection-start-column="11" selection-end-line="44" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Scene/SceneModule.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base/layout/base/Layout.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="756">
-          <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GameConfig.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#60#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/manager/LayerManager.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/manager/KeyboardMod.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="74" selection-start-line="74" selection-end-line="74" />
-        </state>
-      </provider>
-    </entry>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="LONG_EDGES_VISIBLE" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="user">
+                    <value>
+                      <list>
+                        <option value="me" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="me" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="排行榜优化" />
+    <MESSAGE value="add terser plugin keep classname" />
+    <MESSAGE value="显示、隐藏网格&#10;笔触设定&#10;镜头拖动" />
+    <MESSAGE value="解析animation" />
+    <MESSAGE value="remove element" />
+    <MESSAGE value="按下移动删除地块" />
+    <MESSAGE value="add release" />
+    <MESSAGE value="#63 #64" />
+    <MESSAGE value="铺设地块" />
+    <MESSAGE value="排序" />
+    <MESSAGE value="绘制地块设置大小" />
+    <MESSAGE value="编辑器删除对象" />
+    <MESSAGE value="修复物件吸附位置Bug" />
+    <MESSAGE value="sync sprite" />
+    <MESSAGE value="id生成规则" />
+    <MESSAGE value="sprite to client.sprite" />
+    <MESSAGE value="v1.0.7" />
+    <MESSAGE value="移动对象，移动同步改成鼠标松开同步" />
+    <MESSAGE value="v1.0.8" />
+    <MESSAGE value="橡皮擦工具禁用surface Interactive，不擦除该层对象" />
+    <MESSAGE value="merge" />
+    <MESSAGE value="fix bug" />
+    <MESSAGE value="修复rows cols不一致的情况下地图地块位置问题" />
+    <MESSAGE value="fixed bug" />
+    <MESSAGE value="fixed bug game-editor#362" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug game-editor#362" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="dart-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -1,0 +1,34 @@
+import GameObjects = Phaser.GameObjects;
+import Scroller from "../../../lib/rexui/lib/plugins/input/scroller/Scroller";
+
+export class ScrollerContainer extends Scroller {
+    private mMask: GameObjects.Graphics;
+    private mScroller: Scroller;
+    constructor(scene: Phaser.Scene, rect: Phaser.Geom.Rectangle, target: GameObjects.Container | GameObjects.Text | GameObjects.Sprite) {
+        super(scene);
+        if (!target) {
+            // Logger.getInstance().error("scroller target does not exise");
+            return;
+        }
+        // this.mMask = this.scene.make.graphics(undefined, false)
+        //     .fillStyle(0x000033, 1)
+        //     .fillRect(rect.x, rect.y, rect.width, rect.height)
+        //     .setInteractive(rect, Phaser.Geom.Rectangle.Contains);
+
+        // this.add(this.mMask);
+        const graphics = new GameObjects.Graphics(scene)
+            .fillStyle(0x000033, 1)
+            .fillRect(rect.x, rect.y, rect.width, rect.height)
+            .setInteractive(rect, Phaser.Geom.Rectangle.Contains);
+
+        target.setMask(this.mMask.createGeometryMask());
+
+        // this.add(target);
+
+        this.mScroller = new Scroller(this.mMask, {
+            valuechangeCallback: (newValue) => {
+                target.y = newValue;
+            }
+        });
+    }
+}

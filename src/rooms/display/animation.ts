@@ -1,0 +1,155 @@
+import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
+import { op_gameconfig, op_def } from "pixelpai_proto";
+import { IPoint } from "game-capsule/lib/helpers";
+import { Logger } from "../../utils/log";
+export interface IAnimationData {
+    name: string;
+    frameName: string[];
+    frameRate: number;
+    loop: boolean;
+    baseLoc: Phaser.Geom.Point;
+    collisionArea?: number[][];
+    walkableArea?: number[][];
+    originPoint: Phaser.Geom.Point;
+
+    readonly interactiveArea?: op_def.IPBPoint2i[];
+
+    toClient(): op_gameconfig.IAnimation;
+}
+
+export class Animation implements IAnimationData {
+    protected mID: number;
+    protected mBaseLoc: Phaser.Geom.Point;
+    protected mFrameName: string[];
+    protected mFrameRate: number;
+    protected mLoop: boolean;
+    protected mName: string;
+    protected mCollisionArea: number[][];
+    protected mWalkableArea: number[][];
+    protected mOriginPoint: Phaser.Geom.Point;
+    protected mInteractiveArea: IPoint[];
+
+    constructor(ani: AnimationDataNode | op_gameconfig.IAnimation) {
+        let tmpBaseLoc = null;
+        if (typeof ani.baseLoc === "string") {
+            tmpBaseLoc = ani.baseLoc.split(",");
+        } else {
+            tmpBaseLoc = [ani.baseLoc.x, ani.baseLoc.y];
+        }
+        this.mID = ani.id;
+        this.mBaseLoc = tmpBaseLoc;
+        this.mName = ani.name;
+        this.mFrameName = ani.frameName;
+        if (!ani.frameName || this.mFrameName.length < 1) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} frames is invalid`);
+        }
+        this.mLoop = ani.loop;
+        if (!ani.loop) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} loop is invalid`);
+        }
+        if (!ani.frameRate) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} frameRate is invalid`);
+        }
+        if (ani.originPoint) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} originPoint is invalid`);
+        }
+        if (!ani.baseLoc) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} baseLoc is invalid`);
+        }
+        this.mFrameRate = ani.frameRate;
+        this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
+        const origin = ani.originPoint;
+        if (Array.isArray(origin)) {
+            this.mOriginPoint = new Phaser.Geom.Point(origin[0], origin[1]);
+        } else {
+            this.mOriginPoint = new Phaser.Geom.Point(origin.x, origin.y);
+        }
+        if (typeof ani.collisionArea === "string") {
+            this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
+        } else {
+            this.mCollisionArea = ani.collisionArea || [[0]];
+        }
+
+        if (typeof ani.walkableArea === "string") {
+            this.mWalkableArea = this.stringToArray(ani.walkableArea, ",", "&") || [[0]];
+        } else {
+            this.mWalkableArea = ani.walkableArea || [[0]];
+        }
+        // this.mInteractiveArea = [{x: 0, y: 0}];
+        this.mInteractiveArea = ani.interactiveArea;
+    }
+
+    toClient(): op_gameconfig.IAnimation {
+        const ani = op_gameconfig.Animation.create();
+        ani.id = this.id;
+        ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
+        ani.name = this.name;
+        ani.loop = this.loop;
+        ani.frameRate = this.frameRate;
+        ani.frameName = this.frameName;
+        ani.originPoint = [this.originPoint.x, this.originPoint.y];
+        ani.walkOriginPoint = [this.originPoint.x, this.originPoint.y];
+        ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
+        ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
+        ani.interactiveArea = this.mInteractiveArea;
+        return ani;
+    }
+
+    private stringToArray(string: string, fristJoin: string, lastJoin: string) {
+        if (!string) {
+            return;
+        }
+        const tmp = string.split(lastJoin);
+        const result = [];
+        for (const ary of tmp) {
+            const tmpAry = ary.split(fristJoin);
+            result.push(tmpAry.map((value) => parseInt(value, 10)));
+        }
+        return result;
+    }
+
+    private arrayToString<T>(array: T[][], fristJoin: string, lastJoin: string): string {
+        if (!array) return "";
+        const tmp = [];
+        for (const ary of array) {
+            tmp.push(ary.join(fristJoin));
+        }
+        return tmp.join(lastJoin);
+    }
+
+    get baseLoc(): Phaser.Geom.Point {
+        return this.mBaseLoc;
+    }
+
+    get id(): number {
+        return this.mID;
+    }
+
+    get frameName(): string[] {
+        return this.mFrameName;
+    }
+
+    get frameRate(): number {
+        return this.mFrameRate;
+    }
+
+    get loop(): boolean {
+        return this.mLoop;
+    }
+
+    get name(): string {
+        return this.mName;
+    }
+
+    get collisionArea(): number[][] {
+        return this.mCollisionArea;
+    }
+
+    get originPoint(): Phaser.Geom.Point {
+        return this.mOriginPoint;
+    }
+
+    get interactiveArea(): op_def.IPBPoint2i[] {
+        return this.mInteractiveArea;
+    }
+}
