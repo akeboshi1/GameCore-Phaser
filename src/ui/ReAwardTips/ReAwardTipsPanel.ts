@@ -129,13 +129,12 @@ class AwardItem extends Phaser.GameObjects.Container {
             ease: "Bounce.easeOut",
             onComplete: () => {
                 this.emit("show");
+                this.closeDelay = setTimeout(() => {
+                    this.closeTween();
+                }, 1000);
             },
             duration: 300
         });
-
-        this.closeDelay = setTimeout(() => {
-            this.closeTween();
-        }, 1000);
     }
 
     closeTween() {

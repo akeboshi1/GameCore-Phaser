@@ -24272,12 +24272,12 @@ var AwardItem = /** @class */ (function (_super) {
             ease: "Bounce.easeOut",
             onComplete: function () {
                 _this.emit("show");
+                _this.closeDelay = setTimeout(function () {
+                    _this.closeTween();
+                }, 1000);
             },
             duration: 300
         });
-        this.closeDelay = setTimeout(function () {
-            _this.closeTween();
-        }, 1000);
     };
     AwardItem.prototype.closeTween = function () {
         var _this = this;
