@@ -168,7 +168,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             if (terrain) {
                 const sp = new Sprite(sprite, content.nodeType);
                 terrain.model = sp;
-                this.addMap(sp);
+                // this.addMap(sp);
                 // terrain.setRenderable(true);
             }
         }
