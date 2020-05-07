@@ -63,7 +63,7 @@ export class FurniBagPanel extends BasePanel {
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
 
-    this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
+    this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
 
@@ -73,6 +73,7 @@ export class FurniBagPanel extends BasePanel {
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
     this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
+    this.mCategeoriesContainer.y = this.mShelfContainer.y;
     this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
 
     this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
@@ -123,7 +124,7 @@ export class FurniBagPanel extends BasePanel {
     }
     if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
+    this.mPropGrid.y = this.mShelfContainer.y + 175 * this.dpr * zoom;
     this.mPropGrid.layout();
     this.updateCategeoriesLoc(false);
   }
@@ -141,6 +142,10 @@ export class FurniBagPanel extends BasePanel {
     this.mPropGrid.setItems(props);
     if (this.mSelectItem)
       this.onSelectItemHandler(this.mSelectItem);
+    else {
+      this.sellBtn.enable = false;
+      this.useBtn.enable = false;
+    }
   }
 
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
@@ -199,7 +204,7 @@ export class FurniBagPanel extends BasePanel {
     }, false).setScale(zoom);
 
     this.mShelfContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.setSize(width, 277 * this.dpr * zoom);
+    this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mPropsContainer = this.scene.make.container(undefined, false);
     this.mCategeoriesContainer = this.scene.make.container(undefined, false);
@@ -345,10 +350,10 @@ export class FurniBagPanel extends BasePanel {
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
     this.mPropGrid = new GridTable(this.scene, {
       x: w / 2,
-      y: 1050 + (41 * this.dpr * zoom) / 2,
+      y: this.mShelfContainer.y + 20 * this.dpr * zoom,
       table: {
-        width: w - 10 * this.dpr * zoom,
-        height: 224 * this.dpr * zoom,
+        width: w,
+        height: 250 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
