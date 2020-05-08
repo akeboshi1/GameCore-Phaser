@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatch } from "../components/nine.patch";
-export class EquipUpgradeItem extends Phaser.GameObjects.Container {
+export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
     private bottombg: Phaser.GameObjects.Image;
@@ -27,12 +27,16 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     private zoom: number;
     private cellWidth: number = 0;
     private cellHeight: number = 0;
-    constructor(scene: Phaser.Scene, dpr: number, zoom: number, key: string, commonKey: string) {
-        super(scene);
+    private mScene: Phaser.Scene;
+    private mContainer: Phaser.GameObjects.Container;
+    constructor(scene: Phaser.Scene, container: Phaser.GameObjects.Container, dpr: number, zoom: number, key: string, commonKey: string) {
+        super();
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = key;
         this.commonKey = commonKey;
+        this.mScene = scene;
+        this.mContainer = container;
         this.create();
     }
     setEquipItems(data: op_client.IMiningEquipmenetArray) {
@@ -55,11 +59,21 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     setTransPosition(x: number, y: number) {
-        this.setPosition(x, y);
-        const w = this.scene.cameras.main.width, h = this.scene.cameras.main.height;
-        const posX = w * 0.5 + this.x * this.zoom;
-        const posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
-        this.gridTable.refreshPos(posX, posY); //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        const w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
+        const posX = w * 0.5 + this.mContainer.x * this.zoom;
+        const posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
+        this.gridTable.refreshPos(x, y); //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        this.bg.y += y;
+        this.titleName.y += y;
+        this.bottombg.y += y;
+        this.equipName.y += y;
+        this.penetrationText.y += y;
+        this.equipDes.y += y;
+        this.topbg.y += y;
+        this.unlockbtn.y += y;
+        this.costNum.y += y;
+        this.diamondIcon.y += y;
+        this.curEquipItem.y += y;
         // this.gridTable.x = posX;
         // this.gridTable.y = posY;
         // this.gridTable.layout();
@@ -104,30 +118,30 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     private create() {
-        this.bg = this.scene.make.image({ x: 0, y: -21 * this.dpr, key: this.key, frame: "bg1" });
-        this.topbg = this.scene.make.image({ x: 0, y: -61 * this.dpr, key: this.key, frame: "topbg" });
-        this.titleName = this.scene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } }).setOrigin(0.5, 0.5);
-        this.bottombg = this.scene.make.image({ x: 0, y: 42 * this.dpr, key: this.key, frame: "bottombg" });
-        this.equipName = this.scene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } });
-        this.penetrationText = this.scene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#8F4300", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } });
-        this.equipDes = this.scene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
+        this.bg = this.mScene.make.image({ x: 0, y: -21 * this.dpr, key: this.key, frame: "bg1" });
+        this.topbg = this.mScene.make.image({ x: 0, y: -61 * this.dpr, key: this.key, frame: "topbg" });
+        this.titleName = this.mScene.make.text({ x: 0, y: this.topbg.y + 0 * this.dpr, text: "矿镐", style: { blod: true, color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } }).setOrigin(0.5, 0.5);
+        this.bottombg = this.mScene.make.image({ x: 0, y: 42 * this.dpr, key: this.key, frame: "bottombg" });
+        this.equipName = this.mScene.make.text({ x: -120 * this.dpr, y: 15 * this.dpr, text: "精铁镐", style: { color: "#8F4300", fontSize: 14 * this.dpr, font: this.getBoldFont(14 * this.dpr) } });
+        this.penetrationText = this.mScene.make.text({ x: -60 * this.dpr, y: 16 * this.dpr, text: "穿透力:10", style: { color: "#8F4300", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } });
+        this.equipDes = this.mScene.make.text({ x: -120 * this.dpr, y: 35 * this.dpr, text: "描述文字", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, wordWrap: { width: 130 * this.dpr, useAdvancedWrap: true } } });
         this.equipDes.setStroke("#000000", 1);
-        this.add([this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes]);
+        this.mContainer.add([this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes]);
         this.createGridTable();
         this.createBtn();
     }
 
     private createGridTable() {
-        // this.mScrollContainer = this.scene.make.container(undefined, false);
+        // this.mScrollContainer = this.mScene.make.container(undefined, false);
         // this.mScrollContainer.setPosition(0, 0);
-        const propFrame = this.scene.textures.getFrame(this.key, "equipbg");
+        const propFrame = this.mScene.textures.getFrame(this.key, "equipbg");
         const capW = (propFrame.width + 10 * this.dpr * this.zoom);
         const capH = (propFrame.height + 30 * this.dpr * this.zoom);
         this.cellWidth = capW;
         this.cellHeight = capH;
         const config: GridTableConfig = {
             scrollMode: 1,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,
@@ -135,6 +149,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                mask: false
             },
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
@@ -142,7 +157,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 const index = cell.index;
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key, this.zoom);
-                    this.add(cellContainer);
+                    this.mContainer.add(cellContainer);
                     cellContainer.setChildPosition();
                 }
                 cellContainer.setSize(capW, capH);
@@ -159,13 +174,13 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 return cellContainer;
             }
         };
-        this.gridTable = new GameGridTable(this.scene, config);
+        this.gridTable = new GameGridTable(this.mScene, config);
         this.gridTable.layout();
         this.gridTable.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
         this.gridTable.addListen();
-        this.add(this.gridTable.table);
+        this.mContainer.add(this.gridTable.table);
     }
 
     private onSelectItemHandler(cell: EquipItemCell) {
@@ -209,17 +224,17 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
     }
 
     private createBtn() {
-        this.unlockCondition = this.scene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
-        this.unlockbtn = this.scene.make.container(undefined, false);
-        const btnBg = new NinePatch(this.scene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", {
+        this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.unlockbtn = this.mScene.make.container(undefined, false);
+        const btnBg = new NinePatch(this.mScene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", {
             left: 12 * this.dpr * this.zoom,
             top: 12 * this.dpr * this.zoom,
             right: 12 * this.dpr * this.zoom,
             bottom: 12 * this.dpr * this.zoom
         });
-        this.diamondIcon = this.scene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
-        this.costNum = this.scene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.btnName = this.scene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.diamondIcon = this.mScene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
+        this.costNum = this.mScene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.btnName = this.mScene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.costNum.setStroke("#ffffff", 1);
         this.btnName.setStroke("#8F4300", 1);
         this.unlockCondition.setStroke("#000000", 1);
@@ -227,7 +242,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         this.unlockbtn.setSize(btnBg.width, btnBg.height);
         this.unlockbtn.add([this.unlockCondition, btnBg, this.diamondIcon, this.costNum, this.btnName]);
         this.unlockbtn.on("pointerup", this.onUnlockEquipHandler, this);
-        this.add(this.unlockbtn);
+        this.mContainer.add(this.unlockbtn);
     }
 
     private getBoldFont(size: number) {

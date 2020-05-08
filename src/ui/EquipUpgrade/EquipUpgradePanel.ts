@@ -93,10 +93,9 @@ export default class EquipUpgradePanel extends BasePanel {
         let index = 0;
         for (const value of arr) {
             value["isblue"] = (index % 2 === 0 ? false : true);
-            const item = new EquipUpgradeItem(this.scene, this.dpr, this.scale, this.key, this.commonkey);
+            const item = new EquipUpgradeItem(this.scene, this, this.dpr, this.scale, this.key, this.commonkey);
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
-            this.add(item);
             item.setEquipItems(value);
             item.setTransPosition(0, posY);
             this.equipItems.push(item);
