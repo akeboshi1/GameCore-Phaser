@@ -42,15 +42,15 @@ export class MineCarPanel extends BasePanel {
     const zoom = this.mWorld.uiScaleNew;
     this.setSize(w, h);
     this.mBg.x = w / 2;
-    this.mBg.y = h / 2;
+    this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
     this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
-    this.carIcon.y = this.mBg.y / 2;
+    this.carIcon.y = this.mBg.y - (this.mBg.displayHeight - this.carIcon.displayHeight) / 2 + 4 * this.dpr * zoom;
     this.mCloseBtn.x = this.mBg.x + this.mBg.width / 2;
-    this.mCloseBtn.y = this.mBg.y / 2 + 10 * this.dpr * zoom;
+    this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr * zoom;
     this.mCounter.x = this.mBg.x / 2;
-    this.mCounter.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2 - 6 * this.dpr * zoom;
-    this.mTips.x = this.mBg.x;
-    this.mTips.y = this.mBg.y / 2 - 15 * this.dpr * zoom;
+    this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 6 * this.dpr * zoom;
+    this.mTips.x = this.mBg.x + 20 * this.dpr * zoom;
+    this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr * zoom;
     this.mDiscardBtn.x = this.mBg.x + this.mBg.width / 2 - this.mDiscardBtn.width / 2;
     this.mDiscardBtn.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2;
     this.categoriesBg.x = this.mBg.x;
@@ -281,11 +281,11 @@ export class MineCarPanel extends BasePanel {
       // this.mMask,
       this.mBg,
       this.carIcon,
-      this.mCloseBtn,
       this.mCounter,
       this.categoriesBg,
       this.mPropGrid.table,
       this.mCategoryTable.table,
+      this.mCloseBtn,
       this.mDiscardBtn,
     ]);
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
@@ -332,7 +332,7 @@ export class MineCarPanel extends BasePanel {
       this.checkMode();
       return;
     }
-    if (packageItem) {
+    if (packageItem && packageItem.item.item) {
       if (!this.mTips.parentContainer) {
         this.add(this.mTips);
       }

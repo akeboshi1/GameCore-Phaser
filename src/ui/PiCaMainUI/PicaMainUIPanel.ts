@@ -74,12 +74,12 @@ export class PicaMainUIPanel extends BasePanel {
         if (param.hasOwnProperty("name")) {
             this.mSceneName.setText(param.name);
         }
-        if (param.hasOwnProperty("owner_name")) {
-            this.mSceneType.setText(param.owner_name);
+        if (param.hasOwnProperty("ownerName")) {
+            this.mSceneType.setText(param.ownerName);
         }
-        if (param.hasOwnProperty("player_count")) {
+        if (param.hasOwnProperty("playerCount")) {
             // TODO 多语言适配
-            this.mCounter.setText(`${param.player_count} 人`);
+            this.mCounter.setText(`${param.playerCount}人`);
         }
     }
 
@@ -104,7 +104,7 @@ export class PicaMainUIPanel extends BasePanel {
         this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");
         this.mCounter = new IconText(this.scene, this.key, "counter_icon.png", this.dpr);
-        this.mCounter.setText("54人");
+        this.mCounter.setText("1人");
         this.mCounter.x = 15 * this.dpr;
         this.mCounter.y = 105 * this.dpr;
         this.mCounter.setColor("#27f6ff");
