@@ -24,6 +24,7 @@ export class PicaMainUI extends PacketHandler {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUpdatePlayerInfo);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
         }
     }
 
@@ -45,6 +46,10 @@ export class PicaMainUI extends PacketHandler {
     }
 
     private onUpdatePlayerInfo(packet: PBpacket) {
+        this.mEvent.emit("update", packet.content);
+    }
+
+    private onUpdateModeRoomInfo(packet: PBpacket) {
         this.mEvent.emit("update", packet.content);
     }
 

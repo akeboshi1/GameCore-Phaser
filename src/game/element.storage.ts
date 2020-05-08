@@ -10,6 +10,7 @@ import {
     AnimationDataNode,
     MossNode,
     SceneryNode,
+    AssetsNode,
 } from "game-capsule";
 import { Logger } from "../utils/log";
 import { op_def } from "pixelpai_proto";
@@ -48,6 +49,7 @@ export class ElementStorage implements IElementStorage {
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
     private _scenerys: IScenery[];
+    private _assets: AssetsNode[];
 
     private event: Phaser.Events.EventEmitter;
 
@@ -102,6 +104,7 @@ export class ElementStorage implements IElementStorage {
 
         this.updatePalette(config.root.palette);
         this.updateMoss(config.root.moss);
+        this.updateAssets(config.root.assets);
     }
 
     public updatePalette(palette: PaletteNode) {
@@ -144,6 +147,9 @@ export class ElementStorage implements IElementStorage {
                 this.mossPalette.set(peerKey, frameModel);
             }
         }
+    }
+
+    public updateAssets(assets: AssetsNode) {
     }
 
     public setSceneConfig(config) {

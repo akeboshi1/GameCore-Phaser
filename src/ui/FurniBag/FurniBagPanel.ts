@@ -928,10 +928,10 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.blackBg = this.scene.make.graphics(undefined, false);
     this.blackBg.clear();
     this.blackBg.fillStyle(0, 0.5);
-    this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
-    this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
-    this.setSize(1000 * dpr, 2000 * dpr);
-    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, 1000 * dpr, 2000 * dpr), Phaser.Geom.Rectangle.Contains);
+    const w = this.scene.cameras.main.width / this.scale;
+    const h = this.scene.cameras.main.height / this.scale;
+    this.blackBg.fillRect(-w / 2, -h / 2, w, h);
+    bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     const posY = -bg.height * 0.5 + 3 * dpr * zoom;
     const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "title" });
     this.titleName = scene.make.text({
@@ -969,6 +969,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
+    // this.pricText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.priceBg.width, this.priceBg.height),Phaser.Geom.Rectangle.Contains);
     const countOffsetY = 50 * dpr * zoom;
     const countOffsetX = -58 * dpr * zoom;
     const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
