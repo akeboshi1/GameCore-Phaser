@@ -29,7 +29,7 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width, height);
-        this.mPropGrid.refreshPos(this.x + 15 * this.dpr * zoom, this.y - 20 * this.dpr * zoom, -this.x + 15 * this.dpr * zoom, -this.y -0 * this.dpr * zoom);
+        this.mPropGrid.refreshPos(this.x + 15 * this.dpr * zoom, this.y - 20 * this.dpr * zoom, -this.x + 15 * this.dpr * zoom, -this.y + 10 * this.dpr * zoom);
         this.setSize(width, height);
     }
 
@@ -78,7 +78,7 @@ export class MineSettlePanel extends BasePanel {
             y: 0,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
-                width: 300 * this.dpr * zoom,
+                width: 302 * this.dpr * zoom,
                 height: 170 * this.dpr * zoom,
                 columns: 5,
                 cellWidth: capW,
