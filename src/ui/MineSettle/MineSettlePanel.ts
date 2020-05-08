@@ -29,7 +29,7 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width, height);
-        this.mPropGrid.refreshPos(this.x + 15 * this.dpr * zoom, this.y - 20 * this.dpr * zoom, -this.x + 15 * this.dpr * zoom, -this.y + 10 * this.dpr * zoom);
+        this.mPropGrid.refreshPos(40 * this.dpr * zoom, 0);
         this.setSize(width, height);
     }
 
@@ -74,16 +74,17 @@ export class MineSettlePanel extends BasePanel {
         const config: GridTableConfig = {
             x: 0,
             y: 0,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+          //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 302 * this.dpr * zoom,
-                height: 170 * this.dpr * zoom,
+                height: 180 * this.dpr * zoom,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                mask: false
+               // mask: false
             },
+            clamplChildOY:false,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -123,7 +124,7 @@ export class MineSettlePanel extends BasePanel {
 
     setMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
         if (this.mInitialized) {
-            this.mPropGrid.setItems(content.items.concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items));
+            this.mPropGrid.setItems(content.items.concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items));
             this.mPropGrid.layout();
         }
     }
