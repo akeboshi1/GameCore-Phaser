@@ -79,7 +79,7 @@ export class AlertView extends BasePanel {
         });
         this.mOkBtn.x = (bg.width - this.mOkBtn.displayWidth) / 2 - 33 * this.dpr;
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
-        this.mOkBtn.on("click", this.onOkHandler, this);
+        this.mOkBtn.on("Tap", this.onOkHandler, this);
 
         this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, "取消");
         this.mCancelBtn.setTextStyle({
@@ -88,7 +88,7 @@ export class AlertView extends BasePanel {
         });
         this.mCancelBtn.x = -(bg.width - this.mCancelBtn.displayWidth) / 2 + 33 * this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
-        this.mCancelBtn.on("click", this.onCancelHandler, this);
+        this.mCancelBtn.on("Tap", this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
         super.init();
     }

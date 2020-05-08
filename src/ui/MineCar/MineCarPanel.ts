@@ -28,6 +28,7 @@ export class MineCarPanel extends BasePanel {
   private mCategoryTable: GameGridTable;
   private mPreSelectedCategorie: CategorieButton;
   private mBg: Phaser.GameObjects.Image;
+  private carIcon: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -35,23 +36,27 @@ export class MineCarPanel extends BasePanel {
   }
 
   resize(width: number, height: number) {
+    const w = this.scene.cameras.main.width / this.scale;
+    const h = this.scene.cameras.main.height / this.scale;
     super.resize(width, height);
-    this.x = width / 2;
-    this.y = 107 * this.dpr * this.mWorld.uiScaleNew + this.mBg.height / 2;
-
-    // this.mMask.clear();
-    // this.mMask.fillStyle(0x0, 0.6);
-    // this.mMask.fillRect(-this.x, -this.y, width, height);
-    // this.mMask.setInteractive(
-    //   new Phaser.Geom.Rectangle(-this.x, -this.y, width, height),
-    //   Phaser.Geom.Rectangle.Contains
-    // );
-    this.setSize(width, height);
-    // const zoom: number = this.mWorld.uiScaleNew;
-    // this.mPropGrid.refreshPos(this.x, this.y + 14 * this.dpr * zoom);
-
-    // this.mCategoryTable.refreshPos(this.x, 140 * this.dpr * zoom);
-    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+    const zoom = this.mWorld.uiScaleNew;
+    this.setSize(w, h);
+    this.mBg.x = w / 2;
+    this.mBg.y = h / 2;
+    this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
+    this.carIcon.y = this.mBg.y / 2;
+    this.mCloseBtn.x = this.mBg.x + this.mBg.width / 2;
+    this.mCloseBtn.y = this.mBg.y / 2 + 10 * this.dpr * zoom;
+    this.mCounter.x = this.mBg.x / 2;
+    this.mCounter.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2 - 6 * this.dpr * zoom;
+    this.mTips.x = this.mBg.x;
+    this.mTips.y = this.mBg.y / 2 - 15 * this.dpr * zoom;
+    this.mDiscardBtn.x = this.mBg.x + this.mBg.width / 2 - this.mDiscardBtn.width / 2;
+    this.mDiscardBtn.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2;
+    this.categoriesBg.x = this.mBg.x;
+    this.categoriesBg.y = this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 12 * this.dpr * zoom;
+    this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr * zoom, this.mBg.y + 6 * this.dpr * zoom);
+    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 18 * this.dpr * zoom);
   }
 
   public show(param?: any) {
@@ -74,6 +79,7 @@ export class MineCarPanel extends BasePanel {
 
   addListen() {
     if (!this.mInitialized) return;
+    this.removeListen();
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
     this.mDiscardBtn.on("Tap", this.enterDiscardMode, this);
   }
@@ -105,6 +111,9 @@ export class MineCarPanel extends BasePanel {
   }
 
   protected init() {
+    const w = this.scene.cameras.main.width / this.scale;
+    const h = this.scene.cameras.main.height / this.scale;
+    this.setSize(w, h);
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScaleNew;
@@ -115,9 +124,11 @@ export class MineCarPanel extends BasePanel {
         frame: "bg.png",
       })
       .setScale(zoom);
+    this.mBg.x = w / 2;
+    this.mBg.y = h / 2;
     // this.mPanel.setSize(bg.displayWidth, bg.displayHeight);
 
-    const carIcon = this.scene.make
+    this.carIcon = this.scene.make
       .image(
         {
           key: this.key,
@@ -126,8 +137,8 @@ export class MineCarPanel extends BasePanel {
         false
       )
       .setScale(zoom);
-    carIcon.x = (-(this.mBg.width - carIcon.width) * zoom) / 2 + 28 * this.dpr * zoom;
-    carIcon.y = (-(this.mBg.height - carIcon.height / 2) * zoom) / 2 + 10 * this.dpr * zoom;
+    this.carIcon.x = (-(this.mBg.width - this.carIcon.width) * zoom) / 2 + 28 * this.dpr * zoom;
+    this.carIcon.y = (-(this.mBg.height - this.carIcon.height / 2) * zoom) / 2 + 10 * this.dpr * zoom;
 
     this.mCloseBtn = this.scene.make
       .image(
@@ -155,8 +166,8 @@ export class MineCarPanel extends BasePanel {
       },
       false
     );
-    this.mCounter.x = -this.mBg.displayWidth / 2 + 17 * this.dpr * zoom;
-    this.mCounter.y = this.mBg.displayHeight / 2 - 18 * this.dpr * zoom - this.mCounter.height;
+    this.mCounter.x = -this.displayWidth / 2 + 17 * this.dpr * zoom;
+    this.mCounter.y = this.displayHeight / 2 - 18 * this.dpr * zoom - this.mCounter.height;
     this.mCounter.setFontStyle("bold");
 
     this.mTips = new Tips(this.scene, this.key, this.dpr, zoom);
@@ -181,25 +192,25 @@ export class MineCarPanel extends BasePanel {
       })
       .setScale(zoom);
     // this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
-    this.categoriesBg.y = -(this.mBg.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr * zoom;
+    this.categoriesBg.y = -(this.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr * zoom;
 
     const propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
     const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
     const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     // this.cellHeight = capH;
-    const w = this.scene.cameras.main.width;
-    const gridW = 220 * this.dpr * zoom;
+    const gridW = 236 * this.dpr * zoom;
     const propConfig: GridTableConfig = {
       x: -7 * this.dpr * zoom,
       y: -16 * this.dpr * zoom,
       table: {
         width: gridW,
-        height: 250 * this.dpr * zoom,
+        height: 295 * this.dpr * zoom,
         columns: 4,
+        cellsCount: 25,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
-        mask: false
+        // mask: false
       },
       scrollMode: 0,
       clamplChildOY: false,
@@ -235,7 +246,7 @@ export class MineCarPanel extends BasePanel {
         cellWidth: (frame.width + 4 * this.dpr) * zoom,
         cellHeight: (29 * this.dpr) * zoom,
         reuseCellContainer: true,
-        mask: false
+        // mask: false
       },
       scrollMode: 1,
       // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
@@ -269,7 +280,7 @@ export class MineCarPanel extends BasePanel {
     this.add([
       // this.mMask,
       this.mBg,
-      carIcon,
+      this.carIcon,
       this.mCloseBtn,
       this.mCounter,
       this.categoriesBg,
@@ -344,10 +355,10 @@ export class MineCarPanel extends BasePanel {
   }
 
   private checkMode() {
-    if (!this.mAllItem || this.mAllItem.length < 1) {
+    if (!this.mFilterItem || this.mFilterItem.length < 1) {
       return;
     }
-    for (const item of this.mAllItem) {
+    for (const item of this.mFilterItem) {
       if (item.selected) {
         this.mDiscardBtn.changeState(DiscardEnum.Sutmit);
         return;
@@ -357,13 +368,13 @@ export class MineCarPanel extends BasePanel {
   }
 
   private onDiscardSelectedItem() {
-    if (!this.mAllItem || this.mAllItem.length < 1) {
+    if (!this.mFilterItem || this.mFilterItem.length < 1) {
       return;
     }
     // const selected = this.mAllItem.filter((item) => item.selected);
     const selected = [];
     const label = [];
-    for (const item of this.mAllItem) {
+    for (const item of this.mFilterItem) {
       if (item.item && item.selected) {
         selected.push(item.item);
         label.push(`${item.item.name}*${item.item.count}`);
