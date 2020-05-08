@@ -63,7 +63,6 @@ export class FurniBagPanel extends BasePanel {
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
-
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
@@ -192,6 +191,12 @@ export class FurniBagPanel extends BasePanel {
     }
     if (this.mPropGrid) {
       this.mPropGrid.destroy();
+    }
+    if (this.itemPopPanel) {
+      this.itemPopPanel.off("itempopclose", () => {
+        this.mCategoryScroll.addListen();
+      });
+      this.itemPopPanel.destroy();
     }
     super.destroy();
   }
@@ -581,6 +586,10 @@ export class FurniBagPanel extends BasePanel {
     if (!this.itemPopPanel) {
       this.itemPopPanel = new ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
     }
+    this.itemPopPanel.once("itempopclose", () => {
+      this.mCategoryScroll.addListen();
+    });
+    this.mCategoryScroll.removeListen();
     this.add(this.itemPopPanel);
   }
 
@@ -921,6 +930,8 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.blackBg.fillStyle(0, 0.5);
     this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
     this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
+    this.setSize(1000 * dpr, 2000 * dpr);
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, 1000 * dpr, 2000 * dpr), Phaser.Geom.Rectangle.Contains);
     const posY = -bg.height * 0.5 + 3 * dpr * zoom;
     const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "title" });
     this.titleName = scene.make.text({
@@ -1045,10 +1056,12 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
   }
 
   private onCancelBtnHandler() {
+    this.emit("itempopclose");
     if (this.parentContainer) this.parentContainer.remove(this);
   }
 
   private onConfirmBtnHandler() {
+    this.emit("itempopclose");
     if (this.parentContainer) this.parentContainer.remove(this);
     if (this.handler) this.handler.runWith([this.itemData, this.itemCount, this.category]);
   }
