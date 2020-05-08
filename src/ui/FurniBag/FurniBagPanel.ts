@@ -102,7 +102,7 @@ export class FurniBagPanel extends BasePanel {
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
-    subcategorys.unshift({ key: this.seachKey, value: "搜索" });
+    // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const zoom = this.mWorld.uiScaleNew;
@@ -110,10 +110,17 @@ export class FurniBagPanel extends BasePanel {
     const capH = 41 * this.dpr * zoom;
     const items = [];
     this.mCategoryScroll.clearInteractiveObject();
+    if (this.mSeachInput.parentContainer)
+      this.closeSeach(null);
     for (const item of this.mCategeoriesContainer.list) {
       item.destroy();
     }
     this.mCategeoriesContainer.list.length = 0;
+    const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
+    seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
+    seachBtn.y = capH - 20 * this.dpr * zoom;
+    this.mCategeoriesContainer.add(seachBtn.view);
+    this.mCategoryScroll.setInteractiveObject(seachBtn.view);
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
       item.y = capH - item.text.height >> 1;
@@ -126,7 +133,7 @@ export class FurniBagPanel extends BasePanel {
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
     }
-    if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
+    if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
     this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 155 * this.dpr * zoom, 22 * this.dpr, -this.y + 30 * this.dpr);
     this.mPropGrid.layout();
@@ -330,7 +337,7 @@ export class FurniBagPanel extends BasePanel {
     }
 
     const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+    let w = this.scene.cameras.main.width + 80 * this.dpr * zoom + inputWid;
     this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesContainer, {
       x: 0,
       y: this.mCategeoriesContainer.y,
@@ -353,11 +360,12 @@ export class FurniBagPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
+    w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
     const tableConfig: GridTableConfig = {
       x: 0,
       y: 0,
       table: {
-        width: w - 10 * this.dpr * zoom,
+        width: w,
         height: 270 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
@@ -432,15 +440,16 @@ export class FurniBagPanel extends BasePanel {
       }
       return;
     }
-    if (!(gameobject instanceof TextButton)) {
-      return;
-    }
+    // if (!(gameobject instanceof TextButton)) {
+    //   return;
+    // }
     const category: op_def.IStrPair = gameobject.getData("item");
     if (category) {
-      if (this.mPreCategoryBtn) {
+      if (this.mPreCategoryBtn && (this.mPreCategoryBtn instanceof TextButton)) {
         this.mPreCategoryBtn.changeNormal();
       }
-      gameobject.changeDown();
+      if (gameobject instanceof TextButton)
+        gameobject.changeDown();
       let key = category.key;
       if (key === this.seachKey) {
         // gameobject.setSize(100 * this.dpr * this.mWorld.uiScaleNew, gameobject.height);
@@ -597,7 +606,7 @@ export class FurniBagPanel extends BasePanel {
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategeoriesContainer.list;
     const zoom = this.mWorld.uiScaleNew;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
+    const w = this.scene.cameras.main.width + 80 * this.dpr * zoom;
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
     const offset = 10 * this.dpr * zoom;
