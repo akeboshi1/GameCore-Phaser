@@ -82,6 +82,7 @@ export class MineSettlePanel extends BasePanel {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                mask: false
             },
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
@@ -122,7 +123,7 @@ export class MineSettlePanel extends BasePanel {
 
     setMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
         if (this.mInitialized) {
-            this.mPropGrid.setItems(content.items);
+            this.mPropGrid.setItems(content.items.concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items).concat(content.items));
             this.mPropGrid.layout();
         }
     }
