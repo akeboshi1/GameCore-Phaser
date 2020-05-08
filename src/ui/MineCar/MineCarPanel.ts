@@ -9,6 +9,7 @@ import { AlertView } from "../components/alert.view";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   // private mPanel: Phaser.GameObjects.Container;
@@ -46,10 +47,10 @@ export class MineCarPanel extends BasePanel {
     //   Phaser.Geom.Rectangle.Contains
     // );
     this.setSize(width, height);
-    const zoom: number = this.mWorld.uiScaleNew;
-    this.mPropGrid.refreshPos(this.x, this.y + 14 * this.dpr * zoom, -300 * this.dpr * zoom, this.y);
+    // const zoom: number = this.mWorld.uiScaleNew;
+    // this.mPropGrid.refreshPos(this.x, this.y + 14 * this.dpr * zoom);
 
-    this.mCategoryTable.refreshPos(this.x, 140 * this.dpr * zoom, -this.x, -this.mBg.height / 2 - 103 * this.dpr * zoom);
+    // this.mCategoryTable.refreshPos(this.x, 140 * this.dpr * zoom);
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
@@ -187,20 +188,22 @@ export class MineCarPanel extends BasePanel {
     const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     // this.cellHeight = capH;
     const w = this.scene.cameras.main.width;
-    const gridW = 236 * this.dpr * zoom;
+    const gridW = 220 * this.dpr * zoom;
     const propConfig: GridTableConfig = {
+      x: -7 * this.dpr * zoom,
+      y: -16 * this.dpr * zoom,
       table: {
         width: gridW,
-        height: 295 * this.dpr * zoom,
+        height: 250 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
         mask: false
       },
-      scrollMode: 1,
+      scrollMode: 0,
       clamplChildOY: false,
-      background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
@@ -224,6 +227,8 @@ export class MineCarPanel extends BasePanel {
 
     const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
     const categoryTableConfig: GridTableConfig = {
+      x: -9 * this.dpr * zoom,
+      y: -155 * this.dpr * zoom,
       table: {
         width: gridW,
         height: this.categoriesBg.displayHeight,
@@ -233,17 +238,17 @@ export class MineCarPanel extends BasePanel {
         mask: false
       },
       scrollMode: 1,
-      background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new CategorieButton(scene, this.key, "nav_btn_normal.png", "nav_btn_down.png", "1");
-          cellContainer.setTextStyle(
-            Font.DEFULT_FONT,
-            10 * this.dpr * zoom,
-            "#566ddb",
-          );
+          cellContainer.setTextStyle({
+            color: "#566ddb",
+            fontFamily: Font.DEFULT_FONT,
+            fontSize: 10 * this.dpr * zoom
+          });
           cellContainer.setFontStyle("bold");
           this.add(cellContainer);
         }
@@ -268,8 +273,8 @@ export class MineCarPanel extends BasePanel {
       this.mCloseBtn,
       this.mCounter,
       this.categoriesBg,
-      this.mCategoryTable.table,
       this.mPropGrid.table,
+      this.mCategoryTable.table,
       this.mDiscardBtn,
     ]);
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
@@ -610,9 +615,11 @@ enum DiscardEnum {
   Sutmit,
 }
 
-class CategorieButton extends Button {
+class CategorieButton extends TabButton {
   constructor(scene: Phaser.Scene, key: string, frame?: string, downFrame?: string, text?: string) {
     super(scene, key, frame, downFrame, text);
+    this.disInteractive();
+    this.removeListen();
     this.mBackground.setOrigin(0);
     if (this.mText) {
       this.mText.setPosition(this.mBackground.width / 2, this.mBackground.height / 2);
