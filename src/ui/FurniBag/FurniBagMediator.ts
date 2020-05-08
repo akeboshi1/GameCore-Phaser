@@ -24,7 +24,7 @@ export class FurniBagMediator extends BaseMediator {
 
     show() {
         if ((this.mView && this.mView.isShow()) || this.mShow) {
-            this.layerManager.addToUILayer(this.mView.view);
+            this.layerManager.addToUILayer(this.mView);
             return;
         }
 
@@ -46,7 +46,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mView.on("sellProps", this.onSellPropsHandler, this);
         }
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     destroy() {

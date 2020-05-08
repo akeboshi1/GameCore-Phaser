@@ -46,7 +46,8 @@ export class ChatPanelPC extends BaseChatPanel {
         });
     }
 
-    public setPosition(x?: number, y?: number) {
+    public setPosition(x?: number, y?: number): this {
+        if (!this.mInitialized) return;
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorld.getSize();
         super.setPosition(0, size.height - this.mPreHei);
@@ -60,6 +61,7 @@ export class ChatPanelPC extends BaseChatPanel {
             // 每次resize更新textBlock中的textMask的位置
             // this.mTextArea.childrenMap.child.textMask.setPosition(undefined, size.height - this.height + 30).resize();
         }
+        return this;
     }
 
     public addListen() {

@@ -32,7 +32,7 @@ export class EquipUpgradeMediator extends BaseMediator {
             this.equipUpgrade.on("activeEquip", this.onActiveEquipment, this);
             this.equipUpgrade.register();
         }
-        this.layerMgr.addToUILayer(this.mView.view);
+        this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
             this.onEquipUpgradePacket(this.mParam[0]);
         this.mView.show();

@@ -14,10 +14,6 @@ export class InfoPanelMediator extends BaseMediator {
         this.world = world;
     }
 
-    getView(): BasePanel {
-        return this.mView.view;
-    }
-
     hide(): void {
         this.mShow = false;
         this.world.emitter.off(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
@@ -49,7 +45,7 @@ export class InfoPanelMediator extends BaseMediator {
         }
         this.mView = new InfoPanel(this.mScene, this.world);
         this.mView.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         super.show(param);
     }

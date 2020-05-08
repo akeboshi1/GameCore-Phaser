@@ -120,7 +120,7 @@ export class UserMenuPanel extends BasePanel {
         // this.mBackground.x = this.mBackground.width * this.mBackground.originX;
         // this.mBackground.y = this.mBackground.height * this.mBackground.originY;
         super.init();
-        this.addItem(this.getData("data"));
+        if (this.mShowData) this.addItem(this.showData);
     }
 
     private appendItem(menu: op_gameconfig_01.IMenuItem, x: number, y: number): MenuItem {

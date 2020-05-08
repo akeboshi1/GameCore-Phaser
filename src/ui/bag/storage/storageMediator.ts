@@ -23,9 +23,6 @@ export class StorageMediator extends BaseMediator {
     public resize() {
         if (this.mView) this.mView.resize();
     }
-    public getView(): BasePanel {
-        return this.mView.view;
-    }
 
     public show(param?: any): void {
         if (this.mView && this.mView.isShow()) {

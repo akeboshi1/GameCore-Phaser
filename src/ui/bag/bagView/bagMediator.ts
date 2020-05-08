@@ -45,10 +45,6 @@ export class BagMediator extends BaseMediator {
         if (this.mView) return this.mView.isShow();
     }
 
-    public getView(): IAbstractPanel {
-        return this.mView;
-    }
-
     public show(param: any) {
         if (this.mView && this.mView.isShow()) {
             return;
@@ -66,7 +62,7 @@ export class BagMediator extends BaseMediator {
             this.world.roomManager.currentRoom.playerManager.actor.getBag().requestVirtualWorldQueryPackage(this.world.roomManager.currentRoom.playerManager.actor.package.id, 1, BagPanel.PageMaxCount);
         }
         this.mView.show(param);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.uiManager.checkUIState(BagMediator.NAME, false);
         this.refrehView();
         super.show(param);

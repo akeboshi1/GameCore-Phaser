@@ -37,7 +37,7 @@ export class MarketMediator extends BaseMediator {
     this.mView.on("popItemCard", this.onPopItemCardHandler, this);
     this.mView.on("queryPropResource", this.onQueryPropresouceHandler, this);
     this.mView.show();
-    this.layerManager.addToUILayer(this.mView.view);
+    this.layerManager.addToUILayer(this.mView);
   }
 
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {

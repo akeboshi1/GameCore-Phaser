@@ -21,7 +21,7 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     getView(): BasePanel {
-        return this.mView.view;
+        return this.mView as BasePanel;
     }
 
     hide(): void {
@@ -52,7 +52,7 @@ export class UserMenuMediator extends BaseMediator {
         }
         this.mView = new UserMenuPanel(this.mScene, this.world);
         this.mView.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         this.mView.on("menuClick", this.onClickMenuHandler, this);
         super.show(param);

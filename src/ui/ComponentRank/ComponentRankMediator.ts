@@ -14,7 +14,7 @@ export class ComponentRankMediator extends BaseMediator {
         super();
         this.mUIType = UIType.Normal;
         this.mView = new ComponentRankPanel(scene, worldService);
-        layerManager.addToUILayer(this.mView.view);
+        layerManager.addToUILayer(this.mView);
         this.mLayerManager = layerManager;
         this.mScene = scene;
         this.world = worldService;
@@ -22,10 +22,6 @@ export class ComponentRankMediator extends BaseMediator {
 
     getName(): string {
         return "";
-    }
-
-    getView(): BasePanel {
-        return this.mView.view;
     }
 
     hide(): void {
@@ -53,7 +49,7 @@ export class ComponentRankMediator extends BaseMediator {
             return;
         }
         this.mView = new ComponentRankPanel(this.mScene, this.world);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.mView.show();
         if (param && param.length > 0) {
             (this.mView as ComponentRankPanel).addItem(param[0]);
@@ -63,8 +59,8 @@ export class ComponentRankMediator extends BaseMediator {
 
     destroy() {
         if (this.mView) {
-            if (this.mView.view.parentContainer) {
-                this.mView.view.parentContainer.remove(this.mView);
+            if (this.mView.parentContainer) {
+                this.mView.parentContainer.remove(this.mView);
             }
         }
         super.destroy();

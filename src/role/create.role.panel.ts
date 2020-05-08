@@ -33,7 +33,7 @@ export class CreateRolePanel extends BasePanel {
     super(scene, world);
     this.setTween(false);
     const container = this.scene.add.container(0, 0);
-    container.add(this.view);
+    container.add(this);
     scene.scale.on("resize", this.onResize, this);
     // container.scale = 1 / this.mWorld.uiScale;
   }
@@ -136,8 +136,8 @@ export class CreateRolePanel extends BasePanel {
     this.add(this.inputText);
 
     let text = "提 交";
-    if (this.mData && this.mData.button) {
-      text = this.mData.button.text;
+    if (this.mShowData && this.mShowData.button) {
+      text = this.mShowData.button.text;
     }
 
     const frame = this.scene.textures.getFrame(this.key, "submit_button_normal");

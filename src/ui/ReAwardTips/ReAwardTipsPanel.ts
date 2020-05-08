@@ -36,8 +36,8 @@ export class ReAwardTipsPanel extends BasePanel {
     }
 
     protected init() {
+        this.setSize(20, 20);
         super.init();
-
         this.y = 250 * this.dpr;
     }
 

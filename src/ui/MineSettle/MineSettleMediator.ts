@@ -1,9 +1,8 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
-import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
-import { Logger } from "../../utils/log";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class MineSettleMediator extends BaseMediator {
@@ -31,7 +30,7 @@ export class MineSettleMediator extends BaseMediator {
             this.mineSettle.on("minesettlepacket", this.onMineSettlePacket, this);
             this.mineSettle.register();
         }
-        this.layerMgr.addToUILayer(this.mView.view);
+        this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
             this.onMineSettlePacket(this.mParam[0]);
         this.mView.show();

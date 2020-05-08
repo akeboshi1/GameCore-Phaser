@@ -14,7 +14,7 @@ export class UserInfoMediator extends BaseMediator {
     }
 
     getView(): BasePanel {
-        return this.mView.view;
+        return this.mView as BasePanel;
     }
 
     hide(): void {
@@ -48,7 +48,7 @@ export class UserInfoMediator extends BaseMediator {
         }
         this.mView = new UserInfoPanel(this.mScene, this.world);
         this.mView.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
         super.show(param);
     }

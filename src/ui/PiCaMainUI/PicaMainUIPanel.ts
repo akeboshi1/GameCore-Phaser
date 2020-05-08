@@ -29,8 +29,8 @@ export class PicaMainUIPanel extends BasePanel {
         const width = this.scene.cameras.main.width / this.scale;
         const height = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
-        this.mCoinValue.x = width - this.mCoinValue.width / 2 - 5 * this.dpr;
-        this.mDiamondValue.x = width - this.mDiamondValue.width / 2 - 5 * this.dpr;
+        this.mCoinValue.x = width * this.scale - this.mCoinValue.width / 2 - 5 * this.dpr;
+        this.mDiamondValue.x = width * this.scale - this.mDiamondValue.width / 2 - 5 * this.dpr;
     }
 
     preload() {
@@ -130,10 +130,10 @@ export class PicaMainUIPanel extends BasePanel {
         // this.add(healthValue);
         // healthValue.setValue(200, 1000);
 
-        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
+        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
         this.add(this.mExpProgress);
-        super.init();
         this.resize(w, h);
+        super.init();
     }
 
     private onEnterEditScene() {
@@ -249,10 +249,10 @@ class ExpProgress extends Phaser.GameObjects.Container {
     private mCurrentLv: Phaser.GameObjects.Text;
     private mNextLv: Phaser.GameObjects.Text;
     private mProgressBar: ProgressBar;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number, world: WorldService) {
         super(scene);
 
-        const width = scene.cameras.main.width / scale;
+        const width = world.getSize().width;
         let frame = this.scene.textures.getFrame(key, "exp_bg.png");
         this.setSize(width, frame.height);
         const progressW = this.width;
@@ -276,7 +276,6 @@ class ExpProgress extends Phaser.GameObjects.Container {
         });
         this.mProgressBar.setProgress(progres, this.x, this.y, scale);
         this.mProgressBar.setRatio(0.5);
-
         this.mCurrentLv = scene.make.text({
             text: "Lv. 57",
             style: {
@@ -288,20 +287,20 @@ class ExpProgress extends Phaser.GameObjects.Container {
 
         this.mNextLv = scene.make.text({
             text: "Lv. 58",
-            x: this.width,
             style: {
                 fontSize: 10 * dpr,
                 fontFamily: Font.DEFULT_FONT
             }
-        }, false).setOrigin(1, 0);
+        }, false).setOrigin(0, 0);
         this.mNextLv.setStroke("#000000", 1 * dpr);
-
+        this.mNextLv.x = this.width - this.mNextLv.width;
         this.add([this.mProgressBar, this.mCurrentLv, this.mNextLv]);
     }
 
     public setLv(val: number) {
         this.mCurrentLv.setText(val.toString());
         this.mNextLv.setText((val + 1).toString());
+        this.mNextLv.x = this.width - this.mNextLv.width;
     }
 }
 

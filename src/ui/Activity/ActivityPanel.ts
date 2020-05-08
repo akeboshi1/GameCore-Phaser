@@ -12,6 +12,7 @@ export class ActivityPanel extends BasePanel {
         const height = this.scene.cameras.main.height;
         this.x = width - 40 * this.dpr;
         this.y = 150 * this.dpr;
+        this.setSize(w, h);
     }
 
     protected preload() {
@@ -28,18 +29,22 @@ export class ActivityPanel extends BasePanel {
             // img.y = i * 50 * this.dpr;
             this.add(img);
         }
-        super.init();
 
         let mainMenuW = 160 * this.dpr;
         const subList = this.list;
         subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.height);
         const margin = mainMenuW / (subList.length - 1);
+        let tmpWid: number = 0;
+        let tmpHei: number = 0;
         for (let i = 1; i < subList.length; i++) {
-            const preButton = <Phaser.GameObjects.Image> subList[i - 1];
-            const button = <Phaser.GameObjects.Image> subList[i];
+            const preButton = <Phaser.GameObjects.Image>subList[i - 1];
+            const button = <Phaser.GameObjects.Image>subList[i];
             button.y = preButton.height + preButton.y + margin;
+            tmpHei += button.y;
+            tmpWid = button.width;
         }
 
-        this.resize(0, 0);
+        this.resize(tmpWid, tmpHei);
+        super.init();
     }
 }

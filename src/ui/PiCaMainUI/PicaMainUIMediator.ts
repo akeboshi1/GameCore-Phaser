@@ -26,7 +26,7 @@ export class PicaMainUIMediator extends BaseMediator {
         }
         this.mView.show(param);
         this.mView.on("enterEdit", this.onEnterEditSceneHandler, this);
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     destroy() {

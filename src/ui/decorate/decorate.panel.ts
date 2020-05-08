@@ -41,7 +41,7 @@ export class DecoratePanel extends BasePanel {
         if (this.mWorld) this.mScaleRatio = this.mWorld.scaleRatio;
     }
     public show(param?: any) {
-        this.mData = param;
+        this.mShowData = param;
         if (!this.mInitialized) {
             this.preload();
             return;
@@ -121,10 +121,11 @@ export class DecoratePanel extends BasePanel {
         }
     }
 
-    public setPosition(x: number, y?: number, z?: number) {
+    public setPosition(x: number, y?: number, z?: number): this {
         this.x = x * this.mScaleRatio;
         this.y = (y + this.offset.y) * this.mScaleRatio;
         this.z = z || 0;
+        return this;
     }
 
     protected preload() {
@@ -604,7 +605,7 @@ class MoveMenu extends Phaser.GameObjects.Container {
         this.mArrow5.setData("dir", Direction.south_east);
         this.mArrow7 = new Button(this.scene, key, "arrow_7.png");
         this.mArrow7.setData("dir", Direction.east_north);
-        this.mBtns = [this.mArrow1.view, this.mArrow3.view, this.mArrow5.view, this.mArrow7.view];
+        this.mBtns = [this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7];
         this.add(bg);
         this.add(this.mBtns);
 

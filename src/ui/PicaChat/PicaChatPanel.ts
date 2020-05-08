@@ -25,27 +25,44 @@ export class PicaChatPanel extends BasePanel {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
-        this.disInteractive();
+    }
+
+    show(param?: any) {
+        this.mShowData = param;
+        if (this.mPreLoad) return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow) return;
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShow = true;
+        }
+        this.addListen();
     }
 
     resize(w: number, h: number) {
+        this.setSize(w, h);
         const zoom = this.scale;
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         const frame = this.scene.textures.getFrame(this.key, "title_bg.png");
         const scaleRatio = width / frame.width;
         this.mTitleBg.scaleX = scaleRatio;
-        this.mTitleBg.x = width / 2 / zoom;
+        this.mTitleBg.x = width / 2;
 
-        this.y = height - this.height * zoom;
+        this.y = height - this.height;
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
-        this.mBackground.fillRect(0, 0, width / zoom, height);
+        this.mBackground.fillRect(0, 0, width, h);
         // this.mBackground.setInteractive();
-        this.mNavigateBtn.x = width / zoom - this.mNavigateBtn.width / 2 - 2 * this.dpr * zoom;
-        this.mNavigateBtn.y = h - this.mNavigateBtn.height / 2 - 5 * this.dpr * zoom;
+        this.mNavigateBtn.x = width - this.mNavigateBtn.width / 2 - 2 * this.dpr * zoom;
+        this.mNavigateBtn.y = this.height - this.mNavigateBtn.height / 2 - 5 * this.dpr * zoom;
 
-        this.mScrollBtn.x = width / zoom - this.mScrollBtn.width / 2 - 2 * this.dpr * zoom;
+        this.mScrollBtn.x = width - this.mScrollBtn.width / 2 - 2 * this.dpr * zoom;
 
         this.mTextArea.childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
         this.mTextArea.layout();
@@ -68,7 +85,7 @@ export class PicaChatPanel extends BasePanel {
     }
 
     public addListen() {
-        if (!this.mInitialized) return;
+        if (!this.mInitialized || !this.interactiveBoo) return;
         // this.mBackground.setInteractive();
         this.mChatBtn.setInteractive();
         this.mEmojiBtn.setInteractive();
@@ -225,10 +242,8 @@ export class PicaChatPanel extends BasePanel {
         ]);
         this.mTextArea.setSliderEnable(false);
         // this.mTextArea.childrenMap.child.disableInteractive();
+        this.resize(this.width, 400);
         super.init();
-
-        this.resize(this.width, this.height);
-
         // this.addActionListener();
 
         this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
@@ -243,8 +258,7 @@ export class PicaChatPanel extends BasePanel {
         if (height > this.MAX_HEIGHT || height < this.MIN_HEIGHT) {
             return;
         }
-        this.setSize(this.width, height);
-        this.resize(this.width, this.height);
+        this.resize(this.width, height);
     }
 
     private onShowNavigateHandler() {
