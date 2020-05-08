@@ -60,17 +60,26 @@ export class PicaMainUIPanel extends BasePanel {
         if (!param) {
             return;
         }
-        const info: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = param;
-        if (info.hasOwnProperty("level")) this.mExpProgress.setLv(info.level);
-        if (info.hasOwnProperty("coin")) this.mCoinValue.setText(info.coin.toString());
-        if (info.hasOwnProperty("diamond")) this.mDiamondValue.setText(info.diamond.toString());
-        if (info.hasOwnProperty("energy")) {
-            const energy = info.energy;
+        if (param.hasOwnProperty("level")) this.mExpProgress.setLv(param.level);
+        if (param.hasOwnProperty("coin")) this.mCoinValue.setText(param.coin.toString());
+        if (param.hasOwnProperty("diamond")) this.mDiamondValue.setText(param.diamond.toString());
+        if (param.hasOwnProperty("energy")) {
+            const energy = param.energy;
             if (energy) {
                 this.mStrengthValue.setValue(energy.currentValue, energy.max);
             } else {
                 this.mStrengthValue.setValue(0, 100);
             }
+        }
+        if (param.hasOwnProperty("name")) {
+            this.mSceneName.setText(param.name);
+        }
+        if (param.hasOwnProperty("owner_name")) {
+            this.mSceneType.setText(param.owner_name);
+        }
+        if (param.hasOwnProperty("player_count")) {
+            // TODO 多语言适配
+            this.mCounter.setText(`${param.player_count} 人`);
         }
     }
 

@@ -273,7 +273,10 @@ export class Sprite implements ISprite {
 
     set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
-        if (this.currentAnimationName) this.mDisplayInfo.animationName = this.currentAnimationName;
+        if (this.currentAnimationName) {
+            this.mDisplayInfo.animationName = this.currentAnimationName;
+            this.setAnimationData(this.currentAnimationName, this.direction);
+        }
     }
 
     get isMoss() {
