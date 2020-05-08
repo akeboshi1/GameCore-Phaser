@@ -16,10 +16,10 @@ export class AlertView extends BasePanel {
     }
 
     show(config: IAlertConfig) {
-        this.data = config;
+        this.mShowData = config;
         super.show(config);
         if (this.mInitialized) {
-            this.mWorld.uiManager.getUILayerManager().addToDialogLayer(this.container);
+            this.mWorld.uiManager.getUILayerManager().addToDialogLayer(this);
             const { ox, oy } = config;
             this.x = (ox || this.scene.cameras.main.width / 2);
             this.y = (oy || this.scene.cameras.main.height / 2);
@@ -94,22 +94,19 @@ export class AlertView extends BasePanel {
     }
 
     private onOkHandler() {
-        if (!this.data) {
+        if (!this.mShowData) {
             return;
         }
-        const callback = this.data.callback;
+        const callback = this.mShowData.callback;
         if (callback) {
-            callback.call(this.data.content);
+            callback.call(this.mShowData.content);
         }
         this.onCancelHandler();
     }
 
     private onCancelHandler() {
-        if (!this.container) {
-            return;
-        }
-        if (this.container.parentContainer) {
-            this.container.parentContainer.remove(this.container);
+        if (this.parentContainer) {
+            this.parentContainer.remove(this);
         }
     }
 }

@@ -21,7 +21,7 @@ export class PicaNavigateMediator extends BaseMediator {
   show() {
     if ((this.mView && this.mView.isShow()) || this.mShow) {
       this.mView.show();
-      this.layerManager.addToUILayer(this.mView.view);
+      this.layerManager.addToUILayer(this.mView);
       return;
     }
     if (!this.mView) {
@@ -30,7 +30,7 @@ export class PicaNavigateMediator extends BaseMediator {
       this.mView.on("close", this.onCloseHandler, this);
     }
     this.mView.show();
-    this.layerManager.addToUILayer(this.mView.view);
+    this.layerManager.addToUILayer(this.mView);
   }
 
   isSceneUI() {
@@ -47,7 +47,7 @@ export class PicaNavigateMediator extends BaseMediator {
       mediator.show();
       this.mView.hide();
       (<PicaNavigatePanel>this.mView).removeListen();
-      this.layerManager.removeToUILayer(this.mView.view);
+      this.layerManager.removeToUILayer(this.mView);
     }
   }
 

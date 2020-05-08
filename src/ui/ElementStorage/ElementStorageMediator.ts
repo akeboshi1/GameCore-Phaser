@@ -33,7 +33,7 @@ export class ElementStorageMediator extends BaseMediator {
         this.mView = new ElementStoragePanel(this.mScene, this.world);
         this.mStorage.register();
         this.mStorage.on(MessageType.EDIT_MODE_QUERY_PACKAGE, this.onEditModeQueryPackageHandler, this);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.mView.on("queryElement", this.onQueryElementHandler, this);
         this.mView.on("selectedElement", this.onSelectedElement, this);
         this.mView.show(param);

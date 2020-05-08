@@ -126,7 +126,7 @@ export class TopBtnGroup extends BasePanel {
     protected init() {
         let hei: number = 0;
         let wid: number = 0;
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mBtnList = [];
         this.mBtnX = 0;
         this.mTurnBtn = new IconBtn(this.scene, this.mWorld, {

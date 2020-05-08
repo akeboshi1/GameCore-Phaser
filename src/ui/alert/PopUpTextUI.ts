@@ -22,7 +22,7 @@ export class PopUpTextUI extends BasePanel {
         this.setSize(text.width, text.height);
         this.setPosition(size.width - this.width >> 1, size.height >> 1);
         this.scene.tweens.add({
-            targets: this.view,
+            targets: this,
             duration: 1000,
             ease: "Linear",
             props: {
@@ -38,10 +38,9 @@ export class PopUpTextUI extends BasePanel {
     }
 
     public resize() {
-        if (this.view) {
-            const size: Size = this.mWorld.getSize();
-            this.view.x = size.width - this.view.width >> 1;
-        }
+        if (!this.mInitialized) return;
+        const size: Size = this.mWorld.getSize();
+        this.x = size.width - this.width >> 1;
     }
 
     public destroy() {

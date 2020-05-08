@@ -21,7 +21,7 @@ export class ReAwardTipsMediator extends BaseMediator {
         this.mView = new ReAwardTipsPanel(this.scene, this.world);
         (<ReAwardTipsPanel> this.mView).appendAward(param);
         super.show();
-        this.world.uiManager.getUILayerManager().addToDialogLayer(this.mView.view);
+        this.world.uiManager.getUILayerManager().addToDialogLayer(this.mView);
     }
 
     public destroy() {

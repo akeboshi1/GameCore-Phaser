@@ -1,7 +1,7 @@
-import { ISelectCallItemData, ISelectCallUI } from "./comboBox";
 import { NinePatch } from "./nine.patch";
 import { Background } from "../../utils/resUtil";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { ISelectCallUI, ISelectCallItemdata } from "../../../lib/rexui/lib/ui/combobox/Combobox";
 export interface IRadioResConfig {
     wid: number;
     hei: number;
@@ -36,11 +36,13 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
         const len: number = value.length;
         for (let i: number = 0; i < len; i++) {
             const item: RadioItemRender = new RadioItemRender(this.mScene, this, this.mConfig.wid + 10, 20, this.mConfig.resKey, this.mConfig.resArrow);
-            const itemData: any = value[i];
+            const renderData: any = value[i];
             item.itemData = {
                 index: i,
-                text: itemData.text,
-                data: itemData.node.id
+                text: renderData.text,
+                data: renderData.node.id,
+                selected: false,
+                enabled: true,
             };
             item.x = this.mConfig.wid / 2 + 25;
             item.y = i * 33 + 23;
@@ -72,7 +74,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
         this.mIsShow = value;
     }
 
-    public selectCall(itemData: ISelectCallItemData) {
+    public selectCall(itemData: ISelectCallItemdata) {
         if (this.mConfig.clickCallBack) {
             this.mConfig.clickCallBack.call(this, itemData);
         }
@@ -127,7 +129,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
 export class RadioItemRender extends Phaser.GameObjects.Container {
     protected mText: BBCodeText;
     protected mSelectBG: Phaser.GameObjects.Graphics;
-    protected mData: ISelectCallItemData;
+    protected mData: ISelectCallItemdata;
     protected mSelectCallUI: ISelectCallUI;
     private mArrow: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, selectCallUI: ISelectCallUI, wid: number, hei: number, resKey: string, arrowRes: string) {
@@ -175,14 +177,14 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
         this.off("pointerdown", this.selectHandler, this);
     }
 
-    public set itemData(val: ISelectCallItemData) {
+    public set itemData(val: ISelectCallItemdata) {
         this.mData = val;
         this.mText.text = this.mData.text;
         this.mText.x = -this.width >> 1;
         this.mText.y = -this.height / 2 + (this.height - this.mText.height >> 1);
     }
 
-    public get itemData(): ISelectCallItemData {
+    public get itemData(): ISelectCallItemdata {
         return this.mData;
     }
 

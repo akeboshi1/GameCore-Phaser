@@ -40,14 +40,12 @@ export class MineSettlePanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.view.setInteractive();
         this.confirmBtn.on("click", this.onConfirmBtnClick, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.view.disableInteractive();
-        this.confirmBtn.on("click", this.onConfirmBtnClick, this);
+        this.confirmBtn.off("click", this.onConfirmBtnClick, this);
     }
 
     preload() {
@@ -76,7 +74,7 @@ export class MineSettlePanel extends BasePanel {
         const config: GridTableConfig = {
             x: 0,
             y: 0,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 300 * this.dpr * zoom,
                 height: 170 * this.dpr * zoom,
@@ -89,7 +87,7 @@ export class MineSettlePanel extends BasePanel {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new MineSettleItem(scene, this.dpr);
-                    this.mPropGrid.cellParentCon.add(cellContainer);
+                    this.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
@@ -116,7 +114,7 @@ export class MineSettlePanel extends BasePanel {
             fontSize: 16 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        this.add([this.blackGraphic, bg, titleimage, tilteName, this.confirmBtn, this.mPropGrid.cellParentCon]);
+        this.add([this.blackGraphic, bg, titleimage, tilteName, this.confirmBtn, this.mPropGrid.table]);
         this.resize(0, 0);
         super.init();
         // this.setMineSettlePacket(this.testData());

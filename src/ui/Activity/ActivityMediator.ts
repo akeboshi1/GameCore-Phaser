@@ -21,7 +21,7 @@ export class ActivityMediator extends BaseMediator {
             this.mView = new ActivityPanel(this.scene, this.world);
         }
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     isSceneUI() {

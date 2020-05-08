@@ -9,13 +9,11 @@ export class BasePanel extends Panel {
     protected mWorld: WorldService;
     protected mWidth: number = 0;
     protected mHeight: number = 0;
-    protected mData: any;
     protected mPanelTween: Phaser.Tweens.Tween;
     protected dpr: number;
     protected mResources: Map<string, any>;
     protected mReLoadResources: Map<string, any>;
     protected mReloadTimes: number = 0;
-    protected mTweenBoo: boolean = true;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.mScene = scene;
@@ -25,6 +23,10 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(world.uiRatio || 1);
             this.scale = this.mWorld.uiScaleNew;
         }
+    }
+
+    protected init() {
+        super.init();
         this.setInteractive();
     }
 

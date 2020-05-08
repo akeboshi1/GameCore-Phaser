@@ -7,6 +7,7 @@ import { Radio } from "../../components/radio";
 import { ChatMediator } from "../../chat/chat.mediator";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { BasePanel } from "../../components/BasePanel";
+import { Panel } from "../../../../lib/rexui/lib/ui/panel/Panel";
 
 /**
  * 主界面ui pc版本
@@ -33,7 +34,7 @@ export class BagGroup extends BasePanel {
         super(scene, world);
         this.x = x;
         this.y = y;
-        world.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
+        world.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.bagSlotList = [];
     }
 
@@ -44,7 +45,7 @@ export class BagGroup extends BasePanel {
     public resize(wid: number, hei: number) {
         const size: Size = this.mWorld.getSize();
         const chatMed: ChatMediator = this.mWorld.uiManager.getMediator(ChatMediator.NAME) as ChatMediator;
-        this.x = (size.width - this.tmpWid) / 2 < chatMed.getView().view.width ? chatMed.getView().view.width + this.width / 2 : (size.width - this.tmpWid) / 2;
+        this.x = (size.width - this.tmpWid) / 2 < chatMed.getView().width ? chatMed.getView().width + this.width / 2 : (size.width - this.tmpWid) / 2;
         this.y = size.height - 50;
     }
     public tweenExpand(show: boolean) {
@@ -193,7 +194,7 @@ export class BagGroup extends BasePanel {
             } else {
                 subScriptRes = "bag_SubScript" + (i + 1);
             }
-            const itemSlot = new ItemSlot(this.scene, this.mWorld, this.view, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+            const itemSlot = new ItemSlot(this.scene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
             itemSlot.createUI();
             itemSlot.getView().visible = false;
             this.bagSlotList.push(itemSlot);

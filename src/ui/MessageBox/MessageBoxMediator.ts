@@ -33,7 +33,7 @@ export class MessageBoxMediator extends BaseMediator {
         }
         this.mView = new MessageBoxView(this.mScene, this.world);
         this.mView.show(param);
-        this.mLayerManager.addToToolTipsLayer(this.mView.view);
+        this.mLayerManager.addToToolTipsLayer(this.mView);
         this.mScene.input.on("gameobjectdown", this.onBtnHandler, this);
         super.show(param);
     }

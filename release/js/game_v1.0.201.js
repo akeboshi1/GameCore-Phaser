@@ -12110,9 +12110,32 @@ var AddChildrenMap = function (key, gameObject) {
     return this;
 }
 
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
 /* harmony default export */ var basesizer_AddChildrenMap = (AddChildrenMap);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/IsArray.js
 var IsArray = __webpack_require__(103);
+=======
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Radio", function() { return Radio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadioItemRender", function() { return RadioItemRender; });
+/* harmony import */ var _nine_patch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
+/* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/GetElement.js
 
@@ -12171,6 +12194,45 @@ var GetElementByName = function (children, name) {
                 return child;
             }
         }
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
+=======
+    };
+    return Radio;
+}(Phaser.GameObjects.Container));
+
+var RadioItemRender = /** @class */ (function (_super) {
+    __extends(RadioItemRender, _super);
+    function RadioItemRender(scene, selectCallUI, wid, hei, resKey, arrowRes) {
+        var _this = _super.call(this, scene) || this;
+        _this.mSelectCallUI = selectCallUI;
+        _this.mText = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"](scene, 0, 0, "", {
+            fontSize: "20px",
+            wrap: {
+                mode: "char",
+                width: wid
+            },
+        });
+        // this.mText = this.scene.make.text({
+        //     x: -wid >> 1, y: -hei >> 1,
+        //     style: { font: "bold 20px YaHei", fill: "#F7EDED" }
+        // }, false);
+        // this.mText.style.align = "left";
+        var COLOR = 0xffcc00;
+        _this.mSelectBG = scene.make.graphics(undefined, false);
+        _this.mSelectBG.fillStyle(COLOR, .8);
+        _this.mSelectBG.fillRect(-wid >> 1, -hei >> 1, wid - 36, hei);
+        _this.mSelectBG.visible = false;
+        _this.setSize(wid, hei);
+        _this.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
+        _this.addListen();
+        _this.mArrow = scene.make.image(undefined, false);
+        _this.mArrow.setTexture(resKey, arrowRes);
+        _this.mArrow.x = -wid / 2 - 10;
+        _this.mArrow.y = 0;
+        _this.mArrow.visible = false;
+        _this.add([_this.mSelectBG, _this.mText, _this.mArrow]);
+        return _this;
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     }
 }
 
@@ -19586,10 +19648,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(27);
 /* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(56);
+<<<<<<< Updated upstream:release/js/game_v1.0.201.js
 /* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(79);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(33);
 /* harmony import */ var _rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(84);
 /* harmony import */ var _ElementStorage_ElementStorageMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(86);
+=======
+/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
+/* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(33);
+/* harmony import */ var _rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(83);
+/* harmony import */ var _ElementStorage_ElementStorageMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(85);
+=======
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(23);
+/* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(15);
+/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(79);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
+>>>>>>> Stashed changes:release/js/game_v1.0.200.js
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19722,6 +19797,7 @@ var BottomBtnGroup = /** @class */ (function (_super) {
             key: _ui_mediatorType__WEBPACK_IMPORTED_MODULE_3__["UIMediatorType"].Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
         });
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
         this.mTurnBtn.x = (this.tmpWid >> 1) + 30;
         this.mTurnBtn.y = this.tmpHei - this.mTurnBtn.height >> 1;
         this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
@@ -19729,6 +19805,17 @@ var BottomBtnGroup = /** @class */ (function (_super) {
         this.mBagBtn = new _icon_btn__WEBPACK_IMPORTED_MODULE_2__["IconBtn"](this.scene, this.mWorld, {
             key: _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__["BagMediator"].NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
             iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+=======
+        track.x = 100 * this.mWorld.uiScale;
+        track.y = 10 * this.mWorld.uiScale;
+        this.outPut.add(track);
+        var text = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"](this.scene, 0, 0, "", {
+            fontSize: "14px",
+            wrap: {
+                mode: "char",
+                width: 400 * this.mWorld.uiScale
+            },
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
         });
         this.mBagBtn.x = this.mTurnBtn.x;
         this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
@@ -19906,6 +19993,7 @@ var BottomBtnGroup = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementStoragePanel", function() { return ElementStoragePanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
@@ -19913,7 +20001,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(19);
 /* harmony import */ var _item_Item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(143);
+<<<<<<< Updated upstream:release/js/game_v1.0.201.js
 /* harmony import */ var _ElementStorageMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(86);
+=======
+/* harmony import */ var _ElementStorageMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(85);
+=======
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChatPanelMobile", function() { return ChatPanelMobile; });
+/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79);
+/* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(51);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(15);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
+/* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(18);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
+>>>>>>> Stashed changes:release/js/game_v1.0.200.js
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19946,8 +20048,178 @@ var ElementStoragePanel = /** @class */ (function (_super) {
     }
     ElementStoragePanel.prototype.show = function (param) {
         _super.prototype.show.call(this, param);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
         if (this.mInitialized) {
             this.setPackageNum(1);
+=======
+        this.tweenExpand(true);
+    };
+    ChatPanelMobile.prototype.setPosition = function (x, y) {
+        if (!this.mShow)
+            return;
+        // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
+        var size = this.mWorld.getSize();
+        var track;
+        var thumb;
+        var text;
+        if (this.mTextArea) {
+            this.mTextArea.destroy();
+            this.mTextArea = null;
+            text = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"](this.scene, 0, 0, "", {
+                fontSize: "20px",
+                wrap: {
+                    mode: "char",
+                    width: this.width >> 1
+                },
+            });
+            track = new _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__["NinePatchButton"](this.scene, 0, 0, 4, 7, "track", "", "", {
+                left: 0,
+                top: 2,
+                right: 0,
+                bottom: 2
+            });
+            // track.x = this.width / 2;
+            // track.y = 8 * this.mWorld.uiScale;
+            thumb = new _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__["NinePatchButton"](this.scene, 0, 0, 20, 35, "button", "", "", {
+                left: 4,
+                top: 4,
+                right: 4,
+                bottom: 4
+            });
+            this.add(text);
+            this.add(track);
+            this.add(thumb);
+        }
+        if (this.mInputText) {
+            this.mInputText.destroy();
+            this.mInputText = null;
+            this.mInputText = new _lib_rexui_lib_plugins_gameobjects_inputtext_InputText_js__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"](this.scene, 0, 0, 10, 10, {
+                type: "input",
+                fontSize: "20px",
+                color: "#808080"
+            })
+                .resize(328, 26)
+                .setOrigin(0, 0)
+                .setStyle({ font: "bold 20px YaHei" });
+            // .on("focus", this.onFocusHandler, this)
+            // .on("blur", this.onBlurHandler, this);
+        }
+        if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+            this.width = size.width >> 1;
+            this.height = size.height;
+            this.mBorder.resize(this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale);
+            this.x = 0;
+            this.y = 0;
+            this.clickContainer.x = this.width / this.mWorld.uiScale + this.clickContainer.width / 2;
+            this.clickContainer.y = this.height / (this.mWorld.uiScale * 2);
+            this.clickContainer.rotation = Math.PI * .5;
+            this.arrow.rotation = Math.PI * .5;
+            this.mInputBg.y = this.mBorder.height - this.mInputBg.height / 2;
+            this.mTextArea = new _lib_rexui_lib_ui_textarea_TextArea_js__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"](this.scene, {
+                x: this.width * .5 / this.mWorld.uiScale,
+                y: this.height / 2,
+                textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
+                textHeight: this.height,
+                text: text,
+                slider: {
+                    track: track,
+                    thumb: thumb,
+                },
+                clamplChildOY: true,
+            });
+            this.mInputText.setPosition(2, this.mInputBg.y - 12 * this.mWorld.uiScale);
+        }
+        else {
+            this.width = size.width;
+            this.height = size.height / 2;
+            this.mBorder.resize(this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale);
+            this.x = 0;
+            this.y = this.height + 20 * this.mWorld.uiScale;
+            this.mInputBg.y = this.mBorder.height - this.mInputBg.height;
+            this.mTextArea = new _lib_rexui_lib_ui_textarea_TextArea_js__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"](this.scene, {
+                x: (this.width - 15) / this.mWorld.uiScale >> 1,
+                y: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale >> 1,
+                textWidth: this.mBorder.width - 20 * this.mWorld.uiScale,
+                textHeight: (size.height / 2 - this.mSendBtn.height - 20) / this.mWorld.uiScale,
+                text: text,
+                slider: {
+                    track: track,
+                    thumb: thumb,
+                },
+                scroller: {
+                    bounds: [0, this.height >> 1],
+                },
+                clamplChildOY: true,
+                backDeceleration: true,
+            });
+            // this.mTextArea.x = this.mTextArea.childrenMap.child.minWidth >> 1;
+            // this.mTextArea.y = this.mTextArea.childrenMap.child.minHeight >> 1;
+            this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
+            this.clickContainer.y = -this.clickContainer.height >> 1;
+            var silder = this.mTextArea.getElement("slider");
+            silder.y = this.height >> 1;
+            this.clickContainer.rotation = Math.PI;
+            this.arrow.rotation = Math.PI * 1.5;
+            this.mInputText.setPosition(2, this.mInputBg.y - 6 * this.mWorld.uiScale);
+        }
+        this.mTextArea.layout();
+        this.add(this.mTextArea);
+        this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
+        // this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        this.mBorder.x = this.mBorder.width / 2;
+        this.mBorder.y = this.mBorder.height / 2;
+        this.setSize(this.width, this.height);
+        // this.mTextArea.x = this.mBorder.width + 100 * this.mWorld.uiScale >> 1;
+        this.mInputBg.x = this.mInputBg.width >> 1;
+        this.mSendBtn.x = this.mBorder.width - this.mSendBtn.width;
+        this.mSendBtn.y = this.mInputBg.y;
+        this.scale = this.mWorld.uiScale;
+        this.add(this.mInputText);
+    };
+    ChatPanelMobile.prototype.destroy = function () {
+        // if (this.mSendBtn) this.mSendBtn.destroy(true);
+        // if (this.mInputBg) this.mInputBg.destroy(true);
+        // if (this.clickContainer) this.clickContainer.destroy(true);
+        // if (this.arrow) this.arrow.destroy(true);
+        // if (this.mBorder) this.mBorder.destroy(true);
+        // if (this.mTextArea) this.mTextArea.destroy();
+        // if (this.mInputText) this.mInputText.destroy();
+        // this.mTextArea = null;
+        // this.mInputText = null;
+        // this.mSendBtn = null;
+        // this.clickContainer = null;
+        // this.arrow = null;
+        // this.mBorder = null;
+        // this.mInputBg = null;
+        _super.prototype.destroy.call(this);
+    };
+    ChatPanelMobile.prototype.tweenExpand = function (show) {
+        var _this = this;
+        var toAlpha = show === true ? 1 : 0;
+        this.scene.tweens.add({
+            targets: this,
+            duration: 200,
+            ease: "Linear",
+            props: {
+                alpha: { value: toAlpha },
+            },
+            onComplete: function (tween, targets, ship) {
+                if (!show)
+                    _this.hide();
+                _this.addListen();
+            },
+        });
+        if (show)
+            this.setPosition();
+    };
+    ChatPanelMobile.prototype.hide = function () {
+        this.removeListen();
+        _super.prototype.hide.call(this);
+    };
+    ChatPanelMobile.prototype.preload = function () {
+        if (!this.scene) {
+            return;
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
         }
     };
     ElementStoragePanel.prototype.resize = function (oriention) {
@@ -20005,12 +20277,83 @@ var ElementStoragePanel = /** @class */ (function (_super) {
                 this.mProps[i].y = Math.floor(i / 8) * 60 + 80;
             }
         }
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
         this.mPrePageBtn.y = this.height >> 1;
         this.mNextPageBtn.x = this.width;
         this.mNextPageBtn.y = this.height >> 1;
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
         // this.setScale(this.mWorld.uiScale, this.mWorld.uiScale);
         // this.scaleX = this.scaleY = 5;
+=======
+        this.setSize(this.width, this.height);
+        this.mBorder = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__["NinePatch"](this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* Border */ "d"].getName(), null, _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* Border */ "d"].getConfig());
+        this.mBorder.x = this.mBorder.width / 2;
+        this.mBorder.y = this.mBorder.height / 2;
+        this.addAt(this.mBorder, 0);
+        var text = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"](this.scene, 0, 0, "", {
+            fontSize: "20px",
+            wrap: {
+                mode: "char",
+                width: this.width >> 1
+            },
+        });
+        var track = new _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__["NinePatchButton"](this.scene, 0, 0, 4, 7, "track", "", "", {
+            left: 0,
+            top: 2,
+            right: 0,
+            bottom: 2
+        });
+        track.x = this.width / 2;
+        track.y = 8 * this.mWorld.uiScale;
+        var thumb = new _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__["NinePatchButton"](this.scene, 0, 0, 20, 35, "button", "", "", {
+            left: 4,
+            top: 4,
+            right: 4,
+            bottom: 4
+        });
+        this.add(text);
+        this.add(track);
+        this.add(thumb);
+        this.mTextArea = new _lib_rexui_lib_ui_textarea_TextArea_js__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"](this.scene, {
+            x: this.width >> 1,
+            y: this.height + 178 * this.mWorld.uiScale >> 1,
+            textWidth: this.width,
+            textHeight: this.height + 150 * this.mWorld.uiScale,
+            text: text,
+            slider: {
+                track: track,
+                thumb: thumb,
+            },
+        })
+            .layout();
+        this.add(this.mTextArea);
+        this.mInputBg = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__["NinePatch"](this.scene, 0, 0, 340, 30, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
+        this.add(this.mInputBg);
+        this.mInputText = new _lib_rexui_lib_plugins_gameobjects_inputtext_InputText_js__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"](this.scene, 0, 0, 10, 10, {
+            type: "input",
+            fontSize: "20px",
+            color: "#808080"
+        })
+            .resize(328, 26)
+            .setOrigin(0, 0)
+            .setStyle({ font: "bold 20px YaHei" })
+            .on("focus", this.onFocusHandler, this)
+            .on("blur", this.onBlurHandler, this);
+        this.mSendBtn = new _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_6__["NinePatchButton"](this.scene, 0, 0, 60, 30, _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* WhiteButton */ "i"].getName(), "", "发送", _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* WhiteButton */ "i"].getConfig());
+        this.add(this.mSendBtn);
+        this.clickContainer = this.scene.make.container(undefined, false);
+        var btnBg = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__["NinePatch"](this.scene, 0, 0, 53 / this.mWorld.uiScale, 30 / this.mWorld.uiScale, _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* Border */ "d"].getName(), null, _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__[/* Border */ "d"].getConfig());
+        this.arrow = this.scene.make.image(undefined, false);
+        this.arrow.setTexture("arrow");
+        this.clickContainer.setSize(btnBg.width + 4, btnBg.height + 10);
+        this.clickContainer.add(btnBg);
+        this.clickContainer.add(this.arrow);
+        this.clickContainer.setInteractive();
+        this.add(this.clickContainer);
+        this.add(this.mInputText);
+        this.setPosition();
+        _super.prototype.init.call(this);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     ElementStoragePanel.prototype.addListen = function () {
         _super.prototype.addListen.call(this);
@@ -24147,9 +24490,16 @@ var ReAwardTips = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReAwardTipsPanel", function() { return ReAwardTipsPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(10);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+=======
+/* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(51);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11);
+/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(89);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24195,7 +24545,104 @@ var ReAwardTipsPanel = /** @class */ (function (_super) {
         this.addImage(this.key, "reaward_tips/bg.png");
         _super.prototype.preload.call(this);
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     ReAwardTipsPanel.prototype.init = function () {
+=======
+    PicaChatPanel.prototype.init = function () {
+        var width = this.scene.cameras.main.width;
+        var height = this.scene.cameras.main.height;
+        this.mBackground = this.scene.make.graphics(undefined, false);
+        var zoom = this.scale;
+        this.setSize(width, 135 * this.dpr);
+        this.mTileContainer = this.scene.make.container(undefined, false);
+        this.mScrollBtn = this.scene.make
+            .image({
+            key: this.key,
+            frame: "scroll_btn.png"
+        }, false)
+            .setScale(zoom);
+        this.mTitleBg = this.scene.make.image({
+            key: this.key,
+            frame: "title_bg.png"
+        }, false)
+            .setScale(zoom);
+        this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.mChatBtn = this.scene.make
+            .image({
+            x: 33 * this.dpr * zoom,
+            key: this.key,
+            frame: "chat_icon.png"
+        }, false)
+            .setScale(zoom);
+        this.mHornBtn = this.scene.make
+            .image({
+            x: 96 * this.dpr * zoom,
+            key: this.key,
+            frame: "horn_icon.png"
+        }, false)
+            .setScale(zoom);
+        this.mEmojiBtn = this.scene.make
+            .image({
+            x: 155 * this.dpr * zoom,
+            key: this.key,
+            frame: "emoji.png"
+        }, false)
+            .setScale(zoom);
+        this.mChatBtn.y = -this.mChatBtn.height / 2 + this.mTitleBg.height;
+        this.mHornBtn.y = -this.mHornBtn.height / 2 + this.mTitleBg.height;
+        this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
+        this.mOutputText = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"](this.mScene, 0, 0, "", {
+            fontSize: 14 * this.dpr / zoom + "px",
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_3__[/* Font */ "a"].DEFULT_FONT,
+            stroke: "#000000",
+            strokeThickness: 1 * this.dpr * zoom,
+            textMask: false,
+            shadow: {
+                offsetX: 0,
+                offsetY: 0,
+                color: "#000",
+                blur: 4,
+                stroke: true,
+                fill: true
+            },
+            wrap: {
+                mode: "char",
+                width: width - 12 * this.dpr * zoom
+            }
+        });
+        var background = this.scene.make.graphics(undefined, false);
+        this.mTextArea = new _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"](this.mScene, {
+            x: width / 2 + 4 * this.dpr * zoom,
+            y: 160 * this.dpr * zoom,
+            // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, 0.2),
+            textWidth: width - 4 * this.dpr * zoom,
+            textHeight: this.MAX_HEIGHT,
+            text: this.mOutputText,
+        })
+            .layout();
+        this.mNavigateBtn = this.scene.make.image({
+            key: this.key,
+            frame: "more_btn.png"
+        }, false)
+            .setScale(zoom);
+        this.mTileContainer.add([
+            this.mTitleBg,
+            this.mChatBtn,
+            this.mHornBtn,
+            this.mEmojiBtn,
+            this.mScrollBtn
+        ]);
+        this.add([
+            this.mBackground,
+            this.mTileContainer,
+            this.mTextArea,
+            this.mOutputText,
+            background,
+            this.mNavigateBtn
+        ]);
+        this.mTextArea.setSliderEnable(false);
+        // this.mTextArea.childrenMap.child.disableInteractive();
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
         _super.prototype.init.call(this);
         this.y = 250 * this.dpr;
     };
@@ -25207,10 +25654,18 @@ var EquipItemCell = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 /* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(178);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
+=======
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AlertView", function() { return AlertView; });
+/* harmony import */ var _BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(41);
+/* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -25266,11 +25721,58 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
         this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
         _super.prototype.preload.call(this);
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     EquipUpgradePanel.prototype.init = function () {
         this.blackBg = this.scene.make.graphics(undefined, false);
         this.bg = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__["NinePatch"](this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
             top: 40,
             bottom: 40
+=======
+    AlertView.prototype.init = function () {
+        var zoom = this.mWorld.uiScaleNew || 1;
+        var bg = this.scene.make.image({
+            key: this.key,
+            frame: "bg.png"
+        }, false);
+        var title = this.scene.make.image({
+            key: this.key,
+            frame: "title.png"
+        }, false);
+        title.y = -bg.height / 2;
+        this.mTitleLabel = this.scene.make.text({
+            text: "丢弃",
+            style: {
+                fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_2__[/* Font */ "a"].DEFULT_FONT,
+                fontSize: 12 * this.dpr * zoom,
+                color: "#905B06"
+            }
+        }, false).setOrigin(0.5);
+        this.mTitleLabel.y = title.y;
+        this.mContent = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"](this.scene, 0, -11 * this.dpr, "", {
+            fontSize: 12 * this.dpr * zoom + "px",
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_2__[/* Font */ "a"].DEFULT_FONT,
+            color: "#0",
+            wrap: {
+                mode: "char",
+                width: 218 * this.dpr
+            }
+        });
+        this.mContent.setOrigin(0.5, 0.5);
+        this.mContent.setText("[color=#FF0000]里卡多flashed分肤是的肌肤是路径[/color]");
+        this.mOkBtn = new _button__WEBPACK_IMPORTED_MODULE_1__["Button"](this.scene, this.key, "yellow_btn.png", undefined, "确定");
+        this.mOkBtn.setTextStyle({
+            color: "#905B06",
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_2__[/* Font */ "a"].DEFULT_FONT,
+            fontSize: 13 * this.dpr * zoom
+        });
+        this.mOkBtn.x = (bg.width - this.mOkBtn.width) / 2 - 33 * this.dpr;
+        this.mOkBtn.y = (bg.height - this.mOkBtn.height) / 2 - 16 * this.dpr;
+        this.mOkBtn.on("click", this.onOkHandler, this);
+        this.mCancelBtn = new _button__WEBPACK_IMPORTED_MODULE_1__["Button"](this.scene, this.key, "red_btn.png", undefined, "取消");
+        this.mCancelBtn.setTextStyle({
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_2__[/* Font */ "a"].DEFULT_FONT,
+            fontSize: 13 * this.dpr * zoom
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
         });
         var posY = -this.bg.height * 0.5;
         this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "titlebg" });
@@ -26942,6 +27444,7 @@ var ItemPopCardPanel = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementDetail", function() { return ElementDetail; });
 /* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(191);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
@@ -26950,6 +27453,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(48);
 /* harmony import */ var _DetailDisplay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(64);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
+=======
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoPanel", function() { return InfoPanel; });
+/* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(19);
+/* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(51);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
+/* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(18);
+/* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(5);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(37);
+/* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(11);
+/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(181);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27166,6 +27681,7 @@ var ElementDetail = /** @class */ (function (_super) {
         this.mPriceText.setText(price);
         this.mPriceIcon.x = this.mPriceText.x - this.mPriceText.width / 2 - 16 * this.dpr;
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     ElementDetail.prototype.onBuyHandler = function () {
         if (!this.mSelectedProp) {
             return;
@@ -27175,6 +27691,77 @@ var ElementDetail = /** @class */ (function (_super) {
         prop.quantity = this.mCounter.number;
         prop.category = this.mSelectedProp.category;
         this.emit("buyItem", prop);
+=======
+    InfoPanel.prototype.init = function () {
+        var size = this.mWorld.getSize();
+        var scale = this.mWorld.uiScaleNew;
+        this.setSize(400 * this.dpr * scale, 500 * this.dpr * scale);
+        var background = new _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"](this.scene, {
+            width: this.width,
+            height: this.height,
+            key: _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* Background */ "a"].getName(),
+            columns: _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* Background */ "a"].getColumns(),
+            rows: _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* Background */ "a"].getRows()
+        });
+        var border = new _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"](this.scene, {
+            width: this.width - 20 * this.dpr * scale,
+            height: this.height - 20 * this.dpr * scale,
+            key: _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* Border */ "d"].getName(),
+            columns: _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* Border */ "d"].getColumns(),
+            rows: _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* Border */ "d"].getRows()
+        });
+        this.mNameBBCodeText = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"](this.scene, 0, 0, "", {
+            fontSize: 14 * this.dpr * scale + "px",
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_7__[/* Font */ "a"].DEFULT_FONT,
+            textMask: false,
+            wrap: {
+                mode: "char",
+                width: 270 * this.dpr * scale
+            }
+        });
+        this.mNameTextArea = new _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"](this.scene, {
+            x: this.width / 2 - 80 * scale * this.dpr,
+            y: -75 * scale * this.dpr,
+            textWidth: 270 * this.dpr * scale,
+            textHeight: 180 * this.dpr * scale,
+            textMask: true,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            text: this.mNameBBCodeText,
+        })
+            .layout();
+        this.mAttributesBBCodeText = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"](this.scene, 0, 0, "", {
+            fontSize: 14 * this.dpr * scale + "px",
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_7__[/* Font */ "a"].DEFULT_FONT,
+            textMask: false,
+            wrap: {
+                mode: "char",
+                width: this.width - 30 * this.dpr * scale
+            }
+        });
+        this.mAttributesTextArea = new _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"](this.scene, {
+            x: size.width / 2 + 3 * this.dpr * scale,
+            y: size.height / 2 + 95 * this.dpr * scale,
+            textMask: true,
+            textWidth: this.width - 60 * this.dpr * scale,
+            textHeight: 180 * this.dpr * scale,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            text: this.mAttributesBBCodeText,
+        })
+            .layout();
+        this.mCloseBtn = new _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__["NinePatchButton"](this.scene, 258, 145, 80, 34, _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* BlueButton */ "c"].getName(), "", "关闭", _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__[/* BlueButton */ "c"].getConfig());
+        this.mCloseBtn.x = 0;
+        this.mCloseBtn.y = this.height - 100 * this.mWorld.uiRatio * scale >> 1;
+        this.mCloseBtn.setTextStyle({ font: _utils_font__WEBPACK_IMPORTED_MODULE_7__[/* Font */ "a"].YAHEI_16_BOLD });
+        this.mActor = new _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__["DynamicImage"](this.scene, 300, 125).setOrigin(0.5, 1);
+        this.mActor.scale = 2;
+        this.mWorld.uiManager.getMediator(_InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__["InfoPanelMediator"].NAME).resize();
+        this.add([background, border,
+            this.mNameBBCodeText, this.mAttributesBBCodeText, this.mCloseBtn, this.mActor]);
+        // this.mAttributesTextArea, this.mAttributesBBCodeText,this.mNameTextArea, this.mNameTextArea,
+        this.addListen();
+        _super.prototype.init.call(this);
+        this.setInfo(this.getData("data"));
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     ElementDetail.prototype.onChangeCounterHandler = function (num) {
         if (!this.mSelectedProp) {
@@ -27394,9 +27981,22 @@ var NumberCounter = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LabelInput", function() { return LabelInput; });
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
+=======
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractivePanel", function() { return InteractivePanel; });
+/* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+/* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(15);
+/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(86);
+/* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
+/* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
+/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(183);
+/* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(51);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27476,11 +28076,72 @@ var LabelInput = /** @class */ (function (_super) {
         }
         this.add(this.mLabel);
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     LabelInput.prototype.destroyInput = function () {
         if (this.mInputText) {
             this.mInputText.destroy();
             this.mInputText = undefined;
         }
+=======
+    InteractivePanel.prototype.init = function () {
+        var width = this.mWorld.getSize().width;
+        var height = this.mWorld.getSize().height;
+        var zoom = this.mWorld.uiScaleNew;
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
+        this.mNameCon = this.mScene.make.container(undefined, false);
+        this.mDescCon = this.mScene.make.container(undefined, false);
+        this.mBg = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_2__["NinePatch"](this.scene, 0, 0, 1080, 320, _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__[/* Background */ "a"].getName(), null, _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__[/* Background */ "a"].getConfig());
+        this.setSize(width, height);
+        this.mBorder = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_2__["NinePatch"](this.scene, 0, 0, 1040, 280, _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__[/* Border */ "d"].getName(), null, _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__[/* Border */ "d"].getConfig());
+        this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
+        this.mMidFaceIcon = this.mScene.make.image(undefined, false);
+        this.mRightFaceIcon = this.mScene.make.image(undefined, false);
+        this.mNameTF = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"](this.mScene, 0, 0, "", {
+            fontSize: "20px",
+            wrap: {
+                mode: "char",
+                width: this.mBorder.width
+            },
+        });
+        this.mNameBg = this.mScene.make.image(undefined, false);
+        this.mNameBg.setTexture("juqing", "juqing_name.png");
+        this.mDescTF = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"](this.mScene, 0, 0, "", {
+            // width: this.mBorder.width - 20 * this.dpr * zoom,
+            fontSize: "20px",
+            halign: "left",
+            textMask: false,
+            padding: {
+                top: 0,
+                bottom: 0,
+                left: 8 * this.dpr * zoom,
+                right: 3 * this.dpr * zoom,
+            },
+            wrap: {
+                mode: "character",
+                width: this.mBorder.width - 12 * this.dpr * zoom,
+            },
+        });
+        this.mTextArea = new _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"](this.mScene, {
+            x: width / 2,
+            y: this.mBorder.y + this.mBorder.height / 2 + 80 * this.dpr * zoom,
+            width: this.mBorder.width,
+            height: this.mBorder.height - 20 * this.dpr * zoom,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            textWidth: this.mBorder.width - 12 * this.dpr * zoom,
+            textHeight: 0,
+            text: this.mDescTF,
+        })
+            .layout();
+        // const bg1 = this.mScene.make.graphics(undefined, false);
+        // bg1.fillStyle(0xffcc00);
+        // bg1.fillRect(-this.mBg.width >> 1, -this.mBg.height >> 1, this.mBg.width, this.mBg.height);
+        // this.mDescCon.add(bg1);
+        this.mDescCon.setSize(this.mBg.width, this.mBg.height);
+        this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
+        this.mDescCon.setInteractive();
+        this.mNameCon.setInteractive();
+        _super.prototype.init.call(this);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     LabelInput.prototype.onTextChangeHandler = function () {
         this.emit("textchange");
@@ -29453,6 +30114,7 @@ var PopularRoomZoon = /** @class */ (function (_super) {
         }
         return this.mHeight;
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     return PopularRoomZoon;
 }(RoomZoon));
 var RoomItem = /** @class */ (function (_super) {
@@ -29472,6 +30134,69 @@ var RoomItem = /** @class */ (function (_super) {
         // this.crateLabel(room.privacy);
         this.crateLabel(pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__["op_def"].EditModeRoomPrivacy.EDIT_MODE_ROOM_LOCKED);
         this.mRoom = room;
+=======
+    MarketItem.prototype.onPointerUpHandler = function () {
+        this.emit("select", this.mProp);
+    };
+    return MarketItem;
+}(Phaser.GameObjects.Container));
+
+
+
+/***/ }),
+/* 192 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TabButton", function() { return TabButton; });
+/* harmony import */ var _ninepatch_button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var TabButton = /** @class */ (function (_super) {
+    __extends(TabButton, _super);
+    function TabButton(scene, x, y, width, height, key, frame, text, config, data) {
+        var _this = _super.call(this, scene, x, y, width, height, key, frame, text, config, data) || this;
+        _this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+        return _this;
+    }
+    TabButton.prototype.onPointerUp = function () { };
+    return TabButton;
+}(_ninepatch_button__WEBPACK_IMPORTED_MODULE_0__["NinePatchButton"]));
+
+
+
+/***/ }),
+/* 193 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageBoxView", function() { return MessageBoxView; });
+/* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
+/* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(15);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     RoomItem.prototype.roomData = function () {
         return this.mRoom;
@@ -29576,10 +30301,33 @@ var PopularRoomItem = /** @class */ (function (_super) {
             this.add(this.mRankImage);
         }
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     PopularRoomItem.prototype.init = function (key, dpr) {
         _super.prototype.init.call(this, key, dpr);
         this.mRankImage = this.scene.make.image(undefined, false);
         this.mNickName.x = -this.width / 2 + 37 * dpr;
+=======
+    MessageBoxView.prototype.init = function () {
+        var size = this.mWorld.getSize();
+        this.mWidth = 300;
+        this.mHeight = 200;
+        var border = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__["NinePatch"](this.scene, 0, 0, this.mWidth, this.mHeight, _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__[/* Border */ "d"].getName(), null, _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__[/* Border */ "d"].getConfig());
+        border.x = 0;
+        border.y = 0;
+        this.add(border);
+        this.mTxt = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"](this.mScene, 0, 0, "", {
+            fontSize: "16px",
+            wrap: {
+                mode: "char",
+                width: border.width
+            },
+            halign: "center"
+        });
+        this.mTxt.x = -this.mWidth / 2 + 10;
+        this.mTxt.y = -this.mHeight / 2 + 10;
+        this.add(this.mTxt);
+        _super.prototype.init.call(this);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     return PopularRoomItem;
 }(MyRoomItem));
@@ -29761,6 +30509,7 @@ var ShopMediator = /** @class */ (function (_super) {
         this.world.uiManager.checkUIState(ShopMediator.NAME, true);
         _super.prototype.hide.call(this);
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     ShopMediator.prototype.destroy = function () {
         this.world.emitter.off(_const_MessageType__WEBPACK_IMPORTED_MODULE_0__[/* MessageType */ "a"].QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.off(_const_MessageType__WEBPACK_IMPORTED_MODULE_0__[/* MessageType */ "a"].SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
@@ -29770,6 +30519,30 @@ var ShopMediator = /** @class */ (function (_super) {
         this.fetching = false;
         this.isEnd = false;
         _super.prototype.destroy.call(this);
+=======
+    return MineSettleItem;
+}(Phaser.GameObjects.Container));
+
+
+/***/ }),
+/* 196 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaMessageBoxPanel", function() { return PicaMessageBoxPanel; });
+/* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+/* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
+/* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
+/* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     ShopMediator.prototype.isShow = function () {
         return this.mView ? this.mView.isShow() : false;
@@ -29824,10 +30597,52 @@ var ShopMediator = /** @class */ (function (_super) {
         this.world.connection.send(pkt);
         // Globals.SocketManager.send(pkt);
     };
+<<<<<<< Updated upstream:release/js/game_v1.0.199.js
     ShopMediator.prototype.syncUserBalance = function () {
         var pkt = new net_socket_packet__WEBPACK_IMPORTED_MODULE_1__["PBpacket"](pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__["op_virtual_world"].OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_USER_BALANCE);
         this.world.connection.send(pkt);
         // Globals.SocketManager.send(pkt);
+=======
+    PicaMessageBoxPanel.prototype.init = function () {
+        var frame = this.scene.textures.getFrame(this.key, "bg");
+        var background = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_1__["NinePatch"](this.scene, 0, 0, 286 * this.dpr, frame.height, this.key, "bg", {
+            left: 22 * this.dpr,
+            top: frame.height,
+            right: 22 * this.dpr,
+            bottom: 0
+        });
+        this.setSize(background.width, background.height);
+        this.mButtonContaier = this.scene.make.container(undefined, false);
+        var title = this.scene.make.image({
+            y: -background.height / 2,
+            key: this.key,
+            frame: "title"
+        });
+        this.mTitleLabel = this.scene.make.text({
+            y: title.y - 6 * this.dpr,
+            style: {
+                fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_2__[/* Font */ "a"].DEFULT_FONT,
+                fontSize: 16 * this.dpr,
+                color: "#3366cc"
+            }
+        }, false).setOrigin(0.5);
+        this.mText = new _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"](this.mScene, 0, 0, "", {
+            fontSize: 14 * this.dpr + "px",
+            fontFamily: _utils_font__WEBPACK_IMPORTED_MODULE_2__[/* Font */ "a"].DEFULT_FONT,
+            color: "#000000",
+            origin: { x: 0.5, y: 0.5 },
+            wrap: {
+                mode: "char",
+                width: this.width
+            },
+            align: "center"
+        });
+        // this.mText.x = -this.mWidth / 2 + 10;
+        // this.mText.y = -this.mHeight / 2 + 10;
+        this.add([background, title, this.mTitleLabel, this.mText, this.mButtonContaier]);
+        _super.prototype.init.call(this);
+        this.resize(0, 0);
+>>>>>>> Stashed changes:release/js/game_v1.0.197.js
     };
     ShopMediator.prototype.onChangeIndex = function (rate) {
         if (rate >= 0.9 && this.fetching === false && this.isEnd === false) {

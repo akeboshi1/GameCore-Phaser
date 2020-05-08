@@ -7,6 +7,7 @@ import { BasePanel } from "../components/BasePanel";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { Notice } from "./Notice";
 import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
 
 export class NoticeMediator extends BaseMediator {
     public static NAME: string = "NoticeMediator";
@@ -28,8 +29,8 @@ export class NoticeMediator extends BaseMediator {
         this.mView.scale = value;
     }
 
-    getView(): BasePanel {
-        return this.mView !== undefined ? this.mView.view : undefined;
+    getView(): Panel {
+        return this.mView !== undefined ? this.mView as BasePanel : undefined;
     }
 
     getUIType(): number {
@@ -65,7 +66,7 @@ export class NoticeMediator extends BaseMediator {
         this.mView = new NoticePanel(this.mScene, this.world);
         this.mView.show(param);
         (this.mView as NoticePanel).showNotice(param);
-        this.mLayerManager.addToDialogLayer(this.mView.view);
+        this.mLayerManager.addToDialogLayer(this.mView);
         // this.setUiScale(this.world.uiScale);
     }
 

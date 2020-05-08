@@ -28,7 +28,7 @@ export class PicaMessageBoxMediator extends BaseMediator {
       this.mView.on("click", this.onClickHandler, this);
     }
     this.mView.show(params);
-    this.layerManager.addToDialogLayer(this.mView.view);
+    this.layerManager.addToDialogLayer(this.mView);
   }
 
   hide() {

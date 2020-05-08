@@ -52,7 +52,7 @@ export class CreateRole extends PacketHandler {
       this.world.connection.removePacketListener(this);
     }
     this.world.game.scene.remove(CreateRoleScene.name);
-    if (this.createPanel) this.createPanel.destroy();
+    // if (this.createPanel) this.createPanel.destroy();
   }
 
   private onRandomNameHandler() {

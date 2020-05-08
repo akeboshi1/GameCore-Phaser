@@ -31,8 +31,21 @@ export default class EquipUpgradePanel extends BasePanel {
     }
 
     public show(param?: any) {
+        this.mShowData = param;
+        if (this.mPreLoad) return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow) return;
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShow = true;
+        }
         this.refreshData();
-        super.show(param);
+        this.addListen();
     }
 
     public addListen() {
@@ -64,19 +77,19 @@ export default class EquipUpgradePanel extends BasePanel {
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
-        super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+        super.init();
     }
 
     setEquipDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
-        if (!this.mInitialized) return;
         this.content = content;
+        if (!this.mInitialized) return;
         const arr = content.mineEquipments; // this.getEuipDatas();// [content.minePicks, content.minePicks];
         const height = 175 * this.dpr;
         const bgHeight = height * arr.length - (arr.length >= 2 ? 40 * (arr.length - 2) : 0);
         const cellHeight = 155 * this.dpr;
         this.resetPosition(this.bg.width, bgHeight);
-        let posY: number =  -bgHeight * 0.5 + 100 * this.dpr;
+        let posY: number = -bgHeight * 0.5 + 100 * this.dpr;
         let index = 0;
         for (const value of arr) {
             value["isblue"] = (index % 2 === 0 ? false : true);

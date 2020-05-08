@@ -80,10 +80,10 @@ export class ItemPopCardPanel extends BasePanel {
   }
 
   public setProp() {
-    if (!this.mData) {
+    if (!this.mShowData) {
       return;
     }
-    const prop = this.mData[0].prop;
+    const prop = this.mShowData[0].prop;
     if (!prop) {
       return;
     }
@@ -94,7 +94,7 @@ export class ItemPopCardPanel extends BasePanel {
     } else {
       this.mSource.setText("");
     }
-    const resource: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE = this.mData[0].display;
+    const resource: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE = this.mShowData[0].display;
     if (resource) {
       if (resource.display) {
         this.mDetailDisplay.loadDisplay(resource);
@@ -185,10 +185,9 @@ export class ItemPopCardPanel extends BasePanel {
     this.add(this.mCardContainer);
     this.mCardContainer.add([this.mBorder, background, desBg, this.mDetailDisplay, nickNameBg, this.mNickName, this.mDesText, this.mSource]);
     this.add(this.mCloseBtn);
-    this.setInteractive();
-    super.init();
     this.resize(0, 0);
-
+    super.init();
+    this.setInteractive();
     this.setProp();
   }
 

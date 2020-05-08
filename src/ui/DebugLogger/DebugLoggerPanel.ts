@@ -1,8 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
-import { Background, Url } from "../../utils/resUtil";
+import { Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
-import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
 import { DebugLoggerMediator } from "./DebugLoggerMediator";
 import { IconBtn } from "../baseView/icon.btn";
@@ -81,7 +80,7 @@ export class DebugLogger extends BasePanel {
     }
 
     protected init() {
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         const size: Size = this.mWorld.getSize();
         this.mBgWidth = 400;
         this.mBgHeight = size.height >> 1;

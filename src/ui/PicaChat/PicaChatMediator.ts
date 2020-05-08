@@ -25,7 +25,7 @@ export class PicaChatMediator extends BaseMediator {
     show() {
         if ((this.mView && this.mView.isShow()) || this.mShow) {
             this.mView.show();
-            this.layerManager.addToUILayer(this.mView.view);
+            this.layerManager.addToUILayer(this.mView);
             return;
         }
         if (!this.mChat) {
@@ -39,7 +39,7 @@ export class PicaChatMediator extends BaseMediator {
             this.mView.on("chat", this.onSendChatHandler, this);
         }
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     isSceneUI() {
@@ -64,7 +64,7 @@ export class PicaChatMediator extends BaseMediator {
             mediator.show();
             this.mView.hide();
             this.mView.removeListen();
-            this.layerManager.removeToUILayer(this.mView.view);
+            this.layerManager.removeToUILayer(this.mView);
         }
     }
 

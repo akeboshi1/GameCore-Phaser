@@ -24,14 +24,14 @@ export class TopMenuContainer extends BasePanel {
 
   show() {
     if (this.mWorld) {
-      this.mWorld.uiManager.getUILayerManager().addToUILayer(this.view);
+      this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
     }
     super.show();
   }
 
   hide() {
-    if (this.view && this.view.parentContainer) {
-      this.view.parentContainer.remove(this);
+    if (this.parentContainer) {
+      this.parentContainer.remove(this);
     }
   }
 

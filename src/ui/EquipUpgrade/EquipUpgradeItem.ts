@@ -59,7 +59,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
         const w = this.scene.cameras.main.width, h = this.scene.cameras.main.height;
         const posX = w * 0.5 + this.x * this.zoom;
         const posY = h * 0.5 + this.y * this.zoom - 20 * this.dpr;
-        this.gridTable.refreshPos(posX, posY, -posX + this.cellWidth / 2 * this.zoom, -posY);
+        this.gridTable.refreshPos(posX, posY); //  -posX + this.cellWidth / 2 * this.zoom, -posY);
         // this.gridTable.x = posX;
         // this.gridTable.y = posY;
         // this.gridTable.layout();
@@ -142,7 +142,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
                 const index = cell.index;
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key, this.zoom);
-                    this.gridTable.cellParentCon.add(cellContainer);
+                    this.add(cellContainer);
                     cellContainer.setChildPosition();
                 }
                 cellContainer.setSize(capW, capH);
@@ -165,7 +165,7 @@ export class EquipUpgradeItem extends Phaser.GameObjects.Container {
             this.onSelectItemHandler(cell);
         });
         this.gridTable.addListen();
-        this.add(this.gridTable.cellParentCon);
+        this.add(this.gridTable.table);
     }
 
     private onSelectItemHandler(cell: EquipItemCell) {

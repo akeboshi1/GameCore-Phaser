@@ -148,7 +148,7 @@ export class ShopPanel extends BasePanel {
         for (let i: number = 0; i < 20; i++) {
             tmpX = (i % 5) * 88 - this.mBg.width / 2 + 75;
             tmpY = Math.floor(i / 5) * 82 - this.mBg.height / 2 + 72;
-            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this.view, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", "itemSelectFrame");
+            itemSlot = new ShopItemSlot(this.mScene, this.mWorld, this, tmpX, tmpY, "shopView", "ui/shop/shopView.png", "ui/shop/shopView.json", "shopView_bagSlot", "itemSelectFrame");
             itemSlot.createUI();
             this.mShopItemSlotList.push(itemSlot);
         }
@@ -160,7 +160,7 @@ export class ShopPanel extends BasePanel {
         this.mClsBtn.y = -this.height >> 1;
         this.mClsBtn.scaleX = this.mClsBtn.scaleY = 2;
         this.add(this.mClsBtn);
-        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
+        this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
 
         // 异步加载过程中会导致数据过来，面板仍然没有加载完毕，所以缓存数据等ui加载完毕再做显示
         if (this.mShopData) {

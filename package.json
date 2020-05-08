@@ -37,11 +37,13 @@
         "chance": "^1.1.3",
         "copy-text-to-clipboard": "^2.1.1",
         "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
+        "git": "^0.1.5",
         "i18next": "^19.0.3",
         "i18next-browser-languagedetector": "^4.0.1",
         "i18next-xhr-backend": "^3.2.2",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "phaser": "^3.22.0",
+        "phaser3-rex-plugins": "https://code.apowo.com/PixelPai/phaser3-rexui.git",
         "simple-sha1": "^3.0.1"
     }
 }

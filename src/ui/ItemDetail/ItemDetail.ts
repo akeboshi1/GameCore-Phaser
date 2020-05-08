@@ -39,13 +39,13 @@ export class ItemDetail extends BasePanel {
     }
 
     public show(param?: any) {
-        this.mData = param;
+        this.mShowData = param;
         if (!this.mInitialized) {
             this.preload();
             return;
         }
         this.mShow = true;
-        const data = this.mData[0];
+        const data = this.mShowData[0];
         if (data.display.length > 0) {
             this.loadIcon(data.display[0]);
         }
@@ -170,6 +170,6 @@ export class ItemDetail extends BasePanel {
         this.add(this.mDescTF);
 
         this.mInitialized = true;
-        this.show(this.mData);
+        this.show(this.mShowData);
     }
 }
