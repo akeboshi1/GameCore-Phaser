@@ -89,7 +89,7 @@ class AwardItem extends Phaser.GameObjects.Container {
         this.mScaleRatio = dpr * zoom;
 
         this.mImage = new DynamicImage(this.scene, 0, 0);
-        this.mImage.setScale(this.mScaleRatio);
+        this.mImage.setScale(dpr);
         this.mImage.setOrigin(0.5, 1);
         this.mImage.y = this.mBg.height * dpr / 2;
 

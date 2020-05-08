@@ -303,9 +303,10 @@ export class MarketPanel extends BasePanel {
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
+        mask: false
       },
       scrollMode: 1,
-      clamplChildOY: true,
+      clamplChildOY: false,
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
