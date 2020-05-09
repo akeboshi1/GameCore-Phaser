@@ -15652,7 +15652,7 @@ var DecorateManager = /** @class */ (function (_super) {
         if (!this.mPanel) {
             return;
         }
-        this.mPanel.setPosition(x, y);
+        this.mPanel.setPos(x, y);
     };
     DecorateManager.prototype.destroy = function () {
         if (this.mPanel) {
@@ -15853,7 +15853,7 @@ var DecoratePanel = /** @class */ (function (_super) {
             }
         }
     };
-    DecoratePanel.prototype.setPosition = function (x, y, z) {
+    DecoratePanel.prototype.setPos = function (x, y, z) {
         this.x = x * this.mScaleRatio;
         this.y = (y + this.offset.y) * this.mScaleRatio;
         this.z = z || 0;
@@ -21596,7 +21596,7 @@ var PicaMainUIMediator = /** @class */ (function (_super) {
         return _this;
     }
     PicaMainUIMediator.prototype.show = function (param) {
-        if (this.mView && this.mView.isShow() || this.mShow) {
+        if (this.mView) {
             this.update(param);
             return;
         }
@@ -21663,6 +21663,7 @@ var PicaMainUIPanel = /** @class */ (function (_super) {
         return _this;
     }
     PicaMainUIPanel.prototype.show = function (param) {
+        Object.assign(param, this.mShowData);
         _super.prototype.show.call(this, param);
         if (this.mInitialized) {
             this.update(param);
@@ -21719,12 +21720,12 @@ var PicaMainUIPanel = /** @class */ (function (_super) {
         if (param.hasOwnProperty("name")) {
             this.mSceneName.setText(param.name);
         }
-        if (param.hasOwnProperty("owner_name")) {
-            this.mSceneType.setText(param.owner_name);
+        if (param.hasOwnProperty("ownerName")) {
+            this.mSceneType.setText(param.ownerName);
         }
-        if (param.hasOwnProperty("player_count")) {
+        if (param.hasOwnProperty("playerCount")) {
             // TODO 多语言适配
-            this.mCounter.setText(param.player_count + " \u4EBA");
+            this.mCounter.setText(param.playerCount + "\u4EBA");
         }
     };
     PicaMainUIPanel.prototype.init = function () {
@@ -21747,7 +21748,7 @@ var PicaMainUIPanel = /** @class */ (function (_super) {
         this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");
         this.mCounter = new IconText(this.scene, this.key, "counter_icon.png", this.dpr);
-        this.mCounter.setText("54人");
+        this.mCounter.setText("1人");
         this.mCounter.x = 15 * this.dpr;
         this.mCounter.y = 105 * this.dpr;
         this.mCounter.setColor("#27f6ff");
@@ -22457,6 +22458,7 @@ var PicaChatPanel = /** @class */ (function (_super) {
         // this.mTextArea.childrenMap.child.disableInteractive();
         this.resize(this.width, 400);
         _super.prototype.init.call(this);
+        this.removeInteractive();
         // this.addActionListener();
         this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
         this.appendChat("一直狐狸[color=yellow]离开房间[/color]\n");
@@ -22828,21 +22830,21 @@ var MineCarPanel = /** @class */ (function (_super) {
         var zoom = this.mWorld.uiScaleNew;
         this.setSize(w, h);
         this.mBg.x = w / 2;
-        this.mBg.y = h / 2;
+        this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
         this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
-        this.carIcon.y = this.mBg.y / 2;
-        this.mCloseBtn.x = this.mBg.x + this.mBg.width / 2;
-        this.mCloseBtn.y = this.mBg.y / 2 + 10 * this.dpr * zoom;
+        this.carIcon.y = this.mBg.y - (this.mBg.displayHeight - this.carIcon.displayHeight) / 2 + 4 * this.dpr * zoom;
+        this.mCloseBtn.x = this.mBg.x + this.mBg.displayWidth / 2;
+        this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr * zoom;
         this.mCounter.x = this.mBg.x / 2;
-        this.mCounter.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2 - 6 * this.dpr * zoom;
-        this.mTips.x = this.mBg.x;
-        this.mTips.y = this.mBg.y / 2 - 15 * this.dpr * zoom;
-        this.mDiscardBtn.x = this.mBg.x + this.mBg.width / 2 - this.mDiscardBtn.width / 2;
-        this.mDiscardBtn.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2;
+        this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 16 * this.dpr * zoom;
+        this.mTips.x = this.mBg.x + 20 * this.dpr * zoom;
+        this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr * zoom;
+        this.mDiscardBtn.x = this.mBg.x + this.mBg.displayWidth / 2 - this.mDiscardBtn.displayWidth / 2 - 9 * this.dpr * zoom;
+        this.mDiscardBtn.y = this.mBg.y + this.mBg.displayHeight / 2 - this.mDiscardBtn.displayHeight / 2 - 9 * this.dpr * zoom;
         this.categoriesBg.x = this.mBg.x;
-        this.categoriesBg.y = this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 12 * this.dpr * zoom;
+        this.categoriesBg.y = this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 38 * this.dpr * zoom;
         this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr * zoom, this.mBg.y + 6 * this.dpr * zoom);
-        this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 18 * this.dpr * zoom);
+        this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 44 * this.dpr * zoom);
     };
     MineCarPanel.prototype.show = function (param) {
         _super.prototype.show.call(this, param);
@@ -22941,7 +22943,7 @@ var MineCarPanel = /** @class */ (function (_super) {
         this.mTips.x = 40 * this.dpr * zoom; // - this.mTips.width / 2;
         this.mTips.y = (-(this.mBg.height + this.mTips.height) * zoom) / 2 + 15 * this.dpr * zoom;
         this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
-        this.mDiscardBtn.scale = zoom;
+        this.mDiscardBtn.setScale(zoom);
         (this.mDiscardBtn.x = ((this.mBg.width - this.mDiscardBtn.displayWidth) * zoom) / 2 - 17 * this.dpr * zoom),
             (this.mDiscardBtn.y = ((this.mBg.height - this.mDiscardBtn.displayHeight) * zoom) / 2 - 10 * this.dpr * zoom),
             this.mDiscardBtn.setTextStyle({
@@ -23020,6 +23022,7 @@ var MineCarPanel = /** @class */ (function (_super) {
                         fontSize: 10 * _this.dpr * zoom
                     });
                     cellContainer.setFontStyle("bold");
+                    cellContainer.setScale(zoom);
                     _this.add(cellContainer);
                 }
                 cellContainer.setText(item.value);
@@ -23040,11 +23043,11 @@ var MineCarPanel = /** @class */ (function (_super) {
             // this.mMask,
             this.mBg,
             this.carIcon,
-            this.mCloseBtn,
             this.mCounter,
             this.categoriesBg,
             this.mPropGrid.table,
             this.mCategoryTable.table,
+            this.mCloseBtn,
             this.mDiscardBtn,
         ]);
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
@@ -23088,7 +23091,7 @@ var MineCarPanel = /** @class */ (function (_super) {
             this.checkMode();
             return;
         }
-        if (packageItem) {
+        if (packageItem && packageItem.item.item) {
             if (!this.mTips.parentContainer) {
                 this.add(this.mTips);
             }
@@ -23912,6 +23915,7 @@ var InteractiveBubbleManager = /** @class */ (function (_super) {
         configurable: true
     });
     InteractiveBubbleManager.prototype.destroy = function () {
+        this.connection.removePacketListener(this);
         if (this.map) {
             for (var key in this.map) {
                 var bubble = this.map.get(Number(key));
@@ -24123,7 +24127,7 @@ var ReAwardTipsMediator = /** @class */ (function (_super) {
         return _this;
     }
     ReAwardTipsMediator.prototype.show = function (param) {
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView) {
             this.mView.appendAward(param);
             return;
         }
@@ -25022,30 +25026,49 @@ var EquipUpgradeItem = /** @class */ (function (_super) {
         }
         this.gridTable.setItems(items);
         if (this.haveEquiped)
-            this.gridTable.setT((index + 1) / items.length);
-        this.setBgTexture(data["isblue"]);
+            // this.gridTable.setT((index + 1) / items.length);
+            this.setBgTexture(data["isblue"]);
     };
     EquipUpgradeItem.prototype.setTransPosition = function (x, y) {
-        var w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
-        var posX = w * 0.5 + this.mContainer.x * this.zoom;
-        var posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
-        this.gridTable.refreshPos(x, y); //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        // const w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
+        // const posX = w * 0.5 + this.mContainer.x * this.zoom;
+        // const posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
+        //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        this.bg.x += x;
         this.bg.y += y;
+        this.titleName.x += x;
         this.titleName.y += y;
+        this.bottombg.x += x;
         this.bottombg.y += y;
+        this.equipName.x += x;
         this.equipName.y += y;
+        this.penetrationText.x += x;
         this.penetrationText.y += y;
+        this.equipDes.x += x;
         this.equipDes.y += y;
+        this.topbg.x += x;
         this.topbg.y += y;
+        this.unlockbtn.x += x;
         this.unlockbtn.y += y;
+        this.costNum.x += x;
         this.costNum.y += y;
+        this.diamondIcon.x += x;
         this.diamondIcon.y += y;
+        this.curEquipItem.x += x;
         this.curEquipItem.y += y;
+        this.gridTable.refreshPos(x + 20 * this.dpr, y);
         // this.gridTable.x = posX;
         // this.gridTable.y = posY;
         // this.gridTable.layout();
         // this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
     };
+    Object.defineProperty(EquipUpgradeItem.prototype, "displayList", {
+        get: function () {
+            return [this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes];
+        },
+        enumerable: true,
+        configurable: true
+    });
     EquipUpgradeItem.prototype.refreshEquipData = function (data, index) {
         this.gridTable.items[index] = data;
         this.gridTable.refresh();
@@ -25105,7 +25128,7 @@ var EquipUpgradeItem = /** @class */ (function (_super) {
         this.cellHeight = capH;
         var config = {
             scrollMode: 1,
-            background: this.mScene.rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            // background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,
@@ -25145,7 +25168,6 @@ var EquipUpgradeItem = /** @class */ (function (_super) {
         this.gridTable.on("cellTap", function (cell) {
             _this.onSelectItemHandler(cell);
         });
-        this.gridTable.addListen();
         this.mContainer.add(this.gridTable.table);
     };
     EquipUpgradeItem.prototype.onSelectItemHandler = function (cell) {
@@ -25326,17 +25348,26 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
         _this.key = "equip_upgrade";
         _this.commonkey = "common_key";
         _this.equipItems = [];
+        _this.scale = 1;
         return _this;
     }
     EquipUpgradePanel.prototype.resize = function (width, height) {
+        var w = this.scene.cameras.main.width / this.scale;
+        var h = this.scene.cameras.main.height / this.scale;
         _super.prototype.resize.call(this, width, height);
-        this.setSize(width, height);
-        this.x = width / 2;
-        this.y = height / 2;
-        this.blackBg.setPosition(-this.x, -this.y);
+        this.setSize(w, h);
+        this.bg.x = w / 2; // - 24 * this.dpr * this.scale;
+        this.bg.y = h / 2; // - 20 * this.dpr * this.scale;
+        this.tilteName.x = this.bg.x;
+        this.tilteName.y = this.bg.y - this.bg.height / 2;
+        this.titlebg.x = this.bg.x;
+        this.titlebg.y = this.bg.y - this.bg.height / 2;
+        this.closeBtn.x = this.bg.x + this.bg.width / 2 - 10 * this.dpr * this.scale; // + this.bg.width / 2 - this.dpr * 8;
+        this.closeBtn.y = this.bg.y - this.bg.height / 2 + 10 * this.dpr * this.scale; // + posY + this.dpr * 8;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRect(0, 0, width, height);
+        this.blackBg.fillRect(-this.x, -this.y, w, h);
+        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
     };
     EquipUpgradePanel.prototype.show = function (param) {
         this.mShowData = param;
@@ -25375,6 +25406,9 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
         _super.prototype.preload.call(this);
     };
     EquipUpgradePanel.prototype.init = function () {
+        var w = this.scene.cameras.main.width / this.scale;
+        var h = this.scene.cameras.main.height / this.scale;
+        this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
         this.bg = new _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__["NinePatch"](this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
             top: 40,
@@ -25395,6 +25429,8 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
         this.content = content;
         if (!this.mInitialized)
             return;
+        var w = this.scene.cameras.main.width / this.scale;
+        var h = this.scene.cameras.main.height / this.scale;
         var arr = content.mineEquipments; // this.getEuipDatas();// [content.minePicks, content.minePicks];
         var height = 175 * this.dpr;
         var bgHeight = height * arr.length - (arr.length >= 2 ? 40 * (arr.length - 2) : 0);
@@ -25409,11 +25445,12 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
             item.setEquipItems(value);
-            item.setTransPosition(0, posY);
+            item.setTransPosition(w / 2, posY + h / 2);
             this.equipItems.push(item);
             posY += cellHeight;
             index++;
         }
+        this.resize(w, h);
     };
     EquipUpgradePanel.prototype.setActiveEquipment = function (equip) {
         var index = 0;
@@ -25818,9 +25855,16 @@ var FurniBagPanel = /** @class */ (function (_super) {
             props = props.concat(new Array(24 - len));
         }
         this.mPropGrid.setItems(props);
+        var isNull = false;
         if (this.mSelectItem)
             this.onSelectItemHandler(this.mSelectItem);
+        if (!this.mSelectedItemData) {
+            isNull = true;
+        }
         else {
+            isNull = true;
+        }
+        if (isNull) {
             this.sellBtn.enable = false;
             this.useBtn.enable = false;
             this.mAdd.enable = false;
@@ -26482,6 +26526,8 @@ var Item = /** @class */ (function (_super) {
     function Item(scene, x, y, key, dpr, zoom) {
         if (zoom === void 0) { zoom = 1; }
         var _this = _super.call(this, scene, x, y) || this;
+        _this.dpr = dpr;
+        _this.zoom = zoom;
         var background = scene.make.image({
             key: key,
             frame: "grid_bg"
@@ -26531,8 +26577,8 @@ var Item = /** @class */ (function (_super) {
         if (this.mPropImage && this.mPropImage.texture) {
             var texture = this.mPropImage.texture;
             // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
-            this.mPropImage.x = this.width / 2;
-            this.mPropImage.y = this.height / 2;
+            this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
+            this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
             if (texture) {
                 texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
             }
@@ -29583,7 +29629,7 @@ var MineSettlePanel = /** @class */ (function (_super) {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width, height);
-        this.mPropGrid.refreshPos(this.x + 15 * this.dpr * zoom, this.y - 20 * this.dpr * zoom, -this.x + 15 * this.dpr * zoom, -this.y + 10 * this.dpr * zoom);
+        this.mPropGrid.refreshPos(40 * this.dpr * zoom, 0);
         this.setSize(width, height);
     };
     MineSettlePanel.prototype.show = function (param) {
@@ -29626,15 +29672,16 @@ var MineSettlePanel = /** @class */ (function (_super) {
         var config = {
             x: 0,
             y: 0,
-            background: this.scene.rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 302 * this.dpr * zoom,
-                height: 170 * this.dpr * zoom,
+                height: 180 * this.dpr * zoom,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
             },
+            clamplChildOY: false,
             createCellContainerCallback: function (cell, cellContainer) {
                 var scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -31658,6 +31705,7 @@ var UserMenuPanel = /** @class */ (function (_super) {
         var _this = _super.call(this, scene, world) || this;
         _this.mMenus = [];
         _this.disInteractive();
+        _this.scale = 2;
         return _this;
     }
     UserMenuPanel.prototype.show = function (param) {
@@ -31669,6 +31717,7 @@ var UserMenuPanel = /** @class */ (function (_super) {
         this.addItem(param);
         this.x = this.scene.input.activePointer.x + 32;
         this.y = this.scene.input.activePointer.y + 32;
+        this.scaleX = this.scaleY = this.scale;
         // this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     };
     UserMenuPanel.prototype.hide = function () {
@@ -75177,9 +75226,9 @@ var create_role_panel_CreateRolePanel = /** @class */ (function (_super) {
         // this.mBackground.x = this.width >> 1;
         // this.mBackground.y = 60 + (this.mBackground.height >> 1);
         // const scale = this.scene.cameras.main.height / 1920;
-        var width = this.scene.cameras.main.width / this.scale;
-        var height = this.scene.cameras.main.height / this.scale;
-        var centerX = this.scene.cameras.main.centerX / this.scale;
+        var width = this.scene.cameras.main.width;
+        var height = this.scene.cameras.main.height;
+        var centerX = this.scene.cameras.main.centerX;
         // this.setScale(scale);
         // this.mBackground.setScale(scale);
         this.mBackground.x = centerX;
