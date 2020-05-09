@@ -149,10 +149,11 @@ export class FurniBagPanel extends BasePanel {
 
     this.mPropGrid.setItems(props);
     let isNull = false;
-    if (this.mSelectItem)
+    if (this.mSelectItem) {
       this.onSelectItemHandler(this.mSelectItem);
-    if (!this.mSelectedItemData) {
-      isNull = true;
+      if (!this.mSelectedItemData) {
+        isNull = true;
+      }
     } else {
       isNull = true;
     }
