@@ -42,7 +42,7 @@ export class PicaMainUI extends PacketHandler {
     }
 
     destroy() {
-     this.unregister();
+        this.unregister();
     }
 
     private onUpdatePlayerInfo(packet: PBpacket) {

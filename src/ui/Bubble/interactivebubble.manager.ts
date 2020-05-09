@@ -41,6 +41,7 @@ export class InteractiveBubbleManager extends PacketHandler {
     }
 
     public destroy() {
+        this.connection.removePacketListener(this);
         if (this.map) {
             for (const key in this.map) {
                 const bubble = this.map.get(Number(key));
