@@ -23,6 +23,7 @@ export class UserMenuPanel extends BasePanel {
         this.addItem(param);
         this.x = this.scene.input.activePointer.x + 32;
         this.y = this.scene.input.activePointer.y + 32;
+        this.scaleX = this.scaleY = this.scale;
         // this.scene.input.on("gameobjectdown", this.onClickMenu, this);
     }
 

@@ -148,9 +148,15 @@ export class FurniBagPanel extends BasePanel {
     }
 
     this.mPropGrid.setItems(props);
+    let isNull = false;
     if (this.mSelectItem)
       this.onSelectItemHandler(this.mSelectItem);
-    else {
+    if (!this.mSelectedItemData) {
+      isNull = true;
+    } else {
+      isNull = true;
+    }
+    if (isNull) {
       this.sellBtn.enable = false;
       this.useBtn.enable = false;
       this.mAdd.enable = false;
@@ -833,9 +839,12 @@ class Item extends Phaser.GameObjects.Container {
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
   private selectbg: Phaser.GameObjects.Image;
+  private dpr: number;
+  private zoom: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
-
+    this.dpr = dpr;
+    this.zoom = zoom;
     const background = scene.make.image({
       key,
       frame: "grid_bg"
@@ -888,8 +897,8 @@ class Item extends Phaser.GameObjects.Container {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
       // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
-      this.mPropImage.x = this.width / 2;
-      this.mPropImage.y = this.height / 2;
+      this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
+      this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
