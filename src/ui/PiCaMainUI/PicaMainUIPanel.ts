@@ -58,7 +58,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     update(param: any) {
-        if (!param) {
+        if (!param || !this.mInitialized) {
             return;
         }
         if (param.hasOwnProperty("level")) this.mExpProgress.setLv(param.level);
