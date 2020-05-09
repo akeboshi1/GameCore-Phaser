@@ -31,6 +31,7 @@ export interface IElementStorage {
     getScenerys(): IScenery[];
     on(event: string | symbol, fn: Function, context?: any);
     off(event: string | symbol, fn: Function, context?: any);
+    destroy();
 }
 
 interface IDisplayRef {
@@ -121,6 +122,7 @@ export class ElementStorage implements IElementStorage {
                     },
                 });
                 this.terrainPalette.set(key, frameModel);
+                this.terrainPaletteWithBindId.set(terrainPalette.id, frameModel);
             }
         }
     }
@@ -232,5 +234,11 @@ export class ElementStorage implements IElementStorage {
 
     public getScenerys(): IScenery[] {
         return this._scenerys;
+    }
+
+    public destroy() {
+        this.mElementRef.clear();
+        this.terrainPalette.clear();
+        this.mossPalette.clear();
     }
 }
