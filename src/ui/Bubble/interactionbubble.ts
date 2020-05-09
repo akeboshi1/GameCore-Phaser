@@ -7,8 +7,8 @@ import { BubbleAnimation } from "../../rooms/Animation/bubble.animation";
 
 export class InteractionBubble extends Phaser.GameObjects.Container {
     private mBubbleAni: DragonbonesAnimation | FrameAnimation | BubbleAnimation;
-    private mWdith: number = 60;
-    private mHeight: number = 60;
+    private mWdith: number = 78;
+    private mHeight: number = 78;
     private content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE;
     private mRemoveDelay: any;
     private handler: Handler;
@@ -64,7 +64,7 @@ export class InteractionBubble extends Phaser.GameObjects.Container {
         this.mBubbleAni.width = this.width;
         this.mBubbleAni.height = this.height;
         const POINTER_DOWN = Phaser.Input.Events.POINTER_DOWN;
-        this.mBubbleAni.setInteractive();
+        this.mBubbleAni.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBubbleAni.width * 2, this.mBubbleAni.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mBubbleAni.on(POINTER_DOWN, this.onBubbleClick, this);
     }
     private onBubbleClick() {
