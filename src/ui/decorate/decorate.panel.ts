@@ -121,7 +121,7 @@ export class DecoratePanel extends BasePanel {
         }
     }
 
-    public setPosition(x: number, y?: number, z?: number): this {
+    public setPos(x: number, y?: number, z?: number): this {
         this.x = x * this.mScaleRatio;
         this.y = (y + this.offset.y) * this.mScaleRatio;
         this.z = z || 0;

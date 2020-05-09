@@ -244,6 +244,7 @@ export class PicaChatPanel extends BasePanel {
         // this.mTextArea.childrenMap.child.disableInteractive();
         this.resize(this.width, 400);
         super.init();
+        this.removeInteractive();
         // this.addActionListener();
 
         this.appendChat("小盆友[color=yellow]进入房间[/color]\n");
