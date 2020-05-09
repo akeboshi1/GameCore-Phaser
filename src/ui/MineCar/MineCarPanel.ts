@@ -45,18 +45,18 @@ export class MineCarPanel extends BasePanel {
     this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
     this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
     this.carIcon.y = this.mBg.y - (this.mBg.displayHeight - this.carIcon.displayHeight) / 2 + 4 * this.dpr * zoom;
-    this.mCloseBtn.x = this.mBg.x + this.mBg.width / 2;
+    this.mCloseBtn.x = this.mBg.x + this.mBg.displayWidth / 2;
     this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr * zoom;
     this.mCounter.x = this.mBg.x / 2;
-    this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 6 * this.dpr * zoom;
+    this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 16 * this.dpr * zoom;
     this.mTips.x = this.mBg.x + 20 * this.dpr * zoom;
     this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr * zoom;
-    this.mDiscardBtn.x = this.mBg.x + this.mBg.width / 2 - this.mDiscardBtn.width / 2;
-    this.mDiscardBtn.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2;
+    this.mDiscardBtn.x = this.mBg.x + this.mBg.displayWidth / 2 - this.mDiscardBtn.displayWidth / 2 - 9 * this.dpr * zoom;
+    this.mDiscardBtn.y = this.mBg.y + this.mBg.displayHeight / 2 - this.mDiscardBtn.displayHeight / 2 - 9 * this.dpr * zoom;
     this.categoriesBg.x = this.mBg.x;
-    this.categoriesBg.y = this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 12 * this.dpr * zoom;
+    this.categoriesBg.y = this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 38 * this.dpr * zoom;
     this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr * zoom, this.mBg.y + 6 * this.dpr * zoom);
-    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 18 * this.dpr * zoom);
+    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 44 * this.dpr * zoom);
   }
 
   public show(param?: any) {
@@ -176,7 +176,7 @@ export class MineCarPanel extends BasePanel {
     this.mTips.y = (-(this.mBg.height + this.mTips.height) * zoom) / 2 + 15 * this.dpr * zoom;
 
     this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
-    this.mDiscardBtn.scale = zoom;
+    this.mDiscardBtn.setScale(zoom);
     (this.mDiscardBtn.x = ((this.mBg.width - this.mDiscardBtn.displayWidth) * zoom) / 2 - 17 * this.dpr * zoom),
       (this.mDiscardBtn.y = ((this.mBg.height - this.mDiscardBtn.displayHeight) * zoom) / 2 - 10 * this.dpr * zoom),
       this.mDiscardBtn.setTextStyle({
@@ -261,6 +261,7 @@ export class MineCarPanel extends BasePanel {
             fontSize: 10 * this.dpr * zoom
           });
           cellContainer.setFontStyle("bold");
+          cellContainer.setScale(zoom);
           this.add(cellContainer);
         }
         cellContainer.setText(item.value);

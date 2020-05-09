@@ -19,6 +19,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     show(param?: any) {
+        Object.assign(param, this.mShowData);
         super.show(param);
         if (this.mInitialized) {
             this.update(param);
