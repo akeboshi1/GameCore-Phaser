@@ -21663,7 +21663,6 @@ var PicaMainUIPanel = /** @class */ (function (_super) {
         return _this;
     }
     PicaMainUIPanel.prototype.show = function (param) {
-        Object.assign(param, this.mShowData);
         _super.prototype.show.call(this, param);
         if (this.mInitialized) {
             this.update(param);
@@ -21699,7 +21698,12 @@ var PicaMainUIPanel = /** @class */ (function (_super) {
         this.mSceneName.off("pointerup", this.onEnterEditScene, this);
     };
     PicaMainUIPanel.prototype.update = function (param) {
+        Object.assign(this.mShowData, param);
+        _super.prototype.update.call(this, this.mShowData);
         if (!param) {
+            return;
+        }
+        if (!this.mInitialized) {
             return;
         }
         if (param.hasOwnProperty("level"))
@@ -21736,14 +21740,14 @@ var PicaMainUIPanel = /** @class */ (function (_super) {
         this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond.png", this.dpr);
         this.mDiamondValue.y = 68 * this.dpr;
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon.png", "setting_icon.png", this.dpr);
-        this.mSceneName.setText("皮卡小镇");
+        this.mSceneName.setText("");
         this.mSceneName.x = 15 * this.dpr;
         this.mSceneName.y = 55 * this.dpr;
         var bound = this.mSceneName.getBounds();
         this.mSceneName.setSize(bound.width, bound.height);
         this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mSceneType = new IconText(this.scene, this.key, "star_icon.png", this.dpr);
-        this.mSceneType.setText("公共场景");
+        this.mSceneType.setText("");
         this.mSceneType.x = 15 * this.dpr;
         this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");
@@ -22859,6 +22863,7 @@ var MineCarPanel = /** @class */ (function (_super) {
         }
     };
     MineCarPanel.prototype.setCategories = function (subcategorys) {
+        this.mPreSelectedCategorie = undefined;
         this.mCategoryTable.setItems(subcategorys);
     };
     MineCarPanel.prototype.addListen = function () {
@@ -25856,10 +25861,11 @@ var FurniBagPanel = /** @class */ (function (_super) {
         }
         this.mPropGrid.setItems(props);
         var isNull = false;
-        if (this.mSelectItem)
+        if (this.mSelectItem) {
             this.onSelectItemHandler(this.mSelectItem);
-        if (!this.mSelectedItemData) {
-            isNull = true;
+            if (!this.mSelectedItemData) {
+                isNull = true;
+            }
         }
         else {
             isNull = true;
@@ -33720,8 +33726,8 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
     interactionbubble_extends(InteractionBubble, _super);
     function InteractionBubble(scene, dpr) {
         var _this = _super.call(this, scene) || this;
-        _this.mWdith = 60;
-        _this.mHeight = 60;
+        _this.mWdith = 78;
+        _this.mHeight = 78;
         _this.width = _this.mWdith * dpr;
         _this.height = _this.mHeight * dpr;
         return _this;
@@ -33770,7 +33776,7 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
         this.mBubbleAni.width = this.width;
         this.mBubbleAni.height = this.height;
         var POINTER_DOWN = Phaser.Input.Events.POINTER_DOWN;
-        this.mBubbleAni.setInteractive();
+        this.mBubbleAni.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBubbleAni.width * 2, this.mBubbleAni.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mBubbleAni.on(POINTER_DOWN, this.onBubbleClick, this);
     };
     InteractionBubble.prototype.onBubbleClick = function () {
