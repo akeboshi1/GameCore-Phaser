@@ -68,6 +68,8 @@ export class UiManager extends PacketHandler {
 
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
+        this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
+
     }
 
     public getInputTextFactory(): InputTextFactory {
@@ -95,6 +97,7 @@ export class UiManager extends PacketHandler {
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
+        this.interBubbleMgr.setScene(scene);
         if (this.mCacheUI) {
             this.mCacheUI();
             this.mCacheUI = undefined;
@@ -131,11 +134,10 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
-                        // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
             // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
-            this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService, scene);
             // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
             // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
             for (const tmp of this.mCache) {

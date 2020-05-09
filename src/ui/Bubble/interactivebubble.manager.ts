@@ -20,16 +20,18 @@ export class InteractiveBubbleManager extends PacketHandler {
     private scene: Phaser.Scene;
     private mworld: WorldService;
     private mCurRoom: Room;
-    constructor(layerMgr: ILayerManager, mworld: WorldService, scene: Phaser.Scene) {
+    constructor(layerMgr: ILayerManager, mworld: WorldService) {
         super();
         this.uilayer = layerMgr;
         this.mworld = mworld;
-        this.scene = scene;
-        this.mCurRoom = this.mworld.roomManager.currentRoom;
-        this.mCurRoom.frameManager.add(this, this.update);
-        this.connection.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, this.onInteractiveBubble);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORDL_REQ_CLIENT_REMOVE_INTERACTIVE_BUBBLE, this.onClearInteractiveBubble);
+    }
+
+    public setScene(scene: Phaser.Scene) {
+        this.connection.removePacketListener(this);
+        this.scene = scene;
+        this.connection.addPacketListener(this);
     }
 
     get connection(): ConnectionService {
@@ -38,6 +40,10 @@ export class InteractiveBubbleManager extends PacketHandler {
         }
         Logger.getInstance().log("roomManager is undefined");
         return;
+    }
+
+    get currentRoom(): Room {
+        return this.mworld.roomManager.currentRoom;
     }
 
     public destroy() {
@@ -59,9 +65,13 @@ export class InteractiveBubbleManager extends PacketHandler {
 
     private onInteractiveBubble(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE = packet.content;
-        this.mCurRoom = this.mworld.roomManager.currentRoom;
-        let element = this.mCurRoom.elementManager.get(content.receiverId);
-        if (!element) element = this.mCurRoom.playerManager.get(content.receiverId);
+        if (this.mCurRoom !== this.currentRoom) {
+            if (this.mCurRoom) this.mCurRoom.frameManager.remove(this, this.update);
+            this.mCurRoom = this.currentRoom;
+            this.mCurRoom.frameManager.add(this, this.update);
+        }
+        let element = this.currentRoom.elementManager.get(content.receiverId);
+        if (!element) element = this.currentRoom.playerManager.get(content.receiverId);
         if (element) {
             this.showInteractionBubble(content, element);
         }

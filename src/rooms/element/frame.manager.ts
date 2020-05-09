@@ -5,6 +5,7 @@ export class FrameManager implements IDispose {
 
     private handlers: Handler[] = [];
     public add(caller: any, method: Function, args?: any[]) {
+        this.remove(caller, method);
         const handler = new Handler(caller, method, args);
         this.handlers.push(handler);
     }
@@ -36,4 +37,14 @@ export class FrameManager implements IDispose {
         this.handlers.length = 0;
     }
 
+    public hasRegistered(caller: any, method: Function) {
+        let removeid: number = -1;
+        for (const item of this.handlers) {
+            removeid++;
+            if (item.caller === caller && item.method === method) {
+                return;
+            }
+        }
+        return (removeid !== -1);
+    }
 }
