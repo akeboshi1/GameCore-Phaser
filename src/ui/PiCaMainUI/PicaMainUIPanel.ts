@@ -3,7 +3,6 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
-import { op_client } from "pixelpai_proto";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -19,7 +18,6 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     show(param?: any) {
-        Object.assign(param, this.mShowData);
         super.show(param);
         if (this.mInitialized) {
             this.update(param);
@@ -58,7 +56,12 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     update(param: any) {
-        if (!param || !this.mInitialized) {
+        Object.assign(this.mShowData, param);
+        super.update(this.mShowData);
+        if (!param) {
+            return;
+        }
+        if (!this.mInitialized) {
             return;
         }
         if (param.hasOwnProperty("level")) this.mExpProgress.setLv(param.level);
@@ -93,14 +96,14 @@ export class PicaMainUIPanel extends BasePanel {
         this.mDiamondValue.y = 68 * this.dpr;
 
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon.png", "setting_icon.png", this.dpr);
-        this.mSceneName.setText("皮卡小镇");
+        this.mSceneName.setText("");
         this.mSceneName.x = 15 * this.dpr;
         this.mSceneName.y = 55 * this.dpr;
         const bound = this.mSceneName.getBounds();
         this.mSceneName.setSize(bound.width, bound.height);
         this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mSceneType = new IconText(this.scene, this.key, "star_icon.png", this.dpr);
-        this.mSceneType.setText("公共场景");
+        this.mSceneType.setText("");
         this.mSceneType.x = 15 * this.dpr;
         this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");

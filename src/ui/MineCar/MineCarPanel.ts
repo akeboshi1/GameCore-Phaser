@@ -74,6 +74,7 @@ export class MineCarPanel extends BasePanel {
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
+    this.mPreSelectedCategorie = undefined;
     this.mCategoryTable.setItems(subcategorys);
   }
 
