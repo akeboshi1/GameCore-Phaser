@@ -54,32 +54,46 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
 
         this.gridTable.setItems(items);
         if (this.haveEquiped)
-            this.gridTable.setT((index + 1) / items.length);
-        this.setBgTexture(data["isblue"]);
+            // this.gridTable.setT((index + 1) / items.length);
+            this.setBgTexture(data["isblue"]);
     }
 
     setTransPosition(x: number, y: number) {
-        const w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
-        const posX = w * 0.5 + this.mContainer.x * this.zoom;
-        const posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
-        this.gridTable.refreshPos(x, y); //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        // const w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
+        // const posX = w * 0.5 + this.mContainer.x * this.zoom;
+        // const posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
+        //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        this.bg.x += x;
         this.bg.y += y;
+        this.titleName.x += x;
         this.titleName.y += y;
+        this.bottombg.x += x;
         this.bottombg.y += y;
+        this.equipName.x += x;
         this.equipName.y += y;
+        this.penetrationText.x += x;
         this.penetrationText.y += y;
+        this.equipDes.x += x;
         this.equipDes.y += y;
+        this.topbg.x += x;
         this.topbg.y += y;
+        this.unlockbtn.x += x;
         this.unlockbtn.y += y;
+        this.costNum.x += x;
         this.costNum.y += y;
+        this.diamondIcon.x += x;
         this.diamondIcon.y += y;
+        this.curEquipItem.x += x;
         this.curEquipItem.y += y;
+        this.gridTable.refreshPos(x + 20 * this.dpr, y);
         // this.gridTable.x = posX;
         // this.gridTable.y = posY;
         // this.gridTable.layout();
         // this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
     }
-
+    get displayList(): any[] {
+        return [this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes];
+    }
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
         this.gridTable.refresh();
@@ -141,7 +155,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.cellHeight = capH;
         const config: GridTableConfig = {
             scrollMode: 1,
-            background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            // background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 245 * this.dpr * this.zoom,
                 height: 60 * this.dpr * this.zoom,
@@ -179,7 +193,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.gridTable.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.gridTable.addListen();
         this.mContainer.add(this.gridTable.table);
     }
 

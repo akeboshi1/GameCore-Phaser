@@ -18,16 +18,25 @@ export default class EquipUpgradePanel extends BasePanel {
     private content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
     resize(width: number, height: number) {
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
-        this.setSize(width, height);
-        this.x = width / 2;
-        this.y = height / 2;
-        this.blackBg.setPosition(-this.x, -this.y);
+        this.setSize(w, h);
+        this.bg.x = w / 2;// - 24 * this.dpr * this.scale;
+        this.bg.y = h / 2;// - 20 * this.dpr * this.scale;
+        this.tilteName.x = this.bg.x;
+        this.tilteName.y = this.bg.y - this.bg.height / 2;
+        this.titlebg.x = this.bg.x;
+        this.titlebg.y = this.bg.y - this.bg.height / 2;
+        this.closeBtn.x = this.bg.x + this.bg.width / 2 - 10 * this.dpr * this.scale; // + this.bg.width / 2 - this.dpr * 8;
+        this.closeBtn.y = this.bg.y - this.bg.height / 2 + 10 * this.dpr * this.scale; // + posY + this.dpr * 8;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRect(0, 0, width, height);
+        this.blackBg.fillRect(-this.x, -this.y, w, h);
+        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
     }
 
     public show(param?: any) {
@@ -64,6 +73,9 @@ export default class EquipUpgradePanel extends BasePanel {
         super.preload();
     }
     init() {
+        const w = this.scene.cameras.main.width / this.scale;
+        const h = this.scene.cameras.main.height / this.scale;
+        this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
         this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
             top: 40,
@@ -84,6 +96,8 @@ export default class EquipUpgradePanel extends BasePanel {
     setEquipDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
         this.content = content;
         if (!this.mInitialized) return;
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
         const arr = content.mineEquipments; // this.getEuipDatas();// [content.minePicks, content.minePicks];
         const height = 175 * this.dpr;
         const bgHeight = height * arr.length - (arr.length >= 2 ? 40 * (arr.length - 2) : 0);
@@ -97,11 +111,12 @@ export default class EquipUpgradePanel extends BasePanel {
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
             item.setEquipItems(value);
-            item.setTransPosition(0, posY);
+            item.setTransPosition(w / 2, posY + h / 2);
             this.equipItems.push(item);
             posY += cellHeight;
             index++;
         }
+        this.resize(w, h);
     }
 
     setActiveEquipment(equip: op_client.IMiningEquipment) {

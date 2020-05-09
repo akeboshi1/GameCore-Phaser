@@ -11,6 +11,7 @@ export class UserMenuPanel extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.disInteractive();
+        this.scale = 2;
     }
 
     show(param?: any) {
