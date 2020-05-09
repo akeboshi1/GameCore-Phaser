@@ -8,7 +8,7 @@ export class CreateCharacterPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     const container = this.scene.add.container(0, 0);
-    container.add(this.view);
+    container.add(this);
   }
 
   preload() {

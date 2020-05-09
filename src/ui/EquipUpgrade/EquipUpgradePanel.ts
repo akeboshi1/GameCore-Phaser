@@ -18,21 +18,43 @@ export default class EquipUpgradePanel extends BasePanel {
     private content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
     resize(width: number, height: number) {
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
-        this.setSize(width, height);
-        this.x = width / 2;
-        this.y = height / 2;
-        this.blackBg.setPosition(-this.x, -this.y);
+        this.setSize(w, h);
+        this.bg.x = w / 2;// - 24 * this.dpr * this.scale;
+        this.bg.y = h / 2;// - 20 * this.dpr * this.scale;
+        this.tilteName.x = this.bg.x;
+        this.tilteName.y = this.bg.y - this.bg.height / 2;
+        this.titlebg.x = this.bg.x;
+        this.titlebg.y = this.bg.y - this.bg.height / 2;
+        this.closeBtn.x = this.bg.x + this.bg.width / 2 - 10 * this.dpr * this.scale; // + this.bg.width / 2 - this.dpr * 8;
+        this.closeBtn.y = this.bg.y - this.bg.height / 2 + 10 * this.dpr * this.scale; // + posY + this.dpr * 8;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRect(0, 0, width, height);
+        this.blackBg.fillRect(-this.x, -this.y, w, h);
+        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
     }
 
     public show(param?: any) {
+        this.mShowData = param;
+        if (this.mPreLoad) return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow) return;
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShow = true;
+        }
         this.refreshData();
-        super.show(param);
+        this.addListen();
     }
 
     public addListen() {
@@ -51,6 +73,9 @@ export default class EquipUpgradePanel extends BasePanel {
         super.preload();
     }
     init() {
+        const w = this.scene.cameras.main.width / this.scale;
+        const h = this.scene.cameras.main.height / this.scale;
+        this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
         this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
             top: 40,
@@ -64,32 +89,34 @@ export default class EquipUpgradePanel extends BasePanel {
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
-        super.init();
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+        super.init();
     }
 
     setEquipDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
-        if (!this.mInitialized) return;
         this.content = content;
+        if (!this.mInitialized) return;
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
         const arr = content.mineEquipments; // this.getEuipDatas();// [content.minePicks, content.minePicks];
         const height = 175 * this.dpr;
         const bgHeight = height * arr.length - (arr.length >= 2 ? 40 * (arr.length - 2) : 0);
         const cellHeight = 155 * this.dpr;
         this.resetPosition(this.bg.width, bgHeight);
-        let posY: number =  -bgHeight * 0.5 + 100 * this.dpr;
+        let posY: number = -bgHeight * 0.5 + 100 * this.dpr;
         let index = 0;
         for (const value of arr) {
             value["isblue"] = (index % 2 === 0 ? false : true);
-            const item = new EquipUpgradeItem(this.scene, this.dpr, this.scale, this.key, this.commonkey);
+            const item = new EquipUpgradeItem(this.scene, this, this.dpr, this.scale, this.key, this.commonkey);
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
-            this.add(item);
             item.setEquipItems(value);
-            item.setTransPosition(0, posY);
+            item.setTransPosition(w / 2, posY + h / 2);
             this.equipItems.push(item);
             posY += cellHeight;
             index++;
         }
+        this.resize(w, h);
     }
 
     setActiveEquipment(equip: op_client.IMiningEquipment) {

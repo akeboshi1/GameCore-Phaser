@@ -81,7 +81,7 @@ export class StoragePanel extends BasePanel {
         for (let i: number = 0; i < 9; i++) {
             tmpX = i % 9 * 60 + 32 - 724 / 2;
             tmpY = Math.floor(i / 9) * 60 - 55;
-            itemSlot = new ItemSlot(this.scene, this.mWorld, this.view, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
+            itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
             itemSlot.createUI();
             this.mBagItemSlotList.push(itemSlot);
         }

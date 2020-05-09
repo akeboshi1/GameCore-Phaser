@@ -16,21 +16,22 @@ export class PicaNavigatePanel extends BasePanel {
 
   resize(w: number, h: number) {
     this.setSize(w, h);
+    const width = this.scene.cameras.main.width;
     const height = this.scene.cameras.main.height;
     const frame = this.scene.textures.getFrame(this.key, "bg.png");
-    const scaleRatio = (w / frame.width) * this.scale;
+    const zoom = this.scale;
+    const scaleRatio = width / frame.width * this.dpr;
     this.mBackground.scaleX = scaleRatio;
-    this.mBackground.x = w / 2;
+    this.mBackground.x = width / 2;
     this.mBackground.setInteractive();
+    this.mCloseBtn.x = width - this.mCloseBtn.width / 2 - 3 * this.dpr;
 
-    this.mCloseBtn.x = w - this.mCloseBtn.width / 2 - 10 * this.dpr;
-
-    this.y = height - this.height / 2 * this.scale;
+    this.y = height - this.height / 2 ;
     super.resize(w, h);
   }
 
   public addListen() {
-    if (!this.mInitialized) return;
+    if (!this.mInitialized || !this.interactiveBoo) return;
     this.mMapBtn.on("pointerup", this.onShowMapHandler, this);
     this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
@@ -72,8 +73,8 @@ export class PicaNavigatePanel extends BasePanel {
     for (let i = 0; i < list.length; i++) {
       list[i].x = i * 50 * this.dpr - list[i].width / 2;
     }
-    super.init();
     this.resize(this.mScene.cameras.main.width / this.scale, this.mBackground.height);
+    super.init();
   }
 
   private createImage(key: string, frame: string) {

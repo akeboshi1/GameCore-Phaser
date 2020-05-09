@@ -17,7 +17,7 @@ export class PicaMainUIMediator extends BaseMediator {
     }
 
     show(param?: any) {
-        if (this.mView && this.mView.isShow() || this.mShow) {
+        if (this.mView) {
             this.update(param);
             return;
         }
@@ -26,7 +26,7 @@ export class PicaMainUIMediator extends BaseMediator {
         }
         this.mView.show(param);
         this.mView.on("enterEdit", this.onEnterEditSceneHandler, this);
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     destroy() {

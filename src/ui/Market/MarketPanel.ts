@@ -135,8 +135,6 @@ export class MarketPanel extends BasePanel {
     this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom + this.mSubCategeoriesContainer.height + 9 * this.dpr;
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
     this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
-    this.mSubCategorisScroll.layout();
-
     this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom;
     this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
@@ -189,6 +187,7 @@ export class MarketPanel extends BasePanel {
   }
 
   protected init() {
+    if (this.mInitialized) return;
     const w = this.scene.scale.width / this.scale;
     const h = this.scene.scale.height / this.scale;
     const zoom = this.mWorld.uiScaleNew;
@@ -272,7 +271,7 @@ export class MarketPanel extends BasePanel {
           cellContainer = new TextButton(scene, this.dpr, zoom);
           // cellContainer.width = capW;
           // cellContainer.height = capH;
-          if (this.mSubCategorisScroll.cellParentCon) this.mSubCategorisScroll.cellParentCon.add(cellContainer);
+          this.add(cellContainer);
         }
         cellContainer.setText(item.value);
         // cellContainer.setSize(width, height);
@@ -287,7 +286,7 @@ export class MarketPanel extends BasePanel {
     this.mSubCategorisScroll.on("cellTap", (cell, index) => {
       this.onSelectSubCategoryHandler(cell);
     });
-    this.add(this.mSubCategorisScroll.cellParentCon);
+    this.add(this.mSubCategorisScroll.table);
 
     const propFrame = this.scene.textures.getFrame(this.key, "border.png");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
@@ -303,9 +302,10 @@ export class MarketPanel extends BasePanel {
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
+        mask: false
       },
       scrollMode: 1,
-      clamplChildOY: true,
+      clamplChildOY: false,
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
@@ -313,7 +313,7 @@ export class MarketPanel extends BasePanel {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
           // cellContainer.width = capW;
           // cellContainer.height = capH;
-          if (this.mPropGrid.cellParentCon) this.mPropGrid.cellParentCon.add(cellContainer);
+          this.add(cellContainer);
         }
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
@@ -329,7 +329,7 @@ export class MarketPanel extends BasePanel {
         this.onSelectItemHandler(data);
       }
     });
-    this.add(this.mPropGrid.cellParentCon);
+    this.add(this.mPropGrid.table);
 
     this.resize(0, 0);
 

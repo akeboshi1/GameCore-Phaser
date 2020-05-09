@@ -24,7 +24,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
 
     public setElement(ele: IElement) {
         this.mPanel.setElement(ele);
-        this.mLayerManager.addToSceneToUI(this.mPanel.view);
+        this.mLayerManager.addToSceneToUI(this.mPanel);
         this.mPanel.show();
     }
 
@@ -36,8 +36,8 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
 
     public remove() {
         // TODO panel只有destroy。需要封装个仅移除的方法
-        if (this.mPanel.view.parentContainer) {
-            this.mPanel.view.parentContainer.remove(this.mPanel);
+        if (this.mPanel.parentContainer) {
+            this.mPanel.parentContainer.remove(this.mPanel);
         }
         this.mPanel.removeListen();
     }
@@ -46,7 +46,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
         if (!this.mPanel) {
             return;
         }
-        this.mPanel.setPosition(x, y);
+        this.mPanel.setPos(x, y);
     }
 
     public destroy() {

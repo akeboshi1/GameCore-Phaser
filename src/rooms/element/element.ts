@@ -221,11 +221,11 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
-        if (this.model) {
-            this.model.direction = val;
-        }
-        if (this.mDisplay) {
-            this.mDisplay.play(this.model.currentAnimation);
+        if (this.mDisplay && this.model) {
+            if (this.model.direction !== val) {
+                this.model.direction = val;
+                this.mDisplay.play(this.model.currentAnimation);
+            }
         }
     }
 
@@ -234,7 +234,17 @@ export class Element extends BlockObject implements IElement {
     }
 
     public changeState(val?: string) {
+        if (this.mCurState === val) return;
         this.mCurState = val;
+        if (!this.mDisplay) {
+            return;
+        }
+        // if (!val) val = PlayerState.IDLE;
+        if (!val) {
+            val = PlayerState.IDLE;
+        }
+        this.mModel.currentAnimationName = this.mCurState;
+        this.mDisplay.play(this.mModel.currentAnimation);
     }
 
     public getState(): string {
@@ -275,7 +285,7 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplay) {
             return;
         }
-
+        this.startMove();
         if (!pos.depth) pos.depth = this.getDepth();
         this.setPosition(pos);
         this.onCheckDirection(angel);

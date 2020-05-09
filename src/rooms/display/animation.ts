@@ -145,6 +145,10 @@ export class Animation implements IAnimationData {
         return this.mCollisionArea;
     }
 
+    get walkableArea(): number[][] {
+        return this.mWalkableArea;
+    }
+
     get originPoint(): Phaser.Geom.Point {
         return this.mOriginPoint;
     }

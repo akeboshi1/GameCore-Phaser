@@ -29,7 +29,7 @@ export class DecorateControlMediator extends BaseMediator {
         }
         this.addActionListener();
         this.mView.show();
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     destroy() {
@@ -48,8 +48,8 @@ export class DecorateControlMediator extends BaseMediator {
         if (!this.mView) {
             return;
         }
-        if (this.mView.view.parentContainer) {
-            this.mView.view.parentContainer.remove(this.mView);
+        if (this.mView.parentContainer) {
+            this.mView.parentContainer.remove(this.mView);
         }
     }
 
@@ -57,7 +57,7 @@ export class DecorateControlMediator extends BaseMediator {
         if (!this.mView) {
             return;
         }
-        this.layerManager.addToUILayer(this.mView.view);
+        this.layerManager.addToUILayer(this.mView);
     }
 
     private addActionListener() {

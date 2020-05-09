@@ -34,7 +34,7 @@ export class ShopMediator extends BaseMediator {
     }
 
     public getView(): BasePanel {
-        return this.mView.view;
+        return this.mView as BasePanel;
     }
 
     public show(param?: any) {
@@ -46,7 +46,7 @@ export class ShopMediator extends BaseMediator {
         this.world.emitter.on(MessageType.QUERY_PACKAGE, this.queryPackageHandler, this);
         this.world.emitter.on(MessageType.SYNC_USER_BALANCE, this.onSyncUserBalanceHandler, this);
         this.requestVirtualWorldQueryPackage(param[0].id, 1, ShopPanel.ShopSlotCount);
-        this.mLayerManager.addToUILayer(this.mView.view);
+        this.mLayerManager.addToUILayer(this.mView);
         this.world.uiManager.checkUIState(ShopMediator.NAME, false);
         super.show(param);
     }

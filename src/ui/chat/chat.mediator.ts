@@ -64,10 +64,6 @@ export class ChatMediator extends BaseMediator {
         this.mView.tweenExpand(show);
     }
 
-    public getView(): BasePanel {
-        return this.mView.view;
-    }
-
     public isShow(): boolean {
         if (!this.mView) {
             return false;
@@ -96,7 +92,7 @@ export class ChatMediator extends BaseMediator {
             this.mView = new ChatPanelMobile(this.mScene, this.world);
             this.world.uiManager.checkUIState(ChatMediator.NAME, false);
         }
-        this.world.uiManager.getUILayerManager().addToUILayer(this.mView.view);
+        this.world.uiManager.getUILayerManager().addToUILayer(this.mView);
         this.addListen();
         this.mView.show();
         this.mView.scale = this.world.uiScale;

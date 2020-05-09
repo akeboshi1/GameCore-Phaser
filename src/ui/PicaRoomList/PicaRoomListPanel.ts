@@ -8,12 +8,13 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 import { Logger } from "../../utils/log";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 
 export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";
   private mCloseBtn: Phaser.GameObjects.Image;
-  private mRoomDeleBtn: Button;
-  private mMyRoomDeleBtn: Button;
+  private mRoomDeleBtn: TabButton;
+  private mMyRoomDeleBtn: TabButton;
   private mRoomDele: RoomDelegate;
   private mMyRoomDele: MyRoomDelegate;
   private mSeachBtn: Phaser.GameObjects.Image;
@@ -86,7 +87,7 @@ export class PicaRoomListPanel extends BasePanel {
     this.mCloseBtn.x = this.width / 2 - this.mCloseBtn.width / 2 - 2 * this.dpr;
     this.mCloseBtn.y = -this.height / 2 + this.mCloseBtn.height / 2;
 
-    this.mRoomDeleBtn = new Button(this.scene, this.key, "checkbox_normal", "checkbox_down", i18n.t("room_list.visit"));
+    this.mRoomDeleBtn = new TabButton(this.scene, this.key, "checkbox_normal", "checkbox_down", i18n.t("room_list.visit"));
     this.mRoomDeleBtn.x = -54 * this.dpr;
     this.mRoomDeleBtn.y = -this.height / 2 + this.mRoomDeleBtn.displayHeight / 2 - 4 * this.dpr;
     this.mRoomDeleBtn.setTextStyle({
@@ -95,7 +96,7 @@ export class PicaRoomListPanel extends BasePanel {
       fontSize: 14 * this.dpr
     });
     this.mRoomDeleBtn.setFontStyle("bold");
-    this.mMyRoomDeleBtn = new Button(this.scene, this.key, "checkbox_normal", "checkbox_down", i18n.t("room_list.my"));
+    this.mMyRoomDeleBtn = new TabButton(this.scene, this.key, "checkbox_normal", "checkbox_down", i18n.t("room_list.my"));
     this.mMyRoomDeleBtn.x = 54 * this.dpr;
     this.mMyRoomDeleBtn.y = this.mRoomDeleBtn.y;
     this.mMyRoomDeleBtn.setTextStyle({
@@ -137,14 +138,14 @@ export class PicaRoomListPanel extends BasePanel {
       }
     }, false).setOrigin(0.5);
 
-    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText, this.mRoomDeleBtn.view, this.mMyRoomDeleBtn.view]);
+    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
     super.init();
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
     const h = this.mRoomContainer.height * this.scale;
     const config: ScrollerConfig = {
       x: this.x - w / 2,
-      y: this.y - h / 2 - 30 * this.dpr * this.scale,
+      y: this.y - h / 2 - 20 * this.dpr * this.scale,
       width: w,
       height: h,
       bounds: [
@@ -161,6 +162,7 @@ export class PicaRoomListPanel extends BasePanel {
       }
     };
     this.mScroller = new GameScroller(this.scene, this.mRoomContainer, config);
+    this.add([this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn]);
     checkbox.selectIndex(0);
   }
 
@@ -322,11 +324,11 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
         if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
       }
     }
-    this.mContainer.setSize(this.mScroller.view.width, this.mHeight);
+    this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (540 * this.mDpr / 2);
-    this.mScroller.setSize(this.mScroller.view.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    this.mScroller.resize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
     // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScaleNew + (80 * this.mWorld.uiRatio / 2));
   }
 
@@ -410,11 +412,11 @@ class MyRoomDelegate extends RoomDelegate {
         if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
       }
     }
-    this.mContainer.setSize(this.mScroller.view.width, this.mHeight);
+    this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
-    this.mScroller.setSize(this.mScroller.view.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    this.mScroller.resize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
   }
 
   protected init() {

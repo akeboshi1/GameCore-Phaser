@@ -2,7 +2,8 @@ import { Logger } from "../utils/log";
 import { IRoomService } from "../rooms/room";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_client } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
+import { Url } from "../utils/resUtil";
 
 export enum SoundField {
     Background,
@@ -129,10 +130,15 @@ export class SoundManager extends PacketHandler {
 
     private onPlaySoundHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
+        if (content.loop === undefined) {
+            content.loop = true;
+        }
         // TODO
         this.play({
-            urls: content.soundKey,
-            soundConfig: { loop: true }
+            key: content.soundKey,
+            urls: Url.getOsdRes(content.soundKey),
+            field: content.scope,
+            soundConfig: { loop: content.loop }
         });
     }
 }

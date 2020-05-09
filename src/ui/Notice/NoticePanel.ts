@@ -14,7 +14,6 @@ export class NoticePanel extends BasePanel {
 
     public show(param?: any) {
         super.show(param);
-        this.setData("data", param);
         this.resize();
         this.scale = this.mWorld.uiRatio;
         this.refreshData();
@@ -100,7 +99,11 @@ export class NoticePanel extends BasePanel {
 
         this.mContentText = this.scene.make.text({
             align: "center",
-            style: { font: Font.YAHEI_20_BOLD, wordWrap: { width: 1180, useAdvancedWrap: true } }
+            style: {
+                fontFamily: "bold YaHei",
+                fontSize: 20 * this.dpr * this.mWorld.uiScaleNew,
+                wordWrap: { width: 1180, useAdvancedWrap: true },
+            },
         }, false)
             .setStroke("#000000", 1);
         this.add(this.mContentText);
@@ -108,15 +111,15 @@ export class NoticePanel extends BasePanel {
     }
 
     private refreshData() {
-        const data = this.getData("data");
+        const data = this.mShowData;
         if (data) {
-            this.showNotice(data);
+            this.showNotice(<any>data);
         }
     }
 
     private removeFromParent() {
-        if (this.view.parentContainer) {
-            this.view.parentContainer.remove(this.view);
+        if (this.parentContainer) {
+            this.parentContainer.remove(this);
         }
         if (this.mTween) {
             this.mTween.stop();

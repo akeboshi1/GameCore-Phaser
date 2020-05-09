@@ -28,7 +28,7 @@ export class RankMediator extends BaseMediator {
     }
 
     getView(): BasePanel {
-        return this.mView.view;
+        return this.mView as BasePanel;
     }
 
     hide(): void {
@@ -59,7 +59,7 @@ export class RankMediator extends BaseMediator {
             return;
         }
         this.mView = new RankPanel(this.mScene, this.world);
-        this.mlayerManager.addToUILayer(this.mView.view);
+        this.mlayerManager.addToUILayer(this.mView);
         if (param && param.length > 0) {
             (this.mView as RankPanel).addItem(param[0]);
         }
@@ -79,8 +79,8 @@ export class RankMediator extends BaseMediator {
 
     destroy() {
         if (this.mView) {
-            if (this.mView.view.parentContainer) {
-                this.mView.view.parentContainer.remove(this.mView);
+            if (this.mView.parentContainer) {
+                this.mView.parentContainer.remove(this.mView);
             }
             this.mView.destroy();
             this.mView = null;

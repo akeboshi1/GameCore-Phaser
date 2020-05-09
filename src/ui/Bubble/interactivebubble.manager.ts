@@ -20,16 +20,18 @@ export class InteractiveBubbleManager extends PacketHandler {
     private scene: Phaser.Scene;
     private mworld: WorldService;
     private mCurRoom: Room;
-    constructor(layerMgr: ILayerManager, mworld: WorldService, scene: Phaser.Scene) {
+    constructor(layerMgr: ILayerManager, mworld: WorldService) {
         super();
         this.uilayer = layerMgr;
         this.mworld = mworld;
-        this.scene = scene;
-        this.mCurRoom = this.mworld.roomManager.currentRoom;
-        this.mCurRoom.frameManager.add(this, this.update);
-        this.connection.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, this.onInteractiveBubble);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORDL_REQ_CLIENT_REMOVE_INTERACTIVE_BUBBLE, this.onClearInteractiveBubble);
+    }
+
+    public setScene(scene: Phaser.Scene) {
+        this.connection.removePacketListener(this);
+        this.scene = scene;
+        this.connection.addPacketListener(this);
     }
 
     get connection(): ConnectionService {
@@ -40,7 +42,12 @@ export class InteractiveBubbleManager extends PacketHandler {
         return;
     }
 
+    get currentRoom(): Room {
+        return this.mworld.roomManager.currentRoom;
+    }
+
     public destroy() {
+        this.connection.removePacketListener(this);
         if (this.map) {
             for (const key in this.map) {
                 const bubble = this.map.get(Number(key));
@@ -58,9 +65,13 @@ export class InteractiveBubbleManager extends PacketHandler {
 
     private onInteractiveBubble(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE = packet.content;
-        this.mCurRoom = this.mworld.roomManager.currentRoom;
-        let element = this.mCurRoom.elementManager.get(content.receiverId);
-        if (!element) element = this.mCurRoom.playerManager.get(content.receiverId);
+        if (this.mCurRoom !== this.currentRoom) {
+            if (this.mCurRoom) this.mCurRoom.frameManager.remove(this, this.update);
+            this.mCurRoom = this.currentRoom;
+            this.mCurRoom.frameManager.add(this, this.update);
+        }
+        let element = this.currentRoom.elementManager.get(content.receiverId);
+        if (!element) element = this.currentRoom.playerManager.get(content.receiverId);
         if (element) {
             this.showInteractionBubble(content, element);
         }
@@ -101,14 +112,15 @@ export class InteractiveBubbleManager extends PacketHandler {
             this.updateBublePos(ele, obj.scene);
         });
         this.mBubble.show = true;
-        this.uilayer.addToDialogLayer(this.mBubble.view);
+        this.uilayer.addToDialogLayer(this.mBubble);
     }
 
     private updateBublePos(gameObject: any, scene: Phaser.Scene) {
-        const uiRatio = 1; // this.mworld.uiRatio;
+        const dpr = this.mworld.uiRatio;
+        const zoom = this.mworld.uiScaleNew;
         const position = gameObject.getDisplay().getWorldTransformMatrix();
         if (position) {
-            const pos = Tool.getPosByScenes(scene, new Pos(position.tx * uiRatio, (position.ty - 100) * uiRatio));
+            const pos = Tool.getPosByScenes(scene, new Pos(position.tx, (position.ty - 33 * dpr * zoom)));
             this.mBubble.setPosition(pos.x, pos.y);
         }
     }

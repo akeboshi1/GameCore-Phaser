@@ -129,7 +129,7 @@ export class RankPanel extends BasicRankPanel {
         this.mBackground.resize(328, h);
         this.mZoonInBtn.angle = this.mCurrentIndex === 1 ? 180 : 0;
         if (h > 300) {
-            if (this.container.parentContainer)
+            if (this.parentContainer)
                 this.add(this.mChildContainer);
         } else {
             this.remove(this.mChildContainer);

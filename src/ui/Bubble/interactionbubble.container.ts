@@ -20,7 +20,7 @@ export class InteractionBubbleContainer extends BaseUI {
     public hide() {
         this.mShow = false;
         if (this.parentContainer) {
-            (this.parentContainer as Phaser.GameObjects.Container).remove(this.view);
+            (this.parentContainer as Phaser.GameObjects.Container).remove(this);
         }
     }
 

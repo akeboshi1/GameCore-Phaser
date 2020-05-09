@@ -63,7 +63,6 @@ export class FurniBagPanel extends BasePanel {
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
-
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
@@ -83,7 +82,7 @@ export class FurniBagPanel extends BasePanel {
     this.mBg.y = this.mBg.height / 2 + 10 * this.dpr * zoom;
 
     //  this.mTiltle.x = width / 2;
-
+    // this.mCategoryScroll.resize(width, 41 * this.dpr * zoom);
     this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
     this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr * zoom;
 
@@ -95,14 +94,13 @@ export class FurniBagPanel extends BasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
-    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 150 * this.dpr * zoom, 21 * this.dpr, -this.y + 20 * this.dpr);
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
     // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
-    this.mPropGrid.layout();
     this.setSize(width, height);
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
-    subcategorys.unshift({ key: this.seachKey, value: "搜索" });
+    // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const zoom = this.mWorld.uiScaleNew;
@@ -110,10 +108,17 @@ export class FurniBagPanel extends BasePanel {
     const capH = 41 * this.dpr * zoom;
     const items = [];
     this.mCategoryScroll.clearInteractiveObject();
+    if (this.mSeachInput.parentContainer)
+      this.closeSeach(null);
     for (const item of this.mCategeoriesContainer.list) {
       item.destroy();
     }
     this.mCategeoriesContainer.list.length = 0;
+    const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
+    seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
+    seachBtn.y = capH - 20 * this.dpr * zoom;
+    this.mCategeoriesContainer.add(seachBtn);
+    this.mCategoryScroll.setInteractiveObject(seachBtn);
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
       item.y = capH - item.text.height >> 1;
@@ -126,10 +131,9 @@ export class FurniBagPanel extends BasePanel {
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
     }
-    if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
+    if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 155 * this.dpr * zoom, 22 * this.dpr, -this.y + 30 * this.dpr);
-    this.mPropGrid.layout();
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
     this.updateCategeoriesLoc(false);
   }
 
@@ -144,11 +148,19 @@ export class FurniBagPanel extends BasePanel {
     }
 
     this.mPropGrid.setItems(props);
-    if (this.mSelectItem)
+    let isNull = false;
+    if (this.mSelectItem) {
       this.onSelectItemHandler(this.mSelectItem);
-    else {
+      if (!this.mSelectedItemData) {
+        isNull = true;
+      }
+    } else {
+      isNull = true;
+    }
+    if (isNull) {
       this.sellBtn.enable = false;
       this.useBtn.enable = false;
+      this.mAdd.enable = false;
     }
   }
 
@@ -187,6 +199,12 @@ export class FurniBagPanel extends BasePanel {
     if (this.mPropGrid) {
       this.mPropGrid.destroy();
     }
+    if (this.itemPopPanel) {
+      this.itemPopPanel.off("itempopclose", () => {
+        this.mCategoryScroll.addListen();
+      });
+      this.itemPopPanel.destroy();
+    }
     super.destroy();
   }
 
@@ -212,6 +230,7 @@ export class FurniBagPanel extends BasePanel {
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     // this.mPropsContainer = this.scene.make.container(undefined, false);
     this.mCategeoriesContainer = this.scene.make.container(undefined, false);
+    this.mCategeoriesContainer.x = this.mShelfContainer.x;
     this.mCategeoriesContainer.y = this.mShelfContainer.y;
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
@@ -278,15 +297,15 @@ export class FurniBagPanel extends BasePanel {
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
 
     this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
-    this.add([this.sellBtn, this.useBtn]);
+    this.add([this.sellBtn, this.useBtn, this.mAdd]);
     this.mShelfContainer.add(this.mCategoriesBar);
     // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
-    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
-      this.add(this.mAdd);
-    }
+    // if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
+    //   this.add(this.mAdd);
+    // }
     const topCapW = 67 * this.dpr * zoom;
     const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
@@ -299,9 +318,9 @@ export class FurniBagPanel extends BasePanel {
     const topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
     const topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
     if (!this.mEnableEdit) {
-      const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-      topCategorys.splice(index, 1);
-      topBtnTexts.splice(index, 1);
+      // const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+      // topCategorys.splice(index, 1);
+      // topBtnTexts.splice(index, 1);
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
     for (const key in topCategorys) {
@@ -319,7 +338,7 @@ export class FurniBagPanel extends BasePanel {
     this.topCheckBox.appendItemAll(this.topBtns);
     this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
     this.topBtns.forEach((btn) => {
-      this.add(btn.view);
+      this.add(btn);
     });
     if (this.mEnableEdit) {
       const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
@@ -329,16 +348,16 @@ export class FurniBagPanel extends BasePanel {
     }
 
     const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
+    let w = this.scene.cameras.main.width + 80 * this.dpr * zoom + inputWid;
     this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesContainer, {
       x: 0,
       y: this.mCategeoriesContainer.y,
-      width: w,
+      width: this.mWorld.getSize().width,
       height: 41 * this.dpr * zoom,
       value: w / 2,
       orientation: 1,
       bounds: [
-        -w / 4,
+        -w / 2,
         w / 2
       ],
       valuechangeCallback: (newValue) => {
@@ -352,12 +371,13 @@ export class FurniBagPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
+    w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
     const tableConfig: GridTableConfig = {
       x: 0,
       y: 0,
       table: {
-        width: w - 10 * this.dpr * zoom,
-        height: 270 * this.dpr * zoom,
+        width: this.scene.cameras.main.width,
+        height: 250 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
@@ -371,7 +391,7 @@ export class FurniBagPanel extends BasePanel {
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
-          this.mPropGrid.cellParentCon.add(cellContainer);
+          this.add(cellContainer);
         }
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
@@ -391,7 +411,7 @@ export class FurniBagPanel extends BasePanel {
       }
     });
     // this.add(this.mPropGrid);
-    this.add(this.mPropGrid.cellParentCon);
+    this.add(this.mPropGrid.table);
     this.resize(0, 0);
     super.init();
   }
@@ -418,6 +438,7 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
+    this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -430,15 +451,16 @@ export class FurniBagPanel extends BasePanel {
       }
       return;
     }
-    if (!(gameobject instanceof TextButton)) {
-      return;
-    }
+    // if (!(gameobject instanceof TextButton)) {
+    //   return;
+    // }
     const category: op_def.IStrPair = gameobject.getData("item");
     if (category) {
-      if (this.mPreCategoryBtn) {
+      if (this.mPreCategoryBtn && (this.mPreCategoryBtn instanceof TextButton)) {
         this.mPreCategoryBtn.changeNormal();
       }
-      gameobject.changeDown();
+      if (gameobject instanceof TextButton)
+        gameobject.changeDown();
       let key = category.key;
       if (key === this.seachKey) {
         // gameobject.setSize(100 * this.dpr * this.mWorld.uiScaleNew, gameobject.height);
@@ -450,6 +472,8 @@ export class FurniBagPanel extends BasePanel {
           if (key === this.seachKey) {
             this.closeSeach(gameobject);
           }
+        } else {
+          this.closeSeach(gameobject);
         }
         this.mSelectedCategeories = category;
         this.emit("queryPackage", category.key);
@@ -490,7 +514,7 @@ export class FurniBagPanel extends BasePanel {
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
-        this.sellBtn.visible = false;
+        this.sellBtn.visible = true;
         this.useBtn.visible = false;
         this.mAdd.visible = true;
       } else {
@@ -507,7 +531,7 @@ export class FurniBagPanel extends BasePanel {
     const zoom = this.mWorld.uiScaleNew;
     let allRadiu = 0;
     for (const btn of this.topBtns) {
-      allRadiu += btn.displayWidth;
+      allRadiu += btn.width;
     }
     allRadiu /= 2;
     let offsetX: number = width * 0.5 - allRadiu;
@@ -520,19 +544,19 @@ export class FurniBagPanel extends BasePanel {
           fontSize: 12 * this.dpr * zoom,
           color: "#2B4BB5"
         });
-        posY = btn.displayHeight * 0.5;
+        posY = btn.height * 0.5;
       } else {
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
           fontSize: 16 * this.dpr * zoom,
           color: "#8B5603"
         });
-        posY = btn.displayHeight * 0.5 + 2 * this.dpr * zoom;
+        posY = btn.height * 0.5 + 2 * this.dpr * zoom;
       }
-      const radiu = btn.displayWidth * 0.5;
+      const radiu = btn.width * 0.5;
       btn.x = offsetX + radiu;
       btn.y = posY;
-      offsetX += radiu * 2 + 4 * this.dpr * zoom;
+      offsetX += radiu * 2 + 12 * this.dpr * zoom;
     }
   }
 
@@ -569,6 +593,10 @@ export class FurniBagPanel extends BasePanel {
     if (!this.itemPopPanel) {
       this.itemPopPanel = new ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
     }
+    this.itemPopPanel.once("itempopclose", () => {
+      this.mCategoryScroll.addListen();
+    });
+    this.mCategoryScroll.removeListen();
     this.add(this.itemPopPanel);
   }
 
@@ -586,7 +614,9 @@ export class FurniBagPanel extends BasePanel {
     // const cellTable = this.mCategoryScroll.childrenMap.child;
     // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
     // cellTable.updateTable(true);
-    this.mCategeoriesContainer.remove(this.mSeachInput);
+    if (this.mSeachInput.parentContainer) {
+      this.mSeachInput.parentContainer.remove(this.mSeachInput);
+    }
     this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.seachBtn);
     this.mCategoryScroll.removeInteractiveObject(this.mSeachInput.label);
     this.updateCategeoriesLoc(false);
@@ -595,7 +625,7 @@ export class FurniBagPanel extends BasePanel {
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategeoriesContainer.list;
     const zoom = this.mWorld.uiScaleNew;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
+    const w = this.scene.cameras.main.width + 80 * this.dpr * zoom;
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
     const offset = 10 * this.dpr * zoom;
@@ -610,7 +640,7 @@ export class FurniBagPanel extends BasePanel {
     }
     const inputWid: number = inputBoo ? 200 * this.dpr * zoom : 0;
     const updateWid: number = w + inputWid;
-    this.mCategoryScroll.setSize(updateWid, h, -w / 2 - inputWid, w / 2);
+    // this.mCategoryScroll.resize(updateWid, h);
   }
 
   get enableEdit() {
@@ -623,11 +653,12 @@ class SeachInput extends Phaser.GameObjects.Container {
   private mLabelInput: Phaser.GameObjects.Text;
   private mInputText: InputPanel;
   private mWorldService: WorldService;
+  private bg: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService, key: string, dpr: number) {
     super(scene);
     this.mWorldService = world;
 
-    const bg = scene.make.image({
+    this.bg = scene.make.image({
       key,
       frame: "seach_bg"
     }, false).setOrigin(0, 0.5);
@@ -642,31 +673,24 @@ class SeachInput extends Phaser.GameObjects.Container {
     // });
     this.mLabelInput = this.scene.make.text({
       x: 10 * dpr,
-      width: bg.displayWidth,
-      height: bg.displayHeight,
+      width: this.bg.width,
+      height: this.bg.height,
       style: {
         fontFamily: Font.DEFULT_FONT,
-        fontSize: 14 * dpr
+        fontSize: 14 * dpr,
+        wordWrap: { width: 200, useAdvancedWrap: true },
       }
     }, false).setData("type", "label").setOrigin(0, 0.5);
-
+    this.mLabelInput.setSize(this.bg.width, this.bg.height);
+    this.mLabelInput.setInteractive();
     this.mSeachBtn = scene.make.image({
       key,
       frame: "seach_normal"
     }, false).setData("type", "seachBtn");
-    this.mSeachBtn.x = bg.displayWidth - this.mSeachBtn.width / 2 - 4 * dpr,
-      this.add([bg, this.mLabelInput, this.mSeachBtn]);
-    this.setSize(bg.displayWidth + 20 * dpr, bg.displayHeight);
-
-    // this.mSeachBtn.on("pointerup", this.onSeachHandler, this);
+    this.mSeachBtn.x = this.bg.width - this.mSeachBtn.width / 2 - 4 * dpr,
+      this.add([this.bg, this.mLabelInput, this.mSeachBtn]);
+    this.setSize(this.bg.width + 20 * dpr, this.bg.height);
   }
-
-  // private onSeachHandler() {
-  //   if (!this.mLabelInput.text) {
-  //     return;
-  //   }
-  //   this.emit("seach", this.mLabelInput.text);
-  // }
 
   public showInputPanel() {
     if (this.mInputText) {
@@ -677,7 +701,10 @@ class SeachInput extends Phaser.GameObjects.Container {
   }
 
   private sendChat(val: string) {
+    this.mInputText.destroy();
+    this.mInputText = null;
     this.mLabelInput.setText(val);
+    this.mLabelInput.setSize(this.bg.width, this.bg.height);
   }
 
   get seachBtn(): Phaser.GameObjects.Image {
@@ -813,9 +840,12 @@ class Item extends Phaser.GameObjects.Container {
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
   private selectbg: Phaser.GameObjects.Image;
+  private dpr: number;
+  private zoom: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
-
+    this.dpr = dpr;
+    this.zoom = zoom;
     const background = scene.make.image({
       key,
       frame: "grid_bg"
@@ -830,8 +860,8 @@ class Item extends Phaser.GameObjects.Container {
     this.mPropImage.scale = dpr * zoom;
 
     this.mCounter = scene.make.text({
-      x: background.displayWidth - 4 * dpr,
-      y: background.displayHeight + 2 * dpr,
+      x: background.width - 4 * dpr,
+      y: background.height + 2 * dpr,
       style: {
         fontSize: 12 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
@@ -839,8 +869,8 @@ class Item extends Phaser.GameObjects.Container {
     }, false).setOrigin(1);
     this.add([background, this.selectbg]);
     this.isSelect = false;
-    this.setSize(background.displayWidth, background.displayHeight);
-    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.displayWidth, background.displayHeight), Phaser.Geom.Rectangle.Contains);
+    this.setSize(background.width, background.height);
+    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
     // this.on("pointerup", this.onSelectedHandler, this);
   }
 
@@ -867,9 +897,9 @@ class Item extends Phaser.GameObjects.Container {
   private onPropLoadCompleteHandler() {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
-      // this.mPropImage.setPosition((this.mPropImage.displayWidth) / 2, (this.mPropImage.displayHeight) / 2);
-      this.mPropImage.x = this.width / 2;
-      this.mPropImage.y = this.height / 2;
+      // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
+      this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
+      this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
@@ -908,8 +938,10 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.blackBg = this.scene.make.graphics(undefined, false);
     this.blackBg.clear();
     this.blackBg.fillStyle(0, 0.5);
-    this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
-    this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
+    const w = this.scene.cameras.main.width / this.scale;
+    const h = this.scene.cameras.main.height / this.scale;
+    this.blackBg.fillRect(-w / 2, -h / 2, w, h);
+    bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     const posY = -bg.height * 0.5 + 3 * dpr * zoom;
     const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "title" });
     this.titleName = scene.make.text({
@@ -947,6 +979,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
+    // this.pricText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.priceBg.width, this.priceBg.height),Phaser.Geom.Rectangle.Contains);
     const countOffsetY = 50 * dpr * zoom;
     const countOffsetX = -58 * dpr * zoom;
     const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
@@ -988,7 +1021,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
       fontSize: 16 * dpr * zoom,
       fontFamily: Font.DEFULT_FONT
     });
-    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, this.priceBg, this.pricText, countBg, this.itemCountText, minusBtn.view, addBtn.view, cancelBtn, confirmBtn]);
+    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, this.priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
     minusBtn.on("Tap", this.onMinusBtnHandler, this);
     addBtn.on("Tap", this.onAddBtnHandler, this);
     cancelBtn.on("click", this.onCancelBtnHandler, this);
@@ -1034,10 +1067,12 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
   }
 
   private onCancelBtnHandler() {
+    this.emit("itempopclose");
     if (this.parentContainer) this.parentContainer.remove(this);
   }
 
   private onConfirmBtnHandler() {
+    this.emit("itempopclose");
     if (this.parentContainer) this.parentContainer.remove(this);
     if (this.handler) this.handler.runWith([this.itemData, this.itemCount, this.category]);
   }

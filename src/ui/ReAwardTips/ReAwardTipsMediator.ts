@@ -14,14 +14,14 @@ export class ReAwardTipsMediator extends BaseMediator {
     }
 
     show(param: any) {
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView) {
             (<ReAwardTipsPanel> this.mView).appendAward(param);
             return;
         }
         this.mView = new ReAwardTipsPanel(this.scene, this.world);
         (<ReAwardTipsPanel> this.mView).appendAward(param);
         super.show();
-        this.world.uiManager.getUILayerManager().addToDialogLayer(this.mView.view);
+        this.world.uiManager.getUILayerManager().addToDialogLayer(this.mView);
     }
 
     public destroy() {

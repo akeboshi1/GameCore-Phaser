@@ -24,7 +24,7 @@ export class PicaRoomListMediator extends BaseMediator {
 
   show() {
     if ((this.mView && this.mView.isShow()) || this.mShow) {
-      this.layerManager.addToUILayer(this.mView.view);
+      this.layerManager.addToUILayer(this.mView);
       return;
     }
     this.roomList = new RoomList(this.world);
@@ -40,7 +40,7 @@ export class PicaRoomListMediator extends BaseMediator {
     this.mView.on("getMyRoomList", this.onGetMyRoomListHandler, this);
     this.mView.on("enterRoom", this.onEnterRoomHandler, this);
     this.mView.show();
-    this.layerManager.addToUILayer(this.mView.view);
+    this.layerManager.addToUILayer(this.mView);
   }
 
   getView(): BasePanel {

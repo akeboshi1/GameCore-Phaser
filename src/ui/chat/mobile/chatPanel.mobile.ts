@@ -45,7 +45,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.tweenExpand(true);
     }
 
-    public setPosition(x?: number, y?: number) {
+    public setPosition(x?: number, y?: number): this {
         if (!this.mShow) return;
         // DefaultMask在TextBlock中，TextBlock是一个非渲染矩形游戏对象
         const size = this.mWorld.getSize();
@@ -165,6 +165,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         this.mSendBtn.y = this.mInputBg.y;
         this.scale = this.mWorld.uiScale;
         this.add(this.mInputText);
+        return this;
     }
 
     public destroy() {

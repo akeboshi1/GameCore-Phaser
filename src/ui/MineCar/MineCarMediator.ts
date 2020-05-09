@@ -27,7 +27,7 @@ export class MineCarMediator extends BaseMediator {
     this.mView.show(param);
     this.mView.on("close", this.onCloseHandler, this);
     this.mView.on("discard", this.onDiscardHandler, this);
-    this.layerManager.addToUILayer(this.mView.view);
+    this.layerManager.addToUILayer(this.mView);
   }
 
   update(param?: any) {

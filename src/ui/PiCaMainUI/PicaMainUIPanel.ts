@@ -3,7 +3,6 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
-import { op_client } from "pixelpai_proto";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -29,8 +28,8 @@ export class PicaMainUIPanel extends BasePanel {
         const width = this.scene.cameras.main.width / this.scale;
         const height = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
-        this.mCoinValue.x = width - this.mCoinValue.width / 2 - 5 * this.dpr;
-        this.mDiamondValue.x = width - this.mDiamondValue.width / 2 - 5 * this.dpr;
+        this.mCoinValue.x = width * this.scale - this.mCoinValue.width / 2 - 5 * this.dpr;
+        this.mDiamondValue.x = width * this.scale - this.mDiamondValue.width / 2 - 5 * this.dpr;
     }
 
     preload() {
@@ -57,20 +56,34 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     update(param: any) {
+        Object.assign(this.mShowData, param);
+        super.update(this.mShowData);
         if (!param) {
             return;
         }
-        const info: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = param;
-        if (info.hasOwnProperty("level")) this.mExpProgress.setLv(info.level);
-        if (info.hasOwnProperty("coin")) this.mCoinValue.setText(info.coin.toString());
-        if (info.hasOwnProperty("diamond")) this.mDiamondValue.setText(info.diamond.toString());
-        if (info.hasOwnProperty("energy")) {
-            const energy = info.energy;
+        if (!this.mInitialized) {
+            return;
+        }
+        if (param.hasOwnProperty("level")) this.mExpProgress.setLv(param.level);
+        if (param.hasOwnProperty("coin")) this.mCoinValue.setText(param.coin.toString());
+        if (param.hasOwnProperty("diamond")) this.mDiamondValue.setText(param.diamond.toString());
+        if (param.hasOwnProperty("energy")) {
+            const energy = param.energy;
             if (energy) {
                 this.mStrengthValue.setValue(energy.currentValue, energy.max);
             } else {
                 this.mStrengthValue.setValue(0, 100);
             }
+        }
+        if (param.hasOwnProperty("name")) {
+            this.mSceneName.setText(param.name);
+        }
+        if (param.hasOwnProperty("ownerName")) {
+            this.mSceneType.setText(param.ownerName);
+        }
+        if (param.hasOwnProperty("playerCount")) {
+            // TODO 多语言适配
+            this.mCounter.setText(`${param.playerCount}人`);
         }
     }
 
@@ -83,19 +96,19 @@ export class PicaMainUIPanel extends BasePanel {
         this.mDiamondValue.y = 68 * this.dpr;
 
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon.png", "setting_icon.png", this.dpr);
-        this.mSceneName.setText("皮卡小镇");
+        this.mSceneName.setText("");
         this.mSceneName.x = 15 * this.dpr;
         this.mSceneName.y = 55 * this.dpr;
         const bound = this.mSceneName.getBounds();
         this.mSceneName.setSize(bound.width, bound.height);
         this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mSceneType = new IconText(this.scene, this.key, "star_icon.png", this.dpr);
-        this.mSceneType.setText("公共场景");
+        this.mSceneType.setText("");
         this.mSceneType.x = 15 * this.dpr;
         this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");
         this.mCounter = new IconText(this.scene, this.key, "counter_icon.png", this.dpr);
-        this.mCounter.setText("54人");
+        this.mCounter.setText("1人");
         this.mCounter.x = 15 * this.dpr;
         this.mCounter.y = 105 * this.dpr;
         this.mCounter.setColor("#27f6ff");
@@ -130,10 +143,10 @@ export class PicaMainUIPanel extends BasePanel {
         // this.add(healthValue);
         // healthValue.setValue(200, 1000);
 
-        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale);
+        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
         this.add(this.mExpProgress);
-        super.init();
         this.resize(w, h);
+        super.init();
     }
 
     private onEnterEditScene() {
@@ -249,10 +262,10 @@ class ExpProgress extends Phaser.GameObjects.Container {
     private mCurrentLv: Phaser.GameObjects.Text;
     private mNextLv: Phaser.GameObjects.Text;
     private mProgressBar: ProgressBar;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number, world: WorldService) {
         super(scene);
 
-        const width = scene.cameras.main.width / scale;
+        const width = world.getSize().width;
         let frame = this.scene.textures.getFrame(key, "exp_bg.png");
         this.setSize(width, frame.height);
         const progressW = this.width;
@@ -276,7 +289,6 @@ class ExpProgress extends Phaser.GameObjects.Container {
         });
         this.mProgressBar.setProgress(progres, this.x, this.y, scale);
         this.mProgressBar.setRatio(0.5);
-
         this.mCurrentLv = scene.make.text({
             text: "Lv. 57",
             style: {
@@ -288,20 +300,20 @@ class ExpProgress extends Phaser.GameObjects.Container {
 
         this.mNextLv = scene.make.text({
             text: "Lv. 58",
-            x: this.width,
             style: {
                 fontSize: 10 * dpr,
                 fontFamily: Font.DEFULT_FONT
             }
-        }, false).setOrigin(1, 0);
+        }, false).setOrigin(0, 0);
         this.mNextLv.setStroke("#000000", 1 * dpr);
-
+        this.mNextLv.x = this.width - this.mNextLv.width;
         this.add([this.mProgressBar, this.mCurrentLv, this.mNextLv]);
     }
 
     public setLv(val: number) {
         this.mCurrentLv.setText(val.toString());
         this.mNextLv.setText((val + 1).toString());
+        this.mNextLv.x = this.width - this.mNextLv.width;
     }
 }
 

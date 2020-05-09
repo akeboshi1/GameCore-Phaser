@@ -12,7 +12,7 @@ export class CutInPanel extends BasePanel {
   }
 
   show(param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[]) {
-    this.data = param;
+    this.mShowData = param;
     if (!this.mInitialized) {
       this.preload();
       return;
@@ -78,7 +78,7 @@ export class CutInPanel extends BasePanel {
     this.add([background, this.mName]);
     super.init();
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
-    this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this.view);
+    this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
   }
 
 }
