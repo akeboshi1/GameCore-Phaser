@@ -2,6 +2,7 @@ import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/Nine
 import { op_client } from "pixelpai_proto";
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { Url } from "../../utils/resUtil";
+import { Font } from "../../utils/font";
 
 export class Bubble extends Phaser.GameObjects.Container {
     private mChatContent: Phaser.GameObjects.Text;
@@ -12,10 +13,12 @@ export class Bubble extends Phaser.GameObjects.Container {
     private mTweenCompleteCallback: Function;
     private mTweenCallContext: any;
     private mRemoveDelay: any;
+    private mScale: number;
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, scale: number) {
         super(scene);
-        this.x = -60;
+        this.mScale = scale;
+        this.x = -60 * scale;
     }
 
     public show(text: string, bubble: op_client.IChat_Setting) {
@@ -23,9 +26,9 @@ export class Bubble extends Phaser.GameObjects.Container {
             text,
             style: {
                 x: 0,
-                y: 4,
-                fontFamily: "YaHei",
-                fontSize: 14,
+                y: 4 * this.mScale,
+                fontFamily: Font.DEFULT_FONT,
+                fontSize: 12 * this.mScale,
                 color: "#000000",
                 origin: { x: 0, y: 0 },
                 wordWrap: { width: 300, useAdvancedWrap: true }
@@ -34,9 +37,9 @@ export class Bubble extends Phaser.GameObjects.Container {
         this.add(this.mChatContent);
 
         this.mMinHeight = this.mChatContent.height + 26;
-        this.mMinHeight = this.mMinHeight < 54 ? 54 : this.mMinHeight;
+        // this.mMinHeight = this.mMinHeight < 54 ? 54 : this.mMinHeight;
         this.mMinWidth = this.mChatContent.width + 40;
-        this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
+        // this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
 
         this.mBubbleBg = new DynamicNinepatch(this.scene, this);
         const res = Url.getOsdRes(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png");
