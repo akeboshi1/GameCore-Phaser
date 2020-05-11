@@ -16,6 +16,9 @@ export class MineCarSimulateData {
 
     public static addSimulate(roomService: IRoomService, sprite: op_client.ISprite, oldSprite?: op_client.ISprite) {
         let oldCarPos: Pos;
+        if (sprite.attrs.length < 1) {
+            return;
+        }
         if (oldSprite) {
             const newtype = this.getMineCarType(sprite.attrs);
             const oldtype = this.getMineCarType(oldSprite.attrs);

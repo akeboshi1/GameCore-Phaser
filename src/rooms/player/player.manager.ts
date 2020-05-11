@@ -197,11 +197,16 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         let player: Player = null;
         const sprites = content.sprites;
+        const command = content.command;
         for (const sprite of sprites) {
             player = this.get(sprite.id);
             if (player) {
-                MineCarSimulateData.addSimulate(this.roomService, sprite,player.model);
-                player.model = new Sprite(sprite);
+                MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
+                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
+                    player.model = new Sprite(sprite);
+                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
+                    player.updateModel(sprite);
+                }
             }
         }
     }

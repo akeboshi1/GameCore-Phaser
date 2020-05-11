@@ -853,10 +853,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     set dragonBonesName(val: string) {
-        if (this.mDragonbonesName !== val) {
+        // if (this.mDragonbonesName !== val) {
+            // TODO 暴露一个换装接口
             this.mDragonbonesName = val;
             this.buildDragbones();
-        }
+        // }
     }
 
     get dragonBonesName(): string {

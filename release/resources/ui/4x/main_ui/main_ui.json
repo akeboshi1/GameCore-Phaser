@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"add_btn.png": {
+		"add_btn": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,29 +20,29 @@
 				"h": 115
 			}
 		},
-		"coin.png": {
+		"coin": {
 			"frame": {
 				"x": 115,
 				"y": 1,
-				"w": 123,
-				"h": 125
+				"w": 117,
+				"h": 124
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 123,
-				"h": 125
+				"w": 117,
+				"h": 124
 			},
 			"sourceSize": {
-				"w": 123,
-				"h": 125
+				"w": 117,
+				"h": 124
 			}
 		},
-		"counter_icon.png": {
+		"counter_icon": {
 			"frame": {
-				"x": 240,
+				"x": 234,
 				"y": 1,
 				"w": 82,
 				"h": 91
@@ -60,69 +60,69 @@
 				"h": 91
 			}
 		},
-		"diamond.png": {
-			"frame": {
-				"x": 324,
-				"y": 1,
-				"w": 136,
-				"h": 113
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 136,
-				"h": 113
-			},
-			"sourceSize": {
-				"w": 136,
-				"h": 113
-			}
-		},
-		"exp_bg.png": {
-			"frame": {
-				"x": 240,
-				"y": 116,
-				"w": 76,
-				"h": 28
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 76,
-				"h": 28
-			},
-			"sourceSize": {
-				"w": 76,
-				"h": 28
-			}
-		},
-		"exp_progress.png": {
+		"diamond": {
 			"frame": {
 				"x": 318,
-				"y": 116,
-				"w": 70,
-				"h": 22
+				"y": 1,
+				"w": 136,
+				"h": 113
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 70,
-				"h": 22
+				"w": 136,
+				"h": 113
 			},
 			"sourceSize": {
-				"w": 70,
-				"h": 22
+				"w": 136,
+				"h": 113
 			}
 		},
-		"health_con.png": {
+		"exp_bg": {
 			"frame": {
-				"x": 390,
+				"x": 234,
+				"y": 116,
+				"w": 76,
+				"h": 28
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 76,
+				"h": 28
+			},
+			"sourceSize": {
+				"w": 76,
+				"h": 28
+			}
+		},
+		"exp_progress": {
+			"frame": {
+				"x": 312,
+				"y": 116,
+				"w": 70,
+				"h": 22
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 70,
+				"h": 22
+			},
+			"sourceSize": {
+				"w": 70,
+				"h": 22
+			}
+		},
+		"health_con": {
+			"frame": {
+				"x": 384,
 				"y": 116,
 				"w": 67,
 				"h": 86
@@ -140,7 +140,7 @@
 				"h": 86
 			}
 		},
-		"health_progress.png": {
+		"health_progress": {
 			"frame": {
 				"x": 1,
 				"y": 204,
@@ -160,7 +160,7 @@
 				"h": 35
 			}
 		},
-		"price_bg.png": {
+		"price_bg": {
 			"frame": {
 				"x": 1,
 				"y": 241,
@@ -180,7 +180,7 @@
 				"h": 112
 			}
 		},
-		"room_icon.png": {
+		"room_icon": {
 			"frame": {
 				"x": 1,
 				"y": 355,
@@ -200,9 +200,9 @@
 				"h": 66
 			}
 		},
-		"setting_icon.png": {
+		"setting_icon": {
 			"frame": {
-				"x": 462,
+				"x": 456,
 				"y": 1,
 				"w": 79,
 				"h": 85
@@ -220,9 +220,9 @@
 				"h": 85
 			}
 		},
-		"star_icon.png": {
+		"star_icon": {
 			"frame": {
-				"x": 462,
+				"x": 456,
 				"y": 88,
 				"w": 78,
 				"h": 78
@@ -240,7 +240,7 @@
 				"h": 78
 			}
 		},
-		"strength_bg.png": {
+		"strength_bg": {
 			"frame": {
 				"x": 96,
 				"y": 355,
@@ -260,7 +260,7 @@
 				"h": 79
 			}
 		},
-		"strength_icon.png": {
+		"strength_icon": {
 			"frame": {
 				"x": 512,
 				"y": 168,
@@ -280,7 +280,7 @@
 				"h": 81
 			}
 		},
-		"strength_progress.png": {
+		"strength_progress": {
 			"frame": {
 				"x": 80,
 				"y": 168,
@@ -304,7 +304,7 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
 			"w": 575,
