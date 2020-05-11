@@ -101,7 +101,7 @@ export class NoticePanel extends BasePanel {
             align: "center",
             style: {
                 fontFamily: "bold YaHei",
-                fontSize: 20 * this.dpr * this.mWorld.uiScaleNew,
+                fontSize: 20 * this.dpr * this.mWorld.uiScale,
                 wordWrap: { width: 1180, useAdvancedWrap: true },
             },
         }, false)

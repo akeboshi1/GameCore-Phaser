@@ -117,7 +117,7 @@ export class InteractiveBubbleManager extends PacketHandler {
 
     private updateBublePos(gameObject: any, scene: Phaser.Scene) {
         const dpr = this.mworld.uiRatio;
-        const zoom = this.mworld.uiScaleNew;
+        const zoom = this.mworld.uiScale;
         const position = gameObject.getDisplay().getWorldTransformMatrix();
         if (position) {
             const pos = Tool.getPosByScenes(scene, new Pos(position.tx, (position.ty - 33 * dpr * zoom)));
