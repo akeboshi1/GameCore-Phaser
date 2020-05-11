@@ -21,13 +21,13 @@ export class BasePanel extends Panel {
         this.mInitialized = false;
         if (world) {
             this.dpr = Math.round(world.uiRatio || 1);
-            this.scale = this.mWorld.uiScaleNew;
+            this.scale = this.mWorld.uiScale || 1;
         }
     }
 
     protected init() {
         super.init();
-        this.setInteractive();
+        // this.setInteractive();
     }
 
     protected addResources(key: string, resource: any) {

@@ -147,7 +147,7 @@ export class InteractivePanel extends BasePanel {
         const size: Size = this.mWorld.getSize();
         const width = this.mWorld.getSize().width;
         const height = this.mWorld.getSize().height;
-        const zoom = this.mWorld.uiScaleNew;
+        const zoom = this.mWorld.uiScale;
         this.mNameCon.add(this.mNameBg);
         this.mNameCon.add(this.mNameTF);
         this.mDescCon.add(this.mBg);
@@ -248,7 +248,7 @@ export class InteractivePanel extends BasePanel {
     protected init() {
         const width = this.mWorld.getSize().width;
         const height = this.mWorld.getSize().height;
-        const zoom: number = this.mWorld.uiScaleNew;
+        const zoom: number = this.mWorld.uiScale;
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
@@ -339,7 +339,7 @@ export class InteractivePanel extends BasePanel {
 
     private refreshUIPos() {
         const size: Size = this.mWorld.getSize();
-        const zoom = this.mWorld.uiScaleNew;
+        const zoom = this.mWorld.uiScale;
         this.mDescCon.setSize(this.mBg.width, this.mBg.height);
         this.mNameCon.setSize(this.mNameBg.width, this.mNameBg.height);
         this.mNameTF.y = -8 * this.mWorld.uiScale;

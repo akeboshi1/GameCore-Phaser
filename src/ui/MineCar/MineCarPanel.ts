@@ -39,7 +39,7 @@ export class MineCarPanel extends BasePanel {
     const w = this.scene.cameras.main.width / this.scale;
     const h = this.scene.cameras.main.height / this.scale;
     super.resize(width, height);
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     this.setSize(w, h);
     this.mBg.x = w / 2;
     this.mBg.y = h / 2;
@@ -116,7 +116,7 @@ export class MineCarPanel extends BasePanel {
     this.setSize(w, h);
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
 
     this.mBg = this.scene.make
       .image({
@@ -384,7 +384,7 @@ export class MineCarPanel extends BasePanel {
     new AlertView(this.scene, this.mWorld).show({
       text: `您确定要丢弃 [color=#0157BC]${label.join("、")}[/color] 吗？`,
       title: "丢弃",
-      oy: 302 * this.dpr * this.mWorld.uiScaleNew,
+      oy: 302 * this.dpr * this.mWorld.uiScale,
       callback: () => {
         this.emit("discard", selected);
       },

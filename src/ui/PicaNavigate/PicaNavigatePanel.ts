@@ -12,6 +12,7 @@ export class PicaNavigatePanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
+    this.setInteractive();
   }
 
   resize(w: number, h: number) {

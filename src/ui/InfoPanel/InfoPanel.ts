@@ -38,7 +38,7 @@ export class InfoPanel extends BasePanel {
     resize(wid: number, hei: number) {
         if (!this.mInitialized) return;
         const size = this.mWorld.getSize();
-        const scale: number = this.mWorld.uiScaleNew;
+        const scale: number = this.mWorld.uiScale;
         const zoom: number = this.mWorld.uiRatio;
         this.x = size.width >> 1;
         this.y = size.height >> 1;
@@ -129,7 +129,7 @@ export class InfoPanel extends BasePanel {
 
     protected init() {
         const size = this.mWorld.getSize();
-        const scale: number = this.mWorld.uiScaleNew;
+        const scale: number = this.mWorld.uiScale;
         this.setSize(400 * this.dpr * scale, 500 * this.dpr * scale);
         const background = new NinePatch(this.scene, {
             width: this.width,
@@ -210,8 +210,8 @@ export class InfoPanel extends BasePanel {
 
     private checkPointerDis(pointer: Phaser.Input.Pointer) {
         if (!this.mWorld) return true;
-        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew ||
-            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew;
+        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScale ||
+            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScale;
     }
 
     private loadDefaultAvatar() {

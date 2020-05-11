@@ -1,7 +1,6 @@
 import { BasePanel } from "../components/BasePanel";
 import { Border } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
-import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { WorldService } from "../../game/world.service";
 
@@ -10,12 +9,12 @@ export class NoticePanel extends BasePanel {
     private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.disInteractive();
     }
 
     public show(param?: any) {
         super.show(param);
         this.resize();
-        this.scale = this.mWorld.uiRatio;
         this.refreshData();
     }
 
@@ -101,7 +100,7 @@ export class NoticePanel extends BasePanel {
             align: "center",
             style: {
                 fontFamily: "bold YaHei",
-                fontSize: 20 * this.dpr * this.mWorld.uiScaleNew,
+                fontSize: 20 * this.dpr * this.mWorld.uiScale,
                 wordWrap: { width: 1180, useAdvancedWrap: true },
             },
         }, false)

@@ -21,7 +21,7 @@ export class MineSettlePanel extends BasePanel {
     resize(w: number, h: number) {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
-        const zoom = this.mWorld.uiScaleNew;
+        const zoom = this.mWorld.uiScale;
         super.resize(width, height);
         this.x = width / 2;
         this.y = height / 2;
@@ -54,7 +54,7 @@ export class MineSettlePanel extends BasePanel {
     }
 
     init() {
-        const zoom = this.mWorld.uiScaleNew;
+        const zoom = this.mWorld.uiScale;
         const bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr * zoom, 260 * this.dpr * zoom, this.key, "bg", {
             left: 10,
             top: 10,
@@ -150,8 +150,8 @@ export class MineSettlePanel extends BasePanel {
 
     private checkPointerDis(pointer: Phaser.Input.Pointer) {
         if (!this.mWorld) return true;
-        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew &&
-            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScaleNew;
+        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScale &&
+            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScale;
     }
 
 }

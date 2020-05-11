@@ -53,13 +53,14 @@ export class FurniBagPanel extends BasePanel {
     super(scene, world);
     this.mSceneType = sceneType;
     this.scale = 1;
+    this.setInteractive();
   }
 
   resize(w: number, h: number) {
     const width = this.scene.cameras.main.width / this.scale;
     const height = this.scene.cameras.main.height / this.scale;
     super.resize(width, height);
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
@@ -104,7 +105,7 @@ export class FurniBagPanel extends BasePanel {
     subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const capW = 56 * this.dpr * zoom;
     const capH = 41 * this.dpr * zoom;
     const items = [];
@@ -125,6 +126,7 @@ export class FurniBagPanel extends BasePanel {
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
     }
+    this.mCategoryScroll.resize();
     if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
     this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
@@ -199,7 +201,7 @@ export class FurniBagPanel extends BasePanel {
     const width = this.scene.cameras.main.width;
     const height = this.scene.cameras.main.height;
     this.mBackground = this.scene.make.graphics(undefined, false);
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
 
     this.mBg = this.scene.make.image({
       key: this.key,
@@ -400,7 +402,7 @@ export class FurniBagPanel extends BasePanel {
     if (!this.scene) {
       return;
     }
-    const zoom: number = this.mWorld.uiScaleNew;
+    const zoom: number = this.mWorld.uiScale;
     const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
     const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
     this.mCategeoriesContainer.x = value - w / 2;
@@ -442,7 +444,7 @@ export class FurniBagPanel extends BasePanel {
       gameobject.changeDown();
       let key = category.key;
       if (key === this.seachKey) {
-        // gameobject.setSize(100 * this.dpr * this.mWorld.uiScaleNew, gameobject.height);
+        // gameobject.setSize(100 * this.dpr * this.mWorld.uiScale, gameobject.height);
         this.showSeach(gameobject);
       } else {
         if (this.mPreCategoryBtn) {
@@ -507,7 +509,7 @@ export class FurniBagPanel extends BasePanel {
 
   private layoutTopBtn(button: Button) {
     const width = this.scene.cameras.main.width;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     let allRadiu = 0;
     for (const btn of this.topBtns) {
       allRadiu += btn.width;
@@ -566,7 +568,7 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private popItemsPopPanle() {
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const width = this.scene.cameras.main.width;
     const height = this.scene.cameras.main.height;
     if (!this.itemPopPanel) {
@@ -587,7 +589,7 @@ export class FurniBagPanel extends BasePanel {
 
   private closeSeach(parent: TextButton) {
     // const cellTable = this.mCategoryScroll.childrenMap.child;
-    // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScaleNew);
+    // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScale);
     // cellTable.updateTable(true);
     if (this.mSeachInput.parentContainer) {
       this.mSeachInput.parentContainer.remove(this.mSeachInput);
@@ -599,7 +601,7 @@ export class FurniBagPanel extends BasePanel {
 
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategeoriesContainer.list;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
@@ -615,7 +617,7 @@ export class FurniBagPanel extends BasePanel {
     }
     const inputWid: number = inputBoo ? 200 * this.dpr * zoom : 0;
     const updateWid: number = w + inputWid;
-    // this.mCategoryScroll.resize(updateWid, h);
+    this.mCategoryScroll.resize(updateWid, h);
   }
 
   get enableEdit() {

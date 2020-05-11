@@ -27,7 +27,7 @@ export class PicaRoomListPanel extends BasePanel {
 
   resize(w: number, h: number) {
     const scale = this.scale;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const width = this.scene.cameras.main.width / scale;
     const height = this.scene.cameras.main.height / scale;
     const centerX = this.scene.cameras.main.centerX / scale;
@@ -73,7 +73,7 @@ export class PicaRoomListPanel extends BasePanel {
   }
 
   protected init() {
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const background = this.scene.make.image({
       key: this.key,
       frame: "bg.png"
@@ -145,11 +145,11 @@ export class PicaRoomListPanel extends BasePanel {
     const h = this.mRoomContainer.height * this.scale;
     const config: ScrollerConfig = {
       x: this.x - w / 2,
-      y: this.y - h / 2 - 20 * this.dpr * this.scale,
+      y: this.y - h / 2,
       width: w,
       height: h,
       bounds: [
-        this.y,
+        this.y - h - 100 * this.dpr,
         this.y - h - 100 * this.dpr + (350 * this.dpr / 2)
       ],
       value: this.y,
@@ -325,11 +325,11 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       }
     }
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
-    const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
+    const h: number = this.mContainer.height * this.mWorld.uiScale;
     const parentY: number = this.mContainer.parentContainer.y;
-    const refreshHei: number = parentY - h + (540 * this.mDpr / 2);
-    this.mScroller.resize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
-    // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScaleNew + (80 * this.mWorld.uiRatio / 2));
+    const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
+    this.mScroller.resize(this.mScroller.width, refreshHei, -100, refreshHei);
+    // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScale + (80 * this.mWorld.uiRatio / 2));
   }
 
   protected onEnterRoomHandler(room) {
@@ -341,6 +341,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       const roomItem: RoomItem = roomList[i];
       this.mScroller.setInteractiveObject(roomItem);
     }
+    this.refreshPos();
   }
 }
 
@@ -413,7 +414,7 @@ class MyRoomDelegate extends RoomDelegate {
       }
     }
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
-    const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
+    const h: number = this.mContainer.height * this.mWorld.uiScale;
     const parentY: number = this.mContainer.parentContainer.y;
     const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
     this.mScroller.resize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);

@@ -317,11 +317,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     get uiScale(): number {
-        if (this.mConfig) return this.mConfig.ui_scale;
-        return 1;
-    }
-
-    get uiScaleNew(): number {
+        if (this.mConfig && this.mConfig.ui_scale) {
+            return this.mConfig.ui_scale;
+        }
         return this.mUIScale;
     }
 

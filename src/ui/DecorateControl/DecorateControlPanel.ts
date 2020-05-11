@@ -103,7 +103,7 @@ export class DecorateControlPanel extends BasePanel {
         this.add(this.mTopBtns);
         this.add([this.mDoorBtn, this.mStairBtn]);
 
-        const zoom = this.mWorld.uiScaleNew;
+        const zoom = this.mWorld.uiScale;
         let totalWidth = w - 10 * 2 * this.dpr * zoom;
         this.mTopBtns.map((btn) => totalWidth -= btn.width * zoom);
         const space = totalWidth / (this.mTopBtns.length - 1) / zoom;

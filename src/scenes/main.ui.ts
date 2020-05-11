@@ -81,7 +81,7 @@ export class MainUIScene extends BasicScene {
     deviceRatio: ${window.devicePixelRatio}
     scene ratio: ${world.scaleRatio}
     ui ratio: ${world.uiRatio}
-    ui scale: ${world.uiScaleNew.toFixed(5)}
+    ui scale: ${world.uiScale.toFixed(5)}
     `;
     //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
   }

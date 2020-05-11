@@ -1,15 +1,12 @@
 import { BasePanel } from "../ui/components/BasePanel";
 import { WorldService } from "../game/world.service";
-import { ResUtils, Url } from "../utils/resUtil";
 import { NinePatchButton } from "../ui/components/ninepatch.button";
 import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatch } from "../ui/components/nine.patch";
-import { Logger } from "../utils/log";
 import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
-import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbones.model";
+import { DragonbonesModel } from "../rooms/display/dragonbones.model";
 import { Font } from "../utils/font";
-// import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
 export class CreateRolePanel extends BasePanel {
   private readonly key = "createCharacter";
@@ -25,7 +22,6 @@ export class CreateRolePanel extends BasePanel {
   private mError: Phaser.GameObjects.Text;
   private mErrorBg: Phaser.GameObjects.Image;
   private dragonbones: DragonbonesDisplay;
-  private dragonbonesModel: IDragonbonesModel;
   private avatars: op_gameconfig.IAvatar[];
   private mCurPageNum: number = 0;
 
@@ -96,11 +92,12 @@ export class CreateRolePanel extends BasePanel {
 
   init() {
     const size = this.mWorld.getSize();
+    const zoom = this.mWorld.uiScale;
     this.mBackground = this.scene.make.image({
       key: this.key,
       frame: "bg.png",
       x: size.width >> 1,
-    });
+    }).setScale(zoom);
     this.mBackground.y = this.mBackground.height / 2 + 92 * this.dpr;
     this.add(this.mBackground);
 
