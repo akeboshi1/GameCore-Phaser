@@ -327,8 +327,16 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const h: number = this.mContainer.height * this.mWorld.uiScaleNew;
     const parentY: number = this.mContainer.parentContainer.y;
-    const refreshHei: number = parentY - h + (540 * this.mDpr / 2);
-    this.mScroller.resize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    let refreshHei: number = 0;
+    const baseHei: number = 362 * this.mDpr;
+    if (this.mHeight > baseHei) {
+      // over a page
+      refreshHei = - this.mHeight + baseHei / 2;
+    } else {
+      refreshHei = -baseHei / 2;
+    }
+    refreshHei = parentY + (540 * this.mDpr / 2);
+    this.mScroller.resize(this.mScroller.width, refreshHei, -this.mHeight + baseHei+ 50 * this.mWorld.uiRatio, this.mHeight - baseHei - 50 * this.mWorld.uiRatio);
     // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScaleNew + (80 * this.mWorld.uiRatio / 2));
   }
 
