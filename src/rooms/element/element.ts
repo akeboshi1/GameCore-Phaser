@@ -374,7 +374,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (!this.mBubble) {
-            this.mBubble = new BubbleContainer(scene);
+            this.mBubble = new BubbleContainer(scene, this.roomService.world.scaleRatio);
         }
         this.mBubble.addBubble(text, setting);
         this.updateBubble();
@@ -636,8 +636,7 @@ export class Element extends BlockObject implements IElement {
         if (!position) {
             return;
         }
-        this.mBubble.x = position.x;
-        this.mBubble.y = position.y - 130;
+        this.mBubble.updatePos(position.x, position.y - 130);
     }
 
     protected onMoveStart() {

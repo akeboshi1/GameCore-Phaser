@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"add_btn.png": {
+		"add_btn": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,29 +20,29 @@
 				"h": 57
 			}
 		},
-		"coin.png": {
+		"coin": {
 			"frame": {
 				"x": 58,
 				"y": 1,
-				"w": 62,
-				"h": 63
+				"w": 59,
+				"h": 62
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 62,
-				"h": 63
+				"w": 59,
+				"h": 62
 			},
 			"sourceSize": {
-				"w": 62,
-				"h": 63
+				"w": 59,
+				"h": 62
 			}
 		},
-		"counter_icon.png": {
+		"counter_icon": {
 			"frame": {
-				"x": 122,
+				"x": 119,
 				"y": 1,
 				"w": 42,
 				"h": 47
@@ -60,9 +60,9 @@
 				"h": 47
 			}
 		},
-		"diamond.png": {
+		"diamond": {
 			"frame": {
-				"x": 166,
+				"x": 163,
 				"y": 1,
 				"w": 69,
 				"h": 57
@@ -80,7 +80,7 @@
 				"h": 57
 			}
 		},
-		"exp_bg.png": {
+		"exp_bg": {
 			"frame": {
 				"x": 1,
 				"y": 60,
@@ -100,9 +100,9 @@
 				"h": 14
 			}
 		},
-		"exp_progress.png": {
+		"exp_progress": {
 			"frame": {
-				"x": 122,
+				"x": 119,
 				"y": 60,
 				"w": 25,
 				"h": 11
@@ -120,9 +120,9 @@
 				"h": 11
 			}
 		},
-		"health_con.png": {
+		"health_con": {
 			"frame": {
-				"x": 149,
+				"x": 146,
 				"y": 60,
 				"w": 33,
 				"h": 43
@@ -140,9 +140,9 @@
 				"h": 43
 			}
 		},
-		"health_progress.png": {
+		"health_progress": {
 			"frame": {
-				"x": 184,
+				"x": 181,
 				"y": 60,
 				"w": 33,
 				"h": 17
@@ -160,7 +160,7 @@
 				"h": 17
 			}
 		},
-		"price_bg.png": {
+		"price_bg": {
 			"frame": {
 				"x": 1,
 				"y": 105,
@@ -180,7 +180,7 @@
 				"h": 54
 			}
 		},
-		"room_icon.png": {
+		"room_icon": {
 			"frame": {
 				"x": 1,
 				"y": 161,
@@ -200,7 +200,7 @@
 				"h": 34
 			}
 		},
-		"setting_icon.png": {
+		"setting_icon": {
 			"frame": {
 				"x": 50,
 				"y": 161,
@@ -220,7 +220,7 @@
 				"h": 42
 			}
 		},
-		"star_icon.png": {
+		"star_icon": {
 			"frame": {
 				"x": 92,
 				"y": 161,
@@ -240,9 +240,9 @@
 				"h": 40
 			}
 		},
-		"strength_bg.png": {
+		"strength_bg": {
 			"frame": {
-				"x": 237,
+				"x": 234,
 				"y": 1,
 				"w": 176,
 				"h": 39
@@ -260,9 +260,9 @@
 				"h": 39
 			}
 		},
-		"strength_icon.png": {
+		"strength_icon": {
 			"frame": {
-				"x": 237,
+				"x": 234,
 				"y": 42,
 				"w": 30,
 				"h": 39
@@ -280,9 +280,9 @@
 				"h": 39
 			}
 		},
-		"strength_progress.png": {
+		"strength_progress": {
 			"frame": {
-				"x": 269,
+				"x": 266,
 				"y": 42,
 				"w": 33,
 				"h": 17
@@ -304,10 +304,10 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 414,
+			"w": 411,
 			"h": 204
 		},
 		"scale": "1"

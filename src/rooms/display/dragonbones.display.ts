@@ -853,10 +853,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     set dragonBonesName(val: string) {
-        // if (this.mDragonbonesName !== val) {
-        this.mDragonbonesName = val;
-        this.buildDragbones();
-        // }
+        if (this.mDragonbonesName !== val) {
+            this.mDragonbonesName = val;
+            this.buildDragbones();
+        }
     }
 
     get dragonBonesName(): string {

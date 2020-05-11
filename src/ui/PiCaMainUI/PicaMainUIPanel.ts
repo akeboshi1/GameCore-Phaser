@@ -90,35 +90,35 @@ export class PicaMainUIPanel extends BasePanel {
     init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
-        this.mCoinValue = new ValueContainer(this.scene, this.key, "coin.png", this.dpr);
+        this.mCoinValue = new ValueContainer(this.scene, this.key, "coin", this.dpr);
         this.mCoinValue.y = 28 * this.dpr;
-        this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond.png", this.dpr);
+        this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond", this.dpr);
         this.mDiamondValue.y = 68 * this.dpr;
 
-        this.mSceneName = new SceneName(this.scene, this.key, "room_icon.png", "setting_icon.png", this.dpr);
+        this.mSceneName = new SceneName(this.scene, this.key, "room_icon", "setting_icon", this.dpr);
         this.mSceneName.setText("");
         this.mSceneName.x = 15 * this.dpr;
         this.mSceneName.y = 55 * this.dpr;
         const bound = this.mSceneName.getBounds();
         this.mSceneName.setSize(bound.width, bound.height);
         this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
-        this.mSceneType = new IconText(this.scene, this.key, "star_icon.png", this.dpr);
+        this.mSceneType = new IconText(this.scene, this.key, "star_icon", this.dpr);
         this.mSceneType.setText("");
         this.mSceneType.x = 15 * this.dpr;
         this.mSceneType.y = 80 * this.dpr;
         this.mSceneType.setColor("#FFFF00");
-        this.mCounter = new IconText(this.scene, this.key, "counter_icon.png", this.dpr);
+        this.mCounter = new IconText(this.scene, this.key, "counter_icon", this.dpr);
         this.mCounter.setText("1人");
         this.mCounter.x = 15 * this.dpr;
         this.mCounter.y = 105 * this.dpr;
         this.mCounter.setColor("#27f6ff");
         this.add([this.mCoinValue, this.mDiamondValue, this.mSceneName, this.mSceneType, this.mCounter]);
 
-        const frame = this.scene.textures.getFrame(this.key, "strength_progress.png");
-        this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon.png", this.dpr);
+        const frame = this.scene.textures.getFrame(this.key, "strength_progress");
+        this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon", this.dpr);
         this.mStrengthValue.x = 50 * this.dpr;
         this.mStrengthValue.y = 27 * this.dpr;
-        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress.png", {
+        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress", {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
             right: frame.width - 2 - 8 * this.dpr,
@@ -129,11 +129,11 @@ export class PicaMainUIPanel extends BasePanel {
         this.add(this.mStrengthValue);
         this.mStrengthValue.setValue(1000, 1000);
 
-        // frame = this.scene.textures.getFrame(this.key, "health_progress.png");
-        // const healthValue = new ProgressValue(this.scene, this.key, "health_con.png", this.dpr);
+        // frame = this.scene.textures.getFrame(this.key, "health_progress");
+        // const healthValue = new ProgressValue(this.scene, this.key, "health_con", this.dpr);
         // healthValue.x = 150 * this.dpr;
         // healthValue.y = 27 * this.dpr;
-        // const healthNinePatch = new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress.png", {
+        // const healthNinePatch = new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress", {
         //     left: 8 * this.dpr,
         //     top: 3 * this.dpr,
         //     right: frame.width - 2 - 8 * this.dpr,
@@ -169,7 +169,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
     protected init(key: string, leftIcon: string, dpr: number) {
         const bg = this.scene.make.image({
             key,
-            frame: "price_bg.png"
+            frame: "price_bg"
         }, false);
 
         const left = this.scene.make.image({
@@ -190,7 +190,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
 
         this.mAddBtn = this.scene.make.image({
             key,
-            frame: "add_btn.png"
+            frame: "add_btn"
         });
         this.setSize(bg.width, bg.height);
         left.x = -this.width * this.originX + 10 * dpr;
@@ -266,13 +266,13 @@ class ExpProgress extends Phaser.GameObjects.Container {
         super(scene);
 
         const width = world.getSize().width;
-        let frame = this.scene.textures.getFrame(key, "exp_bg.png");
+        let frame = this.scene.textures.getFrame(key, "exp_bg");
         this.setSize(width, frame.height);
         const progressW = this.width;
         const progressH = this.height;
         this.mProgressBar = new ProgressBar(scene, dpr);
         this.mProgressBar.setSize(this.width, this.height);
-        const bg = new NinePatch(this.scene, progressW / 2, progressH / 2, progressW, progressH, key, "exp_bg.png", {
+        const bg = new NinePatch(this.scene, progressW / 2, progressH / 2, progressW, progressH, key, "exp_bg", {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 8 * dpr,
@@ -280,8 +280,8 @@ class ExpProgress extends Phaser.GameObjects.Container {
         });
         this.mProgressBar.setBackground(bg);
 
-        frame = this.scene.textures.getFrame(key, "exp_progress.png");
-        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress.png", {
+        frame = this.scene.textures.getFrame(key, "exp_progress");
+        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress", {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 10 * dpr,
@@ -337,7 +337,7 @@ class ProgressValue extends ValueContainer {
     protected init(key: string, leftIcon: string, dpr: number) {
         const bg = this.scene.make.image({
             key,
-            frame: "strength_bg.png"
+            frame: "strength_bg"
         }, false);
         this.setSize(bg.width, bg.height);
 
@@ -363,7 +363,7 @@ class ProgressValue extends ValueContainer {
 
         this.mAddBtn = this.scene.make.image({
             key,
-            frame: "add_btn.png"
+            frame: "add_btn"
         });
         this.setSize(bg.width, bg.height);
         left.x = -this.width * this.originX + 10 * dpr;
