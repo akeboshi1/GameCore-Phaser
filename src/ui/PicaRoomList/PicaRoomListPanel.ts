@@ -310,6 +310,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   }
 
   protected refreshPos() {
+    this.mContainer.setSize(this.mScroller.width, 0);
     if (this.activity) {
       this.activity.setTexture(this.mKey, "activity_title.png");
       this.mContainer.add(this.activity);
@@ -317,22 +318,34 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     if (this.mPopularityRoom) {
       if (this.mPopularityRoom.showList) {
         this.mContainer.add(this.mPopularityRoom.showList);
-        if (this.mPopularityRoom.roomList) this.mContainer.add(this.mPopularityRoom.roomList);
+        if (this.mPopularityRoom.roomList) {
+          this.mContainer.add(this.mPopularityRoom.roomList);
+        }
       }
     }
     if (this.mPlayerRoom) {
       if (this.mPlayerRoom.showList) {
         this.mContainer.add(this.mPlayerRoom.showList);
-        if (this.mPlayerRoom.roomList) this.mContainer.add(this.mPlayerRoom.roomList);
+        if (this.mPlayerRoom.roomList) {
+          this.mContainer.add(this.mPlayerRoom.roomList);
+        }
       }
     }
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
-    const h: number = this.mContainer.height * this.mWorld.uiScale;
-    const parentY: number = this.mContainer.parentContainer.y;
-    const refreshHei: number = parentY + (540 * this.mDpr / 2);
+    const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
-    this.mScroller.resize(this.mScroller.width, refreshHei, -this.mHeight + baseHei + 50 * this.mWorld.uiRatio, this.mHeight - baseHei - 50 * this.mWorld.uiRatio);
-    // this.mScroller.setSize(this.mScroller.width, this.mHeight, this.mScroller.bounds[0], h - this.mHeight * this.mWorld.uiScale + (80 * this.mWorld.uiRatio / 2));
+    let topY: number = 310 * this.mDpr * zoom;
+    let bottomY: number = 0;
+    if (this.mHeight > baseHei) {
+      const count: number = Math.floor(this.mHeight / baseHei);
+      const tmpHei: number = this.mHeight - count * baseHei;
+      topY = topY; // tmpHei - 40 * this.mDpr * zoom;
+      bottomY = topY - tmpHei - (count - 0.5) * baseHei; // tmpHei + 10 * this.mDpr * zoom - (count - 1.5) * baseHei;
+    } else {
+      topY = topY;
+      bottomY = topY;
+    }
+    this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
   protected onEnterRoomHandler(room) {
@@ -399,6 +412,7 @@ class MyRoomDelegate extends RoomDelegate {
   }
 
   protected refreshPos() {
+    this.mContainer.setSize(this.mScroller.width, 0);
     if (this.activity) {
       this.activity.setTexture(this.mKey, "activity_title.png");
       this.mContainer.add(this.activity);
@@ -416,10 +430,20 @@ class MyRoomDelegate extends RoomDelegate {
       }
     }
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
-    const h: number = this.mContainer.height * this.mWorld.uiScale;
-    const parentY: number = this.mContainer.parentContainer.y;
-    const refreshHei: number = parentY - h + (500 * this.mDpr / 2);
-    this.mScroller.resize(this.mScroller.width, refreshHei, this.mScroller.bounds[0], refreshHei);
+    const zoom: number = this.mWorld.uiScale;
+    const baseHei: number = 362 * this.mDpr;
+    let topY: number = 310 * this.mDpr * zoom;
+    let bottomY: number = 0;
+    if (this.mHeight > baseHei) {
+      const count: number = Math.floor(this.mHeight / baseHei);
+      const tmpHei: number = this.mHeight - count * baseHei;
+      topY = topY;
+      bottomY = topY - tmpHei - (count - 0.5) * baseHei;
+    } else {
+      topY = topY;
+      bottomY = topY;
+    }
+    this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
   protected init() {
@@ -654,6 +678,7 @@ class PopularRoomZoon extends RoomZoon {
     this.mPad = pad ? pad : this.mPad;
     if (rooms.length > 0) {
       // this.mPad += this.mHeight;
+      // rooms.length
       for (let i = 0; i < rooms.length; i++) {
         const room = new PopularRoomItem(this.mScene, this.mKey, this.mDpr);
         room.setInfo(rooms[i]);
