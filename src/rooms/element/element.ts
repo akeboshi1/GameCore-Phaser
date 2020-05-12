@@ -29,7 +29,7 @@ export enum PlayerState {
     GREET01 = "greet01",
     SIT = "sit",
     LIE = "lit",
-    EMOTION01 = "emotion01"
+    EMOTION01 = "emotion01",
 }
 
 export enum Direction {
@@ -104,7 +104,7 @@ export interface MovePath {
 export enum InputEnable {
     Diasble,
     Enable,
-    Interactive
+    Interactive,
 }
 export class Element extends BlockObject implements IElement {
     get dir(): number {
@@ -222,10 +222,8 @@ export class Element extends BlockObject implements IElement {
             this.mDisplayInfo.avatarDir = val;
         }
         if (this.mDisplay && this.model) {
-            if (this.model.direction !== val) {
-                this.model.direction = val;
-                this.mDisplay.play(this.model.currentAnimation);
-            }
+            this.model.direction = val;
+            this.mDisplay.play(this.model.currentAnimation);
         }
     }
 
@@ -271,10 +269,12 @@ export class Element extends BlockObject implements IElement {
         //     Math.floor(moveData.destinationPoint3f.x),
         //     Math.floor(moveData.destinationPoint3f.y)
         // );
-        this.mMoveData.posPath = [{
-            x: moveData.destinationPoint3f.x,
-            y: moveData.destinationPoint3f.y
-        }];
+        this.mMoveData.posPath = [
+            {
+                x: moveData.destinationPoint3f.x,
+                y: moveData.destinationPoint3f.y,
+            },
+        ];
         this._doMove();
     }
 
@@ -324,7 +324,7 @@ export class Element extends BlockObject implements IElement {
                 onStartParams: angle,
                 onStart: (tween, target, params) => {
                     this.onCheckDirection(params);
-                }
+                },
             });
             lastPos = new Pos(point.x, point.y);
             index++;
@@ -549,7 +549,7 @@ export class Element extends BlockObject implements IElement {
             onUpdate: () => {
                 this.onMoving();
             },
-            onCompleteParams: [this]
+            onCompleteParams: [this],
         });
     }
 
@@ -670,7 +670,11 @@ export class Element extends BlockObject implements IElement {
 
     protected get offsetY(): number {
         if (this.mOffsetY === undefined) {
-            if (!this.mElementManager || !this.mElementManager.roomService || !this.mElementManager.roomService.roomSize) {
+            if (
+                !this.mElementManager ||
+                !this.mElementManager.roomService ||
+                !this.mElementManager.roomService.roomSize
+            ) {
                 return 0;
             }
             // this.mOffsetY = 0;
