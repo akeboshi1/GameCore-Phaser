@@ -22,14 +22,14 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
         const len = this.mBubbles.length;
         let bul: Bubble = null;
         let h = 0;
+        bubble.show(text, bubbleSetting);
         for (let i = len - 1; i >= 0; i--) {
             bul = this.mBubbles[i];
             h += bul.minHeight + 5 * this.mScale;
             bul.tweenTo(-h);
         }
-        bubble.show(text, bubbleSetting);
         this.add(bubble);
-        this.mArrow.y = bubble.minHeight + 4 * this.mScale;
+        this.mArrow.y = 4 * this.mScale;
     }
 
     updatePos(x: number, y: number) {

@@ -199,6 +199,9 @@ export class Sprite implements ISprite {
         if (!display || !animations) {
             return;
         }
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.destroy();
+        }
         if (display) {
             const anis = [];
             const objAnis = animations;
@@ -207,7 +210,7 @@ export class Sprite implements ISprite {
             }
             this.mDisplayInfo = new FramesModel({
                 animations: {
-                    defaultAnimationName: defAnimation || "",
+                    defaultAnimationName: defAnimation || this.mCurrentAnimationName || "",
                     display,
                     animationData: anis,
                 },

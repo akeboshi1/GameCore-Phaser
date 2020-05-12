@@ -207,7 +207,7 @@ export class Element extends BlockObject implements IElement {
             this.load(this.mModel.displayInfo);
         }
         if (model.display && model.animations) {
-            this.mModel.updateDisplay(model.display, model.animations, model.currentAnimationName);
+            this.mModel.updateDisplay(model.display, model.animations);
             this.load(this.mModel.displayInfo);
         }
         if (model.hasOwnProperty("point3f")) {
@@ -218,8 +218,7 @@ export class Element extends BlockObject implements IElement {
             this.play(model.currentAnimationName);
         }
         if (model.hasOwnProperty("direction")) {
-            this.model.direction = model.direction;
-            // this.setDirection(model.direction);
+            this.setDirection(model.direction);
         }
     }
 
@@ -663,7 +662,7 @@ export class Element extends BlockObject implements IElement {
         if (!position) {
             return;
         }
-        this.mBubble.updatePos(position.x, position.y - 130);
+        this.mBubble.updatePos(position.x, position.y - 80);
     }
 
     protected onMoveStart() {
