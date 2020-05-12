@@ -216,6 +216,7 @@ export class Element extends BlockObject implements IElement {
         }
         if (model.hasOwnProperty("currentAnimationName")) {
             this.play(model.currentAnimationName);
+            this.setInputEnable(this.mInputEnable);
         }
         if (model.hasOwnProperty("direction")) {
             this.setDirection(model.direction);

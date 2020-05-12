@@ -208,13 +208,17 @@ export class Sprite implements ISprite {
             for (const ani of objAnis) {
                 anis.push(new Animation(ani));
             }
+            defAnimation = defAnimation || this.mCurrentAnimationName || "";
             this.mDisplayInfo = new FramesModel({
                 animations: {
-                    defaultAnimationName: defAnimation || this.mCurrentAnimationName || "",
+                    defaultAnimationName: defAnimation,
                     display,
                     animationData: anis,
                 },
             });
+            if (defAnimation) {
+                this.currentAnimationName = defAnimation;
+            }
         }
     }
 
@@ -243,6 +247,9 @@ export class Sprite implements ISprite {
     }
 
     set currentAnimationName(animationName: string) {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.animationName = animationName;
+        }
         this.mCurrentAnimationName = animationName;
         this.setAnimationData(animationName, this.direction);
         // this.mCurrentAnimation = this.findAnimation(animationName, this.mDirection);
