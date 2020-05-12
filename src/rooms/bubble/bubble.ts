@@ -18,7 +18,7 @@ export class Bubble extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, scale: number) {
         super(scene);
         this.mScale = scale;
-        this.x = -60 * scale;
+        this.x = -40 * scale;
     }
 
     public show(text: string, bubble: op_client.IChat_Setting) {
@@ -28,7 +28,7 @@ export class Bubble extends Phaser.GameObjects.Container {
                 x: 0,
                 y: 4 * this.mScale,
                 fontFamily: Font.DEFULT_FONT,
-                fontSize: 12 * this.mScale,
+                fontSize: 14 * this.mScale,
                 color: "#000000",
                 origin: { x: 0, y: 0 },
                 wordWrap: { width: 300, useAdvancedWrap: true }
@@ -37,9 +37,9 @@ export class Bubble extends Phaser.GameObjects.Container {
         this.add(this.mChatContent);
 
         this.mMinHeight = this.mChatContent.height + 26;
-        // this.mMinHeight = this.mMinHeight < 54 ? 54 : this.mMinHeight;
+        this.mMinHeight = this.mMinHeight < 54 ? 54 : this.mMinHeight;
         this.mMinWidth = this.mChatContent.width + 40;
-        // this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
+        this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
 
         this.mBubbleBg = new DynamicNinepatch(this.scene, this);
         const res = Url.getOsdRes(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png");
