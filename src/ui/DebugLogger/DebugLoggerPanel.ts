@@ -161,7 +161,7 @@ export class DebugLogger extends BasePanel {
             device size: ${this.mWorld.getSize().width.toFixed(2)} ${this.mWorld.getSize().height.toFixed(2)}
             scene scale: ${this.mWorld.scaleRatio}
             devicePixel: ${this.mWorld.uiRatio}
-            ui scale: ${this.mWorld.uiScaleNew.toFixed(4)}`;
+            ui scale: ${this.mWorld.uiScale.toFixed(4)}`;
         // this.showErrTxt();
     }
 

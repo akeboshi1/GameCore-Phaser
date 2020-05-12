@@ -55,7 +55,7 @@ export class MarketPanel extends BasePanel {
   public resize(w: number, h: number) {
     // super.resize(w, h);
     const scale = this.scale;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const width = this.scene.cameras.main.width / scale;
     const height = this.scene.cameras.main.height / scale;
     const centerX = this.scene.cameras.main.centerX / scale;
@@ -113,7 +113,7 @@ export class MarketPanel extends BasePanel {
       bottom: h - 2 - 13 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
@@ -151,7 +151,7 @@ export class MarketPanel extends BasePanel {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    // const zoom = this.mWorld.uiScaleNew;
+    // const zoom = this.mWorld.uiScale;
     // for (let i = 0; i < commodities.length; i++) {
     //   const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr * zoom) + (72 * this.dpr * zoom), Math.floor(i % 3) * (68 * this.dpr * zoom) + 30 * this.dpr * zoom, this.dpr, zoom);
     //   item.setProp(commodities[i]);
@@ -190,7 +190,7 @@ export class MarketPanel extends BasePanel {
     if (this.mInitialized) return;
     const w = this.scene.scale.width / this.scale;
     const h = this.scene.scale.height / this.scale;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     this.mBackgroundColor = this.scene.make.graphics(undefined, false);
     this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     // this.mBackgroundColor.fillStyle(0x6f75ff);
@@ -232,7 +232,7 @@ export class MarketPanel extends BasePanel {
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
     this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScaleNew);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScale);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({

@@ -28,6 +28,7 @@ export class SpawnPoint implements ISprite {
     pos: Pos;
     bindID: number;
     sn: string;
+    attrs: op_def.IStrPair[];
 
     constructor() {
         this.id = 100;
@@ -64,6 +65,14 @@ export class SpawnPoint implements ISprite {
     }
 
     toSprite(): op_client.ISprite {
+        throw new Error("Method not implemented.");
+    }
+
+    updateAvatar(avatar: op_gameconfig.IAvatar) {
+        throw new Error("Method not implemented.");
+    }
+
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string) {
         throw new Error("Method not implemented.");
     }
 

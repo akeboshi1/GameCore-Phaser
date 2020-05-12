@@ -41,6 +41,12 @@ interface IDisplayRef {
     displayModel?: FramesModel | DragonbonesModel;
 }
 
+interface IAsset {
+    type: string;
+    key: string;
+    source: string;
+}
+
 export class ElementStorage implements IElementStorage {
     private mModels = new Map<number, FramesModel | DragonbonesModel>();
     private mElementRef = new Map<number, IDisplayRef>();
@@ -50,7 +56,7 @@ export class ElementStorage implements IElementStorage {
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
     private _scenerys: IScenery[];
-    private _assets: AssetsNode[];
+    private _assets: IAsset[];
 
     private event: Phaser.Events.EventEmitter;
 
@@ -151,7 +157,22 @@ export class ElementStorage implements IElementStorage {
         }
     }
 
-    public updateAssets(assets: AssetsNode) {
+    public updateAssets(assetsNode: AssetsNode) {
+        const assets = assetsNode.getAssetList();
+        this._assets = [];
+        for (const asset of assets) {
+            const media = asset.media;
+            if (media) {
+                const fileType = media.match(/\.([a-zA-Z0-9]+)($|\?)/);
+                if (fileType && fileType[1]) {
+                    this._assets.push({
+                        type: fileType[1],
+                        key: asset.key,
+                        source: media
+                    });
+                }
+            }
+        }
     }
 
     public setSceneConfig(config) {
@@ -246,5 +267,6 @@ export class ElementStorage implements IElementStorage {
         this.mElementRef.clear();
         this.terrainPalette.clear();
         this.mossPalette.clear();
+        this._assets = undefined;
     }
 }

@@ -53,6 +53,8 @@ export interface IElement {
 
     setModel(model: ISprite);
 
+    updateModel(model: op_client.ISprite);
+
     play(animationName: string): void;
 
     getDisplay(): DisplayObject;
@@ -193,6 +195,31 @@ export class Element extends BlockObject implements IElement {
         if (frameModel && frameModel.shops) {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
+        }
+    }
+
+    public updateModel(model: op_client.ISprite) {
+        if (this.mModel.id !== model.id) {
+            return;
+        }
+        if (model.hasOwnProperty("avatar")) {
+            this.mModel.updateAvatar(model.avatar);
+            this.load(this.mModel.displayInfo);
+        }
+        if (model.display && model.animations) {
+            this.mModel.updateDisplay(model.display, model.animations, model.currentAnimationName);
+            this.load(this.mModel.displayInfo);
+        }
+        if (model.hasOwnProperty("point3f")) {
+            const pos = model.point3f;
+            this.setPosition(new Pos(pos.x, pos.y, pos.z));
+        }
+        if (model.hasOwnProperty("currentAnimationName")) {
+            this.play(model.currentAnimationName);
+        }
+        if (model.hasOwnProperty("direction")) {
+            this.model.direction = model.direction;
+            // this.setDirection(model.direction);
         }
     }
 
@@ -374,7 +401,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (!this.mBubble) {
-            this.mBubble = new BubbleContainer(scene);
+            this.mBubble = new BubbleContainer(scene, this.roomService.world.scaleRatio);
         }
         this.mBubble.addBubble(text, setting);
         this.updateBubble();
@@ -636,8 +663,7 @@ export class Element extends BlockObject implements IElement {
         if (!position) {
             return;
         }
-        this.mBubble.x = position.x;
-        this.mBubble.y = position.y - 130;
+        this.mBubble.updatePos(position.x, position.y - 130);
     }
 
     protected onMoveStart() {

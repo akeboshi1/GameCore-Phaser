@@ -79,10 +79,10 @@ export class LoadingScene extends BasicScene {
     });
     if (this.textures.exists("loading_bg")) {
       this.bg = this.add.image(width / 2, height / 2, "loading_bg");
-      this.bg.scale = this.mWorld.uiScaleNew;
+      this.bg.scale = this.mWorld.uiScale;
     }
     this.lo = this.add.sprite(0, 0, "loading");
-    this.lo.setScale(this.mWorld.uiScaleNew);
+    this.lo.setScale(this.mWorld.uiScale);
     this.scale.on("resize", this.checkSize, this);
     this.lo.play("loading_anmis");
 

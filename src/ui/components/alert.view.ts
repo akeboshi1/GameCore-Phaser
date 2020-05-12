@@ -37,7 +37,7 @@ export class AlertView extends BasePanel {
     }
 
     protected init() {
-        const zoom = this.mWorld.uiScaleNew || 1;
+        const zoom = this.mWorld.uiScale || 1;
         const bg = this.scene.make.image({
             key: this.key,
             frame: "bg.png"

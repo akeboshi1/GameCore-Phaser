@@ -251,18 +251,24 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onSync(packet: PBpacket) {
-        const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
         let element: Element = null;
         const sprites = content.sprites;
+        const command = content.command;
         for (const sprite of sprites) {
             element = this.get(sprite.id);
             if (element) {
-                const sp = new Sprite(sprite, content.nodeType);
-                element.model = sp;
-                this.addMap(sp);
+                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
+                    element.model = new Sprite(sprite);
+                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
+                    element.updateModel(sprite);
+                }
+                // const sp = new Sprite(sprite, content.nodeType);
+                // element.model = sp;
+                // this.addMap(sp);
             }
         }
     }

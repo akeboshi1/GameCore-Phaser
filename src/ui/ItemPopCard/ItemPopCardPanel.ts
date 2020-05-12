@@ -49,7 +49,7 @@ export class ItemPopCardPanel extends BasePanel {
 
   resize(w: number, h: number) {
     // const scale = this.scene.cameras.main.height / 1920;
-    const zoom = this.mWorld.uiScaleNew;
+    const zoom = this.mWorld.uiScale;
     const width = this.scene.cameras.main.width / zoom;
     const height = this.scene.cameras.main.height / zoom;
     const centerX = this.scene.cameras.main.centerX / zoom;

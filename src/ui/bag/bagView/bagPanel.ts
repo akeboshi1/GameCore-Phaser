@@ -49,7 +49,6 @@ export class BagPanel extends BasePanel {
                 this.y = size.height - (this.height / 2) * this.mWorld.uiScale >> 1;
             }
         }
-        this.scale = this.uiScale;
     }
 
     public setDataList() {
@@ -85,7 +84,6 @@ export class BagPanel extends BasePanel {
     }
 
     public show(param?: any) {
-        this.scale = this.uiScale;
         super.show(param);
         if (this.mInitialized) {
             this.mPreBtn.play("slipBtn");

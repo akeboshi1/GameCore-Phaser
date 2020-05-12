@@ -24,6 +24,7 @@ export interface ISprite {
     readonly currentWalkableArea: number[][];
     readonly currentCollisionPoint: Phaser.Geom.Point;
     readonly hasInteractive: boolean;
+    readonly attrs: op_def.IStrPair[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -33,6 +34,8 @@ export interface ISprite {
     isMoss?: boolean;
 
     newID();
+    updateAvatar(avatar: op_gameconfig.IAvatar);
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string);
     setPosition(x: number, y: number);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
@@ -81,10 +84,12 @@ export class Sprite implements ISprite {
             const point = obj.point3f;
             this.mPos = new Pos(point.x, point.y, point.z);
         }
+        this.mAttrs = obj.attrs;
         if (obj.avatar) {
-            this.mAvatar = { id: obj.avatar.id };
-            this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
-            this.mAttrs = obj.attrs;
+            // this.mAvatar = { id: obj.avatar.id };
+            // this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
+            // this.mDisplayInfo = new DragonbonesModel(this);
+            this.updateAvatar(obj.avatar);
             // if (attrs && attrs.length > 0) {
             //     for (const att of attrs) {
             //         if (att.key === "minecart") {
@@ -92,22 +97,22 @@ export class Sprite implements ISprite {
             //         }
             //     }
             // }
-            this.mDisplayInfo = new DragonbonesModel(this);
         }
         if (obj.display) {
-            const anis = [];
-            const objAnis = obj.animations;
-            for (const ani of objAnis) {
-                anis.push(new Animation(ani));
-            }
-            this.mDisplayInfo = new FramesModel({
-                id: obj.id,
-                animations: {
-                    defaultAnimationName: obj.currentAnimationName,
-                    display: obj.display,
-                    animationData: anis,
-                },
-            });
+            // const anis = [];
+            // const objAnis = obj.animations;
+            // for (const ani of objAnis) {
+            //     anis.push(new Animation(ani));
+            // }
+            // this.mDisplayInfo = new FramesModel({
+            //     id: obj.id,
+            //     animations: {
+            //         defaultAnimationName: obj.currentAnimationName,
+            //         display: obj.display,
+            //         animationData: anis,
+            //     },
+            // });
+            this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
         if (obj.sn) {
             this.mSn = obj.sn;
@@ -179,6 +184,39 @@ export class Sprite implements ISprite {
         }
 
         return this;
+    }
+
+    public updateAvatar(avatar: op_gameconfig.IAvatar) {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.destroy();
+        }
+        this.mAvatar = { id: avatar.id };
+        this.mAvatar = Object.assign(this.mAvatar, avatar);
+        this.mDisplayInfo = new DragonbonesModel(this);
+    }
+
+    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string) {
+        if (!display || !animations) {
+            return;
+        }
+        if (display) {
+            const anis = [];
+            const objAnis = animations;
+            for (const ani of objAnis) {
+                anis.push(new Animation(ani));
+            }
+            this.mDisplayInfo = new FramesModel({
+                animations: {
+                    defaultAnimationName: defAnimation || "",
+                    display,
+                    animationData: anis,
+                },
+            });
+        }
+    }
+
+    public updateAttr(attrs: op_def.IStrPair[]) {
+        this.mAttrs = attrs;
     }
 
     get id(): number {
