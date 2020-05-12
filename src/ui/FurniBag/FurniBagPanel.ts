@@ -380,7 +380,7 @@ export class FurniBagPanel extends BasePanel {
       x: 0,
       y: 0,
       table: {
-        width: this.scene.cameras.main.width,
+        width: this.scene.cameras.main.width - 20 * this.dpr * zoom,
         height: 250 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
