@@ -27,6 +27,7 @@ import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
+import { NpcDialogueMediator } from "./NpcDialogue/NpcDialogueMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -134,6 +135,7 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
+            //  this.mMedMap.set(NpcDialogueMediator.name, new NpcDialogueMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
             // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));

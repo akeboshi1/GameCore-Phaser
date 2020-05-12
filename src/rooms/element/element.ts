@@ -315,7 +315,10 @@ export class Element extends BlockObject implements IElement {
         this.startMove();
         if (!pos.depth) pos.depth = this.getDepth();
         this.setPosition(pos);
-        this.onCheckDirection(angel);
+        const direction = this.calculateDirectionByAngle(angel);
+        if (direction !== -1 && direction !== this.model.direction) {
+            this.setDirection(direction);
+        }
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
@@ -507,6 +510,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mShopEntity) {
             this.mShopEntity.destroy();
             this.mShopEntity = null;
+        }
+        if (this.mAi) {
+            this.mAi.destroy();
+            this.mAi = null;
         }
         // if (this.concomitants) {
         //     for (const ele of this.concomitants) {
@@ -713,14 +720,23 @@ export class Element extends BlockObject implements IElement {
         if (typeof params !== "number") {
             return;
         }
-        if (params > 90) {
-            this.setDirection(3);
-        } else if (params >= 0) {
-            this.setDirection(5);
-        } else if (params >= -90) {
-            this.setDirection(7);
-        } else {
-            this.setDirection(1);
+        const direction = this.calculateDirectionByAngle(params);
+        if (direction !== -1) {
+            this.setDirection(direction);
         }
+    }
+
+    protected calculateDirectionByAngle(angle: any) {
+        let direction = -1;
+        if (angle > 90) {
+            direction = 3;
+        } else if (angle >= 0) {
+            direction = 5;
+        } else if (angle >= -90) {
+            direction = 7;
+        } else {
+            direction = 1;
+        }
+        return direction;
     }
 }

@@ -12,10 +12,11 @@ export class FrameManager implements IDispose {
 
     public remove(caller: any, method: Function) {
         let removeid: number = -1;
-        for (const item of this.handlers) {
-            removeid++;
+        for (let i = 0; i < this.handlers.length; i++) {
+            const item = this.handlers[i];
             if (item.caller === caller && item.method === method) {
-                return;
+                removeid = i;
+                break;
             }
         }
         if (removeid !== -1) {
@@ -39,10 +40,11 @@ export class FrameManager implements IDispose {
 
     public hasRegistered(caller: any, method: Function) {
         let removeid: number = -1;
-        for (const item of this.handlers) {
-            removeid++;
+        for (let i = 0; i < this.handlers.length; i++) {
+            const item = this.handlers[i];
             if (item.caller === caller && item.method === method) {
-                return;
+                removeid = i;
+                break;
             }
         }
         return (removeid !== -1);

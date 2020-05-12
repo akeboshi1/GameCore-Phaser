@@ -29,7 +29,7 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width, height);
-        this.mPropGrid.refreshPos(40 * this.dpr * zoom, 0);
+        this.mPropGrid.refreshPos(30 * this.dpr * zoom, 0);
         this.setSize(width, height);
     }
 
@@ -69,12 +69,13 @@ export class MineSettlePanel extends BasePanel {
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
-        const capW = (propFrame.width + 20 * this.dpr);
-        const capH = (propFrame.height + 25 * this.dpr);
+        const capW = (propFrame.width + 20 * this.dpr * zoom);
+        const capH = (propFrame.height + 25 * this.dpr * zoom);
+        const width = this.scene.cameras.main.width;
+        const height = this.scene.cameras.main.height;
         const config: GridTableConfig = {
             x: 0,
             y: 0,
-          //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
                 width: 302 * this.dpr * zoom,
                 height: 180 * this.dpr * zoom,
@@ -82,9 +83,9 @@ export class MineSettlePanel extends BasePanel {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-               // mask: false
             },
-            clamplChildOY:false,
+          //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -119,7 +120,6 @@ export class MineSettlePanel extends BasePanel {
         this.add([this.blackGraphic, bg, titleimage, tilteName, this.confirmBtn, this.mPropGrid.table]);
         this.resize(0, 0);
         super.init();
-        // this.setMineSettlePacket(this.testData());
     }
 
     setMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {

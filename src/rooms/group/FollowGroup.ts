@@ -14,6 +14,7 @@ export class FollowGroup implements IGroup {
     }
 
     public addChild(child: any) {
+        this.removeChild(child);
         this.childs.push(child);
     }
 

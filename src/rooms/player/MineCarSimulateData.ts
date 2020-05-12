@@ -52,7 +52,7 @@ export class MineCarSimulateData {
         let group = groupMgr.getGroup(owner, GroupType.Follow);
         if (!group) group = room.groupManager.createGroup<FollowGroup>(owner, GroupType.Follow);
         group.addChild(ele);
-        ele.ai.addAction(new FollowAction(group));
+        ele.ai.addAction(new FollowAction(group),true);
     }
 
     public static getCarSprite(sprite: op_client.ISprite) {

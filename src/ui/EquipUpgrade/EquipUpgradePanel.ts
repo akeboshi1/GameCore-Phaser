@@ -78,14 +78,16 @@ export default class EquipUpgradePanel extends BasePanel {
         this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
         this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
+            left: 40,
             top: 40,
-            bottom: 40
+            bottom: 40,
+            right: 40,
         });
         const posY = -this.bg.height * 0.5;
         this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "titlebg" });
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.tilteName = this.scene.make.text({ x: 0, y: posY, text: "装备", style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
-        this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 8, y: posY + this.dpr * 8, key: this.commonkey, frame: "close" });
+        this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: this.commonkey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
