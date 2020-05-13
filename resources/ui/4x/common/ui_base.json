@@ -160,6 +160,26 @@
 				"h": 225
 			}
 		},
+		"menu_bg_l": {
+			"frame": {
+				"x": 1737,
+				"y": 1,
+				"w": 13,
+				"h": 689
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 13,
+				"h": 689
+			},
+			"sourceSize": {
+				"w": 13,
+				"h": 689
+			}
+		},
 		"name_bg": {
 			"frame": {
 				"x": 1,
@@ -362,8 +382,8 @@
 		},
 		"yellow_btn_over": {
 			"frame": {
-				"x": 1585,
-				"y": 406,
+				"x": 1279,
+				"y": 692,
 				"w": 151,
 				"h": 148
 			},
@@ -387,7 +407,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1737,
+			"w": 1751,
 			"h": 1584
 		},
 		"scale": "1"
