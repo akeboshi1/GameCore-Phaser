@@ -27,7 +27,6 @@ export class BasePanel extends Panel {
 
     protected init() {
         super.init();
-        this.setInteractive();
     }
 
     protected addResources(key: string, resource: any) {

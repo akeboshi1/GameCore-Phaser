@@ -54,6 +54,7 @@ export class FurniBagPanel extends BasePanel {
     super(scene, world);
     this.mSceneType = sceneType;
     this.scale = 1;
+    this.setInteractive();
   }
 
   resize(w: number, h: number) {
@@ -135,7 +136,7 @@ export class FurniBagPanel extends BasePanel {
     }
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
     this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 10 * this.dpr * zoom);
     this.updateCategeoriesLoc(false);
   }
 
@@ -380,7 +381,7 @@ export class FurniBagPanel extends BasePanel {
       x: 0,
       y: 0,
       table: {
-        width: this.scene.cameras.main.width - 20 * this.dpr * zoom,
+        width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
         height: 250 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
@@ -389,7 +390,7 @@ export class FurniBagPanel extends BasePanel {
       },
       scrollMode: 1,
       clamplChildOY: false,
-      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+      background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
