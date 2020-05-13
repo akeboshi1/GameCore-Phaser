@@ -334,7 +334,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
-    let topY: number = 310 * this.mDpr * zoom;
+    let topY: number = 310 * this.mDpr * zoom + this.activity.height;
     let bottomY: number = 0;
     if (this.mHeight > baseHei) {
       const count: number = Math.floor(this.mHeight / baseHei);
@@ -432,7 +432,7 @@ class MyRoomDelegate extends RoomDelegate {
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
-    let topY: number = 310 * this.mDpr * zoom;
+    let topY: number = 310 * this.mDpr * zoom + this.activity.height;
     let bottomY: number = 0;
     if (this.mHeight > baseHei) {
       const count: number = Math.floor(this.mHeight / baseHei);
