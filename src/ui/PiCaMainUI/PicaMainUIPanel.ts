@@ -15,6 +15,7 @@ export class PicaMainUIPanel extends BasePanel {
     private mExpProgress: ExpProgress;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
+        this.setInteractive();
     }
 
     show(param?: any) {
