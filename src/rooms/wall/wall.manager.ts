@@ -15,6 +15,14 @@ export class WallManager extends PacketHandler {
         }
     }
 
+    destroy() {
+        if (this.mRoom.connection) {
+            this.mRoom.connection.removePacketListener(this);
+        }
+        this.mWalls.forEach((wall: Wall) => wall.destroy());
+        this.mWalls.clear();
+    }
+
     protected _add(x: number, y: number, dir: Direction) {
         const pos = this.mRoom.transformTo90(new Pos(x, y));
         const wall = new Wall(this.mRoom, x * 1000000 + y * 1000, pos, dir);
