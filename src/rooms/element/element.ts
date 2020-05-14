@@ -80,6 +80,8 @@ export interface IElement {
     turn();
 
     setAlpha(val: number);
+
+    setQueue(queue: op_client.IChangeAnimation[]);
 }
 
 export interface MoveData {
@@ -103,11 +105,18 @@ export interface MovePath {
     onComplete?: Function;
 }
 
+export interface AnimationQueue {
+    name: string;
+    playTimes?: number;
+    complete?: Function;
+}
+
 export enum InputEnable {
     Diasble,
     Enable,
     Interactive,
 }
+
 export class Element extends BlockObject implements IElement {
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
@@ -158,6 +167,7 @@ export class Element extends BlockObject implements IElement {
     //  protected concomitants: Element[];
     protected mAi: AI;
     protected mOffsetY: number = undefined;
+    protected mQueueAnimations: AnimationQueue[];
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -176,6 +186,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         // this.mDisplayInfo = this.mModel.displayInfo;
+        this.mQueueAnimations = undefined;
         this.load(this.mModel.displayInfo);
         if (!this.mDisplay) {
             return;
@@ -217,6 +228,7 @@ export class Element extends BlockObject implements IElement {
         if (model.hasOwnProperty("currentAnimationName")) {
             this.play(model.currentAnimationName);
             this.setInputEnable(this.mInputEnable);
+            this.mModel.setAnimationQueue(undefined);
         }
         if (model.hasOwnProperty("direction")) {
             this.setDirection(model.direction);
@@ -244,6 +256,32 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    public setQueue(animations: op_client.IChangeAnimation[]) {
+        if (!this.mModel) {
+            return;
+        }
+        const queue = [];
+        for (const animation of animations) {
+            const aq: AnimationQueue = {
+                name: animation.animationName,
+                playTimes: animation.times,
+            };
+            if (animation.times > 0) {
+                aq.complete = () => {
+                    const anis = this.model.animationQueue;
+                    anis.shift();
+                    const aniName = anis.length > 0 ? anis[0].name : "idle";
+                    this.play(aniName);
+                };
+            }
+            queue.push(aq);
+        }
+        this.mModel.setAnimationQueue(queue);
+        if (queue.length > 0) {
+            this.play(animations[0].animationName);
+        }
+    }
+
     public setDirection(val: number) {
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
@@ -268,8 +306,9 @@ export class Element extends BlockObject implements IElement {
         if (!val) {
             val = PlayerState.IDLE;
         }
-        this.mModel.currentAnimationName = this.mCurState;
-        this.mDisplay.play(this.mModel.currentAnimation);
+        this.play(this.mCurState);
+        // this.mModel.currentAnimationName = this.mCurState;
+        // this.mDisplay.play(this.mModel.currentAnimation);
     }
 
     public getState(): string {

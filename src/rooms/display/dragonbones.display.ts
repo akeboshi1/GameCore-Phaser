@@ -129,7 +129,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.mOriginPoint = new Phaser.Geom.Point(1, 1);
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
-        if (this.scene.cache.obj.has(this.dragonBonesName)) { }
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -139,6 +138,12 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public play(val: AnimationData) {
         this.mActionName = val;
         if (this.mArmatureDisplay) {
+            if (val.playingQueue) {
+                if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
+                    this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+                }
+                this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            }
             this.mArmatureDisplay.animation.play(val.animationName);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
         }
@@ -849,6 +854,26 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (this.mFadeTween) {
             this.mFadeTween.stop();
             this.mFadeTween.remove();
+        }
+    }
+
+    private onArmatureLoopComplete(event: dragonBones.EventObject) {
+        if (!this.mArmatureDisplay || !this.mActionName) {
+            return;
+        }
+        const queue = this.mActionName.playingQueue;
+        if (queue.playedTimes === undefined) {
+            queue.playedTimes = 1;
+        } else {
+            queue.playedTimes++;
+        }
+        if (queue.playedTimes >= queue.playTimes) {
+            this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            // this.emit("animationComplete");
+            if (queue.complete) {
+                queue.complete.call(this);
+                delete queue.complete;
+            }
         }
     }
 

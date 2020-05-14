@@ -66,8 +66,13 @@ export class FramesDisplay extends DisplayObject {
         }
         if (sprite) {
             if (sprite instanceof Phaser.GameObjects.Sprite) {
+                sprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
                 if (ani.frameName.length > 1) {
-                    sprite.play(`${data.gene}_${animation.animationName}`);
+                    sprite.play(`${data.gene}_${animation.animationName}`,);
+                    // if (animation.playTimes !== undefined) {
+                    //     sprite.anims.setRepeat(animation.playTimes);
+                    sprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+                    // }
                 } else {
                     sprite.anims.stop();
                     sprite.setTexture(data.gene, ani.frameName[0]);
@@ -266,6 +271,12 @@ export class FramesDisplay extends DisplayObject {
 
         // this.mSprites.set(field, sprite);
         this.emit("initialized", this);
+    }
+
+    private onAnimationRepeatHander() {
+        // if () {
+
+        // }
     }
 
     get spriteWidth(): number {

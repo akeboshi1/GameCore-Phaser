@@ -246,11 +246,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const anis = content.changeAnimation;
+        const ids = content.ids;
         let terrain: Terrain = null;
-        for (const ani of anis) {
-            terrain = this.get(ani.id);
+        for (const id of ids) {
+            terrain = this.get(id);
             if (terrain) {
-                terrain.play(ani.animationName);
+                // terrain.play(ani.animationName);
             }
         }
     }
