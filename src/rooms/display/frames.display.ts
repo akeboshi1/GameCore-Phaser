@@ -71,7 +71,9 @@ export class FramesDisplay extends DisplayObject {
                     sprite.play(`${data.gene}_${animation.animationName}`,);
                     // if (animation.playTimes !== undefined) {
                     //     sprite.anims.setRepeat(animation.playTimes);
-                    sprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+                    if (animation.playingQueue && animation.playingQueue.complete) {
+                        sprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+                    }
                     // }
                 } else {
                     sprite.anims.stop();

@@ -138,10 +138,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public play(val: AnimationData) {
         this.mActionName = val;
         if (this.mArmatureDisplay) {
-            if (val.playingQueue) {
-                if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
-                    this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
-                }
+            if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
+                this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            }
+            if (val.playingQueue && val.playingQueue.complete) {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
             this.mArmatureDisplay.animation.play(val.animationName);

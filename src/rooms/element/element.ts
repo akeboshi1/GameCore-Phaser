@@ -270,7 +270,7 @@ export class Element extends BlockObject implements IElement {
                 aq.complete = () => {
                     const anis = this.model.animationQueue;
                     anis.shift();
-                    const aniName = anis.length > 0 ? anis[0].name : "idle";
+                    const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
                     this.play(aniName);
                 };
             }
