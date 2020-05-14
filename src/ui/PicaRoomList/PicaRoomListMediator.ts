@@ -47,11 +47,15 @@ export class PicaRoomListMediator extends BaseMediator {
     return this.mView;
   }
 
-  private onCloseHandler() {
-    if (this.mView) {
-      this.mView.destroy();
-      this.mView = undefined;
+  destroy() {
+    if (this.roomList) {
+      this.roomList.destroy();
     }
+    super.destroy();
+  }
+
+  private onCloseHandler() {
+    this.destroy();
   }
 
   private updateRoomListHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
@@ -91,6 +95,6 @@ export class PicaRoomListMediator extends BaseMediator {
       return;
     }
     this.roomList.sendEnterRoom(roomID, passworld);
-    this.onCloseHandler();
+    // this.onCloseHandler();
   }
 }
