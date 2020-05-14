@@ -81,7 +81,7 @@ export class Launcher {
         screenHeight: this.minHeight,
         baseWidth: this.maxWidth,
         baseHeight: this.maxHeight,
-        ui_scale: 1,
+        ui_scale: undefined,
         closeGame: null,
         platform: "pc",
     };

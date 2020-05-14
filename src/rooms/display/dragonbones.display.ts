@@ -129,7 +129,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.mOriginPoint = new Phaser.Geom.Point(1, 1);
         if (!this.mDisplayInfo) return;
         this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
-        if (this.scene.cache.obj.has(this.dragonBonesName)) { }
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -139,6 +138,12 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public play(val: AnimationData) {
         this.mActionName = val;
         if (this.mArmatureDisplay) {
+            if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
+                this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            }
+            if (val.playingQueue && val.playingQueue.complete) {
+                this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            }
             this.mArmatureDisplay.animation.play(val.animationName);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
         }
@@ -815,11 +820,15 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     const frameName: string = "test resources/" + tmpKey;
                     const part: string = obj.slot.replace("$", obj.dir.toString());
                     if (part === slotKey) {
+                        const texture = this.scene.textures.get(partName);
+                        if (this.mAntial) {
+                            // 用于设置边缘抗锯齿
+                            texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                        }
                         if (dragonBonesTexture.frames[frameName]) {
                             this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
                             break;
                         } else {
-                            const texture = this.scene.textures.get(partName);
                             this.mDragonBonesRenderTexture.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);
                             break;
                         }
@@ -829,6 +838,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             } else {
                 const drawTextureKey = loadArr[1] + "_png";
                 const drawTexture = this.scene.game.textures.get(drawTextureKey);
+                if (this.mAntial) {
+                    // 用于设置边缘抗锯齿
+                    drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                }
                 this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
             }
         }
@@ -852,11 +865,31 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         }
     }
 
+    private onArmatureLoopComplete(event: dragonBones.EventObject) {
+        if (!this.mArmatureDisplay || !this.mActionName) {
+            return;
+        }
+        const queue = this.mActionName.playingQueue;
+        if (queue.playedTimes === undefined) {
+            queue.playedTimes = 1;
+        } else {
+            queue.playedTimes++;
+        }
+        if (queue.playedTimes >= queue.playTimes) {
+            this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            // this.emit("animationComplete");
+            if (queue.complete) {
+                queue.complete.call(this);
+                delete queue.complete;
+            }
+        }
+    }
+
     set dragonBonesName(val: string) {
         // if (this.mDragonbonesName !== val) {
-            // TODO 暴露一个换装接口
-            this.mDragonbonesName = val;
-            this.buildDragbones();
+        // TODO 暴露一个换装接口
+        this.mDragonbonesName = val;
+        this.buildDragbones();
         // }
     }
 

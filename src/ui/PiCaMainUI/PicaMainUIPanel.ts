@@ -78,6 +78,9 @@ export class PicaMainUIPanel extends BasePanel {
         }
         if (param.hasOwnProperty("name")) {
             this.mSceneName.setText(param.name);
+            const bound = this.mSceneName.getBounds();
+            this.mSceneName.setSize(bound.width, bound.height);
+            this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, this.mSceneName.height / 2, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
         }
         if (param.hasOwnProperty("ownerName")) {
             this.mSceneType.setText(param.ownerName);
@@ -100,9 +103,6 @@ export class PicaMainUIPanel extends BasePanel {
         this.mSceneName.setText("");
         this.mSceneName.x = 15 * this.dpr;
         this.mSceneName.y = 55 * this.dpr;
-        const bound = this.mSceneName.getBounds();
-        this.mSceneName.setSize(bound.width, bound.height);
-        this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(-this.mSceneName.width / 2, -this.mSceneName.height / 2, this.mSceneName.width * 2, this.mSceneName.height * 2), Phaser.Geom.Rectangle.Contains);
         this.mSceneType = new IconText(this.scene, this.key, "star_icon", this.dpr);
         this.mSceneType.setText("");
         this.mSceneType.x = 15 * this.dpr;

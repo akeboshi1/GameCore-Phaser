@@ -315,12 +315,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
-        const anis = content.changeAnimation;
-        let ele = null;
-        for (const ani of anis) {
-            ele = this.get(ani.id);
+        let ele: IElement = null;
+        const ids = content.ids;
+        for (const id of ids) {
+            ele = this.get(id);
             if (ele) {
-                ele.play(ani.animationName);
+                ele.setQueue(content.changeAnimation);
             }
         }
     }
