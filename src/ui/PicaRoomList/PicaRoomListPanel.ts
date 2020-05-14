@@ -157,6 +157,7 @@ export class PicaRoomListPanel extends BasePanel {
       value: this.y,
       valuechangeCallback: (newValue) => {
         this.mRoomContainer.y = newValue - this.y - h / 2;
+        Logger.getInstance().log(this.mRoomContainer.y + "," + this.y);
       },
       cellupCallBack: (gameobject: RoomItem) => {
         gameobject.onEnterRoomHandler();
@@ -334,13 +335,12 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
-    let topY: number = 310 * this.mDpr * zoom + this.activity.height;
+    let topY: number = this.mContainer.parentContainer.y;// 310 * this.mDpr * zoom + this.activity.height;
+    Logger.getInstance().log("cony:" + this.mContainer.parentContainer.y);
     let bottomY: number = 0;
     if (this.mHeight > baseHei) {
-      const count: number = Math.floor(this.mHeight / baseHei);
-      const tmpHei: number = this.mHeight - count * baseHei;
       topY = topY; // tmpHei - 40 * this.mDpr * zoom;
-      bottomY = topY - tmpHei - (count - 0.5) * baseHei; // tmpHei + 10 * this.mDpr * zoom - (count - 1.5) * baseHei;
+      bottomY = topY - this.mHeight; // - tmpHei - (count - 0.5) * baseHei; // tmpHei + 10 * this.mDpr * zoom - (count - 1.5) * baseHei;
     } else {
       topY = topY;
       bottomY = topY;
@@ -432,13 +432,11 @@ class MyRoomDelegate extends RoomDelegate {
     this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
-    let topY: number = 310 * this.mDpr * zoom + this.activity.height;
+    let topY: number = this.mContainer.parentContainer.y;
     let bottomY: number = 0;
     if (this.mHeight > baseHei) {
-      const count: number = Math.floor(this.mHeight / baseHei);
-      const tmpHei: number = this.mHeight - count * baseHei;
       topY = topY;
-      bottomY = topY - tmpHei - (count - 0.5) * baseHei;
+      bottomY = topY - this.mHeight;
     } else {
       topY = topY;
       bottomY = topY;
