@@ -35,7 +35,7 @@ export default class EquipUpgradePanel extends BasePanel {
         this.closeBtn.y = this.bg.y - this.bg.height / 2 + 10 * this.dpr * this.scale; // + posY + this.dpr * 8;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRect(-this.x, -this.y, w, h);
+        this.blackBg.fillRoundedRect(-this.x, -this.y, w, h);
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
     }
 

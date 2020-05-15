@@ -235,6 +235,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   protected mKey: string;
   protected mWorld: WorldService;
   protected mHeight: number = 0;
+  protected mContent;
   private mPopularityRoom: PopularRoomZoon;
   private mPlayerRoom: RoomZoon;
   constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, scene: Phaser.Scene, world: WorldService, key: string, dpr: number = 1) {
@@ -260,26 +261,23 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   }
 
   updateList(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
+    this.mContent = content;
     this.mScroller.clearInteractiveObject();
     this.mHeight = this.activity.height;
-    this.mChildPad = this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
+    this.mChildPad = this.activity.height + 14 * this.mDpr * this.mWorld.uiScale;
+    if (!this.mContent) {
+      return;
+    }
     this.mPopularityRoom.addItem(content.popularRooms, this.mChildPad);
-    if (this.mPopularityRoom.roomList) this.setScrollInteractive(this.mPopularityRoom.roomList);
-    this.mChildPad += this.mPopularityRoom.height + 10 * this.mDpr;
-    this.mPlayerRoom.addItem(content.playerRooms, this.mChildPad);
-    if (this.mPlayerRoom.roomList) this.setScrollInteractive(this.mPlayerRoom.roomList);
   }
 
   addToContainer() {
-    // this.mContainer.visible = this.mShow;
     this.addListen();
     this.refreshPos();
   }
 
   removeFromContainer() {
     this.removeListen();
-    // this.mContainer.visible = this.mShow;
-    // this.mContainer.removeAll(false);
     if (this.mPopularityRoom) this.mPopularityRoom.clear();
     if (this.mPlayerRoom) this.mPlayerRoom.clear();
   }
@@ -299,19 +297,22 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       frame: "activity_title.png"
     }, false);
     this.activity.y = this.activity.height / 2 + 2 * this.mDpr;
-    this.mChildPad += this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
-    this.mPopularityRoom = new PopularRoomZoon(this.mScene, this.mKey, "popularity_icon.png", i18n.t("room_list.popularity_room"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+    this.mChildPad += this.activity.height / 2 + 18 * this.mDpr;
+    this.mPopularityRoom = new PopularRoomZoon(this.mScene, this.mKey, "popularity_icon.png", i18n.t("room_list.popularity_room"), this.mDpr, this.mWorld.uiScale, 0, this.mChildPad, (hei: number) => {
+      if (this.mPopularityRoom.roomList) this.setScrollInteractive(this.mPopularityRoom.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mChildPad += this.mPopularityRoom.height;
+      this.mPlayerRoom.addItem(this.mContent.playerRooms, this.mChildPad);
     });
-    this.mPlayerRoom = new RoomZoon(this.mScene, this.mKey, "player_icon.png", i18n.t("room_list.player_room"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+    this.mPlayerRoom = new RoomZoon(this.mScene, this.mKey, "player_icon.png", i18n.t("room_list.player_room"), this.mDpr, this.mWorld.uiScale, 0, this.mChildPad, (hei: number) => {
+      if (this.mPlayerRoom.roomList) this.setScrollInteractive(this.mPlayerRoom.roomList);
       this.mHeight += hei;
       this.refreshPos();
     });
   }
 
   protected refreshPos() {
-    this.mContainer.setSize(this.mScroller.width, 0);
     if (this.activity) {
       this.activity.setTexture(this.mKey, "activity_title.png");
       this.mContainer.add(this.activity);
@@ -332,15 +333,14 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
         }
       }
     }
-    this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
-    let topY: number = this.mContainer.parentContainer.y;// 310 * this.mDpr * zoom + this.activity.height;
-    Logger.getInstance().log("cony:" + this.mContainer.parentContainer.y);
+    let topY: number = this.mContainer.parentContainer.y;
+    Logger.getInstance().log(this.mContainer.height);
     let bottomY: number = 0;
     if (this.mHeight > baseHei) {
-      topY = topY; // tmpHei - 40 * this.mDpr * zoom;
-      bottomY = topY - this.mHeight; // - tmpHei - (count - 0.5) * baseHei; // tmpHei + 10 * this.mDpr * zoom - (count - 1.5) * baseHei;
+      topY = topY;
+      bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
     } else {
       topY = topY;
       bottomY = topY;
@@ -378,31 +378,25 @@ class MyRoomDelegate extends RoomDelegate {
   }
 
   addToContainer() {
-    // this.mContainer.visible = this.mShow;
     this.addListen();
     this.refreshPos();
   }
 
   removeFromContainer() {
     this.removeListen();
-    // this.mContainer.visible = this.mShow;
     if (this.mMyRoom) this.mMyRoom.clear();
     if (this.mMyHistory) this.mMyHistory.clear();
-    // this.mContainer.removeAll(false);
   }
 
   updateList(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
     if (!this.mMyRoom) {
       return;
     }
+    this.mContent = content;
     this.mScroller.clearInteractiveObject();
     this.mHeight = this.activity.height;
-    this.mChildPad = this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
+    this.mChildPad = this.activity.height + 14 * this.mDpr * this.mWorld.uiScale;
     this.mMyRoom.addItem(content.selfRooms, this.mChildPad);
-    if (this.mMyRoom.roomList) this.setScrollInteractive(this.mMyRoom.roomList);
-    this.mChildPad += this.mMyRoom.height + 14 * this.mDpr;
-    this.mMyHistory.addItem(content.historyRooms, this.mChildPad);
-    if (this.mMyHistory.roomList) this.setScrollInteractive(this.mMyHistory.roomList);
   }
 
   destroy() {
@@ -412,7 +406,6 @@ class MyRoomDelegate extends RoomDelegate {
   }
 
   protected refreshPos() {
-    this.mContainer.setSize(this.mScroller.width, 0);
     if (this.activity) {
       this.activity.setTexture(this.mKey, "activity_title.png");
       this.mContainer.add(this.activity);
@@ -429,14 +422,13 @@ class MyRoomDelegate extends RoomDelegate {
         if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
       }
     }
-    this.mContainer.setSize(this.mScroller.width, this.mHeight);
     const zoom: number = this.mWorld.uiScale;
     const baseHei: number = 362 * this.mDpr;
     let topY: number = this.mContainer.parentContainer.y;
     let bottomY: number = 0;
     if (this.mHeight > baseHei) {
       topY = topY;
-      bottomY = topY - this.mHeight;
+      bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
     } else {
       topY = topY;
       bottomY = topY;
@@ -450,16 +442,19 @@ class MyRoomDelegate extends RoomDelegate {
       frame: "activity_title.png"
     }, false);
     this.activity.y = this.activity.height / 2 + 2 * this.mDpr;
-    this.mChildPad += this.activity.y + this.activity.height / 2 + 18 * this.mDpr;
-    this.mMyRoom = new MyRoomZoon(this.mScene, this.mKey, "my_room_icon.png", i18n.t("room_list.my_room"), this.mDpr, 0, this.mChildPad, (hei: number) => {
+    this.mChildPad = this.activity.height + 14 * this.mDpr * this.mWorld.uiScale;
+    this.mMyRoom = new MyRoomZoon(this.mScene, this.mKey, "my_room_icon.png", i18n.t("room_list.my_room"), this.mDpr, this.mWorld.uiScale, 0, this.mChildPad, (hei: number) => {
+      if (this.mMyRoom.roomList) this.setScrollInteractive(this.mMyRoom.roomList);
+      this.mHeight += hei;
+      this.refreshPos();
+      this.mChildPad += this.mMyRoom.height;
+      this.mMyHistory.addItem(this.mContent.historyRooms, this.mChildPad);
+    });
+    this.mMyHistory = new RoomZoon(this.mScene, this.mKey, "history_icon.png", i18n.t("room_list.my_history"), this.mDpr, this.mWorld.uiScale, 0, this.mChildPad, (hei: number) => {
+      if (this.mMyHistory.roomList) this.setScrollInteractive(this.mMyHistory.roomList);
       this.mHeight += hei;
       this.refreshPos();
     });
-    this.mMyHistory = new RoomZoon(this.mScene, this.mKey, "history_icon.png", i18n.t("room_list.my_history"), this.mDpr, 0, this.mChildPad, (hei: number) => {
-      this.mHeight += hei;
-      this.refreshPos();
-    });
-    // this.mChildPad += 100 * this.mDpr;
   }
 
   protected onEnterRoomHandler(room) {
@@ -482,6 +477,7 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   protected icon: Phaser.GameObjects.Image;
   protected text: Phaser.GameObjects.Text;
   protected mLabel: string;
+  protected uiScale: number;
   /**
    *
    * @param scene
@@ -493,12 +489,13 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
    * @param pad
    * @param addCallBack
    */
-  constructor(scene: Phaser.Scene, key: string, iconFrame: string, label: string, dpr: number, scrollMode: number = 0, pad: number = 0, addCallBack: Function) {
+  constructor(scene: Phaser.Scene, key: string, iconFrame: string, label: string, dpr: number, uiscale: number, scrollMode: number = 0, pad: number = 0, addCallBack: Function) {
     super();
     this.mShowList = [];
     this.mScene = scene;
     this.mKey = key;
     this.mDpr = dpr;
+    this.uiScale = uiscale;
     this.mPad = pad;
     this.mOrientaction = scrollMode;
     this.mIconFrame = iconFrame;
@@ -524,8 +521,6 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     this.mHeight = this.icon.height;
     this.mAddCallBack = addCallBack;
     this.mRooms = [];
-    // this.mShowList.push(this.icon);
-    // this.mShowList.push(this.text);
   }
 
   get showList(): any[] {
@@ -536,7 +531,6 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   }
 
   addItem(rooms: op_client.IEditModeRoom[], pad: number = 0) {
-    // this.clear();
     this.icon = this.mScene.make.image({
       key: this.mKey,
       frame: this.mIconFrame
@@ -559,18 +553,23 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     this.mHeight = this.icon.height;
     this.mPad = pad ? pad : this.mPad;
     const len = rooms.length;
+    const zoom: number = this.uiScale;
+    const tmpWid: number = this.mOrientaction ? this.mPad + pad : 0;
+    const tmpHei: number = 6 * this.mDpr * zoom;
     if (len > 0) {
-      this.mPad += this.mHeight;
+      this.mPad += this.icon.height + 12 * this.mDpr * zoom;
       for (let i = 0; i < len; i++) {
         const room = new RoomItem(this.mScene, this.mKey, this.mDpr);
         room.setInfo(rooms[i]);
         room.on("enterRoom", this.onEnterRoomHandler, this);
-        room.x = this.mOrientaction ? this.mPad + pad : 0;
-        room.y = this.mOrientaction ? i * (room.height + 6 * this.mDpr) + 11 * this.mDpr : i * (room.height + 6 * this.mDpr) + 11 * this.mDpr + this.mPad;
-        this.mHeight += room.height;
+        room.x = tmpWid;
+        const roomY: number = i * (room.height + tmpHei) + this.mPad;
+        room.y = roomY;
+        this.mHeight += room.height + tmpHei;
         this.mRooms[i] = room;
       }
     }
+    this.mHeight += tmpHei;
     if (this.mAddCallBack) {
       this.mAddCallBack(this.mHeight);
     }
@@ -631,20 +630,26 @@ class MyRoomZoon extends RoomZoon {
     this.mShowList.push(this.text);
     this.mHeight = this.icon.height;
     this.mPad = pad ? pad : this.mPad;
+    const zoom: number = this.uiScale;
+    const tmpWid: number = this.mOrientaction ? this.mPad + pad : 0;
+    const tmpHei: number = 6 * this.mDpr * zoom;
     if (rooms.length > 0) {
-      // this.mPad += this.mHeight;
+      this.mPad += this.icon.height + 14 * this.mDpr * zoom;
       // TODO 通过反射创建
       for (let i = 0; i < rooms.length; i++) {
         const room = new MyRoomItem(this.mScene, this.mKey, this.mDpr);
         room.setInfo(rooms[i]);
         room.on("enterRoom", this.onEnterRoomHandler, this);
-        room.x = this.mOrientaction ? this.mPad : 0;
-        room.y = this.mOrientaction ? i * (room.height + 6 * this.mDpr) + 30 * this.mDpr : i * (room.height + 6 * this.mDpr) + 30 * this.mDpr + this.mPad;
-        this.mHeight += room.height;
+        room.x = tmpWid;
+        const roomY: number = i * (room.height + tmpHei) + this.mPad;
+        room.y = roomY;
+        this.mHeight += room.height + tmpHei;
         this.mRooms[i] = room;
       }
     }
+    this.mHeight += tmpHei;
     if (this.mAddCallBack) {
+      Logger.getInstance().log("myroomheight:" + this.mHeight);
       this.mAddCallBack(this.mHeight);
     }
   }
@@ -674,22 +679,27 @@ class PopularRoomZoon extends RoomZoon {
     this.mShowList.push(this.text);
     this.mHeight = this.icon.height;
     this.mPad = pad ? pad : this.mPad;
+    const zoom: number = this.uiScale;
+    const tmpWid: number = this.mOrientaction ? this.mPad : 0;
+    const tmpHei: number = 6 * this.mDpr * zoom;
     if (rooms.length > 0) {
-      // this.mPad += this.mHeight;
-      // rooms.length
+      this.mPad += this.icon.height + 12 * this.mDpr * zoom;
       for (let i = 0; i < rooms.length; i++) {
         const room = new PopularRoomItem(this.mScene, this.mKey, this.mDpr);
         room.setInfo(rooms[i]);
         room.setRank(i + 1);
         room.on("enterRoom", this.onEnterRoomHandler, this);
-        room.x = this.mOrientaction ? this.mPad : 0;
-        room.y = this.mOrientaction ? i * (room.height + 6 * this.mDpr) + 30 * this.mDpr : i * (room.height + 6 * this.mDpr) + 30 * this.mDpr + this.mPad;
-        this.mHeight += room.height;
+        room.x = tmpWid;
+        const roomY: number = i * (room.height + tmpHei) + this.mPad;
+        room.y = roomY;
+        this.mHeight += room.height + tmpHei;
         this.mRooms[i] = room;
       }
     }
+    this.mHeight += tmpHei;
     if (this.mAddCallBack) {
-      this.mAddCallBack(this.mPad);
+      Logger.getInstance().log("popheight:" + this.mHeight);
+      this.mAddCallBack(this.mHeight);
     }
     return this.mHeight;
   }
@@ -713,10 +723,11 @@ class RoomItem extends Phaser.GameObjects.Container {
   }
 
   public setInfo(room: op_client.IEditModeRoom) {
-    this.mNickName.setText(room.name);
-    this.mCounter.setText(room.playerCount.toString());
+    if (room) {
+      if (room.name) this.mNickName.setText(room.name);
+      if (room.playerCount) this.mCounter.setText(room.playerCount.toString());
+    }
     this.mCounterIcon.x = this.mCounter.x - this.mCounter.width / 2 - this.mCounterIcon.width / 2 - 4 * this.mDpr;
-    // this.crateLabel(room.privacy);
     this.crateLabel(op_def.EditModeRoomPrivacy.EDIT_MODE_ROOM_LOCKED);
     this.mRoom = room;
   }
@@ -761,11 +772,7 @@ class RoomItem extends Phaser.GameObjects.Container {
       }
     }, false).setOrigin(0.5);
     this.mCounter.x = this.width / 2 - 23 * dpr;
-
-    // this.mCounter.y = this.mNickName.y;
     this.add([this.mBackground, this.mNickName, this.mCounterIcon, this.mCounter]);
-
-    // this.mBackground.on("pointerup", this.onEnterRoomHandler, this);
   }
 
   protected crateLabel(state: op_def.EditModeRoomPrivacy) {
