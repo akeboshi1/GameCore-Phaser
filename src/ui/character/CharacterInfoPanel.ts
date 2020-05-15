@@ -120,14 +120,15 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg = this.scene.make.graphics(undefined, false);
         this.mCategeoriesCon = this.scene.make.container(undefined, false);
         this.mCategeoriesCon.x = w * 0.5;
-        this.mCategeoriesCon.y = h - 250 * this.dpr * this.scale;
+        this.mCategeoriesCon.y = h - 270 * this.dpr * this.scale;
+        this.mCategeoriesCon.height = 41 * this.dpr * this.scale;
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
-            x: this.mCategeoriesCon.x,
-            y: this.mCategeoriesCon.y,
+            x: (w - bottomWidth) / 2,
+            y: this.mCategeoriesCon.y - this.mCategeoriesCon.height * 0.5,
             clickX: w / 2 - 6 * this.dpr * zoom,
             clickY: this.mCategeoriesCon.y - 20 * this.dpr * zoom,
             width: bottomWidth,
-            height: 41 * this.dpr * zoom,
+            height: this.mCategeoriesCon.height,
             value: -bottomWidth / 2,
             orientation: 1,
             bounds: [
@@ -135,12 +136,7 @@ export default class CharacterInfoPanel extends BasePanel {
                 bottomWidth / 2
             ],
             valuechangeCallback: (newValue) => {
-                const conWidth = this.bottomCon.width;
-                const conOffsetX = (w - conWidth) / 2;
-                const allLen = this.mCategeoriesCon.width;
-                const isScroll = (allLen > conWidth ? true : false);
-                this.mCategeoriesCon.x = (isScroll ? newValue + conOffsetX : (w - allLen) / 2);
-                Logger.getInstance().log(newValue);
+                this.refreshPos(newValue);
             },
             cellupCallBack: (gameobject) => {
                 this.onSelectSubCategoryHandler(gameobject);
@@ -228,7 +224,7 @@ export default class CharacterInfoPanel extends BasePanel {
         for (let i = 0; i < len; i++) {
             const item = new Button(this.scene, this.key, "title_normal", "title_select", arr[i]);
             item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i - 6 * this.dpr * this.scale;
-            item.y = -h / 2;
+            item.y = 0;
             items.push(item);
             item.setTextStyle({ color: "#996600", fontSize: 12 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
             this.mCategeoriesCon.add(item);
@@ -236,7 +232,7 @@ export default class CharacterInfoPanel extends BasePanel {
             item.disInteractive();
             item.removeListen();
         }
-        this.mCategoryScroll.setValue(0);
+        // this.mCategoryScroll.setValue(0);
         this.mCategoryScroll.resize(conWidth, h, -scrollOffsetX, 0);
     }
     private onSelectSubCategoryHandler(obj: Button) {
@@ -246,6 +242,15 @@ export default class CharacterInfoPanel extends BasePanel {
         this.curSelectCategeory = obj;
     }
 
+    private refreshPos(value) {
+        const w = this.scene.cameras.main.width;
+        const conWidth = this.bottomCon.width;
+        const conOffsetX = (w - conWidth) / 2;
+        const allLen = this.mCategeoriesCon.width;
+        const isScroll = (allLen > conWidth ? true : false);
+        this.mCategeoriesCon.x = (isScroll ? value + conOffsetX : (w - allLen) / 2);
+        Logger.getInstance().log(value);
+    }
     private onSelectItemHandler(item) {
 
     }
