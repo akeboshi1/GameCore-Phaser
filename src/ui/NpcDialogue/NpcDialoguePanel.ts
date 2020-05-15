@@ -20,7 +20,7 @@ export class NpcDialoguePanel extends BasePanel {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         const zoom = this.mWorld.uiScale;
-        const cheight = 180 * this.dpr * zoom;
+        const cheight = 177 * this.dpr * zoom;
         super.resize(width, height);
         this.x = width / 2;
         this.y = height / 2;
@@ -36,22 +36,24 @@ export class NpcDialoguePanel extends BasePanel {
         const zoom = this.mWorld.uiScale;
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
-        const cheight = 180 * this.dpr * zoom;
+        const cheight = 177 * this.dpr * zoom;
         this.content = this.scene.make.container({ x: 0 * this.dpr * zoom, y: (height - cheight) / 2, width, height: cheight }, false);
         this.content.setSize(width, cheight);
         const bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "menu_bg_l" });
+        bg.scaleY = zoom;
         bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
         bg.displayWidth = width;
+        bg.displayHeight = cheight;
         const whiteGraphic = this.scene.make.graphics(undefined, false);
         const graphicWidth = width - 30 * this.dpr * zoom;
         const graphicHeight = 122 * this.dpr * zoom;
-        whiteGraphic.setPosition(- graphicWidth >> 1, -graphicHeight * 0.5 + 15 * this.dpr * zoom);
+        whiteGraphic.setPosition(- graphicWidth >> 1, -graphicHeight * 0.5 + 13 * this.dpr * zoom);
         whiteGraphic.clear();
         whiteGraphic.fillStyle(0xffffff, 1);
         whiteGraphic.fillRoundedRect(0, 0, graphicWidth, graphicHeight, 8 * this.dpr * zoom);
 
         const iconPosx = -width * 0.5 + 38 * this.dpr * zoom;
-        const iconPosy = -cheight * 0.5 + 26 * this.dpr * zoom;
+        const iconPosy = -cheight * 0.5 + 25 * this.dpr * zoom;
         this.npcIcon = new DynamicImage(this.scene, iconPosx, iconPosy);
         const nameBg = this.scene.make.image({ x: iconPosx + 100 * this.dpr * zoom, y: iconPosy, key: this.key, frame: "name_bg" });
         this.npcName = this.scene.make.text({
@@ -70,20 +72,23 @@ export class NpcDialoguePanel extends BasePanel {
     }
 
     public layoutItem(arr: string[]) {
-        arr = ["聊天", "购买物品", "再见"];
-        const scaleRadio = (arr.length > 4 ? 2 : 1);
+        arr = ["聊天", "购买物品","威威"];
+        const len = arr.length;
+        const scaleRadio = (len > 4 ? 2 : 1);
         const zoom = this.mWorld.uiScale;
         const height = 177 * this.dpr * zoom;
         const width = 295 * this.dpr * zoom;
         const cheight = 27 * this.dpr * zoom;
         const cwidth = width / scaleRadio;
+        let offsetY = 4 * this.dpr * zoom;
+        if (len === 2) offsetY = 15 * this.dpr * zoom;
+        else if (len === 3) offsetY = 10 * this.dpr * zoom;
         const posX: number = 0;
-        const posy: number = -31 * this.dpr * zoom;
-        const offsetY: number = 4 * this.dpr * zoom;
-        for (let i = 0; i < arr.length; i++) {
+        const posy: number = (124 * this.dpr * zoom - (offsetY + cheight) * (len < 4 ? len : 4) - offsetY) / 2 - 42 * this.dpr * zoom;
+        for (let i = 0; i < len; i++) {
             const item = new NpcDialogueItem(this.scene, this.dpr, zoom, this.key);
             const x = (width - cwidth) * 0.5 * (i < 4 ? -1 : 1);
-            const y = posy + (cheight + offsetY) * (i % 4);
+            const y = posy + cheight * 0.5 + (cheight + offsetY) * (i % 4);
             item.setItemSize(cwidth, cheight);
             item.setPosition(x, y);
             item.setItemData(arr[i], new Handler(this, this.onItemHandler));
