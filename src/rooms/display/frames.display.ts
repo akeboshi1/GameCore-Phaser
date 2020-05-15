@@ -23,6 +23,7 @@ export class FramesDisplay extends DisplayObject {
     >();
     protected mHasAnimation: boolean = false;
     protected mScaleTween: Phaser.Tweens.Tween;
+    protected mActionName: AnimationData;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
     public setPosition(x?: number, y?: number, z?: number): this {
         super.setPosition(x, y, z);
@@ -56,6 +57,7 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public play(animation: AnimationData, field?: DisplayField) {
+        this.mActionName = animation;
         if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data: IFramesModel = this.mDisplayDatas.get(field);
@@ -276,9 +278,23 @@ export class FramesDisplay extends DisplayObject {
     }
 
     private onAnimationRepeatHander() {
-        // if () {
-
-        // }
+        const queue = this.mActionName.playingQueue;
+        if (queue.playedTimes === undefined) {
+            queue.playedTimes = 1;
+        } else {
+            queue.playedTimes++;
+        }
+        if (queue.playedTimes >= queue.playTimes) {
+            const sprite = this.mSprites.get(DisplayField.STAGE);
+            if (sprite) {
+                sprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+            }
+            // this.emit("animationComplete");
+            if (queue.complete) {
+                queue.complete.call(this);
+                delete queue.complete;
+            }
+        }
     }
 
     get spriteWidth(): number {

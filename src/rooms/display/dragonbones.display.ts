@@ -213,6 +213,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mAnimationName,
             this.dragonBonesName,
         );
+        this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
         this.mArmatureDisplay.visible = false;
         this.add(this.mArmatureDisplay);
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
@@ -883,6 +884,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 delete queue.complete;
             }
         }
+    }
+
+    private onSoundEventHandler(event: dragonBones.EventObject) {
+        Logger.getInstance().log("sound event: ", event.name);
     }
 
     set dragonBonesName(val: string) {
