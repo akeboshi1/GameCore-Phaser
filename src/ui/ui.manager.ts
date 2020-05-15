@@ -136,7 +136,7 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
-           // this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager,scene, this.worldService));
+            // this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager,scene, this.worldService));
             // this.mMedMap.set(NpcDialogueMediator.name, new NpcDialogueMediator(this.mUILayerManager,scene, this.worldService));
             // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
