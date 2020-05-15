@@ -51,6 +51,10 @@ export class PicaRoomListMediator extends BaseMediator {
     if (this.roomList) {
       this.roomList.destroy();
     }
+    if (this.mView) {
+      this.mView.destroy();
+      this.mView = undefined;
+    }
     super.destroy();
   }
 
