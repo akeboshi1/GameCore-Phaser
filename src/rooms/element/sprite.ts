@@ -3,7 +3,7 @@ import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../display/dragonb
 import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import { SlotInfo } from "../player/slot.info";
 import { FramesModel, IFramesModel } from "../display/frames.model";
-import { Animation } from "../display/animation";
+import { Animation, IAnimationData } from "../display/animation";
 import Helpers from "../../utils/helpers";
 import NodeType = op_def.NodeType;
 import { Logger } from "../../utils/log";
@@ -25,6 +25,7 @@ export interface ISprite {
     readonly currentCollisionPoint: Phaser.Geom.Point;
     readonly hasInteractive: boolean;
     readonly attrs: op_def.IStrPair[];
+    readonly animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -37,6 +38,8 @@ export interface ISprite {
     updateAvatar(avatar: op_gameconfig.IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string);
     setPosition(x: number, y: number);
+    setAnimationName(name: string, playTimes?: number): AnimationData;
+    setAnimationQueue(queue: AnimationQueue[]);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
@@ -44,6 +47,14 @@ export interface ISprite {
 export interface AnimationData {
     animationName: string;
     flip: boolean;
+    playingQueue?: AnimationQueue;
+}
+
+export interface AnimationQueue {
+    name: string;
+    playTimes?: number;
+    playedTimes?: number;
+    complete?: Function;
 }
 
 export class Sprite implements ISprite {
@@ -78,6 +89,8 @@ export class Sprite implements ISprite {
 
     protected mAttrs: op_def.IStrPair[];
 
+    protected mAnimationQueue: AnimationQueue[];
+
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         this.mID = obj.id;
         if (obj.point3f) {
@@ -86,9 +99,6 @@ export class Sprite implements ISprite {
         }
         this.mAttrs = obj.attrs;
         if (obj.avatar) {
-            // this.mAvatar = { id: obj.avatar.id };
-            // this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
-            // this.mDisplayInfo = new DragonbonesModel(this);
             this.updateAvatar(obj.avatar);
             // if (attrs && attrs.length > 0) {
             //     for (const att of attrs) {
@@ -99,28 +109,12 @@ export class Sprite implements ISprite {
             // }
         }
         if (obj.display) {
-            // const anis = [];
-            // const objAnis = obj.animations;
-            // for (const ani of objAnis) {
-            //     anis.push(new Animation(ani));
-            // }
-            // this.mDisplayInfo = new FramesModel({
-            //     id: obj.id,
-            //     animations: {
-            //         defaultAnimationName: obj.currentAnimationName,
-            //         display: obj.display,
-            //         animationData: anis,
-            //     },
-            // });
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
         if (obj.sn) {
             this.mSn = obj.sn;
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
-        // if (obj.currentAnimationName) {
-        //     Logger.getInstance().error(`${Sprite.name}: currentAnimationName is null, ${JSON.stringify(obj)}`);
-        // }
         this.mCurrentAnimationName = obj.currentAnimationName || "idle";
         this.direction = obj.direction || 3;
         this.mNickname = obj.nickname;
@@ -222,8 +216,21 @@ export class Sprite implements ISprite {
         }
     }
 
+    public setAnimationQueue(queue: AnimationQueue[]) {
+        this.mAnimationQueue = queue;
+    }
+
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.mAttrs = attrs;
+    }
+
+    public setAnimationName(name: string) {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.animationName = name;
+        }
+        this.mCurrentAnimationName = name;
+        const ani = this.setAnimationData(name, this.direction);
+        return ani;
     }
 
     get id(): number {
@@ -335,6 +342,10 @@ export class Sprite implements ISprite {
         this.mIsMoss = val;
     }
 
+    get animationQueue(): AnimationQueue[] {
+        return this.mAnimationQueue;
+    }
+
     get nodeType(): NodeType {
         return this.mNodeType;
     }
@@ -434,9 +445,11 @@ export class Sprite implements ISprite {
             }
         }
         this.mCurrentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+        if (this.mAnimationQueue && this.mAnimationQueue.length > 0) this.mCurrentAnimation.playingQueue = this.mAnimationQueue[0];
         if (this.mCurrentCollisionArea) {
             this.setArea();
         }
+        return this.mCurrentAnimation;
         // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
         // if (animationName !== this.mCurrentAnimation.animationName) {
         //     Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);

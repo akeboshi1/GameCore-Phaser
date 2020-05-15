@@ -353,12 +353,12 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== NodeType.CharacterNodeType) {
             return;
         }
-        const anis = content.changeAnimation;
         let player: Player = null;
-        for (const ani of anis) {
-            player = this.get((ani.id));
+        const ids = content.ids;
+        for (const id of ids) {
+            player = this.get(id);
             if (player) {
-                player.play(ani.animationName);
+                player.setQueue(content.changeAnimation);
             }
         }
     }

@@ -1,5 +1,5 @@
 import { Element } from "../element/element";
-import { ISprite, Sprite, AnimationData } from "../element/sprite";
+import { ISprite, Sprite, AnimationData, AnimationQueue } from "../element/sprite";
 import { IElementManager } from "../element/element.manager";
 import { SlotInfo } from "../player/slot.info";
 import { op_gameconfig, op_def, op_client } from "pixelpai_proto";
@@ -29,6 +29,7 @@ export class SpawnPoint implements ISprite {
     bindID: number;
     sn: string;
     attrs: op_def.IStrPair[];
+    animationQueue: AnimationQueue[];
 
     constructor() {
         this.id = 100;
@@ -73,6 +74,14 @@ export class SpawnPoint implements ISprite {
     }
 
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string) {
+        throw new Error("Method not implemented.");
+    }
+
+    setAnimationName(): AnimationData {
+        throw new Error("Method not implemented.");
+    }
+
+    setAnimationQueue() {
         throw new Error("Method not implemented.");
     }
 

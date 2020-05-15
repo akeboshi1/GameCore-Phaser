@@ -40,7 +40,7 @@ export class DecorateElementManager extends ElementManager {
     for (let i = 0; i < rows; i++) {
       row = pos.y + i - origin.x;
       for (let j = 0; j < cols; j++) {
-        if (collisionArea[i][j] === 1 && walkArea[i][j] === 0) {
+        if (collisionArea[i][j] === 1 && (i >= walkArea.length || j >= walkArea[i].length || walkArea[i][j] === 0)) {
           col = pos.x + j - origin.y;
           if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
             this.mMap[row][col] = 0;
@@ -59,17 +59,10 @@ export class DecorateElementManager extends ElementManager {
     const aniName = curAni.animationName;
     const flip = curAni.flip;
     const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-    let walkArea = displayInfo.getWalkableArea(aniName, flip);
     const origin = displayInfo.getOriginPoint(aniName, flip);
     const rows = collisionArea.length;
     const cols = collisionArea[0].length;
     const pos = this.mRoom.transformToMini45(sprite.pos);
-    if (!walkArea) {
-      walkArea = new Array(rows);
-      for (let i = 0; i < cols; i++) {
-        walkArea[i] = new Array(cols).fill(0);
-      }
-    }
     let row = 0;
     let col = 0;
     for (let i = 0; i < rows; i++) {

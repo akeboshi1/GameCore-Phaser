@@ -12,6 +12,7 @@ export class PicaNavigatePanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
+    this.setInteractive();
   }
 
   resize(w: number, h: number) {
@@ -26,7 +27,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBackground.setInteractive();
     this.mCloseBtn.x = width - this.mCloseBtn.width / 2 - 3 * this.dpr;
 
-    this.y = height - this.height / 2 ;
+    this.y = height - this.height / 2;
     super.resize(w, h);
   }
 
