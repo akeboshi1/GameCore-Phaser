@@ -211,6 +211,8 @@ export class MineCarPanel extends BasePanel {
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0
         // mask: false
       },
       scrollMode: 0,
@@ -247,6 +249,8 @@ export class MineCarPanel extends BasePanel {
         cellWidth: (frame.width + 4 * this.dpr) * zoom,
         cellHeight: (29 * this.dpr) * zoom,
         reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0
         // mask: false
       },
       scrollMode: 1,

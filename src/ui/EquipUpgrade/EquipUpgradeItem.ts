@@ -163,6 +163,8 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                cellOriginX: 0,
+                cellOriginY: 0
             },
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
@@ -312,7 +314,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         let y = this.height - 10 * this.dpr * this.zoom;
         this.bg.setPosition(x, y);
         x = x + 1 * this.dpr * this.zoom;
-        y = this.height * 0.5 + 2* this.dpr * this.zoom;
+        y = this.height * 0.5 + 2 * this.dpr * this.zoom;
         this.equipIcon.setPosition(x, y);
         x = x + 22 * this.dpr * this.zoom;
         y = 8 * this.dpr * this.zoom;
