@@ -180,9 +180,129 @@
 				"h": 95
 			}
 		},
-		"splitters": {
+		"slider_bg01": {
 			"frame": {
 				"x": 831,
+				"y": 1,
+				"w": 6,
+				"h": 8
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 6,
+				"h": 8
+			},
+			"sourceSize": {
+				"w": 6,
+				"h": 8
+			}
+		},
+		"slider_bg02": {
+			"frame": {
+				"x": 839,
+				"y": 1,
+				"w": 1,
+				"h": 8
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1,
+				"h": 8
+			},
+			"sourceSize": {
+				"w": 1,
+				"h": 8
+			}
+		},
+		"slider_bg03": {
+			"frame": {
+				"x": 767,
+				"y": 11,
+				"w": 6,
+				"h": 8
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 6,
+				"h": 8
+			},
+			"sourceSize": {
+				"w": 6,
+				"h": 8
+			}
+		},
+		"slider_rate01": {
+			"frame": {
+				"x": 775,
+				"y": 11,
+				"w": 4,
+				"h": 6
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4,
+				"h": 6
+			},
+			"sourceSize": {
+				"w": 4,
+				"h": 6
+			}
+		},
+		"slider_rate02": {
+			"frame": {
+				"x": 781,
+				"y": 11,
+				"w": 1,
+				"h": 6
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1,
+				"h": 6
+			},
+			"sourceSize": {
+				"w": 1,
+				"h": 6
+			}
+		},
+		"slider_rate03": {
+			"frame": {
+				"x": 784,
+				"y": 11,
+				"w": 4,
+				"h": 6
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4,
+				"h": 6
+			},
+			"sourceSize": {
+				"w": 4,
+				"h": 6
+			}
+		},
+		"splitters": {
+			"frame": {
+				"x": 842,
 				"y": 1,
 				"w": 462,
 				"h": 1
@@ -202,7 +322,7 @@
 		},
 		"test_skillicon": {
 			"frame": {
-				"x": 831,
+				"x": 842,
 				"y": 4,
 				"w": 66,
 				"h": 74
@@ -222,7 +342,7 @@
 		},
 		"title_normal": {
 			"frame": {
-				"x": 899,
+				"x": 910,
 				"y": 4,
 				"w": 122,
 				"h": 54
@@ -242,7 +362,7 @@
 		},
 		"title_select": {
 			"frame": {
-				"x": 1023,
+				"x": 1034,
 				"y": 4,
 				"w": 151,
 				"h": 68
@@ -267,7 +387,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1294,
+			"w": 1305,
 			"h": 1102
 		},
 		"scale": "1"

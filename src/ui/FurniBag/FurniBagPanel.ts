@@ -360,7 +360,7 @@ export class FurniBagPanel extends BasePanel {
       width: this.mWorld.getSize().width,
       height: 41 * this.dpr * zoom,
       value: w / 2,
-      orientation: 1,
+      scrollMode: 1,
       bounds: [
         -w / 2,
         w / 2

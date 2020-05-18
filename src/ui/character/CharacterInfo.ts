@@ -15,6 +15,8 @@ export class CharacterInfo extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO, this.onOwnerCharacterInfo);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO , this.onOtherCharacterInfo);
         }
     }
 
@@ -42,5 +44,15 @@ export class CharacterInfo extends PacketHandler {
         if (this.world) {
             return this.world.connection;
         }
+    }
+
+    private onOwnerCharacterInfo(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO = packge.content;
+        this.mEvent.emit("ownerInfo", content);
+    }
+
+    private onOtherCharacterInfo(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO = packge.content;
+        this.mEvent.emit("otherInfo", content);
     }
 }

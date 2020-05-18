@@ -38,6 +38,9 @@
     "player_title": "Title",
     "option_live": "Living",
     "option_badge": "Badge",
-    "option_title": "Title"
+    "option_title": "Title",
+    "add_friend": "添加好友",
+    "tade_btn": "交易",
+    "private_chat": "私聊"
   }
 }
