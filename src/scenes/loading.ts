@@ -4,13 +4,13 @@ import { Size } from "../utils/size";
 import { Url } from "../utils/resUtil";
 import { Logger } from "../utils/log";
 import { BasicScene } from "./basic.scene";
-const LOGO_MARGIN = 25;
 
 export class LoadingScene extends BasicScene {
   private mWorld: WorldService;
   private mRoom: IRoomService;
   private lo: Phaser.GameObjects.Sprite;
   private bg: Phaser.GameObjects.Image;
+  private mCallback: Function;
   private mRequestCom: boolean = false;
   constructor() {
     super({ key: LoadingScene.name });
@@ -23,6 +23,7 @@ export class LoadingScene extends BasicScene {
     if (this.mWorld) {
       dpr = this.mWorld.uiRatio || 2;
     }
+    Logger.getInstance().log("has Texture: ", this.game.textures.exists("loading_bg"));
     if (this.game.device.os.desktop === false) {
       this.load.image("loading_bg", Url.getUIRes(dpr, "loading/loading_bg.jpg"));
     }
@@ -42,6 +43,8 @@ export class LoadingScene extends BasicScene {
     this.mWorld = data.world;
     this.mRoom = data.room;
     this.mRequestCom = false;
+
+    this.mCallback = data.callBack;
   }
 
   public create() {
@@ -77,30 +80,29 @@ export class LoadingScene extends BasicScene {
       yoyo: false,
       repeat: -1
     });
-    if (this.textures.exists("loading_bg")) {
-      this.bg = this.add.image(width / 2, height / 2, "loading_bg");
-      this.bg.scale = this.mWorld.uiScale;
-    }
+    this.bg = this.add.image(width / 2, height / 2, "loading_bg");
+    this.bg.scale = this.mWorld.uiScale;
     this.lo = this.add.sprite(0, 0, "loading");
-    this.lo.setScale(this.mWorld.uiScale);
+    // this.lo.setScale(this.mWorld.uiScale);
     this.scale.on("resize", this.checkSize, this);
     this.lo.play("loading_anmis");
 
     this.checkSize(new Size(width, height));
+    if (this.mCallback) {
+      this.mCallback.call(this, this);
+      this.mCallback = undefined;
+    }
+    // this.mLoadingManager.startup();
   }
 
-  update(time: number, delta: number) {
-    // if (this.cameras.main) {
-    //   this.cameras.main.emit("renderer", this.cameras.main);
+  // update() {
+    // if (this.mRoom) {
+    //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
+    //     this.mRequestCom = true;
+    //     this.mRoom.completeLoad();
+    //   }
     // }
-    if (this.mRoom) {
-      if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
-        this.mRequestCom = true;
-        this.mRoom.completeLoad();
-      }
-      // this.mRoom.updateClock(time, delta);
-    }
-  }
+  // }
 
   public awake() {
     this.scale.on("resize", this.checkSize, this);
@@ -117,19 +119,9 @@ export class LoadingScene extends BasicScene {
   }
 
   private checkSize(size: Size) {
-    const width: number = size.width;
-    const height: number = size.height;
-    // this.bg.clear();
-    // this.bg.fillStyle(0x616161);
-    // this.bg.fillRect(0, 0, width, height);
-    // if (this.mWorld.game.device.os.desktop) {
+    const { width, height } = size;
     this.lo.x = width / 2;
     this.lo.y = height / 2;
-    // } else {
-    //   this.lo.x = (width - this.lo.width >> 1) + 100;
-    //   this.lo.y = (height - this.lo.height >> 1) + 100;
-    // }
-    // this.lo.scaleX = this.lo.scaleY = this.mWorld.uiScale;
   }
 
 }

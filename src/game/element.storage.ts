@@ -17,6 +17,8 @@ import { op_def } from "pixelpai_proto";
 import { Animation } from "../rooms/display/animation";
 import { MossCollectionNode } from "game-capsule/lib/configobjects/scene";
 import { IScenery } from "../rooms/sky.box/scenery";
+import { IAsset } from "../loading/loading.manager";
+import { Url } from "../utils/resUtil";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
@@ -29,6 +31,7 @@ export interface IElementStorage {
     getTerrainPalette(key: number): IFramesModel;
     getTerrainPaletteByBindId(id: number): IFramesModel;
     getMossPalette(key: number): IFramesModel;
+    getAssets(): IAsset[];
     getScenerys(): IScenery[];
     on(event: string | symbol, fn: Function, context?: any);
     off(event: string | symbol, fn: Function, context?: any);
@@ -39,12 +42,6 @@ interface IDisplayRef {
     // element id
     id: number;
     displayModel?: FramesModel | DragonbonesModel;
-}
-
-interface IAsset {
-    type: string;
-    key: string;
-    source: string;
 }
 
 export class ElementStorage implements IElementStorage {
@@ -168,7 +165,7 @@ export class ElementStorage implements IElementStorage {
                     this._assets.push({
                         type: fileType[1],
                         key: asset.key,
-                        source: media
+                        source: Url.getOsdRes(media)
                     });
                 }
             }
@@ -261,6 +258,10 @@ export class ElementStorage implements IElementStorage {
 
     public getScenerys(): IScenery[] {
         return this._scenerys;
+    }
+
+    public getAssets(): IAsset[] {
+        return this._assets;
     }
 
     public destroy() {

@@ -30,5 +30,17 @@
   "common": {
     "cancel": "Cancel",
     "confirm": "Confirm"
+  },
+  "player_info": {
+    "title": "Player Info",
+    "nick_name": "Nickname",
+    "player_lv": "Lv",
+    "player_title": "Title",
+    "option_live": "Living",
+    "option_badge": "Badge",
+    "option_title": "Title",
+    "add_friend": "添加好友",
+    "tade_btn": "交易",
+    "private_chat": "私聊"
   }
 }

@@ -41,6 +41,7 @@ import { initLocales } from "../i18n";
 import * as path from "path";
 import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
+import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -67,6 +68,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mOrientation: number = 0;
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string = "";
+    private mLoadingManager: ILoadingManager;
 
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
@@ -136,6 +138,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mHttpService = new HttpService(this);
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
+        this.mLoadingManager = new LoadingManager(this);
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();
@@ -400,6 +403,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public showLoading() {
+        return this.mLoadingManager.start();
+    }
+
     public getGameConfig(): Phaser.Types.Core.GameConfig {
         return this.gameConfig;
     }
@@ -457,7 +464,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.loadGameConfig(url);
     }
 
-    public createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
+    public async createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
         // this.mGame.scene.add(PlayScene.name, PlayScene);
@@ -491,6 +498,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         }
 
+        await this.mLoadingManager.addAssets(this.mElementStorage.getAssets());
         this.gameCreated();
     }
 
@@ -517,7 +525,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // }, 1000);
         const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
         if (loginScene) loginScene.remove();
-        this.mGame.scene.start(LoadingScene.name, { world: this });
+        this.mLoadingManager.start();
+        // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
     private onFullScreenChange() {
@@ -589,7 +598,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.loginEnterWorld();
                 const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
                 loginScene.remove();
-                this.mGame.scene.start(LoadingScene.name, { world: this });
+                this.mLoadingManager.start();
+                // this.mGame.scene.start(LoadingScene.name, { world: this });
             },
         });
     }
@@ -641,7 +651,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.login();
                 return;
             } else {
-                this.mGame.scene.start(LoadingScene.name, { world: this });
+                // this.mGame.scene.start(LoadingScene.name, { world: this });
+                this.mLoadingManager.start();
                 this.mAccount.setAccount({
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
@@ -684,6 +695,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
         this.mMoveStyle = content.moveStyle;
+
+        this.clock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
 
