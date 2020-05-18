@@ -206,6 +206,8 @@ export default class CharacterInfoPanel extends BasePanel {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                // cellOriginX:0,
+                // cellOriginY:0,
             },
             scrollMode: 1,
             clamplChildOY: false,
