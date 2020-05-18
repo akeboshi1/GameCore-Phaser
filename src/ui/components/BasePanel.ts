@@ -25,10 +25,6 @@ export class BasePanel extends Panel {
         }
     }
 
-    protected init() {
-        super.init();
-    }
-
     protected addResources(key: string, resource: any) {
         super.addResources(key, resource);
         if (resource.type) {
