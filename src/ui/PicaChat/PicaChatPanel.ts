@@ -25,8 +25,6 @@ export class PicaChatPanel extends BasePanel {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
-        this.scale = 1;
-        this.setInteractive();
     }
 
     show(param?: any) {
@@ -43,6 +41,7 @@ export class PicaChatPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
+        this.setInteractive();
         this.addListen();
     }
 
