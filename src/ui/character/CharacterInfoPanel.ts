@@ -47,12 +47,10 @@ export default class CharacterInfoPanel extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
-    resize(width: number, height: number) {
-        const w: number = this.scene.cameras.main.width;
-        const h: number = this.scene.cameras.main.height;
-        super.resize(width, height);
+    resize(w: number, h: number) {
+        super.resize(w, h);
         this.bottombg.clear();
-        this.bottombg.fillStyle(0x6f75ff, 1);
+        this.bottombg.fillStyle(0x6AE2FF, 1);
         this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
@@ -94,24 +92,23 @@ export default class CharacterInfoPanel extends BasePanel {
         super.preload();
     }
     init() {
-        const w = this.scene.cameras.main.width;
-        const h = this.scene.cameras.main.height;
+        const w = this.screenWidth;
+        const h = this.screenHeight;
         const zoom = this.scale;
         this.setSize(w, h);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(this.bg.width, this.bg.height);
         this.mainContent = this.scene.make.container(undefined, false);
-        // this.mBackground = this.scene.make.graphics(undefined, false);
         this.mainContent.setSize(this.bg.width, this.bg.height);
-        const posY = -this.bg.height * 0.5 + 43 * this.dpr * zoom;
+        const posY = -this.bg.height * 0.5 + 43 * this.dpr;
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("player_info.title"), style: { font: mfont, blod: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.labelText.setStroke("#8F4300", 1);
         this.closeBtn = new Button(this.scene, this.commonkey, "close");
-        this.closeBtn.setPosition(this.bg.width * 0.5 - this.dpr * 5 * zoom, posY + this.dpr * 5);
+        this.closeBtn.setPosition(this.bg.width * 0.5 - this.dpr * 5, posY + this.dpr * 5);
         this.likeBtn = new Button(this.scene, this.key, "praise_bef", "999");
-        this.likeBtn.setPosition(this.bg.width * 0.5 - 10 * this.dpr * zoom, posY + 50 * this.dpr * zoom);
+        this.likeBtn.setPosition(this.bg.width * 0.5 - 10 * this.dpr, posY + 50 * this.dpr);
         this.avatar = new DragonbonesDisplay(this.scene, undefined);
         this.avatar.scale = this.dpr * 3;
         this.avatar.x = w >> 1;
@@ -120,68 +117,68 @@ export default class CharacterInfoPanel extends BasePanel {
             this.avatar.play({ animationName: "idle", flip: false });
         });
 
-        const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr * zoom);
-        const nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr * zoom);
-        const nickOffsetY = 30 * this.dpr * zoom;
+        const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
+        const nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr);
+        const nickOffsetY = 30 * this.dpr;
         const fontSize = Math.round(13 * this.dpr) + "px";
-        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY,{})
+        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
             .setStroke("#ffffff", 2).setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
-        this.nickEditor.setPosition(-nickPosX - 30 * this.dpr * zoom, nickPosY);
-        const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr * this.scale, key: this.key, frame: "splitters" });
+        this.nickEditor.setPosition(-nickPosX - 30 * this.dpr, nickPosY);
+        const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
             .setStroke("#ffffff", 2).setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
-        const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr * this.scale, key: this.key, frame: "splitters" });
+        const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2)
             .setStroke("#ffffff", 2).setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
-        const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr * this.scale, key: this.key, frame: "splitters" });
+        const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
         const lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.lvCon = this.scene.make.container(undefined, false);
         this.lvCon.setSize(lvbg.width, lvbg.height);
         this.lvCon.add([lvbg, this.lvText]);
 
-        const bottomWidth = 234 * this.dpr * zoom;
-        const bottomHeight = 195 * this.dpr * zoom;
+        const bottomWidth = 234 * this.dpr;
+        const bottomHeight = 195 * this.dpr;
         this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
-        this.bottomCon.setPosition(-6 * this.dpr * zoom, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr * zoom);
+        this.bottomCon.setPosition(0, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr);
         this.bottombg = this.scene.make.graphics(undefined, false);
-        const bottomBtnPosx = -this.bottomCon.width * 0.5 + 10 * this.dpr * zoom;
-        const bottomBtnPosy = this.bottomCon.height - 19 * this.dpr * zoom;
-        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "button_g", i18n.t("player_info.add_friend"), {
-            left: 12 * this.dpr * zoom,
-            top: 12 * this.dpr * zoom,
-            right: 12 * this.dpr * zoom,
-            bottom: 12 * this.dpr * zoom
+        const bottomBtnPosx = -this.bottomCon.width * 0.5 + 10 * this.dpr;
+        const bottomBtnPosy = this.bottomCon.height - 19 * this.dpr;
+        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
         });
 
-        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "yellow_btn_down", i18n.t("player_info.private_chat"), {
-            left: 12 * this.dpr * zoom,
-            top: 12 * this.dpr * zoom,
-            right: 12 * this.dpr * zoom,
-            bottom: 12 * this.dpr * zoom
+        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.commonkey, "yellow_btn_down", i18n.t("player_info.private_chat"), {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
         });
 
-        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 112 * this.dpr * zoom, 40 * this.dpr * zoom, this.commonkey, "red_btn_normal", i18n.t("player_info.tade_btn"), {
-            left: 12 * this.dpr * zoom,
-            top: 12 * this.dpr * zoom,
-            right: 12 * this.dpr * zoom,
-            bottom: 12 * this.dpr * zoom
+        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn_normal", i18n.t("player_info.tade_btn"), {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
         });
 
-        this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr * zoom, color: "#000000" });
-        this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr * zoom, color: "#996600" });
-        this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr * zoom, color: "#ffffff" });
+        this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
+        this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
+        this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
 
         this.mCategeoriesCon = this.scene.make.container(undefined, false);
         this.mCategeoriesCon.x = w * 0.5;
-        this.mCategeoriesCon.y = h * 0.5 + 100 * this.dpr * this.scale;
-        this.mCategeoriesCon.height = 41 * this.dpr * this.scale;
+        this.mCategeoriesCon.y = h * 0.5 + 56 * this.dpr * zoom;
+        this.mCategeoriesCon.height = 41 * this.dpr * zoom;
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
             x: this.mCategeoriesCon.x - bottomWidth / 2,
             y: this.mCategeoriesCon.y,
-            clickX: w / 2 - 6 * this.dpr * zoom,
-            clickY: this.mCategeoriesCon.y, // - 20 * this.dpr * zoom,
+            clickX: w / 2,
+            clickY: this.mCategeoriesCon.y,
             width: bottomWidth,
             height: this.mCategeoriesCon.height,
             value: -1,
@@ -201,8 +198,8 @@ export default class CharacterInfoPanel extends BasePanel {
         const capW = (propFrame.width + 5 * this.dpr) * zoom;
         const capH = (propFrame.height + 2 * this.dpr) * zoom;
         const tableConfig: GridTableConfig = {
-            x: 0,
-            y: 0,
+            x: w / 2,
+            y: h * 0.5 + 145 * this.dpr * this.scale,
             table: {
                 width: this.bottomCon.width,
                 height: 170 * this.dpr * zoom,
@@ -255,7 +252,6 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        const zoom = this.scale;
         const nickname = data.nickname;
         const current_title = data.currentTitle;
         const exp = data.level.currentLevelExp;
@@ -273,7 +269,7 @@ export default class CharacterInfoPanel extends BasePanel {
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + nickname);
             this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(3 * this.dpr) + exp + "/" + nexExp);
-            this.lvCon.setPosition(this.idText.x + 70 * this.dpr * zoom, this.idText.y);
+            this.lvCon.setPosition(this.idText.x + 70 * this.dpr, this.idText.y);
             this.likeBtn.setFrame("praise_aft");
             subArr.push(data.titles);
             this.addFriendBtn.visible = false;
@@ -283,7 +279,7 @@ export default class CharacterInfoPanel extends BasePanel {
             const remark = (data.remark ? data.remark : "备注好友昵称");
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + nickname + ` (${remark})`);
             this.idText.setText(this.getRichLabel("ID") + " " + cid);
-            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr * zoom);
+            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
             subArr.push(data.avatar);
             this.addFriendBtn.visible = !data.friend;
@@ -306,7 +302,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const len = datas.length;
         const h = 41 * this.dpr * this.scale;
         const conWidth = this.bottomCon.width;
-        const offsetx = 0 * this.dpr * this.scale;
+        const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const allLen = (itemWidth + offsetx) * len - offsetx;
         this.mCategeoriesCon.setSize(allLen, h);
@@ -314,7 +310,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const items = [];
         for (let i = 0; i < len; i++) {
             const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
-            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i - 6 * this.dpr * this.scale;
+            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
             item.y = 0;
             items.push(item);
             item.setTextStyle({ color: "#996600", fontSize: 12 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
@@ -336,7 +332,6 @@ export default class CharacterInfoPanel extends BasePanel {
         const datas = obj.getData("subData");
         if (datas)
             this.mGrideTable.setItems(datas);
-        const zoom = this.mWorld.uiScale;
         this.mGrideTable.refreshPos(this.mGrideTable.x, this.mGrideTable.y, 0, 0);
     }
 
@@ -412,44 +407,44 @@ export class CharacterOwnerItem extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
         super(scene, x, y);
         const bg = this.scene.make.image({ x: 0, y: 0, key, frame: "skill_bg" });
-        this.nameText = this.scene.make.text({ x: 6 * dpr * zoom, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr * zoom, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.lvText = this.scene.make.text({ x: 6 * dpr * zoom, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr * zoom, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.nameText = this.scene.make.text({ x: 6 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.lvText = this.scene.make.text({ x: 6 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.progressBar = new ProgressBar(this.scene, {
             x: 0,
             y: 0,
-            width: 41 * dpr * zoom,
-            height: 4 * dpr * zoom,
+            width: 41 * dpr,
+            height: 4 * dpr,
             background: {
                 x: 0,
                 y: 0,
-                width: 41 * dpr * zoom,
-                height: 4 * dpr * zoom,
+                width: 41 * dpr,
+                height: 4 * dpr,
                 config: {
-                    top: 10 * dpr * zoom,
-                    left: 10 * dpr * zoom,
-                    right: 10 * dpr * zoom,
-                    bottom: 10 * dpr * zoom,
+                    top: 10 * dpr,
+                    left: 10 * dpr,
+                    right: 10 * dpr,
+                    bottom: 10 * dpr,
                 },
                 key,
-                frame: ""
+                frame: "slider_bg"
             },
             bar: {
                 x: 0,
                 y: 0,
-                width: 41 * dpr * zoom,
-                height: 4 * dpr * zoom,
+                width: 41 * dpr,
+                height: 4 * dpr,
                 config: {
-                    top: 10 * dpr * zoom,
-                    left: 10 * dpr * zoom,
-                    right: 10 * dpr * zoom,
-                    bottom: 10 * dpr * zoom,
+                    top: 10 * dpr,
+                    left: 10 * dpr,
+                    right: 10 * dpr,
+                    bottom: 10 * dpr,
                 },
                 key,
-                frame: ""
+                frame: "slider_rate"
             },
             textConfig: undefined,
         });
-        this.icon = new DynamicImage(this.scene, -bg.width * 0.5 + 22 * dpr * zoom, 0);
+        this.icon = new DynamicImage(this.scene, -bg.width * 0.5 + 22 * dpr, 0);
         this.add([bg, this.icon, this.nameText, this.lvText, this.progressBar]);
         this.setSize(bg.width, bg.height);
         this.dpr = dpr;
